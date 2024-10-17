@@ -108,6 +108,9 @@ export class KbqError extends KbqHint {
             <ng-content />
         </span>
     `,
+    host: {
+        class: 'kbq-password-hint'
+    },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

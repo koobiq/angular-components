@@ -11,13 +11,13 @@
     }
 
     .kbq-form-field:not(.kbq-form-field-type-textarea) {
-        height: kbq-css-variable(form-field-size-height);
+        height: var(--kbq-form-field-size-height);
     }
 
     &,
     .kbq-input,
     .kbq-textarea {
-        border-radius: kbq-css-variable(form-field-size-border-radius);
+        border-radius: var(--kbq-form-field-size-border-radius);
     }
 
     &.kbq-form-field_no-borders .kbq-form-field_container {
@@ -31,10 +31,10 @@
     justify-content: space-between;
     align-items: center;
 
-    border-width: kbq-css-variable(form-field-size-border-width);
+    border-width: var(--kbq-form-field-size-border-width);
     border-style: solid;
     border-color: transparent;
-    border-radius: kbq-css-variable(form-field-size-border-radius);
+    border-radius: var(--kbq-form-field-size-border-radius);
 }
 
 .kbq-form-field_control {
@@ -43,7 +43,7 @@
 
 .kbq-form-field_label {
     display: flex;
-    margin-bottom: kbq-css-variable(size-s);
+    margin-bottom: var(--kbq-size-s);
 }
 
 .kbq-form-field_prefix,
@@ -51,21 +51,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: kbq-css-variable(size-xxs);
+    gap: var(--kbq-size-xxs);
 }
 
 .kbq-form-field_prefix {
-    margin-left: kbq-css-variable(size-s);
+    margin-left: var(--kbq-size-s);
 }
 
 .kbq-form-field_suffix {
-    margin-right: kbq-css-variable(size-s);
+    margin-right: var(--kbq-size-s);
 }
 
 .kbq-form-field_hint {
     display: flex;
     flex-direction: column;
-    margin-top: kbq-css-variable(form-field-hint-size-margin-top);
+    margin-top: var(--kbq-size-s);
+    gap: var(--kbq-size-xxs);
 }
 
 @include kbq-form-field-theme();

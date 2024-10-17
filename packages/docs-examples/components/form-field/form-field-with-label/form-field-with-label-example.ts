@@ -12,9 +12,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Select an option</kbq-label>
-            <kbq-select placeholder="Select an option">
-                <kbq-option value="option">Option</kbq-option>
+            <kbq-label>Label</kbq-label>
+            <kbq-select placeholder="Option">
+                <kbq-option [value]="null">None</kbq-option>
+                <kbq-option value="option1">Option 1</kbq-option>
+                <kbq-option value="option2">Option 2</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,

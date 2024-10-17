@@ -4,7 +4,7 @@
 
 -   удалена поддержка `KbqTrim`;
 -   удалена поддержка `KbqValidateDirective` директивы, вместо этого предлагается использовать `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке));
--   удалена директива `KbqFormFieldWithoutBorders`, вместо нее предлагается использовать `<kbq-form-field noBorders>` атрибут ([см.](#отключение-рамок));
+-   удалена директива `KbqFormFieldWithoutBorders`, вместо нее предлагается использовать `noBorders` атрибут ([см.](#отключение-рамок));
 -   удалена стилизация поля ввода при помощи селектора `.ng-invalid`, вместо этого предлагается использовать селектор `.kbq-form-field_invalid`, который зависит от `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке));
 
 ---
@@ -12,7 +12,7 @@
 `<kbq-form-field>` - это компонент, который используется для создания форм и полей ввода с поддержкой стилизации и дополнительных
 функций.
 
-Следующие компоненты предназначены для работы внутри `<kbq-form-field>`:
+Следующие компоненты предназначены для работы внутри `<kbq-form-field>` компонента:
 
 -   [Autocomplete](https://koobiq.io/components/autocomplete/overview);
 -   [Input](https://koobiq.io/components/input/overview);
@@ -47,18 +47,16 @@
 ### Изменение поведения отображения подсветки и сообщения об ошибке
 
 По умолчанию подсветка и сообщения об ошибках отображаются для **невалидных** полей после взаимодействия пользователя (коснулся или отправил форму)
-с элементом формы. Это поведение можно переопределить при помощи [`ErrorStateMatcher`](https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts),
+с элементом формы. Это поведение можно переопределить при помощи [ErrorStateMatcher](https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts),
 который предоставляет возможность гибко настраивать логику подсветки и отображения ошибок валидации, что позволяет
 адаптировать поведение полей ввода под конкретные требования приложения.
 
-Можно использовать один из встроенных [`ErrorStateMatcher`](<(https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts)>),
-либо написать свою собственную реализацию:
+Можно использовать один из встроенных `ErrorStateMatcher`, либо написать свою собственную реализацию:
 
 ```ts
 /**
  * Подсветит и отобразит ошибку для невалидного поля после отправки формы
- * Копия: https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts
- * @see ShowOnFormSubmitErrorStateMatcher
+ * Копия ShowOnFormSubmitErrorStateMatcher: https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts
  */
 class CustomErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -67,13 +65,13 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 }
 ```
 
-Переопределение:
+Переопределение
 
--   для определенного поля, при помощи `[errorStateMatcher]` атрибута:
+Для определенного поля, при помощи `errorStateMatcher` атрибута:
 
 <!-- example(form-field-with-custom-error-state-matcher-set-by-attribute) -->
 
--   для всех полей, при помощи _Dependency Injection_ c использованием `ErrorStateMatcher` токена:
+Для всех полей, при помощи _Dependency Injection_ c использованием `ErrorStateMatcher` токена:
 
 <!-- example(form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
 
@@ -92,13 +90,13 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 <!-- example(form-field-with-prefix-and-suffix) -->
 
-### Отключение рамок:
+### Отключение рамок
 
--   для определенного поля, при помощи `noBorders` атрибута:
+Для определенного поля, при помощи `noBorders` атрибута:
 
 <!-- example(form-field-without-borders) -->
 
--   для всех полей, при помощи _Dependency Injection_ c использованием `KBQ_FORM_FIELD_DEFAULT_OPTIONS` токена:
+Для всех полей, при помощи _Dependency Injection_ c использованием `KBQ_FORM_FIELD_DEFAULT_OPTIONS` токена:
 
 ```ts
 import { KBQ_FORM_FIELD_DEFAULT_OPTIONS, KbqFormFieldDefaultOptions } from '@koobiq/components-experimental/form-field';
@@ -123,20 +121,20 @@ import { KBQ_FORM_FIELD_DEFAULT_OPTIONS, KbqFormFieldDefaultOptions } from '@koo
 `<kbq-password-hint>` - это компонент, который используется для добавления подсказок к полю `<input kbqInputPassword />`
 внутри `<kbq-form-field>` компонента.
 
-В примере используется `PasswordValidators` - это набор статических методов для валидации пароля.
+В примере используется [PasswordValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - это набор статических методов для валидации пароля.
 
 <!-- example(form-field-password-overview) -->
 
 ### Устранение неисправностей
 
--   `Error: kbq-form-field must contain a KbqFormFieldControl`;
+#### Error: kbq-form-field must contain a KbqFormFieldControl
 
 Эта ошибка возникает, когда `<kbq-form-field>` не содержит поле формы, например: `<input kbqInput />` или его импорт `KbqInputModule`.
 
--   `Error: kbq-password-toggle should use with kbqInputPassword`;
+#### Error: kbq-password-toggle should use with kbqInputPassword
 
 Эта ошибка возникает, когда `<kbq-password-toggle>` не может найти поле `<input kbqInputPassword />` или его импорт `KbqInputModule`.
 
--   `Error: kbq-stepper should use with kbqNumberInput`;
+#### Error: kbq-stepper should use with kbqNumberInput
 
 Эта ошибка возникает, когда `<kbq-stepper>` не может найти поле `<input kbqNumberInput />` или его импорт `KbqInputModule`.

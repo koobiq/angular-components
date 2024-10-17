@@ -19,7 +19,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 [formControl]="formControl"
                 [maxlength]="maxLength"
                 kbqInput
-                placeholder="Enter the title of the article"
+                placeholder="Article title"
             />
             <kbq-hint>Max {{ maxLength }} chars ({{ count }}/{{ maxLength }})</kbq-hint>
         </kbq-form-field>

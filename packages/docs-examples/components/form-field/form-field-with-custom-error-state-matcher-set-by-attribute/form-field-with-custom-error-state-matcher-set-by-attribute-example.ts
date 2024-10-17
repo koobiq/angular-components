@@ -15,8 +15,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
 /**
  * Error state matcher that matches when a control is invalid and form is submitted.
- * Copy from: https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts
- * @see ShowOnFormSubmitErrorStateMatcher
+ * Copy ShowOnFormSubmitErrorStateMatcher: https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts
  */
 class CustomErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -55,6 +54,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             </kbq-form-field>
 
             <button
+                class="layout-margin-top-l"
                 kbq-button
                 type="submit"
             >

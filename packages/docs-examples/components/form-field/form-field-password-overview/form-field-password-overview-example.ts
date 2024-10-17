@@ -18,7 +18,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             <input
                 [formControl]="formControl"
                 [maxLength]="20"
-                placeholder="Enter your password"
+                placeholder="Password"
                 kbqInputPassword
             />
 
