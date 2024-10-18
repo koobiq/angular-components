@@ -39,7 +39,6 @@ import {
         DocExampleViewerModule,
         SidenavModule,
         NavbarModule,
-        KbqIconModule,
         KbqLinkModule
     ],
     declarations: [

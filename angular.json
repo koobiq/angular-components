@@ -1617,6 +1617,42 @@
                 }
             }
         },
+        "dev-svg-icon": {
+            "projectType": "application",
+            "root": "packages/components-dev/svg-icon",
+            "sourceRoot": "packages/components-dev/svg-icon",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/svg-icon"
+                        },
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/svg",
+                                "output": "/assets/SVGIcons"
+                            }
+                        ],
+                        "tsConfig": "packages/components-dev/svg-icon/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/svg-icon/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-svg-icon:build"
+                    }
+                }
+            }
+        },
         "dev-table": {
             "projectType": "application",
             "root": "packages/components-dev/table",
