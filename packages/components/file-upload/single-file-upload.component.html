@@ -2,7 +2,7 @@
     kbqFileDrop
     class="kbq-file-upload"
     [class.kbq-disabled]="disabled"
-    [class.kbq-error]="errors?.length"
+    [class.kbq-error]="file?.hasError"
     (filesDropped)="onFileDropped($event)"
 >
     @if (!file) {
