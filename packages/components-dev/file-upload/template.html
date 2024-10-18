@@ -64,8 +64,11 @@
                 class="layout-margin-bottom-s"
                 [formControl]="control"
             >
-                <i kbq-icon="kbq-info-circle_16"></i>
-                <span hint>test</span>
+                <i kbq-icon="kbq-file-o_16"></i>
+                <kbq-hint>Размер файла не должен быть более 5 МБ</kbq-hint>
+                @if (control.hasError('maxFileSize')) {
+                    <kbq-hint color="error">Слишком большой размер файла</kbq-hint>
+                }
             </kbq-file-upload>
 
             <kbq-file-upload [formControl]="secondControl">
@@ -87,6 +90,9 @@
                     [disabled]="disabled"
                 >
                     <i kbq-icon="kbq-info-circle_16"></i>
+                    @if (form.get('file-upload')?.hasError('maxFileSize')) {
+                        <kbq-hint color="error">Слишком большой размер файла</kbq-hint>
+                    }
                 </kbq-file-upload>
                 <button
                     kbq-button
@@ -101,30 +107,14 @@
         <div class="dev-container">
             <div class="kbq-subheading">Single file upload</div>
             <br />
-            <div class="kbq-body_strong">with customValidation</div>
-            <br />
-            <kbq-file-upload
-                [accept]="accept"
-                [customValidation]="validation"
-                [disabled]="disabled"
-            >
-                <i kbq-icon="kbq-info-circle_16"></i>
-                <span hint>test</span>
-            </kbq-file-upload>
-        </div>
-
-        <div class="dev-container">
-            <div class="kbq-subheading">Single file upload</div>
-            <br />
             <div class="kbq-body_strong">with validation outside</div>
             <br />
             <kbq-file-upload
                 [accept]="accept"
                 [disabled]="disabled"
-                [errors]="errorMessagesForSingle"
             >
                 <i kbq-icon="kbq-info-circle_16"></i>
-                <span hint>test</span>
+                <kbq-hint>{{ hintMessage }}</kbq-hint>
             </kbq-file-upload>
         </div>
     </div>
@@ -143,7 +133,7 @@
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
-                <span hint>Ctest</span>
+                <kbq-hint>{{ hintMessage }}</kbq-hint>
             </kbq-multiple-file-upload>
         </div>
 
@@ -165,7 +155,7 @@
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
-                <span hint>Ctest</span>
+                <kbq-hint>{{ hintMessage }}</kbq-hint>
             </kbq-file-upload>
         </div>
 
@@ -173,7 +163,7 @@
             custom-text
             class="dev-container"
         >
-            <div class="kbq-subheading">Multiple file with ControlValueAccessor</div>
+            <div class="kbq-subheading">Multiple file with ControlValueAccessor, overall hint error</div>
             <br />
             <kbq-file-upload
                 multiple
@@ -183,7 +173,9 @@
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
-                <span hint>Ctest</span>
+                @if (multipleFileUploadControl.hasError('maxFileSize')) {
+                    <kbq-hint color="error">Размер одного из файлов превысил лимит</kbq-hint>
+                }
             </kbq-file-upload>
         </div>
 

@@ -10,14 +10,8 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    AbstractControl,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    ValidationErrors
-} from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -35,49 +29,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
+import { maxFileExceeded, maxFileExceededFn, maxFileSize } from './validation';
 
-const maxFileExceeded = (file: File): string | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    return maxSize !== undefined && (file?.size ?? 0) > maxSize
-        ? `Размер файла превышает максимально допустимый (${maxSize / mega} МБ)`
-        : null;
-};
-
-const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    return maxSize !== undefined && ((control.value as KbqFileItem)?.file?.size ?? 0) > maxSize
-        ? { maxFileExceeded: `Размер файла превышает максимально допустимый (${maxSize / mega} МБ)` }
-        : null;
-};
-
-const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    const value: KbqFileItem[] = control.value;
-
-    const errors = value.reduce<ValidationErrors>((res, current) => {
-        // validation check & hasError set to represent error state
-        if (maxSize !== undefined && (current?.file?.size ?? 0) > maxSize) {
-            current.hasError = true;
-            res[current.file.name] =
-                `${current.file.name} — Размер файла превышает максимально допустимый (${maxSize / mega} МБ)`;
-        }
-        return res;
-    }, {});
-
-    return maxSize !== undefined && !!Object.values(errors).length ? errors : null;
-};
+const hintMessage = 'file upload hint';
 
 @Component({
     selector: 'file-upload-compact',
@@ -93,7 +47,7 @@ const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors |
             <ng-template #kbqFileIcon>
                 <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>
-            <span hint>Ctest</span>
+            <kbq-hint>{{ hintMessage }}</kbq-hint>
         </kbq-multiple-file-upload>
     `,
     providers: [
@@ -112,6 +66,8 @@ export class MultipleFileUploadCompactComponent {
     @Input() files: KbqFileItem[] = [];
     @Output() addedFile: EventEmitter<any> = new EventEmitter<any>();
 
+    hintMessage = hintMessage;
+
     addedFiles(event: KbqFileItem[]) {
         this.addedFile.emit(event);
     }
@@ -127,6 +83,7 @@ export class MultipleFileUploadCompactComponent {
 export class DemoComponent {
     disabled = false;
     validation: KbqFileValidatorFn[] = [maxFileExceeded];
+    hintMessage = hintMessage;
 
     file: KbqFileItem | null;
     files: KbqFileItem[] = [];
@@ -145,13 +102,13 @@ export class DemoComponent {
 
     formMultiple = new FormGroup(
         {
-            'file-upload': new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn)
+            'file-upload': new FormControl<FileList | KbqFileItem[]>([], maxFileSize)
         },
         { updateOn: 'submit' }
     );
 
     secondControl = new FormControl<File | KbqFileItem | null>(null);
-    multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn);
+    multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileSize);
 
     languageList = [
         { id: 'ru-RU' },
@@ -166,7 +123,7 @@ export class DemoComponent {
         private cdr: ChangeDetectorRef,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
-        this.control.valueChanges.subscribe((value: KbqFileItem | null) => {
+        this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: KbqFileItem | null) => {
             // can be used mapped file item
             // this.secondControl.setValue(value);
             // or even JS file object

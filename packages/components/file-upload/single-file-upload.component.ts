@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChildren,
     ElementRef,
     EventEmitter,
     Inject,
@@ -10,6 +11,7 @@ import {
     OnDestroy,
     Optional,
     Output,
+    QueryList,
     Renderer2,
     Self,
     ViewChild,
@@ -17,6 +19,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, FormControlStatus, NgControl } from '@angular/forms';
 import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
@@ -53,10 +56,13 @@ export class KbqSingleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     @Input() accept?: string[];
     @Input() disabled: boolean = false;
+    /**
+     * @deprecated use `FormControl.errors`
+     */
     @Input() errors: string[] = [];
     @Input() inputId: string = `kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`;
     /**
-     * Alternative for FormControl's validation
+     * @deprecated use FormControl for validation
      */
     @Input() customValidation?: KbqFileValidatorFn[];
 
@@ -78,6 +84,8 @@ export class KbqSingleFileUploadComponent
 
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
+    @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
+
     config: KbqInputFileLabel;
 
     separatedCaptionText: string[];
@@ -94,6 +102,10 @@ export class KbqSingleFileUploadComponent
 
     get acceptedFiles(): string {
         return this.accept?.join(',') || '*/*';
+    }
+
+    get hasHint(): boolean {
+        return this.hint.length > 0;
     }
 
     constructor(
@@ -181,9 +193,7 @@ export class KbqSingleFileUploadComponent
     }
 
     deleteItem(event?: MouseEvent): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         event?.stopPropagation();
         this.file = null;
@@ -223,9 +233,7 @@ export class KbqSingleFileUploadComponent
     }
 
     private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) {
-            return;
-        }
+        if (!this.customValidation?.length) return;
 
         this.errors = this.customValidation
             .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {
