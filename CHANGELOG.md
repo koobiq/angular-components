@@ -1,3 +1,12 @@
+## 18.2.1 (2024-10-18)
+
+### Koobiq
+
+ * bug fix  **docs:** Badge article typos ([#DS-3008](https://github.com/koobiq/angular-components/issues/issue/DS-3008)) ([#370](https://github.com/koobiq/angular-components/issues/370)) ([e8708f6](https://github.com/koobiq/angular-components/commit/e8708f659e4c2722e2d23e7eb7bd9aa96c35d030))
+ * bug fix  **docs:** revert constant for docs number ([15f519a](https://github.com/koobiq/angular-components/commit/15f519adb81a9c438a681caf5f74411a16a0556f))
+ * bug fix  update formatter and adapter ([#DS-2903](https://github.com/koobiq/angular-components/issues/issue/DS-2903)) ([1cb3975](https://github.com/koobiq/angular-components/commit/1cb3975ead907a50fc4d507760398a09e664ca35))
+ * feature  migrated to takeUntilDestroyed ([#DS-2784](https://github.com/koobiq/angular-components/issues/issue/DS-2784)) ([#240](https://github.com/koobiq/angular-components/issues/240)) ([d133bd9](https://github.com/koobiq/angular-components/commit/d133bd931ea067b82c0525a703e225ad6f725a3d))
+
 # 18.2.0 (2024-10-16)
 
 ### Koobiq
