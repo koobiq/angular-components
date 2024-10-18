@@ -7,7 +7,8 @@
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
-                    "style": "scss"
+                    "style": "scss",
+                    "changeDetection": "OnPush"
                 }
             },
             "root": "apps/docs",
@@ -859,6 +860,33 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "buildTarget": "dev-form-field:build"
+                    }
+                }
+            }
+        },
+        "dev-experimental-form-field": {
+            "projectType": "application",
+            "root": "packages/components-dev/experimental-form-field",
+            "sourceRoot": "packages/components-dev/experimental-form-field",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": "dist/components-dev/experimental-form-field",
+                        "tsConfig": "packages/components-dev/experimental-form-field/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "browser": "packages/components-dev/experimental-form-field/main.ts",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-experimental-form-field:build"
                     }
                 }
             }

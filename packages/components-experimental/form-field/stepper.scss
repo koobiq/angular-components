@@ -1,0 +1,23 @@
+@use '../../components/core/styles/common/tokens' as *;
+
+.kbq-stepper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .kbq-stepper_step-up,
+    .kbq-stepper_step-down {
+        cursor: pointer;
+        width: var(--kbq-form-field-size-icon-button-size);
+        text-align: center;
+    }
+
+    .kbq-stepper_step-up {
+        transform: scaleY(-1);
+    }
+
+    .kbq-icon-button.kbq-icon-button_small {
+        padding: 0;
+    }
+}

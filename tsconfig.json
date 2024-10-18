@@ -80,7 +80,8 @@
             "@koobiq/angular-moment-adapter": ["packages/angular-moment-adapter/index.ts"],
             "@koobiq/angular-luxon-adapter/adapter": ["packages/angular-luxon-adapter/adapter/index.ts"],
             "@koobiq/angular-moment-adapter/adapter": ["packages/angular-moment-adapter/adapter/index.ts"],
-            "@koobiq/cli": ["packages/cli/index.ts"]
+            "@koobiq/cli": ["packages/cli/index.ts"],
+            "@koobiq/components-experimental/form-field": ["packages/components-experimental/form-field/index.ts"]
         }
     },
     "exclude": [

@@ -7,7 +7,7 @@ export abstract class KbqFormFieldControl<T> {
     value: T | null;
 
     /**
-     * Stream that emits whenever the state of the control changes such that the parent `MсFormField`
+     * Stream that emits whenever the state of the control changes such that the parent `KbqFormField`
      * needs to run change detection.
      */
     readonly stateChanges: Observable<void>;
@@ -46,5 +46,6 @@ export abstract class KbqFormFieldControl<T> {
     /** Handles a click on the control's container. */
     abstract onContainerClick(event: MouseEvent): void;
 
-    abstract focus(): void;
+    /** Focuses the control. */
+    abstract focus(options?: FocusOptions): void;
 }

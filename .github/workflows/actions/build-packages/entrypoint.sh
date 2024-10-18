@@ -35,3 +35,7 @@ echo '::endgroup::'
 echo "::group:: Schematics ..."
     yarn run build:schematics
 echo '::endgroup::'
+
+echo "::group:: Experimental components ..."
+    yarn run build:components-experimental
+echo '::endgroup::'

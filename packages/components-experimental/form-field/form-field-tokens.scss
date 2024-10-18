@@ -1,0 +1,81 @@
+/* stylelint-disable no-unknown-custom-properties */
+
+.kbq-form-field {
+    --kbq-form-field-size-height: var(--kbq-size-3xl);
+    --kbq-form-field-size-border-width: 1px;
+    --kbq-form-field-size-border-radius: var(--kbq-size-s);
+    --kbq-form-field-size-icon-size: var(--kbq-size-l);
+    --kbq-form-field-size-icon-margin-left: var(--kbq-size-s);
+    --kbq-form-field-size-icon-margin-right: var(--kbq-size-s);
+    --kbq-form-field-size-icon-button-size: var(--kbq-size-xxl);
+    --kbq-form-field-size-icon-button-margin-right: var(--kbq-size-xxs);
+    --kbq-form-field-size-icon-button-margin-left: var(--kbq-size-xxs);
+    --kbq-form-field-font-text-font-size: var(--kbq-typography-text-normal-font-size);
+    --kbq-form-field-font-text-line-height: var(--kbq-typography-text-normal-line-height);
+    --kbq-form-field-font-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    --kbq-form-field-font-text-font-weight: var(--kbq-typography-text-normal-font-weight);
+    --kbq-form-field-font-text-font-family: var(--kbq-typography-text-normal-font-family);
+    --kbq-form-field-font-text-text-transform: var(--kbq-typography-text-normal-text-transform);
+    --kbq-form-field-font-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+    --kbq-form-field-hint-size-margin-top: var(--kbq-size-xxs);
+    --kbq-form-field-hint-size-gap: var(--kbq-size-s);
+    --kbq-form-field-hint-font-text-font-size: var(--kbq-typography-text-compact-font-size);
+    --kbq-form-field-hint-font-text-line-height: var(--kbq-typography-text-compact-line-height);
+    --kbq-form-field-hint-font-text-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
+    --kbq-form-field-hint-font-text-font-weight: var(--kbq-typography-text-compact-font-weight);
+    --kbq-form-field-hint-font-text-font-family: var(--kbq-typography-text-compact-font-family);
+    --kbq-form-field-hint-font-text-text-transform: var(--kbq-typography-text-compact-text-transform);
+    --kbq-form-field-hint-font-text-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
+}
+
+:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-form-field-default-border-color: var(--kbq-line-contrast-fade);
+    --kbq-form-field-default-background: var(--kbq-background-bg);
+    --kbq-form-field-default-placeholder: var(--kbq-foreground-contrast-tertiary);
+    --kbq-form-field-default-text: var(--kbq-foreground-contrast);
+    --kbq-form-field-states-focused-border-color: var(--kbq-states-line-focus-theme);
+    --kbq-form-field-states-focused-background: var(--kbq-background-bg);
+    --kbq-form-field-states-focused-placeholder: var(--kbq-foreground-contrast-tertiary);
+    --kbq-form-field-states-focused-text: var(--kbq-foreground-contrast);
+    --kbq-form-field-states-focused-focus-outline: var(--kbq-states-line-focus-theme);
+    --kbq-form-field-states-error-border-color: var(--kbq-line-error);
+    --kbq-form-field-states-error-background: var(--kbq-states-background-error-less);
+    --kbq-form-field-states-error-placeholder: var(--kbq-foreground-error-tertiary);
+    --kbq-form-field-states-error-text: var(--kbq-foreground-error);
+    --kbq-form-field-states-error-focused-focus-outline: var(--kbq-states-line-focus-error);
+    --kbq-form-field-states-autofill-border-color: var(--kbq-states-line-focus-theme);
+    --kbq-form-field-states-autofill-background: var(--kbq-background-theme-fade);
+    --kbq-form-field-states-autofill-placeholder: var(--kbq-foreground-contrast-tertiary);
+    --kbq-form-field-states-autofill-text: var(--kbq-foreground-contrast);
+    --kbq-form-field-states-disabled-border-color: var(--kbq-states-line-disabled);
+    --kbq-form-field-states-disabled-background: var(--kbq-states-background-disabled);
+    --kbq-form-field-states-disabled-placeholder: var(--kbq-states-foreground-disabled);
+    --kbq-form-field-states-disabled-text: var(--kbq-states-foreground-disabled);
+    --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
+}
+
+:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    --kbq-form-field-default-border-color: var(--kbq-line-contrast-fade);
+    --kbq-form-field-default-background: var(--kbq-background-bg);
+    --kbq-form-field-default-placeholder: var(--kbq-foreground-contrast-tertiary);
+    --kbq-form-field-default-text: var(--kbq-foreground-contrast);
+    --kbq-form-field-states-focused-border-color: var(--kbq-states-line-focus-theme);
+    --kbq-form-field-states-focused-background: var(--kbq-background-bg);
+    --kbq-form-field-states-focused-placeholder: var(--kbq-foreground-contrast-tertiary);
+    --kbq-form-field-states-focused-text: var(--kbq-foreground-contrast);
+    --kbq-form-field-states-focused-focus-outline: var(--kbq-states-line-focus-theme);
+    --kbq-form-field-states-error-border-color: var(--kbq-line-error);
+    --kbq-form-field-states-error-background: var(--kbq-states-background-error-less);
+    --kbq-form-field-states-error-placeholder: var(--kbq-foreground-error-tertiary);
+    --kbq-form-field-states-error-text: var(--kbq-foreground-error);
+    --kbq-form-field-states-error-focused-focus-outline: var(--kbq-states-line-focus-error);
+    --kbq-form-field-states-autofill-border-color: var(--kbq-states-line-focus-theme);
+    --kbq-form-field-states-autofill-background: var(--kbq-background-theme-fade);
+    --kbq-form-field-states-autofill-placeholder: var(--kbq-foreground-contrast-tertiary);
+    --kbq-form-field-states-autofill-text: var(--kbq-foreground-contrast);
+    --kbq-form-field-states-disabled-border-color: var(--kbq-states-line-disabled);
+    --kbq-form-field-states-disabled-background: var(--kbq-states-background-disabled);
+    --kbq-form-field-states-disabled-placeholder: var(--kbq-states-foreground-disabled);
+    --kbq-form-field-states-disabled-text: var(--kbq-states-foreground-disabled);
+    --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
+}

@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AbstractControl } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
@@ -50,7 +51,7 @@ import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { Type } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
+import { ValidatorFn } from '@angular/forms';
 import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
@@ -249,7 +250,7 @@ export const enUSLocaleData: {
 // @public
 export class ErrorStateMatcher {
     // (undocumented)
-    isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<ErrorStateMatcher, never>;
     // (undocumented)
@@ -407,9 +408,6 @@ export const faIRLocaleData: {
         };
     };
 };
-
-// @public
-export type FloatLabelType = 'always' | 'never' | 'auto';
 
 // @public (undocumented)
 export const formatDataSize: (value: number, precision: number, system: any) => {
@@ -873,9 +871,6 @@ export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 // @public
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
 
-// @public
-export const KBQ_LABEL_GLOBAL_OPTIONS: InjectionToken<LabelOptions>;
-
 // @public (undocumented)
 export const KBQ_LOCALE_DATA: InjectionToken<any>;
 
@@ -939,7 +934,7 @@ export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: {
 // @public (undocumented)
 export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
 
 // @public
@@ -1067,7 +1062,7 @@ export interface KbqFormFieldRef {
     control: any;
     // (undocumented)
     focusViaKeyboard(): void;
-    // (undocumented)
+    // @deprecated
     shouldForward(str: string): boolean;
 }
 
@@ -1719,11 +1714,6 @@ export interface KeyboardNavigationHandler {
     scrollActiveOptionIntoView(): void;
 }
 
-// @public
-export interface LabelOptions {
-    float?: FloatLabelType;
-}
-
 // @public (undocumented)
 export const LEFT_BOTTOM_POSITION_PRIORITY: ConnectionPositionPair[];
 
@@ -1767,6 +1757,16 @@ export enum MultipleMode {
 
 // @public (undocumented)
 export const NUMBER_FORMAT_REGEXP: RegExp;
+
+// @public
+export class PasswordValidators {
+    static maxLength(max: number): ValidatorFn;
+    static minLength(min: number): ValidatorFn;
+    static minLowercase(min: number): ValidatorFn;
+    static minNumber(min: number): ValidatorFn;
+    static minSpecial(min: number): ValidatorFn;
+    static minUppercase(min: number): ValidatorFn;
+}
 
 // @public (undocumented)
 export enum PopUpPlacements {
@@ -2124,13 +2124,23 @@ export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 export const selectEvents = "selectEvents";
 
 // @public
-export class ShowOnDirtyErrorStateMatcher implements ErrorStateMatcher {
+export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
     // (undocumented)
-    isErrorState(control: UntypedFormControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnDirtyErrorStateMatcher, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnControlDirtyErrorStateMatcher, never>;
     // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnDirtyErrorStateMatcher>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnControlDirtyErrorStateMatcher>;
+}
+
+// @public
+export class ShowOnFormSubmitErrorStateMatcher implements ErrorStateMatcher {
+    // (undocumented)
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<ShowOnFormSubmitErrorStateMatcher, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<ShowOnFormSubmitErrorStateMatcher>;
 }
 
 // @public (undocumented)
