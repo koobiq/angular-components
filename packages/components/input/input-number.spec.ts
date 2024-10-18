@@ -181,6 +181,30 @@ class KbqNumberInputWithMask {
     constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
 }
 
+@Component({
+    template: `
+        <kbq-form-field>
+            <input
+                [(ngModel)]="value"
+                [step]="step"
+                [bigStep]="bigStep"
+                [integer]="true"
+                kbqNumberInput
+            />
+            <kbq-stepper />
+        </kbq-form-field>
+    `
+})
+class KbqNumberInputWithInteger {
+    value: number | null = null;
+    step: number = 1;
+    bigStep: number = 5;
+
+    @ViewChild(KbqNumberInput) inputNumberDirective: KbqNumberInput;
+
+    constructor(@Optional() @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService) {}
+}
+
 describe('KbqNumberInput', () => {
     it('should have stepper on focus', fakeAsync(() => {
         const fixture = createComponent(KbqNumberInputTestComponent);
@@ -1060,6 +1084,36 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('1 234 567,89');
+        }));
+    });
+
+    describe('with [integer]="true"', () => {
+        let fixture: ComponentFixture<KbqNumberInputWithInteger>;
+        let inputElementDebug: DebugElement;
+        let inputElement: HTMLInputElement;
+
+        beforeEach(() => {
+            fixture = createComponent(KbqNumberInputWithInteger);
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+            inputElement = inputElementDebug.nativeElement;
+        });
+
+        it('should paste only integer part and normalize number in different locale', fakeAsync(() => {
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            flush();
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '1.234.567,89'
+                }
+            });
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toBe('1 234 567');
         }));
     });
 });

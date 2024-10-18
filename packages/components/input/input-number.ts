@@ -14,9 +14,7 @@ import {
 } from '@angular/core';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
-    A,
     BACKSPACE,
-    C,
     DASH,
     DELETE,
     DOWN_ARROW,
@@ -25,9 +23,11 @@ import {
     ESCAPE,
     FF_MINUS,
     HOME,
+    isCopy,
     isFunctionKey,
     isNumberKey,
     isNumpadKey,
+    isSelectAll,
     LEFT_ARROW,
     NUMPAD_MINUS,
     RIGHT_ARROW,
@@ -118,6 +118,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     controlType?: string | undefined;
 
     @Input()
+    integer: boolean = false;
+
+    @Input()
     bigStep: number;
 
     @Input()
@@ -193,6 +196,14 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     get ngControl(): any {
         return this.control;
+    }
+
+    get fractionSeparator() {
+        return this.numberLocaleConfig.fractionSeparator;
+    }
+
+    get groupSeparator() {
+        return this.numberLocaleConfig.groupSeparator;
     }
 
     private control: AbstractControl;
@@ -287,47 +298,31 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
-
-        const isCtrlA = (e) => e.keyCode === A && (e.ctrlKey || e.metaKey);
-        const isCtrlC = (e) => e.keyCode === C && (e.ctrlKey || e.metaKey);
-        const isCtrlV = (e) => e.keyCode === V && (e.ctrlKey || e.metaKey);
-        const isCtrlX = (e) => e.keyCode === X && (e.ctrlKey || e.metaKey);
-        const isCtrlZ = (e) => e.keyCode === Z && (e.ctrlKey || e.metaKey);
-
-        const isPeriod = (e) =>
-            this.numberLocaleConfig.groupSeparator.includes(e.key) ||
-            [this.numberLocaleConfig.fractionSeparator, '.'].includes(e.key);
-
         const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
         const serviceKeys = [DELETE, BACKSPACE, TAB, ESCAPE, ENTER];
         const arrows = [LEFT_ARROW, RIGHT_ARROW];
         const allowedKeys = [HOME, END].concat(arrows).concat(serviceKeys).concat(minuses);
 
-        if (minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0)) {
+        if (
+            (this.integer && this.isPeriod(event)) ||
+            (minuses.includes(keyCode) && (this.viewValue.includes(event.key) || this.min >= 0)) ||
+            (this.isPeriod(event) &&
+                event.key === this.fractionSeparator &&
+                this.viewValue.indexOf(this.fractionSeparator) !== -1)
+        ) {
             event.preventDefault();
 
             return;
         }
 
-        if (isPeriod(event)) {
-            if (
-                event.key === this.numberLocaleConfig.fractionSeparator &&
-                this.viewValue.indexOf(this.numberLocaleConfig.fractionSeparator) !== -1
-            ) {
-                event.preventDefault();
-
-                return;
-            }
-        }
-
         if (allowedKeys.indexOf(keyCode) !== -1 || [
-                isCtrlA,
-                isCtrlC,
-                isCtrlV,
-                isCtrlX,
-                isCtrlZ,
+                isSelectAll,
+                isCopy,
+                this.isCtrlV,
+                this.isCtrlX,
+                this.isCtrlZ,
                 isFunctionKey,
-                isPeriod
+                this.isPeriod
             ].some((fn) => fn(event))) {
             // let it happen, don't do anything
             return;
@@ -383,8 +378,16 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     onPaste(event: ClipboardEvent) {
         this.valueFromPaste = this.checkAndNormalizeLocalizedNumber(event.clipboardData?.getData('text'));
+
         if (this.valueFromPaste === null) {
             event.preventDefault();
+        } else if (this.integer && isFloat(this.valueFromPaste.toString())) {
+            event.preventDefault();
+
+            const parsedValue = Number.parseInt(this.valueFromPaste.toString());
+
+            this.setViewValue(this.formatNumber(parsedValue));
+            this.viewToModelUpdate(parsedValue.toString());
         }
     }
 
@@ -411,6 +414,22 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         this.cvaOnChange(res);
         this.valueChange.emit(res);
     }
+
+    private isCtrlV = (event: KeyboardEvent) => {
+        return event.keyCode === V && (event.ctrlKey || event.metaKey);
+    };
+
+    private isCtrlX = (event: KeyboardEvent) => {
+        return event.keyCode === X && (event.ctrlKey || event.metaKey);
+    };
+
+    private isCtrlZ = (event: KeyboardEvent) => {
+        return event.keyCode === Z && (event.ctrlKey || event.metaKey);
+    };
+
+    private isPeriod = (event: KeyboardEvent) => {
+        return this.groupSeparator.includes(event.key) || [this.fractionSeparator, '.'].includes(event.key);
+    };
 
     private cvaOnChange: (value: any) => void = () => {};
 
@@ -443,9 +462,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         }
 
         const separator =
-            this.numberLocaleConfig.groupSeparator.includes(' ') && this.numberLocaleConfig.fractionSeparator === ','
-                ? /[,.]/
-                : this.numberLocaleConfig.fractionSeparator;
+            this.groupSeparator.includes(' ') && this.fractionSeparator === ',' ? /[,.]/ : this.fractionSeparator;
 
         const [intPart, fractionPart] = this.viewValue
             .split(separator)
@@ -455,9 +472,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     private formatNumber(value: number | null | undefined): string | null {
-        if (value === null || value === undefined) {
-            return null;
-        }
+        if (value === null || value === undefined) return null;
 
         const [intPart, fractionPart] = value.toString().split('.');
 
@@ -484,7 +499,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
         return formattedFractionPart === undefined
             ? formatter.format(intPart)
-            : `${formatter.format(intPart)}${this.numberLocaleConfig.fractionSeparator}${formattedFractionPart}`;
+            : `${formatter.format(intPart)}${this.fractionSeparator}${formattedFractionPart}`;
     }
 
     /**
