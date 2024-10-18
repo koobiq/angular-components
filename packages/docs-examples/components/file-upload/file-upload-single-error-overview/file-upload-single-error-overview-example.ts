@@ -1,26 +1,53 @@
 import { Component } from '@angular/core';
-import { KbqFileItem } from '@koobiq/components/file-upload';
+import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 
 /**
  * @title file upload single error overview
  */
 @Component({
+    standalone: true,
     selector: 'file-upload-single-error-overview-example',
-    templateUrl: 'file-upload-single-error-overview-example.html',
-    styleUrls: ['file-upload-single-error-overview-example.css']
+    template: `
+        <kbq-single-file-upload
+            [file]="file"
+            (fileQueueChange)="onChange($event)"
+            inputId="file-upload-single-error-overview"
+        >
+            @if (!errors.length) {
+                <i kbq-icon="kbq-file-o_16"></i>
+            }
+            @if (errors.length) {
+                <i kbq-icon="kbq-exclamation-triangle_16"></i>
+            }
+            <kbq-hint>Максимальный размер файла 5 МБ</kbq-hint>
+            @for (error of errors; track error) {
+                <kbq-hint color="error">{{ error }}</kbq-hint>
+            }
+        </kbq-single-file-upload>
+    `,
+    imports: [
+        KbqFileUploadModule,
+        KbqFormFieldModule
+    ]
 })
 export class FileUploadSingleErrorOverviewExample {
     errors: string[] = [];
+    file: KbqFileItem | null;
 
     onChange(fileItem: KbqFileItem | null): void {
+        this.file = fileItem;
         const someValidationLogic = (): string | null => {
             return 'Не удалось загрузить файл по неизвестным причинам';
         };
 
-        if (fileItem) {
-            this.errors = [
-                someValidationLogic() || ''
-            ].filter(Boolean);
+        if (this.file) {
+            this.errors = [someValidationLogic() || ''].filter(Boolean);
+            if (this.errors.length) {
+                this.file = { ...this.file, hasError: true };
+            }
+        } else {
+            this.errors = [];
         }
     }
 }

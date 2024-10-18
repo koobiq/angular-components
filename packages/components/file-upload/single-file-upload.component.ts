@@ -92,12 +92,14 @@ export class KbqSingleFileUploadComponent
 
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
-    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
-
+    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     * @docs-private
+     */
     cvaOnChange = (_: KbqFileItem | null) => {};
 
-    /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-
+    /** onTouch function registered via registerOnTouch (ControlValueAccessor).
+     * @docs-private
+     */
     onTouched = () => {};
 
     get acceptedFiles(): string {

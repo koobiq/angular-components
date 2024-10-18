@@ -6,6 +6,16 @@
 
 <!-- example(file-upload-indeterminate-loading-overview) -->
 
-Пример использования с Control Value Accessor:
+Простой пример использования Control Value Accessor:
 
 <!-- example(file-upload-cva-overview) -->
+
+### Валидация (дополнительные примеры)
+
+Пример загрузки одного файла и валидации с помощью Reactive Forms.
+
+<!-- example(file-upload-single-validation-reactive-forms-overview) -->
+
+Пример загрузки нескольких файлов и валидации с помощью Reactive Forms.
+
+<!-- example(file-upload-multiple-default-validation-reactive-forms-overview) -->
