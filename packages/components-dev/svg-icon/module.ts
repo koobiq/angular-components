@@ -1,7 +1,7 @@
+import { HttpClientModule } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqSvgIconModule } from '../../components/svg-icon';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
     selector: 'app',
