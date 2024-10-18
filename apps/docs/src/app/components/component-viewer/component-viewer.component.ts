@@ -27,7 +27,8 @@ import { DocStates } from '../doс-states';
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],
     host: {
-        class: 'docs-component-viewer kbq-scrollbar'
+        class: 'docs-component-viewer kbq-scrollbar',
+        '[attr.data-docsearch-category]': 'docCategoryName'
     },
     encapsulation: ViewEncapsulation.None
 })
