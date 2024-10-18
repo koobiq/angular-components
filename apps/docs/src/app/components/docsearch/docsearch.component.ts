@@ -5,12 +5,14 @@ import { UAParser } from 'ua-parser-js';
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
 const DOCSEARCH_COMPONENT_SELECTOR = 'docs-docsearch';
+const HOST = 'koobiq.io';
+const PROTOCOL = 'https:';
 
+/** Algolia DocSearch component implementation */
 @Component({
     standalone: true,
     selector: DOCSEARCH_COMPONENT_SELECTOR,
     template: '',
-    styleUrl: './docsearch.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsearchComponent {
@@ -29,7 +31,7 @@ export class DocsearchComponent {
     };
 
     /** should transform item URL to work docsearch on DEV stand */
-    private readonly shouldTransformItemURL = location.host !== 'koobiq.io' || location.protocol !== 'https:';
+    private readonly shouldTransformItemURL = location.host !== HOST || location.protocol !== PROTOCOL;
 
     constructor() {
         afterNextRender(() => {
@@ -48,8 +50,8 @@ export class DocsearchComponent {
     private readonly transformItems: _DocSearchProps['transformItems'] = (items) => {
         if (this.shouldTransformItemURL) {
             items = items.map((item) => {
-                item.url = item.url.replace('koobiq.io', location.host);
-                item.url = item.url.replace('https:', location.protocol);
+                item.url = item.url.replace(HOST, location.host);
+                item.url = item.url.replace(PROTOCOL, location.protocol);
                 return item;
             });
         }

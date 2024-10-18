@@ -1,9 +1,6 @@
 import { Component } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DocsearchComponent } from './docsearch.component';
-
-const DOCSEARCH_BUTTON_SELECTOR = 'DocSearch-Button';
-const DOCSEARCH_MODAL_SELECTOR = 'DocSearch-Modal';
 
 @Component({
     selector: 'test-app',
@@ -13,27 +10,29 @@ const DOCSEARCH_MODAL_SELECTOR = 'DocSearch-Modal';
 })
 class TestApp {}
 
+const render = async (): Promise<ComponentFixture<TestApp>> => {
+    await TestBed.configureTestingModule({ imports: [TestApp] }).compileComponents();
+    const fixture = TestBed.createComponent(TestApp);
+    fixture.autoDetectChanges();
+    return fixture;
+};
+
 const getDocsearchButton = (): HTMLButtonElement => {
-    return document.getElementsByClassName(DOCSEARCH_BUTTON_SELECTOR)[0] as HTMLButtonElement;
+    return document.getElementsByClassName('DocSearch-Button')[0] as HTMLButtonElement;
 };
 
 const getDocsearchModal = (): HTMLDivElement => {
-    return document.getElementsByClassName(DOCSEARCH_MODAL_SELECTOR)[0] as HTMLDivElement;
+    return document.getElementsByClassName('DocSearch-Modal')[0] as HTMLDivElement;
 };
 
 describe(DocsearchComponent.name, () => {
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            imports: [TestApp]
-        }).compileComponents();
-        TestBed.createComponent(TestApp);
-    });
-
-    it(`should render "${DOCSEARCH_BUTTON_SELECTOR}"`, () => {
+    it(`should render docsearch button`, async () => {
+        await render();
         expect(getDocsearchButton()).toBeInstanceOf(HTMLButtonElement);
     });
 
-    it(`should open "${DOCSEARCH_MODAL_SELECTOR}" on "${DOCSEARCH_BUTTON_SELECTOR}" click`, () => {
+    it(`should open docsearch modal`, async () => {
+        await render();
         expect(getDocsearchModal()).toBeUndefined();
         getDocsearchButton().click();
         expect(getDocsearchModal()).toBeInstanceOf(HTMLDivElement);
