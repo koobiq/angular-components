@@ -1,6 +1,15 @@
-:host {
+@use 'sass:meta';
+@use 'sass:map';
+
+@use './svg-icon-theme' as *;
+
+.kbq-svg-icon {
     display: inline-block;
-    width: var(--kbq-icon__size);
-    height: var(--kbq-icon__size);
-    overflow: hidden;
+    font-style: normal;
+
+    svg {
+        display: block !important;
+    }
 }
+
+@include kbq-svg-icon-theme();

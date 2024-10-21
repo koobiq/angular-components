@@ -1,1 +1,29 @@
-// no styles
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-svg-icon-theme() {
+    .kbq-svg-icon:not(.kbq-icon-button, .kbq-icon-item) {
+        &.kbq-theme svg path {
+            fill: var(--kbq-icon-theme-color);
+        }
+
+        &.kbq-contrast svg path {
+            fill: var(--kbq-icon-contrast-color);
+        }
+
+        &.kbq-contrast-fade svg path {
+            fill: var(--kbq-icon-fade-contrast-color);
+        }
+
+        &.kbq-error svg path {
+            fill: var(--kbq-icon-error-color);
+        }
+
+        &.kbq-warning svg path {
+            fill: var(--kbq-icon-warning-color);
+        }
+
+        &.kbq-success svg path {
+            fill: var(--kbq-icon-success-color);
+        }
+    }
+}

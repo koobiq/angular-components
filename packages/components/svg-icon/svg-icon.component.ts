@@ -10,11 +10,14 @@ import {
     KeyValueDiffers,
     OnDestroy,
     Renderer2,
-    signal
+    signal,
+    ViewEncapsulation
 } from '@angular/core';
 
 import { Subscription } from 'rxjs';
 
+import { CanColor } from '@koobiq/components/core';
+import { KbqIconMixinBase } from '@koobiq/components/icon';
 import { KbqSvgIconRegistryService } from './svg-icon-registry.service';
 
 class KbqSvgIconHelper {
@@ -28,9 +31,15 @@ class KbqSvgIconHelper {
     standalone: true,
     selector: '[kbq-svg-icon]',
     template: '<ng-content />',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: ['svg-icon.scss'],
+    inputs: ['color'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    host: {
+        class: 'kbq-svg-icon'
+    }
 })
-export class KbqSvgIconComponent implements OnDestroy {
+export class KbqSvgIconComponent extends KbqIconMixinBase implements CanColor, OnDestroy {
     private element = inject(ElementRef);
     private differs = inject(KeyValueDiffers);
     private renderer = inject(Renderer2);
@@ -51,7 +60,9 @@ export class KbqSvgIconComponent implements OnDestroy {
 
     private helper = new KbqSvgIconHelper();
 
-    constructor() {
+    constructor(elementRef: ElementRef) {
+        super(elementRef);
+
         // Watch for src or name changes
         effect(
             () => {

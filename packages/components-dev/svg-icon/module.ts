@@ -2,6 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { KbqSvgIconModule } from '../../components/svg-icon';
+import { KbqComponentColors } from '@koobiq/components/core';
 
 @Component({
     selector: 'app',
@@ -10,7 +11,9 @@ import { KbqSvgIconModule } from '../../components/svg-icon';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {}
+export class DemoComponent {
+    protected readonly colors = KbqComponentColors;
+}
 
 @NgModule({
     declarations: [DemoComponent],
