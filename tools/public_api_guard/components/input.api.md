@@ -5,7 +5,6 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
-import { AfterContentInit } from '@angular/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CanUpdateErrorStateCtor } from '@koobiq/components/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -50,6 +49,9 @@ export function isFloat(value: string): boolean;
 
 // @public (undocumented)
 export function isInt(value: string): boolean;
+
+// @public (undocumented)
+export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: any;
 
 // @public (undocumented)
 export const KBQ_INPUT_VALUE_ACCESSOR: InjectionToken<{
@@ -202,8 +204,8 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
 }
 
 // @public (undocumented)
-export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, OnDestroy {
-    constructor(elementRef: ElementRef, renderer: Renderer2, step: string, bigStep: string, min: string, max: string, localeService: KbqLocaleService);
+export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
+    constructor(elementRef: ElementRef, renderer: Renderer2, step: string, bigStep: string, min: string, max: string, localeService?: KbqLocaleService | undefined);
     // (undocumented)
     bigStep: number;
     // (undocumented)
@@ -239,8 +241,6 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     static ngAcceptInputType_integer: unknown;
     // (undocumented)
     static ngAcceptInputType_withThousandSeparator: unknown;
-    // (undocumented)
-    ngAfterContentInit(): void;
     // (undocumented)
     get ngControl(): any;
     // (undocumented)
