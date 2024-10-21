@@ -188,6 +188,7 @@ const animations = [
 ];
 
 @Component({
+    selector: 'docs-cdk-overview',
     templateUrl: './component-overview.template.html',
     host: {
         class: 'component-overview',
@@ -218,6 +219,7 @@ export class CdkOverviewComponent extends BaseOverviewComponent {
 }
 
 @Component({
+    selector: 'docs-component-overview',
     templateUrl: './component-overview.template.html',
     host: {
         class: 'component-overview',
@@ -248,6 +250,7 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
 }
 
 @Component({
+    selector: 'docs-component-api',
     templateUrl: './component-overview.template.html',
     host: {
         class: 'component-overview',
@@ -278,6 +281,7 @@ export class ComponentApiComponent extends BaseOverviewComponent {
 }
 
 @Component({
+    selector: 'docs-cdk-api',
     templateUrl: './component-overview.template.html',
     host: {
         class: 'component-overview',
@@ -308,6 +312,7 @@ export class CdkApiComponent extends BaseOverviewComponent {
 }
 
 @Component({
+    selector: 'docs-component-example',
     templateUrl: 'component-example.template.html',
     host: {
         class: 'component-overview',
