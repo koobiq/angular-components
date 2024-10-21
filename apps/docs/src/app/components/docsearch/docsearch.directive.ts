@@ -1,21 +1,21 @@
-import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
+import { afterNextRender, Directive } from '@angular/core';
 import docsearch from '@docsearch/js';
 import { UAParser } from 'ua-parser-js';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
-const DOCSEARCH_COMPONENT_SELECTOR = 'docs-docsearch';
+const SELECTOR = 'docs-docsearch';
+const HOST = 'koobiq.io';
+const PROTOCOL = 'https:';
 
-@Component({
+/** Algolia DocSearch component implementation */
+@Directive({
     standalone: true,
-    selector: DOCSEARCH_COMPONENT_SELECTOR,
-    template: '',
-    styleUrl: './docsearch.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: SELECTOR
 })
-export class DocsearchComponent {
+export class DocsearchDirective {
     private readonly DOCSEARCH_CONFIG: _DocSearchProps = {
-        container: DOCSEARCH_COMPONENT_SELECTOR,
+        container: SELECTOR,
         appId: '7N2W9AKEM6',
         apiKey: '0f0df042e7b349df5cb381e72f268b4d',
         indexName: 'koobiq',
@@ -29,7 +29,7 @@ export class DocsearchComponent {
     };
 
     /** should transform item URL to work docsearch on DEV stand */
-    private readonly shouldTransformItemURL = location.host !== 'koobiq.io' || location.protocol !== 'https:';
+    private readonly shouldTransformItemURL = location.host !== HOST || location.protocol !== PROTOCOL;
 
     constructor() {
         afterNextRender(() => {
@@ -48,8 +48,8 @@ export class DocsearchComponent {
     private readonly transformItems: _DocSearchProps['transformItems'] = (items) => {
         if (this.shouldTransformItemURL) {
             items = items.map((item) => {
-                item.url = item.url.replace('koobiq.io', location.host);
-                item.url = item.url.replace('https:', location.protocol);
+                item.url = item.url.replace(HOST, location.host);
+                item.url = item.url.replace(PROTOCOL, location.protocol);
                 return item;
             });
         }

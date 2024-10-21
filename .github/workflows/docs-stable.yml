@@ -26,3 +26,13 @@ jobs:
 
       - name: Deploy
         run: npx firebase deploy --only hosting:stable --token=${{ secrets.FIREBASE_DEPLOY_TOKEN }}
+
+      - name: Algolia DocSearch Crawler
+        uses: algolia/algoliasearch-crawler-github-actions@v1.1.12
+        id: algolia_docsearch_crawler
+        with:
+          crawler-user-id: ${{ secrets.ALGOLIA_DOCSEARCH_CRAWLER_USER_ID }}
+          crawler-api-key: ${{ secrets.ALGOLIA_DOCSEARCH_CRAWLER_API_KEY }}
+          algolia-app-id: 7N2W9AKEM6
+          algolia-api-key: ${{ secrets.ALGOLIA_DOCSEARCH_API_KEY }}
+          site-url: 'https://koobiq.io'

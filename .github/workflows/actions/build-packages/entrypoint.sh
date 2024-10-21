@@ -25,7 +25,7 @@ echo "::group:: Moment Adapter ..."
 echo '::endgroup::'
 
 echo "::group:: SCSS Styles ..."
-    yarn run styles:built-all
+    yarn run styles:build-all
 echo '::endgroup::'
 
 echo "::group:: CLI ..."
