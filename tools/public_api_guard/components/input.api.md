@@ -223,12 +223,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     focused: boolean;
     // (undocumented)
-    get fractionSeparator(): string;
+    protected get fractionSeparator(): string;
     // (undocumented)
-    get groupSeparator(): string[];
+    protected get groupSeparator(): string[];
     // (undocumented)
     id: string;
-    // (undocumented)
     integer: boolean;
     // (undocumented)
     max: number;
@@ -236,6 +235,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     min: number;
     // (undocumented)
     get nativeElement(): HTMLInputElement;
+    // (undocumented)
+    static ngAcceptInputType_integer: unknown;
+    // (undocumented)
+    static ngAcceptInputType_withThousandSeparator: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
