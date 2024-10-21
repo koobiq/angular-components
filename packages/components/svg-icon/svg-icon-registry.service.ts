@@ -41,7 +41,7 @@ export class KbqSvgIconRegistryService {
         } else if (this.iconsLoadingByUrl.has(name)) {
             return this.iconsLoadingByUrl.get(name);
         }
-        const o = this.loader.getSvg(url).pipe(
+        const o = this.loader.getSvg('assets/SVGIcons/' + url).pipe(
             map((svg) => {
                 const div = this.document.createElement('DIV');
                 div.innerHTML = svg;

@@ -1,14 +1,15 @@
 import { ModuleWithProviders, NgModule, Provider, makeEnvironmentProviders } from '@angular/core';
 
+import { KbqSvgIconItem } from './svg-icon-item.component';
 import { KBQ_SVG_ICON_REGISTRY_PROVIDER } from './svg-icon-registry.service';
-import { KbqSvgIconComponent } from './svg-icon.component';
+import { KbqSvgIcon } from './svg-icon.component';
 import { KbqSvgHttpLoader, KbqSvgLoader } from './svg-loader';
 
-export interface KbqSvgIcon {
+export interface KbqSvgIconInterface {
     loader?: Provider;
 }
 
-export function provideKbqSvgIcon(config: KbqSvgIcon = {}) {
+export function provideKbqSvgIcon(config: KbqSvgIconInterface = {}) {
     return makeEnvironmentProviders([
         KBQ_SVG_ICON_REGISTRY_PROVIDER,
         config.loader || { provide: KbqSvgLoader, useClass: KbqSvgHttpLoader }]);
@@ -16,12 +17,13 @@ export function provideKbqSvgIcon(config: KbqSvgIcon = {}) {
 
 @NgModule({
     imports: [
-        KbqSvgIconComponent
+        KbqSvgIcon,
+        KbqSvgIconItem
     ],
-    exports: [KbqSvgIconComponent]
+    exports: [KbqSvgIcon, KbqSvgIconItem]
 })
 export class KbqSvgIconModule {
-    static forRoot(config: KbqSvgIcon = {}): ModuleWithProviders<KbqSvgIconModule> {
+    static forRoot(config: KbqSvgIconInterface = {}): ModuleWithProviders<KbqSvgIconModule> {
         return {
             ngModule: KbqSvgIconModule,
             providers: [

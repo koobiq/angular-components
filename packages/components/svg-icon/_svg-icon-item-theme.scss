@@ -1,0 +1,62 @@
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-svg-icon-item-style($type, $style-name) {
+    $base: icon-item-filled-#{$type}-#{$style-name};
+
+    background: var(--kbq-#{$base}-background);
+
+    svg path {
+        fill: var(--kbq-#{$base}-color);
+    }
+}
+
+@mixin kbq-svg-icon-item-theme() {
+    .kbq-svg-icon-item {
+        &.kbq-svg-icon-item_fade-off {
+            &.kbq-theme {
+                @include kbq-svg-icon-item-style(fade-off, theme);
+            }
+
+            &.kbq-contrast {
+                @include kbq-svg-icon-item-style(fade-off, contrast);
+            }
+
+            &.kbq-error {
+                @include kbq-svg-icon-item-style(fade-off, error);
+            }
+
+            &.kbq-warning {
+                @include kbq-svg-icon-item-style(fade-off, warning);
+            }
+
+            &.kbq-success {
+                @include kbq-svg-icon-item-style(fade-off, success);
+            }
+        }
+
+        &.kbq-svg-icon-item_fade-on {
+            &.kbq-theme {
+                @include kbq-svg-icon-item-style(fade-on, theme);
+            }
+
+            &.kbq-contrast {
+                @include kbq-svg-icon-item-style(fade-on, contrast);
+            }
+
+            &.kbq-error {
+                @include kbq-svg-icon-item-style(fade-on, error);
+            }
+
+            &.kbq-warning {
+                @include kbq-svg-icon-item-style(fade-on, warning);
+            }
+
+            &.kbq-success {
+                @include kbq-svg-icon-item-style(fade-on, success);
+            }
+        }
+    }
+}

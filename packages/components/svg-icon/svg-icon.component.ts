@@ -1,14 +1,17 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     effect,
     ElementRef,
+    Inject,
     inject,
     input,
     KeyValueChanges,
     KeyValueDiffer,
     KeyValueDiffers,
     OnDestroy,
+    Optional,
     Renderer2,
     signal,
     ViewEncapsulation
@@ -16,7 +19,7 @@ import {
 
 import { Subscription } from 'rxjs';
 
-import { CanColor } from '@koobiq/components/core';
+import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '@koobiq/components/core';
 import { KbqIconMixinBase } from '@koobiq/components/icon';
 import { KbqSvgIconRegistryService } from './svg-icon-registry.service';
 
@@ -39,7 +42,7 @@ class KbqSvgIconHelper {
         class: 'kbq-svg-icon'
     }
 })
-export class KbqSvgIconComponent extends KbqIconMixinBase implements CanColor, OnDestroy {
+export class KbqSvgIcon extends KbqIconMixinBase implements CanColor, OnDestroy {
     private element = inject(ElementRef);
     private differs = inject(KeyValueDiffers);
     private renderer = inject(Renderer2);
@@ -60,7 +63,11 @@ export class KbqSvgIconComponent extends KbqIconMixinBase implements CanColor, O
 
     private helper = new KbqSvgIconHelper();
 
-    constructor(elementRef: ElementRef) {
+    constructor(
+        elementRef: ElementRef,
+        @Optional() @Inject(KBQ_FORM_FIELD_REF) protected formField: KbqFormFieldRef,
+        protected changeDetectorRef: ChangeDetectorRef
+    ) {
         super(elementRef);
 
         // Watch for src or name changes

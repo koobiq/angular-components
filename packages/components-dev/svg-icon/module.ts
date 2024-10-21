@@ -1,8 +1,9 @@
 import { HttpClientModule } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { KbqSvgIconModule } from '../../components/svg-icon';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIcon, KbqIconButton, KbqIconItem } from '@koobiq/components/icon';
+import { KbqSvgIconModule } from '../../components/svg-icon';
 
 @Component({
     selector: 'app',
@@ -20,7 +21,10 @@ export class DemoComponent {
     imports: [
         HttpClientModule,
         BrowserModule,
-        KbqSvgIconModule.forRoot()
+        KbqSvgIconModule.forRoot(),
+        KbqIcon,
+        KbqIconButton,
+        KbqIconItem
     ],
     bootstrap: [DemoComponent]
 })
