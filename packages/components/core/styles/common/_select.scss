@@ -1,11 +1,5 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../common/vendor-prefixes';
-@use '../tokens';
 @use './tokens' as *;
-
-$tokens: meta.module-variables(tokens) !default;
 
 %kbq-select-base {
     box-sizing: border-box;
@@ -40,37 +34,25 @@ $tokens: meta.module-variables(tokens) !default;
 
         cursor: pointer;
 
-        height: kbq-difference-series-css-variables(
-            [form-field-size-height,
-            calc(var(--kbq-form-field-size-border-width) * 2)]
-        );
+        height: kbq-difference-series-css-variables([size-3xl, calc(var(--kbq-size-border-width) * 2)]);
     }
 
     .kbq-select__trigger.kbq-select__trigger_single,
     .kbq-select__trigger.kbq-select__trigger_multiple.kbq-select__trigger_empty {
         & .kbq-select__matcher {
-            padding: kbq-difference-series-css-variables(
-                    [select-size-single-padding-vertical,
-                    form-field-size-border-width]
-                )
-                kbq-difference-series-css-variables([select-size-single-padding-right, form-field-size-border-width])
-                kbq-difference-series-css-variables([select-size-single-padding-vertical, form-field-size-border-width])
-                kbq-difference-series-css-variables([select-size-single-padding-left, form-field-size-border-width]);
+            padding: kbq-difference-series-css-variables([select-size-single-padding-vertical, size-border-width])
+                kbq-difference-series-css-variables([select-size-single-padding-right, size-border-width])
+                kbq-difference-series-css-variables([select-size-single-padding-vertical, size-border-width])
+                kbq-difference-series-css-variables([select-size-single-padding-left, size-border-width]);
         }
     }
 
     .kbq-select__trigger.kbq-select__trigger_multiple:not(.kbq-select__trigger_empty) {
         & .kbq-select__matcher {
-            padding: kbq-difference-series-css-variables(
-                    [select-size-multiple-padding-vertical,
-                    form-field-size-border-width]
-                )
-                kbq-difference-series-css-variables([select-size-multiple-padding-right, form-field-size-border-width])
-                kbq-difference-series-css-variables(
-                    [select-size-multiple-padding-vertical,
-                    form-field-size-border-width]
-                )
-                kbq-difference-series-css-variables([select-size-multiple-padding-left, form-field-size-border-width]);
+            padding: kbq-difference-series-css-variables([select-size-multiple-padding-vertical, size-border-width])
+                kbq-difference-series-css-variables([select-size-multiple-padding-right, size-border-width])
+                kbq-difference-series-css-variables([select-size-multiple-padding-vertical, size-border-width])
+                kbq-difference-series-css-variables([select-size-multiple-padding-left, size-border-width]);
 
             .kbq-select__match-container {
                 display: flex;
@@ -82,12 +64,12 @@ $tokens: meta.module-variables(tokens) !default;
                 overflow: hidden;
 
                 height: kbq-difference-series-css-variables(
-                    [form-field-size-height,
+                    [size-3xl,
                     calc(var(--kbq-select-size-multiple-padding-vertical) * 2)]
                 );
 
                 max-height: kbq-difference-series-css-variables(
-                    [form-field-size-height,
+                    [size-3xl,
                     calc(var(--kbq-select-size-multiple-padding-vertical) * 2)]
                 );
 

@@ -2,7 +2,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, Directive, ElementRef, Input, Optional, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TreeSizeIndentLevel } from '@koobiq/design-tokens';
+import { SizeXxl as TreeSizeIndentLevel } from '@koobiq/design-tokens';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
 

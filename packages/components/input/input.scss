@@ -12,12 +12,9 @@
     text-overflow: ellipsis;
 
     width: 100%;
-    min-height: kbq-difference-series-css-variables(
-        [form-field-size-height,
-        calc(var(--kbq-form-field-size-border-width) * 2)]
-    );
+    min-height: kbq-difference-series-css-variables([size-3xl, calc(var(--kbq-size-border-width) * 2)]);
 
-    padding: kbq-difference-series-css-variables([input-size-padding-vertical, form-field-size-border-width])
+    padding: kbq-difference-series-css-variables([input-size-padding-vertical, size-border-width])
         var(--kbq-input-size-padding-horizontal);
 }
 
