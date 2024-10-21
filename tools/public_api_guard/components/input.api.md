@@ -51,7 +51,11 @@ export function isFloat(value: string): boolean;
 export function isInt(value: string): boolean;
 
 // @public (undocumented)
-export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: any;
+export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: {
+    groupSeparator: string[];
+    fractionSeparator: string;
+    startFormattingFrom: number;
+};
 
 // @public (undocumented)
 export const KBQ_INPUT_VALUE_ACCESSOR: InjectionToken<{
