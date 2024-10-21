@@ -42,11 +42,11 @@ import {
     checkAndNormalizeLocalizedNumber,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
-    normalizeNumber
+    normalizeNumber,
+    ruRUFormattersData
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-import { ruRUFormattersData } from '../core';
 
 export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION = ruRUFormattersData.input.number;
 
