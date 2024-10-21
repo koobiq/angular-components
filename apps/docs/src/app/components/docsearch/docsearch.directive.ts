@@ -1,23 +1,21 @@
-import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
+import { afterNextRender, Directive } from '@angular/core';
 import docsearch from '@docsearch/js';
 import { UAParser } from 'ua-parser-js';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
-const DOCSEARCH_COMPONENT_SELECTOR = 'docs-docsearch';
+const SELECTOR = 'docs-docsearch';
 const HOST = 'koobiq.io';
 const PROTOCOL = 'https:';
 
 /** Algolia DocSearch component implementation */
-@Component({
+@Directive({
     standalone: true,
-    selector: DOCSEARCH_COMPONENT_SELECTOR,
-    template: '',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: SELECTOR
 })
-export class DocsearchComponent {
+export class DocsearchDirective {
     private readonly DOCSEARCH_CONFIG: _DocSearchProps = {
-        container: DOCSEARCH_COMPONENT_SELECTOR,
+        container: SELECTOR,
         appId: '7N2W9AKEM6',
         apiKey: '0f0df042e7b349df5cb381e72f268b4d',
         indexName: 'koobiq',
