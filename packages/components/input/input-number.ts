@@ -2,6 +2,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     Attribute,
+    booleanAttribute,
     Directive,
     ElementRef,
     EventEmitter,
@@ -117,7 +118,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     controlType?: string | undefined;
 
-    @Input()
+    /**
+     * Allows input and pasting of integers only.
+     */
+    @Input({ transform: booleanAttribute })
     integer: boolean = false;
 
     @Input()
@@ -132,7 +136,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     @Input()
     max: number;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     withThousandSeparator: boolean = true;
 
     /**
@@ -198,11 +202,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         return this.control;
     }
 
-    get fractionSeparator() {
+    protected get fractionSeparator() {
         return this.numberLocaleConfig.fractionSeparator;
     }
 
-    get groupSeparator() {
+    protected get groupSeparator() {
         return this.numberLocaleConfig.groupSeparator;
     }
 
