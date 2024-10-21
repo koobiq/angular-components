@@ -1,62 +1,50 @@
-## Production Build
+## [Production Build](../../.github/workflows/actions/build-docs/action.yml)
 
-1. generate basic module
-
-```bash
-yarn run build:docs-examples-module
-```
-
-2. generate dynamic examples
+Before building the documentation, you must first [build packages](#build-packages) and [generate sitemap](#generate-sitemapxml)
 
 ```bash
-yarn run build:docs-examples
+yarn run build:docs-examples-module &&
+yarn run build:docs-examples &&
+yarn run build:docs-content &&
+yarn run build:package-docs-content &&
+yarn run docs:build
 ```
 
-2.1.
+## Generate `sitemap.xml`
 
 ```bash
-yarn run styles:built-all
+yarn run docs:generate-sitemap
 ```
 
-3. generate `docs-content` folder (dgeni)
+## Build packages
 
 ```bash
-yarn run build:docs-content && yarn run build:package-docs-content
+yarn run build:cdk &&
+yarn run build:components &&
+yarn run build:angular-luxon-adapter &&
+yarn run build:angular-moment-adapter &&
+yarn run styles:build-all
 ```
 
-4. build
-
-```bash
-yarn run docs:prod-build:aot
-```
-
-## Development Server
-
-Before building the documentation, you must first build cdk, koobiq and adapters:
-
-```bash
-yarn run build:cdk && yarn run build:components && yarn run build:angular-luxon-adapter && yarn run build:angular-moment-adapter && yarn run styles:built-all
-```
-
-Generate `docs-content` folder (dgeni)
+## Generate `docs-content` folder (dgeni)
 
 ```bash
 yarn run build:docs-content && yarn run build:package-docs-content
 ```
 
-Generate basic module
+## Generate basic module
 
 ```bash
 yarn run build:docs-examples-module
 ```
 
-Generate dynamic examples
+## Generate examples
 
 ```bash
 yarn run build:docs-examples
 ```
 
-Start ng server documentation as dev (source components from packages)
+## Debugging
 
 ```bash
 yarn run docs:start:dev
