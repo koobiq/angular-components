@@ -141,6 +141,10 @@ export class KbqSvgIcon extends KbqIconMixinBase implements CanColor, OnDestroy 
         return this.element.nativeElement.firstChild;
     }
 
+    getHostElement() {
+        return this.elementRef.nativeElement;
+    }
+
     private init(src?: string, name?: string) {
         if (src && name) {
             const svgObs = this.iconReg.loadSvg(src, name);

@@ -1,0 +1,169 @@
+@use 'sass:map';
+
+@use '../core/styles/theming/theming' as *;
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-svg-icon-button-theme() {
+    .kbq-svg-icon-button {
+        &:focus {
+            outline: none;
+        }
+
+        // FIXME: move to unified mixin
+        &.kbq-theme {
+            svg path {
+                fill: var(--kbq-icon-button-theme-default);
+            }
+
+            &:active,
+            &.kbq-active {
+                svg path {
+                    fill: var(--kbq-icon-button-theme-states-active);
+                }
+            }
+
+            &:not(.kbq-disabled):hover {
+                svg path {
+                    fill: var(--kbq-icon-button-theme-states-hover);
+                }
+            }
+
+            &.kbq-disabled {
+                svg path {
+                    fill: var(--kbq-icon-button-theme-states-disabled);
+                }
+            }
+        }
+
+        &.kbq-contrast {
+            svg path {
+                fill: var(--kbq-icon-button-contrast-default);
+            }
+
+            &:active,
+            &.kbq-active {
+                svg path {
+                    fill: var(--kbq-icon-button-contrast-states-active);
+                }
+            }
+
+            &:not(.kbq-disabled):hover {
+                svg path {
+                    fill: var(--kbq-icon-button-contrast-states-hover);
+                }
+            }
+
+            &.kbq-disabled {
+                svg path {
+                    fill: var(--kbq-icon-button-contrast-states-disabled);
+                }
+            }
+        }
+
+        &.kbq-contrast-fade {
+            svg path {
+                fill: var(--kbq-icon-button-fade-contrast-default);
+            }
+
+            &:active,
+            &.kbq-active {
+                svg path {
+                    fill: var(--kbq-icon-button-fade-contrast-states-active);
+                }
+            }
+
+            &:not(.kbq-disabled):hover {
+                svg path {
+                    fill: var(--kbq-icon-button-fade-contrast-states-hover);
+                }
+            }
+
+            &.kbq-disabled {
+                svg path {
+                    fill: var(--kbq-icon-button-fade-contrast-states-disabled);
+                }
+            }
+        }
+
+        &.kbq-error {
+            svg path {
+                fill: var(--kbq-icon-button-error-default);
+            }
+
+            &:active,
+            &.kbq-active {
+                svg path {
+                    fill: var(--kbq-icon-button-error-states-active);
+                }
+            }
+
+            &:not(.kbq-disabled):hover {
+                svg path {
+                    fill: var(--kbq-icon-button-error-states-hover);
+                }
+            }
+
+            &.kbq-disabled {
+                svg path {
+                    fill: var(--kbq-icon-button-error-states-disabled);
+                }
+            }
+        }
+
+        &.kbq-success {
+            svg path {
+                fill: var(--kbq-icon-button-success-default);
+            }
+
+            &:active,
+            &.kbq-active {
+                svg path {
+                    fill: var(--kbq-icon-button-success-states-active);
+                }
+            }
+
+            &:not(.kbq-disabled):hover {
+                svg path {
+                    fill: var(--kbq-icon-button-success-states-hover);
+                }
+            }
+
+            &.kbq-disabled {
+                svg path {
+                    fill: var(--kbq-icon-button-success-states-disabled);
+                }
+            }
+        }
+
+        &.kbq-warning {
+            svg path {
+                fill: var(--kbq-icon-button-warning-default);
+            }
+
+            &:active,
+            &.kbq-active {
+                svg path {
+                    fill: var(--kbq-icon-button-warning-states-active);
+                }
+            }
+
+            &:not(.kbq-disabled):hover {
+                svg path {
+                    fill: var(--kbq-icon-button-warning-states-hover);
+                }
+            }
+
+            &.kbq-disabled {
+                svg path {
+                    fill: var(--kbq-icon-button-warning-states-disabled);
+                }
+            }
+        }
+
+        &.cdk-keyboard-focused {
+            box-shadow:
+                inset 0 0 0.1px 1px var(--kbq-states-focused-color),
+                0 0 0.1px 1px var(--kbq-states-focused-color);
+        }
+    }
+}

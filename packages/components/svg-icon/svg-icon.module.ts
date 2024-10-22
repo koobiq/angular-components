@@ -1,5 +1,6 @@
 import { ModuleWithProviders, NgModule, Provider, makeEnvironmentProviders } from '@angular/core';
 
+import { KbqSvgIconButton } from './svg-icon-button.component';
 import { KbqSvgIconItem } from './svg-icon-item.component';
 import { KBQ_SVG_ICON_REGISTRY_PROVIDER } from './svg-icon-registry.service';
 import { KbqSvgIcon } from './svg-icon.component';
@@ -18,9 +19,10 @@ export function provideKbqSvgIcon(config: KbqSvgIconInterface = {}) {
 @NgModule({
     imports: [
         KbqSvgIcon,
-        KbqSvgIconItem
+        KbqSvgIconItem,
+        KbqSvgIconButton
     ],
-    exports: [KbqSvgIcon, KbqSvgIconItem]
+    exports: [KbqSvgIcon, KbqSvgIconItem, KbqSvgIconButton]
 })
 export class KbqSvgIconModule {
     static forRoot(config: KbqSvgIconInterface = {}): ModuleWithProviders<KbqSvgIconModule> {
