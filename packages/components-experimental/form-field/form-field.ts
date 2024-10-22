@@ -71,7 +71,7 @@ export const getKbqFormFieldMissingControlError = (): Error => {
         './../../components/textarea/textarea-tokens.scss'
     ],
     host: {
-        class: 'kbq-form-field',
+        class: 'kbq-form-field___EXPERIMENTAL',
         '[class.kbq-form-field_invalid]': 'invalid',
         '[class.kbq-form-field_focused]': 'focused',
         '[class.kbq-form-field_disabled]': 'disabled',

@@ -1,5 +1,3 @@
-@use '../../components/core/styles/theming/theming' as *;
-@use '../../components/core/styles/typography/typography-utils' as *;
 @use '../../components/core/styles/common/tokens' as *;
 
 @mixin kbq-form-field-state($state-name) {
@@ -28,11 +26,10 @@
 }
 
 @mixin kbq-form-field-theme() {
-    .kbq-form-field {
+    .kbq-form-field___EXPERIMENTAL {
         @include kbq-form-field-state(default);
 
         & .kbq-input {
-            //https://css-tricks.com/almanac/selectors/a/autofill/
             &:-webkit-autofill,
             &:-webkit-autofill:hover,
             &:-webkit-autofill:focus {
@@ -66,21 +63,19 @@
                 -webkit-text-fill-color: var(--kbq-form-field-states-disabled-text);
             }
         }
-    }
 
-    .kbq-form-field_hint {
-        .kbq-hint {
+        .kbq-hint___EXPERIMENTAL {
             color: var(--kbq-form-field-hint-text);
         }
     }
 }
 
 @mixin kbq-form-field-typography() {
-    .kbq-form-field {
+    .kbq-form-field___EXPERIMENTAL {
         @include kbq-typography-css-variables(form-field, text);
-    }
 
-    .kbq-form-field_hint .kbq-hint:not(.kbq-password-hint) .kbq-hint_text {
-        @include kbq-typography-css-variables(form-field-hint, text);
+        .kbq-hint___EXPERIMENTAL:not(.kbq-password-hint___EXPERIMENTAL) .kbq-hint_text {
+            @include kbq-typography-css-variables(form-field-hint, text);
+        }
     }
 }

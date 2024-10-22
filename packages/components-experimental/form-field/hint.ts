@@ -17,7 +17,7 @@ let nextUniqueId = 0;
         './hint-tokens.scss'
     ],
     host: {
-        class: 'kbq-hint',
+        class: 'kbq-hint___EXPERIMENTAL',
         '[attr.id]': 'id',
         '[class.kbq-error]': 'color === colors.Error',
         '[class.kbq-contrast-fade]': 'color === colors.ContrastFade',
@@ -109,7 +109,7 @@ export class KbqError extends KbqHint {
         </span>
     `,
     host: {
-        class: 'kbq-password-hint'
+        class: 'kbq-password-hint___EXPERIMENTAL'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

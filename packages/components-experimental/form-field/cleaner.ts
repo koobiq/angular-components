@@ -20,7 +20,7 @@ import { KbqFormField } from './form-field';
     `,
     styleUrl: './cleaner.scss',
     host: {
-        class: 'kbq-cleaner',
+        class: 'kbq-cleaner___EXPERIMENTAL',
         '(click)': 'clean($event)',
         '[style.visibility]': 'visible ? "visible" : "hidden"',
         '[attr.aria-hidden]': '!visible'

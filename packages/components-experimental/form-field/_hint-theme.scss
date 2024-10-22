@@ -1,5 +1,3 @@
-@use '../../components/core/styles/theming/theming' as *;
-@use '../../components/core/styles/typography/typography-utils' as *;
 @use '../../components/core/styles/common/tokens' as *;
 
 @mixin kbq-hint-color($type, $style-name) {
@@ -11,7 +9,7 @@
 }
 
 @mixin kbq-hint-theme() {
-    .kbq-hint {
+    .kbq-hint___EXPERIMENTAL {
         &.kbq-contrast-fade {
             @include kbq-hint-color(fill-text-on, fade-contrast);
         }
@@ -49,7 +47,7 @@
 }
 
 @mixin kbq-hint-typography() {
-    .kbq-hint {
+    .kbq-hint___EXPERIMENTAL {
         .kbq-hint_text {
             @include kbq-typography-css-variables(hint, normal-text);
         }

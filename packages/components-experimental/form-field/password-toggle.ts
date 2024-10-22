@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputPassword } from '@koobiq/components/input';
@@ -25,7 +25,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     `,
     styleUrl: './password-toggle.scss',
     host: {
-        class: 'kbq-password-toggle',
+        class: 'kbq-password-toggle___EXPERIMENTAL',
 
         '[style.visibility]': 'visible ? "visible" : "hidden"',
         '[attr.aria-hidden]': '!visible',
