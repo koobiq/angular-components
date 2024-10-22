@@ -11,8 +11,9 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
+import { KbqFileValidatorFn, maxFileSize } from '@koobiq/components/core';
 import { createFile } from './file-drop.spec';
-import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
+import { KbqFileItem } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
@@ -33,14 +34,9 @@ const fileItemActionCssClass = 'kbq-file-upload__action';
 const fileItemCssClass = 'file-item';
 const fileItemTextCssClass = 'file-item__text';
 
-const maxFileExceeded = (file: File): string | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
+const MAX_FILE_SIZE = 5 * 2 ** 20; // 5 MB
 
-    return maxSize !== undefined && (file?.size ?? 0) > maxSize ? `Exceeded with (${maxSize / mega} Mb)` : null;
-};
+const maxFileExceeded = maxFileSize(MAX_FILE_SIZE, 'Exceeded with (5 Mb)');
 
 describe('MultipleFileUploadComponent', () => {
     let component: BasicMultipleFileUpload;
