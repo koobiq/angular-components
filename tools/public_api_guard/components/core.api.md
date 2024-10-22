@@ -409,6 +409,11 @@ export const faIRLocaleData: {
     };
 };
 
+// @public
+export class FileValidators {
+    static maxFileSize(maxSize: number): ValidatorFn;
+}
+
 // @public (undocumented)
 export const formatDataSize: (value: number, precision: number, system: any) => {
     value: string;
@@ -1722,6 +1727,13 @@ export const LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
 export const LEFT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
+
+// @public
+export const maxFileSize: ({ file, maxFileSize, errorMessage }: {
+    file: File | null;
+    maxFileSize: number;
+    errorMessage: string;
+}) => string | null;
 
 // @public (undocumented)
 export enum MeasurementSystem {

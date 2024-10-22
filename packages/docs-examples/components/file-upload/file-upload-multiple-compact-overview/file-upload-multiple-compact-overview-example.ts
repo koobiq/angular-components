@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 
 /**
@@ -12,10 +11,7 @@ import { KbqFileUploadModule } from '@koobiq/components/file-upload';
         KbqFileUploadModule
     ],
     template: `
-        <kbq-multiple-file-upload
-            inputId="file-upload-multiple-compact"
-            size="compact"
-        >
+        <kbq-multiple-file-upload size="compact">
             <ng-template
                 #kbqFileIcon
                 let-file
@@ -25,6 +21,4 @@ import { KbqFileUploadModule } from '@koobiq/components/file-upload';
         </kbq-multiple-file-upload>
     `
 })
-export class FileUploadMultipleCompactOverviewExample {
-    themePalette = ThemePalette;
-}
+export class FileUploadMultipleCompactOverviewExample {}

@@ -1,20 +1,14 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
-import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FileValidators } from '@koobiq/components/core';
+import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 
-const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    return ((control.value as KbqFileItem)?.file?.size ?? 0) > maxSize ? { maxFileSize: true } : null;
-};
+const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 /**
- * @title file upload Multiple error overview
+ * @title File Upload Single Validation Reactive Forms
  */
 @Component({
     standalone: true,
@@ -49,7 +43,7 @@ const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null =>
 })
 export class FileUploadSingleValidationReactiveFormsOverviewExample {
     formGroup = new FormGroup({
-        fileControl: new FormControl(null, maxFileExceededFn)
+        fileControl: new FormControl(null, FileValidators.maxFileSize(MAX_FILE_SIZE))
     });
 
     get fileControl() {

@@ -2,19 +2,16 @@ import { Component } from '@angular/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 
-const maxFileExceeded = (file: File): string | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
+const MAX_FILE_SIZE = 5 * 2 ** 20;
 
-    return (file?.size ?? 0) > maxSize
-        ? `${file.name} - Размер файла превышает максимально допустимый (${maxSize / mega} МБ)`
+const maxFileExceeded = (file: File): string | null => {
+    return (file?.size ?? 0) > MAX_FILE_SIZE
+        ? `${file.name} - Размер файла превышает максимально допустимый (5 МБ)`
         : null;
 };
 
 /**
- * @title file upload Multiple error overview
+ * @title file upload Multiple error
  */
 @Component({
     standalone: true,

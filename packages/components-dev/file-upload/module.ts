@@ -16,20 +16,28 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
+import {
+    FileValidators,
+    KBQ_LOCALE_SERVICE,
+    KbqDataSizePipe,
+    KbqFileValidatorFn,
+    KbqLocaleService,
+    KbqLocaleServiceModule
+} from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
-    KbqFileUploadModule,
-    KbqFileValidatorFn
+    KbqFileUploadModule
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
-import { maxFileExceeded, maxFileExceededFn, maxFileSize } from './validation';
+import { maxFileExceededFiveMbs, maxFileSize } from './validation';
+
+const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 const hintMessage = 'file upload hint';
 
@@ -81,7 +89,7 @@ export class MultipleFileUploadCompactComponent {
 })
 export class DemoComponent {
     disabled = false;
-    validation: KbqFileValidatorFn[] = [maxFileExceeded];
+    validation: KbqFileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;
 
     file: KbqFileItem | null;
@@ -93,12 +101,12 @@ export class DemoComponent {
     errorMessages: string[] = [];
     accept = ['.pdf', '.png'];
 
-    control = new FormControl<KbqFileItem | null>(null, maxFileExceededFn);
-    singleFileControl = new FormControl<KbqFileItem | null>(null, maxFileExceededFn);
+    control = new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE));
+    singleFileControl = new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE));
 
     form = new FormGroup(
         {
-            'file-upload': new FormControl<KbqFileItem | null>(null, maxFileExceededFn)
+            'file-upload': new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE))
         },
         { updateOn: 'submit' }
     );
@@ -219,7 +227,7 @@ export class DemoComponent {
 
     onSubmit() {
         this.fileListValidationOnSubmit.controls.forEach((control) => {
-            control.setValidators(maxFileExceededFn);
+            control.setValidators(FileValidators.maxFileSize(MAX_FILE_SIZE));
             control.updateValueAndValidity();
         });
     }
@@ -294,13 +302,13 @@ export class DemoComponent {
 
     onFilesAddedForListWithDefaultValidation($event: KbqFileItem[]) {
         for (const fileItem of $event.slice()) {
-            this.fileList.push(new FormControl(fileItem, maxFileExceededFn));
+            this.fileList.push(new FormControl(fileItem, FileValidators.maxFileSize(MAX_FILE_SIZE)));
         }
     }
 
     onFilesAddedForListWithLoadOnAdd($event: KbqFileItem[]) {
         for (const fileItem of $event.slice()) {
-            this.fileListOnAddLoad.push(new FormControl(fileItem, maxFileExceededFn));
+            this.fileListOnAddLoad.push(new FormControl(fileItem, FileValidators.maxFileSize(MAX_FILE_SIZE)));
         }
         this.initLoadingForMultiple();
     }
@@ -316,7 +324,7 @@ export class DemoComponent {
 
         this.errorMessages = [];
         for (const fileItem of this.filesForDefaultValidation) {
-            const validationResult = maxFileExceeded(fileItem.file);
+            const validationResult = maxFileExceededFiveMbs(fileItem.file);
             if (validationResult) {
                 fileItem.hasError = true;
                 this.errorMessages.push(`${fileItem.file.name} - maxFileSize`);

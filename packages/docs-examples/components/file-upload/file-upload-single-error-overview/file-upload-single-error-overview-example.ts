@@ -3,7 +3,7 @@ import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 
 /**
- * @title file upload single error overview
+ * @title file upload single error
  */
 @Component({
     standalone: true,
@@ -20,7 +20,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
             @if (errors.length) {
                 <i kbq-icon="kbq-exclamation-triangle_16"></i>
             }
-            <kbq-hint>Максимальный размер файла 5 МБ</kbq-hint>
+            <kbq-hint>Размер файла не должен быть более 5 МБ</kbq-hint>
             @for (error of errors; track error) {
                 <kbq-hint color="error">{{ error }}</kbq-hint>
             }

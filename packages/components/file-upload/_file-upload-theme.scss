@@ -115,7 +115,7 @@
     }
 
     .kbq-file-upload__hint {
-        & > .kbq-hint:not(.kbq-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning, .kbq-error) {
+        .kbq-hint {
             color: var(--kbq-foreground-contrast-secondary);
         }
     }

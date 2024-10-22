@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 /**
- * @title Button's colors
+ * @title File Upload Indeterminate Loading
  */
 @Component({
     standalone: true,
@@ -36,7 +35,6 @@ import { take } from 'rxjs/operators';
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
     isLoading: boolean;
-    themePalette = ThemePalette;
 
     onFileChange(file: KbqFileItem | null) {
         if (!file) {

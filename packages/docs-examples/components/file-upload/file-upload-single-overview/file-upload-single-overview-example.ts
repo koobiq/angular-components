@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 
 /**
- * @title File Upload Single Overview Example
+ * @title File Upload Single
  */
 @Component({
     standalone: true,
@@ -17,6 +16,4 @@ import { KbqFileUploadModule } from '@koobiq/components/file-upload';
         </kbq-single-file-upload>
     `
 })
-export class FileUploadSingleOverviewExample {
-    themePalette = ThemePalette;
-}
+export class FileUploadSingleOverviewExample {}

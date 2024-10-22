@@ -19,8 +19,15 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import {
+    CanDisable,
+    KBQ_LOCALE_SERVICE,
+    KbqFileValidatorFn,
+    KbqLocaleService,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -28,7 +35,6 @@ import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
-    KbqFileValidatorFn,
     KbqInputFile,
     KbqInputFileLabel,
     isCorrectExtension
@@ -73,6 +79,9 @@ export class KbqMultipleFileUploadComponent
      */
     @Input() errors: string[] = [];
     @Input() size: 'compact' | 'default' = 'default';
+    /**
+     * custom ID for the file input element.
+     */
     @Input() inputId: string = `kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`;
     /**
      * @deprecated use FormControl for validation
@@ -154,7 +163,7 @@ export class KbqMultipleFileUploadComponent
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
         @Optional() @Self() public ngControl?: NgControl
     ) {
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         if (!localeService) {
             this.initDefaultParams();

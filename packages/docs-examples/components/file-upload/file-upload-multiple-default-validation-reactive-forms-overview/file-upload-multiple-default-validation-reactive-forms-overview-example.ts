@@ -1,20 +1,14 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormArray, FormControl, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FileValidators } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 
-const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    return ((control.value as KbqFileItem)?.file?.size ?? 0) > maxSize ? { maxFileSize: true } : null;
-};
+const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 /**
- * @title file upload Multiple error overview
+ * @title File Upload Multiple Default Validation Reactive Forms
  */
 @Component({
     standalone: true,
@@ -38,10 +32,13 @@ const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null =>
                     <i kbq-icon="kbq-exclamation-triangle_16"></i>
                 }
             </ng-template>
+
+            <kbq-hint>Размер файла не должен быть более 5 МБ</kbq-hint>
+
             @for (control of this.fileList.controls; track $index) {
                 <kbq-hint color="error">
                     @if (control.hasError('maxFileSize')) {
-                        {{ control.value?.file?.name }} - {{ maxFileSize }}
+                        {{ control.value?.file?.name }} - {{ maxFileSizeErrorMessage }}
                     }
                 </kbq-hint>
             }
@@ -50,12 +47,12 @@ const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null =>
     imports: [
         KbqFileUploadModule,
         KbqFormFieldModule,
-        KbqIcon,
+        KbqIconModule,
         ReactiveFormsModule
     ]
 })
 export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample {
-    maxFileSize = 'Размер файла не должен быть более 5 МБ.';
+    maxFileSizeErrorMessage = 'Размер файла превысил лимит.';
 
     fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 
@@ -81,7 +78,7 @@ export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample {
 
     onFilesAdded($event: KbqFileItem[]) {
         for (const fileItem of $event.slice()) {
-            this.fileList.push(new FormControl(fileItem, maxFileExceededFn));
+            this.fileList.push(new FormControl(fileItem, FileValidators.maxFileSize(MAX_FILE_SIZE)));
         }
     }
 }

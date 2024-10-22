@@ -179,7 +179,6 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     protected readonly hint: QueryList<TemplateRef<any>>;
     // (undocumented)
     input: ElementRef<HTMLInputElement>;
-    // (undocumented)
     inputId: string;
     // (undocumented)
     ngAfterViewInit(): void;
