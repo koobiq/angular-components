@@ -35,7 +35,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
     `,
     styleUrl: './stepper.scss',
     host: {
-        class: 'kbq-stepper',
+        class: 'kbq-stepper___EXPERIMENTAL',
         '[style.visibility]': 'visible ? "visible" : "hidden"',
         '[attr.aria-hidden]': '!visible'
     },

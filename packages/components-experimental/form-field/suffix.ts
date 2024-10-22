@@ -5,7 +5,7 @@ import { Directive } from '@angular/core';
     standalone: true,
     selector: '[kbqSuffix]',
     host: {
-        class: 'kbq-suffix'
+        class: 'kbq-suffix___EXPERIMENTAL'
     }
 })
 export class KbqSuffix {}

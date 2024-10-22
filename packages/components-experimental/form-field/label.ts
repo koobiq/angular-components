@@ -7,7 +7,7 @@ let nextUniqueId = 0;
     selector: 'kbq-label',
     standalone: true,
     host: {
-        class: 'kbq-label',
+        class: 'kbq-label___EXPERIMENTAL',
         '[attr.id]': 'id'
     }
 })

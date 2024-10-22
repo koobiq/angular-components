@@ -66,7 +66,8 @@ const scope_types = [
     'validation',
     'layout',
     'title',
-    'file-upload'
+    'file-upload',
+    'experimental'
 ];
 
 /** @type {import('@commitlint/types').UserConfig} */
