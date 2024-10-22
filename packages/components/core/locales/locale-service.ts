@@ -84,3 +84,42 @@ export class KbqLocaleService {
         return this.current[componentName];
     }
 }
+
+/**
+ * Function that returns a string representation of a number without localized separators
+ */
+export function normalizeNumber(
+    value: string | null | undefined,
+    customConfig: { groupSeparator: string[]; fractionSeparator: string }
+): string {
+    if (value === null || value === undefined) return '';
+
+    const { groupSeparator, fractionSeparator } = customConfig;
+    const groupSeparatorRegexp = new RegExp(`[${groupSeparator.join('')}]`, 'g');
+    const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
+
+    return value.toString().replace(groupSeparatorRegexp, '').replace(fractionSeparatorRegexp, '.');
+}
+
+/**
+ * Function that parse string and return a number. The string can be in any locale.
+ */
+export function checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null {
+    if (num === null || num === undefined) return null;
+
+    /* if some locale input config satisfies pasted number, try to normalise with selected locale config */
+    let numberOutput: number | null = null;
+
+    const locales = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
+
+    for (const config of locales.items.map(({ id }) => locales[id].input.number)) {
+        const normalized = +normalizeNumber(num, config);
+
+        if (!Number.isNaN(normalized)) {
+            numberOutput = normalized;
+            break;
+        }
+    }
+
+    return numberOutput;
+}

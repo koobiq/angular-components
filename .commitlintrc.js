@@ -34,6 +34,7 @@ const scope_types = [
     'loader-overlay',
     'markdown',
     'modal',
+    'number-input',
     'angular-moment-adapter',
     'angular-luxon-adapter',
     'navbar',

@@ -1,6 +1,5 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    AfterContentInit,
     Attribute,
     booleanAttribute,
     Directive,
@@ -13,6 +12,7 @@ import {
     Optional,
     Renderer2
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import {
     BACKSPACE,
@@ -38,9 +38,17 @@ import {
     X,
     Z
 } from '@koobiq/cdk/keycodes';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import {
+    checkAndNormalizeLocalizedNumber,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    normalizeNumber,
+    ruRUFormattersData
+} from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+
+export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION = ruRUFormattersData.input.number;
 
 export const BIG_STEP = 10;
 export const SMALL_STEP = 1;
@@ -97,7 +105,7 @@ interface NumberLocaleConfig {
         '(input)': 'onInput($event)'
     }
 })
-export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, OnDestroy {
+export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
     /** Emits when the value changes (either due to user input or programmatic change). */
     valueChange = new EventEmitter<number | null>();
 
@@ -203,22 +211,18 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     protected get fractionSeparator() {
-        return this.numberLocaleConfig.fractionSeparator;
+        return this.config.fractionSeparator;
     }
 
     protected get groupSeparator() {
-        return this.numberLocaleConfig.groupSeparator;
+        return this.config.groupSeparator;
     }
 
     private control: AbstractControl;
 
-    private readonly allNumberLocaleConfigs: { id: string; config: NumberLocaleConfig }[];
-
-    private numberLocaleConfig: NumberLocaleConfig;
+    private config: NumberLocaleConfig;
 
     private valueFromPaste: number | null;
-
-    private localeSubscription = Subscription.EMPTY;
 
     constructor(
         private elementRef: ElementRef,
@@ -227,7 +231,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         @Attribute('big-step') bigStep: string,
         @Attribute('min') min: string,
         @Attribute('max') max: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
         this.step = isDigit(step) ? parseFloat(step) : SMALL_STEP;
         this.bigStep = isDigit(bigStep) ? parseFloat(bigStep) : BIG_STEP;
@@ -244,21 +248,14 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             });
         }
 
-        this.allNumberLocaleConfigs = this.localeService?.locales.items.map(
-            (localeItem: { id: string; name: string }) => {
-                return { id: localeItem.id, config: this.localeService.locales[localeItem.id].input.number };
-            }
-        );
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
-        this.localeSubscription = this.localeService?.changes.subscribe(this.updateLocaleParams);
-    }
-
-    ngAfterContentInit(): void {
-        this.renderer.setProperty(this.nativeElement, 'type', 'text');
+        if (!localeService) {
+            this.initDefaultParams();
+        }
     }
 
     ngOnDestroy(): void {
-        this.localeSubscription.unsubscribe();
         this.valueChange.complete();
         this.disabledChange.complete();
     }
@@ -381,7 +378,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     onPaste(event: ClipboardEvent) {
-        this.valueFromPaste = this.checkAndNormalizeLocalizedNumber(event.clipboardData?.getData('text'));
+        this.valueFromPaste = checkAndNormalizeLocalizedNumber(event.clipboardData?.getData('text'));
 
         if (this.valueFromPaste === null) {
             event.preventDefault();
@@ -419,6 +416,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         this.valueChange.emit(res);
     }
 
+    private initDefaultParams() {
+        this.config = KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION;
+    }
+
     private isCtrlV = (event: KeyboardEvent) => {
         return event.keyCode === V && (event.ctrlKey || event.metaKey);
     };
@@ -449,7 +450,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     private viewToModelUpdate(newValue: string | null) {
-        const normalizedValue = newValue === null ? null : +this.normalizeNumber(newValue);
+        const normalizedValue = newValue === null ? null : +normalizeNumber(newValue, this.config);
 
         if (normalizedValue !== this.value) {
             this._value = normalizedValue;
@@ -461,7 +462,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     private formatViewValue(): string | null {
-        if (this.viewValue === null || this.viewValue === '' || Number.isNaN(+this.normalizeNumber(this.viewValue))) {
+        if (
+            this.viewValue === null ||
+            this.viewValue === '' ||
+            Number.isNaN(+normalizeNumber(this.viewValue, this.config))
+        ) {
             return null;
         }
 
@@ -470,7 +475,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
         const [intPart, fractionPart] = this.viewValue
             .split(separator)
-            .map((valuePart) => this.normalizeNumber(valuePart));
+            .map((valuePart) => normalizeNumber(valuePart, this.config));
 
         return this.createLocalizedNumberFromParts(+intPart, fractionPart);
     }
@@ -489,11 +494,11 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             maximumFractionDigits: 20
         };
 
-        if (this.withThousandSeparator && this.numberLocaleConfig.startFormattingFrom) {
-            formatOptions.useGrouping = intPart >= Math.pow(10, this.numberLocaleConfig.startFormattingFrom);
+        if (this.withThousandSeparator && this.config.startFormattingFrom) {
+            formatOptions.useGrouping = intPart >= Math.pow(10, this.config.startFormattingFrom);
         }
 
-        const localeId = this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
+        const localeId = !this.localeService || this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
 
         const formatter = new Intl.NumberFormat(localeId, formatOptions);
         const formattedFractionPart = fractionPart
@@ -506,42 +511,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             : `${formatter.format(intPart)}${this.fractionSeparator}${formattedFractionPart}`;
     }
 
-    /**
-     * Method that returns a string representation of a number without localized separators
-     */
-    private normalizeNumber(value: string | null | undefined, customConfig?: NumberLocaleConfig): string {
-        if (value === null || value === undefined) {
-            return '';
-        }
-
-        const { groupSeparator, fractionSeparator } = customConfig || this.numberLocaleConfig;
-        const groupSeparatorRegexp = new RegExp(`[${groupSeparator.join('')}]`, 'g');
-        const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
-
-        return value.toString().replace(groupSeparatorRegexp, '').replace(fractionSeparatorRegexp, '.');
-    }
-
-    private updateLocaleParams = (id: string) => {
-        this.numberLocaleConfig = this.localeService.locales[id].input.number;
+    private updateLocaleParams = () => {
+        this.config = this.localeService!.getParams('input').number;
 
         this.setViewValue(this.formatNumber(this.value));
     };
-
-    private checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null {
-        if (num === null || num === undefined) {
-            return null;
-        }
-
-        /* if some locale input config satisfies pasted number, try to normalize with selected locale config */
-        let numberOutput: number | null = null;
-        for (const { config } of this.allNumberLocaleConfigs) {
-            const normalized = +this.normalizeNumber(num, config);
-            if (!Number.isNaN(normalized)) {
-                numberOutput = normalized;
-                break;
-            }
-        }
-
-        return numberOutput;
-    }
 }
