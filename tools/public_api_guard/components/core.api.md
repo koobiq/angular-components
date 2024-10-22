@@ -152,6 +152,9 @@ export interface CanUpdateErrorState {
 export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
 // @public
+export function checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null;
+
+// @public
 export function countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<KbqOption>, optionGroups: QueryList<KbqOptgroup>): number;
 
 // @public (undocumented)
@@ -1756,6 +1759,12 @@ export enum MultipleMode {
     // (undocumented)
     KEYBOARD = "keyboard"
 }
+
+// @public
+export function normalizeNumber(value: string | null | undefined, customConfig: {
+    groupSeparator: string[];
+    fractionSeparator: string;
+}): string;
 
 // @public (undocumented)
 export const NUMBER_FORMAT_REGEXP: RegExp;
