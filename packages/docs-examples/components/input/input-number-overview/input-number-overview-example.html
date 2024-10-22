@@ -38,5 +38,17 @@
                 <kbq-stepper />
             </kbq-form-field>
         </div>
+
+        <div class="kbq-form__row">
+            <label class="kbq-form__label flex-40">With integer</label>
+            <kbq-form-field class="kbq-form__control flex-60">
+                <input
+                    kbqNumberInput
+                    [integer]="true"
+                    [(ngModel)]="integerValue"
+                />
+                <kbq-stepper />
+            </kbq-form-field>
+        </div>
     </div>
 </div>
