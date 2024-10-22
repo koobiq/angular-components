@@ -4,7 +4,7 @@ exports[`KbqFormField should change kbq-password-toggle icon by click 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
-    class="kbq-password-toggle"
+    class="kbq-password-toggle___EXPERIMENTAL"
     style="visibility: visible;"
   >
     <i
@@ -20,7 +20,7 @@ exports[`KbqFormField should display kbq-cleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
     aria-hidden="false"
-    class="kbq-cleaner"
+    class="kbq-cleaner___EXPERIMENTAL"
     style="visibility: visible;"
   >
     <i
@@ -35,7 +35,7 @@ DebugElement {
 exports[`KbqFormField should display kbq-error 1`] = `
 DebugElement {
   "nativeNode": <kbq-error
-    class="kbq-hint kbq-error"
+    class="kbq-hint___EXPERIMENTAL kbq-error"
     id="kbq-hint-3"
   >
     <span
@@ -50,7 +50,7 @@ DebugElement {
 exports[`KbqFormField should display kbq-hint 1`] = `
 DebugElement {
   "nativeNode": <kbq-hint
-    class="kbq-hint"
+    class="kbq-hint___EXPERIMENTAL"
     id="kbq-hint-0"
   >
     <span
@@ -65,7 +65,7 @@ DebugElement {
 exports[`KbqFormField should display kbq-label 1`] = `
 DebugElement {
   "nativeNode": <kbq-label
-    class="kbq-label"
+    class="kbq-label___EXPERIMENTAL"
     id="kbq-label-0"
   >
     Label
@@ -76,7 +76,7 @@ DebugElement {
 exports[`KbqFormField should display kbq-password-hint error for invalid password 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-hint
-    class="kbq-password-hint kbq-hint kbq-hint_fill-text-off kbq-error"
+    class="kbq-password-hint___EXPERIMENTAL kbq-hint___EXPERIMENTAL kbq-hint_fill-text-off kbq-error"
     id="kbq-hint-34"
   >
     <i
@@ -97,7 +97,7 @@ DebugElement {
 exports[`KbqFormField should display kbq-password-hint initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-hint
-    class="kbq-password-hint kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
+    class="kbq-password-hint___EXPERIMENTAL kbq-hint___EXPERIMENTAL kbq-contrast-fade kbq-hint_fill-text-off"
     id="kbq-hint-33"
   >
     <i
@@ -118,7 +118,7 @@ DebugElement {
 exports[`KbqFormField should display kbq-password-hint success for valid password 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-hint
-    class="kbq-password-hint kbq-hint kbq-hint_fill-text-off kbq-success"
+    class="kbq-password-hint___EXPERIMENTAL kbq-hint___EXPERIMENTAL kbq-hint_fill-text-off kbq-success"
     id="kbq-hint-35"
   >
     <i
@@ -139,7 +139,7 @@ exports[`KbqFormField should display kbq-password-toggle by input 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
-    class="kbq-password-toggle"
+    class="kbq-password-toggle___EXPERIMENTAL"
     style="visibility: visible;"
   >
     <i
@@ -154,7 +154,7 @@ DebugElement {
 exports[`KbqFormField should display kbqPrefix 1`] = `
 DebugElement {
   "nativeNode": <span
-    class="kbq-prefix"
+    class="kbq-prefix___EXPERIMENTAL"
     kbqprefix=""
   >
     Prefix
@@ -165,7 +165,7 @@ DebugElement {
 exports[`KbqFormField should display kbqSuffix 1`] = `
 DebugElement {
   "nativeNode": <span
-    class="kbq-suffix"
+    class="kbq-suffix___EXPERIMENTAL"
     kbqsuffix=""
   >
     Suffix
@@ -177,7 +177,7 @@ exports[`KbqFormField should hide kbq-cleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
     aria-hidden="true"
-    class="kbq-cleaner"
+    class="kbq-cleaner___EXPERIMENTAL"
     style="visibility: hidden;"
   >
     <i
@@ -193,7 +193,7 @@ exports[`KbqFormField should hide kbq-password-toggle initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="true"
-    class="kbq-password-toggle"
+    class="kbq-password-toggle___EXPERIMENTAL"
     style="visibility: hidden;"
   >
     <i
