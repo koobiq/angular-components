@@ -1397,7 +1397,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-indeterminate-loading-overview": {
     "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
-    "title": "Button's colors",
+    "title": "File Upload Indeterminate Loading",
     "componentName": "FileUploadIndeterminateLoadingOverviewExample",
     "files": [
       "file-upload-indeterminate-loading-overview-example.ts"
@@ -1445,7 +1445,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-default-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-overview",
-    "title": "File Upload Multiple Default Overview",
+    "title": "File Upload Multiple Default",
     "componentName": "FileUploadMultipleDefaultOverviewExample",
     "files": [
       "file-upload-multiple-default-overview-example.ts"
@@ -1461,7 +1461,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-default-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-validation-reactive-forms-overview",
-    "title": "file upload Multiple error overview",
+    "title": "File Upload Multiple Default Validation Reactive Forms",
     "componentName": "FileUploadMultipleDefaultValidationReactiveFormsOverviewExample",
     "files": [
       "file-upload-multiple-default-validation-reactive-forms-overview-example.ts"
@@ -1477,7 +1477,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-error-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-error-overview",
-    "title": "file upload Multiple error overview",
+    "title": "file upload Multiple error",
     "componentName": "FileUploadMultipleErrorOverviewExample",
     "files": [
       "file-upload-multiple-error-overview-example.ts"
@@ -1493,7 +1493,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-error-overview": {
     "packagePath": "components/file-upload/file-upload-single-error-overview",
-    "title": "file upload single error overview",
+    "title": "file upload single error",
     "componentName": "FileUploadSingleErrorOverviewExample",
     "files": [
       "file-upload-single-error-overview-example.ts"
@@ -1509,7 +1509,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-overview": {
     "packagePath": "components/file-upload/file-upload-single-overview",
-    "title": "File Upload Single Overview Example",
+    "title": "File Upload Single",
     "componentName": "FileUploadSingleOverviewExample",
     "files": [
       "file-upload-single-overview-example.ts"
@@ -1525,7 +1525,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-single-validation-reactive-forms-overview",
-    "title": "file upload Multiple error overview",
+    "title": "File Upload Single Validation Reactive Forms",
     "componentName": "FileUploadSingleValidationReactiveFormsOverviewExample",
     "files": [
       "file-upload-single-validation-reactive-forms-overview-example.ts"
