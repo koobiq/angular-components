@@ -1,3 +1,14 @@
+# 18.3.0 (2024-10-22)
+
+### Koobiq
+
+ * bug fix  **docs:** updated article content after review for accordion page ([#371](https://github.com/koobiq/angular-components/issues/371)) ([b6503d0](https://github.com/koobiq/angular-components/commit/b6503d0a7b2c2aedd7548e84bc1e1488c95d6ec6))
+ * bug fix  **file-upload:** mark single upload with kbq-error on hasError = tru… ([#372](https://github.com/koobiq/angular-components/issues/372)) ([4e120f6](https://github.com/koobiq/angular-components/commit/4e120f63088e1f4507af5dc8a7f3a74b8d09d449))
+ * bug fix  **number-input:** errors in "number-input" without localeService ([#DS-3016](https://github.com/koobiq/angular-components/issues/issue/DS-3016)) ([#378](https://github.com/koobiq/angular-components/issues/378)) ([909dd6b](https://github.com/koobiq/angular-components/commit/909dd6b5bc8e2499361c6b6a32249d37a73e0c17))
+ * feature  added experimental form-field ([#DS-2838](https://github.com/koobiq/angular-components/issues/issue/DS-2838)) ([#288](https://github.com/koobiq/angular-components/issues/288)) ([bf1cf30](https://github.com/koobiq/angular-components/commit/bf1cf3003a52d4e69b2748e7454b2cc541a06d73))
+ * feature  **experimental:** added special selectors for experimental form-field components ([#379](https://github.com/koobiq/angular-components/issues/379)) ([18a9825](https://github.com/koobiq/angular-components/commit/18a982505057fb22c00219b3623756bb2da4a396))
+ * feature  **input:** added property [integer] ([#DS-1915](https://github.com/koobiq/angular-components/issues/issue/DS-1915)) ([#375](https://github.com/koobiq/angular-components/issues/375)) ([0745c16](https://github.com/koobiq/angular-components/commit/0745c16dbab79038f45ffe29397ab3c2a16c161c))
+
 ## 18.2.1 (2024-10-18)
 
 ### Koobiq
