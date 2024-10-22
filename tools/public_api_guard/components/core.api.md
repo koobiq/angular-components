@@ -1010,6 +1010,9 @@ export class KbqDecimalPipe implements PipeTransform {
 export const KbqDefaultThemes: KbqTheme[];
 
 // @public (undocumented)
+export type KbqFileValidatorFn = (file: File | null) => string | null;
+
+// @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
     elements: QueryList<KbqFormElement>;
@@ -1729,11 +1732,7 @@ export const LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
 export const LEFT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public
-export const maxFileSize: ({ file, maxFileSize, errorMessage }: {
-    file: File | null;
-    maxFileSize: number;
-    errorMessage: string;
-}) => string | null;
+export const maxFileSize: (maxFileSize: number, errorMessage: string) => KbqFileValidatorFn;
 
 // @public (undocumented)
 export enum MeasurementSystem {
