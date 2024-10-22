@@ -223,13 +223,22 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     focused: boolean;
     // (undocumented)
+    protected get fractionSeparator(): string;
+    // (undocumented)
+    protected get groupSeparator(): string[];
+    // (undocumented)
     id: string;
+    integer: boolean;
     // (undocumented)
     max: number;
     // (undocumented)
     min: number;
     // (undocumented)
     get nativeElement(): HTMLInputElement;
+    // (undocumented)
+    static ngAcceptInputType_integer: unknown;
+    // (undocumented)
+    static ngAcceptInputType_withThousandSeparator: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
@@ -276,7 +285,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     // (undocumented)
     writeValue(value: number | null): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNumberInput, "input[kbqNumberInput]", ["kbqNumericalInput"], { "integer": { "alias": "integer"; "required": false; }; "bigStep": { "alias": "bigStep"; "required": false; }; "step": { "alias": "step"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "withThousandSeparator": { "alias": "withThousandSeparator"; "required": false; }; "startFormattingFrom": { "alias": "startFormattingFrom"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNumberInput, [null, null, { attribute: "step"; }, { attribute: "big-step"; }, { attribute: "min"; }, { attribute: "max"; }, { optional: true; }]>;
 }

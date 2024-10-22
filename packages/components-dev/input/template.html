@@ -193,9 +193,8 @@
     <header>With thousand separators:</header>
     <kbq-form-field class="kbq-group-item">
         <input
-            kbqInput
+            kbqNumberInput
             placeholder="Number MaxMin Step"
-            type="number"
             [bigStep]="1.5"
             [max]="7"
             [min]="min"
@@ -208,14 +207,24 @@
     <header>Without thousand separators:</header>
     <kbq-form-field class="kbq-group-item">
         <input
-            kbqInput
+            kbqNumberInput
             placeholder="Number MaxMin Step"
-            type="number"
             [bigStep]="1.5"
             [max]="7"
             [min]="min"
             [step]="0.5"
             [withThousandSeparator]="false"
+            [(ngModel)]="numberValue"
+        />
+        <kbq-stepper />
+    </kbq-form-field>
+
+    <header>With integer:</header>
+    <kbq-form-field class="kbq-group-item">
+        <input
+            kbqNumberInput
+            placeholder="Number MaxMin Step"
+            [integer]="true"
             [(ngModel)]="numberValue"
         />
         <kbq-stepper />

@@ -11,4 +11,5 @@ import { Component, ViewEncapsulation } from '@angular/core';
 })
 export class InputNumberOverviewExample {
     value = '';
+    integerValue = '';
 }
