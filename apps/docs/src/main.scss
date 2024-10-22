@@ -1,8 +1,5 @@
 @use '@koobiq/icons/fonts/kbq-icons';
 
-@use 'highlightjs/material-dark' as *;
-@use 'highlightjs/material-light' as *;
-
 @use './styles/theme.kbq' as theme-kbq;
 
 @use './styles/markdown';
@@ -11,12 +8,4 @@
 .docs {
     @include theme-kbq.docs-typography();
     @include theme-kbq.kbq-docs-theme();
-
-    &.kbq-theme-light {
-        @include hljs-light-theme();
-    }
-
-    &.kbq-theme-dark {
-        @include hljs-dark-theme();
-    }
 }
