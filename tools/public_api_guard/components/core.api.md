@@ -154,7 +154,7 @@ export interface CanUpdateErrorState {
 // @public
 export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
-// @public (undocumented)
+// @public
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null;
 
 // @public

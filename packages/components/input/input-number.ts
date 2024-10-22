@@ -498,7 +498,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             formatOptions.useGrouping = intPart >= Math.pow(10, this.config.startFormattingFrom);
         }
 
-        const localeId = this.localeService?.id === 'es-LA' ? 'ru-RU' : this.localeService?.id || 'ru-RU';
+        const localeId = !this.localeService || this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
 
         const formatter = new Intl.NumberFormat(localeId, formatOptions);
         const formattedFractionPart = fractionPart
@@ -511,8 +511,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             : `${formatter.format(intPart)}${this.fractionSeparator}${formattedFractionPart}`;
     }
 
-    private updateLocaleParams = (id: string) => {
-        this.config = this.localeService?.locales[id].input.number;
+    private updateLocaleParams = () => {
+        this.config = this.localeService!.getParams('input').number;
 
         this.setViewValue(this.formatNumber(this.value));
     };

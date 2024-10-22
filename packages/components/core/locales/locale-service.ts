@@ -86,7 +86,7 @@ export class KbqLocaleService {
 }
 
 /**
- * Method that returns a string representation of a number without localized separators
+ * Function that returns a string representation of a number without localized separators
  */
 export function normalizeNumber(
     value: string | null | undefined,
@@ -101,6 +101,9 @@ export function normalizeNumber(
     return value.toString().replace(groupSeparatorRegexp, '').replace(fractionSeparatorRegexp, '.');
 }
 
+/**
+ * Function that parse string and return a number. The string can be in any locale.
+ */
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null {
     if (num === null || num === undefined) return null;
 
