@@ -13,8 +13,8 @@
 
 1. Установите пакет дизайн системы Koobiq. Подробнее про установку [тут](/main/installation).
 2. Подключите файлы `css-tokens.css`, `css-tokens-light.css`, `css-tokens-dark.css` для использования глобальных значений дизайн-системы, например, цветов, размеров и параметров шрифтов.
-3. [Подключите файл преднастроенных стилей](#подключение-файла-преднастроенных-стилей) в свой основной файл стилей. Этот шаг нужен для правильного отображения компонентов и оверлеев (например, всплывающих окон).
-4. Добавьте селектор `kbq-theme-light` к элементу `<body>` вашего HTML-документа для использования светлой темы и `kbq-theme-dark` для темной темы.
+3. [Подключите файл преднастроенных стилей](#подключение-файла-преднастроенных-стилей) в свой основной файл стилей. Этот шаг нужен для правильного отображения компонентов и оверлеев (например, всплывающих окон). Код подключения ниже.
+4. Добавьте селектор `kbq-light` к элементу `<body>` вашего HTML-документа для использования светлой темы и `kbq-dark` для темной темы.
 5. Импортируйте компонент и используйте его в вёрстке!🚀
 
 #### Подключение файла преднастроенных стилей
@@ -26,7 +26,7 @@
 Так выглядит тег `body` в `index.html` после добавления необходимых классов:
 
 ```html
-<body class="kbq-app-background kbq-theme-light">
+<body class="kbq-app-background kbq-light">
     <app></app>
 </body>
 ```
@@ -35,7 +35,7 @@
 
 ### Переключение тем
 
-Для переключения темы достаточно изменить соответствующий селектор, чтобы перейти от темной к светлой теме (или наоборот). Например, с `kbq-theme-dark` на `kbq-theme-light`.
+Для переключения темы достаточно изменить соответствующий селектор, чтобы перейти от темной к светлой теме (или наоборот). Например, с `kbq-dark` на `kbq-light`.
 Цветовые значения будут автоматически адаптированы под выбранную тему.
 
 Для переключения тем используйте [ThemeService.](https://github.com/koobiq/angular-components/tree/main/packages/components/core/services/theme.service.ts) Вот пример:
@@ -47,7 +47,7 @@ import { Component } from '@angular/core';
 @Component()
 class AppComponent {
     constructor(private themeService: ThemeService) {
-        /* светлая тема станет активной, к тегу `body` добавится класс `kbq-theme-light` */
+        /* светлая тема станет активной, к тегу `body` добавится класс `kbq-light` */
         this.themeService.setTheme(0);
     }
 }
@@ -62,7 +62,7 @@ class AppComponent {
 | Темная  | .kbq-dark, .theme-dark, .kbq-theme-dark    |
 | Светлая | .kbq-light, .theme-light, .kbq-theme-light |
 
-Мы рекомендуем использовать те селекторы, которые указаны в сервисе `ThemeService` (`kbq-theme-dark` для темной и `kbq-theme-light` для светлой).
+Мы рекомендуем использовать те селекторы, которые указаны в сервисе `ThemeService` (`kbq-dark` для темной и `kbq-light` для светлой).
 
 #### Переключение по выбранной в ОС теме
 
@@ -100,7 +100,7 @@ this.colorAutomaticTheme.addEventListener('change', this.setAutoTheme);
 Например:
 
 ```css
-.kbq-theme-dark .kbq-alert {
+.kbq-dark .kbq-alert {
     --kbq-alert-default-contrast-container-background: var(--kbq-foreground-contrast-secondary);
     --kbq-alert-default-contrast-container-title: var(--kbq-background-contrast-fade);
 }

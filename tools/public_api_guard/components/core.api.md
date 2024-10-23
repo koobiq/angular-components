@@ -1671,8 +1671,8 @@ export interface KbqTheme {
 
 // @public
 export enum KbqThemeSelector {
-    Dark = "kbq-theme-dark",
-    Default = "kbq-theme-light"
+    Dark = "kbq-dark",
+    Default = "kbq-light"
 }
 
 // @public (undocumented)

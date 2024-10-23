@@ -235,7 +235,7 @@
     display: none !important;
 }
 
-body.kbq-theme-light {
+body.kbq-light {
     --docsearch-primary-color: inherit;
     --docsearch-text-color: var(--kbq-foreground-contrast);
     --docsearch-spacing: var(--kbq-size-xxl);
@@ -264,7 +264,7 @@ body.kbq-theme-light {
     --docsearch-footer-shadow: none;
 }
 
-body.kbq-theme-dark {
+body.kbq-dark {
     --docsearch-highlight-color: inherit;
     --docsearch-icon-color: var(--kbq-icon-contrast-fade);
     --docsearch-text-color: var(--kbq-foreground-contrast);
