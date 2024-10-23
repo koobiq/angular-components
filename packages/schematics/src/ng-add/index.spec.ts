@@ -24,7 +24,7 @@ describe(`ng add '@koobiq/components'`, () => {
         expect(dependencies['@koobiq/date-adapter']).toBeDefined();
         expect(dependencies['@koobiq/tokens-builder']).toBeDefined();
         expect(dependencies['@koobiq/design-tokens']).toBeDefined();
-        expect(dependencies['@koobiq/icons']).toBeDefined();
+        expect(dependencies['@koobiq/icons-lts']).toBeDefined();
         expect(dependencies['@messageformat/core']).toBeDefined();
         expect(dependencies['luxon']).toBeDefined();
         expect(dependencies['marked']).toBeDefined();

@@ -29,7 +29,7 @@
         "@docsearch/js": "^3.6.0",
         "@koobiq/date-adapter": "^3.1.2",
         "@koobiq/date-formatter": "^3.1.2",
-        "@koobiq/icons": "^7.1.1",
+        "@koobiq/icons-lts": "^7.3.0",
         "core-js": "^3.36.0",
         "marked": "^9.0.0",
         "overlayscrollbars": "2.7.3",

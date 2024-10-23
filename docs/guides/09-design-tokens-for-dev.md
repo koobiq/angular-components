@@ -69,7 +69,7 @@ The design tokens are also published as SASS variables.
 
 @use '@koobiq/components/visual';
 @use '@koobiq/components/theming';
-@use '@koobiq/icons/dist/styles/mc-icons.css';
+@use '@koobiq/icons-lts/dist/styles/mc-icons.css';
 @use 'pt-product-icons/dist/styles/Product';
 
 // Include Design Tokens

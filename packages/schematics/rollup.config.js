@@ -40,7 +40,7 @@ module.exports = [
                 'VERSIONS.KOOBIQ_DATE_ADAPTER': version(pkg.dependencies['@koobiq/date-adapter']),
                 'VERSIONS.KOOBIQ_TOKENS_BUILDER': version(pkg.devDependencies['@koobiq/tokens-builder']),
                 'VERSIONS.KOOBIQ_DESIGN_TOKENS': version(pkg.devDependencies['@koobiq/design-tokens']),
-                'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons']),
+                'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons-lts']),
                 'VERSIONS.MESSAGEFORMAT_CORE': version(pkg.devDependencies['@messageformat/core']),
                 'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
                 'VERSIONS.MARKED': version(pkg.dependencies.marked),

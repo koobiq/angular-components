@@ -26,12 +26,12 @@
                         "assets": [
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/dist/svg",
+                                "input": "node_modules/@koobiq/icons-lts/dist/svg",
                                 "output": "/assets/SVGIcons"
                             },
                             {
                                 "glob": "**/*",
-                                "input": "node_modules/@koobiq/icons/dist/info",
+                                "input": "node_modules/@koobiq/icons-lts/dist/info",
                                 "output": "/assets/SVGIcons"
                             },
                             {

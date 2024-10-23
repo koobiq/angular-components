@@ -13,7 +13,7 @@ ng add @koobiq/components
 npm install
     @koobiq/cdk
     @koobiq/components
-    @koobiq/icons
+    @koobiq/icons-lts
     @koobiq/design-tokens
     @koobiq/angular-luxon-adapter
     @koobiq/date-adapter
