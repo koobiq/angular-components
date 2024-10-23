@@ -27,7 +27,7 @@
 
 ```html
 <body class="kbq-app-background kbq-theme-light">
-    <app />
+    <app></app>
 </body>
 ```
 
