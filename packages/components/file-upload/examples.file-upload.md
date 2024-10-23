@@ -12,6 +12,8 @@
 
 ### Валидация (дополнительные примеры)
 
+В примерах используется [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - это набор статических методов для валидации поля загрузки файлов.
+
 Пример загрузки одного файла и валидации с помощью Reactive Forms.
 
 <!-- example(file-upload-single-validation-reactive-forms-overview) -->

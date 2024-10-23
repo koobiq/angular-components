@@ -27,15 +27,14 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
                 @if (!file.hasError) {
                     <i kbq-icon="kbq-file-o_16"></i>
                 }
-                <!-- Can be any other icon from package -->
                 @if (file.hasError) {
                     <i kbq-icon="kbq-exclamation-triangle_16"></i>
                 }
             </ng-template>
 
-            <kbq-hint>Размер файла не должен быть более 5 МБ</kbq-hint>
+            <kbq-hint>The file size should not exceed 5 MB</kbq-hint>
 
-            @for (control of this.fileList.controls; track $index) {
+            @for (control of fileList.controls; track $index) {
                 <kbq-hint color="error">
                     @if (control.hasError('maxFileSize')) {
                         {{ control.value?.file?.name }} - {{ maxFileSizeErrorMessage }}
@@ -52,7 +51,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
     ]
 })
 export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample {
-    maxFileSizeErrorMessage = 'Размер файла превысил лимит.';
+    maxFileSizeErrorMessage = 'The file size has exceeded the limit';
 
     fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 

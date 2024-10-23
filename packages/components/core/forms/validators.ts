@@ -1,5 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
+export type KbqFileValidatorFn = (file: File | null) => string | null;
+
 /** Provides a set of validators for password form controls. */
 export class PasswordValidators {
     /**
@@ -133,6 +135,57 @@ export class PasswordValidators {
             }
             const matches = (value.match(/[!@#$%^&*]/g) || []).length;
             return matches >= min ? null : { minSpecial: { min, actual: matches } };
+        };
+    }
+}
+
+/**
+ * Creates a validator function that checks if a file's size exceeds a maximum allowed size.
+ *
+ *
+ * @returns {function(File | null): string | null} - A validator function that takes a file (or null) and returns an error message (if applicable) or null.
+ */
+export const maxFileSize =
+    (maxFileSize: number, errorMessage: string): KbqFileValidatorFn =>
+    (file: File | null): string | null => {
+        if (!file) return null;
+        if (file.size > maxFileSize) {
+            return errorMessage;
+        }
+
+        return null;
+    };
+
+/** Provides a set of validators for file-related form controls. */
+export class FileValidators {
+    /**
+     * Validator that checks if the file size is less than or equal to the provided `maxSize`.
+     *
+     * @param maxSize - The maximum allowed file size in bytes.
+     *
+     * @returns A ValidatorFn function that checks the file size.
+     *
+     * ## Usage:
+     *
+     * ```typescript
+     * const control = new FormControl(null, [FileValidators.maxFileSize(1024 * 1024)]); // 1MB
+     * control.setValue(FILE_LESS_OR_EQUAL_THAN_1MB);
+     * console.log(control.errors); // null
+     * control.setValue(FILE_MORE_THAN_1MB);
+     * console.log(control.errors); // {maxFileSize: { max: 1048576, actual: FILE_MORE_THAN_1MB.size }}
+     * ```
+     */
+    static maxFileSize(maxSize: number): ValidatorFn {
+        return ({ value }: AbstractControl): ValidationErrors | null => {
+            if (!value) return null;
+
+            const size = value instanceof File ? value.size : value.file.size;
+
+            if (size > maxSize) {
+                return { maxFileSize: { max: maxSize, actual: size } };
+            }
+
+            return null;
         };
     }
 }

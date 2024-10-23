@@ -20,7 +20,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
             @if (errors.length) {
                 <i kbq-icon="kbq-exclamation-triangle_16"></i>
             }
-            <kbq-hint>Размер файла не должен быть более 5 МБ</kbq-hint>
+            <kbq-hint>The file size should not exceed 5 MB</kbq-hint>
             @for (error of errors; track error) {
                 <kbq-hint color="error">{{ error }}</kbq-hint>
             }
@@ -38,7 +38,7 @@ export class FileUploadSingleErrorOverviewExample {
     onChange(fileItem: KbqFileItem | null): void {
         this.file = fileItem;
         const someValidationLogic = (): string | null => {
-            return 'Не удалось загрузить файл по неизвестным причинам';
+            return 'The file could not be uploaded for unknown reasons';
         };
 
         if (this.file) {

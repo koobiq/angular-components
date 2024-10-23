@@ -91,10 +91,11 @@ describe('Validators', () => {
             });
 
             it('should return an error for a file size greater than maxFileSize', () => {
-                const control = new FormControl<File | null>(null, [FileValidators.maxFileSize(10)]);
+                const max = 10;
+                const control = new FormControl<File | null>(null, [FileValidators.maxFileSize(max)]);
                 const file = new File(['lorem ipsum'], 'test.txt', { type: 'text/plain' }); // 11 bytes
                 control.setValue(file);
-                expect(control.errors).toEqual({ maxFileSize: true });
+                expect(control.errors).toEqual({ maxFileSize: { max, actual: file.size } });
             });
 
             it('should work with KbqFileItem', () => {

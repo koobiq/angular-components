@@ -28,7 +28,6 @@ const maxFileExceeded = (file: File): string | null => {
                 @if (!file.hasError) {
                     <i kbq-icon="kbq-file-o_16"></i>
                 }
-                <!-- Can be any other icon from package -->
                 @if (file.hasError) {
                     <i kbq-icon="kbq-exclamation-triangle_16"></i>
                 }
