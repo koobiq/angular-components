@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DELETE } from '@koobiq/cdk/keycodes';
 import { createFakeEvent, dispatchEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { KbqFileValidatorFn } from '@koobiq/components/core';
+import { KbqFileValidatorFn } from '@koobiq/components/file-upload';
 import { KbqFileItem } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';

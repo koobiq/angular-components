@@ -20,7 +20,6 @@ import {
     FileValidators,
     KBQ_LOCALE_SERVICE,
     KbqDataSizePipe,
-    KbqFileValidatorFn,
     KbqLocaleService,
     KbqLocaleServiceModule
 } from '@koobiq/components/core';
@@ -28,7 +27,8 @@ import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
-    KbqFileUploadModule
+    KbqFileUploadModule,
+    KbqFileValidatorFn
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -97,7 +97,6 @@ export class DemoComponent {
     filesForDefaultValidation: KbqFileItem[] = [];
 
     errorMessagesForSingle: string[] = [];
-    errorMessagesForMultiple: string[] = [];
     errorMessages: string[] = [];
     accept = ['.pdf', '.png'];
 
@@ -199,7 +198,6 @@ export class DemoComponent {
 
     checkValidation() {
         this.errorMessagesForSingle = [];
-        this.errorMessagesForMultiple = [];
 
         if (this.file) {
             this.errorMessagesForSingle = this.validation.map((fn) => fn(this.file!.file) || '').filter(Boolean);
@@ -207,20 +205,6 @@ export class DemoComponent {
                 this.file = { ...this.file, hasError: true };
             }
         }
-
-        this.files = this.files.map((file) => {
-            const errorsPerFile: string[] = this.validation.map((fn) => fn(file!.file) || '').filter(Boolean);
-
-            this.errorMessagesForMultiple = [
-                ...this.errorMessagesForMultiple,
-                ...errorsPerFile
-            ].filter(Boolean);
-
-            return {
-                ...file,
-                hasError: errorsPerFile.length > 0
-            };
-        });
 
         this.cdr.markForCheck();
     }

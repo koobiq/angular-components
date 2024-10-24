@@ -21,23 +21,18 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
-import {
-    CanDisable,
-    KBQ_LOCALE_SERVICE,
-    KbqFileValidatorFn,
-    KbqLocaleService,
-    ruRULocaleData
-} from '@koobiq/components/core';
+import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
+    isCorrectExtension,
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
+    KbqFileValidatorFn,
     KbqInputFile,
-    KbqInputFileLabel,
-    isCorrectExtension
+    KbqInputFileLabel
 } from './file-upload';
 
 let nextMultipleFileUploadUniqueId = 0;

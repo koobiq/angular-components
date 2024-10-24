@@ -1,11 +1,16 @@
 import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { maxFileSize as maxFileSizeValidation } from '@koobiq/components/core';
 import { KbqFileItem } from '@koobiq/components/file-upload';
 
-export const maxFileExceededFiveMbs = maxFileSizeValidation(
-    5 * 2 ** 20,
-    'Размер файла превышает максимально допустимый (5 МБ)'
-);
+const MAX_FILE_SIZE = 5 * 2 ** 20;
+
+export const maxFileExceededFiveMbs = (file: File) => {
+    if (!file) return null;
+    if (file.size > MAX_FILE_SIZE) {
+        return 'Размер файла превышает максимально допустимый (5 МБ)';
+    }
+
+    return null;
+};
 
 export const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
     const kilo = 1024;

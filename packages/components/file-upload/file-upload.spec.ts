@@ -11,9 +11,8 @@ import {
     dispatchKeyboardEvent,
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
-import { KbqFileValidatorFn, maxFileSize } from '@koobiq/components/core';
 import { createFile } from './file-drop.spec';
-import { KbqFileItem } from './file-upload';
+import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
 import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';

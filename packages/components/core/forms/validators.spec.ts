@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { FileValidators, maxFileSize } from '@koobiq/components/core';
+import { FileValidators } from '@koobiq/components/core';
 import { KbqFileItem } from '@koobiq/components/file-upload';
 import { PasswordValidators } from './validators';
 
@@ -110,25 +110,6 @@ describe('Validators', () => {
                 const control = new FormControl(null, [FileValidators.maxFileSize(maxFileSize)]);
                 control.setValue(null);
                 expect(control.errors).toBeNull();
-            });
-        });
-
-        describe(`${maxFileSize.name} - standalone function`, () => {
-            const errorMessage = 'errorMessage';
-            const maxFileSizeInstance = maxFileSize(10, errorMessage);
-            it('should return null for an empty value', () => {
-                const result = maxFileSizeInstance(null);
-                expect(result).toBeNull();
-            });
-
-            it('should return null for a file size less than or equal to maxFileSize', () => {
-                const result = maxFileSizeInstance(new File(['lorem'], 'test.txt', { type: 'text/plain' }));
-                expect(result).toBeNull();
-            });
-
-            it('should return an error for a file size greater than maxFileSize', () => {
-                const result = maxFileSizeInstance(new File(['lorem ipsum'], 'test.txt', { type: 'text/plain' }));
-                expect(result).toEqual(errorMessage);
             });
         });
     });

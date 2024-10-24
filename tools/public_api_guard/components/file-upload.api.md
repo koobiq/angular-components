@@ -24,7 +24,6 @@ import * as i7 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/button';
 import * as i9 from '@koobiq/components/list';
 import { InjectionToken } from '@angular/core';
-import { KbqFileValidatorFn } from '@koobiq/components/core';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -95,6 +94,9 @@ export class KbqFileUploadModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFileUploadModule, [typeof i1.KbqFileDropDirective, typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent], [typeof i4.FormsModule, typeof i4.ReactiveFormsModule, typeof i5.KbqToolTipModule, typeof i6.KbqProgressSpinnerModule, typeof i7.KbqIconModule, typeof i8.KbqButtonModule, typeof i9.KbqListModule, typeof i10.KbqFormFieldModule, typeof i11.KbqEllipsisCenterModule, typeof i12.KbqDataSizePipe, typeof i13.KbqLinkModule, typeof i14.AsyncPipe, typeof i14.NgClass, typeof i14.NgTemplateOutlet], [typeof i2.KbqSingleFileUploadComponent, typeof i3.KbqMultipleFileUploadComponent, typeof i1.KbqFileDropDirective]>;
 }
+
+// @public @deprecated (undocumented)
+export type KbqFileValidatorFn = (file: File) => string | null;
 
 // @public (undocumented)
 export interface KbqInputFile {
