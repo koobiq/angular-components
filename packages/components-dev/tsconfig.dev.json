@@ -5,6 +5,8 @@
     },
     "angularCompilerOptions": {
         "strictTemplates": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
         "extendedDiagnostics": {
             "checks": {
                 "optionalChainNotNullable": "suppress"
