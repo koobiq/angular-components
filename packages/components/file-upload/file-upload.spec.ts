@@ -33,9 +33,14 @@ const fileItemActionCssClass = 'kbq-file-upload__action';
 const fileItemCssClass = 'file-item';
 const fileItemTextCssClass = 'file-item__text';
 
-const MAX_FILE_SIZE = 5 * 2 ** 20; // 5 MB
+const maxFileExceeded = (file: File): string | null => {
+    const kilo = 1024;
+    const mega = kilo * kilo;
+    const maxMbytes = 5;
+    const maxSize = maxMbytes * mega;
 
-const maxFileExceeded = maxFileSize(MAX_FILE_SIZE, 'Exceeded with (5 Mb)');
+    return (file?.size ?? 0 > maxSize) ? `Exceeded with (${maxSize / mega} Mb)` : null;
+};
 
 describe('MultipleFileUploadComponent', () => {
     let component: BasicMultipleFileUpload;
