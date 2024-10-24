@@ -1,0 +1,20 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/tokens' as *;
+
+@use './svg-icon-button-theme' as *;
+
+.kbq-svg-icon-button {
+    &:not(.kbq-disabled) {
+        cursor: pointer;
+    }
+
+    padding: var(--kbq-icon-button-size-normal-vertical-padding) var(--kbq-icon-button-size-normal-horizontal-padding);
+
+    &.kbq-svg-icon-button_small {
+        padding: var(--kbq-icon-button-size-small-vertical-padding) var(--kbq-icon-button-size-small-horizontal-padding);
+    }
+}
+
+@include kbq-svg-icon-button-theme();
