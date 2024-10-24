@@ -960,7 +960,7 @@ export enum KbqComponentColors {
     // (undocumented)
     Default = "contrast",
     // (undocumented)
-    Empty = "",
+    Empty = "empty",
     // (undocumented)
     Error = "error",
     // (undocumented)
