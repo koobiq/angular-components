@@ -1,13 +1,47 @@
 import { Component } from '@angular/core';
-import { KbqFileItem } from '@koobiq/components/file-upload';
+import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+
+const MAX_FILE_SIZE = 5 * 2 ** 20;
+
+const maxFileExceeded = (file: File): string | null => {
+    return (file?.size ?? 0) > MAX_FILE_SIZE
+        ? `${file.name} - Размер файла превышает максимально допустимый (5 МБ)`
+        : null;
+};
 
 /**
- * @title file upload single error overview
+ * @title file upload Multiple error
  */
 @Component({
+    standalone: true,
     selector: 'file-upload-multiple-error-overview-example',
-    templateUrl: 'file-upload-multiple-error-overview-example.html',
-    styleUrls: ['file-upload-multiple-error-overview-example.css']
+    template: `
+        <kbq-multiple-file-upload
+            (fileQueueChanged)="onChange($event)"
+            inputId="file-upload-multiple-error-overview"
+        >
+            <ng-template
+                #kbqFileIcon
+                let-file
+            >
+                @if (!file.hasError) {
+                    <i kbq-icon="kbq-file-o_16"></i>
+                }
+                @if (file.hasError) {
+                    <i kbq-icon="kbq-exclamation-triangle_16"></i>
+                }
+            </ng-template>
+            <kbq-hint>Максимальный размер файла 5 МБ</kbq-hint>
+            @for (error of errors; track error) {
+                <kbq-hint color="error">{{ error }}</kbq-hint>
+            }
+        </kbq-multiple-file-upload>
+    `,
+    imports: [
+        KbqFileUploadModule,
+        KbqFormFieldModule
+    ]
 })
 export class FileUploadMultipleErrorOverviewExample {
     errors: string[] = [];
@@ -15,30 +49,16 @@ export class FileUploadMultipleErrorOverviewExample {
 
     onChange(files: KbqFileItem[]) {
         this.files = files;
-        const maxFileExceeded = (file: File): string | null => {
-            const kilo = 1024;
-            const mega = kilo * kilo;
-            const maxMbytes = 5;
-            const maxSize = maxMbytes * mega;
-
-            return maxSize !== undefined && (file?.size ?? 0) > maxSize
-                ? `${file.name} - Размер файла превышает максимально допустимый (${maxSize / mega} МБ)`
-                : null;
-        };
 
         this.errors = [];
-        this.files = this.files.map((file) => {
+        this.files.forEach((file) => {
             const errorsPerFile: string[] = [maxFileExceeded(file.file) || ''].filter(Boolean);
+            file.hasError = errorsPerFile.length > 0;
 
             this.errors = [
                 ...this.errors,
                 ...errorsPerFile
             ].filter(Boolean);
-
-            return {
-                ...file,
-                hasError: errorsPerFile.length > 0
-            };
         });
     }
 }

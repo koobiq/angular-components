@@ -122,19 +122,11 @@
     }
 </div>
 
-<div class="kbq-file-upload__info-section">
-    <kbq-hint class="kbq-file-upload__hint">
-        <ng-content select="[hint]" />
-    </kbq-hint>
-
-    @if (hasErrors) {
-        @for (error of errors; track error) {
-            <kbq-hint class="kbq-file-upload__hint kbq-error">
-                {{ error }}
-            </kbq-hint>
-        }
-    }
-</div>
+@if (hasHint) {
+    <div class="kbq-file-upload__hint">
+        <ng-content select="kbq-hint" />
+    </div>
+}
 
 <ng-template #inputTemplate>
     <input

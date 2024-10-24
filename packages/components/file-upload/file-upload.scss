@@ -31,5 +31,11 @@
     }
 }
 
+.kbq-file-upload__hint {
+    .kbq-hint {
+        margin-top: var(--kbq-size-xxs);
+    }
+}
+
 @include kbq-file-upload-theme();
 @include kbq-file-upload-typography();

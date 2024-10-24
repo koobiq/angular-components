@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 
 /**
- * @title Button's colors
+ * @title File Upload Single
  */
 @Component({
+    standalone: true,
     selector: 'file-upload-single-overview-example',
-    templateUrl: 'file-upload-single-overview-example.html',
-    styleUrls: ['file-upload-single-overview-example.css']
+    imports: [
+        KbqFileUploadModule
+    ],
+    template: `
+        <kbq-single-file-upload>
+            <i kbq-icon="kbq-file-o_16"></i>
+        </kbq-single-file-upload>
+    `
 })
-export class FileUploadSingleOverviewExample {
-    themePalette = ThemePalette;
-}
+export class FileUploadSingleOverviewExample {}

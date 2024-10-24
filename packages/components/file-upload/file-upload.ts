@@ -29,15 +29,16 @@ export interface KbqInputFileLabel {
     title?: string | undefined;
 }
 
+/**
+ * @deprecated use FormControl for validation
+ */
 export type KbqFileValidatorFn = (file: File) => string | null;
 
 /* Object for labels customization inside file upload component */
 export const KBQ_FILE_UPLOAD_CONFIGURATION = new InjectionToken<KbqInputFileLabel>('KbqFileUploadConfiguration');
 
 export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
-    if (!accept?.length) {
-        return true;
-    }
+    if (!accept?.length) return true;
 
     const { name, type } = file;
     const fileExt: string = name.split('.').pop() || '';

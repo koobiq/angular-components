@@ -4,6 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    ContentChildren,
     ElementRef,
     EventEmitter,
     Inject,
@@ -11,24 +12,27 @@ import {
     OnDestroy,
     Optional,
     Output,
+    QueryList,
     Renderer2,
     Self,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NgControl } from '@angular/forms';
 import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import {
+    isCorrectExtension,
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
     KbqFileValidatorFn,
     KbqInputFile,
-    KbqInputFileLabel,
-    isCorrectExtension
+    KbqInputFileLabel
 } from './file-upload';
 
 let nextMultipleFileUploadUniqueId = 0;
@@ -65,11 +69,17 @@ export class KbqMultipleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     @Input() accept?: string[];
     @Input() disabled: boolean;
+    /**
+     * @deprecated use `FormControl.errors`
+     */
     @Input() errors: string[] = [];
     @Input() size: 'compact' | 'default' = 'default';
+    /**
+     * custom ID for the file input element.
+     */
     @Input() inputId: string = `kbq-multiple-file-upload-${nextMultipleFileUploadUniqueId++}`;
     /**
-     * Alternative for FormControl's validation
+     * @deprecated use FormControl for validation
      */
     @Input() customValidation?: KbqFileValidatorFn[];
 
@@ -89,9 +99,20 @@ export class KbqMultipleFileUploadComponent
 
     @Output() fileQueueChanged: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
 
+    /**
+     * Emits an event containing a chunk of files added to the file list.
+     */
+    @Output() filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    /**
+     * Emits an event containing a file and file's index when removed from the file list.
+     */
+    @Output() fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
+
     @ContentChild('kbqFileIcon', { static: false, read: TemplateRef }) customFileIcon: TemplateRef<HTMLElement>;
 
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
+
+    @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
 
     hasFocus = false;
     columnDefs: { header: string; cssClass: string }[];
@@ -104,10 +125,14 @@ export class KbqMultipleFileUploadComponent
 
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
-    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
+    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     * @docs-private
+     */
     cvaOnChange = (_: KbqFileItem[]) => {};
 
-    /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
+    /** onTouch function registered via registerOnTouch (ControlValueAccessor).
+     * @docs-private
+     */
 
     onTouched = () => {};
 
@@ -115,8 +140,15 @@ export class KbqMultipleFileUploadComponent
         return this.accept?.join(',') || '*/*';
     }
 
+    /**
+     * @deprecated use `FormControl.errors`
+     */
     get hasErrors(): boolean {
         return this.errors && !!this.errors.length;
+    }
+
+    get hasHint(): boolean {
+        return this.hint.length > 0;
     }
 
     constructor(
@@ -126,7 +158,7 @@ export class KbqMultipleFileUploadComponent
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
         @Optional() @Self() public ngControl?: NgControl
     ) {
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         if (!localeService) {
             this.initDefaultParams();
@@ -188,9 +220,13 @@ export class KbqMultipleFileUploadComponent
             return;
         }
 
+        const filesToAdd = this.mapToFileItem((target as HTMLInputElement).files);
+
         this.files = [
             ...this.files,
-            ...this.mapToFileItem((target as HTMLInputElement).files)];
+            ...filesToAdd
+        ];
+        this.filesAdded.emit(filesToAdd);
         this.onTouched();
         /* even if the user selects the same file,
                  the onchange event will be triggered every time user clicks on the control.*/
@@ -202,7 +238,13 @@ export class KbqMultipleFileUploadComponent
             return;
         }
 
-        this.files = [...this.files, ...this.mapToFileItem(files)];
+        const filesToAdd = this.mapToFileItem(files);
+
+        this.files = [
+            ...this.files,
+            ...filesToAdd
+        ];
+        this.filesAdded.emit(filesToAdd);
         this.onTouched();
     }
 
@@ -212,6 +254,7 @@ export class KbqMultipleFileUploadComponent
         }
 
         event?.stopPropagation();
+        this.fileRemoved.emit([this.files[index], index]);
         this.files.splice(index, 1);
         this.files = [...this.files];
         this.onTouched();

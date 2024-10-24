@@ -1,12 +1,4 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/tokens';
-
-@use '../core/styles/common';
 @use '../core/styles/common/tokens' as *;
-
-$tokens: meta.module-variables(tokens) !default;
 
 .kbq-single-file-upload .kbq-file-upload {
     padding: kbq-difference-series-css-variables(
@@ -50,8 +42,4 @@ $tokens: meta.module-variables(tokens) !default;
             }
         }
     }
-}
-
-.kbq-file-upload__hint {
-    margin-top: var(--kbq-form-field-hint-size-margin-top);
 }

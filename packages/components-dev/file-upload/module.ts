@@ -10,19 +10,19 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    AbstractControl,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    ValidationErrors
-} from '@angular/forms';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
+import {
+    FileValidators,
+    KBQ_LOCALE_SERVICE,
+    KbqDataSizePipe,
+    KbqLocaleService,
+    KbqLocaleServiceModule
+} from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
@@ -35,49 +35,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
+import { maxFileExceededFiveMbs, maxFileSize } from './validation';
 
-const maxFileExceeded = (file: File): string | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
+const MAX_FILE_SIZE = 5 * 2 ** 20;
 
-    return maxSize !== undefined && (file?.size ?? 0) > maxSize
-        ? `Размер файла превышает максимально допустимый (${maxSize / mega} МБ)`
-        : null;
-};
-
-const maxFileExceededFn = (control: AbstractControl): ValidationErrors | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    return maxSize !== undefined && ((control.value as KbqFileItem)?.file?.size ?? 0) > maxSize
-        ? { maxFileExceeded: `Размер файла превышает максимально допустимый (${maxSize / mega} МБ)` }
-        : null;
-};
-
-const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors | null => {
-    const kilo = 1024;
-    const mega = kilo * kilo;
-    const maxMbytes = 5;
-    const maxSize = maxMbytes * mega;
-
-    const value: KbqFileItem[] = control.value;
-
-    const errors = value.reduce<ValidationErrors>((res, current) => {
-        // validation check & hasError set to represent error state
-        if (maxSize !== undefined && (current?.file?.size ?? 0) > maxSize) {
-            current.hasError = true;
-            res[current.file.name] =
-                `${current.file.name} — Размер файла превышает максимально допустимый (${maxSize / mega} МБ)`;
-        }
-        return res;
-    }, {});
-
-    return maxSize !== undefined && !!Object.values(errors).length ? errors : null;
-};
+const hintMessage = 'file upload hint';
 
 @Component({
     selector: 'file-upload-compact',
@@ -85,7 +47,6 @@ const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors |
         <kbq-multiple-file-upload
             [disabled]="disabled"
             [inputId]="'test-compact'"
-            [errors]="errorMessagesForMultiple"
             [files]="files"
             (fileQueueChanged)="addedFiles($event)"
             size="compact"
@@ -93,7 +54,7 @@ const maxFileExceededMultipleFn = (control: AbstractControl): ValidationErrors |
             <ng-template #kbqFileIcon>
                 <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>
-            <span hint>Ctest</span>
+            <kbq-hint>{{ hintMessage }}</kbq-hint>
         </kbq-multiple-file-upload>
     `,
     providers: [
@@ -112,6 +73,8 @@ export class MultipleFileUploadCompactComponent {
     @Input() files: KbqFileItem[] = [];
     @Output() addedFile: EventEmitter<any> = new EventEmitter<any>();
 
+    hintMessage = hintMessage;
+
     addedFiles(event: KbqFileItem[]) {
         this.addedFile.emit(event);
     }
@@ -126,32 +89,39 @@ export class MultipleFileUploadCompactComponent {
 })
 export class DemoComponent {
     disabled = false;
-    validation: KbqFileValidatorFn[] = [maxFileExceeded];
+    validation: KbqFileValidatorFn[] = [maxFileExceededFiveMbs];
+    hintMessage = hintMessage;
 
     file: KbqFileItem | null;
     files: KbqFileItem[] = [];
+    filesForDefaultValidation: KbqFileItem[] = [];
+
     errorMessagesForSingle: string[] = [];
-    errorMessagesForMultiple: string[] = [];
+    errorMessages: string[] = [];
     accept = ['.pdf', '.png'];
 
-    control = new FormControl<KbqFileItem | null>(null, maxFileExceededFn);
+    control = new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE));
+    singleFileControl = new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE));
 
     form = new FormGroup(
         {
-            'file-upload': new FormControl<KbqFileItem | null>(null, maxFileExceededFn)
+            'file-upload': new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE))
         },
         { updateOn: 'submit' }
     );
 
     formMultiple = new FormGroup(
         {
-            'file-upload': new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn)
+            'file-upload': new FormControl<FileList | KbqFileItem[]>([]),
+            'file-list': new FormArray<FormControl<KbqFileItem | null>>([])
         },
         { updateOn: 'submit' }
     );
+    fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
+    fileListOnAddLoad = new FormArray<FormControl<KbqFileItem | null>>([]);
 
     secondControl = new FormControl<File | KbqFileItem | null>(null);
-    multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileExceededMultipleFn);
+    multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileSize);
 
     languageList = [
         { id: 'ru-RU' },
@@ -162,15 +132,49 @@ export class DemoComponent {
         { id: 'fa-IR' }];
     selectedLanguage: any = this.languageList[0];
 
+    get fileListValidationOnSubmit(): FormArray {
+        return this.formMultiple.get('file-list') as FormArray;
+    }
+
     constructor(
         private cdr: ChangeDetectorRef,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
-        this.control.valueChanges.subscribe((value: KbqFileItem | null) => {
+        this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: KbqFileItem | null) => {
             // can be used mapped file item
             // this.secondControl.setValue(value);
             // or even JS file object
             this.secondControl.setValue(value?.file || null);
+        });
+
+        this.singleFileControl.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: KbqFileItem | null) => {
+            if (!value || this.singleFileControl.invalid) return;
+
+            this.initLoading();
+        });
+
+        this.fileList.statusChanges.subscribe(() => {
+            this.fileList.controls.forEach((control: FormControl<KbqFileItem | null>) => {
+                if (control?.value && 'hasError' in control.value) {
+                    control.value.hasError = control.invalid;
+                }
+            });
+        });
+
+        this.fileListValidationOnSubmit.statusChanges.subscribe(() => {
+            this.fileListValidationOnSubmit.controls.forEach((control) => {
+                if (control.invalid) {
+                    control.value.hasError = true;
+                }
+            });
+        });
+
+        this.fileListOnAddLoad.statusChanges.subscribe(() => {
+            this.fileListOnAddLoad.controls.forEach((control) => {
+                if (control?.value && 'hasError' in control.value) {
+                    control.value.hasError = control.invalid;
+                }
+            });
         });
     }
 
@@ -182,6 +186,9 @@ export class DemoComponent {
 
     addFile(file: KbqFileItem | null) {
         this.file = file;
+        if (!this.file) {
+            this.errorMessagesForSingle = [];
+        }
     }
 
     addFileMultiple(files: KbqFileItem[]) {
@@ -191,30 +198,22 @@ export class DemoComponent {
 
     checkValidation() {
         this.errorMessagesForSingle = [];
-        this.errorMessagesForMultiple = [];
+
         if (this.file) {
             this.errorMessagesForSingle = this.validation.map((fn) => fn(this.file!.file) || '').filter(Boolean);
+            if (this.errorMessagesForSingle.length) {
+                this.file = { ...this.file, hasError: true };
+            }
         }
-
-        this.files = this.files.map((file) => {
-            const errorsPerFile: string[] = this.validation.map((fn) => fn(file!.file) || '').filter(Boolean);
-
-            this.errorMessagesForMultiple = [
-                ...this.errorMessagesForMultiple,
-                ...errorsPerFile
-            ].filter(Boolean);
-
-            return {
-                ...file,
-                hasError: errorsPerFile.length > 0
-            };
-        });
 
         this.cdr.markForCheck();
     }
 
     onSubmit() {
-        console.log(this.form.get('first')?.errors?.maxFileExceeded);
+        this.fileListValidationOnSubmit.controls.forEach((control) => {
+            control.setValidators(FileValidators.maxFileSize(MAX_FILE_SIZE));
+            control.updateValueAndValidity();
+        });
     }
 
     toggleDisabled() {
@@ -247,6 +246,74 @@ export class DemoComponent {
         this.files.forEach((file) => timer(300).subscribe(() => file.loading?.next(true)));
 
         timer(5000).subscribe(() => this.files.forEach((file) => file.loading?.next(false)));
+    }
+
+    initLoading() {
+        const file = this.singleFileControl.value;
+        file?.loading?.next(true);
+
+        timer(5000).subscribe(() => file?.loading?.next(false));
+    }
+
+    initLoadingForMultiple() {
+        const files: KbqFileItem[] = [];
+        // const fileControlValue = this.formMultipleLoadOnAdded.get('file-upload')?.value;
+        // if (fileControlValue) {
+        //     files = fileControlValue.filter((file: KbqFileItem) => !file.hasError);
+        // }
+
+        for (const file of files) {
+            file?.loading?.next(true);
+        }
+
+        timer(5000).subscribe(() => {
+            for (const file of files) {
+                file?.loading?.next(false);
+            }
+        });
+    }
+
+    onFileRemoved([
+        _,
+        index
+    ]: [
+        KbqFileItem,
+        number
+    ]) {
+        this.fileListValidationOnSubmit.removeAt(index);
+        this.fileList.removeAt(index);
+    }
+
+    onFilesAddedForListWithDefaultValidation($event: KbqFileItem[]) {
+        for (const fileItem of $event.slice()) {
+            this.fileList.push(new FormControl(fileItem, FileValidators.maxFileSize(MAX_FILE_SIZE)));
+        }
+    }
+
+    onFilesAddedForListWithLoadOnAdd($event: KbqFileItem[]) {
+        for (const fileItem of $event.slice()) {
+            this.fileListOnAddLoad.push(new FormControl(fileItem, FileValidators.maxFileSize(MAX_FILE_SIZE)));
+        }
+        this.initLoadingForMultiple();
+    }
+
+    onFilesAdded($event: KbqFileItem[]) {
+        for (const fileItem of $event.slice()) {
+            this.fileListValidationOnSubmit.push(new FormControl(fileItem));
+        }
+    }
+
+    onFileQueueChange($event: KbqFileItem[]) {
+        this.filesForDefaultValidation = $event.slice();
+
+        this.errorMessages = [];
+        for (const fileItem of this.filesForDefaultValidation) {
+            const validationResult = maxFileExceededFiveMbs(fileItem.file);
+            if (validationResult) {
+                fileItem.hasError = true;
+                this.errorMessages.push(`${fileItem.file.name} - maxFileSize`);
+            }
+        }
     }
 }
 

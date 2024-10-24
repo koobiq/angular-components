@@ -1384,9 +1384,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "File upload with Control Value Accessor",
     "componentName": "FileUploadCvaOverviewExample",
     "files": [
-      "file-upload-cva-overview-example.ts",
-      "file-upload-cva-overview-example.html",
-      "file-upload-cva-overview-example.css"
+      "file-upload-cva-overview-example.ts"
     ],
     "selector": "file-upload-cva-overview-example",
     "additionalComponents": [],
@@ -1399,12 +1397,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-indeterminate-loading-overview": {
     "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
-    "title": "Button's colors",
+    "title": "File Upload Indeterminate Loading",
     "componentName": "FileUploadIndeterminateLoadingOverviewExample",
     "files": [
-      "file-upload-indeterminate-loading-overview-example.ts",
-      "file-upload-indeterminate-loading-overview-example.html",
-      "file-upload-indeterminate-loading-overview-example.css"
+      "file-upload-indeterminate-loading-overview-example.ts"
     ],
     "selector": "file-upload-indeterminate-loading-overview-example",
     "additionalComponents": [],
@@ -1417,12 +1413,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
-    "title": "Progress button",
+    "title": "File Upload Multiple Compact",
     "componentName": "FileUploadMultipleCompactOverviewExample",
     "files": [
-      "file-upload-multiple-compact-overview-example.ts",
-      "file-upload-multiple-compact-overview-example.html",
-      "file-upload-multiple-compact-overview-example.css"
+      "file-upload-multiple-compact-overview-example.ts"
     ],
     "selector": "file-upload-multiple-compact-overview-example",
     "additionalComponents": [],
@@ -1438,9 +1432,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "file upload multiple custom text",
     "componentName": "FileUploadMultipleCustomTextOverviewExample",
     "files": [
-      "file-upload-multiple-custom-text-overview-example.ts",
-      "file-upload-multiple-custom-text-overview-example.html",
-      "file-upload-multiple-custom-text-overview-example.css"
+      "file-upload-multiple-custom-text-overview-example.ts"
     ],
     "selector": "file-upload-multiple-custom-text-overview-example",
     "additionalComponents": [],
@@ -1453,12 +1445,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-default-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-overview",
-    "title": "file upload multiple default size",
+    "title": "File Upload Multiple Default",
     "componentName": "FileUploadMultipleDefaultOverviewExample",
     "files": [
-      "file-upload-multiple-default-overview-example.ts",
-      "file-upload-multiple-default-overview-example.html",
-      "file-upload-multiple-default-overview-example.css"
+      "file-upload-multiple-default-overview-example.ts"
     ],
     "selector": "file-upload-multiple-default-overview-example",
     "additionalComponents": [],
@@ -1469,14 +1459,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-file-upload"
     }
   },
+  "file-upload-multiple-default-validation-reactive-forms-overview": {
+    "packagePath": "components/file-upload/file-upload-multiple-default-validation-reactive-forms-overview",
+    "title": "File Upload Multiple Default Validation Reactive Forms",
+    "componentName": "FileUploadMultipleDefaultValidationReactiveFormsOverviewExample",
+    "files": [
+      "file-upload-multiple-default-validation-reactive-forms-overview-example.ts"
+    ],
+    "selector": "file-upload-multiple-default-validation-reactive-forms-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-default-validation-reactive-forms-overview-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/file-upload",
+      "importPath": "koobiq-docs-examples-components-file-upload"
+    }
+  },
   "file-upload-multiple-error-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-error-overview",
-    "title": "file upload single error overview",
+    "title": "file upload Multiple error",
     "componentName": "FileUploadMultipleErrorOverviewExample",
     "files": [
-      "file-upload-multiple-error-overview-example.ts",
-      "file-upload-multiple-error-overview-example.html",
-      "file-upload-multiple-error-overview-example.css"
+      "file-upload-multiple-error-overview-example.ts"
     ],
     "selector": "file-upload-multiple-error-overview-example",
     "additionalComponents": [],
@@ -1489,12 +1493,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-error-overview": {
     "packagePath": "components/file-upload/file-upload-single-error-overview",
-    "title": "file upload single error overview",
+    "title": "file upload single error",
     "componentName": "FileUploadSingleErrorOverviewExample",
     "files": [
-      "file-upload-single-error-overview-example.ts",
-      "file-upload-single-error-overview-example.html",
-      "file-upload-single-error-overview-example.css"
+      "file-upload-single-error-overview-example.ts"
     ],
     "selector": "file-upload-single-error-overview-example",
     "additionalComponents": [],
@@ -1507,16 +1509,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-overview": {
     "packagePath": "components/file-upload/file-upload-single-overview",
-    "title": "Button's colors",
+    "title": "File Upload Single",
     "componentName": "FileUploadSingleOverviewExample",
     "files": [
-      "file-upload-single-overview-example.ts",
-      "file-upload-single-overview-example.html",
-      "file-upload-single-overview-example.css"
+      "file-upload-single-overview-example.ts"
     ],
     "selector": "file-upload-single-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-overview-example.ts",
+    "module": {
+      "name": "FileUploadExamplesModule",
+      "importSpecifier": "components/file-upload",
+      "importPath": "koobiq-docs-examples-components-file-upload"
+    }
+  },
+  "file-upload-single-validation-reactive-forms-overview": {
+    "packagePath": "components/file-upload/file-upload-single-validation-reactive-forms-overview",
+    "title": "File Upload Single Validation Reactive Forms",
+    "componentName": "FileUploadSingleValidationReactiveFormsOverviewExample",
+    "files": [
+      "file-upload-single-validation-reactive-forms-overview-example.ts"
+    ],
+    "selector": "file-upload-single-validation-reactive-forms-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-validation-reactive-forms-overview-example.ts",
     "module": {
       "name": "FileUploadExamplesModule",
       "importSpecifier": "components/file-upload",

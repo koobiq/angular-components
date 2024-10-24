@@ -45,13 +45,8 @@
     }
 </div>
 
-<kbq-hint class="kbq-file-upload__hint">
-    <ng-content select="[hint]" />
-</kbq-hint>
-@if (errors?.length) {
-    @for (error of errors; track error) {
-        <kbq-hint class="kbq-file-upload__hint kbq-error">
-            {{ error }}
-        </kbq-hint>
-    }
+@if (hasHint) {
+    <div class="kbq-file-upload__hint">
+        <ng-content select="kbq-hint" />
+    </div>
 }

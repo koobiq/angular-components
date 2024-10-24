@@ -1,20 +1,40 @@
 import { Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
-import { KbqFileItem } from '@koobiq/components/file-upload';
+import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 /**
- * @title Button's colors
+ * @title File Upload Indeterminate Loading
  */
 @Component({
+    standalone: true,
     selector: 'file-upload-indeterminate-loading-overview-example',
-    templateUrl: 'file-upload-indeterminate-loading-overview-example.html',
-    styleUrls: ['file-upload-indeterminate-loading-overview-example.css']
+    imports: [
+        KbqFileUploadModule
+    ],
+    template: `
+        <kbq-file-upload
+            (fileQueueChange)="onFileChange($event)"
+            progressMode="indeterminate"
+        >
+            <i kbq-icon="kbq-file-o_16"></i>
+        </kbq-file-upload>
+
+        <kbq-file-upload
+            (fileQueueChanged)="onFilesChange($event)"
+            multiple
+            progressMode="indeterminate"
+        >
+            <i kbq-icon="kbq-file-o_16"></i>
+        </kbq-file-upload>
+
+        @if (isLoading) {
+            <p class="kbq-body">Immediately load to backend...</p>
+        }
+    `
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
     isLoading: boolean;
-    themePalette = ThemePalette;
 
     onFileChange(file: KbqFileItem | null) {
         if (!file) {

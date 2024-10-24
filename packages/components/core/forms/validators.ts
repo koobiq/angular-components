@@ -136,3 +136,37 @@ export class PasswordValidators {
         };
     }
 }
+
+/** Provides a set of validators for file-related form controls. */
+export class FileValidators {
+    /**
+     * Validator that checks if the file size is less than or equal to the provided `maxSize`.
+     *
+     * @param maxSize - The maximum allowed file size in bytes.
+     *
+     * @returns A ValidatorFn function that checks the file size.
+     *
+     * ## Usage:
+     *
+     * ```typescript
+     * const control = new FormControl(null, [FileValidators.maxFileSize(1024 * 1024)]); // 1MB
+     * control.setValue(FILE_LESS_OR_EQUAL_THAN_1MB);
+     * console.log(control.errors); // null
+     * control.setValue(FILE_MORE_THAN_1MB);
+     * console.log(control.errors); // {maxFileSize: { max: 1048576, actual: FILE_MORE_THAN_1MB.size }}
+     * ```
+     */
+    static maxFileSize(maxSize: number): ValidatorFn {
+        return ({ value }: AbstractControl): ValidationErrors | null => {
+            if (!value) return null;
+
+            const size = value instanceof File ? value.size : value.file.size;
+
+            if (size > maxSize) {
+                return { maxFileSize: { max: maxSize, actual: size } };
+            }
+
+            return null;
+        };
+    }
+}

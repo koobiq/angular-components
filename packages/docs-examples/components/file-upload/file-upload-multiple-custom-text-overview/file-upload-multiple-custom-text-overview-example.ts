@@ -1,6 +1,10 @@
 import { Component } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-import { KBQ_FILE_UPLOAD_CONFIGURATION, KbqInputFileMultipleLabel } from '@koobiq/components/file-upload';
+import {
+    KBQ_FILE_UPLOAD_CONFIGURATION,
+    KbqFileUploadModule,
+    KbqInputFileMultipleLabel
+} from '@koobiq/components/file-upload';
 import { enUSLocaleData } from '../en-US';
 import { esLALocaleData } from '../es-LA';
 import { faIRLocaleData } from '../fa-IR';
@@ -44,9 +48,18 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
  * @title file upload multiple custom text
  */
 @Component({
+    standalone: true,
     selector: 'file-upload-multiple-custom-text-overview-example',
-    templateUrl: 'file-upload-multiple-custom-text-overview-example.html',
-    styleUrls: ['file-upload-multiple-custom-text-overview-example.css'],
+    template: `
+        <kbq-multiple-file-upload>
+            <ng-template #kbqFileIcon>
+                <i kbq-icon="kbq-file-o_16"></i>
+            </ng-template>
+        </kbq-multiple-file-upload>
+    `,
+    imports: [
+        KbqFileUploadModule
+    ],
     providers: [
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,

@@ -8,7 +8,7 @@
     .kbq-file-upload {
         .kbq-focused,
         .kbq-link.kbq-focused {
-            border: 2px solid var(--kbq-file-upload-single-states-focused-focus-outline);
+            border: 2px solid var(--kbq-file-upload-single-states-focused-focus-outline-color);
         }
     }
 
@@ -114,10 +114,9 @@
         }
     }
 
-    .kbq-single-file-upload,
-    .kbq-multiple-file-upload {
-        .kbq-file-upload__hint:not(.kbq-error) {
-            color: var(--kbq-form-field-hint-text);
+    .kbq-file-upload__hint {
+        .kbq-hint {
+            color: var(--kbq-foreground-contrast-secondary);
         }
     }
 }
@@ -158,10 +157,7 @@
         }
     }
 
-    .kbq-single-file-upload,
-    .kbq-multiple-file-upload {
-        .kbq-file-upload__hint.kbq-hint .kbq-hint__text {
-            @include kbq-typography-css-variables(form-field-hint, text);
-        }
+    .kbq-file-upload__hint .kbq-hint .kbq-hint__text {
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 }
