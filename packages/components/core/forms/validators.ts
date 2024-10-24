@@ -1,7 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-export type KbqFileValidatorFn = (file: File | null) => string | null;
-
 /** Provides a set of validators for password form controls. */
 export class PasswordValidators {
     /**
@@ -138,23 +136,6 @@ export class PasswordValidators {
         };
     }
 }
-
-/**
- * Creates a validator function that checks if a file's size exceeds a maximum allowed size.
- *
- *
- * @returns {function(File | null): string | null} - A validator function that takes a file (or null) and returns an error message (if applicable) or null.
- */
-export const maxFileSize =
-    (maxFileSize: number, errorMessage: string): KbqFileValidatorFn =>
-    (file: File | null): string | null => {
-        if (!file) return null;
-        if (file.size > maxFileSize) {
-            return errorMessage;
-        }
-
-        return null;
-    };
 
 /** Provides a set of validators for file-related form controls. */
 export class FileValidators {
