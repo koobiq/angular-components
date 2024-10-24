@@ -35,7 +35,7 @@ export enum KbqComponentColors {
     Success = 'success',
 
     Default = 'contrast',
-    Empty = ''
+    Empty = 'empty'
 }
 
 /** Mixin to augment a directive with a `color` property. */
