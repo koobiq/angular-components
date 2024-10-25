@@ -27,16 +27,16 @@ export const ptBRLocaleData = {
         }
     },
     codeBlock: {
-        softWrapOnTooltip: 'Включить перенос по словам',
-        softWrapOffTooltip: 'Выключить перенос по словам',
-        downloadTooltip: 'Скачать',
-        copiedTooltip: '✓ Скопировано',
-        copyTooltip: 'Скопировать',
-        viewAllText: 'Показать все',
-        viewLessText: 'Свернуть',
-        openExternalSystemTooltip: 'Открыть во внешней системе'
+        softWrapOnTooltip: 'Ativar quebra de linha',
+        softWrapOffTooltip: 'Desativar quebra de linha',
+        downloadTooltip: 'Baixar',
+        copiedTooltip: '✓ Copiado',
+        copyTooltip: 'Copiar',
+        viewAllText: 'Mostrar todos',
+        viewLessText: 'Mostrar menos',
+        openExternalSystemTooltip:  'Abrir em sistema externo'
     },
     timezone: {
-        searchPlaceholder: 'Город или часовой пояс'
+        searchPlaceholder:  'Cidade ou fuso horário'
     }
 };
