@@ -17,20 +17,6 @@
     --kbq-toast-size-close-button-margin-right: var(--kbq-size-xxs);
     --kbq-toast-size-button-stack-padding-top: var(--kbq-size-s);
     --kbq-toast-size-button-stack-content-gap-horizontal: var(--kbq-size-m);
-    --kbq-toast-font-title-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-toast-font-title-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-toast-font-title-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-toast-font-title-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-toast-font-title-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-toast-font-title-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-toast-font-title-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    --kbq-toast-font-text-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-toast-font-text-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-toast-font-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-toast-font-text-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-toast-font-text-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-toast-font-text-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-toast-font-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

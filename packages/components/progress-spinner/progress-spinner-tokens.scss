@@ -7,20 +7,6 @@
     --kbq-progress-spinner-size-big-stroke-width: 3px;
     --kbq-progress-spinner-size-big-content-gap-vertical: var(--kbq-size-3xs);
     --kbq-progress-spinner-size-big-content-gap-horizontal: var(--kbq-size-s);
-    --kbq-progress-spinner-font-label-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-progress-spinner-font-label-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-progress-spinner-font-label-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-progress-spinner-font-label-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-progress-spinner-font-label-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-progress-spinner-font-label-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-progress-spinner-font-label-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    --kbq-progress-spinner-font-caption-font-size: var(--kbq-typography-text-compact-font-size);
-    --kbq-progress-spinner-font-caption-line-height: var(--kbq-typography-text-compact-line-height);
-    --kbq-progress-spinner-font-caption-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
-    --kbq-progress-spinner-font-caption-font-weight: var(--kbq-typography-text-compact-font-weight);
-    --kbq-progress-spinner-font-caption-font-family: var(--kbq-typography-text-compact-font-family);
-    --kbq-progress-spinner-font-caption-text-transform: var(--kbq-typography-text-compact-text-transform);
-    --kbq-progress-spinner-font-caption-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

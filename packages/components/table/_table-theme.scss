@@ -44,7 +44,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-css-variables(table, header);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
 
         & > tbody {
@@ -52,7 +52,7 @@
                 font-weight: normal;
             }
 
-            @include kbq-typography-css-variables(table, body);
+            @include kbq-typography-level-to-styles_css-variables(typography, tabular-normal);
         }
     }
 }

@@ -28,7 +28,7 @@
         background: var(--kbq-select-panel-dropdown-background);
 
         & .kbq-select__footer {
-            border-color: var(--kbq-divider-color);
+            border-color: var(--kbq-line-contrast-less);
         }
     }
 }
@@ -36,6 +36,6 @@
 @mixin kbq-tree-select-typography() {
     .kbq-tree-select,
     .kbq-tree-select__panel {
-        @include kbq-typography-css-variables(select-panel, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

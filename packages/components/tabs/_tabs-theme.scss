@@ -151,6 +151,6 @@
 @mixin kbq-tabs-typography() {
     .kbq-tab-label,
     .kbq-tab-link {
-        @include kbq-typography-css-variables(tabs, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
     }
 }

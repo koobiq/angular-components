@@ -9,13 +9,6 @@
     --kbq-button-toggle-size-item-padding-vertical: var(--kbq-size-3xs);
     --kbq-button-toggle-size-item-content-gap-horizontal: var(--kbq-size-xxs);
     --kbq-button-toggle-size-item-focus-outline-width: var(--kbq-size-3xs);
-    --kbq-button-toggle-font-item-font-size: var(--kbq-typography-text-normal-medium-font-size);
-    --kbq-button-toggle-font-item-line-height: var(--kbq-typography-text-normal-medium-line-height);
-    --kbq-button-toggle-font-item-letter-spacing: var(--kbq-typography-text-normal-medium-letter-spacing);
-    --kbq-button-toggle-font-item-font-weight: var(--kbq-typography-text-normal-medium-font-weight);
-    --kbq-button-toggle-font-item-font-family: var(--kbq-typography-text-normal-medium-font-family);
-    --kbq-button-toggle-font-item-text-transform: var(--kbq-typography-text-normal-medium-text-transform);
-    --kbq-button-toggle-font-item-font-feature-settings: var(--kbq-typography-text-normal-medium-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

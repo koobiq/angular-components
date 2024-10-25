@@ -147,7 +147,7 @@
 
 @mixin kbq-link-typography() {
     .kbq-link {
-        @include kbq-typography-css-variables(link, normal);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
 
         & .kbq-icon {
             line-height: inherit;
@@ -156,10 +156,10 @@
     }
 
     .kbq-link.kbq-link_compact {
-        @include kbq-typography-css-variables(link, compact);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 
     .kbq-link.kbq-link_big {
-        @include kbq-typography-css-variables(link, big);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
     }
 }

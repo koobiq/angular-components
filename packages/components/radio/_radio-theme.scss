@@ -72,18 +72,18 @@
 
 @mixin kbq-radio-typography() {
     .kbq-radio-button {
-        @include kbq-typography-css-variables(radio, normal-label);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-css-variables(radio, normal-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
         }
     }
 
     .kbq-radio-button.kbq-radio-button_big {
-        @include kbq-typography-css-variables(radio, big-label);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-css-variables(radio, big-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
     }
 }

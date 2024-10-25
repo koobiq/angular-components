@@ -15,36 +15,6 @@
     --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-xl);
     --kbq-empty-state-size-normal-image-addon-height: var(--kbq-size-xxl);
     --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xxs);
-    --kbq-empty-state-font-big-title-font-size: var(--kbq-typography-headline-font-size);
-    --kbq-empty-state-font-big-title-line-height: var(--kbq-typography-headline-line-height);
-    --kbq-empty-state-font-big-title-letter-spacing: var(--kbq-typography-headline-letter-spacing);
-    --kbq-empty-state-font-big-title-font-weight: var(--kbq-typography-headline-font-weight);
-    --kbq-empty-state-font-big-title-font-family: var(--kbq-typography-headline-font-family);
-    --kbq-empty-state-font-big-title-text-transform: var(--kbq-typography-headline-text-transform);
-    --kbq-empty-state-font-big-title-font-feature-settings: var(--kbq-typography-headline-font-feature-settings);
-    --kbq-empty-state-font-big-text-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-empty-state-font-big-text-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-empty-state-font-big-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-empty-state-font-big-text-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-empty-state-font-big-text-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-empty-state-font-big-text-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-empty-state-font-big-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    --kbq-empty-state-font-normal-title-font-size: var(--kbq-typography-text-big-strong-font-size);
-    --kbq-empty-state-font-normal-title-line-height: var(--kbq-typography-text-big-strong-line-height);
-    --kbq-empty-state-font-normal-title-letter-spacing: var(--kbq-typography-text-big-strong-letter-spacing);
-    --kbq-empty-state-font-normal-title-font-weight: var(--kbq-typography-text-big-strong-font-weight);
-    --kbq-empty-state-font-normal-title-font-family: var(--kbq-typography-text-big-strong-font-family);
-    --kbq-empty-state-font-normal-title-text-transform: var(--kbq-typography-text-big-strong-text-transform);
-    --kbq-empty-state-font-normal-title-font-feature-settings: var(
-        --kbq-typography-text-big-strong-font-feature-settings
-    );
-    --kbq-empty-state-font-normal-text-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-empty-state-font-normal-text-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-empty-state-font-normal-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-empty-state-font-normal-text-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-empty-state-font-normal-text-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-empty-state-font-normal-text-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-empty-state-font-normal-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

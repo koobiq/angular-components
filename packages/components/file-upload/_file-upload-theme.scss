@@ -125,34 +125,34 @@
     .kbq-single-file-upload {
         & .file-item__text-wrapper,
         & .dropzone__text {
-            @include kbq-typography-css-variables(file-upload, single-text-block);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
     }
 
     .kbq-multiple-file-upload {
         .multiple__header {
-            @include kbq-typography-css-variables(file-upload, multiple-title);
+            @include kbq-typography-level-to-styles_css-variables(typography, subheading);
         }
 
         .multiple__caption {
             &,
             .kbq-link {
-                @include kbq-typography-css-variables(file-upload, multiple-text-block);
+                @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
             }
         }
 
         .kbq-file-multiple-uploaded__header {
-            @include kbq-typography-css-variables(file-upload, multiple-grid);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
 
         .multiple__uploaded-item {
-            @include kbq-typography-css-variables(file-upload, multiple-grid);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
 
         .kbq-file-upload {
             .kbq-list-item,
             .kbq-list-option {
-                @include kbq-typography-css-variables(file-upload, multiple-grid);
+                @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
             }
         }
     }

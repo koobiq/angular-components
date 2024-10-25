@@ -364,7 +364,7 @@
 
 @mixin kbq-code-block-typography() {
     .kbq-code-block {
-        @include kbq-typography-css-variables(code-block, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, mono-codeblock);
 
         & .kbq-code-block__code {
             font: inherit;

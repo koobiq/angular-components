@@ -3,22 +3,6 @@
     --kbq-description-list-size-horizontal-gap-vertical: var(--kbq-size-l);
     --kbq-description-list-size-vertical-content-gap-vertical: var(--kbq-size-3xs);
     --kbq-description-list-size-vertical-gap-vertical: var(--kbq-size-m);
-    --kbq-description-list-font-term-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-description-list-font-term-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-description-list-font-term-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-description-list-font-term-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-description-list-font-term-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-description-list-font-term-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-description-list-font-term-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    --kbq-description-list-font-description-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-description-list-font-description-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-description-list-font-description-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-description-list-font-description-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-description-list-font-description-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-description-list-font-description-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-description-list-font-description-font-feature-settings: var(
-        --kbq-typography-text-normal-font-feature-settings
-    );
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

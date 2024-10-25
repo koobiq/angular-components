@@ -17,11 +17,11 @@
 @mixin kbq-dl-typography() {
     .kbq-dl {
         & .kbq-dt {
-            @include kbq-typography-css-variables(description-list, term);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
 
         & .kbq-dd {
-            @include kbq-typography-css-variables(description-list, description);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
     }
 }

@@ -1,8 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/theming/theming';
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-datepicker-theme() {
@@ -54,10 +49,10 @@
 
 @mixin kbq-datepicker-typography() {
     .kbq-calendar {
-        @include kbq-typography-css-variables(datepicker, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-calendar__table-header th {
-        @include kbq-typography-css-variables(datepicker, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

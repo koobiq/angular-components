@@ -39,27 +39,6 @@
     --kbq-alert-size-compact-button-stack-padding-bottom: var(--kbq-size-3xs);
     --kbq-alert-size-compact-no-title-icon-margin-top: var(--kbq-size-m);
     --kbq-alert-size-compact-no-title-icon-padding-top: var(--kbq-size-3xs);
-    --kbq-alert-font-title-font-size: var(--kbq-typography-subheading-font-size);
-    --kbq-alert-font-title-line-height: var(--kbq-typography-subheading-line-height);
-    --kbq-alert-font-title-letter-spacing: var(--kbq-typography-subheading-letter-spacing);
-    --kbq-alert-font-title-font-weight: var(--kbq-typography-subheading-font-weight);
-    --kbq-alert-font-title-font-family: var(--kbq-typography-subheading-font-family);
-    --kbq-alert-font-title-text-transform: var(--kbq-typography-subheading-text-transform);
-    --kbq-alert-font-title-font-feature-settings: var(--kbq-typography-subheading-font-feature-settings);
-    --kbq-alert-font-title-compact-font-size: var(--kbq-typography-text-big-strong-font-size);
-    --kbq-alert-font-title-compact-line-height: var(--kbq-typography-text-big-strong-line-height);
-    --kbq-alert-font-title-compact-letter-spacing: var(--kbq-typography-text-big-strong-letter-spacing);
-    --kbq-alert-font-title-compact-font-weight: var(--kbq-typography-text-big-strong-font-weight);
-    --kbq-alert-font-title-compact-font-family: var(--kbq-typography-text-big-strong-font-family);
-    --kbq-alert-font-title-compact-text-transform: var(--kbq-typography-text-big-strong-text-transform);
-    --kbq-alert-font-title-compact-font-feature-settings: var(--kbq-typography-text-big-strong-font-feature-settings);
-    --kbq-alert-font-text-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-alert-font-text-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-alert-font-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-alert-font-text-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-alert-font-text-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-alert-font-text-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-alert-font-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

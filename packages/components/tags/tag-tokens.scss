@@ -1,26 +1,12 @@
 .kbq-tag,
 .kbq-tag-list,
 .kbq-tag-input {
-    --kbq-tag-input-font-default-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-tag-input-font-default-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-tag-input-font-default-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-tag-input-font-default-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-tag-input-font-default-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-tag-input-font-default-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-tag-input-font-default-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
     --kbq-tag-list-size-content-gap: var(--kbq-size-xxs);
     --kbq-tag-size-padding-horizontal: var(--kbq-size-xxs);
     --kbq-tag-size-padding-vertical: var(--kbq-size-3xs);
     --kbq-tag-size-content-gap-horizontal: var(--kbq-size-3xs);
     --kbq-tag-size-icon-margin-left: var(--kbq-size-3xs);
     --kbq-tag-size-close-button-margin-right: var(--kbq-size-3xs);
-    --kbq-tag-font-default-font-size: var(--kbq-typography-text-normal-medium-font-size);
-    --kbq-tag-font-default-line-height: var(--kbq-typography-text-normal-medium-line-height);
-    --kbq-tag-font-default-letter-spacing: var(--kbq-typography-text-normal-medium-letter-spacing);
-    --kbq-tag-font-default-font-weight: var(--kbq-typography-text-normal-medium-font-weight);
-    --kbq-tag-font-default-font-family: var(--kbq-typography-text-normal-medium-font-family);
-    --kbq-tag-font-default-text-transform: var(--kbq-typography-text-normal-medium-text-transform);
-    --kbq-tag-font-default-font-feature-settings: var(--kbq-typography-text-normal-medium-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

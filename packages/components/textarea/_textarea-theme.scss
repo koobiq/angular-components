@@ -5,6 +5,6 @@
 
 @mixin kbq-textarea-typography() {
     .kbq-textarea {
-        @include kbq-typography-css-variables(textarea, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

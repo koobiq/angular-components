@@ -88,41 +88,41 @@
         // h1, h2, h3, h4, h5, h6
         @for $i from 1 through 6 {
             .kbq-markdown__h#{$i} {
-                @include kbq-typography-css-variables(markdown-h#{$i}, default);
+                @include kbq-typography-level-to-styles_css-variables(md-typography, md-h#{$i});
             }
         }
 
         .kbq-markdown__p {
-            @include kbq-typography-css-variables(markdown-p, default);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__ul,
         .kbq-markdown__ol {
-            @include kbq-typography-css-variables(markdown-list, default);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__blockquote > .kbq-markdown__p {
-            @include kbq-typography-css-variables(markdown-blockquote, default);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__code {
-            @include kbq-typography-css-variables(markdown-code, default);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-body-mono);
         }
 
         .kbq-markdown__a {
-            @include kbq-typography-css-variables(markdown-link, default);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-body);
         }
 
         .kbq-markdown__img + em {
-            @include kbq-typography-css-variables(markdown-image, caption);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-caption);
         }
 
         .kbq-markdown__table > .kbq-markdown__thead {
-            @include kbq-typography-css-variables(markdown-table, header);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-table-header);
         }
 
         .kbq-markdown__table > .kbq-markdown__tbody {
-            @include kbq-typography-css-variables(markdown-table, body);
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-table-cell);
         }
     }
 }

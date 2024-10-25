@@ -62,10 +62,10 @@
 
 @mixin kbq-tree-typography() {
     .kbq-tree-option {
-        @include kbq-typography-css-variables(tree, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-tree-option-caption {
-        @include kbq-typography-css-variables(tree, caption);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 }

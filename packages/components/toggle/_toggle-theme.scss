@@ -71,26 +71,26 @@
 
 @mixin kbq-toggle-typography() {
     .kbq-toggle:not(.kbq-toggle_big) {
-        @include kbq-typography-css-variables(toggle, normal-label);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
 
         & .kbq-hint {
-            @include kbq-typography-css-variables(toggle, normal-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
         }
 
         & .kbq-toggle-bar-container {
-            @include kbq-css-font-variable(toggle, normal-caption, line-height, font-);
+            @include kbq-css-font-variable(typography, text-compact, line-height, '');
         }
     }
 
     .kbq-toggle.kbq-toggle_big {
-        @include kbq-typography-css-variables(toggle, big-label);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
 
         & .kbq-hint {
-            @include kbq-typography-css-variables(toggle, big-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
 
         & .kbq-toggle-bar-container {
-            @include kbq-css-font-variable(toggle, big-label, line-height, font-);
+            @include kbq-css-font-variable(typography, text-big, line-height, '');
         }
     }
 }

@@ -59,18 +59,18 @@
 @mixin kbq-dropdown-typography() {
     .kbq-dropdown-item,
     .kbq-dropdown__content {
-        @include kbq-typography-css-variables(list, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
 
         .kbq-dropdown-item__caption {
-            @include kbq-typography-css-variables(list, caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
         }
     }
 
     .kbq-dropdown__group-header {
-        @include kbq-typography-css-variables(list, header);
+        @include kbq-typography-level-to-styles_css-variables(typography, big-strong);
 
         &.kbq-dropdown__group-header_small {
-            @include kbq-typography-css-variables(list, subheading);
+            @include kbq-typography-level-to-styles_css-variables(typography, caps-compact-strong);
         }
     }
 }
