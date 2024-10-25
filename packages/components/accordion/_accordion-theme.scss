@@ -49,7 +49,7 @@
 @mixin kbq-accordion-typography() {
     .kbq-accordion-header,
     .kbq-accordion-trigger {
-        @include kbq-typography-css-variables(accordion, item-header-text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
     }
 
     .kbq-accordion-trigger__caption {
@@ -57,6 +57,6 @@
     }
 
     .kbq-accordion-content {
-        @include kbq-typography-css-variables(accordion, item-content-text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

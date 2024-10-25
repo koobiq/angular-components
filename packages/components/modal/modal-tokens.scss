@@ -17,20 +17,6 @@
     --kbq-modal-size-footer-padding-horizontal: var(--kbq-size-xxl);
     --kbq-modal-size-footer-padding-vertical: var(--kbq-size-xl);
     --kbq-modal-size-footer-content-gap-horizontal: var(--kbq-size-l);
-    --kbq-modal-font-header-font-size: var(--kbq-typography-title-font-size);
-    --kbq-modal-font-header-line-height: var(--kbq-typography-title-line-height);
-    --kbq-modal-font-header-letter-spacing: var(--kbq-typography-title-letter-spacing);
-    --kbq-modal-font-header-font-weight: var(--kbq-typography-title-font-weight);
-    --kbq-modal-font-header-font-family: var(--kbq-typography-title-font-family);
-    --kbq-modal-font-header-text-transform: var(--kbq-typography-title-text-transform);
-    --kbq-modal-font-header-font-feature-settings: var(--kbq-typography-title-font-feature-settings);
-    --kbq-modal-font-content-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-modal-font-content-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-modal-font-content-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-modal-font-content-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-modal-font-content-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-modal-font-content-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-modal-font-content-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

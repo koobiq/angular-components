@@ -5,20 +5,6 @@
     --kbq-hint-size-normal-content-padding: var(--kbq-size-xxs);
     --kbq-hint-size-compact-margin-top: 0;
     --kbq-hint-size-compact-content-padding: var(--kbq-size-xxs);
-    --kbq-hint-font-normal-text-font-size: var(--kbq-typography-text-normal-medium-font-size);
-    --kbq-hint-font-normal-text-line-height: var(--kbq-typography-text-normal-medium-line-height);
-    --kbq-hint-font-normal-text-letter-spacing: var(--kbq-typography-text-normal-medium-letter-spacing);
-    --kbq-hint-font-normal-text-font-weight: var(--kbq-typography-text-normal-medium-font-weight);
-    --kbq-hint-font-normal-text-font-family: var(--kbq-typography-text-normal-medium-font-family);
-    --kbq-hint-font-normal-text-text-transform: var(--kbq-typography-text-normal-medium-text-transform);
-    --kbq-hint-font-normal-text-font-feature-settings: var(--kbq-typography-text-normal-medium-font-feature-settings);
-    --kbq-hint-font-compact-text-font-size: var(--kbq-typography-text-compact-font-size);
-    --kbq-hint-font-compact-text-line-height: var(--kbq-typography-text-compact-line-height);
-    --kbq-hint-font-compact-text-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
-    --kbq-hint-font-compact-text-font-weight: var(--kbq-typography-text-compact-font-weight);
-    --kbq-hint-font-compact-text-font-family: var(--kbq-typography-text-compact-font-family);
-    --kbq-hint-font-compact-text-text-transform: var(--kbq-typography-text-compact-text-transform);
-    --kbq-hint-font-compact-text-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

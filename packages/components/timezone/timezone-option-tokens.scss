@@ -1,50 +1,12 @@
 /* stylelint-disable no-unknown-custom-properties */
 
-.kbq-timezone-select__panel {
-    --kbq-select-panel-font-default-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-select-panel-font-default-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-select-panel-font-default-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-select-panel-font-default-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-select-panel-font-default-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-select-panel-font-default-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-select-panel-font-default-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+.kbq-timezone-select__panel,
+kbq-timezone-select.kbq-select {
     --kbq-timezone-option-size-padding: 6px 10px;
     --kbq-timezone-option-size-column-gap: 16px;
     --kbq-timezone-option-size-height: auto;
     --kbq-timezone-option-size-max-height: 5em;
     --kbq-timezone-option-size-optgroup-label-padding: 12px 12px 4px 12px;
-    --kbq-timezone-option-font-text-font-size: var(--kbq-typography-tabular-normal-font-size);
-    --kbq-timezone-option-font-text-line-height: var(--kbq-typography-tabular-normal-line-height);
-    --kbq-timezone-option-font-text-letter-spacing: var(--kbq-typography-tabular-normal-letter-spacing);
-    --kbq-timezone-option-font-text-font-weight: var(--kbq-typography-tabular-normal-font-weight);
-    --kbq-timezone-option-font-text-font-family: var(--kbq-typography-tabular-normal-font-family);
-    --kbq-timezone-option-font-text-text-transform: var(--kbq-typography-tabular-normal-text-transform);
-    --kbq-timezone-option-font-text-font-feature-settings: var(--kbq-typography-tabular-normal-font-feature-settings);
-    --kbq-timezone-option-font-offset-text-font-size: var(--kbq-typography-tabular-normal-font-size);
-    --kbq-timezone-option-font-offset-text-line-height: var(--kbq-typography-tabular-normal-line-height);
-    --kbq-timezone-option-font-offset-text-letter-spacing: var(--kbq-typography-tabular-normal-letter-spacing);
-    --kbq-timezone-option-font-offset-text-font-weight: var(--kbq-typography-tabular-normal-font-weight);
-    --kbq-timezone-option-font-offset-text-font-family: var(--kbq-typography-tabular-normal-font-family);
-    --kbq-timezone-option-font-offset-text-text-transform: var(--kbq-typography-tabular-normal-text-transform);
-    --kbq-timezone-option-font-offset-text-font-feature-settings: var(
-        --kbq-typography-tabular-normal-font-feature-settings
-    );
-    --kbq-timezone-option-font-caption-font-size: var(--kbq-typography-text-compact-font-size);
-    --kbq-timezone-option-font-caption-line-height: var(--kbq-typography-text-compact-line-height);
-    --kbq-timezone-option-font-caption-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
-    --kbq-timezone-option-font-caption-font-weight: var(--kbq-typography-text-compact-font-weight);
-    --kbq-timezone-option-font-caption-font-family: var(--kbq-typography-text-compact-font-family);
-    --kbq-timezone-option-font-caption-text-transform: var(--kbq-typography-text-compact-text-transform);
-    --kbq-timezone-option-font-caption-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
-    --kbq-timezone-option-font-optgroup-label-font-size: var(--kbq-typography-caps-compact-strong-font-size);
-    --kbq-timezone-option-font-optgroup-label-line-height: var(--kbq-typography-caps-compact-strong-line-height);
-    --kbq-timezone-option-font-optgroup-label-letter-spacing: var(--kbq-typography-caps-compact-strong-letter-spacing);
-    --kbq-timezone-option-font-optgroup-label-font-weight: var(--kbq-typography-caps-compact-strong-font-weight);
-    --kbq-timezone-option-font-optgroup-label-font-family: var(--kbq-typography-caps-compact-strong-font-family);
-    --kbq-timezone-option-font-optgroup-label-text-transform: var(--kbq-typography-caps-compact-strong-text-transform);
-    --kbq-timezone-option-font-optgroup-label-font-feature-settings: var(
-        --kbq-typography-caps-compact-strong-font-feature-settings
-    );
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

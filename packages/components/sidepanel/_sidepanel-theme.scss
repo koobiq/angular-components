@@ -19,11 +19,11 @@
 
 @mixin kbq-sidepanel-typography() {
     .kbq-sidepanel-title {
-        @include kbq-typography-css-variables(sidepanel, header);
+        @include kbq-typography-level-to-styles_css-variables(typography, title);
     }
 
     .kbq-sidepanel-container,
     .kbq-sidepanel-footer {
-        @include kbq-typography-css-variables(sidepanel, content);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

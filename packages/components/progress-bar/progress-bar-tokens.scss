@@ -5,20 +5,6 @@
     --kbq-progress-bar-size-container-border-radius: var(--kbq-size-3xs);
     --kbq-progress-bar-size-bar-height: var(--kbq-size-xxs);
     --kbq-progress-bar-size-bar-border-radius: var(--kbq-size-3xs);
-    --kbq-progress-bar-font-label-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-progress-bar-font-label-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-progress-bar-font-label-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-progress-bar-font-label-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-progress-bar-font-label-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-progress-bar-font-label-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-progress-bar-font-label-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    --kbq-progress-bar-font-caption-font-size: var(--kbq-typography-text-compact-font-size);
-    --kbq-progress-bar-font-caption-line-height: var(--kbq-typography-text-compact-line-height);
-    --kbq-progress-bar-font-caption-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
-    --kbq-progress-bar-font-caption-font-weight: var(--kbq-typography-text-compact-font-weight);
-    --kbq-progress-bar-font-caption-font-family: var(--kbq-typography-text-compact-font-family);
-    --kbq-progress-bar-font-caption-text-transform: var(--kbq-typography-text-compact-text-transform);
-    --kbq-progress-bar-font-caption-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

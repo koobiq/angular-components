@@ -10,22 +10,6 @@
     --kbq-form-field-size-icon-button-size: var(--kbq-size-xxl);
     --kbq-form-field-size-icon-button-margin-right: var(--kbq-size-xxs);
     --kbq-form-field-size-icon-button-margin-left: var(--kbq-size-xxs);
-    --kbq-form-field-font-text-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-form-field-font-text-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-form-field-font-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-form-field-font-text-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-form-field-font-text-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-form-field-font-text-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-form-field-font-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    --kbq-form-field-hint-size-margin-top: var(--kbq-size-xxs);
-    --kbq-form-field-hint-size-gap: var(--kbq-size-s);
-    --kbq-form-field-hint-font-text-font-size: var(--kbq-typography-text-compact-font-size);
-    --kbq-form-field-hint-font-text-line-height: var(--kbq-typography-text-compact-line-height);
-    --kbq-form-field-hint-font-text-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
-    --kbq-form-field-hint-font-text-font-weight: var(--kbq-typography-text-compact-font-weight);
-    --kbq-form-field-hint-font-text-font-family: var(--kbq-typography-text-compact-font-family);
-    --kbq-form-field-hint-font-text-text-transform: var(--kbq-typography-text-compact-text-transform);
-    --kbq-form-field-hint-font-text-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

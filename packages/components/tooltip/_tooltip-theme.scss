@@ -39,10 +39,10 @@
 
 @mixin kbq-tooltip-typography() {
     .kbq-tooltip {
-        @include kbq-typography-css-variables(tooltip, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
 
         .kbq-tooltip__header {
-            @include kbq-typography-css-variables(tooltip, title);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
         }
     }
 }

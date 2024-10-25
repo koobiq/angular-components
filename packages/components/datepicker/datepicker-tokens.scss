@@ -11,13 +11,6 @@
     --kbq-datepicker-size-grid-cell-padding-horizontal: var(--kbq-size-s);
     --kbq-datepicker-size-grid-cell-padding-vertical: var(--kbq-size-s);
     --kbq-datepicker-size-grid-cell-border-radius: var(--kbq-size-s);
-    --kbq-datepicker-font-text-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-datepicker-font-text-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-datepicker-font-text-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-datepicker-font-text-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-datepicker-font-text-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-datepicker-font-text-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-datepicker-font-text-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

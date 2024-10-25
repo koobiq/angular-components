@@ -41,10 +41,10 @@
 
 @mixin kbq-select-typography() {
     .kbq-select {
-        @include kbq-typography-css-variables(select, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-select__panel {
-        @include kbq-typography-css-variables(select-panel, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

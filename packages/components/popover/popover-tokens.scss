@@ -19,20 +19,6 @@
     --kbq-popover-size-content-padding-with-footer-bottom: var(--kbq-size-s);
     --kbq-popover-size-footer-padding-vertical: var(--kbq-size-l);
     --kbq-popover-size-footer-padding-horizontal: var(--kbq-size-xxl);
-    --kbq-popover-font-header-font-size: var(--kbq-typography-subheading-font-size);
-    --kbq-popover-font-header-line-height: var(--kbq-typography-subheading-line-height);
-    --kbq-popover-font-header-letter-spacing: var(--kbq-typography-subheading-letter-spacing);
-    --kbq-popover-font-header-font-weight: var(--kbq-typography-subheading-font-weight);
-    --kbq-popover-font-header-font-family: var(--kbq-typography-subheading-font-family);
-    --kbq-popover-font-header-text-transform: var(--kbq-typography-subheading-text-transform);
-    --kbq-popover-font-header-font-feature-settings: var(--kbq-typography-subheading-font-feature-settings);
-    --kbq-popover-font-content-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-popover-font-content-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-popover-font-content-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-popover-font-content-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-popover-font-content-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-popover-font-content-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-popover-font-content-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

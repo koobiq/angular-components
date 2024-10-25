@@ -1,5 +1,3 @@
-@use 'sass:map';
-
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-modal-theme() {
@@ -37,10 +35,10 @@
 
 @mixin kbq-modal-typography() {
     .kbq-modal-title {
-        @include kbq-typography-css-variables(modal, header);
+        @include kbq-typography-level-to-styles_css-variables(typography, title);
     }
 
     .kbq-modal-body {
-        @include kbq-typography-css-variables(modal, content);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

@@ -101,18 +101,18 @@
 
 @mixin kbq-checkbox-typography() {
     .kbq-checkbox {
-        @include kbq-typography-css-variables(checkbox, normal-label);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-css-variables(checkbox, normal-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
         }
     }
 
     .kbq-checkbox.kbq-checkbox_big {
-        @include kbq-typography-css-variables(checkbox, big-label);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-css-variables(checkbox, big-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
     }
 }
