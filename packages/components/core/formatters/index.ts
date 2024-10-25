@@ -2,27 +2,37 @@ import { NgModule } from '@angular/core';
 import { DateAdapter, KBQ_DATE_LOCALE } from '../datetime';
 import { DateFormatter } from './date/formatter';
 import {
+    AbsoluteDateFormatterImpurePipe,
     AbsoluteDateFormatterPipe,
+    AbsoluteDateShortFormatterImpurePipe,
     AbsoluteDateShortFormatterPipe,
+    AbsoluteDateTimeFormatterImpurePipe,
     AbsoluteDateTimeFormatterPipe,
+    AbsoluteShortDateTimeFormatterImpurePipe,
     AbsoluteShortDateTimeFormatterPipe,
+    RangeDateFormatterImpurePipe,
     RangeDateFormatterPipe,
+    RangeDateTimeFormatterImpurePipe,
     RangeDateTimeFormatterPipe,
+    RangeMiddleDateTimeFormatterImpurePipe,
     RangeMiddleDateTimeFormatterPipe,
+    RangeShortDateFormatterImpurePipe,
     RangeShortDateFormatterPipe,
+    RangeShortDateTimeFormatterImpurePipe,
     RangeShortDateTimeFormatterPipe,
+    RelativeDateFormatterImpurePipe,
     RelativeDateFormatterPipe,
+    RelativeDateTimeFormatterImpurePipe,
     RelativeDateTimeFormatterPipe,
+    RelativeShortDateFormatterImpurePipe,
     RelativeShortDateFormatterPipe,
+    RelativeShortDateTimeFormatterImpurePipe,
     RelativeShortDateTimeFormatterPipe
 } from './date/formatter.pipe';
 import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './number/formatter';
 
 @NgModule({
-    declarations: [
-        KbqDecimalPipe,
-        KbqRoundDecimalPipe,
-        KbqTableNumberPipe,
+    imports: [
         AbsoluteDateFormatterPipe,
         AbsoluteDateTimeFormatterPipe,
         AbsoluteDateShortFormatterPipe,
@@ -35,7 +45,25 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         RangeShortDateFormatterPipe,
         RangeDateTimeFormatterPipe,
         RangeShortDateTimeFormatterPipe,
-        RangeMiddleDateTimeFormatterPipe
+        RangeMiddleDateTimeFormatterPipe,
+        AbsoluteDateFormatterImpurePipe,
+        AbsoluteDateTimeFormatterImpurePipe,
+        AbsoluteDateShortFormatterImpurePipe,
+        AbsoluteShortDateTimeFormatterImpurePipe,
+        RelativeDateFormatterImpurePipe,
+        RelativeDateTimeFormatterImpurePipe,
+        RelativeShortDateFormatterImpurePipe,
+        RelativeShortDateTimeFormatterImpurePipe,
+        RangeDateFormatterImpurePipe,
+        RangeShortDateFormatterImpurePipe,
+        RangeDateTimeFormatterImpurePipe,
+        RangeShortDateTimeFormatterImpurePipe,
+        RangeMiddleDateTimeFormatterImpurePipe
+    ],
+    declarations: [
+        KbqDecimalPipe,
+        KbqRoundDecimalPipe,
+        KbqTableNumberPipe
     ],
     exports: [
         KbqDecimalPipe,
@@ -53,7 +81,20 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         RangeShortDateFormatterPipe,
         RangeDateTimeFormatterPipe,
         RangeShortDateTimeFormatterPipe,
-        RangeMiddleDateTimeFormatterPipe
+        RangeMiddleDateTimeFormatterPipe,
+        AbsoluteDateFormatterImpurePipe,
+        AbsoluteDateTimeFormatterImpurePipe,
+        AbsoluteDateShortFormatterImpurePipe,
+        AbsoluteShortDateTimeFormatterImpurePipe,
+        RelativeDateFormatterImpurePipe,
+        RelativeDateTimeFormatterImpurePipe,
+        RelativeShortDateFormatterImpurePipe,
+        RelativeShortDateTimeFormatterImpurePipe,
+        RangeDateFormatterImpurePipe,
+        RangeShortDateFormatterImpurePipe,
+        RangeDateTimeFormatterImpurePipe,
+        RangeShortDateTimeFormatterImpurePipe,
+        RangeMiddleDateTimeFormatterImpurePipe
     ],
     providers: [{ provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }]
 })
