@@ -27,16 +27,16 @@ export const esLALocaleData = {
         }
     },
     codeBlock: {
-        softWrapOnTooltip: 'Включить перенос по словам',
-        softWrapOffTooltip: 'Выключить перенос по словам',
-        downloadTooltip: 'Скачать',
-        copiedTooltip: '✓ Скопировано',
-        copyTooltip: 'Скопировать',
-        viewAllText: 'Показать все',
-        viewLessText: 'Свернуть',
-        openExternalSystemTooltip: 'Открыть во внешней системе'
+        softWrapOnTooltip: 'Activar el ajuste de texto',
+        softWrapOffTooltip: 'Desactivar el ajuste de texto',
+        downloadTooltip: 'Descargar',
+        copiedTooltip: '✓ Copiado',
+        copyTooltip: 'Copiar',
+        viewAllText: 'Mostrar todo',
+        viewLessText: 'Mostrar menos',
+        openExternalSystemTooltip: 'Abrir en el sistema externo'
     },
     timezone: {
-        searchPlaceholder: 'Город или часовой пояс'
+        searchPlaceholder: 'Ciudad o zona horaria'
     }
 };

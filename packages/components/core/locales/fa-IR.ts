@@ -27,16 +27,16 @@ export const faIRLocaleData = {
         }
     },
     codeBlock: {
-        softWrapOnTooltip: 'Включить перенос по словам',
-        softWrapOffTooltip: 'Выключить перенос по словам',
-        downloadTooltip: 'Скачать',
-        copiedTooltip: '✓ Скопировано',
-        copyTooltip: 'Скопировать',
-        viewAllText: 'Показать все',
-        viewLessText: 'Свернуть',
-        openExternalSystemTooltip: 'Открыть во внешней системе'
+        softWrapOnTooltip: 'فعال‌سازی سطربندی',
+        softWrapOffTooltip: 'غیرفعال‌سازی سطربندی', 
+        downloadTooltip: 'دانلود',
+        copiedTooltip: '✓ کپی شد',
+        copyTooltip: 'کپی',
+        viewAllText: 'نمایش همه',
+        viewLessText: 'نمایش کمتر',
+        openExternalSystemTooltip: 'باز کردن در سیستم خارجی'
     },
     timezone: {
-        searchPlaceholder: 'Город или часовой пояс'
+        searchPlaceholder: ' شهر یا منطقه زمانی '
     }
 };
