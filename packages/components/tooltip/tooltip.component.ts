@@ -288,6 +288,19 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         }
     }
 
+    /**
+     * method allows to show the tooltip relative to the element
+     * Use this approach when it is not possible to define a trigger in the template.
+     *
+     * For example:
+     * const tooltip = new McTooltipTrigger();
+     * tooltip.showForElement(element);
+     */
+    showForElement(element: HTMLElement) {
+        this.show();
+        this.strategy.setOrigin(element);
+    }
+
     updateData() {
         if (!this.instance) {
             return;
