@@ -34,9 +34,9 @@ export const ptBRLocaleData = {
         copyTooltip: 'Copiar',
         viewAllText: 'Mostrar todos',
         viewLessText: 'Mostrar menos',
-        openExternalSystemTooltip:  'Abrir em sistema externo'
+        openExternalSystemTooltip: 'Abrir em sistema externo'
     },
     timezone: {
-        searchPlaceholder:  'Cidade ou fuso horário'
+        searchPlaceholder: 'Cidade ou fuso horário'
     }
 };

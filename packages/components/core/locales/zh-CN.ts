@@ -31,9 +31,9 @@ export const zhCNLocaleData = {
         softWrapOffTooltip: '禁用文本换行',
         downloadTooltip: '下载',
         copiedTooltip: '✓已复制',
-        copyTooltip:  '复制',
+        copyTooltip: '复制',
         viewAllText: '显示全部',
-        viewLessText: '显示部分'
+        viewLessText: '显示部分',
         openExternalSystemTooltip: '在外部系统中打开'
     },
     timezone: {

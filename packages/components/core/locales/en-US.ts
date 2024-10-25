@@ -33,7 +33,7 @@ export const enUSLocaleData = {
         downloadTooltip: 'Download',
         copiedTooltip: '✓ Copied',
         copyTooltip: 'Copy',
-        viewAllText: 'Show all',,
+        viewAllText: 'Show all',
         viewLessText: 'Show less',
         openExternalSystemTooltip: 'Open in the external system'
     },

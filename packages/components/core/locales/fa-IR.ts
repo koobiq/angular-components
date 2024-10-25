@@ -28,7 +28,7 @@ export const faIRLocaleData = {
     },
     codeBlock: {
         softWrapOnTooltip: 'فعال‌سازی سطربندی',
-        softWrapOffTooltip: 'غیرفعال‌سازی سطربندی', 
+        softWrapOffTooltip: 'غیرفعال‌سازی سطربندی',
         downloadTooltip: 'دانلود',
         copiedTooltip: '✓ کپی شد',
         copyTooltip: 'کپی',
