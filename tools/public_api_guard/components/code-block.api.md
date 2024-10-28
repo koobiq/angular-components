@@ -48,7 +48,7 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 
 // @public (undocumented)
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, config: KbqCodeBlockConfiguration, localeService?: KbqLocaleService | undefined);
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, configuration?: KbqCodeBlockConfiguration | undefined, localeService?: KbqLocaleService | undefined);
     actionbarHidden?: boolean;
     // (undocumented)
     canLoad: boolean;
@@ -59,8 +59,9 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get codeFiles(): KbqCodeFile[];
     set codeFiles(files: KbqCodeFile[]);
+    config: KbqCodeBlockConfiguration;
     // (undocumented)
-    protected config: KbqCodeBlockConfiguration;
+    protected configuration?: KbqCodeBlockConfiguration | undefined;
     // (undocumented)
     copied: boolean;
     // (undocumented)

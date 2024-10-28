@@ -1,16 +1,26 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     EventEmitter,
+    Inject,
     Input,
+    Optional,
     Output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { filter } from 'rxjs/operators';
-import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
+import {
+    KBQ_CODE_BLOCK_CONFIGURATION,
+    KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION,
+    KbqCodeBlockConfiguration,
+    KbqCodeFile
+} from './code-block.types';
 
 @Component({
     selector: 'kbq-actionbar-block',
@@ -25,7 +35,6 @@ import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
 export class KbqActionBarComponent implements AfterViewInit {
     @ViewChild('copyTooltip') copyTooltip: KbqTooltipTrigger;
 
-    @Input() config: KbqCodeBlockConfiguration;
     @Input() codeFiles: KbqCodeFile[];
     @Input() selectedTabIndex = 0;
     @Input() multiLine: boolean;
@@ -38,6 +47,22 @@ export class KbqActionBarComponent implements AfterViewInit {
     @Output() openExternalSystem = new EventEmitter<void>();
 
     copyTooltipText: string;
+    /**
+     * @docs-private
+     */
+    config: KbqCodeBlockConfiguration;
+
+    constructor(
+        private changeDetectorRef: ChangeDetectorRef,
+        @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) protected configuration?: KbqCodeBlockConfiguration,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?: KbqLocaleService
+    ) {
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.initDefaultParams();
+        }
+    }
 
     ngAfterViewInit(): void {
         this.copyTooltipText = this.config.copyTooltip;
@@ -56,5 +81,17 @@ export class KbqActionBarComponent implements AfterViewInit {
             this.copyTooltipText = this.config.copiedTooltip;
             this.copyTooltip.show();
         });
+    }
+
+    private updateLocaleParams = () => {
+        this.config = this.configuration || this.localeService?.getParams('codeBlock');
+
+        this.copyTooltipText = this.config.copyTooltip;
+
+        this.changeDetectorRef.markForCheck();
+    };
+
+    private initDefaultParams() {
+        this.config = KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION;
     }
 }

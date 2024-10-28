@@ -7,7 +7,6 @@ import {
     Component,
     ElementRef,
     Inject,
-    InjectionToken,
     Input,
     OnDestroy,
     Optional,
@@ -16,11 +15,16 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
 import { Subject, Subscription, fromEvent, merge, pairwise } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
-import { KbqCodeBlockConfiguration, KbqCodeFile } from './code-block.types';
+import {
+    KBQ_CODE_BLOCK_CONFIGURATION,
+    KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION,
+    KbqCodeBlockConfiguration,
+    KbqCodeFile
+} from './code-block.types';
 
 export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
 export const DEFAULT_EXTENSION = 'txt';
@@ -42,10 +46,6 @@ export const LANGUAGES_EXTENSIONS = {
     xml: 'xml',
     json: 'json'
 };
-
-export const KBQ_CODE_BLOCK_CONFIGURATION = new InjectionToken<any>('KbqCodeBlockConfiguration');
-
-export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = ruRULocaleData.codeBlock;
 
 const actionBarBlockLeftMargin = 24;
 
@@ -112,6 +112,11 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
      */
     actionbarHidden?: boolean;
 
+    /**
+     * @docs-private
+     */
+    config: KbqCodeBlockConfiguration;
+
     readonly resizeStream = new Subject<Event>();
     readonly currentCodeBlock = new Subject<HTMLElement>();
 
@@ -126,7 +131,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         private clipboard: Clipboard,
         private renderer: Renderer2,
         private focusMonitor: FocusMonitor,
-        @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) protected config: KbqCodeBlockConfiguration,
+        @Optional() @Inject(KBQ_CODE_BLOCK_CONFIGURATION) protected configuration?: KbqCodeBlockConfiguration,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?: KbqLocaleService
     ) {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
@@ -283,13 +288,13 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     }
 
     private updateLocaleParams = () => {
-        this.config = this.config || this.localeService?.getParams('codeBlock');
+        this.config = this.configuration || this.localeService?.getParams('codeBlock');
 
         this.changeDetectorRef.markForCheck();
     };
 
     private initDefaultParams() {
-        this.config = this.config ?? KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION;
+        this.config = KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION;
     }
 
     private updateMultiline = () => {
