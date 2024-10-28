@@ -2,7 +2,7 @@
  * Do not edit directly
  */
 
-.kbq-theme-dark {
+.kbq-dark {
   --kbq-theme-default: hsla(216, 100%, 50%, 100%);
   --kbq-success-default: hsla(104, 64%, 50%, 100%);
   --kbq-warning-default: hsla(38, 100%, 35%, 100%);
