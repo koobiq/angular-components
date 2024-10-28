@@ -5,7 +5,7 @@
 @mixin kbq-modal-theme() {
     .kbq-modal {
         background: var(--kbq-modal-container-background);
-        box-shadow: var(--kbq-modal-container-box-shadow);
+        box-shadow: var(--kbq-modal-container-shadow);
 
         .kbq-modal-header {
             & .kbq-modal-title {

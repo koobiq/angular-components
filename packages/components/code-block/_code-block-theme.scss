@@ -41,7 +41,7 @@
 
     &.kbq-code-block_header-with-shadow {
         & .kbq-tab-header {
-            box-shadow: var(--kbq-#{$base}-header-shadow);
+            box-shadow: var(--kbq-#{$base}-header-scroll-shadow);
         }
     }
 

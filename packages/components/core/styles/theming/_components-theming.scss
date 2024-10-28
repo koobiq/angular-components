@@ -969,7 +969,7 @@
 
     $modal: (
         container-background: map.get($tokens, 'modal-#{$scheme}-container-background'),
-        container-box-shadow: map.get($tokens, 'modal-#{$scheme}-container-box-shadow'),
+        container-box-shadow: map.get($tokens, 'modal-#{$scheme}-container-shadow'),
         close-button: map.get($tokens, 'modal-#{$scheme}-close-button-color'),
         header: map.get($tokens, 'modal-#{$scheme}-header-text-color'),
         content: map.get($tokens, 'modal-#{$scheme}-content-text-color'),
