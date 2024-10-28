@@ -25,5 +25,18 @@ export const esLALocaleData = {
                 size: 'Tamaño'
             }
         }
+    },
+    codeBlock: {
+        softWrapOnTooltip: 'Activar el ajuste de texto',
+        softWrapOffTooltip: 'Desactivar el ajuste de texto',
+        downloadTooltip: 'Descargar',
+        copiedTooltip: '✓ Copiado',
+        copyTooltip: 'Copiar',
+        viewAllText: 'Mostrar todo',
+        viewLessText: 'Mostrar menos',
+        openExternalSystemTooltip: 'Abrir en el sistema externo'
+    },
+    timezone: {
+        searchPlaceholder: 'Ciudad o zona horaria'
     }
 };

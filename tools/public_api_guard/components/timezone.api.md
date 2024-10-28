@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -16,10 +17,8 @@ import * as i6 from '@angular/cdk/overlay';
 import * as i7 from '@koobiq/components/form-field';
 import * as i8 from '@koobiq/components/core';
 import * as i9 from '@koobiq/components/select';
-import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
-import { KbqSelectSearch } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { PipeTransform } from '@angular/core';
@@ -99,15 +98,13 @@ export interface KbqTimezonesByCountry {
 }
 
 // @public (undocumented)
-export class KbqTimezoneSelect extends KbqSelect {
-    // (undocumented)
-    cleaner: KbqCleaner;
+export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     // (undocumented)
     customTrigger: KbqTimezoneSelectTrigger;
     // (undocumented)
-    search: KbqSelectSearch;
+    ngAfterContentInit(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger", "cleaner", "search"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTimezoneSelect, never>;
 }

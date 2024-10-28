@@ -26,5 +26,18 @@ export const enUSLocaleData = {
                 size: 'Size'
             }
         }
+    },
+    codeBlock: {
+        softWrapOnTooltip: 'Enable word wrap',
+        softWrapOffTooltip: 'Disable word wrap',
+        downloadTooltip: 'Download',
+        copiedTooltip: '✓ Copied',
+        copyTooltip: 'Copy',
+        viewAllText: 'Show all',
+        viewLessText: 'Show less',
+        openExternalSystemTooltip: 'Open in the external system'
+    },
+    timezone: {
+        searchPlaceholder: 'City or time zone'
     }
 };

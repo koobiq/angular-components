@@ -522,7 +522,7 @@ export class KbqSelect
         @Optional() private readonly parentFormField: KbqFormField,
         @Self() @Optional() ngControl: NgControl,
         @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?: KbqLocaleService
     ) {
         super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
 

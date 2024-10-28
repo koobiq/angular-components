@@ -25,5 +25,18 @@ export const faIRLocaleData = {
                 size: 'اندازه'
             }
         }
+    },
+    codeBlock: {
+        softWrapOnTooltip: 'فعال‌سازی سطربندی',
+        softWrapOffTooltip: 'غیرفعال‌سازی سطربندی',
+        downloadTooltip: 'دانلود',
+        copiedTooltip: '✓ کپی شد',
+        copyTooltip: 'کپی',
+        viewAllText: 'نمایش همه',
+        viewLessText: 'نمایش کمتر',
+        openExternalSystemTooltip: 'باز کردن در سیستم خارجی'
+    },
+    timezone: {
+        searchPlaceholder: ' شهر یا منطقه زمانی '
     }
 };

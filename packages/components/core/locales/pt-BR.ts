@@ -25,5 +25,18 @@ export const ptBRLocaleData = {
                 size: 'Tamanho'
             }
         }
+    },
+    codeBlock: {
+        softWrapOnTooltip: 'Ativar quebra de linha',
+        softWrapOffTooltip: 'Desativar quebra de linha',
+        downloadTooltip: 'Baixar',
+        copiedTooltip: '✓ Copiado',
+        copyTooltip: 'Copiar',
+        viewAllText: 'Mostrar todos',
+        viewLessText: 'Mostrar menos',
+        openExternalSystemTooltip: 'Abrir em sistema externo'
+    },
+    timezone: {
+        searchPlaceholder: 'Cidade ou fuso horário'
     }
 };

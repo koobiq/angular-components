@@ -17,6 +17,7 @@ import * as i5 from '@koobiq/components/icon';
 import * as i6 from 'ngx-highlightjs';
 import * as i7 from '@koobiq/components/tabs';
 import { InjectionToken } from '@angular/core';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqTabChangeEvent } from '@koobiq/components/tabs';
 import { KbqTabGroup } from '@koobiq/components/tabs';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -47,7 +48,7 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
 
 // @public (undocumented)
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, config: KbqCodeBlockConfiguration);
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, configuration?: KbqCodeBlockConfiguration | undefined, localeService?: KbqLocaleService | undefined);
     actionbarHidden?: boolean;
     // (undocumented)
     canLoad: boolean;
@@ -58,8 +59,9 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get codeFiles(): KbqCodeFile[];
     set codeFiles(files: KbqCodeFile[]);
-    // (undocumented)
     config: KbqCodeBlockConfiguration;
+    // (undocumented)
+    protected configuration?: KbqCodeBlockConfiguration | undefined;
     // (undocumented)
     copied: boolean;
     // (undocumented)
@@ -79,6 +81,8 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     isTopOverflow: boolean;
     // (undocumented)
     lineNumbers: boolean;
+    // (undocumented)
+    protected localeService?: KbqLocaleService | undefined;
     // (undocumented)
     maxHeight: number;
     // (undocumented)
@@ -121,7 +125,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlockComponent, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockComponent, [null, null, null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockComponent, [null, null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public (undocumented)
