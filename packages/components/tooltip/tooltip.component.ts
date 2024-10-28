@@ -293,7 +293,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
      * Use this approach when it is not possible to define a trigger in the template.
      *
      * For example:
-     * const tooltip = new McTooltipTrigger();
+     * const tooltip = new KbqTooltipTrigger();
      * tooltip.showForElement(element);
      */
     showForElement(element: HTMLElement) {
