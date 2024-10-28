@@ -149,6 +149,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected scrollStrategy: () => ScrollStrategy;
     // (undocumented)
     show(delay?: number): void;
+    showForElement(element: HTMLElement): void;
     // (undocumented)
     get tooltipPlacement(): PopUpPlacements;
     set tooltipPlacement(value: PopUpPlacements);
