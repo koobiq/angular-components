@@ -1,0 +1,56 @@
+<kbq-form-field>
+    <input
+        kbqInput
+        placeholder="placeholder"
+        [formControl]="formControl1"
+    />
+</kbq-form-field>
+<!-- [maskito]="options" -->
+
+formControl1.value: {{ formControl1.value }}
+
+<hr />
+
+<h3>disabled</h3>
+<kbq-form-field>
+    <input
+        disabled
+        kbqInput
+        placeholder="disabled"
+    />
+</kbq-form-field>
+
+<hr />
+
+<h3>type password</h3>
+<!-- <kbq-form-field>
+    <input
+        kbqInput
+        placeholder="password"
+        type="password"
+    />
+    <kbq-password-toggle />
+</kbq-form-field> -->
+
+<hr />
+
+<h3>type number</h3>
+<!-- <kbq-form-field>
+    <input
+        kbqInputNumber
+        placeholder="number"
+        [formControl]="formControl2"
+    />
+    <kbq-cleaner />
+</kbq-form-field>
+<kbq-form-field>
+    <input
+        kbqInputNumber
+        placeholder="number"
+        [formControl]="formControl2"
+    />
+    <kbq-cleaner />
+</kbq-form-field> -->
+formControl2.value: {{ formControl2.value }}
+
+<hr />

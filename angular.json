@@ -891,6 +891,33 @@
                 }
             }
         },
+        "dev-experimental-input": {
+            "projectType": "application",
+            "root": "packages/components-dev/experimental-input",
+            "sourceRoot": "packages/components-dev/experimental-input",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": "dist/components-dev/experimental-input",
+                        "tsConfig": "packages/components-dev/experimental-input/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "browser": "packages/components-dev/experimental-input/main.ts",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-experimental-input:build"
+                    }
+                }
+            }
+        },
         "dev-forms": {
             "projectType": "application",
             "root": "packages/components-dev/forms",

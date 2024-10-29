@@ -16,6 +16,7 @@ export class ShowOnFormSubmitErrorStateMatcher implements ErrorStateMatcher {
 @Injectable()
 export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {
     isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        console.log('control?.invalid', control?.invalid, control?.dirty);
         return !!(control?.invalid && (control.dirty || form?.submitted));
     }
 }

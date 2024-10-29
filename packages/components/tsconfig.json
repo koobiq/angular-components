@@ -17,6 +17,7 @@
         "compilationMode": "partial"
     },
     "include": [
-        "**/*.ts"
+        "**/*.ts",
+        "../components-experimental/text-field/text-field.ts"
     ]
 }

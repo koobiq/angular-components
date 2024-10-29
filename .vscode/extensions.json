@@ -5,6 +5,7 @@
         "stylelint.vscode-stylelint",
         "dbaeumer.vscode-eslint",
         "angular.ng-template",
-        "editorconfig.editorconfig"
+        "editorconfig.editorconfig",
+        "firsttris.vscode-jest-runner"
     ]
 }

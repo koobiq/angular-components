@@ -7,6 +7,7 @@
     }
 
     .kbq-input,
+    .kbq-input___EXPERIMENTAL,
     .kbq-tag-input,
     .kbq-textarea {
         color: var(--kbq-form-field-#{$state-name}-text);
@@ -29,7 +30,8 @@
     .kbq-form-field___EXPERIMENTAL {
         @include kbq-form-field-state(default);
 
-        & .kbq-input {
+        & .kbq-input,
+        & .kbq-input___EXPERIMENTAL {
             &:-webkit-autofill,
             &:-webkit-autofill:hover,
             &:-webkit-autofill:focus {

@@ -131,9 +131,9 @@ import { KBQ_FORM_FIELD_DEFAULT_OPTIONS, KbqFormFieldDefaultOptions } from '@koo
 
 Эта ошибка возникает, когда `<kbq-form-field>` не содержит поле формы, например: `<input kbqInput />` или его импорт `KbqInputModule`.
 
-#### Error: kbq-password-toggle should use with kbqInputPassword
+#### Error: kbq-password-toggle should use with kbqInput directive
 
-Эта ошибка возникает, когда `<kbq-password-toggle>` не может найти поле `<input kbqInputPassword />` или его импорт `KbqInputModule`.
+Эта ошибка возникает, когда `<kbq-password-toggle>` не может найти поле `<input kbqInput />` или его импорт `KbqInputModule`.
 
 #### Error: kbq-stepper should use with kbqNumberInput
 

@@ -57,12 +57,11 @@ export const getKbqFormFieldMissingControlError = (): Error => {
     styleUrls: [
         './form-field.scss',
         './form-field-tokens.scss',
-        /**
-         * KbqInput is a directive and can't have styles, so we need to include its styles here.
-         * The KbqInput styles are fairly minimal so it shouldn't be a big deal for people who aren't using KbqInput.
-         * @TODO should be refactored (#DS-2910)
-         */
+        /** KbqInput is a directive and can't have self styles, so we need to include its styles here. */
         './../../components/input/input.scss',
+        './../../components/input/input-tokens.scss',
+        './../input/input.scss',
+        './../input/input-tokens.scss',
         './../../components/input/input-tokens.scss',
         './../../components/tags/tag-input-tokens.scss',
         './../../components/timepicker/timepicker.scss',

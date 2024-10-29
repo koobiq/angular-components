@@ -1,4 +1,4 @@
-@use './form-field-theme' as *;
+@use './form-field-theme';
 
 .kbq-form-field___EXPERIMENTAL {
     display: inline-block;
@@ -23,6 +23,7 @@
 
     &,
     .kbq-input,
+    .kbq-input___EXPERIMENTAL,
     .kbq-textarea {
         border-radius: var(--kbq-form-field-size-border-radius);
     }
@@ -65,5 +66,5 @@
     }
 }
 
-@include kbq-form-field-theme();
-@include kbq-form-field-typography();
+@include form-field-theme.kbq-form-field-theme();
+@include form-field-theme.kbq-form-field-typography();

@@ -1,0 +1,39 @@
+@use '../../components/core/styles/common/input';
+@use '../../components/core/styles/common/tokens';
+@use './input-theme';
+
+.kbq-input___EXPERIMENTAL {
+    @include input.kbq-reset-input();
+
+    display: inline-block;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    width: 100%;
+    min-height: tokens.kbq-difference-series-css-variables(
+        [form-field-size-height,
+        calc(var(--kbq-form-field-size-border-width) * 2)]
+    );
+    padding: tokens.kbq-difference-series-css-variables([input-size-padding-vertical, form-field-size-border-width])
+        var(--kbq-input-size-padding-horizontal);
+
+    &[type='number'] {
+        -moz-appearance: textfield;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+    }
+
+    /* remove default red border for HTML5 validation invalid fields in Firefox */
+    &:invalid {
+        box-shadow: unset;
+    }
+
+    /* overwrite default placeholder opacity in Firefox */
+    &::placeholder {
+        opacity: 1;
+    }
+}
+
+@include input-theme.kbq-input-typography();
