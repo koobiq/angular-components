@@ -92,7 +92,7 @@ $trigger-margin: 9px;
 }
 
 .kbq-popover__header_top-overflow {
-    box-shadow: var(--kbq-popover-header-scroll-shadow);
+    box-shadow: var(--kbq-shadow-overflow-normal-bottom);
 }
 
 .kbq-popover__header_with-close-button {
@@ -104,7 +104,7 @@ $trigger-margin: 9px;
 }
 
 .kbq-popover__footer_bottom-overflow {
-    box-shadow: var(--kbq-popover-footer-scroll-shadow);
+    box-shadow: var(--kbq-shadow-overflow-normal-top);
 }
 
 .kbq-popover__arrow {

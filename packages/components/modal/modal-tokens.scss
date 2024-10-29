@@ -36,7 +36,7 @@
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-modal-overlay-background: var(--kbq-background-overlay);
     --kbq-modal-container-background: var(--kbq-background-card);
-    --kbq-modal-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-modal-container-shadow: var(--kbq-shadow-overlay);
     --kbq-modal-close-button-color: var(--kbq-icon-contrast);
     --kbq-modal-header-text-color: var(--kbq-foreground-contrast);
     --kbq-modal-content-text-color: var(--kbq-foreground-contrast);
@@ -45,7 +45,7 @@
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
     --kbq-modal-overlay-background: var(--kbq-background-overlay);
     --kbq-modal-container-background: var(--kbq-background-card);
-    --kbq-modal-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-modal-container-shadow: var(--kbq-shadow-overlay);
     --kbq-modal-close-button-color: var(--kbq-icon-contrast);
     --kbq-modal-header-text-color: var(--kbq-foreground-contrast);
     --kbq-modal-content-text-color: var(--kbq-foreground-contrast);
