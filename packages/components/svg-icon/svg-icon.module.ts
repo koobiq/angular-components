@@ -1,39 +1,24 @@
-import { ModuleWithProviders, NgModule, Provider, makeEnvironmentProviders } from '@angular/core';
+import { Inject, ModuleWithProviders, NgModule } from '@angular/core';
 
-import iconsJSON from '@koobiq/icons/info/kbq-icons-info.json';
-import { KbqSvgIconButton } from './svg-icon-button.component';
-import { KbqSvgIconItem } from './svg-icon-item.component';
-import { KBQ_SVG_ICON_REGISTRY_PROVIDER } from './svg-icon-registry.service';
+import { KbqSvgIconsToken, provideSvgIcons } from './icon.provider';
 import { KbqSvgIcon } from './svg-icon.component';
-import { KbqSvgHttpLoader, KbqSvgLoader } from './svg-loader';
-
-export const iconsNames: string[] = Object.keys(iconsJSON);
-
-export interface KbqSvgIconInterface {
-    loader?: Provider;
-}
-
-export function provideKbqSvgIcon(config: KbqSvgIconInterface = {}) {
-    return makeEnvironmentProviders([
-        KBQ_SVG_ICON_REGISTRY_PROVIDER,
-        config.loader || { provide: KbqSvgLoader, useClass: KbqSvgHttpLoader }]);
-}
 
 @NgModule({
     imports: [
-        KbqSvgIcon,
-        KbqSvgIconItem,
-        KbqSvgIconButton
+        KbqSvgIcon
     ],
-    exports: [KbqSvgIcon, KbqSvgIconItem, KbqSvgIconButton]
+    exports: [KbqSvgIcon]
 })
 export class KbqSvgIconModule {
-    static forRoot(config: KbqSvgIconInterface = {}): ModuleWithProviders<KbqSvgIconModule> {
-        return {
-            ngModule: KbqSvgIconModule,
-            providers: [
-                KBQ_SVG_ICON_REGISTRY_PROVIDER,
-                config.loader || { provide: KbqSvgLoader, useClass: KbqSvgHttpLoader }]
-        };
+    constructor(@Inject(KbqSvgIconsToken) icons: Record<string, string>) {
+        if (Object.keys(icons).length === 0) {
+            throw new Error(
+                'No icons have been provided. Ensure to include some icons by importing them using KbqSvgIconsModule.withIcons({ ... }).'
+            );
+        }
+    }
+
+    static withIcons(icons: Record<string, string>): ModuleWithProviders<KbqSvgIconModule> {
+        return { ngModule: KbqSvgIconModule, providers: provideSvgIcons(icons) };
     }
 }
