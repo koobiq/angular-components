@@ -50,7 +50,7 @@
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-dropdown-container-background: var(--kbq-background-card);
-    --kbq-dropdown-container-box-shadow: var(--kbq-shadow-popup);
+    --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
     --kbq-list-default-container-background: transparent;
     --kbq-list-default-text-color: var(--kbq-foreground-contrast);
     --kbq-list-default-icon-color: var(--kbq-icon-contrast);
