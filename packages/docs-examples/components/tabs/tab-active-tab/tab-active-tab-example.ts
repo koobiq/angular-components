@@ -1,13 +1,18 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
  * @title Tab list with selection by tabId
  */
 @Component({
+    standalone: true,
     selector: 'tab-active-tab-example',
     templateUrl: 'tab-active-tab-example.html',
-    styleUrls: ['tab-active-tab-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTabsModule,
+        KbqIcon
+    ]
 })
 export class TabActiveTabExample {
     selectedTabId = 'settings';

@@ -1,12 +1,15 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
  * @title Tabs with scroll
  */
 @Component({
+    standalone: true,
     selector: 'tabs-with-scroll-example',
     templateUrl: 'tabs-with-scroll-example.html',
-    styleUrls: ['tabs-with-scroll-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTabsModule
+    ]
 })
 export class TabsWithScrollExample {}

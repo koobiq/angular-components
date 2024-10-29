@@ -1,13 +1,18 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
  * @title Tab list with selection by index
  */
 @Component({
+    standalone: true,
     selector: 'tab-active-tab-index-example',
     templateUrl: 'tab-active-tab-index-example.html',
-    styleUrls: ['tab-active-tab-index-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTabsModule,
+        KbqIcon
+    ]
 })
 export class TabActiveTabIndexExample {
     tabs = [

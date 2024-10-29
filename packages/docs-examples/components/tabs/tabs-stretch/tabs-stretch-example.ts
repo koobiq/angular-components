@@ -1,12 +1,15 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
  * @title Tabs stretch
  */
 @Component({
+    standalone: true,
     selector: 'tabs-stretch-example',
     templateUrl: 'tabs-stretch-example.html',
-    styleUrls: ['tabs-stretch-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTabsModule
+    ]
 })
 export class TabsStretchExample {}

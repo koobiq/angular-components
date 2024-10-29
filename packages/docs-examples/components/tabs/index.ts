@@ -1,8 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTabsModule } from '@koobiq/components/tabs';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { TabActiveTabIndexExample } from './tab-active-tab-index/tab-active-tab-index-example';
 import { TabActiveTabExample } from './tab-active-tab/tab-active-tab-example';
 import { TabsActionbarExample } from './tabs-actionbar/tabs-actionbar-example';
@@ -50,13 +46,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqTabsModule,
-        KbqIconModule,
-        KbqButtonModule,
-        KbqToolTipModule
-    ],
-    declarations: EXAMPLES,
+    imports: [EXAMPLES],
     exports: EXAMPLES
 })
 export class TabsExamplesModule {}

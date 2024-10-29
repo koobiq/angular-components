@@ -1,12 +1,15 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
  * @title Tabs overview
  */
 @Component({
+    standalone: true,
     selector: 'tabs-overview-example',
     templateUrl: 'tabs-overview-example.html',
-    styleUrls: ['tabs-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTabsModule
+    ]
 })
 export class TabsOverviewExample {}
