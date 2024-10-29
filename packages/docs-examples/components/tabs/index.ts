@@ -14,6 +14,7 @@ import { TabsStretchExample } from './tabs-stretch/tabs-stretch-example';
 import { TabsUnderlinedExample } from './tabs-underlined/tabs-underlined-example';
 import { TabsVerticalIconsExample } from './tabs-vertical-icons/tabs-vertical-icons-example';
 import { TabsVerticalExample } from './tabs-vertical/tabs-vertical-example';
+import { TabsWithScrollVerticalExample } from './tabs-with-scroll-vertical/tabs-with-scroll-vertical-example';
 import { TabsWithScrollExample } from './tabs-with-scroll/tabs-with-scroll-example';
 
 export {
@@ -28,7 +29,8 @@ export {
     TabsUnderlinedExample,
     TabsVerticalExample,
     TabsVerticalIconsExample,
-    TabsWithScrollExample
+    TabsWithScrollExample,
+    TabsWithScrollVerticalExample
 };
 
 const EXAMPLES = [
@@ -41,6 +43,7 @@ const EXAMPLES = [
     TabsVerticalExample,
     TabsVerticalIconsExample,
     TabsWithScrollExample,
+    TabsWithScrollVerticalExample,
     TabsEmptyExample,
     TabActiveTabExample,
     TabActiveTabIndexExample

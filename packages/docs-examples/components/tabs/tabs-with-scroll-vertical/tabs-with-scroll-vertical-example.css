@@ -1,0 +1,9 @@
+.tabs-with-scroll-vertical-example {
+    .kbq-tab-group_vertical {
+        height: 176px;
+    }
+
+    .kbq-tab-header {
+        width: 200px;
+    }
+}

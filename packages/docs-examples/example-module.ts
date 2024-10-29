@@ -3770,6 +3770,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "importPath": "koobiq-docs-examples-components-tabs"
     }
   },
+  "tabs-with-scroll-vertical": {
+    "packagePath": "components/tabs/tabs-with-scroll-vertical",
+    "title": "Tabs with scroll vertical",
+    "componentName": "TabsWithScrollVerticalExample",
+    "files": [
+      "tabs-with-scroll-vertical-example.ts",
+      "tabs-with-scroll-vertical-example.html",
+      "tabs-with-scroll-vertical-example.css"
+    ],
+    "selector": "tabs-with-scroll-vertical-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-with-scroll-vertical-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
   "tabs-with-scroll": {
     "packagePath": "components/tabs/tabs-with-scroll",
     "title": "Tabs with scroll",
