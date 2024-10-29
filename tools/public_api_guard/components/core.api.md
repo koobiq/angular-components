@@ -451,6 +451,11 @@ export const faIRLocaleData: {
     };
 };
 
+// @public
+export class FileValidators {
+    static maxFileSize(maxSize: number): ValidatorFn;
+}
+
 // @public (undocumented)
 export const formatDataSize: (value: number, precision: number, system: any) => {
     value: string;

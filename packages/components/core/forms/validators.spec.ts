@@ -1,4 +1,6 @@
 import { FormControl } from '@angular/forms';
+import { FileValidators } from '@koobiq/components/core';
+import { KbqFileItem } from '@koobiq/components/file-upload';
 import { PasswordValidators } from './validators';
 
 describe('Validators', () => {
@@ -74,6 +76,40 @@ describe('Validators', () => {
                 expect(control.errors).toEqual({
                     [PasswordValidators.minSpecial.name]: { min: 2, actual: 1 }
                 });
+            });
+        });
+    });
+
+    describe(FileValidators.name, () => {
+        describe(FileValidators.maxFileSize.name, () => {
+            const maxFileSize = 1024 * 1024; // 1MB
+            it('should return null for a file size less than or equal to maxFileSize', () => {
+                const control = new FormControl<File | null>(null, [FileValidators.maxFileSize(maxFileSize)]);
+                const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+                control.setValue(file);
+                expect(control.errors).toBeNull();
+            });
+
+            it('should return an error for a file size greater than maxFileSize', () => {
+                const max = 10;
+                const control = new FormControl<File | null>(null, [FileValidators.maxFileSize(max)]);
+                const file = new File(['lorem ipsum'], 'test.txt', { type: 'text/plain' }); // 11 bytes
+                control.setValue(file);
+                expect(control.errors).toEqual({ maxFileSize: { max, actual: file.size } });
+            });
+
+            it('should work with KbqFileItem', () => {
+                const control = new FormControl<KbqFileItem | File | null>(null, [
+                    FileValidators.maxFileSize(maxFileSize)]);
+                const kbqFileItem: KbqFileItem = { file: new File(['content'], 'test.txt', { type: 'text/plain' }) };
+                control.setValue(kbqFileItem);
+                expect(control.errors).toBeNull();
+            });
+
+            it('should return null for an empty value', () => {
+                const control = new FormControl(null, [FileValidators.maxFileSize(maxFileSize)]);
+                control.setValue(null);
+                expect(control.errors).toBeNull();
             });
         });
     });

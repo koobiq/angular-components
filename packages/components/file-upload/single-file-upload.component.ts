@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ContentChildren,
     ElementRef,
     EventEmitter,
     Inject,
@@ -10,24 +11,27 @@ import {
     OnDestroy,
     Optional,
     Output,
+    QueryList,
     Renderer2,
     Self,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus, NgControl } from '@angular/forms';
 import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import {
+    isCorrectExtension,
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
     KbqFileValidatorFn,
     KbqInputFile,
-    KbqInputFileLabel,
-    isCorrectExtension
+    KbqInputFileLabel
 } from './file-upload';
 
 let nextSingleFileUploadUniqueId = 0;
@@ -53,10 +57,13 @@ export class KbqSingleFileUploadComponent
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
     @Input() accept?: string[];
     @Input() disabled: boolean = false;
+    /**
+     * @deprecated use `FormControl.errors`
+     */
     @Input() errors: string[] = [];
     @Input() inputId: string = `kbq-single-file-upload-${nextSingleFileUploadUniqueId++}`;
     /**
-     * Alternative for FormControl's validation
+     * @deprecated use FormControl for validation
      */
     @Input() customValidation?: KbqFileValidatorFn[];
 
@@ -78,22 +85,30 @@ export class KbqSingleFileUploadComponent
 
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
+    @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
+
     config: KbqInputFileLabel;
 
     separatedCaptionText: string[];
 
     statusChangeSubscription?: Subscription = Subscription.EMPTY;
 
-    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor). */
-
+    /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
+     * @docs-private
+     */
     cvaOnChange = (_: KbqFileItem | null) => {};
 
-    /** onTouch function registered via registerOnTouch (ControlValueAccessor). */
-
+    /** onTouch function registered via registerOnTouch (ControlValueAccessor).
+     * @docs-private
+     */
     onTouched = () => {};
 
     get acceptedFiles(): string {
         return this.accept?.join(',') || '*/*';
+    }
+
+    get hasHint(): boolean {
+        return this.hint.length > 0;
     }
 
     constructor(
@@ -103,7 +118,7 @@ export class KbqSingleFileUploadComponent
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
         @Optional() @Self() public ngControl?: NgControl
     ) {
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
         if (!localeService) {
             this.initDefaultParams();
@@ -181,9 +196,7 @@ export class KbqSingleFileUploadComponent
     }
 
     deleteItem(event?: MouseEvent): void {
-        if (this.disabled) {
-            return;
-        }
+        if (this.disabled) return;
 
         event?.stopPropagation();
         this.file = null;
@@ -223,9 +236,7 @@ export class KbqSingleFileUploadComponent
     }
 
     private validateFile(file: File): boolean | undefined {
-        if (!this.customValidation?.length) {
-            return;
-        }
+        if (!this.customValidation?.length) return;
 
         this.errors = this.customValidation
             .reduce((errors: (string | null)[], validatorFn: KbqFileValidatorFn) => {

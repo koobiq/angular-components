@@ -39,7 +39,7 @@ const maxFileExceeded = (file: File): string | null => {
     const maxMbytes = 5;
     const maxSize = maxMbytes * mega;
 
-    return maxSize !== undefined && (file?.size ?? 0) > maxSize ? `Exceeded with (${maxSize / mega} Mb)` : null;
+    return (file?.size ?? 0 > maxSize) ? `Exceeded with (${maxSize / mega} Mb)` : null;
 };
 
 describe('MultipleFileUploadComponent', () => {
