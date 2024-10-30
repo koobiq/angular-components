@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 
 const codeJs2 = `function askPassword(ok, fail) {
     if (password == "rockstar") ok();
@@ -25,13 +25,25 @@ let user = {
 askPassword(user.loginOk, user.loginFail);`;
 
 /**
- * @title Basic code-block-cut
+ * @title Code-block cut
  */
 @Component({
+    standalone: true,
     selector: 'code-block-cut-example',
-    templateUrl: 'code-block-cut-example.html',
-    styleUrls: ['code-block-cut-example.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: 'code-block-cut-example.css',
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqCodeBlockModule
+    ],
+    template: `
+        <kbq-code-block
+            class="docs-code-block-cut"
+            [codeFiles]="files"
+            [filled]="false"
+            [lineNumbers]="false"
+            [maxHeight]="maxHeight"
+        />
+    `
 })
 export class CodeBlockCutExample {
     files: KbqCodeFile[];

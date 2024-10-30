@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqHint } from '@koobiq/components-experimental/form-field';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 
 /**
  * @title Checkbox overview
@@ -12,7 +12,7 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
     styleUrl: 'checkbox-overview-example.css',
     imports: [
         KbqCheckboxModule,
-        KbqHint
+        KbqFormFieldModule
     ],
     encapsulation: ViewEncapsulation.None
 })

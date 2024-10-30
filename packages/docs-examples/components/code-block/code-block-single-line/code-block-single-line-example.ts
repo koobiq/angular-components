@@ -1,16 +1,25 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 
 const codeTs2 = `getUserAddress('Rey.Padberg@karina.biz').then(console.log).catch(console.error)`;
 
 /**
- * @title Basic code-block-single-line
+ * @title Сode-block single line
  */
 @Component({
+    standalone: true,
     selector: 'code-block-single-line-example',
-    templateUrl: 'code-block-single-line-example.html',
-    styleUrls: ['code-block-single-line-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqCodeBlockModule
+    ],
+    template: `
+        <kbq-code-block
+            [codeFiles]="files"
+            [filled]="false"
+            [lineNumbers]="true"
+        />
+    `
 })
 export class CodeBlockSingleLineExample {
     files: KbqCodeFile[];

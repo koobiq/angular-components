@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 
 const codeTs = `class Greeter {
   @format("Hello, %s")
@@ -46,13 +46,22 @@ body {
 }`;
 
 /**
- * @title Basic code-block
+ * @title Code-block common
  */
 @Component({
+    standalone: true,
     selector: 'code-block-common-example',
-    templateUrl: 'code-block-common-example.html',
-    styleUrls: ['code-block-common-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqCodeBlockModule
+    ],
+    template: `
+        <kbq-code-block
+            [codeFiles]="files"
+            [filled]="false"
+            [lineNumbers]="true"
+        />
+    `
 })
 export class CodeBlockCommonExample {
     files: KbqCodeFile[];

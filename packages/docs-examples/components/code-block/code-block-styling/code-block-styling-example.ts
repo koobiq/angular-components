@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqToggleModule } from '@koobiq/components/toggle';
+import { FormsModule } from '@angular/forms';
 
 const codeTs = `class Greeter {
   @format("Hello, %s")
@@ -46,13 +48,31 @@ body {
 }`;
 
 /**
- * @title Basic code-block-styling
+ * @title Code-block styling
  */
 @Component({
+    standalone: true,
     selector: 'code-block-styling-example',
-    templateUrl: 'code-block-styling-example.html',
-    styleUrls: ['code-block-styling-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqToggleModule,
+        FormsModule,
+        KbqCodeBlockModule
+    ],
+    template: `
+        <kbq-toggle
+            class="kbq-toggle_small layout-padding-top-m layout-padding-bottom-m"
+            [(ngModel)]="lessContrast"
+        >
+            Контрастный фон
+        </kbq-toggle>
+        <kbq-code-block
+            [codeFiles]="files"
+            [filled]="lessContrast"
+            [lineNumbers]="true"
+            [maxHeight]="286"
+        />
+    `
 })
 export class CodeBlockStylingExample {
     files: KbqCodeFile[];
