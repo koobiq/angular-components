@@ -1,9 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqTableModule } from '@koobiq/components/table';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { BadgeContentExample } from './badge-content/badge-content-example';
 import { BadgeFillAndStyleExample } from './badge-fill-and-style/badge-fill-and-style-example';
 import { BadgeListExample } from './badge-list/badge-list-example';
@@ -30,8 +25,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    declarations: EXAMPLES,
-    imports: [KbqBadgeModule, KbqIconModule, KbqTableModule, KbqToolTipModule, KbqLinkModule],
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class BadgeExamplesModule {}

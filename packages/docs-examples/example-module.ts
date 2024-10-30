@@ -277,9 +277,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge content",
     "componentName": "BadgeContentExample",
     "files": [
-      "badge-content-example.ts",
-      "badge-content-example.html",
-      "badge-content-example.css"
+      "badge-content-example.ts"
     ],
     "selector": "badge-content-example",
     "additionalComponents": [],
@@ -296,8 +294,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeFillAndStyleExample",
     "files": [
       "badge-fill-and-style-example.ts",
-      "badge-fill-and-style-example.html",
-      "badge-fill-and-style-example.css"
+      "badge-fill-and-style-example.html"
     ],
     "selector": "badge-fill-and-style-example",
     "additionalComponents": [],
@@ -314,7 +311,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeListExample",
     "files": [
       "badge-list-example.ts",
-      "badge-list-example.html",
       "badge-list-example.css"
     ],
     "selector": "badge-list-example",
@@ -331,9 +327,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge size",
     "componentName": "BadgeSizeExample",
     "files": [
-      "badge-size-example.ts",
-      "badge-size-example.html",
-      "badge-size-example.css"
+      "badge-size-example.ts"
     ],
     "selector": "badge-size-example",
     "additionalComponents": [],
@@ -350,8 +344,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeTableExample",
     "files": [
       "badge-table-example.ts",
-      "badge-table-example.html",
-      "badge-table-example.css"
+      "badge-table-example.html"
     ],
     "selector": "badge-table-example",
     "additionalComponents": [],
@@ -367,9 +360,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge tooltip",
     "componentName": "BadgeTooltipExample",
     "files": [
-      "badge-tooltip-example.ts",
-      "badge-tooltip-example.html",
-      "badge-tooltip-example.css"
+      "badge-tooltip-example.ts"
     ],
     "selector": "badge-tooltip-example",
     "additionalComponents": [],
