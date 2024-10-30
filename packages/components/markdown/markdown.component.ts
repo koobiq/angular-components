@@ -1,5 +1,5 @@
 import {
-    AfterContentChecked,
+    afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -8,10 +8,13 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { KbqSafeHtmlPipe } from '@koobiq/components/core';
 import { KbqMarkdownService } from './markdown.service';
 
+/** Component which allows to convert `Markdown` into `HTML` */
 @Component({
+    standalone: true,
+    imports: [KbqSafeHtmlPipe],
     selector: 'kbq-markdown',
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
@@ -23,7 +26,7 @@ import { KbqMarkdownService } from './markdown.service';
         ><ng-content /></pre>
         <div
             class="markdown-output"
-            [innerHtml]="resultHtml"
+            [innerHtml]="resultHtml | kbqSafeHtml"
         ></div>
     `,
     host: {
@@ -32,9 +35,10 @@ import { KbqMarkdownService } from './markdown.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqMarkdown implements AfterContentChecked {
-    @ViewChild('contentWrapper') contentWrapper: ElementRef;
+export class KbqMarkdown {
+    @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef;
 
+    /** `Markdown` text. */
     @Input()
     get markdownText(): string | null {
         return this._markdownText;
@@ -42,7 +46,7 @@ export class KbqMarkdown implements AfterContentChecked {
 
     set markdownText(value: string | null) {
         if (value && this.markdownText !== value) {
-            this.resultHtml = this.getResultHTML(value);
+            this.resultHtml = this.markdownService.parseToHtml(value);
         }
 
         this._markdownText = value;
@@ -50,22 +54,17 @@ export class KbqMarkdown implements AfterContentChecked {
 
     private _markdownText: string | null = null;
 
-    resultHtml: SafeHtml = '';
+    protected resultHtml: string = '';
 
     constructor(
-        private markdownService: KbqMarkdownService,
-        private sanitizer: DomSanitizer,
-        private cdr: ChangeDetectorRef
-    ) {}
-
-    ngAfterContentChecked(): void {
-        if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
-            this.resultHtml = this.getResultHTML(this.contentWrapper.nativeElement.textContent);
-            this.cdr.detectChanges();
-        }
-    }
-
-    private getResultHTML(value): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(this.markdownService.parseToHtml(value));
+        private readonly markdownService: KbqMarkdownService,
+        private readonly cdr: ChangeDetectorRef
+    ) {
+        afterNextRender(() => {
+            if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
+                this.resultHtml = this.markdownService.parseToHtml(this.contentWrapper.nativeElement.textContent);
+                this.cdr.detectChanges();
+            }
+        });
     }
 }

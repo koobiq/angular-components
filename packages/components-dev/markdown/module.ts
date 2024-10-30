@@ -1,15 +1,74 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { KbqMarkdownModule } from '@koobiq/components/markdown';
-import { KbqMarkdownService } from 'packages/components/markdown';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqMarkdownModule, KbqMarkdownService } from 'packages/components/markdown';
 
 @Component({
+    standalone: true,
+    imports: [KbqMarkdownModule],
+    selector: 'inline-template-markdown',
+    // prettier-ignore
+    template: `
+<kbq-markdown ngPreserveWhitespaces>
+# H1
+
+## H2
+
+### H3
+
+#### H4
+
+##### H5
+
+###### H6
+
+**bold text**
+
+_italic text_
+
+> blockquote
+
+1. First item
+2. Second item
+3. Third item
+
+-   First item
+-   Second item
+-   Third item
+
+\`inline code\`
+
+---
+
+[title](https://www.koobiq.io)
+
+![](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+
+![With caption text](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+_Image caption text_
+
+| Syntax    | Description | Left-aligned | Center-aligned | Right-aligned |
+| --------- | ----------- | :----------- | :------------: | ------------: |
+| Header    | Title       | git status   |   git status   |    git status |
+| Paragraph | Text        | git diff     |    git diff    |      git diff |
+
+\`\`\`bash
+npm install jquery
+\`\`\`
+</kbq-markdown>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class InlineTemplateMarkdown {}
+
+@Component({
+    standalone: true,
+    imports: [KbqMarkdownModule, InlineTemplateMarkdown],
     selector: 'app',
     templateUrl: './template.html',
-    encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss']
+    styleUrl: './styles.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
-export class DemoComponent {
+export class Markdown {
     markdownText: string = `
 # Foobar
 
@@ -48,17 +107,7 @@ Please make sure to update tests as appropriate.
 `;
     parsedByService: string;
 
-    constructor(markdownService: KbqMarkdownService) {
+    constructor(readonly markdownService: KbqMarkdownService) {
         this.parsedByService = markdownService.parseToHtml(this.markdownText);
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqMarkdownModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

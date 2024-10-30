@@ -305,7 +305,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'markdown',
                     hasApi: true,
                     apiId: 'markdown',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['markdown-types']
                 },
                 {

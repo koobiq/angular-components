@@ -2,7 +2,6 @@
     "extends": "../../tsconfig.json",
     "compilerOptions": {
         "types": [
-            "jasmine",
             "node",
             "jest"
         ]
@@ -18,5 +17,8 @@
     },
     "include": [
         "**/*.ts"
+    ],
+    "exclude": [
+        "**/*.karma-spec.ts"
     ]
 }
