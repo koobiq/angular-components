@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { FormsModule } from '@angular/forms';
 
 const codeTs = `class Greeter {
   @format("Hello, %s")
