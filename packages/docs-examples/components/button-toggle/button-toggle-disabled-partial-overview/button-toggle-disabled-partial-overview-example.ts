@@ -1,11 +1,15 @@
 import { Component } from '@angular/core';
+import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
 /**
- * @title button-toggle-disabled-partial
+ * @title Button toggle disabled partial
  */
 @Component({
+    standalone: true,
     selector: 'button-toggle-disabled-partial-overview-example',
     templateUrl: 'button-toggle-disabled-partial-overview-example.html',
-    styleUrls: ['button-toggle-disabled-partial-overview-example.css']
+    imports: [
+        KbqButtonToggleModule
+    ]
 })
 export class ButtonToggleDisabledPartialOverviewExample {}

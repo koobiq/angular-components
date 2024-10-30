@@ -414,7 +414,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-toggle-disabled-all-overview-example.ts",
       "button-toggle-disabled-all-overview-example.html",
-      "button-toggle-disabled-all-overview-example.css"
     ],
     "selector": "button-toggle-disabled-all-overview-example",
     "additionalComponents": [],
@@ -432,7 +431,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "button-toggle-disabled-partial-overview-example.ts",
       "button-toggle-disabled-partial-overview-example.html",
-      "button-toggle-disabled-partial-overview-example.css"
     ],
     "selector": "button-toggle-disabled-partial-overview-example",
     "additionalComponents": [],
@@ -449,8 +447,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ButtonToggleOverviewExample",
     "files": [
       "button-toggle-overview-example.ts",
-      "button-toggle-overview-example.html",
-      "button-toggle-overview-example.css"
+      "button-toggle-overview-example.html"
     ],
     "selector": "button-toggle-overview-example",
     "additionalComponents": [],
@@ -467,7 +464,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ButtonToggleTooltipOverviewExample",
     "files": [
       "button-toggle-tooltip-overview-example.ts",
-      "button-toggle-tooltip-overview-example.html",
       "button-toggle-tooltip-overview-example.css"
     ],
     "selector": "button-toggle-tooltip-overview-example",

@@ -1,12 +1,17 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
 /**
- * @title button-toggle-alignment
+ * @title Button toggle alignment
  */
 @Component({
+    standalone: true,
     selector: 'button-toggle-alignment-overview-example',
     templateUrl: 'button-toggle-alignment-overview-example.html',
-    styleUrls: ['button-toggle-alignment-overview-example.css'],
+    styleUrl: 'button-toggle-alignment-overview-example.css',
+    imports: [
+        KbqButtonToggleModule
+    ],
     encapsulation: ViewEncapsulation.None
 })
 export class ButtonToggleAlignmentOverviewExample {

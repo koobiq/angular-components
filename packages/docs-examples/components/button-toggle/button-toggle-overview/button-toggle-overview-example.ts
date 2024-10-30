@@ -1,12 +1,15 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
 /**
- * @title button-toggle
+ * @title Button toggle
  */
 @Component({
+    standalone: true,
     selector: 'button-toggle-overview-example',
     templateUrl: 'button-toggle-overview-example.html',
-    styleUrls: ['button-toggle-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqButtonToggleModule
+    ]
 })
 export class ButtonToggleOverviewExample {}
