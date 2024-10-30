@@ -391,12 +391,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-toggle-alignment-overview": {
     "packagePath": "components/button-toggle/button-toggle-alignment-overview",
-    "title": "button-toggle-alignment",
+    "title": "Button toggle alignment",
     "componentName": "ButtonToggleAlignmentOverviewExample",
     "files": [
       "button-toggle-alignment-overview-example.ts",
-      "button-toggle-alignment-overview-example.html",
-      "button-toggle-alignment-overview-example.css"
+      "button-toggle-alignment-overview-example.html"
     ],
     "selector": "button-toggle-alignment-overview-example",
     "additionalComponents": [],
@@ -409,11 +408,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-toggle-disabled-all-overview": {
     "packagePath": "components/button-toggle/button-toggle-disabled-all-overview",
-    "title": "button-toggle-disabled-all",
+    "title": "Button toggle disabled all",
     "componentName": "ButtonToggleDisabledAllOverviewExample",
     "files": [
       "button-toggle-disabled-all-overview-example.ts",
-      "button-toggle-disabled-all-overview-example.html",
+      "button-toggle-disabled-all-overview-example.html"
     ],
     "selector": "button-toggle-disabled-all-overview-example",
     "additionalComponents": [],
@@ -426,11 +425,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-toggle-disabled-partial-overview": {
     "packagePath": "components/button-toggle/button-toggle-disabled-partial-overview",
-    "title": "button-toggle-disabled-partial",
+    "title": "Button toggle disabled partial",
     "componentName": "ButtonToggleDisabledPartialOverviewExample",
     "files": [
       "button-toggle-disabled-partial-overview-example.ts",
-      "button-toggle-disabled-partial-overview-example.html",
+      "button-toggle-disabled-partial-overview-example.html"
     ],
     "selector": "button-toggle-disabled-partial-overview-example",
     "additionalComponents": [],
@@ -443,7 +442,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-toggle-overview": {
     "packagePath": "components/button-toggle/button-toggle-overview",
-    "title": "button-toggle",
+    "title": "Button toggle",
     "componentName": "ButtonToggleOverviewExample",
     "files": [
       "button-toggle-overview-example.ts",
@@ -460,11 +459,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-toggle-tooltip-overview": {
     "packagePath": "components/button-toggle/button-toggle-tooltip-overview",
-    "title": "button-toggle-tooltip",
+    "title": "Button toggle tooltip",
     "componentName": "ButtonToggleTooltipOverviewExample",
     "files": [
-      "button-toggle-tooltip-overview-example.ts",
-      "button-toggle-tooltip-overview-example.css"
+      "button-toggle-tooltip-overview-example.ts"
     ],
     "selector": "button-toggle-tooltip-overview-example",
     "additionalComponents": [],
