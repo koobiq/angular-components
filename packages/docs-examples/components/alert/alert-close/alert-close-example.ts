@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
@@ -7,9 +8,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
  * @title Alert Close
  */
 @Component({
+    standalone: true,
     selector: 'alert-close-example',
-    templateUrl: 'alert-close-example.html',
-    styleUrls: ['alert-close-example.css'],
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),
@@ -18,7 +18,26 @@ import { KbqComponentColors } from '@koobiq/components/core';
             transition('true => false', animate('.2s'))])
 
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqAlertModule
+    ],
+    template: `
+        <kbq-alert
+            class="flex-100"
+            [@hideShowAnimator]="state"
+            [compact]="true"
+        >
+            <i kbq-icon="kbq-info-circle_16"></i>
+            Блок скрывается по крестику в углу, не дублируйте эту возможность с помощью кнопки под текстом сообщения
+            <i
+                [color]="colors.ContrastFade"
+                (click)="state = !state"
+                kbq-alert-close-button
+                kbq-icon-button="kbq-xmark-s_16"
+            ></i>
+        </kbq-alert>
+    `
 })
 export class AlertCloseExample {
     colors = KbqComponentColors;

@@ -1,16 +1,17 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqAlertColors, KbqAlertStyles } from '@koobiq/components/alert';
+import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
 /**
  * @title Alert Variants
  */
 @Component({
+    standalone: true,
     selector: 'alert-variants-example',
-    templateUrl: 'alert-variants-example.html',
-    styleUrls: ['alert-variants-example.css'],
+    styleUrl: 'alert-variants-example.css',
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),
@@ -19,7 +20,40 @@ import { KbqComponentColors } from '@koobiq/components/core';
             transition('true => false', animate('.2s'))])
 
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqIcon,
+        KbqAlertModule,
+        KbqIconItem
+    ],
+    template: `
+        <div class="layout-row flex-100">
+            <div class="layout-column">
+                <kbq-alert [alertColor]="alertColors.Error">
+                    <i
+                        [color]="colors.Error"
+                        kbq-icon-item="kbq-exclamation-triangle_16"
+                    ></i>
+                    <div kbq-alert-title>Default</div>
+                    {{ text }}
+                </kbq-alert>
+            </div>
+            <div class="layout-column">
+                <kbq-alert
+                    [alertColor]="alertColors.Error"
+                    [alertStyle]="alertStyles.Colored"
+                    [compact]="true"
+                >
+                    <i
+                        [color]="colors.Error"
+                        kbq-icon="kbq-exclamation-triangle_16"
+                    ></i>
+                    <div kbq-alert-title>Colored</div>
+                    {{ text }}
+                </kbq-alert>
+            </div>
+        </div>
+    `
 })
 export class AlertVariantsExample {
     colors = KbqComponentColors;

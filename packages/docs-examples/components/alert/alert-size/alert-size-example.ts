@@ -1,15 +1,18 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
  * @title Alert Size
  */
 @Component({
+    standalone: true,
     selector: 'alert-size-example',
     templateUrl: 'alert-size-example.html',
-    styleUrls: ['alert-size-example.css'],
+    styleUrl: 'alert-size-example.css',
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),
@@ -17,6 +20,10 @@ import { KbqComponentColors } from '@koobiq/components/core';
             transition('false => true', animate('.5s')),
             transition('true => false', animate('.2s'))])
 
+    ],
+    imports: [
+        KbqAlertModule,
+        KbqLinkModule
     ],
     encapsulation: ViewEncapsulation.None
 })

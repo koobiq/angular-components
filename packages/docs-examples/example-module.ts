@@ -179,8 +179,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "AlertCloseExample",
     "files": [
       "alert-close-example.ts",
-      "alert-close-example.html",
-      "alert-close-example.css"
     ],
     "selector": "alert-close-example",
     "additionalComponents": [],
@@ -251,7 +249,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "AlertVariantsExample",
     "files": [
       "alert-variants-example.ts",
-      "alert-variants-example.html",
       "alert-variants-example.css"
     ],
     "selector": "alert-variants-example",
