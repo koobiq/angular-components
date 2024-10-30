@@ -3,7 +3,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIconButton } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
@@ -27,7 +27,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqAlertModule,
         KbqButtonModule,
         KbqLinkModule,
-        KbqIconButton
+        KbqIconModule
     ]
 })
 export class AlertContentExample {

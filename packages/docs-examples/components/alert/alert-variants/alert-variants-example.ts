@@ -3,7 +3,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Alert Variants
@@ -22,9 +22,8 @@ import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
     ],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        KbqIcon,
         KbqAlertModule,
-        KbqIconItem
+        KbqIconModule
     ],
     template: `
         <div class="layout-row flex-100">

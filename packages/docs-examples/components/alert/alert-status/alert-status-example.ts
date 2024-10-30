@@ -3,7 +3,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Alert Status
@@ -23,7 +23,7 @@ import { KbqIcon } from '@koobiq/components/icon';
     ],
     imports: [
         KbqAlertModule,
-        KbqIcon
+        KbqIconModule
     ],
     encapsulation: ViewEncapsulation.None
 })

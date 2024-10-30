@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -18,7 +18,6 @@ import { map, startWith } from 'rxjs/operators';
         KbqFormFieldModule,
         KbqAutocompleteModule,
         KbqInputModule,
-        FormsModule,
         ReactiveFormsModule,
         AsyncPipe
     ],

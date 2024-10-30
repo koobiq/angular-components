@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
  * @title Badge tooltip
@@ -13,7 +13,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
     encapsulation: ViewEncapsulation.None,
     imports: [
         KbqBadgeModule,
-        KbqTooltipTrigger
+        KbqToolTipModule
     ],
     template: `
         <div class="badge-tooltip-example">
