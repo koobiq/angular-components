@@ -101,7 +101,7 @@ button {
 
     .kbq-navbar-brand {
         .kbq-navbar-title {
-            @include kbq-typography-css-variables(navbar, title);
+            @include kbq-typography-level-to-styles_css-variables(typography, navbar-title);
         }
     }
 }
