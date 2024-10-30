@@ -481,12 +481,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-content": {
     "packagePath": "components/button/button-content",
-    "title": "Content",
+    "title": "Button content",
     "componentName": "ButtonContentExample",
     "files": [
-      "button-content-example.ts",
-      "button-content-example.html",
-      "button-content-example.css"
+      "button-content-example.ts"
     ],
     "selector": "button-content-example",
     "additionalComponents": [],
@@ -499,12 +497,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-fill-and-style": {
     "packagePath": "components/button/button-fill-and-style",
-    "title": "Fill and Style",
+    "title": "Button fill and style",
     "componentName": "ButtonFillAndStyleExample",
     "files": [
       "button-fill-and-style-example.ts",
-      "button-fill-and-style-example.html",
-      "button-fill-and-style-example.css"
+      "button-fill-and-style-example.html"
     ],
     "selector": "button-fill-and-style-example",
     "additionalComponents": [],
@@ -517,12 +514,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-fill-content": {
     "packagePath": "components/button/button-fill-content",
-    "title": "Button Fill",
+    "title": "Button fill content",
     "componentName": "ButtonFillContentExample",
     "files": [
-      "button-fill-content-example.ts",
-      "button-fill-content-example.html",
-      "button-fill-content-example.css"
+      "button-fill-content-example.ts"
     ],
     "selector": "button-fill-content-example",
     "additionalComponents": [],
@@ -535,12 +530,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-fixed-content": {
     "packagePath": "components/button/button-fixed-content",
-    "title": "Button Fixed",
+    "title": "Button fixed content",
     "componentName": "ButtonFixedContentExample",
     "files": [
-      "button-fixed-content-example.ts",
-      "button-fixed-content-example.html",
-      "button-fixed-content-example.css"
+      "button-fixed-content-example.ts"
     ],
     "selector": "button-fixed-content-example",
     "additionalComponents": [],
@@ -553,12 +546,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-hug-content": {
     "packagePath": "components/button/button-hug-content",
-    "title": "Button Hug",
+    "title": "Button hug content",
     "componentName": "ButtonHugContentExample",
     "files": [
-      "button-hug-content-example.ts",
-      "button-hug-content-example.html",
-      "button-hug-content-example.css"
+      "button-hug-content-example.ts"
     ],
     "selector": "button-hug-content-example",
     "additionalComponents": [],
@@ -571,12 +562,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-loading-state": {
     "packagePath": "components/button/button-loading-state",
-    "title": "Button Loading State",
+    "title": "Button loading state",
     "componentName": "ButtonLoadingStateExample",
     "files": [
-      "button-loading-state-example.ts",
-      "button-loading-state-example.html",
-      "button-loading-state-example.css"
+      "button-loading-state-example.ts"
     ],
     "selector": "button-loading-state-example",
     "additionalComponents": [],
@@ -589,12 +578,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "button-overview": {
     "packagePath": "components/button/button-overview",
-    "title": "Basic button",
+    "title": "Button overview",
     "componentName": "ButtonOverviewExample",
     "files": [
-      "button-overview-example.ts",
-      "button-overview-example.html",
-      "button-overview-example.css"
+      "button-overview-example.ts"
     ],
     "selector": "button-overview-example",
     "additionalComponents": [],
