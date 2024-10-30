@@ -1,5 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -7,10 +11,36 @@ import { map, startWith } from 'rxjs/operators';
  * @title Basic Input
  */
 @Component({
+    standalone: true,
     selector: 'autocomplete-overview-example',
-    templateUrl: 'autocomplete-overview-example.html',
-    styleUrls: ['autocomplete-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqFormFieldModule,
+        KbqAutocompleteModule,
+        KbqInputModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AsyncPipe
+    ],
+    template: `
+        <label>Enter countries to see autocomplete</label>
+        <kbq-form-field>
+            <input
+                [formControl]="control"
+                [kbqAutocomplete]="auto"
+                kbqInput
+                type="text"
+            />
+
+            <kbq-autocomplete #auto="kbqAutocomplete">
+                @for (option of filteredOptions | async; track option) {
+                    <kbq-option [value]="option">
+                        {{ option }}
+                    </kbq-option>
+                }
+            </kbq-autocomplete>
+        </kbq-form-field>
+    `
 })
 export class AutocompleteOverviewExample implements OnInit {
     options = [

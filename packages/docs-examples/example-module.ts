@@ -178,7 +178,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Alert Close",
     "componentName": "AlertCloseExample",
     "files": [
-      "alert-close-example.ts",
+      "alert-close-example.ts"
     ],
     "selector": "alert-close-example",
     "additionalComponents": [],
@@ -195,8 +195,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "AlertContentExample",
     "files": [
       "alert-content-example.ts",
-      "alert-content-example.html",
-      "alert-content-example.css"
+      "alert-content-example.html"
     ],
     "selector": "alert-content-example",
     "additionalComponents": [],
@@ -213,8 +212,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "AlertSizeExample",
     "files": [
       "alert-size-example.ts",
-      "alert-size-example.html",
-      "alert-size-example.css"
+      "alert-size-example.html"
     ],
     "selector": "alert-size-example",
     "additionalComponents": [],
@@ -231,8 +229,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "AlertStatusExample",
     "files": [
       "alert-status-example.ts",
-      "alert-status-example.html",
-      "alert-status-example.css"
+      "alert-status-example.html"
     ],
     "selector": "alert-status-example",
     "additionalComponents": [],
@@ -248,8 +245,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Alert Variants",
     "componentName": "AlertVariantsExample",
     "files": [
-      "alert-variants-example.ts",
-      "alert-variants-example.css"
+      "alert-variants-example.ts"
     ],
     "selector": "alert-variants-example",
     "additionalComponents": [],
@@ -265,9 +261,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic Input",
     "componentName": "AutocompleteOverviewExample",
     "files": [
-      "autocomplete-overview-example.ts",
-      "autocomplete-overview-example.html",
-      "autocomplete-overview-example.css"
+      "autocomplete-overview-example.ts"
     ],
     "selector": "autocomplete-overview-example",
     "additionalComponents": [],

@@ -3,6 +3,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconButton } from '@koobiq/components/icon';
 
 /**
  * @title Alert Close
@@ -20,7 +21,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
     ],
     encapsulation: ViewEncapsulation.None,
     imports: [
-        KbqAlertModule
+        KbqAlertModule,
+        KbqIconButton
     ],
     template: `
         <kbq-alert
