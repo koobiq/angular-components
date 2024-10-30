@@ -21,7 +21,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 [badgeColor]="colors.FadeContrast"
                 [kbqPlacement]="PopUpPlacements.Top"
                 [kbqTooltipArrow]="false"
-                kbqTooltip="DoS (аббр. англ. denial-of-service attack «отказ в обслуживании») — хакерская атака на вычислительную систему с целью довести её до отказа, то есть создание таких условий, при которых добросовестные пользователи системы не смогут получить доступ к предоставляемым системным ресурсам (серверам), либо этот доступ будет затруднён."
+                [kbqTooltip]="tooltipText"
             >
                 DoS
             </kbq-badge>
@@ -31,4 +31,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 export class BadgeTooltipExample {
     colors = KbqBadgeColors;
     protected readonly PopUpPlacements = PopUpPlacements;
+
+    tooltipText =
+        'DoS (аббр. англ. denial-of-service attack «отказ в обслуживании») — хакерская атака на вычислительную систему с целью довести её до отказа, то есть создание таких условий, при которых добросовестные пользователи системы не смогут получить доступ к предоставляемым системным ресурсам (серверам), либо этот доступ будет затруднён.';
 }
