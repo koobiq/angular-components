@@ -7,9 +7,15 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-stretch-example',
-    templateUrl: 'tabs-stretch-example.html',
     imports: [
         KbqTabsModule
-    ]
+    ],
+    template: `
+        <kbq-tab-group kbq-stretch-tabs>
+            <kbq-tab [label]="'Bruteforce'" />
+            <kbq-tab [label]="'Identity Theft'" />
+            <kbq-tab [label]="'Spam Attack'" />
+        </kbq-tab-group>
+    `
 })
 export class TabsStretchExample {}

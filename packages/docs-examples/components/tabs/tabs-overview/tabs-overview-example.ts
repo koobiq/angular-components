@@ -7,9 +7,16 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-overview-example',
-    templateUrl: 'tabs-overview-example.html',
     imports: [
         KbqTabsModule
-    ]
+    ],
+    template: `
+        <kbq-tab-group>
+            <kbq-tab [label]="'Bruteforce'" />
+            <kbq-tab [label]="'Complex Attack'" />
+            <kbq-tab [label]="'DDoS'" />
+            <kbq-tab [label]="'DoS'" />
+        </kbq-tab-group>
+    `
 })
 export class TabsOverviewExample {}

@@ -8,11 +8,26 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tab-active-tab-index-example',
-    templateUrl: 'tab-active-tab-index-example.html',
     imports: [
         KbqTabsModule,
         KbqIcon
-    ]
+    ],
+    template: `
+        <kbq-tab-group [(activeTab)]="selectedTabIndex">
+            @for (tab of tabs; track tab) {
+                <kbq-tab [tabId]="tab.tabId">
+                    <ng-template kbq-tab-label>
+                        <i
+                            [ngClass]="tab.icon"
+                            kbq-icon
+                        ></i>
+                        {{ tab.tabId }}
+                    </ng-template>
+                    Content for selected tab with index={{ selectedTabIndex }}
+                </kbq-tab>
+            }
+        </kbq-tab-group>
+    `
 })
 export class TabActiveTabIndexExample {
     tabs = [

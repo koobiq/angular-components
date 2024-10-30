@@ -8,9 +8,40 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     standalone: true,
     selector: 'tabs-disabled-example',
     styleUrl: 'tabs-disabled-example.css',
-    templateUrl: 'tabs-disabled-example.html',
     imports: [
         KbqTabsModule
-    ]
+    ],
+    template: `
+        <div class="tabs-disabled-example">
+            <kbq-tab-group>
+                <kbq-tab [label]="'Bruteforce'" />
+                <kbq-tab
+                    [disabled]="true"
+                    [label]="'Complex Attack'"
+                />
+                <kbq-tab [label]="'DDoS'" />
+                <kbq-tab [label]="'DoS'" />
+            </kbq-tab-group>
+
+            <kbq-tab-group>
+                <kbq-tab
+                    [disabled]="true"
+                    [label]="'Bruteforce'"
+                />
+                <kbq-tab
+                    [disabled]="true"
+                    [label]="'Complex Attack'"
+                />
+                <kbq-tab
+                    [disabled]="true"
+                    [label]="'DDoS'"
+                />
+                <kbq-tab
+                    [disabled]="true"
+                    [label]="'DoS'"
+                />
+            </kbq-tab-group>
+        </div>
+    `
 })
 export class TabsDisabledExample {}
