@@ -8,7 +8,7 @@
 @mixin kbq-datepicker-theme() {
     .kbq-datepicker__content {
         background: var(--kbq-datepicker-container-background);
-        box-shadow: var(--kbq-datepicker-container-box-shadow);
+        box-shadow: var(--kbq-datepicker-container-shadow);
     }
 
     .kbq-calendar__table-header {

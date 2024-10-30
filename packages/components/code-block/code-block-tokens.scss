@@ -137,7 +137,7 @@
     --kbq-code-block-filled-container-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-filled-container-border-color: transparent;
     --kbq-code-block-filled-header-background: var(--kbq-background-bg-secondary);
-    --kbq-code-block-filled-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-filled-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(
         90deg,
         transparent,
@@ -154,7 +154,7 @@
     --kbq-code-block-outline-container-background: var(--kbq-background-card);
     --kbq-code-block-outline-container-border-color: var(--kbq-line-contrast-less);
     --kbq-code-block-outline-header-background: var(--kbq-background-card);
-    --kbq-code-block-outline-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-outline-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, var(--kbq-background-card));
     --kbq-code-block-outline-actionbar-background: var(--kbq-background-card);
     --kbq-code-block-outline-collapse-expanded-background: transparent;
@@ -273,7 +273,7 @@
     --kbq-code-block-filled-container-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-filled-container-border-color: var(--kbq-line-contrast-less);
     --kbq-code-block-filled-header-background: var(--kbq-background-bg-secondary);
-    --kbq-code-block-filled-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-filled-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(
         90deg,
         transparent,
@@ -290,7 +290,7 @@
     --kbq-code-block-outline-container-background: var(--kbq-background-card);
     --kbq-code-block-outline-container-border-color: transparent;
     --kbq-code-block-outline-header-background: var(--kbq-background-card);
-    --kbq-code-block-outline-header-shadow: var(--kbq-shadow-overflow-compact-bottom);
+    --kbq-code-block-outline-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, var(--kbq-background-card));
     --kbq-code-block-outline-actionbar-background: var(--kbq-background-card);
     --kbq-code-block-outline-collapse-expanded-background: transparent;

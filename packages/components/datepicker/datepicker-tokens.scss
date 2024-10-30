@@ -22,7 +22,7 @@
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-datepicker-container-background: var(--kbq-background-card);
-    --kbq-datepicker-container-box-shadow: var(--kbq-shadow-popup);
+    --kbq-datepicker-container-shadow: var(--kbq-shadow-popup);
     --kbq-datepicker-header-text: var(--kbq-foreground-contrast-tertiary);
     --kbq-datepicker-header-divider: var(--kbq-line-contrast-less);
     --kbq-datepicker-grid-cell-default-background: transparent;
@@ -40,7 +40,7 @@
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
     --kbq-datepicker-container-background: var(--kbq-background-card);
-    --kbq-datepicker-container-box-shadow: var(--kbq-shadow-popup);
+    --kbq-datepicker-container-shadow: var(--kbq-shadow-popup);
     --kbq-datepicker-header-text: var(--kbq-foreground-contrast-tertiary);
     --kbq-datepicker-header-divider: var(--kbq-line-contrast-less);
     --kbq-datepicker-grid-cell-default-background: transparent;

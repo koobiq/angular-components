@@ -33,7 +33,7 @@
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-sidepanel-overlay-background: var(--kbq-background-overlay);
     --kbq-sidepanel-container-background: var(--kbq-background-card);
-    --kbq-sidepanel-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-sidepanel-container-shadow: var(--kbq-shadow-overlay);
     --kbq-sidepanel-header-text-color: var(--kbq-foreground-contrast);
     --kbq-sidepanel-content-text-color: var(--kbq-foreground-contrast);
 }
@@ -41,7 +41,7 @@
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
     --kbq-sidepanel-overlay-background: var(--kbq-background-overlay);
     --kbq-sidepanel-container-background: var(--kbq-background-card);
-    --kbq-sidepanel-container-box-shadow: var(--kbq-shadow-overlay);
+    --kbq-sidepanel-container-shadow: var(--kbq-shadow-overlay);
     --kbq-sidepanel-header-text-color: var(--kbq-foreground-contrast);
     --kbq-sidepanel-content-text-color: var(--kbq-foreground-contrast);
 }

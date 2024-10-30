@@ -16,7 +16,7 @@
 
 @mixin kbq-dropdown-theme() {
     .kbq-dropdown__panel {
-        box-shadow: var(--kbq-dropdown-container-box-shadow);
+        box-shadow: var(--kbq-dropdown-container-shadow);
         background: var(--kbq-dropdown-container-background);
     }
 
