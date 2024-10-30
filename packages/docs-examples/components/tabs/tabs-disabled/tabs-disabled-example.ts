@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -11,6 +11,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     imports: [
         KbqTabsModule
     ],
+    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="tabs-disabled-example">
             <kbq-tab-group>

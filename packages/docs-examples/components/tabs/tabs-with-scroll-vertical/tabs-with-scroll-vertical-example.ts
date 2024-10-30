@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -9,6 +9,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     selector: 'tabs-with-scroll-vertical-example',
     styleUrl: 'tabs-with-scroll-vertical-example.css',
     imports: [KbqTabsModule],
+    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="tabs-with-scroll-vertical-example">
             <kbq-tab-group vertical>

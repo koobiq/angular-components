@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
@@ -15,6 +15,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         KbqButtonModule,
         KbqIcon
     ],
+    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="tabs-actionbar-example">
             <kbq-tab-group underlined>

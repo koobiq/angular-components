@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
@@ -12,6 +12,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     imports: [
         KbqTabsModule
     ],
+    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="tabs-empty-example">
             <kbq-tab-group>

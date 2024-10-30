@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
@@ -14,6 +14,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         KbqTabsModule,
         KbqIcon
     ],
+    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="tabs-vertical-icons-example">
             <kbq-tab-group vertical>
