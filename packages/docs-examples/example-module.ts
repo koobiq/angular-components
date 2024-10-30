@@ -607,12 +607,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
-    "title": "Indeterminate checkbox",
+    "title": "Checkbox indeterminate",
     "componentName": "CheckboxIndeterminateExample",
     "files": [
-      "checkbox-indeterminate-example.ts",
-      "checkbox-indeterminate-example.html",
-      "checkbox-indeterminate-example.css"
+      "checkbox-indeterminate-example.ts"
     ],
     "selector": "checkbox-indeterminate-example",
     "additionalComponents": [],
@@ -625,12 +623,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "checkbox-overview": {
     "packagePath": "components/checkbox/checkbox-overview",
-    "title": "Basic checkboxes",
+    "title": "Checkbox overview",
     "componentName": "CheckboxOverviewExample",
     "files": [
       "checkbox-overview-example.ts",
-      "checkbox-overview-example.html",
-      "checkbox-overview-example.css"
+      "checkbox-overview-example.html"
     ],
     "selector": "checkbox-overview-example",
     "additionalComponents": [],
@@ -646,9 +643,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Pseudo checkbox",
     "componentName": "PseudoCheckboxExample",
     "files": [
-      "pseudo-checkbox-example.ts",
-      "pseudo-checkbox-example.html",
-      "pseudo-checkbox-example.css"
+      "pseudo-checkbox-example.ts"
     ],
     "selector": "pseudo-checkbox-example",
     "additionalComponents": [],
