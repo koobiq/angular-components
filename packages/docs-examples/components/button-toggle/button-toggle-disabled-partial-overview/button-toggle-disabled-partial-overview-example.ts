@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Button toggle disabled partial
@@ -9,7 +10,8 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
     selector: 'button-toggle-disabled-partial-overview-example',
     templateUrl: 'button-toggle-disabled-partial-overview-example.html',
     imports: [
-        KbqButtonToggleModule
+        KbqButtonToggleModule,
+        KbqIconModule
     ]
 })
 export class ButtonToggleDisabledPartialOverviewExample {}

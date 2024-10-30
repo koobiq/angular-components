@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Button toggle disabled all
@@ -11,7 +12,8 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
     templateUrl: 'button-toggle-disabled-all-overview-example.html',
     imports: [
         KbqButtonToggleModule,
-        FormsModule
+        FormsModule,
+        KbqIconModule
     ]
 })
 export class ButtonToggleDisabledAllOverviewExample {

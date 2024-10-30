@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Button toggle alignment
@@ -12,7 +13,8 @@ import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
     styleUrl: 'button-toggle-alignment-overview-example.css',
     imports: [
         KbqButtonToggleModule,
-        FormsModule
+        FormsModule,
+        KbqIconModule
     ],
     encapsulation: ViewEncapsulation.None
 })
