@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Button content
@@ -11,7 +12,8 @@ import { KbqComponentColors } from '@koobiq/components/core';
     styleUrl: 'button-content-example.css',
     encapsulation: ViewEncapsulation.None,
     imports: [
-        KbqButtonModule
+        KbqButtonModule,
+        KbqIconModule
     ],
     template: `
         <div class="content__example-button-group">
