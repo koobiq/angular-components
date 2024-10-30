@@ -15,13 +15,13 @@ const markdownRenderer = new DocsMarkdownRenderer();
 const marked = configureMarkedGlobally(markdownRenderer);
 
 export const src = (path: string | string[]): string[] => {
-    let res: string[];
+    let res: string[] = [];
     if (Array.isArray(path)) {
         res = path.reduce((result, curPath) => {
             const files = new GlobSync(curPath).found;
             result.push(...files);
             return result;
-        }, []);
+        }, [] as string[]);
     } else if (typeof path === 'string') {
         res = new GlobSync(path).found;
     }
