@@ -3,8 +3,6 @@
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/common/tokens';
 
-/* stylelint-disable no-unknown-custom-properties */
-
 @mixin kbq-docs-example-source-theme() {
     .docs-example-source__code {
         background: var(--kbq-background-background-less-contrast);

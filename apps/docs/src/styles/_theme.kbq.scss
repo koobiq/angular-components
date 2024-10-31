@@ -23,8 +23,6 @@
 
 @use '../styles/hot-keys';
 
-/* stylelint-disable no-unknown-custom-properties */
-
 @include components.kbq-core();
 
 @include visual.body-html();

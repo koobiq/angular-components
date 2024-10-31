@@ -4,8 +4,6 @@
 
 @use './button-theme' as *;
 
-/* stylelint-disable no-unknown-custom-properties */
-
 .kbq-button {
     @extend %kbq-button-base;
 

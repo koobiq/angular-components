@@ -42,7 +42,7 @@
 }
 
 // Mixin that renders all of the core styles that depend on the theme.
-/* stylelint-disable no-unknown-custom-properties */
+
 @mixin kbq-core-theme($theme: null) {
     .kbq-app-background {
         background: var(--kbq-background-bg);

@@ -1,8 +1,6 @@
 @use '../dist/components/core/styles/theming';
 @use '../dist/components/core/styles/common/tokens';
 
-/* stylelint-disable no-unknown-custom-properties */
-
 @mixin kbq-docs-icons-viewer-theme() {
     .docs-icons-viewer__header {
         background: var(--kbq-background-bg);

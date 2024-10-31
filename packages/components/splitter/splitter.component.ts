@@ -222,7 +222,7 @@ export class KbqGutterGhostDirective {
         class: 'kbq-splitter'
     },
     preserveWhitespaces: false,
-    styleUrls: ['splitter.scss', 'splitter-tokens.scss'],
+    styleUrls: ['splitter.scss'],
     templateUrl: './splitter.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

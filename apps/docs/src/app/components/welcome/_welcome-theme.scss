@@ -2,8 +2,6 @@
 
 @use '../dist/components/core/styles/common/tokens';
 
-/* stylelint-disable no-unknown-custom-properties */
-
 @mixin kbq-docs-welcome-theme() {
     .docs-footer__label {
         color: var(--kbq-foreground-contrast-secondary);
