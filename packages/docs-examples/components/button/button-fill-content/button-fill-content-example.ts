@@ -1,14 +1,27 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
 /**
- * @title Button Fill
+ * @title Button fill content
  */
 @Component({
+    standalone: true,
     selector: 'button-fill-content-example',
-    templateUrl: 'button-fill-content-example.html',
-    styleUrls: ['button-fill-content-example.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: 'button-fill-content-example.css',
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqButtonModule
+    ],
+    template: `
+        <button
+            class="fill-content__example-button"
+            [color]="colors.Contrast"
+            kbq-button
+        >
+            Очень длинный текст кнопки, который не умеет обрезаться по ширине
+        </button>
+    `
 })
 export class ButtonFillContentExample {
     colors = KbqComponentColors;
