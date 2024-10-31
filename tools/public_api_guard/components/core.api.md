@@ -45,7 +45,6 @@ import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
-import { SafeHtml } from '@angular/platform-browser';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
@@ -1736,16 +1735,6 @@ export class KbqRoundDecimalPipe implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqRoundDecimalPipe, "kbqRoundNumber", false>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqRoundDecimalPipe>;
-}
-
-// @public
-export class KbqSafeHtmlPipe implements PipeTransform {
-    // (undocumented)
-    transform(html: string): SafeHtml;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSafeHtmlPipe, never>;
-    // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<KbqSafeHtmlPipe, "kbqSafeHtml", true>;
 }
 
 // @public
