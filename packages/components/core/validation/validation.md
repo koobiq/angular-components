@@ -1,3 +1,23 @@
+**Обрати внимание!** К элементам формы применяется [`KbqValidateDirective`](https://github.com/koobiq/angular-components/blob/main/packages/components/form-field/validate.directive.ts),
+которая подменяет методы формы (`Validators`, `onSubmit`), что может привести к _"непредсказуемому"_ поведению.
+
+### Отключение KbqValidateDirective
+
+```ts
+import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
+
+@NgModule({
+    providers: [
+        {
+            provide: KBQ_VALIDATION,
+            useValue: { useValidation: false } satisfies KbqValidationOptions
+        }
+    ]
+})
+```
+
+---
+
 Все описанные ниже рекомендации не применяются к форме входа.
 
 Хорошая практика — сделать так, чтобы валидация вообще не понадобилась. Ниже примеры, когда интерфейс не позволяет пользователю совершить ошибку.

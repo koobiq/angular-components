@@ -316,7 +316,7 @@ export class KbqTrim {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTrim, [{ attribute: "no-trim"; }, { optional: true; self: true; }]>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqValidateDirective implements AfterContentInit {
     constructor(formFieldControl: KbqFormFieldControl<any>, rawValidators: Validator[], ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, mcValidation: KbqValidationOptions, cdr: ChangeDetectorRef);
     // (undocumented)
