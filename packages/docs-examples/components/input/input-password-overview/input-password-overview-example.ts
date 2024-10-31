@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule, PasswordRules } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 
 /**
  * @title Input password
@@ -10,6 +11,7 @@ import { KbqFormFieldModule, PasswordRules } from '@koobiq/components/form-field
     selector: 'input-password-overview-example',
     imports: [
         KbqFormFieldModule,
+        KbqInputModule,
         FormsModule
     ],
     template: `

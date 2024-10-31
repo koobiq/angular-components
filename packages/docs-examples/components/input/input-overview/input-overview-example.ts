@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 
 /**
  * @title Input
@@ -12,6 +13,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'input-overview-example',
     imports: [
         KbqFormFieldModule,
+        KbqInputModule,
         KbqIconModule,
         FormsModule
     ],

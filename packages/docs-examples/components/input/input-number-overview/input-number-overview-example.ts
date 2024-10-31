@@ -12,6 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     selector: 'input-number-overview-example',
     imports: [
         KbqFormFieldModule,
+        KbqInputModule,
         FormsModule,
         KbqFormsModule,
         KbqInputModule
