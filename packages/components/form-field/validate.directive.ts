@@ -16,6 +16,26 @@ import {
 import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
 import { KbqFormFieldControl } from './form-field-control';
 
+/**
+ * @deprecated Will be removed in next major release (#DS-2838)
+ *
+ * Legacy mosaic validation
+ *
+ * ### How to disable?
+ *
+ * ```typescript
+ * import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
+ *
+ * @NgModule({
+ *      providers: [
+ *           {
+ *              provide: KBQ_VALIDATION,
+ *              useValue: { useValidation: false } satisfies KbqValidationOptions
+ *           }
+ *      ]
+ * })
+ * ```
+ */
 @Directive({
     selector: `
         input[kbqInput],
