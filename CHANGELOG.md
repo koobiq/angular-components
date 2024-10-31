@@ -1,3 +1,16 @@
+# 18.4.0 (2024-10-31)
+
+### Koobiq
+
+ * bug fix  **icon:** empty state ([#DS-3028](https://github.com/koobiq/angular-components/issues/issue/DS-3028)) ([#383](https://github.com/koobiq/angular-components/issues/383)) ([decd280](https://github.com/koobiq/angular-components/commit/decd280f50118f82287a1ec59e6e70d8ce4ec12e))
+ * bug fix  **navbar:** title font style ([#DS-3023](https://github.com/koobiq/angular-components/issues/issue/DS-3023)) ([#394](https://github.com/koobiq/angular-components/issues/394)) ([1952c34](https://github.com/koobiq/angular-components/commit/1952c34dcf5a2403919d2e07e7537ea3715d5c97))
+ * feature  **code-block, timezone:** localizability for code-block, timezone ([#DS-2214](https://github.com/koobiq/angular-components/issues/issue/DS-2214)) ([#367](https://github.com/koobiq/angular-components/issues/367)) ([9d0d519](https://github.com/koobiq/angular-components/commit/9d0d5191c1fbe14ad21048bbf26e08eacf57ed86))
+ * feature  **docs,core:** sync theme selectors in themeService with design-tokens package ([#DS-3004](https://github.com/koobiq/angular-components/issues/issue/DS-3004)) ([#382](https://github.com/koobiq/angular-components/issues/382)) ([2fd11a9](https://github.com/koobiq/angular-components/commit/2fd11a971ea1bdd70b51c036a5fdaf5c09a39f14))
+ * feature  **docs:** updated docs for theming ([#DS-2622](https://github.com/koobiq/angular-components/issues/issue/DS-2622)) ([#381](https://github.com/koobiq/angular-components/issues/381)) ([48bfa48](https://github.com/koobiq/angular-components/commit/48bfa4887a365fb9a1fa2a23057f8b66ef6db9f5))
+ * feature  **file-upload:** separated validation from file-upload ([#DS-2554](https://github.com/koobiq/angular-components/issues/issue/DS-2554)) ([#377](https://github.com/koobiq/angular-components/issues/377)) ([7581e1e](https://github.com/koobiq/angular-components/commit/7581e1e87bef6dddfd5671c26389846aded3d776))
+ * feature  **tooltip:** added method showForElement ([#DS-3027](https://github.com/koobiq/angular-components/issues/issue/DS-3027)) ([#386](https://github.com/koobiq/angular-components/issues/386)) ([cb4351f](https://github.com/koobiq/angular-components/commit/cb4351ff1bbc411d96bff98d4cc7b1dec7250ab6))
+ * feature  updated tokens for shadows in our components ([#388](https://github.com/koobiq/angular-components/issues/388)) ([d7eb9a8](https://github.com/koobiq/angular-components/commit/d7eb9a8a4981c92cefd62c4b1737ef4d9ef62d90))
+
 # 18.3.0 (2024-10-22)
 
 ### Koobiq
