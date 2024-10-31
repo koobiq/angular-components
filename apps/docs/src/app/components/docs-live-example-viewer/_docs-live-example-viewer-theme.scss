@@ -2,8 +2,6 @@
 
 @use '../dist/components/core/styles/common/tokens';
 
-/* stylelint-disable no-unknown-custom-properties */
-
 @mixin kbq-docs-live-example-viewer-theme() {
     .docs-live-example__container {
         border: 1px solid var(--kbq-background-contrast-fade);

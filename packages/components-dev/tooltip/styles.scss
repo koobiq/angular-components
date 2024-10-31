@@ -4,8 +4,6 @@
 @use '../../components/core/styles/theming/theming';
 @use '../main' as *;
 
-/* stylelint-disable no-unknown-custom-properties */
-
 .kbq-tooltip.kbq-tooltip_extended.tooltip-485 {
     width: 485px;
     max-width: 485px;

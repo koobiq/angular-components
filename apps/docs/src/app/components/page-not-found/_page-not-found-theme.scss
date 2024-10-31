@@ -1,7 +1,5 @@
 @use 'sass:map';
 
-/* stylelint-disable no-unknown-custom-properties */
-
 @mixin kbq-docs-page-not-found-theme() {
     .page-not-found {
         background: var(--kbq-background-bg);

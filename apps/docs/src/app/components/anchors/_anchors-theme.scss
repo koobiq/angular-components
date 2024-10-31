@@ -4,8 +4,6 @@
 @use '../dist/components/core/styles/typography';
 @use '../dist/components/core/styles/common';
 
-/* stylelint-disable no-unknown-custom-properties */
-
 @mixin kbq-docs-anchors-theme() {
     $shadow: var(--kbq-foreground-text-less-contrast);
 
