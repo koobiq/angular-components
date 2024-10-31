@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqMarkdownModule } from '@koobiq/components/markdown';
 
 /**
@@ -9,7 +9,6 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
     imports: [KbqMarkdownModule],
     selector: 'markdown-code-block-example',
     templateUrl: './markdown-code-block-example.html',
-    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkdownCodeBlockExample {}
