@@ -4,12 +4,26 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
+    Inject,
+    InjectionToken,
     Input,
+    Optional,
+    Provider,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqSafeHtmlPipe } from '@koobiq/components/core';
+import { MarkedOptions } from 'marked';
 import { KbqMarkdownService } from './markdown.service';
+
+/** List of options for `marked` library. */
+export const KBQ_MARKDOWN_MARKED_OPTIONS = new InjectionToken<MarkedOptions>('KBQ_MARKDOWN_MARKED_OPTIONS');
+
+/** Utility provider for `KBQ_MARKDOWN_MARKED_OPTIONS`. */
+export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provider => ({
+    provide: KBQ_MARKDOWN_MARKED_OPTIONS,
+    useValue: options
+});
 
 /** Component which allows to convert `Markdown` into `HTML` */
 @Component({
@@ -46,7 +60,7 @@ export class KbqMarkdown {
 
     set markdownText(value: string | null) {
         if (value && this.markdownText !== value) {
-            this.resultHtml = this.markdownService.parseToHtml(value);
+            this.resultHtml = this.markdownService.parseToHtml(value, this.markedOptions);
         }
 
         this._markdownText = value;
@@ -58,11 +72,15 @@ export class KbqMarkdown {
 
     constructor(
         private readonly markdownService: KbqMarkdownService,
-        private readonly cdr: ChangeDetectorRef
+        private readonly cdr: ChangeDetectorRef,
+        @Optional() @Inject(KBQ_MARKDOWN_MARKED_OPTIONS) private readonly markedOptions?: MarkedOptions | undefined
     ) {
         afterNextRender(() => {
             if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
-                this.resultHtml = this.markdownService.parseToHtml(this.contentWrapper.nativeElement.textContent);
+                this.resultHtml = this.markdownService.parseToHtml(
+                    this.contentWrapper.nativeElement.textContent,
+                    this.markedOptions
+                );
                 this.cdr.detectChanges();
             }
         });
