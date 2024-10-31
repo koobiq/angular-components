@@ -1,6 +1,13 @@
 /* stylelint-disable no-unknown-custom-properties */
 
-.kbq-button {
+.kbq-button-icon {
+    --kbq-button-icon-size-horizontal-padding: var(--kbq-size-s);
+    --kbq-button-icon-size-vertical-padding: var(--kbq-size-s);
+    --kbq-button-icon-size-content-padding: var(--kbq-size-xxs);
+}
+
+.kbq-button,
+.kbq-button-icon {
     --kbq-button-size-height: var(--kbq-size-3xl);
     --kbq-button-size-border-width: var(--kbq-size-border-width);
     --kbq-button-size-border-radius: var(--kbq-size-s);

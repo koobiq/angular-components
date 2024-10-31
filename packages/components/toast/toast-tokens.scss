@@ -1,6 +1,9 @@
 /* stylelint-disable no-unknown-custom-properties */
 
-.kbq-toast {
+.kbq-toast-container {
+    --kbq-toast-stack-size-margin-top: var(--kbq-size-m);
+    --kbq-toast-stack-size-margin-right: var(--kbq-size-m);
+    --kbq-toast-stack-size-gap: var(--kbq-size-s);
     --kbq-toast-size-container-width: 360px;
     --kbq-toast-size-container-border-radius: var(--kbq-size-s);
     --kbq-toast-size-container-padding-left: var(--kbq-size-m);
