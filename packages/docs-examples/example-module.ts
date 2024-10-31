@@ -1625,8 +1625,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "HorizontalFormLabelsExample",
     "files": [
       "horizontal-form-labels-example.ts",
-      "horizontal-form-labels-example.html",
-      "horizontal-form-labels-example.css"
+      "horizontal-form-labels-example.html"
     ],
     "selector": "horizontal-form-labels-example",
     "additionalComponents": [],
@@ -1643,7 +1642,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "HorizontalFormExample",
     "files": [
       "horizontal-form-example.ts",
-      "horizontal-form-example.html",
+      "horizontal-form-example.html"
     ],
     "selector": "horizontal-form-example",
     "additionalComponents": [],
@@ -1673,12 +1672,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "icon-item-color": {
     "packagePath": "components/icon-item/icon-item-color",
-    "title": "Icon Item Colors",
+    "title": "Icon-item color",
     "componentName": "IconItemColorExample",
     "files": [
-      "icon-item-color-example.ts",
-      "icon-item-color-example.html",
-      "icon-item-color-example.css"
+      "icon-item-color-example.ts"
     ],
     "selector": "icon-item-color-example",
     "additionalComponents": [],
@@ -1691,12 +1688,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "icon-item-default": {
     "packagePath": "components/icon-item/icon-item-default",
-    "title": "Icon Item",
+    "title": "Icon-item",
     "componentName": "IconItemDefaultExample",
     "files": [
-      "icon-item-default-example.ts",
-      "icon-item-default-example.html",
-      "icon-item-default-example.css"
+      "icon-item-default-example.ts"
     ],
     "selector": "icon-item-default-example",
     "additionalComponents": [],
@@ -1709,12 +1704,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "icon-item-size": {
     "packagePath": "components/icon-item/icon-item-size",
-    "title": "Icon Item Size",
+    "title": "Icon-item size",
     "componentName": "IconItemSizeExample",
     "files": [
-      "icon-item-size-example.ts",
-      "icon-item-size-example.html",
-      "icon-item-size-example.css"
+      "icon-item-size-example.ts"
     ],
     "selector": "icon-item-size-example",
     "additionalComponents": [],
@@ -1730,9 +1723,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon Item Variant",
     "componentName": "IconItemVariantExample",
     "files": [
-      "icon-item-variant-example.ts",
-      "icon-item-variant-example.html",
-      "icon-item-variant-example.css"
+      "icon-item-variant-example.ts"
     ],
     "selector": "icon-item-variant-example",
     "additionalComponents": [],

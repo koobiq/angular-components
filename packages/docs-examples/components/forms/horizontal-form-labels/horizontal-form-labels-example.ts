@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -13,6 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     styleUrl: 'horizontal-form-labels-example.css',
     imports: [
         FormsModule,
+        KbqFormsModule,
         KbqFormFieldModule,
         KbqInputModule
     ]
