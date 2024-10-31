@@ -11,7 +11,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
     standalone: true,
     selector: 'range-date-formatter-example',
     templateUrl: 'range-date-formatter-example.html',
-    styleUrl:'range-date-formatter-example.css'
+    styleUrl: 'range-date-formatter-example.css'
 })
 export class RangeDateFormatterExample {
     formats = {

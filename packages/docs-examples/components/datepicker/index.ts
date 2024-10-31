@@ -1,14 +1,6 @@
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KBQ_LUXON_DATE_ADAPTER_OPTIONS, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE, KbqFormsModule } from '@koobiq/components/core';
-import { KbqDatepickerModule } from '@koobiq/components/datepicker';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqRadioModule } from '@koobiq/components/radio';
-import { KbqTimepickerModule } from '@koobiq/components/timepicker';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { DateAdapter, KBQ_DATE_LOCALE, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { DatepickerAndTimepickerExample } from './datepicker-and-timepicker/datepicker-and-timepicker-example';
 import { DatepickerInactiveExample } from './datepicker-inactive/datepicker-inactive-example';
 import { DatepickerMinimaxExample } from './datepicker-minimax/datepicker-minimax-example';
@@ -35,19 +27,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        KbqDatepickerModule,
-        KbqInputModule,
-        KbqFormFieldModule,
-        KbqIconModule,
-        KbqRadioModule,
-        KbqToolTipModule,
-        KbqTimepickerModule,
-        KbqFormsModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES,
     providers: [
         {

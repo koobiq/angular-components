@@ -1,13 +1,41 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqDatepickerModule } from '@koobiq/components/datepicker';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 
 /**
- * @title datepicker-required
+ * @title Datepicker required
  */
 @Component({
+    standalone: true,
     selector: 'datepicker-required-example',
-    templateUrl: 'datepicker-required-example.html',
-    styleUrls: ['datepicker-required-example.css']
+    imports: [
+        KbqDatepickerModule,
+        KbqFormFieldModule,
+        KbqIconModule,
+        FormsModule
+    ],
+    template: `
+        <div class="docs-example__datepicker-required">
+            <kbq-form-field
+                (click)="datepicker.toggle()"
+                style="width: 136px"
+            >
+                <input
+                    [kbqDatepicker]="datepicker"
+                    [ngModel]="date"
+                    [required]="true"
+                />
+                <i
+                    kbq-icon="kbq-calendar-o_16"
+                    kbqSuffix
+                ></i>
+                <kbq-datepicker #datepicker />
+            </kbq-form-field>
+        </div>
+    `
 })
 export class DatepickerRequiredExample {
     date: DateTime;

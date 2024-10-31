@@ -1,14 +1,54 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { DateAdapter } from '@koobiq/components/core';
+import { KbqDatepickerModule } from '@koobiq/components/datepicker';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
 
 /**
- * @title Datepicker-minimax
+ * @title Datepicker minimax
  */
 @Component({
+    standalone: true,
     selector: 'datepicker-minimax-example',
-    templateUrl: 'datepicker-minimax-example.html',
-    styleUrls: ['datepicker-minimax-example.css']
+    imports: [
+        KbqDatepickerModule,
+        KbqFormFieldModule,
+        FormsModule,
+        KbqToolTipModule
+    ],
+    template: `
+        <div class="docs-example__datepicker-minimax">
+            <div class="kbq-form-vertical">
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label">Выберите дату от 14 декабря 2023 до 25 августа 2024</label>
+                    <kbq-form-field
+                        #tooltip="kbqWarningTooltip"
+                        [kbqWarningTooltip]="'Только цифры'"
+                        (click)="datepicker.toggle()"
+                        style="width: 136px"
+                    >
+                        <input
+                            [kbqDatepicker]="datepicker"
+                            [kbqValidationTooltip]="tooltip"
+                            [max]="maxDate"
+                            [min]="minDate"
+                        />
+                        <i
+                            kbq-icon="kbq-calendar-o_16"
+                            kbqSuffix
+                        ></i>
+                        <kbq-datepicker
+                            #datepicker
+                            [maxDate]="maxDate"
+                            [minDate]="minDate"
+                        />
+                    </kbq-form-field>
+                </div>
+            </div>
+        </div>
+    `
 })
 export class DatepickerMinimaxExample {
     minDate: DateTime;
