@@ -1,7 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-badge-style($type, $sub-type, $style-name) {

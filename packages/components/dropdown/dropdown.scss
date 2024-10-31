@@ -1,8 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/common/tokens' as *;
-
 @use './dropdown-theme' as *;
 
 .kbq-dropdown-trigger.kbq-button-icon_right.kbq-button-icon_left {

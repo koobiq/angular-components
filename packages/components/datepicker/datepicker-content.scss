@@ -1,8 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/common/tokens' as *;
-
 @use './datepicker-theme' as *;
 
 $kbq-datepicker-non-touch-calendar-cell-size: 40px;

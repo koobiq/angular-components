@@ -1,9 +1,3 @@
-@use 'sass:map';
-
-@use '../core/styles/common/popup';
-@use '../core/styles/theming/theming';
-@use '../core/styles/common/tokens' as *;
-
 @mixin kbq-autocomplete-theme {
     .kbq-autocomplete-panel {
         box-shadow: var(--kbq-select-panel-dropdown-shadow);

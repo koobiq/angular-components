@@ -1,11 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/tokens';
-@use '../core/styles/common/tokens' as *;
-
-$tokens: meta.module-variables(tokens) !default;
-
 .kbq-calendar__body-cell {
     position: relative;
     height: 0;
