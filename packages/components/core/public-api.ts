@@ -10,7 +10,6 @@ export * from './line/line';
 export * from './locales/index';
 export * from './option/index';
 export * from './overlay/overlay-position-map';
-export * from './pipes';
 export * from './pop-up/index';
 export * from './select/index';
 export * from './selection/index';

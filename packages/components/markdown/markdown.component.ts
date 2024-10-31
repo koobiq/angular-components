@@ -12,7 +12,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqSafeHtmlPipe } from '@koobiq/components/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { MarkedOptions } from 'marked';
 import { KbqMarkdownService } from './markdown.service';
 
@@ -28,7 +28,6 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
 /** Component which allows to convert `Markdown` into `HTML` */
 @Component({
     standalone: true,
-    imports: [KbqSafeHtmlPipe],
     selector: 'kbq-markdown',
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
@@ -40,7 +39,7 @@ export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provid
         ><ng-content /></pre>
         <div
             class="markdown-output"
-            [innerHtml]="resultHtml | kbqSafeHtml"
+            [innerHtml]="resultHtml"
         ></div>
     `,
     host: {
@@ -60,7 +59,7 @@ export class KbqMarkdown {
 
     set markdownText(value: string | null) {
         if (value && this.markdownText !== value) {
-            this.resultHtml = this.markdownService.parseToHtml(value, this.markedOptions);
+            this.resultHtml = this.getResultHTML(value);
         }
 
         this._markdownText = value;
@@ -68,21 +67,23 @@ export class KbqMarkdown {
 
     private _markdownText: string | null = null;
 
-    protected resultHtml: string = '';
+    protected resultHtml: SafeHtml;
 
     constructor(
         private readonly markdownService: KbqMarkdownService,
         private readonly cdr: ChangeDetectorRef,
+        private sanitizer: DomSanitizer,
         @Optional() @Inject(KBQ_MARKDOWN_MARKED_OPTIONS) private readonly markedOptions?: MarkedOptions | undefined
     ) {
         afterNextRender(() => {
             if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
-                this.resultHtml = this.markdownService.parseToHtml(
-                    this.contentWrapper.nativeElement.textContent,
-                    this.markedOptions
-                );
+                this.resultHtml = this.getResultHTML(this.contentWrapper?.nativeElement.textContent);
                 this.cdr.detectChanges();
             }
         });
+    }
+
+    private getResultHTML(markdown: string): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(this.markdownService.parseToHtml(markdown, this.markedOptions));
     }
 }
