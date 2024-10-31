@@ -56,47 +56,75 @@ import { Version } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
 // @public (undocumented)
-export class AbsoluteDateFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class AbsoluteDateFormatterImpurePipe<D> extends AbsoluteDateFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteDateFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateFormatterImpurePipe<any>, "absoluteLongDateImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class AbsoluteDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string, currYear?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteDateFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateFormatterPipe<any>, "absoluteLongDate", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateFormatterPipe<any>, "absoluteLongDate", true>;
 }
 
 // @public (undocumented)
-export class AbsoluteDateShortFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class AbsoluteDateShortFormatterImpurePipe<D> extends AbsoluteDateShortFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteDateShortFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateShortFormatterImpurePipe<any>, "absoluteShortDateImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class AbsoluteDateShortFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string, currYear?: boolean): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteDateShortFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateShortFormatterPipe<any>, "absoluteShortDate", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateShortFormatterPipe<any>, "absoluteShortDate", true>;
 }
 
 // @public (undocumented)
-export class AbsoluteDateTimeFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class AbsoluteDateTimeFormatterImpurePipe<D> extends AbsoluteDateTimeFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteDateTimeFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateTimeFormatterImpurePipe<any>, "absoluteLongDateTimeImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class AbsoluteDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteDateTimeFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateTimeFormatterPipe<any>, "absoluteLongDateTime", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteDateTimeFormatterPipe<any>, "absoluteLongDateTime", true>;
 }
 
 // @public (undocumented)
-export class AbsoluteShortDateTimeFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class AbsoluteShortDateTimeFormatterImpurePipe<D> extends AbsoluteShortDateTimeFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteShortDateTimeFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterImpurePipe<any>, "absoluteShortDateTimeImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", true>;
 }
 
 // @public (undocumented)
@@ -113,6 +141,14 @@ export enum AnimationCurves {
 
 // @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
+
+// @public (undocumented)
+export class BaseFormatterPipe<D> {
+    // (undocumented)
+    protected readonly adapter: DateAdapter<D>;
+    // (undocumented)
+    protected readonly formatter: DateFormatter<D>;
+}
 
 // @public (undocumented)
 export const BOTTOM_LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
@@ -1153,7 +1189,7 @@ export class KbqFormattersModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, [typeof i1_2.KbqDecimalPipe, typeof i1_2.KbqRoundDecimalPipe, typeof i1_2.KbqTableNumberPipe, typeof i2.AbsoluteDateFormatterPipe, typeof i2.AbsoluteDateTimeFormatterPipe, typeof i2.AbsoluteDateShortFormatterPipe, typeof i2.AbsoluteShortDateTimeFormatterPipe, typeof i2.RelativeDateFormatterPipe, typeof i2.RelativeDateTimeFormatterPipe, typeof i2.RelativeShortDateFormatterPipe, typeof i2.RelativeShortDateTimeFormatterPipe, typeof i2.RangeDateFormatterPipe, typeof i2.RangeShortDateFormatterPipe, typeof i2.RangeDateTimeFormatterPipe, typeof i2.RangeShortDateTimeFormatterPipe, typeof i2.RangeMiddleDateTimeFormatterPipe], never, [typeof i1_2.KbqDecimalPipe, typeof i1_2.KbqRoundDecimalPipe, typeof i1_2.KbqTableNumberPipe, typeof i2.AbsoluteDateFormatterPipe, typeof i2.AbsoluteDateTimeFormatterPipe, typeof i2.AbsoluteDateShortFormatterPipe, typeof i2.AbsoluteShortDateTimeFormatterPipe, typeof i2.RelativeDateFormatterPipe, typeof i2.RelativeDateTimeFormatterPipe, typeof i2.RelativeShortDateFormatterPipe, typeof i2.RelativeShortDateTimeFormatterPipe, typeof i2.RangeDateFormatterPipe, typeof i2.RangeShortDateFormatterPipe, typeof i2.RangeDateTimeFormatterPipe, typeof i2.RangeShortDateTimeFormatterPipe, typeof i2.RangeMiddleDateTimeFormatterPipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormattersModule, [typeof i1_2.KbqDecimalPipe, typeof i1_2.KbqRoundDecimalPipe, typeof i1_2.KbqTableNumberPipe], [typeof i2.AbsoluteDateFormatterPipe, typeof i2.AbsoluteDateTimeFormatterPipe, typeof i2.AbsoluteDateShortFormatterPipe, typeof i2.AbsoluteShortDateTimeFormatterPipe, typeof i2.RelativeDateFormatterPipe, typeof i2.RelativeDateTimeFormatterPipe, typeof i2.RelativeShortDateFormatterPipe, typeof i2.RelativeShortDateTimeFormatterPipe, typeof i2.RangeDateFormatterPipe, typeof i2.RangeShortDateFormatterPipe, typeof i2.RangeDateTimeFormatterPipe, typeof i2.RangeShortDateTimeFormatterPipe, typeof i2.RangeMiddleDateTimeFormatterPipe, typeof i2.AbsoluteDateFormatterImpurePipe, typeof i2.AbsoluteDateTimeFormatterImpurePipe, typeof i2.AbsoluteDateShortFormatterImpurePipe, typeof i2.AbsoluteShortDateTimeFormatterImpurePipe, typeof i2.RelativeDateFormatterImpurePipe, typeof i2.RelativeDateTimeFormatterImpurePipe, typeof i2.RelativeShortDateFormatterImpurePipe, typeof i2.RelativeShortDateTimeFormatterImpurePipe, typeof i2.RangeDateFormatterImpurePipe, typeof i2.RangeShortDateFormatterImpurePipe, typeof i2.RangeDateTimeFormatterImpurePipe, typeof i2.RangeShortDateTimeFormatterImpurePipe, typeof i2.RangeMiddleDateTimeFormatterImpurePipe], [typeof i1_2.KbqDecimalPipe, typeof i1_2.KbqRoundDecimalPipe, typeof i1_2.KbqTableNumberPipe, typeof i2.AbsoluteDateFormatterPipe, typeof i2.AbsoluteDateTimeFormatterPipe, typeof i2.AbsoluteDateShortFormatterPipe, typeof i2.AbsoluteShortDateTimeFormatterPipe, typeof i2.RelativeDateFormatterPipe, typeof i2.RelativeDateTimeFormatterPipe, typeof i2.RelativeShortDateFormatterPipe, typeof i2.RelativeShortDateTimeFormatterPipe, typeof i2.RangeDateFormatterPipe, typeof i2.RangeShortDateFormatterPipe, typeof i2.RangeDateTimeFormatterPipe, typeof i2.RangeShortDateTimeFormatterPipe, typeof i2.RangeMiddleDateTimeFormatterPipe, typeof i2.AbsoluteDateFormatterImpurePipe, typeof i2.AbsoluteDateTimeFormatterImpurePipe, typeof i2.AbsoluteDateShortFormatterImpurePipe, typeof i2.AbsoluteShortDateTimeFormatterImpurePipe, typeof i2.RelativeDateFormatterImpurePipe, typeof i2.RelativeDateTimeFormatterImpurePipe, typeof i2.RelativeShortDateFormatterImpurePipe, typeof i2.RelativeShortDateTimeFormatterImpurePipe, typeof i2.RangeDateFormatterImpurePipe, typeof i2.RangeShortDateFormatterImpurePipe, typeof i2.RangeDateTimeFormatterImpurePipe, typeof i2.RangeShortDateTimeFormatterImpurePipe, typeof i2.RangeMiddleDateTimeFormatterImpurePipe]>;
 }
 
 // @public (undocumented)
@@ -2076,102 +2112,165 @@ export const ptBRLocaleData: {
 };
 
 // @public (undocumented)
-export class RangeDateFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RangeDateFormatterImpurePipe<D> extends RangeDateFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateFormatterImpurePipe<any>, "rangeLongDateImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RangeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform([value1, value2]: D[] | string[]): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateFormatterPipe<any>, "rangeLongDate", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateFormatterPipe<any>, "rangeLongDate", true>;
 }
 
 // @public (undocumented)
-export class RangeDateTimeFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RangeDateTimeFormatterImpurePipe<D> extends RangeDateTimeFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateTimeFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateTimeFormatterImpurePipe<any>, "rangeLongDateTimeImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RangeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeDateTimeFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateTimeFormatterPipe<any>, "rangeLongDateTime", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeDateTimeFormatterPipe<any>, "rangeLongDateTime", true>;
 }
 
 // @public (undocumented)
-export class RangeMiddleDateTimeFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RangeMiddleDateTimeFormatterImpurePipe<D> extends RangeMiddleDateTimeFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RangeMiddleDateTimeFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeMiddleDateTimeFormatterImpurePipe<any>, "rangeMiddleDateTimeImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RangeMiddleDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeMiddleDateTimeFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RangeMiddleDateTimeFormatterPipe<any>, "rangeMiddleDateTime", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeMiddleDateTimeFormatterPipe<any>, "rangeMiddleDateTime", true>;
 }
 
 // @public (undocumented)
-export class RangeShortDateFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RangeShortDateFormatterImpurePipe<D> extends RangeShortDateFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateFormatterImpurePipe<any>, "rangeShortDateImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RangeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform([value1, value2]: D[] | string[]): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateFormatterPipe<any>, "rangeShortDate", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateFormatterPipe<any>, "rangeShortDate", true>;
 }
 
 // @public (undocumented)
-export class RangeShortDateTimeFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RangeShortDateTimeFormatterImpurePipe<D> extends RangeShortDateTimeFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateTimeFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateTimeFormatterImpurePipe<any>, "rangeShortDateTimeImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RangeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform([value1, value2]: D[] | string[], options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RangeShortDateTimeFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateTimeFormatterPipe<any>, "rangeShortDateTime", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RangeShortDateTimeFormatterPipe<any>, "rangeShortDateTime", true>;
 }
 
 // @public (undocumented)
-export class RelativeDateFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RelativeDateFormatterImpurePipe<D> extends RelativeDateFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RelativeDateFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateFormatterImpurePipe<any>, "relativeLongDateImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RelativeDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RelativeDateFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateFormatterPipe<any>, "relativeLongDate", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateFormatterPipe<any>, "relativeLongDate", true>;
 }
 
 // @public (undocumented)
-export class RelativeDateTimeFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RelativeDateTimeFormatterImpurePipe<D> extends RelativeDateTimeFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RelativeDateTimeFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateTimeFormatterImpurePipe<any>, "relativeLongDateTimeImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RelativeDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RelativeDateTimeFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateTimeFormatterPipe<any>, "relativeLongDateTime", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeDateTimeFormatterPipe<any>, "relativeLongDateTime", true>;
 }
 
 // @public (undocumented)
-export class RelativeShortDateFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RelativeShortDateFormatterImpurePipe<D> extends RelativeShortDateFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RelativeShortDateFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateFormatterImpurePipe<any>, "relativeShortDateImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RelativeShortDateFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RelativeShortDateFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateFormatterPipe<any>, "relativeShortDate", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateFormatterPipe<any>, "relativeShortDate", true>;
 }
 
 // @public (undocumented)
-export class RelativeShortDateTimeFormatterPipe<D> implements PipeTransform {
-    constructor(adapter: DateAdapter<D>, formatter: DateFormatter<D>);
+export class RelativeShortDateTimeFormatterImpurePipe<D> extends RelativeShortDateTimeFormatterPipe<D> {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<RelativeShortDateTimeFormatterImpurePipe<any>, never>;
+    // (undocumented)
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateTimeFormatterImpurePipe<any>, "relativeShortDateTimeImpurePipe", true>;
+}
+
+// @public (undocumented)
+export class RelativeShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> implements PipeTransform {
     // (undocumented)
     transform(value: D | string, options?: DateTimeOptions): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<RelativeShortDateTimeFormatterPipe<any>, never>;
     // (undocumented)
-    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateTimeFormatterPipe<any>, "relativeShortDateTime", false>;
+    static ɵpipe: i0.ɵɵPipeDeclaration<RelativeShortDateTimeFormatterPipe<any>, "relativeShortDateTime", true>;
 }
 
 // @public (undocumented)
