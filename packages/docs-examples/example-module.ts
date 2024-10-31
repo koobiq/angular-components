@@ -1007,12 +1007,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-horizontal-overview": {
     "packagePath": "components/dl/dl-horizontal-overview",
-    "title": "Description List Horizontal",
+    "title": "Description list horizontal",
     "componentName": "DlHorizontalOverviewExample",
     "files": [
-      "dl-horizontal-overview-example.ts",
-      "dl-horizontal-overview-example.html",
-      "dl-horizontal-overview-example.css"
+      "dl-horizontal-overview-example.ts"
     ],
     "selector": "dl-horizontal-overview-example",
     "additionalComponents": [],
@@ -1025,12 +1023,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-overview": {
     "packagePath": "components/dl/dl-overview",
-    "title": "Description List",
+    "title": "Description list",
     "componentName": "DlOverviewExample",
     "files": [
-      "dl-overview-example.ts",
-      "dl-overview-example.html",
-      "dl-overview-example.css"
+      "dl-overview-example.ts"
     ],
     "selector": "dl-overview-example",
     "additionalComponents": [],
@@ -1043,12 +1039,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-small": {
     "packagePath": "components/dl/dl-small",
-    "title": "Description List (small)",
+    "title": "Description list small",
     "componentName": "DlSmallExample",
     "files": [
-      "dl-small-example.ts",
-      "dl-small-example.html",
-      "dl-small-example.css"
+      "dl-small-example.ts"
     ],
     "selector": "dl-small-example",
     "additionalComponents": [],
@@ -1061,12 +1055,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-vertical-overview": {
     "packagePath": "components/dl/dl-vertical-overview",
-    "title": "Description List",
+    "title": "Description list vertical",
     "componentName": "DlVerticalOverviewExample",
     "files": [
-      "dl-vertical-overview-example.ts",
-      "dl-vertical-overview-example.html",
-      "dl-vertical-overview-example.css"
+      "dl-vertical-overview-example.ts"
     ],
     "selector": "dl-vertical-overview-example",
     "additionalComponents": [],
