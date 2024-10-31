@@ -26,12 +26,12 @@
         background: var(--kbq-select-panel-dropdown-background);
 
         & .kbq-select__footer {
-            border-color: var(--kbq-divider-color);
+            border-color: var(--kbq-line-contrast-less);
         }
     }
 
     .kbq-select__search-container {
-        border-bottom-color: var(--kbq-divider-color);
+        border-bottom-color: var(--kbq-line-contrast-less);
     }
 
     .kbq-select__no-options-message {

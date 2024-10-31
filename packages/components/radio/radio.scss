@@ -67,7 +67,7 @@
 
         left: 0;
 
-        top: kbq-css-half-difference(radio-font-normal-label-line-height, radio-size-normal-outer-size, 1px);
+        top: kbq-css-half-difference(typography-text-normal-line-height, radio-size-normal-outer-size, 1px);
 
         width: var(--kbq-radio-size-normal-outer-size);
         height: var(--kbq-radio-size-normal-outer-size);
@@ -110,7 +110,7 @@
         );
 
         .kbq-radio-button__outer-circle {
-            top: kbq-css-half-difference(radio-font-big-label-line-height, radio-size-big-outer-size, 1px);
+            top: kbq-css-half-difference(typography-text-big-line-height, radio-size-big-outer-size, 1px);
 
             width: var(--kbq-radio-size-big-outer-size);
             height: var(--kbq-radio-size-big-outer-size);
