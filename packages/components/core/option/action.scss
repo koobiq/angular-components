@@ -14,14 +14,14 @@
 
     margin-right: -2px;
 
-    width: var(--kbq-list-font-text-line-height);
-    height: var(--kbq-list-font-text-line-height);
+    width: var(--kbq-typography-text-normal-line-height);
+    height: var(--kbq-typography-text-normal-line-height);
 
     cursor: pointer;
 
     outline: none;
 
-    border: 2px solid transparent;
+    border: var(--kbq-size-3xs) solid transparent;
 
     background: transparent;
 

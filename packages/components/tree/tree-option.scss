@@ -41,8 +41,8 @@
 
         @include common.kbq-truncate-line();
 
-        padding-top: var(--kbq-list-size-text-padding-vertical);
-        padding-bottom: var(--kbq-list-size-text-padding-vertical);
+        padding-top: var(--kbq-list-size-text-padding-vertical, 0);
+        padding-bottom: var(--kbq-list-size-text-padding-vertical, 0);
     }
 
     &:focus {

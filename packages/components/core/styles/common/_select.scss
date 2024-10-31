@@ -40,19 +40,16 @@
     .kbq-select__trigger.kbq-select__trigger_single,
     .kbq-select__trigger.kbq-select__trigger_multiple.kbq-select__trigger_empty {
         & .kbq-select__matcher {
-            padding: kbq-difference-series-css-variables([select-size-single-padding-vertical, size-border-width])
-                kbq-difference-series-css-variables([select-size-single-padding-right, size-border-width])
-                kbq-difference-series-css-variables([select-size-single-padding-vertical, size-border-width])
-                kbq-difference-series-css-variables([select-size-single-padding-left, size-border-width]);
+            padding: kbq-difference-series-css-variables([size-xs, size-border-width])
+                kbq-difference-series-css-variables([kbq-size-xxs, size-border-width])
+                kbq-difference-series-css-variables([kbq-size-xs, size-border-width])
+                kbq-difference-series-css-variables([kbq-size-m, size-border-width]);
         }
     }
 
     .kbq-select__trigger.kbq-select__trigger_multiple:not(.kbq-select__trigger_empty) {
         & .kbq-select__matcher {
-            padding: kbq-difference-series-css-variables([select-size-multiple-padding-vertical, size-border-width])
-                kbq-difference-series-css-variables([select-size-multiple-padding-right, size-border-width])
-                kbq-difference-series-css-variables([select-size-multiple-padding-vertical, size-border-width])
-                kbq-difference-series-css-variables([select-size-multiple-padding-left, size-border-width]);
+            padding: kbq-difference-series-css-variables([kbq-size-xxs, size-border-width]);
 
             .kbq-select__match-container {
                 display: flex;
@@ -65,17 +62,17 @@
 
                 height: kbq-difference-series-css-variables(
                     [size-3xl,
-                    calc(var(--kbq-select-size-multiple-padding-vertical) * 2)]
+                    calc(var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) * 2)]
                 );
 
                 max-height: kbq-difference-series-css-variables(
                     [size-3xl,
-                    calc(var(--kbq-select-size-multiple-padding-vertical) * 2)]
+                    calc(var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) * 2)]
                 );
 
-                gap: var(--kbq-select-size-multiple-content-gap);
+                gap: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
 
-                margin-right: var(--kbq-select-size-multiple-content-gap);
+                margin-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
             }
         }
     }
@@ -90,7 +87,7 @@
             flex: 0 0 70px;
             align-self: center;
             padding-left: 4px;
-            padding-right: var(--kbq-select-size-multiple-content-gap);
+            padding-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
 
             text-align: right;
         }
@@ -145,15 +142,15 @@
         position: relative;
 
         max-width: 100%;
-        height: var(--kbq-option-size-height);
+        height: var(--kbq-option-size-height, var(--kbq-size-3xl));
 
         cursor: default;
         outline: none;
 
-        padding-left: var(--kbq-option-size-horizontal-padding);
-        padding-right: var(--kbq-option-size-horizontal-padding);
+        padding-left: var(--kbq-option-size-horizontal-padding, var(--kbq-size-m));
+        padding-right: var(--kbq-option-size-horizontal-padding, var(--kbq-size-m));
 
-        border: var(--kbq-option-size-border-width) solid transparent;
+        border: var(--kbq-option-size-border-width, 2px) solid transparent;
     }
 
     .kbq-select__search-container {

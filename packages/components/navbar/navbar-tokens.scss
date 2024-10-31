@@ -8,7 +8,7 @@
     --kbq-navbar-font-title-font-family: var(--kbq-typography-navbar-title-font-family);
     --kbq-navbar-font-title-text-transform: var(--kbq-typography-navbar-title-text-transform);
     --kbq-navbar-font-title-font-feature-settings: var(--kbq-typography-navbar-title-font-feature-settings);
-    --kbq-navbar-item-size-content-border-radius: var(--kbq-button-size-border-radius);
+    --kbq-navbar-item-size-content-border-radius: var(--kbq-size-s);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
