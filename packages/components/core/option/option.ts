@@ -137,7 +137,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         '(click)': 'selectViaInteraction()',
         '(keydown)': 'handleKeydown($event)'
     },
-    styleUrls: ['option.scss', 'option-tokens.scss'],
+    styleUrls: ['option.scss', 'option-tokens.scss', '../../list/list-tokens.scss'],
     templateUrl: 'option.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
