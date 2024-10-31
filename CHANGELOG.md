@@ -1,3 +1,10 @@
+## 18.4.1 (2024-10-31)
+
+### Koobiq
+
+ * bug fix  **formatter:** added impure pipes ([#DS-2612](https://github.com/koobiq/angular-components/issues/issue/DS-2612)) ([#385](https://github.com/koobiq/angular-components/issues/385)) ([5e2278e](https://github.com/koobiq/angular-components/commit/5e2278e2156a23a4aed6ba2afed5651aabc6aab6))
+ * bug fix  **visual:** added missing tokens ([#401](https://github.com/koobiq/angular-components/issues/401)) ([33fc65b](https://github.com/koobiq/angular-components/commit/33fc65bbefa7d9dfeedea5cf6b768f4f81ad995d))
+
 # 18.4.0 (2024-10-31)
 
 ### Koobiq
