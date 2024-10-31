@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { FormsModule } from '@angular/forms';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
   <breakfast_menu></breakfast_menu>
@@ -15,10 +17,29 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
  * @title Basic code-block-line-numbers
  */
 @Component({
+    standalone: true,
     selector: 'code-block-line-numbers-example',
-    templateUrl: 'code-block-line-numbers-example.html',
-    styleUrls: ['code-block-line-numbers-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqToggleModule,
+        FormsModule,
+        KbqCodeBlockModule
+    ],
+    template: `
+        <kbq-toggle
+            class="kbq-toggle_small"
+            [(ngModel)]="lineNumbers"
+            style="margin: 10px 0"
+        >
+            Нумерация строк
+        </kbq-toggle>
+
+        <kbq-code-block
+            [codeFiles]="files"
+            [filled]="false"
+            [lineNumbers]="lineNumbers"
+        />
+    `
 })
 export class CodeBlockLineNumbersExample {
     files: KbqCodeFile[];

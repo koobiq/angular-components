@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
 interface ICheckbox {
     name: string;
@@ -6,13 +7,36 @@ interface ICheckbox {
 }
 
 /**
- * @title Indeterminate checkbox
+ * @title Checkbox indeterminate
  */
 @Component({
+    standalone: true,
     selector: 'checkbox-indeterminate-example',
-    templateUrl: 'checkbox-indeterminate-example.html',
-    styleUrls: ['checkbox-indeterminate-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqCheckboxModule
+    ],
+    template: `
+        <div class="kbq-body">
+            <kbq-checkbox
+                [checked]="parentChecked"
+                [indeterminate]="parentIndeterminate"
+                (change)="toggleChecked()"
+            >
+                All fruits
+            </kbq-checkbox>
+            @for (fruit of fruits; track fruit; let i = $index) {
+                <p>
+                    <kbq-checkbox
+                        [checked]="fruit.checked"
+                        (change)="updateCheckboxes(i)"
+                    >
+                        {{ fruit.name }}
+                    </kbq-checkbox>
+                </p>
+            }
+        </div>
+    `
 })
 export class CheckboxIndeterminateExample {
     parentIndeterminate = true;

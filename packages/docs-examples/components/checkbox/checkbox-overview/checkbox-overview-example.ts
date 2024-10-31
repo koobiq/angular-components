@@ -1,12 +1,19 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 
 /**
- * @title Basic checkboxes
+ * @title Checkbox overview
  */
 @Component({
+    standalone: true,
     selector: 'checkbox-overview-example',
     templateUrl: 'checkbox-overview-example.html',
-    styleUrls: ['checkbox-overview-example.css'],
+    styleUrl: 'checkbox-overview-example.css',
+    imports: [
+        KbqCheckboxModule,
+        KbqFormFieldModule
+    ],
     encapsulation: ViewEncapsulation.None
 })
 export class CheckboxOverviewExample {}

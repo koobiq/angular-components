@@ -1,9 +1,4 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCodeBlockModule } from '@koobiq/components/code-block';
-import { KbqSidepanelModule } from '@koobiq/components/sidepanel';
-import { KbqToggleModule } from '@koobiq/components/toggle';
 import { CodeBlockCommonExample } from './code-block-common/code-block-common-example';
 import { CodeBlockCutExample } from './code-block-cut/code-block-cut-example';
 import { CodeBlockLineNumbersExample } from './code-block-line-numbers/code-block-line-numbers-example';
@@ -45,14 +40,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqCodeBlockModule,
-        KbqToggleModule,
-        KbqButtonModule,
-        KbqSidepanelModule,
-        FormsModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class CodeBlockExamplesModule {}

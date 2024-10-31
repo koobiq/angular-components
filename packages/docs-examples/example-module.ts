@@ -570,12 +570,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
-    "title": "Indeterminate checkbox",
+    "title": "Checkbox indeterminate",
     "componentName": "CheckboxIndeterminateExample",
     "files": [
-      "checkbox-indeterminate-example.ts",
-      "checkbox-indeterminate-example.html",
-      "checkbox-indeterminate-example.css"
+      "checkbox-indeterminate-example.ts"
     ],
     "selector": "checkbox-indeterminate-example",
     "additionalComponents": [],
@@ -588,12 +586,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "checkbox-overview": {
     "packagePath": "components/checkbox/checkbox-overview",
-    "title": "Basic checkboxes",
+    "title": "Checkbox overview",
     "componentName": "CheckboxOverviewExample",
     "files": [
       "checkbox-overview-example.ts",
-      "checkbox-overview-example.html",
-      "checkbox-overview-example.css"
+      "checkbox-overview-example.html"
     ],
     "selector": "checkbox-overview-example",
     "additionalComponents": [],
@@ -609,9 +606,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Pseudo checkbox",
     "componentName": "PseudoCheckboxExample",
     "files": [
-      "pseudo-checkbox-example.ts",
-      "pseudo-checkbox-example.html",
-      "pseudo-checkbox-example.css"
+      "pseudo-checkbox-example.ts"
     ],
     "selector": "pseudo-checkbox-example",
     "additionalComponents": [],
@@ -624,12 +619,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-common": {
     "packagePath": "components/code-block/code-block-common",
-    "title": "Basic code-block",
+    "title": "Code-block common",
     "componentName": "CodeBlockCommonExample",
     "files": [
-      "code-block-common-example.ts",
-      "code-block-common-example.html",
-      "code-block-common-example.css"
+      "code-block-common-example.ts"
     ],
     "selector": "code-block-common-example",
     "additionalComponents": [],
@@ -642,12 +635,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-cut": {
     "packagePath": "components/code-block/code-block-cut",
-    "title": "Basic code-block-cut",
+    "title": "Code-block cut",
     "componentName": "CodeBlockCutExample",
     "files": [
-      "code-block-cut-example.ts",
-      "code-block-cut-example.html",
-      "code-block-cut-example.css"
+      "code-block-cut-example.ts"
     ],
     "selector": "code-block-cut-example",
     "additionalComponents": [],
@@ -663,9 +654,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic code-block-line-numbers",
     "componentName": "CodeBlockLineNumbersExample",
     "files": [
-      "code-block-line-numbers-example.ts",
-      "code-block-line-numbers-example.html",
-      "code-block-line-numbers-example.css"
+      "code-block-line-numbers-example.ts"
     ],
     "selector": "code-block-line-numbers-example",
     "additionalComponents": [],
@@ -681,9 +670,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic code-block-line-wrap",
     "componentName": "CodeBlockLineWrapExample",
     "files": [
-      "code-block-line-wrap-example.ts",
-      "code-block-line-wrap-example.html",
-      "code-block-line-wrap-example.css"
+      "code-block-line-wrap-example.ts"
     ],
     "selector": "code-block-line-wrap-example",
     "additionalComponents": [],
@@ -696,12 +683,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-noborder": {
     "packagePath": "components/code-block/code-block-noborder",
-    "title": "Basic code-block-noborder",
+    "title": "Code block no border",
     "componentName": "CodeBlockNoborderExample",
     "files": [
-      "code-block-noborder-example.ts",
-      "code-block-noborder-example.html",
-      "code-block-noborder-example.css"
+      "code-block-noborder-example.ts"
     ],
     "selector": "code-block-noborder-example",
     "additionalComponents": [],
@@ -714,12 +699,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-single-line": {
     "packagePath": "components/code-block/code-block-single-line",
-    "title": "Basic code-block-single-line",
+    "title": "Сode-block single line",
     "componentName": "CodeBlockSingleLineExample",
     "files": [
-      "code-block-single-line-example.ts",
-      "code-block-single-line-example.html",
-      "code-block-single-line-example.css"
+      "code-block-single-line-example.ts"
     ],
     "selector": "code-block-single-line-example",
     "additionalComponents": [],
@@ -732,12 +715,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-stretch": {
     "packagePath": "components/code-block/code-block-stretch",
-    "title": "Basic code-block-stretch",
+    "title": "Code-block stretch",
     "componentName": "CodeBlockStretchExample",
     "files": [
-      "code-block-stretch-example.ts",
-      "code-block-stretch-example.html",
-      "code-block-stretch-example.css"
+      "code-block-stretch-example.ts"
     ],
     "selector": "code-block-stretch-example",
     "additionalComponents": [],
@@ -750,12 +731,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-styling": {
     "packagePath": "components/code-block/code-block-styling",
-    "title": "Basic code-block-styling",
+    "title": "Code-block styling",
     "componentName": "CodeBlockStylingExample",
     "files": [
-      "code-block-styling-example.ts",
-      "code-block-styling-example.html",
-      "code-block-styling-example.css"
+      "code-block-styling-example.ts"
     ],
     "selector": "code-block-styling-example",
     "additionalComponents": [],
@@ -768,12 +747,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-tabs-with-overflow": {
     "packagePath": "components/code-block/code-block-tabs-with-overflow",
-    "title": "Basic code-block-tabs",
+    "title": "Code-block tabs with overflow",
     "componentName": "CodeBlockTabsWithOverflowExample",
     "files": [
-      "code-block-tabs-with-overflow-example.ts",
-      "code-block-tabs-with-overflow-example.html",
-      "code-block-tabs-with-overflow-example.css"
+      "code-block-tabs-with-overflow-example.ts"
     ],
     "selector": "code-block-tabs-with-overflow-example",
     "additionalComponents": [],
@@ -786,12 +763,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-tabs": {
     "packagePath": "components/code-block/code-block-tabs",
-    "title": "Basic code-block-tabs",
+    "title": "Code-block tabs",
     "componentName": "CodeBlockTabsExample",
     "files": [
-      "code-block-tabs-example.ts",
-      "code-block-tabs-example.html",
-      "code-block-tabs-example.css"
+      "code-block-tabs-example.ts"
     ],
     "selector": "code-block-tabs-example",
     "additionalComponents": [],
@@ -804,12 +779,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-title": {
     "packagePath": "components/code-block/code-block-title",
-    "title": "Basic code-block-title",
+    "title": "Сode-block title",
     "componentName": "CodeBlockTitleExample",
     "files": [
-      "code-block-title-example.ts",
-      "code-block-title-example.html",
-      "code-block-title-example.css"
+      "code-block-title-example.ts"
     ],
     "selector": "code-block-title-example",
     "additionalComponents": [],

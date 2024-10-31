@@ -1,6 +1,7 @@
 import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
-import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { take } from 'rxjs/operators';
 
 const codeJs2 = `import { Clipboard } from '@angular/cdk/clipboard';
@@ -26,7 +27,6 @@ import {
     KbqCodeBlockConfiguration,
     KbqCodeFile
 } from './code-block.types';
-
 
 export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
 export const DEFAULT_EXTENSION = 'txt';
@@ -61,7 +61,6 @@ export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION = {
     viewLessText: 'Свернуть',
     openExternalSystemTooltip: 'Открыть во внешней системе'
 };
-
 
 const actionBarBlockLeftMargin = 24;
 
@@ -198,13 +197,41 @@ export class KbqCodeBlockComponent implements OnDestroy {
 `;
 
 /**
- * @title Basic code-block-noborder
+ * @title Code block no border
  */
 @Component({
+    standalone: true,
     selector: 'code-block-noborder-example',
-    templateUrl: 'code-block-noborder-example.html',
-    styleUrls: ['code-block-noborder-example.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: 'code-block-noborder-example.css',
+    imports: [
+        KbqSidepanelModule,
+        KbqCodeBlockModule,
+        KbqButtonModule
+    ],
+    encapsulation: ViewEncapsulation.None,
+    template: `
+        <div class="kbq-body">
+            <button
+                (click)="toggleSidepanel()"
+                kbq-button
+            >
+                Открыть боковую панель
+            </button>
+        </div>
+
+        <ng-template>
+            <kbq-sidepanel-header [closeable]="true">Блок кода без рамки в боковой панели</kbq-sidepanel-header>
+
+            <kbq-sidepanel-body class="layout-padding">
+                <kbq-code-block
+                    class="code-block_no-border"
+                    [codeFiles]="files"
+                    [filled]="false"
+                    [lineNumbers]="true"
+                />
+            </kbq-sidepanel-body>
+        </ng-template>
+    `
 })
 export class CodeBlockNoborderExample {
     @ViewChild(TemplateRef, { static: false }) template: TemplateRef<any>;

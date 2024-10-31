@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { FormsModule } from '@angular/forms';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
   <breakfast_menu></breakfast_menu>
@@ -15,10 +17,30 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
  * @title Basic code-block-line-wrap
  */
 @Component({
+    standalone: true,
     selector: 'code-block-line-wrap-example',
-    templateUrl: 'code-block-line-wrap-example.html',
-    styleUrls: ['code-block-line-wrap-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqToggleModule,
+        FormsModule,
+        KbqCodeBlockModule
+    ],
+    template: `
+        <kbq-toggle
+            class="kbq-toggle_small"
+            [(ngModel)]="lineWrap"
+            style="margin: 10px 0"
+        >
+            Перенос строк
+        </kbq-toggle>
+
+        <kbq-code-block
+            [codeFiles]="files"
+            [filled]="false"
+            [lineNumbers]="true"
+            [softWrap]="lineWrap"
+        />
+    `
 })
 export class CodeBlockLineWrapExample {
     files: KbqCodeFile[];

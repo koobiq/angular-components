@@ -1,5 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { FormsModule } from '@angular/forms';
+import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 const codeTs = `class Greeter {
   @format("Hello, %s")
@@ -17,13 +19,33 @@ const codeTs = `class Greeter {
 }`;
 
 /**
- * @title Basic code-block-stretch
+ * @title Code-block stretch
  */
 @Component({
+    standalone: true,
     selector: 'code-block-stretch-example',
-    templateUrl: 'code-block-stretch-example.html',
-    styleUrls: ['code-block-stretch-example.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqToggleModule,
+        FormsModule,
+        KbqCodeBlockModule
+    ],
+    template: `
+        <kbq-toggle
+            class="kbq-toggle_small"
+            [(ngModel)]="isFixedHeight"
+            style="margin: 10px 0"
+        >
+            Фиксированная высота
+        </kbq-toggle>
+
+        <kbq-code-block
+            [codeFiles]="files"
+            [filled]="false"
+            [lineNumbers]="true"
+            [maxHeight]="isFixedHeight ? maxHeight : 0"
+        />
+    `
 })
 export class CodeBlockStretchExample {
     files: KbqCodeFile[];
