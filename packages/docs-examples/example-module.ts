@@ -859,12 +859,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "absolute-date-formatter": {
     "packagePath": "components/date-formatter/absolute-date-formatter",
-    "title": "Basic progress absolute-date-formatter",
+    "title": "Absolute date-formatter",
     "componentName": "AbsoluteDateFormatterExample",
     "files": [
       "absolute-date-formatter-example.ts",
-      "absolute-date-formatter-example.html",
-      "absolute-date-formatter-example.css"
+      "absolute-date-formatter-example.html"
     ],
     "selector": "absolute-date-formatter-example",
     "additionalComponents": [],
@@ -877,12 +876,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "duration-date-formatter": {
     "packagePath": "components/date-formatter/duration-date-formatter",
-    "title": "Basic progress duration-date-formatter",
+    "title": "Duration date-formatter",
     "componentName": "DurationDateFormatterExample",
     "files": [
       "duration-date-formatter-example.ts",
-      "duration-date-formatter-example.html",
-      "duration-date-formatter-example.css"
+      "duration-date-formatter-example.html"
     ],
     "selector": "duration-date-formatter-example",
     "additionalComponents": [],
@@ -895,12 +893,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "range-date-formatter": {
     "packagePath": "components/date-formatter/range-date-formatter",
-    "title": "Basic progress range-date-formatter",
+    "title": "Range date-formatter",
     "componentName": "RangeDateFormatterExample",
     "files": [
       "range-date-formatter-example.ts",
-      "range-date-formatter-example.html",
-      "range-date-formatter-example.css"
+      "range-date-formatter-example.html"
     ],
     "selector": "range-date-formatter-example",
     "additionalComponents": [],
@@ -913,12 +910,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "relative-date-formatter": {
     "packagePath": "components/date-formatter/relative-date-formatter",
-    "title": "Basic progress relative-date-formatter",
+    "title": "Relative date-formatter",
     "componentName": "RelativeDateFormatterExample",
     "files": [
       "relative-date-formatter-example.ts",
-      "relative-date-formatter-example.html",
-      "relative-date-formatter-example.css"
+      "relative-date-formatter-example.html"
     ],
     "selector": "relative-date-formatter-example",
     "additionalComponents": [],

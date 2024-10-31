@@ -5,12 +5,13 @@ import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
- * @title Basic progress relative-date-formatter
+ * @title Relative date-formatter
  */
 @Component({
+    standalone: true,
     selector: 'relative-date-formatter-example',
     templateUrl: 'relative-date-formatter-example.html',
-    styleUrls: ['relative-date-formatter-example.css']
+    styleUrl: 'relative-date-formatter-example.css'
 })
 export class RelativeDateFormatterExample {
     formats = {

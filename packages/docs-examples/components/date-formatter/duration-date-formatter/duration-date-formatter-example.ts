@@ -12,12 +12,13 @@ import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
- * @title Basic progress duration-date-formatter
+ * @title Duration date-formatter
  */
 @Component({
+    standalone: true,
     selector: 'duration-date-formatter-example',
     templateUrl: 'duration-date-formatter-example.html',
-    styleUrls: ['duration-date-formatter-example.css'],
+    styleUrl: 'duration-date-formatter-example.css',
     providers: [
         { provide: KBQ_DATE_LOCALE, useValue: 'ru-RU' },
         { provide: DateAdapter, useClass: LuxonDateAdapter },

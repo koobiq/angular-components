@@ -5,12 +5,13 @@ import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
- * @title Basic progress range-date-formatter
+ * @title Range date-formatter
  */
 @Component({
+    standalone: true,
     selector: 'range-date-formatter-example',
     templateUrl: 'range-date-formatter-example.html',
-    styleUrls: ['range-date-formatter-example.css']
+    styleUrl:'range-date-formatter-example.css'
 })
 export class RangeDateFormatterExample {
     formats = {

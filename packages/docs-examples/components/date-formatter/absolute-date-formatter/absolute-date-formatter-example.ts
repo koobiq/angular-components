@@ -5,12 +5,13 @@ import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
- * @title Basic progress absolute-date-formatter
+ * @title Absolute date-formatter
  */
 @Component({
+    standalone: true,
     selector: 'absolute-date-formatter-example',
     templateUrl: 'absolute-date-formatter-example.html',
-    styleUrls: ['absolute-date-formatter-example.css']
+    styleUrl: 'absolute-date-formatter-example.css'
 })
 export class AbsoluteDateFormatterExample {
     formats = {

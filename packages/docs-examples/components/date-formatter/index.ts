@@ -9,8 +9,7 @@ import {
     DateFormatter,
     KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
-    KBQ_LOCALE_SERVICE,
-    KbqFormattersModule
+    KBQ_LOCALE_SERVICE
 } from '@koobiq/components/core';
 import { AbsoluteDateFormatterExample } from './absolute-date-formatter/absolute-date-formatter-example';
 import { DurationDateFormatterExample } from './duration-date-formatter/duration-date-formatter-example';
@@ -32,10 +31,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqFormattersModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES,
     providers: [
         { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
