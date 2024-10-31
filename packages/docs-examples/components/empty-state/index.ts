@@ -1,7 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { EmptyStateActionsExample } from './empty-state-actions/empty-state-actions-example';
 import { EmptyStateActions2Example } from './empty-state-actions2/empty-state-actions2-example';
 import { EmptyStateAlignExample } from './empty-state-align/empty-state-align-example';
@@ -40,12 +37,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqIconModule,
-        KbqButtonModule,
-        KbqEmptyStateModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class FileUploadExamplesModule {}

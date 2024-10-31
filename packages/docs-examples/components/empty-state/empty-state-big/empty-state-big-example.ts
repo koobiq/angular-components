@@ -1,11 +1,43 @@
 import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title empty-state-big
+ * @title Empty-state big
  */
 @Component({
+    standalone: true,
     selector: 'empty-state-big-example',
-    templateUrl: 'empty-state-big-example.html',
-    styleUrls: ['empty-state-big-example.css']
+    imports: [
+        KbqEmptyStateModule,
+        KbqButtonModule,
+        KbqIconModule
+    ],
+    template: `
+        <kbq-empty-state
+            [big]="true"
+            style="min-height: 216px"
+        >
+            <div kbq-empty-state-title>Нет групп</div>
+            <div kbq-empty-state-text>{{ emptyStateText }}</div>
+            <div kbq-empty-state-actions>
+                <button
+                    [color]="'theme'"
+                    [kbqStyle]="'transparent'"
+                    kbq-button
+                >
+                    <i
+                        [color]="'theme'"
+                        kbq-icon="kbq-plus_16"
+                    ></i>
+                    {{ buttonText }}
+                </button>
+            </div>
+        </kbq-empty-state>
+    `
 })
-export class EmptyStateBigExample {}
+export class EmptyStateBigExample {
+    buttonText = 'Создать группу';
+    emptyStateText = 'Агенты можно объединить в группу и назначить им одни и те же политики';
+}

@@ -1,9 +1,0 @@
-.docs-empty-state-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.docs-empty-state-container .kbq-empty-state {
-    min-height: 216px;
-}
