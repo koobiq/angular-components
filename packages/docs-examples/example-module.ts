@@ -978,9 +978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Divider",
     "componentName": "DividerOverviewExample",
     "files": [
-      "divider-overview-example.ts",
-      "divider-overview-example.html",
-      "divider-overview-example.css"
+      "divider-overview-example.ts"
     ],
     "selector": "divider-overview-example",
     "additionalComponents": [],
@@ -993,12 +991,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "divider-vertical": {
     "packagePath": "components/divider/divider-vertical",
-    "title": "divider-vertical",
+    "title": "Divider vertical",
     "componentName": "DividerVerticalExample",
     "files": [
-      "divider-vertical-example.ts",
-      "divider-vertical-example.html",
-      "divider-vertical-example.css"
+      "divider-vertical-example.ts"
     ],
     "selector": "divider-vertical-example",
     "additionalComponents": [],

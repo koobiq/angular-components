@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
 import { DividerOverviewExample } from './divider-overview/divider-overview-example';
 import { DividerVerticalExample } from './divider-vertical/divider-vertical-example';
 
@@ -11,8 +10,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [KbqDividerModule],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class DividerExamplesModule {}
