@@ -537,7 +537,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     id: 'date-formatter',
                     name: 'Date formatter',
                     svgPreview: 'date',
-                    hasApi: true,
+                    hasApi: false,
                     apiId: 'date-formatter',
                     hasExamples: false,
                     examples: ['date-formatter-types']
@@ -546,7 +546,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     id: 'forms',
                     name: 'Forms',
                     svgPreview: 'forms',
-                    hasApi: true,
+                    hasApi: false,
                     apiId: 'forms',
                     hasExamples: false,
                     examples: ['forms-types']
@@ -555,7 +555,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     id: 'number-formatter',
                     name: 'Number formatter',
                     svgPreview: 'number',
-                    hasApi: true,
+                    hasApi: false,
                     apiId: 'number-formatter',
                     hasExamples: false,
                     examples: ['number-formatter-types']
