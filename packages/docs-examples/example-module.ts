@@ -21,6 +21,8 @@ export interface LiveExample {
   additionalComponents: string[];
   /** NgModule that declares this example. */
   module: NgModuleInfo;
+  /** Path from which to import the example. */
+  importPath: string;
 }
 
 export interface NgModuleInfo {

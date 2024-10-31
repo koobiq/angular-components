@@ -14714,6 +14714,7 @@ __metadata:
     node-fetch: "npm:^3.3.1"
     nunjucks: "npm:^3.2.4"
     overlayscrollbars: "npm:2.7.3"
+    path-normalize: "npm:^6.0.7"
     postcss: "npm:^8.4.38"
     postcss-discard-comments: "npm:^7.0.0"
     prettier: "npm:^3.3.3"
@@ -17099,6 +17100,13 @@ __metadata:
   version: 4.0.0
   resolution: "path-key@npm:4.0.0"
   checksum: 10c0/794efeef32863a65ac312f3c0b0a99f921f3e827ff63afa5cb09a377e202c262b671f7b3832a4e64731003fa94af0263713962d317b9887bd1e0c48a342efba3
+  languageName: node
+  linkType: hard
+
+"path-normalize@npm:^6.0.7":
+  version: 6.0.13
+  resolution: "path-normalize@npm:6.0.13"
+  checksum: 10c0/d2ec6f60b04f246d51931e6b061e16c01d183b2efee6b0a24af13d99e769d9f41bc57a7eb7bf83f955d981159a20c86d2245b244400e6c97ec515043c74818b0
   languageName: node
   linkType: hard
 

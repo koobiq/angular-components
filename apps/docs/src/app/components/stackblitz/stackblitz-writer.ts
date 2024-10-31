@@ -5,6 +5,7 @@ import { default as StackBlitzSDK } from '@stackblitz/sdk';
 import { Observable, firstValueFrom } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { koobiqVersion } from '../../version';
+import { normalizePath } from './normalize-path';
 
 const COPYRIGHT = `Use of this source code is governed by an MIT-style license.`;
 
@@ -15,7 +16,6 @@ const COPYRIGHT = `Use of this source code is governed by an MIT-style license.`
  */
 const DOCS_CONTENT_PATH = 'docs-content/examples-source';
 const TEMPLATE_PATH = 'assets/stackblitz/';
-const PROJECT_TAGS = ['angular', 'koobiq', 'cdk', 'web', 'example'];
 const PROJECT_TEMPLATE = 'node';
 
 export const TEMPLATE_FILES = [
@@ -28,11 +28,7 @@ export const TEMPLATE_FILES = [
     'tsconfig.json',
     'src/index.html',
     'src/main.ts',
-    'src/koobiq.module.ts',
-    'src/styles.scss',
-    'src/app/app.module.ts',
-    'src/environments/environment.prod.ts',
-    'src/environments/environment.ts'
+    'src/styles.scss'
 ];
 
 type FileDictionary = { [path: string]: string };
@@ -56,7 +52,7 @@ export class StackblitzWriter {
     constructStackblitzForm(exampleId: string, data: ExampleData): Promise<() => void> {
         return this.ngZone.runOutsideAngular(async () => {
             const files = await this.buildInMemoryFileDictionary(data, exampleId);
-            const exampleMainFile = `src/app/${data.indexFilename}`;
+            const exampleMainFile = `src/example/${data.indexFilename}`;
 
             return () => {
                 this.openStackBlitz({
@@ -75,7 +71,7 @@ export class StackblitzWriter {
      * This will replace those placeholders with the names from the example metadata,
      * e.g. "<basic-button-example>" and "BasicButtonExample"
      */
-    replaceExamplePlaceholderNames(data: ExampleData, fileName: string, fileContent: string): string {
+    private replaceExamplePlaceholders(data: ExampleData, fileName: string, fileContent: string): string {
         if (fileName === 'src/index.html' || fileName === 'package.json') {
             fileContent = fileContent.replace(/\${version}/g, `^${koobiqVersion}`);
         }
@@ -90,33 +86,18 @@ export class StackblitzWriter {
                 .replace(/{{version}}/g, koobiqVersion);
         } else if (fileName === '.stackblitzrc') {
             fileContent = fileContent.replace(/\${startCommand}/, 'npm start');
-        } else if (fileName === 'src/app/app.module.ts') {
-            const joinedComponentNames = data.componentNames.join(', ');
+        } else if (fileName === 'src/main.ts') {
+            const mainComponentName = data.componentNames[0];
             // Replace the component name in `main.ts`.
             // Replace `import {KoobiqDocsExample} from 'koobiq-docs-example'`
             // will be replaced as `import {ButtonDemo} from './button-demo'`
-            fileContent = fileContent.replace(/{ KoobiqDocsExample }/g, `{${joinedComponentNames}}`);
+            fileContent = fileContent.replace(/{ KoobiqDocsExample }/g, `{${mainComponentName}}`);
 
-            // Replace `declarations: [KoobiqDocsExample]`
-            // will be replaced as `declarations: [ButtonDemo]`
+            // Replace `bootstrapApplication(KoobiqDocsExample,`
+            // will be replaced as `bootstrapApplication(ButtonDemo,`
             fileContent = fileContent.replace(
-                /declarations: \[KoobiqDocsExample\]/g,
-                `declarations: [${joinedComponentNames}]`
-            );
-
-            // Replace `entryComponents: [KoobiqDocsExample]`
-            // will be replaced as `entryComponents: [DialogContent]`
-            fileContent = fileContent.replace(
-                /entryComponents: \[KoobiqDocsExample\]/g,
-                `entryComponents: [${joinedComponentNames}]`
-            );
-
-            // Replace `bootstrap: [KoobiqDocsExample]`
-            // will be replaced as `bootstrap: [ButtonDemo]`
-            // This assumes the first component listed in the main component
-            fileContent = fileContent.replace(
-                /bootstrap: \[KoobiqDocsExample]/g,
-                `bootstrap: [${data.componentNames[0]}]`
+                /bootstrapApplication\(KoobiqDocsExample,/g,
+                `bootstrapApplication(${mainComponentName},`
             );
 
             const dotIndex = data.indexFilename.lastIndexOf('.');
@@ -142,23 +123,28 @@ export class StackblitzWriter {
         const result: FileDictionary = {};
         const tasks: Promise<unknown>[] = [];
         const liveExample = EXAMPLE_COMPONENTS[exampleId];
-        const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${liveExample.module.importSpecifier}/${exampleId}/`;
+        const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${liveExample.importPath}/${exampleId}/`;
 
         for (const relativeFilePath of TEMPLATE_FILES) {
             tasks.push(
                 this.loadFile(TEMPLATE_PATH + relativeFilePath)
                     // Replace example placeholders in the template files.
-                    .then((content) => this.replaceExamplePlaceholderNames(data, relativeFilePath, content))
+                    .then((content) => this.replaceExamplePlaceholders(data, relativeFilePath, content))
                     .then((content) => (result[relativeFilePath] = content))
             );
         }
 
         for (const relativeFilePath of data.exampleFiles) {
+            // Note: Since we join with paths from the example data, we normalize
+            // the final target path. This is necessary because StackBlitz does
+            // not and paths like `./bla.ts` would result in a directory called `.`.
+            const targetPath = normalizePath(`src/example/${relativeFilePath}`);
+
             tasks.push(
-                this.loadFile(`${exampleBaseContentPath}${relativeFilePath}`)
+                this.loadFile(exampleBaseContentPath + relativeFilePath)
                     // Insert a copyright footer for all example files inserted into the project.
                     .then((content) => this.appendCopyright(relativeFilePath, content))
-                    .then((content) => (result[`src/app/${relativeFilePath}`] = content))
+                    .then((content) => (result[targetPath] = content))
             );
         }
 
@@ -180,10 +166,7 @@ export class StackblitzWriter {
         openFile: string;
         files: FileDictionary;
     }): void {
-        StackBlitzSDK.openProject(
-            { title, files, description, template: PROJECT_TEMPLATE, tags: PROJECT_TAGS },
-            { openFile }
-        );
+        StackBlitzSDK.openProject({ title, files, description, template: PROJECT_TEMPLATE }, { openFile });
     }
 
     private loadFile(fileUrl: string): Promise<string> {
@@ -191,7 +174,6 @@ export class StackblitzWriter {
 
         if (!stream) {
             stream = this.http.get(fileUrl, { responseType: 'text' }).pipe(shareReplay(1));
-
             this.fileCache.set(fileUrl, stream);
         }
 
