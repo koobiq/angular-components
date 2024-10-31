@@ -1071,12 +1071,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dropdown-navigation-wrap": {
     "packagePath": "components/dropdown/dropdown-navigation-wrap",
-    "title": "Basic dropdown",
+    "title": "Dropdown navigation wrap",
     "componentName": "DropdownNavigationWrapExample",
     "files": [
       "dropdown-navigation-wrap-example.ts",
-      "dropdown-navigation-wrap-example.html",
-      "dropdown-navigation-wrap-example.css"
+      "dropdown-navigation-wrap-example.html"
     ],
     "selector": "dropdown-navigation-wrap-example",
     "additionalComponents": [],
@@ -1089,12 +1088,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dropdown-nested": {
     "packagePath": "components/dropdown/dropdown-nested",
-    "title": "Nested dropdown",
+    "title": "Dropdown nested",
     "componentName": "DropdownNestedExample",
     "files": [
       "dropdown-nested-example.ts",
-      "dropdown-nested-example.html",
-      "dropdown-nested-example.css"
+      "dropdown-nested-example.html"
     ],
     "selector": "dropdown-nested-example",
     "additionalComponents": [],
@@ -1107,12 +1105,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dropdown-overview": {
     "packagePath": "components/dropdown/dropdown-overview",
-    "title": "Basic dropdown",
+    "title": "Dropdown",
     "componentName": "DropdownOverviewExample",
     "files": [
       "dropdown-overview-example.ts",
-      "dropdown-overview-example.html",
-      "dropdown-overview-example.css"
+      "dropdown-overview-example.html"
     ],
     "selector": "dropdown-overview-example",
     "additionalComponents": [],
