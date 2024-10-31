@@ -260,6 +260,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 {
                     id: 'experimental-form-field',
                     name: 'Form field (experimental)',
+                    svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'experimental-form-field',
                     hasExamples: false
