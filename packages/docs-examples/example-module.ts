@@ -1644,7 +1644,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "horizontal-form-example.ts",
       "horizontal-form-example.html",
-      "horizontal-form-example.css"
     ],
     "selector": "horizontal-form-example",
     "additionalComponents": [],
@@ -1661,8 +1660,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "VerticalFormExample",
     "files": [
       "vertical-form-example.ts",
-      "vertical-form-example.html",
-      "vertical-form-example.css"
+      "vertical-form-example.html"
     ],
     "selector": "vertical-form-example",
     "additionalComponents": [],

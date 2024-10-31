@@ -16,7 +16,10 @@
             </div>
 
             <div class="kbq-form__fieldset">
-                <div class="kbq-form__label-wrapper">
+                <div
+                    style="display: flex"
+                    class="kbq-form__label-wrapper"
+                >
                     <label class="kbq-form__label">Общая подпись для нескольких полей</label>
                 </div>
                 <div class="kbq-form__fieldset kbq-horizontal">
@@ -79,7 +82,7 @@
                         [(ngModel)]="value"
                     />
 
-                    <kbq-hint class="one-line">Подсказка под полем</kbq-hint>
+                    <kbq-hint style="white-space: nowrap">Подсказка под полем</kbq-hint>
                 </kbq-form-field>
             </div>
         </div>

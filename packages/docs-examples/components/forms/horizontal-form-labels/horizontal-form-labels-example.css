@@ -21,7 +21,3 @@
     max-width: 320px;
     flex: 1 1 100%;
 }
-
-.one-line {
-    white-space: nowrap;
-}
