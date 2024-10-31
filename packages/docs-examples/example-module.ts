@@ -1736,12 +1736,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
-    "title": "Basic Input",
+    "title": "Input number",
     "componentName": "InputNumberOverviewExample",
     "files": [
-      "input-number-overview-example.ts",
-      "input-number-overview-example.html",
-      "input-number-overview-example.css"
+      "input-number-overview-example.ts"
     ],
     "selector": "input-number-overview-example",
     "additionalComponents": [],
@@ -1754,12 +1752,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "input-overview": {
     "packagePath": "components/input/input-overview",
-    "title": "Basic Input",
+    "title": "Input",
     "componentName": "InputOverviewExample",
     "files": [
-      "input-overview-example.ts",
-      "input-overview-example.html",
-      "input-overview-example.css"
+      "input-overview-example.ts"
     ],
     "selector": "input-overview-example",
     "additionalComponents": [],
@@ -1772,12 +1768,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "input-password-overview": {
     "packagePath": "components/input/input-password-overview",
-    "title": "Password Input",
+    "title": "Input password",
     "componentName": "InputPasswordOverviewExample",
     "files": [
-      "input-password-overview-example.ts",
-      "input-password-overview-example.html",
-      "input-password-overview-example.css"
+      "input-password-overview-example.ts"
     ],
     "selector": "input-password-overview-example",
     "additionalComponents": [],

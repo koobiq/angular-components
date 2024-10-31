@@ -1,14 +1,57 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title Basic Input
+ * @title Input
  */
 @Component({
+    standalone: true,
     selector: 'input-overview-example',
-    templateUrl: 'input-overview-example.html',
-    styleUrls: ['input-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqFormFieldModule,
+        KbqIconModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <i
+                [autoColor]="true"
+                kbq-icon="kbq-magnifying-glass_16"
+                kbqPrefix
+            ></i>
+
+            <input
+                [(ngModel)]="value"
+                kbqInput
+                placeholder="Placeholder"
+            />
+
+            <kbq-cleaner />
+        </kbq-form-field>
+
+        <br />
+        <br />
+        <br />
+
+        <kbq-form-field kbqFormFieldWithoutBorders>
+            <i
+                [autoColor]="true"
+                kbq-icon="kbq-magnifying-glass_16"
+                kbqPrefix
+            ></i>
+
+            <input
+                [(ngModel)]="value"
+                kbqInput
+                placeholder="Placeholder"
+            />
+
+            <kbq-cleaner />
+        </kbq-form-field>
+    `
 })
 export class InputOverviewExample {
     themePalette = ThemePalette;

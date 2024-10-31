@@ -1,14 +1,55 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { PasswordRules } from '@koobiq/components/form-field';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqFormFieldModule, PasswordRules } from '@koobiq/components/form-field';
 
 /**
- * @title Password Input
+ * @title Input password
  */
 @Component({
+    standalone: true,
     selector: 'input-password-overview-example',
-    templateUrl: 'input-password-overview-example.html',
-    styleUrls: ['input-password-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqFormFieldModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-form-field style="width: 250px">
+            <input
+                [(ngModel)]="value"
+                kbqInputPassword
+            />
+
+            <kbq-password-toggle
+                [kbqTooltipHidden]="'Показать пароль'"
+                [kbqTooltipNotHidden]="'Скрыть пароль'"
+            />
+
+            <kbq-password-hint
+                [max]="15"
+                [min]="8"
+                [rule]="passwordRules.Length"
+            >
+                От 8 до 15 символов
+            </kbq-password-hint>
+
+            <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
+
+            <kbq-password-hint [rule]="passwordRules.LowerLatin">Строчная латинская буква</kbq-password-hint>
+
+            <kbq-password-hint [rule]="passwordRules.Digit">Цифра</kbq-password-hint>
+
+            <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols">
+                Только латинские буквы, цифры, пробелы и спецсимволы
+            </kbq-password-hint>
+
+            <kbq-password-hint
+                [checkRule]="atLeastNCapitalLetters(5)"
+                [rule]="passwordRules.Custom"
+            >
+                не менее 5 заглавных букв
+            </kbq-password-hint>
+        </kbq-form-field>
+    `
 })
 export class InputPasswordOverviewExample {
     passwordRules = PasswordRules;
