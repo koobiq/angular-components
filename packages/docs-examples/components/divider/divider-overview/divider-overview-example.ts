@@ -11,12 +11,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
         KbqDividerModule
     ],
     template: `
-        <div
-            class="docs-divider-container"
-            style="margin: 20px"
-        >
-            <kbq-divider />
-        </div>
+        <kbq-divider style="margin: 20px" />
     `
 })
 export class DividerOverviewExample {}
