@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ng add '@koobiq/components' should add missing dependencies to 'package.json': after running schematics 1`] = `
+{
+  "@angular/animations": "^18.2.0",
+  "@angular/cdk": "^0.0.0",
+  "@angular/common": "^18.2.0",
+  "@angular/compiler": "^18.2.0",
+  "@angular/core": "^18.2.0",
+  "@angular/forms": "^18.2.0",
+  "@angular/platform-browser": "^18.2.0",
+  "@angular/platform-browser-dynamic": "^18.2.0",
+  "@angular/router": "^18.2.0",
+  "@koobiq/angular-luxon-adapter": "^0.0.0",
+  "@koobiq/cdk": "^0.0.0",
+  "@koobiq/date-adapter": "^0.0.0",
+  "@koobiq/date-formatter": "^0.0.0",
+  "@koobiq/design-tokens": "^0.0.0",
+  "@koobiq/icons": "^0.0.0",
+  "@koobiq/tokens-builder": "^0.0.0",
+  "@messageformat/core": "^0.0.0",
+  "@radix-ng/primitives": "^0.0.0",
+  "luxon": "^0.0.0",
+  "ngx-highlightjs": "^0.0.0",
+  "overlayscrollbars": "^0.0.0",
+  "rxjs": "~7.8.0",
+  "tslib": "^2.3.0",
+  "zone.js": "~0.14.10",
+}
+`;
+
+exports[`ng add '@koobiq/components' should add missing dependencies to 'package.json': before running schematics 1`] = `
+{
+  "@angular/animations": "^18.2.0",
+  "@angular/common": "^18.2.0",
+  "@angular/compiler": "^18.2.0",
+  "@angular/core": "^18.2.0",
+  "@angular/forms": "^18.2.0",
+  "@angular/platform-browser": "^18.2.0",
+  "@angular/platform-browser-dynamic": "^18.2.0",
+  "@angular/router": "^18.2.0",
+  "rxjs": "~7.8.0",
+  "tslib": "^2.3.0",
+  "zone.js": "~0.14.10",
+}
+`;
