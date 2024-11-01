@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { marked } from 'marked';
+import { marked, MarkedOptions } from 'marked';
 import { CLASS_PREFIX, MARKDOWN_TAGS_TO_CLASS_ALIAS, MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS } from './markdown.values';
 
+/** Service which allows to convert `Markdown` into `HTML` */
 @Injectable()
 export class KbqMarkdownService {
-    parseToHtml(markdown: string): string {
-        return this.transform(marked.parse(markdown));
+    /** Parses `Markdown` into `HTML` */
+    parseToHtml(markdown: string, options?: MarkedOptions): string {
+        return this.transform(marked.parse(markdown, options));
     }
 
     private transform(htmlContent: string): string {

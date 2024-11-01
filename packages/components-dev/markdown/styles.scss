@@ -1,11 +1,6 @@
 @use '../main';
 
-.container {
+.kbq-markdown {
+    border: 1px solid gray;
     padding: 10px;
-
-    .kbq-markdown {
-        margin: 20px;
-        border: 1px solid gray;
-        padding: 10px;
-    }
 }

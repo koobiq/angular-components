@@ -1,61 +1,55 @@
-Компонент kbq-markdown позволяет отображать разметку markdown
+`kbq-markdown` - компонент, который позволяет преобразовывать текст, написанный на языке разметки `Markdown`, в `HTML`.
 
-### Элементы
+**Обрати внимание!** Для работы компонента, необходимо наличие [`marked`](https://github.com/markedjs/marked) зависимости:
 
-#### Заголовки
+```bash
+npm install marked@^9
+```
+
+### Заголовки
 
 <!-- example(markdown-headers) -->
 
-#### Абзац
+### Абзац
 
 <!-- example(markdown-paragraph) -->
 
-#### Выделение текста
+### Выделение текста
 
 <!-- example(markdown-selection) -->
 
-#### Цитата
+### Цитата
 
 <!-- example(markdown-quote) -->
 
-#### Списки
+### Списки
 
 <!-- example(markdown-list) -->
 
-#### Код
+### Код
 
 <!-- example(markdown-code) -->
 
-#### Блок кода
+### Блок кода
 
 <!-- example(markdown-code-block) -->
 
-#### Горизонтальный разделитель
+### Горизонтальный разделитель
 
 <!-- example(markdown-divider) -->
 
-#### Ссылка
+### Ссылка
 
 <!-- example(markdown-link) -->
 
-#### Изображение
+### Изображение
 
 <!-- example(markdown-image) -->
 
-#### Таблица
+### Таблица
 
 <!-- example(markdown-table) -->
 
-#### Перенос строки
+### Перенос строки
 
 <!-- example(markdown-line-break) -->
-
-## Примеры использования
-
-#### Комбинация заголовков
-
-<!-- example(markdown-headers-combinations) -->
-
-#### Большая статья
-
-<!-- example(markdown-article) -->

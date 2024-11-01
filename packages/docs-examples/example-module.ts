@@ -2309,8 +2309,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownArticleExample",
     "files": [
       "markdown-article-example.ts",
-      "markdown-article-example.html",
-      "markdown-article-example.css"
+      "./markdown-article-example.html"
     ],
     "selector": "markdown-article-example",
     "additionalComponents": [],
@@ -2327,8 +2326,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeBlockExample",
     "files": [
       "markdown-code-block-example.ts",
-      "markdown-code-block-example.html",
-      "markdown-code-block-example.css"
+      "./markdown-code-block-example.html"
     ],
     "selector": "markdown-code-block-example",
     "additionalComponents": [],
@@ -2345,8 +2343,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownCodeExample",
     "files": [
       "markdown-code-example.ts",
-      "markdown-code-example.html",
-      "markdown-code-example.css"
+      "./markdown-code-example.html"
     ],
     "selector": "markdown-code-example",
     "additionalComponents": [],
@@ -2363,8 +2360,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownDividerExample",
     "files": [
       "markdown-divider-example.ts",
-      "markdown-divider-example.html",
-      "markdown-divider-example.css"
+      "./markdown-divider-example.html"
     ],
     "selector": "markdown-divider-example",
     "additionalComponents": [],
@@ -2381,8 +2377,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownHeadersCombinationsExample",
     "files": [
       "markdown-headers-combinations-example.ts",
-      "markdown-headers-combinations-example.html",
-      "markdown-headers-combinations-example.css"
+      "./markdown-headers-combinations-example.html"
     ],
     "selector": "markdown-headers-combinations-example",
     "additionalComponents": [],
@@ -2399,8 +2394,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownHeadersExample",
     "files": [
       "markdown-headers-example.ts",
-      "markdown-headers-example.html",
-      "markdown-headers-example.css"
+      "./markdown-headers-example.html"
     ],
     "selector": "markdown-headers-example",
     "additionalComponents": [],
@@ -2417,8 +2411,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownImageExample",
     "files": [
       "markdown-image-example.ts",
-      "markdown-image-example.html",
-      "markdown-image-example.css"
+      "./markdown-image-example.html"
     ],
     "selector": "markdown-image-example",
     "additionalComponents": [],
@@ -2435,8 +2428,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLineBreakExample",
     "files": [
       "markdown-line-break-example.ts",
-      "markdown-line-break-example.html",
-      "markdown-line-break-example.css"
+      "./markdown-line-break-example.html"
     ],
     "selector": "markdown-line-break-example",
     "additionalComponents": [],
@@ -2453,8 +2445,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownLinkExample",
     "files": [
       "markdown-link-example.ts",
-      "markdown-link-example.html",
-      "markdown-link-example.css"
+      "./markdown-link-example.html"
     ],
     "selector": "markdown-link-example",
     "additionalComponents": [],
@@ -2471,30 +2462,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownListExample",
     "files": [
       "markdown-list-example.ts",
-      "markdown-list-example.html",
-      "markdown-list-example.css"
+      "./markdown-list-example.html"
     ],
     "selector": "markdown-list-example",
     "additionalComponents": [],
     "primaryFile": "markdown-list-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
-  },
-  "markdown-overview": {
-    "packagePath": "components/markdown/markdown-overview",
-    "title": "Markdown overview",
-    "componentName": "MarkdownOverviewExample",
-    "files": [
-      "markdown-overview-example.ts",
-      "markdown-overview-example.html",
-      "markdown-overview-example.css"
-    ],
-    "selector": "markdown-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "markdown-overview-example.ts",
     "module": {
       "name": "MarkdownExamplesModule",
       "importSpecifier": "components/markdown",
@@ -2507,8 +2479,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownParagraphExample",
     "files": [
       "markdown-paragraph-example.ts",
-      "markdown-paragraph-example.html",
-      "markdown-paragraph-example.css"
+      "./markdown-paragraph-example.html"
     ],
     "selector": "markdown-paragraph-example",
     "additionalComponents": [],
@@ -2525,8 +2496,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownQuoteExample",
     "files": [
       "markdown-quote-example.ts",
-      "markdown-quote-example.html",
-      "markdown-quote-example.css"
+      "./markdown-quote-example.html"
     ],
     "selector": "markdown-quote-example",
     "additionalComponents": [],
@@ -2543,8 +2513,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownSelectionExample",
     "files": [
       "markdown-selection-example.ts",
-      "markdown-selection-example.html",
-      "markdown-selection-example.css"
+      "markdown-selection-example.html"
     ],
     "selector": "markdown-selection-example",
     "additionalComponents": [],
@@ -2561,30 +2530,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownTableExample",
     "files": [
       "markdown-table-example.ts",
-      "markdown-table-example.html",
-      "markdown-table-example.css"
+      "./markdown-table-example.html"
     ],
     "selector": "markdown-table-example",
     "additionalComponents": [],
     "primaryFile": "markdown-table-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
-  },
-  "markdown-typography": {
-    "packagePath": "components/markdown/markdown-typography",
-    "title": "Markdown typography",
-    "componentName": "MarkdownTypographyExample",
-    "files": [
-      "markdown-typography-example.ts",
-      "markdown-typography-example.html",
-      "markdown-typography-example.css"
-    ],
-    "selector": "markdown-typography-example",
-    "additionalComponents": [],
-    "primaryFile": "markdown-typography-example.ts",
     "module": {
       "name": "MarkdownExamplesModule",
       "importSpecifier": "components/markdown",

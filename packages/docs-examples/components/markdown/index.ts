@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqMarkdownModule } from '@koobiq/components/markdown';
 import { MarkdownArticleExample } from './markdown-article/markdown-article-example';
 import { MarkdownCodeBlockExample } from './markdown-code-block/markdown-code-block-example';
 import { MarkdownCodeExample } from './markdown-code/markdown-code-example';
@@ -34,11 +33,11 @@ export {
 
 const EXAMPLES = [
     MarkdownArticleExample,
-    MarkdownCodeExample,
     MarkdownCodeBlockExample,
+    MarkdownCodeExample,
     MarkdownDividerExample,
-    MarkdownHeadersExample,
     MarkdownHeadersCombinationsExample,
+    MarkdownHeadersExample,
     MarkdownImageExample,
     MarkdownLineBreakExample,
     MarkdownLinkExample,
@@ -50,12 +49,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqMarkdownModule,
-        KbqMarkdownModule,
-        KbqMarkdownModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class MarkdownExamplesModule {}

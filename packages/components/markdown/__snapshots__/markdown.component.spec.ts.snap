@@ -1,0 +1,869 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqMarkdown should generate html from markdown inline template 1`] = `
+DebugElement {
+  "nativeNode": <kbq-markdown
+    class="kbq-markdown"
+  >
+    <pre
+      class="markdown-input"
+    >
+      
+# H1
+
+## H2
+
+### H3
+
+#### H4
+
+##### H5
+
+###### H6
+
+**bold text**  
+__bold text__
+
+_italic text_  
+*italic text*
+
+***bold and italic text***  
+___bold and italic text___
+
+&gt; blockquote
+
+1. First item
+2. Second item
+3. Third item
+
+-   First item
+-   Second item
+-   Third item
+
+\`inline code\`
+
+First line  
+Second line
+
+---
+
+[title](https://www.koobiq.io)
+
+![](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+
+![With caption text](https://koobiq.io/assets/images/koobiq-illustration-wip.png)
+_Image caption text_
+
+| Syntax    | Description | Left-aligned | Center-aligned | Right-aligned |
+| --------- | ----------- | :----------- | :------------: | ------------: |
+| Header    | Title       | git status   |   git status   |    git status |
+| Paragraph | Text        | git diff     |    git diff    |      git diff |
+
+\`\`\`bash
+npm install jquery
+\`\`\`
+
+    </pre>
+    <div
+      class="markdown-output"
+    >
+      <h1
+        class="kbq-markdown__h1"
+      >
+        H1
+      </h1>
+      
+
+      <h2
+        class="kbq-markdown__h2"
+      >
+        H2
+      </h2>
+      
+
+      <h3
+        class="kbq-markdown__h3"
+      >
+        H3
+      </h3>
+      
+
+      <h4
+        class="kbq-markdown__h4"
+      >
+        H4
+      </h4>
+      
+
+      <h5
+        class="kbq-markdown__h5"
+      >
+        H5
+      </h5>
+      
+
+      <h6
+        class="kbq-markdown__h6"
+      >
+        H6
+      </h6>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <strong>
+          bold text
+        </strong>
+        <br />
+        <strong>
+          bold text
+        </strong>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <em>
+          italic text
+        </em>
+        <br />
+        <em>
+          italic text
+        </em>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <em>
+          <strong>
+            bold and italic text
+          </strong>
+        </em>
+        <br />
+        <em>
+          <strong>
+            bold and italic text
+          </strong>
+        </em>
+      </p>
+      
+
+      <blockquote
+        class="kbq-markdown__blockquote"
+      >
+        
+
+        <p
+          class="kbq-markdown__p"
+        >
+          blockquote
+        </p>
+        
+
+      </blockquote>
+      
+
+      <ol
+        class="kbq-markdown__ol"
+      >
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          First item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Second item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Third item
+        </li>
+        
+
+      </ol>
+      
+
+      <ul
+        class="kbq-markdown__ul"
+      >
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          First item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Second item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Third item
+        </li>
+        
+
+      </ul>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <code
+          class="kbq-markdown__code"
+        >
+          inline code
+        </code>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        First line
+        <br />
+        Second line
+      </p>
+      
+
+      <hr
+        class="kbq-markdown__hr"
+      />
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <a
+          class="kbq-markdown__a"
+          href="https://www.koobiq.io"
+        >
+          title
+        </a>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <img
+          alt=""
+          class="kbq-markdown__img"
+          src="https://koobiq.io/assets/images/koobiq-illustration-wip.png"
+        />
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <img
+          alt="With caption text"
+          class="kbq-markdown__img"
+          src="https://koobiq.io/assets/images/koobiq-illustration-wip.png"
+        />
+        
+
+        <em>
+          Image caption text
+        </em>
+      </p>
+      
+
+      <table
+        class="kbq-markdown__table"
+      >
+        
+
+        <thead
+          class="kbq-markdown__thead"
+        >
+          
+
+          <tr
+            class="kbq-markdown__tr"
+          >
+            
+
+            <th
+              class="kbq-markdown__th"
+            >
+              Syntax
+            </th>
+            
+
+            <th
+              class="kbq-markdown__th"
+            >
+              Description
+            </th>
+            
+
+            <th
+              align="left"
+            >
+              Left-aligned
+            </th>
+            
+
+            <th
+              align="center"
+            >
+              Center-aligned
+            </th>
+            
+
+            <th
+              align="right"
+            >
+              Right-aligned
+            </th>
+            
+
+          </tr>
+          
+
+        </thead>
+        
+
+        <tbody
+          class="kbq-markdown__tbody"
+        >
+          <tr
+            class="kbq-markdown__tr"
+          >
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Header
+            </td>
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Title
+            </td>
+            
+
+            <td
+              align="left"
+              class="kbq-markdown__td"
+            >
+              git status
+            </td>
+            
+
+            <td
+              align="center"
+              class="kbq-markdown__td"
+            >
+              git status
+            </td>
+            
+
+            <td
+              align="right"
+              class="kbq-markdown__td"
+            >
+              git status
+            </td>
+            
+
+          </tr>
+          
+
+          <tr
+            class="kbq-markdown__tr"
+          >
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Paragraph
+            </td>
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Text
+            </td>
+            
+
+            <td
+              align="left"
+              class="kbq-markdown__td"
+            >
+              git diff
+            </td>
+            
+
+            <td
+              align="center"
+              class="kbq-markdown__td"
+            >
+              git diff
+            </td>
+            
+
+            <td
+              align="right"
+              class="kbq-markdown__td"
+            >
+              git diff
+            </td>
+            
+
+          </tr>
+          
+
+        </tbody>
+      </table>
+      
+
+      <pre
+        class="kbq-markdown__pre"
+      >
+        <code
+          class="kbq-markdown__code"
+        >
+          npm install jquery
+
+        </code>
+      </pre>
+      
+
+    </div>
+  </kbq-markdown>,
+}
+`;
+
+exports[`KbqMarkdown should generate html from markdown string 1`] = `
+DebugElement {
+  "nativeNode": <kbq-markdown
+    class="kbq-markdown"
+  >
+    <pre
+      class="markdown-input"
+    />
+    <div
+      class="markdown-output"
+    >
+      <h1
+        class="kbq-markdown__h1"
+      >
+        H1
+      </h1>
+      
+
+      <h2
+        class="kbq-markdown__h2"
+      >
+        H2
+      </h2>
+      
+
+      <h3
+        class="kbq-markdown__h3"
+      >
+        H3
+      </h3>
+      
+
+      <h4
+        class="kbq-markdown__h4"
+      >
+        H4
+      </h4>
+      
+
+      <h5
+        class="kbq-markdown__h5"
+      >
+        H5
+      </h5>
+      
+
+      <h6
+        class="kbq-markdown__h6"
+      >
+        H6
+      </h6>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <strong>
+          bold text
+        </strong>
+          
+
+        <strong>
+          bold text
+        </strong>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <em>
+          italic text
+        </em>
+          
+
+        <em>
+          italic text
+        </em>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <em>
+          <strong>
+            bold and italic text
+          </strong>
+        </em>
+          
+
+        <em>
+          <strong>
+            bold and italic text
+          </strong>
+        </em>
+      </p>
+      
+
+      <blockquote
+        class="kbq-markdown__blockquote"
+      >
+        
+
+        <p
+          class="kbq-markdown__p"
+        >
+          blockquote
+        </p>
+        
+
+      </blockquote>
+      
+
+      <ol
+        class="kbq-markdown__ol"
+      >
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          First item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Second item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Third item
+        </li>
+        
+
+      </ol>
+      
+
+      <ul
+        class="kbq-markdown__ul"
+      >
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          First item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Second item
+        </li>
+        
+
+        <li
+          class="kbq-markdown__li"
+        >
+          Third item
+        </li>
+        
+
+      </ul>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <code
+          class="kbq-markdown__code"
+        >
+          inline code
+        </code>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        First line  
+Second line
+      </p>
+      
+
+      <hr
+        class="kbq-markdown__hr"
+      />
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <a
+          class="kbq-markdown__a"
+          href="https://www.koobiq.io"
+        >
+          title
+        </a>
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <img
+          alt=""
+          class="kbq-markdown__img"
+          src="https://koobiq.io/assets/images/koobiq-illustration-wip.png"
+        />
+      </p>
+      
+
+      <p
+        class="kbq-markdown__p"
+      >
+        <img
+          alt="With caption text"
+          class="kbq-markdown__img"
+          src="https://koobiq.io/assets/images/koobiq-illustration-wip.png"
+        />
+        
+
+        <em>
+          Image caption text
+        </em>
+      </p>
+      
+
+      <table
+        class="kbq-markdown__table"
+      >
+        
+
+        <thead
+          class="kbq-markdown__thead"
+        >
+          
+
+          <tr
+            class="kbq-markdown__tr"
+          >
+            
+
+            <th
+              class="kbq-markdown__th"
+            >
+              Syntax
+            </th>
+            
+
+            <th
+              class="kbq-markdown__th"
+            >
+              Description
+            </th>
+            
+
+            <th
+              align="left"
+            >
+              Left-aligned
+            </th>
+            
+
+            <th
+              align="center"
+            >
+              Center-aligned
+            </th>
+            
+
+            <th
+              align="right"
+            >
+              Right-aligned
+            </th>
+            
+
+          </tr>
+          
+
+        </thead>
+        
+
+        <tbody
+          class="kbq-markdown__tbody"
+        >
+          <tr
+            class="kbq-markdown__tr"
+          >
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Header
+            </td>
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Title
+            </td>
+            
+
+            <td
+              align="left"
+              class="kbq-markdown__td"
+            >
+              git status
+            </td>
+            
+
+            <td
+              align="center"
+              class="kbq-markdown__td"
+            >
+              git status
+            </td>
+            
+
+            <td
+              align="right"
+              class="kbq-markdown__td"
+            >
+              git status
+            </td>
+            
+
+          </tr>
+          
+
+          <tr
+            class="kbq-markdown__tr"
+          >
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Paragraph
+            </td>
+            
+
+            <td
+              class="kbq-markdown__td"
+            >
+              Text
+            </td>
+            
+
+            <td
+              align="left"
+              class="kbq-markdown__td"
+            >
+              git diff
+            </td>
+            
+
+            <td
+              align="center"
+              class="kbq-markdown__td"
+            >
+              git diff
+            </td>
+            
+
+            <td
+              align="right"
+              class="kbq-markdown__td"
+            >
+              git diff
+            </td>
+            
+
+          </tr>
+          
+
+        </tbody>
+      </table>
+      
+
+      <pre
+        class="kbq-markdown__pre"
+      >
+        <code
+          class="kbq-markdown__code"
+        >
+          npm install jquery
+
+        </code>
+      </pre>
+      
+
+    </div>
+  </kbq-markdown>,
+}
+`;

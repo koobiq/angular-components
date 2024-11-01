@@ -1,17 +1,33 @@
 import {
-    AfterContentChecked,
+    afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
+    Inject,
+    InjectionToken,
     Input,
+    Optional,
+    Provider,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { MarkedOptions } from 'marked';
 import { KbqMarkdownService } from './markdown.service';
 
+/** List of options for `marked` library. */
+export const KBQ_MARKDOWN_MARKED_OPTIONS = new InjectionToken<MarkedOptions>('KBQ_MARKDOWN_MARKED_OPTIONS');
+
+/** Utility provider for `KBQ_MARKDOWN_MARKED_OPTIONS`. */
+export const kbqMarkdownMarkedOptionsProvider = (options: MarkedOptions): Provider => ({
+    provide: KBQ_MARKDOWN_MARKED_OPTIONS,
+    useValue: options
+});
+
+/** Component which allows to convert `Markdown` into `HTML` */
 @Component({
+    standalone: true,
     selector: 'kbq-markdown',
     styleUrls: ['./markdown.scss', 'markdown-tokens.scss'],
     // no need format line with ng-content it's broke textContent for markdownService.parseToHtml()
@@ -32,9 +48,10 @@ import { KbqMarkdownService } from './markdown.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqMarkdown implements AfterContentChecked {
-    @ViewChild('contentWrapper') contentWrapper: ElementRef;
+export class KbqMarkdown {
+    @ViewChild('contentWrapper', { static: true }) private readonly contentWrapper: ElementRef;
 
+    /** `Markdown` text. */
     @Input()
     get markdownText(): string | null {
         return this._markdownText;
@@ -50,22 +67,23 @@ export class KbqMarkdown implements AfterContentChecked {
 
     private _markdownText: string | null = null;
 
-    resultHtml: SafeHtml = '';
+    protected resultHtml: SafeHtml;
 
     constructor(
-        private markdownService: KbqMarkdownService,
+        private readonly markdownService: KbqMarkdownService,
+        private readonly cdr: ChangeDetectorRef,
         private sanitizer: DomSanitizer,
-        private cdr: ChangeDetectorRef
-    ) {}
-
-    ngAfterContentChecked(): void {
-        if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
-            this.resultHtml = this.getResultHTML(this.contentWrapper.nativeElement.textContent);
-            this.cdr.detectChanges();
-        }
+        @Optional() @Inject(KBQ_MARKDOWN_MARKED_OPTIONS) private readonly markedOptions?: MarkedOptions | undefined
+    ) {
+        afterNextRender(() => {
+            if (!this.markdownText && this.contentWrapper?.nativeElement.textContent) {
+                this.resultHtml = this.getResultHTML(this.contentWrapper?.nativeElement.textContent);
+                this.cdr.detectChanges();
+            }
+        });
     }
 
-    private getResultHTML(value): SafeHtml {
-        return this.sanitizer.bypassSecurityTrustHtml(this.markdownService.parseToHtml(value));
+    private getResultHTML(markdown: string): SafeHtml {
+        return this.sanitizer.bypassSecurityTrustHtml(this.markdownService.parseToHtml(markdown, this.markedOptions));
     }
 }

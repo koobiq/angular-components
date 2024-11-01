@@ -20,3 +20,6 @@ CHANGELOG.md
 
 # ignore nunjuck templates
 /tools/api-gen/rendering/templates
+
+# ignores example markdown templates
+/packages/docs-examples/components/markdown/**/*.html

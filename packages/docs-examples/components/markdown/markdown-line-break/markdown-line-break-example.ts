@@ -1,12 +1,14 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqMarkdownModule } from '@koobiq/components/markdown';
 
 /**
  * @title Markdown line break
  */
 @Component({
+    standalone: true,
+    imports: [KbqMarkdownModule],
     selector: 'markdown-line-break-example',
-    templateUrl: 'markdown-line-break-example.html',
-    styleUrls: ['markdown-line-break-example.css'],
-    encapsulation: ViewEncapsulation.None
+    templateUrl: './markdown-line-break-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkdownLineBreakExample {}
