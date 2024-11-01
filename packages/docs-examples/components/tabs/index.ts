@@ -46,7 +46,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [EXAMPLES],
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class TabsExamplesModule {}

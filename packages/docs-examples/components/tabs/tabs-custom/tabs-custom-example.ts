@@ -35,7 +35,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-linux_24"></i>
                         <div>Linux</div>
-                        <div class="tabs-custom-example__subtitle">Ununtu 10+</div>
+                        <div class="tabs-custom-example__subtitle">Ubuntu 10+</div>
                     </ng-template>
                 </kbq-tab>
                 <kbq-tab>
