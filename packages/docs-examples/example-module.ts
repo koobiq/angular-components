@@ -1122,12 +1122,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-actions": {
     "packagePath": "components/empty-state/empty-state-actions",
-    "title": "empty-state-actions",
+    "title": "Empty-state actions",
     "componentName": "EmptyStateActionsExample",
     "files": [
-      "empty-state-actions-example.ts",
-      "empty-state-actions-example.html",
-      "empty-state-actions-example.css"
+      "empty-state-actions-example.ts"
     ],
     "selector": "empty-state-actions-example",
     "additionalComponents": [],
@@ -1140,12 +1138,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-actions2": {
     "packagePath": "components/empty-state/empty-state-actions2",
-    "title": "empty-state-actions2",
+    "title": "Empty-state actions more",
     "componentName": "EmptyStateActions2Example",
     "files": [
-      "empty-state-actions2-example.ts",
-      "empty-state-actions2-example.html",
-      "empty-state-actions2-example.css"
+      "empty-state-actions2-example.ts"
     ],
     "selector": "empty-state-actions2-example",
     "additionalComponents": [],
@@ -1158,12 +1154,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-align": {
     "packagePath": "components/empty-state/empty-state-align",
-    "title": "empty-state-align",
+    "title": "Empty-state align",
     "componentName": "EmptyStateAlignExample",
     "files": [
-      "empty-state-align-example.ts",
-      "empty-state-align-example.html",
-      "empty-state-align-example.css"
+      "empty-state-align-example.ts"
     ],
     "selector": "empty-state-align-example",
     "additionalComponents": [],
@@ -1176,12 +1170,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-big": {
     "packagePath": "components/empty-state/empty-state-big",
-    "title": "empty-state-big",
+    "title": "Empty-state big",
     "componentName": "EmptyStateBigExample",
     "files": [
-      "empty-state-big-example.ts",
-      "empty-state-big-example.html",
-      "empty-state-big-example.css"
+      "empty-state-big-example.ts"
     ],
     "selector": "empty-state-big-example",
     "additionalComponents": [],
@@ -1194,12 +1186,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-content": {
     "packagePath": "components/empty-state/empty-state-content",
-    "title": "empty-state-content",
+    "title": "Empty-state content",
     "componentName": "EmptyStateContentExample",
     "files": [
-      "empty-state-content-example.ts",
-      "empty-state-content-example.html",
-      "empty-state-content-example.css"
+      "empty-state-content-example.ts"
     ],
     "selector": "empty-state-content-example",
     "additionalComponents": [],
@@ -1212,12 +1202,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-default": {
     "packagePath": "components/empty-state/empty-state-default",
-    "title": "empty-state-default",
+    "title": "Empty-state default",
     "componentName": "EmptyStateDefaultExample",
     "files": [
-      "empty-state-default-example.ts",
-      "empty-state-default-example.html",
-      "empty-state-default-example.css"
+      "empty-state-default-example.ts"
     ],
     "selector": "empty-state-default-example",
     "additionalComponents": [],
@@ -1230,12 +1218,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-error": {
     "packagePath": "components/empty-state/empty-state-error",
-    "title": "empty-state-error",
+    "title": "Empty-state error",
     "componentName": "EmptyStateErrorExample",
     "files": [
-      "empty-state-error-example.ts",
-      "empty-state-error-example.html",
-      "empty-state-error-example.css"
+      "empty-state-error-example.ts"
     ],
     "selector": "empty-state-error-example",
     "additionalComponents": [],
@@ -1248,12 +1234,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-icon": {
     "packagePath": "components/empty-state/empty-state-icon",
-    "title": "empty-state-icon",
+    "title": "Empty-state icon",
     "componentName": "EmptyStateIconExample",
     "files": [
-      "empty-state-icon-example.ts",
-      "empty-state-icon-example.html",
-      "empty-state-icon-example.css"
+      "empty-state-icon-example.ts"
     ],
     "selector": "empty-state-icon-example",
     "additionalComponents": [],
@@ -1266,12 +1250,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-text-only": {
     "packagePath": "components/empty-state/empty-state-text-only",
-    "title": "empty-state-text-only",
+    "title": "Empty-state text only",
     "componentName": "EmptyStateTextOnlyExample",
     "files": [
-      "empty-state-text-only-example.ts",
-      "empty-state-text-only-example.html",
-      "empty-state-text-only-example.css"
+      "empty-state-text-only-example.ts"
     ],
     "selector": "empty-state-text-only-example",
     "additionalComponents": [],
@@ -1284,12 +1266,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "empty-state-title": {
     "packagePath": "components/empty-state/empty-state-title",
-    "title": "empty-state-title",
+    "title": "Empty-state title",
     "componentName": "EmptyStateTitleExample",
     "files": [
-      "empty-state-title-example.ts",
-      "empty-state-title-example.html",
-      "empty-state-title-example.css"
+      "empty-state-title-example.ts"
     ],
     "selector": "empty-state-title-example",
     "additionalComponents": [],
