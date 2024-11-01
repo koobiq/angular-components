@@ -1,8 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-@use 'sass:list';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
 @function kbq-code-block-hljs-attr($attr) {

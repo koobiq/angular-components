@@ -1,9 +1,5 @@
-@use 'sass:meta';
-@use 'sass:map';
-@use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-$tokens: meta.module-variables(tokens) !default;
 $actionbar-indents: var(--kbq-code-block-size-actionbar-padding-vertical)
     var(--kbq-code-block-size-actionbar-padding-horizontal);
 

@@ -1,6 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-table-theme() {
