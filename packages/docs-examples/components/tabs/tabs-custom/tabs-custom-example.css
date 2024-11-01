@@ -1,9 +1,11 @@
 .tabs-custom-example {
+    padding-bottom: 24px;
+
     .kbq-icon {
         margin-bottom: 4px;
     }
 
-    .kbq-tab-label__content.kbq-tab-label__template {
+    .kbq-tab-label .kbq-tab-label__content {
         flex-direction: column;
         align-items: center;
         gap: 0;

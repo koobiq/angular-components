@@ -3462,9 +3462,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tab list with selection by index",
     "componentName": "TabActiveTabIndexExample",
     "files": [
-      "tab-active-tab-index-example.ts",
-      "tab-active-tab-index-example.html",
-      "tab-active-tab-index-example.css"
+      "tab-active-tab-index-example.ts"
     ],
     "selector": "tab-active-tab-index-example",
     "additionalComponents": [],
@@ -3480,9 +3478,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tab list with selection by tabId",
     "componentName": "TabActiveTabExample",
     "files": [
-      "tab-active-tab-example.ts",
-      "tab-active-tab-example.html",
-      "tab-active-tab-example.css"
+      "tab-active-tab-example.ts"
     ],
     "selector": "tab-active-tab-example",
     "additionalComponents": [],
@@ -3498,9 +3494,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs actionbar",
     "componentName": "TabsActionbarExample",
     "files": [
-      "tabs-actionbar-example.ts",
-      "tabs-actionbar-example.html",
-      "tabs-actionbar-example.css"
+      "tabs-actionbar-example.ts"
     ],
     "selector": "tabs-actionbar-example",
     "additionalComponents": [],
@@ -3516,9 +3510,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs custom",
     "componentName": "TabsCustomExample",
     "files": [
-      "tabs-custom-example.ts",
-      "tabs-custom-example.html",
-      "tabs-custom-example.css"
+      "tabs-custom-example.ts"
     ],
     "selector": "tabs-custom-example",
     "additionalComponents": [],
@@ -3534,9 +3526,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs disabled",
     "componentName": "TabsDisabledExample",
     "files": [
-      "tabs-disabled-example.ts",
-      "tabs-disabled-example.html",
-      "tabs-disabled-example.css"
+      "tabs-disabled-example.ts"
     ],
     "selector": "tabs-disabled-example",
     "additionalComponents": [],
@@ -3552,9 +3542,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs empty",
     "componentName": "TabsEmptyExample",
     "files": [
-      "tabs-empty-example.ts",
-      "tabs-empty-example.html",
-      "tabs-empty-example.css"
+      "tabs-empty-example.ts"
     ],
     "selector": "tabs-empty-example",
     "additionalComponents": [],
@@ -3570,9 +3558,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs overview",
     "componentName": "TabsOverviewExample",
     "files": [
-      "tabs-overview-example.ts",
-      "tabs-overview-example.html",
-      "tabs-overview-example.css"
+      "tabs-overview-example.ts"
     ],
     "selector": "tabs-overview-example",
     "additionalComponents": [],
@@ -3588,9 +3574,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs stretch",
     "componentName": "TabsStretchExample",
     "files": [
-      "tabs-stretch-example.ts",
-      "tabs-stretch-example.html",
-      "tabs-stretch-example.css"
+      "tabs-stretch-example.ts"
     ],
     "selector": "tabs-stretch-example",
     "additionalComponents": [],
@@ -3606,9 +3590,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs underlined",
     "componentName": "TabsUnderlinedExample",
     "files": [
-      "tabs-underlined-example.ts",
-      "tabs-underlined-example.html",
-      "tabs-underlined-example.css"
+      "tabs-underlined-example.ts"
     ],
     "selector": "tabs-underlined-example",
     "additionalComponents": [],
@@ -3624,9 +3606,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical icons",
     "componentName": "TabsVerticalIconsExample",
     "files": [
-      "tabs-vertical-icons-example.ts",
-      "tabs-vertical-icons-example.html",
-      "tabs-vertical-icons-example.css"
+      "tabs-vertical-icons-example.ts"
     ],
     "selector": "tabs-vertical-icons-example",
     "additionalComponents": [],
@@ -3642,13 +3622,27 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical",
     "componentName": "TabsVerticalExample",
     "files": [
-      "tabs-vertical-example.ts",
-      "tabs-vertical-example.html",
-      "tabs-vertical-example.css"
+      "tabs-vertical-example.ts"
     ],
     "selector": "tabs-vertical-example",
     "additionalComponents": [],
     "primaryFile": "tabs-vertical-example.ts",
+    "module": {
+      "name": "TabsExamplesModule",
+      "importSpecifier": "components/tabs",
+      "importPath": "koobiq-docs-examples-components-tabs"
+    }
+  },
+  "tabs-with-scroll-vertical": {
+    "packagePath": "components/tabs/tabs-with-scroll-vertical",
+    "title": "Tabs with scroll vertical",
+    "componentName": "TabsWithScrollVerticalExample",
+    "files": [
+      "tabs-with-scroll-vertical-example.ts"
+    ],
+    "selector": "tabs-with-scroll-vertical-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-with-scroll-vertical-example.ts",
     "module": {
       "name": "TabsExamplesModule",
       "importSpecifier": "components/tabs",
@@ -3660,9 +3654,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs with scroll",
     "componentName": "TabsWithScrollExample",
     "files": [
-      "tabs-with-scroll-example.ts",
-      "tabs-with-scroll-example.html",
-      "tabs-with-scroll-example.css"
+      "tabs-with-scroll-example.ts"
     ],
     "selector": "tabs-with-scroll-example",
     "additionalComponents": [],

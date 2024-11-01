@@ -1,8 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTabsModule } from '@koobiq/components/tabs';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { TabActiveTabIndexExample } from './tab-active-tab-index/tab-active-tab-index-example';
 import { TabActiveTabExample } from './tab-active-tab/tab-active-tab-example';
 import { TabsActionbarExample } from './tabs-actionbar/tabs-actionbar-example';
@@ -14,6 +10,7 @@ import { TabsStretchExample } from './tabs-stretch/tabs-stretch-example';
 import { TabsUnderlinedExample } from './tabs-underlined/tabs-underlined-example';
 import { TabsVerticalIconsExample } from './tabs-vertical-icons/tabs-vertical-icons-example';
 import { TabsVerticalExample } from './tabs-vertical/tabs-vertical-example';
+import { TabsWithScrollVerticalExample } from './tabs-with-scroll-vertical/tabs-with-scroll-vertical-example';
 import { TabsWithScrollExample } from './tabs-with-scroll/tabs-with-scroll-example';
 
 export {
@@ -28,7 +25,8 @@ export {
     TabsUnderlinedExample,
     TabsVerticalExample,
     TabsVerticalIconsExample,
-    TabsWithScrollExample
+    TabsWithScrollExample,
+    TabsWithScrollVerticalExample
 };
 
 const EXAMPLES = [
@@ -41,19 +39,14 @@ const EXAMPLES = [
     TabsVerticalExample,
     TabsVerticalIconsExample,
     TabsWithScrollExample,
+    TabsWithScrollVerticalExample,
     TabsEmptyExample,
     TabActiveTabExample,
     TabActiveTabIndexExample
 ];
 
 @NgModule({
-    imports: [
-        KbqTabsModule,
-        KbqIconModule,
-        KbqButtonModule,
-        KbqToolTipModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class TabsExamplesModule {}

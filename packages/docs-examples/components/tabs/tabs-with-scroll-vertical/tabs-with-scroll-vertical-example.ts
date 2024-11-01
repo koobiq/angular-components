@@ -1,18 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
- * @title Tabs with scroll
+ * @title Tabs with scroll vertical
  */
 @Component({
     standalone: true,
-    selector: 'tabs-with-scroll-example',
-    imports: [
-        KbqTabsModule
-    ],
+    selector: 'tabs-with-scroll-vertical-example',
+    styleUrl: 'tabs-with-scroll-vertical-example.css',
+    imports: [KbqTabsModule],
+    encapsulation: ViewEncapsulation.None,
     template: `
-        <div class="tabs-with-scroll-example">
-            <kbq-tab-group>
+        <div class="tabs-with-scroll-vertical-example">
+            <kbq-tab-group vertical>
                 <kbq-tab [label]="'Bruteforce'" />
                 <kbq-tab [label]="'Complex Attack'" />
                 <kbq-tab [label]="'DDoS'" />
@@ -29,4 +29,4 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         </div>
     `
 })
-export class TabsWithScrollExample {}
+export class TabsWithScrollVerticalExample {}
