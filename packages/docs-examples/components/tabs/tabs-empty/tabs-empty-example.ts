@@ -39,7 +39,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                     [empty]="true"
                     [label]="'DDoS'"
                     [tooltipPlacement]="PopUpPlacements.Top"
-                    [tooltipTitle]="'Нет инцидентов'"
+                    [tooltipTitle]="noIncidentText"
                 >
                     <div class="empty-tab-content">DDoS-атак не зарегистрированов</div>
                 </kbq-tab>
@@ -72,4 +72,6 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 })
 export class TabsEmptyExample {
     protected readonly PopUpPlacements = PopUpPlacements;
+
+    noIncidentText = 'Нет инцидентов';
 }
