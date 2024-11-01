@@ -1,12 +1,20 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 
 /**
- * @title divider-vertical
+ * @title Divider vertical
  */
 @Component({
+    standalone: true,
     selector: 'divider-vertical-example',
-    templateUrl: 'divider-vertical-example.html',
-    styleUrls: ['divider-vertical-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqDividerModule
+    ],
+    template: `
+        <kbq-divider
+            [vertical]="true"
+            style="margin: 20px; height: 50px"
+        />
+    `
 })
 export class DividerVerticalExample {}

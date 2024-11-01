@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqLinkModule } from '@koobiq/components/link';
 import { DlHorizontalOverviewExample } from './dl-horizontal-overview/dl-horizontal-overview-example';
 import { DlOverviewExample } from './dl-overview/dl-overview-example';
 import { DlSmallExample } from './dl-small/dl-small-example';
@@ -16,11 +14,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqDlModule,
-        KbqLinkModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class DlExamplesModule {}

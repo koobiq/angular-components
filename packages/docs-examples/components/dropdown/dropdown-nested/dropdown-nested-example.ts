@@ -1,12 +1,21 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title Nested dropdown
+ * @title Dropdown nested
  */
 @Component({
+    standalone: true,
     selector: 'dropdown-nested-example',
-    templateUrl: 'dropdown-nested-example.html',
-    styleUrls: ['dropdown-nested-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqDropdownModule,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqDividerModule
+    ],
+    templateUrl: 'dropdown-nested-example.html'
 })
 export class DropdownNestedExample {}

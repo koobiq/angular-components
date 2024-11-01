@@ -2,7 +2,7 @@
 
 <!-- example(dl-overview) -->
 
-### small (adaptive)
+### Small (adaptive)
 
 <!-- example(dl-small) -->
 

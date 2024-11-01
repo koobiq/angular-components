@@ -978,9 +978,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Divider",
     "componentName": "DividerOverviewExample",
     "files": [
-      "divider-overview-example.ts",
-      "divider-overview-example.html",
-      "divider-overview-example.css"
+      "divider-overview-example.ts"
     ],
     "selector": "divider-overview-example",
     "additionalComponents": [],
@@ -993,12 +991,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "divider-vertical": {
     "packagePath": "components/divider/divider-vertical",
-    "title": "divider-vertical",
+    "title": "Divider vertical",
     "componentName": "DividerVerticalExample",
     "files": [
-      "divider-vertical-example.ts",
-      "divider-vertical-example.html",
-      "divider-vertical-example.css"
+      "divider-vertical-example.ts"
     ],
     "selector": "divider-vertical-example",
     "additionalComponents": [],
@@ -1011,12 +1007,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-horizontal-overview": {
     "packagePath": "components/dl/dl-horizontal-overview",
-    "title": "Description List Horizontal",
+    "title": "Description list horizontal",
     "componentName": "DlHorizontalOverviewExample",
     "files": [
-      "dl-horizontal-overview-example.ts",
-      "dl-horizontal-overview-example.html",
-      "dl-horizontal-overview-example.css"
+      "dl-horizontal-overview-example.ts"
     ],
     "selector": "dl-horizontal-overview-example",
     "additionalComponents": [],
@@ -1029,12 +1023,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-overview": {
     "packagePath": "components/dl/dl-overview",
-    "title": "Description List",
+    "title": "Description list",
     "componentName": "DlOverviewExample",
     "files": [
-      "dl-overview-example.ts",
-      "dl-overview-example.html",
-      "dl-overview-example.css"
+      "dl-overview-example.ts"
     ],
     "selector": "dl-overview-example",
     "additionalComponents": [],
@@ -1047,12 +1039,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-small": {
     "packagePath": "components/dl/dl-small",
-    "title": "Description List (small)",
+    "title": "Description list small",
     "componentName": "DlSmallExample",
     "files": [
-      "dl-small-example.ts",
-      "dl-small-example.html",
-      "dl-small-example.css"
+      "dl-small-example.ts"
     ],
     "selector": "dl-small-example",
     "additionalComponents": [],
@@ -1065,12 +1055,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dl-vertical-overview": {
     "packagePath": "components/dl/dl-vertical-overview",
-    "title": "Description List",
+    "title": "Description list vertical",
     "componentName": "DlVerticalOverviewExample",
     "files": [
-      "dl-vertical-overview-example.ts",
-      "dl-vertical-overview-example.html",
-      "dl-vertical-overview-example.css"
+      "dl-vertical-overview-example.ts"
     ],
     "selector": "dl-vertical-overview-example",
     "additionalComponents": [],
@@ -1083,12 +1071,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dropdown-navigation-wrap": {
     "packagePath": "components/dropdown/dropdown-navigation-wrap",
-    "title": "Basic dropdown",
+    "title": "Dropdown navigation wrap",
     "componentName": "DropdownNavigationWrapExample",
     "files": [
       "dropdown-navigation-wrap-example.ts",
-      "dropdown-navigation-wrap-example.html",
-      "dropdown-navigation-wrap-example.css"
+      "dropdown-navigation-wrap-example.html"
     ],
     "selector": "dropdown-navigation-wrap-example",
     "additionalComponents": [],
@@ -1101,12 +1088,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dropdown-nested": {
     "packagePath": "components/dropdown/dropdown-nested",
-    "title": "Nested dropdown",
+    "title": "Dropdown nested",
     "componentName": "DropdownNestedExample",
     "files": [
       "dropdown-nested-example.ts",
-      "dropdown-nested-example.html",
-      "dropdown-nested-example.css"
+      "dropdown-nested-example.html"
     ],
     "selector": "dropdown-nested-example",
     "additionalComponents": [],
@@ -1119,12 +1105,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "dropdown-overview": {
     "packagePath": "components/dropdown/dropdown-overview",
-    "title": "Basic dropdown",
+    "title": "Dropdown",
     "componentName": "DropdownOverviewExample",
     "files": [
       "dropdown-overview-example.ts",
-      "dropdown-overview-example.html",
-      "dropdown-overview-example.css"
+      "dropdown-overview-example.html"
     ],
     "selector": "dropdown-overview-example",
     "additionalComponents": [],
