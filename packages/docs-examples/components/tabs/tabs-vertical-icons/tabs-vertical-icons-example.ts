@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -12,7 +12,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     styleUrl: 'tabs-vertical-icons-example.css',
     imports: [
         KbqTabsModule,
-        KbqIcon
+        KbqIconModule
     ],
     encapsulation: ViewEncapsulation.None,
     template: `

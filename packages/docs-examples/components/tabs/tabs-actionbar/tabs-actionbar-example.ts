@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -13,7 +13,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     imports: [
         KbqTabsModule,
         KbqButtonModule,
-        KbqIcon
+        KbqIconModule
     ],
     encapsulation: ViewEncapsulation.None,
     template: `

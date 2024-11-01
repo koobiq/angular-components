@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -10,7 +10,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     selector: 'tab-active-tab-example',
     imports: [
         KbqTabsModule,
-        KbqIcon
+        KbqIconModule
     ],
     template: `
         <kbq-tab-group [(activeTab)]="selectedTabId">
