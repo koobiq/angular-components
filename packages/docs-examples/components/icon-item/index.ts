@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { IconItemColorExample } from './icon-item-color/icon-item-color-example';
 import { IconItemDefaultExample } from './icon-item-default/icon-item-default-example';
 import { IconItemSizeExample } from './icon-item-size/icon-item-size-example';
@@ -15,10 +14,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqIconModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class AlertExamplesModule {}
