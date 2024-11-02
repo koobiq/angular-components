@@ -1,13 +1,23 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
- * @title Pseudo link
+ * @title Link disabled
  */
 @Component({
+    standalone: true,
     selector: 'link-disabled-example',
-    templateUrl: 'link-disabled-example.html',
-    styleUrls: ['link-disabled-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqLinkModule],
+    template: `
+        <div style="padding: 16px">
+            <span
+                [disabled]="disabled"
+                kbq-link
+            >
+                Отчет от 15.05.2020
+            </span>
+        </div>
+    `
 })
 export class LinkDisabledExample {
     disabled = true;

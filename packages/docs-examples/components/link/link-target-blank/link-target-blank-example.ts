@@ -1,12 +1,25 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
- * @title Basic link
+ * @title Link target blank
  */
 @Component({
+    standalone: true,
     selector: 'link-target-blank-example',
-    templateUrl: 'link-target-blank-example.html',
-    styleUrls: ['link-target-blank-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqLinkModule, KbqIconModule],
+    template: `
+        <div style="padding: 16px">
+            <a
+                href="/components/link/overview"
+                kbq-link
+                target="_blank"
+            >
+                <span class="kbq-link__text">Отчет сканирования</span>
+                <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+            </a>
+        </div>
+    `
 })
 export class LinkTargetBlankExample {}

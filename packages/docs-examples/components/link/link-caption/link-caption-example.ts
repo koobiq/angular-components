@@ -1,11 +1,25 @@
 import { Component } from '@angular/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
- * @title link caption
+ * @title Link caption
  */
 @Component({
+    standalone: true,
     selector: 'link-caption-example',
-    templateUrl: 'link-caption-example.html',
-    styleUrls: ['link-caption-example.css']
+    imports: [
+        KbqLinkModule
+    ],
+    template: `
+        <div style="padding: 16px">
+            <a
+                compact
+                href="/components/link/overview"
+                kbq-link
+            >
+                Отчет сканирования
+            </a>
+        </div>
+    `
 })
 export class LinkCaptionExample {}

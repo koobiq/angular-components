@@ -1881,12 +1881,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-application": {
     "packagePath": "components/link/link-application",
-    "title": "Basic link",
+    "title": "Link application",
     "componentName": "LinkApplicationExample",
     "files": [
-      "link-application-example.ts",
-      "link-application-example.html",
-      "link-application-example.css"
+      "link-application-example.ts"
     ],
     "selector": "link-application-example",
     "additionalComponents": [],
@@ -1899,12 +1897,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-caption": {
     "packagePath": "components/link/link-caption",
-    "title": "link caption",
+    "title": "Link caption",
     "componentName": "LinkCaptionExample",
     "files": [
-      "link-caption-example.ts",
-      "link-caption-example.html",
-      "link-caption-example.css"
+      "link-caption-example.ts"
     ],
     "selector": "link-caption-example",
     "additionalComponents": [],
@@ -1917,12 +1913,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-color": {
     "packagePath": "components/link/link-color",
-    "title": "Basic link",
+    "title": "Link color",
     "componentName": "LinkColorExample",
     "files": [
-      "link-color-example.ts",
-      "link-color-example.html",
-      "link-color-example.css"
+      "link-color-example.ts"
     ],
     "selector": "link-color-example",
     "additionalComponents": [],
@@ -1935,12 +1929,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-disabled": {
     "packagePath": "components/link/link-disabled",
-    "title": "Pseudo link",
+    "title": "Link disabled",
     "componentName": "LinkDisabledExample",
     "files": [
-      "link-disabled-example.ts",
-      "link-disabled-example.html",
-      "link-disabled-example.css"
+      "link-disabled-example.ts"
     ],
     "selector": "link-disabled-example",
     "additionalComponents": [],
@@ -1953,12 +1945,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-external": {
     "packagePath": "components/link/link-external",
-    "title": "Basic link",
+    "title": "Link external",
     "componentName": "LinkExternalExample",
     "files": [
-      "link-external-example.ts",
-      "link-external-example.html",
-      "link-external-example.css"
+      "link-external-example.ts"
     ],
     "selector": "link-external-example",
     "additionalComponents": [],
@@ -1971,12 +1961,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-general": {
     "packagePath": "components/link/link-general",
-    "title": "Basic link",
+    "title": "Link general",
     "componentName": "LinkGeneralExample",
     "files": [
-      "link-general-example.ts",
-      "link-general-example.html",
-      "link-general-example.css"
+      "link-general-example.ts"
     ],
     "selector": "link-general-example",
     "additionalComponents": [],
@@ -1989,12 +1977,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-icons": {
     "packagePath": "components/link/link-icons",
-    "title": "Basic link",
+    "title": "Link icons",
     "componentName": "LinkIconsExample",
     "files": [
-      "link-icons-example.ts",
-      "link-icons-example.html",
-      "link-icons-example.css"
+      "link-icons-example.ts"
     ],
     "selector": "link-icons-example",
     "additionalComponents": [],
@@ -2007,12 +1993,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-multi-line": {
     "packagePath": "components/link/link-multi-line",
-    "title": "Basic link",
+    "title": "Link multi-line",
     "componentName": "LinkMultiLineExample",
     "files": [
-      "link-multi-line-example.ts",
-      "link-multi-line-example.html",
-      "link-multi-line-example.css"
+      "link-multi-line-example.ts"
     ],
     "selector": "link-multi-line-example",
     "additionalComponents": [],
@@ -2025,12 +2009,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-overview": {
     "packagePath": "components/link/link-overview",
-    "title": "Basic link",
+    "title": "Link",
     "componentName": "LinkOverviewExample",
     "files": [
-      "link-overview-example.ts",
-      "link-overview-example.html",
-      "link-overview-example.css"
+      "link-overview-example.ts"
     ],
     "selector": "link-overview-example",
     "additionalComponents": [],
@@ -2043,12 +2025,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-prepositions": {
     "packagePath": "components/link/link-prepositions",
-    "title": "Basic link",
+    "title": "Link preposition",
     "componentName": "LinkPrepositionsExample",
     "files": [
-      "link-prepositions-example.ts",
-      "link-prepositions-example.html",
-      "link-prepositions-example.css"
+      "link-prepositions-example.ts"
     ],
     "selector": "link-prepositions-example",
     "additionalComponents": [],
@@ -2061,12 +2041,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-print": {
     "packagePath": "components/link/link-print",
-    "title": "Basic link",
+    "title": "Link print",
     "componentName": "LinkPrintExample",
     "files": [
-      "link-print-example.ts",
-      "link-print-example.html",
-      "link-print-example.css"
+      "link-print-example.ts"
     ],
     "selector": "link-print-example",
     "additionalComponents": [],
@@ -2079,12 +2057,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-pseudo": {
     "packagePath": "components/link/link-pseudo",
-    "title": "Pseudo link",
+    "title": "Link pseudo",
     "componentName": "LinkPseudoExample",
     "files": [
-      "link-pseudo-example.ts",
-      "link-pseudo-example.html",
-      "link-pseudo-example.css"
+      "link-pseudo-example.ts"
     ],
     "selector": "link-pseudo-example",
     "additionalComponents": [],
@@ -2097,12 +2073,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-target-blank": {
     "packagePath": "components/link/link-target-blank",
-    "title": "Basic link",
+    "title": "Link target blank",
     "componentName": "LinkTargetBlankExample",
     "files": [
-      "link-target-blank-example.ts",
-      "link-target-blank-example.html",
-      "link-target-blank-example.css"
+      "link-target-blank-example.ts"
     ],
     "selector": "link-target-blank-example",
     "additionalComponents": [],
@@ -2115,12 +2089,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "link-visited": {
     "packagePath": "components/link/link-visited",
-    "title": "Pseudo link",
+    "title": "Link visited",
     "componentName": "LinkVisitedExample",
     "files": [
-      "link-visited-example.ts",
-      "link-visited-example.html",
-      "link-visited-example.css"
+      "link-visited-example.ts"
     ],
     "selector": "link-visited-example",
     "additionalComponents": [],

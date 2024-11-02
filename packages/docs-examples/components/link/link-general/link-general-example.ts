@@ -1,12 +1,22 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
- * @title Basic link
+ * @title Link general
  */
 @Component({
+    standalone: true,
     selector: 'link-general-example',
-    templateUrl: 'link-general-example.html',
-    styleUrls: ['link-general-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqLinkModule],
+    template: `
+        <div style="padding: 16px">
+            <a
+                href="/components/link/overview"
+                kbq-link
+            >
+                Отчет сканирования
+            </a>
+        </div>
+    `
 })
 export class LinkGeneralExample {}

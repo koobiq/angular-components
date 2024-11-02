@@ -1,13 +1,26 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
- * @title Pseudo link
+ * @title Link visited
  */
 @Component({
+    standalone: true,
     selector: 'link-visited-example',
-    templateUrl: 'link-visited-example.html',
-    styleUrls: ['link-visited-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqLinkModule],
+    template: `
+        <div style="padding: 16px">
+            <a
+                [useVisited]="visited"
+                (click)="visited = true"
+                href="/components/link/overview"
+                kbq-link
+                target="_blank"
+            >
+                Отчет от 19.05.2020
+            </a>
+        </div>
+    `
 })
 export class LinkVisitedExample {
     visited = false;
