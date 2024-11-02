@@ -1,14 +1,51 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
- * @title Sizes Modal
+ * @title Modal sizes
  */
 @Component({
+    standalone: true,
     selector: 'modal-sizes-example',
-    templateUrl: 'modal-sizes-example.html',
-    styleUrls: ['modal-sizes-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqButtonModule],
+    template: `
+        <div
+            class="layout-column"
+            style="width: 200px"
+        >
+            <button
+                (click)="showSmallModal()"
+                style="margin-bottom: 16px"
+                kbq-button
+            >
+                Small
+            </button>
+
+            <button
+                (click)="showDefaultModal()"
+                style="margin-bottom: 16px"
+                kbq-button
+            >
+                Medium
+            </button>
+
+            <button
+                (click)="showLargeModal()"
+                style="margin-bottom: 16px"
+                kbq-button
+            >
+                Large
+            </button>
+
+            <button
+                (click)="showCustomModal()"
+                kbq-button
+            >
+                Custom width
+            </button>
+        </div>
+    `
 })
 export class ModalSizesExample {
     constructor(private modalService: KbqModalService) {}

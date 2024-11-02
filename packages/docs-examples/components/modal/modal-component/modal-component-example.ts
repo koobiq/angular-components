@@ -1,14 +1,22 @@
-import { Component, Input, ViewEncapsulation } from '@angular/core';
-import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { Component, Input } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
 /**
- * @title Component Modal
+ * @title Modal component
  */
 @Component({
+    standalone: true,
     selector: 'modal-component-example',
-    templateUrl: 'modal-component-example.html',
-    styleUrls: ['modal-component-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqButtonModule],
+    template: `
+        <button
+            (click)="openModal()"
+            kbq-button
+        >
+            Open Modal
+        </button>
+    `
 })
 export class ModalComponentExample {
     modalRef: KbqModalRef<KbqModalCustomComponent, 'save' | 'close'>;
@@ -35,7 +43,12 @@ export class ModalComponentExample {
 }
 
 @Component({
+    standalone: true,
     selector: 'kbq-modal-full-custom-component',
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
         <kbq-modal-title>Modal Title</kbq-modal-title>
 

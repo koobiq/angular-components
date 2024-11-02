@@ -2491,12 +2491,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-component": {
     "packagePath": "components/modal/modal-component",
-    "title": "Component Modal",
+    "title": "Modal component",
     "componentName": "ModalComponentExample",
     "files": [
-      "modal-component-example.ts",
-      "modal-component-example.html",
-      "modal-component-example.css"
+      "modal-component-example.ts"
     ],
     "selector": "modal-component-example",
     "additionalComponents": [
@@ -2511,12 +2509,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-multiple": {
     "packagePath": "components/modal/modal-multiple",
-    "title": "Multiple Modal",
+    "title": "Modal multiple",
     "componentName": "ModalMultipleExample",
     "files": [
-      "modal-multiple-example.ts",
-      "modal-multiple-example.html",
-      "modal-multiple-example.css"
+      "modal-multiple-example.ts"
     ],
     "selector": "modal-multiple-example",
     "additionalComponents": [],
@@ -2529,12 +2525,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-overview": {
     "packagePath": "components/modal/modal-overview",
-    "title": "Basic Modal",
+    "title": "Modal",
     "componentName": "ModalOverviewExample",
     "files": [
-      "modal-overview-example.ts",
-      "modal-overview-example.html",
-      "modal-overview-example.css"
+      "modal-overview-example.ts"
     ],
     "selector": "modal-overview-example",
     "additionalComponents": [],
@@ -2547,11 +2541,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-scroll": {
     "packagePath": "components/modal/modal-scroll",
-    "title": "Component Modal Scroll",
+    "title": "Modal scroll",
     "componentName": "ModalScrollExample",
     "files": [
-      "modal-scroll-example.ts",
-      "modal-scroll-example.css"
+      "modal-scroll-example.ts"
     ],
     "selector": "modal-scroll-example",
     "additionalComponents": [
@@ -2566,12 +2559,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-sizes": {
     "packagePath": "components/modal/modal-sizes",
-    "title": "Sizes Modal",
+    "title": "Modal sizes",
     "componentName": "ModalSizesExample",
     "files": [
-      "modal-sizes-example.ts",
-      "modal-sizes-example.html",
-      "modal-sizes-example.css"
+      "modal-sizes-example.ts"
     ],
     "selector": "modal-sizes-example",
     "additionalComponents": [],
@@ -2584,12 +2575,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-template": {
     "packagePath": "components/modal/modal-template",
-    "title": "Template Modal",
+    "title": "Modal template",
     "componentName": "ModalTemplateExample",
     "files": [
-      "modal-template-example.ts",
-      "modal-template-example.html",
-      "modal-template-example.css"
+      "modal-template-example.ts"
     ],
     "selector": "modal-template-example",
     "additionalComponents": [],

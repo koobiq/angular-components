@@ -1,14 +1,22 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
- * @title Multiple Modal
+ * @title Modal multiple
  */
 @Component({
+    standalone: true,
     selector: 'modal-multiple-example',
-    templateUrl: 'modal-multiple-example.html',
-    styleUrls: ['modal-multiple-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqButtonModule],
+    template: `
+        <button
+            (click)="showConfirmModal()"
+            kbq-button
+        >
+            Open two modals
+        </button>
+    `
 })
 export class ModalMultipleExample {
     // use modalService to prevent multiple overlaid masks
