@@ -37,7 +37,8 @@ const config = {
                 'typography',
 
                 // others
-                'security'
+                'security',
+                'visual'
             ]
 
         ]
