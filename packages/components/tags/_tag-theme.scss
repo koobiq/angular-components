@@ -55,10 +55,10 @@
 
 @mixin kbq-tag-typography() {
     .kbq-tag {
-        @include kbq-typography-css-variables(tag, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
     }
 
     .kbq-tag-input {
-        @include kbq-typography-css-variables(tag-input, default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 }

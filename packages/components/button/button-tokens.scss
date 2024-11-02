@@ -11,13 +11,6 @@
     --kbq-button-size-border-radius: var(--kbq-size-s);
     --kbq-button-size-horizontal-padding: var(--kbq-size-m);
     --kbq-button-size-content-padding: var(--kbq-size-xs);
-    --kbq-button-font-default-font-size: var(--kbq-typography-text-normal-medium-font-size);
-    --kbq-button-font-default-line-height: var(--kbq-typography-text-normal-medium-line-height);
-    --kbq-button-font-default-letter-spacing: var(--kbq-typography-text-normal-medium-letter-spacing);
-    --kbq-button-font-default-font-weight: var(--kbq-typography-text-normal-medium-font-weight);
-    --kbq-button-font-default-font-family: var(--kbq-typography-text-normal-medium-font-family);
-    --kbq-button-font-default-text-transform: var(--kbq-typography-text-normal-medium-text-transform);
-    --kbq-button-font-default-font-feature-settings: var(--kbq-typography-text-normal-medium-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

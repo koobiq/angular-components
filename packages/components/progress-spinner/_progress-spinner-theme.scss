@@ -18,10 +18,10 @@
 
 @mixin kbq-progress-spinner-typography() {
     .kbq-progress-spinner-text {
-        @include kbq-typography-css-variables(progress-spinner, label);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-progress-spinner-caption {
-        @include kbq-typography-css-variables(progress-spinner, caption);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 }

@@ -1,13 +1,6 @@
 .kbq-tree-select {
     --kbq-select-panel-size-border-radius: var(--kbq-size-s);
     --kbq-select-panel-size-max-height: 256px;
-    --kbq-select-panel-font-default-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-select-panel-font-default-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-select-panel-font-default-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-select-panel-font-default-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-select-panel-font-default-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-select-panel-font-default-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-select-panel-font-default-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

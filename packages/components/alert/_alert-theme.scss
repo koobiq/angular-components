@@ -1,7 +1,3 @@
-@use 'sass:meta';
-@use 'sass:map';
-
-@use '../core/styles/typography/typography-utils' as *;
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-alert-style($type, $style-name) {
@@ -68,14 +64,14 @@
 
 @mixin kbq-alert-typography() {
     .kbq-alert {
-        @include kbq-typography-css-variables(alert, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
 
         .kbq-alert__title {
-            @include kbq-typography-css-variables(alert, title);
+            @include kbq-typography-level-to-styles_css-variables(typography, subheading);
         }
 
         &.kbq-alert_compact .kbq-alert__title {
-            @include kbq-typography-css-variables(alert, title-compact);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-big-strong);
         }
     }
 }

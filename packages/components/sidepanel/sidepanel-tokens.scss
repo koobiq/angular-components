@@ -12,20 +12,6 @@
     --kbq-sidepanel-size-footer-padding-bottom: var(--kbq-size-3xl);
     --kbq-sidepanel-size-footer-padding-horizontal: var(--kbq-size-3xl);
     --kbq-sidepanel-size-footer-content-gap-horizontal: var(--kbq-size-l);
-    --kbq-sidepanel-font-header-font-size: var(--kbq-typography-title-font-size);
-    --kbq-sidepanel-font-header-line-height: var(--kbq-typography-title-line-height);
-    --kbq-sidepanel-font-header-letter-spacing: var(--kbq-typography-title-letter-spacing);
-    --kbq-sidepanel-font-header-font-weight: var(--kbq-typography-title-font-weight);
-    --kbq-sidepanel-font-header-font-family: var(--kbq-typography-title-font-family);
-    --kbq-sidepanel-font-header-text-transform: var(--kbq-typography-title-text-transform);
-    --kbq-sidepanel-font-header-font-feature-settings: var(--kbq-typography-title-font-feature-settings);
-    --kbq-sidepanel-font-content-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-sidepanel-font-content-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-sidepanel-font-content-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-sidepanel-font-content-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-sidepanel-font-content-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-sidepanel-font-content-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-sidepanel-font-content-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

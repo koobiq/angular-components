@@ -3,13 +3,6 @@
     --kbq-risk-level-size-padding-horizontal: var(--kbq-size-s);
     --kbq-risk-level-size-border-width: var(--kbq-size-border-width);
     --kbq-risk-level-size-border-radius: var(--kbq-size-xxs);
-    --kbq-risk-level-font-text-font-size: var(--kbq-typography-subheading-font-size);
-    --kbq-risk-level-font-text-line-height: var(--kbq-typography-subheading-line-height);
-    --kbq-risk-level-font-text-letter-spacing: var(--kbq-typography-subheading-letter-spacing);
-    --kbq-risk-level-font-text-font-weight: var(--kbq-typography-subheading-font-weight);
-    --kbq-risk-level-font-text-font-family: var(--kbq-typography-subheading-font-family);
-    --kbq-risk-level-font-text-text-transform: var(--kbq-typography-subheading-text-transform);
-    --kbq-risk-level-font-text-font-feature-settings: var(--kbq-typography-subheading-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

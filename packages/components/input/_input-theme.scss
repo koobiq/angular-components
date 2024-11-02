@@ -3,7 +3,7 @@
 @mixin kbq-input-typography() {
     .kbq-input,
     .kbq-input.kbq-input-password::placeholder {
-        @include kbq-typography-css-variables(input, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-input.kbq-input-password {

@@ -73,6 +73,6 @@
 
 @mixin kbq-risk-level-typography() {
     .kbq-risk-level {
-        @include kbq-typography-css-variables(risk-level, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, subheading);
     }
 }

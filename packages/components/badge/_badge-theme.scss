@@ -89,18 +89,18 @@
 
 @mixin kbq-badge-typography() {
     .kbq-badge {
-        @include kbq-typography-css-variables(badge, normal-default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
 
         & .kbq-badge-caption {
-            @include kbq-typography-css-variables(badge, normal-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
         }
     }
 
     .kbq-badge_compact {
-        @include kbq-typography-css-variables(badge, compact-default);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact-medium);
 
         & .kbq-badge-caption {
-            @include kbq-typography-css-variables(badge, compact-caption);
+            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
         }
     }
 }

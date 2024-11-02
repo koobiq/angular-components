@@ -45,10 +45,10 @@
 
 @mixin kbq-option-typography() {
     .kbq-option {
-        @include kbq-typography-css-variables(list, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-list-option-caption {
-        @include kbq-typography-css-variables(list, caption);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 }

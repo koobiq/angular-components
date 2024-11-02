@@ -21,18 +21,18 @@
 
 @mixin kbq-timezone-option-typography() {
     .kbq-timezone-option__offset {
-        @include kbq-typography-css-variables(timezone-option, offset-text);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-normal);
     }
 
     .kbq-timezone-option__city {
-        @include kbq-typography-css-variables(timezone-option, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, tabular-normal);
     }
 
     .kbq-timezone-option__cities {
-        @include kbq-typography-css-variables(timezone-option, caption);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 
     .kbq-timezone-select__panel.kbq-select__panel .kbq-optgroup-label {
-        @include kbq-typography-css-variables(timezone-option, optgroup-label);
+        @include kbq-typography-level-to-styles_css-variables(typography, caps-compact-strong);
     }
 }

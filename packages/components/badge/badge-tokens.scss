@@ -22,38 +22,6 @@
     --kbq-badge-size-compact-content-padding: var(--kbq-size-3xs);
     --kbq-badge-size-compact-border-width: var(--kbq-size-border-width);
     --kbq-badge-size-compact-border-radius: var(--kbq-size-xxs);
-    --kbq-badge-font-normal-default-font-size: var(--kbq-typography-text-normal-medium-font-size);
-    --kbq-badge-font-normal-default-line-height: var(--kbq-typography-text-normal-medium-line-height);
-    --kbq-badge-font-normal-default-letter-spacing: var(--kbq-typography-text-normal-medium-letter-spacing);
-    --kbq-badge-font-normal-default-font-weight: var(--kbq-typography-text-normal-medium-font-weight);
-    --kbq-badge-font-normal-default-font-family: var(--kbq-typography-text-normal-medium-font-family);
-    --kbq-badge-font-normal-default-text-transform: var(--kbq-typography-text-normal-medium-text-transform);
-    --kbq-badge-font-normal-default-font-feature-settings: var(
-        --kbq-typography-text-normal-medium-font-feature-settings
-    );
-    --kbq-badge-font-normal-caption-font-size: var(--kbq-typography-text-normal-font-size);
-    --kbq-badge-font-normal-caption-line-height: var(--kbq-typography-text-normal-line-height);
-    --kbq-badge-font-normal-caption-letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
-    --kbq-badge-font-normal-caption-font-weight: var(--kbq-typography-text-normal-font-weight);
-    --kbq-badge-font-normal-caption-font-family: var(--kbq-typography-text-normal-font-family);
-    --kbq-badge-font-normal-caption-text-transform: var(--kbq-typography-text-normal-text-transform);
-    --kbq-badge-font-normal-caption-font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    --kbq-badge-font-compact-default-font-size: var(--kbq-typography-text-compact-medium-font-size);
-    --kbq-badge-font-compact-default-line-height: var(--kbq-typography-text-compact-medium-line-height);
-    --kbq-badge-font-compact-default-letter-spacing: var(--kbq-typography-text-compact-medium-letter-spacing);
-    --kbq-badge-font-compact-default-font-weight: var(--kbq-typography-text-compact-medium-font-weight);
-    --kbq-badge-font-compact-default-font-family: var(--kbq-typography-text-compact-medium-font-family);
-    --kbq-badge-font-compact-default-text-transform: var(--kbq-typography-text-compact-medium-text-transform);
-    --kbq-badge-font-compact-default-font-feature-settings: var(
-        --kbq-typography-text-compact-medium-font-feature-settings
-    );
-    --kbq-badge-font-compact-caption-font-size: var(--kbq-typography-text-compact-font-size);
-    --kbq-badge-font-compact-caption-line-height: var(--kbq-typography-text-compact-line-height);
-    --kbq-badge-font-compact-caption-letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
-    --kbq-badge-font-compact-caption-font-weight: var(--kbq-typography-text-compact-font-weight);
-    --kbq-badge-font-compact-caption-font-family: var(--kbq-typography-text-compact-font-family);
-    --kbq-badge-font-compact-caption-text-transform: var(--kbq-typography-text-compact-text-transform);
-    --kbq-badge-font-compact-caption-font-feature-settings: var(--kbq-typography-text-compact-font-feature-settings);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

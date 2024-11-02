@@ -81,10 +81,10 @@
 
 @mixin kbq-form-field-typography() {
     .kbq-form-field {
-        @include kbq-typography-css-variables(form-field, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
     }
 
     .kbq-form-field__hint > .kbq-hint:not(.kbq-password-hint) .kbq-hint__text {
-        @include kbq-typography-css-variables(form-field-hint, text);
+        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
     }
 }
