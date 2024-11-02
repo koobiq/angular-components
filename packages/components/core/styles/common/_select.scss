@@ -146,7 +146,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     overflow: hidden;
 
-    border-radius: var(--kbq-size-s);
+    border-radius: var(--kbq-select-panel-size-border-radius);
 
     // Override optgroup and option to scale based on font-size of the trigger.
     .kbq-optgroup-label,
@@ -183,7 +183,7 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 %kbq-select-content {
-    max-height: var(--kbq-select-panel-size-max-height, 256px);
+    max-height: var(--kbq-select-panel-size-max-height);
     padding: 4px 0;
     overflow: hidden auto;
 }
