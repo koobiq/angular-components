@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 
 const codeJs2 = `function askPassword(ok, fail) {
     if (password == "rockstar") ok();
@@ -45,7 +45,7 @@ askPassword(user.loginOk, user.loginFail);`;
     `
 })
 export class CodeBlockCutExample {
-    files: KbqCodeFile[];
+    files: KbqCodeBlockFile[];
     maxHeight = 200;
 
     constructor() {

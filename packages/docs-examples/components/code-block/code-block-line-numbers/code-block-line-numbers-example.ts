@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
@@ -33,7 +33,7 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
     `
 })
 export class CodeBlockLineNumbersExample {
-    files: KbqCodeFile[];
+    files: KbqCodeBlockFile[];
     lineNumbers = true;
 
     constructor() {

@@ -1,18 +1,29 @@
-<div class="kbq-text-big">
-    <kbq-code-block [codeFiles]="files" [lineNumbers]="true" [maxHeight]="200" />
+<!-- <kbq-code-block
+    activeFile="1"
+    lineNumbers="false"
+    maxHeight="200"
+    [files]="files1"
+/>
 
-    <br />
-    <br />
+<br /> -->
+<h3>filled, height=200</h3>
+<kbq-code-block activeFileIndex="1" canDownload filled height="200" maxHeight="150" [files]="files1" />
 
-    <kbq-code-block [codeFiles]="files" [filled]="true" [lineNumbers]="true" />
+<h3>noFilled, height=200</h3>
+<kbq-code-block maxHeight="150" [files]="files1" />
 
-    <br />
-    <br />
+<h3>single file</h3>
+<kbq-code-block [files]="files2" />
+<!-- <br />
 
-    <kbq-code-block [codeFiles]="files4" [lineNumbers]="true" [maxHeight]="200" />
+<kbq-code-block
+    [files]="files2"
+    [maxHeight]="200"
+/>
 
-    <br />
-    <br />
+<br />
 
-    <kbq-code-block [codeFiles]="files4" [filled]="true" [lineNumbers]="true" [maxHeight]="200" />
-</div>
+<kbq-code-block
+    [files]="files2"
+    [maxHeight]="200"
+/> -->

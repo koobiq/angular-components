@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 const codeTs = `class Greeter {
@@ -43,7 +43,7 @@ const codeTs = `class Greeter {
     `
 })
 export class CodeBlockStretchExample {
-    files: KbqCodeFile[];
+    files: KbqCodeBlockFile[];
     maxHeight = 185;
     isFixedHeight = true;
 

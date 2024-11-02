@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { codeHTML, codeXML } from '../../components-dev/code-block/code-files-example';
-import { KbqCodeBlockComponent } from './code-block.component';
+import { KbqCodeBlock } from './code-block';
 import { KbqCodeBlockModule } from './code-block.module';
 
 describe('CodeBlockComponent', () => {
@@ -49,7 +49,7 @@ describe('CodeBlockComponent', () => {
     });
 
     it('should invoke handler methods after click on buttons in action bar', fakeAsync(() => {
-        const codeButtons = fixture.debugElement.queryAll(By.css('.kbq-code-block-actionbar .kbq-button-icon'));
+        const codeButtons = fixture.debugElement.queryAll(By.css('.kbq-code-block__actionbar .kbq-button-icon'));
         const downloadCodeSpyFn = jest.spyOn(component.codeBlock, 'downloadCode');
         const copyCodeSpyFn = jest.spyOn(component.codeBlock, 'copyCode');
         const openExternalSystemSpyFn = jest.spyOn(component.codeBlock, 'openExternalSystem');
@@ -73,7 +73,7 @@ describe('CodeBlockComponent', () => {
     `
 })
 class KbqCodeBlockDefault {
-    @ViewChild(KbqCodeBlockComponent) codeBlock: KbqCodeBlockComponent;
+    @ViewChild(KbqCodeBlock) codeBlock: KbqCodeBlock;
 
     codeFiles = [
         {

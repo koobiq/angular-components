@@ -1,3 +1,5 @@
+import { KbqCodeBlockLocaleConfiguration } from './types';
+
 export const faIRLocaleData = {
     select: { hiddenItemsText: '{{ number }} بیشتر' },
     datepicker: {
@@ -35,7 +37,7 @@ export const faIRLocaleData = {
         viewAllText: 'نمایش همه',
         viewLessText: 'نمایش کمتر',
         openExternalSystemTooltip: 'باز کردن در سیستم خارجی'
-    },
+    } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: ' شهر یا منطقه زمانی '
     }

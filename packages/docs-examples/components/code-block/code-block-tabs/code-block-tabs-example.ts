@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 
 const codeTs = `class Greeter {
   @format("Hello, %s")
@@ -59,7 +59,7 @@ body {
     `
 })
 export class CodeBlockTabsExample {
-    files: KbqCodeFile[];
+    files: KbqCodeBlockFile[];
 
     constructor() {
         this.files = [

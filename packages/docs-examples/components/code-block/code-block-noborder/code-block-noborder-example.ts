@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { take } from 'rxjs/operators';
 
@@ -230,7 +230,7 @@ export class CodeBlockNoborderExample {
 
     isOpened = false;
     position = KbqSidepanelPosition.Right;
-    files: KbqCodeFile[];
+    files: KbqCodeBlockFile[];
 
     constructor(private sidepanelService: KbqSidepanelService) {
         this.files = [

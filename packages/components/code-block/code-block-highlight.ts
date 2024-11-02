@@ -10,18 +10,20 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import hljs from 'highlight.js';
-import { KbqCodeBlockFile } from './code-block.types';
+import { KbqCodeBlockFile } from './types';
 
+/** Default value to use when no `KbqCodeBlockFile.language` is specified or invalid. */
 const KBQ_CODE_BLOCK_FALLBACK_LANGUAGE = 'plaintext';
 
+/** Directive which applies syntax highlighting to the code block content. */
 @Directive({
     standalone: true,
-    selector: '[kbqCodeBlockContent]',
+    selector: 'code[kbqCodeBlockHighlight]',
     host: {
         class: 'hljs'
     }
 })
-export class KbqCodeBlockContent {
+export class KbqCodeBlockHighlight {
     private readonly elementRef = inject(ElementRef);
     private readonly renderer = inject(Renderer2);
     private readonly domSanitizer = inject(DomSanitizer);
@@ -55,6 +57,9 @@ export class KbqCodeBlockContent {
 
     /**
      * @TODO Add SSR support (#DS-3173)
+     *
+     * Initialize the HighlightJS line numbers plugin. This method is called once when
+     * the component is constructed.
      */
     private initLineNumbersPlugin(): void {
         window['hljs'] = hljs;

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 const codeTs = `class Greeter {
@@ -66,7 +66,7 @@ body {
     `
 })
 export class CodeBlockStylingExample {
-    files: KbqCodeFile[];
+    files: KbqCodeBlockFile[];
     lessContrast = false;
 
     constructor() {
