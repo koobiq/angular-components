@@ -2091,10 +2091,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "list-action-button": {
     "packagePath": "components/list/list-action-button",
-    "title": "list ActionButton",
+    "title": "List action button",
     "componentName": "ListActionButtonExample",
     "files": [
-      "list-action-button-example.ts",
+      "list-action-button-example.ts"
     ],
     "selector": "list-action-button-example",
     "additionalComponents": [],
@@ -2107,10 +2107,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "list-groups": {
     "packagePath": "components/list/list-groups",
-    "title": "Basic list",
+    "title": "List groups",
     "componentName": "ListGroupsExample",
     "files": [
-      "list-groups-example.ts",
+      "list-groups-example.ts"
     ],
     "selector": "list-groups-example",
     "additionalComponents": [],
@@ -2123,10 +2123,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "list-multiple-checkbox": {
     "packagePath": "components/list/list-multiple-checkbox",
-    "title": "Basic list",
+    "title": "List multiple checkbox",
     "componentName": "ListMultipleCheckboxExample",
     "files": [
-      "list-multiple-checkbox-example.ts",
+      "list-multiple-checkbox-example.ts"
     ],
     "selector": "list-multiple-checkbox-example",
     "additionalComponents": [],
@@ -2139,10 +2139,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "list-multiple-keyboard": {
     "packagePath": "components/list/list-multiple-keyboard",
-    "title": "Basic list",
+    "title": "List multiple keyboard",
     "componentName": "ListMultipleKeyboardExample",
     "files": [
-      "list-multiple-keyboard-example.ts",
+      "list-multiple-keyboard-example.ts"
     ],
     "selector": "list-multiple-keyboard-example",
     "additionalComponents": [],
@@ -2155,10 +2155,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "list-overview": {
     "packagePath": "components/list/list-overview",
-    "title": "Basic list",
+    "title": "List",
     "componentName": "ListOverviewExample",
     "files": [
-      "list-overview-example.ts",
+      "list-overview-example.ts"
     ],
     "selector": "list-overview-example",
     "additionalComponents": [],
@@ -2171,12 +2171,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "loader-overlay-default": {
     "packagePath": "components/loader-overlay/loader-overlay-default",
-    "title": "Loader overlay (default)",
+    "title": "Loader-overlay default",
     "componentName": "LoaderOverlayDefaultExample",
     "files": [
-      "loader-overlay-default-example.ts",
-      "loader-overlay-default-example.html",
-      "loader-overlay-default-example.css"
+      "loader-overlay-default-example.ts"
     ],
     "selector": "loader-overlay-default-example",
     "additionalComponents": [],
@@ -2189,12 +2187,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "loader-overlay-fixed-top": {
     "packagePath": "components/loader-overlay/loader-overlay-fixed-top",
-    "title": "Loader overlay (fixed-top)",
+    "title": "Loader-overlay fixed-top",
     "componentName": "LoaderOverlayFixedTopExample",
     "files": [
-      "loader-overlay-fixed-top-example.ts",
-      "loader-overlay-fixed-top-example.html",
-      "loader-overlay-fixed-top-example.css"
+      "loader-overlay-fixed-top-example.ts"
     ],
     "selector": "loader-overlay-fixed-top-example",
     "additionalComponents": [],
@@ -2207,12 +2203,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "loader-overlay-large": {
     "packagePath": "components/loader-overlay/loader-overlay-large",
-    "title": "Loader overlay (large)",
+    "title": "Loader-overlay large",
     "componentName": "LoaderOverlayLargeExample",
     "files": [
-      "loader-overlay-large-example.ts",
-      "loader-overlay-large-example.html",
-      "loader-overlay-large-example.css"
+      "loader-overlay-large-example.ts"
     ],
     "selector": "loader-overlay-large-example",
     "additionalComponents": [],
@@ -2225,12 +2219,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "loader-overlay-overview": {
     "packagePath": "components/loader-overlay/loader-overlay-overview",
-    "title": "Loader overlay",
+    "title": "Loader-overlay",
     "componentName": "LoaderOverlayOverviewExample",
     "files": [
-      "loader-overlay-overview-example.ts",
-      "loader-overlay-overview-example.html",
-      "loader-overlay-overview-example.css"
+      "loader-overlay-overview-example.ts"
     ],
     "selector": "loader-overlay-overview-example",
     "additionalComponents": [],
