@@ -34,7 +34,10 @@ const config = {
                 'formatter',
                 'layout',
                 'overlay',
-                'typography'
+                'typography',
+
+                // others
+                'security'
             ]
 
         ]
