@@ -43,7 +43,10 @@
     --kbq-markdown-code-size-border-width: var(--kbq-size-border-width);
     --kbq-markdown-link-size-icon-margin: var(--kbq-link-size-normal-content-padding, var(--kbq-size-xxs));
     --kbq-markdown-link-size-state-focused-outline-offset: var(--kbq-link-size-state-focused-outline-offset, 0);
-    --kbq-markdown-link-size-state-focused-outline-width: var(--kbq-link-size-state-focused-outline-width,  var(--kbq-size-3xs));
+    --kbq-markdown-link-size-state-focused-outline-width: var(
+        --kbq-link-size-state-focused-outline-width,
+        var(--kbq-size-3xs)
+    );
     --kbq-markdown-image-size-max-width: var(--kbq-markdown-size-max-width);
     --kbq-markdown-image-size-margin-top: var(--kbq-size-s);
     --kbq-markdown-image-size-margin-bottom: var(--kbq-size-s);

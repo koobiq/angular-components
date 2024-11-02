@@ -1,6 +1,6 @@
 .kbq-navbar,
 .kbq-vertical-navbar {
-  --kbq-navbar-item-size-content-border-radius: var(--kbq-size-s);
+    --kbq-navbar-item-size-content-border-radius: var(--kbq-size-s);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
