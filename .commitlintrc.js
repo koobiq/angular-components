@@ -19,8 +19,24 @@ const config = {
             'always',
             [
                 ...makeScopeTypesByPath(resolve(__dirname, 'apps')),
-                ...makeScopeTypesByPath(resolve(__dirname, 'packages')),
-                ...makeScopeTypesByPath(resolve(__dirname, 'packages/components'))]
+                ...makeScopeTypesByPath(resolve(__dirname, 'packages/components')),
+
+                // packages
+                'angular-luxon-adapter',
+                'angular-moment-adapter',
+                'cdk',
+                'cli',
+                'experimental',
+                'schematics',
+
+                // core
+                'common',
+                'formatter',
+                'layout',
+                'overlay',
+                'typography'
+            ]
+
         ]
     }
 };
