@@ -480,139 +480,76 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
   },
-  "code-block-common": {
-    "packagePath": "components/code-block/code-block-common",
-    "title": "Code-block common",
-    "componentName": "CodeBlockCommonExample",
+  "code-block-with-filled": {
+    "packagePath": "components/code-block/code-block-with-filled",
+    "title": "Code-block with filled attribute",
+    "componentName": "CodeBlockWithFilledExample",
     "files": [
-      "code-block-common-example.ts"
+      "code-block-with-filled-example.ts"
     ],
-    "selector": "code-block-common-example",
+    "selector": "code-block-with-filled-example",
     "additionalComponents": [],
-    "primaryFile": "code-block-common-example.ts",
+    "primaryFile": "code-block-with-filled-example.ts",
     "importPath": "components/code-block"
   },
-  "code-block-cut": {
-    "packagePath": "components/code-block/code-block-cut",
-    "title": "Code-block cut",
-    "componentName": "CodeBlockCutExample",
+  "code-block-with-line-numbers": {
+    "packagePath": "components/code-block/code-block-with-line-numbers",
+    "title": "Code-block with lineNumbers attribute",
+    "componentName": "CodeBlockWithLineNumbersExample",
     "files": [
-      "code-block-cut-example.ts",
-      "code-block-cut-example.css"
+      "code-block-with-line-numbers-example.ts"
     ],
-    "selector": "code-block-cut-example",
+    "selector": "code-block-with-line-numbers-example",
     "additionalComponents": [],
-    "primaryFile": "code-block-cut-example.ts",
+    "primaryFile": "code-block-with-line-numbers-example.ts",
     "importPath": "components/code-block"
   },
-  "code-block-line-numbers": {
-    "packagePath": "components/code-block/code-block-line-numbers",
-    "title": "Code-block line numbers",
-    "componentName": "CodeBlockLineNumbersExample",
+  "code-block-with-max-height": {
+    "packagePath": "components/code-block/code-block-with-max-height",
+    "title": "Code-block with maxHeight attribute",
+    "componentName": "CodeBlockWithMaxHeightExample",
     "files": [
-      "code-block-line-numbers-example.ts"
+      "code-block-with-max-height-example.ts"
     ],
-    "selector": "code-block-line-numbers-example",
+    "selector": "code-block-with-max-height-example",
     "additionalComponents": [],
-    "primaryFile": "code-block-line-numbers-example.ts",
+    "primaryFile": "code-block-with-max-height-example.ts",
     "importPath": "components/code-block"
   },
-  "code-block-line-wrap": {
-    "packagePath": "components/code-block/code-block-line-wrap",
-    "title": "Code-block line wrap",
-    "componentName": "CodeBlockLineWrapExample",
+  "code-block-with-noborder": {
+    "packagePath": "components/code-block/code-block-with-noborder",
+    "title": "Code-block with noBorder attribute",
+    "componentName": "CodeBlockWithNoborderExample",
     "files": [
-      "code-block-line-wrap-example.ts"
+      "code-block-with-noborder-example.ts"
     ],
-    "selector": "code-block-line-wrap-example",
+    "selector": "code-block-with-noborder-example",
     "additionalComponents": [],
-    "primaryFile": "code-block-line-wrap-example.ts",
+    "primaryFile": "code-block-with-noborder-example.ts",
     "importPath": "components/code-block"
   },
-  "code-block-noborder": {
-    "packagePath": "components/code-block/code-block-noborder",
-    "title": "Code-block noborder",
-    "componentName": "CodeBlockNoborderExample",
+  "code-block-with-soft-wrap": {
+    "packagePath": "components/code-block/code-block-with-soft-wrap",
+    "title": "Code-block with softWrap attribute",
+    "componentName": "CodeBlockWithSoftWrapExample",
     "files": [
-      "code-block-noborder-example.ts",
-      "code-block-noborder-example.css"
+      "code-block-with-soft-wrap-example.ts"
     ],
-    "selector": "code-block-noborder-example",
+    "selector": "code-block-with-soft-wrap-example",
     "additionalComponents": [],
-    "primaryFile": "code-block-noborder-example.ts",
+    "primaryFile": "code-block-with-soft-wrap-example.ts",
     "importPath": "components/code-block"
   },
-  "code-block-single-line": {
-    "packagePath": "components/code-block/code-block-single-line",
-    "title": "Сode-block single line",
-    "componentName": "CodeBlockSingleLineExample",
+  "code-block-with-tabs": {
+    "packagePath": "components/code-block/code-block-with-tabs",
+    "title": "Code-block with tabs",
+    "componentName": "CodeBlockWithTabsExample",
     "files": [
-      "code-block-single-line-example.ts"
+      "code-block-with-tabs-example.ts"
     ],
-    "selector": "code-block-single-line-example",
+    "selector": "code-block-with-tabs-example",
     "additionalComponents": [],
-    "primaryFile": "code-block-single-line-example.ts",
-    "importPath": "components/code-block"
-  },
-  "code-block-stretch": {
-    "packagePath": "components/code-block/code-block-stretch",
-    "title": "Code-block stretch",
-    "componentName": "CodeBlockStretchExample",
-    "files": [
-      "code-block-stretch-example.ts"
-    ],
-    "selector": "code-block-stretch-example",
-    "additionalComponents": [],
-    "primaryFile": "code-block-stretch-example.ts",
-    "importPath": "components/code-block"
-  },
-  "code-block-styling": {
-    "packagePath": "components/code-block/code-block-styling",
-    "title": "Code-block styling",
-    "componentName": "CodeBlockStylingExample",
-    "files": [
-      "code-block-styling-example.ts"
-    ],
-    "selector": "code-block-styling-example",
-    "additionalComponents": [],
-    "primaryFile": "code-block-styling-example.ts",
-    "importPath": "components/code-block"
-  },
-  "code-block-tabs-with-overflow": {
-    "packagePath": "components/code-block/code-block-tabs-with-overflow",
-    "title": "Code-block tabs with overflow",
-    "componentName": "CodeBlockTabsWithOverflowExample",
-    "files": [
-      "code-block-tabs-with-overflow-example.ts",
-      "code-block-tabs-with-overflow-example.css"
-    ],
-    "selector": "code-block-tabs-with-overflow-example",
-    "additionalComponents": [],
-    "primaryFile": "code-block-tabs-with-overflow-example.ts",
-    "importPath": "components/code-block"
-  },
-  "code-block-tabs": {
-    "packagePath": "components/code-block/code-block-tabs",
-    "title": "Code-block tabs",
-    "componentName": "CodeBlockTabsExample",
-    "files": [
-      "code-block-tabs-example.ts"
-    ],
-    "selector": "code-block-tabs-example",
-    "additionalComponents": [],
-    "primaryFile": "code-block-tabs-example.ts",
-    "importPath": "components/code-block"
-  },
-  "code-block-title": {
-    "packagePath": "components/code-block/code-block-title",
-    "title": "Сode-block title",
-    "componentName": "CodeBlockTitleExample",
-    "files": [
-      "code-block-title-example.ts"
-    ],
-    "selector": "code-block-title-example",
-    "additionalComponents": [],
-    "primaryFile": "code-block-title-example.ts",
+    "primaryFile": "code-block-with-tabs-example.ts",
     "importPath": "components/code-block"
   },
   "absolute-date-formatter": {
@@ -3553,27 +3490,17 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
 return import('@koobiq/docs-examples/components/checkbox');
-  case 'code-block-common':
+  case 'code-block-with-filled':
 return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-cut':
+  case 'code-block-with-line-numbers':
 return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-line-numbers':
+  case 'code-block-with-max-height':
 return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-line-wrap':
+  case 'code-block-with-noborder':
 return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-noborder':
+  case 'code-block-with-soft-wrap':
 return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-single-line':
-return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-stretch':
-return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-styling':
-return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-tabs-with-overflow':
-return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-tabs':
-return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-title':
+  case 'code-block-with-tabs':
 return import('@koobiq/docs-examples/components/code-block');
   case 'absolute-date-formatter':
 return import('@koobiq/docs-examples/components/date-formatter');

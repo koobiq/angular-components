@@ -24,6 +24,7 @@
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
         "useDefineForClassFields": false,
+        "allowJs": true,
         "paths": {
             "@koobiq/cdk/a11y": ["packages/cdk/a11y/index.ts"],
             "@koobiq/cdk/datetime": ["packages/cdk/datetime/index.ts"],

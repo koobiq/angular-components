@@ -15,8 +15,7 @@ const VERSIONS = {
     KOOBIQ_DESIGN_TOKENS: '^0.0.0',
     MESSAGEFORMAT_CORE: '^0.0.0',
     RADIX_NG: '^0.0.0',
-    LUXON: '^0.0.0',
-    NGX_HIGHLIGHTJS: '^0.0.0'
+    LUXON: '^0.0.0'
 };
 
 /**
