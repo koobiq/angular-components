@@ -1,0 +1,122 @@
+@let file = files[activeFileIndex];
+
+<div class="kbq-code-block__header">
+    @if (!hideTabs) {
+        <div class="kbq-code-block__header-tabs">
+            <div kbqTabNavBar transparent [tabNavPanel]="tabPanel">
+                @for (file of files; track file; let index = $index) {
+                    <div
+                        kbqTabLink
+                        [active]="activeFileIndex === index"
+                        [disabled]="files.length === 1"
+                        (click)="onSelectedTabChange(index)"
+                    >
+                        {{ file.filename || fallbackFileName }}
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="kbq-code-block__actionbar">
+        @if (hideTabs) {
+            <div class="kbq-code-block__actionbar__fade-gradient"></div>
+        }
+
+        <div class="kbq-code-block__actionbar__button-stack">
+            @if (canToggleSoftWrap) {
+                <button
+                    kbq-button
+                    [color]="componentColor.Contrast"
+                    [kbqStyle]="buttonStyle.Transparent"
+                    [kbqTooltip]="
+                        softWrap ? localeConfiguration.softWrapOffTooltip : localeConfiguration.softWrapOnTooltip
+                    "
+                    (click)="toggleSoftWrap()"
+                >
+                    @if (softWrap) {
+                        <i kbq-icon="kbq-wrap-text-slash_16"></i>
+                    } @else {
+                        <i kbq-icon="kbq-wrap-text_16"></i>
+                    }
+                </button>
+            }
+
+            @if (canDownload) {
+                <button
+                    kbq-button
+                    [color]="componentColor.Contrast"
+                    [kbqStyle]="buttonStyle.Transparent"
+                    [kbqTooltip]="localeConfiguration.downloadTooltip"
+                    (click)="downloadCode()"
+                >
+                    <i kbq-icon="kbq-arrow-down-to-line_16"></i>
+                </button>
+            }
+
+            @if (canCopy) {
+                <div #copyButtonTooltip="kbqTooltip" [kbqTooltip]="localeConfiguration.copyTooltip">
+                    <button
+                        kbq-button
+                        [color]="componentColor.Contrast"
+                        [kbqStyle]="buttonStyle.Transparent"
+                        (click)="copyCode()"
+                    >
+                        <i kbq-icon="kbq-file-multiple-o_16"></i>
+                    </button>
+                </div>
+            }
+
+            @if (file.link) {
+                <button
+                    kbq-button
+                    [color]="componentColor.Contrast"
+                    [kbqStyle]="buttonStyle.Transparent"
+                    [kbqTooltip]="localeConfiguration.openExternalSystemTooltip"
+                    (click)="openLink()"
+                >
+                    <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+<pre
+    #tabPanel="kbqTabNavPanel"
+    cdkMonitorElementFocus
+    cdkScrollable
+    kbqTabNavPanel
+    class="kbq-code-block__content kbq-scrollbar"
+    [class.kbq-code-block__content_soft-wrap]="softWrap"
+    [class.kbq-code-block__content_view-all]="viewAll"
+    [style.height.px]="height"
+    [style.max-height.px]="calculatedMaxHeight"
+    [tabIndex]="codeContentTabIndex"
+><code kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file"></code></pre>
+
+@if (maxHeight) {
+    <div
+        class="kbq-code-block__view-all"
+        [class.kbq-code-block__view-all_collapsed]="!viewAll"
+        [class.kbq-code-block__view-all_expanded]="viewAll"
+    >
+        <div class="kbq-code-block__view-all__wrapper">
+            <button
+                kbq-button
+                [color]="componentColor.Theme"
+                [kbqStyle]="buttonStyle.Transparent"
+                (click)="toggleViewAll()"
+                (keydown.enter)="onViewAllEnterKeydown()"
+            >
+                @if (viewAll) {
+                    <i kbq-icon="kbq-chevron-up_16"></i>
+                    {{ localeConfiguration.viewLessText }}
+                } @else {
+                    <i kbq-icon="kbq-chevron-down_16"></i>
+                    {{ localeConfiguration.viewAllText }}
+                }
+            </button>
+        </div>
+    </div>
+}
