@@ -17,12 +17,15 @@
     <button kbq-dropdown-item>Point 2</button>
 </kbq-dropdown>
 
-<div class="demo-vertical-navbar">
+<div
+    style="margin: -20px; height: 480px"
+    class="layout-row"
+>
     <kbq-vertical-navbar
         #verticalNavbar
         [openOver]="true"
     >
-        <kbq-navbar-container>
+        <kbq-navbar-container style="border-top-left-radius: 12px">
             <a
                 #verticalNavbarDropdownTrigger_1="kbqDropdownTrigger"
                 bento
@@ -103,7 +106,10 @@
         </kbq-navbar-container>
     </kbq-vertical-navbar>
 
-    <div class="demo-vertical-navbar__text-container kbq-text-normal flex">
+    <div
+        style="overflow: auto; padding-left: 20px; padding-right: 20px"
+        class="kbq-text-normal"
+    >
         <div>
             <p>
                 Целое число в принципе поддерживает скачок функции. Полином отражает экспериментальный разрыв функции,
