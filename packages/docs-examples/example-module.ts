@@ -1801,11 +1801,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "layout-flex-alignment": {
     "packagePath": "components/layout-flex/layout-flex-alignment",
-    "title": "Flex layout",
+    "title": "Layout-flex alignment",
     "componentName": "LayoutFlexAlignmentExample",
     "files": [
-      "layout-flex-alignment-example.ts",
-      "layout-flex-alignment-example.css"
+      "layout-flex-alignment-example.ts"
     ],
     "selector": "layout-flex-alignment-example",
     "additionalComponents": [],
@@ -1818,11 +1817,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "layout-flex-behaviour-modifiers": {
     "packagePath": "components/layout-flex/layout-flex-behaviour-modifiers",
-    "title": "Flex layout",
+    "title": "Layout-flex behaviour modifiers",
     "componentName": "LayoutFlexBehaviourModifiersExample",
     "files": [
-      "layout-flex-behaviour-modifiers-example.ts",
-      "layout-flex-behaviour-modifiers-example.css"
+      "layout-flex-behaviour-modifiers-example.ts"
     ],
     "selector": "layout-flex-behaviour-modifiers-example",
     "additionalComponents": [],
@@ -1835,11 +1833,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "layout-flex-offsets": {
     "packagePath": "components/layout-flex/layout-flex-offsets",
-    "title": "Flex layout",
+    "title": "Layout-flex offsets",
     "componentName": "LayoutFlexOffsetsExample",
     "files": [
-      "layout-flex-offsets-example.ts",
-      "layout-flex-offsets-example.css"
+      "layout-flex-offsets-example.ts"
     ],
     "selector": "layout-flex-offsets-example",
     "additionalComponents": [],
@@ -1852,11 +1849,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "layout-flex-order": {
     "packagePath": "components/layout-flex/layout-flex-order",
-    "title": "Flex layout",
+    "title": "Layout-flex order",
     "componentName": "LayoutFlexOrderExample",
     "files": [
-      "layout-flex-order-example.ts",
-      "layout-flex-order-example.css"
+      "layout-flex-order-example.ts"
     ],
     "selector": "layout-flex-order-example",
     "additionalComponents": [],
@@ -1869,11 +1865,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "layout-flex-overview": {
     "packagePath": "components/layout-flex/layout-flex-overview",
-    "title": "Flex layout",
+    "title": "Layout-flex",
     "componentName": "LayoutFlexOverviewExample",
     "files": [
-      "layout-flex-overview-example.ts",
-      "layout-flex-overview-example.css"
+      "layout-flex-overview-example.ts"
     ],
     "selector": "layout-flex-overview-example",
     "additionalComponents": [],
