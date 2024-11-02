@@ -1,13 +1,30 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqListModule } from '@koobiq/components/list';
 
 /**
- * @title Basic list
+ * @title List groups
  */
 @Component({
+    standalone: true,
     selector: 'list-groups-example',
-    templateUrl: 'list-groups-example.html',
-    styleUrls: ['list-groups-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqListModule],
+    template: `
+        <kbq-list-selection>
+            @for (group of pokemonTypes; track group) {
+                <kbq-optgroup
+                    [disabled]="group.disabled"
+                    [label]="group.name"
+                >
+                    @for (pokemon of group.pokemon; track pokemon) {
+                        <kbq-list-option [value]="pokemon.value">
+                            {{ pokemon.viewValue }}
+                        </kbq-list-option>
+                    }
+                </kbq-optgroup>
+            }
+            <kbq-list-option [value]="'mime-11'">Mr. Mime</kbq-list-option>
+        </kbq-list-selection>
+    `
 })
 export class ListGroupsExample {
     pokemonTypes = [

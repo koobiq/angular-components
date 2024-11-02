@@ -2095,8 +2095,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListActionButtonExample",
     "files": [
       "list-action-button-example.ts",
-      "list-action-button-example.html",
-      "list-action-button-example.css"
     ],
     "selector": "list-action-button-example",
     "additionalComponents": [],
@@ -2113,8 +2111,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListGroupsExample",
     "files": [
       "list-groups-example.ts",
-      "list-groups-example.html",
-      "list-groups-example.css"
     ],
     "selector": "list-groups-example",
     "additionalComponents": [],
@@ -2131,8 +2127,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListMultipleCheckboxExample",
     "files": [
       "list-multiple-checkbox-example.ts",
-      "list-multiple-checkbox-example.html",
-      "list-multiple-checkbox-example.css"
     ],
     "selector": "list-multiple-checkbox-example",
     "additionalComponents": [],
@@ -2149,8 +2143,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListMultipleKeyboardExample",
     "files": [
       "list-multiple-keyboard-example.ts",
-      "list-multiple-keyboard-example.html",
-      "list-multiple-keyboard-example.css"
     ],
     "selector": "list-multiple-keyboard-example",
     "additionalComponents": [],
@@ -2167,8 +2159,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ListOverviewExample",
     "files": [
       "list-overview-example.ts",
-      "list-overview-example.html",
-      "list-overview-example.css"
     ],
     "selector": "list-overview-example",
     "additionalComponents": [],
