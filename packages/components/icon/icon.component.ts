@@ -25,10 +25,7 @@ export class KbqIconBase {
 }
 
 /** @docs-private */
-export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(
-    KbqIconBase,
-    KbqComponentColors.ContrastFade
-);
+export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(KbqIconBase, KbqComponentColors.Contrast);
 
 @Component({
     standalone: true,

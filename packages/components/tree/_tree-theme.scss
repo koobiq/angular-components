@@ -51,7 +51,7 @@
             @include kbq-tree-option(states-disabled);
 
             & .kbq-icon {
-                cursor: default;
+                color: var(--kbq-states-icon-disabled);
             }
         }
     }
