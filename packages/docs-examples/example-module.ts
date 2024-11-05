@@ -2861,8 +2861,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ProgressSpinnerIndeterminateExample",
     "files": [
       "progress-spinner-indeterminate-example.ts",
-      "progress-spinner-indeterminate-example.html",
-      "progress-spinner-indeterminate-example.css"
     ],
     "selector": "progress-spinner-indeterminate-example",
     "additionalComponents": [],
@@ -2879,8 +2877,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ProgressSpinnerOverviewExample",
     "files": [
       "progress-spinner-overview-example.ts",
-      "progress-spinner-overview-example.html",
-      "progress-spinner-overview-example.css"
     ],
     "selector": "progress-spinner-overview-example",
     "additionalComponents": [],

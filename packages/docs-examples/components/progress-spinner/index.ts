@@ -1,7 +1,4 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { ProgressSpinnerIndeterminateExample } from './progress-spinner-indeterminate/progress-spinner-indeterminate-example';
 import { ProgressSpinnerOverviewExample } from './progress-spinner-overview/progress-spinner-overview-example';
 
@@ -12,12 +9,7 @@ const EXAMPLES = [
     ProgressSpinnerOverviewExample
 ];
 @NgModule({
-    imports: [
-        FormsModule,
-        KbqFormFieldModule,
-        KbqProgressSpinnerModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class ProgressSpinnerExamplesModule {}
