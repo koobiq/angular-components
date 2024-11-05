@@ -1,14 +1,43 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
- * @title Basic Modal
+ * @title Modal
  */
 @Component({
+    standalone: true,
     selector: 'modal-overview-example',
-    templateUrl: 'modal-overview-example.html',
-    styleUrls: ['modal-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqButtonModule],
+    template: `
+        <div
+            class="layout-column"
+            style="width: 200px"
+        >
+            <button
+                (click)="showConfirmModal()"
+                style="margin-bottom: 16px"
+                kbq-button
+            >
+                Open Confirm Modal
+            </button>
+
+            <button
+                (click)="showSuccessModal()"
+                style="margin-bottom: 16px"
+                kbq-button
+            >
+                Open Success Modal
+            </button>
+
+            <button
+                (click)="showDeleteModal()"
+                kbq-button
+            >
+                Open Delete Modal
+            </button>
+        </div>
+    `
 })
 export class ModalOverviewExample {
     constructor(private modalService: KbqModalService) {}

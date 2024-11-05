@@ -1,7 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
+    standalone: true,
     selector: 'kbq-long-component',
     template: `
         @for (item of longText; track item) {
@@ -20,10 +22,12 @@ export class KbqLongComponent {
 }
 
 /**
- * @title Component Modal Scroll
+ * @title Modal scroll
  */
 @Component({
+    standalone: true,
     selector: 'modal-scroll-example',
+    imports: [KbqButtonModule],
     template: `
         <button
             (click)="createLongModal()"
@@ -31,9 +35,7 @@ export class KbqLongComponent {
         >
             Open Modal
         </button>
-    `,
-    styleUrls: ['modal-scroll-example.css'],
-    encapsulation: ViewEncapsulation.None
+    `
 })
 export class ModalScrollExample {
     constructor(private modalService: KbqModalService) {}

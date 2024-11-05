@@ -2491,12 +2491,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-component": {
     "packagePath": "components/modal/modal-component",
-    "title": "Component Modal",
+    "title": "Modal component",
     "componentName": "ModalComponentExample",
     "files": [
-      "modal-component-example.ts",
-      "modal-component-example.html",
-      "modal-component-example.css"
+      "modal-component-example.ts"
     ],
     "selector": "modal-component-example",
     "additionalComponents": [
@@ -2511,12 +2509,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-multiple": {
     "packagePath": "components/modal/modal-multiple",
-    "title": "Multiple Modal",
+    "title": "Modal multiple",
     "componentName": "ModalMultipleExample",
     "files": [
-      "modal-multiple-example.ts",
-      "modal-multiple-example.html",
-      "modal-multiple-example.css"
+      "modal-multiple-example.ts"
     ],
     "selector": "modal-multiple-example",
     "additionalComponents": [],
@@ -2529,12 +2525,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-overview": {
     "packagePath": "components/modal/modal-overview",
-    "title": "Basic Modal",
+    "title": "Modal",
     "componentName": "ModalOverviewExample",
     "files": [
-      "modal-overview-example.ts",
-      "modal-overview-example.html",
-      "modal-overview-example.css"
+      "modal-overview-example.ts"
     ],
     "selector": "modal-overview-example",
     "additionalComponents": [],
@@ -2547,11 +2541,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-scroll": {
     "packagePath": "components/modal/modal-scroll",
-    "title": "Component Modal Scroll",
+    "title": "Modal scroll",
     "componentName": "ModalScrollExample",
     "files": [
-      "modal-scroll-example.ts",
-      "modal-scroll-example.css"
+      "modal-scroll-example.ts"
     ],
     "selector": "modal-scroll-example",
     "additionalComponents": [
@@ -2566,12 +2559,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-sizes": {
     "packagePath": "components/modal/modal-sizes",
-    "title": "Sizes Modal",
+    "title": "Modal sizes",
     "componentName": "ModalSizesExample",
     "files": [
-      "modal-sizes-example.ts",
-      "modal-sizes-example.html",
-      "modal-sizes-example.css"
+      "modal-sizes-example.ts"
     ],
     "selector": "modal-sizes-example",
     "additionalComponents": [],
@@ -2584,12 +2575,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "modal-template": {
     "packagePath": "components/modal/modal-template",
-    "title": "Template Modal",
+    "title": "Modal template",
     "componentName": "ModalTemplateExample",
     "files": [
-      "modal-template-example.ts",
-      "modal-template-example.html",
-      "modal-template-example.css"
+      "modal-template-example.ts"
     ],
     "selector": "modal-template-example",
     "additionalComponents": [],
@@ -2606,8 +2595,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "NavbarOverviewExample",
     "files": [
       "navbar-overview-example.ts",
-      "navbar-overview-example.html",
-      "navbar-overview-example.css"
+      "navbar-overview-example.html"
     ],
     "selector": "navbar-overview-example",
     "additionalComponents": [],
@@ -2620,12 +2608,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "navbar-vertical-open-over": {
     "packagePath": "components/navbar/navbar-vertical-open-over",
-    "title": "Vertical Navbar",
+    "title": "Navbar vertical open over",
     "componentName": "NavbarVerticalOpenOverExample",
     "files": [
       "navbar-vertical-open-over-example.ts",
-      "navbar-vertical-open-over-example.html",
-      "navbar-vertical-open-over-example.css"
+      "navbar-vertical-open-over-example.html"
     ],
     "selector": "navbar-vertical-open-over-example",
     "additionalComponents": [],
@@ -2638,12 +2625,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "navbar-vertical": {
     "packagePath": "components/navbar/navbar-vertical",
-    "title": "Vertical Navbar",
+    "title": "Navbar vertical",
     "componentName": "NavbarVerticalExample",
     "files": [
       "navbar-vertical-example.ts",
-      "navbar-vertical-example.html",
-      "navbar-vertical-example.css"
+      "navbar-vertical-example.html"
     ],
     "selector": "navbar-vertical-example",
     "additionalComponents": [],
@@ -2656,12 +2642,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "number-formatter-overview": {
     "packagePath": "components/number-formatter/number-formatter-overview",
-    "title": "Basic progress number-formatter",
+    "title": "Number-formatter",
     "componentName": "NumberFormatterOverviewExample",
     "files": [
       "number-formatter-overview-example.ts",
-      "number-formatter-overview-example.html",
-      "number-formatter-overview-example.css"
+      "number-formatter-overview-example.html"
     ],
     "selector": "number-formatter-overview-example",
     "additionalComponents": [],

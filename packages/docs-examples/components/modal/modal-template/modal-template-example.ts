@@ -1,14 +1,58 @@
-import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+import { Component, TemplateRef } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
 /**
- * @title Template Modal
+ * @title Modal template
  */
 @Component({
+    standalone: true,
     selector: 'modal-template-example',
-    templateUrl: 'modal-template-example.html',
-    styleUrls: ['modal-template-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqButtonModule, KbqModalModule],
+    template: `
+        <button
+            class="modal-example-button"
+            (click)="createTplModal(tplTitle, tplContent, tplFooter)"
+            kbq-button
+        >
+            Delete
+        </button>
+
+        <ng-template #tplTitle>
+            <span>Заголовок окна</span>
+        </ng-template>
+        <ng-template #tplContent>
+            Кибербезопасность сегодня — это целое направление информационных технологий, которое затрагивает практически
+            все сферы жизни человека.
+        </ng-template>
+        <ng-template #tplFooter>
+            <div class="layout-row flex-grow layout-align-space-between">
+                <button
+                    (click)="destroyTplModal()"
+                    kbq-button
+                >
+                    Доп. действие
+                </button>
+
+                <span>
+                    <button
+                        [color]="'contrast'"
+                        (click)="destroyTplModal()"
+                        kbq-button
+                        kbq-modal-main-action
+                    >
+                        Сохранить
+                    </button>
+                    <button
+                        (click)="destroyTplModal()"
+                        kbq-button
+                    >
+                        Отмена
+                    </button>
+                </span>
+            </div>
+        </ng-template>
+    `
 })
 export class ModalTemplateExample {
     tplModal: KbqModalRef;
