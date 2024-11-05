@@ -1,12 +1,49 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqRadioModule } from '@koobiq/components/radio';
 
 /**
  * @title Radio required
  */
 @Component({
+    standalone: true,
     selector: 'radio-required-example',
-    templateUrl: 'radio-required-example.html',
-    styleUrls: ['radio-required-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqRadioModule,
+        KbqButtonModule
+    ],
+    template: `
+        <div class="example-radio-group">
+            <div class="layout-margin-bottom-m kbq-form__label">Наименование поля</div>
+            <kbq-radio-group name="my_options_9">
+                <kbq-radio-button
+                    [required]="true"
+                    [value]="'option_1'"
+                >
+                    Item 1
+                </kbq-radio-button>
+
+                <kbq-radio-button
+                    [required]="true"
+                    [value]="'option_2'"
+                >
+                    Item 2
+                </kbq-radio-button>
+
+                <kbq-radio-button
+                    [required]="true"
+                    [value]="'option_3'"
+                >
+                    Item 3
+                </kbq-radio-button>
+            </kbq-radio-group>
+        </div>
+        <button
+            class="layout-margin-top-l"
+            kbq-button
+        >
+            Отправить
+        </button>
+    `
 })
 export class RadioRequiredExample {}

@@ -2878,9 +2878,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio content",
     "componentName": "RadioContentExample",
     "files": [
-      "radio-content-example.ts",
-      "radio-content-example.html",
-      "radio-content-example.css"
+      "radio-content-example.ts"
     ],
     "selector": "radio-content-example",
     "additionalComponents": [],
@@ -2896,9 +2894,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio group",
     "componentName": "RadioGroupExample",
     "files": [
-      "radio-group-example.ts",
-      "radio-group-example.html",
-      "radio-group-example.css"
+      "radio-group-example.ts"
     ],
     "selector": "radio-group-example",
     "additionalComponents": [],
@@ -2914,9 +2910,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio invalid",
     "componentName": "RadioInvalidExample",
     "files": [
-      "radio-invalid-example.ts",
-      "radio-invalid-example.html",
-      "radio-invalid-example.css"
+      "radio-invalid-example.ts"
     ],
     "selector": "radio-invalid-example",
     "additionalComponents": [],
@@ -2929,12 +2923,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "radio-overview": {
     "packagePath": "components/radio/radio-overview",
-    "title": "Basic radio",
+    "title": "Radio",
     "componentName": "RadioOverviewExample",
     "files": [
-      "radio-overview-example.ts",
-      "radio-overview-example.html",
-      "radio-overview-example.css"
+      "radio-overview-example.ts"
     ],
     "selector": "radio-overview-example",
     "additionalComponents": [],
@@ -2950,9 +2942,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio required",
     "componentName": "RadioRequiredExample",
     "files": [
-      "radio-required-example.ts",
-      "radio-required-example.html",
-      "radio-required-example.css"
+      "radio-required-example.ts"
     ],
     "selector": "radio-required-example",
     "additionalComponents": [],
@@ -2968,9 +2958,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio size",
     "componentName": "RadioSizeExample",
     "files": [
-      "radio-size-example.ts",
-      "radio-size-example.html",
-      "radio-size-example.css"
+      "radio-size-example.ts"
     ],
     "selector": "radio-size-example",
     "additionalComponents": [],
@@ -2986,9 +2974,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio style",
     "componentName": "RadioStyleExample",
     "files": [
-      "radio-style-example.ts",
-      "radio-style-example.html",
-      "radio-style-example.css"
+      "radio-style-example.ts"
     ],
     "selector": "radio-style-example",
     "additionalComponents": [],
