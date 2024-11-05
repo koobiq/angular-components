@@ -3239,10 +3239,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-dynamic-data": {
     "packagePath": "components/splitter/splitter-dynamic-data",
-    "title": "Splitter with dynamic data",
+    "title": "Splitter dynamic data",
     "componentName": "SplitterDynamicDataExample",
     "files": [
-      "splitter-dynamic-data-example.ts",
+      "splitter-dynamic-data-example.ts"
     ],
     "selector": "splitter-dynamic-data-example",
     "additionalComponents": [],
@@ -3255,10 +3255,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-fixed": {
     "packagePath": "components/splitter/splitter-fixed",
-    "title": "Basic Splitter",
+    "title": "Splitter fixed",
     "componentName": "SplitterFixedExample",
     "files": [
-      "splitter-fixed-example.ts",
+      "splitter-fixed-example.ts"
     ],
     "selector": "splitter-fixed-example",
     "additionalComponents": [],
@@ -3271,10 +3271,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-nested": {
     "packagePath": "components/splitter/splitter-nested",
-    "title": "Basic Splitter",
+    "title": "Splitter nested",
     "componentName": "SplitterNestedExample",
     "files": [
-      "splitter-nested-example.ts",
+      "splitter-nested-example.ts"
     ],
     "selector": "splitter-nested-example",
     "additionalComponents": [],
@@ -3287,10 +3287,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-overview": {
     "packagePath": "components/splitter/splitter-overview",
-    "title": "Basic Splitter",
+    "title": "Splitter",
     "componentName": "SplitterOverviewExample",
     "files": [
-      "splitter-overview-example.ts",
+      "splitter-overview-example.ts"
     ],
     "selector": "splitter-overview-example",
     "additionalComponents": [],
@@ -3306,7 +3306,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic Splitter",
     "componentName": "SplitterVerticalExample",
     "files": [
-      "splitter-vertical-example.ts",
+      "splitter-vertical-example.ts"
     ],
     "selector": "splitter-vertical-example",
     "additionalComponents": [],
@@ -3324,7 +3324,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "files": [
       "table-full-width-example.ts",
       "table-full-width-example.html",
-      "table-full-width-example.css"
     ],
     "selector": "table-full-width-example",
     "additionalComponents": [],
@@ -3341,8 +3340,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TableOverviewExample",
     "files": [
       "table-overview-example.ts",
-      "table-overview-example.html",
-      "table-overview-example.css"
     ],
     "selector": "table-overview-example",
     "additionalComponents": [],
@@ -3359,8 +3356,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TableWithBordersExample",
     "files": [
       "table-with-borders-example.ts",
-      "table-with-borders-example.html",
-      "table-with-borders-example.css"
     ],
     "selector": "table-with-borders-example",
     "additionalComponents": [],
