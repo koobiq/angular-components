@@ -3035,12 +3035,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-footer": {
     "packagePath": "components/select/select-footer",
-    "title": "Basic Select",
+    "title": "Select footer",
     "componentName": "SelectFooterExample",
     "files": [
       "select-footer-example.ts",
-      "select-footer-example.html",
-      "select-footer-example.css"
+      "select-footer-example.html"
     ],
     "selector": "select-footer-example",
     "additionalComponents": [],
@@ -3053,12 +3052,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-groups": {
     "packagePath": "components/select/select-groups",
-    "title": "Basic Select",
+    "title": "Select groups",
     "componentName": "SelectGroupsExample",
     "files": [
-      "select-groups-example.ts",
-      "select-groups-example.html",
-      "select-groups-example.css"
+      "select-groups-example.ts"
     ],
     "selector": "select-groups-example",
     "additionalComponents": [],
@@ -3071,12 +3068,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-multiple-overview": {
     "packagePath": "components/select/select-multiple-overview",
-    "title": "Basic Select",
+    "title": "Select multiple",
     "componentName": "SelectMultipleOverviewExample",
     "files": [
-      "select-multiple-overview-example.ts",
-      "select-multiple-overview-example.html",
-      "select-multiple-overview-example.css"
+      "select-multiple-overview-example.ts"
     ],
     "selector": "select-multiple-overview-example",
     "additionalComponents": [],
@@ -3089,12 +3084,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-overview": {
     "packagePath": "components/select/select-overview",
-    "title": "Basic Select",
+    "title": "Select",
     "componentName": "SelectOverviewExample",
     "files": [
-      "select-overview-example.ts",
-      "select-overview-example.html",
-      "select-overview-example.css"
+      "select-overview-example.ts"
     ],
     "selector": "select-overview-example",
     "additionalComponents": [],
@@ -3107,12 +3100,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-prioritized-selected": {
     "packagePath": "components/select/select-prioritized-selected",
-    "title": "Prioritized Selected Example",
+    "title": "Selected prioritized selected",
     "componentName": "SelectPrioritizedSelectedExample",
     "files": [
-      "select-prioritized-selected-example.ts",
-      "select-prioritized-selected-example.html",
-      "select-prioritized-selected-example.css"
+      "select-prioritized-selected-example.ts"
     ],
     "selector": "select-prioritized-selected-example",
     "additionalComponents": [],
@@ -3125,12 +3116,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-search-overview": {
     "packagePath": "components/select/select-search-overview",
-    "title": "Basic Select",
+    "title": "Select search",
     "componentName": "SelectSearchOverviewExample",
     "files": [
-      "select-search-overview-example.ts",
-      "select-search-overview-example.html",
-      "select-search-overview-example.css"
+      "select-search-overview-example.ts"
     ],
     "selector": "select-search-overview-example",
     "additionalComponents": [],
@@ -3143,12 +3132,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-virtual-scroll": {
     "packagePath": "components/select/select-virtual-scroll",
-    "title": "select-virtual-scroll",
+    "title": "Select virtual scroll",
     "componentName": "SelectVirtualScrollExample",
     "files": [
-      "select-virtual-scroll-example.ts",
-      "select-virtual-scroll-example.html",
-      "select-virtual-scroll-example.css"
+      "select-virtual-scroll-example.ts"
     ],
     "selector": "select-virtual-scroll-example",
     "additionalComponents": [],

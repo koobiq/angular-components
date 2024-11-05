@@ -1,5 +1,7 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
 import { faIRLocaleDataSet } from '../fa-IR';
@@ -17,13 +19,28 @@ const localeDataSet = {
 };
 
 /**
- * @title Basic Select
+ * @title Select multiple
  */
 @Component({
+    standalone: true,
     selector: 'select-multiple-overview-example',
-    templateUrl: 'select-multiple-overview-example.html',
-    styleUrls: ['select-multiple-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                [(value)]="selected"
+                multiple
+            >
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option"></span>
+                    </kbq-option>
+                }
+
+                <kbq-cleaner #kbqSelectCleaner />
+            </kbq-select>
+        </kbq-form-field>
+    `
 })
 export class SelectMultipleOverviewExample {
     selected = [];

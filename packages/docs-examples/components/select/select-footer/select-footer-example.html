@@ -1,4 +1,4 @@
-<p class="paragraph">Link</p>
+<p style="margin-bottom: 12px">Link</p>
 <kbq-form-field>
     <kbq-select [(value)]="selected">
         <kbq-option
@@ -31,7 +31,7 @@
     </kbq-select>
 </kbq-form-field>
 
-<p class="paragraph">Caption</p>
+<p style="margin-top: 24px; margin-bottom: 12px">Caption</p>
 <kbq-form-field>
     <kbq-select [(value)]="selected">
         <kbq-option
@@ -52,12 +52,17 @@
         <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
         <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
         <kbq-select-footer>
-            <div class="kbq-select__no-options-message kbq-caption">Подсказка о чем-нибудь ⌥+⌘+F</div>
+            <div
+                style="padding: 0; display: block; height: unset"
+                class="kbq-caption"
+            >
+                Подсказка о чем-нибудь ⌥+⌘+F
+            </div>
         </kbq-select-footer>
     </kbq-select>
 </kbq-form-field>
 
-<p class="paragraph">Button</p>
+<p style="margin-top: 24px; margin-bottom: 12px">Button</p>
 <kbq-form-field>
     <kbq-select [(value)]="selected">
         <kbq-option
@@ -77,7 +82,7 @@
         <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
         <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
         <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
-        <kbq-select-footer class="kbq-select__footer_icon">
+        <kbq-select-footer style="padding-left: 4px">
             <button
                 kbq-button
                 class="kbq-button_transparent"

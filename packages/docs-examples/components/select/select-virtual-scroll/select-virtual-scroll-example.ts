@@ -1,6 +1,8 @@
 import { ListRange } from '@angular/cdk/collections';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import { Component, ViewChild } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 export const OPTIONS = [
     'Abakan',
@@ -148,13 +150,32 @@ export const OPTIONS = [
 ];
 
 /**
- * @title select-virtual-scroll
+ * @title Select virtual scroll
  */
 @Component({
+    standalone: true,
     selector: 'select-virtual-scroll-example',
-    templateUrl: 'select-virtual-scroll-example.html',
-    styleUrls: ['select-virtual-scroll-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select (openedChange)="openedChange($event)">
+                <kbq-cleaner #kbqSelectCleaner />
+
+                <cdk-virtual-scroll-viewport
+                    [itemSize]="32"
+                    [maxBufferPx]="400"
+                    [minBufferPx]="100"
+                >
+                    <kbq-option
+                        *cdkVirtualFor="let option of options; templateCacheSize: 0"
+                        [value]="option"
+                    >
+                        {{ option }}
+                    </kbq-option>
+                </cdk-virtual-scroll-viewport>
+            </kbq-select>
+        </kbq-form-field>
+    `
 })
 export class SelectVirtualScrollExample {
     options: string[] = OPTIONS.sort();

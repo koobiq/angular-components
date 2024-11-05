@@ -1,13 +1,33 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Basic Select
+ * @title Select groups
  */
 @Component({
+    standalone: true,
     selector: 'select-groups-example',
-    templateUrl: 'select-groups-example.html',
-    styleUrls: ['select-groups-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select>
+                @for (group of pokemonTypes; track group) {
+                    <kbq-optgroup
+                        [disabled]="group.disabled"
+                        [label]="group.name"
+                    >
+                        @for (pokemon of group.pokemon; track pokemon) {
+                            <kbq-option [value]="pokemon.value">
+                                {{ pokemon.viewValue }}
+                            </kbq-option>
+                        }
+                    </kbq-optgroup>
+                }
+                <kbq-option [value]="'mime-11'">Mr. Mime</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
 })
 export class SelectGroupsExample {
     pokemonTypes = [
