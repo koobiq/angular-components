@@ -1,14 +1,31 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
 /**
- * @title Loader overlay
+ * @title Loader-overlay
  */
 @Component({
+    standalone: true,
     selector: 'loader-overlay-overview-example',
-    templateUrl: 'loader-overlay-overview-example.html',
-    styleUrls: ['loader-overlay-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqLoaderOverlayModule],
+    template: `
+        <div
+            class="flex"
+            style="width: 500px; height: 320px"
+        >
+            text text text text text text text text text text text text text text text text text text text text text
+            text text text text text text text text text text text text text text text text text text text text text
+            text text text text text text text text text text text text text text text text text text text text text
+            text text text text text text text text text text text text text text text text text text text text text
+            text text text text text text text text text text text text text text text text text text text text text
+            text text text text text text text text text text text text text text text
+            <kbq-loader-overlay
+                [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
+                [text]="'Создание отчета'"
+            />
+        </div>
+    `
 })
 export class LoaderOverlayOverviewExample {
     themePalette = ThemePalette;

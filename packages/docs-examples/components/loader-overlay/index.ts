@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
-import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { LoaderOverlayDefaultExample } from './loader-overlay-default/loader-overlay-default-example';
 import { LoaderOverlayFixedTopExample } from './loader-overlay-fixed-top/loader-overlay-fixed-top-example';
 import { LoaderOverlayLargeExample } from './loader-overlay-large/loader-overlay-large-example';
@@ -21,11 +19,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqProgressSpinnerModule,
-        KbqLoaderOverlayModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class LoaderOverlayExamplesModule {}
