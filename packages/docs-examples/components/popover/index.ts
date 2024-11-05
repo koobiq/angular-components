@@ -1,21 +1,4 @@
-import { A11yModule } from '@angular/cdk/a11y';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqBadgeModule } from '@koobiq/components/badge';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqFormsModule } from '@koobiq/components/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqPopoverModule } from '@koobiq/components/popover';
-import { KbqRadioModule } from '@koobiq/components/radio';
-import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTitleModule } from '@koobiq/components/title';
 import { PopoverCloseExample } from './popover-close/popover-close-example';
 import { PopoverCommonExample } from './popover-common/popover-common-example';
 import { PopoverContentExample } from './popover-content/popover-content-example';
@@ -51,26 +34,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        A11yModule,
-        FormsModule,
-        KbqFormsModule,
-        KbqFormFieldModule,
-        KbqSelectModule,
-        KbqPopoverModule,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqInputModule,
-        KbqCheckboxModule,
-        KbqRadioModule,
-        KbqLinkModule,
-        KbqDlModule,
-        KbqBadgeModule,
-        KbqDropdownModule,
-        KbqDividerModule,
-        KbqTitleModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class PopoverExamplesModule {}

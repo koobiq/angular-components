@@ -1,9 +1,0 @@
-.popover-scroll-example__buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-
-.kbq-popover.kbq-popover_medium.scroll-example {
-    width: 400px;
-}

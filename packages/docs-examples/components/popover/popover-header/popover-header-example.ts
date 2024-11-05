@@ -1,14 +1,22 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqBadgeColors } from '@koobiq/components/badge';
+import { Component } from '@angular/core';
+import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqPopoverModule } from '@koobiq/components/popover';
 
 /**
- * @title popover-header
+ * @title Popover Header
  */
 @Component({
+    standalone: true,
     selector: 'popover-header-example',
     templateUrl: 'popover-header-example.html',
-    styleUrls: ['popover-header-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqDlModule,
+        KbqPopoverModule,
+        KbqButtonModule,
+        KbqBadgeModule
+    ]
 })
 export class PopoverHeaderExample {
     badgeColors = KbqBadgeColors;

@@ -1,14 +1,30 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { NgStyle } from '@angular/common';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqPopoverModule } from '@koobiq/components/popover';
 
 /**
- * @title popover-content
+ * @title Popover content
  */
 @Component({
+    standalone: true,
     selector: 'popover-content-example',
     templateUrl: 'popover-content-example.html',
-    styleUrls: ['popover-content-example.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: 'popover-content-example.css',
+    imports: [
+        KbqDropdownModule,
+        KbqButtonModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqIconModule,
+        KbqPopoverModule,
+        NgStyle
+    ]
 })
 export class PopoverContentExample {
     members: object[] = [
