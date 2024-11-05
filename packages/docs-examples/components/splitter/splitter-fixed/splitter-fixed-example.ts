@@ -15,7 +15,7 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
             kbq-splitter {
                 display: flex;
                 border: 1px solid black;
-                height: 100px;
+                height: 400px;
                 margin: 2px;
             }
 

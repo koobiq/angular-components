@@ -3319,11 +3319,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "table-full-width": {
     "packagePath": "components/table/table-full-width",
-    "title": "Basic Table",
+    "title": "Table full width",
     "componentName": "TableFullWidthExample",
     "files": [
       "table-full-width-example.ts",
-      "table-full-width-example.html",
+      "table-full-width-example.html"
     ],
     "selector": "table-full-width-example",
     "additionalComponents": [],
@@ -3336,10 +3336,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "table-overview": {
     "packagePath": "components/table/table-overview",
-    "title": "Basic Table",
+    "title": "Table",
     "componentName": "TableOverviewExample",
     "files": [
-      "table-overview-example.ts",
+      "table-overview-example.ts"
     ],
     "selector": "table-overview-example",
     "additionalComponents": [],
@@ -3352,10 +3352,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "table-with-borders": {
     "packagePath": "components/table/table-with-borders",
-    "title": "Basic Table",
+    "title": "Table with borders",
     "componentName": "TableWithBordersExample",
     "files": [
-      "table-with-borders-example.ts",
+      "table-with-borders-example.ts"
     ],
     "selector": "table-with-borders-example",
     "additionalComponents": [],
