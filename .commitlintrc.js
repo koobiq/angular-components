@@ -1,99 +1,46 @@
 // @ts-check
 
-const scope_types = [
-    'alert',
-    'accordion',
-    'autocomplete',
-    'badge',
-    'build',
-    'button',
-    'button-toggle',
-    'ci',
-    'cli',
-    'cdk',
-    'checkbox',
-    'chore',
-    'core',
-    'code-block',
-    'common',
-    'datepicker',
-    'divider',
-    'dl',
-    'docs',
-    'dropdown',
-    'overlay',
-    'formatter',
-    'form-field',
-    'hint',
-    'icon',
-    'icon-button',
-    'icon-item',
-    'input',
-    'link',
-    'list',
-    'loader-overlay',
-    'markdown',
-    'modal',
-    'number-input',
-    'angular-moment-adapter',
-    'angular-luxon-adapter',
-    'navbar',
-    'optgroup',
-    'popover',
-    'progress-bar',
-    'progress-spinner',
-    'pop-up',
-    'radio',
-    'schematics',
-    'scrollbar',
-    'select',
-    'security',
-    'sidepanel',
-    'splitter',
-    'table',
-    'tabs',
-    'tag',
-    'textarea',
-    'timepicker',
-    'timezone',
-    'toast',
-    'toggle',
-    'tooltip',
-    'tree',
-    'tree-select',
-    'typography',
-    'vertical-navbar',
-    'visual',
-    'validation',
-    'layout',
-    'title',
-    'file-upload',
-    'experimental'
-];
+const { readdirSync } = require('fs');
+const { resolve } = require('path');
+
+const makeScopeTypesByPath = (path) => {
+    const files = readdirSync(resolve(__dirname, path), { withFileTypes: true });
+    const directories = files.filter((file) => file.isDirectory());
+    return directories.map((dir) => dir.name);
+};
 
 /** @type {import('@commitlint/types').UserConfig} */
 const config = {
     extends: ['@commitlint/config-conventional'],
     rules: {
-        'type-enum': [
-            2,
-            'always',
-            [
-                'feat',
-                'feature',
-                'fix',
-                'refactor',
-                'docs',
-                'build',
-                'test',
-                'ci',
-                'chore'
-            ]
-        ],
+        'header-max-length': [2, 'always', 120],
         'scope-enum': [
             2,
             'always',
-            scope_types
+            [
+                ...makeScopeTypesByPath(resolve(__dirname, 'apps')),
+                ...makeScopeTypesByPath(resolve(__dirname, 'packages/components')),
+
+                // packages
+                'angular-luxon-adapter',
+                'angular-moment-adapter',
+                'cdk',
+                'cli',
+                'experimental',
+                'schematics',
+
+                // core
+                'common',
+                'formatter',
+                'layout',
+                'overlay',
+                'typography',
+
+                // others
+                'security',
+                'visual'
+            ]
+
         ]
     }
 };
