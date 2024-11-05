@@ -2825,12 +2825,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "progress-bar-indeterminate": {
     "packagePath": "components/progress-bar/progress-bar-indeterminate",
-    "title": "Indeterminate progress bar",
+    "title": "Progress bar indeterminate",
     "componentName": "ProgressBarIndeterminateExample",
     "files": [
-      "progress-bar-indeterminate-example.ts",
-      "progress-bar-indeterminate-example.html",
-      "progress-bar-indeterminate-example.css"
+      "progress-bar-indeterminate-example.ts"
     ],
     "selector": "progress-bar-indeterminate-example",
     "additionalComponents": [],
@@ -2843,12 +2841,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "progress-bar-overview": {
     "packagePath": "components/progress-bar/progress-bar-overview",
-    "title": "Basic progress bar",
+    "title": "Progress bar",
     "componentName": "ProgressBarOverviewExample",
     "files": [
-      "progress-bar-overview-example.ts",
-      "progress-bar-overview-example.html",
-      "progress-bar-overview-example.css"
+      "progress-bar-overview-example.ts"
     ],
     "selector": "progress-bar-overview-example",
     "additionalComponents": [],
