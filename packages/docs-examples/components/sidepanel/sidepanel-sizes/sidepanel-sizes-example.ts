@@ -48,11 +48,16 @@ import {
 
         <ng-template>
             <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
-            <kbq-sidepanel-body class="layout-padding">
-                <div class="kbq-subheading">Sidepanel Template Body</div>
+            <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
+                <div
+                    class="kbq-subheading"
+                    style="padding: 8px"
+                >
+                    Sidepanel Template Body
+                </div>
 
                 @for (item of array; track item; let i = $index) {
-                    <div>
+                    <div style="padding: 8px">
                         {{ i + 1 }}
                     </div>
                 }

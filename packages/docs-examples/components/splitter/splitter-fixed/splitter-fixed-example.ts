@@ -1,12 +1,49 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqSplitterModule } from '@koobiq/components/splitter';
 
 /**
- * @title Basic Splitter
+ * @title Splitter fixed
  */
 @Component({
+    standalone: true,
     selector: 'splitter-fixed-example',
-    templateUrl: 'splitter-fixed-example.html',
-    styleUrls: ['splitter-fixed-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqSplitterModule
+    ],
+    styles: `
+        :host {
+            kbq-splitter {
+                display: flex;
+                border: 1px solid black;
+                height: 100px;
+                margin: 2px;
+            }
+
+            .kbq-splitter-area_fixed-width {
+                min-width: 200px;
+            }
+
+            div[kbq-splitter-area] {
+                background: #c5c0c0;
+            }
+        }
+    `,
+    template: `
+        <kbq-splitter>
+            <div
+                class="kbq-splitter-area_fixed-width"
+                kbq-splitter-area
+            >
+                first (with min-width)
+            </div>
+            <div
+                class="flex"
+                kbq-splitter-area
+            >
+                second
+            </div>
+            <div kbq-splitter-area>third</div>
+        </kbq-splitter>
+    `
 })
 export class SplitterFixedExample {}

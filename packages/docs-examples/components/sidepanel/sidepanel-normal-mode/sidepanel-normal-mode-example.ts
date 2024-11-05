@@ -42,7 +42,7 @@ import { take } from 'rxjs/operators';
 
         <ng-template>
             <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
-            <kbq-sidepanel-body style="padding: 8px">
+            <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
                 <div
                     class="kbq-subheading"
                     style="padding: 8px"
