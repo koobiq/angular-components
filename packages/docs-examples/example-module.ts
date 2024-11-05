@@ -3179,8 +3179,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelModalModeExample",
     "files": [
       "sidepanel-modal-mode-example.ts",
-      "sidepanel-modal-mode-example.html",
-      "sidepanel-modal-mode-example.css"
     ],
     "selector": "sidepanel-modal-mode-example",
     "additionalComponents": [],
@@ -3197,8 +3195,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelNormalModeExample",
     "files": [
       "sidepanel-normal-mode-example.ts",
-      "sidepanel-normal-mode-example.html",
-      "sidepanel-normal-mode-example.css"
     ],
     "selector": "sidepanel-normal-mode-example",
     "additionalComponents": [],
@@ -3215,8 +3211,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelOverlayedExample",
     "files": [
       "sidepanel-overlayed-example.ts",
-      "sidepanel-overlayed-example.html",
-      "sidepanel-overlayed-example.css"
     ],
     "selector": "sidepanel-overlayed-example",
     "additionalComponents": [],
@@ -3233,8 +3227,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelSizesExample",
     "files": [
       "sidepanel-sizes-example.ts",
-      "sidepanel-sizes-example.html",
-      "sidepanel-sizes-example.css"
     ],
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
