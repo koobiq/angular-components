@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, NgModuleFactory, Type, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
-import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
+import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -144,7 +144,7 @@ export class DocsLiveExampleViewer {
         if (this._example != null) {
             const { componentName } = EXAMPLE_COMPONENTS[this._example];
             // Lazily loads the example package that contains the requested example.
-            const moduleExports = await this.loadExample(this._example);
+            const moduleExports = await loadExample(this._example);
             this.exampleComponentType = moduleExports[componentName];
 
             // Since the data is loaded asynchronously, we can't count on the native behavior
@@ -154,17 +154,6 @@ export class DocsLiveExampleViewer {
                 setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
             }
         }
-    }
-
-    private async loadExample(name: string): Promise<{ component: Type<any> }> {
-        const { componentName, importPath } = EXAMPLE_COMPONENTS[name];
-
-        const moduleExports = await import(`@koobiq/docs-examples/fesm2022/${importPath}.mjs`);
-        const componentType: Type<any> = moduleExports[componentName];
-
-        return {
-            component: componentType
-        };
     }
 
     private prepareCodeFiles(codeFiles: ExampleFileData[]) {

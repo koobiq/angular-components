@@ -49,9 +49,22 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
         return result;
     }, {} as any);
 
-    return fs
-        .readFileSync(require.resolve('./example-module.template'), 'utf8')
-        .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2));
+    const loadText = [
+        `export async function loadExample(id: string): Promise<any> {`,
+        `  switch (id) {`,
+        ...exampleMetadata.map(
+            (data) => `  case '${data.id}':\nreturn import('@koobiq/docs-examples/${data.importPath}');`
+        ),
+        `    default:\nreturn undefined;`,
+        `  }`,
+        '}'
+    ].join('\n');
+
+    return (
+        fs
+            .readFileSync(require.resolve('./example-module.template'), 'utf8')
+            .replace(/\${exampleComponents}/g, JSON.stringify(exampleComponents, null, 2)) + loadText
+    );
 }
 
 /** Converts a given camel-cased string to a dash-cased string. */
@@ -71,8 +84,8 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
 
     for (const sourceFile of sourceFiles) {
         const relativePath = path.relative(baseDir, sourceFile).replace(/\\/g, '/');
-        const importPath = relativePath.replace(/\.ts$/, '');
         const packagePath = path.dirname(relativePath);
+        const importPath = path.dirname(packagePath);
 
         // Avoid parsing non-example files.
         if (!path.basename(sourceFile, path.extname(sourceFile)).endsWith('-example')) {
