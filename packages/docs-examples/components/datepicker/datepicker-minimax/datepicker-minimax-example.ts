@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -16,7 +17,8 @@ import { DateTime } from 'luxon';
         KbqDatepickerModule,
         KbqFormFieldModule,
         FormsModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        LuxonDateModule
     ],
     template: `
         <div class="docs-example__datepicker-minimax">

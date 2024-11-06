@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -14,7 +15,8 @@ import { DateTime } from 'luxon';
     imports: [
         KbqDatepickerModule,
         KbqFormFieldModule,
-        KbqIconModule
+        KbqIconModule,
+        LuxonDateModule
     ],
     template: `
         <div class="docs-example__datepicker-range">
