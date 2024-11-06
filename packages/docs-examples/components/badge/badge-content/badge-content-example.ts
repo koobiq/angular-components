@@ -7,7 +7,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 @Component({
     standalone: true,
     selector: 'badge-content-example',
-    styleUrl: 'badge-content-example.css',
+    styleUrls: ['badge-content-example.css'],
     encapsulation: ViewEncapsulation.None,
     imports: [
         KbqBadgeModule

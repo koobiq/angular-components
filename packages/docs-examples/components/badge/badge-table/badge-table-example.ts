@@ -10,7 +10,7 @@ import { KbqTableModule } from '@koobiq/components/table';
     standalone: true,
     selector: 'badge-table-example',
     templateUrl: 'badge-table-example.html',
-    styleUrl: 'badge-table-example.css',
+    styleUrls: ['badge-table-example.css'],
     imports: [
         KbqBadgeModule,
         KbqLinkModule,

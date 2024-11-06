@@ -208,7 +208,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge content",
     "componentName": "BadgeContentExample",
     "files": [
-      "badge-content-example.ts"
+      "badge-content-example.ts",
+      "badge-content-example.css"
     ],
     "selector": "badge-content-example",
     "additionalComponents": [],
@@ -221,7 +222,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeFillAndStyleExample",
     "files": [
       "badge-fill-and-style-example.ts",
-      "badge-fill-and-style-example.html"
+      "badge-fill-and-style-example.html",
+      "badge-fill-and-style-example.css"
     ],
     "selector": "badge-fill-and-style-example",
     "additionalComponents": [],
@@ -246,7 +248,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge size",
     "componentName": "BadgeSizeExample",
     "files": [
-      "badge-size-example.ts"
+      "badge-size-example.ts",
+      "badge-size-example.css"
     ],
     "selector": "badge-size-example",
     "additionalComponents": [],
@@ -259,7 +262,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeTableExample",
     "files": [
       "badge-table-example.ts",
-      "badge-table-example.html"
+      "badge-table-example.html",
+      "badge-table-example.css"
     ],
     "selector": "badge-table-example",
     "additionalComponents": [],
@@ -271,7 +275,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge tooltip",
     "componentName": "BadgeTooltipExample",
     "files": [
-      "badge-tooltip-example.ts"
+      "badge-tooltip-example.ts",
+      "badge-tooltip-example.css"
     ],
     "selector": "badge-tooltip-example",
     "additionalComponents": [],
