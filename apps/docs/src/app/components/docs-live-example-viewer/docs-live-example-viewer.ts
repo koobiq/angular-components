@@ -1,13 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import {
-    Component,
-    ElementRef,
-    Input,
-    NgModuleFactory,
-    Type,
-    ViewEncapsulation,
-    ɵNgModuleFactory
-} from '@angular/core';
+import { Component, ElementRef, Input, NgModuleFactory, Type, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 import { EXAMPLE_COMPONENTS, LiveExample } from '@koobiq/docs-examples';
 import { Observable, forkJoin } from 'rxjs';
@@ -46,8 +38,6 @@ export class DocsLiveExampleViewer {
 
     /** Module factory that declares the example component. */
     exampleModuleFactory: NgModuleFactory<any> | null = null;
-
-    scrollIntoViewDelay = 300;
 
     get exampleId() {
         return this.exampleData?.selector.replace('-example', '');
@@ -152,29 +142,29 @@ export class DocsLiveExampleViewer {
 
     private async loadExampleComponent() {
         if (this._example != null) {
-            const { componentName, module } = EXAMPLE_COMPONENTS[this._example];
-            // Lazily loads the example package that contains the requested example. Webpack needs to be
-            // able to statically determine possible imports for proper chunk generation. Explicitly
-            // specifying the path to the `fesm2015` folder as first segment instructs Webpack to generate
-            // chunks for each example flat esm2015 bundle. To avoid generating unnecessary chunks for
-            // source maps (which would never be loaded), we instruct Webpack to exclude source map
-            // files. More details: https://webpack.js.org/api/module-methods/#magic-comments.
-            // module.importSpecifier
-            const moduleExports = await import(`@koobiq/docs-examples/fesm2022/${module.importPath}.mjs`);
+            const { componentName } = EXAMPLE_COMPONENTS[this._example];
+            // Lazily loads the example package that contains the requested example.
+            const moduleExports = await this.loadExample(this._example);
             this.exampleComponentType = moduleExports[componentName];
-            // The components examples package is built with Ivy. This means that no factory files are
-            // generated. To retrieve the factory of the AOT compiled module, we simply pass the module
-            // class symbol to Ivy's module factory constructor. There is no equivalent for View Engine,
-            // where factories are stored in separate files. Hence the API is currently Ivy-only.
-            this.exampleModuleFactory = new ɵNgModuleFactory(moduleExports[module.name]);
 
             // Since the data is loaded asynchronously, we can't count on the native behavior
             // that scrolls the element into view automatically. We do it ourselves while giving
             // the page some time to render.
             if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
-                setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), this.scrollIntoViewDelay);
+                setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
             }
         }
+    }
+
+    private async loadExample(name: string): Promise<{ component: Type<any> }> {
+        const { componentName, importPath } = EXAMPLE_COMPONENTS[name];
+
+        const moduleExports = await import(`@koobiq/docs-examples/fesm2022/${importPath}.mjs`);
+        const componentType: Type<any> = moduleExports[componentName];
+
+        return {
+            component: componentType
+        };
     }
 
     private prepareCodeFiles(codeFiles: ExampleFileData[]) {
