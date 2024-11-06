@@ -46,6 +46,12 @@
         outline: none;
     }
 
+    &.kbq-disabled {
+        .kbq-icon {
+            cursor: default;
+        }
+    }
+
     &:not(.kbq-disabled) {
         cursor: pointer;
     }
