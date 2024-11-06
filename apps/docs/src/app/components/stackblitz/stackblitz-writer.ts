@@ -141,7 +141,7 @@ export class StackblitzWriter {
             const targetPath = normalizePath(`src/example/${relativeFilePath}`);
 
             tasks.push(
-                this.loadFile(exampleBaseContentPath + relativeFilePath)
+                this.loadFile(`${exampleBaseContentPath}${relativeFilePath}`)
                     // Insert a copyright footer for all example files inserted into the project.
                     .then((content) => this.appendCopyright(relativeFilePath, content))
                     .then((content) => (result[targetPath] = content))
