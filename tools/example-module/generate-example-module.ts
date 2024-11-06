@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { parseExampleFile } from './parse-example-file';
-import { parseExampleModuleFile } from './parse-example-module-file';
 
 interface ExampleMetadata {
     /** Name of the example component. */
@@ -20,15 +19,8 @@ interface ExampleMetadata {
     additionalComponents: string[];
     /** Files for this example. */
     files: string[];
-    /** Reference to the module that declares this example. */
-    module: ExampleModule;
-}
-
-interface ExampleModule {
-    /** Path to the package that the module is defined in. */
-    packagePath: string;
-    /** Name of the module. */
-    name: string;
+    /** Path from which to import the example. */
+    importPath: string;
 }
 
 interface AnalyzedExamples {
@@ -43,8 +35,6 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
             throw Error(`Multiple examples with the same id have been discovered: ${data.id}`);
         }
 
-        const splitPackagePath = data.module.packagePath.split('/');
-
         result[data.id] = {
             packagePath: data.packagePath,
             title: data.title,
@@ -53,11 +43,7 @@ function inlineExampleModuleTemplate(parsedData: AnalyzedExamples): string {
             selector: data.selector,
             additionalComponents: data.additionalComponents,
             primaryFile: path.basename(data.sourcePath),
-            module: {
-                name: data.module.name,
-                importSpecifier: data.module.packagePath,
-                importPath: `koobiq-docs-examples-${splitPackagePath[0]}-${splitPackagePath[1]}`
-            }
+            importPath: data.importPath
         };
 
         return result;
@@ -82,23 +68,11 @@ function convertToDashCase(name: string): string {
  */
 function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExamples {
     const exampleMetadata: ExampleMetadata[] = [];
-    const exampleModules: ExampleModule[] = [];
 
     for (const sourceFile of sourceFiles) {
         const relativePath = path.relative(baseDir, sourceFile).replace(/\\/g, '/');
         const importPath = relativePath.replace(/\.ts$/, '');
         const packagePath = path.dirname(relativePath);
-
-        // Collect all individual example modules.
-        if (path.basename(sourceFile) === 'index.ts') {
-            exampleModules.push(
-                ...parseExampleModuleFile(sourceFile).map((name) => ({
-                    name,
-                    importPath,
-                    packagePath
-                }))
-            );
-        }
 
         // Avoid parsing non-example files.
         if (!path.basename(sourceFile, path.extname(sourceFile)).endsWith('-example')) {
@@ -120,9 +94,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
                 title: primaryComponent.title.trim(),
                 additionalComponents: [],
                 files: [],
-                // The `module` field will be set in a separate step below. We need to set
-                // it here as we are setting it later in a side-effect iteration.
-                module: null!
+                importPath
             };
 
             // For consistency, we expect the example component selector to match
@@ -141,9 +113,6 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             }
             if (primaryComponent.styleUrls) {
                 example.files.push(...primaryComponent.styleUrls);
-            }
-            if (primaryComponent.componentName.includes('Harness')) {
-                example.files.push(`${primaryComponent.selector}.spec.ts`);
             }
 
             if (secondaryComponents.length) {
@@ -168,29 +137,6 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             );
         }
     }
-
-    // Walk through all collected examples and find their parent example module. In View Engine,
-    // components cannot be lazy-loaded without the associated module being loaded.
-    exampleMetadata.forEach((example) => {
-        const parentModule = exampleModules.find((module) => example.sourcePath.startsWith(module.packagePath));
-
-        if (!parentModule) {
-            throw Error(`Could not determine example module for: ${example.id}`);
-        }
-
-        const actualPath = path.dirname(example.sourcePath);
-        const expectedPath = path.posix.join(parentModule.packagePath, example.id);
-
-        // Ensures that example ids match with the directory they are stored in. This is not
-        // necessary for the docs site, but it helps with consistency and makes it easy to
-        // determine an id for an example. We also ensures for consistency that example
-        // folders are direct siblings of the module file.
-        if (actualPath !== expectedPath) {
-            throw Error(`Example is stored in: ${actualPath}, but expected: ${expectedPath}`);
-        }
-
-        example.module = parentModule;
-    });
 
     return { exampleMetadata };
 }
