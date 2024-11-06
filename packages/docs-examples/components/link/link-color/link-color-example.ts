@@ -14,7 +14,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
             <tr>
                 <td>
                     <a
-                        href="/components/link/overview"
+                        href="https://koobiq.io/components/link/overview"
+                        target="_blank"
                         kbq-link
                     >
                         Отчет от 17.05.2020
@@ -23,7 +24,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 <td>
                     <a
                         class="warning"
-                        href="/components/link/overview"
+                        href="https://koobiq.io/components/link/overview"
+                        target="_blank"
                         kbq-link
                     >
                         Отчет от 18.05.2020
@@ -32,7 +34,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 <td>
                     <a
                         class="ok"
-                        href="/components/link/overview"
+                        href="https://koobiq.io/components/link/overview"
+                        target="_blank"
                         kbq-link
                     >
                         Отчет от 19.05.2020

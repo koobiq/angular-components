@@ -10,12 +10,12 @@ import { KbqLinkModule } from '@koobiq/components/link';
     imports: [KbqLinkModule],
     template: `
         <div style="padding: 16px">
-            <span
+            <a
                 [disabled]="disabled"
                 kbq-link
             >
                 Отчет от 15.05.2020
-            </span>
+            </a>
         </div>
     `
 })

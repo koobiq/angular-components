@@ -12,7 +12,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
     template: `
         <div style="padding: 16px">
             <a
-                href="/components/link/overview"
+                href="https://koobiq.io/components/link/overview"
+                target="_blank"
                 kbq-link
             >
                 Отчет сканирования
@@ -21,9 +22,9 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
         <div style="padding: 16px">
             <a
-                href="/components/link/overview"
-                kbq-link
+                href="https://koobiq.io/components/link/overview"
                 target="_blank"
+                kbq-link
             >
                 <span class="kbq-link__text">Отчет сканирования</span>
                 <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
@@ -33,6 +34,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         <div style="padding: 16px">
             <a
                 href="https://www.google.com/"
+                target="_blank"
                 kbq-link
             >
                 <span class="kbq-link__text">Отчет сканирования</span>
@@ -43,7 +45,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
         <div style="padding: 16px">
             <a
                 [disabled]="disabled"
-                href="/components/link/overview"
+                href="https://koobiq.io/components/link/overview"
+                target="_blank"
                 kbq-link
             >
                 <i kbq-icon="kbq-calendar-o_16"></i>
@@ -54,7 +57,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
         <div style="padding: 16px">
             <a
-                href="/components/link/overview"
+                href="https://koobiq.io/components/link/overview"
+                target="_blank"
                 kbq-link
                 noUnderline
             >

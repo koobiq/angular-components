@@ -13,9 +13,9 @@ import { KbqLinkModule } from '@koobiq/components/link';
             <a
                 [useVisited]="visited"
                 (click)="visited = true"
-                href="/components/link/overview"
-                kbq-link
+                href="https://koobiq.io/components/link/overview"
                 target="_blank"
+                kbq-link
             >
                 Отчет от 19.05.2020
             </a>

@@ -12,9 +12,9 @@ import { KbqLinkModule } from '@koobiq/components/link';
     template: `
         <div style="padding: 16px">
             <a
-                href="/components/link/overview"
-                kbq-link
+                href="https://koobiq.io/components/link/overview"
                 target="_blank"
+                kbq-link
             >
                 <span class="kbq-link__text">Отчет сканирования</span>
                 <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
