@@ -49,7 +49,7 @@ export class StackblitzWriter {
      * Returns an HTMLFormElement that will open a new stackblitz template with the example data when
      * called with submit().
      */
-    constructStackblitzForm(exampleId: string, data: ExampleData): Promise<() => void> {
+    createStackBlitzForExample(exampleId: string, data: ExampleData): Promise<() => void> {
         return this.ngZone.runOutsideAngular(async () => {
             const files = await this.buildInMemoryFileDictionary(data, exampleId);
             const exampleMainFile = `src/example/${data.indexFilename}`;
@@ -110,7 +110,7 @@ export class StackblitzWriter {
     }
 
     private appendCopyright(filename: string, content: string): string {
-        if (filename.indexOf('.ts') > -1 || filename.indexOf('.scss') > -1) {
+        if (filename.indexOf('.ts') > -1 || filename.indexOf('.css') > -1) {
             content = `${content}\n\n/**  ${COPYRIGHT} */`;
         } else if (filename.indexOf('.html') > -1) {
             content = `${content}\n\n<!-- ${COPYRIGHT} -->`;

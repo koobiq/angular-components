@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Input, NgModuleFactory, Type, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, Input, Type, ViewEncapsulation } from '@angular/core';
 import { KbqCodeFile } from '@koobiq/components/code-block';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { Observable, forkJoin } from 'rxjs';
@@ -35,9 +35,6 @@ export class DocsLiveExampleViewer {
 
     /** Component type for the current example. */
     exampleComponentType: Type<any> | null = null;
-
-    /** Module factory that declares the example component. */
-    exampleModuleFactory: NgModuleFactory<any> | null = null;
 
     get exampleId() {
         return this.exampleData?.selector.replace('-example', '');

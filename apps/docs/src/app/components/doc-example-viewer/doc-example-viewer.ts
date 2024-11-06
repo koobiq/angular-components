@@ -1,4 +1,4 @@
-import { CdkPortal, ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
+import { ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
     ApplicationRef,
@@ -13,7 +13,6 @@ import {
     OnDestroy,
     Output,
     SecurityContext,
-    ViewChild,
     ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -22,7 +21,7 @@ import { shareReplay, take, tap } from 'rxjs/operators';
 import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-example-viewer';
 
 @Injectable({ providedIn: 'root' })
-export class DocExampleFetcher {
+export class DocFetcher {
     private cache: Record<string, Observable<string>> = {};
 
     constructor(private http: HttpClient) {}
@@ -42,21 +41,15 @@ export class DocExampleFetcher {
     selector: 'doc-example-viewer',
     template: `
         Loading document...
-        <ng-template
-            cdkPortal
-            let-htmlContent
-            let-contentToCopy="textContent"
-        >
-            <copy-button [contentToCopy]="contentToCopy" />
-            <div [outerHTML]="htmlContent"></div>
-        </ng-template>
     `,
     host: {
         class: 'docs-live-example kbq-markdown'
     }
 })
 export class DocExampleViewer implements OnDestroy {
-    @ViewChild(CdkPortal) copyableCodeTemplate: CdkPortal;
+    private portalHosts: DomPortalOutlet[] = [];
+    private documentFetchSubscription: Subscription | undefined;
+
     /** The URL of the document to display. */
     @Input()
     set documentUrl(url: string) {
@@ -70,14 +63,12 @@ export class DocExampleViewer implements OnDestroy {
     @Output() contentRendered = new EventEmitter<void>();
     @Output() contentRenderFailed = new EventEmitter<void>();
 
-    get nativeElement(): HTMLElement {
-        return this.elementRef.nativeElement;
-    }
-
     /** The document text. It should not be HTML encoded. */
     textContent = '';
-    private portalHosts: DomPortalOutlet[] = [];
-    private documentFetchSubscription: Subscription;
+
+    private static initExampleViewer(exampleViewerComponent: DocsLiveExampleViewer, example: string) {
+        exampleViewerComponent.example = example;
+    }
 
     constructor(
         private appRef: ApplicationRef,
@@ -87,7 +78,7 @@ export class DocExampleViewer implements OnDestroy {
         private viewContainerRef: ViewContainerRef,
         private ngZone: NgZone,
         private domSanitizer: DomSanitizer,
-        private docFetcher: DocExampleFetcher
+        private docFetcher: DocFetcher
     ) {}
 
     ngOnDestroy() {
@@ -115,38 +106,44 @@ export class DocExampleViewer implements OnDestroy {
         // links would redirect to "/#my-section".
         rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
             const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
-
             return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
         });
 
-        this.nativeElement.innerHTML = rawDocument;
-        this.textContent = this.nativeElement.textContent || '';
+        this.elementRef.nativeElement.innerHTML = rawDocument;
+        this.textContent = this.elementRef.nativeElement.textContent;
 
         this.loadComponents('koobiq-docs-example', DocsLiveExampleViewer);
 
         // Resolving and creating components dynamically in Angular happens synchronously, but since
         // we want to emit the output if the components are actually rendered completely, we wait
         // until the Angular zone becomes stable.
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next());
+        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRendered.next(this.elementRef.nativeElement));
     }
 
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
         console.error(error);
-        this.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
+        this.elementRef.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
 
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => this.contentRenderFailed.next());
+        this.ngZone.onStable
+            .pipe(take(1))
+            .subscribe(() => this.contentRenderFailed.next(this.elementRef.nativeElement));
     }
 
     /** Instantiate a ExampleViewer for each example. */
     private loadComponents(componentName: string, componentClass: any) {
-        this.nativeElement.querySelectorAll(`[${componentName}]`).forEach((element: Element) => {
-            const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
-            const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
-            const exampleViewer = portalHost.attach(examplePortal);
-            // todo проверить, что достается из атрибута ?
-            (exampleViewer.instance as DocsLiveExampleViewer).example = element.getAttribute(componentName);
+        const exampleElements = this.elementRef.nativeElement.querySelectorAll(`[${componentName}]`);
 
+        [...exampleElements].forEach((element: Element) => {
+            const example = element.getAttribute(componentName);
+
+            const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
+            const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
+            const exampleViewer = portalHost.attach(examplePortal);
+            const exampleViewerComponent = exampleViewer.instance as DocsLiveExampleViewer;
+            if (example !== null) {
+                DocExampleViewer.initExampleViewer(exampleViewerComponent, example);
+            }
             this.portalHosts.push(portalHost);
         });
     }
