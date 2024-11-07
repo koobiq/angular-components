@@ -2835,12 +2835,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "timezone-overview": {
     "packagePath": "components/timezone/timezone-overview",
-    "title": "Timezone overview",
+    "title": "Timezone",
     "componentName": "TimezoneOverviewExample",
     "files": [
-      "timezone-overview-example.ts",
-      "timezone-overview-example.html",
-      "timezone-overview-example.css"
+      "timezone-overview-example.ts"
     ],
     "selector": "timezone-overview-example",
     "additionalComponents": [],
@@ -2849,12 +2847,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "timezone-search-overview": {
     "packagePath": "components/timezone/timezone-search-overview",
-    "title": "Timezone search overview",
+    "title": "Timezone search",
     "componentName": "TimezoneSearchOverviewExample",
     "files": [
-      "timezone-search-overview-example.ts",
-      "timezone-search-overview-example.html",
-      "timezone-search-overview-example.css"
+      "timezone-search-overview-example.ts"
     ],
     "selector": "timezone-search-overview-example",
     "additionalComponents": [],
@@ -2863,12 +2859,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "timezone-trigger-overview": {
     "packagePath": "components/timezone/timezone-trigger-overview",
-    "title": "Timezone trigger overview",
+    "title": "Timezone trigger",
     "componentName": "TimezoneTriggerOverviewExample",
     "files": [
-      "timezone-trigger-overview-example.ts",
-      "timezone-trigger-overview-example.html",
-      "timezone-trigger-overview-example.css"
+      "timezone-trigger-overview-example.ts"
     ],
     "selector": "timezone-trigger-overview-example",
     "additionalComponents": [],
@@ -3806,12 +3800,6 @@ return import('@koobiq/docs-examples/components/progress-spinner');
   case 'radio-content':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-group':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-invalid':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-overview':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-required':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-size':
 return import('@koobiq/docs-examples/components/radio');
