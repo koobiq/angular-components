@@ -43,6 +43,7 @@ import {
     selector: 'kbq-dropdown',
     exportAs: 'kbqDropdown',
     templateUrl: 'dropdown.html',
+    /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['dropdown.scss', 'dropdown-tokens.scss', '../list/list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

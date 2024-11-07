@@ -137,6 +137,7 @@ export class KbqVirtualOption extends KbqOptionBase {
         '(click)': 'selectViaInteraction()',
         '(keydown)': 'handleKeydown($event)'
     },
+    /* Component inherits styles from `list`, so `list` variables are imported as the single source of truth. */
     styleUrls: ['option.scss', 'option-tokens.scss', '../../list/list-tokens.scss'],
     templateUrl: 'option.html',
     encapsulation: ViewEncapsulation.None,
