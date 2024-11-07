@@ -33,7 +33,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
         <div style="padding: 16px">
             <a
-                href="https://www.google.com/"
+                href="https://koobiq.io/components/link/overview"
                 target="_blank"
                 kbq-link
             >
