@@ -19,20 +19,7 @@ export interface LiveExample {
   packagePath: string;
   /** List of additional components which are part of the example. */
   additionalComponents: string[];
-  /** NgModule that declares this example. */
-  module: NgModuleInfo;
-}
-
-export interface NgModuleInfo {
-  /** Name of the NgModule. */
-  name: string;
-  /**
-   * Import specifier that resolves to this module. The specifier is not scoped to
-   * `@angular/components-examples` because it's up to the consumer how the module is
-   * imported. For example, in the docs app, modules are lazily imported from `fesm2015/`.
-   */
-  importSpecifier: string;
-
+  /** Path from which to import the example. */
   importPath: string;
 }
 
@@ -48,11 +35,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-content-example",
     "additionalComponents": [],
     "primaryFile": "accordion-content-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "accordion-header": {
     "packagePath": "components/accordion/accordion-header",
@@ -65,11 +48,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-header-example",
     "additionalComponents": [],
     "primaryFile": "accordion-header-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "accordion-in-panel": {
     "packagePath": "components/accordion/accordion-in-panel",
@@ -82,11 +61,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-in-panel-example",
     "additionalComponents": [],
     "primaryFile": "accordion-in-panel-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "accordion-in-section": {
     "packagePath": "components/accordion/accordion-in-section",
@@ -99,11 +74,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-in-section-example",
     "additionalComponents": [],
     "primaryFile": "accordion-in-section-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "accordion-inactive-section": {
     "packagePath": "components/accordion/accordion-inactive-section",
@@ -116,11 +87,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-inactive-section-example",
     "additionalComponents": [],
     "primaryFile": "accordion-inactive-section-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "accordion-overview": {
     "packagePath": "components/accordion/accordion-overview",
@@ -133,11 +100,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-overview-example",
     "additionalComponents": [],
     "primaryFile": "accordion-overview-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "accordion-sections": {
     "packagePath": "components/accordion/accordion-sections",
@@ -150,11 +113,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-sections-example",
     "additionalComponents": [],
     "primaryFile": "accordion-sections-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "accordion-states": {
     "packagePath": "components/accordion/accordion-states",
@@ -167,11 +126,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "accordion-states-example",
     "additionalComponents": [],
     "primaryFile": "accordion-states-example.ts",
-    "module": {
-      "name": "AccordionExamplesModule",
-      "importSpecifier": "components/accordion",
-      "importPath": "koobiq-docs-examples-components-accordion"
-    }
+    "importPath": "components/accordion"
   },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
@@ -183,11 +138,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "alert-close-example",
     "additionalComponents": [],
     "primaryFile": "alert-close-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/alert",
-      "importPath": "koobiq-docs-examples-components-alert"
-    }
+    "importPath": "components/alert"
   },
   "alert-content": {
     "packagePath": "components/alert/alert-content",
@@ -200,11 +151,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "alert-content-example",
     "additionalComponents": [],
     "primaryFile": "alert-content-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/alert",
-      "importPath": "koobiq-docs-examples-components-alert"
-    }
+    "importPath": "components/alert"
   },
   "alert-size": {
     "packagePath": "components/alert/alert-size",
@@ -217,11 +164,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "alert-size-example",
     "additionalComponents": [],
     "primaryFile": "alert-size-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/alert",
-      "importPath": "koobiq-docs-examples-components-alert"
-    }
+    "importPath": "components/alert"
   },
   "alert-status": {
     "packagePath": "components/alert/alert-status",
@@ -234,11 +177,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "alert-status-example",
     "additionalComponents": [],
     "primaryFile": "alert-status-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/alert",
-      "importPath": "koobiq-docs-examples-components-alert"
-    }
+    "importPath": "components/alert"
   },
   "alert-variants": {
     "packagePath": "components/alert/alert-variants",
@@ -250,11 +189,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "alert-variants-example",
     "additionalComponents": [],
     "primaryFile": "alert-variants-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/alert",
-      "importPath": "koobiq-docs-examples-components-alert"
-    }
+    "importPath": "components/alert"
   },
   "autocomplete-overview": {
     "packagePath": "components/autocomplete/autocomplete-overview",
@@ -266,27 +201,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "autocomplete-overview-example",
     "additionalComponents": [],
     "primaryFile": "autocomplete-overview-example.ts",
-    "module": {
-      "name": "AutocompleteExamplesModule",
-      "importSpecifier": "components/autocomplete",
-      "importPath": "koobiq-docs-examples-components-autocomplete"
-    }
+    "importPath": "components/autocomplete"
   },
   "badge-content": {
     "packagePath": "components/badge/badge-content",
     "title": "Badge content",
     "componentName": "BadgeContentExample",
     "files": [
-      "badge-content-example.ts"
+      "badge-content-example.ts",
+      "badge-content-example.css"
     ],
     "selector": "badge-content-example",
     "additionalComponents": [],
     "primaryFile": "badge-content-example.ts",
-    "module": {
-      "name": "BadgeExamplesModule",
-      "importSpecifier": "components/badge",
-      "importPath": "koobiq-docs-examples-components-badge"
-    }
+    "importPath": "components/badge"
   },
   "badge-fill-and-style": {
     "packagePath": "components/badge/badge-fill-and-style",
@@ -294,16 +222,13 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeFillAndStyleExample",
     "files": [
       "badge-fill-and-style-example.ts",
-      "badge-fill-and-style-example.html"
+      "badge-fill-and-style-example.html",
+      "badge-fill-and-style-example.css"
     ],
     "selector": "badge-fill-and-style-example",
     "additionalComponents": [],
     "primaryFile": "badge-fill-and-style-example.ts",
-    "module": {
-      "name": "BadgeExamplesModule",
-      "importSpecifier": "components/badge",
-      "importPath": "koobiq-docs-examples-components-badge"
-    }
+    "importPath": "components/badge"
   },
   "badge-list": {
     "packagePath": "components/badge/badge-list",
@@ -316,27 +241,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "badge-list-example",
     "additionalComponents": [],
     "primaryFile": "badge-list-example.ts",
-    "module": {
-      "name": "BadgeExamplesModule",
-      "importSpecifier": "components/badge",
-      "importPath": "koobiq-docs-examples-components-badge"
-    }
+    "importPath": "components/badge"
   },
   "badge-size": {
     "packagePath": "components/badge/badge-size",
     "title": "Badge size",
     "componentName": "BadgeSizeExample",
     "files": [
-      "badge-size-example.ts"
+      "badge-size-example.ts",
+      "badge-size-example.css"
     ],
     "selector": "badge-size-example",
     "additionalComponents": [],
     "primaryFile": "badge-size-example.ts",
-    "module": {
-      "name": "BadgeExamplesModule",
-      "importSpecifier": "components/badge",
-      "importPath": "koobiq-docs-examples-components-badge"
-    }
+    "importPath": "components/badge"
   },
   "badge-table": {
     "packagePath": "components/badge/badge-table",
@@ -344,32 +262,26 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeTableExample",
     "files": [
       "badge-table-example.ts",
-      "badge-table-example.html"
+      "badge-table-example.html",
+      "badge-table-example.css"
     ],
     "selector": "badge-table-example",
     "additionalComponents": [],
     "primaryFile": "badge-table-example.ts",
-    "module": {
-      "name": "BadgeExamplesModule",
-      "importSpecifier": "components/badge",
-      "importPath": "koobiq-docs-examples-components-badge"
-    }
+    "importPath": "components/badge"
   },
   "badge-tooltip": {
     "packagePath": "components/badge/badge-tooltip",
     "title": "Badge tooltip",
     "componentName": "BadgeTooltipExample",
     "files": [
-      "badge-tooltip-example.ts"
+      "badge-tooltip-example.ts",
+      "badge-tooltip-example.css"
     ],
     "selector": "badge-tooltip-example",
     "additionalComponents": [],
     "primaryFile": "badge-tooltip-example.ts",
-    "module": {
-      "name": "BadgeExamplesModule",
-      "importSpecifier": "components/badge",
-      "importPath": "koobiq-docs-examples-components-badge"
-    }
+    "importPath": "components/badge"
   },
   "button-toggle-alignment-overview": {
     "packagePath": "components/button-toggle/button-toggle-alignment-overview",
@@ -382,11 +294,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-toggle-alignment-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-alignment-overview-example.ts",
-    "module": {
-      "name": "ButtonToggleExamplesModule",
-      "importSpecifier": "components/button-toggle",
-      "importPath": "koobiq-docs-examples-components-button-toggle"
-    }
+    "importPath": "components/button-toggle"
   },
   "button-toggle-disabled-all-overview": {
     "packagePath": "components/button-toggle/button-toggle-disabled-all-overview",
@@ -399,11 +307,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-toggle-disabled-all-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-disabled-all-overview-example.ts",
-    "module": {
-      "name": "ButtonToggleExamplesModule",
-      "importSpecifier": "components/button-toggle",
-      "importPath": "koobiq-docs-examples-components-button-toggle"
-    }
+    "importPath": "components/button-toggle"
   },
   "button-toggle-disabled-partial-overview": {
     "packagePath": "components/button-toggle/button-toggle-disabled-partial-overview",
@@ -416,11 +320,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-toggle-disabled-partial-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-disabled-partial-overview-example.ts",
-    "module": {
-      "name": "ButtonToggleExamplesModule",
-      "importSpecifier": "components/button-toggle",
-      "importPath": "koobiq-docs-examples-components-button-toggle"
-    }
+    "importPath": "components/button-toggle"
   },
   "button-toggle-overview": {
     "packagePath": "components/button-toggle/button-toggle-overview",
@@ -433,11 +333,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-toggle-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-overview-example.ts",
-    "module": {
-      "name": "ButtonToggleExamplesModule",
-      "importSpecifier": "components/button-toggle",
-      "importPath": "koobiq-docs-examples-components-button-toggle"
-    }
+    "importPath": "components/button-toggle"
   },
   "button-toggle-tooltip-overview": {
     "packagePath": "components/button-toggle/button-toggle-tooltip-overview",
@@ -449,11 +345,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-toggle-tooltip-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-toggle-tooltip-overview-example.ts",
-    "module": {
-      "name": "ButtonToggleExamplesModule",
-      "importSpecifier": "components/button-toggle",
-      "importPath": "koobiq-docs-examples-components-button-toggle"
-    }
+    "importPath": "components/button-toggle"
   },
   "button-content": {
     "packagePath": "components/button/button-content",
@@ -465,11 +357,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-content-example",
     "additionalComponents": [],
     "primaryFile": "button-content-example.ts",
-    "module": {
-      "name": "ButtonExamplesModule",
-      "importSpecifier": "components/button",
-      "importPath": "koobiq-docs-examples-components-button"
-    }
+    "importPath": "components/button"
   },
   "button-fill-and-style": {
     "packagePath": "components/button/button-fill-and-style",
@@ -482,11 +370,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-fill-and-style-example",
     "additionalComponents": [],
     "primaryFile": "button-fill-and-style-example.ts",
-    "module": {
-      "name": "ButtonExamplesModule",
-      "importSpecifier": "components/button",
-      "importPath": "koobiq-docs-examples-components-button"
-    }
+    "importPath": "components/button"
   },
   "button-fill-content": {
     "packagePath": "components/button/button-fill-content",
@@ -498,11 +382,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-fill-content-example",
     "additionalComponents": [],
     "primaryFile": "button-fill-content-example.ts",
-    "module": {
-      "name": "ButtonExamplesModule",
-      "importSpecifier": "components/button",
-      "importPath": "koobiq-docs-examples-components-button"
-    }
+    "importPath": "components/button"
   },
   "button-fixed-content": {
     "packagePath": "components/button/button-fixed-content",
@@ -514,11 +394,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-fixed-content-example",
     "additionalComponents": [],
     "primaryFile": "button-fixed-content-example.ts",
-    "module": {
-      "name": "ButtonExamplesModule",
-      "importSpecifier": "components/button",
-      "importPath": "koobiq-docs-examples-components-button"
-    }
+    "importPath": "components/button"
   },
   "button-hug-content": {
     "packagePath": "components/button/button-hug-content",
@@ -530,11 +406,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-hug-content-example",
     "additionalComponents": [],
     "primaryFile": "button-hug-content-example.ts",
-    "module": {
-      "name": "ButtonExamplesModule",
-      "importSpecifier": "components/button",
-      "importPath": "koobiq-docs-examples-components-button"
-    }
+    "importPath": "components/button"
   },
   "button-loading-state": {
     "packagePath": "components/button/button-loading-state",
@@ -546,11 +418,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-loading-state-example",
     "additionalComponents": [],
     "primaryFile": "button-loading-state-example.ts",
-    "module": {
-      "name": "ButtonExamplesModule",
-      "importSpecifier": "components/button",
-      "importPath": "koobiq-docs-examples-components-button"
-    }
+    "importPath": "components/button"
   },
   "button-overview": {
     "packagePath": "components/button/button-overview",
@@ -562,11 +430,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "button-overview-example",
     "additionalComponents": [],
     "primaryFile": "button-overview-example.ts",
-    "module": {
-      "name": "ButtonExamplesModule",
-      "importSpecifier": "components/button",
-      "importPath": "koobiq-docs-examples-components-button"
-    }
+    "importPath": "components/button"
   },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
@@ -578,11 +442,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "checkbox-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "checkbox-indeterminate-example.ts",
-    "module": {
-      "name": "CheckboxExamplesModule",
-      "importSpecifier": "components/checkbox",
-      "importPath": "koobiq-docs-examples-components-checkbox"
-    }
+    "importPath": "components/checkbox"
   },
   "checkbox-overview": {
     "packagePath": "components/checkbox/checkbox-overview",
@@ -595,11 +455,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "checkbox-overview-example",
     "additionalComponents": [],
     "primaryFile": "checkbox-overview-example.ts",
-    "module": {
-      "name": "CheckboxExamplesModule",
-      "importSpecifier": "components/checkbox",
-      "importPath": "koobiq-docs-examples-components-checkbox"
-    }
+    "importPath": "components/checkbox"
   },
   "pseudo-checkbox": {
     "packagePath": "components/checkbox/pseudo-checkbox",
@@ -611,11 +467,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "pseudo-checkbox-example",
     "additionalComponents": [],
     "primaryFile": "pseudo-checkbox-example.ts",
-    "module": {
-      "name": "CheckboxExamplesModule",
-      "importSpecifier": "components/checkbox",
-      "importPath": "koobiq-docs-examples-components-checkbox"
-    }
+    "importPath": "components/checkbox"
   },
   "code-block-common": {
     "packagePath": "components/code-block/code-block-common",
@@ -627,11 +479,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-common-example",
     "additionalComponents": [],
     "primaryFile": "code-block-common-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-cut": {
     "packagePath": "components/code-block/code-block-cut",
@@ -643,11 +491,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-cut-example",
     "additionalComponents": [],
     "primaryFile": "code-block-cut-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-line-numbers": {
     "packagePath": "components/code-block/code-block-line-numbers",
@@ -659,11 +503,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-line-numbers-example",
     "additionalComponents": [],
     "primaryFile": "code-block-line-numbers-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-line-wrap": {
     "packagePath": "components/code-block/code-block-line-wrap",
@@ -675,11 +515,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-line-wrap-example",
     "additionalComponents": [],
     "primaryFile": "code-block-line-wrap-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-noborder": {
     "packagePath": "components/code-block/code-block-noborder",
@@ -691,11 +527,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-noborder-example",
     "additionalComponents": [],
     "primaryFile": "code-block-noborder-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-single-line": {
     "packagePath": "components/code-block/code-block-single-line",
@@ -707,11 +539,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-single-line-example",
     "additionalComponents": [],
     "primaryFile": "code-block-single-line-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-stretch": {
     "packagePath": "components/code-block/code-block-stretch",
@@ -723,11 +551,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-stretch-example",
     "additionalComponents": [],
     "primaryFile": "code-block-stretch-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-styling": {
     "packagePath": "components/code-block/code-block-styling",
@@ -739,11 +563,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-styling-example",
     "additionalComponents": [],
     "primaryFile": "code-block-styling-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-tabs-with-overflow": {
     "packagePath": "components/code-block/code-block-tabs-with-overflow",
@@ -755,11 +575,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-tabs-with-overflow-example",
     "additionalComponents": [],
     "primaryFile": "code-block-tabs-with-overflow-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-tabs": {
     "packagePath": "components/code-block/code-block-tabs",
@@ -771,11 +587,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-tabs-example",
     "additionalComponents": [],
     "primaryFile": "code-block-tabs-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "code-block-title": {
     "packagePath": "components/code-block/code-block-title",
@@ -787,11 +599,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-title-example",
     "additionalComponents": [],
     "primaryFile": "code-block-title-example.ts",
-    "module": {
-      "name": "CodeBlockExamplesModule",
-      "importSpecifier": "components/code-block",
-      "importPath": "koobiq-docs-examples-components-code-block"
-    }
+    "importPath": "components/code-block"
   },
   "absolute-date-formatter": {
     "packagePath": "components/date-formatter/absolute-date-formatter",
@@ -805,11 +613,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "absolute-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "absolute-date-formatter-example.ts",
-    "module": {
-      "name": "DateFormatterExamplesModule",
-      "importSpecifier": "components/date-formatter",
-      "importPath": "koobiq-docs-examples-components-date-formatter"
-    }
+    "importPath": "components/date-formatter"
   },
   "duration-date-formatter": {
     "packagePath": "components/date-formatter/duration-date-formatter",
@@ -823,11 +627,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "duration-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "duration-date-formatter-example.ts",
-    "module": {
-      "name": "DateFormatterExamplesModule",
-      "importSpecifier": "components/date-formatter",
-      "importPath": "koobiq-docs-examples-components-date-formatter"
-    }
+    "importPath": "components/date-formatter"
   },
   "range-date-formatter": {
     "packagePath": "components/date-formatter/range-date-formatter",
@@ -841,11 +641,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "range-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "range-date-formatter-example.ts",
-    "module": {
-      "name": "DateFormatterExamplesModule",
-      "importSpecifier": "components/date-formatter",
-      "importPath": "koobiq-docs-examples-components-date-formatter"
-    }
+    "importPath": "components/date-formatter"
   },
   "relative-date-formatter": {
     "packagePath": "components/date-formatter/relative-date-formatter",
@@ -859,11 +655,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "relative-date-formatter-example",
     "additionalComponents": [],
     "primaryFile": "relative-date-formatter-example.ts",
-    "module": {
-      "name": "DateFormatterExamplesModule",
-      "importSpecifier": "components/date-formatter",
-      "importPath": "koobiq-docs-examples-components-date-formatter"
-    }
+    "importPath": "components/date-formatter"
   },
   "datepicker-and-timepicker": {
     "packagePath": "components/datepicker/datepicker-and-timepicker",
@@ -877,11 +669,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-and-timepicker-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-and-timepicker-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
+    "importPath": "components/datepicker"
   },
   "datepicker-inactive": {
     "packagePath": "components/datepicker/datepicker-inactive",
@@ -895,11 +683,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-inactive-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-inactive-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
+    "importPath": "components/datepicker"
   },
   "datepicker-minimax": {
     "packagePath": "components/datepicker/datepicker-minimax",
@@ -913,11 +697,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-minimax-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-minimax-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
+    "importPath": "components/datepicker"
   },
   "datepicker-overview": {
     "packagePath": "components/datepicker/datepicker-overview",
@@ -931,11 +711,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-overview-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-overview-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
+    "importPath": "components/datepicker"
   },
   "datepicker-range": {
     "packagePath": "components/datepicker/datepicker-range",
@@ -949,11 +725,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-range-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-range-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
+    "importPath": "components/datepicker"
   },
   "datepicker-required": {
     "packagePath": "components/datepicker/datepicker-required",
@@ -967,11 +739,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "datepicker-required-example",
     "additionalComponents": [],
     "primaryFile": "datepicker-required-example.ts",
-    "module": {
-      "name": "DatepickerExamplesModule",
-      "importSpecifier": "components/datepicker",
-      "importPath": "koobiq-docs-examples-components-datepicker"
-    }
+    "importPath": "components/datepicker"
   },
   "divider-overview": {
     "packagePath": "components/divider/divider-overview",
@@ -983,11 +751,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "divider-overview-example",
     "additionalComponents": [],
     "primaryFile": "divider-overview-example.ts",
-    "module": {
-      "name": "DividerExamplesModule",
-      "importSpecifier": "components/divider",
-      "importPath": "koobiq-docs-examples-components-divider"
-    }
+    "importPath": "components/divider"
   },
   "divider-vertical": {
     "packagePath": "components/divider/divider-vertical",
@@ -999,11 +763,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "divider-vertical-example",
     "additionalComponents": [],
     "primaryFile": "divider-vertical-example.ts",
-    "module": {
-      "name": "DividerExamplesModule",
-      "importSpecifier": "components/divider",
-      "importPath": "koobiq-docs-examples-components-divider"
-    }
+    "importPath": "components/divider"
   },
   "dl-horizontal-overview": {
     "packagePath": "components/dl/dl-horizontal-overview",
@@ -1015,11 +775,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-horizontal-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-horizontal-overview-example.ts",
-    "module": {
-      "name": "DlExamplesModule",
-      "importSpecifier": "components/dl",
-      "importPath": "koobiq-docs-examples-components-dl"
-    }
+    "importPath": "components/dl"
   },
   "dl-overview": {
     "packagePath": "components/dl/dl-overview",
@@ -1031,11 +787,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-overview-example.ts",
-    "module": {
-      "name": "DlExamplesModule",
-      "importSpecifier": "components/dl",
-      "importPath": "koobiq-docs-examples-components-dl"
-    }
+    "importPath": "components/dl"
   },
   "dl-small": {
     "packagePath": "components/dl/dl-small",
@@ -1047,11 +799,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-small-example",
     "additionalComponents": [],
     "primaryFile": "dl-small-example.ts",
-    "module": {
-      "name": "DlExamplesModule",
-      "importSpecifier": "components/dl",
-      "importPath": "koobiq-docs-examples-components-dl"
-    }
+    "importPath": "components/dl"
   },
   "dl-vertical-overview": {
     "packagePath": "components/dl/dl-vertical-overview",
@@ -1063,11 +811,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dl-vertical-overview-example",
     "additionalComponents": [],
     "primaryFile": "dl-vertical-overview-example.ts",
-    "module": {
-      "name": "DlExamplesModule",
-      "importSpecifier": "components/dl",
-      "importPath": "koobiq-docs-examples-components-dl"
-    }
+    "importPath": "components/dl"
   },
   "dropdown-navigation-wrap": {
     "packagePath": "components/dropdown/dropdown-navigation-wrap",
@@ -1080,11 +824,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dropdown-navigation-wrap-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-navigation-wrap-example.ts",
-    "module": {
-      "name": "DropdownExamplesModule",
-      "importSpecifier": "components/dropdown",
-      "importPath": "koobiq-docs-examples-components-dropdown"
-    }
+    "importPath": "components/dropdown"
   },
   "dropdown-nested": {
     "packagePath": "components/dropdown/dropdown-nested",
@@ -1097,11 +837,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dropdown-nested-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-nested-example.ts",
-    "module": {
-      "name": "DropdownExamplesModule",
-      "importSpecifier": "components/dropdown",
-      "importPath": "koobiq-docs-examples-components-dropdown"
-    }
+    "importPath": "components/dropdown"
   },
   "dropdown-overview": {
     "packagePath": "components/dropdown/dropdown-overview",
@@ -1114,11 +850,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dropdown-overview-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-overview-example.ts",
-    "module": {
-      "name": "DropdownExamplesModule",
-      "importSpecifier": "components/dropdown",
-      "importPath": "koobiq-docs-examples-components-dropdown"
-    }
+    "importPath": "components/dropdown"
   },
   "empty-state-actions": {
     "packagePath": "components/empty-state/empty-state-actions",
@@ -1130,11 +862,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-actions-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-actions-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-actions2": {
     "packagePath": "components/empty-state/empty-state-actions2",
@@ -1146,11 +874,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-actions2-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-actions2-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-align": {
     "packagePath": "components/empty-state/empty-state-align",
@@ -1162,11 +886,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-align-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-align-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-big": {
     "packagePath": "components/empty-state/empty-state-big",
@@ -1178,11 +898,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-big-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-big-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-content": {
     "packagePath": "components/empty-state/empty-state-content",
@@ -1194,11 +910,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-content-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-content-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-default": {
     "packagePath": "components/empty-state/empty-state-default",
@@ -1210,11 +922,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-default-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-default-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-error": {
     "packagePath": "components/empty-state/empty-state-error",
@@ -1226,11 +934,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-error-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-error-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-icon": {
     "packagePath": "components/empty-state/empty-state-icon",
@@ -1242,11 +946,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-icon-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-icon-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-text-only": {
     "packagePath": "components/empty-state/empty-state-text-only",
@@ -1258,11 +958,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-text-only-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-text-only-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "empty-state-title": {
     "packagePath": "components/empty-state/empty-state-title",
@@ -1274,11 +970,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "empty-state-title-example",
     "additionalComponents": [],
     "primaryFile": "empty-state-title-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/empty-state",
-      "importPath": "koobiq-docs-examples-components-empty-state"
-    }
+    "importPath": "components/empty-state"
   },
   "file-upload-cva-overview": {
     "packagePath": "components/file-upload/file-upload-cva-overview",
@@ -1290,11 +982,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-cva-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-cva-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-indeterminate-loading-overview": {
     "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
@@ -1306,11 +994,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-indeterminate-loading-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-indeterminate-loading-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
@@ -1322,11 +1006,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-compact-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-compact-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-multiple-custom-text-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-custom-text-overview",
@@ -1338,11 +1018,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-custom-text-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-custom-text-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-multiple-default-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-overview",
@@ -1354,11 +1030,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-default-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-default-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-multiple-default-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-validation-reactive-forms-overview",
@@ -1370,11 +1042,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-default-validation-reactive-forms-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-default-validation-reactive-forms-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-multiple-error-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-error-overview",
@@ -1386,11 +1054,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-error-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-error-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-single-error-overview": {
     "packagePath": "components/file-upload/file-upload-single-error-overview",
@@ -1402,11 +1066,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-single-error-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-error-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-single-overview": {
     "packagePath": "components/file-upload/file-upload-single-overview",
@@ -1418,11 +1078,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-single-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "file-upload-single-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-single-validation-reactive-forms-overview",
@@ -1434,11 +1090,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-single-validation-reactive-forms-overview-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-single-validation-reactive-forms-overview-example.ts",
-    "module": {
-      "name": "FileUploadExamplesModule",
-      "importSpecifier": "components/file-upload",
-      "importPath": "koobiq-docs-examples-components-file-upload"
-    }
+    "importPath": "components/file-upload"
   },
   "form-field-password-overview": {
     "packagePath": "components/form-field/form-field-password-overview",
@@ -1450,11 +1102,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-password-overview-example",
     "additionalComponents": [],
     "primaryFile": "form-field-password-overview-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-with-cleaner": {
     "packagePath": "components/form-field/form-field-with-cleaner",
@@ -1466,11 +1114,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-cleaner-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-cleaner-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-with-custom-error-state-matcher-set-by-attribute": {
     "packagePath": "components/form-field/form-field-with-custom-error-state-matcher-set-by-attribute",
@@ -1482,11 +1126,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-custom-error-state-matcher-set-by-attribute-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-custom-error-state-matcher-set-by-attribute-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider": {
     "packagePath": "components/form-field/form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider",
@@ -1498,11 +1138,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-with-error": {
     "packagePath": "components/form-field/form-field-with-error",
@@ -1514,11 +1150,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-error-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-error-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-with-hint": {
     "packagePath": "components/form-field/form-field-with-hint",
@@ -1530,11 +1162,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-hint-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-hint-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-with-label": {
     "packagePath": "components/form-field/form-field-with-label",
@@ -1546,11 +1174,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-label-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-label-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-with-prefix-and-suffix": {
     "packagePath": "components/form-field/form-field-with-prefix-and-suffix",
@@ -1562,11 +1186,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-with-prefix-and-suffix-example",
     "additionalComponents": [],
     "primaryFile": "form-field-with-prefix-and-suffix-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "form-field-without-borders": {
     "packagePath": "components/form-field/form-field-without-borders",
@@ -1578,11 +1198,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "form-field-without-borders-example",
     "additionalComponents": [],
     "primaryFile": "form-field-without-borders-example.ts",
-    "module": {
-      "name": "FormFieldExamplesModule",
-      "importSpecifier": "components/form-field",
-      "importPath": "koobiq-docs-examples-components-form-field"
-    }
+    "importPath": "components/form-field"
   },
   "horizontal-form-labels": {
     "packagePath": "components/forms/horizontal-form-labels",
@@ -1595,11 +1211,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "horizontal-form-labels-example",
     "additionalComponents": [],
     "primaryFile": "horizontal-form-labels-example.ts",
-    "module": {
-      "name": "FormsExamplesModule",
-      "importSpecifier": "components/forms",
-      "importPath": "koobiq-docs-examples-components-forms"
-    }
+    "importPath": "components/forms"
   },
   "horizontal-form": {
     "packagePath": "components/forms/horizontal-form",
@@ -1612,11 +1224,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "horizontal-form-example",
     "additionalComponents": [],
     "primaryFile": "horizontal-form-example.ts",
-    "module": {
-      "name": "FormsExamplesModule",
-      "importSpecifier": "components/forms",
-      "importPath": "koobiq-docs-examples-components-forms"
-    }
+    "importPath": "components/forms"
   },
   "vertical-form": {
     "packagePath": "components/forms/vertical-form",
@@ -1629,11 +1237,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "vertical-form-example",
     "additionalComponents": [],
     "primaryFile": "vertical-form-example.ts",
-    "module": {
-      "name": "FormsExamplesModule",
-      "importSpecifier": "components/forms",
-      "importPath": "koobiq-docs-examples-components-forms"
-    }
+    "importPath": "components/forms"
   },
   "icon-item-color": {
     "packagePath": "components/icon-item/icon-item-color",
@@ -1645,11 +1249,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-color-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-color-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/icon-item",
-      "importPath": "koobiq-docs-examples-components-icon-item"
-    }
+    "importPath": "components/icon-item"
   },
   "icon-item-default": {
     "packagePath": "components/icon-item/icon-item-default",
@@ -1661,11 +1261,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-default-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-default-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/icon-item",
-      "importPath": "koobiq-docs-examples-components-icon-item"
-    }
+    "importPath": "components/icon-item"
   },
   "icon-item-size": {
     "packagePath": "components/icon-item/icon-item-size",
@@ -1677,11 +1273,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-size-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-size-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/icon-item",
-      "importPath": "koobiq-docs-examples-components-icon-item"
-    }
+    "importPath": "components/icon-item"
   },
   "icon-item-variant": {
     "packagePath": "components/icon-item/icon-item-variant",
@@ -1693,11 +1285,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "icon-item-variant-example",
     "additionalComponents": [],
     "primaryFile": "icon-item-variant-example.ts",
-    "module": {
-      "name": "AlertExamplesModule",
-      "importSpecifier": "components/icon-item",
-      "importPath": "koobiq-docs-examples-components-icon-item"
-    }
+    "importPath": "components/icon-item"
   },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
@@ -1709,11 +1297,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "input-number-overview-example",
     "additionalComponents": [],
     "primaryFile": "input-number-overview-example.ts",
-    "module": {
-      "name": "InputExamplesModule",
-      "importSpecifier": "components/input",
-      "importPath": "koobiq-docs-examples-components-input"
-    }
+    "importPath": "components/input"
   },
   "input-overview": {
     "packagePath": "components/input/input-overview",
@@ -1725,11 +1309,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "input-overview-example",
     "additionalComponents": [],
     "primaryFile": "input-overview-example.ts",
-    "module": {
-      "name": "InputExamplesModule",
-      "importSpecifier": "components/input",
-      "importPath": "koobiq-docs-examples-components-input"
-    }
+    "importPath": "components/input"
   },
   "input-password-overview": {
     "packagePath": "components/input/input-password-overview",
@@ -1741,11 +1321,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "input-password-overview-example",
     "additionalComponents": [],
     "primaryFile": "input-password-overview-example.ts",
-    "module": {
-      "name": "InputExamplesModule",
-      "importSpecifier": "components/input",
-      "importPath": "koobiq-docs-examples-components-input"
-    }
+    "importPath": "components/input"
   },
   "layout-flex-alignment": {
     "packagePath": "components/layout-flex/layout-flex-alignment",
@@ -1759,11 +1335,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "layout-flex-alignment-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-alignment-example.ts",
-    "module": {
-      "name": "FlexLayoutExamplesModule",
-      "importSpecifier": "components/layout-flex",
-      "importPath": "koobiq-docs-examples-components-layout-flex"
-    }
+    "importPath": "components/layout-flex"
   },
   "layout-flex-behaviour-modifiers": {
     "packagePath": "components/layout-flex/layout-flex-behaviour-modifiers",
@@ -1777,11 +1349,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "layout-flex-behaviour-modifiers-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-behaviour-modifiers-example.ts",
-    "module": {
-      "name": "FlexLayoutExamplesModule",
-      "importSpecifier": "components/layout-flex",
-      "importPath": "koobiq-docs-examples-components-layout-flex"
-    }
+    "importPath": "components/layout-flex"
   },
   "layout-flex-offsets": {
     "packagePath": "components/layout-flex/layout-flex-offsets",
@@ -1795,11 +1363,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "layout-flex-offsets-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-offsets-example.ts",
-    "module": {
-      "name": "FlexLayoutExamplesModule",
-      "importSpecifier": "components/layout-flex",
-      "importPath": "koobiq-docs-examples-components-layout-flex"
-    }
+    "importPath": "components/layout-flex"
   },
   "layout-flex-order": {
     "packagePath": "components/layout-flex/layout-flex-order",
@@ -1813,11 +1377,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "layout-flex-order-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-order-example.ts",
-    "module": {
-      "name": "FlexLayoutExamplesModule",
-      "importSpecifier": "components/layout-flex",
-      "importPath": "koobiq-docs-examples-components-layout-flex"
-    }
+    "importPath": "components/layout-flex"
   },
   "layout-flex-overview": {
     "packagePath": "components/layout-flex/layout-flex-overview",
@@ -1831,11 +1391,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "layout-flex-overview-example",
     "additionalComponents": [],
     "primaryFile": "layout-flex-overview-example.ts",
-    "module": {
-      "name": "FlexLayoutExamplesModule",
-      "importSpecifier": "components/layout-flex",
-      "importPath": "koobiq-docs-examples-components-layout-flex"
-    }
+    "importPath": "components/layout-flex"
   },
   "link-application": {
     "packagePath": "components/link/link-application",
@@ -1849,11 +1405,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-application-example",
     "additionalComponents": [],
     "primaryFile": "link-application-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-caption": {
     "packagePath": "components/link/link-caption",
@@ -1867,11 +1419,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-caption-example",
     "additionalComponents": [],
     "primaryFile": "link-caption-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-color": {
     "packagePath": "components/link/link-color",
@@ -1885,11 +1433,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-color-example",
     "additionalComponents": [],
     "primaryFile": "link-color-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-disabled": {
     "packagePath": "components/link/link-disabled",
@@ -1903,11 +1447,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-disabled-example",
     "additionalComponents": [],
     "primaryFile": "link-disabled-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-external": {
     "packagePath": "components/link/link-external",
@@ -1921,11 +1461,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-external-example",
     "additionalComponents": [],
     "primaryFile": "link-external-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-general": {
     "packagePath": "components/link/link-general",
@@ -1939,11 +1475,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-general-example",
     "additionalComponents": [],
     "primaryFile": "link-general-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-icons": {
     "packagePath": "components/link/link-icons",
@@ -1957,11 +1489,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-icons-example",
     "additionalComponents": [],
     "primaryFile": "link-icons-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-multi-line": {
     "packagePath": "components/link/link-multi-line",
@@ -1975,11 +1503,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-multi-line-example",
     "additionalComponents": [],
     "primaryFile": "link-multi-line-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-overview": {
     "packagePath": "components/link/link-overview",
@@ -1993,11 +1517,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-overview-example",
     "additionalComponents": [],
     "primaryFile": "link-overview-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-prepositions": {
     "packagePath": "components/link/link-prepositions",
@@ -2011,11 +1531,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-prepositions-example",
     "additionalComponents": [],
     "primaryFile": "link-prepositions-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-print": {
     "packagePath": "components/link/link-print",
@@ -2029,11 +1545,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-print-example",
     "additionalComponents": [],
     "primaryFile": "link-print-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-pseudo": {
     "packagePath": "components/link/link-pseudo",
@@ -2047,11 +1559,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-pseudo-example",
     "additionalComponents": [],
     "primaryFile": "link-pseudo-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-target-blank": {
     "packagePath": "components/link/link-target-blank",
@@ -2065,11 +1573,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-target-blank-example",
     "additionalComponents": [],
     "primaryFile": "link-target-blank-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "link-visited": {
     "packagePath": "components/link/link-visited",
@@ -2083,11 +1587,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "link-visited-example",
     "additionalComponents": [],
     "primaryFile": "link-visited-example.ts",
-    "module": {
-      "name": "LinkExamplesModule",
-      "importSpecifier": "components/link",
-      "importPath": "koobiq-docs-examples-components-link"
-    }
+    "importPath": "components/link"
   },
   "list-action-button": {
     "packagePath": "components/list/list-action-button",
@@ -2099,11 +1599,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "list-action-button-example",
     "additionalComponents": [],
     "primaryFile": "list-action-button-example.ts",
-    "module": {
-      "name": "ListExamplesModule",
-      "importSpecifier": "components/list",
-      "importPath": "koobiq-docs-examples-components-list"
-    }
+    "importPath": "components/list"
   },
   "list-groups": {
     "packagePath": "components/list/list-groups",
@@ -2115,11 +1611,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "list-groups-example",
     "additionalComponents": [],
     "primaryFile": "list-groups-example.ts",
-    "module": {
-      "name": "ListExamplesModule",
-      "importSpecifier": "components/list",
-      "importPath": "koobiq-docs-examples-components-list"
-    }
+    "importPath": "components/list"
   },
   "list-multiple-checkbox": {
     "packagePath": "components/list/list-multiple-checkbox",
@@ -2131,11 +1623,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "list-multiple-checkbox-example",
     "additionalComponents": [],
     "primaryFile": "list-multiple-checkbox-example.ts",
-    "module": {
-      "name": "ListExamplesModule",
-      "importSpecifier": "components/list",
-      "importPath": "koobiq-docs-examples-components-list"
-    }
+    "importPath": "components/list"
   },
   "list-multiple-keyboard": {
     "packagePath": "components/list/list-multiple-keyboard",
@@ -2147,11 +1635,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "list-multiple-keyboard-example",
     "additionalComponents": [],
     "primaryFile": "list-multiple-keyboard-example.ts",
-    "module": {
-      "name": "ListExamplesModule",
-      "importSpecifier": "components/list",
-      "importPath": "koobiq-docs-examples-components-list"
-    }
+    "importPath": "components/list"
   },
   "list-overview": {
     "packagePath": "components/list/list-overview",
@@ -2163,11 +1647,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "list-overview-example",
     "additionalComponents": [],
     "primaryFile": "list-overview-example.ts",
-    "module": {
-      "name": "ListExamplesModule",
-      "importSpecifier": "components/list",
-      "importPath": "koobiq-docs-examples-components-list"
-    }
+    "importPath": "components/list"
   },
   "loader-overlay-default": {
     "packagePath": "components/loader-overlay/loader-overlay-default",
@@ -2179,11 +1659,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "loader-overlay-default-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-default-example.ts",
-    "module": {
-      "name": "LoaderOverlayExamplesModule",
-      "importSpecifier": "components/loader-overlay",
-      "importPath": "koobiq-docs-examples-components-loader-overlay"
-    }
+    "importPath": "components/loader-overlay"
   },
   "loader-overlay-fixed-top": {
     "packagePath": "components/loader-overlay/loader-overlay-fixed-top",
@@ -2195,11 +1671,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "loader-overlay-fixed-top-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-fixed-top-example.ts",
-    "module": {
-      "name": "LoaderOverlayExamplesModule",
-      "importSpecifier": "components/loader-overlay",
-      "importPath": "koobiq-docs-examples-components-loader-overlay"
-    }
+    "importPath": "components/loader-overlay"
   },
   "loader-overlay-large": {
     "packagePath": "components/loader-overlay/loader-overlay-large",
@@ -2211,11 +1683,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "loader-overlay-large-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-large-example.ts",
-    "module": {
-      "name": "LoaderOverlayExamplesModule",
-      "importSpecifier": "components/loader-overlay",
-      "importPath": "koobiq-docs-examples-components-loader-overlay"
-    }
+    "importPath": "components/loader-overlay"
   },
   "loader-overlay-overview": {
     "packagePath": "components/loader-overlay/loader-overlay-overview",
@@ -2227,11 +1695,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "loader-overlay-overview-example",
     "additionalComponents": [],
     "primaryFile": "loader-overlay-overview-example.ts",
-    "module": {
-      "name": "LoaderOverlayExamplesModule",
-      "importSpecifier": "components/loader-overlay",
-      "importPath": "koobiq-docs-examples-components-loader-overlay"
-    }
+    "importPath": "components/loader-overlay"
   },
   "markdown-article": {
     "packagePath": "components/markdown/markdown-article",
@@ -2244,11 +1708,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-article-example",
     "additionalComponents": [],
     "primaryFile": "markdown-article-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-code-block": {
     "packagePath": "components/markdown/markdown-code-block",
@@ -2261,11 +1721,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-code-block-example",
     "additionalComponents": [],
     "primaryFile": "markdown-code-block-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-code": {
     "packagePath": "components/markdown/markdown-code",
@@ -2278,11 +1734,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-code-example",
     "additionalComponents": [],
     "primaryFile": "markdown-code-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-divider": {
     "packagePath": "components/markdown/markdown-divider",
@@ -2295,11 +1747,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-divider-example",
     "additionalComponents": [],
     "primaryFile": "markdown-divider-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-headers-combinations": {
     "packagePath": "components/markdown/markdown-headers-combinations",
@@ -2312,11 +1760,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-headers-combinations-example",
     "additionalComponents": [],
     "primaryFile": "markdown-headers-combinations-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-headers": {
     "packagePath": "components/markdown/markdown-headers",
@@ -2329,11 +1773,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-headers-example",
     "additionalComponents": [],
     "primaryFile": "markdown-headers-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-image": {
     "packagePath": "components/markdown/markdown-image",
@@ -2346,11 +1786,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-image-example",
     "additionalComponents": [],
     "primaryFile": "markdown-image-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-line-break": {
     "packagePath": "components/markdown/markdown-line-break",
@@ -2363,11 +1799,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-line-break-example",
     "additionalComponents": [],
     "primaryFile": "markdown-line-break-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-link": {
     "packagePath": "components/markdown/markdown-link",
@@ -2380,11 +1812,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-link-example",
     "additionalComponents": [],
     "primaryFile": "markdown-link-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-list": {
     "packagePath": "components/markdown/markdown-list",
@@ -2397,11 +1825,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-list-example",
     "additionalComponents": [],
     "primaryFile": "markdown-list-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-paragraph": {
     "packagePath": "components/markdown/markdown-paragraph",
@@ -2414,11 +1838,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-paragraph-example",
     "additionalComponents": [],
     "primaryFile": "markdown-paragraph-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-quote": {
     "packagePath": "components/markdown/markdown-quote",
@@ -2431,11 +1851,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-quote-example",
     "additionalComponents": [],
     "primaryFile": "markdown-quote-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-selection": {
     "packagePath": "components/markdown/markdown-selection",
@@ -2448,11 +1864,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-selection-example",
     "additionalComponents": [],
     "primaryFile": "markdown-selection-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "markdown-table": {
     "packagePath": "components/markdown/markdown-table",
@@ -2465,11 +1877,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-table-example",
     "additionalComponents": [],
     "primaryFile": "markdown-table-example.ts",
-    "module": {
-      "name": "MarkdownExamplesModule",
-      "importSpecifier": "components/markdown",
-      "importPath": "koobiq-docs-examples-components-markdown"
-    }
+    "importPath": "components/markdown"
   },
   "modal-component": {
     "packagePath": "components/modal/modal-component",
@@ -2483,11 +1891,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "KbqModalCustomComponent"
     ],
     "primaryFile": "modal-component-example.ts",
-    "module": {
-      "name": "ModalExamplesModule",
-      "importSpecifier": "components/modal",
-      "importPath": "koobiq-docs-examples-components-modal"
-    }
+    "importPath": "components/modal"
   },
   "modal-multiple": {
     "packagePath": "components/modal/modal-multiple",
@@ -2499,11 +1903,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "modal-multiple-example",
     "additionalComponents": [],
     "primaryFile": "modal-multiple-example.ts",
-    "module": {
-      "name": "ModalExamplesModule",
-      "importSpecifier": "components/modal",
-      "importPath": "koobiq-docs-examples-components-modal"
-    }
+    "importPath": "components/modal"
   },
   "modal-overview": {
     "packagePath": "components/modal/modal-overview",
@@ -2515,11 +1915,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "modal-overview-example",
     "additionalComponents": [],
     "primaryFile": "modal-overview-example.ts",
-    "module": {
-      "name": "ModalExamplesModule",
-      "importSpecifier": "components/modal",
-      "importPath": "koobiq-docs-examples-components-modal"
-    }
+    "importPath": "components/modal"
   },
   "modal-scroll": {
     "packagePath": "components/modal/modal-scroll",
@@ -2533,11 +1929,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "KbqLongComponent"
     ],
     "primaryFile": "modal-scroll-example.ts",
-    "module": {
-      "name": "ModalExamplesModule",
-      "importSpecifier": "components/modal",
-      "importPath": "koobiq-docs-examples-components-modal"
-    }
+    "importPath": "components/modal"
   },
   "modal-sizes": {
     "packagePath": "components/modal/modal-sizes",
@@ -2549,11 +1941,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "modal-sizes-example",
     "additionalComponents": [],
     "primaryFile": "modal-sizes-example.ts",
-    "module": {
-      "name": "ModalExamplesModule",
-      "importSpecifier": "components/modal",
-      "importPath": "koobiq-docs-examples-components-modal"
-    }
+    "importPath": "components/modal"
   },
   "modal-template": {
     "packagePath": "components/modal/modal-template",
@@ -2565,11 +1953,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "modal-template-example",
     "additionalComponents": [],
     "primaryFile": "modal-template-example.ts",
-    "module": {
-      "name": "ModalExamplesModule",
-      "importSpecifier": "components/modal",
-      "importPath": "koobiq-docs-examples-components-modal"
-    }
+    "importPath": "components/modal"
   },
   "navbar-overview": {
     "packagePath": "components/navbar/navbar-overview",
@@ -2582,11 +1966,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "navbar-overview-example",
     "additionalComponents": [],
     "primaryFile": "navbar-overview-example.ts",
-    "module": {
-      "name": "NavbarExamplesModule",
-      "importSpecifier": "components/navbar",
-      "importPath": "koobiq-docs-examples-components-navbar"
-    }
+    "importPath": "components/navbar"
   },
   "navbar-vertical-open-over": {
     "packagePath": "components/navbar/navbar-vertical-open-over",
@@ -2599,11 +1979,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "navbar-vertical-open-over-example",
     "additionalComponents": [],
     "primaryFile": "navbar-vertical-open-over-example.ts",
-    "module": {
-      "name": "NavbarExamplesModule",
-      "importSpecifier": "components/navbar",
-      "importPath": "koobiq-docs-examples-components-navbar"
-    }
+    "importPath": "components/navbar"
   },
   "navbar-vertical": {
     "packagePath": "components/navbar/navbar-vertical",
@@ -2616,11 +1992,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "navbar-vertical-example",
     "additionalComponents": [],
     "primaryFile": "navbar-vertical-example.ts",
-    "module": {
-      "name": "NavbarExamplesModule",
-      "importSpecifier": "components/navbar",
-      "importPath": "koobiq-docs-examples-components-navbar"
-    }
+    "importPath": "components/navbar"
   },
   "number-formatter-overview": {
     "packagePath": "components/number-formatter/number-formatter-overview",
@@ -2633,11 +2005,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "number-formatter-overview-example",
     "additionalComponents": [],
     "primaryFile": "number-formatter-overview-example.ts",
-    "module": {
-      "name": "NumberFormatterExamplesModule",
-      "importSpecifier": "components/number-formatter",
-      "importPath": "koobiq-docs-examples-components-number-formatter"
-    }
+    "importPath": "components/number-formatter"
   },
   "popover-close": {
     "packagePath": "components/popover/popover-close",
@@ -2651,11 +2019,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-close-example",
     "additionalComponents": [],
     "primaryFile": "popover-close-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-common": {
     "packagePath": "components/popover/popover-common",
@@ -2669,11 +2033,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-common-example",
     "additionalComponents": [],
     "primaryFile": "popover-common-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-content": {
     "packagePath": "components/popover/popover-content",
@@ -2687,11 +2047,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-content-example",
     "additionalComponents": [],
     "primaryFile": "popover-content-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-header": {
     "packagePath": "components/popover/popover-header",
@@ -2705,11 +2061,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-header-example",
     "additionalComponents": [],
     "primaryFile": "popover-header-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-height": {
     "packagePath": "components/popover/popover-height",
@@ -2723,11 +2075,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-height-example",
     "additionalComponents": [],
     "primaryFile": "popover-height-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-placement-center": {
     "packagePath": "components/popover/popover-placement-center",
@@ -2741,11 +2089,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-placement-center-example",
     "additionalComponents": [],
     "primaryFile": "popover-placement-center-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-placement-edges": {
     "packagePath": "components/popover/popover-placement-edges",
@@ -2759,11 +2103,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-placement-edges-example",
     "additionalComponents": [],
     "primaryFile": "popover-placement-edges-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-scroll": {
     "packagePath": "components/popover/popover-scroll",
@@ -2777,11 +2117,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-scroll-example",
     "additionalComponents": [],
     "primaryFile": "popover-scroll-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "popover-width": {
     "packagePath": "components/popover/popover-width",
@@ -2795,11 +2131,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "popover-width-example",
     "additionalComponents": [],
     "primaryFile": "popover-width-example.ts",
-    "module": {
-      "name": "PopoverExamplesModule",
-      "importSpecifier": "components/popover",
-      "importPath": "koobiq-docs-examples-components-popover"
-    }
+    "importPath": "components/popover"
   },
   "progress-bar-indeterminate": {
     "packagePath": "components/progress-bar/progress-bar-indeterminate",
@@ -2813,11 +2145,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "progress-bar-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "progress-bar-indeterminate-example.ts",
-    "module": {
-      "name": "ProgressBarExamplesModule",
-      "importSpecifier": "components/progress-bar",
-      "importPath": "koobiq-docs-examples-components-progress-bar"
-    }
+    "importPath": "components/progress-bar"
   },
   "progress-bar-overview": {
     "packagePath": "components/progress-bar/progress-bar-overview",
@@ -2831,11 +2159,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "progress-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "progress-bar-overview-example.ts",
-    "module": {
-      "name": "ProgressBarExamplesModule",
-      "importSpecifier": "components/progress-bar",
-      "importPath": "koobiq-docs-examples-components-progress-bar"
-    }
+    "importPath": "components/progress-bar"
   },
   "progress-spinner-indeterminate": {
     "packagePath": "components/progress-spinner/progress-spinner-indeterminate",
@@ -2849,11 +2173,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "progress-spinner-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "progress-spinner-indeterminate-example.ts",
-    "module": {
-      "name": "ProgressSpinnerExamplesModule",
-      "importSpecifier": "components/progress-spinner",
-      "importPath": "koobiq-docs-examples-components-progress-spinner"
-    }
+    "importPath": "components/progress-spinner"
   },
   "progress-spinner-overview": {
     "packagePath": "components/progress-spinner/progress-spinner-overview",
@@ -2867,11 +2187,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "progress-spinner-overview-example",
     "additionalComponents": [],
     "primaryFile": "progress-spinner-overview-example.ts",
-    "module": {
-      "name": "ProgressSpinnerExamplesModule",
-      "importSpecifier": "components/progress-spinner",
-      "importPath": "koobiq-docs-examples-components-progress-spinner"
-    }
+    "importPath": "components/progress-spinner"
   },
   "radio-content": {
     "packagePath": "components/radio/radio-content",
@@ -2884,11 +2200,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "radio-content-example",
     "additionalComponents": [],
     "primaryFile": "radio-content-example.ts",
-    "module": {
-      "name": "RadioExamplesModule",
-      "importSpecifier": "components/radio",
-      "importPath": "koobiq-docs-examples-components-radio"
-    }
+    "importPath": "components/radio"
   },
   "radio-group": {
     "packagePath": "components/radio/radio-group",
@@ -2900,11 +2212,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "radio-group-example",
     "additionalComponents": [],
     "primaryFile": "radio-group-example.ts",
-    "module": {
-      "name": "RadioExamplesModule",
-      "importSpecifier": "components/radio",
-      "importPath": "koobiq-docs-examples-components-radio"
-    }
+    "importPath": "components/radio"
   },
   "radio-size": {
     "packagePath": "components/radio/radio-size",
@@ -2916,11 +2224,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "radio-size-example",
     "additionalComponents": [],
     "primaryFile": "radio-size-example.ts",
-    "module": {
-      "name": "RadioExamplesModule",
-      "importSpecifier": "components/radio",
-      "importPath": "koobiq-docs-examples-components-radio"
-    }
+    "importPath": "components/radio"
   },
   "radio-style": {
     "packagePath": "components/radio/radio-style",
@@ -2932,11 +2236,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "radio-style-example",
     "additionalComponents": [],
     "primaryFile": "radio-style-example.ts",
-    "module": {
-      "name": "RadioExamplesModule",
-      "importSpecifier": "components/radio",
-      "importPath": "koobiq-docs-examples-components-radio"
-    }
+    "importPath": "components/radio"
   },
   "scrollbar-scroll-to-top": {
     "packagePath": "components/scrollbar/scrollbar-scroll-to-top",
@@ -2948,11 +2248,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "scrollbar-scroll-to-top-example",
     "additionalComponents": [],
     "primaryFile": "scrollbar-scroll-to-top-example.ts",
-    "module": {
-      "name": "ScrollbarExamplesModule",
-      "importSpecifier": "components/scrollbar",
-      "importPath": "koobiq-docs-examples-components-scrollbar"
-    }
+    "importPath": "components/scrollbar"
   },
   "scrollbar-with-custom-config": {
     "packagePath": "components/scrollbar/scrollbar-with-custom-config",
@@ -2964,11 +2260,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "scrollbar-with-custom-config-example",
     "additionalComponents": [],
     "primaryFile": "scrollbar-with-custom-config-example.ts",
-    "module": {
-      "name": "ScrollbarExamplesModule",
-      "importSpecifier": "components/scrollbar",
-      "importPath": "koobiq-docs-examples-components-scrollbar"
-    }
+    "importPath": "components/scrollbar"
   },
   "scrollbar-with-options": {
     "packagePath": "components/scrollbar/scrollbar-with-options",
@@ -2980,11 +2272,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "scrollbar-with-options-example",
     "additionalComponents": [],
     "primaryFile": "scrollbar-with-options-example.ts",
-    "module": {
-      "name": "ScrollbarExamplesModule",
-      "importSpecifier": "components/scrollbar",
-      "importPath": "koobiq-docs-examples-components-scrollbar"
-    }
+    "importPath": "components/scrollbar"
   },
   "select-footer": {
     "packagePath": "components/select/select-footer",
@@ -2997,11 +2285,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-footer-example",
     "additionalComponents": [],
     "primaryFile": "select-footer-example.ts",
-    "module": {
-      "name": "SelectExamplesModule",
-      "importSpecifier": "components/select",
-      "importPath": "koobiq-docs-examples-components-select"
-    }
+    "importPath": "components/select"
   },
   "select-groups": {
     "packagePath": "components/select/select-groups",
@@ -3013,11 +2297,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-groups-example",
     "additionalComponents": [],
     "primaryFile": "select-groups-example.ts",
-    "module": {
-      "name": "SelectExamplesModule",
-      "importSpecifier": "components/select",
-      "importPath": "koobiq-docs-examples-components-select"
-    }
+    "importPath": "components/select"
   },
   "select-multiple-overview": {
     "packagePath": "components/select/select-multiple-overview",
@@ -3029,11 +2309,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-multiple-overview-example",
     "additionalComponents": [],
     "primaryFile": "select-multiple-overview-example.ts",
-    "module": {
-      "name": "SelectExamplesModule",
-      "importSpecifier": "components/select",
-      "importPath": "koobiq-docs-examples-components-select"
-    }
+    "importPath": "components/select"
   },
   "select-overview": {
     "packagePath": "components/select/select-overview",
@@ -3045,11 +2321,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-overview-example",
     "additionalComponents": [],
     "primaryFile": "select-overview-example.ts",
-    "module": {
-      "name": "SelectExamplesModule",
-      "importSpecifier": "components/select",
-      "importPath": "koobiq-docs-examples-components-select"
-    }
+    "importPath": "components/select"
   },
   "select-prioritized-selected": {
     "packagePath": "components/select/select-prioritized-selected",
@@ -3061,11 +2333,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-prioritized-selected-example",
     "additionalComponents": [],
     "primaryFile": "select-prioritized-selected-example.ts",
-    "module": {
-      "name": "SelectExamplesModule",
-      "importSpecifier": "components/select",
-      "importPath": "koobiq-docs-examples-components-select"
-    }
+    "importPath": "components/select"
   },
   "select-search-overview": {
     "packagePath": "components/select/select-search-overview",
@@ -3077,11 +2345,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-search-overview-example",
     "additionalComponents": [],
     "primaryFile": "select-search-overview-example.ts",
-    "module": {
-      "name": "SelectExamplesModule",
-      "importSpecifier": "components/select",
-      "importPath": "koobiq-docs-examples-components-select"
-    }
+    "importPath": "components/select"
   },
   "select-virtual-scroll": {
     "packagePath": "components/select/select-virtual-scroll",
@@ -3093,11 +2357,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-virtual-scroll-example",
     "additionalComponents": [],
     "primaryFile": "select-virtual-scroll-example.ts",
-    "module": {
-      "name": "SelectExamplesModule",
-      "importSpecifier": "components/select",
-      "importPath": "koobiq-docs-examples-components-select"
-    }
+    "importPath": "components/select"
   },
   "sidepanel-modal-mode": {
     "packagePath": "components/sidepanel/sidepanel-modal-mode",
@@ -3111,11 +2371,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-modal-mode-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-modal-mode-example.ts",
-    "module": {
-      "name": "SidepanelExamplesModule",
-      "importSpecifier": "components/sidepanel",
-      "importPath": "koobiq-docs-examples-components-sidepanel"
-    }
+    "importPath": "components/sidepanel"
   },
   "sidepanel-normal-mode": {
     "packagePath": "components/sidepanel/sidepanel-normal-mode",
@@ -3129,11 +2385,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-normal-mode-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-normal-mode-example.ts",
-    "module": {
-      "name": "SidepanelExamplesModule",
-      "importSpecifier": "components/sidepanel",
-      "importPath": "koobiq-docs-examples-components-sidepanel"
-    }
+    "importPath": "components/sidepanel"
   },
   "sidepanel-overlayed": {
     "packagePath": "components/sidepanel/sidepanel-overlayed",
@@ -3147,11 +2399,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-overlayed-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-overlayed-example.ts",
-    "module": {
-      "name": "SidepanelExamplesModule",
-      "importSpecifier": "components/sidepanel",
-      "importPath": "koobiq-docs-examples-components-sidepanel"
-    }
+    "importPath": "components/sidepanel"
   },
   "sidepanel-sizes": {
     "packagePath": "components/sidepanel/sidepanel-sizes",
@@ -3165,11 +2413,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
     "primaryFile": "sidepanel-sizes-example.ts",
-    "module": {
-      "name": "SidepanelExamplesModule",
-      "importSpecifier": "components/sidepanel",
-      "importPath": "koobiq-docs-examples-components-sidepanel"
-    }
+    "importPath": "components/sidepanel"
   },
   "splitter-dynamic-data": {
     "packagePath": "components/splitter/splitter-dynamic-data",
@@ -3183,11 +2427,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "splitter-dynamic-data-example",
     "additionalComponents": [],
     "primaryFile": "splitter-dynamic-data-example.ts",
-    "module": {
-      "name": "SplitterExamplesModule",
-      "importSpecifier": "components/splitter",
-      "importPath": "koobiq-docs-examples-components-splitter"
-    }
+    "importPath": "components/splitter"
   },
   "splitter-fixed": {
     "packagePath": "components/splitter/splitter-fixed",
@@ -3201,11 +2441,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "splitter-fixed-example",
     "additionalComponents": [],
     "primaryFile": "splitter-fixed-example.ts",
-    "module": {
-      "name": "SplitterExamplesModule",
-      "importSpecifier": "components/splitter",
-      "importPath": "koobiq-docs-examples-components-splitter"
-    }
+    "importPath": "components/splitter"
   },
   "splitter-nested": {
     "packagePath": "components/splitter/splitter-nested",
@@ -3219,11 +2455,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "splitter-nested-example",
     "additionalComponents": [],
     "primaryFile": "splitter-nested-example.ts",
-    "module": {
-      "name": "SplitterExamplesModule",
-      "importSpecifier": "components/splitter",
-      "importPath": "koobiq-docs-examples-components-splitter"
-    }
+    "importPath": "components/splitter"
   },
   "splitter-overview": {
     "packagePath": "components/splitter/splitter-overview",
@@ -3237,11 +2469,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "splitter-overview-example",
     "additionalComponents": [],
     "primaryFile": "splitter-overview-example.ts",
-    "module": {
-      "name": "SplitterExamplesModule",
-      "importSpecifier": "components/splitter",
-      "importPath": "koobiq-docs-examples-components-splitter"
-    }
+    "importPath": "components/splitter"
   },
   "splitter-vertical": {
     "packagePath": "components/splitter/splitter-vertical",
@@ -3255,11 +2483,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "splitter-vertical-example",
     "additionalComponents": [],
     "primaryFile": "splitter-vertical-example.ts",
-    "module": {
-      "name": "SplitterExamplesModule",
-      "importSpecifier": "components/splitter",
-      "importPath": "koobiq-docs-examples-components-splitter"
-    }
+    "importPath": "components/splitter"
   },
   "table-full-width": {
     "packagePath": "components/table/table-full-width",
@@ -3273,11 +2497,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "table-full-width-example",
     "additionalComponents": [],
     "primaryFile": "table-full-width-example.ts",
-    "module": {
-      "name": "TableExamplesModule",
-      "importSpecifier": "components/table",
-      "importPath": "koobiq-docs-examples-components-table"
-    }
+    "importPath": "components/table"
   },
   "table-overview": {
     "packagePath": "components/table/table-overview",
@@ -3291,11 +2511,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "table-overview-example",
     "additionalComponents": [],
     "primaryFile": "table-overview-example.ts",
-    "module": {
-      "name": "TableExamplesModule",
-      "importSpecifier": "components/table",
-      "importPath": "koobiq-docs-examples-components-table"
-    }
+    "importPath": "components/table"
   },
   "table-with-borders": {
     "packagePath": "components/table/table-with-borders",
@@ -3309,11 +2525,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "table-with-borders-example",
     "additionalComponents": [],
     "primaryFile": "table-with-borders-example.ts",
-    "module": {
-      "name": "TableExamplesModule",
-      "importSpecifier": "components/table",
-      "importPath": "koobiq-docs-examples-components-table"
-    }
+    "importPath": "components/table"
   },
   "tab-active-tab-index": {
     "packagePath": "components/tabs/tab-active-tab-index",
@@ -3325,11 +2537,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tab-active-tab-index-example",
     "additionalComponents": [],
     "primaryFile": "tab-active-tab-index-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tab-active-tab": {
     "packagePath": "components/tabs/tab-active-tab",
@@ -3341,11 +2549,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tab-active-tab-example",
     "additionalComponents": [],
     "primaryFile": "tab-active-tab-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-actionbar": {
     "packagePath": "components/tabs/tabs-actionbar",
@@ -3357,11 +2561,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-actionbar-example",
     "additionalComponents": [],
     "primaryFile": "tabs-actionbar-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-custom": {
     "packagePath": "components/tabs/tabs-custom",
@@ -3373,11 +2573,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-custom-example",
     "additionalComponents": [],
     "primaryFile": "tabs-custom-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-disabled": {
     "packagePath": "components/tabs/tabs-disabled",
@@ -3389,11 +2585,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-disabled-example",
     "additionalComponents": [],
     "primaryFile": "tabs-disabled-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-empty": {
     "packagePath": "components/tabs/tabs-empty",
@@ -3405,11 +2597,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-empty-example",
     "additionalComponents": [],
     "primaryFile": "tabs-empty-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-overview": {
     "packagePath": "components/tabs/tabs-overview",
@@ -3421,11 +2609,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-overview-example",
     "additionalComponents": [],
     "primaryFile": "tabs-overview-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-stretch": {
     "packagePath": "components/tabs/tabs-stretch",
@@ -3437,11 +2621,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-stretch-example",
     "additionalComponents": [],
     "primaryFile": "tabs-stretch-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-underlined": {
     "packagePath": "components/tabs/tabs-underlined",
@@ -3453,11 +2633,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-underlined-example",
     "additionalComponents": [],
     "primaryFile": "tabs-underlined-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-vertical-icons": {
     "packagePath": "components/tabs/tabs-vertical-icons",
@@ -3469,11 +2645,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-vertical-icons-example",
     "additionalComponents": [],
     "primaryFile": "tabs-vertical-icons-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-vertical": {
     "packagePath": "components/tabs/tabs-vertical",
@@ -3485,11 +2657,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-vertical-example",
     "additionalComponents": [],
     "primaryFile": "tabs-vertical-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-with-scroll-vertical": {
     "packagePath": "components/tabs/tabs-with-scroll-vertical",
@@ -3501,11 +2669,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-with-scroll-vertical-example",
     "additionalComponents": [],
     "primaryFile": "tabs-with-scroll-vertical-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tabs-with-scroll": {
     "packagePath": "components/tabs/tabs-with-scroll",
@@ -3517,11 +2681,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tabs-with-scroll-example",
     "additionalComponents": [],
     "primaryFile": "tabs-with-scroll-example.ts",
-    "module": {
-      "name": "TabsExamplesModule",
-      "importSpecifier": "components/tabs",
-      "importPath": "koobiq-docs-examples-components-tabs"
-    }
+    "importPath": "components/tabs"
   },
   "tag-autocomplete-option-operations": {
     "packagePath": "components/tag/tag-autocomplete-option-operations",
@@ -3535,11 +2695,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-autocomplete-option-operations-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-option-operations-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-autocomplete": {
     "packagePath": "components/tag/tag-autocomplete",
@@ -3553,11 +2709,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-autocomplete-example",
     "additionalComponents": [],
     "primaryFile": "tag-autocomplete-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-content": {
     "packagePath": "components/tag/tag-content",
@@ -3571,11 +2723,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-content-example",
     "additionalComponents": [],
     "primaryFile": "tag-content-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-fill-and-style": {
     "packagePath": "components/tag/tag-fill-and-style",
@@ -3589,11 +2737,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-fill-and-style-example",
     "additionalComponents": [],
     "primaryFile": "tag-fill-and-style-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-hug-content": {
     "packagePath": "components/tag/tag-hug-content",
@@ -3607,11 +2751,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-hug-content-example",
     "additionalComponents": [],
     "primaryFile": "tag-hug-content-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tag/tag-input-with-form-control-validators",
@@ -3623,11 +2763,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-with-form-control-validators-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-with-form-control-validators-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-input": {
     "packagePath": "components/tag/tag-input",
@@ -3641,11 +2777,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-list": {
     "packagePath": "components/tag/tag-list",
@@ -3659,11 +2791,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-list-example",
     "additionalComponents": [],
     "primaryFile": "tag-list-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tag-overview": {
     "packagePath": "components/tag/tag-overview",
@@ -3677,11 +2805,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-overview-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tags-autocomplete-onpaste-off": {
     "packagePath": "components/tag/tags-autocomplete-onpaste-off",
@@ -3695,11 +2819,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tags-autocomplete-onpaste-off-example",
     "additionalComponents": [],
     "primaryFile": "tags-autocomplete-onpaste-off-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "tags-input-onpaste-off": {
     "packagePath": "components/tag/tags-input-onpaste-off",
@@ -3713,11 +2833,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tags-input-onpaste-off-example",
     "additionalComponents": [],
     "primaryFile": "tags-input-onpaste-off-example.ts",
-    "module": {
-      "name": "TagExamplesModule",
-      "importSpecifier": "components/tag",
-      "importPath": "koobiq-docs-examples-components-tag"
-    }
+    "importPath": "components/tag"
   },
   "text-area-overview": {
     "packagePath": "components/textarea/text-area-overview",
@@ -3731,11 +2847,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "text-area-overview-example",
     "additionalComponents": [],
     "primaryFile": "text-area-overview-example.ts",
-    "module": {
-      "name": "TextAreaExamplesModule",
-      "importSpecifier": "components/textarea",
-      "importPath": "koobiq-docs-examples-components-textarea"
-    }
+    "importPath": "components/textarea"
   },
   "timepicker-overview": {
     "packagePath": "components/timepicker/timepicker-overview",
@@ -3749,11 +2861,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "timepicker-overview-example",
     "additionalComponents": [],
     "primaryFile": "timepicker-overview-example.ts",
-    "module": {
-      "name": "TimepickerExamplesModule",
-      "importSpecifier": "components/timepicker",
-      "importPath": "koobiq-docs-examples-components-timepicker"
-    }
+    "importPath": "components/timepicker"
   },
   "timepicker-range": {
     "packagePath": "components/timepicker/timepicker-range",
@@ -3767,11 +2875,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "timepicker-range-example",
     "additionalComponents": [],
     "primaryFile": "timepicker-range-example.ts",
-    "module": {
-      "name": "TimepickerExamplesModule",
-      "importSpecifier": "components/timepicker",
-      "importPath": "koobiq-docs-examples-components-timepicker"
-    }
+    "importPath": "components/timepicker"
   },
   "timepicker-validation-symbols": {
     "packagePath": "components/timepicker/timepicker-validation-symbols",
@@ -3785,11 +2889,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "timepicker-validation-symbols-example",
     "additionalComponents": [],
     "primaryFile": "timepicker-validation-symbols-example.ts",
-    "module": {
-      "name": "TimepickerExamplesModule",
-      "importSpecifier": "components/timepicker",
-      "importPath": "koobiq-docs-examples-components-timepicker"
-    }
+    "importPath": "components/timepicker"
   },
   "timepicker-variations": {
     "packagePath": "components/timepicker/timepicker-variations",
@@ -3803,11 +2903,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "timepicker-variations-example",
     "additionalComponents": [],
     "primaryFile": "timepicker-variations-example.ts",
-    "module": {
-      "name": "TimepickerExamplesModule",
-      "importSpecifier": "components/timepicker",
-      "importPath": "koobiq-docs-examples-components-timepicker"
-    }
+    "importPath": "components/timepicker"
   },
   "timezone-overview": {
     "packagePath": "components/timezone/timezone-overview",
@@ -3821,11 +2917,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "timezone-overview-example",
     "additionalComponents": [],
     "primaryFile": "timezone-overview-example.ts",
-    "module": {
-      "name": "TimezoneExamplesModule",
-      "importSpecifier": "components/timezone",
-      "importPath": "koobiq-docs-examples-components-timezone"
-    }
+    "importPath": "components/timezone"
   },
   "timezone-search-overview": {
     "packagePath": "components/timezone/timezone-search-overview",
@@ -3839,11 +2931,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "timezone-search-overview-example",
     "additionalComponents": [],
     "primaryFile": "timezone-search-overview-example.ts",
-    "module": {
-      "name": "TimezoneExamplesModule",
-      "importSpecifier": "components/timezone",
-      "importPath": "koobiq-docs-examples-components-timezone"
-    }
+    "importPath": "components/timezone"
   },
   "timezone-trigger-overview": {
     "packagePath": "components/timezone/timezone-trigger-overview",
@@ -3857,11 +2945,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "timezone-trigger-overview-example",
     "additionalComponents": [],
     "primaryFile": "timezone-trigger-overview-example.ts",
-    "module": {
-      "name": "TimezoneExamplesModule",
-      "importSpecifier": "components/timezone",
-      "importPath": "koobiq-docs-examples-components-timezone"
-    }
+    "importPath": "components/timezone"
   },
   "toast-actions-overview": {
     "packagePath": "components/toast/toast-actions-overview",
@@ -3875,11 +2959,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toast-actions-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-actions-overview-example.ts",
-    "module": {
-      "name": "ToastExamplesModule",
-      "importSpecifier": "components/toast",
-      "importPath": "koobiq-docs-examples-components-toast"
-    }
+    "importPath": "components/toast"
   },
   "toast-hide-overview": {
     "packagePath": "components/toast/toast-hide-overview",
@@ -3893,11 +2973,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toast-hide-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-hide-overview-example.ts",
-    "module": {
-      "name": "ToastExamplesModule",
-      "importSpecifier": "components/toast",
-      "importPath": "koobiq-docs-examples-components-toast"
-    }
+    "importPath": "components/toast"
   },
   "toast-link-overview": {
     "packagePath": "components/toast/toast-link-overview",
@@ -3911,11 +2987,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toast-link-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-link-overview-example.ts",
-    "module": {
-      "name": "ToastExamplesModule",
-      "importSpecifier": "components/toast",
-      "importPath": "koobiq-docs-examples-components-toast"
-    }
+    "importPath": "components/toast"
   },
   "toast-overview": {
     "packagePath": "components/toast/toast-overview",
@@ -3929,11 +3001,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toast-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-overview-example.ts",
-    "module": {
-      "name": "ToastExamplesModule",
-      "importSpecifier": "components/toast",
-      "importPath": "koobiq-docs-examples-components-toast"
-    }
+    "importPath": "components/toast"
   },
   "toast-progress-bar-overview": {
     "packagePath": "components/toast/toast-progress-bar-overview",
@@ -3947,11 +3015,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toast-progress-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-progress-bar-overview-example.ts",
-    "module": {
-      "name": "ToastExamplesModule",
-      "importSpecifier": "components/toast",
-      "importPath": "koobiq-docs-examples-components-toast"
-    }
+    "importPath": "components/toast"
   },
   "toast-report-overview": {
     "packagePath": "components/toast/toast-report-overview",
@@ -3965,11 +3029,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toast-report-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-report-overview-example.ts",
-    "module": {
-      "name": "ToastExamplesModule",
-      "importSpecifier": "components/toast",
-      "importPath": "koobiq-docs-examples-components-toast"
-    }
+    "importPath": "components/toast"
   },
   "toast-types-overview": {
     "packagePath": "components/toast/toast-types-overview",
@@ -3983,11 +3043,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toast-types-overview-example",
     "additionalComponents": [],
     "primaryFile": "toast-types-overview-example.ts",
-    "module": {
-      "name": "ToastExamplesModule",
-      "importSpecifier": "components/toast",
-      "importPath": "koobiq-docs-examples-components-toast"
-    }
+    "importPath": "components/toast"
   },
   "toggle-overview": {
     "packagePath": "components/toggle/toggle-overview",
@@ -4001,11 +3057,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toggle-overview-example",
     "additionalComponents": [],
     "primaryFile": "toggle-overview-example.ts",
-    "module": {
-      "name": "ToggleExamplesModule",
-      "importSpecifier": "components/toggle",
-      "importPath": "koobiq-docs-examples-components-toggle"
-    }
+    "importPath": "components/toggle"
   },
   "tooltip-arrow-and-offset": {
     "packagePath": "components/tooltip/tooltip-arrow-and-offset",
@@ -4019,11 +3071,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-arrow-and-offset-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-arrow-and-offset-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-extended": {
     "packagePath": "components/tooltip/tooltip-extended",
@@ -4037,11 +3085,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-extended-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-extended-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-long": {
     "packagePath": "components/tooltip/tooltip-long",
@@ -4055,11 +3099,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-long-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-long-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-multiple-lines": {
     "packagePath": "components/tooltip/tooltip-multiple-lines",
@@ -4073,11 +3113,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-multiple-lines-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-multiple-lines-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-overview": {
     "packagePath": "components/tooltip/tooltip-overview",
@@ -4091,11 +3127,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-overview-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-overview-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-placement-center": {
     "packagePath": "components/tooltip/tooltip-placement-center",
@@ -4109,11 +3141,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-placement-center-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-placement-center-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-placement-edges": {
     "packagePath": "components/tooltip/tooltip-placement-edges",
@@ -4127,11 +3155,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-placement-edges-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-placement-edges-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-relative-to-pointer": {
     "packagePath": "components/tooltip/tooltip-relative-to-pointer",
@@ -4144,11 +3168,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-relative-to-pointer-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-relative-to-pointer-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tooltip-style": {
     "packagePath": "components/tooltip/tooltip-style",
@@ -4162,11 +3182,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tooltip-style-example",
     "additionalComponents": [],
     "primaryFile": "tooltip-style-example.ts",
-    "module": {
-      "name": "TooltipExamplesModule",
-      "importSpecifier": "components/tooltip",
-      "importPath": "koobiq-docs-examples-components-tooltip"
-    }
+    "importPath": "components/tooltip"
   },
   "tree-select-child-selection-overview": {
     "packagePath": "components/tree-select/tree-select-child-selection-overview",
@@ -4180,11 +3196,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-child-selection-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-child-selection-overview-example.ts",
-    "module": {
-      "name": "TreeSelectExamplesModule",
-      "importSpecifier": "components/tree-select",
-      "importPath": "koobiq-docs-examples-components-tree-select"
-    }
+    "importPath": "components/tree-select"
   },
   "tree-select-footer-overview": {
     "packagePath": "components/tree-select/tree-select-footer-overview",
@@ -4198,11 +3210,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-footer-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-footer-overview-example.ts",
-    "module": {
-      "name": "TreeSelectExamplesModule",
-      "importSpecifier": "components/tree-select",
-      "importPath": "koobiq-docs-examples-components-tree-select"
-    }
+    "importPath": "components/tree-select"
   },
   "tree-select-lazyload": {
     "packagePath": "components/tree-select/tree-select-lazyload",
@@ -4216,11 +3224,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-lazyload-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-lazyload-example.ts",
-    "module": {
-      "name": "TreeSelectExamplesModule",
-      "importSpecifier": "components/tree-select",
-      "importPath": "koobiq-docs-examples-components-tree-select"
-    }
+    "importPath": "components/tree-select"
   },
   "tree-select-multiple-overview": {
     "packagePath": "components/tree-select/tree-select-multiple-overview",
@@ -4234,11 +3238,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-multiple-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-multiple-overview-example.ts",
-    "module": {
-      "name": "TreeSelectExamplesModule",
-      "importSpecifier": "components/tree-select",
-      "importPath": "koobiq-docs-examples-components-tree-select"
-    }
+    "importPath": "components/tree-select"
   },
   "tree-select-overview": {
     "packagePath": "components/tree-select/tree-select-overview",
@@ -4252,11 +3252,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-overview-example.ts",
-    "module": {
-      "name": "TreeSelectExamplesModule",
-      "importSpecifier": "components/tree-select",
-      "importPath": "koobiq-docs-examples-components-tree-select"
-    }
+    "importPath": "components/tree-select"
   },
   "tree-select-search-overview": {
     "packagePath": "components/tree-select/tree-select-search-overview",
@@ -4270,11 +3266,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-select-search-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-select-search-overview-example.ts",
-    "module": {
-      "name": "TreeSelectExamplesModule",
-      "importSpecifier": "components/tree-select",
-      "importPath": "koobiq-docs-examples-components-tree-select"
-    }
+    "importPath": "components/tree-select"
   },
   "tree-access-rights": {
     "packagePath": "components/tree/tree-access-rights",
@@ -4288,11 +3280,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-access-rights-example",
     "additionalComponents": [],
     "primaryFile": "tree-access-rights-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-action-button": {
     "packagePath": "components/tree/tree-action-button",
@@ -4306,11 +3294,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-action-button-example",
     "additionalComponents": [],
     "primaryFile": "tree-action-button-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-checked-filtering": {
     "packagePath": "components/tree/tree-checked-filtering",
@@ -4324,11 +3308,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-checked-filtering-example",
     "additionalComponents": [],
     "primaryFile": "tree-checked-filtering-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-custom-filtering": {
     "packagePath": "components/tree/tree-custom-filtering",
@@ -4342,11 +3322,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-custom-filtering-example",
     "additionalComponents": [],
     "primaryFile": "tree-custom-filtering-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-descendants-subcategories": {
     "packagePath": "components/tree/tree-descendants-subcategories",
@@ -4360,11 +3336,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-descendants-subcategories-example",
     "additionalComponents": [],
     "primaryFile": "tree-descendants-subcategories-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-filtering": {
     "packagePath": "components/tree/tree-filtering",
@@ -4378,11 +3350,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-filtering-example",
     "additionalComponents": [],
     "primaryFile": "tree-filtering-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-lazyload": {
     "packagePath": "components/tree/tree-lazyload",
@@ -4396,11 +3364,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-lazyload-example",
     "additionalComponents": [],
     "primaryFile": "tree-lazyload-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-multiple-checkbox": {
     "packagePath": "components/tree/tree-multiple-checkbox",
@@ -4414,11 +3378,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-multiple-checkbox-example",
     "additionalComponents": [],
     "primaryFile": "tree-multiple-checkbox-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-multiple-checklist": {
     "packagePath": "components/tree/tree-multiple-checklist",
@@ -4432,11 +3392,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-multiple-checklist-example",
     "additionalComponents": [],
     "primaryFile": "tree-multiple-checklist-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-multiple-keyboard": {
     "packagePath": "components/tree/tree-multiple-keyboard",
@@ -4450,11 +3406,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-multiple-keyboard-example",
     "additionalComponents": [],
     "primaryFile": "tree-multiple-keyboard-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "tree-overview": {
     "packagePath": "components/tree/tree-overview",
@@ -4468,11 +3420,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tree-overview-example",
     "additionalComponents": [],
     "primaryFile": "tree-overview-example.ts",
-    "module": {
-      "name": "TreeExamplesModule",
-      "importSpecifier": "components/tree",
-      "importPath": "koobiq-docs-examples-components-tree"
-    }
+    "importPath": "components/tree"
   },
   "typography-overview": {
     "packagePath": "components/typography/typography-overview",
@@ -4486,11 +3434,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "typography-overview-example",
     "additionalComponents": [],
     "primaryFile": "typography-overview-example.ts",
-    "module": {
-      "name": "TypographyExamplesModule",
-      "importSpecifier": "components/typography",
-      "importPath": "koobiq-docs-examples-components-typography"
-    }
+    "importPath": "components/typography"
   },
   "validation-composite": {
     "packagePath": "components/validation/validation-composite",
@@ -4504,11 +3448,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-composite-example",
     "additionalComponents": [],
     "primaryFile": "validation-composite-example.ts",
-    "module": {
-      "name": "ValidationExamplesModule",
-      "importSpecifier": "components/validation",
-      "importPath": "koobiq-docs-examples-components-validation"
-    }
+    "importPath": "components/validation"
   },
   "validation-global-one-required": {
     "packagePath": "components/validation/validation-global-one-required",
@@ -4522,11 +3462,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-global-one-required-example",
     "additionalComponents": [],
     "primaryFile": "validation-global-one-required-example.ts",
-    "module": {
-      "name": "ValidationExamplesModule",
-      "importSpecifier": "components/validation",
-      "importPath": "koobiq-docs-examples-components-validation"
-    }
+    "importPath": "components/validation"
   },
   "validation-global": {
     "packagePath": "components/validation/validation-global",
@@ -4540,11 +3476,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-global-example",
     "additionalComponents": [],
     "primaryFile": "validation-global-example.ts",
-    "module": {
-      "name": "ValidationExamplesModule",
-      "importSpecifier": "components/validation",
-      "importPath": "koobiq-docs-examples-components-validation"
-    }
+    "importPath": "components/validation"
   },
   "validation-on-blur": {
     "packagePath": "components/validation/validation-on-blur",
@@ -4558,11 +3490,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-on-blur-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-blur-example.ts",
-    "module": {
-      "name": "ValidationExamplesModule",
-      "importSpecifier": "components/validation",
-      "importPath": "koobiq-docs-examples-components-validation"
-    }
+    "importPath": "components/validation"
   },
   "validation-on-type": {
     "packagePath": "components/validation/validation-on-type",
@@ -4576,11 +3504,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-on-type-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-type-example.ts",
-    "module": {
-      "name": "ValidationExamplesModule",
-      "importSpecifier": "components/validation",
-      "importPath": "koobiq-docs-examples-components-validation"
-    }
+    "importPath": "components/validation"
   },
   "validation-overview": {
     "packagePath": "components/validation/validation-overview",
@@ -4594,11 +3518,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-overview-example",
     "additionalComponents": [],
     "primaryFile": "validation-overview-example.ts",
-    "module": {
-      "name": "ValidationExamplesModule",
-      "importSpecifier": "components/validation",
-      "importPath": "koobiq-docs-examples-components-validation"
-    }
+    "importPath": "components/validation"
   },
   "validation-small": {
     "packagePath": "components/validation/validation-small",
@@ -4612,10 +3532,556 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-small-example",
     "additionalComponents": [],
     "primaryFile": "validation-small-example.ts",
-    "module": {
-      "name": "ValidationExamplesModule",
-      "importSpecifier": "components/validation",
-      "importPath": "koobiq-docs-examples-components-validation"
-    }
+    "importPath": "components/validation"
   }
 };
+export async function loadExample(id: string): Promise<any> {
+  switch (id) {
+  case 'accordion-content':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-header':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-in-panel':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-in-section':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-inactive-section':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-overview':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-sections':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'accordion-states':
+return import('@koobiq/docs-examples/components/accordion');
+  case 'alert-close':
+return import('@koobiq/docs-examples/components/alert');
+  case 'alert-content':
+return import('@koobiq/docs-examples/components/alert');
+  case 'alert-size':
+return import('@koobiq/docs-examples/components/alert');
+  case 'alert-status':
+return import('@koobiq/docs-examples/components/alert');
+  case 'alert-variants':
+return import('@koobiq/docs-examples/components/alert');
+  case 'autocomplete-overview':
+return import('@koobiq/docs-examples/components/autocomplete');
+  case 'badge-content':
+return import('@koobiq/docs-examples/components/badge');
+  case 'badge-fill-and-style':
+return import('@koobiq/docs-examples/components/badge');
+  case 'badge-list':
+return import('@koobiq/docs-examples/components/badge');
+  case 'badge-size':
+return import('@koobiq/docs-examples/components/badge');
+  case 'badge-table':
+return import('@koobiq/docs-examples/components/badge');
+  case 'badge-tooltip':
+return import('@koobiq/docs-examples/components/badge');
+  case 'button-toggle-alignment-overview':
+return import('@koobiq/docs-examples/components/button-toggle');
+  case 'button-toggle-disabled-all-overview':
+return import('@koobiq/docs-examples/components/button-toggle');
+  case 'button-toggle-disabled-partial-overview':
+return import('@koobiq/docs-examples/components/button-toggle');
+  case 'button-toggle-overview':
+return import('@koobiq/docs-examples/components/button-toggle');
+  case 'button-toggle-tooltip-overview':
+return import('@koobiq/docs-examples/components/button-toggle');
+  case 'button-content':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-fill-and-style':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-fill-content':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-fixed-content':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-hug-content':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-loading-state':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-overview':
+return import('@koobiq/docs-examples/components/button');
+  case 'checkbox-indeterminate':
+return import('@koobiq/docs-examples/components/checkbox');
+  case 'checkbox-overview':
+return import('@koobiq/docs-examples/components/checkbox');
+  case 'pseudo-checkbox':
+return import('@koobiq/docs-examples/components/checkbox');
+  case 'code-block-common':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-cut':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-line-numbers':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-line-wrap':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-noborder':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-single-line':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-stretch':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-styling':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-tabs-with-overflow':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-tabs':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-title':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'absolute-date-formatter':
+return import('@koobiq/docs-examples/components/date-formatter');
+  case 'duration-date-formatter':
+return import('@koobiq/docs-examples/components/date-formatter');
+  case 'range-date-formatter':
+return import('@koobiq/docs-examples/components/date-formatter');
+  case 'relative-date-formatter':
+return import('@koobiq/docs-examples/components/date-formatter');
+  case 'datepicker-and-timepicker':
+return import('@koobiq/docs-examples/components/datepicker');
+  case 'datepicker-inactive':
+return import('@koobiq/docs-examples/components/datepicker');
+  case 'datepicker-minimax':
+return import('@koobiq/docs-examples/components/datepicker');
+  case 'datepicker-overview':
+return import('@koobiq/docs-examples/components/datepicker');
+  case 'datepicker-range':
+return import('@koobiq/docs-examples/components/datepicker');
+  case 'datepicker-required':
+return import('@koobiq/docs-examples/components/datepicker');
+  case 'divider-overview':
+return import('@koobiq/docs-examples/components/divider');
+  case 'divider-vertical':
+return import('@koobiq/docs-examples/components/divider');
+  case 'dl-horizontal-overview':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dl-overview':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dl-small':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dl-vertical-overview':
+return import('@koobiq/docs-examples/components/dl');
+  case 'dropdown-navigation-wrap':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-nested':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-overview':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'empty-state-actions':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-actions2':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-align':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-big':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-content':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-default':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-error':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-icon':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-text-only':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-title':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'file-upload-cva-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-indeterminate-loading-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-compact-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-custom-text-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-default-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-default-validation-reactive-forms-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-error-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-error-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-validation-reactive-forms-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'form-field-password-overview':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-with-cleaner':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-with-custom-error-state-matcher-set-by-attribute':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-with-error':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-with-hint':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-with-label':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-with-prefix-and-suffix':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'form-field-without-borders':
+return import('@koobiq/docs-examples/components/form-field');
+  case 'horizontal-form-labels':
+return import('@koobiq/docs-examples/components/forms');
+  case 'horizontal-form':
+return import('@koobiq/docs-examples/components/forms');
+  case 'vertical-form':
+return import('@koobiq/docs-examples/components/forms');
+  case 'icon-item-color':
+return import('@koobiq/docs-examples/components/icon-item');
+  case 'icon-item-default':
+return import('@koobiq/docs-examples/components/icon-item');
+  case 'icon-item-size':
+return import('@koobiq/docs-examples/components/icon-item');
+  case 'icon-item-variant':
+return import('@koobiq/docs-examples/components/icon-item');
+  case 'input-number-overview':
+return import('@koobiq/docs-examples/components/input');
+  case 'input-overview':
+return import('@koobiq/docs-examples/components/input');
+  case 'input-password-overview':
+return import('@koobiq/docs-examples/components/input');
+  case 'layout-flex-alignment':
+return import('@koobiq/docs-examples/components/layout-flex');
+  case 'layout-flex-behaviour-modifiers':
+return import('@koobiq/docs-examples/components/layout-flex');
+  case 'layout-flex-offsets':
+return import('@koobiq/docs-examples/components/layout-flex');
+  case 'layout-flex-order':
+return import('@koobiq/docs-examples/components/layout-flex');
+  case 'layout-flex-overview':
+return import('@koobiq/docs-examples/components/layout-flex');
+  case 'link-application':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-caption':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-color':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-disabled':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-external':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-general':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-icons':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-multi-line':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-overview':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-prepositions':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-print':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-pseudo':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-target-blank':
+return import('@koobiq/docs-examples/components/link');
+  case 'link-visited':
+return import('@koobiq/docs-examples/components/link');
+  case 'list-action-button':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-groups':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-multiple-checkbox':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-multiple-keyboard':
+return import('@koobiq/docs-examples/components/list');
+  case 'list-overview':
+return import('@koobiq/docs-examples/components/list');
+  case 'loader-overlay-default':
+return import('@koobiq/docs-examples/components/loader-overlay');
+  case 'loader-overlay-fixed-top':
+return import('@koobiq/docs-examples/components/loader-overlay');
+  case 'loader-overlay-large':
+return import('@koobiq/docs-examples/components/loader-overlay');
+  case 'loader-overlay-overview':
+return import('@koobiq/docs-examples/components/loader-overlay');
+  case 'markdown-article':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-code-block':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-code':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-divider':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-headers-combinations':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-headers':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-image':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-line-break':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-link':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-list':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-paragraph':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-quote':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-selection':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-table':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'modal-component':
+return import('@koobiq/docs-examples/components/modal');
+  case 'modal-multiple':
+return import('@koobiq/docs-examples/components/modal');
+  case 'modal-overview':
+return import('@koobiq/docs-examples/components/modal');
+  case 'modal-scroll':
+return import('@koobiq/docs-examples/components/modal');
+  case 'modal-sizes':
+return import('@koobiq/docs-examples/components/modal');
+  case 'modal-template':
+return import('@koobiq/docs-examples/components/modal');
+  case 'navbar-overview':
+return import('@koobiq/docs-examples/components/navbar');
+  case 'navbar-vertical-open-over':
+return import('@koobiq/docs-examples/components/navbar');
+  case 'navbar-vertical':
+return import('@koobiq/docs-examples/components/navbar');
+  case 'number-formatter-overview':
+return import('@koobiq/docs-examples/components/number-formatter');
+  case 'popover-close':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-common':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-content':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-header':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-height':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-placement-center':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-placement-edges':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-scroll':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-width':
+return import('@koobiq/docs-examples/components/popover');
+  case 'progress-bar-indeterminate':
+return import('@koobiq/docs-examples/components/progress-bar');
+  case 'progress-bar-overview':
+return import('@koobiq/docs-examples/components/progress-bar');
+  case 'progress-spinner-indeterminate':
+return import('@koobiq/docs-examples/components/progress-spinner');
+  case 'progress-spinner-overview':
+return import('@koobiq/docs-examples/components/progress-spinner');
+  case 'radio-content':
+return import('@koobiq/docs-examples/components/radio');
+  case 'radio-group':
+return import('@koobiq/docs-examples/components/radio');
+  case 'radio-invalid':
+return import('@koobiq/docs-examples/components/radio');
+  case 'radio-overview':
+return import('@koobiq/docs-examples/components/radio');
+  case 'radio-required':
+return import('@koobiq/docs-examples/components/radio');
+  case 'radio-size':
+return import('@koobiq/docs-examples/components/radio');
+  case 'radio-style':
+return import('@koobiq/docs-examples/components/radio');
+  case 'scrollbar-scroll-to-top':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'scrollbar-with-custom-config':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'scrollbar-with-options':
+return import('@koobiq/docs-examples/components/scrollbar');
+  case 'select-footer':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-groups':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-multiple-overview':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-overview':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-prioritized-selected':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-search-overview':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-virtual-scroll':
+return import('@koobiq/docs-examples/components/select');
+  case 'sidepanel-modal-mode':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-normal-mode':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-overlayed':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-sizes':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'splitter-dynamic-data':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-fixed':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-nested':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-overview':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'splitter-vertical':
+return import('@koobiq/docs-examples/components/splitter');
+  case 'table-full-width':
+return import('@koobiq/docs-examples/components/table');
+  case 'table-overview':
+return import('@koobiq/docs-examples/components/table');
+  case 'table-with-borders':
+return import('@koobiq/docs-examples/components/table');
+  case 'tab-active-tab-index':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tab-active-tab':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-actionbar':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-custom':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-disabled':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-empty':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-overview':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-stretch':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-underlined':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-vertical-icons':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-vertical':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-with-scroll-vertical':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-with-scroll':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tag-autocomplete-option-operations':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-autocomplete':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-content':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-fill-and-style':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-hug-content':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-input-with-form-control-validators':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-input':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-list':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-overview':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tags-autocomplete-onpaste-off':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tags-input-onpaste-off':
+return import('@koobiq/docs-examples/components/tag');
+  case 'text-area-overview':
+return import('@koobiq/docs-examples/components/textarea');
+  case 'timepicker-overview':
+return import('@koobiq/docs-examples/components/timepicker');
+  case 'timepicker-range':
+return import('@koobiq/docs-examples/components/timepicker');
+  case 'timepicker-validation-symbols':
+return import('@koobiq/docs-examples/components/timepicker');
+  case 'timepicker-variations':
+return import('@koobiq/docs-examples/components/timepicker');
+  case 'timezone-overview':
+return import('@koobiq/docs-examples/components/timezone');
+  case 'timezone-search-overview':
+return import('@koobiq/docs-examples/components/timezone');
+  case 'timezone-trigger-overview':
+return import('@koobiq/docs-examples/components/timezone');
+  case 'toast-actions-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-hide-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-link-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-progress-bar-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-report-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-types-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toggle-overview':
+return import('@koobiq/docs-examples/components/toggle');
+  case 'tooltip-arrow-and-offset':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-extended':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-long':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-multiple-lines':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-overview':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-placement-center':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-placement-edges':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-relative-to-pointer':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-style':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tree-select-child-selection-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-footer-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-lazyload':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-multiple-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-search-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-access-rights':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-action-button':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-checked-filtering':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-custom-filtering':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-descendants-subcategories':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-filtering':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-lazyload':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-multiple-checkbox':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-multiple-checklist':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-multiple-keyboard':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-overview':
+return import('@koobiq/docs-examples/components/tree');
+  case 'typography-overview':
+return import('@koobiq/docs-examples/components/typography');
+  case 'validation-composite':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-global-one-required':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-global':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-on-blur':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-on-type':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-overview':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-small':
+return import('@koobiq/docs-examples/components/validation');
+    default:
+return undefined;
+  }
+}

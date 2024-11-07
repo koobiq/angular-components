@@ -9,7 +9,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 @Component({
     standalone: true,
     selector: 'badge-tooltip-example',
-    styleUrl: 'badge-tooltip-example.css',
+    styleUrls: ['badge-tooltip-example.css'],
     encapsulation: ViewEncapsulation.None,
     imports: [
         KbqBadgeModule,
