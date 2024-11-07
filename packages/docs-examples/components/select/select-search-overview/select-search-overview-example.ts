@@ -1,6 +1,11 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { AsyncPipe } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KBQ_LOCALE_SERVICE, KbqHighlightModule, KbqLocaleService } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { Observable, merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { enUSLocaleDataSet } from '../en-US';
@@ -20,13 +25,54 @@ const localeDataSet = {
 };
 
 /**
- * @title Basic Select
+ * @title Select search
  */
 @Component({
+    standalone: true,
     selector: 'select-search-overview-example',
-    templateUrl: 'select-search-overview-example.html',
-    styleUrls: ['select-search-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqIconModule,
+        KbqInputModule,
+        AsyncPipe,
+        ReactiveFormsModule,
+        KbqHighlightModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                [(value)]="selected"
+                multiple
+            >
+                <kbq-form-field
+                    kbqFormFieldWithoutBorders
+                    kbqSelectSearch
+                >
+                    <i
+                        kbq-icon="kbq-magnifying-glass_16"
+                        kbqPrefix
+                    ></i>
+                    <input
+                        [formControl]="searchControl"
+                        kbqInput
+                        type="text"
+                    />
+                    <kbq-cleaner />
+                </kbq-form-field>
+
+                <kbq-cleaner #kbqSelectCleaner />
+
+                <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+                @for (option of filteredOptions | async; track option) {
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option | mcHighlight: searchControl.value"></span>
+                    </kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `
 })
 export class SelectSearchOverviewExample {
     options: string[] = [];

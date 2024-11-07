@@ -2195,8 +2195,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "RadioContentExample",
     "files": [
       "radio-content-example.ts",
-      "radio-content-example.html",
-      "radio-content-example.css"
+      "radio-content-example.html"
     ],
     "selector": "radio-content-example",
     "additionalComponents": [],
@@ -2208,55 +2207,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio group",
     "componentName": "RadioGroupExample",
     "files": [
-      "radio-group-example.ts",
-      "radio-group-example.html",
-      "radio-group-example.css"
+      "radio-group-example.ts"
     ],
     "selector": "radio-group-example",
     "additionalComponents": [],
     "primaryFile": "radio-group-example.ts",
-    "importPath": "components/radio"
-  },
-  "radio-invalid": {
-    "packagePath": "components/radio/radio-invalid",
-    "title": "Radio invalid",
-    "componentName": "RadioInvalidExample",
-    "files": [
-      "radio-invalid-example.ts",
-      "radio-invalid-example.html",
-      "radio-invalid-example.css"
-    ],
-    "selector": "radio-invalid-example",
-    "additionalComponents": [],
-    "primaryFile": "radio-invalid-example.ts",
-    "importPath": "components/radio"
-  },
-  "radio-overview": {
-    "packagePath": "components/radio/radio-overview",
-    "title": "Basic radio",
-    "componentName": "RadioOverviewExample",
-    "files": [
-      "radio-overview-example.ts",
-      "radio-overview-example.html",
-      "radio-overview-example.css"
-    ],
-    "selector": "radio-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "radio-overview-example.ts",
-    "importPath": "components/radio"
-  },
-  "radio-required": {
-    "packagePath": "components/radio/radio-required",
-    "title": "Radio required",
-    "componentName": "RadioRequiredExample",
-    "files": [
-      "radio-required-example.ts",
-      "radio-required-example.html",
-      "radio-required-example.css"
-    ],
-    "selector": "radio-required-example",
-    "additionalComponents": [],
-    "primaryFile": "radio-required-example.ts",
     "importPath": "components/radio"
   },
   "radio-size": {
@@ -2264,9 +2219,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio size",
     "componentName": "RadioSizeExample",
     "files": [
-      "radio-size-example.ts",
-      "radio-size-example.html",
-      "radio-size-example.css"
+      "radio-size-example.ts"
     ],
     "selector": "radio-size-example",
     "additionalComponents": [],
@@ -2278,9 +2231,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio style",
     "componentName": "RadioStyleExample",
     "files": [
-      "radio-style-example.ts",
-      "radio-style-example.html",
-      "radio-style-example.css"
+      "radio-style-example.ts"
     ],
     "selector": "radio-style-example",
     "additionalComponents": [],
@@ -2325,12 +2276,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-footer": {
     "packagePath": "components/select/select-footer",
-    "title": "Basic Select",
+    "title": "Select footer",
     "componentName": "SelectFooterExample",
     "files": [
       "select-footer-example.ts",
-      "select-footer-example.html",
-      "select-footer-example.css"
+      "select-footer-example.html"
     ],
     "selector": "select-footer-example",
     "additionalComponents": [],
@@ -2339,12 +2289,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-groups": {
     "packagePath": "components/select/select-groups",
-    "title": "Basic Select",
+    "title": "Select groups",
     "componentName": "SelectGroupsExample",
     "files": [
-      "select-groups-example.ts",
-      "select-groups-example.html",
-      "select-groups-example.css"
+      "select-groups-example.ts"
     ],
     "selector": "select-groups-example",
     "additionalComponents": [],
@@ -2353,12 +2301,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-multiple-overview": {
     "packagePath": "components/select/select-multiple-overview",
-    "title": "Basic Select",
+    "title": "Select multiple",
     "componentName": "SelectMultipleOverviewExample",
     "files": [
-      "select-multiple-overview-example.ts",
-      "select-multiple-overview-example.html",
-      "select-multiple-overview-example.css"
+      "select-multiple-overview-example.ts"
     ],
     "selector": "select-multiple-overview-example",
     "additionalComponents": [],
@@ -2367,12 +2313,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-overview": {
     "packagePath": "components/select/select-overview",
-    "title": "Basic Select",
+    "title": "Select",
     "componentName": "SelectOverviewExample",
     "files": [
-      "select-overview-example.ts",
-      "select-overview-example.html",
-      "select-overview-example.css"
+      "select-overview-example.ts"
     ],
     "selector": "select-overview-example",
     "additionalComponents": [],
@@ -2381,12 +2325,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-prioritized-selected": {
     "packagePath": "components/select/select-prioritized-selected",
-    "title": "Prioritized Selected Example",
+    "title": "Selected prioritized selected",
     "componentName": "SelectPrioritizedSelectedExample",
     "files": [
-      "select-prioritized-selected-example.ts",
-      "select-prioritized-selected-example.html",
-      "select-prioritized-selected-example.css"
+      "select-prioritized-selected-example.ts"
     ],
     "selector": "select-prioritized-selected-example",
     "additionalComponents": [],
@@ -2395,12 +2337,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-search-overview": {
     "packagePath": "components/select/select-search-overview",
-    "title": "Basic Select",
+    "title": "Select search",
     "componentName": "SelectSearchOverviewExample",
     "files": [
-      "select-search-overview-example.ts",
-      "select-search-overview-example.html",
-      "select-search-overview-example.css"
+      "select-search-overview-example.ts"
     ],
     "selector": "select-search-overview-example",
     "additionalComponents": [],
@@ -2409,12 +2349,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "select-virtual-scroll": {
     "packagePath": "components/select/select-virtual-scroll",
-    "title": "select-virtual-scroll",
+    "title": "Select virtual scroll",
     "componentName": "SelectVirtualScrollExample",
     "files": [
-      "select-virtual-scroll-example.ts",
-      "select-virtual-scroll-example.html",
-      "select-virtual-scroll-example.css"
+      "select-virtual-scroll-example.ts"
     ],
     "selector": "select-virtual-scroll-example",
     "additionalComponents": [],

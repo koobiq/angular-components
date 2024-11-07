@@ -1,5 +1,7 @@
-import { Component, Inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
 import { faIRLocaleDataSet } from '../fa-IR';
@@ -17,13 +19,29 @@ const localeDataSet = {
 };
 
 /**
- * @title Prioritized Selected Example
+ * @title Selected prioritized selected
  */
 @Component({
+    standalone: true,
     selector: 'select-prioritized-selected-example',
-    templateUrl: 'select-prioritized-selected-example.html',
-    styleUrls: ['select-prioritized-selected-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqSelectModule],
+    template: `
+        <kbq-form-field>
+            <kbq-select
+                [(value)]="selected"
+                [multiple]="true"
+                (openedChange)="openedChange($event)"
+            >
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option"></span>
+                    </kbq-option>
+                }
+
+                <kbq-cleaner #kbqSelectCleaner />
+            </kbq-select>
+        </kbq-form-field>
+    `
 })
 export class SelectPrioritizedSelectedExample implements OnInit {
     selected: string[];
