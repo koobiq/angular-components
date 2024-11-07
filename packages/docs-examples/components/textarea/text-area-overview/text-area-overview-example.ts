@@ -11,20 +11,20 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     selector: 'text-area-overview-example',
     imports: [KbqFormFieldModule, KbqTextareaModule, FormsModule],
     template: `
-        <kbq-form-field class="layout-margin-bottom-4xl">
+        <kbq-form-field class="layout-margin-bottom-xl">
             <textarea
                 [placeholder]="placeholder"
                 kbqTextarea
             ></textarea>
         </kbq-form-field>
-        <kbq-form-field class="layout-margin-bottom-4xl">
+        <kbq-form-field class="layout-margin-bottom-xl">
             <textarea
                 [disabled]="disabled"
                 [placeholder]="placeholder"
                 kbqTextarea
             ></textarea>
         </kbq-form-field>
-        <kbq-form-field class="layout-margin-bottom-4xl">
+        <kbq-form-field class="layout-margin-bottom-xl">
             <textarea
                 [(ngModel)]="value"
                 [placeholder]="placeholder"
@@ -32,10 +32,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 kbqTextarea
             ></textarea>
         </kbq-form-field>
-        <kbq-form-field
-            class="layout-margin-bottom-4xl"
-            kbqFormFieldWithoutBorders
-        >
+        <kbq-form-field kbqFormFieldWithoutBorders>
             <textarea
                 [(ngModel)]="value"
                 kbqTextarea

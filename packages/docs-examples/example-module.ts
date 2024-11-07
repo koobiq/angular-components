@@ -2747,10 +2747,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "text-area-overview": {
     "packagePath": "components/textarea/text-area-overview",
-    "title": "Basic textarea",
+    "title": "Textarea",
     "componentName": "TextAreaOverviewExample",
     "files": [
-      "text-area-overview-example.ts",
+      "text-area-overview-example.ts"
     ],
     "selector": "text-area-overview-example",
     "additionalComponents": [],
