@@ -1,15 +1,28 @@
 import { Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
-import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagInputEvent, KbqTagsDefaultOptions } from '@koobiq/components/tags';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import {
+    KBQ_TAGS_DEFAULT_OPTIONS,
+    KbqTagInputEvent,
+    KbqTagsDefaultOptions,
+    KbqTagsModule
+} from '@koobiq/components/tags';
 
 /**
- * @title Tags Input Onpaste Off
+ * @title Tags input onpaste off
  */
 @Component({
+    standalone: true,
     selector: 'tags-input-onpaste-off-example',
     templateUrl: 'tags-input-onpaste-off-example.html',
-    styleUrls: ['tags-input-onpaste-off-example.css'],
+    imports: [
+        KbqTagsModule,
+        ReactiveFormsModule,
+        KbqIconModule,
+        KbqFormFieldModule
+    ],
     // turn off tag add on paste with InjectionToken
     providers: [
         {

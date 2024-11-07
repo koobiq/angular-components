@@ -2613,12 +2613,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-autocomplete-option-operations": {
     "packagePath": "components/tag/tag-autocomplete-option-operations",
-    "title": "Tag Autocomplete Option Operations",
+    "title": "Tag autocomplete option operations",
     "componentName": "TagAutocompleteOptionOperationsExample",
     "files": [
-      "tag-autocomplete-option-operations-example.ts",
-      "tag-autocomplete-option-operations-example.html",
-      "tag-autocomplete-option-operations-example.css"
+      "tag-autocomplete-option-operations-example.ts"
     ],
     "selector": "tag-autocomplete-option-operations-example",
     "additionalComponents": [],
@@ -2627,12 +2625,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-autocomplete": {
     "packagePath": "components/tag/tag-autocomplete",
-    "title": "Basic tag autocomplete",
+    "title": "Tag autocomplete",
     "componentName": "TagAutocompleteExample",
     "files": [
-      "tag-autocomplete-example.ts",
-      "tag-autocomplete-example.html",
-      "tag-autocomplete-example.css"
+      "tag-autocomplete-example.ts"
     ],
     "selector": "tag-autocomplete-example",
     "additionalComponents": [],
@@ -2641,12 +2637,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-content": {
     "packagePath": "components/tag/tag-content",
-    "title": "Content",
+    "title": "Tag content",
     "componentName": "TagContentExample",
     "files": [
-      "tag-content-example.ts",
-      "tag-content-example.html",
-      "tag-content-example.css"
+      "tag-content-example.ts"
     ],
     "selector": "tag-content-example",
     "additionalComponents": [],
@@ -2655,12 +2649,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-fill-and-style": {
     "packagePath": "components/tag/tag-fill-and-style",
-    "title": "Fill and Style",
+    "title": "Tag fill and style",
     "componentName": "TagFillAndStyleExample",
     "files": [
-      "tag-fill-and-style-example.ts",
-      "tag-fill-and-style-example.html",
-      "tag-fill-and-style-example.css"
+      "tag-fill-and-style-example.ts"
     ],
     "selector": "tag-fill-and-style-example",
     "additionalComponents": [],
@@ -2669,12 +2661,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-hug-content": {
     "packagePath": "components/tag/tag-hug-content",
-    "title": "Corner Cases",
+    "title": "Tag hug content",
     "componentName": "TagHugContentExample",
     "files": [
-      "tag-hug-content-example.ts",
-      "tag-hug-content-example.html",
-      "tag-hug-content-example.css"
+      "tag-hug-content-example.ts"
     ],
     "selector": "tag-hug-content-example",
     "additionalComponents": [],
@@ -2695,12 +2685,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-input": {
     "packagePath": "components/tag/tag-input",
-    "title": "Basic tag input",
+    "title": "Tag input",
     "componentName": "TagInputExample",
     "files": [
-      "tag-input-example.ts",
-      "tag-input-example.html",
-      "tag-input-example.css"
+      "tag-input-example.ts"
     ],
     "selector": "tag-input-example",
     "additionalComponents": [],
@@ -2709,12 +2697,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-list": {
     "packagePath": "components/tag/tag-list",
-    "title": "Basic tag list",
+    "title": "Tag list",
     "componentName": "TagListExample",
     "files": [
-      "tag-list-example.ts",
-      "tag-list-example.html",
-      "tag-list-example.css"
+      "tag-list-example.ts"
     ],
     "selector": "tag-list-example",
     "additionalComponents": [],
@@ -2723,12 +2709,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tag-overview": {
     "packagePath": "components/tag/tag-overview",
-    "title": "Basic tag",
+    "title": "Tag",
     "componentName": "TagOverviewExample",
     "files": [
-      "tag-overview-example.ts",
-      "tag-overview-example.html",
-      "tag-overview-example.css"
+      "tag-overview-example.ts"
     ],
     "selector": "tag-overview-example",
     "additionalComponents": [],
@@ -2737,12 +2721,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tags-autocomplete-onpaste-off": {
     "packagePath": "components/tag/tags-autocomplete-onpaste-off",
-    "title": "Tags Autocomplete Onpaste Off",
+    "title": "Tags autocomplete onpaste off",
     "componentName": "TagsAutocompleteOnpasteOffExample",
     "files": [
       "tags-autocomplete-onpaste-off-example.ts",
-      "tags-autocomplete-onpaste-off-example.html",
-      "tags-autocomplete-onpaste-off-example.css"
+      "tags-autocomplete-onpaste-off-example.html"
     ],
     "selector": "tags-autocomplete-onpaste-off-example",
     "additionalComponents": [],
@@ -2751,12 +2734,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tags-input-onpaste-off": {
     "packagePath": "components/tag/tags-input-onpaste-off",
-    "title": "Tags Input Onpaste Off",
+    "title": "Tags input onpaste off",
     "componentName": "TagsInputOnpasteOffExample",
     "files": [
       "tags-input-onpaste-off-example.ts",
-      "tags-input-onpaste-off-example.html",
-      "tags-input-onpaste-off-example.css"
+      "tags-input-onpaste-off-example.html"
     ],
     "selector": "tags-input-onpaste-off-example",
     "additionalComponents": [],
@@ -3806,12 +3788,6 @@ return import('@koobiq/docs-examples/components/progress-spinner');
   case 'radio-content':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-group':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-invalid':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-overview':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-required':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-size':
 return import('@koobiq/docs-examples/components/radio');

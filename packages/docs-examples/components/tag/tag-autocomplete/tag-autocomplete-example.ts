@@ -1,18 +1,67 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { KbqAutocomplete, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList } from '@koobiq/components/tags';
+import { AsyncPipe } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 /**
- * @title Basic tag autocomplete
+ * @title Tag autocomplete
  */
 @Component({
+    standalone: true,
     selector: 'tag-autocomplete-example',
-    templateUrl: 'tag-autocomplete-example.html',
-    styleUrls: ['tag-autocomplete-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqTagsModule, KbqAutocompleteModule, ReactiveFormsModule, KbqInputModule, AsyncPipe],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList>
+                @for (tag of selectedTags; track tag) {
+                    <kbq-tag
+                        [value]="tag"
+                        (removed)="onRemove(tag)"
+                    >
+                        {{ tag }}
+                        <i
+                            kbq-icon="kbq-xmark-s_16"
+                            kbqTagRemove
+                        ></i>
+                    </kbq-tag>
+                }
+                <input
+                    #tagInput
+                    [distinct]="true"
+                    [formControl]="control"
+                    [kbqAutocomplete]="autocomplete"
+                    [kbqTagInputAddOnBlur]="false"
+                    [kbqTagInputFor]="tagList"
+                    (blur)="addOnBlurFunc($event)"
+                    (kbqTagInputTokenEnd)="onCreate($event)"
+                    placeholder="Placeholder"
+                />
+            </kbq-tag-list>
+            <kbq-autocomplete
+                #autocomplete
+                (optionSelected)="onSelect($event)"
+            >
+                @if (canCreate) {
+                    <kbq-option [value]="{ new: true, value: tagInput.value }">
+                        Создать: {{ tagInput.value }}
+                    </kbq-option>
+                }
+                @if (hasDuplicates) {
+                    <kbq-option [disabled]="true">Ничего не найдено</kbq-option>
+                }
+                @for (tag of filteredTags | async; track tag) {
+                    <kbq-option [value]="tag">
+                        {{ tag }}
+                    </kbq-option>
+                }
+            </kbq-autocomplete>
+        </kbq-form-field>
+    `
 })
 export class TagAutocompleteExample implements AfterViewInit {
     allTags: string[] = ['Первый', 'Второй', 'Третий', 'Четвертый', 'Пятый', 'Шестой'];
