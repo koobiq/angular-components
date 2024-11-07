@@ -55,13 +55,17 @@
         padding: 0;
 
         & .kbq-list-text {
-            padding: kbq-difference-series-css-variables(
-                    [ file-upload-size-multiple-big-grid-cell-padding-vertical,
-                    var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs))]
+            padding: calc(
+                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical) - var(
+                            --kbq-list-size-container-focus-outline-width,
+                            var(--kbq-size-3xs)
+                        )
                 )
-                kbq-difference-series-css-variables(
-                    [ file-upload-size-multiple-big-grid-cell-padding-horizontal,
-                    var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs))]
+                calc(
+                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal) - var(
+                            --kbq-list-size-container-focus-outline-width,
+                            var(--kbq-size-3xs)
+                        )
                 );
         }
 
@@ -91,13 +95,6 @@
             min-width: var(--kbq-size-7xl);
             text-align: left;
             flex-grow: 1;
-        }
-
-        .kbq-file-upload__file,
-        .kbq-file-upload__size,
-        .kbq-file-upload__action {
-            //padding-left: $horizontal-padding-item;
-            //padding-right: $horizontal-padding-item;
         }
     }
 
