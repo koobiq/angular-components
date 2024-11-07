@@ -11,21 +11,19 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
         KbqSplitterModule
     ],
     styles: `
-        :host {
-            kbq-splitter {
-                display: flex;
-                border: 1px solid black;
-                height: 400px;
-                margin: 2px;
-            }
+        kbq-splitter {
+            display: flex;
+            border: 1px solid black;
+            height: 400px;
+            margin: 2px;
+        }
 
-            .kbq-splitter-area_fixed-width {
-                min-width: 200px;
-            }
+        .kbq-splitter-area_fixed-width {
+            min-width: 200px;
+        }
 
-            div[kbq-splitter-area] {
-                background: #c5c0c0;
-            }
+        div[kbq-splitter-area] {
+            background: #c5c0c0;
         }
     `,
     template: `

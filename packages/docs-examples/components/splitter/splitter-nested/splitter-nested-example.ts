@@ -11,28 +11,26 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
         KbqSplitterModule
     ],
     styles: `
-        :host {
-            kbq-splitter.with-border {
-                border: 1px solid black;
-                height: 300px;
-                margin: 2px;
-            }
+        kbq-splitter.with-border {
+            border: 1px solid black;
+            height: 300px;
+            margin: 2px;
+        }
 
-            kbq-splitter.without-border {
-                height: 300px;
-            }
+        kbq-splitter.without-border {
+            height: 300px;
+        }
 
-            .with-border > div[kbq-splitter-area] {
-                background: #c5c0c0;
-            }
+        .with-border > div[kbq-splitter-area] {
+            background: #c5c0c0;
+        }
 
-            .without-border > div[kbq-splitter-area] {
-                background: #b3b3b3;
-            }
+        .without-border > div[kbq-splitter-area] {
+            background: #b3b3b3;
+        }
 
-            .nested-splitter > div[kbq-splitter-area] {
-                background: #9f9f9f;
-            }
+        .nested-splitter > div[kbq-splitter-area] {
+            background: #9f9f9f;
         }
     `,
     template: `

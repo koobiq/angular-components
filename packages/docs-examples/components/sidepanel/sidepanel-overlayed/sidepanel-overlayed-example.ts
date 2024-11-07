@@ -11,74 +11,7 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
     standalone: true,
     selector: 'sidepanel-overlayed-example',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
-    template: `
-        <div class="kbq-form-horizontal margin">
-            <div class="kbq-form__row">
-                <label class="kbq-form__label">Position</label>
-                <kbq-form-field
-                    class="kbq-form__control flex-10"
-                    style="min-width: 120px"
-                >
-                    <kbq-select [(value)]="position">
-                        <kbq-option [value]="'right'">Right</kbq-option>
-                        <kbq-option [value]="'left'">Left</kbq-option>
-                        <kbq-option [value]="'top'">Top</kbq-option>
-                        <kbq-option [value]="'bottom'">Bottom</kbq-option>
-                    </kbq-select>
-                </kbq-form-field>
-            </div>
-        </div>
-
-        <br />
-
-        <button
-            [color]="'contrast'"
-            (click)="openSidepanel()"
-            kbq-button
-        >
-            <span>Open sidepanel</span>
-        </button>
-
-        <ng-template>
-            <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
-            <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
-                <div
-                    class="kbq-subheading"
-                    style="padding: 8px"
-                >
-                    Sidepanel Template Body
-                </div>
-
-                @for (item of array; track item; let i = $index) {
-                    <div style="padding: 8px">
-                        {{ i + 1 }}
-                    </div>
-                }
-            </kbq-sidepanel-body>
-
-            <kbq-sidepanel-footer>
-                <kbq-sidepanel-actions align="left">
-                    <button
-                        [color]="'contrast'"
-                        (click)="openSidepanel()"
-                        cdkFocusInitial
-                        kbq-button
-                    >
-                        <span>Open another sidepanel</span>
-                    </button>
-                </kbq-sidepanel-actions>
-
-                <kbq-sidepanel-actions align="right">
-                    <button
-                        kbq-button
-                        kbq-sidepanel-close
-                    >
-                        <span>Close</span>
-                    </button>
-                </kbq-sidepanel-actions>
-            </kbq-sidepanel-footer>
-        </ng-template>
-    `
+    templateUrl: './sidepanel-overlayed-example.html'
 })
 export class SidepanelOverlayedExample {
     position = KbqSidepanelPosition.Right;

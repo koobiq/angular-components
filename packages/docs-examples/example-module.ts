@@ -3210,7 +3210,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel overlayed",
     "componentName": "SidepanelOverlayedExample",
     "files": [
-      "sidepanel-overlayed-example.ts"
+      "sidepanel-overlayed-example.ts",
+      "./sidepanel-overlayed-example.html"
     ],
     "selector": "sidepanel-overlayed-example",
     "additionalComponents": [],

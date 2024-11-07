@@ -12,7 +12,7 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
     selector: 'sidepanel-modal-mode-example',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
     template: `
-        <div class="kbq-form-horizontal margin">
+        <div class="kbq-form-horizontal">
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Position</label>
                 <kbq-form-field
