@@ -143,7 +143,7 @@
     );
     --kbq-code-block-filled-collapse-button-expand-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-outline-container-background: var(--kbq-background-card);
-    --kbq-code-block-outline-container-border-color: var(--kbq-line-contrast-less);
+    --kbq-code-block-outline-container-border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
     --kbq-code-block-outline-header-background: var(--kbq-background-card);
     --kbq-code-block-outline-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-code-block-outline-actionbar-fade-gradient: linear-gradient(90deg, transparent, var(--kbq-background-card));
@@ -262,7 +262,7 @@
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
     --kbq-code-block-filled-container-background: var(--kbq-background-bg-secondary);
-    --kbq-code-block-filled-container-border-color: var(--kbq-line-contrast-less);
+    --kbq-code-block-filled-container-border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
     --kbq-code-block-filled-header-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-filled-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-code-block-filled-actionbar-fade-gradient: linear-gradient(

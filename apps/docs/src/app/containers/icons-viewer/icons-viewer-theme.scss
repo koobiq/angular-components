@@ -12,7 +12,7 @@
 
     .docs-icons-viewer__table-cell {
         background: var(--kbq-background-bg);
-        border-color: var(--kbq-line-contrast-less);
+        border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
 
         > .docs-icons-viewer__table-cell-name {
             color: var(--kbq-foreground-text-less-contrast);

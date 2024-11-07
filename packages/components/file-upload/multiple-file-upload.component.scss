@@ -57,11 +57,11 @@
         & .kbq-list-text {
             padding: kbq-difference-series-css-variables(
                     [ file-upload-size-multiple-big-grid-cell-padding-vertical,
-                    list-size-container-focus-outline-width]
+                    var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs))]
                 )
                 kbq-difference-series-css-variables(
                     [ file-upload-size-multiple-big-grid-cell-padding-horizontal,
-                    list-size-container-focus-outline-width]
+                    var(--kbq-list-size-container-focus-outline-width, var(--kbq-size-3xs))]
                 );
         }
 

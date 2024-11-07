@@ -38,29 +38,29 @@
         }
 
         .kbq-markdown__a {
-            color: var(--kbq-markdown-link-text);
-            border-bottom-color: var(--kbq-markdown-link-border-bottom);
+            color: var(--kbq-markdown-link-text, var(--kbq-foreground-theme));
+            border-bottom-color: var(--kbq-markdown-link-border-bottom, var(--kbq-line-theme-less));
 
             &:visited {
-                color: var(--kbq-markdown-link-state-visited-text);
-                border-bottom-color: var(--kbq-markdown-link-state-visited-border-bottom);
+                color: var(--kbq-markdown-link-state-visited-text, var(--kbq-foreground-visited));
+                border-bottom-color: var(--kbq-markdown-link-state-visited-border-bottom, var(--kbq-line-visited));
             }
 
             &:hover {
-                color: var(--kbq-markdown-link-state-hover-text);
+                color: var(--kbq-markdown-link-state-hover-text, var(--kbq-states-foreground-theme-hover));
                 transition: color 0ms;
-                border-bottom-color: var(--kbq-markdown-link-state-hover-border-bottom);
+                border-bottom-color: var(--kbq-markdown-link-state-hover-border-bottom, var(--kbq-line-theme-less));
             }
 
             &:active {
-                color: var(--kbq-markdown-link-state-active);
+                color: var(--kbq-markdown-link-state-active, var(--kbq-states-foreground-theme-active));
             }
 
             &:focus {
-                outline: var(--kbq-markdown-link-state-focused-outline) solid
-                    var(--kbq-markdown-link-size-state-focused-outline-width);
+                outline: var(--kbq-markdown-link-state-focused-outline, var(--kbq-link-state-focused-outline)) solid
+                    var(--kbq-markdown-link-size-state-focused-outline-width, var(--kbq-size-3xs));
 
-                outline-offset: var(--kbq-markdown-link-size-state-focused-outline-offset);
+                outline-offset: var(--kbq-markdown-link-size-state-focused-outline-offset, 0);
             }
         }
 
