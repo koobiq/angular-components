@@ -2757,40 +2757,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "text-area-overview-example.ts",
     "importPath": "components/textarea"
   },
-  "timepicker-overview": {
-    "packagePath": "components/timepicker/timepicker-overview",
-    "title": "Timepicker overview",
-    "componentName": "TimepickerOverviewExample",
-    "files": [
-      "timepicker-overview-example.ts",
-      "timepicker-overview-example.html",
-      "timepicker-overview-example.css"
-    ],
-    "selector": "timepicker-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "timepicker-overview-example.ts",
-    "importPath": "components/timepicker"
-  },
-  "timepicker-range": {
-    "packagePath": "components/timepicker/timepicker-range",
-    "title": "Timepicker range",
-    "componentName": "TimepickerRangeExample",
-    "files": [
-      "timepicker-range-example.ts",
-      "timepicker-range-example.html",
-      "timepicker-range-example.css"
-    ],
-    "selector": "timepicker-range-example",
-    "additionalComponents": [],
-    "primaryFile": "timepicker-range-example.ts",
-    "importPath": "components/timepicker"
-  },
   "timepicker-validation-symbols": {
     "packagePath": "components/timepicker/timepicker-validation-symbols",
-    "title": "Timepicker overview",
+    "title": "Timepicker validation symbols",
     "componentName": "TimepickerValidationSymbolsExample",
     "files": [
-      "timepicker-validation-symbols-example.ts",
+      "timepicker-validation-symbols-example.ts"
     ],
     "selector": "timepicker-validation-symbols-example",
     "additionalComponents": [],
@@ -2799,7 +2771,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "timepicker-variations": {
     "packagePath": "components/timepicker/timepicker-variations",
-    "title": "Timepicker overview",
+    "title": "Timepicker variations",
     "componentName": "TimepickerVariationsExample",
     "files": [
       "timepicker-variations-example.ts",
@@ -3883,10 +3855,6 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'text-area-overview':
 return import('@koobiq/docs-examples/components/textarea');
-  case 'timepicker-overview':
-return import('@koobiq/docs-examples/components/timepicker');
-  case 'timepicker-range':
-return import('@koobiq/docs-examples/components/timepicker');
   case 'timepicker-validation-symbols':
 return import('@koobiq/docs-examples/components/timepicker');
   case 'timepicker-variations':

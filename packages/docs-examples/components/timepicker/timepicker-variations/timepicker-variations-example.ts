@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
-import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
-import { DateTime } from 'luxon';
-import { KbqRadioModule } from '@koobiq/components/radio';
 import { FormsModule } from '@angular/forms';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateAdapter } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqRadioModule } from '@koobiq/components/radio';
+import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { DateTime } from 'luxon';
 
 /**
  * @title Timepicker variations
@@ -21,7 +22,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqFormFieldModule,
         KbqToolTipModule,
         KbqTimepickerModule,
-        KbqIconModule
+        KbqIconModule,
+        LuxonDateModule
     ],
     styleUrls: ['timepicker-variations-example.css']
 })
