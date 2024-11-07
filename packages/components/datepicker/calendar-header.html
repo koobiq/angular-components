@@ -24,7 +24,7 @@
             ></i>
         </button>
 
-        @for (month of monthNames; track month) {
+        @for (month of monthNames; track month.nameShort) {
             <kbq-option
                 [disabled]="month.disabled"
                 [kbqTooltipDisabled]="true"
@@ -58,7 +58,7 @@
             ></i>
         </button>
 
-        @for (year of years; track year) {
+        @for (year of years; track year.name) {
             <kbq-option
                 [kbqTooltipDisabled]="true"
                 [value]="year"
