@@ -2959,12 +2959,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toggle-overview": {
     "packagePath": "components/toggle/toggle-overview",
-    "title": "Basic toggle",
+    "title": "Toggle",
     "componentName": "ToggleOverviewExample",
     "files": [
       "toggle-overview-example.ts",
-      "toggle-overview-example.html",
-      "toggle-overview-example.css"
+      "toggle-overview-example.html"
     ],
     "selector": "toggle-overview-example",
     "additionalComponents": [],

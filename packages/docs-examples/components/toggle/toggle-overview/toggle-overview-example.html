@@ -1,126 +1,115 @@
 <h3>Small Toggles</h3>
-<kbq-toggle
-    class="kbq-toggle_small"
-    [(ngModel)]="value"
-/>
-<kbq-toggle
-    class="kbq-toggle_small"
-    [(ngModel)]="value"
-/>
-<kbq-toggle
-    class="kbq-toggle_small"
-    [color]="themePalette.Error"
-    [(ngModel)]="value"
-/>
-<kbq-toggle
-    class="kbq-toggle_small"
-    [disabled]="true"
-    [(ngModel)]="value"
-/>
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        class="kbq-toggle_small"
+        [(ngModel)]="value"
+    />
+    <kbq-toggle
+        class="kbq-toggle_small"
+        [(ngModel)]="value"
+    />
+    <kbq-toggle
+        class="kbq-toggle_small"
+        [color]="themePalette.Error"
+        [(ngModel)]="value"
+    />
+    <kbq-toggle
+        class="kbq-toggle_small"
+        [disabled]="true"
+        [(ngModel)]="value"
+    />
+</div>
 
-<br />
-<br />
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        class="kbq-toggle_small"
+        [(ngModel)]="value"
+    >
+        right label
+    </kbq-toggle>
+</div>
 
-<kbq-toggle
-    class="kbq-toggle_small"
-    [(ngModel)]="value"
->
-    right label
-</kbq-toggle>
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        class="kbq-toggle_small"
+        [disabled]="true"
+        [(ngModel)]="value"
+    >
+        right disabled label
+    </kbq-toggle>
+</div>
 
-<br />
-<br />
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        labelPosition="left"
+        class="kbq-toggle_small"
+        [(ngModel)]="value"
+    >
+        left label
+    </kbq-toggle>
+</div>
 
-<kbq-toggle
-    class="kbq-toggle_small"
-    [disabled]="true"
-    [(ngModel)]="value"
->
-    right disabled label
-</kbq-toggle>
-
-<br />
-<br />
-
-<kbq-toggle
-    labelPosition="left"
-    class="kbq-toggle_small"
-    [(ngModel)]="value"
->
-    left label
-</kbq-toggle>
-
-<br />
-<br />
-
-<kbq-toggle
-    labelPosition="left"
-    class="kbq-toggle_small"
-    [disabled]="true"
-    [(ngModel)]="value"
->
-    left disabled label
-</kbq-toggle>
-
-<br />
-<br />
-<br />
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        labelPosition="left"
+        class="kbq-toggle_small"
+        [disabled]="true"
+        [(ngModel)]="value"
+    >
+        left disabled label
+    </kbq-toggle>
+</div>
 
 <h3>Big Toggles</h3>
-<kbq-toggle
-    [big]="true"
-    [(ngModel)]="value"
-/>
-<kbq-toggle
-    [big]="true"
-    [(ngModel)]="value"
-/>
-<kbq-toggle
-    [big]="true"
-    [color]="themePalette.Error"
-    [(ngModel)]="value"
-/>
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        [big]="true"
+        [(ngModel)]="value"
+    />
+    <kbq-toggle
+        [big]="true"
+        [(ngModel)]="value"
+    />
+    <kbq-toggle
+        [big]="true"
+        [color]="themePalette.Error"
+        [(ngModel)]="value"
+    />
+    <kbq-toggle
+        [big]="true"
+        [disabled]="true"
+        [(ngModel)]="value"
+    />
+</div>
 
-<kbq-toggle
-    [big]="true"
-    [disabled]="true"
-    [(ngModel)]="value"
-/>
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        [big]="true"
+        [(ngModel)]="value"
+    >
+        right label
+    </kbq-toggle>
+</div>
 
-<br />
-<br />
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        [big]="true"
+        [disabled]="true"
+        [(ngModel)]="value"
+    >
+        right disabled label
+    </kbq-toggle>
+</div>
 
-<kbq-toggle
-    [big]="true"
-    [(ngModel)]="value"
->
-    right label
-</kbq-toggle>
-
-<br />
-<br />
-
-<kbq-toggle
-    [big]="true"
-    [disabled]="true"
-    [(ngModel)]="value"
->
-    right disabled label
-</kbq-toggle>
-
-<br />
-<br />
-
-<kbq-toggle
-    labelPosition="left"
-    [big]="true"
-    [(ngModel)]="value"
->
-    left label
-</kbq-toggle>
-
-<br />
-<br />
+<div class="layout-margin-bottom-xl">
+    <kbq-toggle
+        labelPosition="left"
+        [big]="true"
+        [(ngModel)]="value"
+    >
+        left label
+    </kbq-toggle>
+</div>
 
 <kbq-toggle
     labelPosition="left"

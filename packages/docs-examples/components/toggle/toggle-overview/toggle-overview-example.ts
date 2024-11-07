@@ -1,14 +1,19 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
- * @title Basic toggle
+ * @title Toggle
  */
 @Component({
+    standalone: true,
     selector: 'toggle-overview-example',
-    templateUrl: 'toggle-overview-example.html',
-    styleUrls: ['toggle-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqToggleModule,
+        FormsModule
+    ],
+    templateUrl: 'toggle-overview-example.html'
 })
 export class ToggleOverviewExample {
     themePalette = ThemePalette;
