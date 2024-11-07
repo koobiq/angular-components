@@ -87,7 +87,8 @@
                         "allowedCommonJsDependencies": [
                             "highlight.js",
                             "@messageformat/core",
-                            "ua-parser-js"
+                            "ua-parser-js",
+                            "path-normalize"
                         ]
                     },
                     "configurations": {

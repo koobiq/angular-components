@@ -55,7 +55,7 @@ export class StackblitzButton extends KbqLink {
 
     private prepareStackBlitzForExample(exampleId: string, data: ExampleData): void {
         this.ngZone.runOutsideAngular(async () => {
-            this.openStackBlitzFn = await this.stackBlitzWriter.constructStackblitzForm(exampleId, data);
+            this.openStackBlitzFn = await this.stackBlitzWriter.createStackBlitzForExample(exampleId, data);
         });
     }
 }

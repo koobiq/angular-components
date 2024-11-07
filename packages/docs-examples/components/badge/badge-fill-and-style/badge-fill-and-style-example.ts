@@ -8,7 +8,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     standalone: true,
     selector: 'badge-fill-and-style-example',
     templateUrl: 'badge-fill-and-style-example.html',
-    styleUrl: 'badge-fill-and-style-example.css',
+    styleUrls: ['badge-fill-and-style-example.css'],
     imports: [
         KbqBadgeModule
     ],
