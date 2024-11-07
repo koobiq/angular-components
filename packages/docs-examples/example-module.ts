@@ -2871,12 +2871,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-actions-overview": {
     "packagePath": "components/toast/toast-actions-overview",
-    "title": "Basic Toast",
+    "title": "Toast actions",
     "componentName": "ToastActionsOverviewExample",
     "files": [
       "toast-actions-overview-example.ts",
-      "toast-actions-overview-example.html",
-      "toast-actions-overview-example.css"
+      "toast-actions-overview-example.html"
     ],
     "selector": "toast-actions-overview-example",
     "additionalComponents": [],
@@ -2885,12 +2884,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-hide-overview": {
     "packagePath": "components/toast/toast-hide-overview",
-    "title": "Toast Hide Strategies overview",
+    "title": "Toast hide",
     "componentName": "ToastHideOverviewExample",
     "files": [
       "toast-hide-overview-example.ts",
-      "toast-hide-overview-example.html",
-      "toast-hide-overview-example.css"
+      "toast-hide-overview-example.html"
     ],
     "selector": "toast-hide-overview-example",
     "additionalComponents": [],
@@ -2899,12 +2897,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-link-overview": {
     "packagePath": "components/toast/toast-link-overview",
-    "title": "Basic Toast",
+    "title": "Toast link",
     "componentName": "ToastLinkOverviewExample",
     "files": [
       "toast-link-overview-example.ts",
-      "toast-link-overview-example.html",
-      "toast-link-overview-example.css"
+      "toast-link-overview-example.html"
     ],
     "selector": "toast-link-overview-example",
     "additionalComponents": [],
@@ -2916,9 +2913,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic Toast",
     "componentName": "ToastOverviewExample",
     "files": [
-      "toast-overview-example.ts",
-      "toast-overview-example.html",
-      "toast-overview-example.css"
+      "toast-overview-example.ts"
     ],
     "selector": "toast-overview-example",
     "additionalComponents": [],
@@ -2927,12 +2922,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-progress-bar-overview": {
     "packagePath": "components/toast/toast-progress-bar-overview",
-    "title": "Basic Toast",
+    "title": "Toast progress bar",
     "componentName": "ToastProgressBarOverviewExample",
     "files": [
-      "toast-progress-bar-overview-example.ts",
-      "toast-progress-bar-overview-example.html",
-      "toast-progress-bar-overview-example.css"
+      "toast-progress-bar-overview-example.ts"
     ],
     "selector": "toast-progress-bar-overview-example",
     "additionalComponents": [],
@@ -2941,12 +2934,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-report-overview": {
     "packagePath": "components/toast/toast-report-overview",
-    "title": "Basic Toast",
+    "title": "Toast report",
     "componentName": "ToastReportOverviewExample",
     "files": [
-      "toast-report-overview-example.ts",
-      "toast-report-overview-example.html",
-      "toast-report-overview-example.css"
+      "toast-report-overview-example.ts"
     ],
     "selector": "toast-report-overview-example",
     "additionalComponents": [],
@@ -2955,12 +2946,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-types-overview": {
     "packagePath": "components/toast/toast-types-overview",
-    "title": "Basic Toast",
+    "title": "Toast types",
     "componentName": "ToastTypesOverviewExample",
     "files": [
       "toast-types-overview-example.ts",
-      "toast-types-overview-example.html",
-      "toast-types-overview-example.css"
+      "toast-types-overview-example.html"
     ],
     "selector": "toast-types-overview-example",
     "additionalComponents": [],

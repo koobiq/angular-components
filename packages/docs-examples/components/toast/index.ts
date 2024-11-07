@@ -1,9 +1,4 @@
 import { NgModule } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 
 import { ToastActionsOverviewExample } from './toast-actions-overview/toast-actions-overview-example';
 import { ToastHideOverviewExample } from './toast-hide-overview/toast-hide-overview-example';
@@ -34,14 +29,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        KbqButtonModule,
-        KbqLinkModule,
-        KbqProgressBarModule,
-        KbqIconModule,
-        KbqDropdownModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class ToastExamplesModule {}

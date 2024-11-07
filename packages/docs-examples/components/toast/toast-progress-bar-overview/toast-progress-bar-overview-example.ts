@@ -1,14 +1,52 @@
-import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService } from '@koobiq/components/toast';
 
 /**
- * @title Basic Toast
+ * @title Toast progress bar
  */
 @Component({
+    standalone: true,
     selector: 'toast-progress-bar-overview-example',
-    templateUrl: 'toast-progress-bar-overview-example.html',
-    styleUrls: ['toast-progress-bar-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqProgressBarModule,
+        KbqLinkModule,
+        KbqButtonModule
+    ],
+    template: `
+        <ng-template
+            #toastStickyContentTemplate
+            let-toast
+        >
+            <kbq-progress-bar
+                class="layout-margin-top-m layout-margin-bottom-m"
+                [mode]="'indeterminate'"
+            />
+        </ng-template>
+
+        <ng-template
+            #toastStickyActionsTemplate
+            let-toast
+        >
+            <a
+                (click)="toast.close()"
+                (keydown.enter)="toast.close()"
+                kbq-link
+                pseudo
+            >
+                Отмена
+            </a>
+        </ng-template>
+
+        <button
+            (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)"
+            kbq-button
+        >
+            Тост с прогресс-баром, кнопкой Отмена и без крестика
+        </button>
+    `
 })
 export class ToastProgressBarOverviewExample {
     constructor(private toastService: KbqToastService) {}

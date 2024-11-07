@@ -1,16 +1,25 @@
-import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { Component, TemplateRef } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { switchMap, timer } from 'rxjs';
 
 /**
- * @title Toast Hide Strategies overview
+ * @title Toast hide
  */
 @Component({
     selector: 'toast-hide-overview-example',
+    standalone: true,
     templateUrl: 'toast-hide-overview-example.html',
-    styleUrls: ['toast-hide-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqButtonModule,
+        KbqLinkModule,
+        KbqProgressBarModule,
+        NgTemplateOutlet
+    ]
 })
 export class ToastHideOverviewExample {
     themePalette = ThemePalette;

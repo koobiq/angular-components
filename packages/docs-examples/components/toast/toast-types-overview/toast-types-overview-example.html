@@ -32,7 +32,10 @@
     <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Повторить' }" />
 </ng-template>
 
-<div class="demo-block layout-row">
+<div
+    style="gap: 16px"
+    class="layout-row"
+>
     <button
         kbq-button
         (click)="showContrastToast(toastActionInfo)"
