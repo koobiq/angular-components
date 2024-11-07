@@ -2791,8 +2791,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TimepickerValidationSymbolsExample",
     "files": [
       "timepicker-validation-symbols-example.ts",
-      "timepicker-validation-symbols-example.html",
-      "timepicker-validation-symbols-example.css"
     ],
     "selector": "timepicker-validation-symbols-example",
     "additionalComponents": [],
