@@ -1,3 +1,18 @@
+# 18.5.0 (2024-11-07)
+
+### Koobiq
+
+ * bug fix  **datepicker:** trackBy function ([#DS-3096](https://github.com/koobiq/angular-components/issues/issue/DS-3096)) ([#416](https://github.com/koobiq/angular-components/issues/416)) ([db9ad11](https://github.com/koobiq/angular-components/commit/db9ad118d75950500d8c257143a07e550f8babf5))
+ * bug fix  **docs:** tabs article ([#DS-2999](https://github.com/koobiq/angular-components/issues/issue/DS-2999)) ([#389](https://github.com/koobiq/angular-components/issues/389)) ([02c16f9](https://github.com/koobiq/angular-components/commit/02c16f9f061389a54d438e5092d874dbef720979))
+ * bug fix  **loader-overlay:** align border-radius with parentElement ([#DS-2734](https://github.com/koobiq/angular-components/issues/issue/DS-2734)) ([#405](https://github.com/koobiq/angular-components/issues/405)) ([59cba4a](https://github.com/koobiq/angular-components/commit/59cba4a8deac4962fc56d47c9b192bbaadc4febf))
+ * bug fix  **tree,icon:** aligned icons color with design ([#DS-2875](https://github.com/koobiq/angular-components/issues/issue/DS-2875)) ([#411](https://github.com/koobiq/angular-components/issues/411)) ([b50d2d1](https://github.com/koobiq/angular-components/commit/b50d2d12486244cc0aaab6e3a60f91bd4407c930))
+ * bug fix  **visual:** removed component tokens usage from code ([#DS-2996](https://github.com/koobiq/angular-components/issues/issue/DS-2996)) ([#387](https://github.com/koobiq/angular-components/issues/387)) ([3d02f2f](https://github.com/koobiq/angular-components/commit/3d02f2f5070aa97f544b10adfca993a18501ab23))
+ * bug fix  **visual:** removed unused scss utils ([#400](https://github.com/koobiq/angular-components/issues/400)) ([3bb7d03](https://github.com/koobiq/angular-components/commit/3bb7d03bff666c0b7de2829cef437562a24ee2d7))
+ * bug fix  **visual:** replaced component typography tokens with global tokens ([#399](https://github.com/koobiq/angular-components/issues/399)) ([04bf8a3](https://github.com/koobiq/angular-components/commit/04bf8a333e51ce224fea5ee15b28fe4ec04b0be3))
+ * feature  **docs:** bootstrap standalone examples ([#415](https://github.com/koobiq/angular-components/issues/415)) ([942b844](https://github.com/koobiq/angular-components/commit/942b84441f517fdc678038ac52b3319f169584ec))
+ * feature  **markdown:** removed marked from peerDependencies, mirgrated KbqMarkdownModule to standalone ([#DS-3049](https://github.com/koobiq/angular-components/issues/issue/DS-3049)) ([#393](https://github.com/koobiq/angular-components/issues/393)) ([db5ad7f](https://github.com/koobiq/angular-components/commit/db5ad7fee1a0734e25ee26ed1ca728eb3e7682a8))
+ * feature  **schematics:** removed marked ([#407](https://github.com/koobiq/angular-components/issues/407)) ([51a06b7](https://github.com/koobiq/angular-components/commit/51a06b7308cfb339cd4649d6790612d3e07b9034))
+
 ## 18.4.1 (2024-10-31)
 
 ### Koobiq
