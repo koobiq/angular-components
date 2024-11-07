@@ -162,8 +162,6 @@ this.colorAutomaticTheme.addEventListener('change', this.setAutoTheme);
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/styles/theming/scrollbar-tokens.scss">scrollbar</a></li>
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/forms/forms-tokens.scss">forms</a></li>
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/option/option-tokens.scss">option</a></li>
-        <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/option/optgroup-tokens.scss">optgroup</a></li>
-        <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/core/option/option-action-tokens.scss">option-action</a></li>
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/splitter/splitter-tokens.scss">splitter</a></li>
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/tags/tag-tokens.scss">tag</a></li>
         <li><a href="https://github.com/koobiq/angular-components/tree/main/packages/components/tags/tag-input-tokens.scss">tag-input</a></li>

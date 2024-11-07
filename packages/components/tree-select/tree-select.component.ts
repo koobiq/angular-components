@@ -77,7 +77,7 @@ import {
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
-import { SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
+import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
 import { Observable, Subject, Subscription, defer, merge } from 'rxjs';
 import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 

@@ -1,3 +1,8 @@
+.kbq-radio-group {
+    --kbq-radio-size-big-vertical-gap: var(--kbq-size-m);
+    --kbq-radio-size-big-top: var(--kbq-size-3xs);
+}
+
 .kbq-radio-button {
     --kbq-radio-size-normal-outer-size: var(--kbq-size-l);
     --kbq-radio-size-normal-inner-size: var(--kbq-size-xs);
@@ -9,8 +14,6 @@
     --kbq-radio-size-big-inner-size: var(--kbq-size-xs);
     --kbq-radio-size-big-horizontal-content-padding: var(--kbq-size-s);
     --kbq-radio-size-big-vertical-content-padding: var(--kbq-size-3xs);
-    --kbq-radio-size-big-vertical-gap: var(--kbq-size-m);
-    --kbq-radio-size-big-top: var(--kbq-size-3xs);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {

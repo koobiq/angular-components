@@ -23,7 +23,7 @@
     --kbq-markdown-list-size-max-width: var(--kbq-markdown-size-max-width);
     --kbq-markdown-list-size-margin-top: var(--kbq-size-m);
     --kbq-markdown-list-size-margin-bottom: var(--kbq-size-m);
-    --kbq-markdown-list-size-margin-top-after-paragraph: -var(--kbq-size-s);
+    --kbq-markdown-list-size-margin-top-after-paragraph: calc(-1 * var(--kbq-size-s));
     --kbq-markdown-list-size-ol-number-padding-right: var(--kbq-size-xxs);
     --kbq-markdown-list-size-ul-padding: 0 0 0 var(--kbq-size-xxl);
     --kbq-markdown-list-size-item-margin-bottom: var(--kbq-size-s);
@@ -41,13 +41,13 @@
     --kbq-markdown-code-size-multiline-padding: 14px var(--kbq-size-xl);
     --kbq-markdown-code-size-border-radius: var(--kbq-size-border-radius);
     --kbq-markdown-code-size-border-width: var(--kbq-size-border-width);
-    --kbq-markdown-link-size-icon-margin: var(--kbq-link-size-normal-content-padding);
+    --kbq-markdown-link-size-icon-margin: var(--kbq-link-size-normal-content-padding, var(--kbq-size-xxs));
     --kbq-markdown-link-size-state-focused-outline-offset: var(--kbq-link-size-state-focused-outline-offset);
     --kbq-markdown-link-size-state-focused-outline-width: var(--kbq-link-size-state-focused-outline-width);
     --kbq-markdown-image-size-max-width: var(--kbq-markdown-size-max-width);
     --kbq-markdown-image-size-margin-top: var(--kbq-size-s);
     --kbq-markdown-image-size-margin-bottom: var(--kbq-size-s);
-    --kbq-markdown-image-size-caption-margin-top: -var(--kbq-size-s);
+    --kbq-markdown-image-size-caption-margin-top: calc(-1 * var(--kbq-size-s));
     --kbq-markdown-image-size-caption-margin-bottom: var(--kbq-size-xxl);
     --kbq-markdown-hr-size-width: 1px;
     --kbq-markdown-hr-size-margin-vertical: var(--kbq-size-l);

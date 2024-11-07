@@ -28,7 +28,7 @@
     margin-right: var(--kbq-toast-size-icon-margin-right);
 
     $padding-top: var(--kbq-toast-size-content-padding-top);
-    $toast-font-title-line-height: var(--kbq-toast-font-title-line-height);
+    $toast-font-title-line-height: var(--kbq-typography-text-normal-line-height);
     $toast-size-icon-height: var(--kbq-toast-size-icon-height);
     padding-top: calc($padding-top + (($toast-font-title-line-height - $toast-size-icon-height) / 2));
 }

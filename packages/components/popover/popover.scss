@@ -128,7 +128,7 @@ $arrow-padding: calc(18px - $trigger-margin);
     z-index: 2;
     top: var(--kbq-size-s);
     right: var(--kbq-size-s);
-    border-radius: var(--kbq-button-size-border-radius);
+    border-radius: var(--kbq-size-border-radius);
 }
 
 @include kbq-popover-theme();

@@ -1,11 +1,5 @@
-@use 'sass:meta';
-@use 'sass:map';
-
 @use '../common/vendor-prefixes';
-@use '../tokens';
 @use './tokens' as *;
-
-$tokens: meta.module-variables(tokens) !default;
 
 %kbq-select-base {
     box-sizing: border-box;
@@ -40,37 +34,31 @@ $tokens: meta.module-variables(tokens) !default;
 
         cursor: pointer;
 
-        height: kbq-difference-series-css-variables(
-            [form-field-size-height,
-            calc(var(--kbq-form-field-size-border-width) * 2)]
-        );
+        height: calc(var(--kbq-form-field-size-height, var(--kbq-size-3xl)) - calc(var(--kbq-size-border-width) * 2));
     }
 
     .kbq-select__trigger.kbq-select__trigger_single,
     .kbq-select__trigger.kbq-select__trigger_multiple.kbq-select__trigger_empty {
         & .kbq-select__matcher {
-            padding: kbq-difference-series-css-variables(
-                    [select-size-single-padding-vertical,
-                    form-field-size-border-width]
+            padding: calc(
+                    var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs)) - var(--kbq-size-border-width)
                 )
-                kbq-difference-series-css-variables([select-size-single-padding-right, form-field-size-border-width])
-                kbq-difference-series-css-variables([select-size-single-padding-vertical, form-field-size-border-width])
-                kbq-difference-series-css-variables([select-size-single-padding-left, form-field-size-border-width]);
+                calc(var(--kbq-select-size-single-padding-right, var(--kbq-size-xxs)) - var(--kbq-size-border-width))
+                calc(var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs)) - var(--kbq-size-border-width))
+                calc(var(--kbq-select-size-single-padding-left, var(--kbq-size-m)) - var(--kbq-size-border-width));
         }
     }
 
     .kbq-select__trigger.kbq-select__trigger_multiple:not(.kbq-select__trigger_empty) {
         & .kbq-select__matcher {
-            padding: kbq-difference-series-css-variables(
-                    [select-size-multiple-padding-vertical,
-                    form-field-size-border-width]
+            padding: calc(
+                    var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) - var(--kbq-size-border-width)
                 )
-                kbq-difference-series-css-variables([select-size-multiple-padding-right, form-field-size-border-width])
-                kbq-difference-series-css-variables(
-                    [select-size-multiple-padding-vertical,
-                    form-field-size-border-width]
+                calc(var(--kbq-select-size-multiple-padding-right, var(--kbq-size-xxs)) - var(--kbq-size-border-width))
+                calc(
+                    var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) - var(--kbq-size-border-width)
                 )
-                kbq-difference-series-css-variables([select-size-multiple-padding-left, form-field-size-border-width]);
+                calc(var(--kbq-select-size-multiple-padding-left, var(--kbq-size-xxs)) - var(--kbq-size-border-width));
 
             .kbq-select__match-container {
                 display: flex;
@@ -81,19 +69,21 @@ $tokens: meta.module-variables(tokens) !default;
                 flex-wrap: wrap;
                 overflow: hidden;
 
-                height: kbq-difference-series-css-variables(
-                    [form-field-size-height,
-                    calc(var(--kbq-select-size-multiple-padding-vertical) * 2)]
+                height: calc(
+                    var(--kbq-form-field-size-height, var(--kbq-size-3xl)) - calc(
+                            var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) * 2
+                        )
                 );
 
-                max-height: kbq-difference-series-css-variables(
-                    [form-field-size-height,
-                    calc(var(--kbq-select-size-multiple-padding-vertical) * 2)]
+                max-height: calc(
+                    var(--kbq-form-field-size-height, var(--kbq-size-3xl)) - calc(
+                            var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) * 2
+                        )
                 );
 
-                gap: var(--kbq-select-size-multiple-content-gap);
+                gap: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
 
-                margin-right: var(--kbq-select-size-multiple-content-gap);
+                margin-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
             }
         }
     }
@@ -108,7 +98,7 @@ $tokens: meta.module-variables(tokens) !default;
             flex: 0 0 70px;
             align-self: center;
             padding-left: 4px;
-            padding-right: var(--kbq-select-size-multiple-content-gap);
+            padding-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
 
             text-align: right;
         }
@@ -146,7 +136,7 @@ $tokens: meta.module-variables(tokens) !default;
 
     overflow: hidden;
 
-    border-radius: var(--kbq-select-panel-size-border-radius);
+    border-radius: var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius));
 
     // Override optgroup and option to scale based on font-size of the trigger.
     .kbq-optgroup-label,
@@ -163,15 +153,15 @@ $tokens: meta.module-variables(tokens) !default;
         position: relative;
 
         max-width: 100%;
-        height: var(--kbq-option-size-height);
+        height: var(--kbq-option-size-height, var(--kbq-size-3xl));
 
         cursor: default;
         outline: none;
 
-        padding-left: var(--kbq-option-size-horizontal-padding);
-        padding-right: var(--kbq-option-size-horizontal-padding);
+        padding-left: var(--kbq-option-size-horizontal-padding, var(--kbq-size-m));
+        padding-right: var(--kbq-option-size-horizontal-padding, var(--kbq-size-m));
 
-        border: var(--kbq-option-size-border-width) solid transparent;
+        border: var(--kbq-option-size-border-width, var(--kbq-size-3xs)) solid transparent;
     }
 
     .kbq-select__search-container {
@@ -183,7 +173,7 @@ $tokens: meta.module-variables(tokens) !default;
 }
 
 %kbq-select-content {
-    max-height: var(--kbq-select-panel-size-max-height);
+    max-height: var(--kbq-select-panel-size-max-height, 256px);
     padding: 4px 0;
     overflow: hidden auto;
 }

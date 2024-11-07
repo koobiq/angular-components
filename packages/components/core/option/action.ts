@@ -52,7 +52,7 @@ export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof
             <i class="kbq kbq-icon kbq-ellipsis-vertical_16"></i>
         }
     `,
-    styleUrls: ['./action.scss', 'option-action-tokens.scss'],
+    styleUrls: ['./action.scss'],
     host: {
         class: 'kbq-option-action',
         '[class.kbq-expanded]': 'false',

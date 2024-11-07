@@ -20,8 +20,8 @@
     @extend %kbq-select-content;
 
     &:not(:has(> .kbq-select__no-options-message)) .cdk-virtual-scroll-viewport {
-        min-height: var(--kbq-select-panel-size-max-height);
-        max-height: var(--kbq-select-panel-size-max-height);
+        min-height: var(--kbq-select-panel-size-max-height, 256px);
+        max-height: var(--kbq-select-panel-size-max-height, 256px);
 
         &.cdk-virtual-scroll-orientation-vertical .cdk-virtual-scroll-content-wrapper {
             max-width: 100%;

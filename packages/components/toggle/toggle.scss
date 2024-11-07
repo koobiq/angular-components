@@ -28,7 +28,7 @@
         }
 
         .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
-            padding-top: kbq-css-half-difference(toggle-font-normal-label-line-height, toggle-size-normal-height);
+            padding-top: kbq-css-half-difference(typography-text-normal-line-height, toggle-size-normal-height);
         }
     }
 

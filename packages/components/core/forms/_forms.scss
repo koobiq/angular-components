@@ -12,8 +12,8 @@
     }
 
     .kbq-form-horizontal {
-        $line-height: var(--kbq-forms-font-label-line-height);
-        $form-field-size-height: var(--kbq-form-field-size-height);
+        $line-height: var(--kbq-typography-text-normal-line-height);
+        $form-field-size-height: var(--kbq-form-field-size-height, var(--kbq-size-3xl));
 
         & .kbq-form-row_margin {
             margin-bottom: var(--kbq-forms-size-horizontal-row-margin-bottom);
