@@ -14,18 +14,17 @@ import { KbqRadioModule } from '@koobiq/components/radio';
         FormsModule
     ],
     template: `
-        <br />
-        <br />
-
-        <kbq-radio-group [(ngModel)]="layoutDirection">
+        <kbq-radio-group
+            class="layout-margin-top-4xl"
+            [(ngModel)]="layoutDirection"
+        >
             <kbq-radio-button [value]="'layout-column'">layout-column</kbq-radio-button>
             <kbq-radio-button [value]="'layout-row'">layout-row</kbq-radio-button>
         </kbq-radio-group>
-
-        <br />
-        <br />
-
-        <div [class]="layoutDirection">
+        <div
+            class="layout-margin-top-4xl"
+            [class]="layoutDirection"
+        >
             <div class="flex block">first</div>
             <div class="flex block">second</div>
             <div class="flex block">third</div>

@@ -14,10 +14,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
         FormsModule
     ],
     template: `
-        <br />
-        <br />
-
-        <div class="example-controls">
+        <div class="example-controls layout-margin-top-4xl">
             <kbq-radio-group [(ngModel)]="layoutHorizontalAlignment">
                 <header>Horizontal</header>
                 <kbq-radio-button [value]="'-start'">start</kbq-radio-button>
@@ -37,10 +34,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
             </kbq-radio-group>
         </div>
 
-        <br />
-        <br />
-
-        <header class="layout-padding">
+        <header class="layout-padding  layout-margin-top-4xl">
             class: layout-align{{ layoutHorizontalAlignment }}{{ layoutVerticalAlignment }}
         </header>
         <div

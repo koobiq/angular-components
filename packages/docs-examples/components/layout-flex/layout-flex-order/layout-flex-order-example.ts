@@ -11,10 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     styleUrl: 'layout-flex-order-example.css',
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
-        <br />
-        <br />
-
-        <div class="docs-layout-flex-order">
+        <div class="docs-layout-flex-order layout-margin-top-4xl">
             <div class="example-controls">
                 <div class="layout-column flex">
                     <label class="layout-padding">'Block 1'</label>
@@ -55,11 +52,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     </kbq-form-field>
                 </div>
             </div>
-
-            <br />
-            <br />
-
-            <div class="layout-row block">
+            <div class="layout-row block layout-margin-top-4xl">
                 <div class="flex block {{ selectedFirstBlockOrder }}">Block 1</div>
                 <div class="flex block {{ selectedSecondBlockOrder }}">Block 2</div>
                 <div class="flex block {{ selectedThirdBlockOrder }}">Block 3</div>

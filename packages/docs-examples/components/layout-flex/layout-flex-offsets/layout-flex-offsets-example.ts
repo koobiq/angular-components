@@ -11,10 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     styleUrl: 'layout-flex-offsets-example.css',
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
-        <br />
-        <br />
-
-        <div class="docs-layout-flex-offsets">
+        <div class="docs-layout-flex-offsets layout-margin-top-4xl">
             <div class="example-controls">
                 <kbq-form-field>
                     <kbq-select [(value)]="selectedSize">
@@ -36,11 +33,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     </kbq-select>
                 </kbq-form-field>
             </div>
-
-            <br />
-            <br />
-
-            <div class="layout-row block">
+            <div class="layout-row block  layout-margin-top-4xl">
                 <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
                 <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
                 <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
