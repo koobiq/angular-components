@@ -2364,9 +2364,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel modal mode",
     "componentName": "SidepanelModalModeExample",
     "files": [
-      "sidepanel-modal-mode-example.ts",
-      "sidepanel-modal-mode-example.html",
-      "sidepanel-modal-mode-example.css"
+      "sidepanel-modal-mode-example.ts"
     ],
     "selector": "sidepanel-modal-mode-example",
     "additionalComponents": [],
@@ -2378,9 +2376,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel normal mode",
     "componentName": "SidepanelNormalModeExample",
     "files": [
-      "sidepanel-normal-mode-example.ts",
-      "sidepanel-normal-mode-example.html",
-      "sidepanel-normal-mode-example.css"
+      "sidepanel-normal-mode-example.ts"
     ],
     "selector": "sidepanel-normal-mode-example",
     "additionalComponents": [],
@@ -2393,8 +2389,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "SidepanelOverlayedExample",
     "files": [
       "sidepanel-overlayed-example.ts",
-      "sidepanel-overlayed-example.html",
-      "sidepanel-overlayed-example.css"
+      "./sidepanel-overlayed-example.html"
     ],
     "selector": "sidepanel-overlayed-example",
     "additionalComponents": [],
@@ -2406,9 +2401,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel sizes",
     "componentName": "SidepanelSizesExample",
     "files": [
-      "sidepanel-sizes-example.ts",
-      "sidepanel-sizes-example.html",
-      "sidepanel-sizes-example.css"
+      "sidepanel-sizes-example.ts"
     ],
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
@@ -2417,12 +2410,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-dynamic-data": {
     "packagePath": "components/splitter/splitter-dynamic-data",
-    "title": "Splitter with dynamic data",
+    "title": "Splitter dynamic data",
     "componentName": "SplitterDynamicDataExample",
     "files": [
-      "splitter-dynamic-data-example.ts",
-      "splitter-dynamic-data-example.html",
-      "splitter-dynamic-data-example.css"
+      "splitter-dynamic-data-example.ts"
     ],
     "selector": "splitter-dynamic-data-example",
     "additionalComponents": [],
@@ -2431,12 +2422,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-fixed": {
     "packagePath": "components/splitter/splitter-fixed",
-    "title": "Basic Splitter",
+    "title": "Splitter fixed",
     "componentName": "SplitterFixedExample",
     "files": [
-      "splitter-fixed-example.ts",
-      "splitter-fixed-example.html",
-      "splitter-fixed-example.css"
+      "splitter-fixed-example.ts"
     ],
     "selector": "splitter-fixed-example",
     "additionalComponents": [],
@@ -2445,12 +2434,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-nested": {
     "packagePath": "components/splitter/splitter-nested",
-    "title": "Basic Splitter",
+    "title": "Splitter nested",
     "componentName": "SplitterNestedExample",
     "files": [
-      "splitter-nested-example.ts",
-      "splitter-nested-example.html",
-      "splitter-nested-example.css"
+      "splitter-nested-example.ts"
     ],
     "selector": "splitter-nested-example",
     "additionalComponents": [],
@@ -2459,12 +2446,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "splitter-overview": {
     "packagePath": "components/splitter/splitter-overview",
-    "title": "Basic Splitter",
+    "title": "Splitter",
     "componentName": "SplitterOverviewExample",
     "files": [
-      "splitter-overview-example.ts",
-      "splitter-overview-example.html",
-      "splitter-overview-example.css"
+      "splitter-overview-example.ts"
     ],
     "selector": "splitter-overview-example",
     "additionalComponents": [],
@@ -2476,9 +2461,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic Splitter",
     "componentName": "SplitterVerticalExample",
     "files": [
-      "splitter-vertical-example.ts",
-      "splitter-vertical-example.html",
-      "splitter-vertical-example.css"
+      "splitter-vertical-example.ts"
     ],
     "selector": "splitter-vertical-example",
     "additionalComponents": [],
@@ -2487,12 +2470,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "table-full-width": {
     "packagePath": "components/table/table-full-width",
-    "title": "Basic Table",
+    "title": "Table full width",
     "componentName": "TableFullWidthExample",
     "files": [
       "table-full-width-example.ts",
-      "table-full-width-example.html",
-      "table-full-width-example.css"
+      "table-full-width-example.html"
     ],
     "selector": "table-full-width-example",
     "additionalComponents": [],
@@ -2501,12 +2483,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "table-overview": {
     "packagePath": "components/table/table-overview",
-    "title": "Basic Table",
+    "title": "Table",
     "componentName": "TableOverviewExample",
     "files": [
-      "table-overview-example.ts",
-      "table-overview-example.html",
-      "table-overview-example.css"
+      "table-overview-example.ts"
     ],
     "selector": "table-overview-example",
     "additionalComponents": [],
@@ -2515,12 +2495,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "table-with-borders": {
     "packagePath": "components/table/table-with-borders",
-    "title": "Basic Table",
+    "title": "Table with borders",
     "componentName": "TableWithBordersExample",
     "files": [
-      "table-with-borders-example.ts",
-      "table-with-borders-example.html",
-      "table-with-borders-example.css"
+      "table-with-borders-example.ts"
     ],
     "selector": "table-with-borders-example",
     "additionalComponents": [],

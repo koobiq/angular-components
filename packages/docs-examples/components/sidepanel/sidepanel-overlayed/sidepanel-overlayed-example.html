@@ -1,7 +1,10 @@
-<div class="kbq-form-horizontal margin">
+<div class="kbq-form-horizontal">
     <div class="kbq-form__row">
         <label class="kbq-form__label">Position</label>
-        <kbq-form-field class="kbq-form__control flex-10">
+        <kbq-form-field
+            style="min-width: 120px"
+            class="kbq-form__control flex-10"
+        >
             <kbq-select [(value)]="position">
                 <kbq-option [value]="'right'">Right</kbq-option>
                 <kbq-option [value]="'left'">Left</kbq-option>
@@ -24,11 +27,16 @@
 
 <ng-template>
     <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
-    <kbq-sidepanel-body class="layout-padding">
-        <div class="kbq-subheading">Sidepanel Template Body</div>
+    <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
+        <div
+            style="padding: 8px"
+            class="kbq-subheading"
+        >
+            Sidepanel Template Body
+        </div>
 
         @for (item of array; track item; let i = $index) {
-            <div>
+            <div style="padding: 8px">
                 {{ i + 1 }}
             </div>
         }

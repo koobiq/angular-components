@@ -1,9 +1,0 @@
-kbq-splitter {
-    border: 1px solid black;
-    height: 100px;
-    margin: 2px;
-}
-
-div[kbq-splitter-area] {
-    background: #c5c0c0;
-}

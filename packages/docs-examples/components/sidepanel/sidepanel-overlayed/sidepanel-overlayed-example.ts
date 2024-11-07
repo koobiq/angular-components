@@ -1,14 +1,17 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 
 /**
  * @title Sidepanel overlayed
  */
 @Component({
+    standalone: true,
     selector: 'sidepanel-overlayed-example',
-    templateUrl: 'sidepanel-overlayed-example.html',
-    styleUrls: ['sidepanel-overlayed-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],
+    templateUrl: './sidepanel-overlayed-example.html'
 })
 export class SidepanelOverlayedExample {
     position = KbqSidepanelPosition.Right;
