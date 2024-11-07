@@ -2878,7 +2878,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Radio content",
     "componentName": "RadioContentExample",
     "files": [
-      "radio-content-example.ts"
+      "radio-content-example.ts",
+      "radio-content-example.html"
     ],
     "selector": "radio-content-example",
     "additionalComponents": [],
@@ -2899,54 +2900,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "radio-group-example",
     "additionalComponents": [],
     "primaryFile": "radio-group-example.ts",
-    "module": {
-      "name": "RadioExamplesModule",
-      "importSpecifier": "components/radio",
-      "importPath": "koobiq-docs-examples-components-radio"
-    }
-  },
-  "radio-invalid": {
-    "packagePath": "components/radio/radio-invalid",
-    "title": "Radio invalid",
-    "componentName": "RadioInvalidExample",
-    "files": [
-      "radio-invalid-example.ts"
-    ],
-    "selector": "radio-invalid-example",
-    "additionalComponents": [],
-    "primaryFile": "radio-invalid-example.ts",
-    "module": {
-      "name": "RadioExamplesModule",
-      "importSpecifier": "components/radio",
-      "importPath": "koobiq-docs-examples-components-radio"
-    }
-  },
-  "radio-overview": {
-    "packagePath": "components/radio/radio-overview",
-    "title": "Radio",
-    "componentName": "RadioOverviewExample",
-    "files": [
-      "radio-overview-example.ts"
-    ],
-    "selector": "radio-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "radio-overview-example.ts",
-    "module": {
-      "name": "RadioExamplesModule",
-      "importSpecifier": "components/radio",
-      "importPath": "koobiq-docs-examples-components-radio"
-    }
-  },
-  "radio-required": {
-    "packagePath": "components/radio/radio-required",
-    "title": "Radio required",
-    "componentName": "RadioRequiredExample",
-    "files": [
-      "radio-required-example.ts"
-    ],
-    "selector": "radio-required-example",
-    "additionalComponents": [],
-    "primaryFile": "radio-required-example.ts",
     "module": {
       "name": "RadioExamplesModule",
       "importSpecifier": "components/radio",
