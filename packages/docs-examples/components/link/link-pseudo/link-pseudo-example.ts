@@ -1,12 +1,22 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
- * @title Pseudo link
+ * @title Link pseudo
  */
 @Component({
+    standalone: true,
     selector: 'link-pseudo-example',
-    templateUrl: 'link-pseudo-example.html',
-    styleUrls: ['link-pseudo-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqLinkModule],
+    template: `
+        <div style="padding: 16px">
+            <span
+                kbq-link
+                pseudo
+            >
+                Отчет от 19.05.2020
+            </span>
+        </div>
+    `
 })
 export class LinkPseudoExample {}

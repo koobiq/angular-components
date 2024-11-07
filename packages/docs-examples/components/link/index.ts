@@ -1,7 +1,4 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
 import { LinkApplicationExample } from './link-application/link-application-example';
 import { LinkCaptionExample } from './link-caption/link-caption-example';
 import { LinkColorExample } from './link-color/link-color-example';
@@ -52,12 +49,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        FormsModule,
-        KbqIconModule,
-        KbqLinkModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class LinkExamplesModule {}

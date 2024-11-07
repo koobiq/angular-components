@@ -1,13 +1,64 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Flex layout
+ * @title Layout-flex order
  */
 @Component({
+    standalone: true,
     selector: 'layout-flex-order-example',
-    templateUrl: 'layout-flex-order-example.html',
-    styleUrls: ['layout-flex-order-example.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: 'layout-flex-order-example.css',
+    imports: [KbqSelectModule, KbqFormFieldModule],
+    template: `
+        <div class="docs-layout-flex-order layout-margin-top-4xl">
+            <div class="example-controls">
+                <div class="layout-column flex">
+                    <label class="layout-padding">'Block 1'</label>
+                    <kbq-form-field>
+                        <kbq-select [(value)]="selectedFirstBlockOrder">
+                            @for (flexOrder of flexOrders; track flexOrder) {
+                                <kbq-option [value]="flexOrder">
+                                    {{ flexOrder }}
+                                </kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                </div>
+
+                <div class="layout-column flex">
+                    <label class="layout-padding">'Block 2'</label>
+                    <kbq-form-field>
+                        <kbq-select [(value)]="selectedSecondBlockOrder">
+                            @for (flexOrder of flexOrders; track flexOrder) {
+                                <kbq-option [value]="flexOrder">
+                                    {{ flexOrder }}
+                                </kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                </div>
+
+                <div class="layout-column flex">
+                    <label class="layout-padding">'Block 3'</label>
+                    <kbq-form-field>
+                        <kbq-select [(value)]="selectedThirdBlockOrder">
+                            @for (flexOrder of flexOrders; track flexOrder) {
+                                <kbq-option [value]="flexOrder">
+                                    {{ flexOrder }}
+                                </kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                </div>
+            </div>
+            <div class="layout-row block layout-margin-top-4xl">
+                <div class="flex block {{ selectedFirstBlockOrder }}">Block 1</div>
+                <div class="flex block {{ selectedSecondBlockOrder }}">Block 2</div>
+                <div class="flex block {{ selectedThirdBlockOrder }}">Block 3</div>
+            </div>
+        </div>
+    `
 })
 export class LayoutFlexOrderExample {
     selectedFirstBlockOrder: string = 'flex-order-0';

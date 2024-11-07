@@ -1,13 +1,45 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Flex layout
+ * @title Layout-flex offsets
  */
 @Component({
+    standalone: true,
     selector: 'layout-flex-offsets-example',
-    templateUrl: 'layout-flex-offsets-example.html',
-    styleUrls: ['layout-flex-offsets-example.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: 'layout-flex-offsets-example.css',
+    imports: [KbqSelectModule, KbqFormFieldModule],
+    template: `
+        <div class="docs-layout-flex-offsets layout-margin-top-4xl">
+            <div class="example-controls">
+                <kbq-form-field>
+                    <kbq-select [(value)]="selectedSize">
+                        @for (flexSize of flexSizes; track flexSize) {
+                            <kbq-option [value]="flexSize">
+                                {{ flexSize }}
+                            </kbq-option>
+                        }
+                    </kbq-select>
+                </kbq-form-field>
+
+                <kbq-form-field>
+                    <kbq-select [(value)]="selectedOffset">
+                        @for (flexOffset of flexOffsets; track flexOffset) {
+                            <kbq-option [value]="flexOffset">
+                                {{ flexOffset }}
+                            </kbq-option>
+                        }
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+            <div class="layout-row block  layout-margin-top-4xl">
+                <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
+                <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
+                <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
+            </div>
+        </div>
+    `
 })
 export class LayoutFlexOffsetsExample {
     selectedSize: string = 'flex-10';
