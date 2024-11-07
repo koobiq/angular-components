@@ -2751,8 +2751,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TextAreaOverviewExample",
     "files": [
       "text-area-overview-example.ts",
-      "text-area-overview-example.html",
-      "text-area-overview-example.css"
     ],
     "selector": "text-area-overview-example",
     "additionalComponents": [],
