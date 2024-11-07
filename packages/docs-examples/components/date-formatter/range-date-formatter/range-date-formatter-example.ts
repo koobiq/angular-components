@@ -1,16 +1,30 @@
 import { Component, Inject } from '@angular/core';
-import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { KBQ_LUXON_DATE_FORMATS, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import {
+    DateAdapter,
+    DateFormatter,
+    KBQ_DATE_FORMATS,
+    KBQ_DATE_LOCALE,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService
+} from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
- * @title Basic progress range-date-formatter
+ * @title Range date-formatter
  */
 @Component({
+    standalone: true,
     selector: 'range-date-formatter-example',
     templateUrl: 'range-date-formatter-example.html',
-    styleUrls: ['range-date-formatter-example.css']
+    styleUrls: ['range-date-formatter-example.css'],
+    imports: [LuxonDateModule],
+    providers: [
+        { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ]
 })
 export class RangeDateFormatterExample {
     formats = {

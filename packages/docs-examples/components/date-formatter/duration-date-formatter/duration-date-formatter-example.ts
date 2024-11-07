@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
-import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
+import { KBQ_LUXON_DATE_FORMATS, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
     DateFormatter,
+    KBQ_DATE_FORMATS,
     KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService
@@ -12,15 +13,16 @@ import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
- * @title Basic progress duration-date-formatter
+ * @title Duration date-formatter
  */
 @Component({
+    standalone: true,
     selector: 'duration-date-formatter-example',
     templateUrl: 'duration-date-formatter-example.html',
     styleUrls: ['duration-date-formatter-example.css'],
+    imports: [LuxonDateModule],
     providers: [
-        { provide: KBQ_DATE_LOCALE, useValue: 'ru-RU' },
-        { provide: DateAdapter, useClass: LuxonDateAdapter },
+        { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
         { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
     ]
 })

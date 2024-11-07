@@ -603,7 +603,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "absolute-date-formatter": {
     "packagePath": "components/date-formatter/absolute-date-formatter",
-    "title": "Basic progress absolute-date-formatter",
+    "title": "Absolute date-formatter",
     "componentName": "AbsoluteDateFormatterExample",
     "files": [
       "absolute-date-formatter-example.ts",
@@ -617,7 +617,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "duration-date-formatter": {
     "packagePath": "components/date-formatter/duration-date-formatter",
-    "title": "Basic progress duration-date-formatter",
+    "title": "Duration date-formatter",
     "componentName": "DurationDateFormatterExample",
     "files": [
       "duration-date-formatter-example.ts",
@@ -631,7 +631,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "range-date-formatter": {
     "packagePath": "components/date-formatter/range-date-formatter",
-    "title": "Basic progress range-date-formatter",
+    "title": "Range date-formatter",
     "componentName": "RangeDateFormatterExample",
     "files": [
       "range-date-formatter-example.ts",
@@ -645,7 +645,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "relative-date-formatter": {
     "packagePath": "components/date-formatter/relative-date-formatter",
-    "title": "Basic progress relative-date-formatter",
+    "title": "Relative date-formatter",
     "componentName": "RelativeDateFormatterExample",
     "files": [
       "relative-date-formatter-example.ts",
@@ -659,12 +659,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "datepicker-and-timepicker": {
     "packagePath": "components/datepicker/datepicker-and-timepicker",
-    "title": "datepicker-and-timepicker",
+    "title": "Datepicker and timepicker",
     "componentName": "DatepickerAndTimepickerExample",
     "files": [
-      "datepicker-and-timepicker-example.ts",
-      "datepicker-and-timepicker-example.html",
-      "datepicker-and-timepicker-example.css"
+      "datepicker-and-timepicker-example.ts"
     ],
     "selector": "datepicker-and-timepicker-example",
     "additionalComponents": [],
@@ -673,12 +671,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "datepicker-inactive": {
     "packagePath": "components/datepicker/datepicker-inactive",
-    "title": "datepicker-inactive",
+    "title": "Datepicker inactive",
     "componentName": "DatepickerInactiveExample",
     "files": [
-      "datepicker-inactive-example.ts",
-      "datepicker-inactive-example.html",
-      "datepicker-inactive-example.css"
+      "datepicker-inactive-example.ts"
     ],
     "selector": "datepicker-inactive-example",
     "additionalComponents": [],
@@ -687,12 +683,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "datepicker-minimax": {
     "packagePath": "components/datepicker/datepicker-minimax",
-    "title": "Datepicker-minimax",
+    "title": "Datepicker minimax",
     "componentName": "DatepickerMinimaxExample",
     "files": [
-      "datepicker-minimax-example.ts",
-      "datepicker-minimax-example.html",
-      "datepicker-minimax-example.css"
+      "datepicker-minimax-example.ts"
     ],
     "selector": "datepicker-minimax-example",
     "additionalComponents": [],
@@ -704,9 +698,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Datepicker",
     "componentName": "DatepickerOverviewExample",
     "files": [
-      "datepicker-overview-example.ts",
-      "datepicker-overview-example.html",
-      "datepicker-overview-example.css"
+      "datepicker-overview-example.ts"
     ],
     "selector": "datepicker-overview-example",
     "additionalComponents": [],
@@ -715,12 +707,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "datepicker-range": {
     "packagePath": "components/datepicker/datepicker-range",
-    "title": "datepicker-range",
+    "title": "Datepicker range",
     "componentName": "DatepickerRangeExample",
     "files": [
-      "datepicker-range-example.ts",
-      "datepicker-range-example.html",
-      "datepicker-range-example.css"
+      "datepicker-range-example.ts"
     ],
     "selector": "datepicker-range-example",
     "additionalComponents": [],
@@ -729,12 +719,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "datepicker-required": {
     "packagePath": "components/datepicker/datepicker-required",
-    "title": "datepicker-required",
+    "title": "Datepicker required",
     "componentName": "DatepickerRequiredExample",
     "files": [
-      "datepicker-required-example.ts",
-      "datepicker-required-example.html",
-      "datepicker-required-example.css"
+      "datepicker-required-example.ts"
     ],
     "selector": "datepicker-required-example",
     "additionalComponents": [],

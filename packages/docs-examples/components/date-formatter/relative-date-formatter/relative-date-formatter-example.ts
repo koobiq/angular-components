@@ -1,16 +1,30 @@
 import { Component, Inject } from '@angular/core';
-import { DateAdapter, DateFormatter, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { KBQ_LUXON_DATE_FORMATS, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import {
+    DateAdapter,
+    DateFormatter,
+    KBQ_DATE_FORMATS,
+    KBQ_DATE_LOCALE,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService
+} from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 /**
- * @title Basic progress relative-date-formatter
+ * @title Relative date-formatter
  */
 @Component({
+    standalone: true,
     selector: 'relative-date-formatter-example',
     templateUrl: 'relative-date-formatter-example.html',
-    styleUrls: ['relative-date-formatter-example.css']
+    styleUrls: ['relative-date-formatter-example.css'],
+    imports: [LuxonDateModule],
+    providers: [
+        { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
+        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
+    ]
 })
 export class RelativeDateFormatterExample {
     formats = {
