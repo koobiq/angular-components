@@ -863,7 +863,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "AbsoluteDateFormatterExample",
     "files": [
       "absolute-date-formatter-example.ts",
-      "absolute-date-formatter-example.html"
+      "absolute-date-formatter-example.html",
+      "absolute-date-formatter-example.css"
     ],
     "selector": "absolute-date-formatter-example",
     "additionalComponents": [],
@@ -880,7 +881,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "DurationDateFormatterExample",
     "files": [
       "duration-date-formatter-example.ts",
-      "duration-date-formatter-example.html"
+      "duration-date-formatter-example.html",
+      "duration-date-formatter-example.css"
     ],
     "selector": "duration-date-formatter-example",
     "additionalComponents": [],
@@ -897,7 +899,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "RangeDateFormatterExample",
     "files": [
       "range-date-formatter-example.ts",
-      "range-date-formatter-example.html"
+      "range-date-formatter-example.html",
+      "range-date-formatter-example.css"
     ],
     "selector": "range-date-formatter-example",
     "additionalComponents": [],
@@ -914,7 +917,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "RelativeDateFormatterExample",
     "files": [
       "relative-date-formatter-example.ts",
-      "relative-date-formatter-example.html"
+      "relative-date-formatter-example.html",
+      "relative-date-formatter-example.css"
     ],
     "selector": "relative-date-formatter-example",
     "additionalComponents": [],
