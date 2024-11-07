@@ -1,8 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import {
-    KBQ_LUXON_DATE_FORMATS,
-    LuxonDateModule
-} from '@koobiq/angular-luxon-adapter/adapter';
+import { KBQ_LUXON_DATE_FORMATS, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
     DateFormatter,
