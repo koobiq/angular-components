@@ -1,16 +1,50 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
-import { KbqTagInputEvent } from '@koobiq/components/tags';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
- * @title Basic tag input
+ * @title Tag input
  */
 @Component({
+    standalone: true,
     selector: 'tag-input-example',
-    templateUrl: 'tag-input-example.html',
-    styleUrls: ['tag-input-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqFormFieldModule,
+        KbqTagsModule,
+        KbqIconModule,
+        ReactiveFormsModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #tagList>
+                @for (tag of tags; track tag) {
+                    <kbq-tag
+                        [value]="tag"
+                        (removed)="onRemoveTag(tag)"
+                    >
+                        {{ tag }}
+                        <i
+                            kbq-icon="kbq-xmark-s_16"
+                            kbqTagRemove
+                        ></i>
+                    </kbq-tag>
+                }
+
+                <input
+                    [formControl]="control"
+                    [kbqTagInputFor]="tagList"
+                    [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (kbqTagInputTokenEnd)="onCreate($event)"
+                    placeholder="New tag..."
+                />
+
+                <kbq-cleaner (click)="onClear()" />
+            </kbq-tag-list>
+        </kbq-form-field>
+    `
 })
 export class TagInputExample {
     control = new FormControl();

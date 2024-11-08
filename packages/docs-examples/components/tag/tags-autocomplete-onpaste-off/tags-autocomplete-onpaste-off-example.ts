@@ -1,25 +1,37 @@
+import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
-import { KbqAutocomplete, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KBQ_TAGS_DEFAULT_OPTIONS,
     KbqTag,
     KbqTagInput,
     KbqTagInputEvent,
     KbqTagList,
-    KbqTagsDefaultOptions
+    KbqTagsDefaultOptions,
+    KbqTagsModule
 } from '@koobiq/components/tags';
 import { merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 /**
- * @title Tags Autocomplete Onpaste Off
+ * @title Tags autocomplete onpaste off
  */
 @Component({
+    standalone: true,
     selector: 'tags-autocomplete-onpaste-off-example',
     templateUrl: 'tags-autocomplete-onpaste-off-example.html',
-    styleUrls: ['tags-autocomplete-onpaste-off-example.css'],
+    imports: [
+        KbqTagsModule,
+        KbqFormFieldModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqAutocompleteModule,
+        AsyncPipe
+    ],
     // turn off tag add on paste with InjectionToken
     providers: [
         {

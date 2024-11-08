@@ -1,14 +1,27 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTagsModule } from '@koobiq/components/tags';
 
 /**
- * @title Corner Cases
+ * @title Tag hug content
  */
 @Component({
+    standalone: true,
     selector: 'tag-hug-content-example',
-    templateUrl: 'tag-hug-content-example.html',
-    styleUrls: ['tag-hug-content-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTagsModule,
+        KbqIconModule
+    ],
+    template: `
+        <kbq-tag [color]="colors.Theme">
+            Выбранное значение
+            <i
+                kbq-icon="kbq-xmark-s_16"
+                kbqTagRemove
+            ></i>
+        </kbq-tag>
+    `
 })
 export class TagHugContentExample {
     colors = KbqComponentColors;

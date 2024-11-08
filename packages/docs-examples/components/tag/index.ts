@@ -1,11 +1,4 @@
-import { AsyncPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagsModule } from '@koobiq/components/tags';
 import { TagAutocompleteOptionOperationsExample } from './tag-autocomplete-option-operations/tag-autocomplete-option-operations-example';
 import { TagAutocompleteExample } from './tag-autocomplete/tag-autocomplete-example';
 import { TagContentExample } from './tag-content/tag-content-example';
@@ -42,26 +35,12 @@ const EXAMPLES = [
     TagAutocompleteExample,
     TagAutocompleteOptionOperationsExample,
     TagsInputOnpasteOffExample,
-    TagsAutocompleteOnpasteOffExample
-];
-
-const STANDALONE_EXAMPLES = [
+    TagsAutocompleteOnpasteOffExample,
     TagInputWithFormControlValidatorsExample
 ];
 
 @NgModule({
-    imports: [
-        ...STANDALONE_EXAMPLES,
-        FormsModule,
-        KbqFormFieldModule,
-        ReactiveFormsModule,
-        KbqAutocompleteModule,
-        KbqTagsModule,
-        KbqIconModule,
-        KbqCheckboxModule,
-        AsyncPipe
-    ],
-    declarations: EXAMPLES,
-    exports: [...EXAMPLES, ...STANDALONE_EXAMPLES]
+    imports: EXAMPLES,
+    exports: EXAMPLES
 })
 export class TagExamplesModule {}
