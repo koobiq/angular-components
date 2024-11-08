@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -15,7 +15,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         ReactiveFormsModule,
         KbqFormFieldModule,
         KbqToolTipModule,
-        KbqInputModule
+        KbqInputModule,
+        KbqFormsModule
     ],
     templateUrl: 'validation-on-type-example.html'
 })

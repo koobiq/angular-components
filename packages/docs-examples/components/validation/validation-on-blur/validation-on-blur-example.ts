@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ThemePalette } from '@koobiq/components/core';
+import { KbqFormsModule, ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -16,7 +16,8 @@ const IP_PATTERN =
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
-        KbqInputModule
+        KbqInputModule,
+        KbqFormsModule
     ],
     templateUrl: 'validation-on-blur-example.html'
 })

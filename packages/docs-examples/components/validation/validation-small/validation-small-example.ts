@@ -9,6 +9,7 @@ import {
     Validators
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -25,7 +26,7 @@ function emptyFormValidator(): ValidatorFn {
     standalone: true,
     selector: 'validation-small-example',
     templateUrl: 'validation-small-example.html',
-    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule, KbqButtonModule]
+    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule, KbqButtonModule, KbqFormsModule]
 })
 export class ValidationSmallExample {
     smallForm: FormGroup;

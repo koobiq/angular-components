@@ -4,6 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqFormsModule } from '@koobiq/components/core';
 
 /**
  * @title Validation
@@ -17,7 +18,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqFormFieldModule,
         KbqInputModule,
         KbqSelectModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqFormsModule
     ]
 })
 export class ValidationOverviewExample {

@@ -7,7 +7,7 @@ import {
     ValidationErrors,
     ValidatorFn
 } from '@angular/forms';
-import { PopUpPlacements, ThemePalette } from '@koobiq/components/core';
+import { KbqFormsModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -56,7 +56,8 @@ const IP_PATTERN =
         ReactiveFormsModule,
         KbqFormFieldModule,
         KbqToolTipModule,
-        KbqInputModule
+        KbqInputModule,
+        KbqFormsModule
     ],
     styles: `
         .validation-error {

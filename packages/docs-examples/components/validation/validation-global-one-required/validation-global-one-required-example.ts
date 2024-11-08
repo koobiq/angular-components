@@ -5,6 +5,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqFormsModule } from '@koobiq/components/core';
 
 /**
  * @title Validation global one required
@@ -18,7 +19,8 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqIconModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqFormsModule
     ],
     styles: `
         validation-global-one-required-example .docs-width {

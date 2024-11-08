@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -19,7 +20,8 @@ import { KbqInputModule } from '@koobiq/components/input';
         ReactiveFormsModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqFormsModule
     ],
     styles: `
         validation-global-example .docs-width {

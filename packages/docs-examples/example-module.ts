@@ -3333,7 +3333,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-composite": {
     "packagePath": "components/validation/validation-composite",
-    "title": "validation-composite",
+    "title": "Validation composite",
     "componentName": "ValidationCompositeExample",
     "files": [
       "validation-composite-example.ts",
@@ -3346,7 +3346,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-global-one-required": {
     "packagePath": "components/validation/validation-global-one-required",
-    "title": "validation-global",
+    "title": "Validation global one required",
     "componentName": "ValidationGlobalOneRequiredExample",
     "files": [
       "validation-global-one-required-example.ts",
@@ -3359,7 +3359,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-global": {
     "packagePath": "components/validation/validation-global",
-    "title": "validation-global",
+    "title": "Validation global",
     "componentName": "ValidationGlobalExample",
     "files": [
       "validation-global-example.ts",
@@ -3372,7 +3372,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-on-blur": {
     "packagePath": "components/validation/validation-on-blur",
-    "title": "validation-on-blur",
+    "title": "Validation on blur",
     "componentName": "ValidationOnBlurExample",
     "files": [
       "validation-on-blur-example.ts",
@@ -3385,7 +3385,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-on-type": {
     "packagePath": "components/validation/validation-on-type",
-    "title": "validation-on-type",
+    "title": "Validation on type",
     "componentName": "ValidationOnTypeExample",
     "files": [
       "validation-on-type-example.ts",
@@ -3398,7 +3398,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-overview": {
     "packagePath": "components/validation/validation-overview",
-    "title": "validation-overview",
+    "title": "Validation",
     "componentName": "ValidationOverviewExample",
     "files": [
       "validation-overview-example.ts",
@@ -3411,7 +3411,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-small": {
     "packagePath": "components/validation/validation-small",
-    "title": "validation-small",
+    "title": "Validation small",
     "componentName": "ValidationSmallExample",
     "files": [
       "validation-small-example.ts",
