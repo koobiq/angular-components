@@ -3320,12 +3320,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "typography-overview": {
     "packagePath": "components/typography/typography-overview",
-    "title": "Basic typography",
+    "title": "Typography",
     "componentName": "TypographyOverviewExample",
     "files": [
       "typography-overview-example.ts",
-      "typography-overview-example.html",
-      "typography-overview-example.css"
+      "typography-overview-example.html"
     ],
     "selector": "typography-overview-example",
     "additionalComponents": [],

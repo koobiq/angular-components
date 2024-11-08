@@ -14,7 +14,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="layout-column" style="gap: 16px">
+        <div
+            class="layout-column"
+            style="gap: 16px; align-items: flex-start"
+        >
             <button
                 [kbqPlacement]="placement"
                 kbq-button
