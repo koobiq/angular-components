@@ -1,3 +1,9 @@
+## 18.5.1 (2024-11-08)
+
+### Koobiq
+
+ * bug fix  **docs:** navbar example styles ([#419](https://github.com/koobiq/angular-components/issues/419)) ([c205713](https://github.com/koobiq/angular-components/commit/c2057133cdc5cacb6608b673f3c534e1b23e4d9f))
+
 # 18.5.0 (2024-11-07)
 
 ### Koobiq
