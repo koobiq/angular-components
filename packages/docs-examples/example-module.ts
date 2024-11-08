@@ -2835,12 +2835,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "timezone-overview": {
     "packagePath": "components/timezone/timezone-overview",
-    "title": "Timezone overview",
+    "title": "Timezone",
     "componentName": "TimezoneOverviewExample",
     "files": [
-      "timezone-overview-example.ts",
-      "timezone-overview-example.html",
-      "timezone-overview-example.css"
+      "timezone-overview-example.ts"
     ],
     "selector": "timezone-overview-example",
     "additionalComponents": [],
@@ -2849,12 +2847,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "timezone-search-overview": {
     "packagePath": "components/timezone/timezone-search-overview",
-    "title": "Timezone search overview",
+    "title": "Timezone search",
     "componentName": "TimezoneSearchOverviewExample",
     "files": [
-      "timezone-search-overview-example.ts",
-      "timezone-search-overview-example.html",
-      "timezone-search-overview-example.css"
+      "timezone-search-overview-example.ts"
     ],
     "selector": "timezone-search-overview-example",
     "additionalComponents": [],
@@ -2863,12 +2859,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "timezone-trigger-overview": {
     "packagePath": "components/timezone/timezone-trigger-overview",
-    "title": "Timezone trigger overview",
+    "title": "Timezone trigger",
     "componentName": "TimezoneTriggerOverviewExample",
     "files": [
-      "timezone-trigger-overview-example.ts",
-      "timezone-trigger-overview-example.html",
-      "timezone-trigger-overview-example.css"
+      "timezone-trigger-overview-example.ts"
     ],
     "selector": "timezone-trigger-overview-example",
     "additionalComponents": [],
@@ -2877,12 +2871,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-actions-overview": {
     "packagePath": "components/toast/toast-actions-overview",
-    "title": "Basic Toast",
+    "title": "Toast actions",
     "componentName": "ToastActionsOverviewExample",
     "files": [
       "toast-actions-overview-example.ts",
-      "toast-actions-overview-example.html",
-      "toast-actions-overview-example.css"
+      "toast-actions-overview-example.html"
     ],
     "selector": "toast-actions-overview-example",
     "additionalComponents": [],
@@ -2891,12 +2884,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-hide-overview": {
     "packagePath": "components/toast/toast-hide-overview",
-    "title": "Toast Hide Strategies overview",
+    "title": "Toast hide",
     "componentName": "ToastHideOverviewExample",
     "files": [
       "toast-hide-overview-example.ts",
-      "toast-hide-overview-example.html",
-      "toast-hide-overview-example.css"
+      "toast-hide-overview-example.html"
     ],
     "selector": "toast-hide-overview-example",
     "additionalComponents": [],
@@ -2905,12 +2897,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-link-overview": {
     "packagePath": "components/toast/toast-link-overview",
-    "title": "Basic Toast",
+    "title": "Toast link",
     "componentName": "ToastLinkOverviewExample",
     "files": [
       "toast-link-overview-example.ts",
-      "toast-link-overview-example.html",
-      "toast-link-overview-example.css"
+      "toast-link-overview-example.html"
     ],
     "selector": "toast-link-overview-example",
     "additionalComponents": [],
@@ -2922,9 +2913,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic Toast",
     "componentName": "ToastOverviewExample",
     "files": [
-      "toast-overview-example.ts",
-      "toast-overview-example.html",
-      "toast-overview-example.css"
+      "toast-overview-example.ts"
     ],
     "selector": "toast-overview-example",
     "additionalComponents": [],
@@ -2933,12 +2922,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-progress-bar-overview": {
     "packagePath": "components/toast/toast-progress-bar-overview",
-    "title": "Basic Toast",
+    "title": "Toast progress bar",
     "componentName": "ToastProgressBarOverviewExample",
     "files": [
-      "toast-progress-bar-overview-example.ts",
-      "toast-progress-bar-overview-example.html",
-      "toast-progress-bar-overview-example.css"
+      "toast-progress-bar-overview-example.ts"
     ],
     "selector": "toast-progress-bar-overview-example",
     "additionalComponents": [],
@@ -2947,12 +2934,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-report-overview": {
     "packagePath": "components/toast/toast-report-overview",
-    "title": "Basic Toast",
+    "title": "Toast report",
     "componentName": "ToastReportOverviewExample",
     "files": [
-      "toast-report-overview-example.ts",
-      "toast-report-overview-example.html",
-      "toast-report-overview-example.css"
+      "toast-report-overview-example.ts"
     ],
     "selector": "toast-report-overview-example",
     "additionalComponents": [],
@@ -2961,12 +2946,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toast-types-overview": {
     "packagePath": "components/toast/toast-types-overview",
-    "title": "Basic Toast",
+    "title": "Toast types",
     "componentName": "ToastTypesOverviewExample",
     "files": [
       "toast-types-overview-example.ts",
-      "toast-types-overview-example.html",
-      "toast-types-overview-example.css"
+      "toast-types-overview-example.html"
     ],
     "selector": "toast-types-overview-example",
     "additionalComponents": [],
@@ -2975,12 +2959,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "toggle-overview": {
     "packagePath": "components/toggle/toggle-overview",
-    "title": "Basic toggle",
+    "title": "Toggle",
     "componentName": "ToggleOverviewExample",
     "files": [
       "toggle-overview-example.ts",
-      "toggle-overview-example.html",
-      "toggle-overview-example.css"
+      "toggle-overview-example.html"
     ],
     "selector": "toggle-overview-example",
     "additionalComponents": [],
@@ -3806,12 +3789,6 @@ return import('@koobiq/docs-examples/components/progress-spinner');
   case 'radio-content':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-group':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-invalid':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-overview':
-return import('@koobiq/docs-examples/components/radio');
-  case 'radio-required':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-size':
 return import('@koobiq/docs-examples/components/radio');

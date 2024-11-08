@@ -1,7 +1,12 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { AsyncPipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KbqOptionModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import {
     KbqTimezoneGroup,
+    KbqTimezoneModule,
     KbqTimezoneZone,
     getZonesGroupedByCountry,
     offsetFormatter
@@ -11,13 +16,48 @@ import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { timezones } from '../mock';
 
 /**
- * @title Timezone search overview
+ * @title Timezone search
  */
 @Component({
+    standalone: true,
     selector: 'timezone-search-overview-example',
-    templateUrl: 'timezone-search-overview-example.html',
-    styleUrls: ['timezone-search-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqTimezoneModule, KbqInputModule, ReactiveFormsModule, AsyncPipe, KbqOptionModule],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [(value)]="selected">
+                <kbq-form-field
+                    kbqFormFieldWithoutBorders
+                    kbqSelectSearch
+                >
+                    <i
+                        kbq-icon="kbq-magnifying-glass_16"
+                        kbqPrefix
+                    ></i>
+                    <input
+                        [formControl]="searchControl"
+                        [placeholder]="'Город или часовой пояс'"
+                        autocomplete="off"
+                        kbqInput
+                        type="text"
+                    />
+                    <kbq-cleaner />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+                @for (group of filteredOptions$ | async; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option
+                                [highlightText]="searchPattern"
+                                [timezone]="timezone"
+                            />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
 })
 export class TimezoneSearchOverviewExample implements OnInit {
     filteredOptions$: Observable<KbqTimezoneGroup[]>;

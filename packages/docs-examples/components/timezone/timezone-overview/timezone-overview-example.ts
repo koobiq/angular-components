@@ -1,15 +1,34 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { KbqTimezoneGroup, KbqTimezoneZone, getZonesGroupedByCountry } from '@koobiq/components/timezone';
+import { Component } from '@angular/core';
+import { KbqOptionModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import {
+    getZonesGroupedByCountry,
+    KbqTimezoneGroup,
+    KbqTimezoneModule,
+    KbqTimezoneZone
+} from '@koobiq/components/timezone';
 import { timezones } from '../mock';
 
 /**
- * @title Timezone overview
+ * @title Timezone
  */
 @Component({
+    standalone: true,
     selector: 'timezone-overview-example',
-    templateUrl: 'timezone-overview-example.html',
-    styleUrls: ['timezone-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOptionModule],
+    template: `
+        <kbq-form-field>
+            <kbq-timezone-select [(value)]="selected">
+                @for (group of data; track group) {
+                    <kbq-optgroup [label]="group.countryName">
+                        @for (timezone of group.zones; track timezone) {
+                            <kbq-timezone-option [timezone]="timezone" />
+                        }
+                    </kbq-optgroup>
+                }
+            </kbq-timezone-select>
+        </kbq-form-field>
+    `
 })
 export class TimezoneOverviewExample {
     selected = Intl.DateTimeFormat().resolvedOptions().timeZone;

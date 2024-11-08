@@ -1,15 +1,22 @@
-import { Component, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { Component, TemplateRef } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
- * @title Basic Toast
+ * @title Toast types
  */
 @Component({
+    standalone: true,
     selector: 'toast-types-overview-example',
     templateUrl: 'toast-types-overview-example.html',
-    styleUrls: ['toast-types-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqLinkModule,
+        NgTemplateOutlet,
+        KbqButtonModule
+    ]
 })
 export class ToastTypesOverviewExample {
     themePalette = ThemePalette;
