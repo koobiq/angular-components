@@ -5,6 +5,7 @@ import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
  * @title Validation
@@ -16,6 +17,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [
         ReactiveFormsModule,
         KbqInputModule,
+        KbqTextareaModule,
         KbqSelectModule,
         KbqButtonModule,
         KbqFormsModule,
