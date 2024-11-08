@@ -23,7 +23,7 @@ $tokens: meta.module-variables(tokens) !default;
     @include kbq-css-font-variable($component, $property, letter-spacing, font-);
 }
 
-@mixin kbq-typography-level-to-styles_css-variables($component, $property) {
+@mixin kbq-typography-level-to-styles-css-variables($component, $property) {
     @include kbq-css-font-variable($component, $property, font-size, '');
     @include kbq-css-font-variable($component, $property, font-weight, '');
     @include kbq-css-font-variable($component, $property, line-height, '');
