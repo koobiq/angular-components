@@ -273,6 +273,7 @@
         "packages": [
             "cdk",
             "components",
+            "components-experimental",
             "angular-luxon-adapter",
             "angular-moment-adapter",
             "cli"
