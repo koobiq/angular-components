@@ -1,11 +1,25 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
- * @title tooltip relative to pointer
+ * @title Tooltip relative to pointer
  */
 @Component({
+    standalone: true,
     selector: 'tooltip-relative-to-pointer-example',
-    templateUrl: 'tooltip-relative-to-pointer-example.html',
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqButtonModule,
+        KbqToolTipModule
+    ],
+    template: `
+        <button
+            [kbqRelativeToPointer]="true"
+            kbq-button
+            kbqTooltip="relativeToPointer"
+        >
+            Button with a tooltip positioned relative to the cursor
+        </button>
+    `
 })
 export class TooltipRelativeToPointerExample {}
