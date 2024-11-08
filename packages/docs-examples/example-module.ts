@@ -3337,8 +3337,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ValidationCompositeExample",
     "files": [
       "validation-composite-example.ts",
-      "validation-composite-example.html",
-      "validation-composite-example.css"
+      "validation-composite-example.html"
     ],
     "selector": "validation-composite-example",
     "additionalComponents": [],
@@ -3351,8 +3350,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ValidationGlobalOneRequiredExample",
     "files": [
       "validation-global-one-required-example.ts",
-      "validation-global-one-required-example.html",
-      "validation-global-one-required-example.css"
+      "validation-global-one-required-example.html"
     ],
     "selector": "validation-global-one-required-example",
     "additionalComponents": [],
@@ -3365,8 +3363,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ValidationGlobalExample",
     "files": [
       "validation-global-example.ts",
-      "validation-global-example.html",
-      "validation-global-example.css"
+      "validation-global-example.html"
     ],
     "selector": "validation-global-example",
     "additionalComponents": [],
@@ -3379,8 +3376,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ValidationOnBlurExample",
     "files": [
       "validation-on-blur-example.ts",
-      "validation-on-blur-example.html",
-      "validation-on-blur-example.css"
+      "validation-on-blur-example.html"
     ],
     "selector": "validation-on-blur-example",
     "additionalComponents": [],
@@ -3393,8 +3389,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ValidationOnTypeExample",
     "files": [
       "validation-on-type-example.ts",
-      "validation-on-type-example.html",
-      "validation-on-type-example.css"
+      "validation-on-type-example.html"
     ],
     "selector": "validation-on-type-example",
     "additionalComponents": [],
@@ -3407,8 +3402,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ValidationOverviewExample",
     "files": [
       "validation-overview-example.ts",
-      "validation-overview-example.html",
-      "validation-overview-example.css"
+      "validation-overview-example.html"
     ],
     "selector": "validation-overview-example",
     "additionalComponents": [],
@@ -3421,8 +3415,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ValidationSmallExample",
     "files": [
       "validation-small-example.ts",
-      "validation-small-example.html",
-      "validation-small-example.css"
+      "validation-small-example.html"
     ],
     "selector": "validation-small-example",
     "additionalComponents": [],

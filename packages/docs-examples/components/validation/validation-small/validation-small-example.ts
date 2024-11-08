@@ -1,5 +1,16 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import {
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 
 function emptyFormValidator(): ValidatorFn {
     return (g: AbstractControl | FormGroup): ValidationErrors | null => {
@@ -8,13 +19,13 @@ function emptyFormValidator(): ValidatorFn {
 }
 
 /**
- * @title validation-small
+ * @title Validation small
  */
 @Component({
+    standalone: true,
     selector: 'validation-small-example',
     templateUrl: 'validation-small-example.html',
-    styleUrls: ['validation-small-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqInputModule, KbqButtonModule]
 })
 export class ValidationSmallExample {
     smallForm: FormGroup;

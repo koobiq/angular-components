@@ -1,7 +1,16 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import {
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    ValidatorFn
+} from '@angular/forms';
 import { PopUpPlacements, ThemePalette } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 function groupValidator(): ValidatorFn {
     return (g: AbstractControl | FormGroup): ValidationErrors | null => {
@@ -37,13 +46,24 @@ const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
 /**
- * @title validation-composite
+ * @title Validation composite
  */
 @Component({
+    standalone: true,
     selector: 'validation-composite-example',
     templateUrl: 'validation-composite-example.html',
-    styleUrls: ['validation-composite-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqToolTipModule,
+        KbqInputModule
+    ],
+    styles: `
+        .validation-error {
+            background-color: #fcefec;
+            border-radius: 4px;
+        }
+    `
 })
 export class ValidationCompositeExample {
     popUpPlacements = PopUpPlacements;

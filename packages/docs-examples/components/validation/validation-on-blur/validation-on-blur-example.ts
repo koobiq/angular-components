@@ -1,18 +1,24 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
 /**
- * @title validation-on-blur
+ * @title Validation on blur
  */
 @Component({
+    standalone: true,
     selector: 'validation-on-blur-example',
-    templateUrl: 'validation-on-blur-example.html',
-    styleUrls: ['validation-on-blur-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule
+    ],
+    templateUrl: 'validation-on-blur-example.html'
 })
 export class ValidationOnBlurExample {
     themePalette = ThemePalette;
