@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqFormsModule } from '@koobiq/components/core';
 
 /**
  * @title Validation global one required
@@ -23,11 +23,11 @@ import { KbqFormsModule } from '@koobiq/components/core';
         KbqFormsModule
     ],
     styles: `
-        validation-global-one-required-example .docs-width {
+        .docs-width {
             width: 400px;
         }
 
-        validation-global-one-required-example .kbq-alert {
+        :host ::ng-deep .kbq-alert {
             margin-bottom: 16px;
         }
     `

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqFormsModule } from '@koobiq/components/core';
 
 /**
  * @title Validation
@@ -15,11 +15,11 @@ import { KbqFormsModule } from '@koobiq/components/core';
     templateUrl: 'validation-overview-example.html',
     imports: [
         ReactiveFormsModule,
-        KbqFormFieldModule,
         KbqInputModule,
         KbqSelectModule,
         KbqButtonModule,
-        KbqFormsModule
+        KbqFormsModule,
+        KbqFormFieldModule
     ]
 })
 export class ValidationOverviewExample {

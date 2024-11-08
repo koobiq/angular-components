@@ -24,15 +24,15 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormsModule
     ],
     styles: `
-        validation-global-example .docs-width {
+        .docs-width {
             max-width: 480px;
         }
 
-        validation-global-example .kbq-alert {
+        :host ::ng-deep .kbq-alert {
             margin-bottom: 16px;
         }
 
-        validation-global-example button {
+        button {
             margin-bottom: 16px;
         }
     `
