@@ -167,7 +167,7 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
             />
         </kbq-form-field>
         <kbq-tree-selection
-            class="layout-margin-top-2xl"
+            class="layout-margin-top-4xl"
             [(ngModel)]="modelValue"
             [dataSource]="dataSource"
             [treeControl]="treeControl"

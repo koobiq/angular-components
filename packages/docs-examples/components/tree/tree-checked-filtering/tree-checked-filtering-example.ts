@@ -182,7 +182,7 @@ abstract class TreeParams {
                 type="text"
             />
         </kbq-form-field>
-        <div class="layout-margin-top-2xl">
+        <div class="layout-margin-top-4xl">
             <kbq-button-toggle-group
                 #group1="kbqButtonToggleGroup"
                 (change)="onToggleClick($event)"

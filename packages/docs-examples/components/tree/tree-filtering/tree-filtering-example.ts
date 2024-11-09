@@ -114,7 +114,7 @@ export const DATA_OBJECT = {
             />
         </kbq-form-field>
         <kbq-tree-selection
-            class="layout-margin-top-2xl"
+            class="layout-margin-top-4xl"
             [(ngModel)]="modelValue"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
