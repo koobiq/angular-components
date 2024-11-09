@@ -3047,10 +3047,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-child-selection-overview": {
     "packagePath": "components/tree-select/tree-select-child-selection-overview",
-    "title": "Basic Select",
+    "title": "Tree-select child selection",
     "componentName": "TreeSelectChildSelectionOverviewExample",
     "files": [
-      "tree-select-child-selection-overview-example.ts",
+      "tree-select-child-selection-overview-example.ts"
     ],
     "selector": "tree-select-child-selection-overview-example",
     "additionalComponents": [],
@@ -3059,10 +3059,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-footer-overview": {
     "packagePath": "components/tree-select/tree-select-footer-overview",
-    "title": "Tree select with footer",
+    "title": "Tree-select footer",
     "componentName": "TreeSelectFooterOverviewExample",
     "files": [
-      "tree-select-footer-overview-example.ts",
+      "tree-select-footer-overview-example.ts"
     ],
     "selector": "tree-select-footer-overview-example",
     "additionalComponents": [],
@@ -3071,10 +3071,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-lazyload": {
     "packagePath": "components/tree-select/tree-select-lazyload",
-    "title": "Basic Select",
+    "title": "Tree-select lazyload",
     "componentName": "TreeSelectLazyloadExample",
     "files": [
-      "tree-select-lazyload-example.ts",
+      "tree-select-lazyload-example.ts"
     ],
     "selector": "tree-select-lazyload-example",
     "additionalComponents": [],
@@ -3083,10 +3083,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-multiple-overview": {
     "packagePath": "components/tree-select/tree-select-multiple-overview",
-    "title": "Basic Select",
+    "title": "Tree-select multiple",
     "componentName": "TreeSelectMultipleOverviewExample",
     "files": [
-      "tree-select-multiple-overview-example.ts",
+      "tree-select-multiple-overview-example.ts"
     ],
     "selector": "tree-select-multiple-overview-example",
     "additionalComponents": [],
@@ -3095,10 +3095,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-overview": {
     "packagePath": "components/tree-select/tree-select-overview",
-    "title": "Basic Select",
+    "title": "Tree-select",
     "componentName": "TreeSelectOverviewExample",
     "files": [
-      "tree-select-overview-example.ts",
+      "tree-select-overview-example.ts"
     ],
     "selector": "tree-select-overview-example",
     "additionalComponents": [],
@@ -3107,7 +3107,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-search-overview": {
     "packagePath": "components/tree-select/tree-select-search-overview",
-    "title": "Tree select search",
+    "title": "Tree-select search",
     "componentName": "TreeSelectSearchOverviewExample",
     "files": [
       "tree-select-search-overview-example.ts"
