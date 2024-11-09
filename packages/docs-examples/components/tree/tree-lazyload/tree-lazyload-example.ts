@@ -1,6 +1,7 @@
 import { SelectionChange } from '@angular/cdk/collections';
-import { Component, Injectable, ViewEncapsulation } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component, Injectable } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 
 interface INodeResponse {
@@ -157,14 +158,42 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
 }
 
 /**
- * @title Basic tree
+ * @title Tree lazyload
  */
 @Component({
+    standalone: true,
     selector: 'tree-lazyload-example',
-    templateUrl: 'tree-lazyload-example.html',
-    styleUrls: ['tree-lazyload-example.css'],
-    providers: [LazyLoadDataService],
-    encapsulation: ViewEncapsulation.None
+    template: `
+        <kbq-tree-selection
+            [(ngModel)]="modelValue"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <kbq-tree-node-toggle [node]="node" />
+                @if (node.loading) {
+                    <kbq-progress-spinner mode="indeterminate" />
+                }
+
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `,
+    imports: [
+        KbqTreeModule,
+        FormsModule
+    ],
+    providers: [LazyLoadDataService]
 })
 export class TreeLazyloadExample {
     treeControl: FlatTreeControl<LazyLoadFlatNode>;

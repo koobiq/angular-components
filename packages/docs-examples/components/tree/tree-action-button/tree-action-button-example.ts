@@ -1,6 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
     children: FileNode[];
@@ -95,13 +99,66 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Basic tree
+ * @title Tree action button
  */
 @Component({
+    standalone: true,
     selector: 'tree-action-button-example',
-    templateUrl: 'tree-action-button-example.html',
-    styleUrls: ['tree-action-button-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTreeModule,
+        FormsModule,
+        KbqToolTipModule,
+        KbqDropdownModule,
+        KbqIconModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [(ngModel)]="modelValue"
+            [autoSelect]="false"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            (onSelectAll)="onSelectAll($event)"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [disabled]="node.name === 'tests'"
+                kbqTreeNodePadding
+            >
+                <i kbq-icon="kbq-info-circle_16"></i>
+
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+
+                <kbq-option-action
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [kbqPlacement]="popUpPlacements.Right"
+                    [kbqTooltip]="'Tooltip text'"
+                />
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <i kbq-icon="kbq-info-circle_16"></i>
+
+                <kbq-tree-node-toggle [node]="node" />
+
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+
+                <kbq-option-action
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [kbqPlacement]="popUpPlacements.Right"
+                    [kbqTooltip]="'Tooltip text'"
+                />
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <kbq-dropdown #dropdown>
+            <button kbq-dropdown-item>action 1</button>
+            <button kbq-dropdown-item>action 2</button>
+            <button kbq-dropdown-item>action 3</button>
+        </kbq-dropdown>
+    `
 })
 export class TreeActionButtonExample {
     popUpPlacements = PopUpPlacements;
