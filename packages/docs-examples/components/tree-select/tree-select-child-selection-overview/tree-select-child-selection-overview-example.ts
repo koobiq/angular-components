@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
@@ -10,7 +11,6 @@ import {
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { KbqIconModule } from '@koobiq/components/icon';
 
 export class FileNode {
     children: FileNode[];
