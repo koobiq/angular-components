@@ -3051,8 +3051,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TreeSelectChildSelectionOverviewExample",
     "files": [
       "tree-select-child-selection-overview-example.ts",
-      "tree-select-child-selection-overview-example.html",
-      "tree-select-child-selection-overview-example.css"
     ],
     "selector": "tree-select-child-selection-overview-example",
     "additionalComponents": [],
@@ -3065,8 +3063,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TreeSelectFooterOverviewExample",
     "files": [
       "tree-select-footer-overview-example.ts",
-      "tree-select-footer-overview-example.html",
-      "tree-select-footer-overview-example.css"
     ],
     "selector": "tree-select-footer-overview-example",
     "additionalComponents": [],
@@ -3079,8 +3075,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TreeSelectLazyloadExample",
     "files": [
       "tree-select-lazyload-example.ts",
-      "tree-select-lazyload-example.html",
-      "tree-select-lazyload-example.css"
     ],
     "selector": "tree-select-lazyload-example",
     "additionalComponents": [],
@@ -3093,8 +3087,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TreeSelectMultipleOverviewExample",
     "files": [
       "tree-select-multiple-overview-example.ts",
-      "tree-select-multiple-overview-example.html",
-      "tree-select-multiple-overview-example.css"
     ],
     "selector": "tree-select-multiple-overview-example",
     "additionalComponents": [],
@@ -3107,8 +3099,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "TreeSelectOverviewExample",
     "files": [
       "tree-select-overview-example.ts",
-      "tree-select-overview-example.html",
-      "tree-select-overview-example.css"
     ],
     "selector": "tree-select-overview-example",
     "additionalComponents": [],
@@ -3120,9 +3110,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tree select search",
     "componentName": "TreeSelectSearchOverviewExample",
     "files": [
-      "tree-select-search-overview-example.ts",
-      "tree-select-search-overview-example.html",
-      "tree-select-search-overview-example.css"
+      "tree-select-search-overview-example.ts"
     ],
     "selector": "tree-select-search-overview-example",
     "additionalComponents": [],

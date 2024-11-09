@@ -1,14 +1,4 @@
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTreeModule } from '@koobiq/components/tree';
-import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { TreeSelectChildSelectionOverviewExample } from './tree-select-child-selection-overview/tree-select-child-selection-overview-example';
 import { TreeSelectFooterOverviewExample } from './tree-select-footer-overview/tree-select-footer-overview-example';
 import { TreeSelectLazyloadExample } from './tree-select-lazyload/tree-select-lazyload-example';
@@ -35,21 +25,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqTreeModule,
-        KbqSelectModule,
-        KbqHighlightModule,
-        KbqTreeSelectModule,
-        KbqInputModule,
-        KbqIconModule,
-        KbqProgressSpinnerModule,
-        KbqPseudoCheckboxModule,
-        KbqLinkModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class TreeSelectExamplesModule {}
