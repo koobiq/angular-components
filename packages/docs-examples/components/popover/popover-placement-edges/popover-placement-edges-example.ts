@@ -19,30 +19,28 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
         KbqInputModule
     ],
     styles: `
-        :host {
-            .popover-placement-edges-example {
-                display: flex;
-                column-gap: 16px;
-            }
+        .popover-placement-edges-example {
+            display: flex;
+            column-gap: 16px;
+        }
 
-            .popover-placement-edges-example__column {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                width: 100%;
-            }
+        .popover-placement-edges-example__column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
 
-            .popover-placement-edges-example__column button {
-                width: 100%;
-            }
+        .popover-placement-edges-example__column button {
+            width: 100%;
+        }
 
-            .popover-placement-edges-example__column button + button {
-                margin-top: 52px;
-            }
+        .popover-placement-edges-example__column button + button {
+            margin-top: 52px;
+        }
 
-            .popover-placement-edges-example__column.middle button + button {
-                margin-top: 136px;
-            }
+        .popover-placement-edges-example__column.middle button + button {
+            margin-top: 136px;
         }
     `
 })

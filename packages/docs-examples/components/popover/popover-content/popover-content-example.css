@@ -21,12 +21,12 @@
     right: 8px;
 }
 
->>> .popover-content-custom-example__image {
+.popover-content-custom-example__image {
     padding-top: calc(172 / 400 * 100%);
     background-size: cover;
 }
 
->>> .popover-content-custom-example__container {
+.popover-content-custom-example__container {
     padding: 24px 32px 40px 32px;
     display: flex;
     flex-direction: column;
@@ -49,29 +49,29 @@
     padding-left: 8px;
 }
 
->>> .popover-content-share-example__text {
+.popover-content-share-example__text {
     color: #6c7393;
     margin-top: 4px;
     margin-bottom: 12px;
 }
 
->>> .popover-content-share-example__list {
+.popover-content-share-example__list {
     margin-top: 16px;
 }
 
->>> .popover-content-share-example__list-item {
+.popover-content-share-example__list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 12px;
 }
 
->>> .popover-content-share-example__list-item-left {
+.popover-content-share-example__list-item-left {
     display: flex;
     align-items: center;
 }
 
->>> .popover-content-share-example__list-item-image {
+.popover-content-share-example__list-item-image {
     width: 32px;
     height: 32px;
     border-radius: 100%;

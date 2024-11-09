@@ -14,26 +14,24 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
     templateUrl: 'popover-placement-center-example.html',
     imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule],
     styles: `
-        :host {
-            .popover-placement-center-example {
-                display: flex;
-                column-gap: 16px;
-            }
+        .popover-placement-center-example {
+            display: flex;
+            column-gap: 16px;
+        }
 
-            .popover-placement-center-example__column {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                width: 100%;
-            }
+        .popover-placement-center-example__column {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
 
-            .popover-placement-center-example__column button {
-                width: 100%;
-            }
+        .popover-placement-center-example__column button {
+            width: 100%;
+        }
 
-            .popover-placement-center-example__column button + button {
-                margin-top: 48px;
-            }
+        .popover-placement-center-example__column button + button {
+            margin-top: 48px;
         }
     `
 })

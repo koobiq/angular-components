@@ -2857,10 +2857,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "progress-spinner-indeterminate": {
     "packagePath": "components/progress-spinner/progress-spinner-indeterminate",
-    "title": "Indeterminate progress spinner",
+    "title": "Progress spinner indeterminate",
     "componentName": "ProgressSpinnerIndeterminateExample",
     "files": [
-      "progress-spinner-indeterminate-example.ts",
+      "progress-spinner-indeterminate-example.ts"
     ],
     "selector": "progress-spinner-indeterminate-example",
     "additionalComponents": [],
@@ -2876,7 +2876,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic progress spinner",
     "componentName": "ProgressSpinnerOverviewExample",
     "files": [
-      "progress-spinner-overview-example.ts",
+      "progress-spinner-overview-example.ts"
     ],
     "selector": "progress-spinner-overview-example",
     "additionalComponents": [],

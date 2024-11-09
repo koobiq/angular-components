@@ -14,41 +14,29 @@
     padding-left: 8px;
 }
 
->>> .popover-close-example__text {
+.popover-close-example__text {
     color: #6c7393;
     margin-top: 4px;
     margin-bottom: 12px;
 }
 
->>> .popover-close-example__image {
-    display: block;
-    width: 100%;
-}
-
->>> .popover-close-example__container {
-    padding: 24px 32px 40px 32px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
->>> .popover-close-example__list {
+.popover-close-example__list {
     margin-top: 16px;
 }
 
->>> .popover-close-example__list-item {
+.popover-close-example__list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 12px;
 }
 
->>> .popover-close-example__list-item-left {
+.popover-close-example__list-item-left {
     display: flex;
     align-items: center;
 }
 
->>> .popover-close-example__list-item-image {
+.popover-close-example__list-item-image {
     width: 32px;
     height: 32px;
     border-radius: 100%;
