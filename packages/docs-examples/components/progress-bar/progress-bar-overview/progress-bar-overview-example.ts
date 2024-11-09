@@ -12,15 +12,13 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
     standalone: true,
     selector: 'progress-bar-overview-example',
     styles: `
-        :host {
-            .example-progress-bar-group {
-                display: flex;
-                flex-direction: column;
-            }
+        .example-progress-bar-group {
+            display: flex;
+            flex-direction: column;
+        }
 
-            .example-progress-bar {
-                margin-bottom: 12px;
-            }
+        .example-progress-bar {
+            margin-bottom: 12px;
         }
     `,
     imports: [
