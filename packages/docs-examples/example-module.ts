@@ -1959,12 +1959,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-close": {
     "packagePath": "components/popover/popover-close",
-    "title": "popover-close",
+    "title": "Popover close",
     "componentName": "PopoverCloseExample",
     "files": [
       "popover-close-example.ts",
-      "popover-close-example.html",
-      "popover-close-example.css"
+      "popover-close-example.html"
     ],
     "selector": "popover-close-example",
     "additionalComponents": [],
@@ -1973,12 +1972,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-common": {
     "packagePath": "components/popover/popover-common",
-    "title": "popover-common",
+    "title": "Popover common",
     "componentName": "PopoverCommonExample",
     "files": [
-      "popover-common-example.ts",
-      "popover-common-example.html",
-      "popover-common-example.css"
+      "popover-common-example.ts"
     ],
     "selector": "popover-common-example",
     "additionalComponents": [],
@@ -1987,12 +1984,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-content": {
     "packagePath": "components/popover/popover-content",
-    "title": "popover-content",
+    "title": "Popover content",
     "componentName": "PopoverContentExample",
     "files": [
       "popover-content-example.ts",
-      "popover-content-example.html",
-      "popover-content-example.css"
+      "popover-content-example.html"
     ],
     "selector": "popover-content-example",
     "additionalComponents": [],
@@ -2001,12 +1997,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-header": {
     "packagePath": "components/popover/popover-header",
-    "title": "popover-header",
+    "title": "Popover Header",
     "componentName": "PopoverHeaderExample",
     "files": [
       "popover-header-example.ts",
-      "popover-header-example.html",
-      "popover-header-example.css"
+      "popover-header-example.html"
     ],
     "selector": "popover-header-example",
     "additionalComponents": [],
@@ -2015,12 +2010,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-height": {
     "packagePath": "components/popover/popover-height",
-    "title": "popover-height",
+    "title": "Popover height",
     "componentName": "PopoverHeightExample",
     "files": [
       "popover-height-example.ts",
-      "popover-height-example.html",
-      "popover-height-example.css"
+      "popover-height-example.html"
     ],
     "selector": "popover-height-example",
     "additionalComponents": [],
@@ -2029,12 +2023,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-placement-center": {
     "packagePath": "components/popover/popover-placement-center",
-    "title": "popover-placement-center",
+    "title": "Popover placement center",
     "componentName": "PopoverPlacementCenterExample",
     "files": [
       "popover-placement-center-example.ts",
-      "popover-placement-center-example.html",
-      "popover-placement-center-example.css"
+      "popover-placement-center-example.html"
     ],
     "selector": "popover-placement-center-example",
     "additionalComponents": [],
@@ -2043,12 +2036,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-placement-edges": {
     "packagePath": "components/popover/popover-placement-edges",
-    "title": "popover-placement-edges",
+    "title": "Popover placement edges",
     "componentName": "PopoverPlacementEdgesExample",
     "files": [
       "popover-placement-edges-example.ts",
-      "popover-placement-edges-example.html",
-      "popover-placement-edges-example.css"
+      "popover-placement-edges-example.html"
     ],
     "selector": "popover-placement-edges-example",
     "additionalComponents": [],
@@ -2060,9 +2052,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "popover-scroll",
     "componentName": "PopoverScrollExample",
     "files": [
-      "popover-scroll-example.ts",
-      "popover-scroll-example.html",
-      "popover-scroll-example.css"
+      "popover-scroll-example.ts"
     ],
     "selector": "popover-scroll-example",
     "additionalComponents": [],
@@ -2071,12 +2061,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "popover-width": {
     "packagePath": "components/popover/popover-width",
-    "title": "popover-width",
+    "title": "Popover width",
     "componentName": "PopoverWidthExample",
     "files": [
       "popover-width-example.ts",
-      "popover-width-example.html",
-      "popover-width-example.css"
+      "popover-width-example.html"
     ],
     "selector": "popover-width-example",
     "additionalComponents": [],
@@ -2085,12 +2074,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "progress-bar-indeterminate": {
     "packagePath": "components/progress-bar/progress-bar-indeterminate",
-    "title": "Indeterminate progress bar",
+    "title": "Progress bar indeterminate",
     "componentName": "ProgressBarIndeterminateExample",
     "files": [
-      "progress-bar-indeterminate-example.ts",
-      "progress-bar-indeterminate-example.html",
-      "progress-bar-indeterminate-example.css"
+      "progress-bar-indeterminate-example.ts"
     ],
     "selector": "progress-bar-indeterminate-example",
     "additionalComponents": [],
@@ -2099,12 +2086,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "progress-bar-overview": {
     "packagePath": "components/progress-bar/progress-bar-overview",
-    "title": "Basic progress bar",
+    "title": "Progress bar",
     "componentName": "ProgressBarOverviewExample",
     "files": [
-      "progress-bar-overview-example.ts",
-      "progress-bar-overview-example.html",
-      "progress-bar-overview-example.css"
+      "progress-bar-overview-example.ts"
     ],
     "selector": "progress-bar-overview-example",
     "additionalComponents": [],
@@ -2113,12 +2098,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "progress-spinner-indeterminate": {
     "packagePath": "components/progress-spinner/progress-spinner-indeterminate",
-    "title": "Indeterminate progress spinner",
+    "title": "Progress spinner indeterminate",
     "componentName": "ProgressSpinnerIndeterminateExample",
     "files": [
-      "progress-spinner-indeterminate-example.ts",
-      "progress-spinner-indeterminate-example.html",
-      "progress-spinner-indeterminate-example.css"
+      "progress-spinner-indeterminate-example.ts"
     ],
     "selector": "progress-spinner-indeterminate-example",
     "additionalComponents": [],
@@ -2130,9 +2113,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Basic progress spinner",
     "componentName": "ProgressSpinnerOverviewExample",
     "files": [
-      "progress-spinner-overview-example.ts",
-      "progress-spinner-overview-example.html",
-      "progress-spinner-overview-example.css"
+      "progress-spinner-overview-example.ts"
     ],
     "selector": "progress-spinner-overview-example",
     "additionalComponents": [],

@@ -1,14 +1,21 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqPopoverModule } from '@koobiq/components/popover';
 
 /**
- * @title popover-close
+ * @title Popover close
  */
 @Component({
+    standalone: true,
     selector: 'popover-close-example',
     templateUrl: 'popover-close-example.html',
-    styleUrls: ['popover-close-example.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: 'popover-close-example.css',
+    imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqIconModule, KbqDropdownModule]
 })
 export class PopoverCloseExample {
     members: object[] = [
