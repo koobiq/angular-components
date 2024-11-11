@@ -1,15 +1,24 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { Component, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
- * @title validation-on-type
+ * @title Validation on type
  */
 @Component({
+    standalone: true,
     selector: 'validation-on-type-example',
-    templateUrl: 'validation-on-type-example.html',
-    styleUrls: ['validation-on-type-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqToolTipModule,
+        KbqInputModule,
+        KbqFormsModule
+    ],
+    templateUrl: 'validation-on-type-example.html'
 })
 export class ValidationOnTypeExample {
     popUpPlacements = PopUpPlacements;

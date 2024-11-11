@@ -1,14 +1,41 @@
-import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { KbqAlertModule } from '@koobiq/components/alert';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 
 /**
- * @title validation-global
+ * @title Validation global
  */
 @Component({
+    standalone: true,
     selector: 'validation-global-example',
     templateUrl: 'validation-global-example.html',
-    styleUrls: ['validation-global-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqAlertModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormsModule
+    ],
+    styles: `
+        .docs-width {
+            max-width: 480px;
+        }
+
+        :host ::ng-deep .kbq-alert {
+            margin-bottom: 16px;
+        }
+
+        button {
+            margin-bottom: 16px;
+        }
+    `
 })
 export class ValidationGlobalExample {
     @ViewChild('submitButton') submitButton: ElementRef;

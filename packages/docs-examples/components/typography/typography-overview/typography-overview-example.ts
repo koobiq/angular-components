@@ -1,12 +1,11 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 
 /**
- * @title Basic typography
+ * @title Typography
  */
 @Component({
+    standalone: true,
     selector: 'typography-overview-example',
-    templateUrl: 'typography-overview-example.html',
-    styleUrls: ['typography-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    templateUrl: 'typography-overview-example.html'
 })
 export class TypographyOverviewExample {}

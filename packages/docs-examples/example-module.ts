@@ -2922,12 +2922,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-arrow-and-offset": {
     "packagePath": "components/tooltip/tooltip-arrow-and-offset",
-    "title": "Tooltip Arrow And Offset Example",
+    "title": "Tooltip arrow and offset example",
     "componentName": "TooltipArrowAndOffsetExample",
     "files": [
-      "tooltip-arrow-and-offset-example.ts",
-      "tooltip-arrow-and-offset-example.html",
-      "tooltip-arrow-and-offset-example.css"
+      "tooltip-arrow-and-offset-example.ts"
     ],
     "selector": "tooltip-arrow-and-offset-example",
     "additionalComponents": [],
@@ -2936,12 +2934,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-extended": {
     "packagePath": "components/tooltip/tooltip-extended",
-    "title": "Extended tooltip",
+    "title": "Tooltip extended",
     "componentName": "TooltipExtendedExample",
     "files": [
-      "tooltip-extended-example.ts",
-      "tooltip-extended-example.html",
-      "tooltip-extended-example.css"
+      "tooltip-extended-example.ts"
     ],
     "selector": "tooltip-extended-example",
     "additionalComponents": [],
@@ -2950,12 +2946,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-long": {
     "packagePath": "components/tooltip/tooltip-long",
-    "title": "Long tooltip",
+    "title": "Tooltip long",
     "componentName": "TooltipLongExample",
     "files": [
-      "tooltip-long-example.ts",
-      "tooltip-long-example.html",
-      "tooltip-long-example.css"
+      "tooltip-long-example.ts"
     ],
     "selector": "tooltip-long-example",
     "additionalComponents": [],
@@ -2964,12 +2958,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-multiple-lines": {
     "packagePath": "components/tooltip/tooltip-multiple-lines",
-    "title": "Multiple lines tooltip",
+    "title": "Tooltip multiple lines",
     "componentName": "TooltipMultipleLinesExample",
     "files": [
-      "tooltip-multiple-lines-example.ts",
-      "tooltip-multiple-lines-example.html",
-      "tooltip-multiple-lines-example.css"
+      "tooltip-multiple-lines-example.ts"
     ],
     "selector": "tooltip-multiple-lines-example",
     "additionalComponents": [],
@@ -2978,12 +2970,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-overview": {
     "packagePath": "components/tooltip/tooltip-overview",
-    "title": "Basic tooltip",
+    "title": "Tooltip",
     "componentName": "TooltipOverviewExample",
     "files": [
-      "tooltip-overview-example.ts",
-      "tooltip-overview-example.html",
-      "tooltip-overview-example.css"
+      "tooltip-overview-example.ts"
     ],
     "selector": "tooltip-overview-example",
     "additionalComponents": [],
@@ -2992,11 +2982,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-placement-center": {
     "packagePath": "components/tooltip/tooltip-placement-center",
-    "title": "tooltip-placement-center",
+    "title": "Tooltip placement center",
     "componentName": "TooltipPlacementCenterExample",
     "files": [
       "tooltip-placement-center-example.ts",
-      "tooltip-placement-center-example.html",
       "tooltip-placement-center-example.css"
     ],
     "selector": "tooltip-placement-center-example",
@@ -3006,11 +2995,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-placement-edges": {
     "packagePath": "components/tooltip/tooltip-placement-edges",
-    "title": "tooltip-placement-edges",
+    "title": "Tooltip placement edges",
     "componentName": "TooltipPlacementEdgesExample",
     "files": [
       "tooltip-placement-edges-example.ts",
-      "tooltip-placement-edges-example.html",
       "tooltip-placement-edges-example.css"
     ],
     "selector": "tooltip-placement-edges-example",
@@ -3020,11 +3008,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-relative-to-pointer": {
     "packagePath": "components/tooltip/tooltip-relative-to-pointer",
-    "title": "tooltip relative to pointer",
+    "title": "Tooltip relative to pointer",
     "componentName": "TooltipRelativeToPointerExample",
     "files": [
-      "tooltip-relative-to-pointer-example.ts",
-      "tooltip-relative-to-pointer-example.html"
+      "tooltip-relative-to-pointer-example.ts"
     ],
     "selector": "tooltip-relative-to-pointer-example",
     "additionalComponents": [],
@@ -3033,12 +3020,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tooltip-style": {
     "packagePath": "components/tooltip/tooltip-style",
-    "title": "Tooltip Style",
+    "title": "Tooltip style",
     "componentName": "TooltipStyleExample",
     "files": [
-      "tooltip-style-example.ts",
-      "tooltip-style-example.html",
-      "tooltip-style-example.css"
+      "tooltip-style-example.ts"
     ],
     "selector": "tooltip-style-example",
     "additionalComponents": [],
@@ -3251,12 +3236,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "typography-overview": {
     "packagePath": "components/typography/typography-overview",
-    "title": "Basic typography",
+    "title": "Typography",
     "componentName": "TypographyOverviewExample",
     "files": [
       "typography-overview-example.ts",
-      "typography-overview-example.html",
-      "typography-overview-example.css"
+      "typography-overview-example.html"
     ],
     "selector": "typography-overview-example",
     "additionalComponents": [],
@@ -3265,12 +3249,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-composite": {
     "packagePath": "components/validation/validation-composite",
-    "title": "validation-composite",
+    "title": "Validation composite",
     "componentName": "ValidationCompositeExample",
     "files": [
       "validation-composite-example.ts",
-      "validation-composite-example.html",
-      "validation-composite-example.css"
+      "validation-composite-example.html"
     ],
     "selector": "validation-composite-example",
     "additionalComponents": [],
@@ -3279,12 +3262,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-global-one-required": {
     "packagePath": "components/validation/validation-global-one-required",
-    "title": "validation-global",
+    "title": "Validation global one required",
     "componentName": "ValidationGlobalOneRequiredExample",
     "files": [
       "validation-global-one-required-example.ts",
-      "validation-global-one-required-example.html",
-      "validation-global-one-required-example.css"
+      "validation-global-one-required-example.html"
     ],
     "selector": "validation-global-one-required-example",
     "additionalComponents": [],
@@ -3293,12 +3275,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-global": {
     "packagePath": "components/validation/validation-global",
-    "title": "validation-global",
+    "title": "Validation global",
     "componentName": "ValidationGlobalExample",
     "files": [
       "validation-global-example.ts",
-      "validation-global-example.html",
-      "validation-global-example.css"
+      "validation-global-example.html"
     ],
     "selector": "validation-global-example",
     "additionalComponents": [],
@@ -3307,12 +3288,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-on-blur": {
     "packagePath": "components/validation/validation-on-blur",
-    "title": "validation-on-blur",
+    "title": "Validation on blur",
     "componentName": "ValidationOnBlurExample",
     "files": [
       "validation-on-blur-example.ts",
-      "validation-on-blur-example.html",
-      "validation-on-blur-example.css"
+      "validation-on-blur-example.html"
     ],
     "selector": "validation-on-blur-example",
     "additionalComponents": [],
@@ -3321,12 +3301,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-on-type": {
     "packagePath": "components/validation/validation-on-type",
-    "title": "validation-on-type",
+    "title": "Validation on type",
     "componentName": "ValidationOnTypeExample",
     "files": [
       "validation-on-type-example.ts",
-      "validation-on-type-example.html",
-      "validation-on-type-example.css"
+      "validation-on-type-example.html"
     ],
     "selector": "validation-on-type-example",
     "additionalComponents": [],
@@ -3335,12 +3314,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-overview": {
     "packagePath": "components/validation/validation-overview",
-    "title": "validation-overview",
+    "title": "Validation",
     "componentName": "ValidationOverviewExample",
     "files": [
       "validation-overview-example.ts",
-      "validation-overview-example.html",
-      "validation-overview-example.css"
+      "validation-overview-example.html"
     ],
     "selector": "validation-overview-example",
     "additionalComponents": [],
@@ -3349,12 +3327,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "validation-small": {
     "packagePath": "components/validation/validation-small",
-    "title": "validation-small",
+    "title": "Validation small",
     "componentName": "ValidationSmallExample",
     "files": [
       "validation-small-example.ts",
-      "validation-small-example.html",
-      "validation-small-example.css"
+      "validation-small-example.html"
     ],
     "selector": "validation-small-example",
     "additionalComponents": [],

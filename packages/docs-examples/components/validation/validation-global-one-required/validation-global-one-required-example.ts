@@ -1,14 +1,36 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { KbqAlertModule } from '@koobiq/components/alert';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 
 /**
- * @title validation-global
+ * @title Validation global one required
  */
 @Component({
+    standalone: true,
     selector: 'validation-global-one-required-example',
     templateUrl: 'validation-global-one-required-example.html',
-    styleUrls: ['validation-global-one-required-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqAlertModule,
+        KbqIconModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormsModule
+    ],
+    styles: `
+        .docs-width {
+            width: 400px;
+        }
+
+        :host ::ng-deep .kbq-alert {
+            margin-bottom: 16px;
+        }
+    `
 })
 export class ValidationGlobalOneRequiredExample {
     globalErrorForm: FormGroup;

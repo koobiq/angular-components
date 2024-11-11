@@ -1,13 +1,4 @@
-import { A11yModule } from '@angular/cdk/a11y';
-import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqDlModule } from '@koobiq/components/dl';
-import { KbqTabsModule } from '@koobiq/components/tabs';
-import { KbqToggleModule } from '@koobiq/components/toggle';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { TooltipArrowAndOffsetExample } from './tooltip-arrow-and-offset/tooltip-arrow-and-offset-example';
 import { TooltipExtendedExample } from './tooltip-extended/tooltip-extended-example';
 import { TooltipLongExample } from './tooltip-long/tooltip-long-example';
@@ -44,18 +35,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        FormsModule,
-        A11yModule,
-        KbqButtonModule,
-        KbqToolTipModule,
-        KbqTabsModule,
-        KbqToggleModule,
-        CdkScrollableModule,
-        KbqDlModule,
-        KbqButtonToggleModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class TooltipExamplesModule {}

@@ -1,14 +1,28 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
- * @title validation-overview
+ * @title Validation
  */
 @Component({
+    standalone: true,
     selector: 'validation-overview-example',
     templateUrl: 'validation-overview-example.html',
-    styleUrls: ['validation-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        ReactiveFormsModule,
+        KbqInputModule,
+        KbqTextareaModule,
+        KbqSelectModule,
+        KbqButtonModule,
+        KbqFormsModule,
+        KbqFormFieldModule
+    ]
 })
 export class ValidationOverviewExample {
     feedbackForm: FormGroup;
