@@ -10,34 +10,9 @@
     $typography: map.get(map.get($tokens, koobiq), typography);
 
     $config: (
-        //legacy will be deleted
-        display-1: map.get($typography, display-1),
-        display-2: map.get($typography, display-2),
-        display-3: map.get($typography, display-3),
-        display-1-strong: map.get($typography, display-1-strong),
-        display-2-strong: map.get($typography, display-2-strong),
-        display-3-strong: map.get($typography, display-3-strong),
         headline: map.get($typography, headline),
         subheading: map.get($typography, subheading),
         title: map.get($typography, title),
-        body: map.get($typography, body),
-        body-strong: map.get($typography, body-strong),
-        body-caps: map.get($typography, body-caps),
-        body-mono: map.get($typography, body-mono),
-        body-mono-strong: map.get($typography, body-mono-strong),
-        body-tabular: map.get($typography, body-tabular),
-        caption: map.get($typography, caption),
-        caption-strong: map.get($typography, caption-strong),
-        caption-caps: map.get($typography, caption-caps),
-        caption-mono: map.get($typography, caption-mono),
-        caption-mono-strong: map.get($typography, caption-mono-strong),
-        caption-tabular: map.get($typography, caption-tabular),
-        //small-text:             map.get($typography, small-text),
-        extra-small-text: map.get($typography, extra-small-text),
-        extra-small-text-caps: map.get($typography, extra-small-text-caps),
-        extra-small-text-mono: map.get($typography, extra-small-text-mono),
-        extra-small-text-strong: map.get($typography, extra-small-text-strong),
-        //new
         display-big: map.get($typography, display-big),
         display-normal: map.get($typography, display-normal),
         display-compact: map.get($typography, display-compact),
@@ -154,31 +129,6 @@
 }
 
 @mixin kbq-base-typography() {
-    //legacy will be deleted
-    .kbq-display-1 {
-        @include kbq-typography-level-to-styles_css-variables(typography, display-1);
-    }
-
-    .kbq-display-2 {
-        @include kbq-typography-level-to-styles_css-variables(typography, display-2);
-    }
-
-    .kbq-display-3 {
-        @include kbq-typography-level-to-styles_css-variables(typography, display-3);
-    }
-
-    .kbq-display-1-strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, display-1-strong);
-    }
-
-    .kbq-display-2-strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, display-2-strong);
-    }
-
-    .kbq-display-3-strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, display-3-strong);
-    }
-
     .kbq-headline {
         @include kbq-typography-level-to-styles_css-variables(typography, headline);
     }
@@ -191,67 +141,6 @@
         @include kbq-typography-level-to-styles_css-variables(typography, title);
     }
 
-    .kbq-body {
-        @include kbq-typography-level-to-styles_css-variables(typography, body);
-    }
-
-    .kbq-body_tabular {
-        @include kbq-typography-level-to-styles_css-variables(typography, body-tabular);
-    }
-
-    .kbq-body_strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, body-strong);
-    }
-
-    .kbq-body_caps {
-        @include kbq-typography-level-to-styles_css-variables(typography, body-caps);
-    }
-
-    .kbq-body_mono {
-        @include kbq-typography-level-to-styles_css-variables(typography, body-mono);
-    }
-
-    .kbq-body_mono_strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, body-mono-strong);
-    }
-
-    .kbq-caption {
-        @include kbq-typography-level-to-styles_css-variables(typography, caption);
-    }
-
-    .kbq-caption_tabular {
-        @include kbq-typography-level-to-styles_css-variables(typography, caption-tabular);
-    }
-
-    .kbq-caption_strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, caption-strong);
-    }
-
-    .kbq-caption_caps {
-        @include kbq-typography-level-to-styles_css-variables(typography, caption-caps);
-    }
-
-    .kbq-caption_mono {
-        @include kbq-typography-level-to-styles_css-variables(typography, caption-mono);
-    }
-
-    .kbq-caption_mono_strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, caption-mono-strong);
-    }
-
-    //.kbq-small-text {
-    //    @include kbq-typography-level-to-styles_css-variables(typography,config, small-text);
-    //}
-
-    .kbq-extra-small-text {
-        @include kbq-typography-level-to-styles_css-variables(typography, extra-small-text);
-    }
-
-    .kbq-extra-small-text-strong {
-        @include kbq-typography-level-to-styles_css-variables(typography, extra-small-text-strong);
-    }
-
-    // new
     .kbq-display-big {
         @include kbq-typography-level-to-styles_css-variables(typography, display-big);
     }
@@ -406,6 +295,78 @@
 
     .kbq-italic-compact-strong {
         @include kbq-typography-level-to-styles_css-variables(typography, italic-compact-strong);
+    }
+
+    [lang='zh-CN'] {
+        .kbq-text-normal-strong {
+            font-weight: var(--kbq-zh-cn-text-normal-strong-font-weight);
+        }
+
+        .kbq-mono-normal-strong {
+            font-weight: var(--kbq-zh-cn-mono-normal-strong-font-weight);
+        }
+
+        .kbq-text-compact-strong {
+            font-weight: var(--kbq-zh-cn-text-compact-strong-font-weight);
+        }
+
+        .kbq-mono-compact-strong {
+            font-weight: var(--kbq-zh-cn-mono-compact-strong-font-weight);
+        }
+    }
+
+    [lang='fa-IR'] {
+        .kbq-display-big {
+            font-family: var(--kbq-font-fa-ir-accent);
+        }
+
+        .kbq-display-normal {
+            font-family: var(--kbq-font-fa-ir-accent);
+        }
+
+        .kbq-display-compact {
+            font-family: var(--kbq-font-fa-ir-accent);
+        }
+
+        .kbq-title {
+            font-family: var(--kbq-font-fa-ir-accent);
+        }
+
+        .kbq-subheading {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-text-normal {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-tabular-normal {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-text-normal-strong {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-caps-normal {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-text-compact {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-tabular-compact {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-text-compact-strong {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
+
+        .kbq-caps-compact {
+            font-family: var(--kbq-font-fa-ir-base);
+        }
     }
 }
 

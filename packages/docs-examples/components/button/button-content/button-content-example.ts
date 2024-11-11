@@ -17,7 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="content__example-button-group">
             <div class="example-button">
-                <div class="example-label kbq-extra-small-text">Text</div>
+                <div class="example-label kbq-text-compact">Text</div>
                 <button
                     [color]="colors.Contrast"
                     kbq-button
@@ -25,8 +25,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                     Кнопка
                 </button>
             </div>
-            <div class="example-button kbq-extra-small-text">
-                <div class="example-label kbq-extra-small-text">Icon+Text</div>
+            <div class="example-button kbq-text-compact">
+                <div class="example-label kbq-text-compact">Icon+Text</div>
                 <button
                     [color]="colors.Contrast"
                     kbq-button
