@@ -109,8 +109,8 @@
 
         &.cdk-keyboard-focused {
             box-shadow:
-                inset 0 0 0.1px 1px var(--kbq-states-focused-color),
-                0 0 0.1px 1px var(--kbq-states-focused-color);
+                inset 0 0 0.1px 1px var(--kbq-states-line-focus-theme),
+                0 0 0.1px 1px var(--kbq-states-line-focus-theme);
         }
     }
 }

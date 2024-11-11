@@ -15,7 +15,7 @@
         border-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
 
         > .docs-icons-viewer__table-cell-name {
-            color: var(--kbq-foreground-text-less-contrast);
+            color: var(--kbq-foreground-contrast-secondary);
         }
 
         &:focus {
@@ -32,7 +32,7 @@
     }
 
     .icon-preview-modal__preview-area {
-        background: var(--kbq-background-background-under);
+        background: var(--kbq-background-bg-secondary);
     }
 }
 

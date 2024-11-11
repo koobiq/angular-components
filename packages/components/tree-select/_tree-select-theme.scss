@@ -9,14 +9,14 @@
         }
 
         &.kbq-disabled {
-            color: var(--kbq-foreground-text-disabled);
+            color: var(--kbq-states-foreground-disabled);
         }
     }
 
     .kbq-select__placeholder {
         text-overflow: ellipsis;
 
-        color: var(--kbq-foreground-text-disabled);
+        color: var(--kbq-states-foreground-disabled);
     }
 
     .kbq-tree-select__panel {

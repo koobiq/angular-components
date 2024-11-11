@@ -346,12 +346,12 @@
         .kbq-tab-group.kbq-focused {
             // paint focus border from the top since because of border constraints
             .kbq-tab-header {
-                box-shadow: 0 2px 0 -1px var(--kbq-states-focused-color);
+                box-shadow: 0 2px 0 -1px var(--kbq-states-line-focus-theme);
             }
 
             .kbq-tab-body__wrapper {
-                border-color: var(--kbq-states-focused-color);
-                box-shadow: inset 0 0 0.1 1px var(--kbq-states-focused-color);
+                border-color: var(--kbq-states-line-focus-theme);
+                box-shadow: inset 0 0 0.1 1px var(--kbq-states-line-focus-theme);
             }
         }
     }

@@ -3,7 +3,7 @@
 @mixin kbq-option-action-theme() {
     .kbq-option-action {
         &.cdk-keyboard-focused {
-            border-color: var(--kbq-states-focused-color);
+            border-color: var(--kbq-states-line-focus-theme);
         }
 
         &:active,

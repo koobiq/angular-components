@@ -87,7 +87,7 @@
         &.kbq-button_outline,
         &.kbq-button_transparent {
             &.cdk-keyboard-focused {
-                $focused-color: var(--kbq-states-focused-color);
+                $focused-color: var(--kbq-states-line-focus-theme);
                 outline: 1px solid $focused-color;
                 border-color: $focused-color;
             }
