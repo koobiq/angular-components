@@ -1,5 +1,7 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
     children: FileNode[];
@@ -94,13 +96,45 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Basic tree
+ * @title Tree multiple checkbox
  */
 @Component({
+    standalone: true,
     selector: 'tree-multiple-checkbox-example',
-    templateUrl: 'tree-multiple-checkbox-example.html',
-    styleUrls: ['tree-multiple-checkbox-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTreeModule,
+        FormsModule,
+        KbqIconModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [(ngModel)]="modelValue"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            multiple="checkbox"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [disabled]="node.name === 'tests'"
+                kbqTreeNodePadding
+            >
+                <i kbq-icon="kbq-info-circle_16"></i>
+
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <i kbq-icon="kbq-info-circle_16"></i>
+
+                <kbq-tree-node-toggle [node]="node" />
+
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
 })
 export class TreeMultipleCheckboxExample {
     treeControl: FlatTreeControl<FileFlatNode>;

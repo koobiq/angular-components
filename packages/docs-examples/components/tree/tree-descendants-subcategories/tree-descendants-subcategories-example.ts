@@ -1,8 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqHighlightModule } from '@koobiq/components/core';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
+    KbqTreeModule,
     KbqTreeOption,
     KbqTreeSelection,
     KbqTreeSelectionChange
@@ -150,12 +153,44 @@ abstract class TreeParams {
 }
 
 /**
- * @title Tree Descendants Subcategories
+ * @title Tree descendants subcategories
  */
 @Component({
+    standalone: true,
     selector: 'tree-descendants-subcategories-example',
-    templateUrl: 'tree-descendants-subcategories-example.html',
-    styleUrls: ['tree-descendants-subcategories-example.css']
+    imports: [
+        KbqTreeModule,
+        FormsModule,
+        KbqHighlightModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [(ngModel)]="modelValue"
+            [autoSelect]="false"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            (selectionChange)="onSelectionChange($event)"
+            multiple="checkbox"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [checkboxThirdState]="true"
+                kbqTreeNodePadding
+            >
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                [checkboxThirdState]="true"
+                kbqTreeNodePadding
+            >
+                <kbq-tree-node-toggle [node]="node" />
+
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
 })
 export class TreeDescendantsSubcategoriesExample extends TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;

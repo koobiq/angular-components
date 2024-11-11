@@ -1,6 +1,8 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
     children: FileNode[];
@@ -94,13 +96,57 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Checklist tree
+ * @title Tree multiple checklist
  */
 @Component({
+    standalone: true,
     selector: 'tree-multiple-checklist-example',
-    templateUrl: 'tree-multiple-checklist-example.html',
-    styleUrls: ['tree-multiple-checklist-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTreeModule,
+        FormsModule,
+        KbqCheckboxModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [(ngModel)]="modelValue"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [class.kbq-selected]="selectedState(node)"
+                [disabled]="node.name === 'tests'"
+                (click)="onOptionClick($event, node)"
+                (keydown.enter)="fileSelectionToggle(node)"
+                (keydown.space)="fileSelectionToggle(node)"
+                kbqTreeNodePadding
+            >
+                <kbq-checkbox
+                    [checked]="checklistSelection.isSelected(node)"
+                    [disabled]="node.name === 'tests'"
+                    style="margin-right: 8px"
+                />
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                [class.kbq-selected]="selectedState(node)"
+                (click)="onOptionClick($event, node)"
+                (keydown.enter)="fileSelectionToggle(node)"
+                (keydown.space)="fileSelectionToggle(node)"
+                kbqTreeNodePadding
+            >
+                <kbq-tree-node-toggle [node]="node" />
+                <kbq-checkbox
+                    [checked]="descendantsAllSelected(node)"
+                    [indeterminate]="descendantsPartiallySelected(node)"
+                    style="margin-right: 8px"
+                />
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
 })
 export class TreeMultipleChecklistExample {
     treeControl: FlatTreeControl<FileFlatNode>;

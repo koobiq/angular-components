@@ -1,5 +1,10 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];
@@ -94,13 +99,53 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Tree select with footer
+ * @title Tree-select footer
  */
 @Component({
+    standalone: true,
     selector: 'tree-select-footer-overview-example',
-    templateUrl: 'tree-select-footer-overview-example.html',
-    styleUrls: ['tree-select-footer-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, KbqTreeSelectModule, FormsModule, KbqTreeModule, KbqIconModule, KbqLinkModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [(ngModel)]="selected">
+                <kbq-tree-selection
+                    [dataSource]="dataSource"
+                    [treeControl]="treeControl"
+                >
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node"
+                        kbqTreeNodePadding
+                    >
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                    >
+                        <i
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                            kbq-icon="kbq-chevron-down-s_16"
+                            kbqTreeNodeToggle
+                        ></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+
+                <kbq-cleaner #kbqSelectCleaner />
+
+                <kbq-select-footer>
+                    <a
+                        href="/components/tree-select/overview"
+                        kbq-link
+                    >
+                        <span class="kbq-link__text">Ссылка</span>
+                        <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+                    </a>
+                </kbq-select-footer>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
 })
 export class TreeSelectFooterOverviewExample {
     selected = '';

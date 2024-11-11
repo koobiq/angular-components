@@ -1,6 +1,11 @@
 import { SelectionChange } from '@angular/cdk/collections';
-import { Component, Injectable, ViewEncapsulation } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component, Injectable } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 
 interface INodeResponse {
@@ -155,14 +160,54 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
 }
 
 /**
- * @title Basic Select
+ * @title Tree-select lazyload
  */
 @Component({
+    standalone: true,
     selector: 'tree-select-lazyload-example',
-    templateUrl: 'tree-select-lazyload-example.html',
-    styleUrls: ['tree-select-lazyload-example.css'],
-    providers: [LazyLoadDataService],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqFormFieldModule,
+        KbqTreeSelectModule,
+        FormsModule,
+        KbqTreeModule,
+        KbqIconModule,
+        KbqProgressSpinnerModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [(ngModel)]="selected">
+                <kbq-tree-selection
+                    [dataSource]="dataSource"
+                    [treeControl]="treeControl"
+                >
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node"
+                        kbqTreeNodePadding
+                    >
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                    >
+                        <i
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                            kbq-icon="kbq-chevron-down-s_16"
+                            kbqTreeNodeToggle
+                        ></i>
+                        @if (node.loading) {
+                            <kbq-progress-spinner mode="indeterminate" />
+                        }
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+
+                <kbq-cleaner #kbqSelectCleaner />
+            </kbq-tree-select>
+        </kbq-form-field>
+    `,
+    providers: [LazyLoadDataService]
 })
 export class TreeSelectLazyloadExample {
     selected = '';

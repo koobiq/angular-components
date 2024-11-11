@@ -1,16 +1,4 @@
-import { ClipboardModule } from '@angular/cdk/clipboard';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
-import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqHighlightModule, KbqOptionModule } from '@koobiq/components/core';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqTreeModule } from '@koobiq/components/tree';
 import { TreeAccessRightsExample } from './tree-access-rights/tree-access-rights-example';
 import { TreeActionButtonExample } from './tree-action-button/tree-action-button-example';
 import { TreeCheckedFilteringExample } from './tree-checked-filtering/tree-checked-filtering-example';
@@ -52,22 +40,7 @@ const EXAMPLES = [
 ];
 
 @NgModule({
-    imports: [
-        FormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqTreeModule,
-        KbqIconModule,
-        KbqHighlightModule,
-        KbqCheckboxModule,
-        KbqDropdownModule,
-        KbqToolTipModule,
-        KbqOptionModule,
-        KbqProgressSpinnerModule,
-        ClipboardModule,
-        KbqButtonToggleModule
-    ],
-    declarations: EXAMPLES,
+    imports: EXAMPLES,
     exports: EXAMPLES
 })
 export class TreeExamplesModule {}

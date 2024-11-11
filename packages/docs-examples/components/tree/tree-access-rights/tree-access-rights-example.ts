@@ -1,5 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
+import { FormsModule } from '@angular/forms';
+import {
+    FlatTreeControl,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener,
+    KbqTreeModule,
+    KbqTreeSelection
+} from '@koobiq/components/tree';
 import { Subscription } from 'rxjs';
 
 export class FileNode {
@@ -175,12 +182,41 @@ abstract class TreeParams {
 }
 
 /**
- * @title Tree Descendants Subcategories
+ * @title Tree access rights
  */
 @Component({
+    standalone: true,
     selector: 'tree-access-rights-example',
-    templateUrl: 'tree-access-rights-example.html',
-    styleUrls: ['tree-access-rights-example.css']
+    imports: [
+        KbqTreeModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [autoSelect]="false"
+            [dataSource]="dataSource"
+            [ngModel]="modelValue"
+            [treeControl]="treeControl"
+            (ngModelChange)="onModelChange($event)"
+            multiple="checkbox"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
+            >
+                <span>{{ treeControl.getViewValue(node) }}</span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <kbq-tree-node-toggle [node]="node" />
+
+                <span>{{ treeControl.getViewValue(node) }}</span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
 })
 export class TreeAccessRightsExample extends TreeParams implements AfterViewInit, OnDestroy {
     treeControl: FlatTreeControl<FileFlatNode>;

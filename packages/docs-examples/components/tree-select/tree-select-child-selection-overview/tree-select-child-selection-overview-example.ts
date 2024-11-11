@@ -1,13 +1,16 @@
-import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { Component, ViewChild } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
+    KbqTreeModule,
     KbqTreeOption,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectChange } from '@koobiq/components/tree-select';
+import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];
@@ -102,13 +105,47 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Basic Select
+ * @title Tree-select child selection
  */
 @Component({
+    standalone: true,
     selector: 'tree-select-child-selection-overview-example',
-    templateUrl: 'tree-select-child-selection-overview-example.html',
-    styleUrls: ['tree-select-child-selection-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, ReactiveFormsModule, KbqTreeSelectModule, KbqTreeModule, KbqIconModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select
+                [formControl]="control"
+                [multiple]="true"
+                (selectionChange)="onSelectionChange($event)"
+            >
+                <kbq-tree-selection
+                    [dataSource]="dataSource"
+                    [treeControl]="treeControl"
+                >
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node"
+                        [checkboxThirdState]="true"
+                        kbqTreeNodePadding
+                    >
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        [checkboxThirdState]="true"
+                        kbqTreeNodePadding
+                    >
+                        <i
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                            kbq-icon="kbq-chevron-down-s_16"
+                            kbqTreeNodeToggle
+                        ></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
 })
 export class TreeSelectChildSelectionOverviewExample {
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;

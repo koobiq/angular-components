@@ -1,9 +1,14 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqHighlightModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import {
     FlatTreeControl,
     FlatTreeControlFilter,
     KbqTreeFlatDataSource,
-    KbqTreeFlattener
+    KbqTreeFlattener,
+    KbqTreeModule
 } from '@koobiq/components/tree';
 
 export class FileNode {
@@ -146,12 +151,45 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
 }
 
 /**
- * @title Basic tree
+ * @title Tree custom filtering
  */
 @Component({
+    standalone: true,
     selector: 'tree-custom-filtering-example',
-    templateUrl: 'tree-custom-filtering-example.html',
-    styleUrls: ['tree-custom-filtering-example.css']
+    imports: [KbqFormFieldModule, KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
+    template: `
+        <kbq-form-field>
+            <input
+                [(ngModel)]="filterValue"
+                (ngModelChange)="onFilterChange($event)"
+                kbqInput
+                type="text"
+            />
+        </kbq-form-field>
+        <kbq-tree-selection
+            class="layout-margin-top-4xl"
+            [(ngModel)]="modelValue"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [disabled]="node.name === 'tests'"
+                kbqTreeNodePadding
+            >
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <kbq-tree-node-toggle [node]="node" />
+
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
 })
 export class TreeCustomFilteringExample {
     treeControl: FlatTreeControl<FileFlatNode>;

@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
-import { KbqButtonToggleChange } from '@koobiq/components/button-toggle';
+import { FormsModule } from '@angular/forms';
+import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
+import { KbqHighlightModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import {
     FilterByValues,
     FilterByViewValue,
@@ -7,6 +12,7 @@ import {
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
+    KbqTreeModule,
     KbqTreeSelection
 } from '@koobiq/components/tree';
 
@@ -153,12 +159,77 @@ abstract class TreeParams {
 }
 
 /**
- * @title Basic tree
+ * @title Tree checked filtering
  */
 @Component({
+    standalone: true,
     selector: 'tree-checked-filtering-example',
-    templateUrl: 'tree-checked-filtering-example.html',
-    styleUrls: ['tree-checked-filtering-example.css']
+    imports: [
+        KbqFormFieldModule,
+        FormsModule,
+        KbqButtonToggleModule,
+        KbqTreeModule,
+        KbqHighlightModule,
+        KbqIconModule,
+        KbqInputModule
+    ],
+    template: `
+        <kbq-form-field>
+            <input
+                [(ngModel)]="filterValue"
+                (ngModelChange)="onFilterChange($event)"
+                kbqInput
+                type="text"
+            />
+        </kbq-form-field>
+        <div class="layout-margin-top-4xl">
+            <kbq-button-toggle-group
+                #group1="kbqButtonToggleGroup"
+                (change)="onToggleClick($event)"
+            >
+                <kbq-button-toggle
+                    [checked]="true"
+                    [value]="treeStates.ALL"
+                >
+                    <i kbq-icon="kbq-bell_16"></i>
+                    All
+                </kbq-button-toggle>
+                <kbq-button-toggle [value]="treeStates.SELECTED">
+                    <i kbq-icon="kbq-bell_16"></i>
+                    Selected
+                </kbq-button-toggle>
+                <kbq-button-toggle [value]="treeStates.UNSELECTED">
+                    <i kbq-icon="kbq-bell_16"></i>
+                    Unselected
+                </kbq-button-toggle>
+            </kbq-button-toggle-group>
+        </div>
+        <kbq-tree-selection
+            [(ngModel)]="modelValue"
+            [autoSelect]="false"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            (ngModelChange)="onModelValueChange($event)"
+            multiple="checkbox"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [disabled]="node.name === 'tests'"
+                kbqTreeNodePadding
+            >
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <kbq-tree-node-toggle [node]="node" />
+
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
 })
 export class TreeCheckedFilteringExample extends TreeParams {
     treeControl: FlatTreeControl<FileFlatNode>;

@@ -3047,12 +3047,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-child-selection-overview": {
     "packagePath": "components/tree-select/tree-select-child-selection-overview",
-    "title": "Basic Select",
+    "title": "Tree-select child selection",
     "componentName": "TreeSelectChildSelectionOverviewExample",
     "files": [
-      "tree-select-child-selection-overview-example.ts",
-      "tree-select-child-selection-overview-example.html",
-      "tree-select-child-selection-overview-example.css"
+      "tree-select-child-selection-overview-example.ts"
     ],
     "selector": "tree-select-child-selection-overview-example",
     "additionalComponents": [],
@@ -3061,12 +3059,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-footer-overview": {
     "packagePath": "components/tree-select/tree-select-footer-overview",
-    "title": "Tree select with footer",
+    "title": "Tree-select footer",
     "componentName": "TreeSelectFooterOverviewExample",
     "files": [
-      "tree-select-footer-overview-example.ts",
-      "tree-select-footer-overview-example.html",
-      "tree-select-footer-overview-example.css"
+      "tree-select-footer-overview-example.ts"
     ],
     "selector": "tree-select-footer-overview-example",
     "additionalComponents": [],
@@ -3075,12 +3071,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-lazyload": {
     "packagePath": "components/tree-select/tree-select-lazyload",
-    "title": "Basic Select",
+    "title": "Tree-select lazyload",
     "componentName": "TreeSelectLazyloadExample",
     "files": [
-      "tree-select-lazyload-example.ts",
-      "tree-select-lazyload-example.html",
-      "tree-select-lazyload-example.css"
+      "tree-select-lazyload-example.ts"
     ],
     "selector": "tree-select-lazyload-example",
     "additionalComponents": [],
@@ -3089,12 +3083,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-multiple-overview": {
     "packagePath": "components/tree-select/tree-select-multiple-overview",
-    "title": "Basic Select",
+    "title": "Tree-select multiple",
     "componentName": "TreeSelectMultipleOverviewExample",
     "files": [
-      "tree-select-multiple-overview-example.ts",
-      "tree-select-multiple-overview-example.html",
-      "tree-select-multiple-overview-example.css"
+      "tree-select-multiple-overview-example.ts"
     ],
     "selector": "tree-select-multiple-overview-example",
     "additionalComponents": [],
@@ -3103,12 +3095,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-overview": {
     "packagePath": "components/tree-select/tree-select-overview",
-    "title": "Basic Select",
+    "title": "Tree-select",
     "componentName": "TreeSelectOverviewExample",
     "files": [
-      "tree-select-overview-example.ts",
-      "tree-select-overview-example.html",
-      "tree-select-overview-example.css"
+      "tree-select-overview-example.ts"
     ],
     "selector": "tree-select-overview-example",
     "additionalComponents": [],
@@ -3117,12 +3107,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-select-search-overview": {
     "packagePath": "components/tree-select/tree-select-search-overview",
-    "title": "Tree select search",
+    "title": "Tree-select search",
     "componentName": "TreeSelectSearchOverviewExample",
     "files": [
-      "tree-select-search-overview-example.ts",
-      "tree-select-search-overview-example.html",
-      "tree-select-search-overview-example.css"
+      "tree-select-search-overview-example.ts"
     ],
     "selector": "tree-select-search-overview-example",
     "additionalComponents": [],
@@ -3131,12 +3119,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-access-rights": {
     "packagePath": "components/tree/tree-access-rights",
-    "title": "Tree Descendants Subcategories",
+    "title": "Tree access rights",
     "componentName": "TreeAccessRightsExample",
     "files": [
-      "tree-access-rights-example.ts",
-      "tree-access-rights-example.html",
-      "tree-access-rights-example.css"
+      "tree-access-rights-example.ts"
     ],
     "selector": "tree-access-rights-example",
     "additionalComponents": [],
@@ -3145,12 +3131,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-action-button": {
     "packagePath": "components/tree/tree-action-button",
-    "title": "Basic tree",
+    "title": "Tree action button",
     "componentName": "TreeActionButtonExample",
     "files": [
-      "tree-action-button-example.ts",
-      "tree-action-button-example.html",
-      "tree-action-button-example.css"
+      "tree-action-button-example.ts"
     ],
     "selector": "tree-action-button-example",
     "additionalComponents": [],
@@ -3159,12 +3143,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-checked-filtering": {
     "packagePath": "components/tree/tree-checked-filtering",
-    "title": "Basic tree",
+    "title": "Tree checked filtering",
     "componentName": "TreeCheckedFilteringExample",
     "files": [
-      "tree-checked-filtering-example.ts",
-      "tree-checked-filtering-example.html",
-      "tree-checked-filtering-example.css"
+      "tree-checked-filtering-example.ts"
     ],
     "selector": "tree-checked-filtering-example",
     "additionalComponents": [],
@@ -3173,12 +3155,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-custom-filtering": {
     "packagePath": "components/tree/tree-custom-filtering",
-    "title": "Basic tree",
+    "title": "Tree custom filtering",
     "componentName": "TreeCustomFilteringExample",
     "files": [
-      "tree-custom-filtering-example.ts",
-      "tree-custom-filtering-example.html",
-      "tree-custom-filtering-example.css"
+      "tree-custom-filtering-example.ts"
     ],
     "selector": "tree-custom-filtering-example",
     "additionalComponents": [],
@@ -3187,12 +3167,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-descendants-subcategories": {
     "packagePath": "components/tree/tree-descendants-subcategories",
-    "title": "Tree Descendants Subcategories",
+    "title": "Tree descendants subcategories",
     "componentName": "TreeDescendantsSubcategoriesExample",
     "files": [
-      "tree-descendants-subcategories-example.ts",
-      "tree-descendants-subcategories-example.html",
-      "tree-descendants-subcategories-example.css"
+      "tree-descendants-subcategories-example.ts"
     ],
     "selector": "tree-descendants-subcategories-example",
     "additionalComponents": [],
@@ -3201,12 +3179,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-filtering": {
     "packagePath": "components/tree/tree-filtering",
-    "title": "Basic tree",
+    "title": "Tree filtering",
     "componentName": "TreeFilteringExample",
     "files": [
-      "tree-filtering-example.ts",
-      "tree-filtering-example.html",
-      "tree-filtering-example.css"
+      "tree-filtering-example.ts"
     ],
     "selector": "tree-filtering-example",
     "additionalComponents": [],
@@ -3215,12 +3191,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-lazyload": {
     "packagePath": "components/tree/tree-lazyload",
-    "title": "Basic tree",
+    "title": "Tree lazyload",
     "componentName": "TreeLazyloadExample",
     "files": [
-      "tree-lazyload-example.ts",
-      "tree-lazyload-example.html",
-      "tree-lazyload-example.css"
+      "tree-lazyload-example.ts"
     ],
     "selector": "tree-lazyload-example",
     "additionalComponents": [],
@@ -3229,12 +3203,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-multiple-checkbox": {
     "packagePath": "components/tree/tree-multiple-checkbox",
-    "title": "Basic tree",
+    "title": "Tree multiple checkbox",
     "componentName": "TreeMultipleCheckboxExample",
     "files": [
-      "tree-multiple-checkbox-example.ts",
-      "tree-multiple-checkbox-example.html",
-      "tree-multiple-checkbox-example.css"
+      "tree-multiple-checkbox-example.ts"
     ],
     "selector": "tree-multiple-checkbox-example",
     "additionalComponents": [],
@@ -3243,12 +3215,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-multiple-checklist": {
     "packagePath": "components/tree/tree-multiple-checklist",
-    "title": "Checklist tree",
+    "title": "Tree multiple checklist",
     "componentName": "TreeMultipleChecklistExample",
     "files": [
-      "tree-multiple-checklist-example.ts",
-      "tree-multiple-checklist-example.html",
-      "tree-multiple-checklist-example.css"
+      "tree-multiple-checklist-example.ts"
     ],
     "selector": "tree-multiple-checklist-example",
     "additionalComponents": [],
@@ -3257,12 +3227,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-multiple-keyboard": {
     "packagePath": "components/tree/tree-multiple-keyboard",
-    "title": "Basic tree",
+    "title": "Tree multiple keyboard",
     "componentName": "TreeMultipleKeyboardExample",
     "files": [
-      "tree-multiple-keyboard-example.ts",
-      "tree-multiple-keyboard-example.html",
-      "tree-multiple-keyboard-example.css"
+      "tree-multiple-keyboard-example.ts"
     ],
     "selector": "tree-multiple-keyboard-example",
     "additionalComponents": [],
@@ -3271,12 +3239,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "tree-overview": {
     "packagePath": "components/tree/tree-overview",
-    "title": "Basic tree",
+    "title": "Tree",
     "componentName": "TreeOverviewExample",
     "files": [
-      "tree-overview-example.ts",
-      "tree-overview-example.html",
-      "tree-overview-example.css"
+      "tree-overview-example.ts"
     ],
     "selector": "tree-overview-example",
     "additionalComponents": [],

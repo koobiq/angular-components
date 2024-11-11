@@ -1,5 +1,9 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];
@@ -94,13 +98,43 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Basic Select
+ * @title Tree-select
  */
 @Component({
+    standalone: true,
     selector: 'tree-select-overview-example',
-    templateUrl: 'tree-select-overview-example.html',
-    styleUrls: ['tree-select-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [KbqFormFieldModule, FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [(ngModel)]="selected">
+                <kbq-tree-selection
+                    [dataSource]="dataSource"
+                    [treeControl]="treeControl"
+                >
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node"
+                        kbqTreeNodePadding
+                    >
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                    >
+                        <i
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                            kbq-icon="kbq-chevron-down-s_16"
+                            kbqTreeNodeToggle
+                        ></i>
+                        {{ treeControl.getViewValue(node) }}
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+
+                <kbq-cleaner #kbqSelectCleaner />
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
 })
 export class TreeSelectOverviewExample {
     selected = '';

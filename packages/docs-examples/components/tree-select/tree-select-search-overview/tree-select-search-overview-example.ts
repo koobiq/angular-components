@@ -1,6 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { KbqHighlightModule } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 
 export class FileNode {
     children: FileNode[];
@@ -95,13 +100,77 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Tree select search
+ * @title Tree-select search
  */
 @Component({
+    standalone: true,
     selector: 'tree-select-search-overview-example',
-    templateUrl: 'tree-select-search-overview-example.html',
-    styleUrls: ['tree-select-search-overview-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqFormFieldModule,
+        KbqTreeSelectModule,
+        FormsModule,
+        ReactiveFormsModule,
+        KbqIconModule,
+        KbqInputModule,
+        KbqTreeModule,
+        KbqHighlightModule
+    ],
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select
+                [(ngModel)]="selected"
+                [multiple]="true"
+            >
+                <kbq-form-field
+                    kbqFormFieldWithoutBorders
+                    kbqSelectSearch
+                >
+                    <i
+                        kbq-icon="kbq-magnifying-glass_16"
+                        kbqPrefix
+                    ></i>
+                    <input
+                        [formControl]="searchControl"
+                        kbqInput
+                        type="text"
+                    />
+                    <kbq-cleaner />
+                </kbq-form-field>
+
+                <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+                <kbq-tree-selection
+                    [dataSource]="dataSource"
+                    [treeControl]="treeControl"
+                >
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node"
+                        kbqTreeNodePadding
+                    >
+                        <span
+                            [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                        ></span>
+                    </kbq-tree-option>
+
+                    <kbq-tree-option
+                        *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
+                    >
+                        <i
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                            kbq-icon="kbq-chevron-down-s_16"
+                            kbqTreeNodeToggle
+                        ></i>
+                        <span
+                            [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
+                        ></span>
+                    </kbq-tree-option>
+                </kbq-tree-selection>
+
+                <kbq-cleaner #kbqSelectCleaner />
+            </kbq-tree-select>
+        </kbq-form-field>
+    `
 })
 export class TreeSelectSearchOverviewExample implements OnInit {
     selected = '';

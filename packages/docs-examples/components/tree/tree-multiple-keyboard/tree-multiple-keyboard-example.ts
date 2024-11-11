@@ -1,5 +1,6 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener } from '@koobiq/components/tree';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 
 export class FileNode {
     children: FileNode[];
@@ -94,13 +95,40 @@ export const DATA_OBJECT = {
 };
 
 /**
- * @title Basic tree
+ * @title Tree multiple keyboard
  */
 @Component({
+    standalone: true,
     selector: 'tree-multiple-keyboard-example',
-    templateUrl: 'tree-multiple-keyboard-example.html',
-    styleUrls: ['tree-multiple-keyboard-example.css'],
-    encapsulation: ViewEncapsulation.None
+    imports: [
+        KbqTreeModule,
+        FormsModule
+    ],
+    template: `
+        <kbq-tree-selection
+            [(ngModel)]="modelValue"
+            [dataSource]="dataSource"
+            [treeControl]="treeControl"
+            multiple="keyboard"
+        >
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node"
+                [disabled]="node.name === 'tests'"
+                kbqTreeNodePadding
+            >
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option
+                *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
+            >
+                <kbq-tree-node-toggle [node]="node" />
+
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
 })
 export class TreeMultipleKeyboardExample {
     treeControl: FlatTreeControl<FileFlatNode>;
