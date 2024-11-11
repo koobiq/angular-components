@@ -1,3 +1,10 @@
+## 18.5.2 (2024-11-11)
+
+### Koobiq
+
+ * bug fix  **docs:** badge article edits after proofreading ([#DS-3008](https://github.com/koobiq/angular-components/issues/issue/DS-3008)) ([#423](https://github.com/koobiq/angular-components/issues/423)) ([68556be](https://github.com/koobiq/angular-components/commit/68556be30f3188185c58b291c7aa0c0afd9489ec))
+ * bug fix  normal radio vertical gap ([#424](https://github.com/koobiq/angular-components/issues/424)) ([57a8ee4](https://github.com/koobiq/angular-components/commit/57a8ee4e471615e9637ff9fc77c2df2ddc486f62))
+
 ## 18.5.1 (2024-11-08)
 
 ### Koobiq
