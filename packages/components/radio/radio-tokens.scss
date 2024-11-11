@@ -1,5 +1,6 @@
 .kbq-radio-group {
     --kbq-radio-size-big-vertical-gap: var(--kbq-size-m);
+    --kbq-radio-size-normal-vertical-gap: var(--kbq-size-m);
     --kbq-radio-size-big-top: var(--kbq-size-3xs);
 }
 
@@ -8,7 +9,6 @@
     --kbq-radio-size-normal-inner-size: var(--kbq-size-xs);
     --kbq-radio-size-normal-horizontal-content-padding: var(--kbq-size-s);
     --kbq-radio-size-normal-vertical-content-padding: var(--kbq-size-3xs);
-    --kbq-radio-size-normal-vertical-gap: var(--kbq-size-m);
     --kbq-radio-size-normal-top: 0;
     --kbq-radio-size-big-outer-size: var(--kbq-size-l);
     --kbq-radio-size-big-inner-size: var(--kbq-size-xs);
