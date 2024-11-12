@@ -1,3 +1,10 @@
+## 18.5.3 (2024-11-12)
+
+### Koobiq
+
+ * bug fix  **button:** buttons padding fixes ([#DS-3103](https://github.com/koobiq/angular-components/issues/issue/DS-3103)) ([#426](https://github.com/koobiq/angular-components/issues/426)) ([a5e3a53](https://github.com/koobiq/angular-components/commit/a5e3a530b3b25a87d0a9d4acc37b997e02229aef))
+ * bug fix  **toast:** close-button margin ([#DS-3116](https://github.com/koobiq/angular-components/issues/issue/DS-3116)) ([#425](https://github.com/koobiq/angular-components/issues/425)) ([135efd8](https://github.com/koobiq/angular-components/commit/135efd8ed5b6abbcc369ffbdacb31ca6ce317f8d))
+
 ## 18.5.2 (2024-11-11)
 
 ### Koobiq
