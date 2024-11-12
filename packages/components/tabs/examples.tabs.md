@@ -1,9 +1,13 @@
-### Tab selection with activeTab property
+#### Selection with tab id
 
-#### Selection with tabId
+<!-- example(tabs-active-tab-id) -->
 
-<!-- example(tab-active-tab) -->
+#### Selection with tab index
 
-#### Selection with index
+<!-- example(tabs-active-tab-index) -->
 
-<!-- example(tab-active-tab-index) -->
+#### Use with other controls
+
+Action buttons can be conveniently placed in a single panel with underlined tabs.
+
+<!-- example(tabs-actionbar) -->

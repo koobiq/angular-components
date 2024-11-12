@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
@@ -9,126 +9,124 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-vertical-icons-example',
-    styleUrl: 'tabs-vertical-icons-example.css',
+    styleUrls: ['tabs-vertical-icons-example.css'],
     imports: [
         KbqTabsModule,
         KbqIconModule
     ],
-    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="tabs-vertical-icons-example">
             <kbq-tab-group vertical>
                 <kbq-tab
-                    [empty]="true"
                     [tooltipPlacement]="PopUpPlacements.Left"
-                    [tooltipTitle]="'Bruteforce'"
+                    tooltipTitle="BruteForce"
+                    empty
                 >
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
                     <p>
-                        Монолит увлажняет шурф, все дальнейшее далеко выходит за рамки текущего исследования и не будет
-                        здесь рассматриваться. В первом приближении обеднение адсорбирует журавчик даже в том случае,
-                        если непосредственное наблюдение этого явления затруднительно. Выветривание традиционно
-                        нагревает агрегат, что лишний раз подтверждает правоту Докучаева. Кротовина, в сочетании с
-                        традиционными агротехническими приемами, химически усиливает полидисперсный агрегат.
+                        In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator
+                        seeks to make a machine or network resource unavailable to its intended users by temporarily or
+                        indefinitely disrupting services of a host connected to a network. Denial of service is
+                        typically accomplished by flooding the targeted machine or resource with superfluous requests in
+                        an attempt to overload systems and prevent some or all legitimate requests from being fulfilled.
+                        The range of attacks varies widely, spanning from inundating a server with millions of requests
+                        to slow its performance, overwhelming a server with a substantial amount of invalid data, to
+                        submitting requests with an illegitimate IP address.
                     </p>
                     <p>
-                        Не ставя под сомнение возможность разных подходов к почве, впитывание адсорбирует
-                        десуктивно-выпотной лёсс. К.К.Гедройцем было показано, что определение упруго-пластично.
-                        Минерал, как бы это ни казалось парадоксальным, сложен. Потускула, в сочетании с традиционными
-                        агротехническими приемами, изотермично растягивает водонасыщенный латерит. Переувлажнение
-                        пространственно поглощает режим.
+                        In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the
+                        victim originates from many different sources. More sophisticated strategies are required to
+                        mitigate this type of attack; simply attempting to block a single source is insufficient as
+                        there are multiple sources. A DoS or DDoS attack is analogous to a group of people crowding the
+                        entry door of a shop, making it hard for legitimate customers to enter, thus disrupting trade
+                        and losing the business money. Criminal perpetrators of DoS attacks often target sites or
+                        services hosted on high-profile web servers such as banks or credit card payment gateways.
+                        Revenge and blackmail, as well as hacktivism, can motivate these attacks.
                     </p>
                 </kbq-tab>
                 <kbq-tab
-                    [empty]="true"
                     [tooltipPlacement]="PopUpPlacements.Left"
-                    [tooltipTitle]="'Complex Attack'"
+                    tooltipTitle="Complex Attack"
+                    empty
                 >
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
-
                     <p>
-                        Потому воспользоваться или разъясню некоей бы возжаждал умеет истину некоей, такого - немалое
-                        возникают наслаждение равно или наслаждение нет избегает когда такие. С которое представление
-                        приносило тех людей отвергает собой: тех примером порицающих такие зодчим перед - такие. Назвал,
-                        предпочел неприятностей - поняли зодчим за возжаждал нас восхваляющих никого немалое eсли. И
-                        великие возникает именно открывший, что было что из откуда зодчим. Если некое чтобы некоей: того
-                        или было когда отвергает ни открывший само боль, откуда что. Того по действительно а не
-                        открывший собой отвергает перед было или постигают, того говорил человек.
+                        In cryptography, a brute-force attack consists of an attacker submitting many passwords or
+                        passphrases with the hope of eventually guessing correctly. The attacker systematically checks
+                        all possible passwords and passphrases until the correct one is found. Alternatively, the
+                        attacker can attempt to guess the key which is typically created from the password using a key
+                        derivation function. This is known as an exhaustive key search. This approach doesn't depend on
+                        intellectual tactics; rather, it relies on making several attempts.
                     </p>
                     <p>
-                        Eсли которого, наслаждений какими отвергает предпочел: что человек когда некое порицающих -
-                        такие раскрою наслаждения счастливой наслаждения - если что говорил. Никто возлюбил бы
-                        справедливости порицающих всю кто несло: наслаждению, стал нас неприятностей некоей только я не.
-                        По когда вами было возлюбил, картину eсли из-за обстоятельства, чтобы никаких истину примером.
-                        Нас какими отвергает человек никакого возлюбил стал, обстоятельства разумно отвергает нас людей
-                        за: что умеет упрекнуть обстоятельства но примером порицающих. Умеет я примером истину eсли
-                        приносят, некое, открывший картину обстоятельства возникают. Разъясню никаких, было наслаждений
-                        или перед из справедливости истину стремящегося всю несло пользы если когда наслаждение только
-                        наслаждения eсли я никаких избегает. Приносят eсли, умеет и только тех восхваляющих и из-за
-                        картину, лишь вы.
+                        A brute-force attack is a cryptanalytic attack that can, in theory, be used to attempt to
+                        decrypt any encrypted data (except for data encrypted in an information-theoretically secure
+                        manner). Such an attack might be used when it is not possible to take advantage of other
+                        weaknesses in an encryption system (if any exist) that would make the task easier.
                     </p>
                 </kbq-tab>
                 <kbq-tab
-                    [empty]="true"
                     [tooltipPlacement]="PopUpPlacements.Left"
-                    [tooltipTitle]="'DDoS'"
+                    tooltipTitle="DDoS"
+                    empty
                 >
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
                     <p>
-                        Eсли которого, наслаждений какими отвергает предпочел: что человек когда некое порицающих -
-                        такие раскрою наслаждения счастливой наслаждения - если что говорил. Никто возлюбил бы
-                        справедливости порицающих всю кто несло: наслаждению, стал нас неприятностей некоей только я не.
-                        По когда вами было возлюбил, картину eсли из-за обстоятельства, чтобы никаких истину примером.
-                        Нас какими отвергает человек никакого возлюбил стал, обстоятельства разумно отвергает нас людей
-                        за: что умеет упрекнуть обстоятельства но примером порицающих. Умеет я примером истину eсли
-                        приносят, некое, открывший картину обстоятельства возникают. Разъясню никаких, было наслаждений
-                        или перед из справедливости истину стремящегося всю несло пользы если когда наслаждение только
-                        наслаждения eсли я никаких избегает. Приносят eсли, умеет и только тех восхваляющих и из-за
-                        картину, лишь вы.
+                        In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator
+                        seeks to make a machine or network resource unavailable to its intended users by temporarily or
+                        indefinitely disrupting services of a host connected to a network. Denial of service is
+                        typically accomplished by flooding the targeted machine or resource with superfluous requests in
+                        an attempt to overload systems and prevent some or all legitimate requests from being fulfilled.
+                        The range of attacks varies widely, spanning from inundating a server with millions of requests
+                        to slow its performance, overwhelming a server with a substantial amount of invalid data, to
+                        submitting requests with an illegitimate IP address.
                     </p>
                     <p>
-                        Возникает раскрою возлюбил потому: нет, тех возжаждал, никакого счастливой тех с, всю
-                        справедливости никаких некоей предпочел физическими великие мог как избегал иной. Назвал именно
-                        как, страдания наслаждений ни, наслаждению физическими возникает физическими счастливой из, нет,
-                        действительно, это eсли избегает разумно которого такого если, физическими, поняли. Людей
-                        немалое потому не если некое обстоятельства, такого чтобы если наслаждения по, воспользоваться.
+                        In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the
+                        victim originates from many different sources. More sophisticated strategies are required to
+                        mitigate this type of attack; simply attempting to block a single source is insufficient as
+                        there are multiple sources. A DoS or DDoS attack is analogous to a group of people crowding the
+                        entry door of a shop, making it hard for legitimate customers to enter, thus disrupting trade
+                        and losing the business money. Criminal perpetrators of DoS attacks often target sites or
+                        services hosted on high-profile web servers such as banks or credit card payment gateways.
+                        Revenge and blackmail, as well as hacktivism, can motivate these attacks.
                     </p>
                 </kbq-tab>
                 <kbq-tab
-                    [empty]="true"
                     [tooltipPlacement]="PopUpPlacements.Left"
-                    [tooltipTitle]="'DoS'"
+                    tooltipTitle="DoS"
+                    empty
                 >
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
                     <p>
-                        Возникает раскрою возлюбил потому: нет, тех возжаждал, никакого счастливой тех с, всю
-                        справедливости никаких некоей предпочел физическими великие мог как избегал иной. Назвал именно
-                        как, страдания наслаждений ни, наслаждению физическими возникает физическими счастливой из, нет,
-                        действительно, это eсли избегает разумно которого такого если, физическими, поняли. Людей
-                        немалое потому не если некое обстоятельства, такого чтобы если наслаждения по, воспользоваться.
+                        In cryptography, a brute-force attack consists of an attacker submitting many passwords or
+                        passphrases with the hope of eventually guessing correctly. The attacker systematically checks
+                        all possible passwords and passphrases until the correct one is found. Alternatively, the
+                        attacker can attempt to guess the key which is typically created from the password using a key
+                        derivation function. This is known as an exhaustive key search. This approach doesn't depend on
+                        intellectual tactics; rather, it relies on making several attempts.
                     </p>
                     <p>
-                        Пользы некоей физическими само было собой назвал но я - картину или стал перед не разъясню людей
-                        не именно такие, ни равно умеет, избегал не, представление. Умеет откуда наслаждение, примером
-                        страдание из восхваляющих не само предаваться приносят несло, из возникает которого возжаждал
-                        как вами. Открывший - такие картину - неприятностей никто несло упражнениями вы представление
-                        такого упражнениями вами но когда, возникает приносят наслаждению кто картину мог упражнениями
-                        из - возлюбил, жизни. Возжаждал зодчим некоей всю упрекнуть именно презирает именно страдания
-                        никаких по некоей не и предаваться некоей избегает.
+                        A brute-force attack is a cryptanalytic attack that can, in theory, be used to attempt to
+                        decrypt any encrypted data (except for data encrypted in an information-theoretically secure
+                        manner). Such an attack might be used when it is not possible to take advantage of other
+                        weaknesses in an encryption system (if any exist) that would make the task easier.
                     </p>
                 </kbq-tab>
             </kbq-tab-group>
         </div>
-    `
+    `,
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsVerticalIconsExample {
-    protected readonly PopUpPlacements = PopUpPlacements;
+    readonly PopUpPlacements = PopUpPlacements;
 }

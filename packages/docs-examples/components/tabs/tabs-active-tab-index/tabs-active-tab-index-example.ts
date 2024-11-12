@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
@@ -7,10 +8,11 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
  */
 @Component({
     standalone: true,
-    selector: 'tab-active-tab-index-example',
+    selector: 'tabs-active-tab-index-example',
     imports: [
         KbqTabsModule,
-        KbqIconModule
+        KbqIconModule,
+        NgClass
     ],
     template: `
         <kbq-tab-group [(activeTab)]="selectedTabIndex">
@@ -23,18 +25,19 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         ></i>
                         {{ tab.tabId }}
                     </ng-template>
-                    Content for selected tab with index={{ selectedTabIndex }}
+                    Content for selected tab with index: {{ selectedTabIndex }}
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabActiveTabIndexExample {
-    tabs = [
+export class TabsActiveTabIndexExample {
+    readonly tabs = [
         { tabId: 'files', icon: 'kbq-folder-open_16' },
         { tabId: 'settings', icon: 'kbq-gear_16' },
         { tabId: 'tasks', icon: 'kbq-bars-horizontal_16' }
     ];
 
-    selectedTabIndex = this.tabs.findIndex(({ tabId }) => tabId === 'settings');
+    selectedTabIndex: number = 1;
 }

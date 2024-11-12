@@ -1,9 +1,10 @@
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqTabLink, KbqTabNav, KbqTabsModule } from '../index';
+import { KbqTabLink, KbqTabNavBar } from './tab-nav-bar';
+import { KbqTabsModule } from './tabs.module';
 
-describe('KbqTabNavBar', () => {
+describe(KbqTabNavBar.name, () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [KbqTabsModule],
@@ -37,13 +38,13 @@ describe('KbqTabNavBar', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <nav kbq-tab-nav-bar>
+        <nav kbqTabNavBar>
             @for (tab of tabs; track tab; let index = $index) {
                 <a
                     [active]="activeIndex === index"
                     [disabled]="disabled"
                     (click)="activeIndex = index"
-                    kbq-tab-link
+                    kbqTabLink
                 >
                     Tab link {{ label }}
                 </a>
@@ -52,7 +53,7 @@ describe('KbqTabNavBar', () => {
     `
 })
 class SimpleTabNavBarTestApp {
-    @ViewChild(KbqTabNav, { static: false }) tabNavBar: KbqTabNav;
+    @ViewChild(KbqTabNavBar, { static: false }) tabNavBar: KbqTabNavBar;
     @ViewChildren(KbqTabLink) tabLinks: QueryList<KbqTabLink>;
 
     label = '';

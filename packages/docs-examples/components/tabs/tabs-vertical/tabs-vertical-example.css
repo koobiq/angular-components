@@ -1,21 +1,11 @@
-.tabs-vertical-example {
-    .kbq-tab-group_vertical {
-        height: 220px;
-    }
+.tabs-vertical-example .kbq-tab-group_vertical {
+    height: 220px;
+}
 
-    .kbq-tab-header {
-        max-width: 160px;
-    }
+.tabs-vertical-example .kbq-tab-header {
+    max-width: 160px;
+}
 
-    .kbq-tab-body__wrapper {
-        padding-left: 20px;
-
-        p:first-child {
-            margin-top: 0;
-        }
-
-        p:last-child {
-            margin-bottom: 0;
-        }
-    }
+.tabs-vertical-example .kbq-tab-body__wrapper {
+    padding-left: 20px;
 }

@@ -1,16 +1,18 @@
-import { Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
- * @title Tab list with selection by tabId
+ * @title Tab list with selection by tab id
  */
 @Component({
     standalone: true,
-    selector: 'tab-active-tab-example',
+    selector: 'tabs-active-tab-id-example',
     imports: [
         KbqTabsModule,
-        KbqIconModule
+        KbqIconModule,
+        NgClass
     ],
     template: `
         <kbq-tab-group [(activeTab)]="selectedTabId">
@@ -23,18 +25,19 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         ></i>
                         {{ tab.tabId }}
                     </ng-template>
-                    Content for selected tab with tabId={{ selectedTabId }}
+                    Content for selected tab with id: {{ selectedTabId }}
                 </kbq-tab>
             }
         </kbq-tab-group>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabActiveTabExample {
-    selectedTabId = 'settings';
-
-    tabs = [
+export class TabsActiveTabIdExample {
+    readonly tabs = [
         { tabId: 'files', icon: 'kbq-folder-open_16' },
         { tabId: 'settings', icon: 'kbq-gear_16' },
         { tabId: 'tasks', icon: 'kbq-bars-horizontal_16' }
     ];
+
+    selectedTabId: string = 'settings';
 }

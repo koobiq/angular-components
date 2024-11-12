@@ -2505,30 +2505,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "table-with-borders-example.ts",
     "importPath": "components/table"
   },
-  "tab-active-tab-index": {
-    "packagePath": "components/tabs/tab-active-tab-index",
-    "title": "Tab list with selection by index",
-    "componentName": "TabActiveTabIndexExample",
-    "files": [
-      "tab-active-tab-index-example.ts"
-    ],
-    "selector": "tab-active-tab-index-example",
-    "additionalComponents": [],
-    "primaryFile": "tab-active-tab-index-example.ts",
-    "importPath": "components/tabs"
-  },
-  "tab-active-tab": {
-    "packagePath": "components/tabs/tab-active-tab",
-    "title": "Tab list with selection by tabId",
-    "componentName": "TabActiveTabExample",
-    "files": [
-      "tab-active-tab-example.ts"
-    ],
-    "selector": "tab-active-tab-example",
-    "additionalComponents": [],
-    "primaryFile": "tab-active-tab-example.ts",
-    "importPath": "components/tabs"
-  },
   "tabs-actionbar": {
     "packagePath": "components/tabs/tabs-actionbar",
     "title": "Tabs actionbar",
@@ -2542,17 +2518,41 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-actionbar-example.ts",
     "importPath": "components/tabs"
   },
-  "tabs-custom": {
-    "packagePath": "components/tabs/tabs-custom",
-    "title": "Tabs custom",
-    "componentName": "TabsCustomExample",
+  "tabs-active-tab-id": {
+    "packagePath": "components/tabs/tabs-active-tab-id",
+    "title": "Tab list with selection by tab id",
+    "componentName": "TabsActiveTabIdExample",
     "files": [
-      "tabs-custom-example.ts",
-      "tabs-custom-example.css"
+      "tabs-active-tab-id-example.ts"
     ],
-    "selector": "tabs-custom-example",
+    "selector": "tabs-active-tab-id-example",
     "additionalComponents": [],
-    "primaryFile": "tabs-custom-example.ts",
+    "primaryFile": "tabs-active-tab-id-example.ts",
+    "importPath": "components/tabs"
+  },
+  "tabs-active-tab-index": {
+    "packagePath": "components/tabs/tabs-active-tab-index",
+    "title": "Tab list with selection by index",
+    "componentName": "TabsActiveTabIndexExample",
+    "files": [
+      "tabs-active-tab-index-example.ts"
+    ],
+    "selector": "tabs-active-tab-index-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-active-tab-index-example.ts",
+    "importPath": "components/tabs"
+  },
+  "tabs-custom-label": {
+    "packagePath": "components/tabs/tabs-custom-label",
+    "title": "Tabs custom label",
+    "componentName": "TabsCustomLabelExample",
+    "files": [
+      "tabs-custom-label-example.ts",
+      "tabs-custom-label-example.css"
+    ],
+    "selector": "tabs-custom-label-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-custom-label-example.ts",
     "importPath": "components/tabs"
   },
   "tabs-disabled": {
@@ -2568,17 +2568,29 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tabs-disabled-example.ts",
     "importPath": "components/tabs"
   },
-  "tabs-empty": {
-    "packagePath": "components/tabs/tabs-empty",
-    "title": "Tabs empty",
-    "componentName": "TabsEmptyExample",
+  "tabs-empty-label": {
+    "packagePath": "components/tabs/tabs-empty-label",
+    "title": "Tabs empty label",
+    "componentName": "TabsEmptyLabelExample",
     "files": [
-      "tabs-empty-example.ts",
-      "tabs-empty-example.css"
+      "tabs-empty-label-example.ts",
+      "tabs-empty-label-example.css"
     ],
-    "selector": "tabs-empty-example",
+    "selector": "tabs-empty-label-example",
     "additionalComponents": [],
-    "primaryFile": "tabs-empty-example.ts",
+    "primaryFile": "tabs-empty-label-example.ts",
+    "importPath": "components/tabs"
+  },
+  "tabs-nav-bar-overview": {
+    "packagePath": "components/tabs/tabs-nav-bar-overview",
+    "title": "Tabs nav bar overview",
+    "componentName": "TabsNavBarOverviewExample",
+    "files": [
+      "tabs-nav-bar-overview-example.ts"
+    ],
+    "selector": "tabs-nav-bar-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "tabs-nav-bar-overview-example.ts",
     "importPath": "components/tabs"
   },
   "tabs-overview": {
@@ -3795,17 +3807,19 @@ return import('@koobiq/docs-examples/components/table');
 return import('@koobiq/docs-examples/components/table');
   case 'table-with-borders':
 return import('@koobiq/docs-examples/components/table');
-  case 'tab-active-tab-index':
-return import('@koobiq/docs-examples/components/tabs');
-  case 'tab-active-tab':
-return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-actionbar':
 return import('@koobiq/docs-examples/components/tabs');
-  case 'tabs-custom':
+  case 'tabs-active-tab-id':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-active-tab-index':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-custom-label':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-disabled':
 return import('@koobiq/docs-examples/components/tabs');
-  case 'tabs-empty':
+  case 'tabs-empty-label':
+return import('@koobiq/docs-examples/components/tabs');
+  case 'tabs-nav-bar-overview':
 return import('@koobiq/docs-examples/components/tabs');
   case 'tabs-overview':
 return import('@koobiq/docs-examples/components/tabs');

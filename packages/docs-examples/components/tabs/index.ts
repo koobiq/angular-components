@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { TabActiveTabIndexExample } from './tab-active-tab-index/tab-active-tab-index-example';
-import { TabActiveTabExample } from './tab-active-tab/tab-active-tab-example';
 import { TabsActionbarExample } from './tabs-actionbar/tabs-actionbar-example';
-import { TabsCustomExample } from './tabs-custom/tabs-custom-example';
+import { TabsActiveTabIdExample } from './tabs-active-tab-id/tabs-active-tab-id-example';
+import { TabsActiveTabIndexExample } from './tabs-active-tab-index/tabs-active-tab-index-example';
+import { TabsCustomLabelExample } from './tabs-custom-label/tabs-custom-label-example';
 import { TabsDisabledExample } from './tabs-disabled/tabs-disabled-example';
-import { TabsEmptyExample } from './tabs-empty/tabs-empty-example';
+import { TabsEmptyLabelExample } from './tabs-empty-label/tabs-empty-label-example';
+import { TabsNavBarOverviewExample } from './tabs-nav-bar-overview/tabs-nav-bar-overview-example';
 import { TabsOverviewExample } from './tabs-overview/tabs-overview-example';
 import { TabsStretchExample } from './tabs-stretch/tabs-stretch-example';
 import { TabsUnderlinedExample } from './tabs-underlined/tabs-underlined-example';
@@ -14,12 +15,13 @@ import { TabsWithScrollVerticalExample } from './tabs-with-scroll-vertical/tabs-
 import { TabsWithScrollExample } from './tabs-with-scroll/tabs-with-scroll-example';
 
 export {
-    TabActiveTabExample,
-    TabActiveTabIndexExample,
     TabsActionbarExample,
-    TabsCustomExample,
+    TabsActiveTabIdExample,
+    TabsActiveTabIndexExample,
+    TabsCustomLabelExample,
     TabsDisabledExample,
-    TabsEmptyExample,
+    TabsEmptyLabelExample,
+    TabsNavBarOverviewExample,
     TabsOverviewExample,
     TabsStretchExample,
     TabsUnderlinedExample,
@@ -30,19 +32,20 @@ export {
 };
 
 const EXAMPLES = [
+    TabsActiveTabIdExample,
+    TabsActiveTabIndexExample,
     TabsActionbarExample,
-    TabsCustomExample,
-    TabsOverviewExample,
+    TabsCustomLabelExample,
     TabsDisabledExample,
+    TabsEmptyLabelExample,
+    TabsNavBarOverviewExample,
+    TabsOverviewExample,
     TabsStretchExample,
     TabsUnderlinedExample,
     TabsVerticalExample,
     TabsVerticalIconsExample,
     TabsWithScrollExample,
-    TabsWithScrollVerticalExample,
-    TabsEmptyExample,
-    TabActiveTabExample,
-    TabActiveTabIndexExample
+    TabsWithScrollVerticalExample
 ];
 
 @NgModule({
