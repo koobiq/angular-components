@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "$id": "koobiq-components-new-icons-pack",
-    "title": "koobiq-components new-icons-pack schematic",
+    "$id": "koobiq-components-css-selectors",
+    "title": "koobiq-components css-selectors schematic",
     "type": "object",
     "properties": {
         "project": {
