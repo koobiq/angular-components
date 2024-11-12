@@ -1,9 +1,3 @@
-.kbq-button-icon {
-    --kbq-button-icon-size-horizontal-padding: var(--kbq-size-s);
-    --kbq-button-icon-size-vertical-padding: var(--kbq-size-s);
-    --kbq-button-icon-size-content-padding: var(--kbq-size-xxs);
-}
-
 .kbq-button,
 .kbq-button-icon {
     --kbq-button-size-height: var(--kbq-size-3xl);
@@ -11,6 +5,9 @@
     --kbq-button-size-border-radius: var(--kbq-size-border-radius);
     --kbq-button-size-horizontal-padding: var(--kbq-size-m);
     --kbq-button-size-content-padding: var(--kbq-size-xs);
+    --kbq-button-icon-size-horizontal-padding: var(--kbq-size-s);
+    --kbq-button-icon-size-vertical-padding: var(--kbq-size-s);
+    --kbq-button-icon-size-content-padding: var(--kbq-size-xxs);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
