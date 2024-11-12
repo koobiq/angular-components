@@ -28,11 +28,11 @@ export default function cssSelectors(options: Schema): Rule {
         const handleCssSelectors = (newContent: string | undefined, path: Path) => {
             if (fix) {
                 data.forEach(({ replace, replaceWith }) => {
-                    newContent = newContent!.replace(new RegExp(`^${replace}$`, 'g'), replaceWith);
+                    newContent = newContent!.replace(new RegExp(`\\b${replace}\\b`, 'g'), replaceWith);
                 });
             } else {
-                const foundSelectors = data.filter(
-                    ({ replace }) => newContent!.match(new RegExp(`^${replace}$`, 'g'))?.index !== -1
+                const foundSelectors = data.filter(({ replace }) =>
+                    new RegExp(`\\b${replace}\\b`, 'g').exec(newContent!)
                 );
                 if (foundSelectors.length) {
                     showWarning(path, foundSelectors, logger);
@@ -64,8 +64,11 @@ export default function cssSelectors(options: Schema): Rule {
 
 function showWarning(filePath: Path, foundSelectors: ReplaceData[], logger: LoggerApi) {
     logger.warn('-------------------------');
-    logger.warn(`Please pay attention! Found deprecated icons in file: `);
-    logger.info(`${bold(italic(blue(path.resolve(`.${filePath}`))))}`);
+    logger.warn(`Please pay attention! Found deprecated сss-selectors in file: `);
+    logger.info(`${bold(italic(blue(path.resolve(`.${filePath}`).replace(/\\/g, '/'))))}`);
+    logger.warn(`Replace with specified rules: `);
     logger.warn(foundSelectors.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n'));
+    logger.warn(`Or use ${bold(italic('--fix=true'))} to replace automatically`);
+    logger.warn('Pay attention: overwriting is possible. Check the code after automatic replacement was done.');
     logger.warn('-------------------------');
 }
