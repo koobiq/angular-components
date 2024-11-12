@@ -52,6 +52,6 @@
     }
 
     .docs-icons-viewer__table-empty-results {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, display-normal);
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, display-compact);
     }
 }
