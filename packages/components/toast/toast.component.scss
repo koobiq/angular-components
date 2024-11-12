@@ -94,6 +94,11 @@
             )]
     );
     margin-right: var(--kbq-toast-size-close-button-margin-right);
+
+    &.kbq-icon-button {
+        --kbq-icon-button-size-normal-horizontal-padding: 4px;
+        --kbq-icon-button-size-normal-vertical-padding: 4px;
+    }
 }
 
 @include kbq-toast-theme();
