@@ -51,7 +51,7 @@ exports[`css-selectors should run migration for specified project: project app: 
 <div class="kbq-text-compact"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-text-normal-strong';
+    dynamicClass = 'kbq-display-big-strong';
 }",
   ".kbq-display-big-strong {}
 .kbq-display-normal-strong {}
@@ -129,7 +129,7 @@ exports[`css-selectors should run migration for specified project: project app: 
 <div class="kbq-extra-small-text"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-caption-strong';
+    dynamicClass = 'kbq-display-1-strong';
 }",
   ".kbq-display-1-strong {}
 .kbq-display-2-strong {}
@@ -207,7 +207,7 @@ exports[`css-selectors should run migration for specified project: project secon
 <div class="kbq-extra-small-text"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-caption-strong';
+    dynamicClass = 'kbq-display-1-strong';
 }",
   ".kbq-display-1-strong {}
 .kbq-display-2-strong {}
@@ -285,7 +285,7 @@ exports[`css-selectors should run migration for specified project: project secon
 <div class="kbq-extra-small-text"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-caption-strong';
+    dynamicClass = 'kbq-display-1-strong';
 }",
   ".kbq-display-1-strong {}
 .kbq-display-2-strong {}
@@ -363,7 +363,7 @@ exports[`css-selectors should run migration for whole tree: project app: after c
 <div class="kbq-text-compact"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-text-normal-strong';
+    dynamicClass = 'kbq-display-big-strong';
 }",
   ".kbq-display-big-strong {}
 .kbq-display-normal-strong {}
@@ -441,7 +441,7 @@ exports[`css-selectors should run migration for whole tree: project app: before 
 <div class="kbq-extra-small-text"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-caption-strong';
+    dynamicClass = 'kbq-display-1-strong';
 }",
   ".kbq-display-1-strong {}
 .kbq-display-2-strong {}
@@ -519,7 +519,7 @@ exports[`css-selectors should run migration for whole tree: project second-app: 
 <div class="kbq-text-compact"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-text-normal-strong';
+    dynamicClass = 'kbq-display-big-strong';
 }",
   ".kbq-display-big-strong {}
 .kbq-display-normal-strong {}
@@ -597,7 +597,7 @@ exports[`css-selectors should run migration for whole tree: project second-app: 
 <div class="kbq-extra-small-text"></div>'
 })
 class TestApp {
-    dynamicClass = 'kbq-caption-strong';
+    dynamicClass = 'kbq-display-1-strong';
 }",
   ".kbq-display-1-strong {}
 .kbq-display-2-strong {}

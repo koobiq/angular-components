@@ -22,7 +22,7 @@ const componentClass = `
     template: '${elementsWithDeprecatedSelectors}'
 })
 class TestApp {
-    dynamicClass = 'kbq-caption-strong';
+    dynamicClass = '${cssSelectorsReplacement[0].replace}';
 }`;
 
 const getProjectContent = (tree: UnitTestTree | Tree, project: ProjectDefinition) => {
