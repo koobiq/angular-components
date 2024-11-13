@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
 interface ICheckbox {
@@ -12,7 +12,6 @@ interface ICheckbox {
 @Component({
     standalone: true,
     selector: 'checkbox-indeterminate-example',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqCheckboxModule
     ],

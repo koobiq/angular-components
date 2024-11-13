@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -53,7 +53,6 @@ body {
 @Component({
     standalone: true,
     selector: 'code-block-styling-example',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqToggleModule,
         FormsModule,

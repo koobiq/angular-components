@@ -11,7 +11,7 @@ const maxFileExceeded = (file: File): string | null => {
 };
 
 /**
- * @title file upload Multiple error
+ * @title File-upload multiple error
  */
 @Component({
     standalone: true,

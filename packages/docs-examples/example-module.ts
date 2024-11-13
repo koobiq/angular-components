@@ -459,11 +459,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "checkbox-overview": {
     "packagePath": "components/checkbox/checkbox-overview",
-    "title": "Checkbox overview",
+    "title": "Checkbox",
     "componentName": "CheckboxOverviewExample",
     "files": [
       "checkbox-overview-example.ts",
-      "checkbox-overview-example.html"
+      "checkbox-overview-example.html",
+      "checkbox-overview-example.css"
     ],
     "selector": "checkbox-overview-example",
     "additionalComponents": [],
@@ -475,7 +476,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Pseudo checkbox",
     "componentName": "PseudoCheckboxExample",
     "files": [
-      "pseudo-checkbox-example.ts"
+      "pseudo-checkbox-example.ts",
+      "pseudo-checkbox-example.css"
     ],
     "selector": "pseudo-checkbox-example",
     "additionalComponents": [],
@@ -499,7 +501,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Code-block cut",
     "componentName": "CodeBlockCutExample",
     "files": [
-      "code-block-cut-example.ts"
+      "code-block-cut-example.ts",
+      "code-block-cut-example.css"
     ],
     "selector": "code-block-cut-example",
     "additionalComponents": [],
@@ -508,7 +511,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-line-numbers": {
     "packagePath": "components/code-block/code-block-line-numbers",
-    "title": "Basic code-block-line-numbers",
+    "title": "Code-block line numbers",
     "componentName": "CodeBlockLineNumbersExample",
     "files": [
       "code-block-line-numbers-example.ts"
@@ -520,7 +523,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-line-wrap": {
     "packagePath": "components/code-block/code-block-line-wrap",
-    "title": "Basic code-block-line-wrap",
+    "title": "Code-block line wrap",
     "componentName": "CodeBlockLineWrapExample",
     "files": [
       "code-block-line-wrap-example.ts"
@@ -532,10 +535,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-noborder": {
     "packagePath": "components/code-block/code-block-noborder",
-    "title": "Code block no border",
+    "title": "Code-block noborder",
     "componentName": "CodeBlockNoborderExample",
     "files": [
-      "code-block-noborder-example.ts"
+      "code-block-noborder-example.ts",
+      "code-block-noborder-example.css"
     ],
     "selector": "code-block-noborder-example",
     "additionalComponents": [],
@@ -583,7 +587,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Code-block tabs with overflow",
     "componentName": "CodeBlockTabsWithOverflowExample",
     "files": [
-      "code-block-tabs-with-overflow-example.ts"
+      "code-block-tabs-with-overflow-example.ts",
+      "code-block-tabs-with-overflow-example.css"
     ],
     "selector": "code-block-tabs-with-overflow-example",
     "additionalComponents": [],
@@ -975,7 +980,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-cva-overview": {
     "packagePath": "components/file-upload/file-upload-cva-overview",
-    "title": "File upload with Control Value Accessor",
+    "title": "File-upload with control value accessor",
     "componentName": "FileUploadCvaOverviewExample",
     "files": [
       "file-upload-cva-overview-example.ts"
@@ -987,7 +992,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-indeterminate-loading-overview": {
     "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
-    "title": "File Upload Indeterminate Loading",
+    "title": "File-upload indeterminate loading",
     "componentName": "FileUploadIndeterminateLoadingOverviewExample",
     "files": [
       "file-upload-indeterminate-loading-overview-example.ts"
@@ -999,7 +1004,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
-    "title": "File Upload Multiple Compact",
+    "title": "File-upload multiple compact",
     "componentName": "FileUploadMultipleCompactOverviewExample",
     "files": [
       "file-upload-multiple-compact-overview-example.ts"
@@ -1011,7 +1016,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-custom-text-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-custom-text-overview",
-    "title": "file upload multiple custom text",
+    "title": "File-upload multiple custom text",
     "componentName": "FileUploadMultipleCustomTextOverviewExample",
     "files": [
       "file-upload-multiple-custom-text-overview-example.ts"
@@ -1023,7 +1028,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-default-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-overview",
-    "title": "File Upload Multiple Default",
+    "title": "File-upload multiple default",
     "componentName": "FileUploadMultipleDefaultOverviewExample",
     "files": [
       "file-upload-multiple-default-overview-example.ts"
@@ -1035,7 +1040,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-default-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-validation-reactive-forms-overview",
-    "title": "File Upload Multiple Default Validation Reactive Forms",
+    "title": "File-upload multiple default validation reactive forms",
     "componentName": "FileUploadMultipleDefaultValidationReactiveFormsOverviewExample",
     "files": [
       "file-upload-multiple-default-validation-reactive-forms-overview-example.ts"
@@ -1047,7 +1052,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-error-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-error-overview",
-    "title": "file upload Multiple error",
+    "title": "File-upload multiple error",
     "componentName": "FileUploadMultipleErrorOverviewExample",
     "files": [
       "file-upload-multiple-error-overview-example.ts"
@@ -1059,7 +1064,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-error-overview": {
     "packagePath": "components/file-upload/file-upload-single-error-overview",
-    "title": "file upload single error",
+    "title": "File-upload single error",
     "componentName": "FileUploadSingleErrorOverviewExample",
     "files": [
       "file-upload-single-error-overview-example.ts"
@@ -1071,7 +1076,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-overview": {
     "packagePath": "components/file-upload/file-upload-single-overview",
-    "title": "File Upload Single",
+    "title": "File-upload single",
     "componentName": "FileUploadSingleOverviewExample",
     "files": [
       "file-upload-single-overview-example.ts"
@@ -1083,7 +1088,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-single-validation-reactive-forms-overview",
-    "title": "File Upload Single Validation Reactive Forms",
+    "title": "File-upload single validation reactive forms",
     "componentName": "FileUploadSingleValidationReactiveFormsOverviewExample",
     "files": [
       "file-upload-single-validation-reactive-forms-overview-example.ts"

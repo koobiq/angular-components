@@ -4,7 +4,7 @@ import { timer } from 'rxjs';
 import { take } from 'rxjs/operators';
 
 /**
- * @title File Upload Indeterminate Loading
+ * @title File-upload indeterminate loading
  */
 @Component({
     standalone: true,

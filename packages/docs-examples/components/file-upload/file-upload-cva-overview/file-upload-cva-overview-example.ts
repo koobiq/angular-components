@@ -3,7 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 
 /**
- * @title File upload with Control Value Accessor
+ * @title File-upload with control value accessor
  */
 @Component({
     standalone: true,

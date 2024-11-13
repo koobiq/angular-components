@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 @Component({
     standalone: true,
     selector: 'icon-item-color-example',
-    styleUrl: 'icon-item-color-example.css',
+    styleUrls: ['icon-item-color-example.css'],
     imports: [
         KbqIconModule
     ],

@@ -1,11 +1,11 @@
-.code-block_no-border .kbq-tab-group {
+.code-block_no-border ::ng-deep .kbq-tab-group {
     height: 100%;
 }
 
-.code-block_no-border .kbq-tab-body__wrapper {
+.code-block_no-border ::ng-deep .kbq-tab-body__wrapper {
     border: none;
+}
 
-    .kbq-code-block__code > code {
-        padding: 0 0;
-    }
+.code-block_no-border ::ng-deep .kbq-code-block__code > code {
+    padding: 0 0;
 }

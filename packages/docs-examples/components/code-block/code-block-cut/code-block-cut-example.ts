@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 
 const codeJs2 = `function askPassword(ok, fail) {
@@ -30,8 +30,7 @@ askPassword(user.loginOk, user.loginFail);`;
 @Component({
     standalone: true,
     selector: 'code-block-cut-example',
-    styleUrl: 'code-block-cut-example.css',
-    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['code-block-cut-example.css'],
     imports: [
         KbqCodeBlockModule
     ],

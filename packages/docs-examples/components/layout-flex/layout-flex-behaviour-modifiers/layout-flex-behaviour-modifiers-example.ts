@@ -8,7 +8,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 @Component({
     standalone: true,
     selector: 'layout-flex-behaviour-modifiers-example',
-    styleUrl: 'layout-flex-behaviour-modifiers-example.css',
+    styleUrls: ['layout-flex-behaviour-modifiers-example.css'],
     imports: [
         KbqRadioModule,
         FormsModule
