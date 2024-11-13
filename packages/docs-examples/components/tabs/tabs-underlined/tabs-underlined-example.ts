@@ -8,7 +8,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-underlined-example',
-    styleUrl: 'tabs-underlined-example.css',
+    styleUrls: ['tabs-underlined-example.css'],
     imports: [
         KbqTabsModule,
         KbqIconModule

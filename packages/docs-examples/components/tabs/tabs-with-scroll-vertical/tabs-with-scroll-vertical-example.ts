@@ -7,7 +7,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-with-scroll-vertical-example',
-    styleUrl: 'tabs-with-scroll-vertical-example.css',
+    styleUrls: ['tabs-with-scroll-vertical-example.css'],
     imports: [KbqTabsModule],
     encapsulation: ViewEncapsulation.None,
     template: `

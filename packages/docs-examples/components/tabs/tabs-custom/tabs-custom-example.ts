@@ -8,7 +8,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-custom-example',
-    styleUrl: 'tabs-custom-example.css',
+    styleUrls: ['tabs-custom-example.css'],
     imports: [
         KbqTabsModule,
         KbqIconModule

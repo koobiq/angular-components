@@ -7,7 +7,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-disabled-example',
-    styleUrl: 'tabs-disabled-example.css',
+    styleUrls: ['tabs-disabled-example.css'],
     imports: [
         KbqTabsModule
     ],

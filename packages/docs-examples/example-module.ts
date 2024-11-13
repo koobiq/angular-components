@@ -1212,7 +1212,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "HorizontalFormLabelsExample",
     "files": [
       "horizontal-form-labels-example.ts",
-      "horizontal-form-labels-example.html"
+      "horizontal-form-labels-example.html",
+      "horizontal-form-labels-example.css"
     ],
     "selector": "horizontal-form-labels-example",
     "additionalComponents": [],
@@ -1250,7 +1251,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon-item color",
     "componentName": "IconItemColorExample",
     "files": [
-      "icon-item-color-example.ts"
+      "icon-item-color-example.ts",
+      "icon-item-color-example.css"
     ],
     "selector": "icon-item-color-example",
     "additionalComponents": [],
@@ -1262,7 +1264,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon-item",
     "componentName": "IconItemDefaultExample",
     "files": [
-      "icon-item-default-example.ts"
+      "icon-item-default-example.ts",
+      "icon-item-default-example.css"
     ],
     "selector": "icon-item-default-example",
     "additionalComponents": [],
@@ -1274,7 +1277,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon-item size",
     "componentName": "IconItemSizeExample",
     "files": [
-      "icon-item-size-example.ts"
+      "icon-item-size-example.ts",
+      "icon-item-size-example.css"
     ],
     "selector": "icon-item-size-example",
     "additionalComponents": [],
@@ -1286,7 +1290,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon Item Variant",
     "componentName": "IconItemVariantExample",
     "files": [
-      "icon-item-variant-example.ts"
+      "icon-item-variant-example.ts",
+      "icon-item-variant-example.css"
     ],
     "selector": "icon-item-variant-example",
     "additionalComponents": [],
@@ -1334,7 +1339,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex alignment",
     "componentName": "LayoutFlexAlignmentExample",
     "files": [
-      "layout-flex-alignment-example.ts"
+      "layout-flex-alignment-example.ts",
+      "layout-flex-alignment-example.css"
     ],
     "selector": "layout-flex-alignment-example",
     "additionalComponents": [],
@@ -1346,7 +1352,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex behaviour modifiers",
     "componentName": "LayoutFlexBehaviourModifiersExample",
     "files": [
-      "layout-flex-behaviour-modifiers-example.ts"
+      "layout-flex-behaviour-modifiers-example.ts",
+      "layout-flex-behaviour-modifiers-example.css"
     ],
     "selector": "layout-flex-behaviour-modifiers-example",
     "additionalComponents": [],
@@ -1358,7 +1365,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex offsets",
     "componentName": "LayoutFlexOffsetsExample",
     "files": [
-      "layout-flex-offsets-example.ts"
+      "layout-flex-offsets-example.ts",
+      "layout-flex-offsets-example.css"
     ],
     "selector": "layout-flex-offsets-example",
     "additionalComponents": [],
@@ -1370,7 +1378,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex order",
     "componentName": "LayoutFlexOrderExample",
     "files": [
-      "layout-flex-order-example.ts"
+      "layout-flex-order-example.ts",
+      "layout-flex-order-example.css"
     ],
     "selector": "layout-flex-order-example",
     "additionalComponents": [],
@@ -1382,7 +1391,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex",
     "componentName": "LayoutFlexOverviewExample",
     "files": [
-      "layout-flex-overview-example.ts"
+      "layout-flex-overview-example.ts",
+      "layout-flex-overview-example.css"
     ],
     "selector": "layout-flex-overview-example",
     "additionalComponents": [],
@@ -1418,7 +1428,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Link color",
     "componentName": "LinkColorExample",
     "files": [
-      "link-color-example.ts"
+      "link-color-example.ts",
+      "link-color-example.css"
     ],
     "selector": "link-color-example",
     "additionalComponents": [],
@@ -1671,7 +1682,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownArticleExample",
     "files": [
       "markdown-article-example.ts",
-      "./markdown-article-example.html"
+      "./markdown-article-example.html",
+      "./markdown-article-example.css"
     ],
     "selector": "markdown-article-example",
     "additionalComponents": [],
@@ -1981,7 +1993,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "PopoverCloseExample",
     "files": [
       "popover-close-example.ts",
-      "popover-close-example.html"
+      "popover-close-example.html",
+      "popover-close-example.css"
     ],
     "selector": "popover-close-example",
     "additionalComponents": [],
@@ -2006,7 +2019,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "PopoverContentExample",
     "files": [
       "popover-content-example.ts",
-      "popover-content-example.html"
+      "popover-content-example.html",
+      "popover-content-example.css"
     ],
     "selector": "popover-content-example",
     "additionalComponents": [],
@@ -2313,7 +2327,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel modal mode",
     "componentName": "SidepanelModalModeExample",
     "files": [
-      "sidepanel-modal-mode-example.ts"
+      "sidepanel-modal-mode-example.ts",
+      "sidepanel-modal-mode-example.html"
     ],
     "selector": "sidepanel-modal-mode-example",
     "additionalComponents": [],
@@ -2325,7 +2340,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel normal mode",
     "componentName": "SidepanelNormalModeExample",
     "files": [
-      "sidepanel-normal-mode-example.ts"
+      "sidepanel-normal-mode-example.ts",
+      "sidepanel-normal-mode-example.html"
     ],
     "selector": "sidepanel-normal-mode-example",
     "additionalComponents": [],
@@ -2350,7 +2366,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel sizes",
     "componentName": "SidepanelSizesExample",
     "files": [
-      "sidepanel-sizes-example.ts"
+      "sidepanel-sizes-example.ts",
+      "sidepanel-sizes-example.html"
     ],
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
@@ -2483,7 +2500,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs actionbar",
     "componentName": "TabsActionbarExample",
     "files": [
-      "tabs-actionbar-example.ts"
+      "tabs-actionbar-example.ts",
+      "tabs-actionbar-example.css"
     ],
     "selector": "tabs-actionbar-example",
     "additionalComponents": [],
@@ -2495,7 +2513,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs custom",
     "componentName": "TabsCustomExample",
     "files": [
-      "tabs-custom-example.ts"
+      "tabs-custom-example.ts",
+      "tabs-custom-example.css"
     ],
     "selector": "tabs-custom-example",
     "additionalComponents": [],
@@ -2507,7 +2526,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs disabled",
     "componentName": "TabsDisabledExample",
     "files": [
-      "tabs-disabled-example.ts"
+      "tabs-disabled-example.ts",
+      "tabs-disabled-example.css"
     ],
     "selector": "tabs-disabled-example",
     "additionalComponents": [],
@@ -2519,7 +2539,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs empty",
     "componentName": "TabsEmptyExample",
     "files": [
-      "tabs-empty-example.ts"
+      "tabs-empty-example.ts",
+      "tabs-empty-example.css"
     ],
     "selector": "tabs-empty-example",
     "additionalComponents": [],
@@ -2555,7 +2576,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs underlined",
     "componentName": "TabsUnderlinedExample",
     "files": [
-      "tabs-underlined-example.ts"
+      "tabs-underlined-example.ts",
+      "tabs-underlined-example.css"
     ],
     "selector": "tabs-underlined-example",
     "additionalComponents": [],
@@ -2567,7 +2589,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical icons",
     "componentName": "TabsVerticalIconsExample",
     "files": [
-      "tabs-vertical-icons-example.ts"
+      "tabs-vertical-icons-example.ts",
+      "tabs-vertical-icons-example.css"
     ],
     "selector": "tabs-vertical-icons-example",
     "additionalComponents": [],
@@ -2579,7 +2602,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical",
     "componentName": "TabsVerticalExample",
     "files": [
-      "tabs-vertical-example.ts"
+      "tabs-vertical-example.ts",
+      "tabs-vertical-example.css"
     ],
     "selector": "tabs-vertical-example",
     "additionalComponents": [],
@@ -2591,7 +2615,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs with scroll vertical",
     "componentName": "TabsWithScrollVerticalExample",
     "files": [
-      "tabs-with-scroll-vertical-example.ts"
+      "tabs-with-scroll-vertical-example.ts",
+      "tabs-with-scroll-vertical-example.css"
     ],
     "selector": "tabs-with-scroll-vertical-example",
     "additionalComponents": [],
