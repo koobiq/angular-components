@@ -3,6 +3,7 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { first } from 'rxjs';
 import { createTestApp } from '../utils/testing';
 import { newIconsPackData } from './data';
 
@@ -133,7 +134,7 @@ describe('new-icons-pack', () => {
         });
 
         // simply check for messages to be sent
-        runner.logger.subscribe(({ message }) => {
+        runner.logger.pipe(first()).subscribe(({ message }) => {
             expect(message).toBeTruthy();
             done();
         });
