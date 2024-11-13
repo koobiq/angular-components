@@ -294,7 +294,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ButtonToggleAlignmentOverviewExample",
     "files": [
       "button-toggle-alignment-overview-example.ts",
-      "button-toggle-alignment-overview-example.html"
+      "button-toggle-alignment-overview-example.html",
+      "button-toggle-alignment-overview-example.css"
     ],
     "selector": "button-toggle-alignment-overview-example",
     "additionalComponents": [],
@@ -345,7 +346,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button toggle tooltip",
     "componentName": "ButtonToggleTooltipOverviewExample",
     "files": [
-      "button-toggle-tooltip-overview-example.ts"
+      "button-toggle-tooltip-overview-example.ts",
+      "button-toggle-tooltip-overview-example.css"
     ],
     "selector": "button-toggle-tooltip-overview-example",
     "additionalComponents": [],
@@ -423,8 +425,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button loading state",
     "componentName": "ButtonLoadingStateExample",
     "files": [
-      "button-loading-state-example.ts",
-      "button-loading-state-example.css"
+      "button-loading-state-example.ts"
     ],
     "selector": "button-loading-state-example",
     "additionalComponents": [],

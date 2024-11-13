@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -9,8 +9,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 @Component({
     standalone: true,
     selector: 'button-toggle-tooltip-overview-example',
-    styleUrl: 'button-toggle-tooltip-overview-example.css',
-    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['button-toggle-tooltip-overview-example.css'],
     imports: [
         KbqButtonToggleModule,
         FormsModule,

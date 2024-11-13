@@ -5,7 +5,7 @@
     white-space: nowrap;
 }
 
-.fill-content__example-button .kbq-button-wrapper {
+.fill-content__example-button ::ng-deep .kbq-button-wrapper {
     display: inline-block;
     flex-grow: 1;
     overflow: hidden;

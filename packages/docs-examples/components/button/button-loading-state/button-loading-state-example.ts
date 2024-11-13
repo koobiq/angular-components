@@ -8,7 +8,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 @Component({
     standalone: true,
     selector: 'button-loading-state-example',
-    styleUrls: ['button-loading-state-example.css'],
     imports: [
         KbqButtonModule
     ],
