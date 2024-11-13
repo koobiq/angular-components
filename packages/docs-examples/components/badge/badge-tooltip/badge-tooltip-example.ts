@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -10,7 +10,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     standalone: true,
     selector: 'badge-tooltip-example',
     styleUrls: ['badge-tooltip-example.css'],
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqBadgeModule,
         KbqToolTipModule

@@ -3,7 +3,7 @@ import { KbqAccordionModule, KbqAccordionVariant } from '@koobiq/components/acco
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 
 /**
- * @title accordion-states
+ * @title Accordion states
  */
 @Component({
     standalone: true,

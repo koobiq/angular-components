@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
@@ -15,8 +15,7 @@ import { KbqTableModule } from '@koobiq/components/table';
         KbqBadgeModule,
         KbqLinkModule,
         KbqTableModule
-    ],
-    encapsulation: ViewEncapsulation.None
+    ]
 })
 export class BadgeTableExample {
     colors = KbqBadgeColors;

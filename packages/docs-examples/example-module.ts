@@ -26,11 +26,12 @@ export interface LiveExample {
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   "accordion-content": {
     "packagePath": "components/accordion/accordion-content",
-    "title": "accordion-content",
+    "title": "Accordion content",
     "componentName": "AccordionContentExample",
     "files": [
       "accordion-content-example.ts",
-      "accordion-content-example.html"
+      "accordion-content-example.html",
+      "accordion-content-example.css"
     ],
     "selector": "accordion-content-example",
     "additionalComponents": [],
@@ -39,7 +40,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-header": {
     "packagePath": "components/accordion/accordion-header",
-    "title": "accordion-header",
+    "title": "Accordion header",
     "componentName": "AccordionHeaderExample",
     "files": [
       "accordion-header-example.ts",
@@ -52,7 +53,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-in-panel": {
     "packagePath": "components/accordion/accordion-in-panel",
-    "title": "accordion-in-panel",
+    "title": "Accordion in panel",
     "componentName": "AccordionInPanelExample",
     "files": [
       "accordion-in-panel-example.ts",
@@ -65,11 +66,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-in-section": {
     "packagePath": "components/accordion/accordion-in-section",
-    "title": "accordion-in-section",
+    "title": "Accordion in section",
     "componentName": "AccordionInSectionExample",
     "files": [
       "accordion-in-section-example.ts",
-      "accordion-in-section-example.html"
+      "accordion-in-section-example.html",
+      "accordion-in-section-example.css"
     ],
     "selector": "accordion-in-section-example",
     "additionalComponents": [],
@@ -78,7 +80,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-inactive-section": {
     "packagePath": "components/accordion/accordion-inactive-section",
-    "title": "accordion-inactive-section",
+    "title": "Accordion inactive section",
     "componentName": "AccordionInactiveSectionExample",
     "files": [
       "accordion-inactive-section-example.ts",
@@ -91,7 +93,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-overview": {
     "packagePath": "components/accordion/accordion-overview",
-    "title": "accordion-overview",
+    "title": "Accordion",
     "componentName": "AccordionOverviewExample",
     "files": [
       "accordion-overview-example.ts",
@@ -104,7 +106,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-sections": {
     "packagePath": "components/accordion/accordion-sections",
-    "title": "accordion-sections",
+    "title": "Accordion sections",
     "componentName": "AccordionSectionsExample",
     "files": [
       "accordion-sections-example.ts",
@@ -117,7 +119,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-states": {
     "packagePath": "components/accordion/accordion-states",
-    "title": "accordion-states",
+    "title": "Accordion states",
     "componentName": "AccordionStatesExample",
     "files": [
       "accordion-states-example.ts",
@@ -130,7 +132,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
-    "title": "Alert Close",
+    "title": "Alert close",
     "componentName": "AlertCloseExample",
     "files": [
       "alert-close-example.ts"
@@ -142,11 +144,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-content": {
     "packagePath": "components/alert/alert-content",
-    "title": "Alert",
+    "title": "Alert content",
     "componentName": "AlertContentExample",
     "files": [
       "alert-content-example.ts",
-      "alert-content-example.html"
+      "alert-content-example.html",
+      "alert-content-example.css"
     ],
     "selector": "alert-content-example",
     "additionalComponents": [],
@@ -155,11 +158,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-size": {
     "packagePath": "components/alert/alert-size",
-    "title": "Alert Size",
+    "title": "Alert size",
     "componentName": "AlertSizeExample",
     "files": [
       "alert-size-example.ts",
-      "alert-size-example.html"
+      "alert-size-example.html",
+      "alert-size-example.css"
     ],
     "selector": "alert-size-example",
     "additionalComponents": [],
@@ -168,7 +172,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-status": {
     "packagePath": "components/alert/alert-status",
-    "title": "Alert Status",
+    "title": "Alert status",
     "componentName": "AlertStatusExample",
     "files": [
       "alert-status-example.ts",
@@ -181,10 +185,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-variants": {
     "packagePath": "components/alert/alert-variants",
-    "title": "Alert Variants",
+    "title": "Alert variants",
     "componentName": "AlertVariantsExample",
     "files": [
-      "alert-variants-example.ts"
+      "alert-variants-example.ts",
+      "alert-variants-example.css"
     ],
     "selector": "alert-variants-example",
     "additionalComponents": [],
@@ -193,7 +198,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "autocomplete-overview": {
     "packagePath": "components/autocomplete/autocomplete-overview",
-    "title": "Basic Input",
+    "title": "Autocomplete",
     "componentName": "AutocompleteOverviewExample",
     "files": [
       "autocomplete-overview-example.ts"
@@ -352,7 +357,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button content",
     "componentName": "ButtonContentExample",
     "files": [
-      "button-content-example.ts"
+      "button-content-example.ts",
+      "button-content-example.css"
     ],
     "selector": "button-content-example",
     "additionalComponents": [],
@@ -365,7 +371,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ButtonFillAndStyleExample",
     "files": [
       "button-fill-and-style-example.ts",
-      "button-fill-and-style-example.html"
+      "button-fill-and-style-example.html",
+      "button-fill-and-style-example.css"
     ],
     "selector": "button-fill-and-style-example",
     "additionalComponents": [],
@@ -377,7 +384,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button fill content",
     "componentName": "ButtonFillContentExample",
     "files": [
-      "button-fill-content-example.ts"
+      "button-fill-content-example.ts",
+      "button-fill-content-example.css"
     ],
     "selector": "button-fill-content-example",
     "additionalComponents": [],
@@ -389,7 +397,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button fixed content",
     "componentName": "ButtonFixedContentExample",
     "files": [
-      "button-fixed-content-example.ts"
+      "button-fixed-content-example.ts",
+      "button-fixed-content-example.css"
     ],
     "selector": "button-fixed-content-example",
     "additionalComponents": [],
@@ -401,7 +410,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button hug content",
     "componentName": "ButtonHugContentExample",
     "files": [
-      "button-hug-content-example.ts"
+      "button-hug-content-example.ts",
+      "button-hug-content-example.css"
     ],
     "selector": "button-hug-content-example",
     "additionalComponents": [],
@@ -413,7 +423,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button loading state",
     "componentName": "ButtonLoadingStateExample",
     "files": [
-      "button-loading-state-example.ts"
+      "button-loading-state-example.ts",
+      "button-loading-state-example.css"
     ],
     "selector": "button-loading-state-example",
     "additionalComponents": [],
@@ -425,7 +436,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button overview",
     "componentName": "ButtonOverviewExample",
     "files": [
-      "button-overview-example.ts"
+      "button-overview-example.ts",
+      "button-overview-example.css"
     ],
     "selector": "button-overview-example",
     "additionalComponents": [],

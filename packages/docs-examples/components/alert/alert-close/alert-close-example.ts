@@ -6,7 +6,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title Alert Close
+ * @title Alert close
  */
 @Component({
     standalone: true,

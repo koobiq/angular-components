@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 
 /**
@@ -8,7 +8,6 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     standalone: true,
     selector: 'badge-list-example',
     styleUrls: ['badge-list-example.css'],
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqBadgeModule
     ],

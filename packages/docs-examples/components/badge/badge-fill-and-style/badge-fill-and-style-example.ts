@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 
 /**
@@ -11,8 +11,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     styleUrls: ['badge-fill-and-style-example.css'],
     imports: [
         KbqBadgeModule
-    ],
-    encapsulation: ViewEncapsulation.None
+    ]
 })
 export class BadgeFillAndStyleExample {
     colors = KbqBadgeColors;

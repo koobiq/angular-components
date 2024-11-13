@@ -1,17 +1,17 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title Alert Variants
+ * @title Alert variants
  */
 @Component({
     standalone: true,
     selector: 'alert-variants-example',
-    styleUrl: 'alert-variants-example.css',
+    styleUrls: ['alert-variants-example.css'],
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),
@@ -20,7 +20,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             transition('true => false', animate('.2s'))])
 
     ],
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqAlertModule,
         KbqIconModule
