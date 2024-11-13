@@ -1,7 +1,6 @@
 export interface ReplaceData {
     replace: string;
     replaceWith: string;
-    comment?: string;
 }
 
 export const cssSelectorsReplacement: ReplaceData[] = [

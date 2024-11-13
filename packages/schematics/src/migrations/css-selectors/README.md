@@ -1,21 +1,19 @@
 ### New Icons Pack schematics
 
-This schematic provides migration for update icons pack. It includes:
+This schematic provides migration for css-selectors of typography. It includes:
 
--   Change prefixes from `mc` to `kbq` for ts, html, styles
--   Update icon names for updated/removed icons according to [mapping](data.ts)
--   Fix icons package prefix in styles
+-   Update css-classes for updated typography styles according to [mapping](data.ts)
 
 [Params](schema.ts)
 
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:new-icons-pack --fix=true --project <your project>
+ng g @koobiq/components:css-selectors --fix=true --project <your project>
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:new-icons-pack --fix=true --project <your project>
+nx g @koobiq/components:css-selectors --fix=true --project <your project>
 ```

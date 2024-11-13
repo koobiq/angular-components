@@ -53,5 +53,4 @@ StyleDictionary.registerFormat({
     }
 });
 
-const main = async () => StyleDictionary.extend(sdConfig).buildAllPlatforms();
-main();
+StyleDictionary.extend(sdConfig).buildAllPlatforms();
