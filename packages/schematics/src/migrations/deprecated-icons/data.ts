@@ -31,99 +31,99 @@ export const newIconsPackData: ReplaceData[] = [
         replaceWith: 'speaker-wave_16'
     },
     {
-        replace: 'angle-down-l_16',
+        replace: 'angle-down-L_16',
         replaceWith: 'chevron-down_16'
     },
     {
-        replace: 'angle-down-l_24',
+        replace: 'angle-down-L_24',
         replaceWith: 'chevron-down_24'
     },
     {
-        replace: 'angle-down-m_16',
+        replace: 'angle-down-M_16',
         replaceWith: 'chevron-down_16'
     },
     {
-        replace: 'angle-down-m_24',
+        replace: 'angle-down-M_24',
         replaceWith: 'chevron-down_24'
     },
     {
-        replace: 'angle-down-m_32',
+        replace: 'angle-down-M_32',
         replaceWith: 'chevron-down_32'
     },
     {
-        replace: 'angle-down-s_16',
+        replace: 'angle-down-S_16',
         replaceWith: 'chevron-down-s_16'
     },
     {
-        replace: 'angle-left-l_16',
+        replace: 'angle-left-L_16',
         replaceWith: 'chevron-left_16'
     },
     {
-        replace: 'angle-left-l_24',
+        replace: 'angle-left-L_24',
         replaceWith: 'chevron-left_24'
     },
     {
-        replace: 'angle-left-m_16',
+        replace: 'angle-left-M_16',
         replaceWith: 'chevron-left_16'
     },
     {
-        replace: 'angle-left-m_24',
+        replace: 'angle-left-M_24',
         replaceWith: 'chevron-left_24'
     },
     {
-        replace: 'angle-left-m_32',
+        replace: 'angle-left-M_32',
         replaceWith: 'chevron-left_32'
     },
     {
-        replace: 'angle-left-s_16',
+        replace: 'angle-left-S_16',
         replaceWith: 'chevron-left-s_16'
     },
     {
-        replace: 'angle-right-l_16',
+        replace: 'angle-right-L_16',
         replaceWith: 'chevron-right_16'
     },
     {
-        replace: 'angle-right-l_24',
+        replace: 'angle-right-L_24',
         replaceWith: 'chevron-right_24'
     },
     {
-        replace: 'angle-right-m_16',
+        replace: 'angle-right-M_16',
         replaceWith: 'chevron-right_16'
     },
     {
-        replace: 'angle-right-m_24',
+        replace: 'angle-right-M_24',
         replaceWith: 'chevron-right_24'
     },
     {
-        replace: 'angle-right-m_32',
+        replace: 'angle-right-M_32',
         replaceWith: 'chevron-right_32'
     },
     {
-        replace: 'angle-right-s_16',
+        replace: 'angle-right-S_16',
         replaceWith: 'chevron-right-s_16'
     },
     {
-        replace: 'angle-up-l_16',
+        replace: 'angle-up-L_16',
         replaceWith: 'chevron-up_16'
     },
     {
-        replace: 'angle-up-l_24',
+        replace: 'angle-up-L_24',
         replaceWith: 'chevron-up_24'
     },
     {
-        replace: 'angle-up-m_16',
+        replace: 'angle-up-M_16',
         replaceWith: 'chevron-up_16'
     },
     {
-        replace: 'angle-up-m_24',
+        replace: 'angle-up-M_24',
         replaceWith: 'chevron-up_24'
     },
     {
-        replace: 'angle-up-m_32',
+        replace: 'angle-up-M_32',
         replaceWith: 'chevron-up_32'
     },
     {
-        replace: 'angle-up-s_16',
+        replace: 'angle-up-S_16',
         replaceWith: 'chevron-up-s_16'
     },
     {
@@ -587,19 +587,19 @@ export const newIconsPackData: ReplaceData[] = [
         replaceWith: 'xmark-circle_16'
     },
     {
-        replace: 'close-l_16',
+        replace: 'close-L_16',
         replaceWith: 'xmark_16'
     },
     {
-        replace: 'close-l_32',
+        replace: 'close-L_32',
         replaceWith: 'xmark_32'
     },
     {
-        replace: 'close-m_16',
+        replace: 'close-M_16',
         replaceWith: 'xmark-s_16'
     },
     {
-        replace: 'close-s_16',
+        replace: 'close-S_16',
         replaceWith: 'xmark-s_16'
     },
     {
