@@ -1,0 +1,31 @@
+<kbq-form-field class="layout-margin-bottom-l">
+    <input
+        kbqInput
+        style="max-width: 200px"
+        type="text"
+        [(ngModel)]="someValue"
+    />
+</kbq-form-field>
+
+<button
+    kbq-button
+    [kbqDropdownTriggerData]="{ someValue: someValue }"
+    [kbqDropdownTriggerFor]="appDropdownLazy"
+>
+    dropdown lazy
+    <i kbq-icon="kbq-chevron-down-s_16"></i>
+</button>
+
+<kbq-dropdown #appDropdownLazy="kbqDropdown">
+    <ng-template
+        kbqDropdownContent
+        let-someValue="someValue"
+    >
+        <button kbq-dropdown-item>dropdown</button>
+        <button kbq-dropdown-item>
+            Point 1
+            <span class="kbq-dropdown-item__caption">Some info</span>
+        </button>
+        <button kbq-dropdown-item>Value: {{ someValue }}</button>
+    </ng-template>
+</kbq-dropdown>

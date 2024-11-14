@@ -1,5 +1,13 @@
+<kbq-checkbox
+    class="layout-margin-right-l"
+    [(ngModel)]="disabled"
+>
+    toggle disabled state
+</kbq-checkbox>
+
 <button
     kbq-button
+    [disabled]="disabled"
     [kbqDropdownTriggerFor]="appDropdown"
 >
     dropdown

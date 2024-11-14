@@ -801,6 +801,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dl-vertical-overview-example.ts",
     "importPath": "components/dl"
   },
+  "dropdown-disabled": {
+    "packagePath": "components/dropdown/dropdown-disabled",
+    "title": "Dropdown disabled",
+    "componentName": "DropdownDisabledExample",
+    "files": [
+      "dropdown-disabled-example.ts",
+      "dropdown-disabled-example.html"
+    ],
+    "selector": "dropdown-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-disabled-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-lazyload-data": {
+    "packagePath": "components/dropdown/dropdown-lazyload-data",
+    "title": "Dropdown lazy load data",
+    "componentName": "DropdownLazyloadDataExample",
+    "files": [
+      "dropdown-lazyload-data-example.ts",
+      "dropdown-lazyload-data-example.html"
+    ],
+    "selector": "dropdown-lazyload-data-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-lazyload-data-example.ts",
+    "importPath": "components/dropdown"
+  },
   "dropdown-navigation-wrap": {
     "packagePath": "components/dropdown/dropdown-navigation-wrap",
     "title": "Dropdown navigation wrap",
@@ -825,6 +851,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "dropdown-nested-example",
     "additionalComponents": [],
     "primaryFile": "dropdown-nested-example.ts",
+    "importPath": "components/dropdown"
+  },
+  "dropdown-open-by-arrow-down": {
+    "packagePath": "components/dropdown/dropdown-open-by-arrowdown",
+    "title": "Dropdown open by arrow down",
+    "componentName": "DropdownOpenByArrowDownExample",
+    "files": [
+      "dropdown-open-by-arrow-down-example.ts",
+      "dropdown-open-by-arrow-down-example.html"
+    ],
+    "selector": "dropdown-open-by-arrow-down-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-open-by-arrow-down-example.ts",
     "importPath": "components/dropdown"
   },
   "dropdown-overview": {
@@ -3446,9 +3485,15 @@ return import('@koobiq/docs-examples/components/dl');
 return import('@koobiq/docs-examples/components/dl');
   case 'dl-vertical-overview':
 return import('@koobiq/docs-examples/components/dl');
+  case 'dropdown-disabled':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-lazyload-data':
+return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-navigation-wrap':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-nested':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-open-by-arrow-down':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-overview':
 return import('@koobiq/docs-examples/components/dropdown');

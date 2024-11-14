@@ -1,6 +1,14 @@
+<kbq-checkbox
+    class="layout-margin-right-l"
+    [(ngModel)]="openByArrowDown"
+>
+    toggle openByArrowDown
+</kbq-checkbox>
+
 <button
     kbq-button
     [kbqDropdownTriggerFor]="appDropdown"
+    [openByArrowDown]="openByArrowDown"
 >
     dropdown
     <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -77,10 +85,5 @@
     </button>
 
     <kbq-divider />
-
     <button kbq-dropdown-item>Point 2</button>
-
-    <button kbq-dropdown-item>Point 3</button>
-
-    <button kbq-dropdown-item>Link</button>
 </kbq-dropdown>

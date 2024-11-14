@@ -1,23 +1,29 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 
 /**
- * @title Dropdown
+ * @title Dropdown disabled
  */
 @Component({
     standalone: true,
-    selector: 'dropdown-overview-example',
+    selector: 'dropdown-disabled-example',
     imports: [
         KbqDropdownModule,
+        FormsModule,
+        KbqCheckboxModule,
         KbqDividerModule,
         KbqButtonModule,
         KbqIconModule,
         KbqTitleModule
     ],
-    templateUrl: 'dropdown-overview-example.html'
+    templateUrl: 'dropdown-disabled-example.html'
 })
-export class DropdownOverviewExample {}
+export class DropdownDisabledExample {
+    disabled = false;
+}
