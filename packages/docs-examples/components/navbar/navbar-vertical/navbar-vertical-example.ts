@@ -14,7 +14,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'navbar-vertical-example',
     templateUrl: 'navbar-vertical-example.html',
     styles: `
-        :host::ng-deep.kbq-vertical-navbar__container {
+        :host ::ng-deep .kbq-vertical-navbar__container {
             border-top-left-radius: 12px;
         }
     `,
