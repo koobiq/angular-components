@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import * as path from 'path';
 
 import { LoggerApi } from '@angular-devkit/core/src/logger';
-import { setupOptions } from '../utils/package-config';
+import { setupOptions } from '../../utils/package-config';
 import { ReplaceData, iconReplacements, newIconsPackData } from './data';
 import { Schema } from './schema';
 

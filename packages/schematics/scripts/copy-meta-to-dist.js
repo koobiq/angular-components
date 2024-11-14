@@ -26,6 +26,7 @@ const init = async () => {
     const ngAddPath = join(schematicsPath, 'ng-add');
     const newIconsPackPath = join(schematicsPath, 'new-icons-pack');
     const cssSelectorsPath = join(schematicsPath, 'migrations', 'css-selectors');
+    const deprecatedIconsPath = join(schematicsPath, 'migrations', 'deprecated-icons');
     const utilsPath = join(schematicsPath, 'utils');
 
     // Ensure directories exist
@@ -35,6 +36,7 @@ const init = async () => {
     await ensureDirectoryExistence(newIconsPackPath);
     await ensureDirectoryExistence(utilsPath);
     await ensureDirectoryExistence(cssSelectorsPath);
+    await ensureDirectoryExistence(deprecatedIconsPath);
 
     // Copy files
     await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), join(ngAddPath, 'index.js'));
@@ -49,6 +51,18 @@ const init = async () => {
     await copyFileWrapper(
         resolvePath('../src/migrations/css-selectors/schema.json'),
         join(cssSelectorsPath, 'schema.json')
+    );
+    await copyFileWrapper(
+        resolvePath('../dist/migrations/css-selectors/index.js'),
+        join(deprecatedIconsPath, 'index.js')
+    );
+    await copyFileWrapper(
+        resolvePath('../dist/migrations/css-selectors/data.js'),
+        join(deprecatedIconsPath, 'data.js')
+    );
+    await copyFileWrapper(
+        resolvePath('../src/migrations/deprecated-icons/schema.json'),
+        join(deprecatedIconsPath, 'schema.json')
     );
 
     await copyFileWrapper(resolvePath('../dist/utils/package-config.js'), join(utilsPath, 'package-config.js'));

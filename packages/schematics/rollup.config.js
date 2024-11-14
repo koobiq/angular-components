@@ -29,6 +29,8 @@ module.exports = [
             'new-icons-pack/data': path.join(__dirname, 'src/new-icons-pack/data.ts'),
             'migrations/css-selectors/index': path.join(__dirname, 'src/migrations/css-selectors/index.ts'),
             'migrations/css-selectors/data': path.join(__dirname, 'src/migrations/css-selectors/data.ts'),
+            'migrations/deprecated-icons/index': path.join(__dirname, 'src/migrations/deprecated-icons/index.ts'),
+            'migrations/deprecated-icons/data': path.join(__dirname, 'src/migrations/deprecated-icons/data.ts'),
             'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts')
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
