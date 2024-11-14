@@ -475,7 +475,7 @@
         '7xl': var(--kbq-size-7xl)
     );
 
-    $indents: 'padding', 'margin';
+    $indents: 'padding', 'margin', 'gap';
 
     @each $indent in $indents {
         @each $name, $value in $sizes {

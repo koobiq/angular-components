@@ -13,8 +13,3 @@
 .badge-fill-and-style-example__badge {
     width: 100px;
 }
-
-.badge-fill-and-style-example__row {
-    display: flex;
-    gap: 16px;
-}

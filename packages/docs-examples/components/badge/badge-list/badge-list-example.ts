@@ -19,9 +19,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
                     <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>
                 }
             </div>
-            <div class="badge-list-example__label badge-list-example__label_vertical kbq-extra-small-text">
-                Vertical
-            </div>
+            <div class="badge-list-example__label layout-margin-top-l kbq-extra-small-text">Vertical</div>
             <div class="badge-list-example__list badge-list-example__list_vertical">
                 @for (badge of badges; track badge) {
                     <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>

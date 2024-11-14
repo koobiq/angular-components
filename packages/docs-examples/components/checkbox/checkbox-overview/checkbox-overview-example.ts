@@ -9,7 +9,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
     standalone: true,
     selector: 'checkbox-overview-example',
     templateUrl: 'checkbox-overview-example.html',
-    styleUrls: ['checkbox-overview-example.css'],
     imports: [
         KbqCheckboxModule,
         KbqFormFieldModule

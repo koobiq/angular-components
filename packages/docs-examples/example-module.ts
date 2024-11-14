@@ -213,8 +213,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge content",
     "componentName": "BadgeContentExample",
     "files": [
-      "badge-content-example.ts",
-      "badge-content-example.css"
+      "badge-content-example.ts"
     ],
     "selector": "badge-content-example",
     "additionalComponents": [],
@@ -253,8 +252,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge size",
     "componentName": "BadgeSizeExample",
     "files": [
-      "badge-size-example.ts",
-      "badge-size-example.css"
+      "badge-size-example.ts"
     ],
     "selector": "badge-size-example",
     "additionalComponents": [],
@@ -267,8 +265,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeTableExample",
     "files": [
       "badge-table-example.ts",
-      "badge-table-example.html",
-      "badge-table-example.css"
+      "badge-table-example.html"
     ],
     "selector": "badge-table-example",
     "additionalComponents": [],
@@ -463,8 +460,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "CheckboxOverviewExample",
     "files": [
       "checkbox-overview-example.ts",
-      "checkbox-overview-example.html",
-      "checkbox-overview-example.css"
+      "checkbox-overview-example.html"
     ],
     "selector": "checkbox-overview-example",
     "additionalComponents": [],
@@ -476,8 +472,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Pseudo checkbox",
     "componentName": "PseudoCheckboxExample",
     "files": [
-      "pseudo-checkbox-example.ts",
-      "pseudo-checkbox-example.css"
+      "pseudo-checkbox-example.ts"
     ],
     "selector": "pseudo-checkbox-example",
     "additionalComponents": [],

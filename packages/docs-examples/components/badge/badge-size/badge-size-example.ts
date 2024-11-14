@@ -7,12 +7,11 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 @Component({
     standalone: true,
     selector: 'badge-size-example',
-    styleUrls: ['badge-size-example.css'],
     imports: [
         KbqBadgeModule
     ],
     template: `
-        <div class="badge-size-example">
+        <div class="layout-row layout-gap-l">
             <kbq-badge [badgeColor]="colors.Success">Normal</kbq-badge>
             <kbq-badge
                 [badgeColor]="colors.Success"

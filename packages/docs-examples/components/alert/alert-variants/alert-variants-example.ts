@@ -25,7 +25,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <div class="layout-row flex-100">
+        <div class="layout-row layout-gap-l flex-100">
             <div class="layout-column">
                 <kbq-alert [alertColor]="alertColors.Error">
                     <i

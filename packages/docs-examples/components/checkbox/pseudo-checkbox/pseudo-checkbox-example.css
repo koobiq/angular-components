@@ -1,8 +1,0 @@
-.kbq-body {
-    display: flex;
-    flex-direction: column;
-}
-
-kbq-pseudo-checkbox + kbq-pseudo-checkbox {
-    margin-top: 16px;
-}

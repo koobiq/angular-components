@@ -12,11 +12,6 @@ p + p {
     gap: 16px;
 }
 
-.layout-row,
-.layout-column {
-    gap: 16px;
-}
-
 .layout-column {
     width: 50%;
 }
