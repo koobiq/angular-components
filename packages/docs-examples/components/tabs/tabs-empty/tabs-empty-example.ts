@@ -8,7 +8,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-empty-example',
-    styleUrls: ['tabs-empty-example.css'],
+    styleUrl: 'tabs-empty-example.css',
     imports: [
         KbqTabsModule
     ],

@@ -9,7 +9,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-actionbar-example',
-    styleUrls: ['tabs-actionbar-example.css'],
+    styleUrl: 'tabs-actionbar-example.css',
     imports: [
         KbqTabsModule,
         KbqButtonModule,
