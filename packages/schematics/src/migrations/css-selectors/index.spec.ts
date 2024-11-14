@@ -4,26 +4,36 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 import { ProjectDefinition } from '@schematics/angular/utility';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
-import { first } from 'rxjs';
 import { createTestApp } from '../../utils/testing';
-import { cssSelectorsReplacement } from './data';
+import { colorsVarsReplacement, typographyCssSelectorsReplacement } from './data';
 
 const collectionPath = path.join(__dirname, '../../collection.json');
 
 const SCHEMATIC_NAME = 'css-selectors';
 
-const elementsWithDeprecatedSelectors = cssSelectorsReplacement
+const elementsWithDeprecatedSelectors = typographyCssSelectorsReplacement
     .map(({ replace }) => `<div class="${replace}"></div>`)
     .join('\n');
-const cssClassesWithDeprecatedSelectors = cssSelectorsReplacement.map(({ replace }) => `.${replace} {}`).join('\n');
+
+const cssClassesWithDeprecatedSelectors = typographyCssSelectorsReplacement
+    .map(({ replace }) => `.${replace} {}`)
+    .join('\n');
+
 const componentClass = `
 @Component({
     selector: 'test-app',
     template: '${elementsWithDeprecatedSelectors}'
 })
 class TestApp {
-    dynamicClass = '${cssSelectorsReplacement[0].replace}';
+    dynamicClass = '${typographyCssSelectorsReplacement[0].replace}';
 }`;
+
+const elementsWithDeprecatedColors = colorsVarsReplacement
+    .map(({ replace }) => `<div style="color: var(--${replace})"></div>`)
+    .join('\n');
+const cssClassesWithDeprecatedColors = colorsVarsReplacement
+    .map(({ replace }) => `.test { color: var(--${replace}) }`)
+    .join('\n');
 
 const getProjectContent = (tree: UnitTestTree | Tree, project: ProjectDefinition) => {
     return [
@@ -86,13 +96,51 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
-    it('should inform about deprecated selectors for fix = false (default, without params)', (done) => {
-        // simply check for messages to be sent
-        runner.logger.pipe(first()).subscribe(({ message }) => {
-            expect(message).toBeTruthy();
-            done();
+    it('should inform about deprecated selectors for fix = false (default, without params)', async () => {
+        const [firstProjectKey] = projects.keys();
+        const messages: string[] = [];
+        runner.logger.subscribe(
+            ({ message }) => {
+                messages.push(message);
+                expect(message).toBeTruthy();
+            },
+            () => {},
+            () => expect(messages).toMatchSnapshot()
+        );
+
+        try {
+            await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
+        } finally {
+            runner.logger.complete();
+        }
+    });
+
+    it('should inform about deprecated colors in the file', async () => {
+        const [firstProjectKey] = projects.keys();
+        const messages: string[] = [];
+        runner.logger.subscribe(
+            ({ message }) => {
+                messages.push(message);
+                expect(message).toBeTruthy();
+            },
+            () => {},
+            () => expect(messages).toMatchSnapshot()
+        );
+
+        projects.forEach((project) => {
+            const templatePath = `/${project.root}/src/app/app.component.html`;
+            const tsPath = `/${project.root}/src/app/app.component.ts`;
+            const stylesPath = `/${project.root}/src/styles.scss`;
+
+            appTree.overwrite(templatePath, elementsWithDeprecatedColors);
+            appTree.overwrite(stylesPath, cssClassesWithDeprecatedColors);
+            appTree.overwrite(tsPath, '');
         });
 
-        runner.runSchematic(SCHEMATIC_NAME, {}, appTree);
+        try {
+            await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
+        } finally {
+            runner.logger.complete();
+        }
     });
 });

@@ -1,5 +1,185 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`css-selectors should inform about deprecated colors in the file 1`] = `
+[
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+[1m[3m[34m../../../../../projects/app/src/styles.scss[39m[23m[22m
+Replace with specified rules: 
+	neutral-white -> 	<remove from project>
+	brand-default -> 	<remove from project>
+	brand-palette -> 	<remove from project>
+	info-default -> 	<remove from project>
+	background-background-disabled -> 	<remove from project>
+	background-background-less-contrast -> 	<remove from project>
+	background-background-under -> 	<remove from project>
+	background-background -> 	<remove from project>
+	background-overlay-hover -> 	<remove from project>
+	background-overlay-active -> 	<remove from project>
+	background-overlay-disabled -> 	<remove from project>
+	foreground-text-less-contrast -> 	<remove from project>
+	foreground-text-disabled -> 	<remove from project>
+	foreground-text-error -> 	<remove from project>
+	foreground-text-success -> 	<remove from project>
+	foreground-divider -> 	<remove from project>
+	foreground-text -> 	<remove from project>
+	foreground-icon -> 	<remove from project>
+	foreground-border -> 	<remove from project>
+	states-background-ghost-hover -> 	<remove from project>
+	states-background-ghost-active -> 	<remove from project>
+	states-focused-color-error -> 	<remove from project>
+	states-focused-color -> 	<remove from project>
+	states-selected-color -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	others-brand -> 	<remove from project>
+-------------------------
+    ",
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+[1m[3m[34m../../../../../projects/app/src/app/app.component.html[39m[23m[22m
+Replace with specified rules: 
+	neutral-white -> 	<remove from project>
+	brand-default -> 	<remove from project>
+	brand-palette -> 	<remove from project>
+	info-default -> 	<remove from project>
+	background-background-disabled -> 	<remove from project>
+	background-background-less-contrast -> 	<remove from project>
+	background-background-under -> 	<remove from project>
+	background-background -> 	<remove from project>
+	background-overlay-hover -> 	<remove from project>
+	background-overlay-active -> 	<remove from project>
+	background-overlay-disabled -> 	<remove from project>
+	foreground-text-less-contrast -> 	<remove from project>
+	foreground-text-disabled -> 	<remove from project>
+	foreground-text-error -> 	<remove from project>
+	foreground-text-success -> 	<remove from project>
+	foreground-divider -> 	<remove from project>
+	foreground-text -> 	<remove from project>
+	foreground-icon -> 	<remove from project>
+	foreground-border -> 	<remove from project>
+	states-background-ghost-hover -> 	<remove from project>
+	states-background-ghost-active -> 	<remove from project>
+	states-focused-color-error -> 	<remove from project>
+	states-focused-color -> 	<remove from project>
+	states-selected-color -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	others-brand -> 	<remove from project>
+-------------------------
+    ",
+]
+`;
+
+exports[`css-selectors should inform about deprecated selectors for fix = false (default, without params) 1`] = `
+[
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+[1m[3m[34m../../../../../projects/app/src/styles.scss[39m[23m[22m
+Replace with specified rules: 
+	kbq-display-1-strong -> 	kbq-display-big-strong
+	kbq-display-2-strong -> 	kbq-display-normal-strong
+	kbq-display-3-strong -> 	kbq-display-compact-strong
+	kbq-body-tabular -> 	kbq-tabular-big
+	kbq-body-strong -> 	kbq-text-big-strong
+	kbq-body-mono-strong -> 	kbq-mono-big-strong
+	kbq-body-mono -> 	kbq-mono-big
+	kbq-body-caps -> 	kbq-caps-big
+	kbq-caption-tabular -> 	kbq-tabular-normal
+	kbq-caption-strong -> 	kbq-text-normal-strong
+	kbq-caption-mono-strong -> 	kbq-mono-normal-strong
+	kbq-caption-mono -> 	kbq-mono-normal
+	kbq-caption-caps -> 	kbq-caps-normal
+	kbq-extra-small-text-strong -> 	kbq-text-compact-strong
+	kbq-extra-small-text-mono -> 	kbq-mono-compact
+	kbq-extra-small-text-caps -> 	kbq-caps-compact
+	kbq-display-1 -> 	kbq-display-big
+	kbq-display-2 -> 	kbq-display-normal
+	kbq-display-3 -> 	kbq-display-compact
+	kbq-body -> 	kbq-text-big
+	kbq-caption -> 	kbq-text-normal
+	kbq-extra-small-text -> 	kbq-text-compact
+-------------------------
+    
+
+Or use [1m[3m--fix=true[23m[22m to replace automatically
+Pay attention: overwriting is possible. Check the code after automatic replacement was done.
+-------------------------
+    ",
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+[1m[3m[34m../../../../../projects/app/src/app/app.component.html[39m[23m[22m
+Replace with specified rules: 
+	kbq-display-1-strong -> 	kbq-display-big-strong
+	kbq-display-2-strong -> 	kbq-display-normal-strong
+	kbq-display-3-strong -> 	kbq-display-compact-strong
+	kbq-body-tabular -> 	kbq-tabular-big
+	kbq-body-strong -> 	kbq-text-big-strong
+	kbq-body-mono-strong -> 	kbq-mono-big-strong
+	kbq-body-mono -> 	kbq-mono-big
+	kbq-body-caps -> 	kbq-caps-big
+	kbq-caption-tabular -> 	kbq-tabular-normal
+	kbq-caption-strong -> 	kbq-text-normal-strong
+	kbq-caption-mono-strong -> 	kbq-mono-normal-strong
+	kbq-caption-mono -> 	kbq-mono-normal
+	kbq-caption-caps -> 	kbq-caps-normal
+	kbq-extra-small-text-strong -> 	kbq-text-compact-strong
+	kbq-extra-small-text-mono -> 	kbq-mono-compact
+	kbq-extra-small-text-caps -> 	kbq-caps-compact
+	kbq-display-1 -> 	kbq-display-big
+	kbq-display-2 -> 	kbq-display-normal
+	kbq-display-3 -> 	kbq-display-compact
+	kbq-body -> 	kbq-text-big
+	kbq-caption -> 	kbq-text-normal
+	kbq-extra-small-text -> 	kbq-text-compact
+-------------------------
+    
+
+Or use [1m[3m--fix=true[23m[22m to replace automatically
+Pay attention: overwriting is possible. Check the code after automatic replacement was done.
+-------------------------
+    ",
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+[1m[3m[34m../../../../../projects/app/src/app/app.component.ts[39m[23m[22m
+Replace with specified rules: 
+	kbq-display-1-strong -> 	kbq-display-big-strong
+	kbq-display-2-strong -> 	kbq-display-normal-strong
+	kbq-display-3-strong -> 	kbq-display-compact-strong
+	kbq-body-tabular -> 	kbq-tabular-big
+	kbq-body-strong -> 	kbq-text-big-strong
+	kbq-body-mono-strong -> 	kbq-mono-big-strong
+	kbq-body-mono -> 	kbq-mono-big
+	kbq-body-caps -> 	kbq-caps-big
+	kbq-caption-tabular -> 	kbq-tabular-normal
+	kbq-caption-strong -> 	kbq-text-normal-strong
+	kbq-caption-mono-strong -> 	kbq-mono-normal-strong
+	kbq-caption-mono -> 	kbq-mono-normal
+	kbq-caption-caps -> 	kbq-caps-normal
+	kbq-extra-small-text-strong -> 	kbq-text-compact-strong
+	kbq-extra-small-text-mono -> 	kbq-mono-compact
+	kbq-extra-small-text-caps -> 	kbq-caps-compact
+	kbq-display-1 -> 	kbq-display-big
+	kbq-display-2 -> 	kbq-display-normal
+	kbq-display-3 -> 	kbq-display-compact
+	kbq-body -> 	kbq-text-big
+	kbq-caption -> 	kbq-text-normal
+	kbq-extra-small-text -> 	kbq-text-compact
+-------------------------
+    
+
+Or use [1m[3m--fix=true[23m[22m to replace automatically
+Pay attention: overwriting is possible. Check the code after automatic replacement was done.
+-------------------------
+    ",
+]
+`;
+
 exports[`css-selectors should run migration for specified project: project app: after changes 1`] = `
 [
   "<div class="kbq-display-big-strong"></div>
