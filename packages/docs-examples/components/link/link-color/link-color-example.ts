@@ -7,7 +7,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 @Component({
     standalone: true,
     selector: 'link-color-example',
-    styleUrl: 'link-color-example.css',
+    styleUrls: ['link-color-example.css'],
     imports: [KbqLinkModule],
     template: `
         <table>

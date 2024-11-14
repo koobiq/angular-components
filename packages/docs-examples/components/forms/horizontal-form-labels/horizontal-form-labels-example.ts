@@ -11,7 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     standalone: true,
     selector: 'horizontal-form-labels-example',
     templateUrl: 'horizontal-form-labels-example.html',
-    styleUrl: 'horizontal-form-labels-example.css',
+    styleUrls: ['horizontal-form-labels-example.css'],
     imports: [
         FormsModule,
         KbqFormsModule,

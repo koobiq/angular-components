@@ -15,7 +15,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     standalone: true,
     selector: 'popover-content-example',
     templateUrl: 'popover-content-example.html',
-    styleUrl: 'popover-content-example.css',
+    styleUrls: ['popover-content-example.css'],
     imports: [
         KbqDropdownModule,
         KbqButtonModule,

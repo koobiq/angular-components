@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -8,12 +8,11 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 /**
- * @title Basic Input
+ * @title Autocomplete
  */
 @Component({
     standalone: true,
     selector: 'autocomplete-overview-example',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqFormFieldModule,
         KbqAutocompleteModule,

@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 /**
- * @title File Upload Multiple Default Validation Reactive Forms
+ * @title File-upload multiple default validation reactive forms
  */
 @Component({
     standalone: true,

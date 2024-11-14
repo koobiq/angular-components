@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 
 /**
- * @title accordion-inactive-section
+ * @title Accordion inactive section
  */
 @Component({
     standalone: true,

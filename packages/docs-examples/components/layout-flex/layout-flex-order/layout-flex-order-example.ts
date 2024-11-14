@@ -8,7 +8,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     standalone: true,
     selector: 'layout-flex-order-example',
-    styleUrl: 'layout-flex-order-example.css',
+    styleUrls: ['layout-flex-order-example.css'],
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
         <div class="docs-layout-flex-order layout-margin-top-4xl">

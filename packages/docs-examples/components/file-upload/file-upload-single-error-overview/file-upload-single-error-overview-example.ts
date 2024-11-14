@@ -3,7 +3,7 @@ import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 
 /**
- * @title file upload single error
+ * @title File-upload single error
  */
 @Component({
     standalone: true,

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -24,7 +24,6 @@ const codeTs = `class Greeter {
 @Component({
     standalone: true,
     selector: 'code-block-stretch-example',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqToggleModule,
         FormsModule,

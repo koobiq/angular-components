@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 
 const codeTs = `class Greeter {
@@ -51,8 +51,7 @@ body {
 @Component({
     standalone: true,
     selector: 'code-block-tabs-with-overflow-example',
-    styleUrl: 'code-block-tabs-with-overflow-example.css',
-    encapsulation: ViewEncapsulation.None,
+    styleUrls: ['code-block-tabs-with-overflow-example.css'],
     imports: [
         KbqCodeBlockModule
     ],

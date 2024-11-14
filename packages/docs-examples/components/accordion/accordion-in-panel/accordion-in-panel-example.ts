@@ -9,7 +9,7 @@ import {
 } from '@koobiq/components/sidepanel';
 
 /**
- * @title accordion-in-panel
+ * @title Accordion in panel
  */
 @Component({
     standalone: true,

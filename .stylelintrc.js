@@ -29,6 +29,7 @@ const config = {
                 ignoreTypes: ['app']
             }
         ],
+        'selector-pseudo-element-no-unknown': [true, { ignorePseudoElements: ['ng-deep'] }],
         'font-family-no-missing-generic-family-keyword': [
             true,
             {

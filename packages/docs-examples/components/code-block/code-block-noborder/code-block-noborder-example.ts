@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
@@ -7,7 +7,6 @@ import { take } from 'rxjs/operators';
 const codeJs2 = `import { Clipboard } from '@angular/cdk/clipboard';
 import {
     Component,
-    ViewEncapsulation,
     Input,
     Inject,
     InjectionToken,
@@ -77,8 +76,7 @@ const actionBarBlockLeftMargin = 24;
         '[class.kbq-code-block_no-header]': 'noHeader',
         '(window:resize)': 'resizeStream.next($event)'
     },
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    encapsulation: ViewEncapsulation.None
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCodeBlockComponent implements OnDestroy {
 
@@ -197,18 +195,17 @@ export class KbqCodeBlockComponent implements OnDestroy {
 `;
 
 /**
- * @title Code block no border
+ * @title Code-block noborder
  */
 @Component({
     standalone: true,
     selector: 'code-block-noborder-example',
-    styleUrl: 'code-block-noborder-example.css',
+    styleUrls: ['code-block-noborder-example.css'],
     imports: [
         KbqSidepanelModule,
         KbqCodeBlockModule,
         KbqButtonModule
     ],
-    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="kbq-body">
             <button

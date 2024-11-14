@@ -5,7 +5,7 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqIcon, KbqIconButton } from '@koobiq/components/icon';
 
 /**
- * @title accordion-header
+ * @title Accordion header
  */
 @Component({
     standalone: true,

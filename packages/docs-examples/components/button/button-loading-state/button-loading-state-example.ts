@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
@@ -8,8 +8,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 @Component({
     standalone: true,
     selector: 'button-loading-state-example',
-    styleUrl: 'button-loading-state-example.css',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqButtonModule
     ],

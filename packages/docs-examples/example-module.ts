@@ -26,11 +26,12 @@ export interface LiveExample {
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   "accordion-content": {
     "packagePath": "components/accordion/accordion-content",
-    "title": "accordion-content",
+    "title": "Accordion content",
     "componentName": "AccordionContentExample",
     "files": [
       "accordion-content-example.ts",
-      "accordion-content-example.html"
+      "accordion-content-example.html",
+      "accordion-content-example.css"
     ],
     "selector": "accordion-content-example",
     "additionalComponents": [],
@@ -39,7 +40,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-header": {
     "packagePath": "components/accordion/accordion-header",
-    "title": "accordion-header",
+    "title": "Accordion header",
     "componentName": "AccordionHeaderExample",
     "files": [
       "accordion-header-example.ts",
@@ -52,7 +53,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-in-panel": {
     "packagePath": "components/accordion/accordion-in-panel",
-    "title": "accordion-in-panel",
+    "title": "Accordion in panel",
     "componentName": "AccordionInPanelExample",
     "files": [
       "accordion-in-panel-example.ts",
@@ -65,11 +66,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-in-section": {
     "packagePath": "components/accordion/accordion-in-section",
-    "title": "accordion-in-section",
+    "title": "Accordion in section",
     "componentName": "AccordionInSectionExample",
     "files": [
       "accordion-in-section-example.ts",
-      "accordion-in-section-example.html"
+      "accordion-in-section-example.html",
+      "accordion-in-section-example.css"
     ],
     "selector": "accordion-in-section-example",
     "additionalComponents": [],
@@ -78,7 +80,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-inactive-section": {
     "packagePath": "components/accordion/accordion-inactive-section",
-    "title": "accordion-inactive-section",
+    "title": "Accordion inactive section",
     "componentName": "AccordionInactiveSectionExample",
     "files": [
       "accordion-inactive-section-example.ts",
@@ -91,7 +93,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-overview": {
     "packagePath": "components/accordion/accordion-overview",
-    "title": "accordion-overview",
+    "title": "Accordion",
     "componentName": "AccordionOverviewExample",
     "files": [
       "accordion-overview-example.ts",
@@ -104,7 +106,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-sections": {
     "packagePath": "components/accordion/accordion-sections",
-    "title": "accordion-sections",
+    "title": "Accordion sections",
     "componentName": "AccordionSectionsExample",
     "files": [
       "accordion-sections-example.ts",
@@ -117,7 +119,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "accordion-states": {
     "packagePath": "components/accordion/accordion-states",
-    "title": "accordion-states",
+    "title": "Accordion states",
     "componentName": "AccordionStatesExample",
     "files": [
       "accordion-states-example.ts",
@@ -130,7 +132,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
-    "title": "Alert Close",
+    "title": "Alert close",
     "componentName": "AlertCloseExample",
     "files": [
       "alert-close-example.ts"
@@ -142,11 +144,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-content": {
     "packagePath": "components/alert/alert-content",
-    "title": "Alert",
+    "title": "Alert content",
     "componentName": "AlertContentExample",
     "files": [
       "alert-content-example.ts",
-      "alert-content-example.html"
+      "alert-content-example.html",
+      "alert-content-example.css"
     ],
     "selector": "alert-content-example",
     "additionalComponents": [],
@@ -155,11 +158,12 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-size": {
     "packagePath": "components/alert/alert-size",
-    "title": "Alert Size",
+    "title": "Alert size",
     "componentName": "AlertSizeExample",
     "files": [
       "alert-size-example.ts",
-      "alert-size-example.html"
+      "alert-size-example.html",
+      "alert-size-example.css"
     ],
     "selector": "alert-size-example",
     "additionalComponents": [],
@@ -168,7 +172,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-status": {
     "packagePath": "components/alert/alert-status",
-    "title": "Alert Status",
+    "title": "Alert status",
     "componentName": "AlertStatusExample",
     "files": [
       "alert-status-example.ts",
@@ -181,10 +185,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "alert-variants": {
     "packagePath": "components/alert/alert-variants",
-    "title": "Alert Variants",
+    "title": "Alert variants",
     "componentName": "AlertVariantsExample",
     "files": [
-      "alert-variants-example.ts"
+      "alert-variants-example.ts",
+      "alert-variants-example.css"
     ],
     "selector": "alert-variants-example",
     "additionalComponents": [],
@@ -193,7 +198,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "autocomplete-overview": {
     "packagePath": "components/autocomplete/autocomplete-overview",
-    "title": "Basic Input",
+    "title": "Autocomplete",
     "componentName": "AutocompleteOverviewExample",
     "files": [
       "autocomplete-overview-example.ts"
@@ -208,8 +213,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge content",
     "componentName": "BadgeContentExample",
     "files": [
-      "badge-content-example.ts",
-      "badge-content-example.css"
+      "badge-content-example.ts"
     ],
     "selector": "badge-content-example",
     "additionalComponents": [],
@@ -248,8 +252,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Badge size",
     "componentName": "BadgeSizeExample",
     "files": [
-      "badge-size-example.ts",
-      "badge-size-example.css"
+      "badge-size-example.ts"
     ],
     "selector": "badge-size-example",
     "additionalComponents": [],
@@ -262,8 +265,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BadgeTableExample",
     "files": [
       "badge-table-example.ts",
-      "badge-table-example.html",
-      "badge-table-example.css"
+      "badge-table-example.html"
     ],
     "selector": "badge-table-example",
     "additionalComponents": [],
@@ -289,7 +291,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ButtonToggleAlignmentOverviewExample",
     "files": [
       "button-toggle-alignment-overview-example.ts",
-      "button-toggle-alignment-overview-example.html"
+      "button-toggle-alignment-overview-example.html",
+      "button-toggle-alignment-overview-example.css"
     ],
     "selector": "button-toggle-alignment-overview-example",
     "additionalComponents": [],
@@ -340,7 +343,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button toggle tooltip",
     "componentName": "ButtonToggleTooltipOverviewExample",
     "files": [
-      "button-toggle-tooltip-overview-example.ts"
+      "button-toggle-tooltip-overview-example.ts",
+      "button-toggle-tooltip-overview-example.css"
     ],
     "selector": "button-toggle-tooltip-overview-example",
     "additionalComponents": [],
@@ -352,7 +356,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button content",
     "componentName": "ButtonContentExample",
     "files": [
-      "button-content-example.ts"
+      "button-content-example.ts",
+      "button-content-example.css"
     ],
     "selector": "button-content-example",
     "additionalComponents": [],
@@ -365,7 +370,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "ButtonFillAndStyleExample",
     "files": [
       "button-fill-and-style-example.ts",
-      "button-fill-and-style-example.html"
+      "button-fill-and-style-example.html",
+      "button-fill-and-style-example.css"
     ],
     "selector": "button-fill-and-style-example",
     "additionalComponents": [],
@@ -377,7 +383,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button fill content",
     "componentName": "ButtonFillContentExample",
     "files": [
-      "button-fill-content-example.ts"
+      "button-fill-content-example.ts",
+      "button-fill-content-example.css"
     ],
     "selector": "button-fill-content-example",
     "additionalComponents": [],
@@ -389,7 +396,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button fixed content",
     "componentName": "ButtonFixedContentExample",
     "files": [
-      "button-fixed-content-example.ts"
+      "button-fixed-content-example.ts",
+      "button-fixed-content-example.css"
     ],
     "selector": "button-fixed-content-example",
     "additionalComponents": [],
@@ -401,7 +409,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button hug content",
     "componentName": "ButtonHugContentExample",
     "files": [
-      "button-hug-content-example.ts"
+      "button-hug-content-example.ts",
+      "button-hug-content-example.css"
     ],
     "selector": "button-hug-content-example",
     "additionalComponents": [],
@@ -425,7 +434,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Button overview",
     "componentName": "ButtonOverviewExample",
     "files": [
-      "button-overview-example.ts"
+      "button-overview-example.ts",
+      "button-overview-example.css"
     ],
     "selector": "button-overview-example",
     "additionalComponents": [],
@@ -446,7 +456,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "checkbox-overview": {
     "packagePath": "components/checkbox/checkbox-overview",
-    "title": "Checkbox overview",
+    "title": "Checkbox",
     "componentName": "CheckboxOverviewExample",
     "files": [
       "checkbox-overview-example.ts",
@@ -486,7 +496,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Code-block cut",
     "componentName": "CodeBlockCutExample",
     "files": [
-      "code-block-cut-example.ts"
+      "code-block-cut-example.ts",
+      "code-block-cut-example.css"
     ],
     "selector": "code-block-cut-example",
     "additionalComponents": [],
@@ -495,7 +506,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-line-numbers": {
     "packagePath": "components/code-block/code-block-line-numbers",
-    "title": "Basic code-block-line-numbers",
+    "title": "Code-block line numbers",
     "componentName": "CodeBlockLineNumbersExample",
     "files": [
       "code-block-line-numbers-example.ts"
@@ -507,7 +518,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-line-wrap": {
     "packagePath": "components/code-block/code-block-line-wrap",
-    "title": "Basic code-block-line-wrap",
+    "title": "Code-block line wrap",
     "componentName": "CodeBlockLineWrapExample",
     "files": [
       "code-block-line-wrap-example.ts"
@@ -519,10 +530,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-noborder": {
     "packagePath": "components/code-block/code-block-noborder",
-    "title": "Code block no border",
+    "title": "Code-block noborder",
     "componentName": "CodeBlockNoborderExample",
     "files": [
-      "code-block-noborder-example.ts"
+      "code-block-noborder-example.ts",
+      "code-block-noborder-example.css"
     ],
     "selector": "code-block-noborder-example",
     "additionalComponents": [],
@@ -570,7 +582,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Code-block tabs with overflow",
     "componentName": "CodeBlockTabsWithOverflowExample",
     "files": [
-      "code-block-tabs-with-overflow-example.ts"
+      "code-block-tabs-with-overflow-example.ts",
+      "code-block-tabs-with-overflow-example.css"
     ],
     "selector": "code-block-tabs-with-overflow-example",
     "additionalComponents": [],
@@ -1001,7 +1014,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-cva-overview": {
     "packagePath": "components/file-upload/file-upload-cva-overview",
-    "title": "File upload with Control Value Accessor",
+    "title": "File-upload with control value accessor",
     "componentName": "FileUploadCvaOverviewExample",
     "files": [
       "file-upload-cva-overview-example.ts"
@@ -1013,7 +1026,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-indeterminate-loading-overview": {
     "packagePath": "components/file-upload/file-upload-indeterminate-loading-overview",
-    "title": "File Upload Indeterminate Loading",
+    "title": "File-upload indeterminate loading",
     "componentName": "FileUploadIndeterminateLoadingOverviewExample",
     "files": [
       "file-upload-indeterminate-loading-overview-example.ts"
@@ -1025,7 +1038,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
-    "title": "File Upload Multiple Compact",
+    "title": "File-upload multiple compact",
     "componentName": "FileUploadMultipleCompactOverviewExample",
     "files": [
       "file-upload-multiple-compact-overview-example.ts"
@@ -1037,7 +1050,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-custom-text-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-custom-text-overview",
-    "title": "file upload multiple custom text",
+    "title": "File-upload multiple custom text",
     "componentName": "FileUploadMultipleCustomTextOverviewExample",
     "files": [
       "file-upload-multiple-custom-text-overview-example.ts"
@@ -1049,7 +1062,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-default-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-overview",
-    "title": "File Upload Multiple Default",
+    "title": "File-upload multiple default",
     "componentName": "FileUploadMultipleDefaultOverviewExample",
     "files": [
       "file-upload-multiple-default-overview-example.ts"
@@ -1061,7 +1074,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-default-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-default-validation-reactive-forms-overview",
-    "title": "File Upload Multiple Default Validation Reactive Forms",
+    "title": "File-upload multiple default validation reactive forms",
     "componentName": "FileUploadMultipleDefaultValidationReactiveFormsOverviewExample",
     "files": [
       "file-upload-multiple-default-validation-reactive-forms-overview-example.ts"
@@ -1073,7 +1086,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-multiple-error-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-error-overview",
-    "title": "file upload Multiple error",
+    "title": "File-upload multiple error",
     "componentName": "FileUploadMultipleErrorOverviewExample",
     "files": [
       "file-upload-multiple-error-overview-example.ts"
@@ -1085,7 +1098,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-error-overview": {
     "packagePath": "components/file-upload/file-upload-single-error-overview",
-    "title": "file upload single error",
+    "title": "File-upload single error",
     "componentName": "FileUploadSingleErrorOverviewExample",
     "files": [
       "file-upload-single-error-overview-example.ts"
@@ -1097,7 +1110,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-overview": {
     "packagePath": "components/file-upload/file-upload-single-overview",
-    "title": "File Upload Single",
+    "title": "File-upload single",
     "componentName": "FileUploadSingleOverviewExample",
     "files": [
       "file-upload-single-overview-example.ts"
@@ -1109,7 +1122,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "file-upload-single-validation-reactive-forms-overview": {
     "packagePath": "components/file-upload/file-upload-single-validation-reactive-forms-overview",
-    "title": "File Upload Single Validation Reactive Forms",
+    "title": "File-upload single validation reactive forms",
     "componentName": "FileUploadSingleValidationReactiveFormsOverviewExample",
     "files": [
       "file-upload-single-validation-reactive-forms-overview-example.ts"
@@ -1233,7 +1246,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "HorizontalFormLabelsExample",
     "files": [
       "horizontal-form-labels-example.ts",
-      "horizontal-form-labels-example.html"
+      "horizontal-form-labels-example.html",
+      "horizontal-form-labels-example.css"
     ],
     "selector": "horizontal-form-labels-example",
     "additionalComponents": [],
@@ -1271,7 +1285,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon-item color",
     "componentName": "IconItemColorExample",
     "files": [
-      "icon-item-color-example.ts"
+      "icon-item-color-example.ts",
+      "icon-item-color-example.css"
     ],
     "selector": "icon-item-color-example",
     "additionalComponents": [],
@@ -1283,7 +1298,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon-item",
     "componentName": "IconItemDefaultExample",
     "files": [
-      "icon-item-default-example.ts"
+      "icon-item-default-example.ts",
+      "icon-item-default-example.css"
     ],
     "selector": "icon-item-default-example",
     "additionalComponents": [],
@@ -1295,7 +1311,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon-item size",
     "componentName": "IconItemSizeExample",
     "files": [
-      "icon-item-size-example.ts"
+      "icon-item-size-example.ts",
+      "icon-item-size-example.css"
     ],
     "selector": "icon-item-size-example",
     "additionalComponents": [],
@@ -1307,7 +1324,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Icon Item Variant",
     "componentName": "IconItemVariantExample",
     "files": [
-      "icon-item-variant-example.ts"
+      "icon-item-variant-example.ts",
+      "icon-item-variant-example.css"
     ],
     "selector": "icon-item-variant-example",
     "additionalComponents": [],
@@ -1355,7 +1373,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex alignment",
     "componentName": "LayoutFlexAlignmentExample",
     "files": [
-      "layout-flex-alignment-example.ts"
+      "layout-flex-alignment-example.ts",
+      "layout-flex-alignment-example.css"
     ],
     "selector": "layout-flex-alignment-example",
     "additionalComponents": [],
@@ -1367,7 +1386,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex behaviour modifiers",
     "componentName": "LayoutFlexBehaviourModifiersExample",
     "files": [
-      "layout-flex-behaviour-modifiers-example.ts"
+      "layout-flex-behaviour-modifiers-example.ts",
+      "layout-flex-behaviour-modifiers-example.css"
     ],
     "selector": "layout-flex-behaviour-modifiers-example",
     "additionalComponents": [],
@@ -1379,7 +1399,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex offsets",
     "componentName": "LayoutFlexOffsetsExample",
     "files": [
-      "layout-flex-offsets-example.ts"
+      "layout-flex-offsets-example.ts",
+      "layout-flex-offsets-example.css"
     ],
     "selector": "layout-flex-offsets-example",
     "additionalComponents": [],
@@ -1391,7 +1412,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex order",
     "componentName": "LayoutFlexOrderExample",
     "files": [
-      "layout-flex-order-example.ts"
+      "layout-flex-order-example.ts",
+      "layout-flex-order-example.css"
     ],
     "selector": "layout-flex-order-example",
     "additionalComponents": [],
@@ -1403,7 +1425,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Layout-flex",
     "componentName": "LayoutFlexOverviewExample",
     "files": [
-      "layout-flex-overview-example.ts"
+      "layout-flex-overview-example.ts",
+      "layout-flex-overview-example.css"
     ],
     "selector": "layout-flex-overview-example",
     "additionalComponents": [],
@@ -1439,7 +1462,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Link color",
     "componentName": "LinkColorExample",
     "files": [
-      "link-color-example.ts"
+      "link-color-example.ts",
+      "link-color-example.css"
     ],
     "selector": "link-color-example",
     "additionalComponents": [],
@@ -1692,7 +1716,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownArticleExample",
     "files": [
       "markdown-article-example.ts",
-      "./markdown-article-example.html"
+      "./markdown-article-example.html",
+      "./markdown-article-example.css"
     ],
     "selector": "markdown-article-example",
     "additionalComponents": [],
@@ -2002,7 +2027,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "PopoverCloseExample",
     "files": [
       "popover-close-example.ts",
-      "popover-close-example.html"
+      "popover-close-example.html",
+      "popover-close-example.css"
     ],
     "selector": "popover-close-example",
     "additionalComponents": [],
@@ -2027,7 +2053,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "PopoverContentExample",
     "files": [
       "popover-content-example.ts",
-      "popover-content-example.html"
+      "popover-content-example.html",
+      "popover-content-example.css"
     ],
     "selector": "popover-content-example",
     "additionalComponents": [],
@@ -2334,7 +2361,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel modal mode",
     "componentName": "SidepanelModalModeExample",
     "files": [
-      "sidepanel-modal-mode-example.ts"
+      "sidepanel-modal-mode-example.ts",
+      "sidepanel-modal-mode-example.html"
     ],
     "selector": "sidepanel-modal-mode-example",
     "additionalComponents": [],
@@ -2346,7 +2374,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel normal mode",
     "componentName": "SidepanelNormalModeExample",
     "files": [
-      "sidepanel-normal-mode-example.ts"
+      "sidepanel-normal-mode-example.ts",
+      "sidepanel-normal-mode-example.html"
     ],
     "selector": "sidepanel-normal-mode-example",
     "additionalComponents": [],
@@ -2371,7 +2400,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Sidepanel sizes",
     "componentName": "SidepanelSizesExample",
     "files": [
-      "sidepanel-sizes-example.ts"
+      "sidepanel-sizes-example.ts",
+      "sidepanel-sizes-example.html"
     ],
     "selector": "sidepanel-sizes-example",
     "additionalComponents": [],
@@ -2504,7 +2534,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs actionbar",
     "componentName": "TabsActionbarExample",
     "files": [
-      "tabs-actionbar-example.ts"
+      "tabs-actionbar-example.ts",
+      "tabs-actionbar-example.css"
     ],
     "selector": "tabs-actionbar-example",
     "additionalComponents": [],
@@ -2516,7 +2547,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs custom",
     "componentName": "TabsCustomExample",
     "files": [
-      "tabs-custom-example.ts"
+      "tabs-custom-example.ts",
+      "tabs-custom-example.css"
     ],
     "selector": "tabs-custom-example",
     "additionalComponents": [],
@@ -2528,7 +2560,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs disabled",
     "componentName": "TabsDisabledExample",
     "files": [
-      "tabs-disabled-example.ts"
+      "tabs-disabled-example.ts",
+      "tabs-disabled-example.css"
     ],
     "selector": "tabs-disabled-example",
     "additionalComponents": [],
@@ -2540,7 +2573,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs empty",
     "componentName": "TabsEmptyExample",
     "files": [
-      "tabs-empty-example.ts"
+      "tabs-empty-example.ts",
+      "tabs-empty-example.css"
     ],
     "selector": "tabs-empty-example",
     "additionalComponents": [],
@@ -2576,7 +2610,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs underlined",
     "componentName": "TabsUnderlinedExample",
     "files": [
-      "tabs-underlined-example.ts"
+      "tabs-underlined-example.ts",
+      "tabs-underlined-example.css"
     ],
     "selector": "tabs-underlined-example",
     "additionalComponents": [],
@@ -2588,7 +2623,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical icons",
     "componentName": "TabsVerticalIconsExample",
     "files": [
-      "tabs-vertical-icons-example.ts"
+      "tabs-vertical-icons-example.ts",
+      "tabs-vertical-icons-example.css"
     ],
     "selector": "tabs-vertical-icons-example",
     "additionalComponents": [],
@@ -2600,7 +2636,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical",
     "componentName": "TabsVerticalExample",
     "files": [
-      "tabs-vertical-example.ts"
+      "tabs-vertical-example.ts",
+      "tabs-vertical-example.css"
     ],
     "selector": "tabs-vertical-example",
     "additionalComponents": [],
@@ -2612,7 +2649,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs with scroll vertical",
     "componentName": "TabsWithScrollVerticalExample",
     "files": [
-      "tabs-with-scroll-vertical-example.ts"
+      "tabs-with-scroll-vertical-example.ts",
+      "tabs-with-scroll-vertical-example.css"
     ],
     "selector": "tabs-with-scroll-vertical-example",
     "additionalComponents": [],

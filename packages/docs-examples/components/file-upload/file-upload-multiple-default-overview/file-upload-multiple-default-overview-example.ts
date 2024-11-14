@@ -3,7 +3,7 @@ import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title File Upload Multiple Default
+ * @title File-upload multiple default
  */
 @Component({
     standalone: true,

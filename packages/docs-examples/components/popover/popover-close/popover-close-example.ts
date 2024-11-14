@@ -14,7 +14,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     standalone: true,
     selector: 'popover-close-example',
     templateUrl: 'popover-close-example.html',
-    styleUrl: 'popover-close-example.css',
+    styleUrls: ['popover-close-example.css'],
     imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqIconModule, KbqDropdownModule]
 })
 export class PopoverCloseExample {

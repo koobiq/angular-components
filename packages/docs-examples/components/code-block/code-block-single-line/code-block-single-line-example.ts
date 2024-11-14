@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 
 const codeTs2 = `getUserAddress('Rey.Padberg@karina.biz').then(console.log).catch(console.error)`;
@@ -9,7 +9,6 @@ const codeTs2 = `getUserAddress('Rey.Padberg@karina.biz').then(console.log).catc
 @Component({
     standalone: true,
     selector: 'code-block-single-line-example',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqCodeBlockModule
     ],

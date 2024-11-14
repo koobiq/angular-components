@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 
 /**
@@ -7,16 +7,20 @@ import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
 @Component({
     standalone: true,
     selector: 'pseudo-checkbox-example',
-    styleUrl: 'pseudo-checkbox-example.css',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqPseudoCheckboxModule
     ],
     template: `
-        <div class="kbq-body">
+        <div class="layout-column">
             <kbq-pseudo-checkbox />
-            <kbq-pseudo-checkbox [state]="'indeterminate'" />
-            <kbq-pseudo-checkbox [state]="'checked'" />
+            <kbq-pseudo-checkbox
+                class="layout-margin-top-l"
+                [state]="'indeterminate'"
+            />
+            <kbq-pseudo-checkbox
+                class="layout-margin-top-l"
+                [state]="'checked'"
+            />
         </div>
     `
 })

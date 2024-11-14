@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -14,12 +14,11 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
   </breakfast_menu>`;
 
 /**
- * @title Basic code-block-line-numbers
+ * @title Code-block line numbers
  */
 @Component({
     standalone: true,
     selector: 'code-block-line-numbers-example',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqToggleModule,
         FormsModule,

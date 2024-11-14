@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqCodeBlockModule, KbqCodeFile } from '@koobiq/components/code-block';
 
 const codeTs = `class Greeter {
@@ -51,7 +51,6 @@ body {
 @Component({
     standalone: true,
     selector: 'code-block-tabs-example',
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqCodeBlockModule
     ],

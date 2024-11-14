@@ -45,7 +45,7 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
 }
 
 /**
- * @title file upload multiple custom text
+ * @title File-upload multiple custom text
  */
 @Component({
     standalone: true,

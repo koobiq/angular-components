@@ -1,12 +1,12 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
- * @title Alert Status
+ * @title Alert status
  */
 @Component({
     standalone: true,
@@ -24,8 +24,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     imports: [
         KbqAlertModule,
         KbqIconModule
-    ],
-    encapsulation: ViewEncapsulation.None
+    ]
 })
 export class AlertStatusExample {
     colors = KbqComponentColors;

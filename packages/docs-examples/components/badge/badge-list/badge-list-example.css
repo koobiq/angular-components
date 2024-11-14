@@ -13,7 +13,3 @@
 .badge-list-example__label {
     color: var(--kbq-foreground-contrast-secondary);
 }
-
-.badge-list-example__label_vertical {
-    margin-top: 16px;
-}

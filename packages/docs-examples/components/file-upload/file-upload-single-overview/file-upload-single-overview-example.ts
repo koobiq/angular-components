@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 
 /**
- * @title File Upload Single
+ * @title File-upload single
  */
 @Component({
     standalone: true,

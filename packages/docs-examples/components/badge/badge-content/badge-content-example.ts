@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 
 /**
@@ -7,13 +7,11 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 @Component({
     standalone: true,
     selector: 'badge-content-example',
-    styleUrls: ['badge-content-example.css'],
-    encapsulation: ViewEncapsulation.None,
     imports: [
         KbqBadgeModule
     ],
     template: `
-        <div class="badge-content-example">
+        <div class="layout-row layout-gap-l">
             <kbq-badge [badgeColor]="colors.Success">Normal</kbq-badge>
             <kbq-badge [badgeColor]="colors.Success">
                 Normal
