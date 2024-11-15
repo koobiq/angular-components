@@ -121,7 +121,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             }
 
             if (primaryComponent['styleUrl']) {
-                throw Error(`Example ${exampleId} uses wrong styles: use 'styleUrls' array`);
+                throw Error(`Example ${exampleId} uses 'styleUrl', but expected 'styleUrls' `);
             }
 
             example.files.push(path.basename(relativePath));
