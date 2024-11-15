@@ -1,0 +1,127 @@
+/* stylelint-disable scss/at-extend-no-missing-placeholder */
+
+/**
+    Usage:
+
+    ```html
+        <div class="kbq-callout kbq-callout_theme">
+            <div class="kbq-callout__header">...</div>
+            <div class="kbq-callout__content">...</div>
+        </div>
+    ```
+*/
+
+@use '@koobiq/icons/fonts/kbq-icons';
+
+%kbq-callout_contrast {
+    border-color: var(--kbq-line-contrast-less);
+    background-color: var(--kbq-background-bg-secondary);
+
+    .kbq-callout__header {
+        color: var(--kbq-foreground-contrast-secondary);
+
+        &::before {
+            @extend .kbq;
+            @extend .kbq-question-circle_16;
+        }
+    }
+
+    .kbq-callout__content {
+        color: var(--kbq-foreground-contrast);
+        background-color: var(--kbq-background-bg);
+    }
+}
+
+.kbq-callout {
+    overflow: hidden;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: var(--kbq-size-s);
+    margin-bottom: var(--kbq-size-xl);
+
+    .kbq-callout__header {
+        display: flex;
+        align-items: center;
+        gap: var(--kbq-size-s);
+        font-size: var(--kbq-md-typography-md-h5-font-size);
+        font-weight: var(--kbq-typography-text-normal-strong-font-weight);
+        line-height: var(--kbq-typography-text-normal-strong-line-height);
+        letter-spacing: var(--kbq-typography-text-normal-strong-letter-spacing);
+    }
+
+    .kbq-callout__content {
+        font-size: var(--kbq-md-typography-md-body-font-size);
+        font-weight: var(--kbq-md-typography-md-body-font-weight);
+        line-height: var(--kbq-md-typography-md-body-line-height);
+        letter-spacing: var(--kbq-md-typography-md-body-letter-spacing);
+        border-radius: var(--kbq-size-s) var(--kbq-size-s) 0;
+    }
+
+    .kbq-callout__header,
+    .kbq-callout__content {
+        padding: var(--kbq-size-s) var(--kbq-size-l);
+    }
+
+    // setup contrast theme by default
+    @extend %kbq-callout_contrast;
+
+    &.kbq-callout_contrast {
+        @extend %kbq-callout_contrast;
+    }
+
+    &.kbq-callout_theme {
+        border-color: var(--kbq-line-theme);
+        background-color: var(--kbq-background-theme-fade);
+
+        .kbq-callout__header {
+            color: var(--kbq-foreground-theme);
+
+            &::before {
+                @extend .kbq;
+                @extend .kbq-exclamation-circle_16;
+            }
+        }
+    }
+
+    &.kbq-callout_success {
+        border-color: var(--kbq-line-success);
+        background-color: var(--kbq-background-success-fade);
+
+        .kbq-callout__header {
+            color: var(--kbq-foreground-success);
+
+            &::before {
+                @extend .kbq;
+                @extend .kbq-check-circle_16;
+            }
+        }
+    }
+
+    &.kbq-callout_warning {
+        border-color: var(--kbq-line-warning);
+        background-color: var(--kbq-background-warning-fade);
+
+        .kbq-callout__header {
+            color: var(--kbq-foreground-warning);
+
+            &::before {
+                @extend .kbq;
+                @extend .kbq-exclamation-triangle_16;
+            }
+        }
+    }
+
+    &.kbq-callout_error {
+        border-color: var(--kbq-line-error);
+        background-color: var(--kbq-background-error-fade);
+
+        .kbq-callout__header {
+            color: var(--kbq-foreground-error);
+
+            &::before {
+                @extend .kbq;
+                @extend .kbq-minus-circle_16;
+            }
+        }
+    }
+}

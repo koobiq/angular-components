@@ -1,11 +1,17 @@
-`<kbq-scrollbar>` - это компонент (обертка над библиотекой [`overlayscrollbars`](https://github.com/KingSora/OverlayScrollbars)),
-который используется для настройки параметров скроллбара.
+`<kbq-scrollbar>` - это компонент который используется для настройки параметров скроллбара.
 
-**Обрати внимание!** Для работы компонента, необходимо наличие `overlayscrollbars@2.7.3` зависимости, установи её при отсутствии:
+<div class="kbq-callout kbq-callout_warning">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content">
 
-```
+Для работы компонента, необходимо наличие [`overlayscrollbars@2.7.3`](https://github.com/KingSora/OverlayScrollbars/tree/v2.7.0) зависимости:
+
+```bash
 npm install overlayscrollbars@2.7.3
 ```
+
+</div>
+</div>
 
 ## Настройка и передача параметров:
 

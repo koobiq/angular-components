@@ -1,5 +1,11 @@
-**Обрати внимание!** К элементам формы применяется [`KbqValidateDirective`](https://github.com/koobiq/angular-components/blob/main/packages/components/form-field/validate.directive.ts),
-которая подменяет методы формы (`Validators`, `onSubmit`), что может привести к _"непредсказуемому"_ поведению.
+<div class="kbq-callout kbq-callout_warning">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content">
+
+К элементам формы применяется [`KbqValidateDirective`](https://github.com/koobiq/angular-components/blob/main/packages/components/form-field/validate.directive.ts), которая подменяет методы формы (`Validators`, `onSubmit`), что может привести к _"непредсказуемому"_ поведению.
+
+</div>
+</div>
 
 ### Отключение KbqValidateDirective
 
