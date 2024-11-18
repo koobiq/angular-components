@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import * as path from 'path';
 
 import { LoggerApi } from '@angular-devkit/core/src/logger';
-import { setupOptions } from '../utils/package-config';
+import { setupOptions } from '../../utils/package-config';
 import { ReplaceData, iconReplacements, newIconsPackData } from './data';
 import { Schema } from './schema';
 
@@ -14,9 +14,6 @@ const data = newIconsPackData;
 
 export default function newIconsPack(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
-    const breakingIconsVersionRegExp = /^\^|\~?9\.1\.0/;
-    const pkg = '@koobiq/icons';
-
     return async (tree: Tree, context: SchematicContext) => {
         const { project, fix, stylesExt } = options;
         try {
@@ -35,26 +32,11 @@ export default function newIconsPack(options: Schema): Rule {
             } else {
                 const foundIcons = data.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
                 if (foundIcons.length) {
-                    showWarning(path, foundIcons, logger);
+                    showSuggestion(path, foundIcons, logger);
                 }
             }
             return newContent;
         };
-
-        // Check if breaking version is used indeed
-        if (tree.exists('package.json')) {
-            const sourceText = tree.read('package.json')!.toString('utf-8');
-            const json: Partial<{ devDependencies: any; dependencies: any }> = JSON.parse(sourceText);
-
-            const isIconsBreakingVersionUsed = ['devDependencies', 'dependencies', 'peerDependencies'].some(
-                (type) => json[type] && json[type][pkg] && breakingIconsVersionRegExp.test(json[type][pkg])
-            );
-
-            if (!isIconsBreakingVersionUsed) {
-                logger.warn('Breaking version of icons is not used. Everything is OK.');
-                return;
-            }
-        }
 
         // Update templates & components
         targetDir.visit((path: Path, entry) => {
@@ -107,7 +89,7 @@ export default function newIconsPack(options: Schema): Rule {
     };
 }
 
-function showWarning(filePath: Path, foundIcons: ReplaceData[], logger: LoggerApi) {
+function showSuggestion(filePath: Path, foundIcons: ReplaceData[], logger: LoggerApi) {
     logger.warn('-------------------------');
     logger.warn(`Please pay attention! Found deprecated icons in file: `);
     logger.info(`${bold(italic(blue(path.resolve(`.${filePath}`))))}`);

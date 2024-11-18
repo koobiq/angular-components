@@ -16,6 +16,8 @@ const clean = () => ({
     }
 });
 
+const migrations = ['css-selectors', 'deprecated-icons', 'new-icons-pack'];
+
 module.exports = [
     {
         output: {
@@ -25,13 +27,12 @@ module.exports = [
         },
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
-            'new-icons-pack/index': path.join(__dirname, 'src/new-icons-pack/index.ts'),
-            'new-icons-pack/data': path.join(__dirname, 'src/new-icons-pack/data.ts'),
-            'migrations/css-selectors/index': path.join(__dirname, 'src/migrations/css-selectors/index.ts'),
-            'migrations/css-selectors/data': path.join(__dirname, 'src/migrations/css-selectors/data.ts'),
-            'migrations/deprecated-icons/index': path.join(__dirname, 'src/migrations/deprecated-icons/index.ts'),
-            'migrations/deprecated-icons/data': path.join(__dirname, 'src/migrations/deprecated-icons/data.ts'),
-            'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts')
+            'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
+            ...migrations.reduce((res, cur) => {
+                res[`migrations/${cur}/index`] = path.join(__dirname, `src/migrations/${cur}/index.ts`);
+                res[`migrations/${cur}/data`] = path.join(__dirname, `src/migrations/${cur}/data.ts`);
+                return res;
+            }, {})
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
         external: (dependency) =>
