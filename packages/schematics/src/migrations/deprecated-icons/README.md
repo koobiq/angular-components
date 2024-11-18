@@ -11,11 +11,11 @@ This schematic provides migration for update icons pack. It includes:
 Usage for Angular Cli:
 
 ```shell
-ng g @koobiq/components:new-icons-pack --fix=true --project <your project>
+ng g @koobiq/components:deprecated-icons --fix=true --project <your project>
 ```
 
 Usage for Nx:
 
 ```shell
-nx g @koobiq/components:new-icons-pack --fix=true --project <your project>
+nx g @koobiq/components:deprecated-icons --fix=true --project <your project>
 ```

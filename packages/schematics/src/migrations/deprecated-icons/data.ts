@@ -4,20 +4,17 @@ export interface ReplaceData {
     comment?: string;
 }
 
-export const iconReplacements: ReplaceData[] = [
+export const iconClassReplacements: ReplaceData[] = [
     { replace: 'kbq-icon="pt-icons-', replaceWith: 'kbq-icon="kbq-' },
-    { replace: 'kbq-icon-item="pt-icons-', replaceWith: 'kbq-icon-item="kbq-' },
-    { replace: 'kbq-icon-button="pt-icons-', replaceWith: 'kbq-icon-button="kbq-' },
-    { replace: 'class="pt-icons kbq-icon pt-icons-', replaceWith: 'class="kbq kbq-icon kbq-' },
-    { replace: 'class="mc kbq-', replaceWith: 'class="kbq kbq-' },
-    { replace: "class: 'mc kbq-", replaceWith: "class: 'kbq kbq-" },
-    { replace: 'mc mc-', replaceWith: 'kbq kbq-' },
-    { replace: '\\[class\\.mc', replaceWith: '[class.kbq' },
-    { replace: "'mc-", replaceWith: "'kbq-" },
-    { replace: `\\.mc;`, replaceWith: `.kbq;` }
+    { replace: 'pt-icons-', replaceWith: 'kbq-' },
+    { replace: 'class="pt-icons"', replaceWith: '' },
+    { replace: 'class="pt-icons ', replaceWith: 'class="' },
+    { replace: ' pt-icons"', replaceWith: '"' },
+    { replace: "'pt-icons ", replaceWith: "'" },
+    { replace: '\\.pt-icons', replaceWith: '.kbq' }
 ];
 
-export const newIconsPackData: ReplaceData[] = [
+export const iconsMapping: ReplaceData[] = [
     {
         replace: 'add-to-list_16',
         replaceWith: 'file-plus-o_16'

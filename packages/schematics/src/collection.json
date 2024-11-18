@@ -16,6 +16,11 @@
             "description": "Updates prefixes and names of changed/removed icons",
             "factory": "./migrations/css-selectors/index",
             "schema": "./migrations/css-selectors/schema.json"
+        },
+        "deprecated-icons": {
+            "description": "Updates prefixes and names of changed/removed icons",
+            "factory": "./migrations/deprecated-icons/index",
+            "schema": "./migrations/deprecated-icons/schema.json"
         }
     }
 }

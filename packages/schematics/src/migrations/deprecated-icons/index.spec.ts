@@ -1,140 +1,267 @@
 import { ProjectDefinitionCollection } from '@angular-devkit/core/src/workspace';
 import { Tree } from '@angular-devkit/schematics';
-import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
+import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
+import { ProjectDefinition } from '@schematics/angular/utility';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
-import { createTestApp } from '../utils/testing';
-import { newIconsPackData } from './data';
+import { createTestApp } from '../../utils/testing';
+import { iconsMapping } from './data';
 
-const collectionPath = path.join(__dirname, '../collection.json');
+const collectionPath = path.join(__dirname, '../../collection.json');
+const SCHEMATIC_NAME = 'deprecated-icons';
+const DEPRECATED_SCOPE = 'pt-icons';
 
-describe('new-icons-pack', () => {
+const getProjectContent = (tree: UnitTestTree | Tree, project: ProjectDefinition) => {
+    return [
+        tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
+        tree.read(`/${project.root}/src/app/app.component.ts`)?.toString() || '',
+        tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
+    ];
+};
+
+describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
     let projects: ProjectDefinitionCollection;
-    const elementsWithDeprecatedIconPrefixes = [
-        '<i kbq-icon="mc-word-wrap_16"></i>',
-        '<i kbq-icon-item="mc-word-wrap_16"></i>',
-        '<i kbq-icon-button="mc-word-wrap_16"></i>',
-        '<i class="mc kbq-icon mc-word-wrap_16"></i>',
-        '<div [class.mc-word-wrap_16]="true"></div>'
-    ];
-    const updatedPkgName = '@koobiq/icons';
 
-    beforeEach(async () => {
-        runner = new SchematicTestRunner('schematics', collectionPath);
-        appTree = await createTestApp(runner, { style: 'scss' });
-        const pkgPath = '/package.json';
-        const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        pkg.dependencies['@koobiq/icons'] = '^9.1.0';
-        appTree.overwrite(pkgPath, JSON.stringify(pkg));
+    describe('icons mapping', () => {
+        const elementsWithDeprecatedSelectors = iconsMapping.map(
+            ({ replace }) => `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}"></i>`
+        );
 
-        const workspace = await getWorkspace(appTree);
-        projects = workspace.projects as unknown as ProjectDefinitionCollection;
-        projects.forEach((project) => {
+        const cssClassesWithDeprecatedSelectors = iconsMapping
+            .slice(0, 5)
+            .map(({ replace }) => `.${DEPRECATED_SCOPE}-${replace} {}`)
+            .join('\n');
+
+        const componentClass = `
+@Component({
+    selector: 'test-app',
+    template: '${elementsWithDeprecatedSelectors.slice(0, 5).join('\n')}'
+})
+class TestApp {
+    dynamicClass = '${DEPRECATED_SCOPE}-${iconsMapping[0].replace}';
+}`;
+
+        beforeEach(async () => {
+            runner = new SchematicTestRunner('schematics', collectionPath);
+            appTree = await createTestApp(runner, { style: 'scss' });
+
+            const workspace = await getWorkspace(appTree);
+            projects = workspace.projects as unknown as ProjectDefinitionCollection;
+            projects.forEach((project) => {
+                const templatePath = `/${project.root}/src/app/app.component.html`;
+                const tsPath = `/${project.root}/src/app/app.component.ts`;
+                const stylesPath = `/${project.root}/src/styles.scss`;
+
+                appTree.overwrite(templatePath, elementsWithDeprecatedSelectors.join('\n'));
+                appTree.overwrite(stylesPath, cssClassesWithDeprecatedSelectors);
+                appTree.overwrite(tsPath, componentClass);
+            });
+        });
+
+        it('should run migration for specified project', async () => {
+            const [firstProjectKey, secondProjectKey] = projects.keys();
+            const firstProjectBeforeChanges = getProjectContent(appTree, projects.get(firstProjectKey)!);
+            const secondProjectBeforeChanges = getProjectContent(appTree, projects.get(secondProjectKey)!);
+
+            expect(firstProjectBeforeChanges).toMatchSnapshot(`project ${firstProjectKey}: before changes`);
+            expect(secondProjectBeforeChanges).toMatchSnapshot(`project ${secondProjectKey}: before changes`);
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true, project: firstProjectKey }, appTree);
+
+            expect(getProjectContent(tree, projects.get(firstProjectKey)!)).toMatchSnapshot(
+                `project ${firstProjectKey}: after changes`
+            );
+
+            expect(getProjectContent(tree, projects.get(secondProjectKey)!)).toMatchSnapshot(
+                `project ${secondProjectKey}: after changes`
+            );
+        });
+
+        it('should run migration for whole tree', async () => {
+            projects.forEach((project, key) => {
+                expect(getProjectContent(appTree, project)).toMatchSnapshot(`project ${key}: before changes`);
+            });
+
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
+
+            projects.forEach((project, key) => {
+                expect(getProjectContent(tree, project)).toMatchSnapshot(`project ${key}: after changes`);
+            });
+        });
+
+        it('should inform about deprecated icons for fix = false (default, without params)', async () => {
+            const [firstProjectKey] = projects.keys();
+            const messages: string[] = [];
+            runner.logger.subscribe(
+                ({ message }) => {
+                    messages.push(message);
+                    expect(message).toBeTruthy();
+                },
+                () => {},
+                () => expect(messages).toMatchSnapshot()
+            );
+
+            try {
+                await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
+            } finally {
+                runner.logger.complete();
+            }
+        });
+    });
+
+    describe('class replacements in styles, template, typescript', () => {
+        const { replace } = iconsMapping[0];
+        let currentProject: ProjectDefinition;
+        let currentProjectKey: string;
+        beforeEach(async () => {
+            runner = new SchematicTestRunner('schematics', collectionPath);
+            appTree = await createTestApp(runner, { style: 'scss' });
+
+            const workspace = await getWorkspace(appTree);
+            projects = workspace.projects as unknown as ProjectDefinitionCollection;
+            currentProjectKey = projects.keys().next().value;
+            currentProject = projects.get(currentProjectKey)!;
+        });
+        const overwriteProjectData = ({
+            html,
+            ts,
+            styles,
+            project,
+            tree
+        }: {
+            html?: string;
+            ts?: string;
+            styles?: string;
+            project: ProjectDefinition;
+            tree: Tree;
+        }) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;
+            const tsPath = `/${project.root}/src/app/app.component.ts`;
             const stylesPath = `/${project.root}/src/styles.scss`;
 
-            appTree.overwrite(
-                templatePath,
-                `${appTree.read(templatePath)!.toString()}\n${elementsWithDeprecatedIconPrefixes.join('\n')}`
-            );
-            appTree.overwrite(stylesPath, `@use "@koobiq/icons"\n${appTree.read(stylesPath)!.toString()}`);
-        });
-    });
-
-    it('should skip changes if koobiq icons package with breaking changes is not installed', async () => {
-        const pkgPath = '/package.json';
-        const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        delete pkg.dependencies['@koobiq/icons'];
-        appTree.overwrite(pkgPath, JSON.stringify(pkg));
-
-        runner.logger.subscribe(({ message }) =>
-            expect(message).toContain('Breaking version of icons is not used. Everything is OK.')
-        );
-        await runner.runSchematic('new-icons-pack', { fix: false }, appTree);
-    });
-
-    it('should run migration for specified project', async () => {
-        const [firstProjectKey, secondProjectKey] = projects.keys();
-        const readProjectContent = (projectKey: string) => {
-            const project = projects.get(projectKey)!;
-            return [
-                tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
-                tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
-            ];
+            html && tree.overwrite(templatePath, html);
+            styles && tree.overwrite(stylesPath, styles);
+            ts && tree.overwrite(tsPath, ts);
         };
 
-        const tree = await runner.runSchematic('new-icons-pack', { fix: false, project: firstProjectKey }, appTree);
+        it('should replace "class="pt-icons"" with ""', async () => {
+            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE}">`;
 
-        const [firstProjectTemplateContent, firstProjectStylesContent] = readProjectContent(firstProjectKey);
-        expect(
-            elementsWithDeprecatedIconPrefixes.filter((item) => firstProjectTemplateContent.indexOf(item) !== -1).length
-        ).toBeFalsy();
-        expect(firstProjectStylesContent).toContain(updatedPkgName);
+            const componentClass = `
+            @Component({
+                selector: 'test-app',
+                template: '${elementWithDeprecatedSelector}'
+            })
+            class TestApp {}`;
 
-        const [secondProjectTemplateContent] = readProjectContent(secondProjectKey);
-        expect(
-            elementsWithDeprecatedIconPrefixes.filter((item) => secondProjectTemplateContent.indexOf(item) !== -1)
-                .length
-        ).toEqual(elementsWithDeprecatedIconPrefixes.length);
-    });
+            overwriteProjectData({
+                html: elementWithDeprecatedSelector,
+                styles: 'empty',
+                ts: componentClass,
+                project: currentProject,
+                tree: appTree
+            });
+            expect(getProjectContent(appTree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: before changes`
+            );
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
 
-    it('should run migration for whole tree', async () => {
-        const tree = await runner.runSchematic('new-icons-pack', { fix: true }, appTree);
-
-        projects.forEach((project) => {
-            const templateContent = tree.read(`/${project.root}/src/app/app.component.html`)!.toString();
-
-            expect(
-                elementsWithDeprecatedIconPrefixes.filter((item) => templateContent.indexOf(item) !== -1).length
-            ).toBeFalsy();
-        });
-    });
-
-    it('should replace deprecated icons for fix = true', async () => {
-        const newIconsPackDataSlice = newIconsPackData.slice(0, 10);
-        const iconsToBeReplaced = newIconsPackDataSlice.map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
-        const iconsToBeReplacedWith = newIconsPackDataSlice.map(
-            ({ replaceWith }) => `<i kbq-icon="kbq-${replaceWith}"></i>`
-        );
-
-        projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.component.html`;
-
-            appTree.overwrite(
-                templatePath,
-                `${appTree.read(templatePath)!.toString()}\n${iconsToBeReplaced.join('\n')}`
+            expect(getProjectContent(tree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: after changes`
             );
         });
 
-        const tree = await runner.runSchematic('new-icons-pack', { fix: true }, appTree);
+        it('should replace "class="pt-icons " with "class=""', async () => {
+            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE} layout-column">`;
+            overwriteProjectData({
+                html: elementWithDeprecatedSelector,
+                styles: 'empty',
+                ts: 'empty',
+                project: currentProject,
+                tree: appTree
+            });
 
-        projects.forEach((project) => {
-            const templateContent = tree.read(`/${project.root}/src/app/app.component.html`)!.toString();
-
-            expect(iconsToBeReplaced.filter((item) => templateContent.indexOf(item) !== -1).length).toBeFalsy();
-            expect(iconsToBeReplacedWith.filter((item) => templateContent.indexOf(item) !== -1).length).toEqual(
-                iconsToBeReplacedWith.length
+            expect(getProjectContent(appTree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: before changes`
             );
-        });
-    });
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
 
-    it('should inform about deprecated icons for fix = false (default, without params)', async () => {
-        const newIconsPackDataSlice = newIconsPackData.slice(0, 10);
-        const iconsToBeReplaced = newIconsPackDataSlice.map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
-
-        projects.forEach((project) => {
-            const templatePath = `/${project.root}/src/app/app.component.html`;
-            appTree.overwrite(
-                templatePath,
-                `${appTree.read(templatePath)!.toString()}\n${iconsToBeReplaced.join('\n')}`
+            expect(getProjectContent(tree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: after changes`
             );
         });
 
-        // simply check for messages to be sent
-        runner.logger.subscribe(({ message }) => expect(message).toBeTruthy());
+        it('should replace " pt-icons"" with """', async () => {
+            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}">`;
+            overwriteProjectData({
+                html: elementWithDeprecatedSelector,
+                styles: 'empty',
+                ts: 'empty',
+                project: currentProject,
+                tree: appTree
+            });
 
-        await runner.runSchematic('new-icons-pack', {}, appTree);
+            expect(getProjectContent(appTree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: before changes`
+            );
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(getProjectContent(tree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: after changes`
+            );
+        });
+
+        it('should replace "\'pt-icons " with "\'"', async () => {
+            const componentClass = `
+            @Component({
+                selector: 'test-app',
+                template: ''
+            })
+            class TestApp {
+                getDynamicIcon() {
+                   return '${DEPRECATED_SCOPE} ${replace}';
+                }
+            }`;
+            overwriteProjectData({
+                ts: componentClass,
+                styles: 'empty',
+                html: 'empty',
+                project: currentProject,
+                tree: appTree
+            });
+
+            expect(getProjectContent(appTree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: before changes`
+            );
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(getProjectContent(tree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: after changes`
+            );
+        });
+
+        it('should replace ".pt-icons" with ".kbq"', async () => {
+            const styles = `
+                @mixin test-icon { @extend .pt-icons; }
+            `;
+            overwriteProjectData({
+                styles,
+                html: 'empty',
+                ts: 'empty',
+                project: currentProject,
+                tree: appTree
+            });
+
+            expect(getProjectContent(appTree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: before changes`
+            );
+            const tree = await runner.runSchematic(SCHEMATIC_NAME, { project: currentProjectKey, fix: true }, appTree);
+
+            expect(getProjectContent(tree, currentProject)).toMatchSnapshot(
+                `project ${currentProjectKey}: after changes`
+            );
+        });
     });
 });
