@@ -11,23 +11,23 @@ Replace with specified rules:
 	brand-default -> 	<remove from project>
 	brand-palette -> 	<remove from project>
 	info-default -> 	<remove from project>
-	background-background-disabled -> 	<remove from project>
-	background-background-less-contrast -> 	<remove from project>
-	background-background-under -> 	<remove from project>
-	background-background -> 	<remove from project>
-	background-overlay-hover -> 	<remove from project>
-	background-overlay-active -> 	<remove from project>
-	background-overlay-disabled -> 	<remove from project>
-	foreground-text-less-contrast -> 	<remove from project>
-	foreground-text-disabled -> 	<remove from project>
-	foreground-text-error -> 	<remove from project>
-	foreground-text-success -> 	<remove from project>
-	foreground-divider -> 	<remove from project>
-	foreground-text -> 	<remove from project>
-	foreground-icon -> 	<remove from project>
-	foreground-border -> 	<remove from project>
-	states-background-ghost-hover -> 	<remove from project>
-	states-background-ghost-active -> 	<remove from project>
+	background-background-disabled -> 	states-background-disabled
+	background-background-less-contrast -> 	states-background-secondary
+	background-background-under -> 	states-background-secondary
+	background-background -> 	background-bg
+	background-overlay-hover -> 	states-background-transparent-hover
+	background-overlay-active -> 	states-background-transparent-active
+	background-overlay-disabled -> 	states-background-transparent-disabled
+	foreground-text-less-contrast -> 	foreground-contrast-fade
+	foreground-text-disabled -> 	states-foreground-disabled
+	foreground-text-error -> 	foreground-contrast-fade
+	foreground-text-success -> 	foreground-success
+	foreground-divider -> 	line-contrast-less
+	foreground-text -> 	foreground-contrast
+	foreground-icon -> 	icon-contrast
+	foreground-border -> 	line-contrast-fade
+	states-background-ghost-hover -> 	states-background-transparent-hover
+	states-background-ghost-active -> 	states-background-transparent-active
 	states-focused-color-error -> 	<remove from project>
 	states-focused-color -> 	<remove from project>
 	states-selected-color -> 	<remove from project>
@@ -45,23 +45,23 @@ Replace with specified rules:
 	brand-default -> 	<remove from project>
 	brand-palette -> 	<remove from project>
 	info-default -> 	<remove from project>
-	background-background-disabled -> 	<remove from project>
-	background-background-less-contrast -> 	<remove from project>
-	background-background-under -> 	<remove from project>
-	background-background -> 	<remove from project>
-	background-overlay-hover -> 	<remove from project>
-	background-overlay-active -> 	<remove from project>
-	background-overlay-disabled -> 	<remove from project>
-	foreground-text-less-contrast -> 	<remove from project>
-	foreground-text-disabled -> 	<remove from project>
-	foreground-text-error -> 	<remove from project>
-	foreground-text-success -> 	<remove from project>
-	foreground-divider -> 	<remove from project>
-	foreground-text -> 	<remove from project>
-	foreground-icon -> 	<remove from project>
-	foreground-border -> 	<remove from project>
-	states-background-ghost-hover -> 	<remove from project>
-	states-background-ghost-active -> 	<remove from project>
+	background-background-disabled -> 	states-background-disabled
+	background-background-less-contrast -> 	states-background-secondary
+	background-background-under -> 	states-background-secondary
+	background-background -> 	background-bg
+	background-overlay-hover -> 	states-background-transparent-hover
+	background-overlay-active -> 	states-background-transparent-active
+	background-overlay-disabled -> 	states-background-transparent-disabled
+	foreground-text-less-contrast -> 	foreground-contrast-fade
+	foreground-text-disabled -> 	states-foreground-disabled
+	foreground-text-error -> 	foreground-contrast-fade
+	foreground-text-success -> 	foreground-success
+	foreground-divider -> 	line-contrast-less
+	foreground-text -> 	foreground-contrast
+	foreground-icon -> 	icon-contrast
+	foreground-border -> 	line-contrast-fade
+	states-background-ghost-hover -> 	states-background-transparent-hover
+	states-background-ghost-active -> 	states-background-transparent-active
 	states-focused-color-error -> 	<remove from project>
 	states-focused-color -> 	<remove from project>
 	states-selected-color -> 	<remove from project>
