@@ -28,8 +28,8 @@ Replace with specified rules:
 	foreground-border -> 	line-contrast-fade
 	states-background-ghost-hover -> 	states-background-transparent-hover
 	states-background-ghost-active -> 	states-background-transparent-active
-	states-focused-color-error -> 	<remove from project>
-	states-focused-color -> 	<remove from project>
+	states-focused-color-error -> 	states-line-focus-error
+	states-focused-color -> 	states-line-focus-theme
 	states-selected-color -> 	<remove from project>
 	states-pressed-shadow -> 	<remove from project>
 	states-pressed-shadow -> 	<remove from project>
@@ -62,8 +62,8 @@ Replace with specified rules:
 	foreground-border -> 	line-contrast-fade
 	states-background-ghost-hover -> 	states-background-transparent-hover
 	states-background-ghost-active -> 	states-background-transparent-active
-	states-focused-color-error -> 	<remove from project>
-	states-focused-color -> 	<remove from project>
+	states-focused-color-error -> 	states-line-focus-error
+	states-focused-color -> 	states-line-focus-theme
 	states-selected-color -> 	<remove from project>
 	states-pressed-shadow -> 	<remove from project>
 	states-pressed-shadow -> 	<remove from project>
