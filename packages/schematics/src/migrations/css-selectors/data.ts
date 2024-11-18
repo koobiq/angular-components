@@ -57,8 +57,8 @@ export const colorsVarsReplacement: ReplaceData[] = [
     { replace: 'states-background-ghost-hover', replaceWith: 'states-background-transparent-hover' },
     { replace: 'states-background-ghost-active', replaceWith: 'states-background-transparent-active' },
     /* ICON */
-    { replace: 'states-focused-color-error', replaceWith: '<remove from project>' },
-    { replace: 'states-focused-color', replaceWith: '<remove from project>' },
+    { replace: 'states-focused-color-error', replaceWith: 'states-line-focus-error' },
+    { replace: 'states-focused-color', replaceWith: 'states-line-focus-theme' },
     { replace: 'states-selected-color', replaceWith: '<remove from project>' },
     { replace: 'states-pressed-shadow', replaceWith: '<remove from project>' },
     { replace: 'states-pressed-shadow', replaceWith: '<remove from project>' },
