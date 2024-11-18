@@ -96,7 +96,7 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
-    it('should inform about deprecated selectors for fix = false (default, without params)', (done) => {
+    it('should inform about deprecated selectors for fix = false (default, without params)', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
         runner.logger.subscribe(
@@ -105,16 +105,17 @@ describe(SCHEMATIC_NAME, () => {
                 expect(message).toBeTruthy();
             },
             () => {},
-            () => {
-                expect(messages).toMatchSnapshot();
-                done();
-            }
+            () => expect(messages).toMatchSnapshot()
         );
 
-        runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree).then(() => runner.logger.complete());
+        try {
+            await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
+        } finally {
+            runner.logger.complete();
+        }
     });
 
-    it('should inform about deprecated colors in the file', (done) => {
+    it('should inform about deprecated colors in the file', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
         runner.logger.subscribe(
@@ -123,10 +124,7 @@ describe(SCHEMATIC_NAME, () => {
                 expect(message).toBeTruthy();
             },
             () => {},
-            () => {
-                expect(messages).toMatchSnapshot();
-                done();
-            }
+            () => expect(messages).toMatchSnapshot()
         );
 
         projects.forEach((project) => {
@@ -139,6 +137,10 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(tsPath, '');
         });
 
-        runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree).then(() => runner.logger.complete());
+        try {
+            await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
+        } finally {
+            runner.logger.complete();
+        }
     });
 });

@@ -1,13 +1,10 @@
 import { Path } from '@angular-devkit/core';
 import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
-import chalk from 'chalk';
 import * as path from 'path';
 
 import { setupOptions } from '../../utils/package-config';
 import { colorsVarsReplacement, ReplaceData, typographyCssSelectorsReplacement } from './data';
 import { Schema } from './schema';
-
-const { italic, blue, bold } = chalk;
 
 export default function cssSelectors(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
@@ -75,7 +72,7 @@ function getBaseReplacements(filePath: Path, foundSelectors: ReplaceData[]) {
     return `
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file: 
-${bold(italic(blue(parsedFilePath.replace(/\\/g, '/'))))}
+${parsedFilePath.replace(/\\/g, '/')}
 Replace with specified rules: 
 ${foundSelectors.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')}
 -------------------------
@@ -85,7 +82,7 @@ ${foundSelectors.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceW
 function getTypographyReplacements(filePath: Path, foundSelectors: ReplaceData[]) {
     const baseMessage = getBaseReplacements(filePath, foundSelectors);
     return `${baseMessage}\n
-Or use ${bold(italic('--fix=true'))} to replace automatically
+Or use --fix=true to replace automatically
 Pay attention: overwriting is possible. Check the code after automatic replacement was done.
 -------------------------
     `;

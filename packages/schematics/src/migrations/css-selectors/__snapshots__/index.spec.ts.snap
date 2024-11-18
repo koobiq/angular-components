@@ -5,7 +5,7 @@ exports[`css-selectors should inform about deprecated colors in the file 1`] = `
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file: 
-[1m[3m[34m../../../../../projects/app/src/styles.scss[39m[23m[22m
+../../../../../projects/app/src/styles.scss
 Replace with specified rules: 
 	neutral-white -> 	<remove from project>
 	brand-default -> 	<remove from project>
@@ -39,7 +39,7 @@ Replace with specified rules:
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file: 
-[1m[3m[34m../../../../../projects/app/src/app/app.component.html[39m[23m[22m
+../../../../../projects/app/src/app/app.component.html
 Replace with specified rules: 
 	neutral-white -> 	<remove from project>
 	brand-default -> 	<remove from project>
@@ -78,7 +78,7 @@ exports[`css-selectors should inform about deprecated selectors for fix = false 
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file: 
-[1m[3m[34m../../../../../projects/app/src/styles.scss[39m[23m[22m
+../../../../../projects/app/src/styles.scss
 Replace with specified rules: 
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong
@@ -105,14 +105,14 @@ Replace with specified rules:
 -------------------------
     
 
-Or use [1m[3m--fix=true[23m[22m to replace automatically
+Or use --fix=true to replace automatically
 Pay attention: overwriting is possible. Check the code after automatic replacement was done.
 -------------------------
     ",
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file: 
-[1m[3m[34m../../../../../projects/app/src/app/app.component.html[39m[23m[22m
+../../../../../projects/app/src/app/app.component.html
 Replace with specified rules: 
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong
@@ -139,14 +139,14 @@ Replace with specified rules:
 -------------------------
     
 
-Or use [1m[3m--fix=true[23m[22m to replace automatically
+Or use --fix=true to replace automatically
 Pay attention: overwriting is possible. Check the code after automatic replacement was done.
 -------------------------
     ",
   "
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file: 
-[1m[3m[34m../../../../../projects/app/src/app/app.component.ts[39m[23m[22m
+../../../../../projects/app/src/app/app.component.ts
 Replace with specified rules: 
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong
@@ -173,7 +173,7 @@ Replace with specified rules:
 -------------------------
     
 
-Or use [1m[3m--fix=true[23m[22m to replace automatically
+Or use --fix=true to replace automatically
 Pay attention: overwriting is possible. Check the code after automatic replacement was done.
 -------------------------
     ",
