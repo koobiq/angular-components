@@ -26,7 +26,7 @@ const localeDataSet = {
     selector: 'select-width-min-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field style="width: 104px">
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
@@ -39,6 +39,17 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+
+            .kbq-select__content {
+                max-height: 380px;
+            }
+        }
     `
 })
 export class SelectWidthMinExample {

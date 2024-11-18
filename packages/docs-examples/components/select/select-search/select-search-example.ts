@@ -40,11 +40,8 @@ const localeDataSet = {
         KbqHighlightModule
     ],
     template: `
-        <kbq-form-field>
-            <kbq-select
-                [(value)]="selected"
-                multiple
-            >
+        <kbq-form-field style="width: 320px">
+            <kbq-select [(value)]="selected">
                 <kbq-form-field
                     kbqFormFieldWithoutBorders
                     kbqSelectSearch
@@ -72,6 +69,13 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
     `
 })
 export class SelectSearchExample {

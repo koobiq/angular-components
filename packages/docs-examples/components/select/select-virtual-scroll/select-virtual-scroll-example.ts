@@ -157,8 +157,8 @@ export const OPTIONS = [
     selector: 'select-virtual-scroll-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
     template: `
-        <kbq-form-field>
-            <kbq-select (openedChange)="openedChange($event)">
+        <kbq-form-field style="width: 320px">
+            <kbq-select (openedChange)="openedChange($event)" [placeholder]="'Город'">
                 <kbq-cleaner #kbqSelectCleaner />
 
                 <cdk-virtual-scroll-viewport
@@ -175,6 +175,13 @@ export const OPTIONS = [
                 </cdk-virtual-scroll-viewport>
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
     `
 })
 export class SelectVirtualScrollExample {

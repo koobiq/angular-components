@@ -26,7 +26,7 @@ const localeDataSet = {
     selector: 'select-cleaner-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
@@ -39,6 +39,13 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
     `
 })
 export class SelectCleanerExample {
@@ -52,6 +59,6 @@ export class SelectCleanerExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = '';
+        this.selected = localeDataSet[locale].items[0];
     };
 }

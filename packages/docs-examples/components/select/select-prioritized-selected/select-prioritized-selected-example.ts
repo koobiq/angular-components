@@ -26,7 +26,7 @@ const localeDataSet = {
     selector: 'select-prioritized-selected-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
                 [multiple]="true"
@@ -41,6 +41,13 @@ const localeDataSet = {
                 <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
     `
 })
 export class SelectPrioritizedSelectedExample implements OnInit {
@@ -55,7 +62,7 @@ export class SelectPrioritizedSelectedExample implements OnInit {
 
     update = (locale: string) => {
         this.defaultOptions = localeDataSet[locale].items;
-        this.selected = [this.defaultOptions[10], this.defaultOptions[15], this.defaultOptions[20]];
+        this.selected = [this.defaultOptions[10], this.defaultOptions[20]];
         this.popSelectedOptionsUp();
     };
 

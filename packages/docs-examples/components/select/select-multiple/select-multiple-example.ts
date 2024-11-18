@@ -26,7 +26,7 @@ const localeDataSet = {
     selector: 'select-multiple-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
                 multiple
@@ -40,6 +40,13 @@ const localeDataSet = {
                 <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
     `
 })
 export class SelectMultipleExample {
@@ -53,6 +60,6 @@ export class SelectMultipleExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = [];
+        this.selected = localeDataSet[locale].items[0];
     };
 }

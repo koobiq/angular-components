@@ -10,7 +10,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'select-groups-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field style="width: 320px">
             <kbq-select>
                 @for (group of pokemonTypes; track group) {
                     <kbq-optgroup
@@ -27,6 +27,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 <kbq-option [value]="'mime-11'">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
     `
 })
 export class SelectGroupsExample {

@@ -26,20 +26,55 @@ const localeDataSet = {
     selector: 'select-disabled-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
-            <kbq-select
-                [(value)]="selected"
-                [disabled]="true"
-                [placeholder]="'Город'"
-            >
-                <kbq-cleaner #kbqSelectCleaner />
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">
-                        <span [innerHTML]="option"></span>
-                    </kbq-option>
-                }
-            </kbq-select>
-        </kbq-form-field>
+        <div class="layout-row">
+            <div class="kbq-form__label">Для селекта</div>
+            <kbq-form-field style="width: 320px">
+                <kbq-select
+                    [(value)]="selected"
+                    [disabled]="true"
+                    [placeholder]="'Город'"
+                >
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">
+                            <span [innerHTML]="option"></span>
+                        </kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+        <div class="layout-row">
+            <div class="kbq-form__label">Для значений</div>
+            <kbq-form-field style="width: 320px">
+                <kbq-select
+                    [(value)]="selected"
+                    [placeholder]="'Город'"
+                >
+                    @for (option of options; track option; let i = $index) {
+                        <kbq-option
+                            [value]="option"
+                            [disabled]="i % 2 !== 0"
+                        >
+                            <span [innerHTML]="option"></span>
+                        </kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+    `,
+    styles: `
+        .layout-row {
+            width: 400px;
+            margin: 0 auto;
+            padding: 16px;
+            align-items: center;
+            gap: 24px;
+            justify-content: flex-end;
+        }
+
+        .kbq-form__label {
+            white-space: nowrap;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
     `
 })
 export class SelectDisabledExample {
@@ -53,6 +88,6 @@ export class SelectDisabledExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = '';
+        this.selected = localeDataSet[locale].items[0];
     };
 }

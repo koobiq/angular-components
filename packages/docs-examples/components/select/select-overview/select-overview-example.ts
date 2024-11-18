@@ -43,6 +43,7 @@ const localeDataSet = {
         :host {
             display: flex;
             justify-content: center;
+            padding: 16px;
         }
     `
 })

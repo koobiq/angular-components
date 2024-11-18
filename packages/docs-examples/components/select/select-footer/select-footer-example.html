@@ -1,95 +1,99 @@
-<p style="margin-top: 0; margin-bottom: 12px">Link</p>
-<kbq-form-field>
-    <kbq-select [(value)]="selected">
-        <kbq-option
-            disabled
-            [value]="'Disabled'"
-        >
-            Disabled
-        </kbq-option>
-        <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-        <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-        <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
-        <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
-        <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
-        <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
-        <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
-        <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
-        <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
-        <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
-        <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
-
-        <kbq-select-footer>
-            <a
-                href="/components/select/overview"
-                kbq-link
+<div class="layout-row">
+    <div class="kbq-form__label">Button</div>
+    <kbq-form-field>
+        <kbq-select [(value)]="selected">
+            <kbq-option
+                disabled
+                [value]="'Disabled'"
             >
-                <span class="kbq-link__text">Ссылка</span>
-                <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
-            </a>
-        </kbq-select-footer>
-    </kbq-select>
-</kbq-form-field>
-
-<p style="margin-top: 24px; margin-bottom: 12px">Caption</p>
-<kbq-form-field>
-    <kbq-select [(value)]="selected">
-        <kbq-option
-            disabled
-            [value]="'Disabled'"
-        >
-            Disabled
-        </kbq-option>
-        <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-        <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-        <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
-        <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
-        <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
-        <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
-        <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
-        <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
-        <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
-        <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
-        <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
-        <kbq-select-footer>
-            <div
-                style="padding: 0; display: block; height: unset"
-                class="kbq-select__no-options-message kbq-caption"
+                Disabled
+            </kbq-option>
+            <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
+            <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
+            <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
+            <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
+            <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
+            <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
+            <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
+            <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
+            <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
+            <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
+            <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
+            <kbq-select-footer style="padding-left: 4px">
+                <button
+                    kbq-button
+                    class="kbq-button_transparent"
+                >
+                    <i kbq-icon="kbq-arrow-up-from-line_16"></i>
+                    Добавить
+                </button>
+            </kbq-select-footer>
+        </kbq-select>
+    </kbq-form-field>
+</div>
+<div class="layout-row">
+    <div class="kbq-form__label">Caption</div>
+    <kbq-form-field>
+        <kbq-select [(value)]="selected">
+            <kbq-option
+                disabled
+                [value]="'Disabled'"
             >
-                Подсказка о чем-нибудь ⌥+⌘+F
-            </div>
-        </kbq-select-footer>
-    </kbq-select>
-</kbq-form-field>
-
-<p style="margin-top: 24px; margin-bottom: 12px">Button</p>
-<kbq-form-field>
-    <kbq-select [(value)]="selected">
-        <kbq-option
-            disabled
-            [value]="'Disabled'"
-        >
-            Disabled
-        </kbq-option>
-        <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-        <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-        <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
-        <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
-        <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
-        <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
-        <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
-        <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
-        <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
-        <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
-        <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
-        <kbq-select-footer style="padding-left: 4px">
-            <button
-                kbq-button
-                class="kbq-button_transparent"
+                Disabled
+            </kbq-option>
+            <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
+            <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
+            <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
+            <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
+            <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
+            <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
+            <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
+            <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
+            <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
+            <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
+            <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
+            <kbq-select-footer>
+                <div
+                    style="padding: 0; display: block; height: unset"
+                    class="kbq-select__no-options-message kbq-caption"
+                >
+                    Подсказка о чем-нибудь ⌥+⌘+F
+                </div>
+            </kbq-select-footer>
+        </kbq-select>
+    </kbq-form-field>
+</div>
+<div class="layout-row">
+    <div class="kbq-form__label">Link</div>
+    <kbq-form-field>
+        <kbq-select [(value)]="selected">
+            <kbq-option
+                disabled
+                [value]="'Disabled'"
             >
-                <i kbq-icon="kbq-arrow-up-from-line_16"></i>
-                Добавить
-            </button>
-        </kbq-select-footer>
-    </kbq-select>
-</kbq-form-field>
+                Disabled
+            </kbq-option>
+            <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
+            <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
+            <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
+            <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
+            <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
+            <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
+            <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
+            <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
+            <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
+            <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
+            <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
+
+            <kbq-select-footer>
+                <a
+                    href="/components/select/overview"
+                    kbq-link
+                >
+                    <span class="kbq-link__text">Ссылка</span>
+                    <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+                </a>
+            </kbq-select-footer>
+        </kbq-select>
+    </kbq-form-field>
+</div>
