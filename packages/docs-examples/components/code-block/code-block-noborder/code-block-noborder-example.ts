@@ -207,7 +207,7 @@ export class KbqCodeBlockComponent implements OnDestroy {
         KbqButtonModule
     ],
     template: `
-        <div class="kbq-body">
+        <div class="kbq-text-big">
             <button
                 (click)="toggleSidepanel()"
                 kbq-button

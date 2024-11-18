@@ -16,7 +16,7 @@ interface ICheckbox {
         KbqCheckboxModule
     ],
     template: `
-        <div class="kbq-body">
+        <div class="kbq-text-big">
             <kbq-checkbox
                 [checked]="parentChecked"
                 [indeterminate]="parentIndeterminate"

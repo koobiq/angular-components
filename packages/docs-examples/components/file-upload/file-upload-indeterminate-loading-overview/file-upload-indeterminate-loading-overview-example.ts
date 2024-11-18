@@ -29,7 +29,7 @@ import { take } from 'rxjs/operators';
         </kbq-file-upload>
 
         @if (isLoading) {
-            <p class="kbq-body">Immediately load to backend...</p>
+            <p class="kbq-text-big">Immediately load to backend...</p>
         }
     `
 })

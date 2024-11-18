@@ -15,7 +15,7 @@
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
     --kbq-checkbox-theme-default-border: var(--kbq-line-contrast-fade);
-    --kbq-checkbox-theme-default-color: var(--kbq-neutral-white);
+    --kbq-checkbox-theme-default-color: var(--kbq-icon-white);
     --kbq-checkbox-theme-default-text: var(--kbq-foreground-contrast);
     --kbq-checkbox-theme-default-background: var(--kbq-background-bg);
     --kbq-checkbox-theme-default-caption: var(--kbq-foreground-contrast-secondary);
@@ -37,7 +37,7 @@
     --kbq-checkbox-theme-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-checkbox-theme-states-disabled-caption: var(--kbq-states-icon-disabled);
     --kbq-checkbox-error-default-border: var(--kbq-line-error);
-    --kbq-checkbox-error-default-color: var(--kbq-neutral-white);
+    --kbq-checkbox-error-default-color: var(--kbq-icon-white);
     --kbq-checkbox-error-default-text: var(--kbq-foreground-contrast);
     --kbq-checkbox-error-default-background: var(--kbq-states-background-error-less);
     --kbq-checkbox-error-default-caption: var(--kbq-foreground-contrast-secondary);
@@ -62,7 +62,7 @@
 
 :where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
     --kbq-checkbox-theme-default-border: var(--kbq-line-contrast-fade);
-    --kbq-checkbox-theme-default-color: var(--kbq-neutral-white);
+    --kbq-checkbox-theme-default-color: var(--kbq-icon-white);
     --kbq-checkbox-theme-default-text: var(--kbq-foreground-contrast);
     --kbq-checkbox-theme-default-background: var(--kbq-background-bg);
     --kbq-checkbox-theme-default-caption: var(--kbq-foreground-contrast-secondary);
@@ -84,7 +84,7 @@
     --kbq-checkbox-theme-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-checkbox-theme-states-disabled-caption: var(--kbq-states-icon-disabled);
     --kbq-checkbox-error-default-border: var(--kbq-line-error);
-    --kbq-checkbox-error-default-color: var(--kbq-neutral-white);
+    --kbq-checkbox-error-default-color: var(--kbq-icon-white);
     --kbq-checkbox-error-default-text: var(--kbq-foreground-contrast);
     --kbq-checkbox-error-default-background: var(--kbq-states-background-error-less);
     --kbq-checkbox-error-default-caption: var(--kbq-foreground-contrast-secondary);

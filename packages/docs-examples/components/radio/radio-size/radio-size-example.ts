@@ -11,7 +11,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
         KbqRadioModule
     ],
     template: `
-        <div class="kbq-body layout-wrap">
+        <div class="kbq-text-big layout-wrap">
             <div
                 class="layout-row layout-wrap"
                 style="gap: 24px"

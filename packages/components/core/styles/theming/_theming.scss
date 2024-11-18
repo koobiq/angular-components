@@ -75,16 +75,7 @@
         error-tertiary: map.get($tokens, '#{$scheme}-foreground-error-tertiary'),
         visited: map.get($tokens, '#{$scheme}-foreground-visited'),
         // будет удалено, после удаления из компонентов ↓
-        error-less: map.get($tokens, '#{$scheme}-foreground-error-less'),
-        // будет удалено, после удаления из компонентов ↓
-        text: map.get($tokens, '#{$scheme}-foreground-text'),
-        text-less-contrast: map.get($tokens, '#{$scheme}-foreground-text-less-contrast'),
-        text-disabled: map.get($tokens, '#{$scheme}-foreground-text-disabled'),
-        text-error: map.get($tokens, '#{$scheme}-foreground-text-error'),
-        text-success: map.get($tokens, '#{$scheme}-foreground-text-success'),
-        divider: map.get($tokens, '#{$scheme}-foreground-divider'),
-        border: map.get($tokens, '#{$scheme}-foreground-border'),
-        icon: map.get($tokens, '#{$scheme}-foreground-icon')
+        error-less: map.get($tokens, '#{$scheme}-foreground-error-less')
     );
 }
 
@@ -107,16 +98,8 @@
         warning: map.get($tokens, '#{$scheme}-background-warning'),
         warning-fade: map.get($tokens, '#{$scheme}-background-warning-fade'),
         transparent: map.get($tokens, '#{$scheme}-background-transparent'),
-        // будет удалено, после удаления из компонентов ↓
-        background: map.get($tokens, '#{$scheme}-background-background'),
-        background-disabled: map.get($tokens, '#{$scheme}-background-background-disabled'),
-        background-less-contrast: map.get($tokens, '#{$scheme}-background-background-less-contrast'),
-        background-under: map.get($tokens, '#{$scheme}-background-background-under'),
         overlay: map.get($tokens, '#{$scheme}-background-overlay'),
-        overlay-inverse: map.get($tokens, '#{$scheme}-background-overlay-inverse'),
-        overlay-hover: map.get($tokens, '#{$scheme}-background-overlay-hover'),
-        overlay-active: map.get($tokens, '#{$scheme}-background-overlay-active'),
-        overlay-disabled: map.get($tokens, '#{$scheme}-background-overlay-disabled')
+        overlay-inverse: map.get($tokens, '#{$scheme}-background-overlay-inverse')
     );
 }
 
@@ -213,22 +196,13 @@
     );
 }
 
-@function _theme_states-others($tokens, $scheme) {
-    @return (brand: map.get($tokens, '#{$scheme}-states-others-brand'));
-}
-
 @function _theme_states($tokens, $scheme) {
     @return (
         background: _theme_states-background($tokens, $scheme),
         foreground: _theme_states-foreground($tokens, $scheme),
         icon: _theme_states-icon($tokens, $scheme),
         line: _theme_states-line($tokens, $scheme),
-        others: _theme_states-others($tokens, $scheme),
         // будет удалено, после удаления из компонентов ↓
-        focused-color: map.get($tokens, '#{$scheme}-states-focused-color'),
-        focused-color-error: map.get($tokens, '#{$scheme}-states-focused-color-error'),
-        selected-color: map.get($tokens, '#{$scheme}-states-selected-color'),
-        pressed-shadow: map.get($tokens, '#{$scheme}-states-pressed-shadow'),
         disabled-opacity: map.get($tokens, '#{$scheme}-states-disabled-opacity')
     );
 }
@@ -249,10 +223,6 @@
     );
 }
 
-@function _theme_palette_neutral($tokens, $scheme) {
-    @return (white: map.get($tokens, '#{$scheme}-neutral-white'), black: map.get($tokens, '#{$scheme}-neutral-black'));
-}
-
 @function kbq-light-theme($tokens) {
     $scheme: 'light';
 
@@ -269,14 +239,9 @@
         warning: _theme_palette($tokens, $scheme, warning),
         error: _theme_palette($tokens, $scheme, error),
         contrast: _theme_palette($tokens, $scheme, contrast),
-        neutral: _theme_palette_neutral($tokens, $scheme),
         white: _theme_palette($tokens, $scheme, white),
         black: _theme_palette($tokens, $scheme, black),
-        brand: _theme_palette($tokens, $scheme, brand),
         purple: _theme_palette($tokens, $scheme, purple),
-        // будет удалено, после удаления из компонентов ↓
-        info: _theme_palette($tokens, $scheme, info),
-        // будет удалено, после удаления из компонентов ↑
         components: kbq-components-theme($tokens, $scheme),
         tokens: $tokens
     );
@@ -298,14 +263,9 @@
         warning: _theme_palette($tokens, $scheme, warning),
         error: _theme_palette($tokens, $scheme, error),
         contrast: _theme_palette($tokens, $scheme, contrast),
-        neutral: _theme_palette_neutral($tokens, $scheme),
         white: _theme_palette($tokens, $scheme, white),
         black: _theme_palette($tokens, $scheme, black),
-        brand: _theme_palette($tokens, $scheme, brand),
         purple: _theme_palette($tokens, $scheme, purple),
-        // будет удалено, после удаления из компонентов ↓
-        info: _theme_palette($tokens, $scheme, info),
-        // будет удалено, после удаления из компонентов ↑
         components: kbq-components-theme($tokens, $scheme),
         tokens: $tokens
     );

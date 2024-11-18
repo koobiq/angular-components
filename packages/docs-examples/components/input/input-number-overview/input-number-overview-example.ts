@@ -18,7 +18,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqInputModule
     ],
     template: `
-        <div class="kbq-body">
+        <div class="kbq-text-big">
             <div class="kbq-form-horizontal">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40">

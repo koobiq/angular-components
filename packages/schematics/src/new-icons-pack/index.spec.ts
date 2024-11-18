@@ -3,6 +3,7 @@ import { Tree } from '@angular-devkit/schematics';
 import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
+import { first } from 'rxjs';
 import { createTestApp } from '../utils/testing';
 import { newIconsPackData } from './data';
 
@@ -120,7 +121,7 @@ describe('new-icons-pack', () => {
         });
     });
 
-    it('should inform about deprecated icons for fix = false (default, without params)', async () => {
+    it('should inform about deprecated icons for fix = false (default, without params)', (done) => {
         const newIconsPackDataSlice = newIconsPackData.slice(0, 10);
         const iconsToBeReplaced = newIconsPackDataSlice.map(({ replace }) => `<i kbq-icon="mc-${replace}"></i>`);
 
@@ -133,8 +134,11 @@ describe('new-icons-pack', () => {
         });
 
         // simply check for messages to be sent
-        runner.logger.subscribe(({ message }) => expect(message).toBeTruthy());
+        runner.logger.pipe(first()).subscribe(({ message }) => {
+            expect(message).toBeTruthy();
+            done();
+        });
 
-        await runner.runSchematic('new-icons-pack', {}, appTree);
+        runner.runSchematic('new-icons-pack', {}, appTree);
     });
 });
