@@ -96,7 +96,7 @@ describe(SCHEMATIC_NAME, () => {
         });
     });
 
-    it('should inform about deprecated selectors for fix = false (default, without params)', async () => {
+    it('should inform about deprecated selectors for fix = false (default, without params)', (done) => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
         runner.logger.subscribe(
@@ -105,17 +105,16 @@ describe(SCHEMATIC_NAME, () => {
                 expect(message).toBeTruthy();
             },
             () => {},
-            () => expect(messages).toMatchSnapshot()
+            () => {
+                expect(messages).toMatchSnapshot();
+                done();
+            }
         );
 
-        try {
-            await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
-        } finally {
-            runner.logger.complete();
-        }
+        runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree).then(() => runner.logger.complete());
     });
 
-    it('should inform about deprecated colors in the file', async () => {
+    it('should inform about deprecated colors in the file', (done) => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
         runner.logger.subscribe(
@@ -124,7 +123,10 @@ describe(SCHEMATIC_NAME, () => {
                 expect(message).toBeTruthy();
             },
             () => {},
-            () => expect(messages).toMatchSnapshot()
+            () => {
+                expect(messages).toMatchSnapshot();
+                done();
+            }
         );
 
         projects.forEach((project) => {
@@ -137,10 +139,6 @@ describe(SCHEMATIC_NAME, () => {
             appTree.overwrite(tsPath, '');
         });
 
-        try {
-            await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree);
-        } finally {
-            runner.logger.complete();
-        }
+        runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey }, appTree).then(() => runner.logger.complete());
     });
 });
