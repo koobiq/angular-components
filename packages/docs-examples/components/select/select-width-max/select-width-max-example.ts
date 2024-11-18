@@ -19,18 +19,19 @@ const localeDataSet = {
 };
 
 /**
- * @title Select
+ * @title Select width max
  */
 @Component({
     standalone: true,
-    selector: 'select-overview-example',
+    selector: 'select-width-max-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field style="width: 320px">
+        <kbq-form-field>
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
             >
+                <kbq-cleaner #kbqSelectCleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -38,15 +39,9 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
-    `,
-    styles: `
-        :host {
-            display: flex;
-            justify-content: center;
-        }
     `
 })
-export class SelectOverviewExample {
+export class SelectWidthMaxExample {
     selected = '';
 
     options: string[] = [];

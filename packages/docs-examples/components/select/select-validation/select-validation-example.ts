@@ -19,14 +19,26 @@ const localeDataSet = {
 };
 
 /**
- * @title Select
+ * @title Select validation
  */
 @Component({
     standalone: true,
-    selector: 'select-overview-example',
+    selector: 'select-validation-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field style="width: 320px">
+        <kbq-form-field>
+            <kbq-select
+                [(value)]="selected"
+                [placeholder]="'Город'"
+            >
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option"></span>
+                    </kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+        <kbq-form-field>
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
@@ -42,11 +54,15 @@ const localeDataSet = {
     styles: `
         :host {
             display: flex;
-            justify-content: center;
+            gap: 16px;
+        }
+
+        kbq-form-field {
+            width: 50%;
         }
     `
 })
-export class SelectOverviewExample {
+export class SelectValidationExample {
     selected = '';
 
     options: string[] = [];

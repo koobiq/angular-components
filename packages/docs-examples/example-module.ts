@@ -2271,6 +2271,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "scrollbar-with-options-example.ts",
     "importPath": "components/scrollbar"
   },
+  "select-cleaner": {
+    "packagePath": "components/select/select-cleaner",
+    "title": "Select cleaner",
+    "componentName": "SelectCleanerExample",
+    "files": [
+      "select-cleaner-example.ts"
+    ],
+    "selector": "select-cleaner-example",
+    "additionalComponents": [],
+    "primaryFile": "select-cleaner-example.ts",
+    "importPath": "components/select"
+  },
+  "select-disabled": {
+    "packagePath": "components/select/select-disabled",
+    "title": "Select disabled",
+    "componentName": "SelectDisabledExample",
+    "files": [
+      "select-disabled-example.ts"
+    ],
+    "selector": "select-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "select-disabled-example.ts",
+    "importPath": "components/select"
+  },
   "select-footer": {
     "packagePath": "components/select/select-footer",
     "title": "Select footer",
@@ -2296,16 +2320,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-groups-example.ts",
     "importPath": "components/select"
   },
-  "select-multiple-overview": {
-    "packagePath": "components/select/select-multiple-overview",
-    "title": "Select multiple",
-    "componentName": "SelectMultipleOverviewExample",
+  "select-height": {
+    "packagePath": "components/select/select-height",
+    "title": "Select height",
+    "componentName": "SelectHeightExample",
     "files": [
-      "select-multiple-overview-example.ts"
+      "select-height-example.ts"
     ],
-    "selector": "select-multiple-overview-example",
+    "selector": "select-height-example",
     "additionalComponents": [],
-    "primaryFile": "select-multiple-overview-example.ts",
+    "primaryFile": "select-height-example.ts",
+    "importPath": "components/select"
+  },
+  "select-multiple": {
+    "packagePath": "components/select/select-multiple",
+    "title": "Select multiple",
+    "componentName": "SelectMultipleExample",
+    "files": [
+      "select-multiple-example.ts"
+    ],
+    "selector": "select-multiple-example",
+    "additionalComponents": [],
+    "primaryFile": "select-multiple-example.ts",
     "importPath": "components/select"
   },
   "select-overview": {
@@ -2332,16 +2368,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-prioritized-selected-example.ts",
     "importPath": "components/select"
   },
-  "select-search-overview": {
-    "packagePath": "components/select/select-search-overview",
+  "select-search": {
+    "packagePath": "components/select/select-search",
     "title": "Select search",
-    "componentName": "SelectSearchOverviewExample",
+    "componentName": "SelectSearchExample",
     "files": [
-      "select-search-overview-example.ts"
+      "select-search-example.ts"
     ],
-    "selector": "select-search-overview-example",
+    "selector": "select-search-example",
     "additionalComponents": [],
-    "primaryFile": "select-search-overview-example.ts",
+    "primaryFile": "select-search-example.ts",
+    "importPath": "components/select"
+  },
+  "select-validation": {
+    "packagePath": "components/select/select-validation",
+    "title": "Select validation",
+    "componentName": "SelectValidationExample",
+    "files": [
+      "select-validation-example.ts"
+    ],
+    "selector": "select-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "select-validation-example.ts",
     "importPath": "components/select"
   },
   "select-virtual-scroll": {
@@ -2354,6 +2402,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "select-virtual-scroll-example",
     "additionalComponents": [],
     "primaryFile": "select-virtual-scroll-example.ts",
+    "importPath": "components/select"
+  },
+  "select-width-fixed": {
+    "packagePath": "components/select/select-width-fixed",
+    "title": "Select width fixed",
+    "componentName": "SelectWidthFixedExample",
+    "files": [
+      "select-width-fixed-example.ts"
+    ],
+    "selector": "select-width-fixed-example",
+    "additionalComponents": [],
+    "primaryFile": "select-width-fixed-example.ts",
+    "importPath": "components/select"
+  },
+  "select-width-max": {
+    "packagePath": "components/select/select-width-max",
+    "title": "Select width max",
+    "componentName": "SelectWidthMaxExample",
+    "files": [
+      "select-width-max-example.ts"
+    ],
+    "selector": "select-width-max-example",
+    "additionalComponents": [],
+    "primaryFile": "select-width-max-example.ts",
+    "importPath": "components/select"
+  },
+  "select-width-min": {
+    "packagePath": "components/select/select-width-min",
+    "title": "Select width min",
+    "componentName": "SelectWidthMinExample",
+    "files": [
+      "select-width-min-example.ts"
+    ],
+    "selector": "select-width-min-example",
+    "additionalComponents": [],
+    "primaryFile": "select-width-min-example.ts",
+    "importPath": "components/select"
+  },
+  "select-width": {
+    "packagePath": "components/select/select-width",
+    "title": "Select width",
+    "componentName": "SelectWidthExample",
+    "files": [
+      "select-width-example.ts"
+    ],
+    "selector": "select-width-example",
+    "additionalComponents": [],
+    "primaryFile": "select-width-example.ts",
     "importPath": "components/select"
   },
   "sidepanel-modal-mode": {
@@ -2534,8 +2630,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs actionbar",
     "componentName": "TabsActionbarExample",
     "files": [
-      "tabs-actionbar-example.ts",
-      "tabs-actionbar-example.css"
+      "tabs-actionbar-example.ts"
     ],
     "selector": "tabs-actionbar-example",
     "additionalComponents": [],
@@ -2547,8 +2642,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs custom",
     "componentName": "TabsCustomExample",
     "files": [
-      "tabs-custom-example.ts",
-      "tabs-custom-example.css"
+      "tabs-custom-example.ts"
     ],
     "selector": "tabs-custom-example",
     "additionalComponents": [],
@@ -2560,8 +2654,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs disabled",
     "componentName": "TabsDisabledExample",
     "files": [
-      "tabs-disabled-example.ts",
-      "tabs-disabled-example.css"
+      "tabs-disabled-example.ts"
     ],
     "selector": "tabs-disabled-example",
     "additionalComponents": [],
@@ -2573,8 +2666,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs empty",
     "componentName": "TabsEmptyExample",
     "files": [
-      "tabs-empty-example.ts",
-      "tabs-empty-example.css"
+      "tabs-empty-example.ts"
     ],
     "selector": "tabs-empty-example",
     "additionalComponents": [],
@@ -2610,8 +2702,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs underlined",
     "componentName": "TabsUnderlinedExample",
     "files": [
-      "tabs-underlined-example.ts",
-      "tabs-underlined-example.css"
+      "tabs-underlined-example.ts"
     ],
     "selector": "tabs-underlined-example",
     "additionalComponents": [],
@@ -2623,8 +2714,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical icons",
     "componentName": "TabsVerticalIconsExample",
     "files": [
-      "tabs-vertical-icons-example.ts",
-      "tabs-vertical-icons-example.css"
+      "tabs-vertical-icons-example.ts"
     ],
     "selector": "tabs-vertical-icons-example",
     "additionalComponents": [],
@@ -2636,8 +2726,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs vertical",
     "componentName": "TabsVerticalExample",
     "files": [
-      "tabs-vertical-example.ts",
-      "tabs-vertical-example.css"
+      "tabs-vertical-example.ts"
     ],
     "selector": "tabs-vertical-example",
     "additionalComponents": [],
@@ -2649,8 +2738,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs with scroll vertical",
     "componentName": "TabsWithScrollVerticalExample",
     "files": [
-      "tabs-with-scroll-vertical-example.ts",
-      "tabs-with-scroll-vertical-example.css"
+      "tabs-with-scroll-vertical-example.ts"
     ],
     "selector": "tabs-with-scroll-vertical-example",
     "additionalComponents": [],
@@ -3757,19 +3845,35 @@ return import('@koobiq/docs-examples/components/scrollbar');
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-with-options':
 return import('@koobiq/docs-examples/components/scrollbar');
+  case 'select-cleaner':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-disabled':
+return import('@koobiq/docs-examples/components/select');
   case 'select-footer':
 return import('@koobiq/docs-examples/components/select');
   case 'select-groups':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-multiple-overview':
+  case 'select-height':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-multiple':
 return import('@koobiq/docs-examples/components/select');
   case 'select-overview':
 return import('@koobiq/docs-examples/components/select');
   case 'select-prioritized-selected':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-search-overview':
+  case 'select-search':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-validation':
 return import('@koobiq/docs-examples/components/select');
   case 'select-virtual-scroll':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-width-fixed':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-width-max':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-width-min':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-width':
 return import('@koobiq/docs-examples/components/select');
   case 'sidepanel-modal-mode':
 return import('@koobiq/docs-examples/components/sidepanel');

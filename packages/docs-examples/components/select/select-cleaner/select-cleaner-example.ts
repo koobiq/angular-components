@@ -19,31 +19,30 @@ const localeDataSet = {
 };
 
 /**
- * @title Select multiple
+ * @title Select cleaner
  */
 @Component({
     standalone: true,
-    selector: 'select-multiple-overview-example',
+    selector: 'select-cleaner-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field>
             <kbq-select
                 [(value)]="selected"
-                multiple
+                [placeholder]="'Город'"
             >
+                <kbq-cleaner #kbqSelectCleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
                     </kbq-option>
                 }
-
-                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `
 })
-export class SelectMultipleOverviewExample {
-    selected = [];
+export class SelectCleanerExample {
+    selected = '';
 
     options: string[] = [];
 
@@ -53,6 +52,6 @@ export class SelectMultipleOverviewExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = [];
+        this.selected = '';
     };
 }

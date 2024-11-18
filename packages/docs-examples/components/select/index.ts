@@ -1,30 +1,54 @@
 import { NgModule } from '@angular/core';
+import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
+import { SelectDisabledExample } from './select-disabled/select-disabled-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
-import { SelectMultipleOverviewExample } from './select-multiple-overview/select-multiple-overview-example';
+import { SelectHeightExample } from './select-height/select-height-example';
+import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
-import { SelectSearchOverviewExample } from './select-search-overview/select-search-overview-example';
+import { SelectSearchExample } from './select-search/select-search-example';
+import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
+import { SelectWidthFixedExample } from './select-width-fixed/select-width-fixed-example';
+import { SelectWidthMaxExample } from './select-width-max/select-width-max-example';
+import { SelectWidthMinExample } from './select-width-min/select-width-min-example';
+import { SelectWidthExample } from './select-width/select-width-example';
 
 export {
+    SelectCleanerExample,
+    SelectDisabledExample,
     SelectFooterExample,
     SelectGroupsExample,
-    SelectMultipleOverviewExample,
+    SelectHeightExample,
+    SelectMultipleExample,
     SelectOverviewExample,
     SelectPrioritizedSelectedExample,
-    SelectSearchOverviewExample,
-    SelectVirtualScrollExample
+    SelectSearchExample,
+    SelectValidationExample,
+    SelectVirtualScrollExample,
+    SelectWidthExample,
+    SelectWidthFixedExample,
+    SelectWidthMaxExample,
+    SelectWidthMinExample
 };
 
 const EXAMPLES = [
+    SelectCleanerExample,
+    SelectDisabledExample,
     SelectOverviewExample,
-    SelectMultipleOverviewExample,
-    SelectSearchOverviewExample,
+    SelectMultipleExample,
+    SelectSearchExample,
     SelectPrioritizedSelectedExample,
     SelectGroupsExample,
+    SelectHeightExample,
     SelectFooterExample,
-    SelectVirtualScrollExample
+    SelectValidationExample,
+    SelectVirtualScrollExample,
+    SelectWidthExample,
+    SelectWidthFixedExample,
+    SelectWidthMaxExample,
+    SelectWidthMinExample
 ];
 
 @NgModule({

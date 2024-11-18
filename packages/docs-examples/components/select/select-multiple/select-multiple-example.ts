@@ -19,35 +19,31 @@ const localeDataSet = {
 };
 
 /**
- * @title Select
+ * @title Select multiple
  */
 @Component({
     standalone: true,
-    selector: 'select-overview-example',
+    selector: 'select-multiple-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field style="width: 320px">
+        <kbq-form-field>
             <kbq-select
                 [(value)]="selected"
-                [placeholder]="'Город'"
+                multiple
             >
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
                     </kbq-option>
                 }
+
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
-    `,
-    styles: `
-        :host {
-            display: flex;
-            justify-content: center;
-        }
     `
 })
-export class SelectOverviewExample {
-    selected = '';
+export class SelectMultipleExample {
+    selected = [];
 
     options: string[] = [];
 
@@ -57,6 +53,6 @@ export class SelectOverviewExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = '';
+        this.selected = [];
     };
 }

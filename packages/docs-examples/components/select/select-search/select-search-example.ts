@@ -29,7 +29,7 @@ const localeDataSet = {
  */
 @Component({
     standalone: true,
-    selector: 'select-search-overview-example',
+    selector: 'select-search-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule,
@@ -74,7 +74,7 @@ const localeDataSet = {
         </kbq-form-field>
     `
 })
-export class SelectSearchOverviewExample {
+export class SelectSearchExample {
     options: string[] = [];
     selected = [];
 
