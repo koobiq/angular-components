@@ -12,6 +12,7 @@
 */
 
 @use '@koobiq/icons/fonts/kbq-icons';
+@use '../dist/components/core/styles/common/tokens';
 
 %kbq-callout_contrast {
     border-color: var(--kbq-line-contrast-less);
@@ -40,21 +41,18 @@
     margin-bottom: var(--kbq-size-xl);
 
     .kbq-callout__header {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
+        font-size: 15px;
+
         display: flex;
         align-items: center;
         gap: var(--kbq-size-s);
-        font-size: var(--kbq-md-typography-md-h5-font-size);
-        font-weight: var(--kbq-typography-text-normal-strong-font-weight);
-        line-height: var(--kbq-typography-text-normal-strong-line-height);
-        letter-spacing: var(--kbq-typography-text-normal-strong-letter-spacing);
         padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-xs);
     }
 
     .kbq-callout__content {
-        font-size: var(--kbq-md-typography-md-body-font-size);
-        font-weight: var(--kbq-md-typography-md-body-font-weight);
-        line-height: var(--kbq-md-typography-md-body-line-height);
-        letter-spacing: var(--kbq-md-typography-md-body-letter-spacing);
+        @include tokens.kbq-typography-level-to-styles-css-variables(md-typography, md-body);
+
         border-radius: var(--kbq-size-border-radius) var(---kbq-size-border-radius) 0;
         padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-m);
     }
