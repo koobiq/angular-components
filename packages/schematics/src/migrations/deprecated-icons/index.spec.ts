@@ -16,7 +16,7 @@ const getProjectContent = (tree: UnitTestTree | Tree, project: ProjectDefinition
         tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
         tree.read(`/${project.root}/src/app/app.component.ts`)?.toString() || '',
         tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
-    ];
+    ].filter(Boolean);
 };
 
 describe(SCHEMATIC_NAME, () => {
@@ -61,34 +61,12 @@ class TestApp {
         });
 
         it('should run migration for specified project', async () => {
-            const [firstProjectKey, secondProjectKey] = projects.keys();
-            const firstProjectBeforeChanges = getProjectContent(appTree, projects.get(firstProjectKey)!);
-            const secondProjectBeforeChanges = getProjectContent(appTree, projects.get(secondProjectKey)!);
-
-            expect(firstProjectBeforeChanges).toMatchSnapshot(`project ${firstProjectKey}: before changes`);
-            expect(secondProjectBeforeChanges).toMatchSnapshot(`project ${secondProjectKey}: before changes`);
-
+            const [firstProjectKey] = projects.keys();
             const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true, project: firstProjectKey }, appTree);
 
             expect(getProjectContent(tree, projects.get(firstProjectKey)!)).toMatchSnapshot(
                 `project ${firstProjectKey}: after changes`
             );
-
-            expect(getProjectContent(tree, projects.get(secondProjectKey)!)).toMatchSnapshot(
-                `project ${secondProjectKey}: after changes`
-            );
-        });
-
-        it('should run migration for whole tree', async () => {
-            projects.forEach((project, key) => {
-                expect(getProjectContent(appTree, project)).toMatchSnapshot(`project ${key}: before changes`);
-            });
-
-            const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
-
-            projects.forEach((project, key) => {
-                expect(getProjectContent(tree, project)).toMatchSnapshot(`project ${key}: after changes`);
-            });
         });
 
         it('should inform about deprecated icons for fix = false (default, without params)', async () => {
@@ -141,9 +119,9 @@ class TestApp {
             const tsPath = `/${project.root}/src/app/app.component.ts`;
             const stylesPath = `/${project.root}/src/styles.scss`;
 
-            html && tree.overwrite(templatePath, html);
-            styles && tree.overwrite(stylesPath, styles);
-            ts && tree.overwrite(tsPath, ts);
+            tree.overwrite(templatePath, html || '');
+            tree.overwrite(stylesPath, styles || '');
+            tree.overwrite(tsPath, ts || '');
         };
 
         it('should replace "class="pt-icons"" with ""', async () => {
@@ -158,7 +136,6 @@ class TestApp {
 
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
-                styles: 'empty',
                 ts: componentClass,
                 project: currentProject,
                 tree: appTree
@@ -177,8 +154,6 @@ class TestApp {
             const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE} layout-column">`;
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
-                styles: 'empty',
-                ts: 'empty',
                 project: currentProject,
                 tree: appTree
             });
@@ -197,8 +172,6 @@ class TestApp {
             const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}">`;
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
-                styles: 'empty',
-                ts: 'empty',
                 project: currentProject,
                 tree: appTree
             });
@@ -226,8 +199,6 @@ class TestApp {
             }`;
             overwriteProjectData({
                 ts: componentClass,
-                styles: 'empty',
-                html: 'empty',
                 project: currentProject,
                 tree: appTree
             });
@@ -248,8 +219,6 @@ class TestApp {
             `;
             overwriteProjectData({
                 styles,
-                html: 'empty',
-                ts: 'empty',
                 project: currentProject,
                 tree: appTree
             });

@@ -2,9 +2,10 @@ const typescript = require('@rollup/plugin-typescript');
 const replace = require('@rollup/plugin-replace');
 
 const path = require('path');
-const { promises: fs } = require('fs');
+const { promises: fs, readdirSync } = require('fs');
 
 const pkg = require('../../package.json');
+const { resolve } = require('path');
 
 const version = (str) => JSON.stringify(str.startsWith('^') ? str : '^' + str);
 
@@ -16,7 +17,9 @@ const clean = () => ({
     }
 });
 
-const migrations = ['css-selectors', 'deprecated-icons', 'new-icons-pack'];
+const migrations = readdirSync(resolve(__dirname, './src/migrations'), { withFileTypes: true })
+    .filter((file) => file.isDirectory())
+    .map((dir) => dir.name);
 
 module.exports = [
     {
