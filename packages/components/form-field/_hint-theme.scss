@@ -49,10 +49,10 @@
 
 @mixin kbq-hint-typography() {
     .kbq-hint .kbq-hint__text {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 
     .kbq-hint.kbq-hint_compact .kbq-hint__text {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

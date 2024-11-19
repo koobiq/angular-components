@@ -38,7 +38,7 @@
 
 @mixin kbq-docs-icons-viewer-typography() {
     .icon-preview-modal .kbq-modal-header.kbq-modal-title {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, title);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
     .docs-icons-viewer__header .kbq-input,
@@ -48,10 +48,10 @@
     .kbq-select-overlay .icon-preview-modal__select-option,
     .icon-preview-modal__description .kbq-dd,
     .icon-preview-modal__description .kbq-badge {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     .docs-icons-viewer__table-empty-results {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, display-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, display-compact);
     }
 }

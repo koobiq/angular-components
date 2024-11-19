@@ -13,6 +13,6 @@
 
 @mixin kbq-docs-navbar-typography() {
     .docs-sidenav {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, subheading);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
     }
 }

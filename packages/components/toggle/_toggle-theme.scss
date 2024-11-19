@@ -68,10 +68,10 @@
 
 @mixin kbq-toggle-typography() {
     .kbq-toggle:not(.kbq-toggle_big) {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         & .kbq-hint {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
 
         & .kbq-toggle-bar-container {
@@ -80,10 +80,10 @@
     }
 
     .kbq-toggle.kbq-toggle_big {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
 
         & .kbq-hint {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         & .kbq-toggle-bar-container {

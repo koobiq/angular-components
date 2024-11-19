@@ -29,17 +29,17 @@
 @mixin kbq-docs-sidenav-typography() {
     .docs-sidenav {
         .docs-sidenav__category-text {
-            @include tokens.kbq-typography-level-to-styles_css-variables(typography, subheading);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
     }
 
     .docs-navbar__anchor .kbq-button {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     @media (width <= 768px) {
         .docs-sidenav__category {
-            @include tokens.kbq-typography-level-to-styles_css-variables(typography, title);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
         }
     }
 }

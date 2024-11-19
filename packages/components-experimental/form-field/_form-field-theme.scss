@@ -72,10 +72,10 @@
 
 @mixin kbq-form-field-typography() {
     .kbq-form-field___EXPERIMENTAL {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-hint___EXPERIMENTAL:not(.kbq-password-hint___EXPERIMENTAL) .kbq-hint_text {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }

@@ -9,20 +9,20 @@
 
 @mixin kbq-docs-footer-typography() {
     .docs-footer__label {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .docs-footer__control {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     .docs-dropdown {
         .kbq-dropdown-item__text {
-            @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
         }
 
         .kbq-dropdown-item__caption {
-            @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 }

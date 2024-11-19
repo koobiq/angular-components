@@ -30,21 +30,21 @@
 
     .kbq-empty-state_normal {
         .kbq-empty-state-title {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-big-strong);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
         }
 
         .kbq-empty-state-text {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 
     .kbq-empty-state_big {
         .kbq-empty-state-title {
-            @include kbq-typography-level-to-styles_css-variables(typography, headline);
+            @include kbq-typography-level-to-styles-css-variables(typography, headline);
         }
 
         .kbq-empty-state-text {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 }

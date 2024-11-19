@@ -15,7 +15,7 @@
 @mixin kbq-docs-example-source-typography() {
     .docs-example-source__code,
     .docs-example-source__numbers {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, mono-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
 
         font-size: 14px;
     }

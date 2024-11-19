@@ -22,10 +22,10 @@
 
 @mixin kbq-progress-bar-typography() {
     .kbq-progress-bar-text {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-progress-bar-caption {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

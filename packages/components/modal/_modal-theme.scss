@@ -35,10 +35,10 @@
 
 @mixin kbq-modal-typography() {
     .kbq-modal-title {
-        @include kbq-typography-level-to-styles_css-variables(typography, title);
+        @include kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
     .kbq-modal-body {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }
