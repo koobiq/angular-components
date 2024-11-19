@@ -25,6 +25,10 @@
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
+    --kbq-badge-filled-fade-off-contrast-background: var(--kbq-background-contrast);
+    --kbq-badge-filled-fade-off-contrast-color: var(--kbq-foreground-on-contrast);
+    --kbq-badge-filled-fade-off-contrast-caption: var(--kbq-foreground-on-contrast);
+    --kbq-badge-filled-fade-off-contrast-icon: var(--kbq-icon-on-contrast);
     --kbq-badge-filled-fade-off-theme-background: var(--kbq-background-theme);
     --kbq-badge-filled-fade-off-theme-color: var(--kbq-foreground-white);
     --kbq-badge-filled-fade-off-theme-caption: var(--kbq-foreground-white);
