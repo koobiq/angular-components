@@ -10,6 +10,9 @@
 
 @mixin kbq-icon-item-theme() {
     .kbq-icon-item.kbq-icon-item_filled {
+        // set default color
+        @include kbq-icon-item-style(fade-on, contrast);
+
         &.kbq-icon-item_fade-off {
             &.kbq-theme {
                 @include kbq-icon-item-style(fade-off, theme);

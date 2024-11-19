@@ -68,6 +68,13 @@
             color: var(--kbq-form-field-hint-text);
         }
     }
+
+    .kbq-form-field__prefix,
+    .kbq-form-field__suffix {
+        .kbq-icon {
+            color: var(--kbq-icon-fade-contrast-color);
+        }
+    }
 }
 
 @mixin kbq-form-field-typography() {

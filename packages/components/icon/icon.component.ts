@@ -10,14 +10,7 @@ import {
     Optional,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    CanColor,
-    CanColorCtor,
-    KBQ_FORM_FIELD_REF,
-    KbqComponentColors,
-    KbqFormFieldRef,
-    mixinColor
-} from '@koobiq/components/core';
+import { CanColor, CanColorCtor, KBQ_FORM_FIELD_REF, KbqFormFieldRef, mixinColor } from '@koobiq/components/core';
 
 /** @docs-private */
 export class KbqIconBase {
@@ -25,10 +18,7 @@ export class KbqIconBase {
 }
 
 /** @docs-private */
-export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(
-    KbqIconBase,
-    KbqComponentColors.ContrastFade
-);
+export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(KbqIconBase);
 
 @Component({
     standalone: true,

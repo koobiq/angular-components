@@ -1,7 +1,10 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-icon-theme() {
-    .kbq-icon:not(.kbq-icon-button, .kbq-icon-item) {
+    .kbq-icon {
+        // set default color
+        color: var(--kbq-icon-contrast-color);
+
         &.kbq-theme {
             color: var(--kbq-icon-theme-color);
         }

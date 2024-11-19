@@ -9,7 +9,8 @@
         color: var(--kbq-tree-#{$state-name}-text-color);
     }
 
-    .kbq-tree-node-toggle .kbq-icon {
+    .kbq-tree-node-toggle .kbq-icon,
+    .kbq-icon.kbq-tree-node-toggle {
         color: var(--kbq-tree-#{$state-name}-tree-toggle-color);
     }
 
