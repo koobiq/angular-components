@@ -36,17 +36,22 @@
     <div class="kbq-form__label">Для групп</div>
     <kbq-form-field style="width: 320px">
         <kbq-select
-            [placeholder]="'Город'"
+            [placeholder]="'Pokemon'"
             [(value)]="selected"
         >
-            @for (option of options; track option; let i = $index) {
-                <kbq-option
-                    [disabled]="i % 2 !== 0"
-                    [value]="option"
+            @for (group of pokemonTypes; track group) {
+                <kbq-optgroup
+                    [disabled]="group.disabled"
+                    [label]="group.name"
                 >
-                    <span [innerHTML]="option"></span>
-                </kbq-option>
+                    @for (pokemon of group.pokemon; track pokemon) {
+                        <kbq-option [value]="pokemon.value">
+                            {{ pokemon.viewValue }}
+                        </kbq-option>
+                    }
+                </kbq-optgroup>
             }
+            <kbq-option [value]="'mime-11'">Mr. Mime</kbq-option>
         </kbq-select>
     </kbq-form-field>
 </div>

@@ -48,7 +48,7 @@ const localeDataSet = {
         }
 
         ::ng-deep .select-width-fixed-example .kbq-select__content {
-            max-width: 420px;
+            width: 420px;
         }
     `
 })
