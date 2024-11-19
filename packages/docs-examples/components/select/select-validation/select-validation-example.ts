@@ -26,30 +26,36 @@ const localeDataSet = {
     selector: 'select-validation-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
-            <kbq-select
-                [(value)]="selected"
-                [placeholder]="'Город'"
-            >
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">
-                        <span [innerHTML]="option"></span>
-                    </kbq-option>
-                }
-            </kbq-select>
-        </kbq-form-field>
-        <kbq-form-field>
-            <kbq-select
-                [(value)]="selected"
-                [placeholder]="'Город'"
-            >
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">
-                        <span [innerHTML]="option"></span>
-                    </kbq-option>
-                }
-            </kbq-select>
-        </kbq-form-field>
+        <div class="kbq-form-vertical layout-column">
+            <div class="kbq-form__label">Valid</div>
+            <kbq-form-field>
+                <kbq-select
+                    [(value)]="selected"
+                    [placeholder]="'Город'"
+                >
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">
+                            <span [innerHTML]="option"></span>
+                        </kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+        <div class="kbq-form-vertical layout-column">
+            <div class="kbq-form__label">Invalid</div>
+            <kbq-form-field class="kbq-form-field_invalid">
+                <kbq-select
+                    [(value)]="selected"
+                    [placeholder]="'Город'"
+                >
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">
+                            <span [innerHTML]="option"></span>
+                        </kbq-option>
+                    }
+                </kbq-select>
+            </kbq-form-field>
+        </div>
     `,
     styles: `
         :host {
@@ -57,8 +63,12 @@ const localeDataSet = {
             gap: 16px;
         }
 
-        kbq-form-field {
+        .layout-column {
             width: 50%;
+        }
+
+        .kbq-form__label {
+            color: var(--kbq-foreground-contrast-secondary);
         }
     `
 })

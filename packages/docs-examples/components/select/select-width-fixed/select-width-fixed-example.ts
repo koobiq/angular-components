@@ -38,6 +38,13 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
     `
 })
 export class SelectWidthFixedExample {

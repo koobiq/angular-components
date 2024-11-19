@@ -11,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select>
+            <kbq-select [placeholder]="'Город'">
                 @for (group of pokemonTypes; track group) {
                     <kbq-optgroup
                         [disabled]="group.disabled"

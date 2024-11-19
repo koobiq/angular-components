@@ -25,42 +25,7 @@ const localeDataSet = {
     standalone: true,
     selector: 'select-disabled-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
-    template: `
-        <div class="layout-row">
-            <div class="kbq-form__label">Для селекта</div>
-            <kbq-form-field style="width: 320px">
-                <kbq-select
-                    [(value)]="selected"
-                    [disabled]="true"
-                    [placeholder]="'Город'"
-                >
-                    @for (option of options; track option) {
-                        <kbq-option [value]="option">
-                            <span [innerHTML]="option"></span>
-                        </kbq-option>
-                    }
-                </kbq-select>
-            </kbq-form-field>
-        </div>
-        <div class="layout-row">
-            <div class="kbq-form__label">Для значений</div>
-            <kbq-form-field style="width: 320px">
-                <kbq-select
-                    [(value)]="selected"
-                    [placeholder]="'Город'"
-                >
-                    @for (option of options; track option; let i = $index) {
-                        <kbq-option
-                            [value]="option"
-                            [disabled]="i % 2 !== 0"
-                        >
-                            <span [innerHTML]="option"></span>
-                        </kbq-option>
-                    }
-                </kbq-select>
-            </kbq-form-field>
-        </div>
-    `,
+    templateUrl: 'select-disabled-example.html',
     styles: `
         .layout-row {
             width: 440px;

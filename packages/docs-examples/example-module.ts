@@ -2288,7 +2288,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Select disabled",
     "componentName": "SelectDisabledExample",
     "files": [
-      "select-disabled-example.ts"
+      "select-disabled-example.ts",
+      "select-disabled-example.html"
     ],
     "selector": "select-disabled-example",
     "additionalComponents": [],
