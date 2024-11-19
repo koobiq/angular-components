@@ -47,6 +47,7 @@
         font-weight: var(--kbq-typography-text-normal-strong-font-weight);
         line-height: var(--kbq-typography-text-normal-strong-line-height);
         letter-spacing: var(--kbq-typography-text-normal-strong-letter-spacing);
+        padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-xs);
     }
 
     .kbq-callout__content {
@@ -55,11 +56,7 @@
         line-height: var(--kbq-md-typography-md-body-line-height);
         letter-spacing: var(--kbq-md-typography-md-body-letter-spacing);
         border-radius: var(--kbq-size-s) var(--kbq-size-s) 0;
-    }
-
-    .kbq-callout__header,
-    .kbq-callout__content {
-        padding: var(--kbq-size-s) var(--kbq-size-l);
+        padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-m);
     }
 
     // setup contrast theme by default
