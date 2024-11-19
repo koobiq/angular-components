@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
@@ -24,13 +25,34 @@ const localeDataSet = {
 @Component({
     standalone: true,
     selector: 'select-icon-example',
-    imports: [KbqFormFieldModule, KbqSelectModule],
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule],
     template: `
         <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
             >
+                <kbq-select-matcher class="kbq-select__matcher">
+                    <i
+                        [color]="'contrast-fade'"
+                        style="margin-right: 8px"
+                        kbq-icon="kbq-globe_16"
+                    ></i>
+                    <span>
+                        <div class="kbq-select__match-container">
+                            <span class="kbq-select__matcher-text">
+                                {{ selected }}
+                            </span>
+                        </div>
+                    </span>
+                    <div class="kbq-select__arrow-wrapper">
+                        <i
+                            class="kbq-select__arrow"
+                            [color]="'contrast-fade'"
+                            kbq-icon="kbq-chevron-down-s_16"
+                        ></i>
+                    </div>
+                </kbq-select-matcher>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -58,6 +80,6 @@ export class SelectIconExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = '';
+        this.selected = localeDataSet[locale].items[0];
     };
 }
