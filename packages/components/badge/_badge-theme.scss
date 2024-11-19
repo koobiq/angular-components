@@ -43,6 +43,10 @@
             @include kbq-badge-style(filled, fade-on, error);
         }
 
+        &.kbq-badge_contrast {
+            @include kbq-badge-style(filled, fade-off, contrast);
+        }
+
         &.kbq-badge_theme {
             @include kbq-badge-style(filled, fade-off, theme);
         }

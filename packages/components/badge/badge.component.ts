@@ -23,6 +23,7 @@ export enum KbqBadgeColors {
     FadeWarning = 'fade-warning',
     FadeError = 'fade-error',
 
+    Contrast = 'contrast',
     Theme = 'theme',
     Success = 'success',
     Warning = 'warning',
