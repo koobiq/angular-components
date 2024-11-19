@@ -11,7 +11,7 @@ import { codeCSS, codeCs, codeHTML, codeHTML3, codeJs2, codeJson, codeTs, codeXM
 
 @Component({
     selector: 'app',
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     templateUrl: './template.html'
 })
