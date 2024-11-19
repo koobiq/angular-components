@@ -36,7 +36,7 @@
     overflow: hidden;
     border-width: 2px;
     border-style: solid;
-    border-radius: var(--kbq-size-s);
+    border-radius: var(--kbq-size-border-radius);
     margin-bottom: var(--kbq-size-xl);
 
     .kbq-callout__header {
@@ -55,7 +55,7 @@
         font-weight: var(--kbq-md-typography-md-body-font-weight);
         line-height: var(--kbq-md-typography-md-body-line-height);
         letter-spacing: var(--kbq-md-typography-md-body-letter-spacing);
-        border-radius: var(--kbq-size-s) var(--kbq-size-s) 0;
+        border-radius: var(--kbq-size-border-radius) var(---kbq-size-border-radius) 0;
         padding: var(--kbq-size-s) var(--kbq-size-l) var(--kbq-size-m);
     }
 
