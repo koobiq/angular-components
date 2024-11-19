@@ -30,10 +30,11 @@ const localeDataSet = {
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
+                [panelClass]="'select-width-max-example'"
             >
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
-                        <span [innerHTML]="option"></span>
+                        <span [innerHTML]="option + ' ' + option + ' ' + option"></span>
                     </kbq-option>
                 }
             </kbq-select>
@@ -44,6 +45,10 @@ const localeDataSet = {
             display: flex;
             justify-content: center;
             padding: 16px;
+        }
+
+        ::ng-deep .select-width-max-example .kbq-select__content {
+            max-width: 280px;
         }
     `
 })

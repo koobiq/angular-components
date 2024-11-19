@@ -30,6 +30,7 @@ const localeDataSet = {
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
+                [panelClass]="'select-width-fixed-example'"
             >
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
@@ -44,6 +45,10 @@ const localeDataSet = {
             display: flex;
             justify-content: center;
             padding: 16px;
+        }
+
+        ::ng-deep .select-width-fixed-example .kbq-select__content {
+            max-width: 420px;
         }
     `
 })

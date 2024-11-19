@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqFormsModule, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { enUSLocaleDataSet } from '../en-US';
@@ -24,7 +24,7 @@ const localeDataSet = {
 @Component({
     standalone: true,
     selector: 'select-validation-example',
-    imports: [KbqFormFieldModule, KbqSelectModule],
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqFormsModule],
     template: `
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Valid</div>

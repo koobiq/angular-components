@@ -29,8 +29,8 @@ const localeDataSet = {
         <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
-                [multiple]="true"
                 (openedChange)="openedChange($event)"
+                multiple
             >
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
