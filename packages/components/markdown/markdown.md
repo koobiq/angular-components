@@ -1,8 +1,8 @@
 `kbq-markdown` - компонент, который позволяет преобразовывать текст, написанный на языке разметки _Markdown_, в _HTML_.
 
-<div class="kbq-callout kbq-callout_warning">
+<div class="kbq-callout kbq-callout_theme">
 <div class="kbq-callout__header">Обрати внимание</div>
-<div class="kbq-callout__content">
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
 Для работы компонента, необходимо наличие [`marked@^9`](https://github.com/markedjs/marked/tree/v9.1.6) зависимости:
 

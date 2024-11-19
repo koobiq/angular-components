@@ -186,7 +186,7 @@ this.colorAutomaticTheme.addEventListener('change', this.setAutoTheme);
 
 <div class="kbq-callout kbq-callout_warning">
 <div class="kbq-callout__header">Обрати внимание</div>
-<div class="kbq-callout__content">
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
 На данный момент компонентные токены в пакете `@koobiq/design-tokens` больше не обновляются.
 

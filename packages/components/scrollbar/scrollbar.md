@@ -1,8 +1,8 @@
 `<kbq-scrollbar>` - это компонент который используется для настройки параметров скроллбара.
 
-<div class="kbq-callout kbq-callout_warning">
+<div class="kbq-callout kbq-callout_theme">
 <div class="kbq-callout__header">Обрати внимание</div>
-<div class="kbq-callout__content">
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
 Для работы компонента, необходимо наличие [`overlayscrollbars@2.7.3`](https://github.com/KingSora/OverlayScrollbars/tree/v2.7.0) зависимости:
 
