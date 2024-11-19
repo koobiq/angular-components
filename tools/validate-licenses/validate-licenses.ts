@@ -28,7 +28,10 @@ const licensesWhitelist: License[] = [
     // Have a full copyright grant. Validated by opensource team.
     'Unlicense',
     '0BSD',
-    'CC0-1.0'
+    'CC0-1.0',
+
+    // https://openfontlicense.org/documents/OFL.md
+    'OFL-1.1'
 ];
 
 // Name variations of SPDX licenses that some packages have.
