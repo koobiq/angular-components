@@ -63,7 +63,7 @@ const localeDataSet = {
     `,
     styles: `
         .layout-row {
-            width: 400px;
+            width: 440px;
             margin: 0 auto;
             padding: 16px;
             align-items: center;

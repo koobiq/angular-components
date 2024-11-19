@@ -29,6 +29,7 @@ const localeDataSet = {
         <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
+                [placeholder]="'Город'"
                 multiple
             >
                 @for (option of options; track option) {

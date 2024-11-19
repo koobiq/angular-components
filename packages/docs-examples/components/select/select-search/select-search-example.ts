@@ -41,7 +41,10 @@ const localeDataSet = {
     ],
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select [(value)]="selected">
+            <kbq-select
+                [(value)]="selected"
+                [placeholder]="'Город'"
+            >
                 <kbq-form-field
                     kbqFormFieldWithoutBorders
                     kbqSelectSearch

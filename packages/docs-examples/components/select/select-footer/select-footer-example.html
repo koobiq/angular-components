@@ -1,24 +1,15 @@
 <div class="layout-row">
     <div class="kbq-form__label">Button</div>
-    <kbq-form-field>
-        <kbq-select [(value)]="selected">
-            <kbq-option
-                disabled
-                [value]="'Disabled'"
-            >
-                Disabled
-            </kbq-option>
-            <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-            <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-            <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
-            <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
-            <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
-            <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
-            <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
-            <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
-            <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
-            <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
-            <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
+    <kbq-form-field style="width: 320px">
+        <kbq-select
+            [placeholder]="'Город'"
+            [(value)]="selected"
+        >
+            @for (option of options; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
             <kbq-select-footer style="padding-left: 4px">
                 <button
                     kbq-button
@@ -33,25 +24,16 @@
 </div>
 <div class="layout-row">
     <div class="kbq-form__label">Caption</div>
-    <kbq-form-field>
-        <kbq-select [(value)]="selected">
-            <kbq-option
-                disabled
-                [value]="'Disabled'"
-            >
-                Disabled
-            </kbq-option>
-            <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-            <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-            <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
-            <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
-            <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
-            <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
-            <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
-            <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
-            <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
-            <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
-            <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
+    <kbq-form-field style="width: 320px">
+        <kbq-select
+            [placeholder]="'Город'"
+            [(value)]="selected"
+        >
+            @for (option of options; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
             <kbq-select-footer>
                 <div
                     style="padding: 0; display: block; height: unset"
@@ -65,26 +47,16 @@
 </div>
 <div class="layout-row">
     <div class="kbq-form__label">Link</div>
-    <kbq-form-field>
-        <kbq-select [(value)]="selected">
-            <kbq-option
-                disabled
-                [value]="'Disabled'"
-            >
-                Disabled
-            </kbq-option>
-            <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-            <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-            <kbq-option [value]="'SelectedItem2'">SelectedItem2</kbq-option>
-            <kbq-option [value]="'SelectedItem3'">SelectedItem3</kbq-option>
-            <kbq-option [value]="'SelectedItem4'">SelectedItem4</kbq-option>
-            <kbq-option [value]="'SelectedItem5'">SelectedItem5</kbq-option>
-            <kbq-option [value]="'SelectedItem6'">SelectedItem6</kbq-option>
-            <kbq-option [value]="'SelectedItem7'">SelectedItem7</kbq-option>
-            <kbq-option [value]="'SelectedItem8'">SelectedItem8</kbq-option>
-            <kbq-option [value]="'SelectedItem9'">SelectedItem9</kbq-option>
-            <kbq-option [value]="'SelectedItem10'">SelectedItem10</kbq-option>
-
+    <kbq-form-field style="width: 320px">
+        <kbq-select
+            [placeholder]="'Город'"
+            [(value)]="selected"
+        >
+            @for (option of options; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
             <kbq-select-footer>
                 <a
                     href="/components/select/overview"

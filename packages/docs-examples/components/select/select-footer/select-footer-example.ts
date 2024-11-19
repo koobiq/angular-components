@@ -1,9 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { enUSLocaleDataSet } from '../en-US';
+import { esLALocaleDataSet } from '../es-LA';
+import { faIRLocaleDataSet } from '../fa-IR';
+import { ptBRLocaleDataSet } from '../pt-BR';
+import { ruRULocaleDataSet } from '../ru-RU';
+import { zhCNLocaleDataSet } from '../zh-CN';
+
+const localeDataSet = {
+    'en-US': enUSLocaleDataSet,
+    'zh-CN': zhCNLocaleDataSet,
+    'es-LA': esLALocaleDataSet,
+    'pt-BR': ptBRLocaleDataSet,
+    'ru-RU': ruRULocaleDataSet,
+    'fa-IR': faIRLocaleDataSet
+};
 
 /**
  * @title Select footer
@@ -31,4 +47,15 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectFooterExample {
     selected = '';
+
+    options: string[] = [];
+
+    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
+        this.localeService.changes.subscribe(this.update);
+    }
+
+    update = (locale: string) => {
+        this.options = localeDataSet[locale].items;
+        this.selected = localeDataSet[locale].items[0];
+    };
 }
