@@ -116,7 +116,7 @@ exports[`deprecated-icons icons mapping should inform about deprecated icons for
 [
   "-------------------------",
   "Please pay attention! Found deprecated icons in file: ",
-  "C:\\Dev\\work-opensource\\koobiq\\projects\\app\\src\\styles.scss",
+  "../../../../../projects/app/src/styles.scss",
   "	add-to-list_16 -> 	file-plus-o_16
 	alert-disabled_16 -> 	speaker_16
 	alert-enabled_16 -> 	speaker-wave_16
@@ -125,7 +125,7 @@ exports[`deprecated-icons icons mapping should inform about deprecated icons for
   "-------------------------",
   "-------------------------",
   "Please pay attention! Found deprecated icons in file: ",
-  "C:\\Dev\\work-opensource\\koobiq\\projects\\app\\src\\app\\app.component.html",
+  "../../../../../projects/app/src/app/app.component.html",
   "	add-to-list_16 -> 	file-plus-o_16
 	alert-disabled_16 -> 	speaker_16
 	alert-enabled_16 -> 	speaker-wave_16
@@ -520,7 +520,7 @@ exports[`deprecated-icons icons mapping should inform about deprecated icons for
   "-------------------------",
   "-------------------------",
   "Please pay attention! Found deprecated icons in file: ",
-  "C:\\Dev\\work-opensource\\koobiq\\projects\\app\\src\\app\\app.component.ts",
+  "../../../../../projects/app/src/app/app.component.ts",
   "	add-to-list_16 -> 	file-plus-o_16
 	alert-disabled_16 -> 	speaker_16
 	alert-enabled_16 -> 	speaker-wave_16
