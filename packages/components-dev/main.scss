@@ -4,8 +4,10 @@
 
 @use '../components/core/styles/visual/layout';
 
-@use 'apps/docs/src/styles/koobiq/default-theme/css-tokens.css';
-@use 'apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css';
-//@use 'apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css';
+@use '../../apps/docs/src/styles/koobiq/default-theme/css-tokens.css';
+@use '../../apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css';
+@use '../../apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css';
+
+@use '../../apps/docs/src/styles/fonts';
 
 @include layout.layouts-for-breakpoint();
