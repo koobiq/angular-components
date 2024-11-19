@@ -374,27 +374,27 @@
     // h1, h2, h3, h4, h5, h6
     @for $i from 1 through 6 {
         .md-h#{$i} {
-            @include kbq-typography-level-to-styles_css-variables(typography, md-h#{$i});
+            @include kbq-typography-level-to-styles_css-variables(md-typography, md-h#{$i});
         }
     }
 
     .md-body {
-        @include kbq-typography-level-to-styles_css-variables(typography, md-body);
+        @include kbq-typography-level-to-styles_css-variables(md-typography, md-body);
     }
 
     .md-body-mono {
-        @include kbq-typography-level-to-styles_css-variables(typography, md-body-mono);
+        @include kbq-typography-level-to-styles_css-variables(md-typography, md-body-mono);
     }
 
     .md-caption {
-        @include kbq-typography-level-to-styles_css-variables(typography, md-caption);
+        @include kbq-typography-level-to-styles_css-variables(md-typography, md-caption);
     }
 
     .md-table-cell {
-        @include kbq-typography-level-to-styles_css-variables(typography, md-table-cell);
+        @include kbq-typography-level-to-styles_css-variables(md-typography, md-table-cell);
     }
 
     .md-table-header {
-        @include kbq-typography-level-to-styles_css-variables(typography, md-table-header);
+        @include kbq-typography-level-to-styles_css-variables(md-typography, md-table-header);
     }
 }
