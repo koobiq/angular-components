@@ -4,6 +4,7 @@ import { SelectDisabledExample } from './select-disabled/select-disabled-example
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
 import { SelectHeightExample } from './select-height/select-height-example';
+import { SelectIconExample } from './select-icon/select-icon-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
@@ -21,6 +22,7 @@ export {
     SelectFooterExample,
     SelectGroupsExample,
     SelectHeightExample,
+    SelectIconExample,
     SelectMultipleExample,
     SelectOverviewExample,
     SelectPrioritizedSelectedExample,
@@ -42,6 +44,7 @@ const EXAMPLES = [
     SelectPrioritizedSelectedExample,
     SelectGroupsExample,
     SelectHeightExample,
+    SelectIconExample,
     SelectFooterExample,
     SelectValidationExample,
     SelectVirtualScrollExample,

@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -58,4 +58,6 @@ export class SelectFooterExample {
         this.options = localeDataSet[locale].items;
         this.selected = localeDataSet[locale].items[0];
     };
+    protected readonly colors = KbqComponentColors;
+    protected readonly styles = KbqButtonStyles;
 }

@@ -26,12 +26,11 @@ const localeDataSet = {
     selector: 'select-width-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field style="width: 100%">
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
             >
-                <kbq-cleaner #kbqSelectCleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -39,6 +38,25 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
+        <kbq-form-field style="width: 200px">
+            <kbq-select
+                [(value)]="selected"
+                [placeholder]="'Город'"
+            >
+                @for (option of options; track option) {
+                    <kbq-option [value]="option">
+                        <span [innerHTML]="option"></span>
+                    </kbq-option>
+                }
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: 16px;
+            padding: 16px;
+        }
     `
 })
 export class SelectWidthExample {

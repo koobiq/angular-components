@@ -31,7 +31,6 @@ const localeDataSet = {
                 [(value)]="selected"
                 [placeholder]="'Город'"
             >
-                <kbq-cleaner #kbqSelectCleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>

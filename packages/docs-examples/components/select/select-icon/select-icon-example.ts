@@ -19,18 +19,17 @@ const localeDataSet = {
 };
 
 /**
- * @title Select height
+ * @title Select icon
  */
 @Component({
     standalone: true,
-    selector: 'select-height-example',
+    selector: 'select-icon-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
-                [panelClass]="'select-height-example'"
             >
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
@@ -46,13 +45,9 @@ const localeDataSet = {
             justify-content: center;
             padding: 16px;
         }
-
-        ::ng-deep .select-height-example .kbq-select__content {
-            max-height: 380px;
-        }
     `
 })
-export class SelectHeightExample {
+export class SelectIconExample {
     selected = '';
 
     options: string[] = [];
@@ -63,6 +58,6 @@ export class SelectHeightExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = localeDataSet[locale].items[0];
+        this.selected = '';
     };
 }

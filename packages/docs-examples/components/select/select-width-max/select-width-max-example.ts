@@ -26,12 +26,11 @@ const localeDataSet = {
     selector: 'select-width-max-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
-        <kbq-form-field>
+        <kbq-form-field style="width: 280px">
             <kbq-select
                 [(value)]="selected"
                 [placeholder]="'Город'"
             >
-                <kbq-cleaner #kbqSelectCleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>

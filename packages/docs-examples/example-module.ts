@@ -2332,6 +2332,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-height-example.ts",
     "importPath": "components/select"
   },
+  "select-icon": {
+    "packagePath": "components/select/select-icon",
+    "title": "Select icon",
+    "componentName": "SelectIconExample",
+    "files": [
+      "select-icon-example.ts"
+    ],
+    "selector": "select-icon-example",
+    "additionalComponents": [],
+    "primaryFile": "select-icon-example.ts",
+    "importPath": "components/select"
+  },
   "select-multiple": {
     "packagePath": "components/select/select-multiple",
     "title": "Select multiple",
@@ -3854,6 +3866,8 @@ return import('@koobiq/docs-examples/components/select');
   case 'select-groups':
 return import('@koobiq/docs-examples/components/select');
   case 'select-height':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-icon':
 return import('@koobiq/docs-examples/components/select');
   case 'select-multiple':
 return import('@koobiq/docs-examples/components/select');
