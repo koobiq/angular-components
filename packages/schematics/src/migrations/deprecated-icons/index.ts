@@ -64,8 +64,11 @@ export default function deprecatedIcons(options: Schema): Rule {
                     }
                 }
             }
+        });
 
-            if (filePath.endsWith(stylesExt) && !initialContent?.includes(iconsFontImportRule)) {
+        // check if icon styles from new scope should be included in styles file
+        targetDir.visit((filePath: Path, entry) => {
+            if (filePath.endsWith(stylesExt) && !entry?.content.toString()?.includes(iconsFontImportRule)) {
                 const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
                 logMessage(logger, [
                     parsedFilePath,

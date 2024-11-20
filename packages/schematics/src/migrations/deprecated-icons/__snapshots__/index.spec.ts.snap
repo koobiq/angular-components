@@ -106,10 +106,6 @@ exports[`deprecated-icons icons mapping should inform about deprecated icons for
 	angle-down-L_24 -> 	chevron-down_24",
   "-------------------------",
   "-------------------------",
-  "../../../../../projects/app/src/styles.scss
-Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
-  "-------------------------",
-  "-------------------------",
   "Please pay attention! Found deprecated icons in file: 
 ../../../../../projects/app/src/app/app.component.html
 	add-to-list_16 -> 	file-plus-o_16
@@ -512,6 +508,10 @@ Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from ne
 	alert-enabled_16 -> 	speaker-wave_16
 	angle-down-L_16 -> 	chevron-down_16
 	angle-down-L_24 -> 	chevron-down_24",
+  "-------------------------",
+  "-------------------------",
+  "../../../../../projects/app/src/styles.scss
+Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
   "-------------------------",
   "-------------------------",
   "../../../../../projects/app/src/app/app.component.scss
