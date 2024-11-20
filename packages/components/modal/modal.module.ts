@@ -9,7 +9,6 @@ import { CssUnitPipe } from './css-unit.pipe';
 import { KbqModalControlService } from './modal-control.service';
 import { KbqModalComponent } from './modal.component';
 import { KbqModalBody, KbqModalFooter, KbqModalMainAction, KbqModalTitle } from './modal.directive';
-import { KbqModalService } from './modal.service';
 
 @NgModule({
     imports: [
@@ -39,7 +38,6 @@ import { KbqModalService } from './modal.service';
     ],
     providers: [
         KbqModalControlService,
-        KbqModalService,
         { provide: FocusTrapFactory, useClass: ConfigurableFocusTrapFactory }]
 })
 export class KbqModalModule {}

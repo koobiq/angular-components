@@ -70,7 +70,7 @@ export class ModalBuilderForService {
     }
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class KbqModalService {
     // Track of the current close modals (we assume invisible is close this time)
     get openModals(): KbqModalRef[] {
