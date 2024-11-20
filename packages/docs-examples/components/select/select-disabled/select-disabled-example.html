@@ -35,10 +35,7 @@
 <div class="layout-row">
     <div class="kbq-form__label">Для групп</div>
     <kbq-form-field style="width: 320px">
-        <kbq-select
-            [placeholder]="'Pokemon'"
-            [(value)]="selected"
-        >
+        <kbq-select [placeholder]="'Покемон'">
             @for (group of pokemonTypes; track group) {
                 <kbq-optgroup
                     [disabled]="group.disabled"

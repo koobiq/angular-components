@@ -29,7 +29,6 @@ const localeDataSet = {
         <kbq-form-field style="width: 320px">
             <kbq-select
                 [(value)]="selected"
-                [placeholder]="'Город'"
                 [panelClass]="'select-height-example'"
             >
                 @for (option of options; track option) {
@@ -48,7 +47,7 @@ const localeDataSet = {
         }
 
         ::ng-deep .select-height-example .kbq-select__content {
-            max-height: 380px;
+            max-height: 392px;
         }
     `
 })

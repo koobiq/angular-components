@@ -44,10 +44,7 @@ const localeDataSet = {
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Invalid</div>
             <kbq-form-field class="kbq-form-field_invalid">
-                <kbq-select
-                    [(value)]="selected"
-                    [placeholder]="'Город'"
-                >
+                <kbq-select [placeholder]="'Город'">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">
                             <span [innerHTML]="option"></span>

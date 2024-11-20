@@ -51,7 +51,7 @@ const localeDataSet = {
     `
 })
 export class SelectMultipleExample {
-    selected = [];
+    selected: string[];
 
     options: string[] = [];
 
@@ -61,6 +61,6 @@ export class SelectMultipleExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = localeDataSet[locale].items[0];
+        this.selected = [localeDataSet[locale].items[0]];
     };
 }

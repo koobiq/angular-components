@@ -83,7 +83,7 @@ const localeDataSet = {
 })
 export class SelectSearchExample {
     options: string[] = [];
-    selected = [];
+    selected = '';
 
     searchControl: FormControl = new FormControl();
     filteredOptions: Observable<string[]>;
@@ -94,7 +94,7 @@ export class SelectSearchExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = [];
+        this.selected = localeDataSet[locale].items[0];
 
         this.init();
     };

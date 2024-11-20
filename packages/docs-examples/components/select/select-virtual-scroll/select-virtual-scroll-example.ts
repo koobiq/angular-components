@@ -158,13 +158,15 @@ export const OPTIONS = [
     imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select (openedChange)="openedChange($event)" [placeholder]="'Город'">
-                <kbq-cleaner #kbqSelectCleaner />
-
+            <kbq-select
+                [(value)]="OPTIONS[0]"
+                [placeholder]="'Город'"
+                (openedChange)="openedChange($event)"
+            >
                 <cdk-virtual-scroll-viewport
                     [itemSize]="32"
-                    [maxBufferPx]="400"
-                    [minBufferPx]="100"
+                    [maxBufferPx]="800"
+                    [minBufferPx]="500"
                 >
                     <kbq-option
                         *cdkVirtualFor="let option of options; templateCacheSize: 0"
@@ -199,4 +201,6 @@ export class SelectVirtualScrollExample {
         this.cdkVirtualScrollViewport.setRenderedContentOffset(0);
         this.cdkVirtualScrollViewport.setRenderedRange(this.initialRange);
     }
+
+    protected readonly OPTIONS = OPTIONS;
 }
