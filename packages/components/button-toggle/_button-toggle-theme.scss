@@ -57,6 +57,6 @@
 
 @mixin kbq-button-toggle-typography() {
     .kbq-button-toggle .kbq-button-toggle-wrapper {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 }

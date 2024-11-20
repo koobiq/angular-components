@@ -49,11 +49,11 @@
 @mixin kbq-list-typography() {
     .kbq-list-item,
     .kbq-list-option {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-list-text {
             .kbq-list-option-caption {
-                @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+                @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
             }
         }
     }

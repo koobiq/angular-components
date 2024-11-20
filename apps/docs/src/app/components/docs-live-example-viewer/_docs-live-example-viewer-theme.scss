@@ -13,6 +13,6 @@
 @mixin kbq-docs-live-example-viewer-typography() {
     .docs-live-example__footer,
     .docs-live-example__footer .kbq-link {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 }

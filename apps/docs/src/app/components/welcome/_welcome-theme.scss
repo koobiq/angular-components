@@ -34,14 +34,14 @@
     }
 
     .docs-welcome__description {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     .docs-welcome__category-title {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, title);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
     .docs-welcome__category-item-title {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 }
