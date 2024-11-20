@@ -1,9 +1,9 @@
 .tabs-custom-label-example {
-    padding-bottom: 24px;
+    padding-bottom: var(--kbq-size-xxl);
 }
 
-.tabs-custom-label-example .kbq-icon {
-    margin-bottom: 4px;
+.tabs-custom-label-example .tabs-custom-label-example__icon {
+    margin-bottom: var(--kbq-size-xxs);
 }
 
 .tabs-custom-label-example .kbq-tab-label .kbq-tab-label__content {
@@ -12,9 +12,10 @@
     gap: 0;
 }
 
-.tabs-custom-label-example .tabs-custom-example__subtitle {
-    font-size: 12px;
-    line-height: 16px;
-    font-weight: 400;
-    color: rgba(108, 115, 147, 1);
+.tabs-custom-label-example .tabs-custom-label-example__subtitle {
+    font-size: var(--kbq-typography-text-compact-font-size);
+    line-height: var(--kbq-typography-text-compact-line-height);
+    font-weight: var(--kbq-typography-text-compact-font-weight);
+    letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
+    color: var(--kbq-palette-grey-50);
 }

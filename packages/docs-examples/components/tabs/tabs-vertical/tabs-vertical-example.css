@@ -7,5 +7,5 @@
 }
 
 .tabs-vertical-example .kbq-tab-body__wrapper {
-    padding-left: 20px;
+    padding-left: var(--kbq-size-xl);
 }
