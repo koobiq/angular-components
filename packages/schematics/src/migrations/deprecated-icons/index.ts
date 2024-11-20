@@ -2,9 +2,12 @@ import { Path } from '@angular-devkit/core';
 import { DirEntry, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import * as path from 'path';
 
+import { logMessage } from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
 import { iconClassReplacements, iconsMapping } from './data';
 import { Schema } from './schema';
+
+const iconsFontImportRule = "@use '@koobiq/icons/fonts/kbq-icons';";
 
 export default function deprecatedIcons(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
@@ -28,27 +31,28 @@ export default function deprecatedIcons(options: Schema): Rule {
                 const foundIcons = iconsMapping.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
                 if (foundIcons.length) {
                     const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
-                    logger.warn('-------------------------');
-                    logger.warn(`Please pay attention! Found deprecated icons in file: `);
-                    logger.info(`${parsedFilePath}`);
-                    logger.warn(
-                        foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')
-                    );
-                    logger.warn('-------------------------');
+                    logMessage(logger, () => {
+                        logger.warn(`Please pay attention! Found deprecated icons in file: `);
+                        logger.info(parsedFilePath);
+                        logger.warn(
+                            foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')
+                        );
+                    });
                 }
             }
             return newContent;
         };
 
         // Update styles, templates & components
-        targetDir.visit((path: Path, entry) => {
-            // if project property not provided, skip path from node_modules
-            if (path.includes('node_modules')) {
+        targetDir.visit((filePath: Path, entry) => {
+            let initialContent: string | undefined;
+            // if project property not provided, skip files in node_modules & dist
+            if (filePath.includes('node_modules') || filePath.includes('dist')) {
                 return;
             }
 
-            if (path.endsWith('.html') || path.endsWith('.ts') || path.endsWith(stylesExt)) {
-                const initialContent = entry?.content.toString();
+            if (filePath.endsWith('.html') || filePath.endsWith('.ts') || filePath.endsWith(stylesExt)) {
+                initialContent = entry?.content.toString();
                 let newContent = initialContent;
 
                 if (newContent) {
@@ -56,12 +60,20 @@ export default function deprecatedIcons(options: Schema): Rule {
                         newContent = newContent!.replace(new RegExp(replace, 'g'), replaceWith);
                     });
 
-                    newContent = handleDeprecatedIcons(newContent, path);
+                    newContent = handleDeprecatedIcons(newContent, filePath);
 
                     if (initialContent !== newContent) {
-                        tree.overwrite(path, newContent || '');
+                        tree.overwrite(filePath, newContent || '');
                     }
                 }
+            }
+
+            if (filePath.endsWith(stylesExt) && !initialContent?.includes(iconsFontImportRule)) {
+                const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
+                logMessage(logger, () => {
+                    logger.info(parsedFilePath);
+                    logger.warn(`Provide \`${iconsFontImportRule}\` to support icon styles from new scope`);
+                });
             }
         });
     };

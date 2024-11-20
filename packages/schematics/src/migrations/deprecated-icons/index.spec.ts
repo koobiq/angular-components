@@ -125,7 +125,7 @@ class TestApp {
         };
 
         it('should replace "class="pt-icons"" with ""', async () => {
-            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE}">`;
+            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE}"></i>`;
 
             const componentClass = `
             @Component({
@@ -151,7 +151,7 @@ class TestApp {
         });
 
         it('should replace "class="pt-icons " with "class=""', async () => {
-            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE} layout-column">`;
+            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE} layout-column"></i>`;
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
                 project: currentProject,
@@ -169,7 +169,7 @@ class TestApp {
         });
 
         it('should replace " pt-icons"" with """', async () => {
-            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}">`;
+            const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}"></i>`;
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
                 project: currentProject,

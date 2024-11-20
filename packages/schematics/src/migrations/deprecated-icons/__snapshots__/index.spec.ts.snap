@@ -2,13 +2,13 @@
 
 exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with """: project app: after changes 1`] = `
 [
-  "<i kbq-icon="kbq-file-plus-o_16" class="layout-column">",
+  "<i kbq-icon="kbq-file-plus-o_16" class="layout-column"></i>",
 ]
 `;
 
 exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with """: project app: before changes 1`] = `
 [
-  "<i kbq-icon="pt-icons-add-to-list_16" class="layout-column pt-icons">",
+  "<i kbq-icon="pt-icons-add-to-list_16" class="layout-column pt-icons"></i>",
 ]
 `;
 
@@ -60,23 +60,23 @@ exports[`deprecated-icons class replacements in styles, template, typescript sho
 
 exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons " with "class="": project app: after changes 1`] = `
 [
-  "<i kbq-icon="kbq-file-plus-o_16" class="layout-column">",
+  "<i kbq-icon="kbq-file-plus-o_16" class="layout-column"></i>",
 ]
 `;
 
 exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons " with "class="": project app: before changes 1`] = `
 [
-  "<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons layout-column">",
+  "<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons layout-column"></i>",
 ]
 `;
 
 exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons"" with "": project app: after changes 1`] = `
 [
-  "<i kbq-icon="kbq-file-plus-o_16" >",
+  "<i kbq-icon="kbq-file-plus-o_16" ></i>",
   "
             @Component({
                 selector: 'test-app',
-                template: '<i kbq-icon="kbq-file-plus-o_16" >'
+                template: '<i kbq-icon="kbq-file-plus-o_16" ></i>'
             })
             class TestApp {}",
 ]
@@ -84,11 +84,11 @@ exports[`deprecated-icons class replacements in styles, template, typescript sho
 
 exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons"" with "": project app: before changes 1`] = `
 [
-  "<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons">",
+  "<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons"></i>",
   "
             @Component({
                 selector: 'test-app',
-                template: '<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons">'
+                template: '<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons"></i>'
             })
             class TestApp {}",
 ]
@@ -104,6 +104,10 @@ exports[`deprecated-icons icons mapping should inform about deprecated icons for
 	alert-enabled_16 -> 	speaker-wave_16
 	angle-down-L_16 -> 	chevron-down_16
 	angle-down-L_24 -> 	chevron-down_24",
+  "-------------------------",
+  "-------------------------",
+  "../../../../../projects/app/src/styles.scss",
+  "Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
   "-------------------------",
   "-------------------------",
   "Please pay attention! Found deprecated icons in file: ",
@@ -508,6 +512,10 @@ exports[`deprecated-icons icons mapping should inform about deprecated icons for
 	alert-enabled_16 -> 	speaker-wave_16
 	angle-down-L_16 -> 	chevron-down_16
 	angle-down-L_24 -> 	chevron-down_24",
+  "-------------------------",
+  "-------------------------",
+  "../../../../../projects/app/src/app/app.component.scss",
+  "Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
   "-------------------------",
 ]
 `;

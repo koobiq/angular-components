@@ -1,5 +1,6 @@
 const { access, copyFile, mkdir } = require('fs/promises');
 const { resolve, join } = require('path');
+const { getMigrations } = require('../src/utils/migrations');
 
 const resolvePath = (...segments) => resolve(__dirname, ...segments);
 
@@ -20,8 +21,6 @@ const copyFileWrapper = async (src, dest) => {
     }
 };
 
-const migrations = ['css-selectors', 'deprecated-icons', 'new-icons-pack'];
-
 const init = async () => {
     const distCLIPath = resolvePath('../../../dist/components');
     const schematicsPath = join(distCLIPath, 'schematics');
@@ -39,7 +38,7 @@ const init = async () => {
     await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), join(ngAddPath, 'schema.json'));
     await copyFileWrapper(resolvePath('../src/collection.json'), join(schematicsPath, 'collection.json'));
 
-    for (const migration of migrations) {
+    for (const migration of getMigrations()) {
         const migrationPath = join(schematicsPath, 'migrations', migration);
         await ensureDirectoryExistence(migrationPath);
 

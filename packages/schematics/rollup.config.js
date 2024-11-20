@@ -2,10 +2,10 @@ const typescript = require('@rollup/plugin-typescript');
 const replace = require('@rollup/plugin-replace');
 
 const path = require('path');
-const { promises: fs, readdirSync } = require('fs');
+const { promises: fs } = require('fs');
 
 const pkg = require('../../package.json');
-const { resolve } = require('path');
+const { getMigrations } = require('./src/utils/migrations');
 
 const version = (str) => JSON.stringify(str.startsWith('^') ? str : '^' + str);
 
@@ -17,10 +17,6 @@ const clean = () => ({
     }
 });
 
-const migrations = readdirSync(resolve(__dirname, './src/migrations'), { withFileTypes: true })
-    .filter((file) => file.isDirectory())
-    .map((dir) => dir.name);
-
 module.exports = [
     {
         output: {
@@ -31,7 +27,7 @@ module.exports = [
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
             'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
-            ...migrations.reduce((res, cur) => {
+            ...getMigrations().reduce((res, cur) => {
                 res[`migrations/${cur}/index`] = path.join(__dirname, `src/migrations/${cur}/index.ts`);
                 res[`migrations/${cur}/data`] = path.join(__dirname, `src/migrations/${cur}/data.ts`);
                 return res;
