@@ -15,7 +15,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 @Component({
     selector: 'app',
     templateUrl: './demo-template.html',
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {

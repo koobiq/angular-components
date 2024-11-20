@@ -8,7 +8,7 @@ import { KbqFormFieldModule } from '../../components/form-field';
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss']
+    styleUrls: ['./styles.scss']
 })
 export class DemoComponent {
     value: string;

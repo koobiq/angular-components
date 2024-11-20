@@ -8,7 +8,7 @@ import { KbqButtonModule } from '../../components/button';
 @Component({
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
