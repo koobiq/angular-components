@@ -1,3 +1,13 @@
+# 18.6.0 (2024-11-20)
+
+### Koobiq
+
+ * bug fix  **dropdown:** icon in disabled state ([#DS-3081](https://github.com/koobiq/angular-components/issues/issue/DS-3081)) ([#430](https://github.com/koobiq/angular-components/issues/430)) ([ec38384](https://github.com/koobiq/angular-components/commit/ec383847e8360117425cd77d65ba1aed4060b418))
+ * bug fix  typography token mixin name ([#439](https://github.com/koobiq/angular-components/issues/439)) ([fc367c5](https://github.com/koobiq/angular-components/commit/fc367c54348d2d8cd18bced5fc8dc7897018f7ab))
+ * bug fix  **visual:** md-typography styles prefix ([#438](https://github.com/koobiq/angular-components/issues/438)) ([d5a353a](https://github.com/koobiq/angular-components/commit/d5a353a5589f5ac11ca2903599b314e5074d165c))
+ * feature  **badge:** added contrast color ([#DS-3079](https://github.com/koobiq/angular-components/issues/issue/DS-3079)) ([#441](https://github.com/koobiq/angular-components/issues/441)) ([19e31ff](https://github.com/koobiq/angular-components/commit/19e31ff511fccc28d972d4cdf302df74d24f7b7f))
+ * feature  **visual:** cleanup old tokens ([#DS-3071](https://github.com/koobiq/angular-components/issues/issue/DS-3071)) ([#428](https://github.com/koobiq/angular-components/issues/428)) ([1e74156](https://github.com/koobiq/angular-components/commit/1e74156dbfe58c4a71cda750157a5bc083518a79))
+
 ## 18.5.3 (2024-11-12)
 
 ### Koobiq
