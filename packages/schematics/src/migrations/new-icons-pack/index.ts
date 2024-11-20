@@ -30,13 +30,10 @@ export default function newIconsPack(options: Schema): Rule {
                 const foundIcons = data.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
                 if (foundIcons.length) {
                     const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
-                    logMessage(logger, () => {
-                        logger.warn(`Please pay attention! Found deprecated icons in file: `);
-                        logger.info(parsedFilePath);
-                        logger.warn(
-                            foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')
-                        );
-                    });
+                    logMessage(logger, [
+                        `Please pay attention! Found deprecated icons in file: `,
+                        parsedFilePath,
+                        foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')]);
                 }
             }
             return newContent;

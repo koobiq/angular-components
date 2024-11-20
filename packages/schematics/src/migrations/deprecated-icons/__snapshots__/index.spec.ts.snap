@@ -97,22 +97,22 @@ exports[`deprecated-icons class replacements in styles, template, typescript sho
 exports[`deprecated-icons icons mapping should inform about deprecated icons for fix = false (default, without params) 1`] = `
 [
   "-------------------------",
-  "Please pay attention! Found deprecated icons in file: ",
-  "../../../../../projects/app/src/styles.scss",
-  "	add-to-list_16 -> 	file-plus-o_16
+  "Please pay attention! Found deprecated icons in file: 
+../../../../../projects/app/src/styles.scss
+	add-to-list_16 -> 	file-plus-o_16
 	alert-disabled_16 -> 	speaker_16
 	alert-enabled_16 -> 	speaker-wave_16
 	angle-down-L_16 -> 	chevron-down_16
 	angle-down-L_24 -> 	chevron-down_24",
   "-------------------------",
   "-------------------------",
-  "../../../../../projects/app/src/styles.scss",
-  "Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
+  "../../../../../projects/app/src/styles.scss
+Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
   "-------------------------",
   "-------------------------",
-  "Please pay attention! Found deprecated icons in file: ",
-  "../../../../../projects/app/src/app/app.component.html",
-  "	add-to-list_16 -> 	file-plus-o_16
+  "Please pay attention! Found deprecated icons in file: 
+../../../../../projects/app/src/app/app.component.html
+	add-to-list_16 -> 	file-plus-o_16
 	alert-disabled_16 -> 	speaker_16
 	alert-enabled_16 -> 	speaker-wave_16
 	angle-down-L_16 -> 	chevron-down_16
@@ -505,17 +505,17 @@ exports[`deprecated-icons icons mapping should inform about deprecated icons for
 	zoom-to-fit_16 -> 	arrows-left-right-to-line_16",
   "-------------------------",
   "-------------------------",
-  "Please pay attention! Found deprecated icons in file: ",
-  "../../../../../projects/app/src/app/app.component.ts",
-  "	add-to-list_16 -> 	file-plus-o_16
+  "Please pay attention! Found deprecated icons in file: 
+../../../../../projects/app/src/app/app.component.ts
+	add-to-list_16 -> 	file-plus-o_16
 	alert-disabled_16 -> 	speaker_16
 	alert-enabled_16 -> 	speaker-wave_16
 	angle-down-L_16 -> 	chevron-down_16
 	angle-down-L_24 -> 	chevron-down_24",
   "-------------------------",
   "-------------------------",
-  "../../../../../projects/app/src/app/app.component.scss",
-  "Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
+  "../../../../../projects/app/src/app/app.component.scss
+Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
   "-------------------------",
 ]
 `;

@@ -31,13 +31,10 @@ export default function deprecatedIcons(options: Schema): Rule {
                 const foundIcons = iconsMapping.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
                 if (foundIcons.length) {
                     const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
-                    logMessage(logger, () => {
-                        logger.warn(`Please pay attention! Found deprecated icons in file: `);
-                        logger.info(parsedFilePath);
-                        logger.warn(
-                            foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')
-                        );
-                    });
+                    logMessage(logger, [
+                        `Please pay attention! Found deprecated icons in file: `,
+                        parsedFilePath,
+                        foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')]);
                 }
             }
             return newContent;
@@ -70,10 +67,10 @@ export default function deprecatedIcons(options: Schema): Rule {
 
             if (filePath.endsWith(stylesExt) && !initialContent?.includes(iconsFontImportRule)) {
                 const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
-                logMessage(logger, () => {
-                    logger.info(parsedFilePath);
-                    logger.warn(`Provide \`${iconsFontImportRule}\` to support icon styles from new scope`);
-                });
+                logMessage(logger, [
+                    parsedFilePath,
+                    `Provide \`${iconsFontImportRule}\` to support icon styles from new scope`
+                ]);
             }
         });
     };

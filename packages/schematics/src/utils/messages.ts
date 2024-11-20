@@ -2,8 +2,8 @@ export function noProject(project: string) {
     return `Unable to find project '${project}' in the workspace`;
 }
 
-export const logMessage = (logger, logContent) => {
+export const logMessage = (logger, content) => {
     logger.warn('-------------------------');
-    logContent();
+    logger.warn(content.join('\n'));
     logger.warn('-------------------------');
 };
