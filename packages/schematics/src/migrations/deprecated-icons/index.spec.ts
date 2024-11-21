@@ -168,7 +168,7 @@ class TestApp {
             );
         });
 
-        it('should replace " pt-icons"" with """', async () => {
+        it('should replace " pt-icons"" with "', async () => {
             const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}"></i>`;
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
