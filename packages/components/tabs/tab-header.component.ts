@@ -1,21 +1,14 @@
-import { Directionality } from '@angular/cdk/bidi';
-import { Platform } from '@angular/cdk/platform';
-import { ViewportRuler } from '@angular/cdk/scrolling';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChildren,
     ElementRef,
-    Inject,
     Input,
-    NgZone,
-    Optional,
     QueryList,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { KbqPaginatedTabHeader } from './paginated-tab-header';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 
@@ -35,8 +28,8 @@ export type ScrollDirection = 'after' | 'before';
  */
 @Component({
     selector: 'kbq-tab-header',
-    templateUrl: 'tab-header.html',
-    styleUrls: ['tab-header.scss'],
+    templateUrl: './tab-header.html',
+    styleUrl: './tab-header.scss',
     inputs: ['selectedIndex'],
     outputs: ['selectFocusedIndex', 'indexFocused'],
     encapsulation: ViewEncapsulation.None,
@@ -50,37 +43,24 @@ export type ScrollDirection = 'after' | 'before';
     }
 })
 export class KbqTabHeader extends KbqPaginatedTabHeader {
-    /** The index of the active tab. */
-    @Input() vertical: boolean = false;
-    @Input() underlined: boolean = false;
+    /** Whether the tabs are underlined. */
+    @Input({ transform: booleanAttribute }) underlined: boolean = false;
 
-    @ContentChildren(KbqTabLabelWrapper, { descendants: false }) items: QueryList<KbqTabLabelWrapper>;
-    @ViewChild('tabListContainer', { static: true }) tabListContainer: ElementRef;
-    @ViewChild('tabList', { static: true }) tabList: ElementRef;
-    @ViewChild('nextPaginator') nextPaginator: ElementRef<HTMLElement>;
-    @ViewChild('previousPaginator') previousPaginator: ElementRef<HTMLElement>;
+    @ContentChildren(KbqTabLabelWrapper, { descendants: false }) readonly items: QueryList<KbqTabLabelWrapper>;
+    @ViewChild('tabListContainer', { static: true }) readonly tabListContainer: ElementRef;
+    @ViewChild('tabList', { static: true }) readonly tabList: ElementRef;
+    @ViewChild('nextPaginator') readonly nextPaginator: ElementRef<HTMLElement>;
+    @ViewChild('previousPaginator') readonly previousPaginator: ElementRef<HTMLElement>;
 
-    get activeTabOffsetWidth() {
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth + 'px';
+    protected get activeTabOffsetWidth(): string | null {
+        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetWidth;
     }
 
-    get activeTabOffsetLeft() {
-        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft + 'px';
+    protected get activeTabOffsetLeft(): string | null {
+        return this.items.get(this.selectedIndex)?.elementRef?.nativeElement?.offsetLeft;
     }
 
-    constructor(
-        readonly elementRef: ElementRef,
-        readonly changeDetectorRef: ChangeDetectorRef,
-        viewportRuler: ViewportRuler,
-        ngZone: NgZone,
-        platform: Platform,
-        @Optional() dir: Directionality,
-        @Optional() @Inject(ANIMATION_MODULE_TYPE) animationMode?: string
-    ) {
-        super(elementRef, changeDetectorRef, viewportRuler, ngZone, platform, dir, animationMode);
-    }
-
-    itemSelected(event: KeyboardEvent) {
+    protected itemSelected(event: KeyboardEvent): void {
         event.preventDefault();
     }
 }

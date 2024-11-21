@@ -5,7 +5,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LEFT_ARROW } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { Observable } from 'rxjs';
-import { KbqTab, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy, KbqTabsModule } from './index';
+import { KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
+import { KbqTab } from './tab.component';
+import { KbqTabsModule } from './tabs.module';
 
 describe('KbqTabGroup', () => {
     beforeEach(() => {
@@ -214,7 +216,7 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
 
             const tabLabels = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
-            const tabLabelContainer = fixture.debugElement.query(By.css('.kbq-tab-header__content'))
+            const tabLabelContainer = fixture.debugElement.query(By.css('.kbq-tab-header__container'))
                 .nativeElement as HTMLElement;
 
             expect(handleFocusSpyFn).toHaveBeenCalledTimes(0);

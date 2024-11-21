@@ -1,17 +1,7 @@
-.tabs-vertical-icons-example {
-    .kbq-tab-group_vertical {
-        height: 220px;
-    }
+.tabs-vertical-icons-example .kbq-tab-group_vertical {
+    height: 220px;
+}
 
-    .kbq-tab-body__wrapper {
-        padding-left: 20px;
-
-        p:first-child {
-            margin-top: 0;
-        }
-
-        p:last-child {
-            margin-bottom: 0;
-        }
-    }
+.tabs-vertical-icons-example .kbq-tab-body__wrapper {
+    padding-left: var(--kbq-size-xl);
 }

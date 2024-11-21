@@ -1,5 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChild,
@@ -18,8 +19,8 @@ import {
     CanDisableCtor,
     KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER,
     KBQ_SELECT_SCROLL_STRATEGY,
-    PopUpPlacements,
-    mixinDisabled
+    mixinDisabled,
+    PopUpPlacements
 } from '@koobiq/components/core';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY } from '@koobiq/components/dropdown';
 import { Subject } from 'rxjs';
@@ -89,7 +90,7 @@ export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnCha
     /** Plain text label for the tab, used when there is no template label. */
     @Input('label') textLabel = '';
 
-    @Input() empty = false;
+    @Input({ transform: booleanAttribute }) empty: boolean = false;
 
     @Input() tabId: string;
 

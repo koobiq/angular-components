@@ -7,9 +7,12 @@
     </div>
     <div class="docs-component-navbar layout-row layout-padding-top-s">
         @if (!docItem.isGuide) {
-            <nav kbq-tab-nav-bar>
+            <nav
+                kbqTabNavBar
+                [tabNavPanel]="tabNavPanel"
+            >
                 <a
-                    kbq-tab-link
+                    kbqTabLink
                     routerLinkActive="kbq-selected"
                     [routerLink]="'overview'"
                 >
@@ -17,7 +20,7 @@
                 </a>
                 @if (docItem.hasApi) {
                     <a
-                        kbq-tab-link
+                        kbqTabLink
                         routerLinkActive="kbq-selected"
                         [routerLink]="'api'"
                     >
@@ -26,7 +29,7 @@
                 }
                 @if (docItem.hasExamples) {
                     <a
-                        kbq-tab-link
+                        kbqTabLink
                         routerLinkActive="kbq-selected"
                         [routerLink]="'examples'"
                     >
@@ -38,4 +41,9 @@
     </div>
 </div>
 
-<router-outlet />
+<div
+    #tabNavPanel="kbqTabNavPanel"
+    kbqTabNavPanel
+>
+    <router-outlet />
+</div>
