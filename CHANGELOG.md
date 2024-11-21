@@ -1,3 +1,10 @@
+# 18.7.0 (2024-11-21)
+
+### Koobiq
+
+ * bug fix  **docs:** missing icon in "badge content" example ([#444](https://github.com/koobiq/angular-components/issues/444)) ([324d70b](https://github.com/koobiq/angular-components/commit/324d70b5841cfc909b4e9f2c7c67691967d12200))
+ * feature  **schematics:** added migration script for product-icons ([#DS-3124](https://github.com/koobiq/angular-components/issues/issue/DS-3124)) ([#434](https://github.com/koobiq/angular-components/issues/434)) ([375b676](https://github.com/koobiq/angular-components/commit/375b6766d05fade6108affb9a08b6da7be2fbd33))
+
 # 18.6.0 (2024-11-20)
 
 ### Koobiq
