@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with """: project app: after changes 1`] = `
+exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with ": project app: after changes 1`] = `
 [
   "<i kbq-icon="kbq-file-plus-o_16" class="layout-column"></i>",
 ]
 `;
 
-exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with """: project app: before changes 1`] = `
+exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with ": project app: before changes 1`] = `
 [
   "<i kbq-icon="pt-icons-add-to-list_16" class="layout-column pt-icons"></i>",
 ]
