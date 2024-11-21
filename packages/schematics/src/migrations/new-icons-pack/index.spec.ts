@@ -4,12 +4,13 @@ import { SchematicTestRunner } from '@angular-devkit/schematics/testing';
 import { getWorkspace } from '@schematics/angular/utility/workspace';
 import * as path from 'path';
 import { first } from 'rxjs';
-import { createTestApp } from '../utils/testing';
+import { createTestApp } from '../../utils/testing';
 import { newIconsPackData } from './data';
 
-const collectionPath = path.join(__dirname, '../collection.json');
+const collectionPath = path.join(__dirname, '../../collection.json');
+const SCHEMATIC_NAME = 'new-icons-pack';
 
-describe('new-icons-pack', () => {
+describe(SCHEMATIC_NAME, () => {
     let runner: SchematicTestRunner;
     let appTree: Tree;
     let projects: ProjectDefinitionCollection;
@@ -25,10 +26,6 @@ describe('new-icons-pack', () => {
     beforeEach(async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
         appTree = await createTestApp(runner, { style: 'scss' });
-        const pkgPath = '/package.json';
-        const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        pkg.dependencies['@koobiq/icons'] = '^9.1.0';
-        appTree.overwrite(pkgPath, JSON.stringify(pkg));
 
         const workspace = await getWorkspace(appTree);
         projects = workspace.projects as unknown as ProjectDefinitionCollection;
@@ -44,18 +41,6 @@ describe('new-icons-pack', () => {
         });
     });
 
-    it('should skip changes if koobiq icons package with breaking changes is not installed', async () => {
-        const pkgPath = '/package.json';
-        const pkg = JSON.parse(appTree.read(pkgPath)!.toString());
-        delete pkg.dependencies['@koobiq/icons'];
-        appTree.overwrite(pkgPath, JSON.stringify(pkg));
-
-        runner.logger.subscribe(({ message }) =>
-            expect(message).toContain('Breaking version of icons is not used. Everything is OK.')
-        );
-        await runner.runSchematic('new-icons-pack', { fix: false }, appTree);
-    });
-
     it('should run migration for specified project', async () => {
         const [firstProjectKey, secondProjectKey] = projects.keys();
         const readProjectContent = (projectKey: string) => {
@@ -66,7 +51,7 @@ describe('new-icons-pack', () => {
             ];
         };
 
-        const tree = await runner.runSchematic('new-icons-pack', { fix: false, project: firstProjectKey }, appTree);
+        const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: false, project: firstProjectKey }, appTree);
 
         const [firstProjectTemplateContent, firstProjectStylesContent] = readProjectContent(firstProjectKey);
         expect(
@@ -82,7 +67,7 @@ describe('new-icons-pack', () => {
     });
 
     it('should run migration for whole tree', async () => {
-        const tree = await runner.runSchematic('new-icons-pack', { fix: true }, appTree);
+        const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
 
         projects.forEach((project) => {
             const templateContent = tree.read(`/${project.root}/src/app/app.component.html`)!.toString();
@@ -109,7 +94,7 @@ describe('new-icons-pack', () => {
             );
         });
 
-        const tree = await runner.runSchematic('new-icons-pack', { fix: true }, appTree);
+        const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: true }, appTree);
 
         projects.forEach((project) => {
             const templateContent = tree.read(`/${project.root}/src/app/app.component.html`)!.toString();
@@ -139,6 +124,6 @@ describe('new-icons-pack', () => {
             done();
         });
 
-        runner.runSchematic('new-icons-pack', {}, appTree);
+        runner.runSchematic(SCHEMATIC_NAME, {}, appTree);
     });
 });
