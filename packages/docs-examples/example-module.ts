@@ -2560,8 +2560,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs disabled",
     "componentName": "TabsDisabledExample",
     "files": [
-      "tabs-disabled-example.ts",
-      "tabs-disabled-example.css"
+      "tabs-disabled-example.ts"
     ],
     "selector": "tabs-disabled-example",
     "additionalComponents": [],
@@ -2622,8 +2621,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Tabs underlined",
     "componentName": "TabsUnderlinedExample",
     "files": [
-      "tabs-underlined-example.ts",
-      "tabs-underlined-example.css"
+      "tabs-underlined-example.ts"
     ],
     "selector": "tabs-underlined-example",
     "additionalComponents": [],
