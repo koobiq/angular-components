@@ -1,22 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Select width
@@ -28,7 +12,7 @@ const localeDataSet = {
     template: `
         <kbq-form-field style="width: 100%">
             <kbq-select
-                [(value)]="selected"
+                [value]="options[2]"
                 [placeholder]="'Город'"
             >
                 @for (option of options; track option) {
@@ -40,7 +24,7 @@ const localeDataSet = {
         </kbq-form-field>
         <kbq-form-field style="width: 200px">
             <kbq-select
-                [(value)]="selected"
+                [value]="options[1]"
                 [placeholder]="'Город'"
             >
                 @for (option of options; track option) {
@@ -60,16 +44,14 @@ const localeDataSet = {
     `
 })
 export class SelectWidthExample {
-    selected = '';
-
-    options: string[] = [];
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
-    }
-
-    update = (locale: string) => {
-        this.options = localeDataSet[locale].items;
-        this.selected = '';
-    };
+    options = [
+        'Администратор (admin)',
+        'Иван Иванов (iivanov)',
+        'Иннокентий Смоктуновский (ke$ha)',
+        'Ирина Краева (ikraeva)',
+        'Константин Константинопольский (kostya)',
+        'Роман Кравченко (nagibator666)',
+        'Роман Туров (rturov)',
+        'Руслан Боярский (rus777lan)'
+    ];
 }

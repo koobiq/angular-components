@@ -28,15 +28,16 @@ const localeDataSet = {
     template: `
         <kbq-form-field style="width: 280px">
             <kbq-select
-                [(value)]="selected"
-                [placeholder]="'Город'"
+                [value]="'value-1'"
                 [panelClass]="'select-width-fixed-example'"
             >
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">
-                        <span [innerHTML]="option"></span>
-                    </kbq-option>
-                }
+                <kbq-option [value]="'value-1'">Использование альтернативных данных для аутентификации</kbq-option>
+                <kbq-option [value]="'value-2'">Использование альтернативных данных для аутентификации</kbq-option>
+                <kbq-option [value]="'value-3'">Использование альтернативных данных для аутентификации</kbq-option>
+                <kbq-option [value]="'value-4'">Использование интерпретаторов командной строки и сценариев</kbq-option>
+                <kbq-option [value]="'value-5'">Использование сценариев XSL</kbq-option>
+                <kbq-option [value]="'value-6'">Исследование владельца или пользователей системы</kbq-option>
+                <kbq-option [value]="'value-6'">Исследование групп разрешений</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,

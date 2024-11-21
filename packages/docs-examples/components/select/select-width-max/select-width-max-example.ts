@@ -1,22 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Select width max
@@ -28,15 +12,16 @@ const localeDataSet = {
     template: `
         <kbq-form-field style="width: 280px">
             <kbq-select
-                [(value)]="selected"
-                [placeholder]="'Город'"
+                [value]="'value-1'"
                 [panelClass]="'select-width-max-example'"
             >
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">
-                        <span [innerHTML]="option + ' ' + option + ' ' + option"></span>
-                    </kbq-option>
-                }
+                <kbq-option [value]="'value-1'">Активное сканирование</kbq-option>
+                <kbq-option [value]="'value-2'">Сбор бизнес-информации об организации</kbq-option>
+                <kbq-option [value]="'value-3'">Сбор информации из закрытых источников</kbq-option>
+                <kbq-option [value]="'value-4'">Сбор информации из общедоступных источников</kbq-option>
+                <kbq-option [value]="'value-5'">Сбор информации о сетевой инфраструктуре</kbq-option>
+                <kbq-option [value]="'value-6'">Сбор информации об атакуемых пользователях</kbq-option>
+                <kbq-option [value]="'value-6'">Сбор информации об атакуемых узлах</kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -52,17 +37,4 @@ const localeDataSet = {
         }
     `
 })
-export class SelectWidthMaxExample {
-    selected = '';
-
-    options: string[] = [];
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
-    }
-
-    update = (locale: string) => {
-        this.options = localeDataSet[locale].items;
-        this.selected = '';
-    };
-}
+export class SelectWidthMaxExample {}
