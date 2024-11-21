@@ -46,7 +46,9 @@ const localeDataSet = {
     `
 })
 export class SelectFooterExample {
-    selected = '';
+    selectedButton = '';
+    selectedCaption = '';
+    selectedLink = '';
 
     options: string[] = [];
 
@@ -56,7 +58,9 @@ export class SelectFooterExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = localeDataSet[locale].items[0];
+        this.selectedButton = localeDataSet[locale].items[0];
+        this.selectedCaption = localeDataSet[locale].items[0];
+        this.selectedLink = localeDataSet[locale].items[0];
     };
     protected readonly colors = KbqComponentColors;
     protected readonly styles = KbqButtonStyles;

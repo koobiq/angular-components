@@ -4,7 +4,7 @@
         <kbq-select
             [disabled]="true"
             [placeholder]="'Город'"
-            [(value)]="selected"
+            [(value)]="selectedDisabled"
         >
             @for (option of options; track option) {
                 <kbq-option [value]="option">
@@ -35,7 +35,7 @@
 <div class="layout-row">
     <div class="kbq-form__label">Для групп</div>
     <kbq-form-field style="width: 320px">
-        <kbq-select [placeholder]="'Покемон'">
+        <kbq-select [(value)]="pokemonTypes[0].pokemon[0].value">
             @for (group of pokemonTypes; track group) {
                 <kbq-optgroup
                     [disabled]="group.disabled"

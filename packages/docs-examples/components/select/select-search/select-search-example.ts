@@ -61,8 +61,6 @@ const localeDataSet = {
                     <kbq-cleaner />
                 </kbq-form-field>
 
-                <kbq-cleaner #kbqSelectCleaner />
-
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
 
                 @for (option of filteredOptions | async; track option) {

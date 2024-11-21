@@ -78,6 +78,7 @@ export class SelectDisabledExample {
         }
     ];
     selected = '';
+    selectedDisabled = '';
 
     options: string[] = [];
 
@@ -88,5 +89,6 @@ export class SelectDisabledExample {
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
         this.selected = localeDataSet[locale].items[0];
+        this.selectedDisabled = localeDataSet[locale].items[0];
     };
 }
