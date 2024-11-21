@@ -15,8 +15,6 @@
         outline: none;
         text-decoration: none;
         color: inherit;
-
-        @include common.kbq-truncate-line();
     }
 
     .docs-anchors__element {
