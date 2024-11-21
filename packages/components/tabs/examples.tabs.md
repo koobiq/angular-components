@@ -1,13 +1,13 @@
-#### Selection with tab id
+#### Выбор вкладки по идентификатору
 
 <!-- example(tabs-active-tab-id) -->
 
-#### Selection with tab index
+#### Выбор вкладки по индексу
 
 <!-- example(tabs-active-tab-index) -->
 
-#### Use with other controls
+#### Использование с другими контролами
 
-Action buttons can be conveniently placed in a single panel with underlined tabs.
+Кнопки действий удобно разместить в одной панели с подчеркнутыми вкладками.
 
 <!-- example(tabs-actionbar) -->
