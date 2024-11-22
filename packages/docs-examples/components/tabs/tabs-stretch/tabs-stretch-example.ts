@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -7,15 +7,14 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-stretch-example',
-    imports: [
-        KbqTabsModule
-    ],
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group kbq-stretch-tabs>
-            <kbq-tab [label]="'Bruteforce'" />
-            <kbq-tab [label]="'Identity Theft'" />
-            <kbq-tab [label]="'Spam Attack'" />
+            <kbq-tab label="BruteForce" />
+            <kbq-tab label="Identity Theft" />
+            <kbq-tab label="Spam Attack" />
         </kbq-tab-group>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsStretchExample {}

@@ -11,7 +11,7 @@
 
 <div
     #tabListContainer
-    class="kbq-tab-header__content"
+    class="kbq-tab-header__container"
     (keydown)="handleKeydown($event)"
 >
     <div
@@ -23,10 +23,8 @@
             <ng-content />
             <div
                 class="kbq-tab-list__active-tab-underline"
-                [ngStyle]="{
-                    width: activeTabOffsetWidth,
-                    left: activeTabOffsetLeft
-                }"
+                [style.left.px]="activeTabOffsetLeft"
+                [style.width.px]="activeTabOffsetWidth"
             ></div>
         </div>
     </div>

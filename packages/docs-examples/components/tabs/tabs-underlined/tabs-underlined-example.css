@@ -1,7 +1,0 @@
-.tabs-underlined-example {
-    padding-bottom: 24px;
-
-    kbq-tab-group + kbq-tab-group {
-        margin-top: 16px;
-    }
-}

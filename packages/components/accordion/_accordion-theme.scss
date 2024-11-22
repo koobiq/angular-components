@@ -45,14 +45,14 @@
 @mixin kbq-accordion-typography() {
     .kbq-accordion-header,
     .kbq-accordion-trigger {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     .kbq-accordion-trigger__caption {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 
     .kbq-accordion-content {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

@@ -4062,6 +4062,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fontsource/inter@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@fontsource/inter@npm:5.1.0"
+  checksum: 10c0/48c740b8a311908ca9527bf598e759bdfad6429f730450cc4904877915537e857a322db3ff7ade0bf731a3853ab34e611638d560529774a7e94ca2237735c86b
+  languageName: node
+  linkType: hard
+
+"@fontsource/jetbrains-mono@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "@fontsource/jetbrains-mono@npm:5.1.1"
+  checksum: 10c0/fa20ba273ecf6d4e50bffb689bc2b4d90712fc023203eb32a8bb8587a89eec0ae2cccd94197e2389857d6920e232c8ae2427f211fed7069fd25ec6d03499f153
+  languageName: node
+  linkType: hard
+
 "@google-cloud/paginator@npm:^4.0.0":
   version: 4.0.1
   resolution: "@google-cloud/paginator@npm:4.0.1"
@@ -4756,10 +4770,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:^3.7.3":
-  version: 3.7.3
-  resolution: "@koobiq/design-tokens@npm:3.7.3"
-  checksum: 10c0/45606c8f2d2da5c0aeb2cc80e1fa3bf06aa08e2dccea795cbe232b2986ff231c5828168d5ecc3e969dddc01de5318d3cd2537649117d47e2b7352485cf6ecae6
+"@koobiq/design-tokens@npm:^3.8.1":
+  version: 3.8.1
+  resolution: "@koobiq/design-tokens@npm:3.8.1"
+  checksum: 10c0/20292029ed32b2ec1326fa6f5ee089ecd4eccc1fcff50b47b3d1b5d5c715e9d03d0e8e28f27ed1112cfd442e7098c62c014543f0bcd3a60a32625f473bc2fef7
   languageName: node
   linkType: hard
 
@@ -4790,10 +4804,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:^3.7.3":
-  version: 3.7.3
-  resolution: "@koobiq/tokens-builder@npm:3.7.3"
-  checksum: 10c0/2ff2f0d153d9d0f5a5fda4b64bee04c7328aaca463915b755bf1cf911f8d720ee22269d830ddd2d6a1189447164ed50c50034789b71f879b235276841b47c9e0
+"@koobiq/tokens-builder@npm:^3.8.1":
+  version: 3.8.1
+  resolution: "@koobiq/tokens-builder@npm:3.8.1"
+  checksum: 10c0/fbd7cc4997763843d4316410c63e328d7be9d350637713dda1aeba67300d861359a41183fdbb171dc0ab015f3099e3b771c199d0a9c090d38b264b1e901b3b36
   languageName: node
   linkType: hard
 
@@ -14633,13 +14647,15 @@ __metadata:
     "@cspell/dict-ru_ru": "npm:^2.2.1"
     "@docsearch/css": "npm:^3.6.2"
     "@docsearch/js": "npm:^3.6.2"
+    "@fontsource/inter": "npm:^5.1.0"
+    "@fontsource/jetbrains-mono": "npm:^5.1.1"
     "@koobiq/date-adapter": "npm:^3.1.3"
     "@koobiq/date-formatter": "npm:^3.1.3"
-    "@koobiq/design-tokens": "npm:^3.7.3"
+    "@koobiq/design-tokens": "npm:^3.8.1"
     "@koobiq/icons": "npm:9.1.0"
     "@koobiq/luxon-date-adapter": "npm:^3.1.3"
     "@koobiq/moment-date-adapter": "npm:^3.1.3"
-    "@koobiq/tokens-builder": "npm:^3.7.3"
+    "@koobiq/tokens-builder": "npm:^3.8.1"
     "@messageformat/core": "npm:^3.0.1"
     "@microsoft/api-extractor": "npm:7.40.2"
     "@octokit/rest": "npm:^18.9.1"

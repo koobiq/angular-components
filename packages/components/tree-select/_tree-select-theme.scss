@@ -9,14 +9,14 @@
         }
 
         &.kbq-disabled {
-            color: var(--kbq-foreground-text-disabled);
+            color: var(--kbq-states-foreground-disabled);
         }
     }
 
     .kbq-select__placeholder {
         text-overflow: ellipsis;
 
-        color: var(--kbq-foreground-text-disabled);
+        color: var(--kbq-states-foreground-disabled);
     }
 
     .kbq-tree-select__panel {
@@ -32,6 +32,6 @@
 @mixin kbq-tree-select-typography() {
     .kbq-tree-select,
     .kbq-tree-select__panel {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

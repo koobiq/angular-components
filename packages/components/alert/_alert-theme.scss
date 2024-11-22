@@ -64,14 +64,14 @@
 
 @mixin kbq-alert-typography() {
     .kbq-alert {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-alert__title {
-            @include kbq-typography-level-to-styles_css-variables(typography, subheading);
+            @include kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
 
         &.kbq-alert_compact .kbq-alert__title {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-big-strong);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
         }
     }
 }

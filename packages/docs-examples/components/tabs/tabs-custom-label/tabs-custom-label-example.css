@@ -1,0 +1,21 @@
+.tabs-custom-label-example {
+    padding-bottom: var(--kbq-size-xxl);
+}
+
+.tabs-custom-label-example .tabs-custom-label-example__icon {
+    margin-bottom: var(--kbq-size-xxs);
+}
+
+.tabs-custom-label-example .kbq-tab-label .kbq-tab-label__content {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+}
+
+.tabs-custom-label-example .tabs-custom-label-example__subtitle {
+    font-size: var(--kbq-typography-text-compact-font-size);
+    line-height: var(--kbq-typography-text-compact-line-height);
+    font-weight: var(--kbq-typography-text-compact-font-weight);
+    letter-spacing: var(--kbq-typography-text-compact-letter-spacing);
+    color: var(--kbq-palette-grey-50);
+}

@@ -98,22 +98,22 @@
     }
 
     .docs-component-navbar .kbq-tab-link {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 
     .docs-api__class-selector-name,
     .docs-api__input-marker,
     .docs-api_property-name {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, mono-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
     }
 
     .docs-api_method-name {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, mono-big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big-strong);
     }
 
     .docs-api {
         .kbq-markdown__code {
-            @include tokens.kbq-typography-level-to-styles_css-variables(typography, mono-big);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
         }
     }
 }

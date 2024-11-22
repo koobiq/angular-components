@@ -50,8 +50,8 @@ export type KbqTabBodyOriginState = 'left' | 'right';
  */
 @Component({
     selector: 'kbq-tab-body',
-    templateUrl: 'tab-body.html',
-    styleUrls: ['tab-body.scss'],
+    templateUrl: './tab-body.html',
+    styleUrl: './tab-body.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: [kbqTabsAnimations.translateTab],

@@ -25,7 +25,7 @@ export function customValidator(): ValidatorFn {
 
 @Component({
     selector: 'app',
-    styleUrls: ['../main.scss', 'styles.scss'],
+    styleUrls: ['styles.scss'],
     templateUrl: 'template.html',
     encapsulation: ViewEncapsulation.None
 })

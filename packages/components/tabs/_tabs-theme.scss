@@ -1,5 +1,4 @@
-@use '../core/styles/typography/typography-utils' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-tab-item-state($type, $sub-type, $style-name) {
     $base: tabs-tab-item-#{$type}-#{$sub-type}-#{$style-name};
@@ -52,7 +51,6 @@
     }
 }
 
-//noinspection ALL
 @mixin kbq-tabs-theme() {
     .kbq-tab-group {
         &.kbq-tab-group_filled {
@@ -104,9 +102,7 @@
     .kbq-tab-nav-bar {
         &.kbq-tab-nav-bar_filled {
             &.kbq-tab-nav-bar_on-background {
-                .kbq-tab-header {
-                    background: var(--kbq-tabs-tab-stack-filled-on-background-background);
-                }
+                background: var(--kbq-tabs-tab-stack-filled-on-background-background);
 
                 & .kbq-tab-link {
                     @include kbq-tab-item-style(filled, on-background);
@@ -114,9 +110,7 @@
             }
 
             &.kbq-tab-nav-bar_on-surface {
-                .kbq-tab-header {
-                    background: var(--kbq-tabs-tab-stack-filled-on-surface-background);
-                }
+                background: var(--kbq-tabs-tab-stack-filled-on-surface-background);
 
                 & .kbq-tab-link {
                     @include kbq-tab-item-style(filled, on-background);
@@ -126,9 +120,7 @@
 
         &.kbq-tab-nav-bar_transparent {
             &.kbq-tab-nav-bar_on-background {
-                .kbq-tab-header {
-                    background: var(--kbq-tabs-tab-stack-transparent-on-background-background);
-                }
+                background: var(--kbq-tabs-tab-stack-transparent-on-background-background);
 
                 & .kbq-tab-link {
                     @include kbq-tab-item-style(transparent, on-background);
@@ -136,9 +128,7 @@
             }
 
             &.kbq-tab-nav-bar_on-surface {
-                .kbq-tab-header {
-                    background: var(--kbq-tabs-tab-stack-transparent-on-surface-background);
-                }
+                background: var(--kbq-tabs-tab-stack-transparent-on-surface-background);
 
                 & .kbq-tab-link {
                     @include kbq-tab-item-style(transparent, on-background);
@@ -151,6 +141,6 @@
 @mixin kbq-tabs-typography() {
     .kbq-tab-label,
     .kbq-tab-link {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 }

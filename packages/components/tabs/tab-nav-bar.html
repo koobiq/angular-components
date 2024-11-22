@@ -1,0 +1,42 @@
+<div
+    #previousPaginator
+    class="kbq-tab-header__pagination kbq-tab-header__pagination_before"
+    [class.kbq-disabled]="disableScrollBefore"
+    (click)="handlePaginatorClick('before')"
+    (mousedown)="handlePaginatorPress('before', $event)"
+    (touchend)="stopInterval()"
+>
+    <i kbq-icon="kbq-chevron-left_16"></i>
+</div>
+
+<div
+    #tabListContainer
+    class="kbq-tab-link__container"
+    (keydown)="handleKeydown($event)"
+>
+    <div
+        #tabList
+        class="kbq-tab-list"
+        (cdkObserveContent)="onContentChanges()"
+    >
+        <div class="kbq-tab-list__content">
+            <ng-content />
+            <div
+                class="kbq-tab-list__active-tab-underline"
+                [style.left.px]="activeTabOffsetLeft"
+                [style.width.px]="activeTabOffsetWidth"
+            ></div>
+        </div>
+    </div>
+</div>
+
+<div
+    #nextPaginator
+    class="kbq-tab-header__pagination kbq-tab-header__pagination_after"
+    [class.kbq-disabled]="disableScrollAfter"
+    (click)="handlePaginatorClick('after')"
+    (mousedown)="handlePaginatorPress('after', $event)"
+    (touchend)="stopInterval()"
+>
+    <i kbq-icon="kbq-chevron-right_16"></i>
+</div>

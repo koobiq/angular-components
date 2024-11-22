@@ -1,10 +1,10 @@
-export { KbqTabBody, KbqTabBodyOriginState, KbqTabBodyPortal, KbqTabBodyPositionState } from './tab-body.component';
-export { KbqTabContent } from './tab-content.directive';
+export * from './tab-body.component';
+export * from './tab-content.directive';
 export * from './tab-group.component';
-export { KbqTabHeader, ScrollDirection } from './tab-header.component';
-export { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
-export { KbqTabLabel } from './tab-label.directive';
-export { KbqTabLink, KbqTabNav } from './tab-nav-bar/index';
-export { KbqTab } from './tab.component';
+export * from './tab-header.component';
+export * from './tab-label-wrapper.directive';
+export * from './tab-label.directive';
+export * from './tab-nav-bar';
+export * from './tab.component';
 export * from './tabs-animations';
 export * from './tabs.module';

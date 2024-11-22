@@ -1,0 +1,934 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with ": project app: after changes 1`] = `
+[
+  "<i kbq-icon="kbq-file-plus-o_16" class="layout-column"></i>",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace " pt-icons"" with ": project app: before changes 1`] = `
+[
+  "<i kbq-icon="pt-icons-add-to-list_16" class="layout-column pt-icons"></i>",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace "'pt-icons " with "'": project app: after changes 1`] = `
+[
+  "
+            @Component({
+                selector: 'test-app',
+                template: ''
+            })
+            class TestApp {
+                getDynamicIcon() {
+                   return 'add-to-list_16';
+                }
+            }",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace "'pt-icons " with "'": project app: before changes 1`] = `
+[
+  "
+            @Component({
+                selector: 'test-app',
+                template: ''
+            })
+            class TestApp {
+                getDynamicIcon() {
+                   return 'pt-icons add-to-list_16';
+                }
+            }",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace ".pt-icons" with ".kbq": project app: after changes 1`] = `
+[
+  "
+                @mixin test-icon { @extend .kbq; }
+            ",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace ".pt-icons" with ".kbq": project app: before changes 1`] = `
+[
+  "
+                @mixin test-icon { @extend .pt-icons; }
+            ",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons " with "class="": project app: after changes 1`] = `
+[
+  "<i kbq-icon="kbq-file-plus-o_16" class="layout-column"></i>",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons " with "class="": project app: before changes 1`] = `
+[
+  "<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons layout-column"></i>",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons"" with "": project app: after changes 1`] = `
+[
+  "<i kbq-icon="kbq-file-plus-o_16" ></i>",
+  "
+            @Component({
+                selector: 'test-app',
+                template: '<i kbq-icon="kbq-file-plus-o_16" ></i>'
+            })
+            class TestApp {}",
+]
+`;
+
+exports[`deprecated-icons class replacements in styles, template, typescript should replace "class="pt-icons"" with "": project app: before changes 1`] = `
+[
+  "<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons"></i>",
+  "
+            @Component({
+                selector: 'test-app',
+                template: '<i kbq-icon="pt-icons-add-to-list_16" class="pt-icons"></i>'
+            })
+            class TestApp {}",
+]
+`;
+
+exports[`deprecated-icons icons mapping should inform about deprecated icons for fix = false (default, without params) 1`] = `
+[
+  "-------------------------",
+  "Please pay attention! Found deprecated icons in file: 
+../../../../../projects/app/src/styles.scss
+	add-to-list_16 -> 	file-plus-o_16
+	alert-disabled_16 -> 	speaker_16
+	alert-enabled_16 -> 	speaker-wave_16
+	angle-down-L_16 -> 	chevron-down_16
+	angle-down-L_24 -> 	chevron-down_24",
+  "-------------------------",
+  "-------------------------",
+  "Please pay attention! Found deprecated icons in file: 
+../../../../../projects/app/src/app/app.component.html
+	add-to-list_16 -> 	file-plus-o_16
+	alert-disabled_16 -> 	speaker_16
+	alert-enabled_16 -> 	speaker-wave_16
+	angle-down-L_16 -> 	chevron-down_16
+	angle-down-L_24 -> 	chevron-down_24
+	angle-down-M_16 -> 	chevron-down_16
+	angle-down-M_24 -> 	chevron-down_24
+	angle-down-M_32 -> 	chevron-down_32
+	angle-down-S_16 -> 	chevron-down-s_16
+	angle-left-L_16 -> 	chevron-left_16
+	angle-left-L_24 -> 	chevron-left_24
+	angle-left-M_16 -> 	chevron-left_16
+	angle-left-M_24 -> 	chevron-left_24
+	angle-left-M_32 -> 	chevron-left_32
+	angle-left-S_16 -> 	chevron-left-s_16
+	angle-right-L_16 -> 	chevron-right_16
+	angle-right-L_24 -> 	chevron-right_24
+	angle-right-M_16 -> 	chevron-right_16
+	angle-right-M_24 -> 	chevron-right_24
+	angle-right-M_32 -> 	chevron-right_32
+	angle-right-S_16 -> 	chevron-right-s_16
+	angle-up-L_16 -> 	chevron-up_16
+	angle-up-L_24 -> 	chevron-up_24
+	angle-up-M_16 -> 	chevron-up_16
+	angle-up-M_24 -> 	chevron-up_24
+	angle-up-M_32 -> 	chevron-up_32
+	angle-up-S_16 -> 	chevron-up-s_16
+	archive_16 -> 	box-archive_16
+	arrow-back_16 -> 	arrow-left_16
+	arrow-forward_16 -> 	arrow-right_16
+	arrow-left-terminal_16 -> 	arrow-left-to-line_16
+	arrow-right-terminal_16 -> 	arrow-right-to-line_16
+	arrow-small-down_16 -> 	arrow-down_16
+	arrow-small-left_16 -> 	arrow-left_16
+	arrow-small-right_16 -> 	arrow-right_16
+	arrow-small-up_16 -> 	arrow-up_16
+	asset-access-point_16 -> 	signal-stream_16
+	asset-access-point_24 -> 	signal-stream_24
+	asset-account_16 -> 	user_16
+	asset-account_24 -> 	user_24
+	asset-active-directory_16 -> 	active-directory_16
+	asset-active-directory_24 -> 	active-directory_24
+	asset-aix_16 -> 	aix_16
+	asset-aix_24 -> 	aix_24
+	asset-android_16 -> 	android_16
+	asset-apple_16 -> 	apple_16
+	asset-apple_24 -> 	apple_24
+	asset-bsd_16 -> 	bsd_16
+	asset-bsd_24 -> 	bsd_24
+	asset-cloud_16 -> 	cloud_16
+	asset-cloud_24 -> 	cloud_24
+	asset-desktop_16 -> 	desktop_16
+	asset-desktop_24 -> 	desktop_24
+	asset-firewall_16 -> 	block-brick_16
+	asset-firewall_24 -> 	block-brick_24
+	asset-host-virtual_16 -> 	question-circle_16
+	asset-host-virtual_24 -> 	question-circle_24
+	asset-hpux_16 -> 	hpux_16
+	asset-hpux_24 -> 	hpux_24
+	asset-hypervisor_16 -> 	hypervisor_16
+	asset-hypervisor_24 -> 	hypervisor_24
+	asset-idrac_16 -> 	idrac_16
+	asset-idrac_24 -> 	idrac_24
+	asset-linux_16 -> 	linux_16
+	asset-linux_24 -> 	linux_24
+	asset-mobile-device_16 -> 	mobile_16
+	asset-multiple_16 -> 	desktop-multiple_16
+	asset-multiple_24 -> 	desktop-multiple_24
+	asset-network_16 -> 	cloud_16
+	asset-network_24 -> 	cloud-o_24
+	asset-network-device_16 -> 	network-device-dots_16
+	asset-network-device_24 -> 	network-device-dots_24
+	asset-network-dummy_16 -> 	question-circle_16
+	asset-node_16 -> 	question-circle_16
+	asset-node_24 -> 	question-circle_24
+	asset-other_16 -> 	question-circle_16
+	asset-other_24 -> 	question-circle_24
+	asset-other-2_24 -> 	question-circle_24
+	asset-printer_16 -> 	printer_16
+	asset-printer_24 -> 	printer_24
+	asset-router_16 -> 	router_16
+	asset-router_24 -> 	router_24
+	asset-sap_16 -> 	sap_16
+	asset-sap_24 -> 	sap_24
+	asset-server_16 -> 	server_16
+	asset-server_24 -> 	server_24
+	asset-switch_16 -> 	arrows-left-right-rectangle-horizontal-o_16
+	asset-switch_24 -> 	arrows-left-right-rectangle-horizontal-o_24
+	asset-website_16 -> 	globe_16
+	asset-website_24 -> 	globe_24
+	asset-windows_16 -> 	windows_16
+	asset-windows_24 -> 	windows_24
+	bell-o_16 -> 	bell_16
+	bell-o_24 -> 	bell_24
+	bell-off-o_16 -> 	bell-slash_16
+	bell-off-o_24 -> 	bell-slash_24
+	bento_16 -> 	bento-menu_16
+	bento_24 -> 	bento-menu_24
+	bento_32 -> 	bento-menu_32
+	blackbox_24 -> 	server_24
+	blackbox-o_24 -> 	server_24
+	blacklist_16 -> 	file-badge-ban-o_16
+	blacklist_24 -> 	file-badge-ban-o_24
+	bolt_32 -> 	bolt-o_32
+	book_24 -> 	book-multiple_24
+	book-o_24 -> 	book-multiple-o_24
+	border-network_16 -> 	cloud-badge-globe-o_16
+	border-network_24 -> 	cloud-badge-globe-o_24
+	box-closed_16 -> 	box_16
+	branch-o_24 -> 	branch_24
+	build-config_16 -> 	wrench-badge-play_16
+	calendar_16 -> 	calendar-o_16
+	calendar-stopped_16 -> 	calendar-xmark-o_16
+	chart-bar_16 -> 	chart-bar-horizontal_16
+	chart-bar_24 -> 	chart-bar-horizontal_24
+	chart-bar_32 -> 	chart-bar-horizontal_32
+	chart-bar_48 -> 	chart-bar-horizontal_48
+	chart-index_24 -> 	chart-index-line_24
+	chart-index-only_24 -> 	chart-index_24
+	chart-map_16 -> 	map_16
+	chart-map_24 -> 	map_24
+	chart-stacked-bar_24 -> 	chart-stacked-bar-horizontal_24
+	check-auto_16 -> 	check-badge-auto_16
+	child-link_16 -> 	arrow-turn-down-right_16
+	circle-6_16 -> 	circle-xs_16
+	circle-8_16 -> 	circle-xs_16
+	circle-empty_16 -> 	circle-o_16
+	circle-empty_24 -> 	circle-o_24
+	circle-empty-partial_16 -> 	circle-dot-o_16
+	circle-outline_16 -> 	circle-o_16
+	circle-partial_16 -> 	circle-dot_16
+	circle-successfull_16 -> 	check-circle_16
+	circle-successfull_24 -> 	check-circle_24
+	circle-successfull-o_16 -> 	check-circle_16
+	circle-unavailable_16 -> 	ban_16
+	circle-unavailable_24 -> 	ban_24
+	circle-unavailable-partial_16 -> 	ban-dot_16
+	circle-warning_24 -> 	exclamation-circle_24
+	close-circle_16 -> 	xmark-circle_16
+	close-circle-o_16 -> 	xmark-circle_16
+	close-circle-o_24 -> 	xmark-circle_24
+	close-circle-small_16 -> 	xmark-circle_16
+	close-L_16 -> 	xmark_16
+	close-L_32 -> 	xmark_32
+	close-M_16 -> 	xmark-s_16
+	close-S_16 -> 	xmark-s_16
+	collapse_16 -> 	chevrons-down-up_16
+	collapse-diagonal_16 -> 	arrows-collapse-diagonal_16
+	collect-data_16 -> 	satellite-dish_16
+	color-palette_16 -> 	palette_16
+	comment_16 -> 	message_16
+	comment_24 -> 	message_24
+	comment-active_24 -> 	message-dot_24
+	compliance_16 -> 	certificate-vertical_16
+	compliance-level-critical_16 -> 	gear-badge-arrowtriangle-up-square_16
+	compliance-level-high_16 -> 	gear-badge-square_16
+	compliance-level-low_16 -> 	gear-badge-square-o_16
+	compliance-level-medium_16 -> 	gear-badge-square-s_16
+	compliance-level-not-defined_16 -> 	gear-badge-square-o_16
+	connection_24 -> 	network-device-dots_24
+	connection-o_24 -> 	network-device-dots_24
+	copy_16 -> 	square-multiple-o_16
+	copy-o_16 -> 	file-multiple-o_16
+	criticality-medium_16 -> 	circle-half_16
+	dashboard_32 -> 	dashboard-o_32
+	delete_16 -> 	trash_16
+	delivered_16 -> 	check-double_16
+	disc_16 -> 	disk-drive_16
+	disc_24 -> 	disk-drive_24
+	double-angle-down_16 -> 	chevron-double-down_16
+	double-angle-left_16 -> 	chevron-double-left_16
+	double-angle-right_16 -> 	chevron-double-right_16
+	double-angle-up_16 -> 	chevron-double-up_16
+	download_16 -> 	arrow-down-to-line_16
+	download_32 -> 	cloud-arrow-down-o_32
+	edit_16 -> 	pencil_16
+	edit_24 -> 	pencil_24
+	ellipsis_16 -> 	ellipsis-vertical_16
+	ellipsis_24 -> 	ellipsis-vertical_24
+	ellipsis-horiz-circle_16 -> 	ellipsis-horizontal-circle-o_16
+	email-notification_24 -> 	envelope-dot_24
+	email-notification-o_24 -> 	envelope-dot_24
+	enter_16 -> 	arrow-turn-down-left_16
+	envelope-partial_16 -> 	envelope-dot_16
+	envelope-send_16 -> 	envelope-badge-arrow-right_16
+	error_16 -> 	exclamation-triangle_16
+	error_32 -> 	exclamation-triangle_32
+	event-alert_16 -> 	bolt-rectangle-vertical_16
+	event-alert-o_16 -> 	bolt-rectangle-vertical-o_16
+	event-hierarchical_16 -> 	database-badge-arrow-down_16
+	event-normalized_16 -> 	file-lines_16
+	event-normalized-o_16 -> 	file-lines_16
+	event-raw-o_16 -> 	file-lines-short_16
+	event-template_16 -> 	bars-bold-horizontal_16
+	exchange_16 -> 	arrow-right-arrow-left_16
+	expand_16 -> 	chevrons-up-down_16
+	expand-diagonal_16 -> 	arrows-expand-diagonal_16
+	export_16 -> 	arrow-right-from-bracket_16
+	external-link_16 -> 	arrow-up-right-from-square_16
+	eye-crossed_16 -> 	eye-slash_16
+	file-archive_16 -> 	file-archive-o_16
+	file-code_16 -> 	file-code-o_16
+	file-doc_48 -> 	file-doc-o_48
+	file-empty_16 -> 	file-o_16
+	file-empty_32 -> 	file-o_32
+	file-empty-multiple_16 -> 	file-multiple-o_16
+	file-empty-multiple_24 -> 	file-multiple-o_24
+	file-passed_16 -> 	arrow-right-through-line_16
+	file-passed-partial_16 -> 	arrow-right-circle-dot-o_16
+	file-pdf_48 -> 	file-pdf-o_48
+	file-text_16 -> 	file-text-o_16
+	file-text-arrow-left_16 -> 	file-badge-arrow-left-o_16
+	file-text-arrow-right_16 -> 	file-badge-arrow-right-o_16
+	file-unfinished_16 -> 	file-cut-o_16
+	filter-active_16 -> 	filter-dot_16
+	filter-active-o_16 -> 	filter-dot_16
+	filter-o_16 -> 	filter_16
+	find-me_16 -> 	crosshairs_16
+	flowchart-partial_16 -> 	flowchart-dot_16
+	folder_32 -> 	folder-o_32
+	folder-closed_16 -> 	folder_16
+	folder-closed_24 -> 	folder_24
+	folder-closed-partial_16 -> 	folder-dot_16
+	folder-move_16 -> 	folder-badge-arrow-right_16
+	folder-open-o_24 -> 	folder-open_24
+	folder-open-partial_16 -> 	folder-open-dot_16
+	folder-opened_16 -> 	folder_open_16
+	folder-search_16 -> 	folder-badge-magnifying-glass_16
+	folder-search-open_16 -> 	folder-open-badge-magnifying-glass_16
+	folder-search-opened_16 -> 	folder-open-badge-magnifying-glass_16
+	forward_16 -> 	forward-step_16
+	gear-o_24 -> 	gear_24
+	globe-partial_16 -> 	globe-dot_16
+	go-to-comment_16 -> 	message-arrow-right_16
+	go-to-comment_24 -> 	message-arrow-right_24
+	grid-group-active_16 -> 	grid-group-dot_16
+	hamburger_16 -> 	bars-horizontal_16
+	hamburger_32 -> 	bars-horizontal_32
+	handle_16 -> 	grip-vertical_16
+	hash_16 -> 	hashtag_16
+	history_16 -> 	clock-rotate-left_16
+	hourglasses-0_16 -> 	hourglass-start_16
+	hourglasses-100_16 -> 	hourglass-end_16
+	hourglasses-50_16 -> 	hourglass-half_16
+	ignore_24 -> 	minus-circle_24
+	ignore-o_16 -> 	minus-circle-o_16
+	ignore-o_24 -> 	minus-circle-o_24
+	image-block_16 -> 	image_16
+	import_16 -> 	arrow-right-to-bracket_16
+	importance-1_16 -> 	arrows-up_16
+	importance-2_16 -> 	arrow-up_16
+	importance-3_16 -> 	circle-half_16
+	importance-4_16 -> 	minus_16
+	importance-5_16 -> 	arrow-down_16
+	info_16 -> 	info-circle_16
+	info_24 -> 	info-circle_24
+	info-o_16 -> 	info-circle_16
+	info-o_24 -> 	info-circle_24
+	interface-in_16 -> 	arrow-right-to-arc_16
+	interface-in_24 -> 	arrow-right-to-arc_24
+	interface-out_16 -> 	arrow-right-from-arc_16
+	interface-out_24 -> 	arrow-right-from-arc_24
+	ip-group_16 -> 	ip-multiple_16
+	landscape-orientation_16 -> 	file-horizontal-o_16
+	license_16 -> 	certificate-horizontal_16
+	license_24 -> 	certificate-horizontal_24
+	limit_16 -> 	scissors_16
+	link-group_16 -> 	link-multiple_16
+	link-group_24 -> 	link-multiple_24
+	link-partial_16 -> 	link-dot_16
+	loader-circle_16 -> 	spinner_16
+	lock-locked_16 -> 	lock_16
+	lock-locked_24 -> 	lock_24
+	lock-locked-o_16 -> 	lock_16
+	lock-locked-o_24 -> 	lock_24
+	lock-unlocked_16 -> 	lock-open_16
+	log_24 -> 	scroll-o_24
+	log-o_16 -> 	scroll-o_16
+	log-o_24 -> 	scroll-o_24
+	login_24 -> 	arrow-right-to-rectangle_24
+	maximize_16 -> 	chevrons-expand_16
+	minimize_16 -> 	compress_16
+	minus-circle-small_16 -> 	minus-circle-s_16
+	minus-circle-xs_16 -> 	minus-circle-s_16
+	net-packet_16 -> 	network-device_16
+	net-packet-group_16 -> 	network-device-multiple_16
+	new-tab_16 -> 	arrow-up-right-from-square_16
+	parent-link_16 -> 	arrow-up-left_16
+	pause-on-time_16 -> 	clock-badge-pause_16
+	play-o_16 -> 	play_16
+	play-on-time_16 -> 	clock-badge-play_16
+	plug-o_16 -> 	plug_16
+	plug-o_24 -> 	plug_24
+	plus-circle-xs_16 -> 	plus-circle-s_16
+	policies_16 -> 	robot_16
+	policy_24 -> 	clipboard-check_24
+	policy-o_24 -> 	clipboard-check-o_24
+	portrait-orientation_16 -> 	file-o_16
+	project_16 -> 	bars-vertical_16
+	protection-active_16 -> 	shield-check_16
+	protection-half_16 -> 	shield-half_16
+	protection-off_16 -> 	shield-slash_16
+	question-circle-o_16 -> 	question-circle_16
+	question-circle-o_24 -> 	question-circle_24
+	refresh_16 -> 	arrows-rotate-reverse_16
+	refresh_24 -> 	arrows-rotate-reverse_24
+	refresh_48 -> 	arrows-rotate_48
+	refresh-off_16 -> 	arrows-rotate-reverse-slash_16
+	registry-group_16 -> 	registry-multiple_16
+	remove-from-list_16 -> 	list-badge-xmark_16
+	report_16 -> 	file-o_16
+	report_24 -> 	file-o_24
+	report_32 -> 	file-lines-o_32
+	report-errors_16 -> 	file-exclamation-o_16
+	report-o_16 -> 	file-o_16
+	report-o_24 -> 	file-o_24
+	retro-analysis_16 -> 	arrow-rotate-right-dot_16
+	satellite_16 -> 	satellite-dish_16
+	save_16 -> 	floppy-disk_16
+	scan_32 -> 	radar-o_32
+	search_16 -> 	magnifying-glass_16
+	search_24 -> 	magnifying-glass_24
+	search-sparkles_16 -> 	magnifying-glass-badge-sparkles_16
+	share_16 -> 	arrow-up-from-rectangle_16
+	siem-vulner-level-critical_16 -> 	rectangle-triangle-vertical-thin_16
+	siem-vulner-level-high_16 -> 	rectangle-vertical-thin_16
+	siem-vulner-level-low_16 -> 	rectangle-vertical-thin-o_16
+	siem-vulner-level-medium_16 -> 	rectangle-vertical-thin-half_16
+	siem-vulner-level-not-defined_16 -> 	rectangle-vertical-thin-lines_16
+	significance-high_16 -> 	shield-star_16
+	significance-low_16 -> 	shield-o_16
+	significance-medium_16 -> 	shield-ribbon_16
+	significance-na_16 -> 	shield-o_16
+	sliders-active_16 -> 	sliders-dot_16
+	sort_16 -> 	arrow-up-arrow-down_16
+	sort-active_16 -> 	arrow-up-arrow-down-dot_16
+	square-partial_16 -> 	square-dot_16
+	startline_16 -> 	diamond_16
+	stop-on-time_16 -> 	clock-badge-stop_16
+	storage_16 -> 	database_16
+	storage_32 -> 	database-o_32
+	storage-normal_16 -> 	database-normal_16
+	storage-raw_16 -> 	database-raw_16
+	success_16 -> 	check-circle_16
+	success-small_16 -> 	check-circle_16
+	summ_16 -> 	sigma_16
+	table-download_32 -> 	table-badge-arrow-down-circle_32
+	table-list_16 -> 	table_16
+	table-list_24 -> 	table_24
+	table-list-ttl_16 -> 	table-badge-clock_16
+	table-list-ttl_24 -> 	table-badge-clock_24
+	tags_16 -> 	tag-multiple_16
+	tasks_16 -> 	bars-progress_16
+	tasks_24 -> 	bars-progress_24
+	text-block_16 -> 	text-font_16
+	theme_16 -> 	sun-moon_16
+	trend-down_16 -> 	arrow-down-right_16
+	trend-up_16 -> 	arrow-up-right_16
+	triangle-down_16 -> 	chevron-down-s_16
+	triangle-left_16 -> 	chevron-left-s_16
+	triangle-right_16 -> 	chevron-right-s_16
+	triangle-up_16 -> 	chevron-up-s_16
+	unique_16 -> 	arrow-down-on-rectangles_16
+	unlink_16 -> 	link-broken_16
+	unpin_16 -> 	pin-slash_16
+	update_16 -> 	arrow-rotate-left_16
+	update_24 -> 	arrow-rotate-left_24
+	update-o_24 -> 	arrow-rotate-left_24
+	upload-to-cloud_16 -> 	arrow-up-from-line_16
+	upload-to-cloud_24 -> 	cloud-arrow-up-o_24
+	upload-to-cloud_32 -> 	cloud-arrow-up-o_32
+	upload-to-cloud_64 -> 	cloud-arrow-up-o_64
+	user-o_16 -> 	user_16
+	user-o_24 -> 	user_24
+	users-group_16 -> 	user-multiple_16
+	users-group_24 -> 	user-multiple_24
+	users-group-o_24 -> 	user-multiple_24
+	vulner-exploitable_16 -> 	burst_16
+	vulner-level-abovemedium_16 -> 	eject_16
+	vulner-level-belowmedium_16 -> 	eject-down_16
+	vulner-level-high_16 -> 	arrow-up_16
+	vulner-level-low_16 -> 	arrow-down_16
+	vulner-level-medium_16 -> 	stop_16
+	vulner-lpe_16 -> 	user-arrow-triangle-up_16
+	vulner-network_16 -> 	chart-network_16
+	vulner-patch_16 -> 	capsule_16
+	vulner-rce_16 -> 	code_16
+	whitelist_16 -> 	file-badge-arrow-through-line-o_16
+	word-wrap_16 -> 	wrap-text_16
+	word-wrap-slash_16 -> 	wrap-text-slash_16
+	zoom-to-fit_16 -> 	arrows-left-right-to-line_16",
+  "-------------------------",
+  "-------------------------",
+  "Please pay attention! Found deprecated icons in file: 
+../../../../../projects/app/src/app/app.component.ts
+	add-to-list_16 -> 	file-plus-o_16
+	alert-disabled_16 -> 	speaker_16
+	alert-enabled_16 -> 	speaker-wave_16
+	angle-down-L_16 -> 	chevron-down_16
+	angle-down-L_24 -> 	chevron-down_24",
+  "-------------------------",
+  "-------------------------",
+  "../../../../../projects/app/src/styles.scss
+Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
+  "-------------------------",
+  "-------------------------",
+  "../../../../../projects/app/src/app/app.component.scss
+Provide \`@use '@koobiq/icons/fonts/kbq-icons';\` to support icon styles from new scope",
+  "-------------------------",
+]
+`;
+
+exports[`deprecated-icons icons mapping should run migration for specified project: project app: after changes 1`] = `
+[
+  "<i kbq-icon="kbq-file-plus-o_16"></i>
+<i kbq-icon="kbq-speaker_16"></i>
+<i kbq-icon="kbq-speaker-wave_16"></i>
+<i kbq-icon="kbq-chevron-down_16"></i>
+<i kbq-icon="kbq-chevron-down_24"></i>
+<i kbq-icon="kbq-chevron-down_16"></i>
+<i kbq-icon="kbq-chevron-down_24"></i>
+<i kbq-icon="kbq-chevron-down_32"></i>
+<i kbq-icon="kbq-chevron-down-s_16"></i>
+<i kbq-icon="kbq-chevron-left_16"></i>
+<i kbq-icon="kbq-chevron-left_24"></i>
+<i kbq-icon="kbq-chevron-left_16"></i>
+<i kbq-icon="kbq-chevron-left_24"></i>
+<i kbq-icon="kbq-chevron-left_32"></i>
+<i kbq-icon="kbq-chevron-left-s_16"></i>
+<i kbq-icon="kbq-chevron-right_16"></i>
+<i kbq-icon="kbq-chevron-right_24"></i>
+<i kbq-icon="kbq-chevron-right_16"></i>
+<i kbq-icon="kbq-chevron-right_24"></i>
+<i kbq-icon="kbq-chevron-right_32"></i>
+<i kbq-icon="kbq-chevron-right-s_16"></i>
+<i kbq-icon="kbq-chevron-up_16"></i>
+<i kbq-icon="kbq-chevron-up_24"></i>
+<i kbq-icon="kbq-chevron-up_16"></i>
+<i kbq-icon="kbq-chevron-up_24"></i>
+<i kbq-icon="kbq-chevron-up_32"></i>
+<i kbq-icon="kbq-chevron-up-s_16"></i>
+<i kbq-icon="kbq-box-archive_16"></i>
+<i kbq-icon="kbq-arrow-left_16"></i>
+<i kbq-icon="kbq-arrow-right_16"></i>
+<i kbq-icon="kbq-arrow-left-to-line_16"></i>
+<i kbq-icon="kbq-arrow-right-to-line_16"></i>
+<i kbq-icon="kbq-arrow-down_16"></i>
+<i kbq-icon="kbq-arrow-left_16"></i>
+<i kbq-icon="kbq-arrow-right_16"></i>
+<i kbq-icon="kbq-arrow-up_16"></i>
+<i kbq-icon="kbq-signal-stream_16"></i>
+<i kbq-icon="kbq-signal-stream_24"></i>
+<i kbq-icon="kbq-user_16"></i>
+<i kbq-icon="kbq-user_24"></i>
+<i kbq-icon="kbq-active-directory_16"></i>
+<i kbq-icon="kbq-active-directory_24"></i>
+<i kbq-icon="kbq-aix_16"></i>
+<i kbq-icon="kbq-aix_24"></i>
+<i kbq-icon="kbq-android_16"></i>
+<i kbq-icon="kbq-apple_16"></i>
+<i kbq-icon="kbq-apple_24"></i>
+<i kbq-icon="kbq-bsd_16"></i>
+<i kbq-icon="kbq-bsd_24"></i>
+<i kbq-icon="kbq-cloud_16"></i>
+<i kbq-icon="kbq-cloud_24"></i>
+<i kbq-icon="kbq-desktop_16"></i>
+<i kbq-icon="kbq-desktop_24"></i>
+<i kbq-icon="kbq-block-brick_16"></i>
+<i kbq-icon="kbq-block-brick_24"></i>
+<i kbq-icon="kbq-question-circle_16"></i>
+<i kbq-icon="kbq-question-circle_24"></i>
+<i kbq-icon="kbq-hpux_16"></i>
+<i kbq-icon="kbq-hpux_24"></i>
+<i kbq-icon="kbq-hypervisor_16"></i>
+<i kbq-icon="kbq-hypervisor_24"></i>
+<i kbq-icon="kbq-idrac_16"></i>
+<i kbq-icon="kbq-idrac_24"></i>
+<i kbq-icon="kbq-linux_16"></i>
+<i kbq-icon="kbq-linux_24"></i>
+<i kbq-icon="kbq-mobile_16"></i>
+<i kbq-icon="kbq-desktop-multiple_16"></i>
+<i kbq-icon="kbq-desktop-multiple_24"></i>
+<i kbq-icon="kbq-cloud_16"></i>
+<i kbq-icon="kbq-cloud-o_24"></i>
+<i kbq-icon="kbq-network-device-dots_16"></i>
+<i kbq-icon="kbq-network-device-dots_24"></i>
+<i kbq-icon="kbq-question-circle_16"></i>
+<i kbq-icon="kbq-question-circle_16"></i>
+<i kbq-icon="kbq-question-circle_24"></i>
+<i kbq-icon="kbq-question-circle_16"></i>
+<i kbq-icon="kbq-question-circle_24"></i>
+<i kbq-icon="kbq-question-circle_24"></i>
+<i kbq-icon="kbq-printer_16"></i>
+<i kbq-icon="kbq-printer_24"></i>
+<i kbq-icon="kbq-router_16"></i>
+<i kbq-icon="kbq-router_24"></i>
+<i kbq-icon="kbq-sap_16"></i>
+<i kbq-icon="kbq-sap_24"></i>
+<i kbq-icon="kbq-server_16"></i>
+<i kbq-icon="kbq-server_24"></i>
+<i kbq-icon="kbq-arrows-left-right-rectangle-horizontal-o_16"></i>
+<i kbq-icon="kbq-arrows-left-right-rectangle-horizontal-o_24"></i>
+<i kbq-icon="kbq-globe_16"></i>
+<i kbq-icon="kbq-globe_24"></i>
+<i kbq-icon="kbq-windows_16"></i>
+<i kbq-icon="kbq-windows_24"></i>
+<i kbq-icon="kbq-bell_16"></i>
+<i kbq-icon="kbq-bell_24"></i>
+<i kbq-icon="kbq-bell-slash_16"></i>
+<i kbq-icon="kbq-bell-slash_24"></i>
+<i kbq-icon="kbq-bento-menu_16"></i>
+<i kbq-icon="kbq-bento-menu_24"></i>
+<i kbq-icon="kbq-bento-menu_32"></i>
+<i kbq-icon="kbq-server_24"></i>
+<i kbq-icon="kbq-server_24"></i>
+<i kbq-icon="kbq-file-badge-ban-o_16"></i>
+<i kbq-icon="kbq-file-badge-ban-o_24"></i>
+<i kbq-icon="kbq-bolt-o_32"></i>
+<i kbq-icon="kbq-book-multiple_24"></i>
+<i kbq-icon="kbq-book-multiple-o_24"></i>
+<i kbq-icon="kbq-cloud-badge-globe-o_16"></i>
+<i kbq-icon="kbq-cloud-badge-globe-o_24"></i>
+<i kbq-icon="kbq-box_16"></i>
+<i kbq-icon="kbq-branch_24"></i>
+<i kbq-icon="kbq-wrench-badge-play_16"></i>
+<i kbq-icon="kbq-calendar-o_16"></i>
+<i kbq-icon="kbq-calendar-xmark-o_16"></i>
+<i kbq-icon="kbq-chart-bar-horizontal_16"></i>
+<i kbq-icon="kbq-chart-bar-horizontal_24"></i>
+<i kbq-icon="kbq-chart-bar-horizontal_32"></i>
+<i kbq-icon="kbq-chart-bar-horizontal_48"></i>
+<i kbq-icon="kbq-chart-index-line_24"></i>
+<i kbq-icon="kbq-chart-index_24"></i>
+<i kbq-icon="kbq-map_16"></i>
+<i kbq-icon="kbq-map_24"></i>
+<i kbq-icon="kbq-chart-stacked-bar-horizontal_24"></i>
+<i kbq-icon="kbq-check-badge-auto_16"></i>
+<i kbq-icon="kbq-arrow-turn-down-right_16"></i>
+<i kbq-icon="kbq-circle-xs_16"></i>
+<i kbq-icon="kbq-circle-xs_16"></i>
+<i kbq-icon="kbq-circle-o_16"></i>
+<i kbq-icon="kbq-circle-o_24"></i>
+<i kbq-icon="kbq-circle-dot-o_16"></i>
+<i kbq-icon="kbq-circle-o_16"></i>
+<i kbq-icon="kbq-circle-dot_16"></i>
+<i kbq-icon="kbq-check-circle_16"></i>
+<i kbq-icon="kbq-check-circle_24"></i>
+<i kbq-icon="kbq-check-circle_16"></i>
+<i kbq-icon="kbq-ban_16"></i>
+<i kbq-icon="kbq-ban_24"></i>
+<i kbq-icon="kbq-ban-dot_16"></i>
+<i kbq-icon="kbq-exclamation-circle_24"></i>
+<i kbq-icon="kbq-xmark-circle_16"></i>
+<i kbq-icon="kbq-xmark-circle_16"></i>
+<i kbq-icon="kbq-xmark-circle_24"></i>
+<i kbq-icon="kbq-xmark-circle_16"></i>
+<i kbq-icon="kbq-xmark_16"></i>
+<i kbq-icon="kbq-xmark_32"></i>
+<i kbq-icon="kbq-xmark-s_16"></i>
+<i kbq-icon="kbq-xmark-s_16"></i>
+<i kbq-icon="kbq-chevrons-down-up_16"></i>
+<i kbq-icon="kbq-arrows-collapse-diagonal_16"></i>
+<i kbq-icon="kbq-satellite-dish_16"></i>
+<i kbq-icon="kbq-palette_16"></i>
+<i kbq-icon="kbq-message_16"></i>
+<i kbq-icon="kbq-message_24"></i>
+<i kbq-icon="kbq-message-dot_24"></i>
+<i kbq-icon="kbq-certificate-vertical_16"></i>
+<i kbq-icon="kbq-gear-badge-arrowtriangle-up-square_16"></i>
+<i kbq-icon="kbq-gear-badge-square_16"></i>
+<i kbq-icon="kbq-gear-badge-square-o_16"></i>
+<i kbq-icon="kbq-gear-badge-square-s_16"></i>
+<i kbq-icon="kbq-gear-badge-square-o_16"></i>
+<i kbq-icon="kbq-network-device-dots_24"></i>
+<i kbq-icon="kbq-network-device-dots_24"></i>
+<i kbq-icon="kbq-square-multiple-o_16"></i>
+<i kbq-icon="kbq-file-multiple-o_16"></i>
+<i kbq-icon="kbq-circle-half_16"></i>
+<i kbq-icon="kbq-dashboard-o_32"></i>
+<i kbq-icon="kbq-trash_16"></i>
+<i kbq-icon="kbq-check-double_16"></i>
+<i kbq-icon="kbq-disk-drive_16"></i>
+<i kbq-icon="kbq-disk-drive_24"></i>
+<i kbq-icon="kbq-chevron-double-down_16"></i>
+<i kbq-icon="kbq-chevron-double-left_16"></i>
+<i kbq-icon="kbq-chevron-double-right_16"></i>
+<i kbq-icon="kbq-chevron-double-up_16"></i>
+<i kbq-icon="kbq-arrow-down-to-line_16"></i>
+<i kbq-icon="kbq-cloud-arrow-down-o_32"></i>
+<i kbq-icon="kbq-pencil_16"></i>
+<i kbq-icon="kbq-pencil_24"></i>
+<i kbq-icon="kbq-ellipsis-vertical_16"></i>
+<i kbq-icon="kbq-ellipsis-vertical_24"></i>
+<i kbq-icon="kbq-ellipsis-horizontal-circle-o_16"></i>
+<i kbq-icon="kbq-envelope-dot_24"></i>
+<i kbq-icon="kbq-envelope-dot_24"></i>
+<i kbq-icon="kbq-arrow-turn-down-left_16"></i>
+<i kbq-icon="kbq-envelope-dot_16"></i>
+<i kbq-icon="kbq-envelope-badge-arrow-right_16"></i>
+<i kbq-icon="kbq-exclamation-triangle_16"></i>
+<i kbq-icon="kbq-exclamation-triangle_32"></i>
+<i kbq-icon="kbq-bolt-rectangle-vertical_16"></i>
+<i kbq-icon="kbq-bolt-rectangle-vertical-o_16"></i>
+<i kbq-icon="kbq-database-badge-arrow-down_16"></i>
+<i kbq-icon="kbq-file-lines_16"></i>
+<i kbq-icon="kbq-file-lines_16"></i>
+<i kbq-icon="kbq-file-lines-short_16"></i>
+<i kbq-icon="kbq-bars-bold-horizontal_16"></i>
+<i kbq-icon="kbq-arrow-right-arrow-left_16"></i>
+<i kbq-icon="kbq-chevrons-up-down_16"></i>
+<i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
+<i kbq-icon="kbq-arrow-right-from-bracket_16"></i>
+<i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+<i kbq-icon="kbq-eye-slash_16"></i>
+<i kbq-icon="kbq-file-archive-o_16"></i>
+<i kbq-icon="kbq-file-code-o_16"></i>
+<i kbq-icon="kbq-file-doc-o_48"></i>
+<i kbq-icon="kbq-file-o_16"></i>
+<i kbq-icon="kbq-file-o_32"></i>
+<i kbq-icon="kbq-file-multiple-o_16"></i>
+<i kbq-icon="kbq-file-multiple-o_24"></i>
+<i kbq-icon="kbq-arrow-right-through-line_16"></i>
+<i kbq-icon="kbq-arrow-right-circle-dot-o_16"></i>
+<i kbq-icon="kbq-file-pdf-o_48"></i>
+<i kbq-icon="kbq-file-text-o_16"></i>
+<i kbq-icon="kbq-file-badge-arrow-left-o_16"></i>
+<i kbq-icon="kbq-file-badge-arrow-right-o_16"></i>
+<i kbq-icon="kbq-file-cut-o_16"></i>
+<i kbq-icon="kbq-filter-dot_16"></i>
+<i kbq-icon="kbq-filter-dot_16"></i>
+<i kbq-icon="kbq-filter_16"></i>
+<i kbq-icon="kbq-crosshairs_16"></i>
+<i kbq-icon="kbq-flowchart-dot_16"></i>
+<i kbq-icon="kbq-folder-o_32"></i>
+<i kbq-icon="kbq-folder_16"></i>
+<i kbq-icon="kbq-folder_24"></i>
+<i kbq-icon="kbq-folder-dot_16"></i>
+<i kbq-icon="kbq-folder-badge-arrow-right_16"></i>
+<i kbq-icon="kbq-folder-open_24"></i>
+<i kbq-icon="kbq-folder-open-dot_16"></i>
+<i kbq-icon="kbq-folder_open_16"></i>
+<i kbq-icon="kbq-folder-badge-magnifying-glass_16"></i>
+<i kbq-icon="kbq-folder-open-badge-magnifying-glass_16"></i>
+<i kbq-icon="kbq-folder-open-badge-magnifying-glass_16"></i>
+<i kbq-icon="kbq-forward-step_16"></i>
+<i kbq-icon="kbq-gear_24"></i>
+<i kbq-icon="kbq-globe-dot_16"></i>
+<i kbq-icon="kbq-message-arrow-right_16"></i>
+<i kbq-icon="kbq-message-arrow-right_24"></i>
+<i kbq-icon="kbq-grid-group-dot_16"></i>
+<i kbq-icon="kbq-bars-horizontal_16"></i>
+<i kbq-icon="kbq-bars-horizontal_32"></i>
+<i kbq-icon="kbq-grip-vertical_16"></i>
+<i kbq-icon="kbq-hashtag_16"></i>
+<i kbq-icon="kbq-clock-rotate-left_16"></i>
+<i kbq-icon="kbq-hourglass-start_16"></i>
+<i kbq-icon="kbq-hourglass-end_16"></i>
+<i kbq-icon="kbq-hourglass-half_16"></i>
+<i kbq-icon="kbq-minus-circle_24"></i>
+<i kbq-icon="kbq-minus-circle-o_16"></i>
+<i kbq-icon="kbq-minus-circle-o_24"></i>
+<i kbq-icon="kbq-image_16"></i>
+<i kbq-icon="kbq-arrow-right-to-bracket_16"></i>
+<i kbq-icon="kbq-arrows-up_16"></i>
+<i kbq-icon="kbq-arrow-up_16"></i>
+<i kbq-icon="kbq-circle-half_16"></i>
+<i kbq-icon="kbq-minus_16"></i>
+<i kbq-icon="kbq-arrow-down_16"></i>
+<i kbq-icon="kbq-info-circle_16"></i>
+<i kbq-icon="kbq-info-circle_24"></i>
+<i kbq-icon="kbq-info-circle_16"></i>
+<i kbq-icon="kbq-info-circle_24"></i>
+<i kbq-icon="kbq-arrow-right-to-arc_16"></i>
+<i kbq-icon="kbq-arrow-right-to-arc_24"></i>
+<i kbq-icon="kbq-arrow-right-from-arc_16"></i>
+<i kbq-icon="kbq-arrow-right-from-arc_24"></i>
+<i kbq-icon="kbq-ip-multiple_16"></i>
+<i kbq-icon="kbq-file-horizontal-o_16"></i>
+<i kbq-icon="kbq-certificate-horizontal_16"></i>
+<i kbq-icon="kbq-certificate-horizontal_24"></i>
+<i kbq-icon="kbq-scissors_16"></i>
+<i kbq-icon="kbq-link-multiple_16"></i>
+<i kbq-icon="kbq-link-multiple_24"></i>
+<i kbq-icon="kbq-link-dot_16"></i>
+<i kbq-icon="kbq-spinner_16"></i>
+<i kbq-icon="kbq-lock_16"></i>
+<i kbq-icon="kbq-lock_24"></i>
+<i kbq-icon="kbq-lock_16"></i>
+<i kbq-icon="kbq-lock_24"></i>
+<i kbq-icon="kbq-lock-open_16"></i>
+<i kbq-icon="kbq-scroll-o_24"></i>
+<i kbq-icon="kbq-scroll-o_16"></i>
+<i kbq-icon="kbq-scroll-o_24"></i>
+<i kbq-icon="kbq-arrow-right-to-rectangle_24"></i>
+<i kbq-icon="kbq-chevrons-expand_16"></i>
+<i kbq-icon="kbq-compress_16"></i>
+<i kbq-icon="kbq-minus-circle-s_16"></i>
+<i kbq-icon="kbq-minus-circle-s_16"></i>
+<i kbq-icon="kbq-network-device_16"></i>
+<i kbq-icon="kbq-network-device-multiple_16"></i>
+<i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+<i kbq-icon="kbq-arrow-up-left_16"></i>
+<i kbq-icon="kbq-clock-badge-pause_16"></i>
+<i kbq-icon="kbq-play_16"></i>
+<i kbq-icon="kbq-clock-badge-play_16"></i>
+<i kbq-icon="kbq-plug_16"></i>
+<i kbq-icon="kbq-plug_24"></i>
+<i kbq-icon="kbq-plus-circle-s_16"></i>
+<i kbq-icon="kbq-robot_16"></i>
+<i kbq-icon="kbq-clipboard-check_24"></i>
+<i kbq-icon="kbq-clipboard-check-o_24"></i>
+<i kbq-icon="kbq-file-o_16"></i>
+<i kbq-icon="kbq-bars-vertical_16"></i>
+<i kbq-icon="kbq-shield-check_16"></i>
+<i kbq-icon="kbq-shield-half_16"></i>
+<i kbq-icon="kbq-shield-slash_16"></i>
+<i kbq-icon="kbq-question-circle_16"></i>
+<i kbq-icon="kbq-question-circle_24"></i>
+<i kbq-icon="kbq-arrows-rotate-reverse_16"></i>
+<i kbq-icon="kbq-arrows-rotate-reverse_24"></i>
+<i kbq-icon="kbq-arrows-rotate_48"></i>
+<i kbq-icon="kbq-arrows-rotate-reverse-slash_16"></i>
+<i kbq-icon="kbq-registry-multiple_16"></i>
+<i kbq-icon="kbq-list-badge-xmark_16"></i>
+<i kbq-icon="kbq-file-o_16"></i>
+<i kbq-icon="kbq-file-o_24"></i>
+<i kbq-icon="kbq-file-lines-o_32"></i>
+<i kbq-icon="kbq-file-exclamation-o_16"></i>
+<i kbq-icon="kbq-file-o_16"></i>
+<i kbq-icon="kbq-file-o_24"></i>
+<i kbq-icon="kbq-arrow-rotate-right-dot_16"></i>
+<i kbq-icon="kbq-satellite-dish_16"></i>
+<i kbq-icon="kbq-floppy-disk_16"></i>
+<i kbq-icon="kbq-radar-o_32"></i>
+<i kbq-icon="kbq-magnifying-glass_16"></i>
+<i kbq-icon="kbq-magnifying-glass_24"></i>
+<i kbq-icon="kbq-magnifying-glass-badge-sparkles_16"></i>
+<i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
+<i kbq-icon="kbq-rectangle-triangle-vertical-thin_16"></i>
+<i kbq-icon="kbq-rectangle-vertical-thin_16"></i>
+<i kbq-icon="kbq-rectangle-vertical-thin-o_16"></i>
+<i kbq-icon="kbq-rectangle-vertical-thin-half_16"></i>
+<i kbq-icon="kbq-rectangle-vertical-thin-lines_16"></i>
+<i kbq-icon="kbq-shield-star_16"></i>
+<i kbq-icon="kbq-shield-o_16"></i>
+<i kbq-icon="kbq-shield-ribbon_16"></i>
+<i kbq-icon="kbq-shield-o_16"></i>
+<i kbq-icon="kbq-sliders-dot_16"></i>
+<i kbq-icon="kbq-arrow-up-arrow-down_16"></i>
+<i kbq-icon="kbq-arrow-up-arrow-down-dot_16"></i>
+<i kbq-icon="kbq-square-dot_16"></i>
+<i kbq-icon="kbq-diamond_16"></i>
+<i kbq-icon="kbq-clock-badge-stop_16"></i>
+<i kbq-icon="kbq-database_16"></i>
+<i kbq-icon="kbq-database-o_32"></i>
+<i kbq-icon="kbq-database-normal_16"></i>
+<i kbq-icon="kbq-database-raw_16"></i>
+<i kbq-icon="kbq-check-circle_16"></i>
+<i kbq-icon="kbq-check-circle_16"></i>
+<i kbq-icon="kbq-sigma_16"></i>
+<i kbq-icon="kbq-table-badge-arrow-down-circle_32"></i>
+<i kbq-icon="kbq-table_16"></i>
+<i kbq-icon="kbq-table_24"></i>
+<i kbq-icon="kbq-table-badge-clock_16"></i>
+<i kbq-icon="kbq-table-badge-clock_24"></i>
+<i kbq-icon="kbq-tag-multiple_16"></i>
+<i kbq-icon="kbq-bars-progress_16"></i>
+<i kbq-icon="kbq-bars-progress_24"></i>
+<i kbq-icon="kbq-text-font_16"></i>
+<i kbq-icon="kbq-sun-moon_16"></i>
+<i kbq-icon="kbq-arrow-down-right_16"></i>
+<i kbq-icon="kbq-arrow-up-right_16"></i>
+<i kbq-icon="kbq-chevron-down-s_16"></i>
+<i kbq-icon="kbq-chevron-left-s_16"></i>
+<i kbq-icon="kbq-chevron-right-s_16"></i>
+<i kbq-icon="kbq-chevron-up-s_16"></i>
+<i kbq-icon="kbq-arrow-down-on-rectangles_16"></i>
+<i kbq-icon="kbq-link-broken_16"></i>
+<i kbq-icon="kbq-pin-slash_16"></i>
+<i kbq-icon="kbq-arrow-rotate-left_16"></i>
+<i kbq-icon="kbq-arrow-rotate-left_24"></i>
+<i kbq-icon="kbq-arrow-rotate-left_24"></i>
+<i kbq-icon="kbq-arrow-up-from-line_16"></i>
+<i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
+<i kbq-icon="kbq-cloud-arrow-up-o_32"></i>
+<i kbq-icon="kbq-cloud-arrow-up-o_64"></i>
+<i kbq-icon="kbq-user_16"></i>
+<i kbq-icon="kbq-user_24"></i>
+<i kbq-icon="kbq-user-multiple_16"></i>
+<i kbq-icon="kbq-user-multiple_24"></i>
+<i kbq-icon="kbq-user-multiple_24"></i>
+<i kbq-icon="kbq-burst_16"></i>
+<i kbq-icon="kbq-eject_16"></i>
+<i kbq-icon="kbq-eject-down_16"></i>
+<i kbq-icon="kbq-arrow-up_16"></i>
+<i kbq-icon="kbq-arrow-down_16"></i>
+<i kbq-icon="kbq-stop_16"></i>
+<i kbq-icon="kbq-user-arrow-triangle-up_16"></i>
+<i kbq-icon="kbq-chart-network_16"></i>
+<i kbq-icon="kbq-capsule_16"></i>
+<i kbq-icon="kbq-code_16"></i>
+<i kbq-icon="kbq-file-badge-arrow-through-line-o_16"></i>
+<i kbq-icon="kbq-wrap-text_16"></i>
+<i kbq-icon="kbq-wrap-text-slash_16"></i>
+<i kbq-icon="kbq-arrows-left-right-to-line_16"></i>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<i kbq-icon="kbq-file-plus-o_16"></i>
+<i kbq-icon="kbq-speaker_16"></i>
+<i kbq-icon="kbq-speaker-wave_16"></i>
+<i kbq-icon="kbq-chevron-down_16"></i>
+<i kbq-icon="kbq-chevron-down_24"></i>'
+})
+class TestApp {
+    dynamicClass = 'kbq-file-plus-o_16';
+}",
+  ".kbq-file-plus-o_16 {}
+.kbq-speaker_16 {}
+.kbq-speaker-wave_16 {}
+.kbq-chevron-down_16 {}
+.kbq-chevron-down_24 {}",
+]
+`;

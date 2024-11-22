@@ -11,14 +11,14 @@
         }
 
         &.kbq-disabled {
-            color: var(--kbq-foreground-text-disabled);
+            color: var(--kbq-states-foreground-disabled);
         }
     }
 
     .kbq-select__placeholder {
         text-overflow: ellipsis;
 
-        color: var(--kbq-foreground-text-disabled);
+        color: var(--kbq-states-foreground-disabled);
     }
 
     .kbq-select__panel {
@@ -35,16 +35,16 @@
     }
 
     .kbq-select__no-options-message {
-        color: var(--kbq-foreground-text-less-contrast);
+        color: var(--kbq-foreground-contrast-secondary);
     }
 }
 
 @mixin kbq-select-typography() {
     .kbq-select {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-select__panel {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

@@ -34,21 +34,21 @@
 @mixin kbq-loader-overlay-typography() {
     .kbq-loader-overlay_big {
         & .kbq-loader-overlay-text {
-            @include kbq-typography-level-to-styles_css-variables(typography, subheading);
+            @include kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
 
         & .kbq-loader-overlay-caption {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 
     .kbq-loader-overlay_compact {
         & .kbq-loader-overlay-text {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         & .kbq-loader-overlay-caption {
-            @include kbq-typography-level-to-styles_css-variables(typography, text-compact);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }

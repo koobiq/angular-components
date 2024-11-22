@@ -1,48 +1,19 @@
-.docs-live-example__example_tabs-actionbar {
-    padding-right: 0;
-}
-
 .tabs-actionbar-example {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    padding-bottom: 24px;
 }
 
-.tabs-actionbar-example__center {
-    position: relative;
-    width: 100%;
-    height: 48px;
-    min-width: 16px;
-
-    &:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        height: 1px;
-        background: var(--kbq-line-contrast-less);
-    }
+.tabs-actionbar-example .tabs-actionbar-example_nav {
+    overflow: hidden;
 }
 
-.tabs-actionbar-example__controls {
-    position: relative;
+.tabs-actionbar-example .tabs-actionbar-example_controls {
     display: flex;
-    padding: 8px 20px 8px 0;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: end;
+    border-bottom: 1px solid var(--kbq-line-contrast-less);
+}
 
-    &:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        right: 20px;
-        height: 1px;
-        background: var(--kbq-line-contrast-less);
-    }
-
-    button + button {
-        margin-left: 8px;
-    }
+.tabs-actionbar-example .tabs-actionbar-example_controls button + button {
+    margin-left: var(--kbq-size-s);
 }

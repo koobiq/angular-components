@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -7,26 +7,31 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-with-scroll-vertical-example',
-    styleUrl: 'tabs-with-scroll-vertical-example.css',
     imports: [KbqTabsModule],
-    encapsulation: ViewEncapsulation.None,
     template: `
         <div class="tabs-with-scroll-vertical-example">
             <kbq-tab-group vertical>
-                <kbq-tab [label]="'Bruteforce'" />
-                <kbq-tab [label]="'Complex Attack'" />
-                <kbq-tab [label]="'DDoS'" />
-                <kbq-tab [label]="'DoS'" />
-                <kbq-tab [label]="'HIPS Alert'" />
-                <kbq-tab [label]="'IDS/IPS Alert'" />
-                <kbq-tab [label]="'Bruteforce'" />
-                <kbq-tab [label]="'Complex Attack'" />
-                <kbq-tab [label]="'DDoS'" />
-                <kbq-tab [label]="'DoS'" />
-                <kbq-tab [label]="'HIPS Alert'" />
-                <kbq-tab [label]="'IDS/IPS Alert'" />
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [label]="tab">{{ tab }} tab content</kbq-tab>
+                }
             </kbq-tab-group>
         </div>
-    `
+    `,
+    styleUrls: ['tabs-with-scroll-vertical-example.css'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsWithScrollVerticalExample {}
+export class TabsWithScrollVerticalExample {
+    readonly tabs = [
+        'BruteForce',
+        'Complex Attack',
+        'DDoS',
+        'HIPS alert',
+        'IDS/IPS Alert',
+        'Zero-Day Exploit',
+        'XSS',
+        'Malware',
+        'Ransomware',
+        'Phishing'
+    ];
+}

@@ -12,7 +12,7 @@ import { KBQ_MODAL_DATA } from '../../components/modal/modal.service';
 @Component({
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class ModalDemoComponent {

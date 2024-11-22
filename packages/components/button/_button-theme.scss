@@ -87,7 +87,7 @@
         &.kbq-button_outline,
         &.kbq-button_transparent {
             &.cdk-keyboard-focused {
-                $focused-color: var(--kbq-states-focused-color);
+                $focused-color: var(--kbq-states-line-focus-theme);
                 outline: 1px solid $focused-color;
                 border-color: $focused-color;
             }
@@ -98,7 +98,7 @@
 @mixin kbq-button-typography() {
     .kbq-button,
     .kbq-button-icon {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal-medium);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 
     .kbq-button-icon.kbq-button-wrapper {

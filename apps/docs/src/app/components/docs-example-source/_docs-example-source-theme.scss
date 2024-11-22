@@ -3,19 +3,19 @@
 
 @mixin kbq-docs-example-source-theme() {
     .docs-example-source__code {
-        background: var(--kbq-background-background-less-contrast);
+        background: var(--kbq-background-bg-secondary);
     }
 
     .docs-example-source__numbers {
-        background: var(--kbq-background-background-less-contrast);
-        color: var(--kbq-foreground-text-disabled);
+        background: var(--kbq-background-bg-secondary);
+        color: var(--kbq-states-foreground-disabled);
     }
 }
 
 @mixin kbq-docs-example-source-typography() {
     .docs-example-source__code,
     .docs-example-source__numbers {
-        @include tokens.kbq-typography-level-to-styles_css-variables(typography, body-mono);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, mono-big);
 
         font-size: 14px;
     }

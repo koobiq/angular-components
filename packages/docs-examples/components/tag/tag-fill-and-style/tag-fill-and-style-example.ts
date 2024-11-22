@@ -30,7 +30,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
         }
     `,
     template: `
-        <div class="kbq-body layout-wrap fill-and-style__example-tags-group">
+        <div class="kbq-text-big layout-wrap fill-and-style__example-tags-group">
             <div class="layout-row layout-wrap fill-and-style__example-tag-row">
                 <div class="example-tag">
                     <div class="layout-margin-bottom-l kbq-form__label">Fade Theme</div>

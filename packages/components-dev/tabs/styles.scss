@@ -1,16 +1,13 @@
 @use '../main';
 
-.example-stretched-tabs {
-    max-width: 800px;
+app {
+    display: block;
+    width: 500px;
+    border: 1px solid cyan;
 }
 
-.example-button-toggle-label {
-    display: inline-block;
-    margin: 16px;
-}
-
-.example-action-button {
-    margin-bottom: 8px;
+hr {
+    margin: 30px 0;
 }
 
 .docs-vertical-tabs .kbq-tab-header {
@@ -38,4 +35,24 @@
 
 .custom-underlined-tabs_with-icons .kbq-tab-label__content.kbq-tab-label__template {
     align-items: center;
+}
+
+.tabs-actionbar-example {
+    display: flex;
+
+    .tabs-actionbar-example_nav {
+        overflow: hidden;
+    }
+
+    .tabs-actionbar-example_controls {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: end;
+        border-bottom: 1px solid var(--kbq-line-contrast-less);
+
+        button + button {
+            margin-left: 8px;
+        }
+    }
 }

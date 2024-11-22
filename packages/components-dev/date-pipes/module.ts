@@ -14,7 +14,7 @@ import { DateTime } from 'luxon';
 @Component({
     selector: 'app',
     templateUrl: 'template.html',
-    styleUrls: ['../main.scss', 'styles.scss'],
+    styleUrls: ['styles.scss'],
     providers: [
         { provide: KBQ_DATE_LOCALE, useValue: 'ru-RU' },
         {

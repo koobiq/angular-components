@@ -1,120 +1,208 @@
-<div>
-    <h4>Custom underlined tabs</h4>
-    <kbq-tab-group
-        underlined
-        class="custom-underlined-tabs"
-    >
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <div>Заголовок</div>
-                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
-            </ng-template>
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <div>Заголовок</div>
-                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
-            </ng-template>
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <div>Заголовок</div>
-                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
-            </ng-template>
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <div>Заголовок</div>
-                <div class="custom-underlined-tabs__subtitle">Подзаголовок</div>
-            </ng-template>
-        </kbq-tab>
-    </kbq-tab-group>
-
-    <h4>Custom underlined tabs with icons</h4>
-    <kbq-tab-group
-        underlined
-        class="custom-underlined-tabs custom-underlined-tabs_with-icons"
-    >
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-apple_24"></i>
-                <div>macOS</div>
-                <div class="custom-underlined-tabs__subtitle">14.5+</div>
-            </ng-template>
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-windows_24"></i>
-                <div>Windows</div>
-                <div class="custom-underlined-tabs__subtitle">XP+</div>
-            </ng-template>
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-linux_24"></i>
-                <div>Linux</div>
-                <div class="custom-underlined-tabs__subtitle">Ubuntu 10+</div>
-            </ng-template>
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-bsd_24"></i>
-                <div>FreeBSD</div>
-                <div class="custom-underlined-tabs__subtitle">14.1+</div>
-            </ng-template>
-        </kbq-tab>
-    </kbq-tab-group>
-
-    <h4>Underlined tabs</h4>
-    <kbq-tab-group underlined>
-        <kbq-tab [label]="'Spam Attack'">Spam Attack Content</kbq-tab>
-        <kbq-tab [label]="'Miscellaneous'">Miscellaneous Content</kbq-tab>
-        <kbq-tab [label]="'DDoS'">DDoS Content</kbq-tab>
-        <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
-    </kbq-tab-group>
-
-    <h4>Underlined tabs with icons</h4>
-    <kbq-tab-group underlined>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-play_16"></i>
-                Spam Attack
-            </ng-template>
-            Spam Attack Content
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                Miscellaneous
-                <i kbq-icon="kbq-play_16"></i>
-            </ng-template>
-            Miscellaneous Content
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-play_16"></i>
-                DDoS
-                <i kbq-icon="kbq-play_16"></i>
-            </ng-template>
-            DDoS Content
-        </kbq-tab>
-        <kbq-tab>
-            <ng-template kbq-tab-label>IDS/IPS Alert</ng-template>
-            IDS/IPS Alert Content
-        </kbq-tab>
-    </kbq-tab-group>
-
-    <h4>Default tabs (filled)</h4>
-    <kbq-tab-group>
-        <kbq-tab [label]="'label 3'">Content 3</kbq-tab>
-        <kbq-tab
-            [disabled]="true"
-            [label]="'label 4'"
+<h3>Nav-bar tabs</h3>
+<nav
+    kbqTabNavBar
+    [tabNavPanel]="kbqTabNavPanel1"
+>
+    @for (link of links; track link; let index = $index) {
+        @let disabled = index === 1;
+        <a
+            kbqTabLink
+            [active]="activeLink === link"
+            [disabled]="disabled"
+            (click)="activeLink = link"
         >
-            Content 4
+            {{ link }}
+        </a>
+    }
+</nav>
+<div
+    #kbqTabNavPanel1="kbqTabNavPanel"
+    kbqTabNavPanel
+>
+    activeLink: {{ activeLink }}
+</div>
+
+<hr />
+
+<h3>Nav-bar tabs vertical</h3>
+<div class="layout-row">
+    <nav
+        kbqTabNavBar
+        vertical
+        [style.height.px]="160"
+        [style.width.px]="120"
+        [tabNavPanel]="kbqTabNavPanel2"
+    >
+        @for (link of links; track link; let index = $index) {
+            @let disabled = index === 1;
+            <a
+                kbqTabLink
+                [active]="activeLink === link"
+                [disabled]="disabled"
+                (click)="activeLink = link"
+            >
+                {{ link }}
+            </a>
+        }
+    </nav>
+    <div
+        #kbqTabNavPanel2="kbqTabNavPanel"
+        kbqTabNavPanel
+    >
+        activeLink: {{ activeLink }}
+    </div>
+</div>
+
+<hr />
+
+<h3>Nav-bar tabs transparent</h3>
+<nav
+    kbqTabNavBar
+    transparent
+    [tabNavPanel]="kbqTabNavPanel3"
+>
+    @for (link of links; track link; let index = $index) {
+        @let disabled = index === 1;
+        <div
+            kbqTabLink
+            [active]="activeLink === link"
+            [disabled]="disabled"
+            (click)="activeLink = link"
+        >
+            {{ link }}
+        </div>
+    }
+</nav>
+<div
+    #kbqTabNavPanel3="kbqTabNavPanel"
+    kbqTabNavPanel
+>
+    activeLink: {{ activeLink }}
+</div>
+
+<hr />
+
+<h3>Nav-bar tabs onSurface</h3>
+<nav
+    kbqTabNavBar
+    onSurface
+    [tabNavPanel]="kbqTabNavPanel4"
+>
+    @for (link of links; track link; let index = $index) {
+        @let disabled = index === 1;
+        <div
+            kbqTabLink
+            [active]="activeLink === link"
+            [disabled]="disabled"
+            (click)="activeLink = link"
+        >
+            {{ link }}
+        </div>
+    }
+</nav>
+<div
+    #kbqTabNavPanel4="kbqTabNavPanel"
+    kbqTabNavPanel
+>
+    activeLink: {{ activeLink }}
+</div>
+
+<hr />
+
+<h4>Tabs underlined with custom label</h4>
+<kbq-tab-group
+    underlined
+    class="custom-underlined-tabs"
+>
+    @for (tab of tabs; track tab; let index = $index) {
+        <kbq-tab>
+            <ng-template kbq-tab-label>
+                <div>Заголовок {{ index }}</div>
+                <div class="custom-underlined-tabs__subtitle">Подзаголовок {{ index }}</div>
+            </ng-template>
+
+            {{ tab }} content
         </kbq-tab>
-        <kbq-tab [label]="'label 5'">
+    }
+</kbq-tab-group>
+
+<hr />
+
+<h4>Tabs underlined with custom label + icons</h4>
+<kbq-tab-group
+    underlined
+    class="custom-underlined-tabs custom-underlined-tabs_with-icons"
+>
+    <kbq-tab>
+        <ng-template kbq-tab-label>
+            <i kbq-icon="kbq-apple_24"></i>
+            <div>macOS</div>
+            <div class="custom-underlined-tabs__subtitle">14.5+</div>
+        </ng-template>
+    </kbq-tab>
+    <kbq-tab>
+        <ng-template kbq-tab-label>
+            <i kbq-icon="kbq-windows_24"></i>
+            <div>Windows</div>
+            <div class="custom-underlined-tabs__subtitle">XP+</div>
+        </ng-template>
+    </kbq-tab>
+    <kbq-tab>
+        <ng-template kbq-tab-label>
+            <i kbq-icon="kbq-linux_24"></i>
+            <div>Linux</div>
+            <div class="custom-underlined-tabs__subtitle">Ubuntu 10+</div>
+        </ng-template>
+    </kbq-tab>
+    <kbq-tab>
+        <ng-template kbq-tab-label>
+            <i kbq-icon="kbq-bsd_24"></i>
+            <div>FreeBSD</div>
+            <div class="custom-underlined-tabs__subtitle">14.1+</div>
+        </ng-template>
+    </kbq-tab>
+</kbq-tab-group>
+
+<hr />
+
+<h4>Tabs underlined</h4>
+<kbq-tab-group underlined>
+    <kbq-tab [label]="'Spam Attack'">Spam Attack Content</kbq-tab>
+    <kbq-tab
+        disabled
+        [label]="'Miscellaneous'"
+    >
+        Miscellaneous Content
+    </kbq-tab>
+    <kbq-tab [label]="'DDoS'">DDoS Content</kbq-tab>
+    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
+    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
+    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
+    <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
+</kbq-tab-group>
+
+<hr />
+
+<h4>Tabs kbq-stretch-tabs</h4>
+<kbq-tab-group kbq-stretch-tabs>
+    <kbq-tab [label]="'Bruteforce'">content 1</kbq-tab>
+    <kbq-tab [label]="'Identity Theft'">content 2</kbq-tab>
+    <kbq-tab [label]="'Spam Attack'">content 3</kbq-tab>
+</kbq-tab-group>
+
+<hr />
+
+<h4>Tabs with scrolled content</h4>
+<kbq-tab-group>
+    @for (tab of tabs; track tab; let index = $index) {
+        @let disabled = index === 2;
+        <kbq-tab
+            [disabled]="disabled"
+            [label]="tab"
+        >
             <div style="height: 200px">
-                <div style="height: 300px"></div>
+                {{ tab }} content
+                <div style="height: 300px">scroll down vvv</div>
                 <button
                     kbq-button
                     kbqPopover
@@ -122,107 +210,156 @@
                         'Сегодня этот текст используют практически все дизайнеры, набирающие рыбу латиницей. Абзац считается каноническим во всех справочниках по типографике и предлагается к использованию в статьях, посвященных изготовлению макета верстки при отсутствии финальных текстов. В руководствах по работе с фирменным стилем крупных международных компаний именно с этих слов начинаются образцы верстки. Существуют даже издания с названием Lorem ipsum'
                     "
                 >
-                    Button
+                    click me
                 </button>
                 <div style="height: 300px"></div>
             </div>
         </kbq-tab>
-        <kbq-tab [label]="'label 6'">Content 6</kbq-tab>
-        <kbq-tab [label]="'label 7'">Content 7</kbq-tab>
-        <kbq-tab [label]="'label 8'">Content 8</kbq-tab>
-        <kbq-tab [label]="'label 9'">Content 9</kbq-tab>
-        <kbq-tab [label]="'label 10'">Content 10</kbq-tab>
-    </kbq-tab-group>
+    }
+</kbq-tab-group>
 
-    <h4>Default tabs (on-surface)</h4>
-    <kbq-tab-group [onSurface]="true">
-        <kbq-tab [label]="'label 3'">Content 3</kbq-tab>
-        <kbq-tab [label]="'label 4'">Content 4</kbq-tab>
-        <kbq-tab [label]="'label 5'">Content 5</kbq-tab>
-        <kbq-tab [label]="'label 6'">Content 6</kbq-tab>
-        <kbq-tab [label]="'label 7'">Content 7</kbq-tab>
-        <kbq-tab [label]="'label 8'">Content 8</kbq-tab>
-        <kbq-tab [label]="'label 9'">Content 9</kbq-tab>
-        <kbq-tab [label]="'label 10'">Content 10</kbq-tab>
-    </kbq-tab-group>
+<hr />
 
-    <h4>Transparent tabs</h4>
-    <kbq-tab-group [transparent]="true">
-        <kbq-tab [label]="'label 3'">Content 3</kbq-tab>
-        <kbq-tab [label]="'label 4'">Content 4</kbq-tab>
-        <kbq-tab [label]="'label 5'">Content 5</kbq-tab>
-        <kbq-tab [label]="'label 6'">Content 6</kbq-tab>
-        <kbq-tab [label]="'label 7'">Content 7</kbq-tab>
-        <kbq-tab [label]="'label 8'">Content 8</kbq-tab>
-        <kbq-tab [label]="'label 9'">Content 9</kbq-tab>
-        <kbq-tab [label]="'label 10'">Content 10</kbq-tab>
-    </kbq-tab-group>
+<h4>Tabs onSurface</h4>
+<kbq-tab-group onSurface>
+    @for (tab of tabs; track tab) {
+        <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
+    }
+</kbq-tab-group>
 
-    <h4>Transparent tabs (on-surface)</h4>
-    <kbq-tab-group
-        [onSurface]="true"
-        [transparent]="true"
-    >
-        <kbq-tab [label]="'label 3'">Content 3</kbq-tab>
-        <kbq-tab [label]="'label 4'">Content 4</kbq-tab>
-        <kbq-tab [label]="'label 5'">Content 5</kbq-tab>
-        <kbq-tab [label]="'label 6'">Content 6</kbq-tab>
-        <kbq-tab [label]="'label 7'">Content 7</kbq-tab>
-        <kbq-tab [label]="'label 8'">Content 8</kbq-tab>
-        <kbq-tab [label]="'label 9'">Content 9</kbq-tab>
-        <kbq-tab [label]="'label 10'">Content 10</kbq-tab>
-    </kbq-tab-group>
+<hr />
 
-    <h4>Default Vertical tabs</h4>
-    <kbq-tab-group
-        style="height: 100px"
-        vertical
-        class="docs-vertical-tabs"
-        (selectedTabChange)="selectedTabChange($event)"
-    >
-        <kbq-tab [tabId]="'firstTab'">
-            <ng-template kbq-tab-label>
-                <i kbq-icon="kbq-play_16"></i>
-                First long long long long long long long long tab name
-                <i kbq-icon="kbq-play_16"></i>
-            </ng-template>
-            Content 1
-        </kbq-tab>
-        <kbq-tab
-            [empty]="true"
-            [tabId]="'Empty'"
-            [tooltipTitle]="'Text for empty tab'"
-        >
-            <ng-template kbq-tab-label>
-                Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty Empty
-                <i kbq-icon="kbq-play_16"></i>
-            </ng-template>
-            Empty Content
-        </kbq-tab>
-        <kbq-tab label="long long long long long long long long tab name">Content 4</kbq-tab>
-    </kbq-tab-group>
+<h4>Tabs transparent</h4>
+<kbq-tab-group transparent>
+    @for (tab of tabs; track tab) {
+        <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
+    }
+</kbq-tab-group>
 
-    <h3>Navigation</h3>
+<hr />
 
-    <nav kbq-tab-nav-bar>
-        @for (link of links; track link) {
-            <a
-                kbq-tab-link
-                [active]="activeLink === link"
-                (click)="activeLink = link"
-            >
-                {{ link }}
-            </a>
-        }
+<h4>Tabs onSurface + transparent</h4>
+<kbq-tab-group
+    onSurface
+    transparent
+>
+    @for (tab of tabs; track tab) {
+        <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
+    }
+</kbq-tab-group>
 
-        <a
-            kbq-tab-link
-            [active]="activeLink === 1"
-            [disabled]="true"
-            (click)="activeLink = 1"
-        >
+<hr />
+
+<h4>Tabs vertical</h4>
+<kbq-tab-group
+    vertical
+    [style.height.px]="160"
+>
+    @for (tab of tabs; track tab) {
+        <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
+    }
+</kbq-tab-group>
+
+<hr />
+
+<h4>Tabs vertical with custom label</h4>
+<kbq-tab-group
+    vertical
+    class="docs-vertical-tabs"
+    (selectedTabChange)="selectedTabChange($event)"
+>
+    <kbq-tab [tabId]="'firstTab'">
+        <ng-template kbq-tab-label>
             <i kbq-icon="kbq-play_16"></i>
-            Disabled
-        </a>
-    </nav>
+            Very long long long long long long long long tab label
+            <i kbq-icon="kbq-play_16"></i>
+        </ng-template>
+        Content
+    </kbq-tab>
+    <kbq-tab
+        tooltipTitle="Empty tooltip"
+        [empty]="true"
+        [tabId]="'Empty'"
+    >
+        <ng-template kbq-tab-label>
+            Empty
+            <i kbq-icon="kbq-play_16"></i>
+        </ng-template>
+        Empty Content
+    </kbq-tab>
+    <kbq-tab label="Label">Content</kbq-tab>
+</kbq-tab-group>
+
+<hr />
+
+<h3>selectedTabIndex</h3>
+<kbq-tab-group [(activeTab)]="selectedTabIndex">
+    @for (tab of tabsWithIcons; track tab) {
+        <kbq-tab [tabId]="tab.tabId">
+            <ng-template kbq-tab-label>
+                <i
+                    kbq-icon
+                    [ngClass]="tab.icon"
+                ></i>
+                {{ tab.tabId }}
+            </ng-template>
+            Content for selected tab with index={{ selectedTabIndex }}
+        </kbq-tab>
+    }
+</kbq-tab-group>
+
+<hr />
+
+<h3>Tabs with actionbar</h3>
+<div class="tabs-actionbar-example">
+    <div class="tabs-actionbar-example_nav">
+        <nav
+            kbqTabNavBar
+            underlined
+            [tabNavPanel]="kbqTabNavPanel77"
+        >
+            @for (dashboard of dashboards; track dashboard) {
+                <a
+                    kbqTabLink
+                    [active]="activeDashboard === dashboard"
+                    (click)="activeDashboard = dashboard"
+                >
+                    {{ dashboard }}
+                </a>
+            }
+        </nav>
+    </div>
+
+    <div class="tabs-actionbar-example_controls">
+        <button
+            color="contrast"
+            kbq-button
+            class="kbq-button_transparent"
+        >
+            <i kbq-icon="kbq-list_16"></i>
+        </button>
+        <button
+            color="contrast"
+            kbq-button
+            class="kbq-button_transparent"
+        >
+            <i kbq-icon="kbq-filter_16"></i>
+        </button>
+        <button
+            color="contrast"
+            kbq-button
+            (click)="createDashboard()"
+        >
+            <i kbq-icon="kbq-plus_16"></i>
+            Create dashboard
+        </button>
+    </div>
 </div>
+<div
+    #kbqTabNavPanel77="kbqTabNavPanel"
+    kbqTabNavPanel
+>
+    Active dashboard: {{ activeDashboard }}
+</div>
+
+<hr />

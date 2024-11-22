@@ -3,10 +3,10 @@
 @mixin kbq-input-typography() {
     .kbq-input,
     .kbq-input.kbq-input-password::placeholder {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-input.kbq-input-password {
-        @include kbq-typography-level-to-styles_css-variables(typography, mono-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, mono-normal);
     }
 }
