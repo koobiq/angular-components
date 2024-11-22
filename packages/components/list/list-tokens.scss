@@ -6,13 +6,13 @@
     --kbq-list-size-container-content-gap-horizontal: var(--kbq-size-s);
     --kbq-list-size-container-content-gap-vertical: var(--kbq-size-3xs);
     --kbq-list-size-container-focus-outline-width: var(--kbq-size-3xs);
-    --kbq-list-size-text-padding-vertical: 0;
     --kbq-list-size-header-padding-top: var(--kbq-size-s);
     --kbq-list-size-header-padding-bottom: var(--kbq-size-xxs);
     --kbq-list-size-header-padding-horizontal: var(--kbq-size-m);
     --kbq-list-size-subheading-padding-top: var(--kbq-size-m);
     --kbq-list-size-subheading-padding-bottom: var(--kbq-size-xxs);
     --kbq-list-size-subheading-padding-horizontal: var(--kbq-size-m);
+    --kbq-button-toggle-size-item-border-radius: var(--kbq-size-xxs);
 }
 
 :where(.kbq-light, .theme-light, .kbq-theme-light) {
