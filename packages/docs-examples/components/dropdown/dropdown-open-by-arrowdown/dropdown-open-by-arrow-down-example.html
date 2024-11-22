@@ -1,30 +1,15 @@
-<kbq-checkbox
-    class="layout-margin-right-l"
-    [(ngModel)]="openByArrowDown"
->
-    toggle openByArrowDown
-</kbq-checkbox>
+<kbq-checkbox class="layout-margin-right-l" [(ngModel)]="openByArrowDown">toggle openByArrowDown</kbq-checkbox>
 
-<button
-    kbq-button
-    [kbqDropdownTriggerFor]="appDropdown"
-    [openByArrowDown]="openByArrowDown"
->
+<button kbq-button [kbqDropdownTriggerFor]="appDropdown" [openByArrowDown]="openByArrowDown">
     dropdown
     <i kbq-icon="kbq-chevron-down-s_16"></i>
 </button>
 
-<kbq-dropdown
-    #appDropdown="kbqDropdown"
-    style="max-width: 200px"
->
+<kbq-dropdown #appDropdown="kbqDropdown" style="max-width: 200px">
     <button kbq-dropdown-item>Text Normal</button>
 
     <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-info-circle_16"
-            [color]="'contrast'"
-        ></i>
+        <i kbq-icon="kbq-info-circle_16" [color]="'contrast'"></i>
         Text Normal
     </button>
 
@@ -34,26 +19,17 @@
     </button>
 
     <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-info-circle_16"
-            [color]="'contrast'"
-        ></i>
+        <i kbq-icon="kbq-info-circle_16" [color]="'contrast'"></i>
         Text Normal
         <div class="kbq-dropdown-item__caption">Caption</div>
     </button>
 
     <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-circle-xs_16"
-            [color]="'contrast'"
-        ></i>
+        <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
         Text Normal
     </button>
 
-    <button
-        kbq-dropdown-item
-        kbq-title
-    >
+    <button kbq-dropdown-item kbq-title>
         Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and
         very long text
     </button>
@@ -62,25 +38,14 @@
 
     <div class="kbq-dropdown__group-header">Header</div>
 
-    <button
-        disabled
-        kbq-dropdown-item
-    >
-        Disabled
-    </button>
+    <button disabled kbq-dropdown-item>Disabled</button>
 
     <kbq-divider />
 
     <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Subheading</div>
 
-    <button
-        disabled
-        kbq-dropdown-item
-    >
-        <i
-            kbq-icon="kbq-circle-xs_16"
-            [color]="'contrast'"
-        ></i>
+    <button disabled kbq-dropdown-item>
+        <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
         Disabled with icon
     </button>
 

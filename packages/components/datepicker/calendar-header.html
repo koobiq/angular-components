@@ -17,19 +17,11 @@
         >
             {{ monthNames[selectedMonth].nameShort | titlecase }}
 
-            <i
-                kbq-icon="kbq-chevron-down-s_16"
-                class="layout-padding-left-3xs"
-                [color]="'contrast'"
-            ></i>
+            <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs" [color]="'contrast'"></i>
         </button>
 
         @for (month of monthNames; track month.nameShort) {
-            <kbq-option
-                [disabled]="month.disabled"
-                [kbqTooltipDisabled]="true"
-                [value]="month.value"
-            >
+            <kbq-option [disabled]="month.disabled" [kbqTooltipDisabled]="true" [value]="month.value">
                 {{ month.name }}
             </kbq-option>
         }
@@ -52,17 +44,11 @@
         >
             {{ selectedYear.value }}
 
-            <i
-                kbq-icon="kbq-chevron-down-s_16"
-                class="layout-padding-left-3xs"
-            ></i>
+            <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs"></i>
         </button>
 
         @for (year of years; track year.name) {
-            <kbq-option
-                [kbqTooltipDisabled]="true"
-                [value]="year"
-            >
+            <kbq-option [kbqTooltipDisabled]="true" [value]="year">
                 {{ year.value }}
             </kbq-option>
         }

@@ -25,11 +25,7 @@
 
             <div dir="rtl">
                 <h4>Bidi support</h4>
-                <div
-                    kbq-scrollbar
-                    style="height: 300px; max-width: 400px"
-                    (onScroll)="onScroll($event)"
-                >
+                <div kbq-scrollbar style="height: 300px; max-width: 400px" (onScroll)="onScroll($event)">
                     <div style="width: 400px">{{ longText }}</div>
                 </div>
             </div>
@@ -46,11 +42,9 @@
             >
 
             <h3>Buttons & Resize corner</h3>
-            <textarea
-                style="height: 300px; width: 400px; overflow-y: auto"
-                class="kbq-scrollbar with-buttons"
-                >{{ longText }}</textarea
-            >
+            <textarea style="height: 300px; width: 400px; overflow-y: auto" class="kbq-scrollbar with-buttons">{{
+                longText
+            }}</textarea>
         </div>
     </div>
 </div>

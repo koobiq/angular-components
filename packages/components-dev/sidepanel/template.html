@@ -33,36 +33,20 @@
     <br />
 
     <div class="layout-row">
-        <button
-            kbq-button
-            (click)="openComponentSidepanel()"
-        >
+        <button kbq-button (click)="openComponentSidepanel()">
             <span>Open component sidepanel</span>
         </button>
 
-        <button
-            kbq-button
-            class="template-button"
-            (click)="openTemplateSidepanel()"
-        >
+        <button kbq-button class="template-button" (click)="openTemplateSidepanel()">
             <span>Open template sidepanel</span>
         </button>
 
-        <button
-            kbq-button
-            class="template-button"
-            [kbqDropdownTriggerFor]="dropdown"
-        >
+        <button kbq-button class="template-button" [kbqDropdownTriggerFor]="dropdown">
             Open sidepanel from dropdown
         </button>
         <kbq-dropdown #dropdown>
             <ng-template kbqDropdownContent>
-                <button
-                    kbq-dropdown-item
-                    (click)="openComponentSidepanel()"
-                >
-                    open Component Sidepanel
-                </button>
+                <button kbq-dropdown-item (click)="openComponentSidepanel()">open Component Sidepanel</button>
             </ng-template>
         </kbq-dropdown>
     </div>
@@ -87,18 +71,10 @@
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions align="left">
-                <button
-                    cdkFocusInitial
-                    kbq-button
-                    [color]="'contrast'"
-                    (click)="openTemplateSidepanel()"
-                >
+                <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openTemplateSidepanel()">
                     <span>Open another sidepanel</span>
                 </button>
-                <button
-                    kbq-button
-                    kbq-sidepanel-close
-                >
+                <button kbq-button kbq-sidepanel-close>
                     <span>Close</span>
                 </button>
             </kbq-sidepanel-actions>

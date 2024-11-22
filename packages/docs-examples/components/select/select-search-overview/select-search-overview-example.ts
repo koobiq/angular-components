@@ -41,23 +41,10 @@ const localeDataSet = {
     ],
     template: `
         <kbq-form-field>
-            <kbq-select
-                [(value)]="selected"
-                multiple
-            >
-                <kbq-form-field
-                    kbqFormFieldWithoutBorders
-                    kbqSelectSearch
-                >
-                    <i
-                        kbq-icon="kbq-magnifying-glass_16"
-                        kbqPrefix
-                    ></i>
-                    <input
-                        [formControl]="searchControl"
-                        kbqInput
-                        type="text"
-                    />
+            <kbq-select [(value)]="selected" multiple>
+                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                    <input [formControl]="searchControl" kbqInput type="text" />
                     <kbq-cleaner />
                 </kbq-form-field>
 

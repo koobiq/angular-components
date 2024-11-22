@@ -18,18 +18,11 @@ const MAX_PERCENT: number = 100;
     template: `
         <div class="layout-row">
             <div style="width: 40px">{{ percent }}%</div>
-            <kbq-progress-spinner
-                class="layout-margin-right-s"
-                [value]="percent"
-            />
+            <kbq-progress-spinner class="layout-margin-right-s" [value]="percent" />
         </div>
         <div class="layout-row">
             <div style="width: 40px">{{ percent }}%</div>
-            <kbq-progress-spinner
-                class="layout-margin-right-s"
-                [size]="'big'"
-                [value]="percent"
-            />
+            <kbq-progress-spinner class="layout-margin-right-s" [size]="'big'" [value]="percent" />
         </div>
     `
 })

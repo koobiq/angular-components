@@ -1,7 +1,4 @@
-<kbq-tab-group
-    [class.kbq-focused]="hasKeyboardFocus"
-    (selectedTabChange)="onSelectTab($event)"
->
+<kbq-tab-group [class.kbq-focused]="hasKeyboardFocus" (selectedTabChange)="onSelectTab($event)">
     @for (codeFile of codeFiles; track codeFile; let i = $index) {
         <kbq-tab [disabled]="singleFile">
             <ng-template kbq-tab-label>{{ codeFile.filename }}</ng-template>

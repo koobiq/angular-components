@@ -133,14 +133,8 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                 [panelClass]="panelClass"
                 placeholder="Food"
             >
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
@@ -149,10 +143,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                         [disabled]="node.name === 'Downloads'"
                         kbqTreeNodePadding
                     >
-                        <i
-                            kbq-icon="kbq-chevron-down-s_16"
-                            kbqTreeNodeToggle
-                        ></i>
+                        <i kbq-icon="kbq-chevron-down-s_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -199,14 +190,8 @@ class BasicTreeSelect {
                 (opened)="openedListener()"
                 (closed)="closedListener()"
             >
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
@@ -215,10 +200,7 @@ class BasicTreeSelect {
                         [disabled]="node.name === 'Downloads'"
                         kbqTreeNodePadding
                     >
-                        <i
-                            kbq-icon="kbq-chevron-down-s_16"
-                            kbqTreeNodeToggle
-                        ></i>
+                        <i kbq-icon="kbq-chevron-down-s_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -255,30 +237,14 @@ class BasicEvents {
     selector: 'ng-model-select',
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                [disabled]="isDisabled"
-                placeholder="Food"
-                ngModel
-            >
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+            <kbq-tree-select [disabled]="isDisabled" placeholder="Food" ngModel>
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="kbq-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -316,28 +282,13 @@ class NgModelSelect {
         @if (isShowing) {
             <div>
                 <kbq-form-field>
-                    <kbq-tree-select
-                        [formControl]="control"
-                        placeholder="Food I want to eat right now"
-                    >
-                        <kbq-tree-selection
-                            [dataSource]="dataSource"
-                            [treeControl]="treeControl"
-                        >
-                            <kbq-tree-option
-                                *kbqTreeNodeDef="let node"
-                                kbqTreeNodePadding
-                            >
+                    <kbq-tree-select [formControl]="control" placeholder="Food I want to eat right now">
+                        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                                 {{ treeControl.getViewValue(node) }}
                             </kbq-tree-option>
-                            <kbq-tree-option
-                                *kbqTreeNodeDef="let node; when: hasChild"
-                                kbqTreeNodePadding
-                            >
-                                <i
-                                    kbq-icon="kbq-angle-s_16"
-                                    kbqTreeNodeToggle
-                                ></i>
+                            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                                <i kbq-icon="kbq-angle-s_16" kbqTreeNodeToggle></i>
                                 {{ treeControl.getViewValue(node) }}
                             </kbq-tree-option>
                         </kbq-tree-selection>
@@ -377,25 +328,13 @@ class NgIfSelect {
     template: `
         <kbq-form-field>
             <kbq-tree-select (selectionChange)="changeListener($event)">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="kbq-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -428,30 +367,14 @@ class SelectWithChangeEvent {
     selector: 'multi-select',
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                [multiple]="true"
-                [formControl]="control"
-                placeholder="Food"
-            >
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+            <kbq-tree-select [multiple]="true" [formControl]="control" placeholder="Food">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="kbq-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -488,25 +411,13 @@ class MultiSelect {
     template: `
         <kbq-form-field>
             <kbq-tree-select [style.display]="isVisible ? 'block' : 'none'">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="kbq-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -540,25 +451,13 @@ class BasicSelectInitiallyHidden {
     template: `
         <kbq-form-field>
             <kbq-tree-select>
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
-                        <i
-                            kbq-icon="kbq-angle-S_16"
-                            kbqTreeNodeToggle
-                        ></i>
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                        <i kbq-icon="kbq-angle-S_16" kbqTreeNodeToggle></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
@@ -591,10 +490,7 @@ class BasicSelectNoPlaceholder {
             <!--<kbq-label>Select a thing</kbq-label>-->
 
             <kbq-tree-select [placeholder]="placeholder">
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option>A thing</kbq-tree-option>
                 </kbq-tree-selection>
             </kbq-tree-select>

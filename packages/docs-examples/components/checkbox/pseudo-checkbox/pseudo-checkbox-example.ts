@@ -13,14 +13,8 @@ import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
     template: `
         <div class="layout-column">
             <kbq-pseudo-checkbox />
-            <kbq-pseudo-checkbox
-                class="layout-margin-top-l"
-                [state]="'indeterminate'"
-            />
-            <kbq-pseudo-checkbox
-                class="layout-margin-top-l"
-                [state]="'checked'"
-            />
+            <kbq-pseudo-checkbox class="layout-margin-top-l" [state]="'indeterminate'" />
+            <kbq-pseudo-checkbox class="layout-margin-top-l" [state]="'checked'" />
         </div>
     `
 })

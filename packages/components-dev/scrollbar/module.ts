@@ -13,10 +13,7 @@ import {
     selector: 'scrollbar-with-options',
     template: `
         <h4>ScrollbarWithOptions:</h4>
-        <kbq-scrollbar
-            [options]="options"
-            style="width: 200px; height: 200px;"
-        >
+        <kbq-scrollbar [options]="options" style="width: 200px; height: 200px;">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />
@@ -50,10 +47,7 @@ export class ScrollbarWithOptions {
     ],
     template: `
         <h4>ScrollbarWithCustomConfig:</h4>
-        <div
-            kbq-scrollbar
-            style="width: 200px; height: 200px;"
-        >
+        <div kbq-scrollbar style="width: 200px; height: 200px;">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />
@@ -75,11 +69,7 @@ export class ScrollbarWithCustomConfig {
     ],
     template: `
         <h4>ScrollbarScrollToTop:</h4>
-        <kbq-scrollbar
-            #scrollbarRef="kbqScrollbar"
-            (onScroll)="onScroll($event)"
-            style="width: 200px; height: 200px;"
-        >
+        <kbq-scrollbar #scrollbarRef="kbqScrollbar" (onScroll)="onScroll($event)" style="width: 200px; height: 200px;">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />

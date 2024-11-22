@@ -263,12 +263,7 @@ describe('KbqAccordion', () => {
         <kbq-accordion>
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
@@ -283,12 +278,7 @@ class TestApp {}
         <kbq-accordion [variant]="selectedVariant">
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
@@ -305,12 +295,7 @@ class AccordionVariants {
         <kbq-accordion [defaultValue]="defaultValue">
             <kbq-accordion-item [value]="'item-1'">
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
@@ -327,23 +312,13 @@ class AccordionDefaultValue {
         <kbq-accordion [value]="value">
             <kbq-accordion-item [value]="'item-1'">
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item [value]="'item-2'">
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
@@ -360,23 +335,13 @@ class AccordionValue {
         <kbq-accordion [disabled]="disabled">
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
@@ -393,23 +358,13 @@ class AccordionDisabled {
         <kbq-accordion>
             <kbq-accordion-item [disabled]="disabledItem">
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
@@ -426,23 +381,13 @@ class AccordionDisabledItem {
         <kbq-accordion [type]="type">
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
@@ -459,23 +404,13 @@ class AccordionType {
         <kbq-accordion [collapsible]="false">
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>
             <kbq-accordion-item>
                 <kbq-accordion-header>
-                    <button
-                        kbq-accordion-trigger
-                        type="button"
-                    >
-                        Is it accessible?
-                    </button>
+                    <button kbq-accordion-trigger type="button">Is it accessible?</button>
                 </kbq-accordion-header>
                 <kbq-accordion-content>Yes. It adheres to the WAI-ARIA design pattern.</kbq-accordion-content>
             </kbq-accordion-item>

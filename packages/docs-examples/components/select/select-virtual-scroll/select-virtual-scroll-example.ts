@@ -161,15 +161,8 @@ export const OPTIONS = [
             <kbq-select (openedChange)="openedChange($event)">
                 <kbq-cleaner #kbqSelectCleaner />
 
-                <cdk-virtual-scroll-viewport
-                    [itemSize]="32"
-                    [maxBufferPx]="400"
-                    [minBufferPx]="100"
-                >
-                    <kbq-option
-                        *cdkVirtualFor="let option of options; templateCacheSize: 0"
-                        [value]="option"
-                    >
+                <cdk-virtual-scroll-viewport [itemSize]="32" [maxBufferPx]="400" [minBufferPx]="100">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>

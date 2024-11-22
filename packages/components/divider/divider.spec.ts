@@ -48,10 +48,7 @@ describe('KbqDivider', () => {
 
 @Component({
     template: `
-        <kbq-divider
-            [vertical]="vertical"
-            [inset]="inset"
-        />
+        <kbq-divider [vertical]="vertical" [inset]="inset" />
     `
 })
 class KbqDividerTestComponent {

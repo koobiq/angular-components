@@ -15,11 +15,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     template: `
         <kbq-form-field>
             <kbq-label>Email</kbq-label>
-            <input
-                [formControl]="formControl"
-                kbqInput
-                placeholder="mail@koobiq.io"
-            />
+            <input [formControl]="formControl" kbqInput placeholder="mail@koobiq.io" />
             <kbq-hint>Enter email</kbq-hint>
             <kbq-error>
                 @if (formControl.hasError('required')) {

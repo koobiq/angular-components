@@ -10,32 +10,20 @@
     <div class="percent">{{ mode === 'indeterminate' ? '--' : percent }}%</div>
     <div class="lines">
         <div class="line-container">
-            <kbq-progress-bar
-                [mode]="mode"
-                [value]="percent"
-            />
+            <kbq-progress-bar [mode]="mode" [value]="percent" />
         </div>
         <div class="line-container">
-            <kbq-progress-bar
-                [mode]="mode"
-                [value]="percent"
-            >
+            <kbq-progress-bar [mode]="mode" [value]="percent">
                 <div kbq-progress-bar-text>kbq-progress-bar-text</div>
             </kbq-progress-bar>
         </div>
         <div class="line-container">
-            <kbq-progress-bar
-                [mode]="mode"
-                [value]="percent"
-            >
+            <kbq-progress-bar [mode]="mode" [value]="percent">
                 <div kbq-progress-bar-caption>kbq-progress-bar-caption</div>
             </kbq-progress-bar>
         </div>
         <div class="line-container">
-            <kbq-progress-bar
-                [mode]="mode"
-                [value]="percent"
-            >
+            <kbq-progress-bar [mode]="mode" [value]="percent">
                 <div kbq-progress-bar-text>kbq-progress-bar-text</div>
                 <div kbq-progress-bar-caption>kbq-progress-bar-caption</div>
             </kbq-progress-bar>

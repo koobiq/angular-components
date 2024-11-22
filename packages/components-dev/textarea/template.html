@@ -1,11 +1,6 @@
 <div class="container">
     <kbq-form-field class="kbq-focused">
-        <textarea
-            kbqTextarea
-            placeholder="Placeholder"
-            rows="4"
-            [(ngModel)]="value"
-        ></textarea>
+        <textarea kbqTextarea placeholder="Placeholder" rows="4" [(ngModel)]="value"></textarea>
     </kbq-form-field>
 
     <br />
@@ -14,13 +9,7 @@
     <header>Resizable:</header>
 
     <kbq-form-field>
-        <textarea
-            kbqTextarea
-            placeholder="Placeholder"
-            rows="4"
-            [canGrow]="false"
-            [(ngModel)]="value"
-        ></textarea>
+        <textarea kbqTextarea placeholder="Placeholder" rows="4" [canGrow]="false" [(ngModel)]="value"></textarea>
     </kbq-form-field>
 
     <br />
@@ -28,10 +17,7 @@
 
     <header>Without placeholder:</header>
     <kbq-form-field>
-        <textarea
-            kbqTextarea
-            [(ngModel)]="value"
-        ></textarea>
+        <textarea kbqTextarea [(ngModel)]="value"></textarea>
     </kbq-form-field>
 
     <br />
@@ -40,11 +26,7 @@
     <header>With placeholder:</header>
 
     <kbq-form-field>
-        <textarea
-            kbqTextarea
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        ></textarea>
+        <textarea kbqTextarea placeholder="Placeholder" [(ngModel)]="value"></textarea>
     </kbq-form-field>
 
     <br />
@@ -53,12 +35,7 @@
     <header>With placeholder and disabled:</header>
 
     <kbq-form-field>
-        <textarea
-            kbqTextarea
-            placeholder="Placeholder"
-            [disabled]="true"
-            [(ngModel)]="value"
-        ></textarea>
+        <textarea kbqTextarea placeholder="Placeholder" [disabled]="true" [(ngModel)]="value"></textarea>
     </kbq-form-field>
 
     <br />

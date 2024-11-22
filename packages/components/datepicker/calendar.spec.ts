@@ -353,11 +353,7 @@ class StandardCalendar {
 
 @Component({
     template: `
-        <kbq-calendar
-            [startAt]="startAt"
-            [minDate]="minDate"
-            [maxDate]="maxDate"
-        />
+        <kbq-calendar [startAt]="startAt" [minDate]="minDate" [maxDate]="maxDate" />
     `
 })
 class CalendarWithMinMax {
@@ -370,11 +366,7 @@ class CalendarWithMinMax {
 
 @Component({
     template: `
-        <kbq-calendar
-            [(selected)]="selected"
-            [startAt]="startDate"
-            [dateFilter]="dateFilter"
-        />
+        <kbq-calendar [(selected)]="selected" [startAt]="startDate" [dateFilter]="dateFilter" />
     `
 })
 class CalendarWithDateFilter {

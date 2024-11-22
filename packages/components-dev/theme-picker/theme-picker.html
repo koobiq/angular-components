@@ -1,15 +1,9 @@
 <div class="theme-picker">
     @for (theme of themes; track theme) {
         <div>
-            <div
-                class="theme-picker--item"
-                (click)="installTheme(theme)"
-            >
+            <div class="theme-picker--item" (click)="installTheme(theme)">
                 <div>
-                    <div
-                        class="theme-picker-element"
-                        [style.background]="theme.primary"
-                    ></div>
+                    <div class="theme-picker-element" [style.background]="theme.primary"></div>
                     @if (currentTheme === theme) {
                         <div class="is-active">v</div>
                     }

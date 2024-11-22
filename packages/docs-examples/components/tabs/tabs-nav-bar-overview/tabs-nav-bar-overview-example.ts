@@ -9,30 +9,15 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     selector: 'tabs-nav-bar-overview-example',
     imports: [KbqTabsModule],
     template: `
-        <nav
-            [tabNavPanel]="tabNavPanel"
-            kbqTabNavBar
-        >
+        <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
             @for (link of links; track link) {
-                <a
-                    [active]="activeLink === link"
-                    (click)="activeLink = link"
-                    kbqTabLink
-                >
+                <a [active]="activeLink === link" (click)="activeLink = link" kbqTabLink>
                     {{ link }}
                 </a>
             }
-            <a
-                disabled
-                kbqTabLink
-            >
-                DoS
-            </a>
+            <a disabled kbqTabLink>DoS</a>
         </nav>
-        <main
-            #tabNavPanel="kbqTabNavPanel"
-            kbqTabNavPanel
-        >
+        <main #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
             Active link: {{ activeLink }}
             <!-- Perfect place for your <router-outlet /> -->
         </main>

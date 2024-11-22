@@ -27,18 +27,10 @@
 </ng-template>
 
 <ng-template #customFooter>
-    <button
-        kbq-button
-        (click)="kbqPopover.hide()"
-    >
-        Закрыть
-    </button>
+    <button kbq-button (click)="kbqPopover.hide()">Закрыть</button>
 </ng-template>
 
-<div
-    style="gap: 16px"
-    class="layout-row layout-wrap"
->
+<div style="gap: 16px" class="layout-row layout-wrap">
     <button
         kbq-button
         kbqPopover
@@ -57,11 +49,5 @@
     >
         Только с футером
     </button>
-    <button
-        kbq-button
-        kbqPopover
-        [kbqPopoverContent]="customContent"
-    >
-        Без хедера и футера
-    </button>
+    <button kbq-button kbqPopover [kbqPopoverContent]="customContent">Без хедера и футера</button>
 </div>

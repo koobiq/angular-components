@@ -28,18 +28,8 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
     `,
     template: `
         <kbq-splitter [direction]="direction.Vertical">
-            <div
-                class="kbq-splitter-area_fixed-height"
-                kbq-splitter-area
-            >
-                first (with min-height)
-            </div>
-            <div
-                class="flex"
-                kbq-splitter-area
-            >
-                second
-            </div>
+            <div class="kbq-splitter-area_fixed-height" kbq-splitter-area>first (with min-height)</div>
+            <div class="flex" kbq-splitter-area>second</div>
             <div kbq-splitter-area>third</div>
         </kbq-splitter>
     `

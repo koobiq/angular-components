@@ -25,14 +25,8 @@ import { timezones } from '../mock';
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
-                <kbq-form-field
-                    kbqFormFieldWithoutBorders
-                    kbqSelectSearch
-                >
-                    <i
-                        kbq-icon="kbq-magnifying-glass_16"
-                        kbqPrefix
-                    ></i>
+                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input
                         [formControl]="searchControl"
                         [placeholder]="'Город или часовой пояс'"
@@ -48,10 +42,7 @@ import { timezones } from '../mock';
                 @for (group of filteredOptions$ | async; track group) {
                     <kbq-optgroup [label]="group.countryName">
                         @for (timezone of group.zones; track timezone) {
-                            <kbq-timezone-option
-                                [highlightText]="searchPattern"
-                                [timezone]="timezone"
-                            />
+                            <kbq-timezone-option [highlightText]="searchPattern" [timezone]="timezone" />
                         }
                     </kbq-optgroup>
                 }

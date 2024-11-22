@@ -1,119 +1,59 @@
 <h3>Nav-bar tabs</h3>
-<nav
-    kbqTabNavBar
-    [tabNavPanel]="kbqTabNavPanel1"
->
+<nav kbqTabNavBar [tabNavPanel]="kbqTabNavPanel1">
     @for (link of links; track link; let index = $index) {
         @let disabled = index === 1;
-        <a
-            kbqTabLink
-            [active]="activeLink === link"
-            [disabled]="disabled"
-            (click)="activeLink = link"
-        >
+        <a kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
             {{ link }}
         </a>
     }
 </nav>
-<div
-    #kbqTabNavPanel1="kbqTabNavPanel"
-    kbqTabNavPanel
->
-    activeLink: {{ activeLink }}
-</div>
+<div #kbqTabNavPanel1="kbqTabNavPanel" kbqTabNavPanel>activeLink: {{ activeLink }}</div>
 
 <hr />
 
 <h3>Nav-bar tabs vertical</h3>
 <div class="layout-row">
-    <nav
-        kbqTabNavBar
-        vertical
-        [style.height.px]="160"
-        [style.width.px]="120"
-        [tabNavPanel]="kbqTabNavPanel2"
-    >
+    <nav kbqTabNavBar vertical [style.height.px]="160" [style.width.px]="120" [tabNavPanel]="kbqTabNavPanel2">
         @for (link of links; track link; let index = $index) {
             @let disabled = index === 1;
-            <a
-                kbqTabLink
-                [active]="activeLink === link"
-                [disabled]="disabled"
-                (click)="activeLink = link"
-            >
+            <a kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
                 {{ link }}
             </a>
         }
     </nav>
-    <div
-        #kbqTabNavPanel2="kbqTabNavPanel"
-        kbqTabNavPanel
-    >
-        activeLink: {{ activeLink }}
-    </div>
+    <div #kbqTabNavPanel2="kbqTabNavPanel" kbqTabNavPanel>activeLink: {{ activeLink }}</div>
 </div>
 
 <hr />
 
 <h3>Nav-bar tabs transparent</h3>
-<nav
-    kbqTabNavBar
-    transparent
-    [tabNavPanel]="kbqTabNavPanel3"
->
+<nav kbqTabNavBar transparent [tabNavPanel]="kbqTabNavPanel3">
     @for (link of links; track link; let index = $index) {
         @let disabled = index === 1;
-        <div
-            kbqTabLink
-            [active]="activeLink === link"
-            [disabled]="disabled"
-            (click)="activeLink = link"
-        >
+        <div kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
             {{ link }}
         </div>
     }
 </nav>
-<div
-    #kbqTabNavPanel3="kbqTabNavPanel"
-    kbqTabNavPanel
->
-    activeLink: {{ activeLink }}
-</div>
+<div #kbqTabNavPanel3="kbqTabNavPanel" kbqTabNavPanel>activeLink: {{ activeLink }}</div>
 
 <hr />
 
 <h3>Nav-bar tabs onSurface</h3>
-<nav
-    kbqTabNavBar
-    onSurface
-    [tabNavPanel]="kbqTabNavPanel4"
->
+<nav kbqTabNavBar onSurface [tabNavPanel]="kbqTabNavPanel4">
     @for (link of links; track link; let index = $index) {
         @let disabled = index === 1;
-        <div
-            kbqTabLink
-            [active]="activeLink === link"
-            [disabled]="disabled"
-            (click)="activeLink = link"
-        >
+        <div kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
             {{ link }}
         </div>
     }
 </nav>
-<div
-    #kbqTabNavPanel4="kbqTabNavPanel"
-    kbqTabNavPanel
->
-    activeLink: {{ activeLink }}
-</div>
+<div #kbqTabNavPanel4="kbqTabNavPanel" kbqTabNavPanel>activeLink: {{ activeLink }}</div>
 
 <hr />
 
 <h4>Tabs underlined with custom label</h4>
-<kbq-tab-group
-    underlined
-    class="custom-underlined-tabs"
->
+<kbq-tab-group underlined class="custom-underlined-tabs">
     @for (tab of tabs; track tab; let index = $index) {
         <kbq-tab>
             <ng-template kbq-tab-label>
@@ -129,10 +69,7 @@
 <hr />
 
 <h4>Tabs underlined with custom label + icons</h4>
-<kbq-tab-group
-    underlined
-    class="custom-underlined-tabs custom-underlined-tabs_with-icons"
->
+<kbq-tab-group underlined class="custom-underlined-tabs custom-underlined-tabs_with-icons">
     <kbq-tab>
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-apple_24"></i>
@@ -168,12 +105,7 @@
 <h4>Tabs underlined</h4>
 <kbq-tab-group underlined>
     <kbq-tab [label]="'Spam Attack'">Spam Attack Content</kbq-tab>
-    <kbq-tab
-        disabled
-        [label]="'Miscellaneous'"
-    >
-        Miscellaneous Content
-    </kbq-tab>
+    <kbq-tab disabled [label]="'Miscellaneous'">Miscellaneous Content</kbq-tab>
     <kbq-tab [label]="'DDoS'">DDoS Content</kbq-tab>
     <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
     <kbq-tab [label]="'IDS/IPS Alert'">IDS/IPS Alert Content</kbq-tab>
@@ -196,10 +128,7 @@
 <kbq-tab-group>
     @for (tab of tabs; track tab; let index = $index) {
         @let disabled = index === 2;
-        <kbq-tab
-            [disabled]="disabled"
-            [label]="tab"
-        >
+        <kbq-tab [disabled]="disabled" [label]="tab">
             <div style="height: 200px">
                 {{ tab }} content
                 <div style="height: 300px">scroll down vvv</div>
@@ -239,10 +168,7 @@
 <hr />
 
 <h4>Tabs onSurface + transparent</h4>
-<kbq-tab-group
-    onSurface
-    transparent
->
+<kbq-tab-group onSurface transparent>
     @for (tab of tabs; track tab) {
         <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
     }
@@ -251,10 +177,7 @@
 <hr />
 
 <h4>Tabs vertical</h4>
-<kbq-tab-group
-    vertical
-    [style.height.px]="160"
->
+<kbq-tab-group vertical [style.height.px]="160">
     @for (tab of tabs; track tab) {
         <kbq-tab [label]="tab">{{ tab }} content</kbq-tab>
     }
@@ -263,11 +186,7 @@
 <hr />
 
 <h4>Tabs vertical with custom label</h4>
-<kbq-tab-group
-    vertical
-    class="docs-vertical-tabs"
-    (selectedTabChange)="selectedTabChange($event)"
->
+<kbq-tab-group vertical class="docs-vertical-tabs" (selectedTabChange)="selectedTabChange($event)">
     <kbq-tab [tabId]="'firstTab'">
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-play_16"></i>
@@ -276,11 +195,7 @@
         </ng-template>
         Content
     </kbq-tab>
-    <kbq-tab
-        tooltipTitle="Empty tooltip"
-        [empty]="true"
-        [tabId]="'Empty'"
-    >
+    <kbq-tab tooltipTitle="Empty tooltip" [empty]="true" [tabId]="'Empty'">
         <ng-template kbq-tab-label>
             Empty
             <i kbq-icon="kbq-play_16"></i>
@@ -297,10 +212,7 @@
     @for (tab of tabsWithIcons; track tab) {
         <kbq-tab [tabId]="tab.tabId">
             <ng-template kbq-tab-label>
-                <i
-                    kbq-icon
-                    [ngClass]="tab.icon"
-                ></i>
+                <i kbq-icon [ngClass]="tab.icon"></i>
                 {{ tab.tabId }}
             </ng-template>
             Content for selected tab with index={{ selectedTabIndex }}
@@ -313,17 +225,9 @@
 <h3>Tabs with actionbar</h3>
 <div class="tabs-actionbar-example">
     <div class="tabs-actionbar-example_nav">
-        <nav
-            kbqTabNavBar
-            underlined
-            [tabNavPanel]="kbqTabNavPanel77"
-        >
+        <nav kbqTabNavBar underlined [tabNavPanel]="kbqTabNavPanel77">
             @for (dashboard of dashboards; track dashboard) {
-                <a
-                    kbqTabLink
-                    [active]="activeDashboard === dashboard"
-                    (click)="activeDashboard = dashboard"
-                >
+                <a kbqTabLink [active]="activeDashboard === dashboard" (click)="activeDashboard = dashboard">
                     {{ dashboard }}
                 </a>
             }
@@ -331,35 +235,18 @@
     </div>
 
     <div class="tabs-actionbar-example_controls">
-        <button
-            color="contrast"
-            kbq-button
-            class="kbq-button_transparent"
-        >
+        <button color="contrast" kbq-button class="kbq-button_transparent">
             <i kbq-icon="kbq-list_16"></i>
         </button>
-        <button
-            color="contrast"
-            kbq-button
-            class="kbq-button_transparent"
-        >
+        <button color="contrast" kbq-button class="kbq-button_transparent">
             <i kbq-icon="kbq-filter_16"></i>
         </button>
-        <button
-            color="contrast"
-            kbq-button
-            (click)="createDashboard()"
-        >
+        <button color="contrast" kbq-button (click)="createDashboard()">
             <i kbq-icon="kbq-plus_16"></i>
             Create dashboard
         </button>
     </div>
 </div>
-<div
-    #kbqTabNavPanel77="kbqTabNavPanel"
-    kbqTabNavPanel
->
-    Active dashboard: {{ activeDashboard }}
-</div>
+<div #kbqTabNavPanel77="kbqTabNavPanel" kbqTabNavPanel>Active dashboard: {{ activeDashboard }}</div>
 
 <hr />

@@ -8,42 +8,27 @@
             [kbqDropdownTriggerFor]="languageDropdown"
         >
             <span>{{ selectedLanguages }}</span>
-            <i
-                kbq-icon="kbq-chevron-down-s_16"
-                [color]="'contrast'"
-            ></i>
+            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
         </div>
 
-        <kbq-dropdown
-            #languageDropdown="kbqDropdown"
-            [class]="'docs-dropdown'"
-        >
+        <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
             <div class="kbq-dropdown__group-header">
                 <span class="kbq-caps-compact-strong">ЯЗЫК</span>
             </div>
 
-            <button
-                kbq-dropdown-item
-                [kbqDropdownTriggerFor]="docsLanguageDropdown"
-            >
+            <button kbq-dropdown-item [kbqDropdownTriggerFor]="docsLanguageDropdown">
                 Интерфейс
                 <div class="kbq-dropdown-item__caption">Русский</div>
             </button>
 
-            <button
-                kbq-dropdown-item
-                [kbqDropdownTriggerFor]="examplesLanguageDropdown"
-            >
+            <button kbq-dropdown-item [kbqDropdownTriggerFor]="examplesLanguageDropdown">
                 Примеры
                 <div class="kbq-dropdown-item__caption">{{ examplesLanguageSwitch.currentValue.value }}</div>
             </button>
         </kbq-dropdown>
     </div>
 
-    <kbq-dropdown
-        #docsLanguageDropdown="kbqDropdown"
-        [class]="'docs-dropdown'"
-    >
+    <kbq-dropdown #docsLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
         @for (language of docsLanguageSwitch.data; track language; let i = $index) {
             <button
                 kbq-dropdown-item
@@ -72,15 +57,9 @@
             @if (versionPicker.isNext) {
                 <span>.next</span>
             }
-            <i
-                kbq-icon="kbq-chevron-down-s_16"
-                [color]="'contrast'"
-            ></i>
+            <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
 
-            <kbq-dropdown
-                #versionDropdown="kbqDropdown"
-                [class]="'docs-dropdown'"
-            >
+            <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">
                     <div class="kbq-caps-compact-strong">ВЕРСИЯ</div>
                 </div>
@@ -96,16 +75,9 @@
                 }
             </kbq-dropdown>
 
-            <kbq-dropdown
-                #examplesLanguageDropdown="kbqDropdown"
-                [class]="'docs-dropdown'"
-            >
+            <kbq-dropdown #examplesLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 @for (language of examplesLanguageSwitch.data; track language; let i = $index) {
-                    <button
-                        kbq-dropdown-item
-                        [class.kbq-selected]="language.selected"
-                        (click)="setLanguage(i)"
-                    >
+                    <button kbq-dropdown-item [class.kbq-selected]="language.selected" (click)="setLanguage(i)">
                         {{ language.value }}
                     </button>
                 }

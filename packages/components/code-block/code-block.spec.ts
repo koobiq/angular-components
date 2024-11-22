@@ -71,11 +71,7 @@ describe('CodeBlockComponent', () => {
 
 @Component({
     template: `
-        <kbq-code-block
-            [filled]="lessContrast"
-            [codeFiles]="codeFiles"
-            [maxHeight]="200"
-        />
+        <kbq-code-block [filled]="lessContrast" [codeFiles]="codeFiles" [maxHeight]="200" />
     `
 })
 class KbqCodeBlockDefault {

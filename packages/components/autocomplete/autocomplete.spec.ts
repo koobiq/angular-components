@@ -2085,10 +2085,7 @@ describe('KbqAutocomplete', () => {
             (closed)="closedSpy()"
         >
             @for (state of filteredStates; track state) {
-                <kbq-option
-                    [value]="state"
-                    [style.height.px]="kbqOptionWidth"
-                >
+                <kbq-option [value]="state" [style.height.px]="kbqOptionWidth">
                     <span>{{ state.code }}: {{ state.name }}</span>
                 </kbq-option>
             }
@@ -2144,12 +2141,7 @@ class SimpleAutocomplete implements OnDestroy {
     template: `
         @if (isVisible) {
             <kbq-form-field>
-                <input
-                    [kbqAutocomplete]="auto"
-                    [formControl]="optionCtrl"
-                    kbqInput
-                    placeholder="Choose"
-                />
+                <input [kbqAutocomplete]="auto" [formControl]="optionCtrl" kbqInput placeholder="Choose" />
             </kbq-form-field>
         }
 
@@ -2184,12 +2176,7 @@ class NgIfAutocomplete {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [kbqAutocomplete]="auto"
-                (input)="onInput($event.target?.value)"
-                kbqInput
-                placeholder="State"
-            />
+            <input [kbqAutocomplete]="auto" (input)="onInput($event.target?.value)" kbqInput placeholder="State" />
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
@@ -2252,12 +2239,7 @@ class AutocompleteWithNgModel {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="selectedNumber"
-                [kbqAutocomplete]="auto"
-                kbqInput
-                placeholder="Number"
-            />
+            <input [(ngModel)]="selectedNumber" [kbqAutocomplete]="auto" kbqInput placeholder="Number" />
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
@@ -2278,11 +2260,7 @@ class AutocompleteWithNumbers {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <input
-                [kbqAutocomplete]="auto"
-                type="text"
-                kbqInput
-            />
+            <input [kbqAutocomplete]="auto" type="text" kbqInput />
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
@@ -2307,11 +2285,7 @@ class AutocompleteWithOnPushDelay implements OnInit {
 
 @Component({
     template: `
-        <input
-            [kbqAutocomplete]="auto"
-            [formControl]="optionCtrl"
-            placeholder="Choose"
-        />
+        <input [kbqAutocomplete]="auto" [formControl]="optionCtrl" placeholder="Choose" />
 
         <kbq-autocomplete #auto="kbqAutocomplete">
             @for (option of filteredOptions | async; track option) {
@@ -2342,11 +2316,7 @@ class AutocompleteWithNativeInput {
 
 @Component({
     template: `
-        <input
-            [kbqAutocomplete]="auto"
-            [formControl]="control"
-            placeholder="Choose"
-        />
+        <input [kbqAutocomplete]="auto" [formControl]="control" placeholder="Choose" />
     `
 })
 class AutocompleteWithoutPanel {
@@ -2357,12 +2327,7 @@ class AutocompleteWithoutPanel {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [kbqAutocomplete]="auto"
-                [formControl]="formControl"
-                placeholder="State"
-                kbqInput
-            />
+            <input [kbqAutocomplete]="auto" [formControl]="formControl" placeholder="State" kbqInput />
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
@@ -2377,12 +2342,7 @@ class AutocompleteWithFormsAndNonfloatingLabel {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="selectedState"
-                [kbqAutocomplete]="auto"
-                kbqInput
-                placeholder="State"
-            />
+            <input [(ngModel)]="selectedState" [kbqAutocomplete]="auto" kbqInput placeholder="State" />
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
@@ -2420,18 +2380,10 @@ class AutocompleteWithGroups {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="selectedState"
-                [kbqAutocomplete]="auto"
-                kbqInput
-                placeholder="State"
-            />
+            <input [(ngModel)]="selectedState" [kbqAutocomplete]="auto" kbqInput placeholder="State" />
         </kbq-form-field>
 
-        <kbq-autocomplete
-            #auto="kbqAutocomplete"
-            (optionSelected)="optionSelected($event)"
-        >
+        <kbq-autocomplete #auto="kbqAutocomplete" (optionSelected)="optionSelected($event)">
             @for (state of states; track state) {
                 <kbq-option [value]="state">
                     <span>{{ state }}</span>
@@ -2451,10 +2403,7 @@ class AutocompleteWithSelectEvent {
 
 @Component({
     template: `
-        <input
-            [formControl]="formControl"
-            [kbqAutocomplete]="auto"
-        />
+        <input [formControl]="formControl" [kbqAutocomplete]="auto" />
         <kbq-autocomplete #auto="kbqAutocomplete" />
     `
 })
@@ -2465,12 +2414,7 @@ class PlainAutocompleteInputWithFormControl {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="selectedValue"
-                [kbqAutocomplete]="auto"
-                type="number"
-                kbqInput
-            />
+            <input [(ngModel)]="selectedValue" [kbqAutocomplete]="auto" type="number" kbqInput />
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
@@ -2500,12 +2444,7 @@ class AutocompleteWithNumberInputAndNgModel {
             </kbq-form-field>
         </div>
 
-        <div
-            class="origin"
-            #origin="kbqAutocompleteOrigin"
-            kbqAutocompleteOrigin
-            style="margin-top: 50px"
-        >
+        <div class="origin" #origin="kbqAutocompleteOrigin" kbqAutocompleteOrigin style="margin-top: 50px">
             Connection element
         </div>
 
@@ -2529,11 +2468,7 @@ class AutocompleteWithDifferentOrigin {
 
 @Component({
     template: `
-        <input
-            [(ngModel)]="value"
-            [kbqAutocomplete]="auto"
-            autocomplete="changed"
-        />
+        <input [(ngModel)]="value" [kbqAutocomplete]="auto" autocomplete="changed" />
         <kbq-autocomplete #auto="kbqAutocomplete" />
     `
 })
@@ -2549,20 +2484,12 @@ class InputWithoutAutocompleteAndDisabled {}
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="selectedState"
-                [kbqAutocomplete]="auto"
-                kbqInput
-                placeholder="States"
-            />
+            <input [(ngModel)]="selectedState" [kbqAutocomplete]="auto" kbqInput placeholder="States" />
         </kbq-form-field>
 
         <kbq-autocomplete #auto="kbqAutocomplete">
             @for (state of states; track state) {
-                <kbq-option
-                    [value]="state.code"
-                    [disabled]="state.disabled"
-                >
+                <kbq-option [value]="state.code" [disabled]="state.disabled">
                     <span>{{ state.name }}</span>
                 </kbq-option>
             }
@@ -2591,18 +2518,10 @@ class AutocompleteWithDisabledItems {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="selectedState"
-                [kbqAutocomplete]="auto"
-                kbqInput
-                placeholder="States"
-            />
+            <input [(ngModel)]="selectedState" [kbqAutocomplete]="auto" kbqInput placeholder="States" />
         </kbq-form-field>
 
-        <kbq-autocomplete
-            #auto="kbqAutocomplete"
-            [openOnFocus]="false"
-        >
+        <kbq-autocomplete #auto="kbqAutocomplete" [openOnFocus]="false">
             @for (state of states; track state) {
                 <kbq-option [value]="state.code">
                     <span>{{ state.name }}</span>

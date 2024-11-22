@@ -14,10 +14,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div
-            class="layout-row layout-wrap"
-            style="gap: 16px"
-        >
+        <div class="layout-row layout-wrap" style="gap: 16px">
             <button
                 [kbqPlacement]="placement"
                 [kbqTooltipColor]="KbqComponentColors.Contrast"

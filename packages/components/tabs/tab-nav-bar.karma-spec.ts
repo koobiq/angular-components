@@ -40,12 +40,7 @@ describe(KbqTabNavBar.name, () => {
     template: `
         <nav kbqTabNavBar>
             @for (tab of tabs; track tab; let index = $index) {
-                <a
-                    [active]="activeIndex === index"
-                    [disabled]="disabled"
-                    (click)="activeIndex = index"
-                    kbqTabLink
-                >
+                <a [active]="activeIndex === index" [disabled]="disabled" (click)="activeIndex = index" kbqTabLink>
                     Tab link {{ label }}
                 </a>
             }

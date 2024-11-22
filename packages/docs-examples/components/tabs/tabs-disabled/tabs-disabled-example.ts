@@ -11,14 +11,8 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <kbq-tab-group class="layout-margin-bottom-m">
             <kbq-tab label="BruteForce" />
-            <kbq-tab
-                label="Complex attack"
-                disabled
-            />
-            <kbq-tab
-                label="DDoS"
-                disabled
-            />
+            <kbq-tab label="Complex attack" disabled />
+            <kbq-tab label="DDoS" disabled />
             <kbq-tab label="DoS" />
         </kbq-tab-group>
     `,
