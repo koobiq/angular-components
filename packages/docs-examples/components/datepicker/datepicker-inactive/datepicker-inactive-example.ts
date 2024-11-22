@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { DateTime } from 'luxon';
@@ -16,7 +16,8 @@ import { DateTime } from 'luxon';
         KbqDatepickerModule,
         KbqFormFieldModule,
         FormsModule,
-        LuxonDateModule
+        LuxonDateModule,
+        KbqFormsModule
     ],
     template: `
         <div class="docs-example__datepicker-inactive kbq-form-vertical">
