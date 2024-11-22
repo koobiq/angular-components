@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -26,18 +26,12 @@ const localeDataSet = {
     standalone: true,
     selector: 'select-icon-example',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select
-                [(value)]="selected"
-                [placeholder]="'Город'"
-            >
+            <kbq-select [(value)]="selected" [placeholder]="'Город'">
                 <kbq-select-matcher class="kbq-select__matcher">
-                    <i
-                        [color]="'contrast-fade'"
-                        style="margin-right: 8px"
-                        kbq-icon="kbq-globe_16"
-                    ></i>
+                    <i [color]="'contrast-fade'" style="margin-right: 8px" kbq-icon="kbq-globe_16"></i>
                     <span>
                         <div class="kbq-select__match-container">
                             <span class="kbq-select__matcher-text">
@@ -46,11 +40,7 @@ const localeDataSet = {
                         </div>
                     </span>
                     <div class="kbq-select__arrow-wrapper">
-                        <i
-                            class="kbq-select__arrow"
-                            [color]="'contrast-fade'"
-                            kbq-icon="kbq-chevron-down-s_16"
-                        ></i>
+                        <i class="kbq-select__arrow" [color]="'contrast-fade'" kbq-icon="kbq-chevron-down-s_16"></i>
                     </div>
                 </kbq-select-matcher>
                 @for (option of options; track option) {

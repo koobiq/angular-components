@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -25,12 +25,10 @@ const localeDataSet = {
     standalone: true,
     selector: 'select-height-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select
-                [(value)]="selected"
-                [panelClass]="'select-height-example'"
-            >
+            <kbq-select [(value)]="selected" [panelClass]="'select-height-example'">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>

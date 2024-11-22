@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -26,6 +26,7 @@ const localeDataSet = {
     selector: 'select-disabled-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     templateUrl: 'select-disabled-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .layout-row {
             width: 440px;

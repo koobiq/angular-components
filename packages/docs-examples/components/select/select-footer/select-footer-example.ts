@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -29,6 +29,7 @@ const localeDataSet = {
     selector: 'select-footer-example',
     templateUrl: 'select-footer-example.html',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .layout-row {
             width: 400px;
