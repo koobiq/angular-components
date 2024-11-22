@@ -12,7 +12,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     standalone: true,
     selector: 'alert-status-example',
     templateUrl: 'alert-status-example.html',
-    styleUrl: 'alert-status-example.css',
+    styleUrls: ['alert-status-example.css'],
     animations: [
         trigger('hideShowAnimator', [
             state('true', style({ opacity: 1, display: '' })),

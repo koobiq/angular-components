@@ -176,7 +176,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "AlertStatusExample",
     "files": [
       "alert-status-example.ts",
-      "alert-status-example.html"
+      "alert-status-example.html",
+      "alert-status-example.css"
     ],
     "selector": "alert-status-example",
     "additionalComponents": [],
