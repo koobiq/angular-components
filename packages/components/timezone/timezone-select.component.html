@@ -1,7 +1,7 @@
 <div
-    #origin="cdkOverlayOrigin"
+    #fallbackOverlayOrigin="cdkOverlayOrigin"
     #trigger
-    cdk-overlay-origin
+    cdkOverlayOrigin
     class="kbq-select__trigger"
     [class.kbq-select__trigger_empty]="empty"
     [class.kbq-select__trigger_multiple]="multiple"
@@ -37,17 +37,17 @@
 </div>
 
 <ng-template
-    cdk-connected-overlay
+    cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
     [cdkConnectedOverlayBackdropClass]="backdropClass"
     [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
-    [cdkConnectedOverlayMinWidth]="triggerRect?.width!"
+    [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOffsetY]="offsetY"
     [cdkConnectedOverlayOpen]="panelOpen"
-    [cdkConnectedOverlayOrigin]="origin"
+    [cdkConnectedOverlayOrigin]="overlayOrigin || fallbackOverlayOrigin"
     [cdkConnectedOverlayPositions]="positions"
     [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
-    [cdkConnectedOverlayWidth]="triggerRect?.width!"
+    [cdkConnectedOverlayWidth]="overlayWidth"
     (attach)="onAttached()"
     (backdropClick)="close()"
     (detach)="close()"

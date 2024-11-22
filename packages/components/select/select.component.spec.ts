@@ -61,8 +61,8 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { Observable, Subject, Subscription, merge, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
-import { KbqSelectModule } from './index';
 import { KbqSelect } from './select.component';
+import { KbqSelectModule } from './select.module';
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -1296,7 +1296,7 @@ class CdkVirtualScrollViewportSelectOptionAsObject extends CdkVirtualScrollViewp
     }
 }
 
-describe('KbqSelect', () => {
+describe(KbqSelect.name, () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
     let dir: { value: 'ltr' | 'rtl' };
@@ -1342,7 +1342,7 @@ describe('KbqSelect', () => {
     }
 
     afterEach(() => {
-        overlayContainer.ngOnDestroy();
+        overlayContainer?.ngOnDestroy();
     });
 
     describe('core', () => {

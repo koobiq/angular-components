@@ -82,6 +82,24 @@
 
 <!-- example(select-virtual-scroll) -->
 
+### Ширина выпадающего списка
+
+По умолчанию ширина выпадающего списка равна селекту и она увеличивается, когда в списке будет длинный текст. Это поведение можно изменить при помощи `panelWidth` атрибута:
+
+<!-- example(select-with-panel-width-attribute) -->
+
+При помощи `kbqSelectOptionsProvider` провайдера:
+
+```ts
+import { kbqSelectOptionsProvider } from '@koobiq/components/select';
+
+@NgModule({
+    providers: [
+        kbqSelectOptionsProvider({ panelWidth: 'auto' })
+    ]
+})
+```
+
 ### Рекомендации
 
 -   Если вы используете селект без лейбла, то советуем добавить placeholder для указания, какую информацию пользователь должен выбрать. Например, «Страна».

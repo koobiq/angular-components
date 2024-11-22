@@ -1,27 +1,25 @@
-<br />
-<br />
+<select-with-panel-width-attribute-example />
+
+<hr />
 
 <div class="dev-container">
-    <kbq-select #select="kbqSelect" [(value)]="singleSelectedWithSearch">
-        <button kbq-button kbq-select-matcher class="layout-padding-right-xs">
-            {{ select.triggerValue }}
+    <kbq-form-field>
+        <kbq-select #select="kbqSelect" [(value)]="singleSelectedWithSearch">
+            <button kbq-button kbq-select-matcher class="layout-padding-right-xs">
+                {{ select.triggerValue }}
 
-            <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs"></i>
-        </button>
+                <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs"></i>
+            </button>
 
-        @for (option of filteredOptions | async; track option) {
-            <kbq-option [value]="option">
-                <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
-            </kbq-option>
-        }
+            @for (option of filteredOptions | async; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option | mcHighlight: searchCtrl.value"></span>
+                </kbq-option>
+            }
 
-        <div kbq-select-footer class="custom-footer">Custom footer</div>
-    </kbq-select>
-
-    <br />
-    <br />
-    <br />
-
+            <div kbq-select-footer class="custom-footer">Custom footer</div>
+        </kbq-select>
+    </kbq-form-field>
     <kbq-form-field>
         <kbq-select (openedChange)="openedChange($event)">
             <kbq-cleaner #kbqSelectCleaner />
@@ -119,9 +117,6 @@
         <kbq-hint>multiple select with cdk-virtual-scroll, option as object</kbq-hint>
     </kbq-form-field>
 
-    <br />
-    <br />
-
     {{ singleSelectedWithSearch }}
 
     <kbq-form-field>
@@ -149,15 +144,9 @@
         </kbq-select>
     </kbq-form-field>
 
-    <br />
-    <br />
-
     <button kbq-button (click)="optionCounter = optionCounter + 1; options.push(optionCounter.toString())">
         add option
     </button>
-
-    <br />
-    <br />
 
     {{ multipleSelectedWithSearch }}
 
@@ -182,8 +171,6 @@
     </kbq-form-field>
 </div>
 
-<br />
-
 <div class="dev-container">
     <kbq-form-field>
         <kbq-select [placeholder]="'placeholder'" [(value)]="singleSelected">
@@ -205,9 +192,6 @@
         </kbq-select>
     </kbq-form-field>
 
-    <br />
-    <br />
-
     <kbq-form-field>
         <kbq-select
             placeholder="placeholder for multiple select"
@@ -217,9 +201,6 @@
             <kbq-option [value]="'Normal'">Normal</kbq-option>
         </kbq-select>
     </kbq-form-field>
-
-    <br />
-    <br />
 
     <kbq-form-field>
         <kbq-select #selectWithFormControl="kbqSelect" [formControl]="singleSelectFormControl">
@@ -233,9 +214,6 @@
         Update connected form control value
     </button>
 
-    <br />
-    <br />
-
     <kbq-form-field>
         <kbq-select [disabled]="true" [(value)]="singleSelected">
             <kbq-option [value]="'Normal'">Normal</kbq-option>
@@ -243,10 +221,8 @@
     </kbq-form-field>
 </div>
 
-<br />
-
-<div style="height: 20px">{{ multipleSelected }}</div>
 <div style="width: 25%" class="dev-container">
+    <h3>{{ multipleSelected }}</h3>
     <kbq-form-field>
         <kbq-select [multiple]="true" [(value)]="multipleSelected">
             <!--<kbq-select-trigger>custom trigger <span>{{ select.triggerValue }}</span></kbq-select-trigger>-->
@@ -273,9 +249,6 @@
         </kbq-select>
     </kbq-form-field>
 
-    <br />
-    <br />
-
     <kbq-form-field>
         <kbq-select [formControl]="multiSelectSelectFormControl" [multiple]="true">
             <kbq-option [value]="'Normal'">Normal</kbq-option>
@@ -284,9 +257,6 @@
             <kbq-option [value]="'Selected1'">Selected1</kbq-option>
         </kbq-select>
     </kbq-form-field>
-
-    <br />
-    <br />
 
     <kbq-form-field>
         <kbq-select [disabled]="true" [multiple]="true" [(value)]="multipleSelected">
@@ -297,9 +267,6 @@
         </kbq-select>
     </kbq-form-field>
 </div>
-
-<br />
-<br />
 
 <div style="width: 25%" class="dev-container">
     <h4 class="kbq-subheading">Custom tag content</h4>
@@ -325,9 +292,6 @@
             </ng-template>
         </kbq-select>
     </kbq-form-field>
-
-    <br />
-    <br />
 
     <h5 class="kbq-text-big">Custom tag text with context value</h5>
     <kbq-form-field>
@@ -455,17 +419,19 @@
     </kbq-form-field>
 </div>
 
-<div class="kbq-text-big">
-    <form novalidate class="kbq-form-horizontal">
-        <div class="kbq-form__row">
-            <label for="select-test" class="kbq-form__label">Подпись поля</label>
-            <kbq-form-field class="kbq-form__control flex-80">
-                <kbq-select [id]="'select-test'" [(value)]="selected">
-                    <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
-                    <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
-                    <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
-                </kbq-select>
-            </kbq-form-field>
-        </div>
-    </form>
+<div class="dev-container">
+    <div class="kbq-text-big">
+        <form novalidate class="kbq-form-horizontal">
+            <div class="kbq-form__row">
+                <label for="select-test" class="kbq-form__label">Подпись поля</label>
+                <kbq-form-field class="kbq-form__control flex-80">
+                    <kbq-select [id]="'select-test'" [(value)]="selected">
+                        <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
+                        <kbq-option [value]="'SelectedItem'">SelectedItem</kbq-option>
+                        <kbq-option [value]="'SelectedItem1'">SelectedItem1</kbq-option>
+                    </kbq-select>
+                </kbq-form-field>
+            </div>
+        </form>
+    </div>
 </div>

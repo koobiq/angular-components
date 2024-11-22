@@ -1,27 +1,49 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectChange, KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
+import { SelectExamplesModule } from 'packages/docs-examples/components/select';
 import { Observable, merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OPTIONS } from './options';
 
 @Component({
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        FormsModule,
+        ScrollingModule,
+        KbqButtonModule,
+        KbqSelectModule,
+        KbqHighlightModule,
+        KbqInputModule,
+        KbqFormFieldModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqTagsModule,
+        SelectExamplesModule
+    ],
+    providers: [
+        kbqSelectOptionsProvider({
+            // panelWidth: 200
+        })
+
+    ],
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: './styles.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent implements OnInit {
+export class SelectDev implements OnInit {
     singleSelected = '';
     multipleSelected = ['Disabled', 'Normal', 'Hovered', 'Selected', 'Selected1'];
     multipleSelectedForCustomTagText = ['Normal', 'Hovered'];
@@ -103,24 +125,3 @@ export class DemoComponent implements OnInit {
             : this.options;
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        FormsModule,
-        ScrollingModule,
-        KbqButtonModule,
-        KbqSelectModule,
-        KbqHighlightModule,
-        KbqButtonModule,
-        KbqInputModule,
-        KbqFormFieldModule,
-        KbqIconModule,
-        ReactiveFormsModule,
-        KbqTagsModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}
