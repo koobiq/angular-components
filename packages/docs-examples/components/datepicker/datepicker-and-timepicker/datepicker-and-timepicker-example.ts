@@ -6,6 +6,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { DateTime } from 'luxon';
 import { KbqFormsModule } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Datepicker and timepicker
@@ -19,7 +20,8 @@ import { KbqFormsModule } from '@koobiq/components/core';
         KbqFormFieldModule,
         FormsModule,
         LuxonDateModule,
-        KbqFormsModule
+        KbqFormsModule,
+        KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-and-timepicker">
