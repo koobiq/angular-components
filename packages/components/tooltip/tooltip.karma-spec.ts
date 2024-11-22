@@ -85,36 +85,12 @@ describe('KbqTooltip', () => {
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
     template: `
-        <a
-            #mostSimpleTrigger
-            [kbqTooltip]="'MOST-SIMPLE'"
-        >
-            Show
-        </a>
+        <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 
-        <span
-            #normalTrigger
-            [kbqTooltip]="'NORMAL'"
-            [kbqTrigger]="'hover'"
-            [kbqPlacement]="'right'"
-        >
-            Show
-        </span>
+        <span #normalTrigger [kbqTooltip]="'NORMAL'" [kbqTrigger]="'hover'" [kbqPlacement]="'right'">Show</span>
 
-        <span
-            #focusTrigger
-            [kbqTooltip]="'FOCUS'"
-            [kbqTrigger]="'focus'"
-        >
-            Show
-        </span>
-        <span
-            #visibleTrigger
-            [kbqTooltip]="'VISIBLE'"
-            [kbqVisible]="visible"
-        >
-            Show
-        </span>
+        <span #focusTrigger [kbqTooltip]="'FOCUS'" [kbqTrigger]="'focus'">Show</span>
+        <span #visibleTrigger [kbqTooltip]="'VISIBLE'" [kbqVisible]="visible">Show</span>
         <span
             #dynamicArrowAndOffsetTrigger
             [kbqTooltip]="'ArrowAndOffset'"

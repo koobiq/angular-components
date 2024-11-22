@@ -10,16 +10,8 @@ import { KbqListModule } from '@koobiq/components/list';
     selector: 'list-multiple-checkbox-example',
     imports: [KbqListModule, FormsModule],
     template: `
-        <kbq-list-selection
-            [(ngModel)]="selected"
-            multiple="checkbox"
-        >
-            <kbq-list-option
-                [disabled]="true"
-                [value]="'Item 1'"
-            >
-                Item 1
-            </kbq-list-option>
+        <kbq-list-selection [(ngModel)]="selected" multiple="checkbox">
+            <kbq-list-option [disabled]="true" [value]="'Item 1'">Item 1</kbq-list-option>
             <kbq-list-option [value]="'Item 2'">Item 2</kbq-list-option>
             <kbq-list-option [value]="'Item 3'">Item 3</kbq-list-option>
             <kbq-list-option [value]="'Item 4'">Item 4</kbq-list-option>

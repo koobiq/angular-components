@@ -1,19 +1,10 @@
 <kbq-form-field class="number-input">
-    <input
-        kbqInput
-        placeholder="Number"
-        type="number"
-        [(ngModel)]="value"
-    />
+    <input kbqInput placeholder="Number" type="number" [(ngModel)]="value" />
 </kbq-form-field>
 &nbsp;
 
 @for (language of locales; track language) {
-    <button
-        kbq-dropdown-item
-        [class.kbq-selected]="language.selected"
-        (click)="selectLanguage(language)"
-    >
+    <button kbq-dropdown-item [class.kbq-selected]="language.selected" (click)="selectLanguage(language)">
         {{ language.name }}
     </button>
 }

@@ -175,22 +175,11 @@ abstract class TreeParams {
     ],
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="filterValue"
-                (ngModelChange)="onFilterChange($event)"
-                kbqInput
-                type="text"
-            />
+            <input [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" kbqInput type="text" />
         </kbq-form-field>
         <div class="layout-margin-top-4xl">
-            <kbq-button-toggle-group
-                #group1="kbqButtonToggleGroup"
-                (change)="onToggleClick($event)"
-            >
-                <kbq-button-toggle
-                    [checked]="true"
-                    [value]="treeStates.ALL"
-                >
+            <kbq-button-toggle-group #group1="kbqButtonToggleGroup" (change)="onToggleClick($event)">
+                <kbq-button-toggle [checked]="true" [value]="treeStates.ALL">
                     <i kbq-icon="kbq-bell_16"></i>
                     All
                 </kbq-button-toggle>
@@ -212,18 +201,11 @@ abstract class TreeParams {
             (ngModelChange)="onModelValueChange($event)"
             multiple="checkbox"
         >
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node"
-                [disabled]="node.name === 'tests'"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
 
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node; when: hasChild"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>

@@ -1,11 +1,7 @@
 <div style="width: 400px; margin-bottom: 32px">
     <div class="kbq-headline">Вариация с текстами ошибок</div>
 
-    <form
-        novalidate
-        class="kbq-form-vertical"
-        [formGroup]="feedbackFormWithHints"
-    >
+    <form novalidate class="kbq-form-vertical" [formGroup]="feedbackFormWithHints">
         <div class="kbq-form__fieldset">
             <div class="kbq-form__legend">Форма обратной связи</div>
 
@@ -13,10 +9,7 @@
                 <label class="kbq-form__label">Имя</label>
 
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        formControlName="firstName"
-                        kbqInput
-                    />
+                    <input formControlName="firstName" kbqInput />
                     @if (feedbackFormWithHints.controls.firstName.invalid) {
                         <kbq-hint [color]="'error'">Укажите ваше имя</kbq-hint>
                     }
@@ -27,10 +20,7 @@
                 <label class="kbq-form__label">Фамилия</label>
 
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        formControlName="lastName"
-                        kbqInput
-                    />
+                    <input formControlName="lastName" kbqInput />
                     @if (feedbackFormWithHints.controls.lastName.invalid) {
                         <kbq-hint [color]="'error'">Укажите вашу фамилию</kbq-hint>
                     }
@@ -41,11 +31,7 @@
                 <label class="kbq-form__label">Отчество</label>
 
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        formControlName="thirdName"
-                        kbqInput
-                        placeholder="Необязательно"
-                    />
+                    <input formControlName="thirdName" kbqInput placeholder="Необязательно" />
                 </kbq-form-field>
             </div>
 
@@ -53,10 +39,7 @@
                 <label class="kbq-form__label">Адрес эл. почты</label>
 
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        formControlName="email"
-                        kbqInput
-                    />
+                    <input formControlName="email" kbqInput />
                     @if (feedbackFormWithHints.controls.email.invalid) {
                         <kbq-hint [color]="'error'">Оставьте свой адрес эл. почты</kbq-hint>
                     }
@@ -98,23 +81,13 @@
                 <label class="kbq-form__label">Комментарий</label>
 
                 <kbq-form-field class="kbq-form__control">
-                    <textarea
-                        formControlName="comment"
-                        kbqTextarea
-                    ></textarea>
+                    <textarea formControlName="comment" kbqTextarea></textarea>
                 </kbq-form-field>
             </div>
         </div>
 
         <div class="kbq-form__row">
-            <button
-                kbq-button
-                type="submit"
-                class="flex-40"
-                [color]="'contrast'"
-            >
-                Отправить
-            </button>
+            <button kbq-button type="submit" class="flex-40" [color]="'contrast'">Отправить</button>
         </div>
     </form>
 </div>
@@ -123,52 +96,35 @@
     <div class="docs-width">
         <div class="kbq-headline">Вариация без текста ошибок</div>
 
-        <form
-            novalidate
-            class="kbq-form-vertical"
-            [formGroup]="feedbackForm"
-        >
+        <form novalidate class="kbq-form-vertical" [formGroup]="feedbackForm">
             <div class="kbq-form__legend">Форма обратной связи</div>
 
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Имя</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            formControlName="firstName"
-                            kbqInput
-                        />
+                        <input formControlName="firstName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Фамилия</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            formControlName="lastName"
-                            kbqInput
-                        />
+                        <input formControlName="lastName" kbqInput />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Отчество</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            formControlName="thirdName"
-                            kbqInput
-                            placeholder="Необязательно"
-                        />
+                        <input formControlName="thirdName" kbqInput placeholder="Необязательно" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Адрес эл. почты</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            formControlName="email"
-                            kbqInput
-                        />
+                        <input formControlName="email" kbqInput />
                     </kbq-form-field>
                 </div>
 
@@ -197,22 +153,12 @@
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Комментарий</label>
                     <kbq-form-field class="kbq-form__control">
-                        <textarea
-                            formControlName="comment"
-                            kbqTextarea
-                        ></textarea>
+                        <textarea formControlName="comment" kbqTextarea></textarea>
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
-                    <button
-                        kbq-button
-                        type="submit"
-                        class="flex-40"
-                        [color]="'contrast'"
-                    >
-                        Отправить
-                    </button>
+                    <button kbq-button type="submit" class="flex-40" [color]="'contrast'">Отправить</button>
                 </div>
             </div>
         </form>

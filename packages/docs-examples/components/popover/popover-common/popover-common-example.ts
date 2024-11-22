@@ -20,31 +20,14 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
             <kbq-form-field>
-                <input
-                    kbqInput
-                    placeholder="Интересная мысль"
-                />
+                <input kbqInput placeholder="Интересная мысль" />
             </kbq-form-field>
         </ng-template>
 
         <ng-template #customFooter>
-            <div
-                class="layout-row layout-wrap"
-                style="gap: 16px"
-            >
-                <button
-                    [color]="'contrast'"
-                    (click)="kbqPopover.hide(0)"
-                    kbq-button
-                >
-                    Сохранить
-                </button>
-                <button
-                    (click)="kbqPopover.hide(0)"
-                    kbq-button
-                >
-                    Отмена
-                </button>
+            <div class="layout-row layout-wrap" style="gap: 16px">
+                <button [color]="'contrast'" (click)="kbqPopover.hide(0)" kbq-button>Сохранить</button>
+                <button (click)="kbqPopover.hide(0)" kbq-button>Отмена</button>
             </div>
         </ng-template>
 

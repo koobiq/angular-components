@@ -13,10 +13,7 @@ import { KbqFormField } from './form-field';
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',
     template: `
-        <i
-            [autoColor]="true"
-            kbq-icon-button="kbq-xmark-circle_16"
-        ></i>
+        <i [autoColor]="true" kbq-icon-button="kbq-xmark-circle_16"></i>
     `,
     styleUrl: './cleaner.scss',
     host: {

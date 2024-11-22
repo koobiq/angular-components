@@ -59,18 +59,10 @@ body {
         KbqCodeBlockModule
     ],
     template: `
-        <kbq-toggle
-            class="kbq-toggle_small layout-padding-top-m layout-padding-bottom-m"
-            [(ngModel)]="lessContrast"
-        >
+        <kbq-toggle class="kbq-toggle_small layout-padding-top-m layout-padding-bottom-m" [(ngModel)]="lessContrast">
             Контрастный фон
         </kbq-toggle>
-        <kbq-code-block
-            [codeFiles]="files"
-            [filled]="lessContrast"
-            [lineNumbers]="true"
-            [maxHeight]="286"
-        />
+        <kbq-code-block [codeFiles]="files" [filled]="lessContrast" [lineNumbers]="true" [maxHeight]="286" />
     `
 })
 export class CodeBlockStylingExample {

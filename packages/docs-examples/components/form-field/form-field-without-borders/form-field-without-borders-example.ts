@@ -14,11 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field noBorders>
-            <input
-                [formControl]="formControl"
-                placeholder="Form field without borders"
-                kbqInput
-            />
+            <input [formControl]="formControl" placeholder="Form field without borders" kbqInput />
             <kbq-error>Should enter a value</kbq-error>
         </kbq-form-field>
     `,

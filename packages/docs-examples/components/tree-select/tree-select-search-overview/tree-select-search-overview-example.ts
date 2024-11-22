@@ -117,45 +117,23 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                [(ngModel)]="selected"
-                [multiple]="true"
-            >
-                <kbq-form-field
-                    kbqFormFieldWithoutBorders
-                    kbqSelectSearch
-                >
-                    <i
-                        kbq-icon="kbq-magnifying-glass_16"
-                        kbqPrefix
-                    ></i>
-                    <input
-                        [formControl]="searchControl"
-                        kbqInput
-                        type="text"
-                    />
+            <kbq-tree-select [(ngModel)]="selected" [multiple]="true">
+                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                    <input [formControl]="searchControl" kbqInput type="text" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
 
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        kbqTreeNodePadding
-                    >
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         <span
                             [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
                         ></span>
                     </kbq-tree-option>
 
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node; when: hasChild"
-                        kbqTreeNodePadding
-                    >
+                    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                         <i
                             [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                             kbq-icon="kbq-chevron-down-s_16"

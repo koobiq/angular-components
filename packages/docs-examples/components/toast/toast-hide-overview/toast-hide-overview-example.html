@@ -1,31 +1,13 @@
-<ng-template
-    #action
-    let-actionText="text"
-    let-toast
->
-    <a
-        kbq-link
-        pseudo
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-    >
+<ng-template #action let-actionText="text" let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">
         {{ actionText }}
     </a>
 </ng-template>
 
-<ng-template
-    #toastActionInfo
-    let-toast
->
-    <ng-container
-        [ngTemplateOutlet]="action"
-        [ngTemplateOutletContext]="{ $implicit: toast, text: 'Обновить' }"
-    />
+<ng-template #toastActionInfo let-toast>
+    <ng-container [ngTemplateOutlet]="action" [ngTemplateOutletContext]="{ $implicit: toast, text: 'Обновить' }" />
 </ng-template>
-<ng-template
-    #toastActionWarning
-    let-toast
->
+<ng-template #toastActionWarning let-toast>
     <ng-container
         [ngTemplateOutlet]="action"
         [ngTemplateOutletContext]="{ $implicit: toast, text: 'Сменить пароль' }"
@@ -34,56 +16,24 @@
 
 <ng-template #toastPermanentContentTemplate>
     @if (progress) {
-        <kbq-progress-bar
-            class="layout-margin-top-m layout-margin-bottom-m"
-            [mode]="'indeterminate'"
-        />
+        <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />
     }
     @if (!progress) {
         <div>
             <span>Импорт файлов завершен</span>
-            <i
-                kbq-icon="kbq-check-circle_16"
-                class="kbq-success"
-            ></i>
+            <i kbq-icon="kbq-check-circle_16" class="kbq-success"></i>
         </div>
     }
 </ng-template>
 
-<ng-template
-    #toastPermanentActionsTemplate
-    let-toast
->
-    <a
-        kbq-link
-        pseudo
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-    >
-        Отмена
-    </a>
+<ng-template #toastPermanentActionsTemplate let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отмена</a>
 </ng-template>
 
-<div
-    style="gap: 16px"
-    class="layout-row"
->
-    <button
-        kbq-button
-        (click)="showDefaultToast(toastActionInfo)"
-    >
-        По таймеру
-    </button>
-    <button
-        kbq-button
-        (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)"
-    >
+<div style="gap: 16px" class="layout-row">
+    <button kbq-button (click)="showDefaultToast(toastActionInfo)">По таймеру</button>
+    <button kbq-button (click)="showPermanentToast(toastPermanentContentTemplate, toastPermanentActionsTemplate)">
         По команде
     </button>
-    <button
-        kbq-button
-        (click)="showWarningToast(toastActionWarning)"
-    >
-        Ховер или фокус
-    </button>
+    <button kbq-button (click)="showWarningToast(toastActionWarning)">Ховер или фокус</button>
 </div>

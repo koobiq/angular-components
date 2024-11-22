@@ -38,10 +38,7 @@ To show indeterminate progress
 Or for determinate progress
 
 ```html
-<kbq-progress-spinner
-    [mode]="'determinate'"
-    [value]="30"
-></kbq-progress-spinner>
+<kbq-progress-spinner [mode]="'determinate'" [value]="30"></kbq-progress-spinner>
 ```
 
 <!-- example(progress-spinner-indeterminate) -->

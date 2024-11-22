@@ -17,19 +17,12 @@ interface ICheckbox {
     ],
     template: `
         <div class="kbq-text-big">
-            <kbq-checkbox
-                [checked]="parentChecked"
-                [indeterminate]="parentIndeterminate"
-                (change)="toggleChecked()"
-            >
+            <kbq-checkbox [checked]="parentChecked" [indeterminate]="parentIndeterminate" (change)="toggleChecked()">
                 All fruits
             </kbq-checkbox>
             @for (fruit of fruits; track fruit; let i = $index) {
                 <p>
-                    <kbq-checkbox
-                        [checked]="fruit.checked"
-                        (change)="updateCheckboxes(i)"
-                    >
+                    <kbq-checkbox [checked]="fruit.checked" (change)="updateCheckboxes(i)">
                         {{ fruit.name }}
                     </kbq-checkbox>
                 </p>

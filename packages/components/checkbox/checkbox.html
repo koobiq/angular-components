@@ -1,8 +1,4 @@
-<label
-    #label
-    class="kbq-checkbox__layout"
-    [attr.for]="inputId"
->
+<label #label class="kbq-checkbox__layout" [attr.for]="inputId">
     <div
         class="kbq-checkbox__inner-container"
         [class.kbq-checkbox__inner-container_no-side-margin]="
@@ -32,11 +28,7 @@
     </div>
 
     <div class="kbq-checkbox__text-container">
-        <span
-            #checkboxLabel
-            class="kbq-checkbox-label"
-            (cdkObserveContent)="onLabelTextChange()"
-        >
+        <span #checkboxLabel class="kbq-checkbox-label" (cdkObserveContent)="onLabelTextChange()">
             <ng-content />
         </span>
 

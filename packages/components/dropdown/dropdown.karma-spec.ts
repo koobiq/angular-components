@@ -178,26 +178,13 @@ describe('KbqDropdown', () => {
 
 @Component({
     template: `
-        <button
-            #rootTrigger="kbqDropdownTrigger"
-            #rootTriggerEl
-            [kbqDropdownTriggerFor]="root"
-        >
-            Toggle dropdown
-        </button>
+        <button #rootTrigger="kbqDropdownTrigger" #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
 
-        <button
-            #alternateTrigger="kbqDropdownTrigger"
-            [kbqDropdownTriggerFor]="levelTwo"
-        >
+        <button #alternateTrigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="levelTwo">
             Toggle alternate dropdown
         </button>
 
-        <kbq-dropdown
-            #root="kbqDropdown"
-            [hasBackdrop]="true"
-            (closed)="rootCloseCallback($event)"
-        >
+        <kbq-dropdown #root="kbqDropdown" [hasBackdrop]="true" (closed)="rootCloseCallback($event)">
             <button
                 id="level-one-trigger"
                 #levelOneTrigger="kbqDropdownTrigger"
@@ -219,11 +206,7 @@ describe('KbqDropdown', () => {
             }
         </kbq-dropdown>
 
-        <kbq-dropdown
-            #levelOne="kbqDropdown"
-            [hasBackdrop]="true"
-            (closed)="levelOneCloseCallback($event)"
-        >
+        <kbq-dropdown #levelOne="kbqDropdown" [hasBackdrop]="true" (closed)="levelOneCloseCallback($event)">
             <button kbq-dropdown-item>Four</button>
             <button
                 id="level-two-trigger"
@@ -236,20 +219,13 @@ describe('KbqDropdown', () => {
             <button kbq-dropdown-item>Six</button>
         </kbq-dropdown>
 
-        <kbq-dropdown
-            #levelTwo="kbqDropdown"
-            [hasBackdrop]="true"
-            (closed)="levelTwoCloseCallback($event)"
-        >
+        <kbq-dropdown #levelTwo="kbqDropdown" [hasBackdrop]="true" (closed)="levelTwoCloseCallback($event)">
             <button kbq-dropdown-item>Seven</button>
             <button kbq-dropdown-item>Eight</button>
             <button kbq-dropdown-item>Nine</button>
         </kbq-dropdown>
 
-        <kbq-dropdown
-            #lazy="kbqDropdown"
-            [hasBackdrop]="true"
-        >
+        <kbq-dropdown #lazy="kbqDropdown" [hasBackdrop]="true">
             <button kbq-dropdown-item>Ten</button>
             <button kbq-dropdown-item>Eleven</button>
             <button kbq-dropdown-item>Twelve</button>
@@ -278,42 +254,21 @@ class NestedDropdown {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-        >
-            Toggle dropdown
-        </button>
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 {{ longValue }}
             </button>
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 {{ defaultValue }}
             </button>
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 <div #kbqTitleContainer>
                     <div>Complex header</div>
                     <div #kbqTitleText>{{ longValue }}</div>
                 </div>
             </button>
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 <div #kbqTitleContainer>
                     <div>Complex header</div>
                     <div #kbqTitleText>{{ defaultValue }}</div>

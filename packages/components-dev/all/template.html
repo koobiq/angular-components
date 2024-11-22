@@ -3,68 +3,38 @@
         <h1>Alert</h1>
 
         <div class="kbq-alert kbq-alert_error kbq-alert_dismissible">
-            <i
-                kbq-icon="kbq-info-circle_16"
-                class="kbq-alert__icon"
-            ></i>
+            <i kbq-icon="kbq-info-circle_16" class="kbq-alert__icon"></i>
             Alert text // todo сделать отдельную кнопку
             <button class="kbq-alert__close">
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    class="kbq-icon_light"
-                ></i>
+                <i kbq-icon="kbq-xmark-s_16" class="kbq-icon_light"></i>
             </button>
         </div>
         <div class="kbq-alert kbq-alert_warning kbq-alert_dismissible">
-            <i
-                kbq-icon="kbq-info-circle_16"
-                class="kbq-alert__icon"
-            ></i>
+            <i kbq-icon="kbq-info-circle_16" class="kbq-alert__icon"></i>
             Alert text
             <button class="kbq-alert__close">
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    class="kbq-icon_light"
-                ></i>
+                <i kbq-icon="kbq-xmark-s_16" class="kbq-icon_light"></i>
             </button>
         </div>
         <div class="kbq-alert kbq-alert_success kbq-alert_dismissible">
-            <i
-                kbq-icon="kbq-info-circle_16"
-                class="kbq-alert__icon"
-            ></i>
+            <i kbq-icon="kbq-info-circle_16" class="kbq-alert__icon"></i>
             Alert text
             <button class="kbq-alert__close">
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    class="kbq-icon_light"
-                ></i>
+                <i kbq-icon="kbq-xmark-s_16" class="kbq-icon_light"></i>
             </button>
         </div>
         <div class="kbq-alert kbq-alert_info kbq-alert_dismissible">
-            <i
-                kbq-icon="kbq-info-circle_16"
-                class="kbq-alert__icon"
-            ></i>
+            <i kbq-icon="kbq-info-circle_16" class="kbq-alert__icon"></i>
             Alert text
             <button class="kbq-alert__close">
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    class="kbq-icon_light"
-                ></i>
+                <i kbq-icon="kbq-xmark-s_16" class="kbq-icon_light"></i>
             </button>
         </div>
         <div class="kbq-alert kbq-alert_dismissible">
-            <i
-                kbq-icon="kbq-info-circle_16"
-                class="kbq-alert__icon"
-            ></i>
+            <i kbq-icon="kbq-info-circle_16" class="kbq-alert__icon"></i>
             Alert text
             <button class="kbq-alert__close">
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    class="kbq-icon_light"
-                ></i>
+                <i kbq-icon="kbq-xmark-s_16" class="kbq-icon_light"></i>
             </button>
         </div>
     </div>
@@ -111,28 +81,17 @@
     <div class="dev-box">
         <h1>Button</h1>
 
-        <button
-            disabled
-            kbq-button
-            [color]="'contrast'"
-        >
+        <button disabled kbq-button [color]="'contrast'">
             <i kbq-icon="kbq-play_16"></i>
             disabled
         </button>
         &nbsp;
-        <button
-            kbq-button
-            [color]="'contrast'"
-        >
+        <button kbq-button [color]="'contrast'">
             <i kbq-icon="kbq-play_16"></i>
             normal
         </button>
         &nbsp;
-        <button
-            kbq-button
-            class="cdk-keyboard-focused"
-            [color]="'contrast'"
-        >
+        <button kbq-button class="cdk-keyboard-focused" [color]="'contrast'">
             <i kbq-icon="kbq-play_16"></i>
             focus
         </button>
@@ -141,10 +100,7 @@
         <br />
         <br />
 
-        <button
-            disabled
-            kbq-button
-        >
+        <button disabled kbq-button>
             <i kbq-icon="kbq-play_16"></i>
             disabled
         </button>
@@ -154,10 +110,7 @@
             normal
         </button>
         &nbsp;
-        <button
-            kbq-button
-            class="cdk-keyboard-focused"
-        >
+        <button kbq-button class="cdk-keyboard-focused">
             <i kbq-icon="kbq-play_16"></i>
             focus
         </button>
@@ -166,28 +119,17 @@
         <br />
         <br />
 
-        <button
-            disabled
-            kbq-button
-            [color]="'error'"
-        >
+        <button disabled kbq-button [color]="'error'">
             <i kbq-icon="kbq-play_16"></i>
             disabled
         </button>
         &nbsp;
-        <button
-            kbq-button
-            [color]="'error'"
-        >
+        <button kbq-button [color]="'error'">
             <i kbq-icon="kbq-play_16"></i>
             normal
         </button>
         &nbsp;
-        <button
-            kbq-button
-            class="cdk-keyboard-focused"
-            [color]="'error'"
-        >
+        <button kbq-button class="cdk-keyboard-focused" [color]="'error'">
             <i kbq-icon="kbq-play_16"></i>
             focus
         </button>
@@ -202,12 +144,7 @@
             <kbq-button-toggle [value]="'1'">default 1</kbq-button-toggle>
             <kbq-button-toggle [value]="'2'">default 2</kbq-button-toggle>
             <kbq-button-toggle [value]="'3'">default 3</kbq-button-toggle>
-            <kbq-button-toggle
-                [disabled]="true"
-                [value]="'4'"
-            >
-                default 4
-            </kbq-button-toggle>
+            <kbq-button-toggle [disabled]="true" [value]="'4'">default 4</kbq-button-toggle>
             <kbq-button-toggle [value]="'5'">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </kbq-button-toggle>
@@ -224,27 +161,14 @@
 
         <br />
 
-        <button
-            kbq-button
-            (click)="disabled = !disabled"
-        >
-            Toggle Disabled
-        </button>
+        <button kbq-button (click)="disabled = !disabled">Toggle Disabled</button>
 
         <br />
         <br />
 
-        <kbq-button-toggle-group
-            #disabledGroup="kbqButtonToggleGroup"
-            [disabled]="disabled"
-        >
+        <kbq-button-toggle-group #disabledGroup="kbqButtonToggleGroup" [disabled]="disabled">
             <kbq-button-toggle [value]="'1'">default 1</kbq-button-toggle>
-            <kbq-button-toggle
-                [disabled]="true"
-                [value]="'2'"
-            >
-                default 2
-            </kbq-button-toggle>
+            <kbq-button-toggle [disabled]="true" [value]="'2'">default 2</kbq-button-toggle>
             <kbq-button-toggle [value]="'3'">default 3</kbq-button-toggle>
             <kbq-button-toggle [value]="'4'">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -255,17 +179,9 @@
         <br />
 
         <label>Multiple Group</label>
-        <kbq-button-toggle-group
-            #multipleGroup="kbqButtonToggleGroup"
-            [multiple]="true"
-        >
+        <kbq-button-toggle-group #multipleGroup="kbqButtonToggleGroup" [multiple]="true">
             <kbq-button-toggle [value]="'1'">default 1</kbq-button-toggle>
-            <kbq-button-toggle
-                [disabled]="true"
-                [value]="'2'"
-            >
-                default 2
-            </kbq-button-toggle>
+            <kbq-button-toggle [disabled]="true" [value]="'2'">default 2</kbq-button-toggle>
             <kbq-button-toggle [value]="'3'">default</kbq-button-toggle>
             <kbq-button-toggle [value]="'4'">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -299,12 +215,7 @@
 
         <kbq-button-toggle-group [(ngModel)]="buttonToggleModelResult">
             <kbq-button-toggle [value]="'1'">default 1</kbq-button-toggle>
-            <kbq-button-toggle
-                [disabled]="true"
-                [value]="'2'"
-            >
-                default 2
-            </kbq-button-toggle>
+            <kbq-button-toggle [disabled]="true" [value]="'2'">default 2</kbq-button-toggle>
             <kbq-button-toggle [value]="'3'">default 3</kbq-button-toggle>
             <kbq-button-toggle [value]="'4'">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -321,31 +232,17 @@
         <p><kbq-checkbox [(ngModel)]="checked[0]">Checked</kbq-checkbox></p>
 
         <p>
-            <kbq-checkbox
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
-                Indeterminate
-            </kbq-checkbox>
+            <kbq-checkbox [indeterminate]="true" [(ngModel)]="checked[2]">Indeterminate</kbq-checkbox>
         </p>
 
         <p><kbq-checkbox [disabled]="true">Default disabled</kbq-checkbox></p>
 
         <p>
-            <kbq-checkbox
-                disabled="disabled"
-                [(ngModel)]="checked"
-            >
-                Checked disabled
-            </kbq-checkbox>
+            <kbq-checkbox disabled="disabled" [(ngModel)]="checked">Checked disabled</kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                disabled="disabled"
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
+            <kbq-checkbox disabled="disabled" [indeterminate]="true" [(ngModel)]="checked[2]">
                 Indeterminate disabled
             </kbq-checkbox>
         </p>
@@ -360,28 +257,16 @@
         <h1>Dropdown</h1>
 
         <span class="kbq-group">
-            <button
-                kbq-button
-                class="kbq-group-item"
-            >
-                dropdown
-            </button>
+            <button kbq-button class="kbq-group-item">dropdown</button>
 
-            <button
-                kbq-button
-                class="kbq-group-item"
-                [kbqDropdownTriggerFor]="appDropdown"
-            >
+            <button kbq-button class="kbq-group-item" [kbqDropdownTriggerFor]="appDropdown">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </span>
 
         <br />
 
-        <button
-            kbq-button
-            [kbqDropdownTriggerFor]="appDropdown"
-        >
+        <button kbq-button [kbqDropdownTriggerFor]="appDropdown">
             dropdown
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -399,12 +284,7 @@
                 Very Long Point
             </button>
             <h5>Additional info</h5>
-            <button
-                disabled
-                kbq-dropdown-item
-            >
-                Disabled
-            </button>
+            <button disabled kbq-dropdown-item>Disabled</button>
             <button kbq-dropdown-item>Point 2</button>
             <button kbq-dropdown-item>
                 <a kbq-link>
@@ -430,65 +310,41 @@
             <tr>
                 <td><i kbq-icon="kbq-chevron-down-s_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" [color]="'contrast'"></i>
                 </td>
                 <td><i kbq-icon="kbq-chevron-down-s_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td><i kbq-icon="kbq-calendar-o_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" [color]="'contrast'"></i>
                 </td>
                 <td><i kbq-icon="kbq-calendar-o_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td><i kbq-icon="kbq-clock_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" [color]="'contrast'"></i>
                 </td>
                 <td><i kbq-icon="kbq-clock_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td><i kbq-icon="kbq-folder-open_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" [color]="'contrast'"></i>
                 </td>
                 <td><i kbq-icon="kbq-folder-open_16"></i></td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" [color]="'error'"></i>
                 </td>
             </tr>
         </table>
@@ -509,114 +365,58 @@
             </thead>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-disabled"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-disabled" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-disabled"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-disabled" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-disabled"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-disabled" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-disabled"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-disabled" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-disabled"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-disabled" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-disabled"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-disabled" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-disabled"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-disabled" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-disabled"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-disabled"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-disabled"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-disabled" [color]="'error'"></i>
                 </td>
             </tr>
         </table>
@@ -637,114 +437,58 @@
             </thead>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-icon_light"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-icon_light" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        class="kbq-icon_light"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" class="kbq-icon_light" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-icon_light"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-icon_light" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-calendar-o_16"
-                        class="kbq-icon_light"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-calendar-o_16" class="kbq-icon_light" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-icon_light"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-icon_light" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        class="kbq-icon_light"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" class="kbq-icon_light" [color]="'error'"></i>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-icon_light"
-                        [color]="'contrast'"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-icon_light" [color]="'contrast'"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-icon_light"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-icon_light"></i>
                 </td>
                 <td>
-                    <i
-                        kbq-icon="kbq-folder-open_16"
-                        class="kbq-icon_light"
-                        [color]="'error'"
-                    ></i>
+                    <i kbq-icon="kbq-folder-open_16" class="kbq-icon_light" [color]="'error'"></i>
                 </td>
             </tr>
         </table>
@@ -771,16 +515,9 @@
         <br />
 
         <kbq-form-field class="kbq-focused">
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
-            <i
-                kbq-icon="kbq-calendar-o_16"
-                kbqSuffix
-            ></i>
+            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
         </kbq-form-field>
 
         <br />
@@ -789,12 +526,7 @@
         <header>With placeholder and monospace:</header>
 
         <kbq-form-field>
-            <input
-                kbqInput
-                kbqInputMonospace
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            />
+            <input kbqInput kbqInputMonospace placeholder="Placeholder" [(ngModel)]="value" />
         </kbq-form-field>
 
         <br />
@@ -803,11 +535,7 @@
         <header>With placeholder and hint:</header>
 
         <kbq-form-field>
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
             <kbq-hint>Hint under field</kbq-hint>
         </kbq-form-field>
@@ -818,12 +546,7 @@
         <header>With placeholder, hint and disabled:</header>
 
         <kbq-form-field>
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [disabled]="true"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [disabled]="true" [(ngModel)]="value" />
 
             <kbq-hint>Hint under field</kbq-hint>
         </kbq-form-field>
@@ -834,11 +557,7 @@
         <header>With clear-button:</header>
 
         <kbq-form-field>
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -849,16 +568,9 @@
         <header>With prefix:</header>
 
         <kbq-form-field>
-            <i
-                kbq-icon="kbq-magnifying-glass_16"
-                kbqPrefix
-            ></i>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
         </kbq-form-field>
 
         <br />
@@ -867,16 +579,9 @@
         <header>With suffix:</header>
 
         <kbq-form-field>
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
-            <i
-                kbq-icon="kbq-calendar-o_16"
-                kbqSuffix
-            ></i>
+            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
         </kbq-form-field>
 
         <br />
@@ -885,13 +590,7 @@
         <header>Invalid with clear-button:</header>
 
         <kbq-form-field>
-            <input
-                kbqInput
-                minlength="4"
-                placeholder="Placeholder"
-                [required]="true"
-                [(ngModel)]="value"
-            />
+            <input kbqInput minlength="4" placeholder="Placeholder" [required]="true" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -902,17 +601,9 @@
         <header>With placeholder, hint, prefix, cleaner and disabled:</header>
 
         <kbq-form-field>
-            <i
-                kbq-icon="kbq-magnifying-glass_16"
-                kbqPrefix
-            ></i>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [disabled]="true"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [disabled]="true" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -923,16 +614,9 @@
         <header>Without borders:</header>
 
         <kbq-form-field kbqFormFieldWithoutBorders>
-            <i
-                kbq-icon="kbq-magnifying-glass_16"
-                kbqPrefix
-            ></i>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
-            <input
-                kbqInput
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -941,22 +625,14 @@
     <div class="dev-box">
         <h1>Link</h1>
 
-        <table
-            cellpadding="10"
-            cellspacing="10"
-            style="margin: auto; text-align: left"
-        >
+        <table cellpadding="10" cellspacing="10" style="margin: auto; text-align: left">
             <tr>
                 <td>Disabled</td>
                 <td>Normal</td>
             </tr>
             <tr>
                 <td>
-                    <a
-                        href=""
-                        kbq-link
-                        [disabled]="true"
-                    >
+                    <a href="" kbq-link [disabled]="true">
                         <span class="kbq-link__text">Сохранить</span>
                     </a>
                 </td>
@@ -966,30 +642,19 @@
             </tr>
             <tr>
                 <td>
-                    <a
-                        href=""
-                        kbq-link
-                        [disabled]="true"
-                    >
+                    <a href="" kbq-link [disabled]="true">
                         <span class="kbq-link__text">Сохранить</span>
                     </a>
                 </td>
                 <td>
-                    <a
-                        href=""
-                        kbq-link
-                    >
+                    <a href="" kbq-link>
                         <span class="kbq-link__text">Сохранить</span>
                     </a>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <a
-                        href=""
-                        kbq-link
-                        [disabled]="true"
-                    >
+                    <a href="" kbq-link [disabled]="true">
                         <span class="kbq-link__text">Сохранить</span>
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </a>
@@ -1003,11 +668,7 @@
             </tr>
             <tr>
                 <td>
-                    <a
-                        href=""
-                        kbq-link
-                        [disabled]="true"
-                    >
+                    <a href="" kbq-link [disabled]="true">
                         <i kbq-icon="kbq-calendar-o_16"></i>
                         <span class="kbq-link__text">Сохранить</span>
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -1027,48 +688,19 @@
     <div class="dev-box">
         <h1>List</h1>
 
-        <kbq-list-selection
-            class="kbq-no-select"
-            [(ngModel)]="multipleSelected"
-        >
-            <kbq-list-option
-                disabled
-                [value]="'Disabled'"
-            >
-                Disabled
-            </kbq-list-option>
+        <kbq-list-selection class="kbq-no-select" [(ngModel)]="multipleSelected">
+            <kbq-list-option disabled [value]="'Disabled'">Disabled</kbq-list-option>
             <kbq-list-option [value]="'Normal'">Normal</kbq-list-option>
-            <kbq-list-option
-                class="kbq-hovered"
-                [value]="'Hovered'"
-            >
-                Hovered
-            </kbq-list-option>
-            <kbq-list-option
-                class="kbq-focused"
-                [value]="'Focused'"
-            >
-                Focused
-            </kbq-list-option>
-            <kbq-list-option
-                class="kbq-selected"
-                [value]="'Selected'"
-            >
-                Selected
-            </kbq-list-option>
+            <kbq-list-option class="kbq-hovered" [value]="'Hovered'">Hovered</kbq-list-option>
+            <kbq-list-option class="kbq-focused" [value]="'Focused'">Focused</kbq-list-option>
+            <kbq-list-option class="kbq-selected" [value]="'Selected'">Selected</kbq-list-option>
         </kbq-list-selection>
     </div>
 
     <div class="dev-box">
         <h1>Modal</h1>
 
-        <button
-            kbq-button
-            style="margin-right: 18px"
-            (click)="showConfirm()"
-        >
-            Confirm
-        </button>
+        <button kbq-button style="margin-right: 18px" (click)="showConfirm()">Confirm</button>
     </div>
 
     <div class="dev-box">
@@ -1076,24 +708,13 @@
 
         <div class="lines">
             <div class="line-container">
-                <kbq-progress-bar
-                    [color]="'contrast'"
-                    [mode]="mode"
-                    [value]="percent"
-                />
+                <kbq-progress-bar [color]="'contrast'" [mode]="mode" [value]="percent" />
             </div>
             <div class="line-container">
-                <kbq-progress-bar
-                    [mode]="mode"
-                    [value]="percent"
-                />
+                <kbq-progress-bar [mode]="mode" [value]="percent" />
             </div>
             <div class="line-container">
-                <kbq-progress-bar
-                    [color]="'error'"
-                    [mode]="mode"
-                    [value]="percent"
-                />
+                <kbq-progress-bar [color]="'error'" [mode]="mode" [value]="percent" />
             </div>
         </div>
     </div>
@@ -1104,24 +725,13 @@
         <div>
             <ul class="spinners">
                 <li class="spinner-container">
-                    <kbq-progress-spinner
-                        [color]="'contrast'"
-                        [mode]="mode"
-                        [value]="percent"
-                    />
+                    <kbq-progress-spinner [color]="'contrast'" [mode]="mode" [value]="percent" />
                 </li>
                 <li class="spinner-container">
-                    <kbq-progress-spinner
-                        [mode]="mode"
-                        [value]="percent"
-                    />
+                    <kbq-progress-spinner [mode]="mode" [value]="percent" />
                 </li>
                 <li class="spinner-container">
-                    <kbq-progress-spinner
-                        [color]="'error'"
-                        [mode]="mode"
-                        [value]="percent"
-                    />
+                    <kbq-progress-spinner [color]="'error'" [mode]="mode" [value]="percent" />
                 </li>
             </ul>
             <ul class="spinners">
@@ -1134,11 +744,7 @@
                     />
                 </li>
                 <li class="spinner-container">
-                    <kbq-progress-spinner
-                        class="kbq-progress-spinner_big"
-                        [mode]="mode"
-                        [value]="percent"
-                    />
+                    <kbq-progress-spinner class="kbq-progress-spinner_big" [mode]="mode" [value]="percent" />
                 </li>
                 <li class="spinner-container">
                     <kbq-progress-spinner
@@ -1155,15 +761,9 @@
     <div class="dev-box">
         <h1>Radio</h1>
 
-        <kbq-radio-group
-            class="example-radio-group"
-            [(ngModel)]="favoriteFruit"
-        >
+        <kbq-radio-group class="example-radio-group" [(ngModel)]="favoriteFruit">
             @for (season of fruits; track season) {
-                <kbq-radio-button
-                    class="example-radio-button"
-                    [value]="season"
-                >
+                <kbq-radio-button class="example-radio-button" [value]="season">
                     {{ season }}
                 </kbq-radio-button>
             }
@@ -1192,12 +792,7 @@
         <div class="dev-container">
             <kbq-form-field>
                 <kbq-select [(value)]="singleSelected">
-                    <kbq-option
-                        disabled
-                        [value]="'Disabled'"
-                    >
-                        Disabled
-                    </kbq-option>
+                    <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
                     <kbq-option [value]="'Normal'">Normal</kbq-option>
                     <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                     <kbq-option [value]="'Focused'">Focused</kbq-option>
@@ -1228,10 +823,7 @@
             <br />
 
             <kbq-form-field>
-                <kbq-select
-                    [disabled]="true"
-                    [(value)]="singleSelected"
-                >
+                <kbq-select [disabled]="true" [(value)]="singleSelected">
                     <kbq-option [value]="'Normal'">Normal</kbq-option>
                 </kbq-select>
             </kbq-form-field>
@@ -1241,16 +833,8 @@
 
         <div class="dev-container">
             <kbq-form-field>
-                <kbq-select
-                    [multiple]="true"
-                    [(value)]="multipleSelected"
-                >
-                    <kbq-option
-                        disabled
-                        [value]="'Disabled'"
-                    >
-                        Disabled
-                    </kbq-option>
+                <kbq-select [multiple]="true" [(value)]="multipleSelected">
+                    <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
                     <kbq-option [value]="'Normal'">Normal</kbq-option>
                     <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                     <kbq-option [value]="'FocusedFocusedFocusedFocusedFocusedFocusedFocusedFocusedFocusedFocused'">
@@ -1274,10 +858,7 @@
             <br />
 
             <kbq-form-field>
-                <kbq-select
-                    [formControl]="multiSelectSelectFormControl"
-                    [multiple]="true"
-                >
+                <kbq-select [formControl]="multiSelectSelectFormControl" [multiple]="true">
                     <kbq-option [value]="'Normal'">Normal</kbq-option>
                     <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                     <kbq-option [value]="'Selected'">Selected</kbq-option>
@@ -1289,11 +870,7 @@
             <br />
 
             <kbq-form-field>
-                <kbq-select
-                    [disabled]="true"
-                    [multiple]="true"
-                    [(value)]="multipleSelected"
-                >
+                <kbq-select [disabled]="true" [multiple]="true" [(value)]="multipleSelected">
                     <kbq-option [value]="'Normal'">Normal</kbq-option>
                     <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                     <kbq-option [value]="'Selected'">Selected</kbq-option>
@@ -1330,24 +907,15 @@
             Normal
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-hovered"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-hovered" [color]="'contrast'">
             Hovered
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-focused"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-focused" [color]="'contrast'">
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            [color]="'contrast'"
-            [disabled]="true"
-        >
+        <kbq-tag [color]="'contrast'" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1359,24 +927,15 @@
             Normal
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-hovered"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-hovered" [color]="'error'">
             Hovered
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-focused"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-focused" [color]="'error'">
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            [color]="'error'"
-            [disabled]="true"
-        >
+        <kbq-tag [color]="'error'" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1398,10 +957,7 @@
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_mono"
-            [disabled]="true"
-        >
+        <kbq-tag class="kbq-tag_mono" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1409,32 +965,19 @@
         <br />
         <br />
 
-        <kbq-tag
-            class="kbq-tag_mono"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-tag_mono" [color]="'contrast'">
             Normal
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_mono kbq-hovered"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-tag_mono kbq-hovered" [color]="'contrast'">
             Hovered
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_mono kbq-focused"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-tag_mono kbq-focused" [color]="'contrast'">
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_mono"
-            [color]="'contrast'"
-            [disabled]="true"
-        >
+        <kbq-tag class="kbq-tag_mono" [color]="'contrast'" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1442,32 +985,19 @@
         <br />
         <br />
 
-        <kbq-tag
-            class="kbq-tag_mono"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-tag_mono" [color]="'error'">
             Normal
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_mono kbq-hovered"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-tag_mono kbq-hovered" [color]="'error'">
             Hovered
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_mono kbq-focused"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-tag_mono kbq-focused" [color]="'error'">
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_mono"
-            [color]="'error'"
-            [disabled]="true"
-        >
+        <kbq-tag class="kbq-tag_mono" [color]="'error'" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1489,10 +1019,7 @@
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_caps"
-            [disabled]="true"
-        >
+        <kbq-tag class="kbq-tag_caps" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1500,32 +1027,19 @@
         <br />
         <br />
 
-        <kbq-tag
-            class="kbq-tag_caps"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-tag_caps" [color]="'contrast'">
             Normal
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-hovered kbq-tag_caps"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-hovered kbq-tag_caps" [color]="'contrast'">
             Hovered
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-focused kbq-tag_caps"
-            [color]="'contrast'"
-        >
+        <kbq-tag class="kbq-focused kbq-tag_caps" [color]="'contrast'">
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_caps"
-            [color]="'contrast'"
-            [disabled]="true"
-        >
+        <kbq-tag class="kbq-tag_caps" [color]="'contrast'" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1533,32 +1047,19 @@
         <br />
         <br />
 
-        <kbq-tag
-            class="kbq-tag_caps"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-tag_caps" [color]="'error'">
             Normal
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-hovered kbq-tag_caps"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-hovered kbq-tag_caps" [color]="'error'">
             Hovered
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-focused kbq-tag_caps"
-            [color]="'error'"
-        >
+        <kbq-tag class="kbq-focused kbq-tag_caps" [color]="'error'">
             Focused
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
-        <kbq-tag
-            class="kbq-tag_caps"
-            [color]="'error'"
-            [disabled]="true"
-        >
+        <kbq-tag class="kbq-tag_caps" [color]="'error'" [disabled]="true">
             Disabled
             <i kbq-icon="kbq-xmark-s_16"></i>
         </kbq-tag>
@@ -1568,12 +1069,7 @@
         <h1>Textarea</h1>
 
         <kbq-form-field>
-            <textarea
-                kbqTextarea
-                placeholder="Placeholder"
-                [canGrow]="false"
-                [(ngModel)]="value"
-            ></textarea>
+            <textarea kbqTextarea placeholder="Placeholder" [canGrow]="false" [(ngModel)]="value"></textarea>
         </kbq-form-field>
 
         <br />
@@ -1596,12 +1092,7 @@
         <header>disabled:</header>
 
         <kbq-form-field>
-            <textarea
-                kbqTextarea
-                placeholder="Placeholder"
-                [disabled]="true"
-                [(ngModel)]="value"
-            ></textarea>
+            <textarea kbqTextarea placeholder="Placeholder" [disabled]="true" [(ngModel)]="value"></textarea>
         </kbq-form-field>
 
         <br />
@@ -1625,11 +1116,7 @@
         <header>Without border:</header>
 
         <kbq-form-field kbqFormFieldWithoutBorders>
-            <textarea
-                kbqTextarea
-                placeholder="Placeholder"
-                [(ngModel)]="value"
-            ></textarea>
+            <textarea kbqTextarea placeholder="Placeholder" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     </div>
 
@@ -1638,21 +1125,13 @@
 
         <div class="kbq-text-big">
             <div>
-                <button
-                    kbq-button
-                    (click)="toggleDisable()"
-                >
-                    Toggle disabled state
-                </button>
+                <button kbq-button (click)="toggleDisable()">Toggle disabled state</button>
             </div>
             <br />
 
             <section class="demo-timepicker_full">
                 <kbq-form-field>
-                    <i
-                        kbq-icon="kbq-clock_16"
-                        kbqPrefix
-                    ></i>
+                    <i kbq-icon="kbq-clock_16" kbqPrefix></i>
                     <input
                         kbqTimepicker
                         [disabled]="isDisabled"
@@ -1674,32 +1153,17 @@
                 <h3>Small Toggles</h3>
                 <div class="layout-row flex-100 toggle-demo-container">
                     <div class="flex-33">
-                        <kbq-toggle
-                            class="kbq-toggle_small"
-                            [(ngModel)]="valueSmallOn"
-                        />
+                        <kbq-toggle class="kbq-toggle_small" [(ngModel)]="valueSmallOn" />
                     </div>
                     <div class="flex-33">
-                        <kbq-toggle
-                            class="kbq-toggle_small"
-                            [(ngModel)]="valueSmallOn"
-                        />
+                        <kbq-toggle class="kbq-toggle_small" [(ngModel)]="valueSmallOn" />
                     </div>
                     <div class="flex-33">
-                        <kbq-toggle
-                            class="kbq-toggle_small"
-                            [color]="'error'"
-                            [(ngModel)]="valueSmallOn"
-                        />
+                        <kbq-toggle class="kbq-toggle_small" [color]="'error'" [(ngModel)]="valueSmallOn" />
                     </div>
                 </div>
                 <div class="toggle-demo-container">
-                    <kbq-toggle
-                        class="kbq-toggle_small"
-                        [(ngModel)]="valueSmallOn"
-                    >
-                        Quack like a duck
-                    </kbq-toggle>
+                    <kbq-toggle class="kbq-toggle_small" [(ngModel)]="valueSmallOn">Quack like a duck</kbq-toggle>
                 </div>
                 <div class="toggle-demo-container">
                     <kbq-toggle
@@ -1721,22 +1185,14 @@
                         <kbq-toggle [(ngModel)]="valueBigOn" />
                     </div>
                     <div class="flex-33">
-                        <kbq-toggle
-                            [color]="'error'"
-                            [(ngModel)]="valueBigOn"
-                        />
+                        <kbq-toggle [color]="'error'" [(ngModel)]="valueBigOn" />
                     </div>
                 </div>
                 <div class="toggle-demo-container">
                     <kbq-toggle [(ngModel)]="valueBigOn">Quack like a duck</kbq-toggle>
                 </div>
                 <div class="toggle-demo-container">
-                    <kbq-toggle
-                        labelPosition="left"
-                        [(ngModel)]="valueBigOn"
-                    >
-                        Quack like a duck
-                    </kbq-toggle>
+                    <kbq-toggle labelPosition="left" [(ngModel)]="valueBigOn">Quack like a duck</kbq-toggle>
                 </div>
             </div>
         </div>
@@ -1746,18 +1202,10 @@
                 <h3>Small Toggles</h3>
                 <div class="layout-row flex-100 toggle-demo-container">
                     <div class="flex-33">
-                        <kbq-toggle
-                            class="kbq-toggle_small"
-                            [disabled]="true"
-                            [(ngModel)]="valueSmallOn"
-                        />
+                        <kbq-toggle class="kbq-toggle_small" [disabled]="true" [(ngModel)]="valueSmallOn" />
                     </div>
                     <div class="flex-33">
-                        <kbq-toggle
-                            class="kbq-toggle_small"
-                            [disabled]="true"
-                            [(ngModel)]="valueSmallOn"
-                        />
+                        <kbq-toggle class="kbq-toggle_small" [disabled]="true" [(ngModel)]="valueSmallOn" />
                     </div>
                     <div class="flex-33">
                         <kbq-toggle
@@ -1769,11 +1217,7 @@
                     </div>
                 </div>
                 <div class="toggle-demo-container">
-                    <kbq-toggle
-                        class="kbq-toggle_small"
-                        [disabled]="true"
-                        [(ngModel)]="valueSmallOn"
-                    >
+                    <kbq-toggle class="kbq-toggle_small" [disabled]="true" [(ngModel)]="valueSmallOn">
                         Quack like a duck
                     </kbq-toggle>
                 </div>
@@ -1792,39 +1236,20 @@
                 <h3>Big Toggles</h3>
                 <div class="layout-row flex-100 toggle-demo-container">
                     <div class="flex-33">
-                        <kbq-toggle
-                            [disabled]="true"
-                            [(ngModel)]="valueBigOn"
-                        />
+                        <kbq-toggle [disabled]="true" [(ngModel)]="valueBigOn" />
                     </div>
                     <div class="flex-33">
-                        <kbq-toggle
-                            [disabled]="true"
-                            [(ngModel)]="valueBigOn"
-                        />
+                        <kbq-toggle [disabled]="true" [(ngModel)]="valueBigOn" />
                     </div>
                     <div class="flex-33">
-                        <kbq-toggle
-                            [color]="'error'"
-                            [disabled]="true"
-                            [(ngModel)]="valueBigOn"
-                        />
+                        <kbq-toggle [color]="'error'" [disabled]="true" [(ngModel)]="valueBigOn" />
                     </div>
                 </div>
                 <div class="toggle-demo-container">
-                    <kbq-toggle
-                        [disabled]="true"
-                        [(ngModel)]="valueBigOn"
-                    >
-                        Quack like a duck
-                    </kbq-toggle>
+                    <kbq-toggle [disabled]="true" [(ngModel)]="valueBigOn">Quack like a duck</kbq-toggle>
                 </div>
                 <div class="toggle-demo-container">
-                    <kbq-toggle
-                        labelPosition="left"
-                        [disabled]="true"
-                        [(ngModel)]="valueBigOn"
-                    >
+                    <kbq-toggle labelPosition="left" [disabled]="true" [(ngModel)]="valueBigOn">
                         Quack like a duck
                     </kbq-toggle>
                 </div>
@@ -1837,19 +1262,9 @@
 
         <div class="flex-60 layout-row layout-align-center-center">
             <div class="flex layout-column layout-align-center-center container-item">
-                <button
-                    kbq-button
-                    [kbqPlacement]="popUpPlacements.Top"
-                    [kbqTooltip]="'Показать\Скрыть'"
-                >
-                    top
-                </button>
+                <button kbq-button [kbqPlacement]="popUpPlacements.Top" [kbqTooltip]="'Показать\Скрыть'">top</button>
                 <br />
-                <button
-                    kbq-button
-                    [kbqPlacement]="popUpPlacements.Right"
-                    [kbqTooltip]="'Активировать записи'"
-                >
+                <button kbq-button [kbqPlacement]="popUpPlacements.Right" [kbqTooltip]="'Активировать записи'">
                     right
                 </button>
                 <br />
@@ -1861,13 +1276,7 @@
                     left
                 </button>
                 <br />
-                <button
-                    kbq-button
-                    [kbqPlacement]="popUpPlacements.Bottom"
-                    [kbqTooltip]="'Обновить'"
-                >
-                    bottom
-                </button>
+                <button kbq-button [kbqPlacement]="popUpPlacements.Bottom" [kbqTooltip]="'Обновить'">bottom</button>
             </div>
         </div>
     </div>
@@ -1875,23 +1284,12 @@
     <div class="dev-box">
         <h1>Tree</h1>
 
-        <kbq-tree-selection
-            multiple
-            [dataSource]="dataSource"
-            [noUnselectLast]="false"
-            [treeControl]="treeControl"
-        >
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node"
-                kbqTreeNodePadding
-            >
+        <kbq-tree-selection multiple [dataSource]="dataSource" [noUnselectLast]="false" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                 {{ treeControl.getViewValue(node) }}
             </kbq-tree-option>
 
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node; when: hasChild"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                 <i
                     kbq-icon="kbq-chevron-down-s_16"
                     kbqTreeNodeToggle
@@ -1907,33 +1305,18 @@
 
         <div class="kbq-group">
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
-            <button
-                kbq-button
-                class="kbq-group-item"
-            >
+            <button kbq-button class="kbq-group-item">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </div>
@@ -1941,35 +1324,20 @@
         <br />
 
         <div class="kbq-group">
-            <button
-                kbq-button
-                class="kbq-group-item"
-            >
+            <button kbq-button class="kbq-group-item">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
         </div>
 
@@ -1977,33 +1345,18 @@
 
         <div class="kbq-vertical-group">
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
-            <button
-                kbq-button
-                class="kbq-group-item"
-            >
+            <button kbq-button class="kbq-group-item">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </div>
@@ -2011,35 +1364,20 @@
         <br />
 
         <div class="kbq-vertical-group">
-            <button
-                kbq-button
-                class="kbq-group-item"
-            >
+            <button kbq-button class="kbq-group-item">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
 
             <kbq-form-field class="kbq-group-item">
-                <input
-                    kbqInput
-                    placeholder="text"
-                    type="text"
-                />
+                <input kbqInput placeholder="text" type="text" />
             </kbq-form-field>
         </div>
 
@@ -2047,10 +1385,7 @@
 
         <div class="kbq-group">
             <kbq-form-field class="kbq-group-item">
-                <kbq-select
-                    [formControl]="multiSelectSelectFormControl"
-                    [multiple]="true"
-                >
+                <kbq-select [formControl]="multiSelectSelectFormControl" [multiple]="true">
                     <kbq-option [value]="'Normal'">Normal</kbq-option>
                     <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                     <kbq-option [value]="'Selected'">Selected</kbq-option>
@@ -2058,10 +1393,7 @@
                 </kbq-select>
             </kbq-form-field>
 
-            <button
-                kbq-button
-                class="kbq-group-item"
-            >
+            <button kbq-button class="kbq-group-item">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
         </div>
@@ -2069,18 +1401,12 @@
         <br />
 
         <div class="kbq-group">
-            <button
-                kbq-button
-                class="kbq-group-item"
-            >
+            <button kbq-button class="kbq-group-item">
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </button>
 
             <kbq-form-field class="kbq-group-item">
-                <kbq-select
-                    [formControl]="multiSelectSelectFormControl"
-                    [multiple]="true"
-                >
+                <kbq-select [formControl]="multiSelectSelectFormControl" [multiple]="true">
                     <kbq-option [value]="'Normal'">Normal</kbq-option>
                     <kbq-option [value]="'Hovered'">Hovered</kbq-option>
                     <kbq-option [value]="'Selected'">Selected</kbq-option>

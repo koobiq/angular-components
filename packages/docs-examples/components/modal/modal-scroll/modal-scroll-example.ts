@@ -29,12 +29,7 @@ export class KbqLongComponent {
     selector: 'modal-scroll-example',
     imports: [KbqButtonModule],
     template: `
-        <button
-            (click)="createLongModal()"
-            kbq-button
-        >
-            Open Modal
-        </button>
+        <button (click)="createLongModal()" kbq-button>Open Modal</button>
     `
 })
 export class ModalScrollExample {

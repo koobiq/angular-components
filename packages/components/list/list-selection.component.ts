@@ -110,11 +110,7 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
     selector: 'kbq-list-selection',
     exportAs: 'kbqListSelection',
     template: `
-        <div
-            [attr.tabindex]="tabIndex"
-            (focus)="focus()"
-            (blur)="blur()"
-        >
+        <div [attr.tabindex]="tabIndex" (focus)="focus()" (blur)="blur()">
             <ng-content />
         </div>
     `,

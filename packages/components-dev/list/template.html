@@ -1,19 +1,10 @@
 <h5>single selection</h5>
-<kbq-list-selection
-    [(ngModel)]="selected"
-    (onCopy)="onCopy($event)"
->
-    <kbq-list-option
-        [disabled]="true"
-        [value]="'Disabled'"
-    >
+<kbq-list-selection [(ngModel)]="selected" (onCopy)="onCopy($event)">
+    <kbq-list-option [disabled]="true" [value]="'Disabled'">
         <i kbq-icon="kbq-play_16"></i>
         Disabled
     </kbq-list-option>
-    <kbq-list-option
-        [showCheckbox]="true"
-        [value]="'Normal'"
-    >
+    <kbq-list-option [showCheckbox]="true" [value]="'Normal'">
         <i kbq-icon="kbq-play_16"></i>
         Normal
         <kbq-option-action
@@ -22,25 +13,12 @@
             [kbqTooltip]="'Tooltip text'"
         />
     </kbq-list-option>
-    <kbq-list-option
-        class="kbq-hovered"
-        [value]="'Hovered'"
-    >
+    <kbq-list-option class="kbq-hovered" [value]="'Hovered'">
         Hovered
         <div kbq-list-option-caption>kbq-list-option-caption</div>
     </kbq-list-option>
-    <kbq-list-option
-        class="kbq-focused"
-        [value]="'Focused'"
-    >
-        Focused
-    </kbq-list-option>
-    <kbq-list-option
-        class="kbq-selected"
-        [value]="'Selected'"
-    >
-        Selected
-    </kbq-list-option>
+    <kbq-list-option class="kbq-focused" [value]="'Focused'">Focused</kbq-list-option>
+    <kbq-list-option class="kbq-selected" [value]="'Selected'">Selected</kbq-list-option>
 </kbq-list-selection>
 <br />
 <div>selected: {{ selected }}</div>
@@ -139,11 +117,7 @@
 <br />
 
 <h2>Multiple selection with Async: Checkbox</h2>
-<kbq-list-selection
-    multiple="checkbox"
-    [(ngModel)]="multipleSelected"
-    (selectionChange)="onSelectionChange($event)"
->
+<kbq-list-selection multiple="checkbox" [(ngModel)]="multipleSelected" (selectionChange)="onSelectionChange($event)">
     @for (shoe of asyncUpdate$ | async; track shoe) {
         <kbq-list-option [value]="shoe">
             {{ shoe }}
@@ -189,12 +163,7 @@
     <kbq-list-option [value]="'Hovered'">Hovered</kbq-list-option>
     <kbq-list-option [value]="'Focused'">Focused</kbq-list-option>
     <kbq-list-option [value]="'Disabled'">Disabled</kbq-list-option>
-    <kbq-list-option
-        kbq-title
-        [value]="'Selected'"
-    >
-        Selected and long long and long long text
-    </kbq-list-option>
+    <kbq-list-option kbq-title [value]="'Selected'">Selected and long long and long long text</kbq-list-option>
 </kbq-list-selection>
 <br />
 <div>singleSelected: {{ singleSelected }}</div>

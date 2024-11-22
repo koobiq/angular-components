@@ -43,11 +43,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
         <form [formGroup]="formGroup">
             <kbq-form-field>
                 <kbq-label>Email</kbq-label>
-                <input
-                    formControlName="email"
-                    kbqInput
-                    placeholder="mail@koobiq.io"
-                />
+                <input formControlName="email" kbqInput placeholder="mail@koobiq.io" />
                 <kbq-hint>Enter email</kbq-hint>
                 <kbq-error>
                     @if (formGroup.get('email')?.hasError('required')) {
@@ -58,13 +54,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 </kbq-error>
             </kbq-form-field>
 
-            <button
-                class="layout-margin-top-l"
-                kbq-button
-                type="submit"
-            >
-                Submit form
-            </button>
+            <button class="layout-margin-top-l" kbq-button type="submit">Submit form</button>
         </form>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

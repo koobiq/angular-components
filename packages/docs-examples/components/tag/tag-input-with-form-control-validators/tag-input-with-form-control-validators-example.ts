@@ -44,20 +44,11 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
     selector: 'tag-input-with-form-control-validators-example',
     template: `
         <kbq-form-field>
-            <kbq-tag-list
-                #inputTagList
-                [formControl]="formControl"
-            >
+            <kbq-tag-list #inputTagList [formControl]="formControl">
                 @for (tag of formControl.value; track tag) {
-                    <kbq-tag
-                        [value]="tag"
-                        (removed)="removeTag(tag)"
-                    >
+                    <kbq-tag [value]="tag" (removed)="removeTag(tag)">
                         {{ tag }}
-                        <i
-                            kbq-icon-button="kbq-xmark-s_16"
-                            kbqTagRemove
-                        ></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 }
 

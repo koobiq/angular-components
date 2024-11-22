@@ -4,10 +4,7 @@ import { KbqModalComponent } from './modal.component';
 @Component({
     selector: `[kbq-modal-title], kbq-modal-title, [kbqModalTitle]`,
     template: `
-        <div
-            class="kbq-modal-title"
-            kbq-title
-        >
+        <div class="kbq-modal-title" kbq-title>
             <ng-content />
         </div>
 
@@ -18,10 +15,7 @@ import { KbqModalComponent } from './modal.component';
                 (click)="modal.onClickCloseBtn()"
                 kbq-button
             >
-                <i
-                    [color]="modal.componentColors.Contrast"
-                    kbq-icon="kbq-xmark_16"
-                ></i>
+                <i [color]="modal.componentColors.Contrast" kbq-icon="kbq-xmark_16"></i>
             </button>
         }
     `,

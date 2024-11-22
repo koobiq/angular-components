@@ -24,12 +24,7 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
     template: `
         <kbq-splitter>
             <div kbq-splitter-area>first</div>
-            <div
-                class="flex"
-                kbq-splitter-area
-            >
-                second
-            </div>
+            <div class="flex" kbq-splitter-area>second</div>
             <div kbq-splitter-area>third</div>
         </kbq-splitter>
     `

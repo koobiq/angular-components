@@ -95,10 +95,7 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
     ],
     template: `
         <kbq-form-field>
-            <input
-                [formControl]="control"
-                kbqInput
-            />
+            <input [formControl]="control" kbqInput />
             <kbq-hint>Hint</kbq-hint>
             <kbq-error>Error</kbq-error>
         </kbq-form-field>
@@ -135,10 +132,7 @@ export class InputFormFieldWithPrefixAndSuffix {}
     ],
     template: `
         <kbq-form-field>
-            <input
-                [formControl]="control"
-                kbqInput
-            />
+            <input [formControl]="control" kbqInput />
             <kbq-cleaner />
         </kbq-form-field>
     `
@@ -175,10 +169,7 @@ export class InputFormFieldWithoutFormFieldControl {
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>
-            <input
-                [id]="id"
-                kbqInput
-            />
+            <input [id]="id" kbqInput />
         </kbq-form-field>
     `
 })
@@ -203,11 +194,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
-                <input
-                    [errorStateMatcher]="errorStateMatcher"
-                    formControlName="email"
-                    kbqInput
-                />
+                <input [errorStateMatcher]="errorStateMatcher" formControlName="email" kbqInput />
                 <kbq-error>Error</kbq-error>
                 <input type="submit" />
             </kbq-form-field>
@@ -249,10 +236,7 @@ export class InputFormFieldWithBorderCustomization {
     ],
     template: `
         <kbq-form-field>
-            <input
-                [formControl]="formControl"
-                kbqInputPassword
-            />
+            <input [formControl]="formControl" kbqInputPassword />
             <kbq-password-toggle />
             <kbq-password-hint [hasError]="formControl.hasError('minLength')">
                 Min length

@@ -17,16 +17,9 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <div class="tabs-actionbar-example">
             <div class="tabs-actionbar-example_nav">
-                <nav
-                    kbqTabNavBar
-                    underlined
-                >
+                <nav kbqTabNavBar underlined>
                     @for (dashboard of dashboards; track dashboard) {
-                        <a
-                            [active]="activeDashboard === dashboard"
-                            (click)="activeDashboard = dashboard"
-                            kbqTabLink
-                        >
+                        <a [active]="activeDashboard === dashboard" (click)="activeDashboard = dashboard" kbqTabLink>
                             {{ dashboard }}
                         </a>
                     }
@@ -34,25 +27,13 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             </div>
 
             <div class="tabs-actionbar-example_controls">
-                <button
-                    class="kbq-button_transparent"
-                    color="contrast"
-                    kbq-button
-                >
+                <button class="kbq-button_transparent" color="contrast" kbq-button>
                     <i kbq-icon="kbq-list_16"></i>
                 </button>
-                <button
-                    class="kbq-button_transparent"
-                    color="contrast"
-                    kbq-button
-                >
+                <button class="kbq-button_transparent" color="contrast" kbq-button>
                     <i kbq-icon="kbq-filter_16"></i>
                 </button>
-                <button
-                    (click)="createDashboard()"
-                    color="contrast"
-                    kbq-button
-                >
+                <button (click)="createDashboard()" color="contrast" kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
                     Create dashboard
                 </button>

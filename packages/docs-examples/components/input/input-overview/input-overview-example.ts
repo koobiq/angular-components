@@ -19,17 +19,9 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field>
-            <i
-                [autoColor]="true"
-                kbq-icon="kbq-magnifying-glass_16"
-                kbqPrefix
-            ></i>
+            <i [autoColor]="true" kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
-            <input
-                [(ngModel)]="value"
-                kbqInput
-                placeholder="Placeholder"
-            />
+            <input [(ngModel)]="value" kbqInput placeholder="Placeholder" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -39,17 +31,9 @@ import { KbqInputModule } from '@koobiq/components/input';
         <br />
 
         <kbq-form-field kbqFormFieldWithoutBorders>
-            <i
-                [autoColor]="true"
-                kbq-icon="kbq-magnifying-glass_16"
-                kbqPrefix
-            ></i>
+            <i [autoColor]="true" kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
-            <input
-                [(ngModel)]="value"
-                kbqInput
-                placeholder="Placeholder"
-            />
+            <input [(ngModel)]="value" kbqInput placeholder="Placeholder" />
 
             <kbq-cleaner />
         </kbq-form-field>

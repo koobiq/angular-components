@@ -105,28 +105,13 @@ describe('KbqTitleDirective', () => {
 
     ],
     template: `
-        <div
-            class="parent"
-            id="parent1"
-            style="max-width: 150px;"
-            kbq-title
-        >
+        <div class="parent" id="parent1" style="max-width: 150px;" kbq-title>
             {{ longValue }}
         </div>
-        <div
-            class="parent"
-            id="parent2"
-            style="max-width: 600px;"
-            kbq-title
-        >
+        <div class="parent" id="parent2" style="max-width: 600px;" kbq-title>
             {{ defaultValue }}
         </div>
-        <div
-            class="parent"
-            id="parent3"
-            style="max-width: 600px;"
-            kbq-title
-        >
+        <div class="parent" id="parent3" style="max-width: 600px;" kbq-title>
             <span>{{ longValue }}</span>
         </div>
     `
@@ -159,37 +144,17 @@ class BaseKbqTitleComponent {
 
     ],
     template: `
-        <div
-            id="parent1"
-            style="max-width: 150px"
-            kbq-title
-        >
-            <div
-                class="parent"
-                #kbqTitleContainer
-            >
-                <div
-                    class="child"
-                    #kbqTitleText
-                >
+        <div id="parent1" style="max-width: 150px" kbq-title>
+            <div class="parent" #kbqTitleContainer>
+                <div class="child" #kbqTitleText>
                     {{ longValue }}
                 </div>
             </div>
         </div>
 
-        <div
-            id="parent2"
-            style="max-width: 600px"
-            kbq-title
-        >
-            <div
-                class="parent"
-                #kbqTitleContainer
-            >
-                <div
-                    class="child"
-                    #kbqTitleText
-                >
+        <div id="parent2" style="max-width: 600px" kbq-title>
+            <div class="parent" #kbqTitleContainer>
+                <div class="child" #kbqTitleText>
                     {{ defaultValue }}
                 </div>
             </div>

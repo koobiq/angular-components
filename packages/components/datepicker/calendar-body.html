@@ -6,10 +6,7 @@
         percentage of the width (a variant of the trick described here:
         https://www.w3schools.com/howto/howto_css_aspect_ratio.asp). -->
         @if (rowIndex === 0 && firstRowOffset) {
-            <td
-                class="kbq-calendar__body-label"
-                [attr.colspan]="firstRowOffset"
-            ></td>
+            <td class="kbq-calendar__body-label" [attr.colspan]="firstRowOffset"></td>
         }
         @for (item of row; track item.displayValue; let colIndex = $index) {
             <td

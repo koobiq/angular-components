@@ -17,27 +17,9 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
         <kbq-empty-state style="min-height: 216px">
             <div kbq-empty-state-text>{{ emptyStateText }}</div>
             <div kbq-empty-state-actions>
-                <button
-                    [color]="colors.Theme"
-                    [kbqStyle]="styles.Transparent"
-                    kbq-button
-                >
-                    Action 1
-                </button>
-                <button
-                    [color]="colors.Theme"
-                    [kbqStyle]="styles.Transparent"
-                    kbq-button
-                >
-                    Action 2
-                </button>
-                <button
-                    [color]="colors.Theme"
-                    [kbqStyle]="styles.Transparent"
-                    kbq-button
-                >
-                    Action 3
-                </button>
+                <button [color]="colors.Theme" [kbqStyle]="styles.Transparent" kbq-button>Action 1</button>
+                <button [color]="colors.Theme" [kbqStyle]="styles.Transparent" kbq-button>Action 2</button>
+                <button [color]="colors.Theme" [kbqStyle]="styles.Transparent" kbq-button>Action 3</button>
             </div>
         </kbq-empty-state>
     `

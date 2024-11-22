@@ -47,10 +47,7 @@ describe('Tag Remove', () => {
 
 @Component({
     template: `
-        <kbq-tag
-            [removable]="removable"
-            (removed)="didRemove()"
-        >
+        <kbq-tag [removable]="removable" (removed)="didRemove()">
             <a kbqTagRemove></a>
         </kbq-tag>
     `

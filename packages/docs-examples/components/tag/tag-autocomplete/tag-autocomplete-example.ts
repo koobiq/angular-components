@@ -19,15 +19,9 @@ import { map } from 'rxjs/operators';
         <kbq-form-field>
             <kbq-tag-list #tagList>
                 @for (tag of selectedTags; track tag) {
-                    <kbq-tag
-                        [value]="tag"
-                        (removed)="onRemove(tag)"
-                    >
+                    <kbq-tag [value]="tag" (removed)="onRemove(tag)">
                         {{ tag }}
-                        <i
-                            kbq-icon="kbq-xmark-s_16"
-                            kbqTagRemove
-                        ></i>
+                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 }
                 <input
@@ -42,10 +36,7 @@ import { map } from 'rxjs/operators';
                     placeholder="Placeholder"
                 />
             </kbq-tag-list>
-            <kbq-autocomplete
-                #autocomplete
-                (optionSelected)="onSelect($event)"
-            >
+            <kbq-autocomplete #autocomplete (optionSelected)="onSelect($event)">
                 @if (canCreate) {
                     <kbq-option [value]="{ new: true, value: tagInput.value }">
                         Создать: {{ tagInput.value }}

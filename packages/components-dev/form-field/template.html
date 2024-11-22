@@ -1,9 +1,6 @@
 <div class="dev-container">
     <kbq-form-field>
-        <kbq-select
-            [placeholder]="placeholder"
-            [value]="''"
-        >
+        <kbq-select [placeholder]="placeholder" [value]="''">
             <kbq-cleaner />
 
             @for (option of options; track option) {
@@ -33,11 +30,7 @@
     <br />
 
     <kbq-form-field>
-        <kbq-select
-            [multiple]="true"
-            [placeholder]="placeholder"
-            [(value)]="emptyMultipleValue"
-        >
+        <kbq-select [multiple]="true" [placeholder]="placeholder" [(value)]="emptyMultipleValue">
             <kbq-cleaner #kbqSelectCleaner />
 
             @for (option of options; track option) {
@@ -52,17 +45,11 @@
     <br />
 
     <kbq-form-field>
-        <kbq-select
-            [multiple]="true"
-            [(value)]="multipleSelected"
-        >
+        <kbq-select [multiple]="true" [(value)]="multipleSelected">
             <kbq-cleaner #kbqSelectCleaner />
 
             @for (option of options; track option) {
-                <kbq-option
-                    [showCheckbox]="false"
-                    [value]="option"
-                >
+                <kbq-option [showCheckbox]="false" [value]="option">
                     <span [innerHTML]="option"></span>
                 </kbq-option>
             }
@@ -73,21 +60,11 @@
     <br />
 
     <kbq-form-field>
-        <kbq-tree-select
-            [ngModel]="value"
-            [placeholder]="placeholder"
-        >
+        <kbq-tree-select [ngModel]="value" [placeholder]="placeholder">
             <kbq-cleaner />
 
-            <kbq-tree-selection
-                [dataSource]="dataSource"
-                [treeControl]="treeControl"
-            >
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
+            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
                 </kbq-tree-option>
 
@@ -107,10 +84,7 @@
                 </kbq-tree-option>
             </kbq-tree-selection>
 
-            <div
-                kbq-select-footer
-                class="custom-footer"
-            >
+            <div kbq-select-footer class="custom-footer">
                 <div>Custom footer</div>
             </div>
         </kbq-tree-select>
@@ -120,21 +94,11 @@
     <br />
 
     <kbq-form-field>
-        <kbq-tree-select
-            [ngModel]="treeModel"
-            [placeholder]="placeholder"
-        >
+        <kbq-tree-select [ngModel]="treeModel" [placeholder]="placeholder">
             <kbq-cleaner />
 
-            <kbq-tree-selection
-                [dataSource]="dataSource"
-                [treeControl]="treeControl"
-            >
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
+            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
                 </kbq-tree-option>
 
@@ -154,10 +118,7 @@
                 </kbq-tree-option>
             </kbq-tree-selection>
 
-            <div
-                kbq-select-footer
-                class="custom-footer"
-            >
+            <div kbq-select-footer class="custom-footer">
                 <div>Custom footer</div>
             </div>
         </kbq-tree-select>
@@ -167,22 +128,11 @@
     <br />
 
     <kbq-form-field>
-        <kbq-tree-select
-            placeholder="this is placeholder"
-            [multiple]="true"
-            [ngModel]="multipleTreeModel"
-        >
+        <kbq-tree-select placeholder="this is placeholder" [multiple]="true" [ngModel]="multipleTreeModel">
             <kbq-cleaner />
 
-            <kbq-tree-selection
-                [dataSource]="dataSource"
-                [treeControl]="treeControl"
-            >
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
+            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
                 </kbq-tree-option>
 
@@ -202,10 +152,7 @@
                 </kbq-tree-option>
             </kbq-tree-selection>
 
-            <div
-                kbq-select-footer
-                class="custom-footer"
-            >
+            <div kbq-select-footer class="custom-footer">
                 <div>Custom footer</div>
             </div>
         </kbq-tree-select>
@@ -215,22 +162,11 @@
     <br />
 
     <kbq-form-field>
-        <kbq-tree-select
-            [multiple]="true"
-            [ngModel]="emptyMultipleValue"
-            [placeholder]="placeholder"
-        >
+        <kbq-tree-select [multiple]="true" [ngModel]="emptyMultipleValue" [placeholder]="placeholder">
             <kbq-cleaner />
 
-            <kbq-tree-selection
-                [dataSource]="dataSource"
-                [treeControl]="treeControl"
-            >
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
+            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
                 </kbq-tree-option>
 
@@ -250,10 +186,7 @@
                 </kbq-tree-option>
             </kbq-tree-selection>
 
-            <div
-                kbq-select-footer
-                class="custom-footer"
-            >
+            <div kbq-select-footer class="custom-footer">
                 <div>Custom footer</div>
             </div>
         </kbq-tree-select>
@@ -267,10 +200,7 @@
             @for (tag of inputTags; track tag) {
                 <kbq-tag [value]="tag">
                     {{ tag }}
-                    <i
-                        kbq-icon="kbq-xmark-s_16"
-                        kbqTagRemove
-                    ></i>
+                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
             }
 
@@ -293,10 +223,7 @@
             @for (tag of inputTags; track tag) {
                 <kbq-tag [value]="tag">
                     {{ tag }}
-                    <i
-                        kbq-icon="kbq-xmark-s_16"
-                        kbqTagRemove
-                    ></i>
+                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
             }
 
@@ -320,10 +247,7 @@
             @for (tag of ['tag']; track tag) {
                 <kbq-tag [value]="tag">
                     {{ tag }}
-                    <i
-                        kbq-icon="kbq-xmark-s_16"
-                        kbqTagRemove
-                    ></i>
+                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
             }
             <input
@@ -358,10 +282,7 @@
             @for (tag of autocompleteSelectedTags; track tag) {
                 <kbq-tag [value]="tag">
                     {{ tag }}
-                    <i
-                        kbq-icon="kbq-xmark-s_16"
-                        kbqTagRemove
-                    ></i>
+                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
             }
             <input
@@ -389,12 +310,7 @@
     <br />
 
     <kbq-form-field>
-        <input
-            kbqInputPassword
-            placeholder="Number MaxMin Step"
-            [ngModel]="password"
-            [required]="true"
-        />
+        <input kbqInputPassword placeholder="Number MaxMin Step" [ngModel]="password" [required]="true" />
         <kbq-password-toggle />
     </kbq-form-field>
 
@@ -402,11 +318,7 @@
     <br />
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [ngModel]="'value'"
-        />
+        <input kbqInput placeholder="Placeholder" [ngModel]="'value'" />
 
         <kbq-cleaner />
     </kbq-form-field>
@@ -415,38 +327,18 @@
     <br />
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqPrefix
-            [autoColor]="true"
-        ></i>
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-            [autoColor]="true"
-        ></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
 
-        <input
-            kbqInput
-            placeholder="{{ placeholder }}"
-            [ngModel]="''"
-        />
+        <input kbqInput placeholder="{{ placeholder }}" [ngModel]="''" />
     </kbq-form-field>
 
     <br />
     <br />
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqPrefix
-            [autoColor]="true"
-        ></i>
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-            [autoColor]="true"
-        ></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
 
         <input
             kbqInput

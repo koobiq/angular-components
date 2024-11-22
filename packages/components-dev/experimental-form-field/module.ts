@@ -31,11 +31,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <form [formGroup]="formGroup">
             <kbq-form-field>
                 <kbq-label>Form field with custom ErrorStateMatcher</kbq-label>
-                <input
-                    formControlName="email"
-                    kbqInput
-                    placeholder="mail@koobiq.io"
-                />
+                <input formControlName="email" kbqInput placeholder="mail@koobiq.io" />
                 <kbq-hint>Enter email</kbq-hint>
                 <kbq-error>
                     @if (formGroup.get('email')?.hasError('required')) {
@@ -71,19 +67,13 @@ export class ShowValidationErrorOnFormSubmit {
 
         <form [formGroup]="formGroup">
             <kbq-form-field>
-                <input
-                    formControlName="field1"
-                    kbqInput
-                />
+                <input formControlName="field1" kbqInput />
                 <kbq-hint>should be filled</kbq-hint>
                 <kbq-error>required</kbq-error>
             </kbq-form-field>
 
             <kbq-form-field>
-                <input
-                    formControlName="field2"
-                    kbqInput
-                />
+                <input formControlName="field2" kbqInput />
                 <kbq-hint>should contain max 2 chars</kbq-hint>
                 <kbq-error>max 2 chars</kbq-error>
             </kbq-form-field>
@@ -121,11 +111,7 @@ export class ShowValidationErrorOnControlDirty {
     ],
     template: `
         <kbq-form-field noBorders>
-            <input
-                [formControl]="formControl"
-                placeholder="Form field without borders"
-                kbqInput
-            />
+            <input [formControl]="formControl" placeholder="Form field without borders" kbqInput />
             <kbq-error>Should enter a value</kbq-error>
         </kbq-form-field>
     `,

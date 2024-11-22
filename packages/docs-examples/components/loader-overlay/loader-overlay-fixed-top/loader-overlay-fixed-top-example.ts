@@ -11,10 +11,7 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
     selector: 'loader-overlay-fixed-top-example',
     imports: [KbqLoaderOverlayModule, KbqProgressSpinnerModule],
     template: `
-        <div
-            class="flex"
-            style="width: 500px; height: 320px"
-        >
+        <div class="flex" style="width: 500px; height: 320px">
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
@@ -22,10 +19,7 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
             <kbq-loader-overlay fixed-top>
-                <kbq-progress-spinner
-                    [mode]="'indeterminate'"
-                    kbq-loader-overlay-indicator
-                />
+                <kbq-progress-spinner [mode]="'indeterminate'" kbq-loader-overlay-indicator />
 
                 <div kbq-loader-overlay-text>Создание отчета</div>
                 <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>

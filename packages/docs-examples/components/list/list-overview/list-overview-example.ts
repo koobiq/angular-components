@@ -11,12 +11,7 @@ import { KbqListModule } from '@koobiq/components/list';
     imports: [KbqListModule, FormsModule],
     template: `
         <kbq-list-selection [(ngModel)]="selected">
-            <kbq-list-option
-                [value]="'Item 1'"
-                disabled
-            >
-                Item 1
-            </kbq-list-option>
+            <kbq-list-option [value]="'Item 1'" disabled>Item 1</kbq-list-option>
             <kbq-list-option [value]="'Item 2'">Item 2</kbq-list-option>
             <kbq-list-option [value]="'Item 3'">Item 3</kbq-list-option>
             <kbq-list-option [value]="'Item 4'">Item 4</kbq-list-option>

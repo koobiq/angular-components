@@ -106,12 +106,7 @@ export const DATA_OBJECT = {
     imports: [KbqFormFieldModule, KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="filterValue"
-                (ngModelChange)="onFilterChange($event)"
-                kbqInput
-                type="text"
-            />
+            <input [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" kbqInput type="text" />
         </kbq-form-field>
         <kbq-tree-selection
             class="layout-margin-top-4xl"
@@ -119,18 +114,11 @@ export const DATA_OBJECT = {
             [dataSource]="dataSource"
             [treeControl]="treeControl"
         >
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node"
-                [disabled]="node.name === 'tests'"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
 
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node; when: hasChild"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>

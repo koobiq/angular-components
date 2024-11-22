@@ -10,12 +10,7 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-multiple-example',
     imports: [KbqButtonModule],
     template: `
-        <button
-            (click)="showConfirmModal()"
-            kbq-button
-        >
-            Open two modals
-        </button>
+        <button (click)="showConfirmModal()" kbq-button>Open two modals</button>
     `
 })
 export class ModalMultipleExample {

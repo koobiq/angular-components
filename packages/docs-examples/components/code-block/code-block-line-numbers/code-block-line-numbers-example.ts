@@ -25,19 +25,11 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
         KbqCodeBlockModule
     ],
     template: `
-        <kbq-toggle
-            class="kbq-toggle_small"
-            [(ngModel)]="lineNumbers"
-            style="margin: 10px 0"
-        >
+        <kbq-toggle class="kbq-toggle_small" [(ngModel)]="lineNumbers" style="margin: 10px 0">
             Нумерация строк
         </kbq-toggle>
 
-        <kbq-code-block
-            [codeFiles]="files"
-            [filled]="false"
-            [lineNumbers]="lineNumbers"
-        />
+        <kbq-code-block [codeFiles]="files" [filled]="false" [lineNumbers]="lineNumbers" />
     `
 })
 export class CodeBlockLineNumbersExample {
