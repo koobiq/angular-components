@@ -240,20 +240,8 @@ describe('KbqTooltip', () => {
     template: `
         <ng-template #template>title-template</ng-template>
 
-        <a
-            #titleString
-            [kbqTooltip]="'title-string'"
-            [kbqTrigger]="'hover'"
-            [kbqPlacement]="'top'"
-        >
-            Show
-        </a>
-        <a
-            #titleTemplate
-            [kbqTooltip]="template"
-        >
-            Show
-        </a>
+        <a #titleString [kbqTooltip]="'title-string'" [kbqTrigger]="'hover'" [kbqPlacement]="'top'">Show</a>
+        <a #titleTemplate [kbqTooltip]="template">Show</a>
     `
 })
 class KbqTooltipTestNewComponent {
@@ -274,36 +262,12 @@ class KbqTooltipTestNewComponent {
 @Component({
     selector: 'kbq-tooltip-test-wrapper',
     template: `
-        <a
-            #mostSimpleTrigger
-            [kbqTooltip]="'MOST-SIMPLE'"
-        >
-            Show
-        </a>
+        <a #mostSimpleTrigger [kbqTooltip]="'MOST-SIMPLE'">Show</a>
 
-        <span
-            #normalTrigger
-            [kbqTooltip]="'NORMAL'"
-            [kbqTrigger]="'hover'"
-            [kbqPlacement]="'right'"
-        >
-            Show
-        </span>
+        <span #normalTrigger [kbqTooltip]="'NORMAL'" [kbqTrigger]="'hover'" [kbqPlacement]="'right'">Show</span>
 
-        <span
-            #focusTrigger
-            [kbqTooltip]="'FOCUS'"
-            [kbqTrigger]="'focus'"
-        >
-            Show
-        </span>
-        <span
-            #visibleTrigger
-            [kbqTooltip]="'VISIBLE'"
-            [kbqVisible]="visible"
-        >
-            Show
-        </span>
+        <span #focusTrigger [kbqTooltip]="'FOCUS'" [kbqTrigger]="'focus'">Show</span>
+        <span #visibleTrigger [kbqTooltip]="'VISIBLE'" [kbqVisible]="visible">Show</span>
         <span
             #dynamicArrowAndOffsetTrigger
             [kbqTooltip]="'ArrowAndOffset'"
@@ -332,12 +296,7 @@ class KbqTooltipTestWrapperComponent {
 @Component({
     selector: 'kbq-tooltip-disabled-wrapper',
     template: `
-        <span
-            #disabledAttribute
-            [kbqTooltip]="'DISABLED'"
-            [kbqTrigger]="'manual'"
-            [kbqTooltipDisabled]="true"
-        >
+        <span #disabledAttribute [kbqTooltip]="'DISABLED'" [kbqTrigger]="'manual'" [kbqTooltipDisabled]="true">
             Disabled
         </span>
     `
@@ -350,18 +309,10 @@ class KbqTooltipDisabledComponent {
 @Component({
     selector: 'kbq-tooltip-wih-template-ref-content',
     template: `
-        <ng-template
-            #tooltipContent
-            let-ctx
-        >
+        <ng-template #tooltipContent let-ctx>
             <div>{{ ctx.content }}</div>
         </ng-template>
-        <button
-            #trigger
-            [kbqTooltip]="tooltipContent"
-            [kbqTooltipContext]="tooltipContext"
-            kbqTrigger="click"
-        >
+        <button #trigger [kbqTooltip]="tooltipContent" [kbqTooltipContext]="tooltipContext" kbqTrigger="click">
             Button
         </button>
     `

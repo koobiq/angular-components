@@ -207,13 +207,8 @@ export class KbqCodeBlockComponent implements OnDestroy {
         KbqButtonModule
     ],
     template: `
-        <div class="kbq-body">
-            <button
-                (click)="toggleSidepanel()"
-                kbq-button
-            >
-                Открыть боковую панель
-            </button>
+        <div class="kbq-text-big">
+            <button (click)="toggleSidepanel()" kbq-button>Открыть боковую панель</button>
         </div>
 
         <ng-template>

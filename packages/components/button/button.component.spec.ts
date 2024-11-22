@@ -301,20 +301,8 @@ describe('Button with icon', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <button
-            [color]="buttonColor"
-            [disabled]="isDisabled"
-            (click)="increment()"
-            kbq-button
-            type="button"
-        ></button>
-        <a
-            [color]="buttonColor"
-            [disabled]="isDisabled"
-            (click)="increment()"
-            href="#"
-            kbq-button
-        ></a>
+        <button [color]="buttonColor" [disabled]="isDisabled" (click)="increment()" kbq-button type="button"></button>
+        <a [color]="buttonColor" [disabled]="isDisabled" (click)="increment()" href="#" kbq-button></a>
     `
 })
 class TestApp {
@@ -330,10 +318,7 @@ class TestApp {
 @Component({
     selector: 'kbq-button-comment-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             <!-- comment-before -->
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             <!-- comment-after -->
@@ -345,10 +330,7 @@ class KbqButtonCommentCaseTestApp {}
 @Component({
     selector: 'kbq-button-two-icons-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             <span>Some text</span>
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -359,10 +341,7 @@ class KbqButtonHtmlIconRightCaseTestApp {}
 @Component({
     selector: 'kbq-button-two-icons-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             <span>Some text</span>
         </button>
@@ -375,10 +354,7 @@ class KbqButtonHtmlIconLeftCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             Some text
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             Some text
@@ -390,10 +366,7 @@ class KbqButtonTextIconCaseTestApp {}
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             @if (visible) {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
@@ -410,10 +383,7 @@ class KbqButtonTextIconLeftNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             Some text
             @if (visible) {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -428,10 +398,7 @@ class KbqButtonTextIconRightNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             Some text
             @if (visible) {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -447,10 +414,7 @@ class KbqButtonTextIconLeftRightNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             <span>Some text</span>
             <span>Some text</span>
             <span>Some text</span>
@@ -470,18 +434,9 @@ class KbqButtonHtmlNodesNCountIconLeftRightNgIfCaseTestApp {
 @Component({
     selector: 'kbq-button-comment-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
-            <i
-                id="icon1"
-                kbq-icon="kbq-chevron-down-s_16"
-            ></i>
-            <i
-                id="icon2"
-                kbq-icon="kbq-chevron-down-s_16"
-            ></i>
+        <button kbq-button type="button">
+            <i id="icon1" kbq-icon="kbq-chevron-down-s_16"></i>
+            <i id="icon2" kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
     `
 })
@@ -490,10 +445,7 @@ class KbqButtonTwoIconsCaseTestApp {}
 @Component({
     selector: 'kbq-button-text-icon-case-test-app',
     template: `
-        <button
-            kbq-button
-            type="button"
-        >
+        <button kbq-button type="button">
             @if (visible) {
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             }
@@ -506,13 +458,7 @@ class KbqButtonIconNgIfCaseTestApp {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-            kbq-button
-        >
-            Toggle dropdown
-        </button>
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown" kbq-button>Toggle dropdown</button>
         <kbq-dropdown
             class="custom-one custom-two"
             #dropdown="kbqDropdown"

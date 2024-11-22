@@ -16,24 +16,15 @@
     class="kbq-button-toggle-group_stretched layout-margin-bottom-l"
 >
     @for (toggle of group; track toggle; let i = $index) {
-        <kbq-button-toggle
-            [checked]="i === 1"
-            [value]="i"
-        >
+        <kbq-button-toggle [checked]="i === 1" [value]="i">
             {{ toggle }}
         </kbq-button-toggle>
     }
 </kbq-button-toggle-group>
 
-<kbq-button-toggle-group
-    #group3="kbqButtonToggleGroup"
-    class="kbq-button-toggle-group_stretched"
->
+<kbq-button-toggle-group #group3="kbqButtonToggleGroup" class="kbq-button-toggle-group_stretched">
     @for (toggle of group; track toggle; let i = $index) {
-        <kbq-button-toggle
-            [checked]="i === 2"
-            [value]="i"
-        >
+        <kbq-button-toggle [checked]="i === 2" [value]="i">
             <i kbq-icon="kbq-briefcase_16"></i>
         </kbq-button-toggle>
     }

@@ -113,20 +113,9 @@ export const DATA_OBJECT = {
     imports: [KbqFormFieldModule, ReactiveFormsModule, KbqTreeSelectModule, KbqTreeModule, KbqIconModule],
     template: `
         <kbq-form-field>
-            <kbq-tree-select
-                [formControl]="control"
-                [multiple]="true"
-                (selectionChange)="onSelectionChange($event)"
-            >
-                <kbq-tree-selection
-                    [dataSource]="dataSource"
-                    [treeControl]="treeControl"
-                >
-                    <kbq-tree-option
-                        *kbqTreeNodeDef="let node"
-                        [checkboxThirdState]="true"
-                        kbqTreeNodePadding
-                    >
+            <kbq-tree-select [formControl]="control" [multiple]="true" (selectionChange)="onSelectionChange($event)">
+                <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+                    <kbq-tree-option *kbqTreeNodeDef="let node" [checkboxThirdState]="true" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 

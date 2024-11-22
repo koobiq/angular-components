@@ -21,18 +21,9 @@ import { DateTime } from 'luxon';
     ],
     template: `
         <div class="docs-example__datepicker-overview">
-            <kbq-form-field
-                (click)="datepicker.toggle()"
-                style="width: 136px"
-            >
-                <input
-                    [(ngModel)]="date"
-                    [kbqDatepicker]="datepicker"
-                />
-                <i
-                    kbq-icon="kbq-calendar-o_16"
-                    kbqSuffix
-                ></i>
+            <kbq-form-field (click)="datepicker.toggle()" style="width: 136px">
+                <input [(ngModel)]="date" [kbqDatepicker]="datepicker" />
+                <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                 <kbq-datepicker #datepicker />
             </kbq-form-field>
         </div>

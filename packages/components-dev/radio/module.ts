@@ -7,7 +7,7 @@ import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 
 @Component({
     selector: 'app',
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     templateUrl: './template.html'
 })

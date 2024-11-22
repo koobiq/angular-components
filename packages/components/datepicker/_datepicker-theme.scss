@@ -49,10 +49,10 @@
 
 @mixin kbq-datepicker-typography() {
     .kbq-calendar {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-calendar__table-header th {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

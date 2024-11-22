@@ -1,11 +1,6 @@
 <div class="container">
     @for (locale of locales; track locale) {
-        <button
-            kbq-button
-            (click)="localeService.setLocale(locale)"
-        >
-            set {{ locale }}
-        </button>
+        <button kbq-button (click)="localeService.setLocale(locale)">set {{ locale }}</button>
     }
     <header>Selected Locale: {{ localeService.id }}</header>
     <header>Number Value: {{ numberValue }}</header>
@@ -14,24 +9,10 @@
 
     <div class="kbq-subheading">With password hints INSIDE kbqFormField</div>
     <kbq-form-field>
-        <input
-            kbqInputPassword
-            placeholder="Number MaxMin Step"
-            [ngModel]="password"
-            [required]="true"
-        />
-        <kbq-password-toggle
-            [kbqTooltipHidden]="'Показать пароль'"
-            [kbqTooltipNotHidden]="'Скрыть пароль'"
-        />
+        <input kbqInputPassword placeholder="Number MaxMin Step" [ngModel]="password" [required]="true" />
+        <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
 
-        <kbq-password-hint
-            [max]="15"
-            [min]="8"
-            [rule]="passwordRules.Length"
-        >
-            От 8 до 15 символов
-        </kbq-password-hint>
+        <kbq-password-hint [max]="15" [min]="8" [rule]="passwordRules.Length">От 8 до 15 символов</kbq-password-hint>
 
         @if (true) {
             <kbq-password-hint [rule]="passwordRules.UpperLatin">Заглавная латинская буква</kbq-password-hint>
@@ -45,12 +26,7 @@
             Только латинские буквы, цифры, пробелы и спецсимволы
         </kbq-password-hint>
 
-        <kbq-password-hint
-            [regex]="customRegex"
-            [rule]="passwordRules.Custom"
-        >
-            User Rule
-        </kbq-password-hint>
+        <kbq-password-hint [regex]="customRegex" [rule]="passwordRules.Custom">User Rule</kbq-password-hint>
     </kbq-form-field>
 
     <br />
@@ -59,74 +35,35 @@
     <div class="kbq-subheading">With password hints OUTSIDE kbqFormField</div>
     <div>
         <kbq-form-field>
-            <input
-                kbqInputPassword
-                placeholder="Number MaxMin Step"
-                [formControl]="control"
-                [required]="true"
-            />
-            <kbq-password-toggle
-                [kbqTooltipHidden]="'Показать пароль'"
-                [kbqTooltipNotHidden]="'Скрыть пароль'"
-            />
+            <input kbqInputPassword placeholder="Number MaxMin Step" [formControl]="control" [required]="true" />
+            <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
         </kbq-form-field>
     </div>
 
     <kbq-form-field #formField>
-        <input
-            kbqInputPassword
-            placeholder="Подтвердите пароль"
-            [ngModel]="password"
-            [required]="true"
-        />
-        <kbq-password-toggle
-            [kbqTooltipHidden]="'Показать пароль'"
-            [kbqTooltipNotHidden]="'Скрыть пароль'"
-        />
+        <input kbqInputPassword placeholder="Подтвердите пароль" [ngModel]="password" [required]="true" />
+        <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
     </kbq-form-field>
 
-    <kbq-password-hint
-        [max]="15"
-        [min]="8"
-        [rule]="passwordRules.Length"
-        [viewFormField]="formField"
-    >
+    <kbq-password-hint [max]="15" [min]="8" [rule]="passwordRules.Length" [viewFormField]="formField">
         От 8 до 15 символов
     </kbq-password-hint>
 
-    <kbq-password-hint
-        [rule]="passwordRules.UpperLatin"
-        [viewFormField]="formField"
-    >
+    <kbq-password-hint [rule]="passwordRules.UpperLatin" [viewFormField]="formField">
         Заглавная латинская буква
     </kbq-password-hint>
 
-    <kbq-password-hint
-        [rule]="passwordRules.LowerLatin"
-        [viewFormField]="formField"
-    >
+    <kbq-password-hint [rule]="passwordRules.LowerLatin" [viewFormField]="formField">
         Строчная латинская буква
     </kbq-password-hint>
 
-    <kbq-password-hint
-        [rule]="passwordRules.Digit"
-        [viewFormField]="formField"
-    >
-        Цифра
-    </kbq-password-hint>
+    <kbq-password-hint [rule]="passwordRules.Digit" [viewFormField]="formField">Цифра</kbq-password-hint>
 
-    <kbq-password-hint
-        [rule]="passwordRules.LatinAndSpecialSymbols"
-        [viewFormField]="formField"
-    >
+    <kbq-password-hint [rule]="passwordRules.LatinAndSpecialSymbols" [viewFormField]="formField">
         Только латинские буквы, цифры, пробелы и спецсимволы
     </kbq-password-hint>
 
-    <kbq-password-hint
-        [regex]="customRegex"
-        [rule]="passwordRules.Custom"
-        [viewFormField]="formField"
-    >
+    <kbq-password-hint [regex]="customRegex" [rule]="passwordRules.Custom" [viewFormField]="formField">
         User Rule
     </kbq-password-hint>
 
@@ -141,11 +78,7 @@
     <header>With clear-button:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
         <kbq-cleaner />
     </kbq-form-field>
@@ -156,17 +89,9 @@
     <header>With prefix:</header>
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-magnifying-glass_16"
-            kbqPrefix
-            [autoColor]="true"
-        ></i>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
     </kbq-form-field>
 
     <br />
@@ -175,17 +100,9 @@
     <header>With suffix:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-            [autoColor]="true"
-        ></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
     </kbq-form-field>
 
     <br />
@@ -221,12 +138,7 @@
 
     <header>With integer:</header>
     <kbq-form-field class="kbq-group-item">
-        <input
-            kbqNumberInput
-            placeholder="Number MaxMin Step"
-            [integer]="true"
-            [(ngModel)]="numberValue"
-        />
+        <input kbqNumberInput placeholder="Number MaxMin Step" [integer]="true" [(ngModel)]="numberValue" />
         <kbq-stepper />
     </kbq-form-field>
 
@@ -234,16 +146,9 @@
     <br />
 
     <kbq-form-field class="kbq-focused">
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-        ></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
     </kbq-form-field>
 
     <br />
@@ -251,10 +156,7 @@
 
     <header>Without placeholder:</header>
     <kbq-form-field>
-        <input
-            kbqInput
-            [(ngModel)]="value"
-        />
+        <input kbqInput [(ngModel)]="value" />
     </kbq-form-field>
 
     <br />
@@ -263,11 +165,7 @@
     <header>With placeholder:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
     </kbq-form-field>
 
     <br />
@@ -276,12 +174,7 @@
     <header>With placeholder and monospace:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            kbqInputMonospace
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput kbqInputMonospace placeholder="Placeholder" [(ngModel)]="value" />
     </kbq-form-field>
 
     <br />
@@ -290,11 +183,7 @@
     <header>With placeholder and hint:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
         <kbq-hint>Hint under field 1</kbq-hint>
         <kbq-hint>Hint under field 2</kbq-hint>
@@ -306,12 +195,7 @@
     <header>With placeholder, hint and disabled:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [disabled]="true"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [disabled]="true" [(ngModel)]="value" />
 
         <kbq-hint>Hint under field</kbq-hint>
     </kbq-form-field>
@@ -322,11 +206,7 @@
     <header>With clear-button:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
         <kbq-cleaner />
     </kbq-form-field>
@@ -337,16 +217,9 @@
     <header>With prefix:</header>
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-magnifying-glass_16"
-            kbqPrefix
-        ></i>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
     </kbq-form-field>
 
     <br />
@@ -355,16 +228,9 @@
     <header>With suffix:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-        ></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
     </kbq-form-field>
 
     <br />
@@ -373,23 +239,9 @@
     <header>Invalid:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            minlength="4"
-            placeholder="Placeholder"
-            [required]="true"
-            [(ngModel)]="value"
-        />
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqPrefix
-            [autoColor]="true"
-        ></i>
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-            [autoColor]="true"
-        ></i>
+        <input kbqInput minlength="4" placeholder="Placeholder" [required]="true" [(ngModel)]="value" />
+        <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
 
         <kbq-hint [color]="'error'">Hint under field</kbq-hint>
     </kbq-form-field>
@@ -400,13 +252,7 @@
     <header>Invalid with clear-button:</header>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            minlength="4"
-            placeholder="Placeholder"
-            [required]="true"
-            [(ngModel)]="value"
-        />
+        <input kbqInput minlength="4" placeholder="Placeholder" [required]="true" [(ngModel)]="value" />
 
         <kbq-cleaner />
     </kbq-form-field>
@@ -417,18 +263,9 @@
     <header>With placeholder, hint, prefix, cleaner and disabled:</header>
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-magnifying-glass_16"
-            kbqPrefix
-            [autoColor]="true"
-        ></i>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [disabled]="true"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [disabled]="true" [(ngModel)]="value" />
 
         <kbq-cleaner />
     </kbq-form-field>
@@ -439,17 +276,9 @@
     <header>Without borders:</header>
 
     <kbq-form-field kbqFormFieldWithoutBorders>
-        <i
-            kbq-icon="kbq-magnifying-glass_16"
-            kbqPrefix
-            [autoColor]="true"
-        ></i>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-        <input
-            kbqInput
-            placeholder="Placeholder"
-            [(ngModel)]="value"
-        />
+        <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
         <kbq-cleaner />
     </kbq-form-field>

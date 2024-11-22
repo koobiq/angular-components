@@ -98,27 +98,16 @@ to close sidepanel. For example, cancel button in footer.
 <kbq-sidepanel-body class="layout-padding">Sidepanel Body</kbq-sidepanel-body>
 <kbq-sidepanel-footer>
     <kbq-sidepanel-actions align="left">
-        <button
-            kbq-button
-            [color]="'contrast'"
-            (click)="doAnotherAction()"
-        >
+        <button kbq-button [color]="'contrast'" (click)="doAnotherAction()">
             <span>Another Action</span>
         </button>
     </kbq-sidepanel-actions>
     <kbq-sidepanel-actions align="right">
-        <button
-            kbq-button
-            [color]="'contrast'"
-            (click)="doAction()"
-        >
+        <button kbq-button [color]="'contrast'" (click)="doAction()">
             <span>Action</span>
         </button>
 
-        <button
-            kbq-button
-            kbq-sidepanel-close
-        >
+        <button kbq-button kbq-sidepanel-close>
             <span>Close</span>
         </button>
     </kbq-sidepanel-actions>

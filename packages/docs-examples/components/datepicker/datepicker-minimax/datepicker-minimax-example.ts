@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
 
@@ -18,6 +19,8 @@ import { DateTime } from 'luxon';
         KbqFormFieldModule,
         FormsModule,
         KbqToolTipModule,
+        KbqIconModule,
+        KbqFormsModule,
         LuxonDateModule
     ],
     template: `
@@ -37,15 +40,8 @@ import { DateTime } from 'luxon';
                             [max]="maxDate"
                             [min]="minDate"
                         />
-                        <i
-                            kbq-icon="kbq-calendar-o_16"
-                            kbqSuffix
-                        ></i>
-                        <kbq-datepicker
-                            #datepicker
-                            [maxDate]="maxDate"
-                            [minDate]="minDate"
-                        />
+                        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                        <kbq-datepicker #datepicker [maxDate]="maxDate" [minDate]="minDate" />
                     </kbq-form-field>
                 </div>
             </div>

@@ -1,41 +1,22 @@
 <div class="docs-component-header">
-    <div
-        docs-header
-        class="docs-component-name"
-    >
+    <div docs-header class="docs-component-name">
         {{ docItem.name }}
     </div>
     <div class="docs-component-navbar layout-row layout-padding-top-s">
         @if (!docItem.isGuide) {
-            <nav kbq-tab-nav-bar>
-                <a
-                    kbq-tab-link
-                    routerLinkActive="kbq-selected"
-                    [routerLink]="'overview'"
-                >
-                    Обзор
-                </a>
+            <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
+                <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'overview'">Обзор</a>
                 @if (docItem.hasApi) {
-                    <a
-                        kbq-tab-link
-                        routerLinkActive="kbq-selected"
-                        [routerLink]="'api'"
-                    >
-                        API
-                    </a>
+                    <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'api'">API</a>
                 }
                 @if (docItem.hasExamples) {
-                    <a
-                        kbq-tab-link
-                        routerLinkActive="kbq-selected"
-                        [routerLink]="'examples'"
-                    >
-                        Примеры
-                    </a>
+                    <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'examples'">Примеры</a>
                 }
             </nav>
         }
     </div>
 </div>
 
-<router-outlet />
+<div #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
+    <router-outlet />
+</div>

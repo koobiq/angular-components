@@ -53,13 +53,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                 </kbq-error>
             </kbq-form-field>
 
-            <button
-                class="layout-margin-top-l"
-                kbq-button
-                type="submit"
-            >
-                Submit form
-            </button>
+            <button class="layout-margin-top-l" kbq-button type="submit">Submit form</button>
         </form>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

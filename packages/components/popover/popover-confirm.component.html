@@ -10,11 +10,7 @@
     <div class="kbq-popover__container">
         <div class="kbq-popover__content">
             <div>{{ confirmText }}</div>
-            <button
-                kbq-button
-                [color]="'contrast'"
-                (click)="onConfirm.next()"
-            >
+            <button kbq-button [color]="'contrast'" (click)="onConfirm.next()">
                 {{ confirmButtonText }}
             </button>
         </div>

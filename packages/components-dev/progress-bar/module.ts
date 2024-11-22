@@ -12,7 +12,7 @@ const MAX_PERCENT: number = 100;
     selector: 'app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['../main.scss', './styles.scss']
+    styleUrls: ['./styles.scss']
 })
 export class ProgressBarDemoComponent implements OnDestroy {
     themePalette = ThemePalette;

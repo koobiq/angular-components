@@ -17,20 +17,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="content__example-button-group">
             <div class="example-button">
-                <div class="example-label kbq-extra-small-text">Text</div>
-                <button
-                    [color]="colors.Contrast"
-                    kbq-button
-                >
-                    Кнопка
-                </button>
+                <div class="example-label kbq-text-compact">Text</div>
+                <button [color]="colors.Contrast" kbq-button>Кнопка</button>
             </div>
-            <div class="example-button kbq-extra-small-text">
-                <div class="example-label kbq-extra-small-text">Icon+Text</div>
-                <button
-                    [color]="colors.Contrast"
-                    kbq-button
-                >
+            <div class="example-button kbq-text-compact">
+                <div class="example-label kbq-text-compact">Icon+Text</div>
+                <button [color]="colors.Contrast" kbq-button>
                     <i kbq-icon="kbq-plus_16"></i>
                     Кнопка
                 </button>

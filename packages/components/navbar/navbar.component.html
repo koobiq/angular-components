@@ -1,11 +1,7 @@
 <div [style.width.px]="navbarContainerWidth">
     <kbq-navbar>
         <kbq-navbar-container>
-            <kbq-navbar-item
-                #disabledItem="kbqNavbarItem"
-                [disabled]="true"
-                (click)="onItemClick(disabledItem)"
-            >
+            <kbq-navbar-item #disabledItem="kbqNavbarItem" [disabled]="true" (click)="onItemClick(disabledItem)">
                 <i kbq-icon="kbq-info-circle_16"></i>
                 <kbq-navbar-title>Left icon</kbq-navbar-title>
             </kbq-navbar-item>

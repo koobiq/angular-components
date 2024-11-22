@@ -2,12 +2,7 @@
 
 <div class="dev-container">
     <kbq-form-field>
-        <input
-            kbqInput
-            type="text"
-            [formControl]="formControl"
-            [kbqAutocomplete]="auto"
-        />
+        <input kbqInput type="text" [formControl]="formControl" [kbqAutocomplete]="auto" />
         <kbq-autocomplete #auto="kbqAutocomplete">
             @for (option of filteredOptions | async; track option) {
                 <kbq-option [value]="option">

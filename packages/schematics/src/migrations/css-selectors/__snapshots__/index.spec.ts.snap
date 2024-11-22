@@ -1,0 +1,805 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`css-selectors should inform about deprecated colors in the file 1`] = `
+[
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+../../../../../projects/app/src/styles.scss
+Replace with specified rules: 
+	neutral-white -> 	<remove from project>
+	brand-default -> 	<remove from project>
+	brand-palette -> 	<remove from project>
+	info-default -> 	<remove from project>
+	background-background-disabled -> 	states-background-disabled
+	background-background-less-contrast -> 	states-background-secondary
+	background-background-under -> 	states-background-secondary
+	background-background -> 	background-bg
+	background-overlay-hover -> 	states-background-transparent-hover
+	background-overlay-active -> 	states-background-transparent-active
+	background-overlay-disabled -> 	states-background-transparent-disabled
+	foreground-text-less-contrast -> 	foreground-contrast-fade
+	foreground-text-disabled -> 	states-foreground-disabled
+	foreground-text-error -> 	foreground-contrast-fade
+	foreground-text-success -> 	foreground-success
+	foreground-divider -> 	line-contrast-less
+	foreground-text -> 	foreground-contrast
+	foreground-icon -> 	icon-contrast
+	foreground-border -> 	line-contrast-fade
+	states-background-ghost-hover -> 	states-background-transparent-hover
+	states-background-ghost-active -> 	states-background-transparent-active
+	states-focused-color-error -> 	states-line-focus-error
+	states-focused-color -> 	states-line-focus-theme
+	states-selected-color -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	others-brand -> 	<remove from project>
+-------------------------
+    ",
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+../../../../../projects/app/src/app/app.component.html
+Replace with specified rules: 
+	neutral-white -> 	<remove from project>
+	brand-default -> 	<remove from project>
+	brand-palette -> 	<remove from project>
+	info-default -> 	<remove from project>
+	background-background-disabled -> 	states-background-disabled
+	background-background-less-contrast -> 	states-background-secondary
+	background-background-under -> 	states-background-secondary
+	background-background -> 	background-bg
+	background-overlay-hover -> 	states-background-transparent-hover
+	background-overlay-active -> 	states-background-transparent-active
+	background-overlay-disabled -> 	states-background-transparent-disabled
+	foreground-text-less-contrast -> 	foreground-contrast-fade
+	foreground-text-disabled -> 	states-foreground-disabled
+	foreground-text-error -> 	foreground-contrast-fade
+	foreground-text-success -> 	foreground-success
+	foreground-divider -> 	line-contrast-less
+	foreground-text -> 	foreground-contrast
+	foreground-icon -> 	icon-contrast
+	foreground-border -> 	line-contrast-fade
+	states-background-ghost-hover -> 	states-background-transparent-hover
+	states-background-ghost-active -> 	states-background-transparent-active
+	states-focused-color-error -> 	states-line-focus-error
+	states-focused-color -> 	states-line-focus-theme
+	states-selected-color -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	states-pressed-shadow -> 	<remove from project>
+	others-brand -> 	<remove from project>
+-------------------------
+    ",
+]
+`;
+
+exports[`css-selectors should inform about deprecated selectors for fix = false (default, without params) 1`] = `
+[
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+../../../../../projects/app/src/styles.scss
+Replace with specified rules: 
+	kbq-display-1-strong -> 	kbq-display-big-strong
+	kbq-display-2-strong -> 	kbq-display-normal-strong
+	kbq-display-3-strong -> 	kbq-display-compact-strong
+	kbq-body-tabular -> 	kbq-tabular-big
+	kbq-body-strong -> 	kbq-text-big-strong
+	kbq-body-mono-strong -> 	kbq-mono-big-strong
+	kbq-body-mono -> 	kbq-mono-big
+	kbq-body-caps -> 	kbq-caps-big
+	kbq-caption-tabular -> 	kbq-tabular-normal
+	kbq-caption-strong -> 	kbq-text-normal-strong
+	kbq-caption-mono-strong -> 	kbq-mono-normal-strong
+	kbq-caption-mono -> 	kbq-mono-normal
+	kbq-caption-caps -> 	kbq-caps-normal
+	kbq-extra-small-text-strong -> 	kbq-text-compact-strong
+	kbq-extra-small-text-mono -> 	kbq-mono-compact
+	kbq-extra-small-text-caps -> 	kbq-caps-compact
+	kbq-display-1 -> 	kbq-display-big
+	kbq-display-2 -> 	kbq-display-normal
+	kbq-display-3 -> 	kbq-display-compact
+	kbq-body -> 	kbq-text-big
+	kbq-caption -> 	kbq-text-normal
+	kbq-extra-small-text -> 	kbq-text-compact
+-------------------------
+    
+
+Or use --fix=true to replace automatically
+Pay attention: overwriting is possible. Check the code after automatic replacement was done.
+-------------------------
+    ",
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+../../../../../projects/app/src/app/app.component.html
+Replace with specified rules: 
+	kbq-display-1-strong -> 	kbq-display-big-strong
+	kbq-display-2-strong -> 	kbq-display-normal-strong
+	kbq-display-3-strong -> 	kbq-display-compact-strong
+	kbq-body-tabular -> 	kbq-tabular-big
+	kbq-body-strong -> 	kbq-text-big-strong
+	kbq-body-mono-strong -> 	kbq-mono-big-strong
+	kbq-body-mono -> 	kbq-mono-big
+	kbq-body-caps -> 	kbq-caps-big
+	kbq-caption-tabular -> 	kbq-tabular-normal
+	kbq-caption-strong -> 	kbq-text-normal-strong
+	kbq-caption-mono-strong -> 	kbq-mono-normal-strong
+	kbq-caption-mono -> 	kbq-mono-normal
+	kbq-caption-caps -> 	kbq-caps-normal
+	kbq-extra-small-text-strong -> 	kbq-text-compact-strong
+	kbq-extra-small-text-mono -> 	kbq-mono-compact
+	kbq-extra-small-text-caps -> 	kbq-caps-compact
+	kbq-display-1 -> 	kbq-display-big
+	kbq-display-2 -> 	kbq-display-normal
+	kbq-display-3 -> 	kbq-display-compact
+	kbq-body -> 	kbq-text-big
+	kbq-caption -> 	kbq-text-normal
+	kbq-extra-small-text -> 	kbq-text-compact
+-------------------------
+    
+
+Or use --fix=true to replace automatically
+Pay attention: overwriting is possible. Check the code after automatic replacement was done.
+-------------------------
+    ",
+  "
+-------------------------
+Please pay attention! Found deprecated сss-selectors in file: 
+../../../../../projects/app/src/app/app.component.ts
+Replace with specified rules: 
+	kbq-display-1-strong -> 	kbq-display-big-strong
+	kbq-display-2-strong -> 	kbq-display-normal-strong
+	kbq-display-3-strong -> 	kbq-display-compact-strong
+	kbq-body-tabular -> 	kbq-tabular-big
+	kbq-body-strong -> 	kbq-text-big-strong
+	kbq-body-mono-strong -> 	kbq-mono-big-strong
+	kbq-body-mono -> 	kbq-mono-big
+	kbq-body-caps -> 	kbq-caps-big
+	kbq-caption-tabular -> 	kbq-tabular-normal
+	kbq-caption-strong -> 	kbq-text-normal-strong
+	kbq-caption-mono-strong -> 	kbq-mono-normal-strong
+	kbq-caption-mono -> 	kbq-mono-normal
+	kbq-caption-caps -> 	kbq-caps-normal
+	kbq-extra-small-text-strong -> 	kbq-text-compact-strong
+	kbq-extra-small-text-mono -> 	kbq-mono-compact
+	kbq-extra-small-text-caps -> 	kbq-caps-compact
+	kbq-display-1 -> 	kbq-display-big
+	kbq-display-2 -> 	kbq-display-normal
+	kbq-display-3 -> 	kbq-display-compact
+	kbq-body -> 	kbq-text-big
+	kbq-caption -> 	kbq-text-normal
+	kbq-extra-small-text -> 	kbq-text-compact
+-------------------------
+    
+
+Or use --fix=true to replace automatically
+Pay attention: overwriting is possible. Check the code after automatic replacement was done.
+-------------------------
+    ",
+]
+`;
+
+exports[`css-selectors should run migration for specified project: project app: after changes 1`] = `
+[
+  "<div class="kbq-display-big-strong"></div>
+<div class="kbq-display-normal-strong"></div>
+<div class="kbq-display-compact-strong"></div>
+<div class="kbq-tabular-big"></div>
+<div class="kbq-text-big-strong"></div>
+<div class="kbq-mono-big-strong"></div>
+<div class="kbq-mono-big"></div>
+<div class="kbq-caps-big"></div>
+<div class="kbq-tabular-normal"></div>
+<div class="kbq-text-normal-strong"></div>
+<div class="kbq-mono-normal-strong"></div>
+<div class="kbq-mono-normal"></div>
+<div class="kbq-caps-normal"></div>
+<div class="kbq-text-compact-strong"></div>
+<div class="kbq-mono-compact"></div>
+<div class="kbq-caps-compact"></div>
+<div class="kbq-display-big"></div>
+<div class="kbq-display-normal"></div>
+<div class="kbq-display-compact"></div>
+<div class="kbq-text-big"></div>
+<div class="kbq-text-normal"></div>
+<div class="kbq-text-compact"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-big-strong"></div>
+<div class="kbq-display-normal-strong"></div>
+<div class="kbq-display-compact-strong"></div>
+<div class="kbq-tabular-big"></div>
+<div class="kbq-text-big-strong"></div>
+<div class="kbq-mono-big-strong"></div>
+<div class="kbq-mono-big"></div>
+<div class="kbq-caps-big"></div>
+<div class="kbq-tabular-normal"></div>
+<div class="kbq-text-normal-strong"></div>
+<div class="kbq-mono-normal-strong"></div>
+<div class="kbq-mono-normal"></div>
+<div class="kbq-caps-normal"></div>
+<div class="kbq-text-compact-strong"></div>
+<div class="kbq-mono-compact"></div>
+<div class="kbq-caps-compact"></div>
+<div class="kbq-display-big"></div>
+<div class="kbq-display-normal"></div>
+<div class="kbq-display-compact"></div>
+<div class="kbq-text-big"></div>
+<div class="kbq-text-normal"></div>
+<div class="kbq-text-compact"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-big-strong';
+}",
+  ".kbq-display-big-strong {}
+.kbq-display-normal-strong {}
+.kbq-display-compact-strong {}
+.kbq-tabular-big {}
+.kbq-text-big-strong {}
+.kbq-mono-big-strong {}
+.kbq-mono-big {}
+.kbq-caps-big {}
+.kbq-tabular-normal {}
+.kbq-text-normal-strong {}
+.kbq-mono-normal-strong {}
+.kbq-mono-normal {}
+.kbq-caps-normal {}
+.kbq-text-compact-strong {}
+.kbq-mono-compact {}
+.kbq-caps-compact {}
+.kbq-display-big {}
+.kbq-display-normal {}
+.kbq-display-compact {}
+.kbq-text-big {}
+.kbq-text-normal {}
+.kbq-text-compact {}",
+]
+`;
+
+exports[`css-selectors should run migration for specified project: project app: before changes 1`] = `
+[
+  "<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-1-strong';
+}",
+  ".kbq-display-1-strong {}
+.kbq-display-2-strong {}
+.kbq-display-3-strong {}
+.kbq-body-tabular {}
+.kbq-body-strong {}
+.kbq-body-mono-strong {}
+.kbq-body-mono {}
+.kbq-body-caps {}
+.kbq-caption-tabular {}
+.kbq-caption-strong {}
+.kbq-caption-mono-strong {}
+.kbq-caption-mono {}
+.kbq-caption-caps {}
+.kbq-extra-small-text-strong {}
+.kbq-extra-small-text-mono {}
+.kbq-extra-small-text-caps {}
+.kbq-display-1 {}
+.kbq-display-2 {}
+.kbq-display-3 {}
+.kbq-body {}
+.kbq-caption {}
+.kbq-extra-small-text {}",
+]
+`;
+
+exports[`css-selectors should run migration for specified project: project second-app: after changes 1`] = `
+[
+  "<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-1-strong';
+}",
+  ".kbq-display-1-strong {}
+.kbq-display-2-strong {}
+.kbq-display-3-strong {}
+.kbq-body-tabular {}
+.kbq-body-strong {}
+.kbq-body-mono-strong {}
+.kbq-body-mono {}
+.kbq-body-caps {}
+.kbq-caption-tabular {}
+.kbq-caption-strong {}
+.kbq-caption-mono-strong {}
+.kbq-caption-mono {}
+.kbq-caption-caps {}
+.kbq-extra-small-text-strong {}
+.kbq-extra-small-text-mono {}
+.kbq-extra-small-text-caps {}
+.kbq-display-1 {}
+.kbq-display-2 {}
+.kbq-display-3 {}
+.kbq-body {}
+.kbq-caption {}
+.kbq-extra-small-text {}",
+]
+`;
+
+exports[`css-selectors should run migration for specified project: project second-app: before changes 1`] = `
+[
+  "<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-1-strong';
+}",
+  ".kbq-display-1-strong {}
+.kbq-display-2-strong {}
+.kbq-display-3-strong {}
+.kbq-body-tabular {}
+.kbq-body-strong {}
+.kbq-body-mono-strong {}
+.kbq-body-mono {}
+.kbq-body-caps {}
+.kbq-caption-tabular {}
+.kbq-caption-strong {}
+.kbq-caption-mono-strong {}
+.kbq-caption-mono {}
+.kbq-caption-caps {}
+.kbq-extra-small-text-strong {}
+.kbq-extra-small-text-mono {}
+.kbq-extra-small-text-caps {}
+.kbq-display-1 {}
+.kbq-display-2 {}
+.kbq-display-3 {}
+.kbq-body {}
+.kbq-caption {}
+.kbq-extra-small-text {}",
+]
+`;
+
+exports[`css-selectors should run migration for whole tree: project app: after changes 1`] = `
+[
+  "<div class="kbq-display-big-strong"></div>
+<div class="kbq-display-normal-strong"></div>
+<div class="kbq-display-compact-strong"></div>
+<div class="kbq-tabular-big"></div>
+<div class="kbq-text-big-strong"></div>
+<div class="kbq-mono-big-strong"></div>
+<div class="kbq-mono-big"></div>
+<div class="kbq-caps-big"></div>
+<div class="kbq-tabular-normal"></div>
+<div class="kbq-text-normal-strong"></div>
+<div class="kbq-mono-normal-strong"></div>
+<div class="kbq-mono-normal"></div>
+<div class="kbq-caps-normal"></div>
+<div class="kbq-text-compact-strong"></div>
+<div class="kbq-mono-compact"></div>
+<div class="kbq-caps-compact"></div>
+<div class="kbq-display-big"></div>
+<div class="kbq-display-normal"></div>
+<div class="kbq-display-compact"></div>
+<div class="kbq-text-big"></div>
+<div class="kbq-text-normal"></div>
+<div class="kbq-text-compact"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-big-strong"></div>
+<div class="kbq-display-normal-strong"></div>
+<div class="kbq-display-compact-strong"></div>
+<div class="kbq-tabular-big"></div>
+<div class="kbq-text-big-strong"></div>
+<div class="kbq-mono-big-strong"></div>
+<div class="kbq-mono-big"></div>
+<div class="kbq-caps-big"></div>
+<div class="kbq-tabular-normal"></div>
+<div class="kbq-text-normal-strong"></div>
+<div class="kbq-mono-normal-strong"></div>
+<div class="kbq-mono-normal"></div>
+<div class="kbq-caps-normal"></div>
+<div class="kbq-text-compact-strong"></div>
+<div class="kbq-mono-compact"></div>
+<div class="kbq-caps-compact"></div>
+<div class="kbq-display-big"></div>
+<div class="kbq-display-normal"></div>
+<div class="kbq-display-compact"></div>
+<div class="kbq-text-big"></div>
+<div class="kbq-text-normal"></div>
+<div class="kbq-text-compact"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-big-strong';
+}",
+  ".kbq-display-big-strong {}
+.kbq-display-normal-strong {}
+.kbq-display-compact-strong {}
+.kbq-tabular-big {}
+.kbq-text-big-strong {}
+.kbq-mono-big-strong {}
+.kbq-mono-big {}
+.kbq-caps-big {}
+.kbq-tabular-normal {}
+.kbq-text-normal-strong {}
+.kbq-mono-normal-strong {}
+.kbq-mono-normal {}
+.kbq-caps-normal {}
+.kbq-text-compact-strong {}
+.kbq-mono-compact {}
+.kbq-caps-compact {}
+.kbq-display-big {}
+.kbq-display-normal {}
+.kbq-display-compact {}
+.kbq-text-big {}
+.kbq-text-normal {}
+.kbq-text-compact {}",
+]
+`;
+
+exports[`css-selectors should run migration for whole tree: project app: before changes 1`] = `
+[
+  "<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-1-strong';
+}",
+  ".kbq-display-1-strong {}
+.kbq-display-2-strong {}
+.kbq-display-3-strong {}
+.kbq-body-tabular {}
+.kbq-body-strong {}
+.kbq-body-mono-strong {}
+.kbq-body-mono {}
+.kbq-body-caps {}
+.kbq-caption-tabular {}
+.kbq-caption-strong {}
+.kbq-caption-mono-strong {}
+.kbq-caption-mono {}
+.kbq-caption-caps {}
+.kbq-extra-small-text-strong {}
+.kbq-extra-small-text-mono {}
+.kbq-extra-small-text-caps {}
+.kbq-display-1 {}
+.kbq-display-2 {}
+.kbq-display-3 {}
+.kbq-body {}
+.kbq-caption {}
+.kbq-extra-small-text {}",
+]
+`;
+
+exports[`css-selectors should run migration for whole tree: project second-app: after changes 1`] = `
+[
+  "<div class="kbq-display-big-strong"></div>
+<div class="kbq-display-normal-strong"></div>
+<div class="kbq-display-compact-strong"></div>
+<div class="kbq-tabular-big"></div>
+<div class="kbq-text-big-strong"></div>
+<div class="kbq-mono-big-strong"></div>
+<div class="kbq-mono-big"></div>
+<div class="kbq-caps-big"></div>
+<div class="kbq-tabular-normal"></div>
+<div class="kbq-text-normal-strong"></div>
+<div class="kbq-mono-normal-strong"></div>
+<div class="kbq-mono-normal"></div>
+<div class="kbq-caps-normal"></div>
+<div class="kbq-text-compact-strong"></div>
+<div class="kbq-mono-compact"></div>
+<div class="kbq-caps-compact"></div>
+<div class="kbq-display-big"></div>
+<div class="kbq-display-normal"></div>
+<div class="kbq-display-compact"></div>
+<div class="kbq-text-big"></div>
+<div class="kbq-text-normal"></div>
+<div class="kbq-text-compact"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-big-strong"></div>
+<div class="kbq-display-normal-strong"></div>
+<div class="kbq-display-compact-strong"></div>
+<div class="kbq-tabular-big"></div>
+<div class="kbq-text-big-strong"></div>
+<div class="kbq-mono-big-strong"></div>
+<div class="kbq-mono-big"></div>
+<div class="kbq-caps-big"></div>
+<div class="kbq-tabular-normal"></div>
+<div class="kbq-text-normal-strong"></div>
+<div class="kbq-mono-normal-strong"></div>
+<div class="kbq-mono-normal"></div>
+<div class="kbq-caps-normal"></div>
+<div class="kbq-text-compact-strong"></div>
+<div class="kbq-mono-compact"></div>
+<div class="kbq-caps-compact"></div>
+<div class="kbq-display-big"></div>
+<div class="kbq-display-normal"></div>
+<div class="kbq-display-compact"></div>
+<div class="kbq-text-big"></div>
+<div class="kbq-text-normal"></div>
+<div class="kbq-text-compact"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-big-strong';
+}",
+  ".kbq-display-big-strong {}
+.kbq-display-normal-strong {}
+.kbq-display-compact-strong {}
+.kbq-tabular-big {}
+.kbq-text-big-strong {}
+.kbq-mono-big-strong {}
+.kbq-mono-big {}
+.kbq-caps-big {}
+.kbq-tabular-normal {}
+.kbq-text-normal-strong {}
+.kbq-mono-normal-strong {}
+.kbq-mono-normal {}
+.kbq-caps-normal {}
+.kbq-text-compact-strong {}
+.kbq-mono-compact {}
+.kbq-caps-compact {}
+.kbq-display-big {}
+.kbq-display-normal {}
+.kbq-display-compact {}
+.kbq-text-big {}
+.kbq-text-normal {}
+.kbq-text-compact {}",
+]
+`;
+
+exports[`css-selectors should run migration for whole tree: project second-app: before changes 1`] = `
+[
+  "<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>",
+  "
+@Component({
+    selector: 'test-app',
+    template: '<div class="kbq-display-1-strong"></div>
+<div class="kbq-display-2-strong"></div>
+<div class="kbq-display-3-strong"></div>
+<div class="kbq-body-tabular"></div>
+<div class="kbq-body-strong"></div>
+<div class="kbq-body-mono-strong"></div>
+<div class="kbq-body-mono"></div>
+<div class="kbq-body-caps"></div>
+<div class="kbq-caption-tabular"></div>
+<div class="kbq-caption-strong"></div>
+<div class="kbq-caption-mono-strong"></div>
+<div class="kbq-caption-mono"></div>
+<div class="kbq-caption-caps"></div>
+<div class="kbq-extra-small-text-strong"></div>
+<div class="kbq-extra-small-text-mono"></div>
+<div class="kbq-extra-small-text-caps"></div>
+<div class="kbq-display-1"></div>
+<div class="kbq-display-2"></div>
+<div class="kbq-display-3"></div>
+<div class="kbq-body"></div>
+<div class="kbq-caption"></div>
+<div class="kbq-extra-small-text"></div>'
+})
+class TestApp {
+    dynamicClass = 'kbq-display-1-strong';
+}",
+  ".kbq-display-1-strong {}
+.kbq-display-2-strong {}
+.kbq-display-3-strong {}
+.kbq-body-tabular {}
+.kbq-body-strong {}
+.kbq-body-mono-strong {}
+.kbq-body-mono {}
+.kbq-body-caps {}
+.kbq-caption-tabular {}
+.kbq-caption-strong {}
+.kbq-caption-mono-strong {}
+.kbq-caption-mono {}
+.kbq-caption-caps {}
+.kbq-extra-small-text-strong {}
+.kbq-extra-small-text-mono {}
+.kbq-extra-small-text-caps {}
+.kbq-display-1 {}
+.kbq-display-2 {}
+.kbq-display-3 {}
+.kbq-body {}
+.kbq-caption {}
+.kbq-extra-small-text {}",
+]
+`;

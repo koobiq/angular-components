@@ -1,36 +1,15 @@
-<ng-template
-    #toastWithInlineLinkTemplate
-    let-toast
->
+<ng-template #toastWithInlineLinkTemplate let-toast>
     <p>
         Запрос
-        <a
-            kbq-link
-            pseudo
-        >
-            REQ-20180101-02
-        </a>
+        <a kbq-link pseudo>REQ-20180101-02</a>
         назначен на вас
     </p>
 </ng-template>
 
-<ng-template
-    #toastActionsTemplate
-    let-toast
->
-    <a
-        kbq-link
-        pseudo
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-    >
-        Восстановить
-    </a>
+<ng-template #toastActionsTemplate let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Восстановить</a>
 </ng-template>
 
-<button
-    kbq-button
-    (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)"
->
+<button kbq-button (click)="showToastWithInlineLink(toastWithInlineLinkTemplate, toastActionsTemplate)">
     Тост с гиперссылкой в заголовке
 </button>

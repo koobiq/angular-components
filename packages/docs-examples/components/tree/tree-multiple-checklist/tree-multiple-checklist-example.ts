@@ -107,11 +107,7 @@ export const DATA_OBJECT = {
         KbqCheckboxModule
     ],
     template: `
-        <kbq-tree-selection
-            [(ngModel)]="modelValue"
-            [dataSource]="dataSource"
-            [treeControl]="treeControl"
-        >
+        <kbq-tree-selection [(ngModel)]="modelValue" [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option
                 *kbqTreeNodeDef="let node"
                 [class.kbq-selected]="selectedState(node)"

@@ -3,7 +3,7 @@
 @use '../dist/components/core/styles/common';
 
 @mixin kbq-docs-anchors-theme() {
-    $shadow: var(--kbq-foreground-text-less-contrast);
+    $shadow: var(--kbq-foreground-contrast-secondary);
 
     .docs-anchors {
         background-color: var(--kbq-background-bg);

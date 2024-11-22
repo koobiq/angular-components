@@ -5,6 +5,7 @@ const path = require('path');
 const { promises: fs } = require('fs');
 
 const pkg = require('../../package.json');
+const { getMigrations } = require('./src/utils/migrations');
 
 const version = (str) => JSON.stringify(str.startsWith('^') ? str : '^' + str);
 
@@ -25,9 +26,12 @@ module.exports = [
         },
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
-            'new-icons-pack/index': path.join(__dirname, 'src/new-icons-pack/index.ts'),
-            'new-icons-pack/data': path.join(__dirname, 'src/new-icons-pack/data.ts'),
-            'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts')
+            'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
+            ...getMigrations().reduce((res, cur) => {
+                res[`migrations/${cur}/index`] = path.join(__dirname, `src/migrations/${cur}/index.ts`);
+                res[`migrations/${cur}/data`] = path.join(__dirname, `src/migrations/${cur}/data.ts`);
+                return res;
+            }, {})
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
         external: (dependency) =>

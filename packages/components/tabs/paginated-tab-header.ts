@@ -8,21 +8,19 @@ import {
     AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectorRef,
     DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
     inject,
-    Inject,
     Input,
     NgZone,
     OnDestroy,
-    Optional,
     QueryList
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ANIMATION_MODULE_TYPE } from '@angular/platform-browser/animations';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { fromEvent, merge, of as observableOf, Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -113,11 +111,11 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     /** The distance in pixels that the tab labels should be translated to the left. */
     private _scrollDistance = 0;
 
-    abstract items: QueryList<KbqPaginatedTabHeaderItem>;
-    abstract tabListContainer: ElementRef<HTMLElement>;
-    abstract tabList: ElementRef<HTMLElement>;
-    abstract nextPaginator: ElementRef<HTMLElement>;
-    abstract previousPaginator: ElementRef<HTMLElement>;
+    abstract readonly items: QueryList<KbqPaginatedTabHeaderItem>;
+    abstract readonly tabListContainer: ElementRef<HTMLElement>;
+    abstract readonly tabList: ElementRef<HTMLElement>;
+    abstract readonly nextPaginator: ElementRef<HTMLElement>;
+    abstract readonly previousPaginator: ElementRef<HTMLElement>;
 
     /** Event emitted when the option is selected. */
     readonly selectFocusedIndex: EventEmitter<number> = new EventEmitter<number>();
@@ -138,11 +136,23 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * Whether pagination should be disabled. This can be used to avoid unnecessary
      * layout recalculations if it's known that pagination won't be required.
      */
-    @Input() disablePagination: boolean = false;
+    @Input({ transform: booleanAttribute }) disablePagination: boolean = false;
 
-    private readonly destroyRef = inject(DestroyRef);
+    /** Whether the tabs should be displayed vertically. */
+    @Input({ transform: booleanAttribute })
+    set vertical(value: boolean) {
+        this._vertical = value;
 
-    protected vertical: boolean = false;
+        if (this._vertical) {
+            this.disablePagination = true;
+        }
+    }
+
+    get vertical(): boolean {
+        return this._vertical;
+    }
+
+    private _vertical = false;
 
     /**
      * The number of tab labels that are displayed on the header. When this changes, the header
@@ -165,18 +175,18 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     /** Whether the header should scroll to the selected index after the view has been checked. */
     private selectedIndexChanged = false;
 
-    constructor(
-        protected elementRef: ElementRef<HTMLElement>,
-        protected changeDetectorRef: ChangeDetectorRef,
-        private viewportRuler: ViewportRuler,
-        private ngZone: NgZone,
-        private platform: Platform,
-        @Optional() private dir: Directionality,
-        @Optional() @Inject(ANIMATION_MODULE_TYPE) public animationMode?: string
-    ) {
+    protected readonly destroyRef = inject(DestroyRef);
+    public readonly elementRef = inject(ElementRef);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly viewportRuler = inject(ViewportRuler);
+    private readonly ngZone = inject(NgZone);
+    private readonly platform = inject(Platform);
+    private readonly dir = inject(Directionality, { optional: true });
+
+    constructor() {
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
-        ngZone.runOutsideAngular(() => {
-            fromEvent(elementRef.nativeElement, 'mouseleave')
+        this.ngZone.runOutsideAngular(() => {
+            fromEvent(this.elementRef.nativeElement, 'mouseleave')
                 .pipe(takeUntilDestroyed())
                 .subscribe(() => this.stopInterval());
         });
@@ -479,7 +489,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
      * should be called sparingly.
      */
     checkPaginationEnabled() {
-        if (this.disablePagination || this.vertical) {
+        if (this.disablePagination) {
             this.showPaginationControls = false;
         } else {
             const isEnabled = this.tabList.nativeElement.scrollWidth > this.elementRef.nativeElement.offsetWidth;

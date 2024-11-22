@@ -1,8 +1,5 @@
 <div class="common-container">
-    <kbq-radio-group
-        class="layout-column example-radio-group"
-        (change)="setLocale($event)"
-    >
+    <kbq-radio-group class="layout-column example-radio-group" (change)="setLocale($event)">
         @for (language of languageList; track language) {
             <kbq-radio-button
                 class="example-radio-button"
@@ -22,11 +19,8 @@
     </div>
 </div>
 
-<div class="kbq-body">
-    <kbq-radio-group
-        class="layout-column"
-        [(ngModel)]="timeFormat"
-    >
+<div class="kbq-text-big">
+    <kbq-radio-group class="layout-column" [(ngModel)]="timeFormat">
         <kbq-radio-button [value]="TimeFormats.HHmm">{{ TimeFormats.HHmm.toLowerCase() }}</kbq-radio-button>
         <kbq-radio-button [value]="TimeFormats.HHmmss">{{ TimeFormats.HHmmss.toLowerCase() }}</kbq-radio-button>
     </kbq-radio-group>
@@ -43,24 +37,13 @@
     <div>Validation state: {{ reactiveFormControlValue.errors | json }}</div>
 
     <kbq-form-field (click)="myDatepicker2.toggle()">
-        <input
-            [kbqDatepicker]="myDatepicker2"
-            [max]="maxDate"
-            [min]="minDate"
-            [(ngModel)]="ngModelValue"
-        />
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-        ></i>
+        <input [kbqDatepicker]="myDatepicker2" [max]="maxDate" [min]="minDate" [(ngModel)]="ngModelValue" />
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
         <kbq-datepicker #myDatepicker2 />
     </kbq-form-field>
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-clock_16"
-            kbqPrefix
-        ></i>
+        <i kbq-icon="kbq-clock_16" kbqPrefix></i>
         <input
             kbqTimepicker
             [format]="timeFormat"
@@ -69,7 +52,7 @@
             [(ngModel)]="ngModelValue"
             (ngModelChange)="onTimepickerChange()"
         />
-        <!--        <kbq-hint class="kbq-caption" *ngIf="reactiveFormControlValue.errors?.kbqTimepickerParse">Только цифры</kbq-hint>-->
+        <!--        <kbq-hint class="kbq-text-normal" *ngIf="reactiveFormControlValue.errors?.kbqTimepickerParse">Только цифры</kbq-hint>-->
     </kbq-form-field>
 
     <!--    <br><br><br>-->

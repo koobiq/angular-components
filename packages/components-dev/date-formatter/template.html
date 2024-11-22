@@ -1,8 +1,5 @@
-<div class="common-container kbq-body p-fixed">
-    <kbq-radio-group
-        class="example-radio-group"
-        (change)="setLocale($event)"
-    >
+<div class="common-container kbq-text-big p-fixed">
+    <kbq-radio-group class="example-radio-group" (change)="setLocale($event)">
         @for (language of languageList; track language) {
             <kbq-radio-button
                 class="example-radio-button"
@@ -20,10 +17,10 @@
     </div>
 </div>
 
-<div class="common-container kbq-body">
+<div class="common-container kbq-text-big">
     <br />
     <br />
-    <header class="kbq-display-3">Absolute date</header>
+    <header class="kbq-display-compact">Absolute date</header>
     <div class="common-container">
         <h3>Long format</h3>
         <div>
@@ -132,7 +129,7 @@
     </div>
 
     <br />
-    <header class="kbq-display-3">Relative date</header>
+    <header class="kbq-display-compact">Relative date</header>
     <div class="common-container">
         <h3>Long format</h3>
         <div>
@@ -335,7 +332,7 @@
     </div>
 
     <br />
-    <header class="kbq-display-3">Date range</header>
+    <header class="kbq-display-compact">Date range</header>
     <h2>Closed range</h2>
     <div class="common-container">
         <h3>Long format</h3>
@@ -805,7 +802,7 @@
         </div>
     </div>
     <br />
-    <header class="kbq-display-3">Time duration</header>
+    <header class="kbq-display-compact">Time duration</header>
     <div class="common-container">
         <h3>The shortest format</h3>
         <div>

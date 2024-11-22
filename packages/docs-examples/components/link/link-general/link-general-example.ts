@@ -10,13 +10,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     imports: [KbqLinkModule],
     template: `
         <div style="padding: 16px">
-            <a
-                href="https://koobiq.io/components/link/overview"
-                target="_blank"
-                kbq-link
-            >
-                Отчет сканирования
-            </a>
+            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>Отчет сканирования</a>
         </div>
     `
 })

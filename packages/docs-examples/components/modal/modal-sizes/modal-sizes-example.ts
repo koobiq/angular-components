@@ -10,40 +10,14 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
     selector: 'modal-sizes-example',
     imports: [KbqButtonModule],
     template: `
-        <div
-            class="layout-column"
-            style="width: 200px"
-        >
-            <button
-                (click)="showSmallModal()"
-                style="margin-bottom: 16px"
-                kbq-button
-            >
-                Small
-            </button>
+        <div class="layout-column" style="width: 200px">
+            <button (click)="showSmallModal()" style="margin-bottom: 16px" kbq-button>Small</button>
 
-            <button
-                (click)="showDefaultModal()"
-                style="margin-bottom: 16px"
-                kbq-button
-            >
-                Medium
-            </button>
+            <button (click)="showDefaultModal()" style="margin-bottom: 16px" kbq-button>Medium</button>
 
-            <button
-                (click)="showLargeModal()"
-                style="margin-bottom: 16px"
-                kbq-button
-            >
-                Large
-            </button>
+            <button (click)="showLargeModal()" style="margin-bottom: 16px" kbq-button>Large</button>
 
-            <button
-                (click)="showCustomModal()"
-                kbq-button
-            >
-                Custom width
-            </button>
+            <button (click)="showCustomModal()" kbq-button>Custom width</button>
         </div>
     `
 })

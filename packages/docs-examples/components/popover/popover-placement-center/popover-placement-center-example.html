@@ -2,31 +2,14 @@
     <ng-template #customContent>
         <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
         <kbq-form-field>
-            <input
-                kbqInput
-                placeholder="Интересная мысль"
-            />
+            <input kbqInput placeholder="Интересная мысль" />
         </kbq-form-field>
     </ng-template>
 
     <ng-template #customFooter>
-        <div
-            style="gap: 16px"
-            class="layout-row layout-wrap"
-        >
-            <button
-                kbq-button
-                [color]="'contrast'"
-                (click)="activePopover.hide(0)"
-            >
-                Сохранить
-            </button>
-            <button
-                kbq-button
-                (click)="activePopover.hide(0)"
-            >
-                Отмена
-            </button>
+        <div style="gap: 16px" class="layout-row layout-wrap">
+            <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Сохранить</button>
+            <button kbq-button (click)="activePopover.hide(0)">Отмена</button>
         </div>
     </ng-template>
 

@@ -1,56 +1,25 @@
-<ng-template
-    #tooltipContent
-    let-ctx
->
+<ng-template #tooltipContent let-ctx>
     <div>{{ ctx.content }}</div>
 </ng-template>
 
-<ng-template
-    #tooltipHeader
-    let-ctx
->
+<ng-template #tooltipHeader let-ctx>
     <span>{{ ctx.header }}</span>
 </ng-template>
 
 <div class="container flex-100 layout-column layout-align-start-start">
-    <div
-        class="kbq-form-vertical layout-row layou-align-start-start config"
-        [style]="getOrder('config')"
-    >
+    <div class="kbq-form-vertical layout-row layou-align-start-start config" [style]="getOrder('config')">
         <div class="flex-20 kbq-form__fieldset">
             <div class="kbq-form__row">
-                <label
-                    for="order"
-                    class="kbq-form__label"
-                >
-                    Inverse layout order
-                </label>
+                <label for="order" class="kbq-form__label">Inverse layout order</label>
 
-                <kbq-checkbox
-                    id="order"
-                    class="kbq-form__control"
-                    [(ngModel)]="selectedOrder"
-                >
-                    Yes/No
-                </kbq-checkbox>
+                <kbq-checkbox id="order" class="kbq-form__control" [(ngModel)]="selectedOrder">Yes/No</kbq-checkbox>
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="element"
-                    class="kbq-form__label"
-                >
-                    Choose color
-                </label>
+                <label for="element" class="kbq-form__label">Choose color</label>
 
-                <kbq-form-field
-                    id="color"
-                    class="kbq-form__control"
-                >
-                    <kbq-select
-                        [placeholder]="'Select element'"
-                        [(value)]="selectedColor"
-                    >
+                <kbq-form-field id="color" class="kbq-form__control">
+                    <kbq-select [placeholder]="'Select element'" [(value)]="selectedColor">
                         <kbq-option [value]="componentColors.Contrast">Contrast</kbq-option>
                         <kbq-option [value]="componentColors.ContrastFade">ContrastFade</kbq-option>
                         <kbq-option [value]="componentColors.Theme">Theme</kbq-option>
@@ -61,21 +30,10 @@
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="element"
-                    class="kbq-form__label"
-                >
-                    Choose trigger element
-                </label>
+                <label for="element" class="kbq-form__label">Choose trigger element</label>
 
-                <kbq-form-field
-                    id="element"
-                    class="kbq-form__control"
-                >
-                    <kbq-select
-                        [placeholder]="'Select element'"
-                        [(value)]="selectedElement"
-                    >
+                <kbq-form-field id="element" class="kbq-form__control">
+                    <kbq-select [placeholder]="'Select element'" [(value)]="selectedElement">
                         <kbq-option [value]="'button'">Button</kbq-option>
                         <kbq-option [value]="'icon'">Icon</kbq-option>
                         <kbq-option [value]="'input'">Input</kbq-option>
@@ -85,21 +43,10 @@
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="trigger"
-                    class="kbq-form__label"
-                >
-                    Choose popover trigger
-                </label>
+                <label for="trigger" class="kbq-form__label">Choose popover trigger</label>
 
-                <kbq-form-field
-                    id="trigger"
-                    class="kbq-form__control"
-                >
-                    <kbq-select
-                        [placeholder]="'Select trigger'"
-                        [(value)]="selectedTrigger"
-                    >
+                <kbq-form-field id="trigger" class="kbq-form__control">
+                    <kbq-select [placeholder]="'Select trigger'" [(value)]="selectedTrigger">
                         <kbq-option [value]="'click'">Click</kbq-option>
                         <kbq-option [value]="'hover'">Hover</kbq-option>
                         <kbq-option [value]="'focus'">Focus</kbq-option>
@@ -108,21 +55,10 @@
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="layout"
-                    class="kbq-form__label"
-                >
-                    Choose layout content placement
-                </label>
+                <label for="layout" class="kbq-form__label">Choose layout content placement</label>
 
-                <kbq-form-field
-                    id="layout"
-                    class="kbq-form__control"
-                >
-                    <kbq-select
-                        [placeholder]="'Select layout'"
-                        [(value)]="layoutClass"
-                    >
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <kbq-select [placeholder]="'Select layout'" [(value)]="layoutClass">
                         <kbq-option [value]="'layout-row layout-align-start-start'">Start start</kbq-option>
                         <kbq-option [value]="'layout-row layout-align-start-center'">Start center</kbq-option>
                         <kbq-option [value]="'layout-row layout-align-start-end'">Start end</kbq-option>
@@ -137,27 +73,14 @@
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="layout"
-                    class="kbq-form__label"
-                >
-                    Choose tooltip text
-                </label>
+                <label for="layout" class="kbq-form__label">Choose tooltip text</label>
                 <kbq-form-field>
-                    <input
-                        kbqInput
-                        [(ngModel)]="inputText"
-                    />
+                    <input kbqInput [(ngModel)]="inputText" />
                 </kbq-form-field>
             </div>
         </div>
         <div class="flex left-padding layout-align-center-center">
-            <label
-                for="trigger"
-                class="flex kbq-form__label"
-            >
-                Choose kbqPlacement
-            </label>
+            <label for="trigger" class="flex kbq-form__label">Choose kbqPlacement</label>
             <div class="visual-box">
                 <div
                     class="visual-box_clickable visual-box_placement-top-left"
@@ -261,16 +184,8 @@
                 <label class="kbq-form__label">Choose kbqPlacementPriority</label>
 
                 <kbq-form-field class="kbq-form__control">
-                    <kbq-select
-                        [multiple]="true"
-                        [(value)]="multipleSelected"
-                    >
-                        <kbq-option
-                            disabled
-                            [value]="popUpPlacements.Top"
-                        >
-                            Top
-                        </kbq-option>
+                    <kbq-select [multiple]="true" [(value)]="multipleSelected">
+                        <kbq-option disabled [value]="popUpPlacements.Top">Top</kbq-option>
                         <kbq-option [value]="popUpPlacements.TopLeft">TopLeft</kbq-option>
                         <kbq-option [value]="popUpPlacements.TopRight">TopRight</kbq-option>
                         <kbq-option [value]="popUpPlacements.Bottom">Bottom</kbq-option>
@@ -303,10 +218,7 @@
         </div>
     </div>
 
-    <div
-        class="{{ layoutClass }} result"
-        [style]="getOrder('result')"
-    >
+    <div class="{{ layoutClass }} result" [style]="getOrder('result')">
         <div>
             @switch (showElement()) {
                 @case (ELEMENTS.BUTTON) {

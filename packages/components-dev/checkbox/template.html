@@ -1,5 +1,5 @@
 <div class="layout-row">
-    <div class="kbq-body layout-padding-right-xl">
+    <div class="kbq-text-big layout-padding-right-xl">
         <p>
             <kbq-checkbox labelPosition="before">default</kbq-checkbox>
         </p>
@@ -12,31 +12,17 @@
         </p>
 
         <p>
-            <kbq-checkbox
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
-                default indeterminate
-            </kbq-checkbox>
+            <kbq-checkbox [indeterminate]="true" [(ngModel)]="checked[2]">default indeterminate</kbq-checkbox>
         </p>
 
         <p>
             <kbq-checkbox [color]="themePalette.Error">error</kbq-checkbox>
         </p>
         <p>
-            <kbq-checkbox
-                [color]="themePalette.Error"
-                [(ngModel)]="checked[1]"
-            >
-                error checked
-            </kbq-checkbox>
+            <kbq-checkbox [color]="themePalette.Error" [(ngModel)]="checked[1]">error checked</kbq-checkbox>
         </p>
         <p>
-            <kbq-checkbox
-                [color]="themePalette.Error"
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
+            <kbq-checkbox [color]="themePalette.Error" [indeterminate]="true" [(ngModel)]="checked[2]">
                 error indeterminate
             </kbq-checkbox>
         </p>
@@ -46,20 +32,11 @@
         </p>
 
         <p>
-            <kbq-checkbox
-                [disabled]="true"
-                [(ngModel)]="checked[1]"
-            >
-                disabled checked
-            </kbq-checkbox>
+            <kbq-checkbox [disabled]="true" [(ngModel)]="checked[1]">disabled checked</kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                [disabled]="true"
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
+            <kbq-checkbox [disabled]="true" [indeterminate]="true" [(ngModel)]="checked[2]">
                 disabled indeterminate
             </kbq-checkbox>
         </p>
@@ -78,115 +55,61 @@
         <p>
             <kbq-pseudo-checkbox [color]="themePalette.Error" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [color]="themePalette.Error"
-                [state]="'checked'"
-            />
+            <kbq-pseudo-checkbox [color]="themePalette.Error" [state]="'checked'" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [color]="themePalette.Error"
-                [state]="'indeterminate'"
-            />
+            <kbq-pseudo-checkbox [color]="themePalette.Error" [state]="'indeterminate'" />
         </p>
         <p>
             <kbq-pseudo-checkbox [disabled]="true" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [disabled]="true"
-                [state]="'checked'"
-            />
+            <kbq-pseudo-checkbox [disabled]="true" [state]="'checked'" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [disabled]="true"
-                [state]="'indeterminate'"
-            />
+            <kbq-pseudo-checkbox [disabled]="true" [state]="'indeterminate'" />
         </p>
     </div>
 
-    <div class="kbq-body layout-padding-right-xl">
+    <div class="kbq-text-big layout-padding-right-xl">
         <p>
-            <kbq-checkbox
-                labelPosition="before"
-                [big]="true"
-            >
-                default
-            </kbq-checkbox>
+            <kbq-checkbox labelPosition="before" [big]="true">default</kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [(ngModel)]="checked[0]"
-            >
+            <kbq-checkbox [big]="true" [(ngModel)]="checked[0]">
                 <kbq-hint>kbq-hint</kbq-hint>
                 default checked
             </kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
+            <kbq-checkbox [big]="true" [indeterminate]="true" [(ngModel)]="checked[2]">
                 default indeterminate
             </kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [color]="themePalette.Error"
-            >
-                error
-            </kbq-checkbox>
+            <kbq-checkbox [big]="true" [color]="themePalette.Error">error</kbq-checkbox>
         </p>
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [color]="themePalette.Error"
-                [(ngModel)]="checked[1]"
-            >
+            <kbq-checkbox [big]="true" [color]="themePalette.Error" [(ngModel)]="checked[1]">
                 error checked
             </kbq-checkbox>
         </p>
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [color]="themePalette.Error"
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
+            <kbq-checkbox [big]="true" [color]="themePalette.Error" [indeterminate]="true" [(ngModel)]="checked[2]">
                 error indeterminate
             </kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [disabled]="true"
-            >
-                disabled
-            </kbq-checkbox>
+            <kbq-checkbox [big]="true" [disabled]="true">disabled</kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [disabled]="true"
-                [(ngModel)]="checked[1]"
-            >
-                disabled checked
-            </kbq-checkbox>
+            <kbq-checkbox [big]="true" [disabled]="true" [(ngModel)]="checked[1]">disabled checked</kbq-checkbox>
         </p>
 
         <p>
-            <kbq-checkbox
-                [big]="true"
-                [disabled]="true"
-                [indeterminate]="true"
-                [(ngModel)]="checked[2]"
-            >
+            <kbq-checkbox [big]="true" [disabled]="true" [indeterminate]="true" [(ngModel)]="checked[2]">
                 disabled indeterminate
             </kbq-checkbox>
         </p>
@@ -197,52 +120,24 @@
         <p>
             <kbq-pseudo-checkbox [big]="true" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [state]="'checked'"
-            />
+            <kbq-pseudo-checkbox [big]="true" [state]="'checked'" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [state]="'indeterminate'"
-            />
+            <kbq-pseudo-checkbox [big]="true" [state]="'indeterminate'" />
         </p>
 
         <p>
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [color]="themePalette.Error"
-            />
+            <kbq-pseudo-checkbox [big]="true" [color]="themePalette.Error" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [color]="themePalette.Error"
-                [state]="'checked'"
-            />
+            <kbq-pseudo-checkbox [big]="true" [color]="themePalette.Error" [state]="'checked'" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [color]="themePalette.Error"
-                [state]="'indeterminate'"
-            />
+            <kbq-pseudo-checkbox [big]="true" [color]="themePalette.Error" [state]="'indeterminate'" />
         </p>
         <p>
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [disabled]="true"
-            />
+            <kbq-pseudo-checkbox [big]="true" [disabled]="true" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [disabled]="true"
-                [state]="'checked'"
-            />
+            <kbq-pseudo-checkbox [big]="true" [disabled]="true" [state]="'checked'" />
             &nbsp;
-            <kbq-pseudo-checkbox
-                [big]="true"
-                [disabled]="true"
-                [state]="'indeterminate'"
-            />
+            <kbq-pseudo-checkbox [big]="true" [disabled]="true" [state]="'indeterminate'" />
         </p>
     </div>
 </div>

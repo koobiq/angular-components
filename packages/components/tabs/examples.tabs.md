@@ -1,9 +1,13 @@
-### Tab selection with activeTab property
+#### Выбор вкладки по идентификатору
 
-#### Selection with tabId
+<!-- example(tabs-active-tab-id) -->
 
-<!-- example(tab-active-tab) -->
+#### Выбор вкладки по индексу
 
-#### Selection with index
+<!-- example(tabs-active-tab-index) -->
 
-<!-- example(tab-active-tab-index) -->
+#### Использование с другими контролами
+
+Кнопки действий удобно разместить в одной панели с подчеркнутыми вкладками.
+
+<!-- example(tabs-actionbar) -->

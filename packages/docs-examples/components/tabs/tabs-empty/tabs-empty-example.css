@@ -1,8 +1,0 @@
-.tabs-empty-example {
-    .empty-tab-content {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 200px;
-    }
-}

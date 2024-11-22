@@ -1,8 +1,4 @@
-<label
-    #label
-    class="kbq-radio-label"
-    [attr.for]="inputId"
->
+<label #label class="kbq-radio-label" [attr.for]="inputId">
     <input
         #input
         type="radio"
@@ -17,10 +13,7 @@
         (click)="onInputClick($event)"
     />
 
-    <div
-        class="kbq-radio-label-content"
-        [class.kbq-radio-label-before]="labelPosition === 'before'"
-    >
+    <div class="kbq-radio-label-content" [class.kbq-radio-label-before]="labelPosition === 'before'">
         <div class="kbq-radio-button__outer-circle">
             <div class="kbq-radio-button__inner-circle"></div>
         </div>

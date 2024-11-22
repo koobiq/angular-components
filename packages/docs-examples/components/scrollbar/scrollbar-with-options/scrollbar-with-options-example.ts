@@ -9,10 +9,7 @@ import { KbqScrollbarModule, KbqScrollbarOptions } from '@koobiq/components/scro
     selector: 'scrollbar-with-options-example',
     imports: [KbqScrollbarModule],
     template: `
-        <kbq-scrollbar
-            [options]="options"
-            style="width: 200px; height: 200px;"
-        >
+        <kbq-scrollbar [options]="options" style="width: 200px; height: 200px;">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />

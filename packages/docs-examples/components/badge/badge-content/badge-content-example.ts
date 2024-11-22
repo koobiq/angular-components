@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title Badge content
@@ -8,7 +9,8 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     standalone: true,
     selector: 'badge-content-example',
     imports: [
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqIconModule
     ],
     template: `
         <div class="layout-row layout-gap-l">

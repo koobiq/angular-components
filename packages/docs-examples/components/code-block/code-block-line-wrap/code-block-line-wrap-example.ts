@@ -25,20 +25,9 @@ const codeXML = `<?xml version="1.0" encoding="UTF-8"?>
         KbqCodeBlockModule
     ],
     template: `
-        <kbq-toggle
-            class="kbq-toggle_small"
-            [(ngModel)]="lineWrap"
-            style="margin: 10px 0"
-        >
-            Перенос строк
-        </kbq-toggle>
+        <kbq-toggle class="kbq-toggle_small" [(ngModel)]="lineWrap" style="margin: 10px 0">Перенос строк</kbq-toggle>
 
-        <kbq-code-block
-            [codeFiles]="files"
-            [filled]="false"
-            [lineNumbers]="true"
-            [softWrap]="lineWrap"
-        />
+        <kbq-code-block [codeFiles]="files" [filled]="false" [lineNumbers]="true" [softWrap]="lineWrap" />
     `
 })
 export class CodeBlockLineWrapExample {

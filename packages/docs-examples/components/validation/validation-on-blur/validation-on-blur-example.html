@@ -1,15 +1,9 @@
-<div
-    style="width: 400px"
-    class="kbq-form-vertical"
->
+<div style="width: 400px" class="kbq-form-vertical">
     <div class="kbq-form__fieldset">
         <div class="kbq-form__row">
             <div class="kbq-form__label">IP-адрес</div>
             <kbq-form-field class="kbq-form__control">
-                <input
-                    kbqInput
-                    [formControl]="ipAddress"
-                />
+                <input kbqInput [formControl]="ipAddress" />
                 @if (ipAddress.invalid) {
                     <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
                 }
@@ -21,11 +15,7 @@
         <div class="kbq-form__row">
             <div class="kbq-form__label">Частота обновлений (часы)</div>
             <kbq-form-field class="kbq-form__control">
-                <input
-                    kbqInput
-                    type="number"
-                    [formControl]="frequency"
-                />
+                <input kbqInput type="number" [formControl]="frequency" />
                 <kbq-hint>Введите значение от 1 до 24</kbq-hint>
                 @if (frequency.errors?.min) {
                     <kbq-hint [color]="themePalette.Error">Минимальное значение: 1 час</kbq-hint>

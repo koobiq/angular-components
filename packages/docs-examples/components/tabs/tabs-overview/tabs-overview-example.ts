@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -7,16 +7,15 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-overview-example',
-    imports: [
-        KbqTabsModule
-    ],
+    imports: [KbqTabsModule],
     template: `
         <kbq-tab-group>
-            <kbq-tab [label]="'Bruteforce'" />
-            <kbq-tab [label]="'Complex Attack'" />
-            <kbq-tab [label]="'DDoS'" />
-            <kbq-tab [label]="'DoS'" />
+            <kbq-tab label="BruteForce">BruteForce tab content</kbq-tab>
+            <kbq-tab label="Complex attack">Complex attack tab content</kbq-tab>
+            <kbq-tab label="DDoS">DDoS tab content</kbq-tab>
+            <kbq-tab label="DoS">DoS tab content</kbq-tab>
         </kbq-tab-group>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsOverviewExample {}

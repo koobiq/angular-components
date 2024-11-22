@@ -29,10 +29,10 @@
 
 @mixin kbq-popover-typography() {
     .kbq-popover__header {
-        @include kbq-typography-level-to-styles_css-variables(typography, subheading);
+        @include kbq-typography-level-to-styles-css-variables(typography, subheading);
     }
 
     .kbq-popover__content {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

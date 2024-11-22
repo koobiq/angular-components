@@ -24,11 +24,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <kbq-alert
-            class="flex-100"
-            [@hideShowAnimator]="state"
-            [compact]="true"
-        >
+        <kbq-alert class="flex-100" [@hideShowAnimator]="state" [compact]="true">
             <i kbq-icon="kbq-info-circle_16"></i>
             Блок скрывается по крестику в углу, не дублируйте эту возможность с помощью кнопки под текстом сообщения
             <i

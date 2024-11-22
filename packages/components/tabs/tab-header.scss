@@ -1,6 +1,7 @@
 @use '../core/styles/common/vendor-prefixes';
-@use 'tabs-common' as *;
-@use '../core/styles/common/tokens' as *;
+@use './tabs-common';
+
+@include tabs-common.paginated-tab-header;
 
 .kbq-tab-header {
     display: flex;
@@ -53,44 +54,21 @@
     transition: all 0.2s ease-in-out;
 }
 
-.kbq-tab-header__pagination {
-    @include vendor-prefixes.user-select(none);
-
-    position: relative;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 2;
-    -webkit-tap-highlight-color: transparent;
-    touch-action: none;
-
-    padding-left: 12px;
-    padding-right: 12px;
-
-    .kbq-tab-header__pagination-controls_enabled & {
-        display: flex;
-    }
-}
-
-.kbq-tab-header__content {
+.kbq-tab-header__container {
     display: flex;
     flex-grow: 1;
-
     z-index: 1;
     overflow: hidden;
 }
 
 .kbq-tab-list {
     position: relative;
-
     width: 100%;
-
     transition: transform 500ms cubic-bezier(0.35, 0, 0.25, 1);
 }
 
 .kbq-tab-label {
-    @include tab-label;
+    @include tabs-common.tab-label;
     @include vendor-prefixes.user-select(none);
 
     .kbq-tab-group_stretch-labels & {

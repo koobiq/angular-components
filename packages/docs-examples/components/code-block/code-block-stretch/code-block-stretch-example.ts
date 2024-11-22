@@ -30,11 +30,7 @@ const codeTs = `class Greeter {
         KbqCodeBlockModule
     ],
     template: `
-        <kbq-toggle
-            class="kbq-toggle_small"
-            [(ngModel)]="isFixedHeight"
-            style="margin: 10px 0"
-        >
+        <kbq-toggle class="kbq-toggle_small" [(ngModel)]="isFixedHeight" style="margin: 10px 0">
             Фиксированная высота
         </kbq-toggle>
 

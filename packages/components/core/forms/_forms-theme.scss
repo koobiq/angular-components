@@ -17,6 +17,6 @@
 
 @mixin kbq-forms-typography() {
     .kbq-form__label {
-        @include kbq-typography-level-to-styles_css-variables(typography, text-normal);
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 }

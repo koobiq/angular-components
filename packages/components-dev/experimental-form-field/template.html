@@ -1,11 +1,7 @@
 <h3>Form field with error</h3>
 <kbq-form-field>
     <kbq-label>Email</kbq-label>
-    <input
-        kbqInput
-        placeholder="mail@koobiq.io"
-        [formControl]="formControl1"
-    />
+    <input kbqInput placeholder="mail@koobiq.io" [formControl]="formControl1" />
     <kbq-hint>Enter email</kbq-hint>
     <kbq-error>
         @if (formControl1.hasError('required')) {
@@ -20,12 +16,7 @@
 
 <h3>Form field with stepper</h3>
 <kbq-form-field>
-    <input
-        kbqNumberInput
-        placeholder="type number"
-        [formControl]="formControl2"
-        [step]="0.5"
-    />
+    <input kbqNumberInput placeholder="type number" [formControl]="formControl2" [step]="0.5" />
     <kbq-stepper />
 </kbq-form-field>
 
@@ -33,12 +24,7 @@
 
 <h3>Form field with password-toggle and password-hint</h3>
 <kbq-form-field>
-    <input
-        kbqInputPassword
-        placeholder="password"
-        [formControl]="formControl3"
-        [maxLength]="20"
-    />
+    <input kbqInputPassword placeholder="password" [formControl]="formControl3" [maxLength]="20" />
     <kbq-password-toggle />
     <kbq-password-hint [hasError]="formControl3.hasError('minLength')">
         Min length
@@ -96,12 +82,7 @@
 
 <kbq-form-field>
     <kbq-label>Article title</kbq-label>
-    <input
-        kbqInput
-        placeholder="Enter the title of the article"
-        [formControl]="formControl5"
-        [maxlength]="20"
-    />
+    <input kbqInput placeholder="Enter the title of the article" [formControl]="formControl5" [maxlength]="20" />
     <kbq-hint>Max 20 chars ({{ formControl5.value?.length || 0 }}/20)</kbq-hint>
 </kbq-form-field>
 
@@ -110,19 +91,9 @@
 <h3>Form field with prefix, suffix and cleaner</h3>
 <kbq-form-field>
     <kbq-label>Form field with prefix and suffix</kbq-label>
-    <i
-        kbq-icon="kbq-magnifying-glass_16"
-        kbqPrefix
-    ></i>
-    <input
-        kbqInput
-        placeholder="Search"
-        [formControl]="formControl5"
-    />
-    <i
-        kbq-icon="kbq-info-circle_16"
-        kbqSuffix
-    ></i>
+    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+    <input kbqInput placeholder="Search" [formControl]="formControl5" />
+    <i kbq-icon="kbq-info-circle_16" kbqSuffix></i>
     <kbq-cleaner />
 </kbq-form-field>
 
@@ -131,11 +102,7 @@
 <h3>Form field with cleaner</h3>
 <kbq-form-field>
     <kbq-label>Form field with cleaner</kbq-label>
-    <input
-        kbqInput
-        placeholder="Enter some input"
-        [formControl]="formControl6"
-    />
+    <input kbqInput placeholder="Enter some input" [formControl]="formControl6" />
     <kbq-cleaner />
 </kbq-form-field>
 
@@ -148,12 +115,7 @@
 <h3>Show validation error on form submit, using ShowOnFormSubmitErrorStateMatcher by errorStateMatcher attribute</h3>
 <form [formGroup]="formGroup1">
     <kbq-form-field>
-        <input
-            formControlName="email"
-            kbqInput
-            placeholder="mail@koobiq.io"
-            [errorStateMatcher]="errorStateMatcher1"
-        />
+        <input formControlName="email" kbqInput placeholder="mail@koobiq.io" [errorStateMatcher]="errorStateMatcher1" />
         <kbq-hint>Enter email</kbq-hint>
         <kbq-error>
             @if (formGroup1.get('email')?.hasError('required')) {

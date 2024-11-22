@@ -51,11 +51,6 @@
                                 "output": "/"
                             },
                             {
-                                "glob": "**/*",
-                                "input": "apps/docs/src/styles",
-                                "output": "/tokens"
-                            },
-                            {
                                 "glob": "robots.txt",
                                 "input": "apps/docs/src",
                                 "output": "/"
@@ -70,13 +65,10 @@
                             "includePaths": ["packages"]
                         },
                         "styles": [
-                            {
-                                "input": "apps/docs/src/main.scss"
-                            },
+                            "apps/docs/src/main.scss",
                             "apps/docs/src/styles/koobiq/default-theme/css-tokens.css",
                             "apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css",
                             "apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css"
-
                         ],
                         "scripts": [],
                         "vendorChunk": true,

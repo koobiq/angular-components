@@ -10,11 +10,7 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
     selector: 'modal-template-example',
     imports: [KbqButtonModule, KbqModalModule],
     template: `
-        <button
-            class="modal-example-button"
-            (click)="createTplModal(tplTitle, tplContent, tplFooter)"
-            kbq-button
-        >
+        <button class="modal-example-button" (click)="createTplModal(tplTitle, tplContent, tplFooter)" kbq-button>
             Delete
         </button>
 
@@ -27,28 +23,13 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
         </ng-template>
         <ng-template #tplFooter>
             <div class="layout-row flex-grow layout-align-space-between">
-                <button
-                    (click)="destroyTplModal()"
-                    kbq-button
-                >
-                    Доп. действие
-                </button>
+                <button (click)="destroyTplModal()" kbq-button>Доп. действие</button>
 
                 <span>
-                    <button
-                        [color]="'contrast'"
-                        (click)="destroyTplModal()"
-                        kbq-button
-                        kbq-modal-main-action
-                    >
+                    <button [color]="'contrast'" (click)="destroyTplModal()" kbq-button kbq-modal-main-action>
                         Сохранить
                     </button>
-                    <button
-                        (click)="destroyTplModal()"
-                        kbq-button
-                    >
-                        Отмена
-                    </button>
+                    <button (click)="destroyTplModal()" kbq-button>Отмена</button>
                 </span>
             </div>
         </ng-template>

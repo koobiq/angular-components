@@ -1,25 +1,13 @@
 @for (utcItem of timezone.offset | utcOffset | keyvalue; track utcItem) {
     <div class="kbq-timezone-option__offset-wrapper layout-row layout-align-space-between">
-        <div
-            class="kbq-timezone-option__offset"
-            [innerHTML]="utcItem.key | mcHighlight: highlightText"
-        ></div>
-        <div
-            class="kbq-timezone-option__offset"
-            [innerHTML]="utcItem.value | mcHighlight: highlightText"
-        ></div>
+        <div class="kbq-timezone-option__offset" [innerHTML]="utcItem.key | mcHighlight: highlightText"></div>
+        <div class="kbq-timezone-option__offset" [innerHTML]="utcItem.value | mcHighlight: highlightText"></div>
     </div>
 }
 
 <div class="kbq-timezone-option__label">
-    <span
-        class="kbq-timezone-option__city"
-        [innerHTML]="timezone.city | mcHighlight: highlightText"
-    ></span>
-    <div
-        #tooltipContentWrapper
-        class="kbq-timezone-option__cities"
-    >
+    <span class="kbq-timezone-option__city" [innerHTML]="timezone.city | mcHighlight: highlightText"></span>
+    <div #tooltipContentWrapper class="kbq-timezone-option__cities">
         <span
             #tooltipContent
             [innerHTML]="timezone.cities | citiesByFilter: highlightText | mcHighlight: highlightText"

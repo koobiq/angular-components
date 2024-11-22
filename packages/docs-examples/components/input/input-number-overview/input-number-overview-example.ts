@@ -18,7 +18,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqInputModule
     ],
     template: `
-        <div class="kbq-body">
+        <div class="kbq-text-big">
             <div class="kbq-form-horizontal">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40">
@@ -41,10 +41,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40">With localized thousand separator</label>
                     <kbq-form-field class="kbq-form__control flex-60">
-                        <input
-                            [(ngModel)]="value"
-                            kbqNumberInput
-                        />
+                        <input [(ngModel)]="value" kbqNumberInput />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>
@@ -52,11 +49,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40">Without localized thousand separator</label>
                     <kbq-form-field class="kbq-form__control flex-60">
-                        <input
-                            [(ngModel)]="value"
-                            [withThousandSeparator]="false"
-                            kbqNumberInput
-                        />
+                        <input [(ngModel)]="value" [withThousandSeparator]="false" kbqNumberInput />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>
@@ -64,11 +57,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40">With integer</label>
                     <kbq-form-field class="kbq-form__control flex-60">
-                        <input
-                            [(ngModel)]="integerValue"
-                            [integer]="true"
-                            kbqNumberInput
-                        />
+                        <input [(ngModel)]="integerValue" [integer]="true" kbqNumberInput />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>

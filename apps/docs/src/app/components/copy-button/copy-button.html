@@ -1,22 +1,12 @@
 @if (isLabelSuccessVisible) {
-    <span
-        disabled
-        kbq-link
-        pseudo
-    >
+    <span disabled kbq-link pseudo>
         <i class="kbq kbq-check_16"></i>
         <span class="kbq-link__text">{{ successLabelText }}</span>
     </span>
 }
 
 @if (!isLabelSuccessVisible) {
-    <span
-        kbq-link
-        pseudo
-    >
-        <i
-            class="kbq kbq-square-multiple-o_16"
-            (click)="copyContent()"
-        ></i>
+    <span kbq-link pseudo>
+        <i class="kbq kbq-square-multiple-o_16" (click)="copyContent()"></i>
     </span>
 }

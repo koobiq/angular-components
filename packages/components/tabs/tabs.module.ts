@@ -1,7 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
+import { CdkObserveContent } from '@angular/cdk/observers';
 import { PortalModule } from '@angular/cdk/portal';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { NgStyle } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -13,14 +13,34 @@ import {
     KbqAlignTabsEndCssStyler,
     KbqStretchTabsCssStyler,
     KbqTabGroup,
-    KbqUnderlinedTabsCssStyler,
     KbqVerticalTabsCssStyler
 } from './tab-group.component';
 import { KbqTabHeader } from './tab-header.component';
 import { KbqTabLabelWrapper } from './tab-label-wrapper.directive';
 import { KbqTabLabel } from './tab-label.directive';
-import { KbqTabLink, KbqTabNav } from './tab-nav-bar';
+import { KbqTabLink, KbqTabNavBar, KbqTabNavPanel } from './tab-nav-bar';
 import { KbqTab } from './tab.component';
+
+const STANDALONE_COMPONENTS = [
+    KbqTabNavBar,
+    KbqTabLink,
+    KbqTabNavPanel
+];
+
+const COMPONENTS = [
+    KbqTabGroup,
+    KbqTabLabel,
+    KbqTab,
+    KbqTabLabelWrapper,
+    KbqTabBody,
+    KbqTabBodyPortal,
+    KbqTabHeader,
+    KbqTabContent,
+    KbqAlignTabsCenterCssStyler,
+    KbqAlignTabsEndCssStyler,
+    KbqStretchTabsCssStyler,
+    KbqVerticalTabsCssStyler
+];
 
 @NgModule({
     imports: [
@@ -30,39 +50,13 @@ import { KbqTab } from './tab.component';
         KbqCommonModule,
         KbqIconModule,
         KbqToolTipModule,
-        NgStyle
+        CdkObserveContent,
+        ...STANDALONE_COMPONENTS
     ],
-    // Don't export all components because some are only to be used internally.
+    declarations: COMPONENTS,
     exports: [
-        KbqCommonModule,
-        KbqTabGroup,
-        KbqTabLabel,
-        KbqTab,
-        KbqTabNav,
-        KbqTabLink,
-        KbqTabContent,
-        KbqAlignTabsCenterCssStyler,
-        KbqAlignTabsEndCssStyler,
-        KbqStretchTabsCssStyler,
-        KbqUnderlinedTabsCssStyler,
-        KbqVerticalTabsCssStyler
-    ],
-    declarations: [
-        KbqTabGroup,
-        KbqTabLabel,
-        KbqTab,
-        KbqTabLabelWrapper,
-        KbqTabNav,
-        KbqTabLink,
-        KbqTabBody,
-        KbqTabBodyPortal,
-        KbqTabHeader,
-        KbqTabContent,
-        KbqAlignTabsCenterCssStyler,
-        KbqAlignTabsEndCssStyler,
-        KbqStretchTabsCssStyler,
-        KbqUnderlinedTabsCssStyler,
-        KbqVerticalTabsCssStyler
+        ...COMPONENTS,
+        ...STANDALONE_COMPONENTS
     ]
 })
 export class KbqTabsModule {}

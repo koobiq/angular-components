@@ -277,10 +277,7 @@ describe('KbqAutocomplete', () => {
             (closed)="closedSpy()"
         >
             @for (state of filteredStates; track state) {
-                <kbq-option
-                    [value]="state"
-                    [style.height.px]="kbqOptionWidth"
-                >
+                <kbq-option [value]="state" [style.height.px]="kbqOptionWidth">
                     <span>{{ state.code }}: {{ state.name }}</span>
                 </kbq-option>
             }

@@ -1,10 +1,7 @@
 <div class="dev-container">
     <div class="kbq-subheading">Simple cut text with tooltip in div</div>
     <br />
-    <div
-        kbq-title
-        class="child text-with-tooltip kbq-body"
-    >
+    <div kbq-title class="child text-with-tooltip kbq-text-big">
         {{ longValue }}
     </div>
 </div>
@@ -12,11 +9,7 @@
 <div class="dev-container">
     <div class="kbq-subheading">Simple cut text with tooltip inside button</div>
     <br />
-    <button
-        kbq-button
-        kbq-title
-        class="text-with-tooltip kbq-body"
-    >
+    <button kbq-button kbq-title class="text-with-tooltip kbq-text-big">
         {{ longValue }}
     </button>
 </div>
@@ -24,10 +17,7 @@
 <div class="dev-container responsive">
     <div class="kbq-subheading">Responsive text with tooltip</div>
     <br />
-    <div
-        kbq-title
-        class="child wide kbq-body"
-    >
+    <div kbq-title class="child wide kbq-text-big">
         {{ longValue }}
     </div>
 </div>
@@ -36,35 +26,16 @@
     <div class="kbq-subheading">Tooltip tracking for parent & child as parameters</div>
     <br />
 
-    <div
-        kbq-title
-        style="max-width: 50%"
-    >
-        <div
-            #kbqTitleContainer
-            class="parent"
-        >
-            <div
-                #kbqTitleText
-                class="child kbq-caption"
-            >
+    <div kbq-title style="max-width: 50%">
+        <div #kbqTitleContainer class="parent">
+            <div #kbqTitleText class="child kbq-text-normal">
                 {{ field }}
             </div>
         </div>
     </div>
 
-    <button
-        kbq-button
-        (click)="onAddText()"
-    >
-        Add text
-    </button>
-    <button
-        kbq-button
-        (click)="field = defaultValue"
-    >
-        Set Default text
-    </button>
+    <button kbq-button (click)="onAddText()">Add text</button>
+    <button kbq-button (click)="field = defaultValue">Set Default text</button>
 </div>
 
 <div class="dev-container">
@@ -72,110 +43,33 @@
     <br />
 
     <kbq-form-field>
-        <kbq-select
-            [placeholder]="'placeholder'"
-            [(value)]="singleSelected"
-        >
-            <kbq-option
-                disabled
-                [value]="'Disabled'"
-            >
-                Disabled
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Normal'"
-            >
-                Normal
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Hovered'"
-            >
-                Hovered
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Focused'"
-            >
-                Focused
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected'"
-            >
-                Selected
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected1'"
-            >
-                Selected1
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected2'"
-            >
-                Selected2
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected3'"
-            >
-                Selected3
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected4'"
-            >
-                Selected4
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected5'"
-            >
-                Selected5
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected6'"
-            >
-                Selected6
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected7'"
-            >
-                Selected7
-            </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected8'"
-            >
+        <kbq-select [placeholder]="'placeholder'" [(value)]="singleSelected">
+            <kbq-option disabled [value]="'Disabled'">Disabled</kbq-option>
+            <kbq-option kbq-title [value]="'Normal'">Normal</kbq-option>
+            <kbq-option kbq-title [value]="'Hovered'">Hovered</kbq-option>
+            <kbq-option kbq-title [value]="'Focused'">Focused</kbq-option>
+            <kbq-option kbq-title [value]="'Selected'">Selected</kbq-option>
+            <kbq-option kbq-title [value]="'Selected1'">Selected1</kbq-option>
+            <kbq-option kbq-title [value]="'Selected2'">Selected2</kbq-option>
+            <kbq-option kbq-title [value]="'Selected3'">Selected3</kbq-option>
+            <kbq-option kbq-title [value]="'Selected4'">Selected4</kbq-option>
+            <kbq-option kbq-title [value]="'Selected5'">Selected5</kbq-option>
+            <kbq-option kbq-title [value]="'Selected6'">Selected6</kbq-option>
+            <kbq-option kbq-title [value]="'Selected7'">Selected7</kbq-option>
+            <kbq-option kbq-title [value]="'Selected8'">
                 {{ longValue }}
             </kbq-option>
-            <kbq-option
-                kbq-title
-                [value]="'Selected9'"
-            >
+            <kbq-option kbq-title [value]="'Selected9'">
                 {{ longValue }}
             </kbq-option>
         </kbq-select>
     </kbq-form-field>
 
     <kbq-form-field>
-        <input
-            kbqInput
-            type="text"
-            [formControl]="formControl"
-            [kbqAutocomplete]="auto"
-        />
+        <input kbqInput type="text" [formControl]="formControl" [kbqAutocomplete]="auto" />
         <kbq-autocomplete #auto="kbqAutocomplete">
             @for (option of filteredOptions | async; track option) {
-                <kbq-option
-                    kbq-title
-                    [value]="option"
-                >
+                <kbq-option kbq-title [value]="option">
                     {{ option }}
                 </kbq-option>
             }
@@ -187,50 +81,30 @@
     <div class="kbq-subheading">Dropdown with long options and tooltips</div>
     <br />
 
-    <button
-        kbq-button
-        class="kbq-button_transparent"
-        [kbqDropdownTriggerFor]="appDropdown"
-    >
+    <button kbq-button class="kbq-button_transparent" [kbqDropdownTriggerFor]="appDropdown">
         dropdown
         <i kbq-icon="kbq-chevron-down-s_16"></i>
     </button>
 
-    <kbq-dropdown
-        #appDropdown="kbqDropdown"
-        [overlapTriggerX]="false"
-        [overlapTriggerY]="true"
-    >
-        <button
-            kbq-dropdown-item
-            kbq-title
-        >
+    <kbq-dropdown #appDropdown="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
+        <button kbq-dropdown-item kbq-title>
             <i kbq-icon="kbq-circle-xs_16"></i>
             Общие сведения
         </button>
 
         <kbq-divider />
 
-        <button
-            kbq-dropdown-item
-            kbq-title
-        >
+        <button kbq-dropdown-item kbq-title>
             {{ longValue }}
         </button>
 
-        <button
-            kbq-dropdown-item
-            kbq-title
-        >
+        <button kbq-dropdown-item kbq-title>
             <div #kbqTitleContainer>
                 <div>Complex header</div>
                 <div #kbqTitleText>{{ longValue }}</div>
             </div>
         </button>
-        <button
-            kbq-dropdown-item
-            kbq-title
-        >
+        <button kbq-dropdown-item kbq-title>
             <div #kbqTitleContainer>
                 <div>Complex header</div>
                 <div #kbqTitleText>{{ defaultValue }}</div>
@@ -238,31 +112,19 @@
         </button>
     </kbq-dropdown>
 
-    <button
-        kbq-button
-        [kbqDropdownTriggerFor]="appDropdownWithNested"
-    >
+    <button kbq-button [kbqDropdownTriggerFor]="appDropdownWithNested">
         nested dropdown
         <i kbq-icon="kbq-chevron-down-s_16"></i>
     </button>
 
     <kbq-dropdown #appDropdownWithNested="kbqDropdown">
-        <button
-            kbq-dropdown-item
-            [kbqDropdownTriggerFor]="appDropdownNested"
-        >
-            1 level (1)
-        </button>
+        <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">1 level (1)</button>
         <button kbq-dropdown-item>1 level (2)</button>
         <button kbq-dropdown-item>1 level (3)</button>
     </kbq-dropdown>
 
     <kbq-dropdown #appDropdownNested="kbqDropdown">
-        <button
-            kbq-dropdown-item
-            kbq-title
-            [kbqDropdownTriggerFor]="appDropdownNestedNested"
-        >
+        <button kbq-dropdown-item kbq-title [kbqDropdownTriggerFor]="appDropdownNestedNested">
             {{ longValue }}
         </button>
         <button kbq-dropdown-item>2 level (2)</button>

@@ -32,82 +32,32 @@
 
 <ng-template #customFooter>
     <div class="flex-100 layout-row layout-align-space-between-center">
-        <button
-            kbq-button
-            class="step"
-            [color]="'contrast'"
-            (click)="changeStep(-1)"
-        >
-            &larr; Назад
-        </button>
+        <button kbq-button class="step" [color]="'contrast'" (click)="changeStep(-1)">&larr; Назад</button>
 
-        <button
-            kbq-button
-            class="step"
-            [color]="'contrast'"
-            (click)="changeStep(1)"
-        >
-            Дальше &rarr;
-        </button>
+        <button kbq-button class="step" [color]="'contrast'" (click)="changeStep(1)">Дальше &rarr;</button>
     </div>
 </ng-template>
 
 <div class="container flex-100 layout-column layout-align-start-start">
-    <div
-        class="kbq-form-vertical layout-row layou-align-start-start config"
-        [style]="getOrder('config')"
-    >
+    <div class="kbq-form-vertical layout-row layou-align-start-start config" [style]="getOrder('config')">
         <div class="flex-20 kbq-form__fieldset">
             <div class="kbq-form__row">
-                <label
-                    for="order"
-                    class="kbq-form__label"
-                >
-                    Inverse layout order
-                </label>
+                <label for="order" class="kbq-form__label">Inverse layout order</label>
 
-                <kbq-checkbox
-                    id="order"
-                    class="kbq-form__control"
-                    [(ngModel)]="selectedOrder"
-                >
-                    Yes/No
-                </kbq-checkbox>
+                <kbq-checkbox id="order" class="kbq-form__control" [(ngModel)]="selectedOrder">Yes/No</kbq-checkbox>
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="isClosable"
-                    class="kbq-form__label"
-                >
-                    Is closable
-                </label>
+                <label for="isClosable" class="kbq-form__label">Is closable</label>
 
-                <kbq-checkbox
-                    id="isClosable"
-                    class="kbq-form__control"
-                    [(ngModel)]="isClosable"
-                >
-                    Yes/No
-                </kbq-checkbox>
+                <kbq-checkbox id="isClosable" class="kbq-form__control" [(ngModel)]="isClosable">Yes/No</kbq-checkbox>
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="element"
-                    class="kbq-form__label"
-                >
-                    Choose trigger element
-                </label>
+                <label for="element" class="kbq-form__label">Choose trigger element</label>
 
-                <kbq-form-field
-                    id="element"
-                    class="kbq-form__control"
-                >
-                    <kbq-select
-                        [placeholder]="'Select element'"
-                        [(value)]="selectedElement"
-                    >
+                <kbq-form-field id="element" class="kbq-form__control">
+                    <kbq-select [placeholder]="'Select element'" [(value)]="selectedElement">
                         <kbq-option [value]="ELEMENTS.BUTTON">Button</kbq-option>
                         <kbq-option [value]="ELEMENTS.CONFIRM_BUTTON">Confirm Button</kbq-option>
                         <kbq-option [value]="ELEMENTS.ICON">Icon</kbq-option>
@@ -122,19 +72,11 @@
                 class="kbq-form__row"
                 [style.display]="selectedElement === ELEMENTS.CONFIRM_BUTTON ? 'none' : 'initial'"
             >
-                <label
-                    for="trigger"
-                    class="kbq-form__label"
-                >
-                    Choose popover trigger
-                </label>
+                <label for="trigger" class="kbq-form__label">Choose popover trigger</label>
 
                 <div class="kbq-form__control">
                     <kbq-form-field id="trigger">
-                        <kbq-select
-                            [placeholder]="'Select trigger'"
-                            [(value)]="selectedTrigger"
-                        >
+                        <kbq-select [placeholder]="'Select trigger'" [(value)]="selectedTrigger">
                             <kbq-option [value]="TRIGGERS.CLICK">Click</kbq-option>
                             <kbq-option [value]="TRIGGERS.HOVER">Hover</kbq-option>
                             <kbq-option [value]="TRIGGERS.FOCUS">Focus</kbq-option>
@@ -145,19 +87,8 @@
 
                 @if (selectedTrigger === TRIGGERS.CUSTOM) {
                     <div class="kbq-form__control layout-padding-top-s">
-                        <button
-                            kbq-button
-                            class="layout-margin-right-s"
-                            (click)="openPopover()"
-                        >
-                            Open
-                        </button>
-                        <button
-                            kbq-button
-                            (click)="closePopover()"
-                        >
-                            Close
-                        </button>
+                        <button kbq-button class="layout-margin-right-s" (click)="openPopover()">Open</button>
+                        <button kbq-button (click)="closePopover()">Close</button>
                     </div>
                 }
             </div>
@@ -166,21 +97,10 @@
                 class="kbq-form__row"
                 [style.display]="selectedElement === ELEMENTS.CONFIRM_BUTTON ? 'none' : 'initial'"
             >
-                <label
-                    for="size"
-                    class="kbq-form__label"
-                >
-                    Choose popover size
-                </label>
+                <label for="size" class="kbq-form__label">Choose popover size</label>
 
-                <kbq-form-field
-                    id="size"
-                    class="kbq-form__control"
-                >
-                    <kbq-select
-                        [placeholder]="'Select size'"
-                        [(value)]="selectedSize"
-                    >
+                <kbq-form-field id="size" class="kbq-form__control">
+                    <kbq-select [placeholder]="'Select size'" [(value)]="selectedSize">
                         <kbq-option [value]="SIZE.SMALL">Small</kbq-option>
                         <kbq-option [value]="SIZE.MEDIUM">Medium</kbq-option>
                         <kbq-option [value]="SIZE.LARGE">Large</kbq-option>
@@ -189,21 +109,10 @@
             </div>
 
             <div class="kbq-form__row">
-                <label
-                    for="layout"
-                    class="kbq-form__label"
-                >
-                    Choose layout content placement
-                </label>
+                <label for="layout" class="kbq-form__label">Choose layout content placement</label>
 
-                <kbq-form-field
-                    id="layout"
-                    class="kbq-form__control"
-                >
-                    <kbq-select
-                        [placeholder]="'Select layout'"
-                        [(value)]="layoutClass"
-                    >
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <kbq-select [placeholder]="'Select layout'" [(value)]="layoutClass">
                         <kbq-option [value]="'layout-row layout-align-start-start'">Start start</kbq-option>
                         <kbq-option [value]="'layout-row layout-align-start-center'">Start center</kbq-option>
                         <kbq-option [value]="'layout-row layout-align-start-end'">Start end</kbq-option>
@@ -221,21 +130,10 @@
                 class="kbq-form__row"
                 [style.display]="selectedElement === ELEMENTS.CONFIRM_BUTTON ? 'initial' : 'none'"
             >
-                <label
-                    for="layout"
-                    class="kbq-form__label"
-                >
-                    Set confirm text
-                </label>
+                <label for="layout" class="kbq-form__label">Set confirm text</label>
 
-                <kbq-form-field
-                    id="layout"
-                    class="kbq-form__control"
-                >
-                    <input
-                        kbqInput
-                        [(ngModel)]="confirmText"
-                    />
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <input kbqInput [(ngModel)]="confirmText" />
                 </kbq-form-field>
             </div>
 
@@ -243,31 +141,15 @@
                 class="kbq-form__row"
                 [style.display]="selectedElement === ELEMENTS.CONFIRM_BUTTON ? 'initial' : 'none'"
             >
-                <label
-                    for="layout"
-                    class="kbq-form__label"
-                >
-                    Set confirm button text
-                </label>
+                <label for="layout" class="kbq-form__label">Set confirm button text</label>
 
-                <kbq-form-field
-                    id="layout"
-                    class="kbq-form__control"
-                >
-                    <input
-                        kbqInput
-                        [(ngModel)]="confirmButtonText"
-                    />
+                <kbq-form-field id="layout" class="kbq-form__control">
+                    <input kbqInput [(ngModel)]="confirmButtonText" />
                 </kbq-form-field>
             </div>
         </div>
         <div class="flex left-padding layout-align-center-center">
-            <label
-                for="trigger"
-                class="flex kbq-form__label"
-            >
-                Choose kbqPlacement
-            </label>
+            <label for="trigger" class="flex kbq-form__label">Choose kbqPlacement</label>
             <div class="visual-box">
                 <div
                     class="visual-box_clickable visual-box_placement-top-left"
@@ -368,24 +250,11 @@
             </div>
 
             <div class="kbq-form__row flex-50">
-                <label
-                    for="size"
-                    class="kbq-form__label"
-                >
-                    Choose kbqPlacementPriority
-                </label>
+                <label for="size" class="kbq-form__label">Choose kbqPlacementPriority</label>
 
                 <kbq-form-field class="kbq-form__control">
-                    <kbq-select
-                        [multiple]="true"
-                        [(value)]="multipleSelected"
-                    >
-                        <kbq-option
-                            disabled
-                            [value]="popUpPlacements.Top"
-                        >
-                            Top
-                        </kbq-option>
+                    <kbq-select [multiple]="true" [(value)]="multipleSelected">
+                        <kbq-option disabled [value]="popUpPlacements.Top">Top</kbq-option>
                         <kbq-option [value]="popUpPlacements.TopLeft">TopLeft</kbq-option>
                         <kbq-option [value]="popUpPlacements.TopRight">TopRight</kbq-option>
                         <kbq-option [value]="popUpPlacements.Bottom">Bottom</kbq-option>
@@ -420,12 +289,7 @@
         </div>
     </div>
 
-    <div
-        cdkScrollable
-        style="overflow: scroll"
-        class="{{ layoutClass }} result"
-        [style]="getOrder('result')"
-    >
+    <div cdkScrollable style="overflow: scroll" class="{{ layoutClass }} result" [style]="getOrder('result')">
         <div style="min-width: 1500px; display: flex; justify-content: center">
             @switch (showElement()) {
                 @case (ELEMENTS.BUTTON) {

@@ -299,10 +299,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
             kbq-title
             type="button"
         >
-            <div
-                class="kbq-button-toggle-wrapper"
-                #kbqTitleText
-            >
+            <div class="kbq-button-toggle-wrapper" #kbqTitleText>
                 <ng-content />
             </div>
         </button>

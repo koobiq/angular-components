@@ -30,7 +30,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
         }
     `,
     template: `
-        <div class="kbq-body layout-wrap content__example-tags-group">
+        <div class="kbq-text-big layout-wrap content__example-tags-group">
             <div class="layout-row layout-wrap content__example-tag-row">
                 <div class="example-tag">
                     <div class="layout-margin-bottom-l kbq-form__label">Text</div>
@@ -47,10 +47,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
                     <div class="layout-margin-bottom-l kbq-form__label">Text+Close</div>
                     <kbq-tag [color]="colors.Theme">
                         Tag
-                        <i
-                            kbq-icon="kbq-xmark-s_16"
-                            kbqTagRemove
-                        ></i>
+                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 </div>
                 <div class="example-tag">
@@ -58,10 +55,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
                     <kbq-tag [color]="colors.Theme">
                         <i kbq-icon="kbq-check-circle_16"></i>
                         Tag
-                        <i
-                            kbq-icon="kbq-xmark-s_16"
-                            kbqTagRemove
-                        ></i>
+                        <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
                 </div>
             </div>

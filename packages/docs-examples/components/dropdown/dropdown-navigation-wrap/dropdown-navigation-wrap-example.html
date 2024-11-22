@@ -1,23 +1,13 @@
-<button
-    kbq-button
-    [kbqDropdownTriggerFor]="appDropdown"
->
+<button kbq-button [kbqDropdownTriggerFor]="appDropdown">
     dropdown
     <i kbq-icon="kbq-chevron-down-s_16"></i>
 </button>
 
-<kbq-dropdown
-    #appDropdown="kbqDropdown"
-    style="max-width: 200px"
-    [navigationWithWrap]="true"
->
+<kbq-dropdown #appDropdown="kbqDropdown" style="max-width: 200px" [navigationWithWrap]="true">
     <button kbq-dropdown-item>Text Normal</button>
 
     <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-info-circle_16"
-            [color]="'contrast'"
-        ></i>
+        <i kbq-icon="kbq-info-circle_16" [color]="'contrast'"></i>
         Text Normal
     </button>
 
@@ -27,26 +17,17 @@
     </button>
 
     <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-info-circle_16"
-            [color]="'contrast'"
-        ></i>
+        <i kbq-icon="kbq-info-circle_16" [color]="'contrast'"></i>
         Text Normal
         <div class="kbq-dropdown-item__caption">Caption</div>
     </button>
 
     <button kbq-dropdown-item>
-        <i
-            kbq-icon="kbq-circle-xs_16"
-            [color]="'contrast'"
-        ></i>
+        <i kbq-icon="kbq-circle-xs_16" [color]="'contrast'"></i>
         Text Normal
     </button>
 
-    <button
-        kbq-dropdown-item
-        kbq-title
-    >
+    <button kbq-dropdown-item kbq-title>
         Text Normal and very long text Text Normal and very long text Text Normal and very long text Text Normal and
         very long text
     </button>
@@ -55,23 +36,13 @@
 
     <div class="kbq-dropdown__group-header">Header</div>
 
-    <button
-        disabled
-        kbq-dropdown-item
-    >
-        Disabled
-    </button>
+    <button disabled kbq-dropdown-item>Disabled</button>
 
     <kbq-divider />
 
     <div class="kbq-dropdown__group-header kbq-dropdown__group-header_small">Subheading</div>
 
-    <button
-        disabled
-        kbq-dropdown-item
-    >
-        Disabled
-    </button>
+    <button disabled kbq-dropdown-item>Disabled</button>
 
     <kbq-divider />
 

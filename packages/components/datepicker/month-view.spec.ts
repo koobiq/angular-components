@@ -111,10 +111,7 @@ describe('KbqMonthView', () => {
 
 @Component({
     template: `
-        <kbq-month-view
-            [(activeDate)]="date"
-            [(selected)]="selected"
-        />
+        <kbq-month-view [(activeDate)]="date" [(selected)]="selected" />
     `
 })
 class StandardMonthView {
@@ -124,10 +121,7 @@ class StandardMonthView {
 
 @Component({
     template: `
-        <kbq-month-view
-            [activeDate]="activeDate"
-            [dateFilter]="dateFilter"
-        />
+        <kbq-month-view [activeDate]="activeDate" [dateFilter]="dateFilter" />
     `
 })
 class MonthViewWithDateFilter {
@@ -140,10 +134,7 @@ class MonthViewWithDateFilter {
 
 @Component({
     template: `
-        <kbq-month-view
-            [activeDate]="activeDate"
-            [dateClass]="dateClass"
-        />
+        <kbq-month-view [activeDate]="activeDate" [dateClass]="dateClass" />
     `
 })
 class MonthViewWithDateClass {

@@ -20,7 +20,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 @Component({
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class SidepanelDemoComponent {
@@ -74,18 +74,11 @@ export class SidepanelDemoComponent {
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button
-                    [color]="'contrast'"
-                    (click)="openComponentSidepanel()"
-                    kbq-button
-                >
+                <button [color]="'contrast'" (click)="openComponentSidepanel()" kbq-button>
                     <span>Open another sidepanel</span>
                 </button>
 
-                <button
-                    kbq-button
-                    kbq-sidepanel-close
-                >
+                <button kbq-button kbq-sidepanel-close>
                     <span>Close</span>
                 </button>
             </kbq-sidepanel-actions>

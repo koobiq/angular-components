@@ -10,7 +10,7 @@ import { KbqButtonToggleModule } from '../../components/button-toggle';
 @Component({
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss', './styles.scss'],
+    styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class ButtonToggleDemoComponent {

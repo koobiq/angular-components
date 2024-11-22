@@ -119,11 +119,7 @@ export const DATA_OBJECT = {
             [treeControl]="treeControl"
             (onSelectAll)="onSelectAll($event)"
         >
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node"
-                [disabled]="node.name === 'tests'"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
                 <i kbq-icon="kbq-info-circle_16"></i>
 
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
@@ -135,10 +131,7 @@ export const DATA_OBJECT = {
                 />
             </kbq-tree-option>
 
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node; when: hasChild"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                 <i kbq-icon="kbq-info-circle_16"></i>
 
                 <kbq-tree-node-toggle [node]="node" />

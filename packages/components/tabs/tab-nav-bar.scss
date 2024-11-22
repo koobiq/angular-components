@@ -1,0 +1,36 @@
+@use './tabs-common';
+
+@include tabs-common.paginated-tab-header();
+
+.kbq-tab-nav-bar {
+    display: flex;
+    position: relative;
+
+    .kbq-tab-link__container {
+        display: flex;
+        flex-grow: 1;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    .kbq-tab-list {
+        position: relative;
+        width: 100%;
+        transition: transform 500ms cubic-bezier(0.35, 0, 0.25, 1);
+    }
+
+    .kbq-tab-list__content {
+        display: flex;
+    }
+
+    &.kbq-tab-group_vertical {
+        .kbq-tab-link__container {
+            overflow-y: scroll;
+        }
+
+        .kbq-tab-list__content {
+            flex-direction: column;
+            gap: var(--kbq-tabs-size-tab-stack-vertical-content-gap-vertical);
+        }
+    }
+}

@@ -1599,12 +1599,7 @@ describe('KbqDropdown default overrides', () => {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-        >
-            Toggle dropdown
-        </button>
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown
             class="custom-one custom-two"
             #dropdown="kbqDropdown"
@@ -1613,12 +1608,7 @@ describe('KbqDropdown default overrides', () => {
             (closed)="closeCallback($event)"
         >
             <button kbq-dropdown-item>Item</button>
-            <button
-                kbq-dropdown-item
-                disabled
-            >
-                Disabled
-            </button>
+            <button kbq-dropdown-item disabled>Disabled</button>
             <button kbq-dropdown-item>
                 <i class="kbq-icon">unicorn</i>
                 Item with an icon
@@ -1643,17 +1633,8 @@ class SimpleDropdown {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-        >
-            Toggle dropdown
-        </button>
-        <kbq-dropdown
-            #dropdown="kbqDropdown"
-            [xPosition]="xPosition"
-            [yPosition]="yPosition"
-        >
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" [xPosition]="xPosition" [yPosition]="yPosition">
             <button kbq-dropdown-item>Positioned Content</button>
         </kbq-dropdown>
     `
@@ -1672,16 +1653,8 @@ interface TestableDropdown {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-        >
-            Toggle dropdown
-        </button>
-        <kbq-dropdown
-            #dropdown="kbqDropdown"
-            [overlapTriggerY]="overlapTriggerY"
-        >
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
+        <kbq-dropdown #dropdown="kbqDropdown" [overlapTriggerY]="overlapTriggerY">
             <button kbq-dropdown-item>Not overlapped Content</button>
         </kbq-dropdown>
     `
@@ -1738,26 +1711,13 @@ class CustomDropdown {
 
 @Component({
     template: `
-        <button
-            #rootTrigger="kbqDropdownTrigger"
-            #rootTriggerEl
-            [kbqDropdownTriggerFor]="root"
-        >
-            Toggle dropdown
-        </button>
+        <button #rootTrigger="kbqDropdownTrigger" #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
 
-        <button
-            #alternateTrigger="kbqDropdownTrigger"
-            [kbqDropdownTriggerFor]="levelTwo"
-        >
+        <button #alternateTrigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="levelTwo">
             Toggle alternate dropdown
         </button>
 
-        <kbq-dropdown
-            #root="kbqDropdown"
-            [hasBackdrop]="true"
-            (closed)="rootCloseCallback($event)"
-        >
+        <kbq-dropdown #root="kbqDropdown" [hasBackdrop]="true" (closed)="rootCloseCallback($event)">
             <button
                 id="level-one-trigger"
                 #levelOneTrigger="kbqDropdownTrigger"
@@ -1779,11 +1739,7 @@ class CustomDropdown {
             }
         </kbq-dropdown>
 
-        <kbq-dropdown
-            #levelOne="kbqDropdown"
-            [hasBackdrop]="true"
-            (closed)="levelOneCloseCallback($event)"
-        >
+        <kbq-dropdown #levelOne="kbqDropdown" [hasBackdrop]="true" (closed)="levelOneCloseCallback($event)">
             <button kbq-dropdown-item>Four</button>
             <button
                 id="level-two-trigger"
@@ -1796,20 +1752,13 @@ class CustomDropdown {
             <button kbq-dropdown-item>Six</button>
         </kbq-dropdown>
 
-        <kbq-dropdown
-            #levelTwo="kbqDropdown"
-            [hasBackdrop]="true"
-            (closed)="levelTwoCloseCallback($event)"
-        >
+        <kbq-dropdown #levelTwo="kbqDropdown" [hasBackdrop]="true" (closed)="levelTwoCloseCallback($event)">
             <button kbq-dropdown-item>Seven</button>
             <button kbq-dropdown-item>Eight</button>
             <button kbq-dropdown-item>Nine</button>
         </kbq-dropdown>
 
-        <kbq-dropdown
-            #lazy="kbqDropdown"
-            [hasBackdrop]="true"
-        >
+        <kbq-dropdown #lazy="kbqDropdown" [hasBackdrop]="true">
             <button kbq-dropdown-item>Ten</button>
             <button kbq-dropdown-item>Eleven</button>
             <button kbq-dropdown-item>Twelve</button>
@@ -1838,19 +1787,10 @@ class NestedDropdown {
 
 @Component({
     template: `
-        <button
-            #rootTriggerEl
-            [kbqDropdownTriggerFor]="root"
-        >
-            Toggle dropdown
-        </button>
+        <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
         <kbq-dropdown #root="kbqDropdown">
             @for (item of items; track item) {
-                <button
-                    class="level-one-trigger"
-                    [kbqDropdownTriggerFor]="levelOne"
-                    kbq-dropdown-item
-                >
+                <button class="level-one-trigger" [kbqDropdownTriggerFor]="levelOne" kbq-dropdown-item>
                     {{ item }}
                 </button>
             }
@@ -1871,29 +1811,13 @@ class NestedDropdownRepeater {
 
 @Component({
     template: `
-        <button
-            #rootTriggerEl
-            [kbqDropdownTriggerFor]="root"
-        >
-            Toggle dropdown
-        </button>
+        <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
 
         <kbq-dropdown #root="kbqDropdown">
-            <button
-                class="level-one-trigger"
-                [kbqDropdownTriggerFor]="levelOne"
-                kbq-dropdown-item
-            >
-                One
-            </button>
+            <button class="level-one-trigger" [kbqDropdownTriggerFor]="levelOne" kbq-dropdown-item>One</button>
 
             <kbq-dropdown #levelOne="kbqDropdown">
-                <button
-                    class="level-two-item"
-                    kbq-dropdown-item
-                >
-                    Two
-                </button>
+                <button class="level-two-item" kbq-dropdown-item>Two</button>
             </kbq-dropdown>
         </kbq-dropdown>
     `
@@ -1904,12 +1828,7 @@ class NestedDropdownDeclaredInsideParentDropdown {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-        >
-            Toggle dropdown
-        </button>
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
             <ng-template kbqDropdownContent>
                 <button kbq-dropdown-item>Item</button>
@@ -1941,10 +1860,7 @@ class SimpleLazyDropdown {
             Two
         </button>
         <kbq-dropdown #dropdown="kbqDropdown">
-            <ng-template
-                let-label="label"
-                kbqDropdownContent
-            >
+            <ng-template let-label="label" kbqDropdownContent>
                 <button kbq-dropdown-item>{{ label }}</button>
             </ng-template>
         </kbq-dropdown>
@@ -1975,19 +1891,9 @@ class DynamicPanelDropdown {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-        >
-            Toggle dropdown
-        </button>
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button
-                #item
-                kbq-dropdown-item
-            >
-                Item
-            </button>
+            <button #item kbq-dropdown-item>Item</button>
         </kbq-dropdown>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -2000,42 +1906,21 @@ class OnPushContainer {
 
 @Component({
     template: `
-        <button
-            #triggerEl
-            [kbqDropdownTriggerFor]="dropdown"
-        >
-            Toggle dropdown
-        </button>
+        <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown #dropdown="kbqDropdown">
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 {{ longValue }}
             </button>
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 {{ defaultValue }}
             </button>
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 <div #kbqTitleContainer>
                     <div>Complex header</div>
                     <div #kbqTitleText>{{ longValue }}</div>
                 </div>
             </button>
-            <button
-                style="max-width: 150px; width: 150px"
-                kbq-dropdown-item
-                kbq-title
-            >
+            <button style="max-width: 150px; width: 150px" kbq-dropdown-item kbq-title>
                 <div #kbqTitleContainer>
                     <div>Complex header</div>
                     <div #kbqTitleText>{{ defaultValue }}</div>

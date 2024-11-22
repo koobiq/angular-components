@@ -20,26 +20,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
             &nbsp;удален
         </ng-template>
 
-        <ng-template
-            #toastActionsTemplate
-            let-toast
-        >
-            <a
-                (click)="toast.close()"
-                (keydown.enter)="toast.close()"
-                kbq-link
-                pseudo
-            >
-                Восстановить
-            </a>
+        <ng-template #toastActionsTemplate let-toast>
+            <a (click)="toast.close()" (keydown.enter)="toast.close()" kbq-link pseudo>Восстановить</a>
         </ng-template>
 
-        <button
-            (click)="showToast(toastContentTemplate, toastActionsTemplate)"
-            kbq-button
-        >
-            Отчет
-        </button>
+        <button (click)="showToast(toastContentTemplate, toastActionsTemplate)" kbq-button>Отчет</button>
     `
 })
 export class ToastReportOverviewExample {

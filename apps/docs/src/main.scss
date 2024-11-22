@@ -1,7 +1,6 @@
 @use '@koobiq/icons/fonts/kbq-icons';
-
-@use './styles/theme.kbq' as theme-kbq;
-
+@use './styles/fonts';
+@use './styles/theme-kbq';
 @use './styles/markdown';
 @use './styles/docsearch';
 

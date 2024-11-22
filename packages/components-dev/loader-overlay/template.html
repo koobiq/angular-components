@@ -1,9 +1,4 @@
-<button
-    kbq-button
-    (click)="loading = !loading"
->
-    toggleLoading
-</button>
+<button kbq-button (click)="loading = !loading">toggleLoading</button>
 
 <br />
 <br />
@@ -17,10 +12,7 @@
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
     @if (loading) {
-        <kbq-loader-overlay
-            [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
-            [text]="'Создание отчета'"
-        />
+        <kbq-loader-overlay [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" [text]="'Создание отчета'" />
     }
 </div>
 
@@ -79,16 +71,8 @@ custom
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
     @if (loading) {
-        <kbq-loader-overlay
-            fixed-top
-            [caption]="caption"
-            [text]="text"
-        >
-            <kbq-progress-spinner
-                kbq-loader-overlay-indicator
-                [color]="themePalette.Error"
-                [mode]="'indeterminate'"
-            />
+        <kbq-loader-overlay fixed-top [caption]="caption" [text]="text">
+            <kbq-progress-spinner kbq-loader-overlay-indicator [color]="themePalette.Error" [mode]="'indeterminate'" />
             <div kbq-loader-overlay-text>Создание отчета</div>
             <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
         </kbq-loader-overlay>

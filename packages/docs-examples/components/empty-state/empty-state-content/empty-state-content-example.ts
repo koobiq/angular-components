@@ -17,59 +17,29 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ],
     template: `
         <div class="layout-row layout-wrap">
-            <kbq-empty-state
-                class="flex"
-                style="min-height: 216px"
-            >
+            <kbq-empty-state class="flex" style="min-height: 216px">
                 <div kbq-empty-state-icon>
-                    <img
-                        alt=""
-                        height="192"
-                        src="assets/images/empty-state/4_Empty_F_1psW.png"
-                        width="192"
-                    />
+                    <img alt="" height="192" src="assets/images/empty-state/4_Empty_F_1psW.png" width="192" />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
-                    <button
-                        [color]="colors.Theme"
-                        [kbqStyle]="styles.Transparent"
-                        kbq-button
-                    >
-                        <i
-                            [color]="'theme'"
-                            kbq-icon="kbq-plus_16"
-                        ></i>
+                    <button [color]="colors.Theme" [kbqStyle]="styles.Transparent" kbq-button>
+                        <i [color]="'theme'" kbq-icon="kbq-plus_16"></i>
                         {{ buttonText }}
                     </button>
                 </div>
             </kbq-empty-state>
 
-            <kbq-empty-state
-                class="flex"
-                style="min-height: 216px"
-            >
+            <kbq-empty-state class="flex" style="min-height: 216px">
                 <div kbq-empty-state-icon>
-                    <img
-                        alt=""
-                        height="80"
-                        src="assets/images/empty-state/4_Empty_F_1psW.png"
-                        width="80"
-                    />
+                    <img alt="" height="80" src="assets/images/empty-state/4_Empty_F_1psW.png" width="80" />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
-                    <button
-                        [color]="colors.Theme"
-                        [kbqStyle]="styles.Transparent"
-                        kbq-button
-                    >
-                        <i
-                            [color]="'theme'"
-                            kbq-icon="kbq-plus_16"
-                        ></i>
+                    <button [color]="colors.Theme" [kbqStyle]="styles.Transparent" kbq-button>
+                        <i [color]="'theme'" kbq-icon="kbq-plus_16"></i>
                         {{ buttonText }}
                     </button>
                 </div>

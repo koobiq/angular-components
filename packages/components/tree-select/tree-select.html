@@ -7,10 +7,7 @@
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    <select
-        class="cdk-visually-hidden"
-        [id]="id"
-    ></select>
+    <select class="cdk-visually-hidden" [id]="id"></select>
 
     @if (!!customMatcher) {
         <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
@@ -73,20 +70,13 @@
             }
 
             @if (canShowCleaner) {
-                <div
-                    class="kbq-select__cleaner"
-                    (click)="clearValue($event)"
-                >
+                <div class="kbq-select__cleaner" (click)="clearValue($event)">
                     <ng-content select="kbq-cleaner" />
                 </div>
             }
 
             <div class="kbq-select__arrow-wrapper">
-                <i
-                    kbq-icon="kbq-chevron-down-s_16"
-                    class="kbq-select__arrow"
-                    [color]="'contrast-fade'"
-                ></i>
+                <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="'contrast-fade'"></i>
             </div>
         </div>
     }

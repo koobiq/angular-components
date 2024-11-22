@@ -200,17 +200,11 @@ abstract class TreeParams {
             (ngModelChange)="onModelChange($event)"
             multiple="checkbox"
         >
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                 <span>{{ treeControl.getViewValue(node) }}</span>
             </kbq-tree-option>
 
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node; when: hasChild"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span>{{ treeControl.getViewValue(node) }}</span>

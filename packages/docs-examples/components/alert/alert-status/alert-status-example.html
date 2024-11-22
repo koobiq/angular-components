@@ -1,51 +1,23 @@
 <div class="layout-row layout-gap-l flex-100">
     <div class="layout-column layout-gap-l">
-        <kbq-alert
-            class="kbq-alert_theme"
-            [alertStyle]="alertStyles.Colored"
-            [compact]="true"
-        >
-            <i
-                kbq-icon="kbq-info-circle_16"
-                [color]="colors.Contrast"
-            ></i>
+        <kbq-alert class="kbq-alert_theme" [alertStyle]="alertStyles.Colored" [compact]="true">
+            <i kbq-icon="kbq-info-circle_16" [color]="colors.Contrast"></i>
             {{ text }}
         </kbq-alert>
 
-        <kbq-alert
-            [alertColor]="alertColors.Warning"
-            [alertStyle]="alertStyles.Colored"
-            [compact]="true"
-        >
-            <i
-                kbq-icon="kbq-exclamation-triangle_16"
-                [color]="colors.Warning"
-            ></i>
+        <kbq-alert [alertColor]="alertColors.Warning" [alertStyle]="alertStyles.Colored" [compact]="true">
+            <i kbq-icon="kbq-exclamation-triangle_16" [color]="colors.Warning"></i>
             {{ text }}
         </kbq-alert>
     </div>
     <div class="layout-column layout-gap-l">
-        <kbq-alert
-            [alertColor]="alertColors.Error"
-            [alertStyle]="alertStyles.Colored"
-            [compact]="true"
-        >
-            <i
-                kbq-icon="kbq-exclamation-triangle_16"
-                [color]="colors.Error"
-            ></i>
+        <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored" [compact]="true">
+            <i kbq-icon="kbq-exclamation-triangle_16" [color]="colors.Error"></i>
             {{ text }}
         </kbq-alert>
 
-        <kbq-alert
-            [alertColor]="alertColors.Success"
-            [alertStyle]="alertStyles.Colored"
-            [compact]="true"
-        >
-            <i
-                kbq-icon="kbq-check-circle_16"
-                [color]="colors.Success"
-            ></i>
+        <kbq-alert [alertColor]="alertColors.Success" [alertStyle]="alertStyles.Colored" [compact]="true">
+            <i kbq-icon="kbq-check-circle_16" [color]="colors.Success"></i>
             {{ text }}
         </kbq-alert>
     </div>

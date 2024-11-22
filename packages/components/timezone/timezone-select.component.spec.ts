@@ -123,20 +123,9 @@ class BasicTimezoneSelect {
     template: `
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
-                <kbq-form-field
-                    kbqFormFieldWithoutBorders
-                    kbqSelectSearch
-                >
-                    <i
-                        kbqPrefix
-                        kbq-icon="kbq-magnifying-glass_16"
-                    ></i>
-                    <input
-                        [formControl]="searchCtrl"
-                        [placeholder]="'Город или часовой пояс'"
-                        kbqInput
-                        type="text"
-                    />
+                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                    <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
+                    <input [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" kbqInput type="text" />
                     <kbq-cleaner />
                 </kbq-form-field>
 

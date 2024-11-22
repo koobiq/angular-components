@@ -1,43 +1,25 @@
 <div class="layout-margin docs-width">
     @if (showServerErrors) {
-        <kbq-alert
-            [alertColor]="'error'"
-            [alertStyle]="'colored'"
-            [compact]="true"
-        >
-            <i
-                kbq-icon="kbq-info-circle_16"
-                [color]="'error'"
-            ></i>
+        <kbq-alert [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true">
+            <i kbq-icon="kbq-info-circle_16" [color]="'error'"></i>
             <div kbq-alert-title>Не удается получить ответ от сервера</div>
             При попытке отправить данные сервер не ответил, попробуйте снова
         </kbq-alert>
     }
 
-    <form
-        novalidate
-        class="kbq-form-vertical"
-        [formGroup]="globalErrorForm"
-        (ngSubmit)="submitGlobalErrorForm()"
-    >
+    <form novalidate class="kbq-form-vertical" [formGroup]="globalErrorForm" (ngSubmit)="submitGlobalErrorForm()">
         <div class="kbq-form__fieldset">
             <div class="kbq-form__row">
                 <div class="kbq-form__label">Имя</div>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        formControlName="firstName"
-                        kbqInput
-                    />
+                    <input formControlName="firstName" kbqInput />
                 </kbq-form-field>
             </div>
 
             <div class="kbq-form__row">
                 <div class="kbq-form__label">Фамилия</div>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        formControlName="lastName"
-                        kbqInput
-                    />
+                    <input formControlName="lastName" kbqInput />
                 </kbq-form-field>
             </div>
 

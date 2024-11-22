@@ -13,12 +13,7 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     template: `
         <div class="layout-row layout-gap-l">
             <kbq-badge [badgeColor]="colors.Success">Normal</kbq-badge>
-            <kbq-badge
-                [badgeColor]="colors.Success"
-                [compact]="true"
-            >
-                Compact
-            </kbq-badge>
+            <kbq-badge [badgeColor]="colors.Success" [compact]="true">Compact</kbq-badge>
         </div>
     `
 })
