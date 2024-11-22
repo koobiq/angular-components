@@ -1,18 +1,12 @@
 <ng-content select="[kbq-progress-bar-text]" />
 
-<div
-    class="kbq-progress-bar__inner"
-    [id]="id"
->
+<div class="kbq-progress-bar__inner" [id]="id">
     @switch (mode) {
         @case ('indeterminate') {
             <div class="kbq-progress-bar__line kbq-progress-bar__line_indeterminate"></div>
         }
         @default {
-            <div
-                class="kbq-progress-bar__line kbq-progress-bar__line_determinate"
-                [style.width.%]="percentage"
-            ></div>
+            <div class="kbq-progress-bar__line kbq-progress-bar__line_determinate" [style.width.%]="percentage"></div>
         }
     }
 </div>

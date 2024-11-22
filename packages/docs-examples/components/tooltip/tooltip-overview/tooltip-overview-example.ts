@@ -14,24 +14,9 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div
-            class="layout-column"
-            style="gap: 16px; align-items: flex-start"
-        >
-            <button
-                [kbqPlacement]="placement"
-                kbq-button
-                kbqTooltip="Тултип"
-            >
-                Кнопка с тултипом
-            </button>
-            <button
-                [kbqPlacement]="placement"
-                kbq-button
-                kbqWarningTooltip="Тултип"
-            >
-                Кнопка с предупреждением
-            </button>
+        <div class="layout-column" style="gap: 16px; align-items: flex-start">
+            <button [kbqPlacement]="placement" kbq-button kbqTooltip="Тултип">Кнопка с тултипом</button>
+            <button [kbqPlacement]="placement" kbq-button kbqWarningTooltip="Тултип">Кнопка с предупреждением</button>
         </div>
     `
 })

@@ -12,10 +12,7 @@ import { KbqFileUploadModule } from '@koobiq/components/file-upload';
     ],
     template: `
         <kbq-multiple-file-upload size="compact">
-            <ng-template
-                #kbqFileIcon
-                let-file
-            >
+            <ng-template #kbqFileIcon let-file>
                 <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>
         </kbq-multiple-file-upload>

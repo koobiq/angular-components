@@ -1,22 +1,9 @@
 <div class="docs-icons-viewer__header">
-    <span
-        docs-header
-        class="docs-icons-viewer__header-text docs-component-name"
-    >
-        Иконки
-    </span>
+    <span docs-header class="docs-icons-viewer__header-text docs-component-name">Иконки</span>
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-magnifying-glass_16"
-            kbqPrefix
-            [color]="themePalette.Secondary"
-        ></i>
-        <input
-            kbqInput
-            placeholder="Название иконки"
-            [formControl]="searchControl"
-        />
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [color]="themePalette.Secondary"></i>
+        <input kbqInput placeholder="Название иконки" [formControl]="searchControl" />
         <kbq-cleaner />
     </kbq-form-field>
 </div>
@@ -35,10 +22,7 @@
                                 (click)="setActiveIcon(icon)"
                                 (keyup.enter)="setActiveIcon(icon)"
                             >
-                                <i
-                                    kbq-icon
-                                    [ngClass]="icon.cssClass"
-                                ></i>
+                                <i kbq-icon [ngClass]="icon.cssClass"></i>
                                 <span
                                     class="docs-icons-viewer__table-cell-name"
                                     [innerHtml]="icon.name | mcHighlight: searchControl.value"

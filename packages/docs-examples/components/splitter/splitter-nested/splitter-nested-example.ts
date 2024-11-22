@@ -36,27 +36,13 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
     template: `
         <kbq-splitter class="with-border">
             <div kbq-splitter-area>left</div>
-            <div
-                class="flex"
-                kbq-splitter-area
-            >
-                <kbq-splitter
-                    class="without-border flex"
-                    [direction]="direction.Vertical"
-                >
+            <div class="flex" kbq-splitter-area>
+                <kbq-splitter class="without-border flex" [direction]="direction.Vertical">
                     <div kbq-splitter-area>top</div>
-                    <div
-                        class="layout-column flex"
-                        kbq-splitter-area
-                    >
+                    <div class="layout-column flex" kbq-splitter-area>
                         <kbq-splitter class="flex nested-splitter">
                             <div kbq-splitter-area>center-left</div>
-                            <div
-                                class="flex"
-                                kbq-splitter-area
-                            >
-                                center
-                            </div>
+                            <div class="flex" kbq-splitter-area>center</div>
                             <div kbq-splitter-area>center-right</div>
                         </kbq-splitter>
                     </div>

@@ -12,10 +12,7 @@ import { KbqTableModule } from '@koobiq/components/table';
         KbqTableModule
     ],
     template: `
-        <table
-            kbq-table
-            style="margin-bottom: 32px"
-        >
+        <table kbq-table style="margin-bottom: 32px">
             <thead>
                 <tr>
                     <th>Клиент</th>

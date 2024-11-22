@@ -5,44 +5,14 @@
     }
 </style>
 
-<button
-    kbq-button
-    (click)="modelValue = 'Applications'"
->
-    set modelValue = Applications
-</button>
-<button
-    kbq-button
-    (click)="modelValue = 'Application'"
->
-    set modelValue = Application
-</button>
+<button kbq-button (click)="modelValue = 'Applications'">set modelValue = Applications</button>
+<button kbq-button (click)="modelValue = 'Application'">set modelValue = Application</button>
 <br />
 <br />
-<button
-    kbq-button
-    (click)="disableState = !disableState"
->
-    toggle disableState
-</button>
-<button
-    kbq-button
-    (click)="switchToDataSource('big')"
->
-    switch to bigger datasource
-</button>
-<button
-    kbq-button
-    (click)="switchToDataSource('small')"
->
-    switch to smaller datasource
-</button>
-<button
-    kbq-button
-    (click)="treeControl.expandAll()"
->
-    Expand all
-</button>
+<button kbq-button (click)="disableState = !disableState">toggle disableState</button>
+<button kbq-button (click)="switchToDataSource('big')">switch to bigger datasource</button>
+<button kbq-button (click)="switchToDataSource('small')">switch to smaller datasource</button>
+<button kbq-button (click)="treeControl.expandAll()">Expand all</button>
 
 <br />
 <br />
@@ -55,12 +25,7 @@
 <br />
 
 <kbq-form-field>
-    <input
-        kbqInput
-        type="text"
-        [(ngModel)]="filterValue"
-        (ngModelChange)="onFilterChange($event)"
-    />
+    <input kbqInput type="text" [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" />
     <kbq-cleaner />
 </kbq-form-field>
 
@@ -69,14 +34,8 @@
 <br />
 <!--    [noUnselectLast]="false"-->
 <div>
-    <kbq-button-toggle-group
-        #group1="kbqButtonToggleGroup"
-        (change)="onToggleClick($event)"
-    >
-        <kbq-button-toggle
-            [checked]="true"
-            [value]="TreeStates.ALL"
-        >
+    <kbq-button-toggle-group #group1="kbqButtonToggleGroup" (change)="onToggleClick($event)">
+        <kbq-button-toggle [checked]="true" [value]="TreeStates.ALL">
             <i kbq-icon="kbq-bell_16"></i>
             All
         </kbq-button-toggle>
@@ -101,10 +60,7 @@
     (ngModelChange)="onModelValueChange($event)"
     (onSelectAll)="onSelectAll($event)"
 >
-    <kbq-tree-option
-        *kbqTreeNodeDef="let node"
-        kbqTreeNodePadding
-    >
+    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
         <i kbq-icon="kbq-info-circle_16"></i>
         <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
     </kbq-tree-option>
@@ -137,11 +93,7 @@
         [(ngModel)]="modelValue"
         (onSelectAll)="onSelectAll($event)"
     >
-        <kbq-tree-option
-            *kbqTreeNodeDef="let node"
-            kbq-title
-            kbqTreeNodePadding
-        >
+        <kbq-tree-option *kbqTreeNodeDef="let node" kbq-title kbqTreeNodePadding>
             <i kbq-icon="kbq-info-circle_16"></i>
             <span
                 #kbqTitleText
@@ -179,20 +131,13 @@
     [treeControl]="treeControl2"
     [(ngModel)]="modelValue2"
 >
-    <kbq-tree-option
-        *kbqTreeNodeDef="let node"
-        kbqTreeNodePadding
-        [disabled]="node.name === 'tests'"
-    >
+    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
         <i kbq-icon="kbq-info-circle_16"></i>
 
         <span [innerHTML]="treeControl.getViewValue(node)"></span>
     </kbq-tree-option>
 
-    <kbq-tree-option
-        *kbqTreeNodeDef="let node; when: hasChild"
-        kbqTreeNodePadding
-    >
+    <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
         <i kbq-icon="kbq-info-circle_16"></i>
 
         <kbq-tree-node-toggle [node]="node" />

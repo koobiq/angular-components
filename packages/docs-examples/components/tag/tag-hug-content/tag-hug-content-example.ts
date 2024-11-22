@@ -16,10 +16,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
     template: `
         <kbq-tag [color]="colors.Theme">
             Выбранное значение
-            <i
-                kbq-icon="kbq-xmark-s_16"
-                kbqTagRemove
-            ></i>
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
     `
 })

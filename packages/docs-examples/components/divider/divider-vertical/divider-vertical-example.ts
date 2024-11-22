@@ -11,10 +11,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
         KbqDividerModule
     ],
     template: `
-        <kbq-divider
-            [vertical]="true"
-            style="margin: 20px; height: 50px"
-        />
+        <kbq-divider [vertical]="true" style="margin: 20px; height: 50px" />
     `
 })
 export class DividerVerticalExample {}

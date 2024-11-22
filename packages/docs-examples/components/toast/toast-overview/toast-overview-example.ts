@@ -14,28 +14,12 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
         KbqButtonModule
     ],
     template: `
-        <ng-template
-            #toastAction
-            let-toast
-        >
-            <a
-                (click)="toast.close()"
-                (keydown.enter)="toast.close()"
-                kbq-link
-                pseudo
-            >
-                Обновить
-            </a>
+        <ng-template #toastAction let-toast>
+            <a (click)="toast.close()" (keydown.enter)="toast.close()" kbq-link pseudo>Обновить</a>
         </ng-template>
 
         <div class="demo-block">
-            <button
-                class="example-button"
-                (click)="showToast(toastAction)"
-                kbq-button
-            >
-                Показать тост
-            </button>
+            <button class="example-button" (click)="showToast(toastAction)" kbq-button>Показать тост</button>
         </div>
     `
 })

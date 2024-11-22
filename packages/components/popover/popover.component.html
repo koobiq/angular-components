@@ -28,11 +28,7 @@
         }
 
         @if (content) {
-            <div
-                #popoverContent
-                class="kbq-popover__content kbq-scrollbar"
-                (cdkObserveContent)="onContentChange()"
-            >
+            <div #popoverContent class="kbq-popover__content kbq-scrollbar" (cdkObserveContent)="onContentChange()">
                 @if (hasCloseButton && !header) {
                     <div class="kbq-popover__close-container">
                         <ng-container *ngTemplateOutlet="closeButton" />
@@ -48,10 +44,7 @@
         }
 
         @if (footer) {
-            <div
-                class="kbq-popover__footer"
-                [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow"
-            >
+            <div class="kbq-popover__footer" [class.kbq-popover__footer_bottom-overflow]="isContentBottomOverflow">
                 @if (isTemplateRef(footer)) {
                     <ng-container [ngTemplateOutlet]="$any(footer)" />
                 }
@@ -70,16 +63,8 @@
 
     <ng-template #closeButton>
         <div class="kbq-popover__close">
-            <button
-                kbq-button
-                class="kbq-button_transparent"
-                [color]="componentColors.Contrast"
-                (click)="hide(0)"
-            >
-                <i
-                    kbq-icon="kbq-xmark_16"
-                    [color]="componentColors.Contrast"
-                ></i>
+            <button kbq-button class="kbq-button_transparent" [color]="componentColors.Contrast" (click)="hide(0)">
+                <i kbq-icon="kbq-xmark_16" [color]="componentColors.Contrast"></i>
             </button>
         </div>
     </ng-template>

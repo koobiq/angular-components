@@ -13,20 +13,14 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         KbqIconModule
     ],
     template: `
-        <kbq-tab-group
-            class="layout-margin-bottom-l"
-            underlined
-        >
+        <kbq-tab-group class="layout-margin-bottom-l" underlined>
             <kbq-tab label="BruteForce" />
             <kbq-tab label="Complex Attack" />
             <kbq-tab label="DDoS" />
             <kbq-tab label="DoS" />
         </kbq-tab-group>
 
-        <kbq-tab-group
-            class="layout-margin-bottom-l"
-            underlined
-        >
+        <kbq-tab-group class="layout-margin-bottom-l" underlined>
             <kbq-tab>
                 <ng-template kbq-tab-label>
                     <i kbq-icon="kbq-bug_16"></i>

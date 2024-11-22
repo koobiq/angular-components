@@ -1,33 +1,17 @@
 <kbq-modal-title>
     {{ iconItem.name }}
-    <button
-        kbq-button
-        class="kbq-modal-close kbq-button_transparent"
-        [color]="'contrast'"
-        (click)="modal.close()"
-    >
-        <i
-            kbq-icon="kbq-xmark_16"
-            [color]="componentColors.Contrast"
-        ></i>
+    <button kbq-button class="kbq-modal-close kbq-button_transparent" [color]="'contrast'" (click)="modal.close()">
+        <i kbq-icon="kbq-xmark_16" [color]="componentColors.Contrast"></i>
     </button>
 </kbq-modal-title>
 
 <kbq-modal-body>
     <div class="icon-preview-modal__preview-area">
-        <i
-            #iconPreview
-            kbq-icon
-            [color]="selectedColorTheme"
-            [ngClass]="iconItem.cssClass"
-        ></i>
+        <i #iconPreview kbq-icon [color]="selectedColorTheme" [ngClass]="iconItem.cssClass"></i>
     </div>
     <div class="icon-preview-modal__content">
         <kbq-form-field>
-            <kbq-select
-                [placeholder]="'Цвет'"
-                [(value)]="selectedColorTheme"
-            >
+            <kbq-select [placeholder]="'Цвет'" [(value)]="selectedColorTheme">
                 <kbq-select-trigger>
                     <i
                         kbq-icon="kbq-circle-xs_16"
@@ -38,10 +22,7 @@
                 </kbq-select-trigger>
 
                 @for (paletteName of themePalettes; track paletteName) {
-                    <kbq-option
-                        class="icon-preview-modal__select-option"
-                        [value]="paletteName"
-                    >
+                    <kbq-option class="icon-preview-modal__select-option" [value]="paletteName">
                         <i
                             kbq-icon="kbq-circle-xs_16"
                             class="icon-preview-modal__palette-icon"
@@ -54,51 +35,31 @@
         </kbq-form-field>
 
         <div class="icon-preview-modal__buttons">
-            <a
-                download
-                href="{{ SVGLink }}"
-                kbq-button
-            >
+            <a download href="{{ SVGLink }}" kbq-button>
                 <i kbq-icon="kbq-arrow-down-to-line_16"></i>
                 Скачать SVG
             </a>
 
-            <button
-                kbq-button
-                (click)="copySVG()"
-            >
+            <button kbq-button (click)="copySVG()">
                 <i kbq-icon="kbq-file-multiple-o_16"></i>
                 Скопировать SVG
             </button>
         </div>
 
-        <kbq-dl
-            class="icon-preview-modal__description"
-            [vertical]="true"
-        >
+        <kbq-dl class="icon-preview-modal__description" [vertical]="true">
             <kbq-dt>Размер</kbq-dt>
             <kbq-dd>{{ iconItem.size }}px</kbq-dd>
 
             <kbq-dt>HTML</kbq-dt>
-            <kbq-dd
-                kbqTooltip="Скопировать"
-                (click)="copyCodeExample()"
-            >
+            <kbq-dd kbqTooltip="Скопировать" (click)="copyCodeExample()">
                 <code [innerText]="getCodeExampleText()"></code>
             </kbq-dd>
 
             <kbq-dt>Для MS Word</kbq-dt>
             <kbq-dd>
-                <span
-                    #wordExample
-                    kbqTooltip="Скопировать"
-                    (click)="copyWordExample()"
-                >
+                <span #wordExample kbqTooltip="Скопировать" (click)="copyWordExample()">
                     [#{{ getHexColor() }}]
-                    <span
-                        class="icon-unicode"
-                        [innerHtml]="getUnicode()"
-                    ></span>
+                    <span class="icon-unicode" [innerHtml]="getUnicode()"></span>
                 </span>
             </kbq-dd>
 

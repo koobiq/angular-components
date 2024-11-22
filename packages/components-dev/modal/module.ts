@@ -213,11 +213,7 @@ export class KbqModalLongCustomComponent {
             <h4>{{ subtitle }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
-                <button
-                    [color]="componentColors.Contrast"
-                    (click)="destroyModal()"
-                    kbq-button
-                >
+                <button [color]="componentColors.Contrast" (click)="destroyModal()" kbq-button>
                     destroy modal in the component
                 </button>
             </p>
@@ -254,30 +250,15 @@ export class KbqModalCustomComponent {
             <h4>{{ subtitle }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
-                <button
-                    [color]="componentColors.Contrast"
-                    (click)="destroyModal()"
-                    kbq-button
-                >
+                <button [color]="componentColors.Contrast" (click)="destroyModal()" kbq-button>
                     destroy modal in the component
                 </button>
             </p>
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button
-                [color]="componentColors.Contrast"
-                kbq-button
-            >
-                Save
-            </button>
-            <button
-                (click)="destroyModal()"
-                kbq-button
-                autofocus
-            >
-                Close
-            </button>
+            <button [color]="componentColors.Contrast" kbq-button>Save</button>
+            <button (click)="destroyModal()" kbq-button autofocus>Close</button>
         </div>
     `
 })

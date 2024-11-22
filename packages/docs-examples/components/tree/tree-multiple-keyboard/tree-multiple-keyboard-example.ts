@@ -111,18 +111,11 @@ export const DATA_OBJECT = {
             [treeControl]="treeControl"
             multiple="keyboard"
         >
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node"
-                [disabled]="node.name === 'tests'"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 
-            <kbq-tree-option
-                *kbqTreeNodeDef="let node; when: hasChild"
-                kbqTreeNodePadding
-            >
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>

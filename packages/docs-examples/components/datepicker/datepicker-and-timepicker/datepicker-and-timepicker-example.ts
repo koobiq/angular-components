@@ -30,26 +30,14 @@ import { DateTime } from 'luxon';
                             (click)="datepicker.toggle()"
                             style="width: 136px"
                         >
-                            <input
-                                [kbqDatepicker]="datepicker"
-                                [ngModel]="selectedDateTime"
-                            />
-                            <i
-                                kbq-icon="kbq-calendar-o_16"
-                                kbqSuffix
-                            ></i>
+                            <input [kbqDatepicker]="datepicker" [ngModel]="selectedDateTime" />
+                            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
                         <kbq-form-field style="width: 136px">
-                            <i
-                                kbq-icon="kbq-clock_16"
-                                kbqPrefix
-                            ></i>
-                            <input
-                                [ngModel]="selectedDateTime"
-                                kbqTimepicker
-                            />
+                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                            <input [ngModel]="selectedDateTime" kbqTimepicker />
                         </kbq-form-field>
                     </div>
                 </div>

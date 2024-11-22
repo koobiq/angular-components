@@ -15,10 +15,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
     selector: 'file-upload-single-validation-reactive-forms-overview-example',
     template: `
         <form [formGroup]="formGroup">
-            <kbq-file-upload
-                class="layout-margin-bottom-s"
-                formControlName="fileControl"
-            >
+            <kbq-file-upload class="layout-margin-bottom-s" formControlName="fileControl">
                 @if (!formGroup.get('fileControl')?.errors) {
                     <i kbq-icon="kbq-file-o_16"></i>
                 }

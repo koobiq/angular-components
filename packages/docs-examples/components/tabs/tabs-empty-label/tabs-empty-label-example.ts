@@ -32,12 +32,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         weaknesses in an encryption system (if any exist) that would make the task easier.
                     </p>
                 </kbq-tab>
-                <kbq-tab
-                    [tooltipPlacement]="PopUpPlacements.Top"
-                    label="DDoS"
-                    tooltipTitle="No incidents"
-                    empty
-                >
+                <kbq-tab [tooltipPlacement]="PopUpPlacements.Top" label="DDoS" tooltipTitle="No incidents" empty>
                     <div class="tabs-empty-label-example_tab-content">No DDoS attacks have been registered</div>
                 </kbq-tab>
                 <kbq-tab label="DoS">

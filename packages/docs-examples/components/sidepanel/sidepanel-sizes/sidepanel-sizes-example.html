@@ -1,40 +1,15 @@
-<div
-    style="width: 200px"
-    class="layout-column"
->
-    <button
-        kbq-button
-        class="layout-margin-bottom-l"
-        (click)="showSmall()"
-    >
-        Small
-    </button>
+<div style="width: 200px" class="layout-column">
+    <button kbq-button class="layout-margin-bottom-l" (click)="showSmall()">Small</button>
 
-    <button
-        kbq-button
-        class="layout-margin-bottom-l"
-        (click)="showMedium()"
-    >
-        Medium
-    </button>
+    <button kbq-button class="layout-margin-bottom-l" (click)="showMedium()">Medium</button>
 
-    <button
-        kbq-button
-        (click)="showLarge()"
-    >
-        Large
-    </button>
+    <button kbq-button (click)="showLarge()">Large</button>
 </div>
 
 <ng-template>
     <kbq-sidepanel-header [closeable]="true">Sidepanel Template Content</kbq-sidepanel-header>
     <kbq-sidepanel-body style="padding-top: 8px; padding-bottom: 8px">
-        <div
-            style="padding: 8px"
-            class="kbq-subheading"
-        >
-            Sidepanel Template Body
-        </div>
+        <div style="padding: 8px" class="kbq-subheading">Sidepanel Template Body</div>
 
         @for (item of array; track item; let i = $index) {
             <div style="padding: 8px">
@@ -45,11 +20,7 @@
 
     <kbq-sidepanel-footer>
         <kbq-sidepanel-actions align="left">
-            <button
-                cdkFocusInitial
-                kbq-button
-                [color]="'contrast'"
-            >
+            <button cdkFocusInitial kbq-button [color]="'contrast'">
                 <span>Button</span>
             </button>
         </kbq-sidepanel-actions>

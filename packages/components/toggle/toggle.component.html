@@ -1,8 +1,4 @@
-<label
-    class="kbq-toggle-layout"
-    [attr.for]="inputId"
-    [class.left]="labelPosition === 'left'"
->
+<label class="kbq-toggle-layout" [attr.for]="inputId" [class.left]="labelPosition === 'left'">
     <input
         #input
         role="switch"
@@ -22,22 +18,12 @@
     />
     <div class="kbq-toggle-bar-container">
         <div class="kbq-toggle-bar">
-            <div
-                class="kbq-toggle__circle"
-                [@switch]="checked"
-            ></div>
+            <div class="kbq-toggle__circle" [@switch]="checked"></div>
         </div>
     </div>
 
-    <div
-        class="kbq-toggle__content"
-        [class.left]="labelPosition === 'left'"
-        [class.right]="labelPosition === 'right'"
-    >
-        <span
-            class="kbq-toggle-label"
-            (cdkObserveContent)="onLabelTextChange()"
-        >
+    <div class="kbq-toggle__content" [class.left]="labelPosition === 'left'" [class.right]="labelPosition === 'right'">
+        <span class="kbq-toggle-label" (cdkObserveContent)="onLabelTextChange()">
             <ng-content />
         </span>
 

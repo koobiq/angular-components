@@ -15,42 +15,27 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="docs-icon-item-layout layout-row">
             <div class="docs-icon-item-container">
-                <i
-                    [color]="colors.Theme"
-                    kbq-icon-item="kbq-bell_16"
-                ></i>
+                <i [color]="colors.Theme" kbq-icon-item="kbq-bell_16"></i>
                 <div class="docs-icon-item-container__name kbq-text-normal">Theme</div>
             </div>
 
             <div class="docs-icon-item-container">
-                <i
-                    [color]="colors.Contrast"
-                    kbq-icon-item="kbq-bell_16"
-                ></i>
+                <i [color]="colors.Contrast" kbq-icon-item="kbq-bell_16"></i>
                 <div class="docs-icon-item-container__name kbq-text-normal">Contrast</div>
             </div>
 
             <div class="docs-icon-item-container">
-                <i
-                    [color]="colors.Success"
-                    kbq-icon-item="kbq-bell_16"
-                ></i>
+                <i [color]="colors.Success" kbq-icon-item="kbq-bell_16"></i>
                 <div class="docs-icon-item-container__name kbq-text-normal">Success</div>
             </div>
 
             <div class="docs-icon-item-container">
-                <i
-                    [color]="colors.Warning"
-                    kbq-icon-item="kbq-bell_16"
-                ></i>
+                <i [color]="colors.Warning" kbq-icon-item="kbq-bell_16"></i>
                 <div class="docs-icon-item-container__name kbq-text-normal">Warning</div>
             </div>
 
             <div class="docs-icon-item-container">
-                <i
-                    [color]="colors.Error"
-                    kbq-icon-item="kbq-bell_16"
-                ></i>
+                <i [color]="colors.Error" kbq-icon-item="kbq-bell_16"></i>
                 <div class="docs-icon-item-container__name kbq-text-normal">Error</div>
             </div>
         </div>

@@ -27,10 +27,7 @@ const localeDataSet = {
     imports: [KbqFormFieldModule, KbqSelectModule],
     template: `
         <kbq-form-field>
-            <kbq-select
-                [(value)]="selected"
-                multiple
-            >
+            <kbq-select [(value)]="selected" multiple>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>

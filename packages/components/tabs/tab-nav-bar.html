@@ -9,16 +9,8 @@
     <i kbq-icon="kbq-chevron-left_16"></i>
 </div>
 
-<div
-    #tabListContainer
-    class="kbq-tab-link__container"
-    (keydown)="handleKeydown($event)"
->
-    <div
-        #tabList
-        class="kbq-tab-list"
-        (cdkObserveContent)="onContentChanges()"
-    >
+<div #tabListContainer class="kbq-tab-link__container" (keydown)="handleKeydown($event)">
+    <div #tabList class="kbq-tab-list" (cdkObserveContent)="onContentChanges()">
         <div class="kbq-tab-list__content">
             <ng-content />
             <div

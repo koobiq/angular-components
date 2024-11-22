@@ -662,10 +662,7 @@ class SimpleDynamicTabsTestApp {
 
 @Component({
     template: `
-        <kbq-tab-group
-            class="tab-group"
-            [(selectedIndex)]="selectedIndex"
-        >
+        <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
             @for (tab of tabs; track tab) {
                 <kbq-tab label="{{ tab.label }}">
                     {{ tab.content }}
@@ -792,12 +789,7 @@ class TemplateTabs {}
 @Component({
     template: `
         <kbq-tab-group>
-            <kbq-tab
-                #pizza
-                label="Junk food"
-            >
-                Pizza, fries
-            </kbq-tab>
+            <kbq-tab #pizza label="Junk food">Pizza, fries</kbq-tab>
             <kbq-tab label="Vegetables">Broccoli, spinach</kbq-tab>
         </kbq-tab-group>
 
@@ -810,10 +802,7 @@ class TabGroupWithIsActiveBinding {}
 
 @Component({
     template: `
-        <kbq-tab-group
-            class="tab-group"
-            [(activeTab)]="selectBy"
-        >
+        <kbq-tab-group class="tab-group" [(activeTab)]="selectBy">
             <kbq-tab tabId="first">
                 <ng-template kbq-tab-label>Tab first</ng-template>
                 Tab first content

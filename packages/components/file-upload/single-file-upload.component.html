@@ -20,17 +20,10 @@
                             <ng-content select="[kbq-icon]" />
                         }
                         @if (asyncData.loading) {
-                            <kbq-progress-spinner
-                                [mode]="progressMode"
-                                [value]="asyncData.progress || 0"
-                            />
+                            <kbq-progress-spinner [mode]="progressMode" [value]="asyncData.progress || 0" />
                         }
                     }
-                    <div
-                        class="file-item__text"
-                        [kbqEllipsisCenter]="file.file.name"
-                        [minVisibleLength]="10"
-                    ></div>
+                    <div class="file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></div>
                 </div>
                 <i
                     kbq-icon-button="kbq-xmark-circle_16"

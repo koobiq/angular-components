@@ -10,12 +10,7 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
     selector: 'modal-component-example',
     imports: [KbqButtonModule],
     template: `
-        <button
-            (click)="openModal()"
-            kbq-button
-        >
-            Open Modal
-        </button>
+        <button (click)="openModal()" kbq-button>Open Modal</button>
     `
 })
 export class ModalComponentExample {
@@ -57,31 +52,15 @@ export class ModalComponentExample {
             <h4>{{ subtitle }}</h4>
             <p>
                 <span>Get Modal instance in component</span>
-                <button
-                    [color]="'contrast'"
-                    (click)="destroyModal('close')"
-                    kbq-button
-                >
+                <button [color]="'contrast'" (click)="destroyModal('close')" kbq-button>
                     destroy modal in the component
                 </button>
             </p>
         </kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button
-                [color]="'contrast'"
-                (click)="destroyModal('save')"
-                kbq-button
-            >
-                Save
-            </button>
-            <button
-                (click)="destroyModal('close')"
-                kbq-button
-                autofocus
-            >
-                Close
-            </button>
+            <button [color]="'contrast'" (click)="destroyModal('save')" kbq-button>Save</button>
+            <button (click)="destroyModal('close')" kbq-button autofocus>Close</button>
         </div>
     `
 })

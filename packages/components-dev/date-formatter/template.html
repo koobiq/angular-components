@@ -1,8 +1,5 @@
 <div class="common-container kbq-text-big p-fixed">
-    <kbq-radio-group
-        class="example-radio-group"
-        (change)="setLocale($event)"
-    >
+    <kbq-radio-group class="example-radio-group" (change)="setLocale($event)">
         @for (language of languageList; track language) {
             <kbq-radio-button
                 class="example-radio-button"

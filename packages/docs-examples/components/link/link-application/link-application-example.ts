@@ -14,28 +14,16 @@ import { KbqLinkModule } from '@koobiq/components/link';
     ],
     template: `
         <div style="padding: 16px">
-            <a
-                href="https://koobiq.io/components/link/overview"
-                target="_blank"
-                kbq-link
-            >
+            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
                 <span class="kbq-link__text">Отчет сканирования в AI Desktop</span>
                 <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
             </a>
         </div>
         <div style="padding: 16px">
-            <a
-                href="https://koobiq.io/components/link/overview"
-                target="_blank"
-                kbq-link
-            >
+            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
                 <span class="kbq-link__text">Отчет сканирования в AI Desktop</span>
             </a>
-            <img
-                style="margin-left: 5px; vertical-align: middle"
-                alt=""
-                src="favicon.ico"
-            />
+            <img style="margin-left: 5px; vertical-align: middle" alt="" src="favicon.ico" />
         </div>
     `
 })

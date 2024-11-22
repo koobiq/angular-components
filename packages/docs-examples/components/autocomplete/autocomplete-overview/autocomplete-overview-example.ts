@@ -23,12 +23,7 @@ import { map, startWith } from 'rxjs/operators';
     template: `
         <label>Enter countries to see autocomplete</label>
         <kbq-form-field>
-            <input
-                [formControl]="control"
-                [kbqAutocomplete]="auto"
-                kbqInput
-                type="text"
-            />
+            <input [formControl]="control" [kbqAutocomplete]="auto" kbqInput type="text" />
 
             <kbq-autocomplete #auto="kbqAutocomplete">
                 @for (option of filteredOptions | async; track option) {

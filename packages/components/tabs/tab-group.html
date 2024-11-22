@@ -26,11 +26,7 @@
             [tab]="tab"
             (click)="handleClick(tab, tabHeader, i)"
         >
-            <div
-                #labelContent
-                class="kbq-tab-label__content"
-                [class.kbq-tab-label__template]="tab.templateLabel"
-            >
+            <div #labelContent class="kbq-tab-label__content" [class.kbq-tab-label__template]="tab.templateLabel">
                 <!-- If there is a label template, use it. -->
                 @if (tab.templateLabel) {
                     <ng-template [cdkPortalOutlet]="tab.templateLabel" />
@@ -44,10 +40,7 @@
     }
 </kbq-tab-header>
 
-<div
-    #tabBodyWrapper
-    class="kbq-tab-body__wrapper"
->
+<div #tabBodyWrapper class="kbq-tab-body__wrapper">
     @for (tab of tabs; track tab; let i = $index) {
         <kbq-tab-body
             [animationDuration]="animationDuration"

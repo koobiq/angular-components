@@ -36,18 +36,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <kbq-dl [vertical]="true">
                 <kbq-dt>Arrow</kbq-dt>
                 <kbq-dd>
-                    <kbq-toggle
-                        [ngModel]="arrow"
-                        (ngModelChange)="onArrowChange($event)"
-                    />
+                    <kbq-toggle [ngModel]="arrow" (ngModelChange)="onArrowChange($event)" />
                 </kbq-dd>
 
                 <kbq-dt>Offset</kbq-dt>
                 <kbq-dd>
-                    <kbq-button-toggle-group
-                        [ngModel]="offset"
-                        (ngModelChange)="onOffsetChange($event)"
-                    >
+                    <kbq-button-toggle-group [ngModel]="offset" (ngModelChange)="onOffsetChange($event)">
                         <kbq-button-toggle [value]="-4">-4px</kbq-button-toggle>
                         <kbq-button-toggle [value]="0">0px</kbq-button-toggle>
                         <kbq-button-toggle [value]="4">4px</kbq-button-toggle>

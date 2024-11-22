@@ -317,25 +317,11 @@ describe('MсRadio', () => {
             [value]="groupValue"
             name="test-name"
         >
-            <kbq-radio-button
-                [value]="'fire'"
-                [disabled]="isFirstDisabled"
-                [color]="color"
-            >
+            <kbq-radio-button [value]="'fire'" [disabled]="isFirstDisabled" [color]="color">
                 Charmander
             </kbq-radio-button>
-            <kbq-radio-button
-                [value]="'water'"
-                [color]="color"
-            >
-                Squirtle
-            </kbq-radio-button>
-            <kbq-radio-button
-                [value]="'leaf'"
-                [color]="color"
-            >
-                Bulbasaur
-            </kbq-radio-button>
+            <kbq-radio-button [value]="'water'" [color]="color">Squirtle</kbq-radio-button>
+            <kbq-radio-button [value]="'leaf'" [color]="color">Bulbasaur</kbq-radio-button>
         </kbq-radio-group>
     `
 })

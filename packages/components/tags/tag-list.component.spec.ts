@@ -1220,17 +1220,9 @@ describe('KbqTagList', () => {
 
 @Component({
     template: `
-        <kbq-tag-list
-            [tabIndex]="tabIndex"
-            [selectable]="selectable"
-        >
+        <kbq-tag-list [tabIndex]="tabIndex" [selectable]="selectable">
             @for (i of tags; track i) {
-                <kbq-tag
-                    (select)="chipSelect(i)"
-                    (deselect)="chipDeselect(i)"
-                >
-                    {{ name }} {{ i + 1 }}
-                </kbq-tag>
+                <kbq-tag (select)="chipSelect(i)" (deselect)="chipDeselect(i)">{{ name }} {{ i + 1 }}</kbq-tag>
             }
         </kbq-tag-list>
     `
@@ -1254,10 +1246,7 @@ class StandardTagList {
                         {{ tag }}
                     </kbq-tag>
                 }
-                <input
-                    [kbqTagInputFor]="tagList"
-                    name="test"
-                />
+                <input [kbqTagInputFor]="tagList" name="test" />
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -1286,10 +1275,7 @@ class FormFieldTagList {
                 placeholder="Food"
             >
                 @for (food of foods; track food) {
-                    <kbq-tag
-                        [value]="food.value"
-                        [disabled]="food.disabled"
-                    >
+                    <kbq-tag [value]="food.value" [disabled]="food.disabled">
                         {{ food.viewValue }}
                     </kbq-tag>
                 }
@@ -1330,10 +1316,7 @@ class BasicTagList {
                 placeholder="Food"
             >
                 @for (food of foods; track food) {
-                    <kbq-tag
-                        [value]="food.value"
-                        [disabled]="food.disabled"
-                    >
+                    <kbq-tag [value]="food.value" [disabled]="food.disabled">
                         {{ food.viewValue }}
                     </kbq-tag>
                 }
@@ -1373,10 +1356,7 @@ class MultiSelectionTagList {
                 placeholder="Food"
             >
                 @for (food of foods; track food) {
-                    <kbq-tag
-                        [value]="food.value"
-                        (removed)="remove(food)"
-                    >
+                    <kbq-tag [value]="food.value" (removed)="remove(food)">
                         {{ food.viewValue }}
                     </kbq-tag>
                 }
@@ -1464,10 +1444,7 @@ class FalsyValueTagList {
     template: `
         <kbq-tag-list>
             @for (food of foods; track food) {
-                <kbq-tag
-                    [value]="food.value"
-                    [selected]="food.selected"
-                >
+                <kbq-tag [value]="food.value" [selected]="food.selected">
                     {{ food.viewValue }}
                 </kbq-tag>
             }
@@ -1485,17 +1462,11 @@ class SelectedTagList {
 
 @Component({
     template: `
-        <form
-            #form="ngForm"
-            novalidate
-        >
+        <form #form="ngForm" novalidate>
             <kbq-form-field>
                 <kbq-tag-list [formControl]="formControl">
                     @for (food of foods; track food) {
-                        <kbq-tag
-                            [value]="food.value"
-                            [selected]="food.selected"
-                        >
+                        <kbq-tag [value]="food.value" [selected]="food.selected">
                             {{ food.viewValue }}
                         </kbq-tag>
                     }
@@ -1558,10 +1529,7 @@ class StandardTagListWithAnimations {
         <kbq-form-field>
             <kbq-tag-list>
                 @for (i of tags; track i) {
-                    <kbq-tag
-                        [value]="i"
-                        (removed)="removeChip($event)"
-                    >
+                    <kbq-tag [value]="i" (removed)="removeChip($event)">
                         Chip {{ i + 1 }}
                         <span kbqTagRemove>Remove</span>
                     </kbq-tag>

@@ -13,10 +13,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'list-action-button-example',
     imports: [KbqListModule, FormsModule, KbqDropdownModule, KbqToolTipModule],
     template: `
-        <kbq-list-selection
-            [(ngModel)]="selected"
-            [autoSelect]="false"
-        >
+        <kbq-list-selection [(ngModel)]="selected" [autoSelect]="false">
             @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9]; track item) {
                 <kbq-list-option [value]="'Item ' + item">
                     Item {{ item }}

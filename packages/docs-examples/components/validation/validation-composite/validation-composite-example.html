@@ -1,7 +1,4 @@
-<div
-    style="width: 400px"
-    class="layout-padding"
->
+<div style="width: 400px" class="layout-padding">
     <form
         novalidate
         class="kbq-form-horizontal"
@@ -21,11 +18,7 @@
                     [kbqTrigger]="'manual'"
                     [kbqWarningTooltip]="'Только цифры'"
                 >
-                    <input
-                        formControlName="start"
-                        kbqInput
-                        (input)="onInput($event, startTooltip, 'start')"
-                    />
+                    <input formControlName="start" kbqInput (input)="onInput($event, startTooltip, 'start')" />
 
                     @if (compositeFormGroup.controls.start.invalid) {
                         <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
@@ -45,11 +38,7 @@
                     [kbqTrigger]="'manual'"
                     [kbqWarningTooltip]="'Только цифры и точки'"
                 >
-                    <input
-                        formControlName="end"
-                        kbqInput
-                        (input)="onInput($event, endTooltip, 'end')"
-                    />
+                    <input formControlName="end" kbqInput (input)="onInput($event, endTooltip, 'end')" />
 
                     @if (compositeFormGroup.controls.end.invalid) {
                         <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
@@ -60,10 +49,7 @@
             </div>
 
             @if (compositeFormGroup.errors?.range) {
-                <kbq-hint
-                    style="margin-top: 4px"
-                    [color]="themePalette.Error"
-                >
+                <kbq-hint style="margin-top: 4px" [color]="themePalette.Error">
                     IP-адрес окончания диапазона должен быть больше, чем IP-адрес начала
                 </kbq-hint>
             }

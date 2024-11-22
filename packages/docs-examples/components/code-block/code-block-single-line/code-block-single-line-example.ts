@@ -13,11 +13,7 @@ const codeTs2 = `getUserAddress('Rey.Padberg@karina.biz').then(console.log).catc
         KbqCodeBlockModule
     ],
     template: `
-        <kbq-code-block
-            [codeFiles]="files"
-            [filled]="false"
-            [lineNumbers]="true"
-        />
+        <kbq-code-block [codeFiles]="files" [filled]="false" [lineNumbers]="true" />
     `
 })
 export class CodeBlockSingleLineExample {

@@ -19,10 +19,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             @for (tab of tabs; track tab) {
                 <kbq-tab [tabId]="tab.tabId">
                     <ng-template kbq-tab-label>
-                        <i
-                            [ngClass]="tab.icon"
-                            kbq-icon
-                        ></i>
+                        <i [ngClass]="tab.icon" kbq-icon></i>
                         {{ tab.tabId }}
                     </ng-template>
                     Content for selected tab with index: {{ selectedTabIndex }}

@@ -33,10 +33,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
 
         <br />
 
-        <kbq-dl
-            [vertical]="true"
-            [wide]="true"
-        >
+        <kbq-dl [vertical]="true" [wide]="true">
             <kbq-dt>File</kbq-dt>
             <kbq-dd>125 КБ</kbq-dd>
 

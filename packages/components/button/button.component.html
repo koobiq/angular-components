@@ -1,11 +1,4 @@
-<div
-    #kbqTitleText
-    class="kbq-button-wrapper"
-    (cdkObserveContent)="projectContentChanged()"
->
+<div #kbqTitleText class="kbq-button-wrapper" (cdkObserveContent)="projectContentChanged()">
     <ng-content />
 </div>
-<div
-    class="kbq-button-overlay"
-    (click)="haltDisabledEvents($event)"
-></div>
+<div class="kbq-button-overlay" (click)="haltDisabledEvents($event)"></div>

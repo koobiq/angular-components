@@ -79,12 +79,7 @@ describe('KbqLink', () => {
 @Component({
     selector: 'kbq-link-base-test-app',
     template: `
-        <a
-            href="http://localhost:3003/"
-            kbq-link
-        >
-            Отчет сканирования
-        </a>
+        <a href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
     `
 })
 class KbqLinkBaseTestApp {}
@@ -92,13 +87,7 @@ class KbqLinkBaseTestApp {}
 @Component({
     selector: 'kbq-link-print-test-app',
     template: `
-        <a
-            [print]="print"
-            href="http://localhost:3003/"
-            kbq-link
-        >
-            Отчет сканирования
-        </a>
+        <a [print]="print" href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
     `
 })
 class KbqLinkPrintTestApp {
@@ -108,10 +97,7 @@ class KbqLinkPrintTestApp {
 @Component({
     selector: 'kbq-link-icon-test-app',
     template: `
-        <a
-            href="http://localhost:3003/"
-            kbq-link
-        >
+        <a href="http://localhost:3003/" kbq-link>
             <span class="kbq-link__text">Отчет сканирования</span>
             <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
         </a>
@@ -122,13 +108,7 @@ class KbqLinkIconTestApp {}
 @Component({
     selector: 'kbq-link-pseudo-test-app',
     template: `
-        <a
-            href="http://localhost:3003/"
-            kbq-link
-            pseudo
-        >
-            Отчет сканирования
-        </a>
+        <a href="http://localhost:3003/" kbq-link pseudo>Отчет сканирования</a>
     `
 })
 class KbqLinkPseudoTestApp {}
@@ -136,13 +116,7 @@ class KbqLinkPseudoTestApp {}
 @Component({
     selector: 'kbq-link-no-underline-test-app',
     template: `
-        <a
-            href="http://localhost:3003/"
-            kbq-link
-            noUnderline
-        >
-            Отчет сканирования
-        </a>
+        <a href="http://localhost:3003/" kbq-link noUnderline>Отчет сканирования</a>
     `
 })
 class KbqLinkNoUnderlineTestApp {}

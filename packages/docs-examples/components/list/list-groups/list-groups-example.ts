@@ -11,10 +11,7 @@ import { KbqListModule } from '@koobiq/components/list';
     template: `
         <kbq-list-selection>
             @for (group of pokemonTypes; track group) {
-                <kbq-optgroup
-                    [disabled]="group.disabled"
-                    [label]="group.name"
-                >
+                <kbq-optgroup [disabled]="group.disabled" [label]="group.name">
                     @for (pokemon of group.pokemon; track pokemon) {
                         <kbq-list-option [value]="pokemon.value">
                             {{ pokemon.viewValue }}

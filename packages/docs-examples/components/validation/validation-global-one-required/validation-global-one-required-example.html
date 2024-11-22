@@ -1,18 +1,8 @@
 <div class="layout-margin">
-    <form
-        novalidate
-        class="kbq-form-vertical margin docs-width"
-    >
+    <form novalidate class="kbq-form-vertical margin docs-width">
         @if (showError) {
-            <kbq-alert
-                [alertColor]="'error'"
-                [alertStyle]="'colored'"
-                [compact]="true"
-            >
-                <i
-                    kbq-icon="kbq-info-circle_16"
-                    [color]="'error'"
-                ></i>
+            <kbq-alert [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true">
+                <i kbq-icon="kbq-info-circle_16" [color]="'error'"></i>
                 Заполните хотя бы одно из полей -
                 <b>Серия</b>
                 ,
@@ -27,20 +17,14 @@
                 <div class="kbq-form__row flex-30">
                     <label class="kbq-form__label">Серия</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            kbqInput
-                            name="input"
-                        />
+                        <input kbqInput name="input" />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row flex-70">
                     <label class="kbq-form__label">Номер</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            kbqInput
-                            name="input"
-                        />
+                        <input kbqInput name="input" />
                     </kbq-form-field>
                 </div>
             </div>
@@ -49,10 +33,7 @@
                 <div class="kbq-form__row flex-45">
                     <label class="kbq-form__label">Имя</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            kbqInput
-                            name="input"
-                        />
+                        <input kbqInput name="input" />
 
                         <kbq-hint>Необязательно</kbq-hint>
                     </kbq-form-field>
@@ -61,10 +42,7 @@
                 <div class="kbq-form__row flex-55">
                     <label class="kbq-form__label">Отчество</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            kbqInput
-                            name="input"
-                        />
+                        <input kbqInput name="input" />
 
                         <kbq-hint>Необязательно</kbq-hint>
                     </kbq-form-field>
@@ -74,10 +52,7 @@
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Фамилия</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                 </kbq-form-field>
             </div>
         </div>

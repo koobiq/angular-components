@@ -1,182 +1,65 @@
 <div class="body-container">
-    <div
-        kbq-scrollbar
-        class="scroll-container"
-    >
-        <ng-template
-            #toastIconTemplate
-            let-toast
-        >
-            <i
-                kbq-icon="kbq-play_16"
-                [color]="themePalette.Secondary"
-            ></i>
+    <div kbq-scrollbar class="scroll-container">
+        <ng-template #toastIconTemplate let-toast>
+            <i kbq-icon="kbq-play_16" [color]="themePalette.Secondary"></i>
         </ng-template>
 
-        <ng-template
-            #toastTitleTemplate
-            let-toast
-        >
+        <ng-template #toastTitleTemplate let-toast>
             <p>my title my title my title my title my title my title my title my title</p>
         </ng-template>
 
-        <ng-template
-            #toastCaptionTemplate
-            let-toast
-        >
+        <ng-template #toastCaptionTemplate let-toast>
             my caption my caption my caption my caption my caption my caption my caption my caption
         </ng-template>
 
-        <ng-template
-            #toastContentTemplate
-            let-toast
-        >
-            <kbq-progress-bar
-                class="layout-margin-top-m layout-margin-bottom-m"
-                [value]="50"
-            />
+        <ng-template #toastContentTemplate let-toast>
+            <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [value]="50" />
         </ng-template>
 
-        <ng-template
-            #toastActionsTemplate
-            let-toast
-        >
-            <a
-                kbq-link
-                pseudo
-                (click)="toast.close()"
-            >
-                Кнопка 1
-            </a>
-            <a
-                kbq-link
-                pseudo
-            >
-                Кнопка 1
-            </a>
+        <ng-template #toastActionsTemplate let-toast>
+            <a kbq-link pseudo (click)="toast.close()">Кнопка 1</a>
+            <a kbq-link pseudo>Кнопка 1</a>
         </ng-template>
 
-        <ng-template
-            #toastInfoActionsTemplate
-            let-toast
-        >
-            <a
-                kbq-link
-                pseudo
-            >
-                Обновить
-            </a>
-            <a
-                kbq-link
-                pseudo
-            >
-                Что нового ?
-            </a>
+        <ng-template #toastInfoActionsTemplate let-toast>
+            <a kbq-link pseudo>Обновить</a>
+            <a kbq-link pseudo>Что нового ?</a>
         </ng-template>
 
-        <ng-template
-            #toastErrorActionsTemplate
-            let-toast
-        >
-            <a
-                kbq-link
-                pseudo
-            >
-                Повторить
-            </a>
+        <ng-template #toastErrorActionsTemplate let-toast>
+            <a kbq-link pseudo>Повторить</a>
         </ng-template>
 
-        <ng-template
-            #toastStickyContentTemplate
-            let-toast
-        >
-            <kbq-progress-bar
-                class="layout-margin-top-m layout-margin-bottom-m"
-                [value]="50"
-            />
+        <ng-template #toastStickyContentTemplate let-toast>
+            <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [value]="50" />
         </ng-template>
 
-        <ng-template
-            #toastStickyActionsTemplate
-            let-toast
-        >
-            <a
-                kbq-link
-                pseudo
-                (click)="toast.close()"
-            >
-                Отмена
-            </a>
+        <ng-template #toastStickyActionsTemplate let-toast>
+            <a kbq-link pseudo (click)="toast.close()">Отмена</a>
         </ng-template>
 
-        <ng-template
-            #toastCloseButtonTemplate
-            let-toast
-        >
-            <i
-                kbq-icon-button="kbq-xmark_16"
-                kbq-toast-close-button
-                (click)="toast.close()"
-            ></i>
+        <ng-template #toastCloseButtonTemplate let-toast>
+            <i kbq-icon-button="kbq-xmark_16" kbq-toast-close-button (click)="toast.close()"></i>
         </ng-template>
 
-        <ng-template
-            #toastSingleActonContentTemplate
-            let-toast
-        >
+        <ng-template #toastSingleActonContentTemplate let-toast>
             Политика&nbsp;
             <a kbq-link>Почтовые серверы</a>
             &nbsp;удалена
         </ng-template>
 
-        <ng-template
-            #toastSingleActonActionsTemplate
-            let-toast
-        >
-            <button
-                kbq-button
-                [color]="'contrast'"
-            >
-                Восстановить
-            </button>
+        <ng-template #toastSingleActonActionsTemplate let-toast>
+            <button kbq-button [color]="'contrast'">Восстановить</button>
         </ng-template>
 
-        <ng-template
-            #toastTwoActonActionsTemplate
-            let-toast
-        >
-            <a
-                kbq-link
-                pseudo
-                class="layout-margin-right-m"
-            >
-                Посмотреть
-            </a>
-            <a
-                kbq-link
-                pseudo
-                (click)="toast.close()"
-            >
-                Отклонить
-            </a>
+        <ng-template #toastTwoActonActionsTemplate let-toast>
+            <a kbq-link pseudo class="layout-margin-right-m">Посмотреть</a>
+            <a kbq-link pseudo (click)="toast.close()">Отклонить</a>
         </ng-template>
 
-        <ng-template
-            #toastManyActonActionsTemplate
-            let-toast
-        >
-            <a
-                kbq-link
-                pseudo
-            >
-                Восстановить
-            </a>
-            <a
-                kbq-link
-                pseudo
-            >
-                Восстановить
-            </a>
+        <ng-template #toastManyActonActionsTemplate let-toast>
+            <a kbq-link pseudo>Восстановить</a>
+            <a kbq-link pseudo>Восстановить</a>
             <a
                 #dropdownTrigger1="kbqDropdownTrigger"
                 kbq-link
@@ -195,73 +78,25 @@
             <button kbq-dropdown-item>Второстепенное действие 3</button>
         </kbq-dropdown>
 
-        <ng-template
-            #toastWithInlineLinkTemplate
-            let-toast
-        >
+        <ng-template #toastWithInlineLinkTemplate let-toast>
             <p>
                 <a kbq-link>Запрос REQ-20180101-02</a>
                 назначен на вас
             </p>
         </ng-template>
 
-        <ng-template
-            #template
-            let-data
-        >
-            Template with data.title: {{ data.title }}
-        </ng-template>
+        <ng-template #template let-data>Template with data.title: {{ data.title }}</ng-template>
 
         <div class="demo-block">
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showToast('contrast')"
-            >
-                contrast
-            </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showToast('success')"
-            >
-                success
-            </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showToast('warning')"
-            >
-                warning
-            </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showToast('error')"
-            >
-                error
-            </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showErrorCustomIconToast(toastErrorActionsTemplate)"
-            >
+            <button kbq-button class="example-button" (click)="showToast('contrast')">contrast</button>
+            <button kbq-button class="example-button" (click)="showToast('success')">success</button>
+            <button kbq-button class="example-button" (click)="showToast('warning')">warning</button>
+            <button kbq-button class="example-button" (click)="showToast('error')">error</button>
+            <button kbq-button class="example-button" (click)="showErrorCustomIconToast(toastErrorActionsTemplate)">
                 Error (custom icon)
             </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showIconAndCaption()"
-            >
-                showIconAndCaption
-            </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showOnlyCaption()"
-            >
-                showOnlyCaption
-            </button>
+            <button kbq-button class="example-button" (click)="showIconAndCaption()">showIconAndCaption</button>
+            <button kbq-button class="example-button" (click)="showOnlyCaption()">showOnlyCaption</button>
 
             <button
                 kbq-button
@@ -283,32 +118,16 @@
             >
                 Single Action
             </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showTwoActonToast(toastTwoActonActionsTemplate)"
-            >
+            <button kbq-button class="example-button" (click)="showTwoActonToast(toastTwoActonActionsTemplate)">
                 Two Actions
             </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showManyActonToast(toastManyActonActionsTemplate)"
-            >
+            <button kbq-button class="example-button" (click)="showManyActonToast(toastManyActonActionsTemplate)">
                 Many Actions
             </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showToastWithInlineLink(toastWithInlineLinkTemplate)"
-            >
+            <button kbq-button class="example-button" (click)="showToastWithInlineLink(toastWithInlineLinkTemplate)">
                 Show toast with inline-link
             </button>
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showToastWithLongText()"
-            >
+            <button kbq-button class="example-button" (click)="showToastWithLongText()">
                 Show toast with long text
             </button>
 
@@ -332,37 +151,15 @@
                 Templates
             </button>
 
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showNewToast()"
-            >
-                MyToast
-            </button>
+            <button kbq-button class="example-button" (click)="showNewToast()">MyToast</button>
 
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showTemplate(template)"
-            >
-                show template
-            </button>
+            <button kbq-button class="example-button" (click)="showTemplate(template)">show template</button>
 
-            <button
-                kbq-button
-                class="example-button"
-                (click)="showModal(modalTitle, modalContent, modalFooter)"
-            >
+            <button kbq-button class="example-button" (click)="showModal(modalTitle, modalContent, modalFooter)">
                 show modal
             </button>
 
-            <button
-                kbq-button
-                class="example-button"
-                (click)="openTemplateSidepanel()"
-            >
-                show sidepanel
-            </button>
+            <button kbq-button class="example-button" (click)="openTemplateSidepanel()">show sidepanel</button>
         </div>
 
         <ng-template #modalTitle>
@@ -371,32 +168,19 @@
         <ng-template #modalContent>
             <kbq-modal-body>
                 <p>z index test</p>
-                <button
-                    kbq-button
-                    [kbqDropdownTriggerFor]="appDropdownWithNested"
-                >
+                <button kbq-button [kbqDropdownTriggerFor]="appDropdownWithNested">
                     nested dropdown
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
 
                 <kbq-dropdown #appDropdownWithNested="kbqDropdown">
-                    <button
-                        kbq-dropdown-item
-                        [kbqDropdownTriggerFor]="appDropdownNested"
-                    >
-                        1 level (1)
-                    </button>
+                    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNested">1 level (1)</button>
                     <button kbq-dropdown-item>1 level (2)</button>
                     <button kbq-dropdown-item>1 level (3)</button>
                 </kbq-dropdown>
 
                 <kbq-dropdown #appDropdownNested="kbqDropdown">
-                    <button
-                        kbq-dropdown-item
-                        [kbqDropdownTriggerFor]="appDropdownNestedNested"
-                    >
-                        2 level (1)
-                    </button>
+                    <button kbq-dropdown-item [kbqDropdownTriggerFor]="appDropdownNestedNested">2 level (1)</button>
                     <button kbq-dropdown-item>2 level (2)</button>
                     <button kbq-dropdown-item>2 level (3)</button>
                 </kbq-dropdown>
@@ -409,10 +193,7 @@
             </kbq-modal-body>
         </ng-template>
         <ng-template #modalFooter>
-            <div
-                mcModalFooter
-                class="layout-row flex-grow layout-align-space-between"
-            >
+            <div mcModalFooter class="layout-row flex-grow layout-align-space-between">
                 <button
                     kbq-button
                     kbq-modal-main-action
@@ -439,20 +220,12 @@
 
             <kbq-sidepanel-footer>
                 <kbq-sidepanel-actions align="left">
-                    <button
-                        cdkFocusInitial
-                        kbq-button
-                        [color]="'contrast'"
-                        (click)="openTemplateSidepanel()"
-                    >
+                    <button cdkFocusInitial kbq-button [color]="'contrast'" (click)="openTemplateSidepanel()">
                         <span>Open another sidepanel</span>
                     </button>
                 </kbq-sidepanel-actions>
                 <kbq-sidepanel-actions align="right">
-                    <button
-                        kbq-button
-                        kbq-sidepanel-close
-                    >
+                    <button kbq-button kbq-sidepanel-close>
                         <span>Close</span>
                     </button>
                 </kbq-sidepanel-actions>
