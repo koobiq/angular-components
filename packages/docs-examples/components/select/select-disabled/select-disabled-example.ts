@@ -31,9 +31,9 @@ const localeDataSet = {
         .layout-row {
             width: 440px;
             margin: 0 auto;
-            padding: 16px;
+            padding: var(--kbq-size-l);
             align-items: center;
-            gap: 24px;
+            gap: var(--kbq-size-xxl);
             justify-content: flex-end;
         }
 

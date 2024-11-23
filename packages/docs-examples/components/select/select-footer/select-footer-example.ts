@@ -31,12 +31,12 @@ const localeDataSet = {
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
-        .layout-row {
+        .example-row {
             width: 400px;
             margin: 0 auto;
-            padding: 16px;
+            padding: var(--kbq-size-l);
             align-items: center;
-            gap: 24px;
+            gap: var(--kbq-size-xxl);
             justify-content: flex-end;
         }
 

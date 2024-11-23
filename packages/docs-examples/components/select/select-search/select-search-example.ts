@@ -42,23 +42,10 @@ const localeDataSet = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select
-                [(value)]="selected"
-                [placeholder]="'Город'"
-            >
-                <kbq-form-field
-                    kbqFormFieldWithoutBorders
-                    kbqSelectSearch
-                >
-                    <i
-                        kbq-icon="kbq-magnifying-glass_16"
-                        kbqPrefix
-                    ></i>
-                    <input
-                        [formControl]="searchControl"
-                        kbqInput
-                        type="text"
-                    />
+            <kbq-select [(value)]="selected" [placeholder]="'Город'">
+                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+                    <input [formControl]="searchControl" kbqInput type="text" />
                     <kbq-cleaner />
                 </kbq-form-field>
 
@@ -76,7 +63,7 @@ const localeDataSet = {
         :host {
             display: flex;
             justify-content: center;
-            padding: 16px;
+            padding: var(--kbq-size-l);
         }
     `
 })

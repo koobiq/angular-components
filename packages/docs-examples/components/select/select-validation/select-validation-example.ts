@@ -30,10 +30,7 @@ const localeDataSet = {
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Valid</div>
             <kbq-form-field>
-                <kbq-select
-                    [(value)]="selected"
-                    [placeholder]="'Город'"
-                >
+                <kbq-select [(value)]="selected" [placeholder]="'Город'">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">
                             <span [innerHTML]="option"></span>
@@ -61,7 +58,7 @@ const localeDataSet = {
             gap: 16px;
         }
 
-        .layout-column {
+        .kbq-form-vertical {
             width: 50%;
         }
 

@@ -33,8 +33,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
     styles: `
         :host {
             display: flex;
-            gap: 16px;
-            padding: 16px;
+            gap: var(--kbq-size-l);
+            padding: var(--kbq-size-l);
         }
     `
 })

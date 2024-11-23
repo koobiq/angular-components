@@ -159,20 +159,9 @@ export const OPTIONS = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select
-                [(value)]="OPTIONS[0]"
-                [placeholder]="'Город'"
-                (openedChange)="openedChange($event)"
-            >
-                <cdk-virtual-scroll-viewport
-                    [itemSize]="32"
-                    [maxBufferPx]="800"
-                    [minBufferPx]="500"
-                >
-                    <kbq-option
-                        *cdkVirtualFor="let option of options; templateCacheSize: 0"
-                        [value]="option"
-                    >
+            <kbq-select [(value)]="OPTIONS[0]" [placeholder]="'Город'" (openedChange)="openedChange($event)">
+                <cdk-virtual-scroll-viewport [itemSize]="32" [maxBufferPx]="800" [minBufferPx]="500">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
@@ -183,7 +172,7 @@ export const OPTIONS = [
         :host {
             display: flex;
             justify-content: center;
-            padding: 16px;
+            padding: var(--kbq-size-l);
         }
     `
 })

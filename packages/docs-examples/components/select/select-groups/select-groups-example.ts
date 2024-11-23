@@ -14,10 +14,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <kbq-form-field style="width: 320px">
             <kbq-select [(value)]="pokemonTypes[0].pokemon[0].value">
                 @for (group of pokemonTypes; track group) {
-                    <kbq-optgroup
-                        [disabled]="group.disabled"
-                        [label]="group.name"
-                    >
+                    <kbq-optgroup [disabled]="group.disabled" [label]="group.name">
                         @for (pokemon of group.pokemon; track pokemon) {
                             <kbq-option [value]="pokemon.value">
                                 {{ pokemon.viewValue }}
@@ -33,7 +30,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         :host {
             display: flex;
             justify-content: center;
-            padding: 16px;
+            padding: var(--kbq-size-l);
         }
     `
 })

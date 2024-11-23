@@ -28,10 +28,7 @@ const localeDataSet = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select
-                [(value)]="selected"
-                [panelClass]="'select-height-example'"
-            >
+            <kbq-select [(value)]="selected" [panelClass]="'select-height-example'">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -44,7 +41,7 @@ const localeDataSet = {
         :host {
             display: flex;
             justify-content: center;
-            padding: 16px;
+            padding: var(--kbq-size-l);
         }
 
         ::ng-deep .select-height-example .kbq-select__content {

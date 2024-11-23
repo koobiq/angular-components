@@ -12,10 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 280px">
-            <kbq-select
-                [value]="'value-1'"
-                [panelClass]="'select-width-max-example'"
-            >
+            <kbq-select [value]="'value-1'" [panelClass]="'select-width-max-example'">
                 <kbq-option [value]="'value-1'">Активное сканирование</kbq-option>
                 <kbq-option [value]="'value-2'">Сбор бизнес-информации об организации</kbq-option>
                 <kbq-option [value]="'value-3'">Сбор информации из закрытых источников</kbq-option>
@@ -30,7 +27,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         :host {
             display: flex;
             justify-content: center;
-            padding: 16px;
+            padding: var(--kbq-size-l);
         }
 
         ::ng-deep .select-width-max-example .kbq-select__content {
