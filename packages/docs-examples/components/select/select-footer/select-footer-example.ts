@@ -40,6 +40,10 @@ const localeDataSet = {
             justify-content: flex-end;
         }
 
+        kbq-form-field {
+            width: 320px;
+        }
+
         .kbq-form__label {
             white-space: nowrap;
             color: var(--kbq-foreground-contrast-secondary);

@@ -11,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-form-field style="width: 320px">
+        <kbq-form-field>
             <kbq-select [(value)]="pokemonTypes[0].pokemon[0].value">
                 @for (group of pokemonTypes; track group) {
                     <kbq-optgroup [disabled]="group.disabled" [label]="group.name">
@@ -31,6 +31,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
             display: flex;
             justify-content: center;
             padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field {
+            width: 320px;
         }
     `
 })

@@ -28,10 +28,10 @@ const localeDataSet = {
     imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-form-field style="width: 320px">
+        <kbq-form-field>
             <kbq-select [(value)]="selected" [placeholder]="'Город'">
                 <kbq-select-matcher class="kbq-select__matcher">
-                    <i [color]="'contrast-fade'" style="margin-right: 8px" kbq-icon="kbq-globe_16"></i>
+                    <i [color]="'contrast-fade'" kbq-icon="kbq-globe_16"></i>
                     <span>
                         <div class="kbq-select__match-container">
                             <span class="kbq-select__matcher-text">
@@ -56,6 +56,14 @@ const localeDataSet = {
             display: flex;
             justify-content: center;
             padding: var(--kbq-size-l);
+
+            ::ng-deep .kbq-icon {
+                margin-right: var(--kbq-size-s);
+            }
+        }
+
+        kbq-form-field {
+            width: 320px;
         }
     `
 })

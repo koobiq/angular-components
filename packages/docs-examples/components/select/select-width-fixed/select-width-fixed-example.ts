@@ -27,7 +27,7 @@ const localeDataSet = {
     imports: [KbqFormFieldModule, KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-form-field style="width: 280px">
+        <kbq-form-field>
             <kbq-select [value]="'value-1'" [panelClass]="'select-width-fixed-example'">
                 <kbq-option [value]="'value-1'">Использование альтернативных данных для аутентификации</kbq-option>
                 <kbq-option [value]="'value-2'">Использование альтернативных данных для аутентификации</kbq-option>
@@ -46,7 +46,11 @@ const localeDataSet = {
             padding: var(--kbq-size-l);
         }
 
-        ::ng-deep .select-width-fixed-example .kbq-select__content {
+        kbq-form-field {
+            width: 280px;
+        }
+
+        ::ng-deep .select-width-fixed-example.kbq-select__panel {
             width: 420px;
         }
     `

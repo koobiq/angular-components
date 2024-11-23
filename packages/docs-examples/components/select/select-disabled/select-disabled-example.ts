@@ -28,13 +28,17 @@ const localeDataSet = {
     templateUrl: 'select-disabled-example.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
-        .layout-row {
+        .example-row {
             width: 440px;
             margin: 0 auto;
             padding: var(--kbq-size-l);
             align-items: center;
             gap: var(--kbq-size-xxl);
             justify-content: flex-end;
+        }
+
+        kbq-form-field {
+            width: 320px;
         }
 
         .kbq-form__label {

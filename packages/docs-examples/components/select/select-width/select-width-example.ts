@@ -11,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-form-field style="width: 100%">
+        <kbq-form-field>
             <kbq-select [value]="options[2]">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
@@ -20,7 +20,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 }
             </kbq-select>
         </kbq-form-field>
-        <kbq-form-field style="width: 200px">
+        <kbq-form-field>
             <kbq-select [value]="options[1]">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
@@ -35,6 +35,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
             display: flex;
             gap: var(--kbq-size-l);
             padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field:first-child {
+            width: 100%;
+        }
+
+        kbq-form-field:last-child {
+            width: 200px;
         }
     `
 })

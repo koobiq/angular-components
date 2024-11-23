@@ -27,7 +27,7 @@ const localeDataSet = {
     imports: [KbqFormFieldModule, KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-form-field style="width: 320px">
+        <kbq-form-field>
             <kbq-select [(value)]="selected" [placeholder]="'Город'" multiple>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
@@ -44,6 +44,10 @@ const localeDataSet = {
             display: flex;
             justify-content: center;
             padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field {
+            width: 320px;
         }
     `
 })

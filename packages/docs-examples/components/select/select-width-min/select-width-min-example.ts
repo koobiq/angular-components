@@ -11,7 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     imports: [KbqFormFieldModule, KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-form-field style="width: 104px">
+        <kbq-form-field>
             <kbq-select [value]="'hair-1'" [panelClass]="'select-width-min-example'">
                 <kbq-option [value]="'hair-1'">Блондин</kbq-option>
                 <kbq-option [value]="'hair-2'">Русый</kbq-option>
@@ -29,7 +29,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
             padding: var(--kbq-size-l);
         }
 
-        ::ng-deep .select-width-min-example .kbq-select__content {
+        kbq-form-field {
+            width: 104px;
+        }
+
+        ::ng-deep .select-width-min-example.kbq-select__panel {
             min-width: 200px;
         }
     `

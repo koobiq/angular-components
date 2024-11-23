@@ -158,7 +158,7 @@ export const OPTIONS = [
     imports: [KbqFormFieldModule, KbqSelectModule, ScrollingModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-form-field style="width: 320px">
+        <kbq-form-field>
             <kbq-select [(value)]="OPTIONS[0]" [placeholder]="'Город'" (openedChange)="openedChange($event)">
                 <cdk-virtual-scroll-viewport [itemSize]="32" [maxBufferPx]="800" [minBufferPx]="500">
                     <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
@@ -173,6 +173,10 @@ export const OPTIONS = [
             display: flex;
             justify-content: center;
             padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field {
+            width: 320px;
         }
     `
 })
