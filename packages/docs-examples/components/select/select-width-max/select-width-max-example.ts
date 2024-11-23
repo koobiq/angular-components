@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -12,7 +12,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 280px">
-            <kbq-select [value]="'value-1'" [panelClass]="'select-width-max-example'">
+            <kbq-select
+                [value]="'value-1'"
+                [panelClass]="'select-width-max-example'"
+            >
                 <kbq-option [value]="'value-1'">Активное сканирование</kbq-option>
                 <kbq-option [value]="'value-2'">Сбор бизнес-информации об организации</kbq-option>
                 <kbq-option [value]="'value-3'">Сбор информации из закрытых источников</kbq-option>

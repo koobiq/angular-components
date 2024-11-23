@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
@@ -28,7 +28,11 @@ const localeDataSet = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select [(value)]="selected" [placeholder]="'Город'" multiple>
+            <kbq-select
+                [(value)]="selected"
+                [placeholder]="'Город'"
+                multiple
+            >
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>

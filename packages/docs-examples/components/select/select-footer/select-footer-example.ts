@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqLocaleService } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
@@ -28,7 +28,10 @@ const localeDataSet = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 280px">
-            <kbq-select [value]="'value-1'" [panelClass]="'select-width-fixed-example'">
+            <kbq-select
+                [value]="'value-1'"
+                [panelClass]="'select-width-fixed-example'"
+            >
                 <kbq-option [value]="'value-1'">Использование альтернативных данных для аутентификации</kbq-option>
                 <kbq-option [value]="'value-2'">Использование альтернативных данных для аутентификации</kbq-option>
                 <kbq-option [value]="'value-3'">Использование альтернативных данных для аутентификации</kbq-option>

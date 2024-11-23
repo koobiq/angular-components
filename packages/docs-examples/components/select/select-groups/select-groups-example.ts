@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -14,7 +14,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <kbq-form-field style="width: 320px">
             <kbq-select [(value)]="pokemonTypes[0].pokemon[0].value">
                 @for (group of pokemonTypes; track group) {
-                    <kbq-optgroup [disabled]="group.disabled" [label]="group.name">
+                    <kbq-optgroup
+                        [disabled]="group.disabled"
+                        [label]="group.name"
+                    >
                         @for (pokemon of group.pokemon; track pokemon) {
                             <kbq-option [value]="pokemon.value">
                                 {{ pokemon.viewValue }}

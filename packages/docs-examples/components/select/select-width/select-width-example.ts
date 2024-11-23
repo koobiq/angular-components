@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**

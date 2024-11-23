@@ -1,8 +1,8 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KBQ_LOCALE_SERVICE, KbqHighlightModule, KbqLocaleService } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -42,10 +42,23 @@ const localeDataSet = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select [(value)]="selected" [placeholder]="'Город'">
-                <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input [formControl]="searchControl" kbqInput type="text" />
+            <kbq-select
+                [(value)]="selected"
+                [placeholder]="'Город'"
+            >
+                <kbq-form-field
+                    kbqFormFieldWithoutBorders
+                    kbqSelectSearch
+                >
+                    <i
+                        kbq-icon="kbq-magnifying-glass_16"
+                        kbqPrefix
+                    ></i>
+                    <input
+                        [formControl]="searchControl"
+                        kbqInput
+                        type="text"
+                    />
                     <kbq-cleaner />
                 </kbq-form-field>
 

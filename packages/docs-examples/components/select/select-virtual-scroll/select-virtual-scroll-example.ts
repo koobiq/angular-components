@@ -1,7 +1,7 @@
 import { ListRange } from '@angular/cdk/collections';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 export const OPTIONS = [
@@ -159,9 +159,20 @@ export const OPTIONS = [
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field style="width: 320px">
-            <kbq-select [(value)]="OPTIONS[0]" [placeholder]="'Город'" (openedChange)="openedChange($event)">
-                <cdk-virtual-scroll-viewport [itemSize]="32" [maxBufferPx]="800" [minBufferPx]="500">
-                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
+            <kbq-select
+                [(value)]="OPTIONS[0]"
+                [placeholder]="'Город'"
+                (openedChange)="openedChange($event)"
+            >
+                <cdk-virtual-scroll-viewport
+                    [itemSize]="32"
+                    [maxBufferPx]="800"
+                    [minBufferPx]="500"
+                >
+                    <kbq-option
+                        *cdkVirtualFor="let option of options; templateCacheSize: 0"
+                        [value]="option"
+                    >
                         {{ option }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
