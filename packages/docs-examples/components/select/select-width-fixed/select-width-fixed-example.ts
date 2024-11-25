@@ -28,50 +28,26 @@ const localeDataSet = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select
-                [value]="'value-1'"
-                [panelClass]="'select-width-fixed-example'"
-            >
-                <kbq-option
-                    [kbqPlacement]="PopUpPlacements.Right"
-                    [value]="'value-1'"
-                >
+            <kbq-select [value]="'value-1'" [panelClass]="'select-width-fixed-example'">
+                <kbq-option [kbqPlacement]="PopUpPlacements.Right" [value]="'value-1'">
                     Использование альтернативных данных для аутентификации
                 </kbq-option>
-                <kbq-option
-                    [kbqPlacement]="PopUpPlacements.Right"
-                    [value]="'value-2'"
-                >
+                <kbq-option [kbqPlacement]="PopUpPlacements.Right" [value]="'value-2'">
                     Использование альтернативных данных для аутентификации
                 </kbq-option>
-                <kbq-option
-                    [kbqPlacement]="PopUpPlacements.Right"
-                    [value]="'value-3'"
-                >
+                <kbq-option [kbqPlacement]="PopUpPlacements.Right" [value]="'value-3'">
                     Использование альтернативных данных для аутентификации
                 </kbq-option>
-                <kbq-option
-                    [kbqPlacement]="PopUpPlacements.Right"
-                    [value]="'value-4'"
-                >
+                <kbq-option [kbqPlacement]="PopUpPlacements.Right" [value]="'value-4'">
                     Использование интерпретаторов командной строки и сценариев
                 </kbq-option>
-                <kbq-option
-                    [kbqPlacement]="PopUpPlacements.Right"
-                    [value]="'value-5'"
-                >
+                <kbq-option [kbqPlacement]="PopUpPlacements.Right" [value]="'value-5'">
                     Использование сценариев XSL
                 </kbq-option>
-                <kbq-option
-                    [kbqPlacement]="PopUpPlacements.Right"
-                    [value]="'value-6'"
-                >
+                <kbq-option [kbqPlacement]="PopUpPlacements.Right" [value]="'value-6'">
                     Исследование владельца или пользователей системы
                 </kbq-option>
-                <kbq-option
-                    [kbqPlacement]="PopUpPlacements.Right"
-                    [value]="'value-6'"
-                >
+                <kbq-option [kbqPlacement]="PopUpPlacements.Right" [value]="'value-6'">
                     Исследование групп разрешений
                 </kbq-option>
             </kbq-select>
