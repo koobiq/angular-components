@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { KbqTitleModule } from '../../../../../../packages/components/title';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { AnchorsComponent } from './anchors.component';
 import { HeaderDirective } from './header.directive';
 
