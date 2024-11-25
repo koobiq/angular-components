@@ -8,10 +8,16 @@
 * - Have the `target="_blank"` attribute (using the browser's default behavior for external links).
 * - Have the `.external` class (used for custom handling of external link behavior).
 */
-@mixin external-link-margin($margin) {
+@mixin external-link-geometry($text-margin, $icon-margin: null) {
     &:is([target="_blank"], .external):has(.kbq-north-east_16) {
         .kbq-link__text:not(:last-child) {
-            margin-right: $margin;
+            margin-right: $text-margin;
+        }
+
+        @if ($icon-margin) {
+            .kbq-icon {
+                margin-bottom: 1px;
+            }
         }
     }
 }
@@ -24,7 +30,7 @@
 
     outline-offset: var(--kbq-link-size-state-focused-outline-offset);
 
-    @include external-link-margin(1px);
+    @include external-link-geometry(1px);
 
     &:focus {
         outline: none;
@@ -35,6 +41,11 @@
     &.kbq-text-with-dot .kbq-link__text {
         border-bottom-style: solid;
         border-bottom-width: 1px;
+    }
+
+    &.kbq-text-with-icon {
+        display: inline-flex;
+        align-items: center;
     }
 
     &.kbq-text-with-icon .kbq-link__text {
@@ -48,7 +59,7 @@
     }
 
     &.kbq-link_compact {
-        @include external-link-margin(0);
+        @include external-link-geometry(0, 1px);
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
                 margin-left: var(--kbq-link-size-compact-content-padding);
@@ -61,7 +72,7 @@
     }
 
     &.kbq-link_big {
-        @include external-link-margin(2px);
+        @include external-link-geometry(2px);
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
                 margin-left: var(--kbq-link-size-big-content-padding);
@@ -166,11 +177,6 @@
 @mixin kbq-link-typography() {
     .kbq-link {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
-
-        & .kbq-icon {
-            line-height: inherit;
-            vertical-align: baseline;
-        }
     }
 
     .kbq-link.kbq-link_compact {
