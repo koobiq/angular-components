@@ -27,6 +27,7 @@ module.exports = [
         input: {
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
             'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
+            'utils/messages': path.join(__dirname, 'src/utils/messages.ts'),
             ...getMigrations().reduce((res, cur) => {
                 res[`migrations/${cur}/index`] = path.join(__dirname, `src/migrations/${cur}/index.ts`);
                 res[`migrations/${cur}/data`] = path.join(__dirname, `src/migrations/${cur}/data.ts`);
