@@ -1,3 +1,9 @@
+## 18.7.1 (2024-11-25)
+
+### Koobiq
+
+ * bug fix  **chore,schematics:** schematics bundle imports ([#449](https://github.com/koobiq/angular-components/issues/449)) ([9eb9c9c](https://github.com/koobiq/angular-components/commit/9eb9c9c818cf1788a4eba00ec5f3d16aeeba9ec7))
+
 # 18.7.0 (2024-11-21)
 
 ### Koobiq
