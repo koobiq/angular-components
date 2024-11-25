@@ -10,11 +10,13 @@
     }
 
     .docs-anchors__link {
-        display: block;
-
         outline: none;
         text-decoration: none;
         color: inherit;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .docs-anchors__element {
