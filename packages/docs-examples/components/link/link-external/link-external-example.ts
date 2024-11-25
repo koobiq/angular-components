@@ -13,7 +13,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         <div style="padding: 16px">
             <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
                 <span class="kbq-link__text">Центр технической поддержки</span>
-                <i kbq-icon="kbq-arrow-up-right-from-square_16"></i>
+                <i kbq-icon="kbq-north-east_16"></i>
             </a>
         </div>
     `
