@@ -9,7 +9,7 @@
 * - Have the `.external` class (used for custom handling of external link behavior).
 */
 @mixin external-link-geometry($text-margin, $icon-margin: null) {
-    &:is([target="_blank"], .external):has(.kbq-north-east_16) {
+    &:is([target='_blank'], .external):has(.kbq-north-east_16) {
         .kbq-link__text:not(:last-child) {
             margin-right: $text-margin;
         }
