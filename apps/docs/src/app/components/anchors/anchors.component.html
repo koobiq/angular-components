@@ -4,8 +4,10 @@
         [ngClass]="{ 'docs-anchors__element_active': anchor.active }"
     >
         <a
+            kbq-title
             class="docs-anchors__link"
             [fragment]="anchor.href"
+            [kbqPlacement]="PopUpPlacements.Left"
             [routerLink]="this.pathName"
             (click)="scrollIntoView(anchor)"
         >
