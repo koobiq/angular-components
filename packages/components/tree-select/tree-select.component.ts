@@ -2,6 +2,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, ConnectedPosition, ViewportRuler } from '@angular/cdk/overlay';
+import { _getEventTarget } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -918,7 +919,7 @@ export class KbqTreeSelect
         const backdrop = this.overlayDir.overlayRef!.backdropClick();
         const outsidePointerEvents = this.overlayDir
             .overlayRef!.outsidePointerEvents()
-            .pipe(filter((event) => !this.elementRef.nativeElement.contains(event.target)));
+            .pipe(filter((event) => !this.elementRef.nativeElement.contains(_getEventTarget(event))));
         const detachments = this.overlayDir.overlayRef!.detachments();
 
         return merge(backdrop, outsidePointerEvents, detachments);

@@ -9,6 +9,7 @@ import {
     PositionStrategy,
     ScrollStrategy
 } from '@angular/cdk/overlay';
+import { _getEventTarget } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { ViewportRuler } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
@@ -410,10 +411,11 @@ export class KbqAutocompleteTrigger
     private getOutsideClickStream(): Observable<any> {
         return merge(
             fromEvent(this.document, 'click') as Observable<MouseEvent>,
+            fromEvent(this.document, 'auxclick') as Observable<MouseEvent>,
             fromEvent(this.document, 'touchend') as Observable<TouchEvent>
         ).pipe(
             filter((event) => {
-                const clickTarget = event.target as HTMLElement;
+                const clickTarget = _getEventTarget<HTMLElement>(event);
                 const formField = this.formField ? this.formField.elementRef.nativeElement : null;
                 const customOrigin = this.connectedTo ? this.connectedTo.elementRef.nativeElement : null;
 
