@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -12,14 +13,52 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [value]="'value-1'" [panelClass]="'select-width-max-example'">
-                <kbq-option [value]="'value-1'">Активное сканирование</kbq-option>
-                <kbq-option [value]="'value-2'">Сбор бизнес-информации об организации</kbq-option>
-                <kbq-option [value]="'value-3'">Сбор информации из закрытых источников</kbq-option>
-                <kbq-option [value]="'value-4'">Сбор информации из общедоступных источников</kbq-option>
-                <kbq-option [value]="'value-5'">Сбор информации о сетевой инфраструктуре</kbq-option>
-                <kbq-option [value]="'value-6'">Сбор информации об атакуемых пользователях</kbq-option>
-                <kbq-option [value]="'value-6'">Сбор информации об атакуемых узлах</kbq-option>
+            <kbq-select
+                [value]="'value-1'"
+                [panelClass]="'select-width-max-example'"
+            >
+                <kbq-option
+                    [kbqPlacement]="PopUpPlacements.Right"
+                    [value]="'value-1'"
+                >
+                    Активное сканирование
+                </kbq-option>
+                <kbq-option
+                    [kbqPlacement]="PopUpPlacements.Right"
+                    [value]="'value-2'"
+                >
+                    Сбор бизнес-информации об организации
+                </kbq-option>
+                <kbq-option
+                    [kbqPlacement]="PopUpPlacements.Right"
+                    [value]="'value-3'"
+                >
+                    Сбор информации из закрытых источников
+                </kbq-option>
+                <kbq-option
+                    [kbqPlacement]="PopUpPlacements.Right"
+                    [value]="'value-4'"
+                >
+                    Сбор информации из общедоступных источников
+                </kbq-option>
+                <kbq-option
+                    [kbqPlacement]="PopUpPlacements.Right"
+                    [value]="'value-5'"
+                >
+                    Сбор информации о сетевой инфраструктуре
+                </kbq-option>
+                <kbq-option
+                    [kbqPlacement]="PopUpPlacements.Right"
+                    [value]="'value-6'"
+                >
+                    Сбор информации об атакуемых пользователях
+                </kbq-option>
+                <kbq-option
+                    [kbqPlacement]="PopUpPlacements.Right"
+                    [value]="'value-6'"
+                >
+                    Сбор информации об атакуемых узлах
+                </kbq-option>
             </kbq-select>
         </kbq-form-field>
     `,
@@ -39,4 +78,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         }
     `
 })
-export class SelectWidthMaxExample {}
+export class SelectWidthMaxExample {
+    protected readonly PopUpPlacements = PopUpPlacements;
+}
