@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { PopUpPlacements } from '../../../../../../packages/components/core';
 
 interface KbqDocsAnchor {
     href: string;
@@ -242,4 +243,6 @@ export class AnchorsComponent implements OnDestroy, OnInit {
 
         this.ref.detectChanges();
     }
+
+    protected readonly PopUpPlacements = PopUpPlacements;
 }
