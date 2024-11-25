@@ -11,17 +11,7 @@
     --kbq-timezone-option-size-height: auto;
     --kbq-timezone-option-size-max-height: 5em;
     --kbq-timezone-option-size-optgroup-label-padding: 12px 12px 4px 12px;
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-select-panel-dropdown-background: var(--kbq-background-card);
-    --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
-    --kbq-timezone-option-text: var(--kbq-foreground-contrast);
-    --kbq-timezone-option-caption: var(--kbq-foreground-contrast-secondary);
-    --kbq-timezone-option-optgroup-label: var(--kbq-foreground-contrast-secondary);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-select-panel-dropdown-background: var(--kbq-background-card);
     --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
     --kbq-timezone-option-text: var(--kbq-foreground-contrast);

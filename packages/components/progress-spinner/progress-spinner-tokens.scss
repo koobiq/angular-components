@@ -7,15 +7,7 @@
     --kbq-progress-spinner-size-big-stroke-width: 3px;
     --kbq-progress-spinner-size-big-content-gap-vertical: var(--kbq-size-3xs);
     --kbq-progress-spinner-size-big-content-gap-horizontal: var(--kbq-size-s);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-progress-spinner-circle-background: var(--kbq-icon-theme);
-    --kbq-progress-spinner-text-color: var(--kbq-foreground-contrast);
-    --kbq-progress-spinner-caption-color: var(--kbq-foreground-contrast-secondary);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-progress-spinner-circle-background: var(--kbq-icon-theme);
     --kbq-progress-spinner-text-color: var(--kbq-foreground-contrast);
     --kbq-progress-spinner-caption-color: var(--kbq-foreground-contrast-secondary);

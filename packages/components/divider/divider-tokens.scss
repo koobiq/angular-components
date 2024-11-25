@@ -3,12 +3,6 @@
     --kbq-divider-size-horizontal-margin-vertical: var(--kbq-size-xxs);
     --kbq-divider-size-vertical-width: 1px;
     --kbq-divider-size-vertical-margin-horizontal: var(--kbq-size-xxs);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-divider-color: var(--kbq-line-contrast-less);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-divider-color: var(--kbq-line-contrast-less);
 }

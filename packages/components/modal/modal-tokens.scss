@@ -15,18 +15,7 @@
     --kbq-modal-size-footer-padding-horizontal: var(--kbq-size-xxl);
     --kbq-modal-size-footer-padding-vertical: var(--kbq-size-xl);
     --kbq-modal-size-footer-content-gap-horizontal: var(--kbq-size-l);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-modal-overlay-background: var(--kbq-background-overlay);
-    --kbq-modal-container-background: var(--kbq-background-card);
-    --kbq-modal-container-shadow: var(--kbq-shadow-overlay);
-    --kbq-modal-close-button-color: var(--kbq-icon-contrast);
-    --kbq-modal-header-text-color: var(--kbq-foreground-contrast);
-    --kbq-modal-content-text-color: var(--kbq-foreground-contrast);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-modal-overlay-background: var(--kbq-background-overlay);
     --kbq-modal-container-background: var(--kbq-background-card);
     --kbq-modal-container-shadow: var(--kbq-shadow-overlay);

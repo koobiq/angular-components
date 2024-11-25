@@ -2,14 +2,7 @@
     --kbq-autocomplete-size-panel-padding: var(--kbq-size-xxs) 0;
     --kbq-autocomplete-size-panel-max-height: 256px;
     --kbq-autocomplete-size-panel-border-radius: var(--kbq-size-border-radius);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-select-panel-dropdown-background: var(--kbq-background-card);
-    --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-select-panel-dropdown-background: var(--kbq-background-card);
     --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
 }

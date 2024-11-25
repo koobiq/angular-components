@@ -3,14 +3,7 @@
     --kbq-dropdown-size-container-width-max: 640px;
     --kbq-dropdown-size-container-padding-vertical: var(--kbq-size-xxs);
     --kbq-dropdown-size-container-border-radius: var(--kbq-size-s);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-dropdown-container-background: var(--kbq-background-card);
-    --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-dropdown-container-background: var(--kbq-background-card);
     --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
 }
