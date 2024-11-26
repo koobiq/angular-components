@@ -174,7 +174,7 @@
 
 %kbq-select-content {
     max-height: var(--kbq-select-panel-size-max-height, 256px);
-    padding: 4px 4px;
+    padding: var(--kbq-size-xxs);
     overflow: hidden auto;
 }
 
