@@ -1,13 +1,22 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, DebugElement, Provider, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    Provider,
+    QueryList,
+    Type,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {
     ComponentFixture,
-    TestBed,
     discardPeriodicTasks,
     fakeAsync,
     flush,
     inject,
+    TestBed,
     tick,
     waitForAsync
 } from '@angular/core/testing';
@@ -20,7 +29,7 @@ import { KbqOption } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { KbqSelect, kbqSelectOptionsProvider } from './select.component';
+import { KbqSelect, kbqSelectOptionsProvider, KbqSelectPanelWidth } from './select.component';
 import { KbqSelectModule } from './select.module';
 
 const createComponent = async <T>(
@@ -491,10 +500,11 @@ class CdkVirtualScrollViewportSelect<T = string> {
                 <kbq-option [value]="'option2'">Option3</kbq-option>
             </kbq-select>
         </kbq-form-field>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class SelectWithPanelWidth {
-    panelWidth: string | number | null;
+    panelWidth: KbqSelectPanelWidth;
 }
 
 @Component({

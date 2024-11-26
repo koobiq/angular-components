@@ -2418,52 +2418,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-virtual-scroll-example.ts",
     "importPath": "components/select"
   },
-  "select-width-fixed": {
-    "packagePath": "components/select/select-width-fixed",
-    "title": "Select width fixed",
-    "componentName": "SelectWidthFixedExample",
+  "select-with-panel-width-attribute": {
+    "packagePath": "components/select/select-with-panel-width-attribute",
+    "title": "Select with panelWidth attribute",
+    "componentName": "SelectWithPanelWidthAttributeExample",
     "files": [
-      "select-width-fixed-example.ts"
+      "select-with-panel-width-attribute-example.ts"
     ],
-    "selector": "select-width-fixed-example",
+    "selector": "select-with-panel-width-attribute-example",
     "additionalComponents": [],
-    "primaryFile": "select-width-fixed-example.ts",
-    "importPath": "components/select"
-  },
-  "select-width-max": {
-    "packagePath": "components/select/select-width-max",
-    "title": "Select width max",
-    "componentName": "SelectWidthMaxExample",
-    "files": [
-      "select-width-max-example.ts"
-    ],
-    "selector": "select-width-max-example",
-    "additionalComponents": [],
-    "primaryFile": "select-width-max-example.ts",
-    "importPath": "components/select"
-  },
-  "select-width-min": {
-    "packagePath": "components/select/select-width-min",
-    "title": "Select width min",
-    "componentName": "SelectWidthMinExample",
-    "files": [
-      "select-width-min-example.ts"
-    ],
-    "selector": "select-width-min-example",
-    "additionalComponents": [],
-    "primaryFile": "select-width-min-example.ts",
-    "importPath": "components/select"
-  },
-  "select-width": {
-    "packagePath": "components/select/select-width",
-    "title": "Select width",
-    "componentName": "SelectWidthExample",
-    "files": [
-      "select-width-example.ts"
-    ],
-    "selector": "select-width-example",
-    "additionalComponents": [],
-    "primaryFile": "select-width-example.ts",
+    "primaryFile": "select-with-panel-width-attribute-example.ts",
     "importPath": "components/select"
   },
   "sidepanel-modal-mode": {
@@ -3901,13 +3865,7 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-virtual-scroll':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-width-fixed':
-return import('@koobiq/docs-examples/components/select');
-  case 'select-width-max':
-return import('@koobiq/docs-examples/components/select');
-  case 'select-width-min':
-return import('@koobiq/docs-examples/components/select');
-  case 'select-width':
+  case 'select-with-panel-width-attribute':
 return import('@koobiq/docs-examples/components/select');
   case 'sidepanel-modal-mode':
 return import('@koobiq/docs-examples/components/sidepanel');

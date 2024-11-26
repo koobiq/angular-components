@@ -105,9 +105,10 @@ export class KbqSelectChange {
     ) {}
 }
 
-type KbqSelectPanelWidth = 'auto' | number | null;
+/** Select panel width type. */
+export type KbqSelectPanelWidth = 'auto' | number | null;
 
-/** Options for the kbq-select that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
+/** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
 export type KbqSelectOptions = Partial<{
     /**
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
@@ -550,7 +551,7 @@ export class KbqSelect
     protected readonly overlayPanelClass = 'kbq-select-overlay';
 
     /** Origin for the overlay panel. */
-    protected overlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
+    protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -1404,12 +1405,12 @@ export class KbqSelect
     }
 
     /** Gets how wide the overlay panel should be. */
-    private getOverlayWidth(origin: ElementRef<ElementRef> | CdkOverlayOrigin | undefined): string | number {
+    private getOverlayWidth(origin?: ElementRef | CdkOverlayOrigin): string | number {
         if (this.panelWidth === 'auto') {
             const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
             return elementRef.nativeElement.getBoundingClientRect().width;
         }
-        return this.panelWidth === null ? '' : this.panelWidth;
+        return this.panelWidth ?? '';
     }
 
     /** Comparison function to specify which option is displayed. Defaults to object equality. */

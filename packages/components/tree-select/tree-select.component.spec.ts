@@ -67,7 +67,8 @@ import {
     KbqTreeSelectionChange
 } from '@koobiq/components/tree';
 import { Observable, Subject, Subscription, of } from 'rxjs';
-import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from './index';
+import { KbqTreeSelect, KbqTreeSelectChange } from './tree-select.component';
+import { KbqTreeSelectModule } from './tree-select.module';
 
 const TREE_DATA = {
     rootNode_1: 'app',
@@ -1383,7 +1384,7 @@ class LocalizedTreeSelect extends BasicTreeSelect {
     }
 }
 
-describe('KbqTreeSelect', () => {
+describe(KbqTreeSelect.name, () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
     let dir: { value: 'ltr' | 'rtl' };

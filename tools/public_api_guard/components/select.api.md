@@ -197,7 +197,7 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     // (undocumented)
     overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
-    protected overlayOrigin: CdkOverlayOrigin | ElementRef | undefined;
+    protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
     // (undocumented)
@@ -298,9 +298,8 @@ export type KbqSelectOptions = Partial<{
 // @public
 export const kbqSelectOptionsProvider: (options: KbqSelectOptions) => Provider;
 
-// Warnings were encountered during analysis:
-//
-// dist/components/select/select.component.d.ts:34:5 - (ae-forgotten-export) The symbol "KbqSelectPanelWidth" needs to be exported by the entry point index.d.ts
+// @public
+export type KbqSelectPanelWidth = 'auto' | number | null;
 
 // (No @packageDocumentation comment for this package)
 

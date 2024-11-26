@@ -15,28 +15,28 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <kbq-form-field>
             <kbq-select [panelWidth]="400" placeholder="Fixed panelWidth">
-                <kbq-option [value]="null">---</kbq-option>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
 
         <kbq-form-field>
             <kbq-select panelWidth="auto" placeholder="Auto panelWidth">
-                <kbq-option [value]="null">---</kbq-option>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
 
         <kbq-form-field>
             <kbq-select placeholder="Without panelWidth attribute">
-                <kbq-option [value]="null">---</kbq-option>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `,
