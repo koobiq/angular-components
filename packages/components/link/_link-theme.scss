@@ -9,14 +9,14 @@
 * - Have the `.external` class (used for custom handling of external link behavior).
 */
 @mixin external-link-geometry($text-margin, $icon-margin: null) {
-    &:is([target='_blank'], .external):has(.kbq-north-east_16) {
+    &.kbq-text-with-icon:is([target='_blank'], .external) {
         .kbq-link__text:not(:last-child) {
             margin-right: $text-margin;
         }
 
         @if ($icon-margin) {
             .kbq-icon {
-                margin-bottom: 1px;
+                margin-bottom: $icon-margin;
             }
         }
     }
@@ -60,6 +60,7 @@
 
     &.kbq-link_compact {
         @include external-link-geometry(0, 1px);
+
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
                 margin-left: var(--kbq-link-size-compact-content-padding);
@@ -73,6 +74,7 @@
 
     &.kbq-link_big {
         @include external-link-geometry(2px);
+
         &.kbq-text-with-icon .kbq-link__text {
             &:not(:first-child) {
                 margin-left: var(--kbq-link-size-big-content-padding);
