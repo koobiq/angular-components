@@ -41,6 +41,26 @@
             @include kbq-option(states-disabled);
         }
     }
+
+    .kbq-option:has(+ .kbq-option.kbq-selected),
+    .kbq-option:has(+ .kbq-option.kbq-focused),
+    .kbq-option:has(+ .kbq-option.kbq-active),
+    .kbq-option.kbq-selected:has(+ .kbq-option:not(.kbq-disabled):hover),
+    .kbq-option.kbq-focused:has(+ .kbq-option:not(.kbq-disabled):hover),
+    .kbq-option.kbq-active:has(+ .kbq-option:not(.kbq-disabled):hover) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .kbq-option.kbq-selected + .kbq-option,
+    .kbq-option.kbq-focused + .kbq-option,
+    .kbq-option.kbq-active + .kbq-option,
+    .kbq-option:not(.kbq-disabled):hover + .kbq-option.kbq-selected,
+    .kbq-option:not(.kbq-disabled):hover + .kbq-option.kbq-focused,
+    .kbq-option:not(.kbq-disabled):hover + .kbq-option.kbq-active {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
 
 @mixin kbq-option-typography() {
