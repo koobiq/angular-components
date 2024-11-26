@@ -21,3 +21,31 @@
 ### With custom footer
 
 <!-- example(tree-select-footer-overview) -->
+
+### Ширина выпадающего списка
+
+По умолчанию ширина выпадающего списка равна селекту и она увеличивается, когда в списке будет длинный текст. Это поведение можно изменить при помощи `panelWidth` атрибута.
+
+Для определенного выпадающего списка:
+
+```ts
+@Component({
+    template: `
+        <kbq-form-field>
+            <kbq-tree-select [panelWidth]="700">...</kbq-tree-select>
+        </kbq-form-field>
+    `
+})
+```
+
+Для всех выпадающих списков в модуле, используя _Dependency Injection_ при помощи `kbqTreeSelectOptionsProvider` провайдера:
+
+```ts
+import { kbqTreeSelectOptionsProvider } from '@koobiq/components/tree-select';
+
+@NgModule({
+    providers: [
+        kbqTreeSelectOptionsProvider({ panelWidth: 'auto' })
+    ]
+})
+```

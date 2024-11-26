@@ -1,25 +1,32 @@
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<br />
-<div style="height: 20px">{{ control.value | json }}</div>
+<h3>TreeSelectOverviewExample</h3>
+<tree-select-overview-example />
 
-<button kbq-button (click)="disabledState = !disabledState">disable</button>
-&nbsp;
-<!--<button kbq-button (click)="modelValue = 'Application'">setValue: incorrect array</button>&nbsp;-->
-<!--<button kbq-button (click)="modelValue = 'Applications'">setValue: correct array</button>&nbsp;-->
-<button kbq-button (click)="modelValue = null">modelValue = null</button>
+<hr />
 
-<button kbq-button (click)="multiSelectSelectFormControl.setValue(null)">setValue(null)</button>
-<button kbq-button (click)="multiSelectSelectFormControl.reset()">reset</button>
-<button kbq-button (click)="multiSelectSelectFormControl.setValue(['Pictures'])">setValue</button>
+<h3>TreeSelectMultipleOverviewExample</h3>
+<tree-select-multiple-overview-example />
 
-<br />
-<br />
-<br />
+<hr />
+
+<h3>TreeSelectChildSelectionOverviewExample</h3>
+<tree-select-child-selection-overview-example />
+
+<hr />
+
+<h3>TreeSelectSearchOverviewExample</h3>
+<tree-select-search-overview-example />
+
+<hr />
+
+<h3>TreeSelectLazyloadExample</h3>
+<tree-select-lazyload-example />
+
+<hr />
+
+<h3>TreeSelectFooterOverviewExample</h3>
+<tree-select-footer-overview-example />
+
+<hr />
 
 <div class="dev-container">
     <h2 class="kbq-subheading">Custom footer</h2>
@@ -69,6 +76,8 @@
         </kbq-tree-select>
     </kbq-form-field>
 </div>
+
+<hr />
 
 <div class="dev-container">
     <h2 class="kbq-subheading">Default footer</h2>
@@ -121,7 +130,6 @@
     </kbq-form-field>
 
     <br />
-    <br />
 
     <kbq-form-field>
         <kbq-tree-select
@@ -171,7 +179,6 @@
     </kbq-form-field>
 
     <br />
-    <br />
 
     <kbq-form-field>
         <kbq-tree-select
@@ -220,6 +227,8 @@
         </kbq-tree-select>
     </kbq-form-field>
 </div>
+
+<hr />
 
 <div class="dev-container">
     <h2 class="kbq-subheading">Default footer with icon button</h2>
@@ -276,6 +285,8 @@
         </kbq-tree-select>
     </kbq-form-field>
 </div>
+
+<hr />
 
 <div class="dev-container">
     <form novalidate class="kbq-form-horizontal">

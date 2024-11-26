@@ -11,6 +11,7 @@ import { CanDisableCtor } from '@koobiq/components/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { CanUpdateErrorStateCtor } from '@koobiq/components/core';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
@@ -29,6 +30,7 @@ import * as i4 from '@koobiq/components/icon';
 import * as i5 from '@koobiq/components/tags';
 import * as i6 from '@koobiq/components/core';
 import * as i7 from '@angular/common';
+import { InjectionToken } from '@angular/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -46,6 +48,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -54,15 +57,14 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { ViewportRuler } from '@angular/cdk/overlay';
 
-// @public (undocumented)
-export interface ITriggerValue {
-    // (undocumented)
-    disabled: boolean;
-    // (undocumented)
-    value: string;
-    // (undocumented)
-    viewValue: string;
+// @public @deprecated (undocumented)
+export interface ITriggerValue extends KbqTreeSelectTriggerValue {
 }
+
+// @public
+export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
+    panelWidth: KbqTreeSelectPanelWidth;
+}>>;
 
 // Warning: (ae-forgotten-export) The symbol "KbqTreeSelectMixinBase" needs to be exported by the entry point index.d.ts
 //
@@ -158,6 +160,10 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange>;
     // (undocumented)
     overlayDir: CdkConnectedOverlay;
+    protected overlayMinWidth: string | number;
+    protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
+    protected readonly overlayPanelClass = "kbq-select-overlay";
+    protected overlayWidth: string | number;
     // (undocumented)
     panel: ElementRef;
     panelClass: string | string[] | Set<string> | {
@@ -166,6 +172,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     panelDoneAnimatingStream: Subject<string>;
     // (undocumented)
     get panelOpen(): boolean;
+    panelWidth: KbqTreeSelectPanelWidth;
     // (undocumented)
     get placeholder(): string;
     set placeholder(value: string);
@@ -199,14 +206,14 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     // (undocumented)
     get triggerValue(): string;
     // (undocumented)
-    triggerValues: ITriggerValue[];
+    triggerValues: KbqTreeSelectTriggerValue[];
     readonly userInteractionChanges: Observable<void>;
     // (undocumented)
     get value(): any;
     readonly valueChange: EventEmitter<any>;
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { optional: true; }]>;
 }
@@ -233,6 +240,24 @@ export class KbqTreeSelectModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeSelectModule, [typeof i1.KbqTreeSelect], [typeof i2.OverlayModule, typeof i3.KbqTreeModule, typeof i4.KbqIconModule, typeof i5.KbqTagsModule, typeof i6.KbqPseudoCheckboxModule, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult, typeof i7.NgClass, typeof i7.NgTemplateOutlet], [typeof i1.KbqTreeSelect, typeof i6.KbqSelectSearch, typeof i6.KbqSelectFooter, typeof i6.KbqSelectMatcher, typeof i6.KbqSelectTrigger, typeof i6.KbqSelectSearchEmptyResult]>;
 }
+
+// @public
+export type KbqTreeSelectOptions = Partial<{
+    panelWidth: KbqTreeSelectPanelWidth;
+}>;
+
+// @public
+export const kbqTreeSelectOptionsProvider: (options: KbqTreeSelectOptions) => Provider;
+
+// @public
+export type KbqTreeSelectPanelWidth = 'auto' | number | null;
+
+// @public
+export type KbqTreeSelectTriggerValue = {
+    disabled: boolean;
+    value: string;
+    viewValue: string;
+};
 
 // (No @packageDocumentation comment for this package)
 

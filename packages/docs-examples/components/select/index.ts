@@ -11,10 +11,7 @@ import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/
 import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
-import { SelectWidthFixedExample } from './select-width-fixed/select-width-fixed-example';
-import { SelectWidthMaxExample } from './select-width-max/select-width-max-example';
-import { SelectWidthMinExample } from './select-width-min/select-width-min-example';
-import { SelectWidthExample } from './select-width/select-width-example';
+import { SelectWithPanelWidthAttributeExample } from './select-with-panel-width-attribute/select-with-panel-width-attribute-example';
 
 export {
     SelectCleanerExample,
@@ -29,10 +26,7 @@ export {
     SelectSearchExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
-    SelectWidthExample,
-    SelectWidthFixedExample,
-    SelectWidthMaxExample,
-    SelectWidthMinExample
+    SelectWithPanelWidthAttributeExample
 };
 
 const EXAMPLES = [
@@ -48,10 +42,7 @@ const EXAMPLES = [
     SelectFooterExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
-    SelectWidthExample,
-    SelectWidthFixedExample,
-    SelectWidthMaxExample,
-    SelectWidthMinExample
+    SelectWithPanelWidthAttributeExample
 ];
 
 @NgModule({

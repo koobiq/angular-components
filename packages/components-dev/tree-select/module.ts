@@ -1,7 +1,5 @@
-import { Component, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -19,16 +17,22 @@ import {
     defaultCompareValues,
     defaultCompareViewValues
 } from '@koobiq/components/tree';
-import { KbqTreeSelect, KbqTreeSelectChange, KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import {
+    KbqTreeSelect,
+    KbqTreeSelectChange,
+    KbqTreeSelectModule,
+    kbqTreeSelectOptionsProvider
+} from '@koobiq/components/tree-select';
+import { TreeSelectExamplesModule } from 'packages/docs-examples/components/tree-select';
 
-export class FileNode {
+class FileNode {
     children: FileNode[];
     name: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
-export class FileFlatNode {
+class FileFlatNode {
     name: string;
     type: any;
     level: number;
@@ -40,7 +44,7 @@ export class FileFlatNode {
  * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
  * The return value is the list of `FileNode`.
  */
-export function buildFileTree(value: any, level: number): FileNode[] {
+function buildFileTree(value: any, level: number): FileNode[] {
     const data: any[] = [];
 
     for (const k of Object.keys(value)) {
@@ -63,7 +67,7 @@ export function buildFileTree(value: any, level: number): FileNode[] {
     return data;
 }
 
-export const DATA_OBJECT = {
+const DATA_OBJECT = {
     rootNode_1: 'app',
     Pictures: {
         Sun: 'png',
@@ -104,11 +108,33 @@ export const DATA_OBJECT = {
 
 @Component({
     selector: 'app',
-    templateUrl: 'template.html',
-    styleUrls: ['./styles.scss'],
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        KbqSelectModule,
+        KbqHighlightModule,
+        KbqButtonModule,
+        KbqInputModule,
+        KbqFormFieldModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqPseudoCheckboxModule,
+        KbqTitleModule,
+        TreeSelectExamplesModule
+    ],
+    providers: [
+        kbqTreeSelectOptionsProvider({
+            // panelWidth: 700
+        })
+
+    ],
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None
 })
-export class DemoComponent implements OnInit {
+export class TreeSelectDev implements OnInit {
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
     @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 
@@ -233,25 +259,3 @@ export class DemoComponent implements OnInit {
         return node.name === 'November';
     };
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        FormsModule,
-        KbqTreeModule,
-        KbqTreeSelectModule,
-        KbqSelectModule,
-        KbqHighlightModule,
-        KbqButtonModule,
-        KbqInputModule,
-        KbqFormFieldModule,
-        KbqIconModule,
-        ReactiveFormsModule,
-        KbqPseudoCheckboxModule,
-        KbqTitleModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

@@ -1,13 +1,22 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    Provider,
+    QueryList,
+    Type,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {
     ComponentFixture,
-    TestBed,
     discardPeriodicTasks,
     fakeAsync,
     flush,
     inject,
+    TestBed,
     tick,
     waitForAsync
 } from '@angular/core/testing';
@@ -20,8 +29,30 @@ import { KbqOption } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { KbqSelectModule } from './index';
-import { KbqSelect } from './select.component';
+import { KbqSelect, kbqSelectOptionsProvider, KbqSelectPanelWidth } from './select.component';
+import { KbqSelectModule } from './select.module';
+
+const createComponent = <T>(
+    component: Type<T>,
+    providers: Provider[] = []
+): {
+    fixture: ComponentFixture<T>;
+    overlayContainer: OverlayContainer;
+} => {
+    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    const fixture = TestBed.createComponent<T>(component);
+    const overlayContainer = TestBed.inject(OverlayContainer);
+    fixture.autoDetectChanges();
+    return { fixture, overlayContainer };
+};
+
+const getSelectDebugElement = (debugElement: DebugElement): DebugElement => {
+    return debugElement.query(By.directive(KbqSelect));
+};
+
+const getOverlayPanelElement = (overlayContainer: OverlayContainer): HTMLElement => {
+    return overlayContainer.getContainerElement().querySelector('.cdk-overlay-pane') as HTMLElement;
+};
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -454,7 +485,44 @@ class CdkVirtualScrollViewportSelect<T = string> {
     constructor(public scrollDispatcher: ScrollDispatcher) {}
 }
 
-describe('KbqSelect', () => {
+@Component({
+    standalone: true,
+    imports: [KbqSelectModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-select [panelWidth]="panelWidth">
+                <kbq-option [value]="'option1'">
+                    Long long long long long long long long long long long long long long long long long long long long
+                    long long long long long long long long long long long long long long long long long long long long
+                    long long long long long long long long long option
+                </kbq-option>
+                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option [value]="'option2'">Option3</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+export class SelectWithPanelWidth {
+    panelWidth: KbqSelectPanelWidth;
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqSelectModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-select>
+                <kbq-option [value]="'option1'">Option1</kbq-option>
+                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option [value]="'option2'">Option3</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+export class BaseSelect {}
+
+describe(KbqSelect.name, () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
@@ -486,7 +554,7 @@ describe('KbqSelect', () => {
     }
 
     afterEach(() => {
-        overlayContainer.ngOnDestroy();
+        overlayContainer?.ngOnDestroy();
     });
 
     describe('core', () => {
@@ -921,5 +989,48 @@ describe('KbqSelect', () => {
             flush();
             expect(fixture.componentInstance.select.hiddenItems).toEqual(2);
         }));
+    });
+
+    it('should set panel width same as trigger by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.panelWidth = 'auto';
+        fixture.detectChanges();
+        getSelectDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+        // 300 - trigger width
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('300px');
+    });
+
+    it('should set custom panel width by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.panelWidth = 344;
+        fixture.detectChanges();
+        getSelectDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('344px');
+    });
+
+    it('should set custom panel width by KBQ_SELECT_OPTIONS provider', () => {
+        const { fixture, overlayContainer } = createComponent(BaseSelect, [
+            kbqSelectOptionsProvider({ panelWidth: 537 })
+        ]);
+        fixture.detectChanges();
+        getSelectDebugElement(fixture.debugElement).nativeElement.click();
+        fixture.detectChanges();
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('537px');
+    });
+
+    it('should override panelWidth value by attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth, [
+            kbqSelectOptionsProvider({ panelWidth: 222 })
+        ]);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.panelWidth = 537;
+        fixture.detectChanges();
+        getSelectDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('537px');
     });
 });

@@ -1,7 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkConnectedOverlay, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
     AfterContentInit,
@@ -16,6 +16,7 @@ import {
     ElementRef,
     EventEmitter,
     Inject,
+    InjectionToken,
     Input,
     NgZone,
     OnChanges,
@@ -23,6 +24,7 @@ import {
     OnInit,
     Optional,
     Output,
+    Provider,
     QueryList,
     Renderer2,
     Self,
@@ -31,6 +33,7 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
+    booleanAttribute,
     inject,
     isDevMode
 } from '@angular/core';
@@ -102,6 +105,29 @@ export class KbqSelectChange {
     ) {}
 }
 
+/** Select panel width type. */
+export type KbqSelectPanelWidth = 'auto' | number | null;
+
+/** Options for the `kbq-select` that can be configured using the `KBQ_SELECT_OPTIONS` injection token. */
+export type KbqSelectOptions = Partial<{
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width.
+     * If set to null or an empty string, the panel will grow to match the longest option's text.
+     */
+    panelWidth: KbqSelectPanelWidth;
+}>;
+
+/** Injection token that can be used to provide the default options for the `kbq-select`. */
+export const KBQ_SELECT_OPTIONS = new InjectionToken<KbqSelectOptions>('KBQ_SELECT_OPTIONS');
+
+/** Utility provider for `KBQ_SELECT_OPTIONS`. */
+export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider => {
+    return {
+        provide: KBQ_SELECT_OPTIONS,
+        useValue: options
+    };
+};
+
 /** @docs-private */
 export class KbqSelectBase {
     /**
@@ -171,13 +197,15 @@ export class KbqSelect
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
+    private readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
+
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
 
     hiddenItems: number = 0;
 
     /** The last measured value for the trigger's client bounding rect. */
-    triggerRect: ClientRect;
+    triggerRect: DOMRect;
 
     /** The cached font-size of the trigger element. */
     triggerFontSize = 0;
@@ -357,7 +385,7 @@ export class KbqSelect
 
     private _required: boolean = false;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     get multiple(): boolean {
         return this._multiple;
     }
@@ -367,7 +395,7 @@ export class KbqSelect
             throw getKbqSelectDynamicMultipleError();
         }
 
-        this._multiple = coerceBooleanProperty(value);
+        this._multiple = value;
     }
 
     private _multiple: boolean = false;
@@ -394,6 +422,12 @@ export class KbqSelect
             this.initializeSelection();
         }
     }
+
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width.
+     * If set to null or an empty string, the panel will grow to match the longest option's text.
+     */
+    @Input() panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || null;
 
     /** Value of the select control. */
     @Input()
@@ -506,6 +540,18 @@ export class KbqSelect
     private readonly uid = `kbq-select-${nextUniqueId++}`;
 
     private visibleChanges: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+    /** Width of the overlay panel. */
+    protected overlayWidth: string | number;
+
+    /** Min width of the overlay panel. */
+    protected overlayMinWidth: string | number;
+
+    /** Overlay panel class. */
+    protected readonly overlayPanelClass = 'kbq-select-overlay';
+
+    /** Origin for the overlay panel. */
+    protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -659,9 +705,20 @@ export class KbqSelect
         }
 
         this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
         this.triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement)['font-size']);
+
+        // It's important that we read this as late as possible, because doing so earlier will
+        // return a different element since it's based on queries in the form field which may
+        // not have run yet. Also this needs to be assigned before we measure the overlay width.
+        if (this.parentFormField) {
+            this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
+        }
+
+        this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
+        this.overlayMinWidth = this.overlayWidth ? '' : this.triggerRect.width;
 
         this.panelOpen = true;
 
@@ -1010,7 +1067,7 @@ export class KbqSelect
         } else if ((keyCode === ENTER || keyCode === SPACE) && this.keyManager.activeItem) {
             event.preventDefault();
             this.keyManager.activeItem.selectViaInteraction();
-        } else if (this._multiple && keyCode === A && event.ctrlKey) {
+        } else if (this.multiple && keyCode === A && event.ctrlKey) {
             event.preventDefault();
             const hasDeselectedOptions = this.options.some((option) => !option.selected);
             this.options.forEach((option) => {
@@ -1026,7 +1083,7 @@ export class KbqSelect
             this.keyManager.onKeydown(event);
 
             if (
-                this._multiple &&
+                this.multiple &&
                 isArrowKey &&
                 event.shiftKey &&
                 this.keyManager.activeItem &&
@@ -1177,7 +1234,7 @@ export class KbqSelect
     private onSelect(option: KbqOption, isUserInput: boolean): void {
         const wasSelected = this.selectionModel.isSelected(option);
 
-        if (option.value == null && !this._multiple) {
+        if (option.value == null && !this.multiple) {
             option.deselect();
             this.selectionModel.clear();
             this.propagateChanges(option.value);
@@ -1277,7 +1334,7 @@ export class KbqSelect
 
         const overlayRect = this.getOverlayRect();
         // Window width without scrollbar
-        const windowWidth = this.getOverlayWidth();
+        const windowWidth = this.scrollStrategy._overlayRef?.hostElement.clientWidth;
         const isRtl = this.isRtl();
         const paddingWidth = SELECT_PANEL_PADDING_X * 2;
         let offsetX: number = SELECT_PANEL_PADDING_X;
@@ -1336,19 +1393,24 @@ export class KbqSelect
         return [offsetX, overlayMaxWidth];
     }
 
-    private resetOverlay() {
-        this.overlayDir.overlayRef.hostElement.classList.add('kbq-select-overlay');
+    private resetOverlay(): void {
+        this.overlayDir.overlayRef.hostElement.classList.add(this.overlayPanelClass);
         this.overlayDir.offsetX = 0;
         this.overlayDir.overlayRef.overlayElement.style.maxWidth = 'unset';
         this.overlayDir.overlayRef.updatePosition();
     }
 
-    private getOverlayRect() {
+    private getOverlayRect(): DOMRect {
         return this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
     }
 
-    private getOverlayWidth() {
-        return this.scrollStrategy._overlayRef.hostElement.clientWidth;
+    /** Gets how wide the overlay panel should be. */
+    private getOverlayWidth(origin?: ElementRef | CdkOverlayOrigin): string | number {
+        if (this.panelWidth === 'auto') {
+            const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
+            return elementRef.nativeElement.getBoundingClientRect().width;
+        }
+        return this.panelWidth ?? '';
     }
 
     /** Comparison function to specify which option is displayed. Defaults to object equality. */
