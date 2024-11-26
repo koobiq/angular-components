@@ -22,9 +22,7 @@
 
     border-radius: var(--kbq-dropdown-size-container-border-radius);
 
-    padding-top: var(--kbq-dropdown-size-container-padding-vertical);
-
-    padding-bottom: var(--kbq-dropdown-size-container-padding-vertical);
+    padding: var(--kbq-size-xs);
 
     // Prevent users from interacting with the panel while it's animating. Note that
     // people won't be able to click through it, because the overlay pane will catch the click.
