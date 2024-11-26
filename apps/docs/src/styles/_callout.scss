@@ -38,7 +38,7 @@
     border-width: 2px;
     border-style: solid;
     border-radius: var(--kbq-size-border-radius);
-    margin-bottom: var(--kbq-size-xl);
+    margin-bottom: var(--kbq-size-xxl);
 
     .kbq-callout__header {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-strong);
