@@ -32,14 +32,14 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqSelect, kbqSelectOptionsProvider, KbqSelectPanelWidth } from './select.component';
 import { KbqSelectModule } from './select.module';
 
-const createComponent = async <T>(
+const createComponent = <T>(
     component: Type<T>,
     providers: Provider[] = []
-): Promise<{
+): {
     fixture: ComponentFixture<T>;
     overlayContainer: OverlayContainer;
-}> => {
-    await TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers }).compileComponents();
+} => {
+    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
     const fixture = TestBed.createComponent<T>(component);
     const overlayContainer = TestBed.inject(OverlayContainer);
     fixture.autoDetectChanges();
@@ -991,8 +991,8 @@ describe(KbqSelect.name, () => {
         }));
     });
 
-    it('should set panel width same as trigger by panelWidth attribute', async () => {
-        const { fixture, overlayContainer } = await createComponent(SelectWithPanelWidth);
+    it('should set panel width same as trigger by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
         componentInstance.panelWidth = 'auto';
         fixture.detectChanges();
@@ -1002,8 +1002,8 @@ describe(KbqSelect.name, () => {
         expect(getOverlayPanelElement(overlayContainer).style.width).toBe('300px');
     });
 
-    it('should set custom panel width by panelWidth attribute', async () => {
-        const { fixture, overlayContainer } = await createComponent(SelectWithPanelWidth);
+    it('should set custom panel width by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
         componentInstance.panelWidth = 344;
         fixture.detectChanges();
@@ -1012,8 +1012,8 @@ describe(KbqSelect.name, () => {
         expect(getOverlayPanelElement(overlayContainer).style.width).toBe('344px');
     });
 
-    it('should set custom panel width by KBQ_SELECT_OPTIONS provider', async () => {
-        const { fixture, overlayContainer } = await createComponent(BaseSelect, [
+    it('should set custom panel width by KBQ_SELECT_OPTIONS provider', () => {
+        const { fixture, overlayContainer } = createComponent(BaseSelect, [
             kbqSelectOptionsProvider({ panelWidth: 537 })
         ]);
         fixture.detectChanges();
@@ -1022,8 +1022,8 @@ describe(KbqSelect.name, () => {
         expect(getOverlayPanelElement(overlayContainer).style.width).toBe('537px');
     });
 
-    it('should override panelWidth value by attribute', async () => {
-        const { fixture, overlayContainer } = await createComponent(SelectWithPanelWidth, [
+    it('should override panelWidth value by attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth, [
             kbqSelectOptionsProvider({ panelWidth: 222 })
         ]);
         const { debugElement, componentInstance } = fixture;

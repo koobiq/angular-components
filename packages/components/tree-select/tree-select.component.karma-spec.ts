@@ -30,14 +30,14 @@ import { Observable, Subject, of as observableOf } from 'rxjs';
 import { KbqTreeSelect, KbqTreeSelectPanelWidth } from './tree-select.component';
 import { KbqTreeSelectModule } from './tree-select.module';
 
-const createComponent = async <T>(
+const createComponent = <T>(
     component: Type<T>,
     providers: Provider[] = []
-): Promise<{
+): {
     fixture: ComponentFixture<T>;
     overlayContainer: OverlayContainer;
-}> => {
-    await TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers }).compileComponents();
+} => {
+    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
     const fixture = TestBed.createComponent<T>(component);
     const overlayContainer = TestBed.inject(OverlayContainer);
     fixture.autoDetectChanges();
@@ -875,8 +875,8 @@ describe(KbqTreeSelect.name, () => {
         });
     });
 
-    it('should set panel width same as trigger by panelWidth attribute', async () => {
-        const { fixture, overlayContainer } = await createComponent(TreeSelectWithPanelWidth);
+    it('should set panel width same as trigger by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(TreeSelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
         componentInstance.panelWidth = 'auto';
         fixture.detectChanges();
@@ -886,8 +886,8 @@ describe(KbqTreeSelect.name, () => {
         expect(getOverlayPanelElement(overlayContainer).style.width).toBe('300px');
     });
 
-    it('should set custom panel width by panelWidth attribute', async () => {
-        const { fixture, overlayContainer } = await createComponent(TreeSelectWithPanelWidth);
+    it('should set custom panel width by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(TreeSelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
         componentInstance.panelWidth = 344;
         fixture.detectChanges();
