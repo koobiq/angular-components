@@ -50,6 +50,15 @@
 
 Для перехода на внешние страницы. Внешние страницы — все, которые не входят в контур продукта (другие продукты компании — тоже не входят). Отличие поддерживается иконкой.
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Для использования корректных отступов иконки, используйте CSS-класс `.kbq-external`, как в примере
+
+</div>
+</div>
+
 <!-- example(link-external) -->
 
 ##### Внешнее приложение
