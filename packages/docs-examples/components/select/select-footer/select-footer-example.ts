@@ -1,9 +1,25 @@
-import { Component } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { enUSLocaleDataSet } from '../en-US';
+import { esLALocaleDataSet } from '../es-LA';
+import { faIRLocaleDataSet } from '../fa-IR';
+import { ptBRLocaleDataSet } from '../pt-BR';
+import { ruRULocaleDataSet } from '../ru-RU';
+import { zhCNLocaleDataSet } from '../zh-CN';
+
+const localeDataSet = {
+    'en-US': enUSLocaleDataSet,
+    'zh-CN': zhCNLocaleDataSet,
+    'es-LA': esLALocaleDataSet,
+    'pt-BR': ptBRLocaleDataSet,
+    'ru-RU': ruRULocaleDataSet,
+    'fa-IR': faIRLocaleDataSet
+};
 
 /**
  * @title Select footer
@@ -12,8 +28,45 @@ import { KbqSelectModule } from '@koobiq/components/select';
     standalone: true,
     selector: 'select-footer-example',
     templateUrl: 'select-footer-example.html',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqIconModule, KbqLinkModule]
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    styles: `
+        .example-row {
+            width: 400px;
+            margin: 0 auto;
+            padding: var(--kbq-size-l);
+            align-items: center;
+            gap: var(--kbq-size-xxl);
+            justify-content: flex-end;
+        }
+
+        kbq-form-field {
+            width: 320px;
+        }
+
+        .kbq-form__label {
+            white-space: nowrap;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    `
 })
 export class SelectFooterExample {
-    selected = '';
+    selectedButton = '';
+    selectedCaption = '';
+    selectedLink = '';
+
+    options: string[] = [];
+
+    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
+        this.localeService.changes.subscribe(this.update);
+    }
+
+    update = (locale: string) => {
+        this.options = localeDataSet[locale].items;
+        this.selectedButton = localeDataSet[locale].items[0];
+        this.selectedCaption = localeDataSet[locale].items[0];
+        this.selectedLink = localeDataSet[locale].items[0];
+    };
+    protected readonly colors = KbqComponentColors;
+    protected readonly styles = KbqButtonStyles;
 }

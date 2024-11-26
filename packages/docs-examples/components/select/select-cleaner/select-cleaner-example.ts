@@ -19,16 +19,17 @@ const localeDataSet = {
 };
 
 /**
- * @title Select
+ * @title Select cleaner
  */
 @Component({
     standalone: true,
-    selector: 'select-overview-example',
+    selector: 'select-cleaner-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select [(value)]="selected" [placeholder]="'Город'">
+                <kbq-cleaner #kbqSelectCleaner />
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -49,7 +50,7 @@ const localeDataSet = {
         }
     `
 })
-export class SelectOverviewExample {
+export class SelectCleanerExample {
     selected = '';
 
     options: string[] = [];
@@ -60,6 +61,6 @@ export class SelectOverviewExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = '';
+        this.selected = localeDataSet[locale].items[0];
     };
 }

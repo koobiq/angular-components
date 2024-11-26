@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -25,9 +25,10 @@ const localeDataSet = {
     standalone: true,
     selector: 'select-prioritized-selected-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selected" [multiple]="true" (openedChange)="openedChange($event)">
+            <kbq-select [(value)]="selected" (openedChange)="openedChange($event)" multiple>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -37,6 +38,17 @@ const localeDataSet = {
                 <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field {
+            width: 320px;
+        }
     `
 })
 export class SelectPrioritizedSelectedExample implements OnInit {
@@ -51,7 +63,7 @@ export class SelectPrioritizedSelectedExample implements OnInit {
 
     update = (locale: string) => {
         this.defaultOptions = localeDataSet[locale].items;
-        this.selected = [this.defaultOptions[10], this.defaultOptions[15], this.defaultOptions[20]];
+        this.selected = [this.defaultOptions[10], this.defaultOptions[20]];
         this.popSelectedOptionsUp();
     };
 

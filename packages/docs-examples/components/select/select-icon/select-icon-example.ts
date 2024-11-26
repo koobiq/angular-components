@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { enUSLocaleDataSet } from '../en-US';
 import { esLALocaleDataSet } from '../es-LA';
@@ -19,16 +20,29 @@ const localeDataSet = {
 };
 
 /**
- * @title Select
+ * @title Select icon
  */
 @Component({
     standalone: true,
-    selector: 'select-overview-example',
-    imports: [KbqFormFieldModule, KbqSelectModule],
+    selector: 'select-icon-example',
+    imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
             <kbq-select [(value)]="selected" [placeholder]="'Город'">
+                <kbq-select-matcher class="kbq-select__matcher">
+                    <i [color]="'contrast-fade'" kbq-icon="kbq-globe_16"></i>
+                    <span>
+                        <div class="kbq-select__match-container">
+                            <span class="kbq-select__matcher-text">
+                                {{ selected }}
+                            </span>
+                        </div>
+                    </span>
+                    <div class="kbq-select__arrow-wrapper">
+                        <i class="kbq-select__arrow" [color]="'contrast-fade'" kbq-icon="kbq-chevron-down-s_16"></i>
+                    </div>
+                </kbq-select-matcher>
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -42,6 +56,10 @@ const localeDataSet = {
             display: flex;
             justify-content: center;
             padding: var(--kbq-size-l);
+
+            ::ng-deep .kbq-icon {
+                margin-right: var(--kbq-size-s);
+            }
         }
 
         kbq-form-field {
@@ -49,7 +67,7 @@ const localeDataSet = {
         }
     `
 })
-export class SelectOverviewExample {
+export class SelectIconExample {
     selected = '';
 
     options: string[] = [];
@@ -60,6 +78,6 @@ export class SelectOverviewExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = '';
+        this.selected = localeDataSet[locale].items[0];
     };
 }

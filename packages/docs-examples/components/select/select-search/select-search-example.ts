@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KBQ_LOCALE_SERVICE, KbqHighlightModule, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -29,7 +29,7 @@ const localeDataSet = {
  */
 @Component({
     standalone: true,
-    selector: 'select-search-overview-example',
+    selector: 'select-search-example',
     imports: [
         KbqFormFieldModule,
         KbqSelectModule,
@@ -39,16 +39,15 @@ const localeDataSet = {
         ReactiveFormsModule,
         KbqHighlightModule
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selected" multiple>
+            <kbq-select [(value)]="selected" [placeholder]="'Город'">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input [formControl]="searchControl" kbqInput type="text" />
                     <kbq-cleaner />
                 </kbq-form-field>
-
-                <kbq-cleaner #kbqSelectCleaner />
 
                 <div kbq-select-search-empty-result>Ничего не найдено</div>
 
@@ -59,11 +58,22 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field {
+            width: 320px;
+        }
     `
 })
-export class SelectSearchOverviewExample {
+export class SelectSearchExample {
     options: string[] = [];
-    selected = [];
+    selected = '';
 
     searchControl: FormControl = new FormControl();
     filteredOptions: Observable<string[]>;
@@ -74,7 +84,7 @@ export class SelectSearchOverviewExample {
 
     update = (locale: string) => {
         this.options = localeDataSet[locale].items;
-        this.selected = [];
+        this.selected = localeDataSet[locale].items[0];
 
         this.init();
     };
