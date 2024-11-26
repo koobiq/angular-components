@@ -13,17 +13,29 @@ import { KbqLinkModule } from '@koobiq/components/link';
         <table>
             <tr>
                 <td>
-                    <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+                    <a class="kbq-external" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
                         Отчет от 17.05.2020
                     </a>
                 </td>
                 <td>
-                    <a class="warning" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+                    <a
+                        class="warning"
+                        class="kbq-external"
+                        href="https://koobiq.io/components/link/overview"
+                        target="_blank"
+                        kbq-link
+                    >
                         Отчет от 18.05.2020
                     </a>
                 </td>
                 <td>
-                    <a class="ok" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+                    <a
+                        class="ok"
+                        class="kbq-external"
+                        href="https://koobiq.io/components/link/overview"
+                        target="_blank"
+                        kbq-link
+                    >
                         Отчет от 19.05.2020
                     </a>
                 </td>

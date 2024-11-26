@@ -11,6 +11,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     template: `
         <div style="padding: 16px">
             <a
+                class="kbq-external"
                 [useVisited]="visited"
                 (click)="visited = true"
                 href="https://koobiq.io/components/link/overview"

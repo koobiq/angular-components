@@ -126,7 +126,7 @@ export const DATA_OBJECT = {
                 <kbq-cleaner #kbqSelectCleaner />
 
                 <kbq-select-footer>
-                    <a href="/components/tree-select/overview" kbq-link target="_blank">
+                    <a class="kbq-external" href="/components/tree-select/overview" kbq-link target="_blank">
                         <span class="kbq-link__text">Ссылка</span>
                         <i kbq-icon="kbq-north-east_16"></i>
                     </a>

@@ -11,25 +11,33 @@ import { KbqLinkModule } from '@koobiq/components/link';
     imports: [KbqLinkModule, KbqIconModule],
     template: `
         <div style="padding: 16px">
-            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>Отчет сканирования</a>
+            <a class="kbq-external" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+                Отчет сканирования
+            </a>
         </div>
 
         <div style="padding: 16px">
-            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+            <a class="kbq-external" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
                 <span class="kbq-link__text">Отчет сканирования</span>
                 <i kbq-icon="kbq-north-east_16"></i>
             </a>
         </div>
 
         <div style="padding: 16px">
-            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+            <a class="kbq-external" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
                 <span class="kbq-link__text">Отчет сканирования</span>
                 <i kbq-icon="kbq-north-east_16"></i>
             </a>
         </div>
 
         <div style="padding: 16px">
-            <a [disabled]="disabled" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+            <a
+                class="kbq-external"
+                [disabled]="disabled"
+                href="https://koobiq.io/components/link/overview"
+                target="_blank"
+                kbq-link
+            >
                 <i kbq-icon="kbq-calendar-o_16"></i>
                 <span class="kbq-link__text">Отчет сканирования</span>
                 <i kbq-icon="kbq-north-east_16"></i>
@@ -37,7 +45,13 @@ import { KbqLinkModule } from '@koobiq/components/link';
         </div>
 
         <div style="padding: 16px">
-            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link noUnderline>
+            <a
+                class="kbq-external"
+                href="https://koobiq.io/components/link/overview"
+                target="_blank"
+                kbq-link
+                noUnderline
+            >
                 Отчет сканирования
             </a>
         </div>

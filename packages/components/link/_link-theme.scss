@@ -68,6 +68,28 @@
             border-bottom-color: transparent;
         }
     }
+
+    &.kbq-text-with-icon.kbq-external {
+        .kbq-link__text:not(:last-child) {
+            margin-right: 1px;
+        }
+
+        &.kbq-link_compact {
+            .kbq-link__text:not(:last-child) {
+                margin-right: 0;
+            }
+
+            .kbq-icon {
+                margin-bottom: 1px;
+            }
+        }
+
+        &.kbq-link_big {
+            .kbq-link__text:not(:last-child) {
+                margin-right: 2px;
+            }
+        }
+    }
 }
 
 @mixin kbq-link-state($state-name: null) {
