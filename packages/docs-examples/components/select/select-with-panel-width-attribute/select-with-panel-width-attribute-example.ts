@@ -13,32 +13,41 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     selector: 'select-with-panel-width-attribute-example',
     template: `
-        <kbq-form-field>
-            <kbq-select [panelWidth]="400" placeholder="Fixed panelWidth">
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">{{ option }}</kbq-option>
-                }
-                <kbq-cleaner #kbqSelectCleaner />
-            </kbq-select>
-        </kbq-form-field>
+        <div>
+            <label class="kbq-form__label">Fixed panelWidth</label>
+            <kbq-form-field>
+                <kbq-select [panelWidth]="400">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-cleaner #kbqSelectCleaner />
+                </kbq-select>
+            </kbq-form-field>
+        </div>
 
-        <kbq-form-field>
-            <kbq-select panelWidth="auto" placeholder="Auto panelWidth">
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">{{ option }}</kbq-option>
-                }
-                <kbq-cleaner #kbqSelectCleaner />
-            </kbq-select>
-        </kbq-form-field>
+        <div>
+            <label class="kbq-form__label">Auto panelWidth</label>
+            <kbq-form-field>
+                <kbq-select panelWidth="auto">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-cleaner #kbqSelectCleaner />
+                </kbq-select>
+            </kbq-form-field>
+        </div>
 
-        <kbq-form-field>
-            <kbq-select placeholder="Without panelWidth attribute">
-                @for (option of options; track option) {
-                    <kbq-option [value]="option">{{ option }}</kbq-option>
-                }
-                <kbq-cleaner #kbqSelectCleaner />
-            </kbq-select>
-        </kbq-form-field>
+        <div>
+            <label class="kbq-form__label">Without panelWidth attribute</label>
+            <kbq-form-field>
+                <kbq-select>
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-cleaner #kbqSelectCleaner />
+                </kbq-select>
+            </kbq-form-field>
+        </div>
     `,
     styles: [
         `
@@ -48,11 +57,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 align-items: center;
             }
 
-            .kbq-form-field {
+            div {
                 width: 300px;
             }
 
-            .kbq-form-field:not(:last-child) {
+            div:not(:last-child) {
                 margin-bottom: var(--kbq-size-xl);
             }
         `
