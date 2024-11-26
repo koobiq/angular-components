@@ -11,7 +11,10 @@ const PROTOCOL = 'https:';
 /** Algolia DocSearch component implementation */
 @Directive({
     standalone: true,
-    selector: SELECTOR
+    selector: SELECTOR,
+    host: {
+        class: 'layout-align-center-center'
+    }
 })
 export class DocsearchDirective {
     private readonly DOCSEARCH_CONFIG: _DocSearchProps = {
