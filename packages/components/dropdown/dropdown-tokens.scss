@@ -1,3 +1,5 @@
+@use '../list/list-tokens';
+
 .kbq-dropdown__panel {
     --kbq-dropdown-size-container-width-min: var(--kbq-size-7xl);
     --kbq-dropdown-size-container-width-max: 640px;
@@ -6,4 +8,6 @@
     /* THEME TOKENS */
     --kbq-dropdown-container-background: var(--kbq-background-card);
     --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
+    /* LIST THEME TOKENS */
+    @include list-tokens.list-theme-tokens;
 }
