@@ -48,6 +48,9 @@
 }
 
 .DocSearch-Container {
+    // more than `.cdk-overlay-pane` z-index
+    z-index: 1001;
+
     @media (max-width: 768px) {
         display: flex;
         align-items: flex-end;
