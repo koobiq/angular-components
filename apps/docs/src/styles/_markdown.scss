@@ -10,3 +10,9 @@
         width: 50%;
     }
 }
+
+.kbq-docs-element-last-child-margin-bottom-0 {
+    & > *:last-child {
+        margin-bottom: 0 !important;
+    }
+}

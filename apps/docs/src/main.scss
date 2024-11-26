@@ -3,6 +3,7 @@
 @use './styles/theme-kbq';
 @use './styles/markdown';
 @use './styles/docsearch';
+@use './styles/callout';
 
 .docs {
     @include theme-kbq.docs-typography();
