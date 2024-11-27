@@ -54,7 +54,8 @@
 <div class="kbq-callout__header">Обрати внимание</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Для использования корректных отступов иконки, используйте CSS-класс `.kbq-external`, как в примере
+Для обозначения внешних ссылок используйте иконку `kbq-north-east_16`.
+Эта иконка имеет специально подобранные отступы, поэтому для правильного отображения добавьте к элементу ссылки класс `.kbq-link_external`.
 
 </div>
 </div>

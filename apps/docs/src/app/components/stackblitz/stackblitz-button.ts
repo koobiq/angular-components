@@ -13,7 +13,7 @@ import { StackblitzWriter } from './stackblitz-writer';
         <i kbq-icon="kbq-north-east_16"></i>
     `,
     host: {
-        class: 'docs-stackblitz-button kbq-external',
+        class: 'docs-stackblitz-button kbq-link_external',
         '(click)': 'openStackBlitz()',
         '(keydown.enter)': 'openStackBlitz()'
     },
