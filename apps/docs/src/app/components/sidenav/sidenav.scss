@@ -40,6 +40,10 @@
         height: 36px;
     }
 
+    .kbq-tree-selection {
+        padding: 0 var(--kbq-size-xxs);
+    }
+
     .docs-sidenav__category-text {
         display: flex;
         justify-content: space-between;
