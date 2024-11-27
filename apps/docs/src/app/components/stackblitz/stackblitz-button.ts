@@ -8,10 +8,14 @@ import { StackblitzWriter } from './stackblitz-writer';
 
 @Component({
     selector: 'docs-stackblitz-button',
-    templateUrl: './stackblitz-button.html',
+    template: `
+        <span class="kbq-link__text">StackBlitz</span>
+        <i kbq-icon="kbq-north-east_16"></i>
+    `,
     host: {
-        class: 'docs-stackblitz-button',
-        '(click)': 'openStackBlitz()'
+        class: 'docs-stackblitz-button kbq-link_external',
+        '(click)': 'openStackBlitz()',
+        '(keydown.enter)': 'openStackBlitz()'
     },
     encapsulation: ViewEncapsulation.None
 })

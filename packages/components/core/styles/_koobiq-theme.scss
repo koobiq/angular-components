@@ -3,7 +3,7 @@
 
 @use 'theming/scrollbar-theme' as *;
 
-@use '../../link/link-theme' as *;
+@use '../../link/link-theme';
 @use '../../markdown/markdown-theme' as *;
 @use '../../tabs/tabs-theme' as *;
 @use '../../tags/tag-theme' as *;
@@ -17,7 +17,7 @@
     @include kbq-forms-theme();
     @include kbq-highlight-theme();
     // link is a directive, so styles for it should be applied globally
-    @include kbq-link-theme();
+    @include link-theme.kbq-link-theme();
     @include kbq-markdown-theme();
     @include kbq-scrollbar-theme();
     @include kbq-tabs-theme();
@@ -29,6 +29,7 @@
     @include kbq-markdown-base-typography();
     @include kbq-markdown-typography();
 
+    @include link-theme.kbq-link-typography();
     @include kbq-forms-typography();
     @include kbq-tabs-typography();
     @include kbq-tag-typography();

@@ -11,7 +11,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     imports: [KbqLinkModule, KbqIconModule],
     template: `
         <div style="padding: 16px">
-            <a href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
+            <a class="kbq-link_external" href="https://koobiq.io/components/link/overview" target="_blank" kbq-link>
                 <i kbq-icon="kbq-clock_16"></i>
                 <span class="kbq-link__text">Отчет сканирования</span>
             </a>
