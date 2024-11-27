@@ -1,16 +1,13 @@
+@use '../list/list-tokens';
+
 .kbq-dropdown__panel {
     --kbq-dropdown-size-container-width-min: var(--kbq-size-7xl);
     --kbq-dropdown-size-container-width-max: 640px;
     --kbq-dropdown-size-container-padding-vertical: var(--kbq-size-xxs);
     --kbq-dropdown-size-container-border-radius: var(--kbq-size-s);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
+    /* THEME TOKENS */
     --kbq-dropdown-container-background: var(--kbq-background-card);
     --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
-    --kbq-dropdown-container-background: var(--kbq-background-card);
-    --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
+    /* LIST THEME TOKENS */
+    @include list-tokens.list-theme-tokens;
 }

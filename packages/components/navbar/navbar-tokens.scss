@@ -1,34 +1,7 @@
 .kbq-navbar,
 .kbq-vertical-navbar {
     --kbq-navbar-item-size-content-border-radius: var(--kbq-size-border-radius);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-navbar-background: var(--kbq-background-bg);
-    --kbq-navbar-border: var(--kbq-line-contrast-less);
-    --kbq-navbar-item-default-content-text: var(--kbq-foreground-contrast);
-    --kbq-navbar-item-default-content-background: transparent;
-    --kbq-navbar-item-default-content-icon-left: var(--kbq-icon-contrast);
-    --kbq-navbar-item-default-content-icon-right: var(--kbq-icon-contrast);
-    --kbq-navbar-item-states-hover-content-text: var(--kbq-foreground-contrast);
-    --kbq-navbar-item-states-hover-content-background: var(--kbq-states-background-transparent-hover);
-    --kbq-navbar-item-states-hover-content-icon-left: var(--kbq-states-icon-contrast-hover);
-    --kbq-navbar-item-states-hover-content-icon-right: var(--kbq-states-icon-contrast-hover);
-    --kbq-navbar-item-states-selected-content-text: var(--kbq-foreground-contrast);
-    --kbq-navbar-item-states-selected-content-background: var(--kbq-states-background-transparent-active);
-    --kbq-navbar-item-states-selected-content-icon-left: var(--kbq-states-icon-contrast-active);
-    --kbq-navbar-item-states-selected-content-icon-right: var(--kbq-states-icon-contrast-active);
-    --kbq-navbar-item-states-selected-hover-content-text: var(--kbq-foreground-contrast);
-    --kbq-navbar-item-states-selected-hover-content-background: var(--kbq-states-background-transparent-hover);
-    --kbq-navbar-item-states-selected-hover-content-icon-left: var(--kbq-states-icon-contrast-hover);
-    --kbq-navbar-item-states-selected-hover-content-icon-right: var(--kbq-states-icon-contrast-hover);
-    --kbq-navbar-item-states-disabled-content-text: var(--kbq-states-foreground-disabled);
-    --kbq-navbar-item-states-disabled-content-background: transparent;
-    --kbq-navbar-item-states-disabled-content-icon-left: var(--kbq-states-icon-disabled);
-    --kbq-navbar-item-states-disabled-content-icon-right: var(--kbq-states-icon-disabled);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-navbar-background: var(--kbq-background-bg);
     --kbq-navbar-border: var(--kbq-line-contrast-less);
     --kbq-navbar-item-default-content-text: var(--kbq-foreground-contrast);

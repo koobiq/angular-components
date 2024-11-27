@@ -17,18 +17,7 @@
     --kbq-popover-size-content-padding-with-footer-bottom: var(--kbq-size-s);
     --kbq-popover-size-footer-padding-vertical: var(--kbq-size-l);
     --kbq-popover-size-footer-padding-horizontal: var(--kbq-size-xxl);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-popover-container-background: var(--kbq-background-card);
-    --kbq-popover-container-shadow: var(--kbq-shadow-popup);
-    --kbq-popover-header-text-color: var(--kbq-foreground-contrast);
-    --kbq-popover-header-scroll-shadow: var(--kbq-shadow-overflow-normal-bottom);
-    --kbq-popover-content-text-color: var(--kbq-foreground-contrast);
-    --kbq-popover-footer-scroll-shadow: var(--kbq-shadow-overflow-normal-top);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-popover-container-background: var(--kbq-background-card);
     --kbq-popover-container-shadow: var(--kbq-shadow-popup);
     --kbq-popover-header-text-color: var(--kbq-foreground-contrast);

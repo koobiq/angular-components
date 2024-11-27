@@ -1,9 +1,5 @@
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-select-panel-dropdown-background: var(--kbq-background-card);
-    --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+.kbq-tree-select__panel {
+    /* THEME TOKENS */
     --kbq-select-panel-dropdown-background: var(--kbq-background-card);
     --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
 }

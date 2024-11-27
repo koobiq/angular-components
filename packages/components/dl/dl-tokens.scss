@@ -3,14 +3,7 @@
     --kbq-description-list-size-horizontal-gap-vertical: var(--kbq-size-l);
     --kbq-description-list-size-vertical-content-gap-vertical: var(--kbq-size-3xs);
     --kbq-description-list-size-vertical-gap-vertical: var(--kbq-size-m);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-description-list-term-color: var(--kbq-foreground-contrast-secondary);
-    --kbq-description-list-description-color: var(--kbq-foreground-contrast);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-description-list-term-color: var(--kbq-foreground-contrast-secondary);
     --kbq-description-list-description-color: var(--kbq-foreground-contrast);
 }

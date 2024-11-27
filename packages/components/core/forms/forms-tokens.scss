@@ -9,14 +9,7 @@
     --kbq-forms-size-vertical-control-padding-left: var(--kbq-size-xxl);
     --kbq-forms-size-vertical-legend-margin-top: var(--kbq-size-3xl);
     --kbq-forms-size-vertical-legend-margin-bottom: var(--kbq-size-m);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-forms-label: var(--kbq-foreground-contrast);
-    --kbq-forms-legend: var(--kbq-foreground-contrast);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-forms-label: var(--kbq-foreground-contrast);
     --kbq-forms-legend: var(--kbq-foreground-contrast);
 }

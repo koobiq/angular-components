@@ -5,18 +5,7 @@
     --kbq-loader-overlay-size-compact-overlay-padding-horizontal: var(--kbq-size-3xl);
     --kbq-loader-overlay-size-compact-loader-margin-bottom: var(--kbq-size-s);
     --kbq-loader-overlay-size-compact-content-content-gap-vertical: var(--kbq-size-3xs);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-loader-overlay-transparent-overlay-background: var(--kbq-background-overlay-inverse);
-    --kbq-loader-overlay-transparent-text-color: var(--kbq-foreground-contrast);
-    --kbq-loader-overlay-transparent-caption-color: var(--kbq-foreground-contrast-secondary);
-    --kbq-loader-overlay-filled-overlay-background: var(--kbq-background-bg);
-    --kbq-loader-overlay-filled-text-color: var(--kbq-foreground-contrast);
-    --kbq-loader-overlay-filled-caption-color: var(--kbq-foreground-contrast-secondary);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-loader-overlay-transparent-overlay-background: var(--kbq-background-overlay-inverse);
     --kbq-loader-overlay-transparent-text-color: var(--kbq-foreground-contrast);
     --kbq-loader-overlay-transparent-caption-color: var(--kbq-foreground-contrast-secondary);

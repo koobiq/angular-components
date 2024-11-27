@@ -15,14 +15,7 @@
     --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-xl);
     --kbq-empty-state-size-normal-image-addon-height: var(--kbq-size-xxl);
     --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xxs);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-empty-state-title: var(--kbq-foreground-contrast);
-    --kbq-empty-state-color: var(--kbq-foreground-contrast);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-empty-state-title: var(--kbq-foreground-contrast);
     --kbq-empty-state-color: var(--kbq-foreground-contrast);
 }

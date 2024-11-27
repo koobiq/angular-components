@@ -1,5 +1,8 @@
 @import '@koobiq/components/prebuilt-themes/light-theme.css';
 @import '@koobiq/icons/fonts/kbq-icons';
+@import '@koobiq/design-tokens/web/css-tokens.css';
+@import '@koobiq/design-tokens/web/css-tokens-dark.css';
+@import '@koobiq/design-tokens/web/css-tokens-light.css';
 
 body {
     font-family: Inter, Arial, sans-serif;

@@ -4,19 +4,7 @@
     --kbq-accordion-size-item-header-variant-hug-padding: var(--kbq-size-xs) var(--kbq-size-s) var(--kbq-size-xs)
         var(--kbq-size-m);
     --kbq-accordion-size-item-content-padding: 0px var(--kbq-size-m) var(--kbq-size-s) var(--kbq-size-m);
-}
-
-:where(.kbq-light, .theme-light, .kbq-theme-light) {
-    --kbq-accordion-item-default-background: transparent;
-    --kbq-accordion-item-default-text-color: var(--kbq-foreground-contrast);
-    --kbq-accordion-item-default-icon-color: var(--kbq-icon-contrast-fade);
-    --kbq-accordion-item-states-hover-icon-color: var(--kbq-icon-contrast);
-    --kbq-accordion-item-states-focus-border-color: var(--kbq-line-theme);
-    --kbq-accordion-item-states-disabled-text-color: var(--kbq-foreground-contrast-secondary);
-    --kbq-accordion-item-states-disabled-icon-color: var(--kbq-states-icon-disabled);
-}
-
-:where(.kbq-dark, .theme-dark, .kbq-theme-dark) {
+    /* THEME TOKENS */
     --kbq-accordion-item-default-background: transparent;
     --kbq-accordion-item-default-text-color: var(--kbq-foreground-contrast);
     --kbq-accordion-item-default-icon-color: var(--kbq-icon-contrast-fade);
