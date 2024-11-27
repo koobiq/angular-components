@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { HighlightModule } from 'ngx-highlightjs';
 import { codeHTML, codeXML } from '../../components-dev/code-block/code-files-example';
 import { KbqCodeBlockComponent } from './code-block.component';
 import { KbqCodeBlockModule } from './code-block.module';
@@ -15,7 +14,6 @@ describe('CodeBlockComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                HighlightModule,
                 KbqCodeBlockModule
             ],
             declarations: [KbqCodeBlockDefault]

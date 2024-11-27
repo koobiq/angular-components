@@ -13,7 +13,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToastModule } from '@koobiq/components/toast';
 import { KbqTreeModule } from '@koobiq/components/tree';
-import { HIGHLIGHT_OPTIONS } from 'ngx-highlightjs';
 import { AnchorsModule } from './components/anchors/anchors.module';
 import { ComponentViewerModule } from './components/component-viewer/component-viewer.module';
 import { DocumentationItems } from './components/documentation-items';
@@ -64,14 +63,6 @@ import { APP_ROUTES } from './docs.module-routes';
         {
             provide: LocationStrategy,
             useClass: PathLocationStrategy
-        },
-        {
-            provide: HIGHLIGHT_OPTIONS,
-            useValue: {
-                fullLibraryLoader: () => import('highlight.js'),
-                lineNumbersLoader: () => import('ngx-highlightjs/line-numbers'),
-                lineNumbers: true
-            }
         },
         { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }
     ],

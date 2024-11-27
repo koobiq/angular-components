@@ -23,7 +23,7 @@ import {
     KBQ_CODE_BLOCK_CONFIGURATION,
     KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION,
     KbqCodeBlockConfiguration,
-    KbqCodeFile
+    KbqCodeBlockFile
 } from './code-block.types';
 
 export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
@@ -80,17 +80,17 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     @Input() maxHeight: number;
     @Input() softWrap: boolean = false;
     @Input() canLoad: boolean = true;
-    @Input() get codeFiles(): KbqCodeFile[] {
+    @Input() get codeFiles(): KbqCodeBlockFile[] {
         return this._codeFiles;
     }
 
-    set codeFiles(files: KbqCodeFile[]) {
+    set codeFiles(files: KbqCodeBlockFile[]) {
         this._codeFiles = files;
         this.hideActionBarIfNoHeader();
         this.subscribeToHover();
     }
 
-    private _codeFiles: KbqCodeFile[];
+    private _codeFiles: KbqCodeBlockFile[];
 
     // TODO: replace with property
     get noHeader(): any {
@@ -305,7 +305,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
         this.changeDetectorRef.markForCheck();
     };
 
-    private getFullFileName(codeFile: KbqCodeFile): string {
+    private getFullFileName(codeFile: KbqCodeBlockFile): string {
         const fileName = codeFile.filename || 'code';
         const extension = LANGUAGES_EXTENSIONS[codeFile.language] || DEFAULT_EXTENSION;
 
