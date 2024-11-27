@@ -56,11 +56,7 @@ body {
         KbqCodeBlockModule
     ],
     template: `
-        <kbq-code-block
-            [codeFiles]="files"
-            [filled]="false"
-            [lineNumbers]="true"
-        />
+        <kbq-code-block [codeFiles]="files" [filled]="false" [lineNumbers]="true" />
     `
 })
 export class CodeBlockTabsWithOverflowExample {

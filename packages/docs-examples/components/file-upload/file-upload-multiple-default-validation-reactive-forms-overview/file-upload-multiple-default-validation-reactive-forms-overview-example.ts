@@ -20,10 +20,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
             (filesAdded)="onFilesAdded($event)"
             multiple
         >
-            <ng-template
-                #kbqFileIcon
-                let-file
-            >
+            <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {
                     <i kbq-icon="kbq-file-o_16"></i>
                 }

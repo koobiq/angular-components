@@ -16,21 +16,11 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field style="width: 250px">
-            <input
-                [(ngModel)]="value"
-                kbqInputPassword
-            />
+            <input [(ngModel)]="value" kbqInputPassword />
 
-            <kbq-password-toggle
-                [kbqTooltipHidden]="'Показать пароль'"
-                [kbqTooltipNotHidden]="'Скрыть пароль'"
-            />
+            <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
 
-            <kbq-password-hint
-                [max]="15"
-                [min]="8"
-                [rule]="passwordRules.Length"
-            >
+            <kbq-password-hint [max]="15" [min]="8" [rule]="passwordRules.Length">
                 От 8 до 15 символов
             </kbq-password-hint>
 
@@ -44,10 +34,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 Только латинские буквы, цифры, пробелы и спецсимволы
             </kbq-password-hint>
 
-            <kbq-password-hint
-                [checkRule]="atLeastNCapitalLetters(5)"
-                [rule]="passwordRules.Custom"
-            >
+            <kbq-password-hint [checkRule]="atLeastNCapitalLetters(5)" [rule]="passwordRules.Custom">
                 не менее 5 заглавных букв
             </kbq-password-hint>
         </kbq-form-field>

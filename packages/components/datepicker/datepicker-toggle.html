@@ -11,10 +11,7 @@
     (click)="open($event)"
 >
     @if (!customIcon) {
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            class="kbq-datepicker-toggle__default-icon"
-        ></i>
+        <i kbq-icon="kbq-calendar-o_16" class="kbq-datepicker-toggle__default-icon"></i>
     }
 
     <ng-content select="[kbqDatepickerToggleIcon]" />

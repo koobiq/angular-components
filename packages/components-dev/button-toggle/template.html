@@ -4,11 +4,7 @@
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
         <kbq-button-toggle [value]="2">default 2</kbq-button-toggle>
         <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
-        <kbq-button-toggle
-            [checked]="true"
-            [disabled]="true"
-            [value]="4"
-        >
+        <kbq-button-toggle [checked]="true" [disabled]="true" [value]="4">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             default 4
         </kbq-button-toggle>
@@ -31,27 +27,14 @@
 
     <br />
 
-    <button
-        kbq-button
-        (click)="disabled = !disabled"
-    >
-        Toggle Disabled
-    </button>
+    <button kbq-button (click)="disabled = !disabled">Toggle Disabled</button>
 
     <br />
     <br />
 
-    <kbq-button-toggle-group
-        #disabledGroup="kbqButtonToggleGroup"
-        [disabled]="disabled"
-    >
+    <kbq-button-toggle-group #disabledGroup="kbqButtonToggleGroup" [disabled]="disabled">
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
-        <kbq-button-toggle
-            [disabled]="true"
-            [value]="2"
-        >
-            default 2
-        </kbq-button-toggle>
+        <kbq-button-toggle [disabled]="true" [value]="2">default 2</kbq-button-toggle>
         <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
         <kbq-button-toggle [value]="4">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -62,17 +45,9 @@
     <br />
 
     <label>Multiple Group</label>
-    <kbq-button-toggle-group
-        #multipleGroup="kbqButtonToggleGroup"
-        [multiple]="true"
-    >
+    <kbq-button-toggle-group #multipleGroup="kbqButtonToggleGroup" [multiple]="true">
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
-        <kbq-button-toggle
-            [disabled]="true"
-            [value]="2"
-        >
-            default 2
-        </kbq-button-toggle>
+        <kbq-button-toggle [disabled]="true" [value]="2">default 2</kbq-button-toggle>
         <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
         <kbq-button-toggle [value]="4">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -84,12 +59,7 @@
 
     <kbq-button-toggle-group>
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
-        <kbq-button-toggle
-            [disabled]="true"
-            [value]="2"
-        >
-            default 2
-        </kbq-button-toggle>
+        <kbq-button-toggle [disabled]="true" [value]="2">default 2</kbq-button-toggle>
         <kbq-button-toggle [value]="3">
             <i kbq-icon="kbq-chevron-down-s_16"></i>
             Long long long long long Long long long long long Long long long long long text
@@ -122,12 +92,7 @@
 
     <kbq-button-toggle-group [(ngModel)]="modelResult">
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
-        <kbq-button-toggle
-            [disabled]="true"
-            [value]="2"
-        >
-            default 2
-        </kbq-button-toggle>
+        <kbq-button-toggle [disabled]="true" [value]="2">default 2</kbq-button-toggle>
         <kbq-button-toggle [value]="3">default 3</kbq-button-toggle>
     </kbq-button-toggle-group>
     <div class="example-selected-value">Model result: {{ modelResult }}</div>
@@ -136,17 +101,9 @@
 <div class="dev-container responsive">
     <div class="kbq-subheading">Responsive text with tooltip</div>
     <br />
-    <kbq-button-toggle-group
-        style="width: 100%"
-        [(ngModel)]="modelResult"
-    >
+    <kbq-button-toggle-group style="width: 100%" [(ngModel)]="modelResult">
         <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
-        <kbq-button-toggle
-            [disabled]="true"
-            [value]="2"
-        >
-            default 2
-        </kbq-button-toggle>
+        <kbq-button-toggle [disabled]="true" [value]="2">default 2</kbq-button-toggle>
         <kbq-button-toggle [value]="3">default 3 default 3 default 3 default 3</kbq-button-toggle>
     </kbq-button-toggle-group>
 </div>

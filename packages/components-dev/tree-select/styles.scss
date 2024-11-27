@@ -1,12 +1,19 @@
 @use '../main';
 
+app {
+    display: block;
+    width: 400px;
+}
+
+hr {
+    margin: var(--kbq-size-xl) 0;
+}
+
 .dev-container {
-    width: 50%;
-    min-height: 140px;
-
-    border: 1px solid red;
-
-    padding: 24px;
+    max-width: 400px;
+    border: 1px solid cyan;
+    padding: var(--kbq-size-xxl);
+    margin-bottom: var(--kbq-size-xl);
 }
 
 .kbq-select__panel .kbq-select__footer.custom-footer {

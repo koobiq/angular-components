@@ -492,10 +492,7 @@ class TestModalContentComponent {}
 @Component({
     selector: 'kbq-modal-by-service',
     template: `
-        <kbq-modal
-            [(kbqVisible)]="nonServiceModalVisible"
-            kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__"
-        />
+        <kbq-modal [(kbqVisible)]="nonServiceModalVisible" kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__" />
         <button kbq-button>focusable button</button>
     `,
     // Testing for service with parent service

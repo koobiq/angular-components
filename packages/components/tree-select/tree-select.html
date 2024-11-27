@@ -1,16 +1,13 @@
 <div
-    #origin="cdkOverlayOrigin"
+    #fallbackOverlayOrigin="cdkOverlayOrigin"
     #trigger
-    cdk-overlay-origin
+    cdkOverlayOrigin
     class="kbq-select__trigger"
     [class.kbq-select__trigger_empty]="empty"
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    <select
-        class="cdk-visually-hidden"
-        [id]="id"
-    ></select>
+    <select class="cdk-visually-hidden" [id]="id"></select>
 
     @if (!!customMatcher) {
         <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
@@ -73,37 +70,31 @@
             }
 
             @if (canShowCleaner) {
-                <div
-                    class="kbq-select__cleaner"
-                    (click)="clearValue($event)"
-                >
+                <div class="kbq-select__cleaner" (click)="clearValue($event)">
                     <ng-content select="kbq-cleaner" />
                 </div>
             }
 
             <div class="kbq-select__arrow-wrapper">
-                <i
-                    kbq-icon="kbq-chevron-down-s_16"
-                    class="kbq-select__arrow"
-                    [color]="'contrast-fade'"
-                ></i>
+                <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="'contrast-fade'"></i>
             </div>
         </div>
     }
 </div>
 
 <ng-template
-    cdk-connected-overlay
+    cdkConnectedOverlay
     cdkConnectedOverlayLockPosition
     [cdkConnectedOverlayBackdropClass]="backdropClass"
     [cdkConnectedOverlayHasBackdrop]="hasBackdrop"
-    [cdkConnectedOverlayMinWidth]="triggerRect?.width!"
+    [cdkConnectedOverlayMinWidth]="overlayMinWidth"
     [cdkConnectedOverlayOffsetY]="offsetY"
     [cdkConnectedOverlayOpen]="panelOpen"
-    [cdkConnectedOverlayOrigin]="origin"
-    [cdkConnectedOverlayPanelClass]="'kbq-select-overlay'"
+    [cdkConnectedOverlayOrigin]="overlayOrigin || fallbackOverlayOrigin"
+    [cdkConnectedOverlayPanelClass]="overlayPanelClass"
     [cdkConnectedOverlayPositions]="positions"
     [cdkConnectedOverlayScrollStrategy]="scrollStrategy"
+    [cdkConnectedOverlayWidth]="overlayWidth"
     (attach)="onAttached()"
     (backdropClick)="close()"
 >

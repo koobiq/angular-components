@@ -4,10 +4,7 @@
     <ng-content select="kbq-pseudo-checkbox" />
 } @else {
     @if (showCheckbox) {
-        <kbq-pseudo-checkbox
-            [disabled]="disabled"
-            [state]="checkboxState"
-        />
+        <kbq-pseudo-checkbox [disabled]="disabled" [state]="checkboxState" />
     }
 }
 
@@ -17,10 +14,7 @@
 
 <ng-content select="kbq-progress-spinner" />
 
-<span
-    #kbqTitleContainer
-    class="kbq-option-text"
->
+<span #kbqTitleContainer class="kbq-option-text">
     <ng-content />
 </span>
 

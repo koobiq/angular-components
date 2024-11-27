@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Overlay, OverlayConfig, OverlayRef, PositionStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { DOCUMENT } from '@angular/common';
 import {
@@ -344,7 +345,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         }
 
         if (this.document) {
-            this.focusedElementBeforeOpen = this.document.activeElement;
+            this.focusedElementBeforeOpen = _getFocusedElementPierceShadowDom();
         }
 
         this.openAsPopup();

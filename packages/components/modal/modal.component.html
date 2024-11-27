@@ -28,10 +28,7 @@
             [style.transform-origin]="transformOrigin"
             [style.width]="kbqWidth | toCssUnit"
         >
-            <div
-                cdkTrapFocus
-                class="kbq-modal-content"
-            >
+            <div cdkTrapFocus class="kbq-modal-content">
                 @switch (true) {
                     @case (isModalType('default')) {
                         <ng-container [ngTemplateOutlet]="tplContentDefault" />
@@ -55,11 +52,7 @@
 <!-- [Predefined] Default Modal Content -->
 <ng-template #tplContentDefault>
     @if (kbqTitle) {
-        <div
-            kbq-title
-            class="kbq-modal-header"
-            [class.kbq-modal-body_top-overflow]="isTopOverflow"
-        >
+        <div kbq-title class="kbq-modal-header" [class.kbq-modal-body_top-overflow]="isTopOverflow">
             <div class="kbq-modal-title">
                 @switch (true) {
                     @case (isTemplateRef(kbqTitle)) {
@@ -77,20 +70,12 @@
                     [color]="'contrast'"
                     (click)="onClickCloseBtn()"
                 >
-                    <i
-                        kbq-icon="kbq-xmark_16"
-                        [color]="componentColors.Contrast"
-                    ></i>
+                    <i kbq-icon="kbq-xmark_16" [color]="componentColors.Contrast"></i>
                 </button>
             }
         </div>
     }
-    <div
-        #modalBody
-        class="kbq-modal-body kbq-scrollbar"
-        [ngStyle]="kbqBodyStyle"
-        (scroll)="checkOverflow()"
-    >
+    <div #modalBody class="kbq-modal-body kbq-scrollbar" [ngStyle]="kbqBodyStyle" (scroll)="checkOverflow()">
         <ng-container #bodyContainer>
             @if (!isComponent(kbqContent)) {
                 @switch (true) {
@@ -108,10 +93,7 @@
         </ng-container>
     </div>
     @if (kbqFooter || kbqOkText || kbqCancelText) {
-        <div
-            class="kbq-modal-footer"
-            [class.kbq-modal-body_bottom-overflow]="isBottomOverflow"
-        >
+        <div class="kbq-modal-footer" [class.kbq-modal-body_bottom-overflow]="isBottomOverflow">
             @switch (true) {
                 @case (isTemplateRef(kbqFooter)) {
                     <ng-container [ngTemplateOutlet]="$any(kbqFooter)" />
@@ -148,10 +130,7 @@
                         </button>
                     }
                     @if (kbqCancelText) {
-                        <button
-                            kbq-button
-                            (click)="onClickOkCancel('cancel')"
-                        >
+                        <button kbq-button (click)="onClickOkCancel('cancel')">
                             {{ cancelText }}
                         </button>
                     }
@@ -164,10 +143,7 @@
 
 <!-- [Predefined] Confirm Modal Content -->
 <ng-template #tplContentConfirm>
-    <div
-        class="kbq-modal-body"
-        [ngStyle]="kbqBodyStyle"
-    >
+    <div class="kbq-modal-body" [ngStyle]="kbqBodyStyle">
         <ng-container #bodyContainer>
             @if (!isComponent(kbqContent)) {
                 @switch (true) {
@@ -187,20 +163,12 @@
     @if (kbqOkText || kbqCancelText) {
         <div class="kbq-confirm-footer">
             @if (kbqOkText) {
-                <button
-                    kbq-button
-                    [attr.autofocus]="true"
-                    [color]="kbqOkType"
-                    (click)="onClickOkCancel('ok')"
-                >
+                <button kbq-button [attr.autofocus]="true" [color]="kbqOkType" (click)="onClickOkCancel('ok')">
                     {{ okText }}
                 </button>
             }
             @if (kbqCancelText) {
-                <button
-                    kbq-button
-                    (click)="onClickOkCancel('cancel')"
-                >
+                <button kbq-button (click)="onClickOkCancel('cancel')">
                     {{ cancelText }}
                 </button>
             }

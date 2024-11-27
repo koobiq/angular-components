@@ -1,13 +1,22 @@
 import { OverlayContainer, ScrollDispatcher } from '@angular/cdk/overlay';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    DebugElement,
+    Provider,
+    QueryList,
+    Type,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import {
     ComponentFixture,
-    TestBed,
     discardPeriodicTasks,
     fakeAsync,
     flush,
     inject,
+    TestBed,
     tick,
     waitForAsync
 } from '@angular/core/testing';
@@ -20,8 +29,30 @@ import { KbqOption } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagsModule } from '@koobiq/components/tags';
-import { KbqSelectModule } from './index';
-import { KbqSelect } from './select.component';
+import { KbqSelect, kbqSelectOptionsProvider, KbqSelectPanelWidth } from './select.component';
+import { KbqSelectModule } from './select.module';
+
+const createComponent = <T>(
+    component: Type<T>,
+    providers: Provider[] = []
+): {
+    fixture: ComponentFixture<T>;
+    overlayContainer: OverlayContainer;
+} => {
+    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    const fixture = TestBed.createComponent<T>(component);
+    const overlayContainer = TestBed.inject(OverlayContainer);
+    fixture.autoDetectChanges();
+    return { fixture, overlayContainer };
+};
+
+const getSelectDebugElement = (debugElement: DebugElement): DebugElement => {
+    return debugElement.query(By.directive(KbqSelect));
+};
+
+const getOverlayPanelElement = (overlayContainer: OverlayContainer): HTMLElement => {
+    return overlayContainer.getContainerElement().querySelector('.cdk-overlay-pane') as HTMLElement;
+};
 
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
@@ -199,22 +230,12 @@ const OPTIONS = [
                 placeholder="Food"
             >
                 @for (food of foods; track food) {
-                    <kbq-option
-                        [value]="food.value"
-                        [disabled]="food.disabled"
-                    >
+                    <kbq-option [value]="food.value" [disabled]="food.disabled">
                         {{ food.viewValue }}
                     </kbq-option>
                 }
-                <ng-template
-                    #kbqSelectTagContent
-                    let-option
-                    let-select="select"
-                >
-                    <kbq-tag
-                        [selectable]="false"
-                        [class.kbq-error]="select.errorState"
-                    >
+                <ng-template #kbqSelectTagContent let-option let-select="select">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
@@ -256,11 +277,7 @@ class BasicSelect {
     selector: 'ng-model-select',
     template: `
         <kbq-form-field>
-            <kbq-select
-                [disabled]="isDisabled"
-                placeholder="Food"
-                ngModel
-            >
+            <kbq-select [disabled]="isDisabled" placeholder="Food" ngModel>
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -288,10 +305,7 @@ class NgModelSelect {
         @if (isShowing) {
             <div>
                 <kbq-form-field>
-                    <kbq-select
-                        [formControl]="control"
-                        placeholder="Food I want to eat right now"
-                    >
+                    <kbq-select [formControl]="control" placeholder="Food I want to eat right now">
                         @for (food of foods; track food) {
                             <kbq-option [value]="food.value">
                                 {{ food.viewValue }}
@@ -345,15 +359,9 @@ class BasicSelectNoPlaceholder {}
     selector: 'select-with-groups',
     template: `
         <kbq-form-field>
-            <kbq-select
-                [formControl]="control"
-                placeholder="Pokemon"
-            >
+            <kbq-select [formControl]="control" placeholder="Pokemon">
                 @for (group of pokemonTypes; track group) {
-                    <kbq-optgroup
-                        [label]="group.name"
-                        [disabled]="group.disabled"
-                    >
+                    <kbq-optgroup [label]="group.name" [disabled]="group.disabled">
                         @for (pokemon of group.pokemon; track pokemon) {
                             <kbq-option [value]="pokemon.value">
                                 {{ pokemon.viewValue }}
@@ -413,28 +421,15 @@ class SelectWithGroups {
         <kbq-form-field>
             <kbq-select>
                 <kbq-option [value]="'value1'">Not long text</kbq-option>
-                <kbq-option
-                    [value]="'value2'"
-                    style="max-width: 200px;"
-                >
+                <kbq-option [value]="'value2'" style="max-width: 200px;">
                     Long long long long Long long long long Long long long long Long long long long Long long long long
                     Long long long long text
                 </kbq-option>
-                <kbq-option
-                    [value]="'value3'"
-                    style="max-width: 200px;"
-                >
+                <kbq-option [value]="'value3'" style="max-width: 200px;">
                     {{ changingLabel }}
                 </kbq-option>
-                <ng-template
-                    #kbqSelectTagContent
-                    let-option
-                    let-select="select"
-                >
-                    <kbq-tag
-                        [selectable]="false"
-                        [class.kbq-error]="select.errorState"
-                    >
+                <ng-template #kbqSelectTagContent let-option let-select="select">
+                    <kbq-tag [selectable]="false" [class.kbq-error]="select.errorState">
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
@@ -463,20 +458,9 @@ class SelectWithLongOptionText {
     selector: 'cdk-virtual-scroll-viewport-select',
     template: `
         <kbq-form-field>
-            <kbq-select
-                [(value)]="values"
-                [multiple]="true"
-                [style]="style"
-            >
-                <cdk-virtual-scroll-viewport
-                    [itemSize]="itemSize"
-                    [minBufferPx]="100"
-                    [maxBufferPx]="400"
-                >
-                    <kbq-option
-                        *cdkVirtualFor="let option of options; templateCacheSize: 0"
-                        [value]="option"
-                    >
+            <kbq-select [(value)]="values" [multiple]="true" [style]="style">
+                <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
+                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
@@ -501,7 +485,44 @@ class CdkVirtualScrollViewportSelect<T = string> {
     constructor(public scrollDispatcher: ScrollDispatcher) {}
 }
 
-describe('KbqSelect', () => {
+@Component({
+    standalone: true,
+    imports: [KbqSelectModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-select [panelWidth]="panelWidth">
+                <kbq-option [value]="'option1'">
+                    Long long long long long long long long long long long long long long long long long long long long
+                    long long long long long long long long long long long long long long long long long long long long
+                    long long long long long long long long long option
+                </kbq-option>
+                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option [value]="'option2'">Option3</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.Default
+})
+export class SelectWithPanelWidth {
+    panelWidth: KbqSelectPanelWidth;
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqSelectModule, KbqFormFieldModule],
+    template: `
+        <kbq-form-field style="width: 300px">
+            <kbq-select>
+                <kbq-option [value]="'option1'">Option1</kbq-option>
+                <kbq-option [value]="'option2'">Option2</kbq-option>
+                <kbq-option [value]="'option2'">Option3</kbq-option>
+            </kbq-select>
+        </kbq-form-field>
+    `
+})
+export class BaseSelect {}
+
+describe(KbqSelect.name, () => {
     let overlayContainer: OverlayContainer;
     let overlayContainerElement: HTMLElement;
 
@@ -533,7 +554,7 @@ describe('KbqSelect', () => {
     }
 
     afterEach(() => {
-        overlayContainer.ngOnDestroy();
+        overlayContainer?.ngOnDestroy();
     });
 
     describe('core', () => {
@@ -968,5 +989,48 @@ describe('KbqSelect', () => {
             flush();
             expect(fixture.componentInstance.select.hiddenItems).toEqual(2);
         }));
+    });
+
+    it('should set panel width same as trigger by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.panelWidth = 'auto';
+        fixture.detectChanges();
+        getSelectDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+        // 300 - trigger width
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('300px');
+    });
+
+    it('should set custom panel width by panelWidth attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.panelWidth = 344;
+        fixture.detectChanges();
+        getSelectDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('344px');
+    });
+
+    it('should set custom panel width by KBQ_SELECT_OPTIONS provider', () => {
+        const { fixture, overlayContainer } = createComponent(BaseSelect, [
+            kbqSelectOptionsProvider({ panelWidth: 537 })
+        ]);
+        fixture.detectChanges();
+        getSelectDebugElement(fixture.debugElement).nativeElement.click();
+        fixture.detectChanges();
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('537px');
+    });
+
+    it('should override panelWidth value by attribute', () => {
+        const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth, [
+            kbqSelectOptionsProvider({ panelWidth: 222 })
+        ]);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.panelWidth = 537;
+        fixture.detectChanges();
+        getSelectDebugElement(debugElement).nativeElement.click();
+        fixture.detectChanges();
+        expect(getOverlayPanelElement(overlayContainer).style.width).toBe('537px');
     });
 });

@@ -1,34 +1,22 @@
 <ng-template #shortContent>
-    <form
-        novalidate
-        class="kbq-form-vertical"
-    >
+    <form novalidate class="kbq-form-vertical">
         <div class="kbq-form__fieldset">
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Relying Party Indicator</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                 </kbq-form-field>
             </div>
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Relying Party Indicator</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                 </kbq-form-field>
             </div>
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Post Back URL</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                     <kbq-hint>
                         URL of the Management Center SAML assertion consumer, including schema (http:// or https://) and
                         port.
@@ -38,10 +26,7 @@
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Identity Provider Metadata</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                     <kbq-hint>Your Identity Provider’s metadata in XML format</kbq-hint>
                 </kbq-form-field>
             </div>
@@ -50,36 +35,24 @@
 </ng-template>
 
 <ng-template #customContent>
-    <form
-        novalidate
-        class="kbq-form-vertical"
-    >
+    <form novalidate class="kbq-form-vertical">
         <div class="kbq-form__fieldset">
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Relying Party Indicator</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                 </kbq-form-field>
             </div>
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Relying Party Indicator</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                 </kbq-form-field>
             </div>
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Post Back URL</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                     <kbq-hint>
                         URL of the Management Center SAML assertion consumer, including schema (http:// or https://) and
                         port.
@@ -89,19 +62,13 @@
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Group Attribute</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                 </kbq-form-field>
             </div>
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Identity Provider Metadata</label>
                 <kbq-form-field class="kbq-form__control">
-                    <input
-                        kbqInput
-                        name="input"
-                    />
+                    <input kbqInput name="input" />
                     <kbq-hint>Your Identity Provider’s metadata in XML format</kbq-hint>
                 </kbq-form-field>
             </div>
@@ -110,30 +77,13 @@
 </ng-template>
 
 <ng-template #customFooter>
-    <div
-        style="gap: 16px"
-        class="layout-row layout-wrap"
-    >
-        <button
-            kbq-button
-            [color]="'contrast'"
-            (click)="activePopover.hide(0)"
-        >
-            Save
-        </button>
-        <button
-            kbq-button
-            (click)="activePopover.hide(0)"
-        >
-            Cancel
-        </button>
+    <div style="gap: 16px" class="layout-row layout-wrap">
+        <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Save</button>
+        <button kbq-button (click)="activePopover.hide(0)">Cancel</button>
     </div>
 </ng-template>
 
-<div
-    style="gap: 16px"
-    class="layout-row layout-wrap"
->
+<div style="gap: 16px" class="layout-row layout-wrap">
     <button
         #kbqNoScrollPopover="kbqPopover"
         kbq-button

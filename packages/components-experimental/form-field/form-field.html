@@ -1,17 +1,10 @@
 @if (hasLabel) {
-    <label
-        class="kbq-form-field_label"
-        [attr.for]="control.id"
-    >
+    <label class="kbq-form-field_label" [attr.for]="control.id">
         <ng-content select="kbq-label" />
     </label>
 }
 
-<div
-    #connectionContainer
-    class="kbq-form-field_container"
-    (click)="onContainerClick($event)"
->
+<div #connectionContainer class="kbq-form-field_container" (click)="onContainerClick($event)">
     @if (hasPrefix) {
         <div class="kbq-form-field_prefix">
             <ng-content select="[kbqPrefix]" />

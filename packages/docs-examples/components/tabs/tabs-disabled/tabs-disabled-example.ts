@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -7,42 +7,15 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-disabled-example',
-    styleUrl: 'tabs-disabled-example.css',
-    imports: [
-        KbqTabsModule
-    ],
-    encapsulation: ViewEncapsulation.None,
+    imports: [KbqTabsModule],
     template: `
-        <div class="tabs-disabled-example">
-            <kbq-tab-group>
-                <kbq-tab [label]="'Bruteforce'" />
-                <kbq-tab
-                    [disabled]="true"
-                    [label]="'Complex Attack'"
-                />
-                <kbq-tab [label]="'DDoS'" />
-                <kbq-tab [label]="'DoS'" />
-            </kbq-tab-group>
-
-            <kbq-tab-group>
-                <kbq-tab
-                    [disabled]="true"
-                    [label]="'Bruteforce'"
-                />
-                <kbq-tab
-                    [disabled]="true"
-                    [label]="'Complex Attack'"
-                />
-                <kbq-tab
-                    [disabled]="true"
-                    [label]="'DDoS'"
-                />
-                <kbq-tab
-                    [disabled]="true"
-                    [label]="'DoS'"
-                />
-            </kbq-tab-group>
-        </div>
-    `
+        <kbq-tab-group class="layout-margin-bottom-m">
+            <kbq-tab label="BruteForce" />
+            <kbq-tab label="Complex attack" disabled />
+            <kbq-tab label="DDoS" disabled />
+            <kbq-tab label="DoS" />
+        </kbq-tab-group>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TabsDisabledExample {}

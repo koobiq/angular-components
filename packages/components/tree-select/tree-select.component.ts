@@ -1,7 +1,8 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkConnectedOverlay, ConnectedPosition, ViewportRuler } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, ViewportRuler } from '@angular/cdk/overlay';
+import { _getEventTarget } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -14,6 +15,7 @@ import {
     ElementRef,
     EventEmitter,
     Inject,
+    InjectionToken,
     Input,
     NgZone,
     OnChanges,
@@ -21,6 +23,7 @@ import {
     OnInit,
     Optional,
     Output,
+    Provider,
     QueryList,
     Renderer2,
     Self,
@@ -83,11 +86,38 @@ import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take } 
 
 let nextUniqueId = 0;
 
-export interface ITriggerValue {
+/** Tree select trigger value type. */
+export type KbqTreeSelectTriggerValue = {
     disabled: boolean;
     value: string;
     viewValue: string;
-}
+};
+
+/** @deprecated Will be removed in the next major release, use `KbqTreeSelectTriggerValue` instead */
+export interface ITriggerValue extends KbqTreeSelectTriggerValue {}
+
+/** Tree select panel width type. */
+export type KbqTreeSelectPanelWidth = 'auto' | number | null;
+
+/** Options for the `kbq-tree-select` that can be configured using the `KBQ_TREE_SELECT_OPTIONS` injection token. */
+export type KbqTreeSelectOptions = Partial<{
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width.
+     * If set to null or an empty string, the panel will grow to match the longest option's text.
+     */
+    panelWidth: KbqTreeSelectPanelWidth;
+}>;
+
+/** Injection token that can be used to provide the default options for the `kbq-tree-select`. */
+export const KBQ_TREE_SELECT_OPTIONS = new InjectionToken<KbqTreeSelectOptions>('KBQ_TREE_SELECT_OPTIONS');
+
+/** Utility provider for `KBQ_TREE_SELECT_OPTIONS`. */
+export const kbqTreeSelectOptionsProvider = (options: KbqTreeSelectOptions): Provider => {
+    return {
+        provide: KBQ_TREE_SELECT_OPTIONS,
+        useValue: options
+    };
+};
 
 /** Change event object that is emitted when the select value has changed. */
 export class KbqTreeSelectChange {
@@ -166,6 +196,8 @@ export class KbqTreeSelect
         KbqFormFieldControl<KbqTreeOption>,
         CanUpdateErrorState
 {
+    private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
+
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
 
@@ -447,6 +479,24 @@ export class KbqTreeSelect
 
     private _focused = false;
 
+    /** Width of the overlay panel. */
+    protected overlayWidth: string | number;
+
+    /** Min width of the overlay panel. */
+    protected overlayMinWidth: string | number;
+
+    /** Overlay panel class. */
+    protected readonly overlayPanelClass = 'kbq-select-overlay';
+
+    /** Origin for the overlay panel. */
+    protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
+
+    /**
+     * Width of the panel. If set to `auto`, the panel will match the trigger width.
+     * If set to null or an empty string, the panel will grow to match the longest option's text.
+     */
+    @Input() panelWidth: KbqTreeSelectPanelWidth = this.defaultOptions?.panelWidth || null;
+
     get panelOpen(): boolean {
         return this._panelOpen;
     }
@@ -457,7 +507,7 @@ export class KbqTreeSelect
 
     isEmptySearchResult: boolean;
 
-    triggerValues: ITriggerValue[] = [];
+    triggerValues: KbqTreeSelectTriggerValue[] = [];
 
     private closeSubscription = Subscription.EMPTY;
 
@@ -469,7 +519,7 @@ export class KbqTreeSelect
     private scrollTop = 0;
 
     /** Unique id for this input. */
-    private readonly uid = `kbq-select-${nextUniqueId++}`;
+    private readonly uid = `kbq-tree-select-${nextUniqueId++}`;
 
     // Used for storing the values that were assigned before the options were initialized.
     private tempValues: string | string[] | null;
@@ -669,6 +719,16 @@ export class KbqTreeSelect
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
         this.triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement)['font-size']);
+
+        // It's important that we read this as late as possible, because doing so earlier will
+        // return a different element since it's based on queries in the form field which may
+        // not have run yet. Also this needs to be assigned before we measure the overlay width.
+        if (this.parentFormField) {
+            this.overlayOrigin = this.parentFormField.getConnectedOverlayOrigin();
+        }
+
+        this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
+        this.overlayMinWidth = this.overlayWidth ? '' : this.triggerRect.width;
 
         this._panelOpen = true;
 
@@ -918,7 +978,7 @@ export class KbqTreeSelect
         const backdrop = this.overlayDir.overlayRef!.backdropClick();
         const outsidePointerEvents = this.overlayDir
             .overlayRef!.outsidePointerEvents()
-            .pipe(filter((event) => !this.elementRef.nativeElement.contains(event.target)));
+            .pipe(filter((event) => !this.elementRef.nativeElement.contains(_getEventTarget(event))));
         const detachments = this.overlayDir.overlayRef!.detachments();
 
         return merge(backdrop, outsidePointerEvents, detachments);
@@ -955,6 +1015,15 @@ export class KbqTreeSelect
         triggerClone.remove();
 
         return [totalVisibleItemsWidth, visibleItemsCount];
+    }
+
+    /** Gets how wide the overlay panel should be. */
+    private getOverlayWidth(origin?: ElementRef | CdkOverlayOrigin): string | number {
+        if (this.panelWidth === 'auto') {
+            const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
+            return elementRef.nativeElement.getBoundingClientRect().width;
+        }
+        return this.panelWidth ?? '';
     }
 
     private buildTriggerClone(): HTMLDivElement {

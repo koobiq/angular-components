@@ -1,9 +1,8 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
-    Attribute,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -29,34 +28,30 @@ import { KbqTabHeader } from './tab-header.component';
 import { KbqTab } from './tab.component';
 
 @Directive({
-    selector: 'kbq-tab-group[kbq-align-tabs-center], [kbq-tab-nav-bar][kbq-align-tabs-center]',
+    selector:
+        'kbq-tab-group[kbq-align-tabs-center], [kbq-tab-nav-bar][kbq-align-tabs-center], [kbqTabNavBar][kbq-align-tabs-center]',
     host: { class: 'kbq-tab-group_align-labels-center' }
 })
 export class KbqAlignTabsCenterCssStyler {}
 
 @Directive({
-    selector: 'kbq-tab-group[kbq-align-tabs-end], [kbq-tab-nav-bar][kbq-align-tabs-end]',
+    selector:
+        'kbq-tab-group[kbq-align-tabs-end], [kbq-tab-nav-bar][kbq-align-tabs-end], [kbqTabNavBar][kbq-align-tabs-end]',
     host: { class: 'kbq-tab-group_align-labels-end' }
 })
 export class KbqAlignTabsEndCssStyler {}
 
 @Directive({
-    selector: 'kbq-tab-group[kbq-stretch-tabs], [kbq-tab-nav-bar][kbq-stretch-tabs]',
+    selector: 'kbq-tab-group[kbq-stretch-tabs], [kbq-tab-nav-bar][kbq-stretch-tabs], [kbqTabNavBar][kbq-stretch-tabs]',
     host: { class: 'kbq-tab-group_stretch-labels' }
 })
 export class KbqStretchTabsCssStyler {}
 
 @Directive({
-    selector: 'kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical]',
+    selector: 'kbq-tab-group[vertical], [kbq-tab-nav-bar][vertical], [kbqTabNavBar][vertical]',
     host: { class: 'kbq-tab-group_vertical' }
 })
 export class KbqVerticalTabsCssStyler {}
-
-@Directive({
-    selector: 'kbq-tab-group[underlined], [kbq-tab-nav-bar][underlined]',
-    host: { class: 'kbq-tab-group_underlined' }
-})
-export class KbqUnderlinedTabsCssStyler {}
 
 /** Used to generate unique ID's for each tab component */
 let nextId = 0;
@@ -73,34 +68,31 @@ export class KbqTabChangeEvent {
 export type KbqTabHeaderPosition = 'above' | 'below';
 
 /** Object that can be used to configure the default options for the tabs module. */
-export interface IKbqTabsConfig {
+export interface KbqTabsConfig {
     /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
     animationDuration?: string;
 }
 
 /** Injection token that can be used to provide the default options the tabs module. */
-export const KBQ_TABS_CONFIG = new InjectionToken<string>('KBQ_TABS_CONFIG');
+export const KBQ_TABS_CONFIG = new InjectionToken<KbqTabsConfig>('KBQ_TABS_CONFIG');
 
 // Boilerplate for applying mixins to KbqTabGroup.
-/** @docs-private */
-export class KbqTabGroupBase {
+class KbqTabGroupBase {
     constructor(public elementRef: ElementRef) {}
 }
 
-/** @docs-private */
-export const KbqTabGroupMixinBase: CanDisableCtor & typeof KbqTabGroupBase = mixinDisabled(KbqTabGroupBase);
+const KbqTabGroupMixinBase: CanDisableCtor & typeof KbqTabGroupBase = mixinDisabled(KbqTabGroupBase);
 
 export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | null);
 
 /**
- * Tab-group component.  Supports basic tab pairs (label + content) and includes
- * keyboard navigation.
+ * Tab-group component.  Supports basic tab pairs (label + content) and includes keyboard navigation.
  */
 @Component({
     selector: 'kbq-tab-group',
     exportAs: 'kbqTabGroup',
-    templateUrl: 'tab-group.html',
-    styleUrls: ['tab-group.scss', 'tabs-tokens.scss'],
+    templateUrl: './tab-group.html',
+    styleUrls: ['./tab-group.scss', './tabs-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     inputs: ['disabled'],
@@ -122,29 +114,19 @@ export class KbqTabGroup
 {
     readonly resizeStream = new Subject<Event>();
 
-    vertical: boolean;
-    underlined: boolean;
-
     @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
 
     @ViewChild('tabBodyWrapper', { static: false }) tabBodyWrapper: ElementRef;
 
     @ViewChild('tabHeader', { static: false }) tabHeader: KbqTabHeader;
 
-    @Input() transparent: boolean = false;
-    @Input() onSurface: boolean = false;
+    @Input({ transform: booleanAttribute }) transparent: boolean = false;
+    @Input({ transform: booleanAttribute }) onSurface: boolean = false;
+    @Input({ transform: booleanAttribute }) underlined: boolean = false;
+    @Input({ transform: booleanAttribute }) vertical: boolean = false;
 
     /** Whether the tab group should grow to the size of the active tab. */
-    @Input()
-    get dynamicHeight(): boolean {
-        return this._dynamicHeight;
-    }
-
-    set dynamicHeight(value: boolean) {
-        this._dynamicHeight = coerceBooleanProperty(value);
-    }
-
-    private _dynamicHeight = false;
+    @Input({ transform: booleanAttribute }) dynamicHeight: boolean = false;
 
     /** The index of the active tab. */
     @Input()
@@ -221,14 +203,9 @@ export class KbqTabGroup
     constructor(
         elementRef: ElementRef,
         private readonly changeDetectorRef: ChangeDetectorRef,
-        @Attribute('vertical') vertical: string,
-        @Attribute('underlined') underlined: string,
-        @Inject(KBQ_TABS_CONFIG) @Optional() defaultConfig?: IKbqTabsConfig
+        @Inject(KBQ_TABS_CONFIG) @Optional() defaultConfig?: KbqTabsConfig
     ) {
         super(elementRef);
-
-        this.vertical = coerceBooleanProperty(vertical);
-        this.underlined = coerceBooleanProperty(underlined);
 
         this.groupId = nextId++;
         this.animationDuration = defaultConfig?.animationDuration || '0ms';
@@ -352,7 +329,7 @@ export class KbqTabGroup
      * height property is true.
      */
     setTabBodyWrapperHeight(tabHeight: number): void {
-        if (!this._dynamicHeight || !this.tabBodyWrapperHeight) {
+        if (!this.dynamicHeight || !this.tabBodyWrapperHeight) {
             return;
         }
 

@@ -11,12 +11,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
     template: `
         <div style="padding: 16px">
             Обратитесь
-            <a
-                href="#"
-                kbq-link
-            >
-                в Центр технической поддержки
-            </a>
+            <a href="#" kbq-link>в Центр технической поддержки</a>
         </div>
     `
 })

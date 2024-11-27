@@ -32,22 +32,14 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="value"
-                [disabled]="disabled"
-                kbqInputPassword
-            />
+            <input [(ngModel)]="value" [disabled]="disabled" kbqInputPassword />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipDisabled]="disabled"
                 [kbqTooltipHidden]="'Показать пароль'"
             />
 
-            <kbq-password-hint
-                [rule]="passwordRules.Length"
-                [min]="8"
-                [max]="64"
-            >
+            <kbq-password-hint [rule]="passwordRules.Length" [min]="8" [max]="64">
                 От 8 до 64 символов
             </kbq-password-hint>
 
@@ -73,20 +65,10 @@ class KbqPasswordInputDefault {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="value"
-                kbqInputPassword
-            />
-            <kbq-password-toggle
-                [kbqTooltipNotHidden]="'Скрыть пароль'"
-                [kbqTooltipHidden]="'Показать пароль'"
-            />
+            <input [(ngModel)]="value" kbqInputPassword />
+            <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'" [kbqTooltipHidden]="'Показать пароль'" />
 
-            <kbq-password-hint
-                [rule]="passwordRules.Custom"
-                [regex]="regex"
-                [checkRule]="checkFunc"
-            >
+            <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>
@@ -102,21 +84,10 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
 @Component({
     template: `
         <kbq-form-field>
-            <input
-                [(ngModel)]="value"
-                [disabled]="disabled"
-                kbqInputPassword
-            />
-            <kbq-password-toggle
-                [kbqTooltipNotHidden]="'Скрыть пароль'"
-                [kbqTooltipHidden]="'Показать пароль'"
-            />
+            <input [(ngModel)]="value" [disabled]="disabled" kbqInputPassword />
+            <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'" [kbqTooltipHidden]="'Показать пароль'" />
 
-            <kbq-password-hint
-                [rule]="passwordRules.Custom"
-                [regex]="regex"
-                [checkRule]="checkFunc"
-            >
+            <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
                 Не менее 5 букв
             </kbq-password-hint>
         </kbq-form-field>

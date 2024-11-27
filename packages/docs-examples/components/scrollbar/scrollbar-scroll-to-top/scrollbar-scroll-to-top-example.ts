@@ -13,11 +13,7 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
         KbqButtonModule
     ],
     template: `
-        <kbq-scrollbar
-            #scrollbarRef="kbqScrollbar"
-            (onScroll)="onScroll($event)"
-            style="width: 200px; height: 200px;"
-        >
+        <kbq-scrollbar #scrollbarRef="kbqScrollbar" (onScroll)="onScroll($event)" style="width: 200px; height: 200px;">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />

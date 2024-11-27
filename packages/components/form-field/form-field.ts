@@ -227,7 +227,7 @@ export class KbqFormField
     }
 
     onContainerClick($event) {
-        if (this.control.onContainerClick) {
+        if (this.control?.onContainerClick) {
             this.control.onContainerClick($event);
         }
     }

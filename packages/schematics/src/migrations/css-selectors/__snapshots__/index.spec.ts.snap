@@ -4,9 +4,9 @@ exports[`css-selectors should inform about deprecated colors in the file 1`] = `
 [
   "
 -------------------------
-Please pay attention! Found deprecated сss-selectors in file: 
+Please pay attention! Found deprecated сss-selectors in file:
 ../../../../../projects/app/src/styles.scss
-Replace with specified rules: 
+Replace with specified rules:
 	neutral-white -> 	<remove from project>
 	brand-default -> 	<remove from project>
 	brand-palette -> 	<remove from project>
@@ -38,9 +38,9 @@ Replace with specified rules:
     ",
   "
 -------------------------
-Please pay attention! Found deprecated сss-selectors in file: 
+Please pay attention! Found deprecated сss-selectors in file:
 ../../../../../projects/app/src/app/app.component.html
-Replace with specified rules: 
+Replace with specified rules:
 	neutral-white -> 	<remove from project>
 	brand-default -> 	<remove from project>
 	brand-palette -> 	<remove from project>
@@ -77,9 +77,9 @@ exports[`css-selectors should inform about deprecated selectors for fix = false 
 [
   "
 -------------------------
-Please pay attention! Found deprecated сss-selectors in file: 
+Please pay attention! Found deprecated сss-selectors in file:
 ../../../../../projects/app/src/styles.scss
-Replace with specified rules: 
+Replace with specified rules:
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong
 	kbq-display-3-strong -> 	kbq-display-compact-strong
@@ -111,9 +111,9 @@ Pay attention: overwriting is possible. Check the code after automatic replaceme
     ",
   "
 -------------------------
-Please pay attention! Found deprecated сss-selectors in file: 
+Please pay attention! Found deprecated сss-selectors in file:
 ../../../../../projects/app/src/app/app.component.html
-Replace with specified rules: 
+Replace with specified rules:
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong
 	kbq-display-3-strong -> 	kbq-display-compact-strong
@@ -145,9 +145,9 @@ Pay attention: overwriting is possible. Check the code after automatic replaceme
     ",
   "
 -------------------------
-Please pay attention! Found deprecated сss-selectors in file: 
+Please pay attention! Found deprecated сss-selectors in file:
 ../../../../../projects/app/src/app/app.component.ts
-Replace with specified rules: 
+Replace with specified rules:
 	kbq-display-1-strong -> 	kbq-display-big-strong
 	kbq-display-2-strong -> 	kbq-display-normal-strong
 	kbq-display-3-strong -> 	kbq-display-compact-strong

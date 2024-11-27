@@ -13,18 +13,11 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
     ],
     template: `
         <div class="layout-row">
-            <kbq-progress-spinner
-                class="layout-margin-right-s"
-                [mode]="'indeterminate'"
-            />
+            <kbq-progress-spinner class="layout-margin-right-s" [mode]="'indeterminate'" />
         </div>
 
         <div class="layout-row">
-            <kbq-progress-spinner
-                class="layout-margin-right-s"
-                [mode]="'indeterminate'"
-                [size]="'big'"
-            />
+            <kbq-progress-spinner class="layout-margin-right-s" [mode]="'indeterminate'" [size]="'big'" />
         </div>
     `
 })

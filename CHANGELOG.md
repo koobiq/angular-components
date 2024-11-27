@@ -1,3 +1,19 @@
+# 18.8.0 (2024-11-26)
+
+### Koobiq
+
+ * bug fix  **chore,schematics:** schematics bundle imports ([#449](https://github.com/koobiq/angular-components/issues/449)) ([1513ea4](https://github.com/koobiq/angular-components/commit/1513ea46a0727fb1ade0027649603f527fe1f418))
+ * bug fix  **chore:** updated date-related packages versions ([#DS-3128](https://github.com/koobiq/angular-components/issues/issue/DS-3128)) ([#448](https://github.com/koobiq/angular-components/issues/448)) ([0473a4b](https://github.com/koobiq/angular-components/commit/0473a4b0f816a1e588c404ff554ec9f843c61f4c))
+ * bug fix  **common:** unable to get overlay element in shadowRoot ([#DS-3157](https://github.com/koobiq/angular-components/issues/issue/DS-3157)) ([#450](https://github.com/koobiq/angular-components/issues/450)) ([ab6eec4](https://github.com/koobiq/angular-components/commit/ab6eec480c300464fc152d7e6f264399261e28b8))
+ * feature  **tabs:** added pagination for KbqTabNavBar ([#DS-3105](https://github.com/koobiq/angular-components/issues/issue/DS-3105)) ([#431](https://github.com/koobiq/angular-components/issues/431)) ([c2c8e30](https://github.com/koobiq/angular-components/commit/c2c8e30cbd96f9d57e2c13af67044e360bd4c0bd))
+
+# 18.7.0 (2024-11-21)
+
+### Koobiq
+
+ * bug fix  **docs:** missing icon in "badge content" example ([#444](https://github.com/koobiq/angular-components/issues/444)) ([324d70b](https://github.com/koobiq/angular-components/commit/324d70b5841cfc909b4e9f2c7c67691967d12200))
+ * feature  **schematics:** added migration script for product-icons ([#DS-3124](https://github.com/koobiq/angular-components/issues/issue/DS-3124)) ([#434](https://github.com/koobiq/angular-components/issues/434)) ([375b676](https://github.com/koobiq/angular-components/commit/375b6766d05fade6108affb9a08b6da7be2fbd33))
+
 # 18.6.0 (2024-11-20)
 
 ### Koobiq

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -9,14 +9,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
     standalone: true,
     selector: 'select-groups-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select>
+            <kbq-select [(value)]="pokemonTypes[0].pokemon[0].value">
                 @for (group of pokemonTypes; track group) {
-                    <kbq-optgroup
-                        [disabled]="group.disabled"
-                        [label]="group.name"
-                    >
+                    <kbq-optgroup [disabled]="group.disabled" [label]="group.name">
                         @for (pokemon of group.pokemon; track pokemon) {
                             <kbq-option [value]="pokemon.value">
                                 {{ pokemon.viewValue }}
@@ -27,6 +25,17 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 <kbq-option [value]="'mime-11'">Mr. Mime</kbq-option>
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field {
+            width: 320px;
+        }
     `
 })
 export class SelectGroupsExample {

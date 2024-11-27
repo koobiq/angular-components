@@ -1,5 +1,6 @@
 const { access, copyFile, mkdir } = require('fs/promises');
 const { resolve, join } = require('path');
+const { getMigrations } = require('../src/utils/migrations');
 
 const resolvePath = (...segments) => resolve(__dirname, ...segments);
 
@@ -24,34 +25,33 @@ const init = async () => {
     const distCLIPath = resolvePath('../../../dist/components');
     const schematicsPath = join(distCLIPath, 'schematics');
     const ngAddPath = join(schematicsPath, 'ng-add');
-    const newIconsPackPath = join(schematicsPath, 'new-icons-pack');
-    const cssSelectorsPath = join(schematicsPath, 'migrations', 'css-selectors');
     const utilsPath = join(schematicsPath, 'utils');
 
     // Ensure directories exist
     await ensureDirectoryExistence(distCLIPath);
     await ensureDirectoryExistence(schematicsPath);
     await ensureDirectoryExistence(ngAddPath);
-    await ensureDirectoryExistence(newIconsPackPath);
     await ensureDirectoryExistence(utilsPath);
-    await ensureDirectoryExistence(cssSelectorsPath);
 
     // Copy files
     await copyFileWrapper(resolvePath('../dist/ng-add/index.js'), join(ngAddPath, 'index.js'));
     await copyFileWrapper(resolvePath('../src/ng-add/schema.json'), join(ngAddPath, 'schema.json'));
     await copyFileWrapper(resolvePath('../src/collection.json'), join(schematicsPath, 'collection.json'));
 
-    await copyFileWrapper(resolvePath('../dist/new-icons-pack/index.js'), join(newIconsPackPath, 'index.js'));
-    await copyFileWrapper(resolvePath('../dist/new-icons-pack/data.js'), join(newIconsPackPath, 'data.js'));
-    await copyFileWrapper(resolvePath('../src/new-icons-pack/schema.json'), join(newIconsPackPath, 'schema.json'));
-    await copyFileWrapper(resolvePath('../dist/migrations/css-selectors/index.js'), join(cssSelectorsPath, 'index.js'));
-    await copyFileWrapper(resolvePath('../dist/migrations/css-selectors/data.js'), join(cssSelectorsPath, 'data.js'));
-    await copyFileWrapper(
-        resolvePath('../src/migrations/css-selectors/schema.json'),
-        join(cssSelectorsPath, 'schema.json')
-    );
+    for (const migration of getMigrations()) {
+        const migrationPath = join(schematicsPath, 'migrations', migration);
+        await ensureDirectoryExistence(migrationPath);
+
+        await copyFileWrapper(
+            resolvePath(`../src/migrations/${migration}/schema.json`),
+            join(migrationPath, 'schema.json')
+        );
+        await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/index.js`), join(migrationPath, 'index.js'));
+        await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/data.js`), join(migrationPath, 'data.js'));
+    }
 
     await copyFileWrapper(resolvePath('../dist/utils/package-config.js'), join(utilsPath, 'package-config.js'));
+    await copyFileWrapper(resolvePath('../dist/utils/messages.js'), join(utilsPath, 'messages.js'));
 };
 
 init().catch((error) => console.error(`Failed to initialize directories and copy files: ${error.message}`));

@@ -493,10 +493,7 @@ describe('KbqToggle', () => {
 
 @Component({
     template: `
-        <div
-            (click)="parentElementClicked = true"
-            (keyup)="parentElementKeyedUp = true"
-        >
+        <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
             <kbq-toggle
                 [id]="toggleId"
                 [labelPosition]="labelPos"
@@ -527,12 +524,7 @@ class SingleToggle {
 @Component({
     template: `
         <form>
-            <kbq-toggle
-                [(ngModel)]="isGood"
-                name="cb"
-            >
-                Be good
-            </kbq-toggle>
+            <kbq-toggle [(ngModel)]="isGood" name="cb">Be good</kbq-toggle>
         </form>
     `
 })
@@ -550,10 +542,7 @@ class MultipleToggles {}
 
 @Component({
     template: `
-        <kbq-toggle
-            [tabIndex]="customTabIndex"
-            [disabled]="isDisabled"
-        />
+        <kbq-toggle [tabIndex]="customTabIndex" [disabled]="isDisabled" />
     `
 })
 class ToggleWithTabIndex {

@@ -21,13 +21,7 @@
                 <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
                 <span class="dropzone__text multiple__caption">
                     {{ separatedCaptionTextForCompactSize[0] }}
-                    <label
-                        kbq-link
-                        pseudo
-                        [disabled]="disabled"
-                        [for]="inputId"
-                        [tabIndex]="-1"
-                    >
+                    <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
                         {{ config.browseLink }}
                         <ng-container *ngTemplateOutlet="inputTemplate" />
                     </label>
@@ -47,10 +41,7 @@
                         }
                     </div>
                 </div>
-                <kbq-list-selection
-                    [autoSelect]="false"
-                    [disabled]="disabled"
-                >
+                <kbq-list-selection [autoSelect]="false" [disabled]="disabled">
                     @for (file of files; track file; let index = $index) {
                         <kbq-list-option
                             class="multiple__uploaded-item"
@@ -58,10 +49,7 @@
                             (keydown.backspace)="deleteFile(index)"
                             (keydown.delete)="deleteFile(index)"
                         >
-                            <div
-                                class="kbq-file-upload__row"
-                                [class.error]="file.hasError"
-                            >
+                            <div class="kbq-file-upload__row" [class.error]="file.hasError">
                                 <div class="kbq-file-upload__file">
                                     @if (
                                         { loading: file.loading | async, progress: file.progress | async };
@@ -89,10 +77,7 @@
                                 </div>
                                 <div class="kbq-file-upload__size">{{ file.file.size | kbqDataSize }}</div>
                                 <div class="kbq-file-upload__action">
-                                    <i
-                                        kbq-icon-button="kbq-xmark-circle_16"
-                                        (click)="deleteFile(index, $event)"
-                                    ></i>
+                                    <i kbq-icon-button="kbq-xmark-circle_16" (click)="deleteFile(index, $event)"></i>
                                 </div>
                             </div>
                         </kbq-list-option>
@@ -104,13 +89,7 @@
                     <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
                     <span class="dropzone__text multiple__caption">
                         {{ separatedCaptionTextWhenSelected[0] }}
-                        <label
-                            kbq-link
-                            pseudo
-                            [disabled]="disabled"
-                            [for]="inputId"
-                            [tabIndex]="-1"
-                        >
+                        <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
                             {{ config.browseLink }}
                             <ng-container *ngTemplateOutlet="inputTemplate" />
                         </label>

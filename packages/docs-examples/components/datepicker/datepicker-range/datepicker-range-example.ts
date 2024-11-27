@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -16,7 +16,8 @@ import { DateTime } from 'luxon';
         KbqDatepickerModule,
         KbqFormFieldModule,
         KbqIconModule,
-        LuxonDateModule
+        LuxonDateModule,
+        KbqFormsModule
     ],
     template: `
         <div class="docs-example__datepicker-range">
@@ -30,22 +31,13 @@ import { DateTime } from 'luxon';
                             style="width: 136px"
                         >
                             <input [kbqDatepicker]="datepicker" />
-                            <i
-                                kbq-icon="kbq-calendar-o_16"
-                                kbqSuffix
-                            ></i>
+                            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
-                        <kbq-form-field
-                            (click)="datepicker2.toggle()"
-                            style="width: 136px"
-                        >
+                        <kbq-form-field (click)="datepicker2.toggle()" style="width: 136px">
                             <input [kbqDatepicker]="datepicker2" />
-                            <i
-                                kbq-icon="kbq-calendar-o_16"
-                                kbqSuffix
-                            ></i>
+                            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                             <kbq-datepicker #datepicker2 />
                         </kbq-form-field>
                     </div>

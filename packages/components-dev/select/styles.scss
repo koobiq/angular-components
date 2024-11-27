@@ -1,13 +1,21 @@
 @use '../main';
 
+app {
+    display: block;
+    width: 400px;
+}
+
+hr {
+    margin: var(--kbq-size-xl) 0;
+}
+
 .dev-container {
     max-width: 400px;
-
-    border: 1px solid red;
-
-    padding: 24px;
+    border: 1px solid cyan;
+    padding: var(--kbq-size-xxl);
+    margin-bottom: var(--kbq-size-xl);
 }
 
 .kbq-select__footer_icon {
-    padding-left: 4px;
+    padding-left: var(--kbq-size-xxs);
 }

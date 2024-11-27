@@ -38,10 +38,7 @@
 Для отображения определенного по завершенности прогресса:
 
 ```html
-<kbq-progress-bar
-    [mode]="'determinate'"
-    [value]="30"
-></kbq-progress-bar>
+<kbq-progress-bar [mode]="'determinate'" [value]="30"></kbq-progress-bar>
 ```
 
 <!-- example(progress-bar-indeterminate) -->

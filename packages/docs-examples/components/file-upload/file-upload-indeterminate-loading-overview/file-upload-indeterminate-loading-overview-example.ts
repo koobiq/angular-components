@@ -13,18 +13,11 @@ import { take } from 'rxjs/operators';
         KbqFileUploadModule
     ],
     template: `
-        <kbq-file-upload
-            (fileQueueChange)="onFileChange($event)"
-            progressMode="indeterminate"
-        >
+        <kbq-file-upload (fileQueueChange)="onFileChange($event)" progressMode="indeterminate">
             <i kbq-icon="kbq-file-o_16"></i>
         </kbq-file-upload>
 
-        <kbq-file-upload
-            (fileQueueChanged)="onFilesChange($event)"
-            multiple
-            progressMode="indeterminate"
-        >
+        <kbq-file-upload (fileQueueChanged)="onFilesChange($event)" multiple progressMode="indeterminate">
             <i kbq-icon="kbq-file-o_16"></i>
         </kbq-file-upload>
 

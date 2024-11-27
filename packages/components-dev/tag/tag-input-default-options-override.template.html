@@ -2,15 +2,9 @@
 <kbq-form-field>
     <kbq-tag-list #inputTagList>
         @for (tag of inputTags; track tag) {
-            <kbq-tag
-                [value]="tag"
-                (removed)="inputOnRemoveTag(tag)"
-            >
+            <kbq-tag [value]="tag" (removed)="inputOnRemoveTag(tag)">
                 {{ tag }}
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
             </kbq-tag>
         }
 
@@ -31,15 +25,9 @@
 <kbq-form-field>
     <kbq-tag-list #autocompleteTagList>
         @for (tag of autocompleteSelectedTags; track tag) {
-            <kbq-tag
-                [value]="tag"
-                (removed)="autocompleteOnRemove(tag)"
-            >
+            <kbq-tag [value]="tag" (removed)="autocompleteOnRemove(tag)">
                 {{ tag }}
-                <i
-                    kbq-icon="kbq-xmark-s_16"
-                    kbqTagRemove
-                ></i>
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
             </kbq-tag>
         }
         <input
@@ -54,10 +42,7 @@
             (kbqTagInputTokenEnd)="autocompleteOnCreate($event)"
         />
     </kbq-tag-list>
-    <kbq-autocomplete
-        #autocomplete
-        (optionSelected)="autocompleteOnSelect($event)"
-    >
+    <kbq-autocomplete #autocomplete (optionSelected)="autocompleteOnSelect($event)">
         @if (canCreate) {
             <kbq-option [value]="{ new: true, value: autocompleteTagInput.value }">
                 Создать: {{ autocompleteTagInput.value }}

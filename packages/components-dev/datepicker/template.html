@@ -1,9 +1,6 @@
 <div>Validation state: {{ formControlValue.errors | json }}</div>
 
-<kbq-radio-group
-    class="example-radio-group"
-    (change)="setFormat($event)"
->
+<kbq-radio-group class="example-radio-group" (change)="setFormat($event)">
     @for (language of languageList; track language) {
         <kbq-radio-button
             class="example-radio-button"
@@ -26,11 +23,7 @@
 
 <div class="container">
     <label>Default datepicker toggle</label>
-    <kbq-form-field
-        #tooltip="kbqWarningTooltip"
-        [kbqWarningTooltip]="'Только цифры'"
-        (click)="myDatepicker1.toggle()"
-    >
+    <kbq-form-field #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="'Только цифры'" (click)="myDatepicker1.toggle()">
         <input
             [kbqDatepicker]="myDatepicker1"
             [kbqValidationTooltip]="tooltip"
@@ -41,16 +34,8 @@
             (dateInput)="onDateInput()"
         />
         <!--        <kbq-datepicker-toggle [tabIndex]="7" kbqSuffix [for]="myDatepicker1"></kbq-datepicker-toggle>-->
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-        ></i>
-        <kbq-datepicker
-            #myDatepicker1
-            [maxDate]="maxDate"
-            [minDate]="minDate"
-            [startAt]="startAt"
-        />
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+        <kbq-datepicker #myDatepicker1 [maxDate]="maxDate" [minDate]="minDate" [startAt]="startAt" />
     </kbq-form-field>
 
     <br />
@@ -58,26 +43,14 @@
 
     <label>Datepicker toggle with custom icon</label>
     <kbq-form-field (click)="myDatepicker2.toggle()">
-        <input
-            [kbqDatepicker]="myDatepicker2"
-            [(ngModel)]="date"
-        />
-        <i
-            kbq-icon="kbq-calendar-o_16"
-            kbqSuffix
-        ></i>
+        <input [kbqDatepicker]="myDatepicker2" [(ngModel)]="date" />
+        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
         <kbq-datepicker #myDatepicker2 />
     </kbq-form-field>
 
     <kbq-form-field>
-        <i
-            kbq-icon="kbq-clock_16"
-            kbqPrefix
-        ></i>
-        <input
-            kbqTimepicker
-            [(ngModel)]="date"
-        />
+        <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+        <input kbqTimepicker [(ngModel)]="date" />
     </kbq-form-field>
 
     <!--    <br/><br/>-->

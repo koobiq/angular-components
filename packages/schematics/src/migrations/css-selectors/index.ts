@@ -68,12 +68,12 @@ export default function cssSelectors(options: Schema): Rule {
 }
 
 function getBaseReplacements(filePath: Path, foundSelectors: ReplaceData[]) {
-    const parsedFilePath = path.relative(__dirname, `.${filePath}`);
+    const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
     return `
 -------------------------
-Please pay attention! Found deprecated сss-selectors in file: 
-${parsedFilePath.replace(/\\/g, '/')}
-Replace with specified rules: 
+Please pay attention! Found deprecated сss-selectors in file:
+${parsedFilePath}
+Replace with specified rules:
 ${foundSelectors.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')}
 -------------------------
     `;

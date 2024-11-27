@@ -1,0 +1,41 @@
+<div class="layout-row example-row">
+    <div class="kbq-form__label">Для селекта</div>
+    <kbq-form-field>
+        <kbq-select [disabled]="true" [placeholder]="'Город'" [(value)]="selectedDisabled">
+            @for (option of options; track option) {
+                <kbq-option [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
+        </kbq-select>
+    </kbq-form-field>
+</div>
+<div class="layout-row example-row">
+    <div class="kbq-form__label">Для значений</div>
+    <kbq-form-field>
+        <kbq-select [placeholder]="'Город'" [(value)]="selected">
+            @for (option of options; track option; let i = $index) {
+                <kbq-option [disabled]="i % 2 !== 0" [value]="option">
+                    <span [innerHTML]="option"></span>
+                </kbq-option>
+            }
+        </kbq-select>
+    </kbq-form-field>
+</div>
+<div class="layout-row example-row">
+    <div class="kbq-form__label">Для групп</div>
+    <kbq-form-field>
+        <kbq-select [value]="pokemonTypes[0].pokemon[0].value">
+            @for (group of pokemonTypes; track group) {
+                <kbq-optgroup [disabled]="group.disabled" [label]="group.name">
+                    @for (pokemon of group.pokemon; track pokemon) {
+                        <kbq-option [value]="pokemon.value">
+                            {{ pokemon.viewValue }}
+                        </kbq-option>
+                    }
+                </kbq-optgroup>
+            }
+            <kbq-option [value]="'mime-11'">Mr. Mime</kbq-option>
+        </kbq-select>
+    </kbq-form-field>
+</div>

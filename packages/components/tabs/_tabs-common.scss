@@ -1,4 +1,5 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
+@use '../core/styles/common/vendor-prefixes';
 
 @mixin tab-label {
     position: relative;
@@ -14,11 +15,11 @@
 
     cursor: pointer;
 
-    padding: kbq-difference-series-css-variables(
+    padding: tokens.kbq-difference-series-css-variables(
             [tabs-size-tab-item-padding-vertical,
             tabs-size-tab-item-focus-outline-width]
         )
-        kbq-difference-series-css-variables(
+        tokens.kbq-difference-series-css-variables(
             [tabs-size-tab-item-padding-horizontal,
             tabs-size-tab-item-focus-outline-width]
         );
@@ -38,14 +39,14 @@
     }
 
     &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-left {
-        padding-left: kbq-difference-series-css-variables(
+        padding-left: tokens.kbq-difference-series-css-variables(
             [tabs-size-tab-item-padding-horizontal,
             tabs-size-tab-item-focus-outline-width]
         );
     }
 
     &.kbq-tab-label_underlined:not(.kbq-tab-label_vertical).kbq-tab-label_with-icon-right {
-        padding-right: kbq-difference-series-css-variables(
+        padding-right: tokens.kbq-difference-series-css-variables(
             [tabs-size-tab-item-padding-horizontal,
             tabs-size-tab-item-focus-outline-width]
         );
@@ -87,6 +88,27 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+        }
+    }
+}
+
+// Common styles for paginated tabs, used by `.kbq-tab-header` and `.kbq-tab-nav-bar`
+@mixin paginated-tab-header {
+    .kbq-tab-header__pagination {
+        @include vendor-prefixes.user-select(none);
+
+        position: relative;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        z-index: 2;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: none;
+        padding: 0 var(--kbq-size-m);
+
+        .kbq-tab-header__pagination-controls_enabled & {
+            display: flex;
         }
     }
 }

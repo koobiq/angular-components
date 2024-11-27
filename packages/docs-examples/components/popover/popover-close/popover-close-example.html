@@ -1,10 +1,5 @@
 <ng-template #customContent>
-    <h1
-        style="margin-top: 0"
-        class="kbq-headline"
-    >
-        Making hybrid‑remote inclusive with unique audio technology
-    </h1>
+    <h1 style="margin-top: 0" class="kbq-headline">Making hybrid‑remote inclusive with unique audio technology</h1>
     <p style="margin-top: 0">
         Traditional video conferencing can make remote colleagues feel like second-class citizens
     </p>
@@ -38,10 +33,7 @@
     <div class="popover-close-example__text">
         Give your teammates access to the project and start collaborating in real time
     </div>
-    <form
-        novalidate
-        class="kbq-form-vertical"
-    >
+    <form novalidate class="kbq-form-vertical">
         <div class="kbq-form__fieldset">
             <div class="kbq-form__label-wrapper">
                 <label class="kbq-form__label">Email</label>
@@ -49,20 +41,11 @@
             <div class="kbq-form__fieldset kbq-horizontal">
                 <div class="kbq-form__row">
                     <kbq-form-field class="kbq-form__control">
-                        <input
-                            kbqInput
-                            name="input"
-                        />
+                        <input kbqInput name="input" />
                     </kbq-form-field>
                 </div>
                 <div class="kbq-form__row">
-                    <button
-                        kbq-button
-                        [color]="'contrast'"
-                        (click)="kbqSharePopover.hide(0)"
-                    >
-                        Send invite
-                    </button>
+                    <button kbq-button [color]="'contrast'" (click)="kbqSharePopover.hide(0)">Send invite</button>
                 </div>
             </div>
         </div>
@@ -86,34 +69,19 @@
                     [kbqDropdownTriggerFor]="appDropdown"
                 >
                     {{ member.role }}
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        [color]="componentColors.Contrast"
-                    ></i>
+                    <i kbq-icon="kbq-chevron-down-s_16" [color]="componentColors.Contrast"></i>
                 </button>
             </div>
         }
-        <kbq-dropdown
-            #appDropdown="kbqDropdown"
-            [class]="'max-width'"
-            [navigationWithWrap]="true"
-        >
+        <kbq-dropdown #appDropdown="kbqDropdown" [class]="'max-width'" [navigationWithWrap]="true">
             <button kbq-dropdown-item>Editor</button>
             <button kbq-dropdown-item>Viewer</button>
         </kbq-dropdown>
     </div>
 </ng-template>
 
-<div
-    style="gap: 16px"
-    class="layout-row layout-wrap"
->
-    <button
-        kbq-button
-        kbqPopover
-        [hasCloseButton]="true"
-        [kbqPopoverContent]="customContent"
-    >
+<div style="gap: 16px" class="layout-row layout-wrap">
+    <button kbq-button kbqPopover [hasCloseButton]="true" [kbqPopoverContent]="customContent">
         Крестик в углу с большим заголовком
     </button>
     <button

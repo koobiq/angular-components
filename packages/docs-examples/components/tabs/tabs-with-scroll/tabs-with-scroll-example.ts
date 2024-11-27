@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 
 /**
@@ -7,26 +7,29 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 @Component({
     standalone: true,
     selector: 'tabs-with-scroll-example',
-    imports: [
-        KbqTabsModule
-    ],
+    imports: [KbqTabsModule],
     template: `
         <div class="tabs-with-scroll-example">
             <kbq-tab-group>
-                <kbq-tab [label]="'Bruteforce'" />
-                <kbq-tab [label]="'Complex Attack'" />
-                <kbq-tab [label]="'DDoS'" />
-                <kbq-tab [label]="'DoS'" />
-                <kbq-tab [label]="'HIPS Alert'" />
-                <kbq-tab [label]="'IDS/IPS Alert'" />
-                <kbq-tab [label]="'Bruteforce'" />
-                <kbq-tab [label]="'Complex Attack'" />
-                <kbq-tab [label]="'DDoS'" />
-                <kbq-tab [label]="'DoS'" />
-                <kbq-tab [label]="'HIPS Alert'" />
-                <kbq-tab [label]="'IDS/IPS Alert'" />
+                @for (tab of tabs; track tab) {
+                    <kbq-tab [label]="tab" />
+                }
             </kbq-tab-group>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TabsWithScrollExample {}
+export class TabsWithScrollExample {
+    readonly tabs = [
+        'BruteForce',
+        'Complex Attack',
+        'DDoS',
+        'HIPS alert',
+        'IDS/IPS Alert',
+        'Zero-Day Exploit',
+        'XSS',
+        'Malware',
+        'Ransomware',
+        'Phishing'
+    ];
+}

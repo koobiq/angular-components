@@ -15,12 +15,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <kbq-empty-state style="min-height: 216px">
             <div kbq-empty-state-icon>
-                <i
-                    [big]="true"
-                    [color]="'contrast'"
-                    [fade]="true"
-                    kbq-icon-item="kbq-info-circle_16"
-                ></i>
+                <i [big]="true" [color]="'contrast'" [fade]="true" kbq-icon-item="kbq-info-circle_16"></i>
             </div>
             <div kbq-empty-state-text>
                 This should detail the actions you can take on this screen, as well as why it’s valuable.

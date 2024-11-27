@@ -1,63 +1,22 @@
-<ng-template
-    #action
-    let-actionText="text"
-    let-toast
->
-    <a
-        kbq-link
-        pseudo
-        (click)="toast.close()"
-        (keydown.enter)="toast.close()"
-    >
+<ng-template #action let-actionText="text" let-toast>
+    <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">
         {{ actionText }}
     </a>
 </ng-template>
 
-<ng-template
-    #toastActionInfo
-    let-toast
->
+<ng-template #toastActionInfo let-toast>
     <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Обновить' }" />
 </ng-template>
-<ng-template
-    #toastActionWarning
-    let-toast
->
+<ng-template #toastActionWarning let-toast>
     <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Сменить пароль' }" />
 </ng-template>
-<ng-template
-    #toastActionError
-    let-toast
->
+<ng-template #toastActionError let-toast>
     <ng-container *ngTemplateOutlet="action; context: { $implicit: toast, text: 'Повторить' }" />
 </ng-template>
 
-<div
-    style="gap: 16px"
-    class="layout-row"
->
-    <button
-        kbq-button
-        (click)="showContrastToast(toastActionInfo)"
-    >
-        Информация
-    </button>
-    <button
-        kbq-button
-        (click)="showSuccessToast()"
-    >
-        Успех
-    </button>
-    <button
-        kbq-button
-        (click)="showWarningToast(toastActionWarning)"
-    >
-        Предупреждение
-    </button>
-    <button
-        kbq-button
-        (click)="showErrorToast(toastActionError)"
-    >
-        Ошибка
-    </button>
+<div style="gap: 16px" class="layout-row">
+    <button kbq-button (click)="showContrastToast(toastActionInfo)">Информация</button>
+    <button kbq-button (click)="showSuccessToast()">Успех</button>
+    <button kbq-button (click)="showWarningToast(toastActionWarning)">Предупреждение</button>
+    <button kbq-button (click)="showErrorToast(toastActionError)">Ошибка</button>
 </div>

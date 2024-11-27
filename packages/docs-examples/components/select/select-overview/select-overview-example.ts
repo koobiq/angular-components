@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -25,9 +25,10 @@ const localeDataSet = {
     standalone: true,
     selector: 'select-overview-example',
     imports: [KbqFormFieldModule, KbqSelectModule],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selected">
+            <kbq-select [(value)]="selected" [placeholder]="'Город'">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">
                         <span [innerHTML]="option"></span>
@@ -35,6 +36,17 @@ const localeDataSet = {
                 }
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            justify-content: center;
+            padding: var(--kbq-size-l);
+        }
+
+        kbq-form-field {
+            width: 320px;
+        }
     `
 })
 export class SelectOverviewExample {

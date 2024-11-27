@@ -15,10 +15,7 @@
         @if (header) {
             <div class="kbq-tooltip__header">
                 @if (isTemplateRef(header)) {
-                    <ng-container
-                        [ngTemplateOutlet]="$any(header)"
-                        [ngTemplateOutletContext]="context"
-                    />
+                    <ng-container [ngTemplateOutlet]="$any(header)" [ngTemplateOutletContext]="context" />
                 }
                 @if (!isTemplateRef(header)) {
                     <div>{{ header }}</div>
@@ -27,10 +24,7 @@
         }
         <div class="kbq-tooltip__content">
             @if (isTemplateRef(content)) {
-                <ng-container
-                    [ngTemplateOutlet]="$any(content)"
-                    [ngTemplateOutletContext]="context"
-                />
+                <ng-container [ngTemplateOutlet]="$any(content)" [ngTemplateOutletContext]="context" />
             }
             @if (!isTemplateRef(content)) {
                 <div>{{ content }}</div>

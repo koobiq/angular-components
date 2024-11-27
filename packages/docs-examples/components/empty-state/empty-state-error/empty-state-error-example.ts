@@ -15,10 +15,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <kbq-empty-state
-            [errorColor]="true"
-            style="min-height: 216px"
-        >
+        <kbq-empty-state [errorColor]="true" style="min-height: 216px">
             <i
                 [big]="true"
                 [color]="'contrast'"
@@ -31,13 +28,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 {{ emptyStateText }}
             </div>
             <div kbq-empty-state-actions>
-                <button
-                    [color]="'theme'"
-                    [kbqStyle]="'transparent'"
-                    kbq-button
-                >
-                    Обновить
-                </button>
+                <button [color]="'theme'" [kbqStyle]="'transparent'" kbq-button>Обновить</button>
             </div>
         </kbq-empty-state>
     `

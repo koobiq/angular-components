@@ -14,20 +14,10 @@ import { KbqComponentColors } from '@koobiq/components/core';
     ],
     template: `
         <div class="fixed-content__example-button-group">
-            <button
-                class="fixed-content__example-button"
-                [color]="colors.Contrast"
-                kbq-button
-            >
-                Текст кнопки
-            </button>
+            <button class="fixed-content__example-button" [color]="colors.Contrast" kbq-button>Текст кнопки</button>
             &nbsp;
             <br />
-            <button
-                class="fixed-content__example-button"
-                [color]="colors.Contrast"
-                kbq-button
-            >
+            <button class="fixed-content__example-button" [color]="colors.Contrast" kbq-button>
                 Очень длинный текст кнопки
             </button>
             &nbsp;

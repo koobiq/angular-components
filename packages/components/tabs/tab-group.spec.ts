@@ -5,7 +5,9 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LEFT_ARROW } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { Observable } from 'rxjs';
-import { KbqTab, KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy, KbqTabsModule } from './index';
+import { KbqTabGroup, KbqTabHeaderPosition, KbqTabSelectBy } from './tab-group.component';
+import { KbqTab } from './tab.component';
+import { KbqTabsModule } from './tabs.module';
 
 describe('KbqTabGroup', () => {
     beforeEach(() => {
@@ -214,7 +216,7 @@ describe('KbqTabGroup', () => {
             fixture.detectChanges();
 
             const tabLabels = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
-            const tabLabelContainer = fixture.debugElement.query(By.css('.kbq-tab-header__content'))
+            const tabLabelContainer = fixture.debugElement.query(By.css('.kbq-tab-header__container'))
                 .nativeElement as HTMLElement;
 
             expect(handleFocusSpyFn).toHaveBeenCalledTimes(0);
@@ -660,10 +662,7 @@ class SimpleDynamicTabsTestApp {
 
 @Component({
     template: `
-        <kbq-tab-group
-            class="tab-group"
-            [(selectedIndex)]="selectedIndex"
-        >
+        <kbq-tab-group class="tab-group" [(selectedIndex)]="selectedIndex">
             @for (tab of tabs; track tab) {
                 <kbq-tab label="{{ tab.label }}">
                     {{ tab.content }}
@@ -790,12 +789,7 @@ class TemplateTabs {}
 @Component({
     template: `
         <kbq-tab-group>
-            <kbq-tab
-                #pizza
-                label="Junk food"
-            >
-                Pizza, fries
-            </kbq-tab>
+            <kbq-tab #pizza label="Junk food">Pizza, fries</kbq-tab>
             <kbq-tab label="Vegetables">Broccoli, spinach</kbq-tab>
         </kbq-tab-group>
 
@@ -808,10 +802,7 @@ class TabGroupWithIsActiveBinding {}
 
 @Component({
     template: `
-        <kbq-tab-group
-            class="tab-group"
-            [(activeTab)]="selectBy"
-        >
+        <kbq-tab-group class="tab-group" [(activeTab)]="selectBy">
             <kbq-tab tabId="first">
                 <ng-template kbq-tab-label>Tab first</ng-template>
                 Tab first content

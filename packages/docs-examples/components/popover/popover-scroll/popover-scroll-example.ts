@@ -25,38 +25,18 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
         <ng-template #customContent>
             <div class="layout-margin-bottom-s">Интересно, что это такое?</div>
             <kbq-form-field>
-                <input
-                    kbqInput
-                    placeholder="Интересная мысль"
-                />
+                <input kbqInput placeholder="Интересная мысль" />
             </kbq-form-field>
         </ng-template>
 
         <ng-template #customFooter>
-            <div
-                class="layout-row layout-wrap"
-                style="gap: 16px"
-            >
-                <button
-                    [color]="'contrast'"
-                    (click)="activePopover.hide(0)"
-                    kbq-button
-                >
-                    Сохранить
-                </button>
-                <button
-                    (click)="activePopover.hide(0)"
-                    kbq-button
-                >
-                    Отмена
-                </button>
+            <div class="layout-row layout-wrap" style="gap: 16px">
+                <button [color]="'contrast'" (click)="activePopover.hide(0)" kbq-button>Сохранить</button>
+                <button (click)="activePopover.hide(0)" kbq-button>Отмена</button>
             </div>
         </ng-template>
 
-        <div
-            class="layout-row layout-wrap"
-            style="gap: 16px"
-        >
+        <div class="layout-row layout-wrap" style="gap: 16px">
             <button
                 #kbqNoClosePopover="kbqPopover"
                 [kbqPopoverClass]="'popover-scroll-example'"

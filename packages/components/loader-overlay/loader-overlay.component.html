@@ -2,10 +2,7 @@
     @if (isExternalIndicator) {
         <ng-content select="[kbq-loader-overlay-indicator]" />
     } @else {
-        <kbq-progress-spinner
-            [mode]="'indeterminate'"
-            [size]="spinnerSize"
-        />
+        <kbq-progress-spinner [mode]="'indeterminate'" [size]="spinnerSize" />
     }
 
     @if (isExternalText) {

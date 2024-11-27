@@ -1,5 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { _getFocusedElementPierceShadowDom } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
@@ -292,7 +293,7 @@ export class KbqModalComponent<T = any, R = any>
     }
 
     open() {
-        this.focusedElementBeforeOpen = this.document.activeElement;
+        this.focusedElementBeforeOpen = _getFocusedElementPierceShadowDom();
         this.previouslyFocusedElementOrigin = this.focusMonitor['_lastFocusOrigin'];
 
         this.focusMonitor

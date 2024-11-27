@@ -184,7 +184,14 @@ this.colorAutomaticTheme.addEventListener('change', this.setAutoTheme);
 **Компонентные CSS-переменные** – это набор значений, которые используются в стилях наших компонентов. Они задаются на основе токенов и хранятся в репозитории `@koobiq/components`.
 Это позволяет нам легко использовать токены в стилях компонентов и ускоряет разработку, в том числе проведение дизайн-ревью.
 
-**Обрати внимание!** На данный момент компонентные токены в пакете `@koobiq/design-tokens` больше не обновляются.
+<div class="kbq-callout kbq-callout_warning">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+На данный момент компонентные токены в пакете `@koobiq/design-tokens` больше не обновляются.
+
+</div>
+</div>
 
 ### Планы
 

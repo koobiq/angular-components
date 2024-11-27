@@ -19,10 +19,7 @@ import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarModule, KbqScrollbarOptions } from '@
         }
     ],
     template: `
-        <div
-            kbq-scrollbar
-            style="width: 200px; height: 200px;"
-        >
+        <div kbq-scrollbar style="width: 200px; height: 200px;">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />

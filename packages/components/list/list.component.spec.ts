@@ -101,10 +101,7 @@ class ListWithOneItem extends BaseTestList {}
         <kbq-list>
             @for (item of items; track item) {
                 <kbq-list-item>
-                    <img
-                        src=""
-                        alt=""
-                    />
+                    <img src="" alt="" />
                     <h3 kbq-line>{{ item.name }}</h3>
                     <p kbq-line>{{ item.description }}</p>
                 </kbq-list-item>
@@ -151,11 +148,7 @@ class ListWithManyLines extends BaseTestList {}
     template: `
         <kbq-list>
             <kbq-list-item>
-                <img
-                    alt=""
-                    src=""
-                    kbq-list-avatar
-                />
+                <img alt="" src="" kbq-list-avatar />
                 Paprika
             </kbq-list-item>
             <kbq-list-item>Pepper</kbq-list-item>
