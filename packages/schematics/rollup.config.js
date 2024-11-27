@@ -51,7 +51,6 @@ module.exports = [
                 'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons']),
                 'VERSIONS.MESSAGEFORMAT_CORE': version(pkg.devDependencies['@messageformat/core']),
                 'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
-                'VERSIONS.OVERLAYSCROLLBARS': version(pkg.dependencies.overlayscrollbars),
                 'VERSIONS.NGX_HIGHLIGHTJS': version(pkg.devDependencies['ngx-highlightjs'])
             }),
             typescript({

@@ -16,7 +16,6 @@ const VERSIONS = {
     MESSAGEFORMAT_CORE: '^0.0.0',
     RADIX_NG: '^0.0.0',
     LUXON: '^0.0.0',
-    OVERLAYSCROLLBARS: '^0.0.0',
     NGX_HIGHLIGHTJS: '^0.0.0'
 };
 
@@ -48,7 +47,6 @@ export default function ngAdd(options: Schema): Rule {
         addPackageToPackageJson(tree, '@messageformat/core', VERSIONS.MESSAGEFORMAT_CORE);
         addPackageToPackageJson(tree, '@radix-ng/primitives', VERSIONS.RADIX_NG);
         addPackageToPackageJson(tree, 'luxon', VERSIONS.LUXON);
-        addPackageToPackageJson(tree, 'overlayscrollbars', VERSIONS.OVERLAYSCROLLBARS);
         addPackageToPackageJson(tree, 'ngx-highlightjs', VERSIONS.NGX_HIGHLIGHTJS);
     };
 }
