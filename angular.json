@@ -65,10 +65,7 @@
                             "includePaths": ["packages"]
                         },
                         "styles": [
-                            "apps/docs/src/main.scss",
-                            "apps/docs/src/styles/koobiq/default-theme/css-tokens.css",
-                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-dark.css",
-                            "apps/docs/src/styles/koobiq/default-theme/css-tokens-light.css"
+                            "apps/docs/src/main.scss"
                         ],
                         "scripts": [],
                         "vendorChunk": true,

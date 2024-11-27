@@ -5,6 +5,10 @@
 @use './styles/docsearch';
 @use './styles/callout';
 
+@use './styles/koobiq/default-theme/css-tokens.css';
+@use './styles/koobiq/default-theme/css-tokens-dark.css';
+@use './styles/koobiq/default-theme/css-tokens-light.css';
+
 .docs {
     @include theme-kbq.docs-typography();
     @include theme-kbq.kbq-docs-theme();
