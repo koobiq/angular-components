@@ -91,7 +91,8 @@
 
 .kbq-form-field__suffix {
     right: 0;
-    width: 32px;
+    padding-right: var(--kbq-size-m);
+    padding-left: var(--kbq-size-s);
 }
 
 .kbq-form-field__cleaner,
