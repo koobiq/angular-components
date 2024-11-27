@@ -2,7 +2,6 @@
 
 @mixin kbq-icon-theme() {
     .kbq-icon {
-        // set default color
         color: var(--kbq-icon-contrast-color);
 
         &.kbq-theme {

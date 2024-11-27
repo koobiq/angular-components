@@ -17,7 +17,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 @Component({
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
-    template: '<i kbq-icon-button="" [ngClass]="iconClass"></i>',
+    template: '<i kbq-icon-button="" color="contrast-fade" [ngClass]="iconClass"></i>',
     styleUrls: ['password-toggle.scss'],
     host: {
         class: 'kbq-password-toggle',
