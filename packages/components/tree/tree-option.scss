@@ -16,7 +16,7 @@
     border-width: var(--kbq-tree-size-container-focus-outline-width);
     border-style: solid;
     border-color: transparent;
-    border-radius: var(--kbq-size-s);
+    border-radius: var(--kbq-size-border-radius);
 
     padding-top: kbq-difference-series-css-variables(
         [ tree-size-container-padding-vertical,
