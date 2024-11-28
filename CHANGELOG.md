@@ -1,3 +1,13 @@
+# 17.9.0 (2024-11-28)
+
+### Koobiq
+
+ * bug fix  **icon:** empty state ([#DS-3028](https://github.com/koobiq/angular-components/issues/issue/DS-3028)) ([#383](https://github.com/koobiq/angular-components/issues/383)) ([309e159](https://github.com/koobiq/angular-components/commit/309e15947ab763789ddf207556a81bf36a789fc6))
+ * bug fix  **number-input:** errors in "number-input" without localeService ([#DS-3016](https://github.com/koobiq/angular-components/issues/issue/DS-3016)) ([#378](https://github.com/koobiq/angular-components/issues/378)) ([30ed8fc](https://github.com/koobiq/angular-components/commit/30ed8fc02a281f38d6faebd1da02b4d51a1d9ade))
+ * bug fix  **select:** customMatcher error ([#DS-3179](https://github.com/koobiq/angular-components/issues/issue/DS-3179)) ([#457](https://github.com/koobiq/angular-components/issues/457)) ([8926aab](https://github.com/koobiq/angular-components/commit/8926aabdd8a5dbe9b07e978b57af1e5eef6a79a2))
+ * feature  **input:** added property [integer] ([#DS-1915](https://github.com/koobiq/angular-components/issues/issue/DS-1915)) ([#375](https://github.com/koobiq/angular-components/issues/375)) ([49a3c95](https://github.com/koobiq/angular-components/commit/49a3c95840cd35ceab4cec030176f43b0e723c15))
+ * feature  using koobiq/icon-lts ([361544f](https://github.com/koobiq/angular-components/commit/361544fdc8e4afc71cca2f6efdc6d77d6efbca59))
+
 ## 17.8.7 (2024-10-14)
 
 ### Koobiq
