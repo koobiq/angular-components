@@ -37,20 +37,40 @@
     flex: 1;
 
     .docs-sidenav__category {
-        height: 36px;
+        height: 40px;
+        padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
+        padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
     }
 
     .kbq-tree-selection {
-        padding: 0 var(--kbq-size-xxs);
+        padding: 0 var(--kbq-size-m);
+        padding-bottom: var(--kbq-size-xxl);
+
+        .kbq-tree-option {
+            position: relative;
+
+            &:before,
+            &:after {
+                position: absolute;
+                content: '';
+                width: var(--kbq-size-m);
+                height: calc(100% + var(--kbq-size-3xs) * 2); // outline size * 2
+            }
+
+            &:before {
+                right: calc(100% + var(--kbq-size-3xs)); // outline size
+            }
+
+            &:after {
+                left: calc(100% + var(--kbq-size-3xs)); // outline size
+            }
+        }
     }
 
     .docs-sidenav__category-text {
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        padding-left: $size-l !important;
-        padding-right: $size-l !important;
 
         & > span {
             display: flex;
@@ -60,16 +80,15 @@
         .docs-sidenav__category-icon {
             @include transition(transform 225ms cubic-bezier(0.4, 0, 0.2, 1));
 
-            &.mc_collapsed {
+            &.kbq_collapsed {
                 transform: rotate(-90deg);
             }
         }
     }
 
     .docs-sidenav__item {
-        padding-left: $size-3xl;
-
-        height: 32px;
+        padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
+        padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
 
         & > span {
             display: flex;
