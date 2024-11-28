@@ -14,8 +14,7 @@ import * as i0 from '@angular/core';
 import * as i3 from '@koobiq/components/button';
 import * as i4 from '@koobiq/components/tooltip';
 import * as i5 from '@koobiq/components/icon';
-import * as i6 from 'ngx-highlightjs';
-import * as i7 from '@koobiq/components/tabs';
+import * as i6 from '@koobiq/components/tabs';
 import { InjectionToken } from '@angular/core';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqTabChangeEvent } from '@koobiq/components/tabs';
@@ -57,8 +56,8 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     checkOverflow(currentCodeContentElement: HTMLElement): void;
     // (undocumented)
-    get codeFiles(): KbqCodeFile[];
-    set codeFiles(files: KbqCodeFile[]);
+    get codeFiles(): KbqCodeBlockFile[];
+    set codeFiles(files: KbqCodeBlockFile[]);
     config: KbqCodeBlockConfiguration;
     // (undocumented)
     protected configuration?: KbqCodeBlockConfiguration | undefined;
@@ -148,6 +147,14 @@ export interface KbqCodeBlockConfiguration {
     viewLessText: string;
 }
 
+// @public
+export type KbqCodeBlockFile = {
+    filename: string;
+    content: string;
+    language: string;
+    link?: string;
+};
+
 // @public (undocumented)
 export class KbqCodeBlockModule {
     // (undocumented)
@@ -156,22 +163,14 @@ export class KbqCodeBlockModule {
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCodeBlockModule>;
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, [typeof i1.KbqCodeBlockComponent, typeof i2.KbqActionBarComponent], [typeof i3.KbqButtonModule, typeof i4.KbqToolTipModule, typeof i5.KbqIconModule, typeof i6.HighlightModule, typeof i7.KbqTabsModule], [typeof i1.KbqCodeBlockComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, [typeof i1.KbqCodeBlockComponent, typeof i2.KbqActionBarComponent], [typeof i3.KbqButtonModule, typeof i4.KbqToolTipModule, typeof i5.KbqIconModule, typeof i6.KbqTabsModule, typeof i7.KbqCodeBlockContent], [typeof i1.KbqCodeBlockComponent]>;
 }
 
-// @public (undocumented)
-export interface KbqCodeFile {
-    // (undocumented)
-    content: string;
-    // (undocumented)
-    filename: string;
-    // (undocumented)
-    language: string;
-    // (undocumented)
-    link?: string;
-}
+// @public @deprecated (undocumented)
+export type KbqCodeFile = KbqCodeBlockFile;
 
 // @public (undocumented)
 export const LANGUAGES_EXTENSIONS: {

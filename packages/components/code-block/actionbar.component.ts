@@ -19,7 +19,7 @@ import {
     KBQ_CODE_BLOCK_CONFIGURATION,
     KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION,
     KbqCodeBlockConfiguration,
-    KbqCodeFile
+    KbqCodeBlockFile
 } from './code-block.types';
 
 @Component({
@@ -35,7 +35,7 @@ import {
 export class KbqActionBarComponent implements AfterViewInit {
     @ViewChild('copyTooltip') copyTooltip: KbqTooltipTrigger;
 
-    @Input() codeFiles: KbqCodeFile[];
+    @Input() codeFiles: KbqCodeBlockFile[];
     @Input() selectedTabIndex = 0;
     @Input() multiLine: boolean;
     @Input() softWrap: boolean;

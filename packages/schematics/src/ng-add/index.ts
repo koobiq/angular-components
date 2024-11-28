@@ -47,6 +47,5 @@ export default function ngAdd(options: Schema): Rule {
         addPackageToPackageJson(tree, '@messageformat/core', VERSIONS.MESSAGEFORMAT_CORE);
         addPackageToPackageJson(tree, '@radix-ng/primitives', VERSIONS.RADIX_NG);
         addPackageToPackageJson(tree, 'luxon', VERSIONS.LUXON);
-        addPackageToPackageJson(tree, 'ngx-highlightjs', VERSIONS.NGX_HIGHLIGHTJS);
     };
 }

@@ -1,4 +1,17 @@
-Компонент показывает переформатированный текстовый контент и подсвечивает синтаксис.
+`<kbq-code-block>` - компонент который показывает переформатированный текстовый контент и подсвечивает синтаксис.
+
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Для работы компонента, необходимо наличие [`highlight.js@^11`](https://github.com/highlightjs/highlight.js/tree/11.10.0) зависимости:
+
+```bash
+npm install highlight.js@^11
+```
+
+</div>
+</div>
 
 <!-- example(code-block-common) -->
 

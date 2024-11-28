@@ -10,25 +10,23 @@
                 [style.max-height]="getMaxHeight()"
                 (scroll)="checkOverflow(codeContent)"
             ><kbq-actionbar-block
-        [class.kbq-actionbar-block_floating]="noHeader"
-        [codeFiles]="codeFiles"
-        [selectedTabIndex]="selectedTabIndex"
-        [multiLine]="multiLine"
-        [softWrap]="softWrap"
-        [canLoad]="canLoad"
-        [style.opacity]="actionbarHidden ? 0 : null"
-        (toggleSoftWrap)="toggleSoftWrap()"
-        (downloadCode)="downloadCode()"
-        (copyCode)="copyCode()"
-        (openExternalSystem)="openExternalSystem()" /><code class="hljs"
-        [id]="codeFile.filename + '_' + i"
-        [class.hljs-line-numbers]="lineNumbers"
-        [highlight]="codeFiles[i].content"
-        [lineNumbers]="true"
-        [tabIndex]="canShowFocus(codeContent) ? 0 : -1"
-        (highlighted)="onHighlighted()"
-        (blur)="hasKeyboardFocus = false">
-      </code></pre>
+                    [canLoad]="canLoad"
+                    [class.kbq-actionbar-block_floating]="noHeader"
+                    [codeFiles]="codeFiles"
+                    [multiLine]="multiLine"
+                    [selectedTabIndex]="selectedTabIndex"
+                    [softWrap]="softWrap"
+                    [style.opacity]="actionbarHidden ? 0 : null"
+                    (copyCode)="copyCode()"
+                    (downloadCode)="downloadCode()"
+                    (openExternalSystem)="openExternalSystem()"
+                    (toggleSoftWrap)="toggleSoftWrap()"
+                /><code
+                    kbqCodeBlockContent
+                    [file]="codeFiles[selectedTabIndex]"
+                    [tabIndex]="canShowFocus(codeContent) ? 0 : -1"
+                    (blur)="hasKeyboardFocus = false"
+                ></code></pre>
             @if (maxHeight) {
                 <div
                     class="kbq-code-block__show-more"

@@ -1,4 +1,4 @@
-import highlightJs from 'highlight.js';
+import highlightJs, { HighlightResult } from 'highlight.js';
 import { Renderer as MarkedRenderer } from 'marked';
 import { splitLines } from '../transforms/code-transforms';
 
