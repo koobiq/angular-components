@@ -38,8 +38,6 @@
 
     .docs-sidenav__category {
         height: 40px;
-        padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
-        padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
     }
 
     .kbq-tree-selection {
@@ -48,6 +46,8 @@
 
         .kbq-tree-option {
             position: relative;
+            padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
+            padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
 
             &:before,
             &:after {
@@ -87,18 +87,10 @@
     }
 
     .docs-sidenav__item {
-        padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
-        padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
-
         & > span {
             display: flex;
             justify-content: center;
         }
-    }
-
-    .kbq-tree-option .kbq-option-text {
-        padding-top: $size-3xs;
-        padding-bottom: $size-3xs;
     }
 }
 
@@ -108,31 +100,36 @@
 
         overflow-y: auto;
 
+        .kbq-tree-selection {
+            padding: 0 0;
+
+            .kbq-tree-option {
+                border-radius: 0;
+                font-size: 16px;
+                line-height: 24px;
+                min-height: 48px;
+                padding: calc(var(--kbq-size-m) - var(--kbq-size-3xs)) calc(var(--kbq-size-l) - var(--kbq-size-3xs));
+
+                &:before,
+                &:after {
+                    display: none;
+                }
+            }
+        }
+
         .docs-sidenav__header {
             display: none;
         }
 
         .docs-sidenav__menu {
             overflow-y: unset;
-            padding-top: $size-l;
+            padding-top: $size-s;
             padding-bottom: $size-xxl;
         }
 
-        .docs-sidenav__category {
-            height: 48px;
-        }
-
-        .docs-sidenav__item {
-            height: 44px;
-            padding-left: $size-xxl !important;
-        }
-
-        .docs-sidenav__item + .docs-sidenav__category {
-            margin-top: $size-s;
-        }
-
         .docs-sidenav__category-text {
-            padding-left: $size-s !important;
+            font-size: 16px !important;
+            line-height: 24px !important;
         }
     }
 }
