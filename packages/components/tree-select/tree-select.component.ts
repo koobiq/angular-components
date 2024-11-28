@@ -930,7 +930,7 @@ export class KbqTreeSelect
     }
 
     calculateHiddenItems() {
-        if (this.customTrigger || this.empty || !this.multiple) {
+        if (this.customTrigger || this.empty || !this.multiple || this.customMatcher) {
             return;
         }
 
