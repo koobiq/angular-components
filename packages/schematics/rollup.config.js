@@ -50,9 +50,7 @@ module.exports = [
                 'VERSIONS.KOOBIQ_DESIGN_TOKENS': version(pkg.devDependencies['@koobiq/design-tokens']),
                 'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons']),
                 'VERSIONS.MESSAGEFORMAT_CORE': version(pkg.devDependencies['@messageformat/core']),
-                'VERSIONS.LUXON': version(pkg.devDependencies.luxon),
-                'VERSIONS.OVERLAYSCROLLBARS': version(pkg.dependencies.overlayscrollbars),
-                'VERSIONS.NGX_HIGHLIGHTJS': version(pkg.devDependencies['ngx-highlightjs'])
+                'VERSIONS.LUXON': version(pkg.devDependencies.luxon)
             }),
             typescript({
                 tsconfig: path.join(__dirname, 'tsconfig.rollup.json')

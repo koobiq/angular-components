@@ -31,9 +31,7 @@
         "@koobiq/icons": "^9.2.0",
         "@koobiq/tokens-builder": "3.8.1",
         "@koobiq/design-tokens": "3.8.1",
-        "@radix-ng/primitives": "^0.14.0",
-        "overlayscrollbars": "2.7.3",
-        "ngx-highlightjs": "^10.0.0"
+        "@radix-ng/primitives": "^0.14.0"
     },
     "dependencies": {
         "tslib": "^2.6.2"

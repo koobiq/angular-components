@@ -1,3 +1,4 @@
+// prettier-ignore
 export const TREE_DATA = [
     {
         id: '00000000-0000-0000-0000-000000000002',
