@@ -14,7 +14,6 @@ import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -104,8 +103,7 @@ export class TimepickerDemoComponent {
         KbqLuxonDateModule,
         ReactiveFormsModule,
         KbqRadioModule,
-        KbqLocaleServiceModule,
-        KbqIconModule
+        KbqLocaleServiceModule
     ],
     bootstrap: [TimepickerDemoComponent]
 })
