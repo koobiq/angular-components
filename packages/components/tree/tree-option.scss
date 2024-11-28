@@ -68,24 +68,14 @@
             display: flex;
         }
     }
-}
 
-.kbq-tree-option:has(+ .kbq-tree-option.kbq-selected),
-.kbq-tree-option:has(+ .kbq-tree-option.kbq-focused),
-.kbq-tree-option:has(+ .kbq-tree-option.kbq-active),
-.kbq-tree-option.kbq-selected:has(+ .kbq-tree-option:not(.kbq-disabled):hover),
-.kbq-tree-option.kbq-focused:has(+ .kbq-tree-option:not(.kbq-disabled):hover),
-.kbq-tree-option.kbq-active:has(+ .kbq-tree-option:not(.kbq-disabled):hover) {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-}
+    &:is(.kbq-selected, .kbq-focused, .kbq-active):has(+ :is(.kbq-selected, .kbq-focused, .kbq-active)) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 
-.kbq-tree-option.kbq-selected + .kbq-tree-option,
-.kbq-tree-option.kbq-focused + .kbq-tree-option,
-.kbq-tree-option.kbq-active + .kbq-tree-option,
-.kbq-tree-option:not(.kbq-disabled):hover + .kbq-tree-option.kbq-selected,
-.kbq-tree-option:not(.kbq-disabled):hover + .kbq-tree-option.kbq-focused,
-.kbq-tree-option:not(.kbq-disabled):hover + .kbq-tree-option.kbq-active {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    &:is(.kbq-selected, .kbq-focused, .kbq-active) + :is(.kbq-selected, .kbq-focused, .kbq-active) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
 }

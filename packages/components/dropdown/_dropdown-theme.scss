@@ -43,22 +43,16 @@
         &.kbq-disabled {
             @include kbq-dropdown-item-state(states-disabled);
         }
-    }
 
-    .kbq-dropdown-item:has(+ .kbq-dropdown-item.kbq-selected),
-    .kbq-dropdown-item:has(+ .kbq-dropdown-item.cdk-keyboard-focused),
-    .kbq-dropdown-item.kbq-selected:has(+ .kbq-dropdown-item:not(.kbq-disabled):hover),
-    .kbq-dropdown-item.cdk-keyboard-focused:has(+ .kbq-dropdown-item:not(.kbq-disabled):hover) {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
+        &:is(.kbq-selected, .cdk-keyboard-focused):has(+ :is(.kbq-selected, .cdk-keyboard-focused)) {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
 
-    .kbq-dropdown-item.kbq-selected + .kbq-dropdown-item,
-    .kbq-dropdown-item.cdk-keyboard-focused + .kbq-dropdown-item,
-    .kbq-dropdown-item:not(.kbq-disabled):hover + .kbq-dropdown-item.kbq-selected,
-    .kbq-dropdown-item:not(.kbq-disabled):hover + .kbq-dropdown-item.cdk-keyboard-focused {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        &:is(.kbq-selected, .cdk-keyboard-focused) + :is(.kbq-selected, .cdk-keyboard-focused) {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
     }
 
     .kbq-dropdown__group-header {

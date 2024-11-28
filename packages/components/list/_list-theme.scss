@@ -43,22 +43,16 @@
         &.kbq-disabled {
             @include kbq-list-item(states-disabled);
         }
-    }
 
-    .kbq-list-option:has(+ .kbq-list-option.kbq-selected),
-    .kbq-list-option:has(+ .kbq-list-option.kbq-focused),
-    .kbq-list-option.kbq-selected:has(+ .kbq-list-option:not(.kbq-disabled):hover),
-    .kbq-list-option.kbq-focused:has(+ .kbq-list-option:not(.kbq-disabled):hover) {
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
-    }
+        &:is(.kbq-selected, .kbq-focused):has(+ :is(.kbq-selected, .kbq-focused)) {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
 
-    .kbq-list-option.kbq-selected + .kbq-list-option,
-    .kbq-list-option.kbq-focused + .kbq-list-option,
-    .kbq-list-option:not(.kbq-disabled):hover + .kbq-list-option.kbq-selected,
-    .kbq-list-option:not(.kbq-disabled):hover + .kbq-list-option.kbq-focused {
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
+        &:is(.kbq-selected, .kbq-focused) + :is(.kbq-selected, .kbq-focused) {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
     }
 }
 
