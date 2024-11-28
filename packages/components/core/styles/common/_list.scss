@@ -67,8 +67,8 @@
     border-radius: var(--kbq-size-border-radius);
 
     padding-top: var(--kbq-size-xxs);
-    padding-left: var(--kbq-size-m);
-    padding-right: var(--kbq-size-m);
+    padding-left: kbq-difference-series-css-variables([size-m, size-3xs]);
+    padding-right: kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-bottom: var(--kbq-size-xxs);
 
     .kbq-list-text {
@@ -91,8 +91,8 @@
     border-right: var(--kbq-size-3xs) solid transparent;
 
     padding-top: var(--kbq-size-xs);
-    padding-left: var(--kbq-size-m);
-    padding-right: var(--kbq-size-m);
+    padding-left: kbq-difference-series-css-variables([size-m, size-3xs]);
+    padding-right: kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-bottom: var(--kbq-size-3xs);
 
     .kbq-list-text {
@@ -111,8 +111,8 @@
     border-right: var(--kbq-size-3xs) solid transparent;
 
     padding-top: var(--kbq-size-m);
-    padding-left: var(--kbq-size-m);
-    padding-right: var(--kbq-size-m);
+    padding-left: kbq-difference-series-css-variables([size-m, size-3xs]);
+    padding-right: kbq-difference-series-css-variables([size-m, size-3xs]);
     padding-bottom: var(--kbq-size-xxs);
 
     .kbq-list-text {
