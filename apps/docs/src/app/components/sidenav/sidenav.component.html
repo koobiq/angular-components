@@ -13,7 +13,7 @@
         [treeControl]="treeControl"
         [(ngModel)]="selectedItem"
     >
-        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding class="docs-sidenav__category">
+        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" class="docs-sidenav__category">
             <div class="docs-sidenav__category-text" (click)="toggle($event, node)">
                 <span>{{ node.name }}</span>
                 <i
@@ -26,12 +26,7 @@
             </div>
         </kbq-tree-option>
 
-        <kbq-tree-option
-            *kbqTreeNodeDef="let node"
-            kbqTreeNodePadding
-            class="docs-sidenav__item"
-            [kbqTreeNodePaddingIndent]="0"
-        >
+        <kbq-tree-option *kbqTreeNodeDef="let node" class="docs-sidenav__item">
             {{ node.name }}
         </kbq-tree-option>
     </kbq-tree-selection>

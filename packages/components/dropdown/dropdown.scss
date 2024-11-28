@@ -22,9 +22,8 @@
 
     border-radius: var(--kbq-dropdown-size-container-border-radius);
 
-    padding-top: var(--kbq-dropdown-size-container-padding-vertical);
-
-    padding-bottom: var(--kbq-dropdown-size-container-padding-vertical);
+    box-sizing: border-box;
+    padding: var(--kbq-size-xxs);
 
     // Prevent users from interacting with the panel while it's animating. Note that
     // people won't be able to click through it, because the overlay pane will catch the click.
@@ -35,6 +34,26 @@
     //    `mouseenter` event by dispatching it on tap.
     &.ng-animating {
         pointer-events: none;
+    }
+
+    .kbq-option {
+        position: relative;
+
+        &:before,
+        &:after {
+            position: absolute;
+            content: '';
+            width: var(--kbq-size-xxs);
+            height: calc(100% + var(--kbq-size-3xs) * 2); // outline size * 2
+        }
+
+        &:before {
+            right: calc(100% + var(--kbq-size-3xs)); // outline size
+        }
+
+        &:after {
+            left: calc(100% + var(--kbq-size-3xs)); // outline size
+        }
     }
 }
 

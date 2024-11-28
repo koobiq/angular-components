@@ -16,6 +16,7 @@
     border-width: var(--kbq-tree-size-container-focus-outline-width);
     border-style: solid;
     border-color: transparent;
+    border-radius: var(--kbq-size-border-radius);
 
     padding-top: kbq-difference-series-css-variables(
         [ tree-size-container-padding-vertical,
@@ -66,5 +67,15 @@
         & .kbq-option-action {
             display: flex;
         }
+    }
+
+    &:is(.kbq-selected, .kbq-focused, .kbq-active):has(+ :is(.kbq-selected, .kbq-focused, .kbq-active)) {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    &:is(.kbq-selected, .kbq-focused, .kbq-active) + :is(.kbq-selected, .kbq-focused, .kbq-active) {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
     }
 }

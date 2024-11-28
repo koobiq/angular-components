@@ -40,11 +40,7 @@
 
     &.kbq-form-field_has-prefix {
         .kbq-input {
-            padding-left: kbq-sum-series-css-variables(
-                [form-field-size-icon-size,
-                form-field-size-icon-margin-left,
-                form-field-size-icon-margin-right]
-            );
+            padding-left: kbq-sum-series-css-variables([form-field-size-icon-size, size-m, size-s]);
         }
     }
 
@@ -80,7 +76,6 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 32px;
 
     display: flex;
     flex-direction: row;
@@ -90,10 +85,14 @@
 
 .kbq-form-field__prefix {
     left: 0;
+    padding-left: var(--kbq-size-m);
+    padding-right: var(--kbq-size-s);
 }
 
 .kbq-form-field__suffix {
     right: 0;
+    padding-right: var(--kbq-size-m);
+    padding-left: var(--kbq-size-s);
 }
 
 .kbq-form-field__cleaner,

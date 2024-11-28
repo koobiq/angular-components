@@ -43,6 +43,16 @@
         &.kbq-disabled {
             @include kbq-dropdown-item-state(states-disabled);
         }
+
+        &:is(.kbq-selected, .cdk-keyboard-focused):has(+ :is(.kbq-selected, .cdk-keyboard-focused)) {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &:is(.kbq-selected, .cdk-keyboard-focused) + :is(.kbq-selected, .cdk-keyboard-focused) {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
     }
 
     .kbq-dropdown__group-header {

@@ -40,6 +40,16 @@
         &.kbq-disabled {
             @include kbq-option(states-disabled);
         }
+
+        &:is(.kbq-selected, .kbq-focused, .kbq-active):has(+ :is(.kbq-selected, .kbq-focused, .kbq-active)) {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &:is(.kbq-selected, .kbq-focused, .kbq-active) + :is(.kbq-selected, .kbq-focused, .kbq-active) {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
     }
 }
 

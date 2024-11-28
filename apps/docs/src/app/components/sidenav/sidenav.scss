@@ -37,16 +37,40 @@
     flex: 1;
 
     .docs-sidenav__category {
-        height: 36px;
+        height: 40px;
+    }
+
+    .kbq-tree-selection {
+        padding: 0 var(--kbq-size-m);
+        padding-bottom: var(--kbq-size-xxl);
+
+        .kbq-tree-option {
+            position: relative;
+            padding-left: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
+            padding-right: calc(var(--kbq-size-m) - var(--kbq-size-3xs));
+
+            &:before,
+            &:after {
+                position: absolute;
+                content: '';
+                width: var(--kbq-size-m);
+                height: calc(100% + var(--kbq-size-3xs) * 2); // outline size * 2
+            }
+
+            &:before {
+                right: calc(100% + var(--kbq-size-3xs)); // outline size
+            }
+
+            &:after {
+                left: calc(100% + var(--kbq-size-3xs)); // outline size
+            }
+        }
     }
 
     .docs-sidenav__category-text {
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        padding-left: $size-l !important;
-        padding-right: $size-l !important;
 
         & > span {
             display: flex;
@@ -56,26 +80,17 @@
         .docs-sidenav__category-icon {
             @include transition(transform 225ms cubic-bezier(0.4, 0, 0.2, 1));
 
-            &.mc_collapsed {
+            &.kbq_collapsed {
                 transform: rotate(-90deg);
             }
         }
     }
 
     .docs-sidenav__item {
-        padding-left: $size-3xl;
-
-        height: 32px;
-
         & > span {
             display: flex;
             justify-content: center;
         }
-    }
-
-    .kbq-tree-option .kbq-option-text {
-        padding-top: $size-3xs;
-        padding-bottom: $size-3xs;
     }
 }
 
@@ -85,31 +100,36 @@
 
         overflow-y: auto;
 
+        .kbq-tree-selection {
+            padding: 0 0;
+
+            .kbq-tree-option {
+                border-radius: 0;
+                font-size: 16px;
+                line-height: 24px;
+                min-height: 48px;
+                padding: calc(var(--kbq-size-m) - var(--kbq-size-3xs)) calc(var(--kbq-size-l) - var(--kbq-size-3xs));
+
+                &:before,
+                &:after {
+                    display: none;
+                }
+            }
+        }
+
         .docs-sidenav__header {
             display: none;
         }
 
         .docs-sidenav__menu {
             overflow-y: unset;
-            padding-top: $size-l;
+            padding-top: $size-s;
             padding-bottom: $size-xxl;
         }
 
-        .docs-sidenav__category {
-            height: 48px;
-        }
-
-        .docs-sidenav__item {
-            height: 44px;
-            padding-left: $size-xxl !important;
-        }
-
-        .docs-sidenav__item + .docs-sidenav__category {
-            margin-top: $size-s;
-        }
-
         .docs-sidenav__category-text {
-            padding-left: $size-s !important;
+            font-size: 16px !important;
+            line-height: 24px !important;
         }
     }
 }
