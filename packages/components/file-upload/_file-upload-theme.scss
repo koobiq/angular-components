@@ -25,7 +25,7 @@
                     border-color: var(--kbq-file-upload-single-states-error-container-border) !important;
                 }
 
-                *,
+                *:not(.kbq-link),
                 .kbq-icon {
                     color: var(--kbq-file-upload-single-states-error-text-block-color);
                 }
@@ -91,7 +91,7 @@
 
             &:not(.kbq-disabled) {
                 .kbq-file-upload__row.error {
-                    *,
+                    *:not(.kbq-link),
                     .kbq-icon {
                         color: var(--kbq-file-upload-multiple-states-error-text-block-color);
                     }
