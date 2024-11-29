@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -14,7 +14,15 @@ import { map } from 'rxjs/operators';
 @Component({
     standalone: true,
     selector: 'tag-autocomplete-option-operations-example',
-    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule, KbqAutocompleteModule, KbqIconModule, AsyncPipe],
+    imports: [
+        FormsModule,
+        KbqFormFieldModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        KbqAutocompleteModule,
+        KbqIconModule,
+        AsyncPipe
+    ],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
