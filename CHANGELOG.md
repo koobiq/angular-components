@@ -1,3 +1,15 @@
+# 18.9.0 (2024-11-29)
+
+### Koobiq
+
+ * bug fix  **perf:** components tokens usage optimization ([#DS-3117](https://github.com/koobiq/angular-components/issues/issue/DS-3117)) ([#453](https://github.com/koobiq/angular-components/issues/453)) ([d53c76f](https://github.com/koobiq/angular-components/commit/d53c76f195a26b92cbcddcb4ad3895055dd6caaf))
+ * bug fix  **select:** customMatcher error ([#DS-3179](https://github.com/koobiq/angular-components/issues/issue/DS-3179)) ([#457](https://github.com/koobiq/angular-components/issues/457)) ([802fc41](https://github.com/koobiq/angular-components/commit/802fc41220aca51e40912cc02d69d8c6e5665169))
+ * feature  **code-block:** removed ngx-highlightjs dependency ([#DS-3043](https://github.com/koobiq/angular-components/issues/issue/DS-3043)) ([#455](https://github.com/koobiq/angular-components/issues/455)) ([4a252f8](https://github.com/koobiq/angular-components/commit/4a252f8bc3af231e8c006fcba13ae8141cf854e2))
+ * feature  **link:** new icon for external link ([#DS-3020](https://github.com/koobiq/angular-components/issues/issue/DS-3020)) ([#451](https://github.com/koobiq/angular-components/issues/451)) ([1144f99](https://github.com/koobiq/angular-components/commit/1144f99733f19814808874fc40493a3c1a6dea3f))
+ * feature  **scrollbar:** removed overlayscrollbars from dependencies ([#DS-2982](https://github.com/koobiq/angular-components/issues/issue/DS-2982)) ([#456](https://github.com/koobiq/angular-components/issues/456)) ([e9aaac1](https://github.com/koobiq/angular-components/commit/e9aaac17db021da4a4ea920fdbb1639540cff3f2))
+ * feature  **select:** added support for panel width customization ([#DS-2922](https://github.com/koobiq/angular-components/issues/issue/DS-2922)) ([#447](https://github.com/koobiq/angular-components/issues/447)) ([db0dd2a](https://github.com/koobiq/angular-components/commit/db0dd2a1dbe91a3e319adc2179d1ab15fd5b9495))
+ * feature  **visual:** updated border-radius for list components ([#DS-2171](https://github.com/koobiq/angular-components/issues/issue/DS-2171)) ([#454](https://github.com/koobiq/angular-components/issues/454)) ([26ed111](https://github.com/koobiq/angular-components/commit/26ed111f32a90e3e5e3523b92f5e08ef9462c175))
+
 # 18.8.0 (2024-11-26)
 
 ### Koobiq
