@@ -9,6 +9,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
             [tabindex]="-1"
             [autoColor]="true"
             (mousedown)="onStepUp($event)"
+            color="contrast-fade"
             kbq-icon-button="kbq-chevron-down_16"
         ></i>
         <i
@@ -17,6 +18,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
             [tabindex]="-1"
             [autoColor]="true"
             (mousedown)="onStepDown($event)"
+            color="contrast-fade"
             kbq-icon-button="kbq-chevron-down_16"
         ></i>
     `,

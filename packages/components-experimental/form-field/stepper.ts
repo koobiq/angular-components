@@ -22,6 +22,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
             [tabindex]="-1"
             [autoColor]="true"
             (click)="stepUp($event)"
+            color="contrast-fade"
             kbq-icon-button="kbq-chevron-down_16"
         ></i>
         <i
@@ -30,6 +31,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
             [tabindex]="-1"
             [autoColor]="true"
             (mousedown)="stepDown($event)"
+            color="contrast-fade"
             kbq-icon-button="kbq-chevron-down_16"
         ></i>
     `,

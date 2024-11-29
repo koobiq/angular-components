@@ -9,7 +9,7 @@
     @if (!files.length) {
         <div class="dropzone">
             @if (size === 'default') {
-                <i kbq-icon="kbq-cloud-arrow-up-o_32"></i>
+                <i color="contrast-fade" kbq-icon="kbq-cloud-arrow-up-o_32"></i>
                 <div class="dropzone__text">
                     <span class="multiple__header">{{ config.title }}</span>
                     <div>
@@ -18,7 +18,7 @@
                     </div>
                 </div>
             } @else {
-                <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
+                <i color="contrast-fade" kbq-icon="kbq-cloud-arrow-up-o_24"></i>
                 <span class="dropzone__text multiple__caption">
                     {{ separatedCaptionTextForCompactSize[0] }}
                     <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">

@@ -53,7 +53,7 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
     template: `
         <kbq-multiple-file-upload>
             <ng-template #kbqFileIcon>
-                <i kbq-icon="kbq-file-o_16"></i>
+                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
             </ng-template>
         </kbq-multiple-file-upload>
     `,

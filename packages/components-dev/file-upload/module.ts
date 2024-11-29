@@ -52,7 +52,7 @@ const hintMessage = 'file upload hint';
             size="compact"
         >
             <ng-template #kbqFileIcon>
-                <i kbq-icon="kbq-file-o_16"></i>
+                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
             </ng-template>
             <kbq-hint>{{ hintMessage }}</kbq-hint>
         </kbq-multiple-file-upload>
