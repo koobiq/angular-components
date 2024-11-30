@@ -1,3 +1,5 @@
+*.vsix
+
 .nx
 CHANGELOG_CURRENT.md
 

@@ -1,0 +1,16 @@
+{
+    "koobiq theme badge": {
+        "prefix": "kbq-badge:theme",
+        "body": [
+            "<kbq-badge [badgeColor]=\"'theme'\">Badge</kbq-badge>"
+        ],
+        "description": ""
+    },
+    "koobiq Outline Fade Theme badge": {
+        "prefix": "kbq-badge:outline-fade-theme",
+        "body": [
+            "<kbq-badge [badgeColor]=\"'fade-theme'\" [outline]=\"true\">Badge</kbq-badge>"
+        ],
+        "description": ""
+    }
+}

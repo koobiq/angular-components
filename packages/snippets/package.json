@@ -1,0 +1,37 @@
+{
+    "name": "koobiq-snippets",
+    "version": "18.9.1",
+    "displayName": "Koobiq Snippets",
+    "description": "Koobiq components that you can use right in your favorite IDE, VS Code.",
+    "icon": "public/icon.png",
+    "repository": "https://github.com/koobiq/angular-components",
+    "galleryBanner": {
+        "color": "#00325E",
+        "theme": "dark"
+    },
+    "license": "MIT",
+    "publisher": "Koobiq",
+    "engines": {
+        "vscode": "^1.70.0"
+    },
+    "keywords": [
+        "development",
+        "release",
+        "koobiq"
+    ],
+    "categories": [
+        "Snippets"
+    ],
+    "contributes": {
+        "snippets": [
+            {
+                "language": "html",
+                "path": "./src/html/badge.code-snippets"
+            },
+            {
+                "language": "angular",
+                "path": "./src/angular/badge.code-snippets"
+            }
+        ]
+    }
+}
