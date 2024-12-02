@@ -80,6 +80,8 @@ $trigger-margin: 9px;
 .kbq-popover__header {
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 2;
 
     overflow: hidden;
 
