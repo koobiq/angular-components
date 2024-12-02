@@ -89,9 +89,7 @@ export class IconPreviewModalComponent implements AfterViewInit {
 
     getCodeExampleText(): string {
         const color =
-            this.selectedColorTheme === KbqComponentColors.ContrastFade
-                ? ''
-                : ` [color]="'${this.selectedColorTheme}'"`;
+            this.selectedColorTheme === KbqComponentColors.Contrast ? '' : ` [color]="'${this.selectedColorTheme}'"`;
 
         return `<i kbq-icon="${this.iconItem.cssClass}"${color}></i>`;
     }
