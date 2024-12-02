@@ -1,10 +1,12 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { Platform } from '@angular/cdk/platform';
 import {
     Directive,
     DoCheck,
     ElementRef,
     EventEmitter,
     Host,
+    inject,
     Inject,
     InjectionToken,
     Input,
@@ -72,6 +74,8 @@ export class KbqTextarea
     extends KbqTextareaMixinBase
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
+    protected readonly platform = inject(Platform);
+
     @Input() canGrow: boolean = true;
 
     /** An object used to control when error messages are shown. */
@@ -204,17 +208,19 @@ export class KbqTextarea
     }
 
     ngOnInit() {
-        Promise.resolve().then(() => {
-            this.lineHeight = parseInt(getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
+        if (this.platform.isBrowser) {
+            Promise.resolve().then(() => {
+                this.lineHeight = parseInt(getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
 
-            const paddingTop = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
-            const paddingBottom = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingBottom!, 10);
+                const paddingTop = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
+                const paddingBottom = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingBottom!, 10);
 
-            this.minHeight = this.lineHeight * 2 + paddingTop + paddingBottom;
-            this.freeRowsHeight = this.lineHeight;
-        });
+                this.minHeight = this.lineHeight * 2 + paddingTop + paddingBottom;
+                this.freeRowsHeight = this.lineHeight;
+            });
 
-        setTimeout(this.grow, 0);
+            setTimeout(this.grow, 0);
+        }
     }
 
     ngOnChanges() {
@@ -253,14 +259,12 @@ export class KbqTextarea
 
     /** Grow textarea height to avoid vertical scroll  */
     grow = () => {
-        if (!this.canGrow) {
-            return;
-        }
+        if (!this.platform.isBrowser || !this.canGrow) return;
 
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;
 
-            const outerHeight = parseInt(window.getComputedStyle(textarea).height!, 10);
+            const outerHeight = parseInt(getComputedStyle(textarea).height!, 10);
             const diff = outerHeight - textarea.clientHeight;
 
             textarea.style.minHeight = 0; // this line is important to height recalculation

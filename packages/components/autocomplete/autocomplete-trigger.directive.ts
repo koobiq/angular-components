@@ -26,7 +26,8 @@ import {
     OnDestroy,
     Optional,
     ViewContainerRef,
-    forwardRef
+    forwardRef,
+    inject
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
@@ -104,6 +105,8 @@ export function getKbqAutocompleteMissingPanelError(): Error {
 export class KbqAutocompleteTrigger
     implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler
 {
+    protected readonly document = inject<Document>(DOCUMENT);
+
     readonly optionSelections: Observable<KbqOptionSelectionChange> = defer(() => {
         if (this.autocomplete && this.autocomplete.options) {
             return merge(...this.autocomplete.options.map((option) => option.onSelectionChange));
@@ -208,14 +211,13 @@ export class KbqAutocompleteTrigger
         @Inject(KBQ_AUTOCOMPLETE_SCROLL_STRATEGY) scrollStrategy: any,
         @Optional() private dir: Directionality,
         @Optional() @Host() private formField: KbqFormField,
-        @Optional() @Inject(DOCUMENT) private document: any,
         // @breaking-change 8.0.0 Make `_viewportRuler` required.
         private viewportRuler?: ViewportRuler
     ) {
-        if (typeof window !== 'undefined') {
-            zone.runOutsideAngular(() => {
-                window.addEventListener('blur', this.windowBlurHandler);
-            });
+        const window = this.getWindow();
+
+        if (window) {
+            zone.runOutsideAngular(() => window.addEventListener('blur', this.windowBlurHandler));
         }
 
         this.scrollStrategy = scrollStrategy;
@@ -235,9 +237,7 @@ export class KbqAutocompleteTrigger
     }
 
     ngOnDestroy() {
-        if (typeof window !== 'undefined') {
-            window.removeEventListener('blur', this.windowBlurHandler);
-        }
+        this.getWindow()?.removeEventListener('blur', this.windowBlurHandler);
 
         this.viewportSubscription.unsubscribe();
         this.componentDestroyed = true;
@@ -673,5 +673,10 @@ export class KbqAutocompleteTrigger
         const element = this.elementRef.nativeElement;
 
         return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
+    }
+
+    /** Use defaultView of injected document if available or fallback to global window reference */
+    private getWindow(): Window | null {
+        return this.document?.defaultView || window;
     }
 }

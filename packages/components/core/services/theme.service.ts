@@ -1,5 +1,6 @@
-import { Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
-import { BehaviorSubject, Subscription, pairwise } from 'rxjs';
+import { DOCUMENT } from '@angular/common';
+import { inject, Injectable, OnDestroy, Renderer2 } from '@angular/core';
+import { BehaviorSubject, pairwise, Subscription } from 'rxjs';
 
 export interface KbqTheme {
     name: string;
@@ -39,16 +40,16 @@ export const KbqDefaultThemes: KbqTheme[] = [
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
+    protected readonly document = inject<Document>(DOCUMENT);
+    protected readonly renderer = inject(Renderer2);
+
     current: BehaviorSubject<T> = new BehaviorSubject(null as T);
 
     themes: T[] = KbqDefaultThemes as T[];
 
-    protected renderer: Renderer2;
     protected subscription: Subscription;
 
-    constructor(private rendererFactory: RendererFactory2) {
-        this.renderer = this.rendererFactory.createRenderer(null, null);
-
+    constructor() {
         this.subscription = this.current.pipe(pairwise()).subscribe(this.update);
     }
 
@@ -77,11 +78,11 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     protected update = ([prev, current]: T[]) => {
         if (prev) {
             prev.selected = false;
-            this.renderer.removeClass(document.body, prev.className);
+            this.renderer.removeClass(this.document.body, prev.className);
         }
 
         if (current) {
-            this.renderer.addClass(document.body, current.className);
+            this.renderer.addClass(this.document.body, current.className);
             current.selected = true;
         }
     };

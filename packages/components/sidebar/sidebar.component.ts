@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -6,6 +7,7 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     NgZone,
     OnDestroy,
@@ -14,7 +16,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/cdk/keycodes';
-import { KbqSidebarAnimationState, kbqSidebarAnimations } from './sidebar-animations';
+import { kbqSidebarAnimations, KbqSidebarAnimationState } from './sidebar-animations';
 
 export enum SidebarPositions {
     Left = 'left',
@@ -66,6 +68,8 @@ export class KbqSidebarClosed {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
+    protected readonly document = inject<Document>(DOCUMENT);
+
     @Input()
     get opened(): boolean {
         return this._opened;
@@ -149,9 +153,7 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
 
     private registerKeydownListener(): void {
         this.documentKeydownListener = (event) => {
-            if (isControl(event) || isInput(event)) {
-                return;
-            }
+            if (isControl(event) || isInput(event)) return;
 
             if (
                 (this.position === SidebarPositions.Left && isLeftBracket(event)) ||
@@ -162,12 +164,12 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
         };
 
         this.ngZone.runOutsideAngular(() => {
-            document.addEventListener('keypress', this.documentKeydownListener, true);
+            this.document.addEventListener('keypress', this.documentKeydownListener, true);
         });
     }
 
     private unRegisterKeydownListener(): void {
-        document.removeEventListener('keypress', this.documentKeydownListener, true);
+        this.document.removeEventListener('keypress', this.documentKeydownListener, true);
     }
 
     private saveWidth() {

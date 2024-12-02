@@ -11,7 +11,7 @@ import {
     ComponentRef,
     ElementRef,
     EventEmitter,
-    Inject,
+    inject,
     Injector,
     Input,
     OnChanges,
@@ -56,6 +56,8 @@ export class KbqModalComponent<T = any, R = any>
     extends KbqModalRef<T, R>
     implements OnInit, OnChanges, AfterViewInit, OnDestroy, ModalOptions
 {
+    protected readonly document = inject<Document>(DOCUMENT);
+
     componentColors = KbqComponentColors;
 
     @Input() kbqModalType: ModalType = 'default';
@@ -212,8 +214,7 @@ export class KbqModalComponent<T = any, R = any>
         private viewContainer: ViewContainerRef,
         private modalControl: KbqModalControlService,
         private changeDetector: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor,
-        @Inject(DOCUMENT) private document: any
+        private focusMonitor: FocusMonitor
     ) {
         super();
     }
@@ -537,14 +538,14 @@ export class KbqModalComponent<T = any, R = any>
         if (isVisible) {
             // [NOTE] Using timeout due to the document.click event is fired later than visible change,
             // so if not postponed to next event-loop, we can't get the latest click position
-            window.setTimeout(() => this.updateTransformOrigin());
+            setTimeout(() => this.updateTransformOrigin());
         }
 
         this.changeAnimationState(isVisible ? 'enter' : 'leave');
 
         // Return when animation is over
         return new Promise((resolve) => {
-            return window.setTimeout(() => {
+            return setTimeout(() => {
                 this.changeAnimationState(null);
                 resolve(null);
             }, MODAL_ANIMATE_DURATION);

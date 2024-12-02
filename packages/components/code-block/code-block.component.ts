@@ -1,11 +1,13 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
+import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
+    inject,
     Inject,
     Input,
     OnDestroy,
@@ -17,7 +19,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import { KbqTabChangeEvent, KbqTabGroup } from '@koobiq/components/tabs';
-import { Subject, Subscription, fromEvent, merge, pairwise } from 'rxjs';
+import { fromEvent, merge, pairwise, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, map, startWith, switchMap } from 'rxjs/operators';
 import {
     KBQ_CODE_BLOCK_CONFIGURATION,
@@ -73,6 +75,8 @@ const hasScroll = (element: HTMLElement) => {
     encapsulation: ViewEncapsulation.None
 })
 export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
+    protected readonly document = inject<Document>(DOCUMENT);
+
     @ViewChild(KbqTabGroup) tabGroup: KbqTabGroup;
 
     @Input() lineNumbers = true;
@@ -198,8 +202,8 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     downloadCode() {
         const codeFile = this.codeFiles[this.selectedTabIndex];
         const blob = new Blob([codeFile.content], { type: 'text/plain' });
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const link = this.document.createElement('a');
 
         link.setAttribute('href', url);
         link.setAttribute('download', `${this.getFullFileName(codeFile)}`);
@@ -213,7 +217,7 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
 
     openExternalSystem() {
         const externalLink = this.codeFiles[this.selectedTabIndex].link;
-        window.open(externalLink, '_blank');
+        this.getWindow()?.open(externalLink, '_blank');
     }
 
     onHighlighted() {
@@ -338,5 +342,10 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
             this.changeDetectorRef.markForCheck();
         });
         this.hoverSubscription.add(blur);
+    }
+
+    /** Use defaultView of injected document if available or fallback to global window reference */
+    private getWindow(): Window | null {
+        return this.document?.defaultView || window;
     }
 }

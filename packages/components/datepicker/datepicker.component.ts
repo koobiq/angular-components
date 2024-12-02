@@ -11,6 +11,7 @@ import {
     Component,
     ComponentRef,
     EventEmitter,
+    inject,
     Inject,
     InjectionToken,
     Input,
@@ -24,7 +25,7 @@ import {
 } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { Subject, Subscription, merge } from 'rxjs';
+import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { KbqCalendar } from './calendar.component';
@@ -126,6 +127,8 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqDatepicker }]
 })
 export class KbqDatepicker<D> implements OnDestroy {
+    protected readonly document = inject<Document>(DOCUMENT);
+
     @Input()
     get hasBackdrop(): boolean {
         return this._hasBackdrop;
@@ -275,8 +278,7 @@ export class KbqDatepicker<D> implements OnDestroy {
         private viewContainerRef: ViewContainerRef,
         @Inject(KBQ_DATEPICKER_SCROLL_STRATEGY) scrollStrategy: any,
         @Optional() private readonly dateAdapter: DateAdapter<D>,
-        @Optional() private dir: Directionality,
-        @Optional() @Inject(DOCUMENT) private document: any
+        @Optional() private dir: Directionality
     ) {
         if (!this.dateAdapter) {
             throw createMissingDateImplError('DateAdapter');
