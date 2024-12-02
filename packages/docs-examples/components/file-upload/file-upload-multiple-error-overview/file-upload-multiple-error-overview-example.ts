@@ -20,7 +20,7 @@ const maxFileExceeded = (file: File): string | null => {
         <kbq-multiple-file-upload (fileQueueChanged)="onChange($event)" inputId="file-upload-multiple-error-overview">
             <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 }
                 @if (file.hasError) {
                     <i kbq-icon="kbq-exclamation-triangle_16"></i>

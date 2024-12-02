@@ -4,7 +4,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',
     template: `
-        <i [autoColor]="true" kbq-icon-button="kbq-xmark-circle_16"></i>
+        <i [autoColor]="true" color="contrast-fade" kbq-icon-button="kbq-xmark-circle_16"></i>
     `,
     styleUrls: ['cleaner.scss'],
     host: {

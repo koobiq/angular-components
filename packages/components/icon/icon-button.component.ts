@@ -24,7 +24,7 @@ import { KbqIcon } from './icon.component';
     encapsulation: ViewEncapsulation.None,
     inputs: ['color'],
     host: {
-        class: 'kbq kbq-icon kbq-icon-button',
+        class: 'kbq kbq-icon-button',
 
         '[attr.tabindex]': 'tabindex',
         '[attr.disabled]': 'disabled',

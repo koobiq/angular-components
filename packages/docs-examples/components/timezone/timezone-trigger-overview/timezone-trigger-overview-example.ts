@@ -21,8 +21,10 @@ import { timezones } from '../mock';
         <kbq-form-field>
             <kbq-timezone-select [(value)]="selected">
                 <kbq-timezone-select-trigger>
-                    <i kbq-icon="kbq-clock_16" style="margin-right: 8px"></i>
-                    <span>{{ selected }}</span>
+                    <div class="layout-row layout-align-start-center">
+                        <i color="contrast-fade" kbq-icon="kbq-clock_16" style="margin-right: 8px"></i>
+                        <span>{{ selected }}</span>
+                    </div>
                 </kbq-timezone-select-trigger>
 
                 @for (group of data; track group) {

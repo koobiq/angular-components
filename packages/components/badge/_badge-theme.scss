@@ -11,7 +11,7 @@
     }
 
     & .kbq-icon {
-        color: var(--kbq-#{$base-path}-icon) !important;
+        color: var(--kbq-#{$base-path}-icon);
     }
 
     @if $type == filled {

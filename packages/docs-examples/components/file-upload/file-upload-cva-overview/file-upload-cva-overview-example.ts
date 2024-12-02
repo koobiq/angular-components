@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title File-upload with control value accessor
@@ -13,14 +14,15 @@ import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload
             <div class="kbq-form__row layout-margin-bottom-m">
                 <label class="kbq-form__label flex-20">Single file-upload with formControl</label>
                 <kbq-file-upload class="kbq-form__control flex-80" [formControl]="control">
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </kbq-file-upload>
             </div>
         </div>
     `,
     imports: [
         KbqFileUploadModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        KbqIconModule
     ]
 })
 export class FileUploadCvaOverviewExample {

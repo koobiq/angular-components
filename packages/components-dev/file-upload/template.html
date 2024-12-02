@@ -40,7 +40,7 @@
             </kbq-checkbox>
             <div class="kbq-caption_mono">file name: {{ control.value?.file?.name }}</div>
             <kbq-file-upload class="layout-margin-bottom-s" [formControl]="control">
-                <i kbq-icon="kbq-file-o_16"></i>
+                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 <kbq-hint>Размер файла не должен быть более 5 МБ</kbq-hint>
                 @if (control.hasError('maxFileSize')) {
                     <kbq-hint color="error">Слишком большой размер файла</kbq-hint>
@@ -48,7 +48,7 @@
             </kbq-file-upload>
 
             <kbq-file-upload [formControl]="secondControl">
-                <i kbq-icon="kbq-file-o_16"></i>
+                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
             </kbq-file-upload>
         </div>
 
@@ -114,7 +114,7 @@
                 (filesAdded)="onFilesAddedForListWithLoadOnAdd($event)"
             >
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
 
                 @for (control of this.fileListOnAddLoad.controls; track $index) {
@@ -139,7 +139,7 @@
                 (fileQueueChanged)="addFileMultiple($event)"
             >
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 <kbq-hint>{{ hintMessage }}</kbq-hint>
             </kbq-multiple-file-upload>
@@ -157,7 +157,7 @@
                 (fileQueueChanged)="addFileMultiple($event)"
             >
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 <kbq-hint>{{ hintMessage }}</kbq-hint>
             </kbq-file-upload>
@@ -168,7 +168,7 @@
             <br />
             <kbq-file-upload multiple (fileQueueChanged)="onFileQueueChange($event)">
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 @for (error of errorMessages; track error) {
                     <kbq-hint color="error">{{ error }}</kbq-hint>
@@ -187,7 +187,7 @@
                 (filesAdded)="onFilesAddedForListWithDefaultValidation($event)"
             >
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
 
                 @for (control of this.fileList.controls; track $index) {
@@ -205,7 +205,7 @@
             <br />
             <kbq-file-upload multiple [formControl]="multipleFileUploadControl" [progressMode]="'indeterminate'">
                 <ng-template #kbqFileIcon>
-                    <i kbq-icon="kbq-file-o_16"></i>
+                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
                 @if (multipleFileUploadControl.hasError('maxFileSize')) {
                     <kbq-hint color="error">Размер одного из файлов превысил лимит</kbq-hint>
@@ -227,7 +227,7 @@
                     (filesAdded)="onFilesAdded($event)"
                 >
                     <ng-template #kbqFileIcon>
-                        <i kbq-icon="kbq-file-o_16"></i>
+                        <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                     </ng-template>
                     @for (control of this.fileListValidationOnSubmit.controls; track $index) {
                         <kbq-hint color="error">

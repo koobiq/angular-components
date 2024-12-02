@@ -12,7 +12,7 @@ import { KbqFileUploadModule } from '@koobiq/components/file-upload';
     ],
     template: `
         <kbq-single-file-upload>
-            <i kbq-icon="kbq-file-o_16"></i>
+            <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
         </kbq-single-file-upload>
     `
 })

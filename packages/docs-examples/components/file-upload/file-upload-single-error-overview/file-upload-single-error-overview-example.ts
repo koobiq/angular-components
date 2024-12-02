@@ -15,7 +15,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
             inputId="file-upload-single-error-overview"
         >
             @if (!errors.length) {
-                <i kbq-icon="kbq-file-o_16"></i>
+                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
             }
             @if (errors.length) {
                 <i kbq-icon="kbq-exclamation-triangle_16"></i>

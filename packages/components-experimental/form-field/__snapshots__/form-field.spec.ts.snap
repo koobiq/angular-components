@@ -8,7 +8,8 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
-      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-eye-slash_16"
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye-slash_16"
+      color="contrast-fade"
       kbq-icon-button=""
       tabindex="0"
     />
@@ -24,7 +25,8 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
-      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-xmark-circle_16"
+      class="kbq kbq-icon-button kbq-icon kbq-xmark-circle_16 kbq-contrast-fade"
+      color="contrast-fade"
       kbq-icon-button="kbq-xmark-circle_16"
       tabindex="0"
     />
@@ -80,7 +82,7 @@ DebugElement {
     id="kbq-hint-34"
   >
     <i
-      class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
+      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
       kbq-icon=""
     />
     <span
@@ -101,7 +103,7 @@ DebugElement {
     id="kbq-hint-33"
   >
     <i
-      class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
+      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
       kbq-icon=""
     />
     <span
@@ -122,7 +124,7 @@ DebugElement {
     id="kbq-hint-35"
   >
     <i
-      class="kbq kbq-icon kbq-contrast-fade kbq-check-s_16"
+      class="kbq kbq-icon kbq-empty kbq-check-s_16"
       kbq-icon=""
     />
     <span
@@ -143,7 +145,8 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
-      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-eye_16"
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      color="contrast-fade"
       kbq-icon-button=""
       tabindex="0"
     />
@@ -181,7 +184,8 @@ DebugElement {
     style="visibility: hidden;"
   >
     <i
-      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-xmark-circle_16"
+      class="kbq kbq-icon-button kbq-icon kbq-xmark-circle_16 kbq-contrast-fade"
+      color="contrast-fade"
       kbq-icon-button="kbq-xmark-circle_16"
       tabindex="0"
     />
@@ -197,7 +201,8 @@ DebugElement {
     style="visibility: hidden;"
   >
     <i
-      class="kbq kbq-icon kbq-icon-button kbq-contrast-fade kbq-eye_16"
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      color="contrast-fade"
       kbq-icon-button=""
       tabindex="0"
     />
