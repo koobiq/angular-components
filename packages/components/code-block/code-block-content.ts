@@ -103,7 +103,7 @@ export class KbqCodeBlockContent {
 
             addStyles();
         } else {
-            w.console.error('highlight.js not detected!');
+            console.error('highlight.js not detected!');
         }
 
         function isHljsLnCodeDescendant(domElt) {
@@ -248,7 +248,7 @@ export class KbqCodeBlockContent {
                     }
                 }
             } catch (e) {
-                w.console.error('LineNumbers error: ', e);
+                console.error('LineNumbers error: ', e);
             }
         }
 
