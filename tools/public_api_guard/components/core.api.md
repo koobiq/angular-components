@@ -43,6 +43,7 @@ import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
+import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -2459,7 +2460,9 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    protected readonly renderer: Renderer2;
+    protected renderer: Renderer2;
+    // (undocumented)
+    protected readonly rendererFactory: RendererFactory2;
     // (undocumented)
     setTheme(value: T | number): void;
     // (undocumented)
