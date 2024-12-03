@@ -3,10 +3,13 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from '@koobiq/components/tags';
 import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+const valueCoercion = (value): string => (value?.new ? value.value : value) || '';
 
 /**
  * @title Tag autocomplete
@@ -21,6 +24,7 @@ import { map } from 'rxjs/operators';
         KbqAutocompleteModule,
         ReactiveFormsModule,
         KbqInputModule,
+        KbqIconModule,
         AsyncPipe
     ],
     template: `
@@ -39,6 +43,7 @@ import { map } from 'rxjs/operators';
                     [kbqAutocomplete]="autocomplete"
                     [kbqTagInputAddOnBlur]="false"
                     [kbqTagInputFor]="tagList"
+                    [kbqTagInputSeparatorKeyCodes]="[]"
                     (blur)="addOnBlurFunc($event)"
                     (kbqTagInputTokenEnd)="onCreate($event)"
                     placeholder="Placeholder"
@@ -63,7 +68,7 @@ import { map } from 'rxjs/operators';
     `
 })
 export class TagAutocompleteExample implements AfterViewInit {
-    allTags: string[] = ['Первый', 'Второй', 'Третий', 'Четвертый', 'Пятый', 'Шестой'];
+    suggestions: string[] = ['Первый', 'Второй', 'Третий', 'Четвертый', 'Пятый', 'Шестой'];
     selectedTags: string[] = [];
 
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
@@ -71,6 +76,7 @@ export class TagAutocompleteExample implements AfterViewInit {
     @ViewChild('tagInput', { read: KbqTagInput, static: false }) tagInputDirective: KbqTagInput;
     @ViewChild('autocomplete', { static: false }) autocomplete: KbqAutocomplete;
 
+    // Control is being used to handle input value changes
     control = new FormControl();
 
     filteredTags: Observable<string[]>;
@@ -82,7 +88,8 @@ export class TagAutocompleteExample implements AfterViewInit {
         const cleanedValue: string = (this.control.value || '').trim();
 
         return (
-            !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
+            !!cleanedValue &&
+            [...new Set(this.suggestions.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
         );
     }
 
@@ -92,10 +99,10 @@ export class TagAutocompleteExample implements AfterViewInit {
                 map((selectedTags: KbqTag[]) => {
                     const values = selectedTags.map((tag: any) => tag.value);
 
-                    return this.allTags.filter((tag) => !values.includes(tag));
+                    return this.suggestions.filter((tag) => !values.includes(tag));
                 })
             ),
-            this.control.valueChanges.pipe(map((e) => this.onControlValueChanges(e)))
+            this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)))
         );
     }
 
@@ -103,37 +110,28 @@ export class TagAutocompleteExample implements AfterViewInit {
         this.control.setValue(value);
         const cleanedValue = (value || '').trim();
 
-        if (cleanedValue) {
-            const isOptionSelected = this.autocomplete.options.some((option) => option.selected);
-            if (!isOptionSelected && this.canCreate) {
-                this.selectedTags.push(cleanedValue);
+        if (cleanedValue && this.canCreate) {
+            this.selectedTags.push(cleanedValue);
 
-                // Reset the input value
-                if (input) {
-                    input.value = '';
-                }
+            // Reset the input value
+            if (input) input.value = '';
 
-                this.control.setValue(null);
+            this.control.setValue(null);
 
-                return;
-            }
+            return;
         }
+
+        // IMPORTANT: can't paste value if tag already exists, should be fixed
 
         // save input value on paste event to continue editing
-        if (!this.canCreate) {
-            input.value = cleanedValue;
-            this.control.setValue(cleanedValue);
-        }
+        input.value = cleanedValue;
+        this.control.setValue(cleanedValue);
     }
 
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        if (option.value.new) {
-            this.selectedTags.push(option.value.value);
-        } else {
-            this.selectedTags.push(option.value);
-        }
+        this.selectedTags.push(valueCoercion(option.value));
         this.control.setValue(null);
         this.tagInput.nativeElement.value = '';
     }
@@ -146,6 +144,7 @@ export class TagAutocompleteExample implements AfterViewInit {
         }
     }
 
+    // properly handle input loses focus, for example when selecting suggestion and input has value
     addOnBlurFunc(event: FocusEvent) {
         const target: HTMLElement = event.relatedTarget as HTMLElement;
 
@@ -160,22 +159,25 @@ export class TagAutocompleteExample implements AfterViewInit {
     }
 
     private filter(value: string): string[] {
+        // Convert the input value to lowercase for case-insensitive comparison
         const filterValue = value.toLowerCase();
 
-        return [...new Set(this.allTags.concat(this.selectedTags))].filter(
-            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
-        );
+        // Combine all tags and selected tags into a single array, removing duplicates
+        const uniqueTags = [...new Set(this.suggestions.concat(this.selectedTags))];
+
+        return uniqueTags.filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
     }
 
-    private onControlValueChanges = (value: any) => {
-        const typedText = (value?.new ? value.value : value)?.trim();
-        const filteredTagsByInput = typedText ? this.filter(typedText) : this.allTags.slice();
+    private onControlValueChanges = (value: string | null) => {
+        const typedText: string | undefined = valueCoercion(value)?.trim();
+        const filteredTagsByInput = typedText ? this.filter(typedText) : this.suggestions.slice();
 
         const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
 
         // check for scenario where duplicate exists but also can create/select other tags
         this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective.hasDuplicates;
 
+        // Return the difference between filtered tags and selected tags
         return inputAndSelectionTagsDiff;
     };
 }

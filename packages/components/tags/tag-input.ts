@@ -226,9 +226,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Checks to see if the (tagEnd) event needs to be emitted. */
     emitTagEnd() {
         if (!this.hasControl() || (this.hasControl() && !this.ngControl.invalid)) {
-            if (this.distinct && this.hasDuplicates) {
-                return;
-            }
+            if (this.distinct && this.hasDuplicates) return;
 
             this.tagEnd.emit({ input: this.inputElement, value: this.trimValue(this.inputElement.value) });
             this.updateInputWidth();
