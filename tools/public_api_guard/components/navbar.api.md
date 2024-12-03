@@ -26,7 +26,6 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -288,9 +287,9 @@ export class KbqNavbarRectangleElement {
     get horizontal(): boolean;
     set horizontal(value: boolean);
     // (undocumented)
-    protected readonly nativeElement: any;
+    protected readonly isBrowser: boolean;
     // (undocumented)
-    protected readonly platform: Platform;
+    protected readonly nativeElement: any;
     // (undocumented)
     readonly state: Subject<void>;
     // (undocumented)
@@ -311,6 +310,8 @@ export class KbqNavbarTitle implements AfterViewInit {
     // (undocumented)
     readonly hovered: Subject<boolean>;
     // (undocumented)
+    protected readonly isBrowser: boolean;
+    // (undocumented)
     get isOverflown(): boolean;
     // (undocumented)
     isTextOverflown: boolean;
@@ -320,8 +321,6 @@ export class KbqNavbarTitle implements AfterViewInit {
     ngAfterViewInit(): void;
     // (undocumented)
     outerElementWidth: number;
-    // (undocumented)
-    protected readonly platform: Platform;
     // (undocumented)
     get text(): string;
     // (undocumented)

@@ -54,7 +54,6 @@ import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Platform } from '@angular/cdk/platform';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
@@ -155,6 +154,8 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     get id(): string;
     set id(value: string);
     // (undocumented)
+    protected readonly isBrowser: boolean;
+    // (undocumented)
     get isEmptySearchResult(): boolean;
     // (undocumented)
     isRtl(): boolean;
@@ -213,8 +214,6 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     // (undocumented)
     get placeholder(): string;
     set placeholder(value: string);
-    // (undocumented)
-    protected readonly platform: Platform;
     positions: ConnectedPosition[];
     // (undocumented)
     previousSelectionModelSelected: KbqOptionBase[];

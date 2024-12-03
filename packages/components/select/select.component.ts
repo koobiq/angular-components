@@ -198,7 +198,7 @@ export class KbqSelect
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
-    protected readonly platform = inject(Platform);
+    protected readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
 
@@ -900,9 +900,7 @@ export class KbqSelect
     }
 
     calculateHiddenItems(): void {
-        if (!this.platform.isBrowser || this.customTrigger || this.empty || !this.multiple || this.customMatcher) {
-            return;
-        }
+        if (!this.isBrowser || this.customTrigger || this.empty || !this.multiple || this.customMatcher) return;
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();

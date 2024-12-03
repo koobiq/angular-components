@@ -33,7 +33,6 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
-import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
@@ -259,6 +258,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     handleMousedown(event: MouseEvent): void;
+    // (undocumented)
+    protected readonly isBrowser: boolean;
     isNested(): boolean;
     // (undocumented)
     lastDestroyReason: DropdownCloseReason;
@@ -272,8 +273,6 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     get opened(): boolean;
     // (undocumented)
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
-    // (undocumented)
-    protected readonly platform: Platform;
     restoreFocus: boolean;
     toggle(): void;
     // (undocumented)

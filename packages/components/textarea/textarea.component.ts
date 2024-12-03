@@ -74,7 +74,7 @@ export class KbqTextarea
     extends KbqTextareaMixinBase
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
-    protected readonly platform = inject(Platform);
+    protected readonly isBrowser = inject(Platform).isBrowser;
 
     @Input() canGrow: boolean = true;
 
@@ -208,7 +208,7 @@ export class KbqTextarea
     }
 
     ngOnInit() {
-        if (this.platform.isBrowser) {
+        if (this.isBrowser) {
             Promise.resolve().then(() => {
                 this.lineHeight = parseInt(getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
 
@@ -259,7 +259,7 @@ export class KbqTextarea
 
     /** Grow textarea height to avoid vertical scroll  */
     grow = () => {
-        if (!this.platform.isBrowser || !this.canGrow) return;
+        if (!this.isBrowser || !this.canGrow) return;
 
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;

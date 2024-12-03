@@ -73,7 +73,7 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
     }
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
-    protected readonly platform = inject(Platform);
+    protected readonly isBrowser = inject(Platform).isBrowser;
 
     lastDestroyReason: DropdownCloseReason;
 
@@ -587,7 +587,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     }
 
     private getWidth(): string {
-        if (!this.platform.isBrowser) return '';
+        if (!this.isBrowser) return '';
 
         const nativeElement = this.elementRef.nativeElement;
 

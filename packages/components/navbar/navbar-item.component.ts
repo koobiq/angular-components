@@ -69,7 +69,7 @@ export class KbqNavbarBento {}
     }
 })
 export class KbqNavbarTitle implements AfterViewInit {
-    protected readonly platform = inject(Platform);
+    protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly nativeElement = inject(ElementRef).nativeElement;
 
     readonly hovered = new Subject<boolean>();
@@ -86,7 +86,7 @@ export class KbqNavbarTitle implements AfterViewInit {
     }
 
     getOuterElementWidth(): number {
-        if (!this.platform.isBrowser) return 0;
+        if (!this.isBrowser) return 0;
 
         const { width, marginLeft, marginRight } = getComputedStyle(this.nativeElement);
 
@@ -305,7 +305,7 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
     }
 })
 export class KbqNavbarRectangleElement {
-    protected readonly platform = inject(Platform);
+    protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly nativeElement = inject(ElementRef).nativeElement;
 
     readonly state = new Subject<void>();
@@ -349,7 +349,7 @@ export class KbqNavbarRectangleElement {
     @ContentChild(KbqButtonCssStyler) button: KbqButtonCssStyler;
 
     getOuterElementWidth(): number {
-        if (!this.platform.isBrowser) return 0;
+        if (!this.isBrowser) return 0;
 
         const { width, marginLeft, marginRight } = getComputedStyle(this.nativeElement);
 
