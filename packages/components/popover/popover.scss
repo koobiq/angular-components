@@ -80,8 +80,6 @@ $trigger-margin: 9px;
 .kbq-popover__header {
     display: flex;
     align-items: center;
-    position: relative;
-    z-index: 2;
 
     overflow: hidden;
 
@@ -94,6 +92,8 @@ $trigger-margin: 9px;
 }
 
 .kbq-popover__header_top-overflow {
+    position: relative;
+    z-index: 2;
     box-shadow: var(--kbq-shadow-overflow-normal-bottom);
 }
 
@@ -106,6 +106,8 @@ $trigger-margin: 9px;
 }
 
 .kbq-popover__footer_bottom-overflow {
+    position: relative;
+    z-index: 2;
     box-shadow: var(--kbq-shadow-overflow-normal-top);
 }
 
