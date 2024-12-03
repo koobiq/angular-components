@@ -61,7 +61,7 @@
     .kbq-form-field_hint {
         display: flex;
         flex-direction: column;
-        margin-top: var(--kbq-size-s);
+        margin-top: var(--kbq-form-field-hint-size-margin-top);
         gap: var(--kbq-size-xxs);
     }
 }
