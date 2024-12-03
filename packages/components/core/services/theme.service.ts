@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { inject, Injectable, OnDestroy, Renderer2 } from '@angular/core';
+import { inject, Injectable, OnDestroy, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, pairwise, Subscription } from 'rxjs';
 
 export interface KbqTheme {
@@ -41,7 +41,8 @@ export const KbqDefaultThemes: KbqTheme[] = [
 @Injectable({ providedIn: 'root' })
 export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
     protected readonly document = inject<Document>(DOCUMENT);
-    protected readonly renderer = inject(Renderer2);
+    protected readonly rendererFactory = inject(RendererFactory2);
+    protected renderer: Renderer2;
 
     current: BehaviorSubject<T> = new BehaviorSubject(null as T);
 
@@ -50,6 +51,8 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     protected subscription: Subscription;
 
     constructor() {
+        this.renderer = this.rendererFactory.createRenderer(null, null);
+
         this.subscription = this.current.pipe(pairwise()).subscribe(this.update);
     }
 
