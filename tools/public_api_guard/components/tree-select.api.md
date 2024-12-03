@@ -48,6 +48,7 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
@@ -176,6 +177,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     // (undocumented)
     get placeholder(): string;
     set placeholder(value: string);
+    // (undocumented)
+    protected readonly platform: Platform;
     positions: ConnectedPosition[];
     registerOnChange(fn: (value: any) => void): void;
     registerOnTouched(fn: () => {}): void;

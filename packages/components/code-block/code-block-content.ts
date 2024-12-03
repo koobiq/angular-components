@@ -61,7 +61,7 @@ export class KbqCodeBlockContent {
     }
 
     /** Use defaultView of injected document if available or fallback to global window reference */
-    private getWindow(): Window | null {
+    private getWindow(): Window {
         return this.document?.defaultView || window;
     }
 

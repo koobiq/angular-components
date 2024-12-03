@@ -68,6 +68,8 @@ export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     readonly currentCodeBlock: Subject<HTMLElement>;
     // (undocumented)
+    protected readonly document: Document;
+    // (undocumented)
     downloadCode(): void;
     // (undocumented)
     filled: boolean;

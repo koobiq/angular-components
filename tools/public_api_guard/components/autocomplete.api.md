@@ -148,7 +148,7 @@ export class KbqAutocompleteSelectedEvent {
 
 // @public (undocumented)
 export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler {
-    constructor(elementRef: ElementRef<HTMLInputElement>, viewContainerRef: ViewContainerRef, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, zone: NgZone, scrollStrategy: any, dir: Directionality, formField: KbqFormField, document: any, viewportRuler?: ViewportRuler | undefined);
+    constructor(elementRef: ElementRef<HTMLInputElement>, viewContainerRef: ViewContainerRef, changeDetectorRef: ChangeDetectorRef, overlay: Overlay, zone: NgZone, scrollStrategy: any, dir: Directionality, formField: KbqFormField, viewportRuler?: ViewportRuler | undefined);
     get activeOption(): KbqOption | null;
     autocomplete: KbqAutocomplete;
     autocompleteAttribute: string;
@@ -157,6 +157,8 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     closePanel(): void;
     connectedTo: KbqAutocompleteOrigin;
+    // (undocumented)
+    protected readonly document: Document;
     // (undocumented)
     handleClick($event: MouseEvent): void;
     // (undocumented)
@@ -192,7 +194,7 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutocompleteTrigger, "input[kbqAutocomplete], textarea[kbqAutocomplete]", ["kbqAutocompleteTrigger"], { "autocomplete": { "alias": "kbqAutocomplete"; "required": false; }; "connectedTo": { "alias": "kbqAutocompleteConnectedTo"; "required": false; }; "autocompleteAttribute": { "alias": "autocomplete"; "required": false; }; "autocompleteDisabled": { "alias": "kbqAutocompleteDisabled"; "required": false; }; "onInputBlur": { "alias": "kbqAutocompleteOnBlur"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, null]>;
 }
 
 // @public

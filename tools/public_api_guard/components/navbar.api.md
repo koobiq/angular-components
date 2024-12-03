@@ -26,6 +26,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -276,19 +277,20 @@ export class KbqNavbarModule {
 
 // @public (undocumented)
 export class KbqNavbarRectangleElement {
-    constructor(elementRef: ElementRef);
     // (undocumented)
     button: KbqButtonCssStyler;
     // (undocumented)
     get collapsed(): boolean;
     set collapsed(value: boolean);
     // (undocumented)
-    elementRef: ElementRef;
-    // (undocumented)
     getOuterElementWidth(): number;
     // (undocumented)
     get horizontal(): boolean;
     set horizontal(value: boolean);
+    // (undocumented)
+    protected readonly nativeElement: any;
+    // (undocumented)
+    protected readonly platform: Platform;
     // (undocumented)
     readonly state: Subject<void>;
     // (undocumented)
@@ -302,7 +304,6 @@ export class KbqNavbarRectangleElement {
 
 // @public (undocumented)
 export class KbqNavbarTitle implements AfterViewInit {
-    constructor(elementRef: ElementRef);
     // (undocumented)
     checkTextOverflown(): void;
     // (undocumented)
@@ -314,9 +315,13 @@ export class KbqNavbarTitle implements AfterViewInit {
     // (undocumented)
     isTextOverflown: boolean;
     // (undocumented)
+    protected readonly nativeElement: any;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     outerElementWidth: number;
+    // (undocumented)
+    protected readonly platform: Platform;
     // (undocumented)
     get text(): string;
     // (undocumented)
@@ -327,7 +332,7 @@ export class KbqNavbarTitle implements AfterViewInit {
 
 // @public (undocumented)
 export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
-    constructor(navbar: KbqVerticalNavbar, changeDetectorRef: ChangeDetectorRef, document: any);
+    constructor(navbar: KbqVerticalNavbar, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
@@ -335,6 +340,8 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
     customIcon: KbqIcon;
     // (undocumented)
     get disabled(): boolean;
+    // (undocumented)
+    protected readonly document: Document;
     // (undocumented)
     protected modifier: TooltipModifier;
     // (undocumented)
@@ -348,7 +355,7 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarToggle, "kbq-navbar-toggle", never, { "content": { "alias": "kbqCollapsedTooltip"; "required": false; }; }, {}, ["customIcon"], ["[kbq-icon]", "kbq-navbar-title"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarToggle, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarToggle, never>;
 }
 
 // @public (undocumented)

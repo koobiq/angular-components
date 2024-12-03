@@ -43,7 +43,6 @@ import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
-import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
@@ -1102,6 +1101,8 @@ export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
 export class KbqCommonModule {
     constructor(_sanityChecksEnabled: boolean);
     // (undocumented)
+    protected readonly document: Document;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCommonModule, [{ optional: true; }]>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCommonModule>;
@@ -1319,7 +1320,9 @@ export class KbqLocaleServiceModule {
 
 // @public (undocumented)
 export class KbqMeasureScrollbarService {
-    constructor(document: any);
+    constructor();
+    // (undocumented)
+    protected readonly document: Document;
     // (undocumented)
     initScrollBarWidth(): void;
     // (undocumented)
@@ -2446,15 +2449,17 @@ export enum ThemePalette {
 
 // @public (undocumented)
 export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDestroy {
-    constructor(rendererFactory: RendererFactory2);
+    constructor();
     // (undocumented)
     current: BehaviorSubject<T>;
+    // (undocumented)
+    protected readonly document: Document;
     // (undocumented)
     getTheme(): T;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    protected renderer: Renderer2;
+    protected readonly renderer: Renderer2;
     // (undocumented)
     setTheme(value: T | number): void;
     // (undocumented)

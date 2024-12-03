@@ -193,7 +193,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
 // @public
 export class KbqDatepicker<D> implements OnDestroy {
-    constructor(overlay: Overlay, ngZone: NgZone, viewContainerRef: ViewContainerRef, scrollStrategy: any, dateAdapter: DateAdapter<D>, dir: Directionality, document: any);
+    constructor(overlay: Overlay, ngZone: NgZone, viewContainerRef: ViewContainerRef, scrollStrategy: any, dateAdapter: DateAdapter<D>, dir: Directionality);
     // (undocumented)
     backdropClass: string;
     close(restoreFocus?: boolean): void;
@@ -205,6 +205,8 @@ export class KbqDatepicker<D> implements OnDestroy {
     get disabled(): boolean;
     set disabled(value: boolean);
     readonly disabledChange: Subject<boolean>;
+    // (undocumented)
+    protected readonly document: Document;
     // (undocumented)
     get hasBackdrop(): boolean;
     set hasBackdrop(value: boolean);
@@ -239,7 +241,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepicker<any>, "kbq-datepicker", ["kbqDatepicker"], { "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "startAt": { "alias": "startAt"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "opened": { "alias": "opened"; "required": false; }; "minDate": { "alias": "minDate"; "required": false; }; "maxDate": { "alias": "maxDate"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "dateClass": { "alias": "dateClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; }, { "yearSelected": "yearSelected"; "monthSelected": "monthSelected"; "openedStream": "opened"; "closedStream": "closed"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepicker<any>, [null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepicker<any>, [null, null, null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public

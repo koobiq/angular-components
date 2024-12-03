@@ -33,6 +33,7 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Subject } from 'rxjs';
@@ -136,10 +137,12 @@ export const kbqDropdownAnimations: {
 
 // @public
 export class KbqDropdownContent implements OnDestroy {
-    constructor(template: TemplateRef<any>, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef, document: any);
+    constructor(template: TemplateRef<any>, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef);
     attach(context?: any): void;
     attached: Subject<void>;
     detach(): void;
+    // (undocumented)
+    protected readonly document: Document;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -269,6 +272,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     get opened(): boolean;
     // (undocumented)
     openedBy: Exclude<FocusOrigin, 'program' | null> | undefined;
+    // (undocumented)
+    protected readonly platform: Platform;
     restoreFocus: boolean;
     toggle(): void;
     // (undocumented)
