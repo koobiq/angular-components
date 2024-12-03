@@ -17,6 +17,8 @@ import {
 import { merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
+
 /**
  * @title Tags autocomplete onpaste off
  */
@@ -48,8 +50,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
 
     control = new FormControl();
 
-    allTags: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
-    filteredTagsByInput: string[] = [];
+    suggestions: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
     selectedTags: string[] = ['tag1'];
 
     filteredTags: any;
@@ -59,7 +60,8 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
         const cleanedValue: string = (this.control.value || '').trim();
 
         return (
-            !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
+            !!cleanedValue &&
+            [...new Set(this.suggestions.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
         );
     }
 
@@ -69,25 +71,11 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
                 map((selectedTags: KbqTag[]) => {
                     const values = selectedTags.map((tag: any) => tag.value);
 
-                    return this.allTags.filter((tag) => !values.includes(tag));
+                    return this.suggestions.filter((tag) => !values.includes(tag));
                 })
             ),
-            this.control.valueChanges.pipe(
-                map((value: any) => {
-                    const typedText = (value?.new ? value.value : value)?.trim();
 
-                    this.filteredTagsByInput = typedText ? this.filter(typedText) : this.allTags.slice();
-
-                    const inputAndSelectionTagsDiff = this.filteredTagsByInput.filter(
-                        (tag) => !this.selectedTags.includes(tag)
-                    );
-
-                    // check for scenario where duplicate exists but also can create/select other tags
-                    this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective.hasDuplicates;
-
-                    return inputAndSelectionTagsDiff;
-                })
-            )
+            this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)))
         );
     }
 
@@ -108,37 +96,26 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
         this.control.setValue(value);
         const cleanedValue = (value || '').trim();
 
-        if (cleanedValue) {
-            const isOptionSelected = this.autocomplete.options.some((option) => option.selected);
-            if (!isOptionSelected && this.canCreate) {
-                this.selectedTags.push(cleanedValue);
+        if (cleanedValue && this.canCreate) {
+            this.selectedTags.push(cleanedValue);
 
-                // Reset the input value
-                if (input) {
-                    input.value = '';
-                }
+            // Reset the input value
+            if (input) input.value = '';
 
-                this.control.setValue(null);
+            this.control.setValue(null);
 
-                return;
-            }
+            return;
         }
 
         // save input value on paste event to continue editing
-        if (!this.canCreate) {
-            input.value = cleanedValue;
-            this.control.setValue(cleanedValue);
-        }
+        input.value = cleanedValue;
+        this.control.setValue(cleanedValue);
     }
 
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        if (option.value.new) {
-            this.selectedTags.push(option.value.value);
-        } else {
-            this.selectedTags.push(option.value);
-        }
+        this.selectedTags.push(autocompleteValueCoercion(option.value));
         this.tagInput.nativeElement.value = '';
         this.control.setValue(null);
     }
@@ -152,10 +129,25 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     }
 
     private filter(value: string): string[] {
+        // Convert the input value to lowercase for case-insensitive comparison
         const filterValue = value.toLowerCase();
 
-        return [...new Set(this.allTags.concat(this.selectedTags))].filter(
-            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
-        );
+        // Combine all tags and selected tags into a single array, removing duplicates
+        const uniqueTags = [...new Set(this.suggestions.concat(this.selectedTags))];
+
+        return uniqueTags.filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
     }
+
+    private onControlValueChanges = (value: string | null) => {
+        const typedText: string | undefined = autocompleteValueCoercion(value)?.trim();
+        const filteredTagsByInput = typedText ? this.filter(typedText) : this.suggestions.slice();
+
+        const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
+
+        // check for scenario where duplicate exists but also can create/select other tags
+        this.hasDuplicates = !inputAndSelectionTagsDiff.length && this.tagInputDirective.hasDuplicates;
+
+        // Return the difference between filtered tags and selected tags
+        return inputAndSelectionTagsDiff;
+    };
 }

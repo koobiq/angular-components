@@ -9,7 +9,7 @@ import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from
 import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const valueCoercion = (value): string => (value?.new ? value.value : value) || '';
+const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
 
 /**
  * @title Tag autocomplete
@@ -68,7 +68,7 @@ const valueCoercion = (value): string => (value?.new ? value.value : value) || '
     `
 })
 export class TagAutocompleteExample implements AfterViewInit {
-    suggestions: string[] = ['Первый', 'Второй', 'Третий', 'Четвертый', 'Пятый', 'Шестой'];
+    allTags: string[] = ['Первый', 'Второй', 'Третий', 'Четвертый', 'Пятый', 'Шестой'];
     selectedTags: string[] = [];
 
     @ViewChild('tagList', { static: false }) tagList: KbqTagList;
@@ -88,8 +88,7 @@ export class TagAutocompleteExample implements AfterViewInit {
         const cleanedValue: string = (this.control.value || '').trim();
 
         return (
-            !!cleanedValue &&
-            [...new Set(this.suggestions.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
+            !!cleanedValue && [...new Set(this.allTags.concat(this.selectedTags))].every((tag) => tag !== cleanedValue)
         );
     }
 
@@ -99,7 +98,7 @@ export class TagAutocompleteExample implements AfterViewInit {
                 map((selectedTags: KbqTag[]) => {
                     const values = selectedTags.map((tag: any) => tag.value);
 
-                    return this.suggestions.filter((tag) => !values.includes(tag));
+                    return this.allTags.filter((tag) => !values.includes(tag));
                 })
             ),
             this.control.valueChanges.pipe(map((e: string | null) => this.onControlValueChanges(e)))
@@ -121,8 +120,6 @@ export class TagAutocompleteExample implements AfterViewInit {
             return;
         }
 
-        // IMPORTANT: can't paste value if tag already exists, should be fixed
-
         // save input value on paste event to continue editing
         input.value = cleanedValue;
         this.control.setValue(cleanedValue);
@@ -131,7 +128,7 @@ export class TagAutocompleteExample implements AfterViewInit {
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        this.selectedTags.push(valueCoercion(option.value));
+        this.selectedTags.push(autocompleteValueCoercion(option.value));
         this.control.setValue(null);
         this.tagInput.nativeElement.value = '';
     }
@@ -163,14 +160,14 @@ export class TagAutocompleteExample implements AfterViewInit {
         const filterValue = value.toLowerCase();
 
         // Combine all tags and selected tags into a single array, removing duplicates
-        const uniqueTags = [...new Set(this.suggestions.concat(this.selectedTags))];
+        const uniqueTags = [...new Set(this.allTags.concat(this.selectedTags))];
 
         return uniqueTags.filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
     }
 
     private onControlValueChanges = (value: string | null) => {
-        const typedText: string | undefined = valueCoercion(value)?.trim();
-        const filteredTagsByInput = typedText ? this.filter(typedText) : this.suggestions.slice();
+        const typedText: string | undefined = autocompleteValueCoercion(value)?.trim();
+        const filteredTagsByInput = typedText ? this.filter(typedText) : this.allTags.slice();
 
         const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
 
