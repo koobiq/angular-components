@@ -37,7 +37,7 @@
             grid-column: 1;
         }
 
-        .kbq-dd {
+        .kbq-dd:not(:last-child) {
             margin-bottom: var(--kbq-description-list-size-vertical-gap-vertical);
         }
     }
