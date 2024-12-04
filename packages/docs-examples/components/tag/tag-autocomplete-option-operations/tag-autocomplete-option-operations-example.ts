@@ -1,6 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -8,13 +8,23 @@ import { KbqTag, KbqTagInput, KbqTagInputEvent, KbqTagList, KbqTagsModule } from
 import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
+
 /**
  * @title Tag autocomplete option operations
  */
 @Component({
     standalone: true,
     selector: 'tag-autocomplete-option-operations-example',
-    imports: [KbqFormFieldModule, KbqTagsModule, ReactiveFormsModule, KbqAutocompleteModule, KbqIconModule, AsyncPipe],
+    imports: [
+        FormsModule,
+        KbqFormFieldModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        KbqAutocompleteModule,
+        KbqIconModule,
+        AsyncPipe
+    ],
     template: `
         <kbq-form-field>
             <kbq-tag-list #tagList>
@@ -31,6 +41,7 @@ import { map } from 'rxjs/operators';
                     [kbqAutocomplete]="autocomplete"
                     [kbqTagInputAddOnBlur]="false"
                     [kbqTagInputFor]="tagList"
+                    [kbqTagInputSeparatorKeyCodes]="[]"
                     (blur)="addOnBlurFunc($event)"
                     (kbqTagInputTokenEnd)="onCreate($event)"
                     placeholder="Placeholder"
@@ -95,37 +106,26 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
         this.control.setValue(value);
         const cleanedValue = (value || '').trim();
 
-        if (cleanedValue) {
-            const isOptionSelected = this.autocomplete.options.some((option) => option.selected);
-            if (!isOptionSelected && this.canCreate) {
-                this.selectedTags.push(cleanedValue);
+        if (cleanedValue && this.canCreate) {
+            this.selectedTags.push(cleanedValue);
 
-                // Reset the input value
-                if (input) {
-                    input.value = '';
-                }
+            // Reset the input value
+            if (input) input.value = '';
 
-                this.control.setValue(null);
+            this.control.setValue(null);
 
-                return;
-            }
+            return;
         }
 
         // save input value on paste event to continue editing
-        if (!this.canCreate) {
-            input.value = cleanedValue;
-            this.control.setValue(cleanedValue);
-        }
+        input.value = cleanedValue;
+        this.control.setValue(cleanedValue);
     }
 
     onSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
 
-        if (option.value.new) {
-            this.selectedTags.push(option.value.value);
-        } else {
-            this.selectedTags.push(option.value);
-        }
+        this.selectedTags.push(autocompleteValueCoercion(option.value));
         this.control.setValue(null);
         this.tagInput.nativeElement.value = '';
     }
@@ -152,15 +152,17 @@ export class TagAutocompleteOptionOperationsExample implements AfterViewInit {
     }
 
     private filter(value: string): string[] {
+        // Convert the input value to lowercase for case-insensitive comparison
         const filterValue = value.toLowerCase();
 
-        return [...new Set(this.allTags.concat(this.selectedTags))].filter(
-            (tag) => tag.toLowerCase().indexOf(filterValue) === 0
-        );
+        // Combine all tags and selected tags into a single array, removing duplicates
+        const uniqueTags = [...new Set(this.allTags.concat(this.selectedTags))];
+
+        return uniqueTags.filter((tag) => tag.toLowerCase().indexOf(filterValue) === 0);
     }
 
-    private onControlValueChanges = (value: any) => {
-        const typedText = (value?.new ? value.value : value)?.trim();
+    private onControlValueChanges = (value: string | null) => {
+        const typedText: string | undefined = autocompleteValueCoercion(value)?.trim();
         const filteredTagsByInput = typedText ? this.filter(typedText) : this.allTags.slice();
 
         const inputAndSelectionTagsDiff = filteredTagsByInput.filter((tag) => !this.selectedTags.includes(tag));
