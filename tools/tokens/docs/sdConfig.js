@@ -10,7 +10,7 @@ module.exports = {
                 {
                     filter: (token) => !token.attributes.palette && !token.attributes.category.includes('palette'),
                     destination: 'colors.tmp.md',
-                    format: 'kbq-vars/docs',
+                    format: 'docs/colors',
                     prefix: 'kbq'
                 }
             ],
