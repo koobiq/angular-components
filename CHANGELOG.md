@@ -1,3 +1,17 @@
+## 18.9.1 (2024-12-04)
+
+### Koobiq
+
+ * bug fix  **common:** support SSR ([#DS-3147](https://github.com/koobiq/angular-components/issues/issue/DS-3147)) ([#465](https://github.com/koobiq/angular-components/issues/465)) ([c29f62b](https://github.com/koobiq/angular-components/commit/c29f62bd1a5b05bd89fc30dbe2f45775127bed6d))
+ * bug fix  **dl:** last element margin ([#DS-3207](https://github.com/koobiq/angular-components/issues/issue/DS-3207)) ([#467](https://github.com/koobiq/angular-components/issues/467)) ([98f76b7](https://github.com/koobiq/angular-components/commit/98f76b7a9eab912adf0f074cfdae0e2633aa3c00))
+ * bug fix  **docs,tags:** add missing FormsModule to enable correct tag addition ([#DS-3109](https://github.com/koobiq/angular-components/issues/issue/DS-3109)) ([#461](https://github.com/koobiq/angular-components/issues/461)) ([e81a79d](https://github.com/koobiq/angular-components/commit/e81a79d9f9dfba20a4e9787adb7392fe28e99c0e))
+ * bug fix  **file-upload:** link in upload error ([#DS-2971](https://github.com/koobiq/angular-components/issues/issue/DS-2971))  ([#460](https://github.com/koobiq/angular-components/issues/460)) ([d998b89](https://github.com/koobiq/angular-components/commit/d998b8911017ef7a8f8c450762092392e19dd063))
+ * bug fix  **form-field:** add missing tokens for hint ([#DS-3188](https://github.com/koobiq/angular-components/issues/issue/DS-3188))  ([#463](https://github.com/koobiq/angular-components/issues/463)) ([c8ad1bc](https://github.com/koobiq/angular-components/commit/c8ad1bc184a0a7eca66696c97becf29e0c65e2c5))
+ * bug fix  **forms:** vertical form label padding bottom ([#DS-2717](https://github.com/koobiq/angular-components/issues/issue/DS-2717)) ([#459](https://github.com/koobiq/angular-components/issues/459)) ([b17619e](https://github.com/koobiq/angular-components/commit/b17619e8569570f85a4a734b22b526f5210a4eb4))
+ * bug fix  **icon:** changed default icon color ([#DS-3081](https://github.com/koobiq/angular-components/issues/issue/DS-3081)) ([#440](https://github.com/koobiq/angular-components/issues/440)) ([1a0ff5c](https://github.com/koobiq/angular-components/commit/1a0ff5c9514b04dc58ad29aafbe20987514a8735))
+ * bug fix  **popover:** footer z-index if shadow ([#DS-3204](https://github.com/koobiq/angular-components/issues/issue/DS-3204))  ([#466](https://github.com/koobiq/angular-components/issues/466)) ([7035c36](https://github.com/koobiq/angular-components/commit/7035c36c5918ff7c000fc6e25b9ff7ec1c3c4256))
+ * bug fix  **popover:** header z-index fix ([#DS-3095](https://github.com/koobiq/angular-components/issues/issue/DS-3095)) ([#464](https://github.com/koobiq/angular-components/issues/464)) ([a8b9326](https://github.com/koobiq/angular-components/commit/a8b932650de8d022bdc96eb232964c0032fc5deb))
+
 # 18.9.0 (2024-11-29)
 
 ### Koobiq
