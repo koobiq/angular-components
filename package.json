@@ -212,6 +212,7 @@
         "dev:form-field": "ng serve dev-form-field --port 3003",
         "dev:forms": "ng serve dev-forms --port 3003",
         "dev:file-upload": "ng serve dev-file-upload --port 3003",
+        "dev:filter-bar": "ng serve dev-filter-bar --port 3003",
         "dev:icon": "ng serve dev-icon --port 3003",
         "dev:icon-item": "ng serve dev-icon-item --port 3003",
         "dev:hint": "ng serve dev-hint --port 3003",

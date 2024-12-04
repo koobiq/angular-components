@@ -1,0 +1,7 @@
+@use './filter-bar-theme' as *;
+
+.kbq-filter-bar {
+}
+
+@include kbq-filter-bar-theme();
+@include kbq-filter-bar-typography();
