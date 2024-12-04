@@ -1,16 +1,52 @@
-const { BASE_PATH } = require('./config');
+const { BASE_PATH, BUILD_PATH } = require('./config');
 
 module.exports = {
-    source: [`${BASE_PATH}/properties/colors.json5`, `${BASE_PATH}/properties/palette.json5`],
+    source: [`${BASE_PATH}/properties/*.json5`],
     platforms: {
         css: {
-            buildPath: `docs/guides/`,
+            buildPath: BUILD_PATH,
             transformGroup: 'kbq/css',
             files: [
                 {
-                    filter: (token) => !token.attributes.palette && !token.attributes.category.includes('palette'),
+                    filter: (token) =>
+                        ['light', 'dark'].includes(token.attributes.category) &&
+                        !token.attributes.category.includes('palette'),
+                    fileHeader: ['### Colors'],
                     destination: 'colors.tmp.md',
                     format: 'docs/colors',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) => token.attributes.category === 'typography',
+                    destination: 'typography.tmp.md',
+                    format: 'docs/typography',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) =>
+                        token.attributes.category === 'size' && !token.attributes.type.includes('border'),
+                    destination: 'globals.tmp.md',
+                    format: 'docs/globals',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) =>
+                        token.attributes.category === 'size' && token.attributes.type.includes('border-width'),
+                    destination: 'border-width.tmp.md',
+                    format: 'docs/border-width',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) =>
+                        token.attributes.category === 'size' && token.attributes.type.includes('border-radius'),
+                    destination: 'border-radius.tmp.md',
+                    format: 'docs/border-radius',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) => token.attributes.category === 'shadow',
+                    destination: 'shadows.tmp.md',
+                    format: 'docs/shadows',
                     prefix: 'kbq'
                 }
             ],
