@@ -208,19 +208,19 @@ export class KbqTextarea
     }
 
     ngOnInit() {
-        if (this.isBrowser) {
-            Promise.resolve().then(() => {
-                this.lineHeight = parseInt(getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
+        if (!this.isBrowser) return;
 
-                const paddingTop = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
-                const paddingBottom = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingBottom!, 10);
+        Promise.resolve().then(() => {
+            this.lineHeight = parseInt(getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
 
-                this.minHeight = this.lineHeight * 2 + paddingTop + paddingBottom;
-                this.freeRowsHeight = this.lineHeight;
-            });
+            const paddingTop = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
+            const paddingBottom = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingBottom!, 10);
 
-            setTimeout(this.grow, 0);
-        }
+            this.minHeight = this.lineHeight * 2 + paddingTop + paddingBottom;
+            this.freeRowsHeight = this.lineHeight;
+        });
+
+        setTimeout(this.grow, 0);
     }
 
     ngOnChanges() {
