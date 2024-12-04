@@ -1,0 +1,9 @@
+@use './filter-bar-theme' as *;
+
+.kbq-filter-bar {
+    display: flex;
+    align-items: center;
+}
+
+@include kbq-filter-bar-theme();
+@include kbq-filter-bar-typography();
