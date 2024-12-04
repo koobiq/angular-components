@@ -1,5 +1,6 @@
 import { BidiModule } from '@angular/cdk/bidi';
-import { Inject, InjectionToken, isDevMode, NgModule, Optional } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { inject, Inject, InjectionToken, isDevMode, NgModule, Optional } from '@angular/core';
 
 // Injection token that configures whether the koobiq sanity checks are enabled.
 export const KBQ_SANITY_CHECKS = new InjectionToken<boolean>('kbq-sanity-checks', {
@@ -22,14 +23,10 @@ export function mcSanityChecksFactory(): boolean {
     exports: [BidiModule]
 })
 export class KbqCommonModule {
+    protected readonly document = inject<Document>(DOCUMENT);
+
     // Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype).
     private hasDoneGlobalChecks = false;
-
-    // Reference to the global `document` object.
-    private _document = typeof document === 'object' && document ? document : null;
-
-    // Reference to the global 'window' object.
-    private _window = typeof window === 'object' && window ? window : null;
 
     constructor(@Optional() @Inject(KBQ_SANITY_CHECKS) private _sanityChecksEnabled: boolean) {
         if (this.areChecksEnabled() && !this.hasDoneGlobalChecks) {
@@ -45,12 +42,14 @@ export class KbqCommonModule {
     }
 
     // Whether the code is running in tests.
-    private isTestEnv() {
-        return this._window && (this._window['__karma__'] || this._window['jasmine'] || this._window['__jest__']);
+    private isTestEnv(): boolean {
+        const window = this.getWindow();
+
+        return !!(window && (window['__karma__'] || window['jasmine'] || window['__jest__']));
     }
 
     private checkDoctypeIsDefined(): void {
-        if (this._document && !this._document.doctype) {
+        if (this.document && !this.document.doctype) {
             console.warn(
                 'Current document does not have a doctype. This may cause ' +
                     'some koobiq components not to behave as expected.'
@@ -59,11 +58,11 @@ export class KbqCommonModule {
     }
 
     private checkThemeIsPresent(): void {
-        if (this._document && typeof getComputedStyle === 'function') {
-            const testElement = this._document.createElement('div');
+        if (this.document && typeof getComputedStyle === 'function') {
+            const testElement = this.document.createElement('div');
 
             testElement.classList.add('kbq-theme-loaded-marker');
-            this._document.body.appendChild(testElement);
+            this.document.body.appendChild(testElement);
 
             const computedStyle = getComputedStyle(testElement);
 
@@ -78,7 +77,11 @@ export class KbqCommonModule {
                 );
             }
 
-            this._document.body.removeChild(testElement);
+            this.document.body.removeChild(testElement);
         }
+    }
+
+    private getWindow(): Window | null {
+        return this.document?.defaultView || window;
     }
 }

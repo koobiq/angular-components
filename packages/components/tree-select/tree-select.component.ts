@@ -2,7 +2,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, ViewportRuler } from '@angular/cdk/overlay';
-import { _getEventTarget } from '@angular/cdk/platform';
+import { Platform, _getEventTarget } from '@angular/cdk/platform';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -196,6 +196,8 @@ export class KbqTreeSelect
         KbqFormFieldControl<KbqTreeOption>,
         CanUpdateErrorState
 {
+    protected readonly isBrowser = inject(Platform).isBrowser;
+
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
 
     /** A name for this control that can be used by `kbq-form-field`. */
@@ -930,9 +932,7 @@ export class KbqTreeSelect
     }
 
     calculateHiddenItems() {
-        if (this.customTrigger || this.empty || !this.multiple || this.customMatcher) {
-            return;
-        }
+        if (!this.isBrowser || this.customTrigger || this.empty || !this.multiple || this.customMatcher) return;
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
@@ -1038,7 +1038,7 @@ export class KbqTreeSelect
     }
 
     private getItemWidth(element: HTMLElement): number {
-        const computedStyle = window.getComputedStyle(element);
+        const computedStyle = getComputedStyle(element);
 
         const width: number = parseInt(computedStyle.width as string);
         const marginLeft: number = parseInt(computedStyle.marginLeft as string);

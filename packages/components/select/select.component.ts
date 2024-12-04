@@ -2,6 +2,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, OverlayContainer } from '@angular/cdk/overlay';
+import { Platform } from '@angular/cdk/platform';
 import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import {
     AfterContentInit,
@@ -197,6 +198,8 @@ export class KbqSelect
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
+    protected readonly isBrowser = inject(Platform).isBrowser;
+
     private readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
 
     /** A name for this control that can be used by `kbq-form-field`. */
@@ -897,9 +900,7 @@ export class KbqSelect
     }
 
     calculateHiddenItems(): void {
-        if (this.customTrigger || this.empty || !this.multiple || this.customMatcher) {
-            return;
-        }
+        if (!this.isBrowser || this.customTrigger || this.empty || !this.multiple || this.customMatcher) return;
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
@@ -1014,7 +1015,7 @@ export class KbqSelect
     }
 
     private getItemWidth(element: HTMLElement): number {
-        const computedStyle = window.getComputedStyle(element);
+        const computedStyle = getComputedStyle(element);
 
         const width: number = parseInt(computedStyle.width);
         const marginLeft: number = parseInt(computedStyle.marginLeft);

@@ -50,6 +50,8 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     set id(value: string);
     protected isBadInput(): boolean;
     // (undocumented)
+    protected readonly isBrowser: boolean;
+    // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
     ngOnChanges(): void;

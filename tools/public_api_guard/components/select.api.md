@@ -154,6 +154,8 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     get id(): string;
     set id(value: string);
     // (undocumented)
+    protected readonly isBrowser: boolean;
+    // (undocumented)
     get isEmptySearchResult(): boolean;
     // (undocumented)
     isRtl(): boolean;

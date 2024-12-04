@@ -9,7 +9,7 @@ import {
     ScrollStrategy,
     VerticalConnectionPos
 } from '@angular/cdk/overlay';
-import { normalizePassiveListenerOptions } from '@angular/cdk/platform';
+import { normalizePassiveListenerOptions, Platform } from '@angular/cdk/platform';
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterContentInit,
@@ -17,6 +17,7 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    inject,
     Inject,
     InjectionToken,
     Input,
@@ -27,7 +28,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
-import { Observable, Subscription, asapScheduler, merge, of as observableOf } from 'rxjs';
+import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
 import { KbqDropdownItem } from './dropdown-item.component';
@@ -72,6 +73,8 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
     }
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
+    protected readonly isBrowser = inject(Platform).isBrowser;
+
     lastDestroyReason: DropdownCloseReason;
 
     /** Data to be passed along to any lazily-rendered content. */
@@ -584,9 +587,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     }
 
     private getWidth(): string {
+        if (!this.isBrowser) return '';
+
         const nativeElement = this.elementRef.nativeElement;
 
-        const { width, borderRightWidth, borderLeftWidth } = window.getComputedStyle(nativeElement);
+        const { width, borderRightWidth, borderLeftWidth } = getComputedStyle(nativeElement);
 
         return `${parseInt(width) - parseInt(borderRightWidth) - parseInt(borderLeftWidth)}px`;
     }

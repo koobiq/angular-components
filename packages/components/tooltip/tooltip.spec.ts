@@ -46,7 +46,7 @@ describe('KbqTooltip', () => {
         tick(tooltipDefaultEnterDelayWithDefer);
 
         const tooltip = overlayContainer.getContainerElement().querySelector(selector);
-        const styles = tooltip && window.getComputedStyle(tooltip);
+        const styles = tooltip && getComputedStyle(tooltip);
 
         return [
             tooltip,

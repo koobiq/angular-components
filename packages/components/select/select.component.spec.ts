@@ -3581,7 +3581,7 @@ describe(KbqSelect.name, () => {
             const overlayTop: number = overlayPane.getBoundingClientRect().top;
             const options: NodeListOf<HTMLElement> = overlayPane.querySelectorAll('kbq-option');
             const optionTop = options[index].getBoundingClientRect().top;
-            const triggerFontSize = parseInt(window.getComputedStyle(trigger)['font-size']);
+            const triggerFontSize = parseInt(getComputedStyle(trigger)['font-size']);
             const triggerLineHeightEm = 1.125;
 
             // Extra trigger height beyond the font size caused by the fact that the line-height is

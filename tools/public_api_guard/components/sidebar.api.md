@@ -23,6 +23,8 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
     // (undocumented)
     closedContent: KbqSidebarClosed;
     // (undocumented)
+    protected readonly document: Document;
+    // (undocumented)
     internalState: boolean;
     // (undocumented)
     ngAfterContentInit(): void;

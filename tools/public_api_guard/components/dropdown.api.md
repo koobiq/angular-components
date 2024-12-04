@@ -136,10 +136,12 @@ export const kbqDropdownAnimations: {
 
 // @public
 export class KbqDropdownContent implements OnDestroy {
-    constructor(template: TemplateRef<any>, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef, document: any);
+    constructor(template: TemplateRef<any>, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, viewContainerRef: ViewContainerRef);
     attach(context?: any): void;
     attached: Subject<void>;
     detach(): void;
+    // (undocumented)
+    protected readonly document: Document;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -256,6 +258,8 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     handleClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     handleMousedown(event: MouseEvent): void;
+    // (undocumented)
+    protected readonly isBrowser: boolean;
     isNested(): boolean;
     // (undocumented)
     lastDestroyReason: DropdownCloseReason;

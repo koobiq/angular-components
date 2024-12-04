@@ -124,6 +124,8 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     get id(): string;
     set id(value: string);
     // (undocumented)
+    protected readonly isBrowser: boolean;
+    // (undocumented)
     isEmptySearchResult: boolean;
     // (undocumented)
     isRtl(): boolean;

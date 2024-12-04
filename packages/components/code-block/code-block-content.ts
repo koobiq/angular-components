@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
     Directive,
@@ -22,12 +23,18 @@ const KBQ_CODE_BLOCK_FALLBACK_LANGUAGE = 'plaintext';
     }
 })
 export class KbqCodeBlockContent {
-    private readonly elementRef = inject(ElementRef);
+    protected readonly document = inject<Document>(DOCUMENT);
+    private readonly nativeElement = inject(ElementRef).nativeElement;
     private readonly renderer = inject(Renderer2);
     private readonly domSanitizer = inject(DomSanitizer);
 
     /** The code file. */
-    @Input({ required: true }) set file({ language, content }: KbqCodeBlockFile) {
+    @Input({ required: true })
+    set file({ language, content }: KbqCodeBlockFile) {
+        const window = this.getWindow();
+
+        if (!window) return;
+
         if (!hljs.getLanguage(language)) {
             console.warn(`[KBQ] Unknown language: "${language}". Setting to "${KBQ_CODE_BLOCK_FALLBACK_LANGUAGE}".`);
             language = KBQ_CODE_BLOCK_FALLBACK_LANGUAGE;
@@ -39,8 +46,8 @@ export class KbqCodeBlockContent {
             singleLine: this.singleLine
         });
 
-        this.renderer.setAttribute(this.elementRef.nativeElement, 'data-language', highlightedLanguage!);
-        this.renderer.setProperty(this.elementRef.nativeElement, 'innerHTML', highlightedHTMLWithLineNumbers);
+        this.renderer.setAttribute(this.nativeElement, 'data-language', highlightedLanguage!);
+        this.renderer.setProperty(this.nativeElement, 'innerHTML', highlightedHTMLWithLineNumbers);
     }
 
     /** The starting line number. */
@@ -53,10 +60,16 @@ export class KbqCodeBlockContent {
         this.initLineNumbersPlugin();
     }
 
-    /**
-     * @TODO Add SSR support (#DS-3173)
-     */
+    /** Use defaultView of injected document if available or fallback to global window reference */
+    private getWindow(): Window {
+        return this.document?.defaultView || window;
+    }
+
     private initLineNumbersPlugin(): void {
+        const window = this.getWindow();
+
+        if (!window) return;
+
         window['hljs'] = hljs;
         this.highlightJSLineNumbersPlugin();
     }
@@ -69,8 +82,10 @@ export class KbqCodeBlockContent {
     private highlightJSLineNumbersPlugin(): void {
         'use strict';
 
-        const w = window;
-        const d = document;
+        const d = this.document;
+        const w = this.getWindow();
+
+        if (!w) return;
 
         const TABLE_NAME = 'hljs-ln',
             LINE_NAME = 'hljs-ln-line',
@@ -88,7 +103,7 @@ export class KbqCodeBlockContent {
 
             addStyles();
         } else {
-            w.console.error('highlight.js not detected!');
+            console.error('highlight.js not detected!');
         }
 
         function isHljsLnCodeDescendant(domElt) {
@@ -233,7 +248,7 @@ export class KbqCodeBlockContent {
                     }
                 }
             } catch (e) {
-                w.console.error('LineNumbers error: ', e);
+                console.error('LineNumbers error: ', e);
             }
         }
 
