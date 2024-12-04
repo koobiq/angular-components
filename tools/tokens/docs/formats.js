@@ -30,10 +30,9 @@ module.exports = (StyleDictionary) => {
         formatter: function ({ dictionary }) {
             const filtered = [];
             for (const token of dictionary.allTokens) {
-                const typeMissed =
-                    filtered.findIndex((filteredToken) => filteredToken.attributes.type === token.attributes.type) ===
-                    -1;
-                if (typeMissed) {
+                const isTypographyTypeMissing =
+                    filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
+                if (isTypographyTypeMissing) {
                     filtered.push(token);
                 }
             }

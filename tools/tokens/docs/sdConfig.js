@@ -10,6 +10,7 @@ module.exports = {
                 {
                     filter: (token) =>
                         ['light', 'dark'].includes(token.attributes.category) &&
+                        token.attributes.item !== 'palette' &&
                         !token.attributes.category.includes('palette'),
                     fileHeader: ['### Colors'],
                     destination: 'colors.tmp.md',

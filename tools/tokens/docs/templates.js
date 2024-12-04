@@ -1,17 +1,22 @@
 const { LINE_SEP } = require('./config');
 
-const descriptionTemplate = (name, description = '') =>
-    `<h5 class="kbq-text-big-strong layout-margin-bottom-l">${name}</h5> <p class="kbq-text-normal">${description}</p>`;
+const descriptionTemplate = (name, description = '') => {
+    if (description) {
+        return `<div class="kbq-text-big-strong layout-margin-bottom-l">${name}</div> <div class="kbq-text-normal">${description}</div>`;
+    }
 
-const varTemplate = (designToken) => `<code class="kbq-markdown__code">--${designToken}</code>`;
+    return `<div class="kbq-text-big-strong layout-margin-bottom-l">${name}</div>`;
+};
+
+const varTemplate = (designToken) => '```' + `--${designToken}` + '```';
 
 const exampleTemplate = (designToken) =>
-    `<div class="kbq-design-token-example kbq-design-token-example__colors" style="${designToken}"></div>`;
+    `<div class="kbq-design-token-example__dimensions" style="${designToken}"></div>`;
 
 const varTypographyTemplate = (name) => `class="kbq-${name}"`;
 
 const exampleTypographyTemplate = (typographyType) => {
-    return `<div class="kbq-design-token-example kbq-${typographyType}">${typographyType}</div>`;
+    return `<div class="kbq-${typographyType}">${typographyType}</div>`;
 };
 
 module.exports = {
