@@ -21,7 +21,7 @@ module.exports = (StyleDictionary) => {
                 .filter((token, pos, allTokens) => allTokens.indexOf(token) === pos);
 
             const mappedTokens = dictionary.allTokens.map(mapToken);
-            return `### Colors${LINE_SEP}` + outputTable(mappedTokens);
+            return `### Цвета${LINE_SEP}` + outputTable(mappedTokens);
         }
     });
 
@@ -36,9 +36,19 @@ module.exports = (StyleDictionary) => {
                     filtered.push(token);
                 }
             }
+            // Sort with design guidelines
+            filtered.sort((a, b) => {
+                if (a.attributes.type < b.attributes.type) {
+                    return -1;
+                }
+                if (a.attributes.type > b.attributes.type) {
+                    return 1;
+                }
+                return 0;
+            });
             const mappedTokens = filtered.map(mapTypography);
 
-            return `### Typography${LINE_SEP}` + outputTable(mappedTokens);
+            return `### Типографика${LINE_SEP}` + outputTable(mappedTokens);
         }
     });
 
@@ -46,7 +56,7 @@ module.exports = (StyleDictionary) => {
         name: 'docs/globals',
         formatter: function ({ dictionary }) {
             const mappedTokens = dictionary.allTokens.map(mapGlobals);
-            return `### Sizes${LINE_SEP}` + outputTable(mappedTokens);
+            return `### Размеры${LINE_SEP}` + outputTable(mappedTokens);
         }
     });
 
@@ -76,7 +86,7 @@ module.exports = (StyleDictionary) => {
             });
 
             const mappedTokens = dictionary.allTokens.map(mapShadows);
-            return `### Shadows${LINE_SEP}` + outputTable(mappedTokens);
+            return `### Тени${LINE_SEP}` + outputTable(mappedTokens);
         }
     });
 };
