@@ -20,6 +20,9 @@ export class KbqSidepanelConfig<D = any> {
     /** ID for the sidepanel. If omitted, a unique one will be generated. */
     id?: string;
 
+    /** capture focus on initialization. This option sets cdkTrapFocusAutoCapture. */
+    trapFocusAutoCapture?: boolean;
+
     /** Data being injected into the child component. */
     data?: D | null = null;
 

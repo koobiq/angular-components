@@ -95,6 +95,7 @@ export class KbqSidepanelConfig<D = any> {
     requiredBackdrop?: boolean;
     // (undocumented)
     size?: KbqSidepanelSize;
+    trapFocusAutoCapture?: boolean;
 }
 
 // @public (undocumented)
@@ -122,6 +123,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     sidepanelConfig: KbqSidepanelConfig;
     // (undocumented)
     get size(): string;
+    // (undocumented)
+    get trapFocusAutoCapture(): boolean;
     // (undocumented)
     withIndent: boolean;
     // (undocumented)
