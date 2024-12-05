@@ -24,7 +24,7 @@ import { timezones } from '../mock';
     imports: [KbqFormFieldModule, KbqTimezoneModule, KbqInputModule, ReactiveFormsModule, AsyncPipe, KbqOptionModule],
     template: `
         <kbq-form-field>
-            <kbq-timezone-select panelWidth="auto" [(value)]="selected">
+            <kbq-timezone-select [(value)]="selected" panelWidth="auto">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input
