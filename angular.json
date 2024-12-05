@@ -506,6 +506,35 @@
                 }
             }
         },
+        "dev-breadcrumbs": {
+            "projectType": "application",
+            "root": "packages/components-dev/breadcrumbs",
+            "sourceRoot": "packages/components-dev/breadcrumbs",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/breadcrumbs"
+                        },
+                        "tsConfig": "packages/components-dev/breadcrumbs/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/breadcrumbs/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-breadcrumbs:build"
+                    }
+                }
+            }
+        },
         "dev-button": {
             "projectType": "application",
             "root": "packages/components-dev/button",
