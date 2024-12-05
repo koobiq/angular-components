@@ -1,0 +1,52 @@
+@use 'button-base' as *;
+
+@use '../core/styles/common/tokens' as *;
+
+@use './button-theme' as *;
+
+.kbq-button {
+    @extend %kbq-button-base;
+
+    // base padding - border-width
+    padding-left: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
+    padding-right: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
+
+    &.kbq-button-icon_left {
+        padding-left: kbq-difference-series-css-variables(
+            [button-icon-size-horizontal-padding,
+            button-size-border-width]
+        );
+    }
+
+    &.kbq-button-icon_right {
+        padding-right: kbq-difference-series-css-variables(
+            [button-icon-size-horizontal-padding,
+            button-size-border-width]
+        );
+    }
+}
+
+.kbq-light-button {
+    @extend %kbq-button-base;
+}
+
+.kbq-button-icon {
+    @extend %kbq-button-base;
+
+    padding-left: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
+    padding-right: kbq-difference-series-css-variables([button-icon-size-horizontal-padding, button-size-border-width]);
+}
+
+.kbq-button-overlay {
+    position: absolute;
+
+    top: calc(-1 * #{var(--kbq-button-size-border-width)});
+    left: calc(-1 * #{var(--kbq-button-size-border-width)});
+    right: calc(-1 * #{var(--kbq-button-size-border-width)});
+    bottom: calc(-1 * #{var(--kbq-button-size-border-width)});
+
+    border-radius: inherit;
+}
+
+@include kbq-button-theme();
+@include kbq-button-typography();
