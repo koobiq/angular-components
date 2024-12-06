@@ -15,6 +15,7 @@ import { KbqToastModule } from '@koobiq/components/toast';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { AnchorsModule } from './components/anchors/anchors.module';
 import { ComponentViewerModule } from './components/component-viewer/component-viewer.module';
+import { DesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
 import { DocumentationItems } from './components/documentation-items';
 import { DocStates } from './components/doс-states';
 import { FooterModule } from './components/footer/footer.module';
@@ -52,7 +53,8 @@ import { APP_ROUTES } from './docs.module-routes';
         }),
         ComponentViewerModule,
         IconsViewerModule,
-        SidenavModule
+        SidenavModule,
+        DesignTokensViewer
 
     ],
     declarations: [DocsAppComponent, PageNotFoundComponent],

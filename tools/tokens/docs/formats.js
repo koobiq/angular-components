@@ -5,7 +5,8 @@ const {
     mapGlobals,
     mapBorderWidth,
     mapBorderRadius,
-    mapShadows
+    mapShadows,
+    outputTypographyTable
 } = require('./templates');
 const { LINE_SEP } = require('./config');
 
@@ -32,23 +33,21 @@ module.exports = (StyleDictionary) => {
             for (const token of dictionary.allTokens) {
                 const isTypographyTypeMissing =
                     filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
-                if (isTypographyTypeMissing) {
+                if (isTypographyTypeMissing && token.attributes.item === 'font-size') {
                     filtered.push(token);
                 }
             }
-            // Sort with design guidelines
+            // Sort by font-size
             filtered.sort((a, b) => {
-                if (a.attributes.type < b.attributes.type) {
-                    return -1;
-                }
-                if (a.attributes.type > b.attributes.type) {
-                    return 1;
-                }
+                const aFontSize = parseInt(a.value);
+                const bFontSize = parseInt(b.value);
+                if (parseInt(aFontSize) < parseInt(bFontSize)) return 1;
+                if (parseInt(aFontSize) > parseInt(bFontSize)) return -1;
                 return 0;
             });
             const mappedTokens = filtered.map(mapTypography);
 
-            return `### Типографика${LINE_SEP}` + outputTable(mappedTokens);
+            return `### Типографика${LINE_SEP}` + outputTypographyTable(mappedTokens);
         }
     });
 

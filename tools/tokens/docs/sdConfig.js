@@ -13,40 +13,33 @@ module.exports = {
                         token.attributes.item !== 'palette' &&
                         !token.attributes.category.includes('palette'),
                     fileHeader: ['### Colors'],
-                    destination: 'colors.tmp.md',
+                    destination: 'colors.md',
                     format: 'docs/colors',
                     prefix: 'kbq'
                 },
                 {
                     filter: (token) => token.attributes.category === 'typography',
-                    destination: 'typography.tmp.md',
+                    destination: 'typography.md',
                     format: 'docs/typography',
                     prefix: 'kbq'
                 },
                 {
                     filter: (token) =>
-                        token.attributes.category === 'size' && !token.attributes.type.includes('border'),
-                    destination: 'globals.tmp.md',
+                        token.attributes.category === 'size' && !token.attributes.type.includes('border-radius'),
+                    destination: 'sizes.md',
                     format: 'docs/globals',
                     prefix: 'kbq'
                 },
                 {
                     filter: (token) =>
-                        token.attributes.category === 'size' && token.attributes.type.includes('border-width'),
-                    destination: 'border-width.tmp.md',
-                    format: 'docs/border-width',
-                    prefix: 'kbq'
-                },
-                {
-                    filter: (token) =>
                         token.attributes.category === 'size' && token.attributes.type.includes('border-radius'),
-                    destination: 'border-radius.tmp.md',
+                    destination: 'border-radius.md',
                     format: 'docs/border-radius',
                     prefix: 'kbq'
                 },
                 {
                     filter: (token) => token.attributes.category === 'shadow',
-                    destination: 'shadows.tmp.md',
+                    destination: 'shadows.md',
                     format: 'docs/shadows',
                     prefix: 'kbq'
                 }

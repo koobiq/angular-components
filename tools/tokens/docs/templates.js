@@ -13,8 +13,16 @@ const varTemplate = (designToken) => `<code kbq-code-snippet style="cursor: poin
 const exampleTemplate = (designToken) =>
     `<div class="kbq-design-token-example__dimensions" style="${designToken}"></div>`;
 
+const sizesTemplate = (designToken) => {
+    const varTemplate = `var(--${designToken.name})`;
+    const styles = designToken.attributes.type.includes('border-width')
+        ? `border: ${varTemplate} solid black;`
+        : `width: ${varTemplate}; height: ${varTemplate};`;
+    return `<div class="kbq-design-token-example__dimensions" style="${styles}"></div>`;
+};
+
 const exampleTypographyTemplate = (typographyType) => {
-    return `<div class="kbq-${typographyType}">${typographyType}</div>`;
+    return `<div class="kbq-design-token-example__typography kbq-${typographyType}">${typographyType}</div>`;
 };
 
 module.exports = {
@@ -32,6 +40,21 @@ module.exports = {
         );
     },
 
+    outputTypographyTable: (tokens) => {
+        return `<table class="kbq-markdown__table">
+                    <tbody class="kbq-markdown__tbody">
+                                ${tokens
+                                    .map(({ example, varSnippet }) => {
+                                        return `<tr class="kbq-markdown__tr">
+                                                <td align="left" class="kbq-markdown__td">${example}</td>
+                                                <td align="left" class="kbq-markdown__td">${varSnippet}</td>
+                                            </tr>`;
+                                    })
+                                    .join(LINE_SEP)}
+                    </tbody>
+             </table>`;
+    },
+
     mapToken: (token) => ({
         varSnippet: varTemplate(`--${token.name}`),
         example: exampleTemplate(`background-color: var(--${token.name})`),
@@ -40,13 +63,12 @@ module.exports = {
 
     mapTypography: (token) => ({
         varSnippet: varTemplate(`.kbq-${token.attributes.type}`),
-        example: exampleTypographyTemplate(token.attributes.type),
-        description: descriptionTemplate(token.attributes.type, token.description)
+        example: exampleTypographyTemplate(token.attributes.type)
     }),
 
     mapGlobals: (token) => ({
         varSnippet: varTemplate(`--${token.name}`),
-        example: exampleTemplate(`width: var(--${token.name}); height: var(--${token.name});`),
+        example: sizesTemplate(token),
         description: descriptionTemplate(token.name, token.description)
     }),
 
