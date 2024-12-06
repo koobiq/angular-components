@@ -9,6 +9,7 @@ import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { CopyButtonModule } from 'src/app/components/copy-button/copy-button';
 import { AnchorsModule } from '../anchors/anchors.module';
+import { CodeSnippet } from '../code-snippet/code-snippet';
 import { DocExampleViewerModule } from '../doc-example-viewer/doc-example-viewer-module';
 import { DocsLiveExampleModule } from '../docs-live-example/docs-live-example-module';
 import { DocumentationItems } from '../documentation-items';
@@ -40,7 +41,8 @@ import {
         SidenavModule,
         NavbarModule,
         KbqIconModule,
-        KbqLinkModule
+        KbqLinkModule,
+        CodeSnippet
     ],
     declarations: [
         ComponentViewerComponent,

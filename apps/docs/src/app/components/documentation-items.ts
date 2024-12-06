@@ -92,6 +92,14 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasApi: false,
                     hasExamples: false,
                     examples: ['typography-types']
+                },
+                {
+                    id: 'design-tokens',
+                    name: 'Дизайн-токены',
+                    svgPreview: '',
+                    hasApi: false,
+                    hasExamples: false,
+                    examples: []
                 }
             ]
         }

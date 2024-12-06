@@ -1,0 +1,3 @@
+| Скругление                                                                                                     | Токен                                                                          | Значение                                                      |
+| :------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------- | :------------------------------------------------------------ |
+| <div class="kbq-design-token-example__dimensions" style="border-radius: var(--kbq-size-border-radius);"></div> | <code kbq-code-snippet style="cursor: pointer">--kbq-size-border-radius</code> | <div class="kbq-text-normal layout-margin-bottom-l">8px</div> |
