@@ -1,12 +1,6 @@
 const { LINE_SEP } = require('./config');
 
-const descriptionTemplate = (name, description = '') => {
-    if (description) {
-        return `<div class="kbq-text-big-strong layout-margin-bottom-l">${name}</div> <div class="kbq-text-normal">${description}</div>`;
-    }
-
-    return `<div class="kbq-text-big-strong layout-margin-bottom-l">${name}</div>`;
-};
+const descriptionTemplate = (token) => `<div class="kbq-text-normal layout-margin-bottom-l">${token.value}</div>`;
 
 const varTemplate = (designToken) => `<code kbq-code-snippet style="cursor: pointer">${designToken}</code>`;
 
@@ -29,12 +23,12 @@ module.exports = {
     descriptionTemplate,
     varTemplate,
     exampleTemplate,
-    outputTable: (tokens) => {
+    outputTable: (type, tokens) => {
         return (
-            '| Example | Description | Var |\r\n| :--- | :---| :---|\r\n' +
+            `| ${type} | Токен | Значение |\r\n| :--- | :---| :---|\r\n` +
             tokens
                 .map(({ example, varSnippet, description }) => {
-                    return `| ${example} | ${description} | ${varSnippet} |`;
+                    return `| ${example} | ${varSnippet} | ${description} |`;
                 })
                 .join(LINE_SEP)
         );
@@ -55,10 +49,10 @@ module.exports = {
              </table>`;
     },
 
-    mapToken: (token) => ({
+    mapColors: (token) => ({
         varSnippet: varTemplate(`--${token.name}`),
         example: exampleTemplate(`background-color: var(--${token.name})`),
-        description: descriptionTemplate(token.name, token.description)
+        description: descriptionTemplate(token)
     }),
 
     mapTypography: (token) => ({
@@ -69,24 +63,24 @@ module.exports = {
     mapGlobals: (token) => ({
         varSnippet: varTemplate(`--${token.name}`),
         example: sizesTemplate(token),
-        description: descriptionTemplate(token.name, token.description)
+        description: descriptionTemplate(token)
     }),
 
     mapBorderWidth: (token) => ({
         varSnippet: varTemplate(`--${token.name}`),
         example: exampleTemplate(`border: var(--${token.name}) solid black;`),
-        description: descriptionTemplate(token.name, token.description)
+        description: descriptionTemplate(token)
     }),
 
     mapBorderRadius: (token) => ({
         varSnippet: varTemplate(`--${token.name}`),
         example: exampleTemplate(`border-radius: var(--${token.name});`),
-        description: descriptionTemplate(token.name, token.description)
+        description: descriptionTemplate(token)
     }),
 
     mapShadows: (token) => ({
         varSnippet: varTemplate(`--${token.name}`),
         example: exampleTemplate(`box-shadow: var(--${token.name});`),
-        description: descriptionTemplate(token.name, token.description)
+        description: descriptionTemplate(token)
     })
 };

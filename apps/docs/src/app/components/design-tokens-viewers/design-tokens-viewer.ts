@@ -59,7 +59,8 @@ export class DesignTokensViewer extends ComponentViewerComponent implements OnIn
         { viewValue: 'Цвета', value: 'colors' },
         { viewValue: 'Тени', value: 'shadows' },
         { viewValue: 'Скругления', value: 'border-radius' },
-        { viewValue: 'Размеры', value: 'sizes' }
+        { viewValue: 'Размеры', value: 'sizes' },
+        { viewValue: 'Типографика', value: 'typography' }
     ];
 
     constructor(

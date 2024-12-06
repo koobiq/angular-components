@@ -1,5 +1,3 @@
-### Типографика
-
 <table class="kbq-markdown__table">
                     <tbody class="kbq-markdown__tbody">
                                 <tr class="kbq-markdown__tr">

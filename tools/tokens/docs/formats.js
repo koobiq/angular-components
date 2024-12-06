@@ -1,5 +1,5 @@
 const {
-    mapToken,
+    mapColors,
     outputTable,
     mapTypography,
     mapGlobals,
@@ -8,7 +8,6 @@ const {
     mapShadows,
     outputTypographyTable
 } = require('./templates');
-const { LINE_SEP } = require('./config');
 
 module.exports = (StyleDictionary) => {
     StyleDictionary.registerFormat({
@@ -21,8 +20,8 @@ module.exports = (StyleDictionary) => {
                 })
                 .filter((token, pos, allTokens) => allTokens.indexOf(token) === pos);
 
-            const mappedTokens = dictionary.allTokens.map(mapToken);
-            return `### Цвета${LINE_SEP}` + outputTable(mappedTokens);
+            const mappedTokens = dictionary.allTokens.map(mapColors);
+            return outputTable('Цвет', mappedTokens);
         }
     });
 
@@ -47,7 +46,7 @@ module.exports = (StyleDictionary) => {
             });
             const mappedTokens = filtered.map(mapTypography);
 
-            return `### Типографика${LINE_SEP}` + outputTypographyTable(mappedTokens);
+            return outputTypographyTable(mappedTokens);
         }
     });
 
@@ -55,7 +54,7 @@ module.exports = (StyleDictionary) => {
         name: 'docs/globals',
         formatter: function ({ dictionary }) {
             const mappedTokens = dictionary.allTokens.map(mapGlobals);
-            return `### Размеры${LINE_SEP}` + outputTable(mappedTokens);
+            return outputTable('Размер', mappedTokens);
         }
     });
 
@@ -64,7 +63,7 @@ module.exports = (StyleDictionary) => {
         formatter: function ({ dictionary }) {
             const mappedTokens = dictionary.allTokens.map(mapBorderWidth);
 
-            return `### Border-width${LINE_SEP}` + outputTable(mappedTokens);
+            return outputTable('Ширина обводки', mappedTokens);
         }
     });
 
@@ -72,7 +71,7 @@ module.exports = (StyleDictionary) => {
         name: 'docs/border-radius',
         formatter: function ({ dictionary }) {
             const mappedTokens = dictionary.allTokens.map(mapBorderRadius);
-            return `### Border-radius${LINE_SEP}` + outputTable(mappedTokens);
+            return outputTable('Скругление', mappedTokens);
         }
     });
 
@@ -85,7 +84,7 @@ module.exports = (StyleDictionary) => {
             });
 
             const mappedTokens = dictionary.allTokens.map(mapShadows);
-            return `### Тени${LINE_SEP}` + outputTable(mappedTokens);
+            return outputTable('Тень', mappedTokens);
         }
     });
 };

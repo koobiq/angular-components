@@ -25,6 +25,7 @@ export const APP_ROUTES: Routes = [
             { path: 'shadows', component: TokensOverview, pathMatch: 'full' },
             { path: 'border-radius', component: TokensOverview, pathMatch: 'full' },
             { path: 'sizes', component: TokensOverview, pathMatch: 'full' },
+            { path: 'typography', component: TokensOverview, pathMatch: 'full' },
             { path: '**', redirectTo: 'colors' }
         ]
     },
