@@ -1,0 +1,21 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use '../core/styles/common/tokens' as *;
+
+@use './svg-icon-item-theme' as *;
+
+.kbq-svg-icon-item {
+    box-sizing: border-box;
+    border-radius: 50%;
+
+    &.kbq-svg-icon-item_normal {
+        padding: var(--kbq-icon-item-size-normal-vertical-padding) var(--kbq-icon-item-size-normal-horizontal-padding);
+    }
+
+    &.kbq-svg-icon-item_big {
+        padding: var(--kbq-icon-item-size-big-vertical-padding) var(--kbq-icon-item-size-big-horizontal-padding);
+    }
+}
+
+@include kbq-svg-icon-item-theme();
