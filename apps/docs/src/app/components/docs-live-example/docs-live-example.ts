@@ -32,6 +32,9 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
                 [canLoad]="false"
             />
         </ng-template>
+        <ng-template #codeSnippet cdkPortal let-htmlContent>
+            <span [innerHTML]="htmlContent" kbq-code-snippet kbqTooltip="Скопировать"></span>
+        </ng-template>
     `,
     host: {
         class: 'docs-live-example kbq-markdown'
@@ -39,6 +42,7 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
 })
 export class DocsLiveExample implements OnDestroy {
     @ViewChild(CdkPortal) codeTemplate: CdkPortal;
+    @ViewChild('codeSnippet', { read: CdkPortal }) codeSnippetTemplate: CdkPortal;
     /** The URL of the document to display. */
     @Input()
     set documentUrl(url: string) {
@@ -119,6 +123,7 @@ export class DocsLiveExample implements OnDestroy {
 
         this.loadComponents('koobiq-docs-example', DocsLiveExampleViewer);
         this.initCodeBlocks();
+        this.initCodeSnippets();
 
         // Resolving and creating components dynamically in Angular happens synchronously, but since
         // we want to emit the output if the components are actually rendered completely, we wait
@@ -161,6 +166,18 @@ export class DocsLiveExample implements OnDestroy {
             this.portalHosts.push(portalHost);
 
             element.classList.replace(markDownClass, 'kbq-docs-pre');
+        });
+    }
+
+    private initCodeSnippets() {
+        const selector = 'kbq-code-snippet';
+        this.nativeElement.querySelectorAll(`[${selector}]`).forEach((element: Element) => {
+            const { outerHTML, textContent } = element;
+            element.innerHTML = '';
+
+            const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
+            this.codeSnippetTemplate.attach(portalHost, { $implicit: outerHTML, textContent });
+            this.portalHosts.push(portalHost);
         });
     }
 
