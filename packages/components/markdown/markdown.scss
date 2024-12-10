@@ -118,13 +118,11 @@
     }
 
     .kbq-markdown__pre,
-    .kbq-markdown__p > .kbq-markdown__code,
-    .kbq-markdown__a > .kbq-markdown__code {
+    .kbq-markdown__code {
         border-radius: var(--kbq-markdown-code-size-border-radius);
     }
 
-    .kbq-markdown__p > .kbq-markdown__code,
-    .kbq-markdown__a > .kbq-markdown__code {
+    .kbq-markdown__code {
         white-space: nowrap;
         padding: var(--kbq-markdown-code-size-inline-padding);
     }

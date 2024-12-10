@@ -31,23 +31,23 @@
         }
 
         .kbq-markdown__pre,
-        .kbq-markdown__p > .kbq-markdown__code {
+        .kbq-markdown__code:not(.kbq-markdown__a .kbq-markdown__code) {
             color: var(--kbq-markdown-code-text);
             background-color: var(--kbq-markdown-code-background);
         }
 
-        .kbq-markdown__a > .kbq-markdown__code {
+        .kbq-markdown__a .kbq-markdown__code {
             background-color: var(--kbq-markdown-code-background);
-        }
-
-        .kbq-markdown__a:has(.kbq-markdown__code) {
-            display: inline;
-            border-bottom: none;
         }
 
         .kbq-markdown__a {
             color: var(--kbq-markdown-link-text, var(--kbq-foreground-theme));
             border-bottom-color: var(--kbq-markdown-link-border-bottom, var(--kbq-line-theme-less));
+
+            &:has(.kbq-markdown__code) {
+                display: inline;
+                border-bottom: none;
+            }
 
             &:visited {
                 color: var(--kbq-markdown-link-state-visited-text, var(--kbq-foreground-visited));
