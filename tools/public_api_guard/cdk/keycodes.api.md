@@ -143,9 +143,6 @@ export const FOUR = 52;
 export const G = 71;
 
 // @public (undocumented)
-export function getEventTargetWithShadowRoot(event: Event): Element;
-
-// @public (undocumented)
 export const H = 72;
 
 // Warning: (ae-forgotten-export) The symbol "ModifierKey" needs to be exported by the entry point index.d.ts
