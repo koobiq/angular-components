@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CodeBlockWithCustomLocaleConfigurationExample } from './code-block-with-custom-locale-configuration/code-block-with-custom-locale-configuration-example';
 import { CodeBlockWithFilledExample } from './code-block-with-filled/code-block-with-filled-example';
 import { CodeBlockWithLineNumbersExample } from './code-block-with-line-numbers/code-block-with-line-numbers-example';
 import { CodeBlockWithMaxHeightExample } from './code-block-with-max-height/code-block-with-max-height-example';
@@ -7,6 +8,7 @@ import { CodeBlockWithSoftWrapExample } from './code-block-with-soft-wrap/code-b
 import { CodeBlockWithTabsExample } from './code-block-with-tabs/code-block-with-tabs-example';
 
 export {
+    CodeBlockWithCustomLocaleConfigurationExample,
     CodeBlockWithFilledExample,
     CodeBlockWithLineNumbersExample,
     CodeBlockWithMaxHeightExample,
@@ -21,7 +23,8 @@ const EXAMPLES = [
     CodeBlockWithMaxHeightExample,
     CodeBlockWithFilledExample,
     CodeBlockWithNoborderExample,
-    CodeBlockWithLineNumbersExample
+    CodeBlockWithLineNumbersExample,
+    CodeBlockWithCustomLocaleConfigurationExample
 ];
 
 @NgModule({

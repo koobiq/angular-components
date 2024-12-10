@@ -480,6 +480,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
   },
+  "code-block-with-custom-locale-configuration": {
+    "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
+    "title": "Code-block with custom locale configuration",
+    "componentName": "CodeBlockWithCustomLocaleConfigurationExample",
+    "files": [
+      "code-block-with-custom-locale-configuration-example.ts"
+    ],
+    "selector": "code-block-with-custom-locale-configuration-example",
+    "additionalComponents": [],
+    "primaryFile": "code-block-with-custom-locale-configuration-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-with-filled": {
     "packagePath": "components/code-block/code-block-with-filled",
     "title": "Code-block with filled attribute",
@@ -3490,6 +3502,8 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'code-block-with-custom-locale-configuration':
+return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-line-numbers':
