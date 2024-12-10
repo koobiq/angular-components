@@ -1,0 +1,25 @@
+<button kbq-button [color]="colors.ContrastFade" [kbqDropdownTriggerFor]="dropdown" [kbqStyle]="styles.Outline">
+    filter-name
+</button>
+
+<button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+    <i kbq-icon="kbq-xmark-s_16"></i>
+</button>
+
+<kbq-dropdown #dropdown="kbqDropdown">
+    <kbq-form-field kbqFormFieldWithoutBorders>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+
+        <input kbqInput placeholder="Placeholder" [value]="''" />
+
+        <kbq-cleaner />
+    </kbq-form-field>
+
+    <kbq-divider />
+
+    <button kbq-dropdown-item>filter.name</button>
+
+    <kbq-divider />
+
+    <button disabled kbq-dropdown-item>Disabled</button>
+</kbq-dropdown>

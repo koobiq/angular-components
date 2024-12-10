@@ -2,7 +2,23 @@
 
 .kbq-filter-bar {
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .kbq-divider {
+        align-self: center;
+
+        height: 12px !important;
+
+        margin-left: 6px !important;
+        margin-right: 6px !important;
+    }
+
+    .kbq-filter-bar__left {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 }
 
 @include kbq-filter-bar-theme();

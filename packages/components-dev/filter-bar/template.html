@@ -1,4 +1,3 @@
-
 <div style="height: 50px; border: 1px solid red">
     <kbq-filter-bar>
         <kbq-filters>
@@ -6,5 +5,16 @@
             Фильтры
         </kbq-filters>
 
+        <kbq-divider [vertical]="true" />
+
+        <kbq-pipes />
+
+        <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'outline'">
+            <i kbq-icon="kbq-plus_16"></i>
+        </button>
+
+        <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Сбросить</button>
+
+        <kbq-filter-bar-actions />
     </kbq-filter-bar>
 </div>
