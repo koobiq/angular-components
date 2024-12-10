@@ -3,7 +3,6 @@ const {
     outputTable,
     mapTypography,
     mapGlobals,
-    mapBorderWidth,
     mapBorderRadius,
     mapShadows,
     outputTypographyTable
@@ -21,7 +20,7 @@ module.exports = (StyleDictionary) => {
                 .filter((token, pos, allTokens) => allTokens.indexOf(token) === pos);
 
             const mappedTokens = dictionary.allTokens.map(mapColors);
-            return outputTable('Цвет', mappedTokens);
+            return outputTable(mappedTokens);
         }
     });
 
@@ -54,16 +53,7 @@ module.exports = (StyleDictionary) => {
         name: 'docs/globals',
         formatter: function ({ dictionary }) {
             const mappedTokens = dictionary.allTokens.map(mapGlobals);
-            return outputTable('Размер', mappedTokens);
-        }
-    });
-
-    StyleDictionary.registerFormat({
-        name: 'docs/border-width',
-        formatter: function ({ dictionary }) {
-            const mappedTokens = dictionary.allTokens.map(mapBorderWidth);
-
-            return outputTable('Ширина обводки', mappedTokens);
+            return outputTable(mappedTokens);
         }
     });
 
@@ -71,7 +61,7 @@ module.exports = (StyleDictionary) => {
         name: 'docs/border-radius',
         formatter: function ({ dictionary }) {
             const mappedTokens = dictionary.allTokens.map(mapBorderRadius);
-            return outputTable('Скругление', mappedTokens);
+            return outputTable(mappedTokens);
         }
     });
 
@@ -84,7 +74,7 @@ module.exports = (StyleDictionary) => {
             });
 
             const mappedTokens = dictionary.allTokens.map(mapShadows);
-            return outputTable('Тень', mappedTokens);
+            return outputTable(mappedTokens);
         }
     });
 };

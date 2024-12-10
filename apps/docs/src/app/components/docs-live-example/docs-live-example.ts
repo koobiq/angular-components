@@ -33,7 +33,7 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
             />
         </ng-template>
         <ng-template #codeSnippet cdkPortal let-htmlContent>
-            <span [innerHTML]="htmlContent" kbq-code-snippet kbqTooltip="Скопировать"></span>
+            <span class="kbq-mono-normal" [innerHTML]="htmlContent" kbq-code-snippet kbqTooltip="Скопировать"></span>
         </ng-template>
     `,
     host: {
@@ -172,11 +172,11 @@ export class DocsLiveExample implements OnDestroy {
     private initCodeSnippets() {
         const selector = 'kbq-code-snippet';
         this.nativeElement.querySelectorAll(`[${selector}]`).forEach((element: Element) => {
-            const { outerHTML, textContent } = element;
+            const { innerHTML, textContent } = element;
             element.innerHTML = '';
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
-            this.codeSnippetTemplate.attach(portalHost, { $implicit: outerHTML, textContent });
+            this.codeSnippetTemplate.attach(portalHost, { $implicit: innerHTML, textContent });
             this.portalHosts.push(portalHost);
         });
     }

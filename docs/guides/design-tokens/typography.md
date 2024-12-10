@@ -1,180 +1,180 @@
-<table class="kbq-markdown__table">
-                    <tbody class="kbq-markdown__tbody">
-                                <tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-display-big">display-big</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-display-big</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-display-big-strong">display-big-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-display-big-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-display-normal">display-normal</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-display-normal</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-display-normal-strong">display-normal-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-display-normal-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-display-compact">display-compact</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-display-compact</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-display-compact-strong">display-compact-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-display-compact-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-headline">headline</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-headline</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-title">title</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-title</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-subheading">subheading</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-subheading</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-navbar-title">navbar-title</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-navbar-title</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-big">text-big</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-big</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-big-medium">text-big-medium</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-big-medium</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-big-strong">text-big-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-big-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-caps-big">caps-big</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-big</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-caps-big-strong">caps-big-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-big-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-mono-big">mono-big</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-big</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-mono-big-strong">mono-big-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-big-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-tabular-big">tabular-big</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-big</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-tabular-big-strong">tabular-big-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-big-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-italic-big">italic-big</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-big</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-italic-big-strong">italic-big-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-big-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-normal">text-normal</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-normal</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-normal-medium">text-normal-medium</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-normal-medium</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-normal-strong">text-normal-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-normal-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-caps-normal">caps-normal</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-normal</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-caps-normal-strong">caps-normal-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-normal-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-mono-normal">mono-normal</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-normal</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-mono-normal-strong">mono-normal-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-normal-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-mono-codeblock">mono-codeblock</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-codeblock</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-tabular-normal">tabular-normal</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-normal</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-tabular-normal-strong">tabular-normal-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-normal-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-italic-normal">italic-normal</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-normal</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-italic-normal-strong">italic-normal-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-normal-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-compact">text-compact</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-compact</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-compact-medium">text-compact-medium</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-compact-medium</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-text-compact-strong">text-compact-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-text-compact-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-caps-compact">caps-compact</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-compact</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-caps-compact-strong">caps-compact-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-compact-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-mono-compact">mono-compact</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-compact</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-mono-compact-strong">mono-compact-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-compact-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-tabular-compact">tabular-compact</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-compact</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-tabular-compact-strong">tabular-compact-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-compact-strong</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-italic-compact">italic-compact</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-compact</code></td>
-                                            </tr>
-<tr class="kbq-markdown__tr">
-                                                <td align="left" class="kbq-markdown__td"><div class="kbq-design-token-example__typography kbq-italic-compact-strong">italic-compact-strong</div></td>
-                                                <td align="left" class="kbq-markdown__td"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-compact-strong</code></td>
-                                            </tr>
+<table id="base-typography-table">
+                    <tbody>
+                        <tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-display-big">Display Big</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-display-big</code><div class="kbq-design-token-example__value kbq-mono-normal">57px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-display-big-strong">Display Big Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-display-big-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">57px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-display-normal">Display Normal</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-display-normal</code><div class="kbq-design-token-example__value kbq-mono-normal">45px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-display-normal-strong">Display Normal Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-display-normal-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">45px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-display-compact">Display Compact</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-display-compact</code><div class="kbq-design-token-example__value kbq-mono-normal">36px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-display-compact-strong">Display Compact Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-display-compact-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">36px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-headline">Headline</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-headline</code><div class="kbq-design-token-example__value kbq-mono-normal">28px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-title">Title</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-title</code><div class="kbq-design-token-example__value kbq-mono-normal">20px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-subheading">Subheading</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-subheading</code><div class="kbq-design-token-example__value kbq-mono-normal">18px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-navbar-title">Navbar Title</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-navbar-title</code><div class="kbq-design-token-example__value kbq-mono-normal">18px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-big">Text Big</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-big</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-big-medium">Text Big Medium</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-big-medium</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-big-strong">Text Big Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-big-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-caps-big">Caps Big</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-big</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-caps-big-strong">Caps Big Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-big-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-mono-big">Mono Big</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-big</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-mono-big-strong">Mono Big Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-big-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-tabular-big">Tabular Big</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-big</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-tabular-big-strong">Tabular Big Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-big-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-italic-big">Italic Big</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-big</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-italic-big-strong">Italic Big Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-big-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">16px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-normal">Text Normal</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-normal</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-normal-medium">Text Normal Medium</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-normal-medium</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-normal-strong">Text Normal Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-normal-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-caps-normal">Caps Normal</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-normal</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-caps-normal-strong">Caps Normal Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-normal-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-mono-normal">Mono Normal</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-normal</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-mono-normal-strong">Mono Normal Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-normal-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-mono-codeblock">Mono Codeblock</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-codeblock</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-tabular-normal">Tabular Normal</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-normal</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-tabular-normal-strong">Tabular Normal Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-normal-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-italic-normal">Italic Normal</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-normal</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-italic-normal-strong">Italic Normal Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-normal-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">14px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-compact">Text Compact</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-compact</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-compact-medium">Text Compact Medium</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-compact-medium</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-text-compact-strong">Text Compact Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-text-compact-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-caps-compact">Caps Compact</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-compact</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-caps-compact-strong">Caps Compact Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-caps-compact-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-mono-compact">Mono Compact</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-compact</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-mono-compact-strong">Mono Compact Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-mono-compact-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-tabular-compact">Tabular Compact</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-compact</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-tabular-compact-strong">Tabular Compact Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-tabular-compact-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-italic-compact">Italic Compact</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-compact</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
+<tr>
+                                        <td align="left"><div class="kbq-design-token-example__typography kbq-italic-compact-strong">Italic Compact Strong</div></td>
+                                        <td align="left" style="vertical-align: bottom"><div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-italic-compact-strong</code><div class="kbq-design-token-example__value kbq-mono-normal">12px</div></div></td>
+                                    </tr>
                     </tbody>
              </table>

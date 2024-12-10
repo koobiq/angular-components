@@ -21,16 +21,14 @@ import { SidenavModule } from '../sidenav/sidenav.module';
             <div class="docs-component-name" docs-header>
                 {{ docItem.name }}
             </div>
-            <div class="docs-component-navbar layout-row layout-padding-top-s">
-                @if (!docItem.isGuide) {
-                    <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
-                        @for (link of links; track link) {
-                            <a [routerLink]="link.value" kbqTabLink routerLinkActive="kbq-selected">
-                                {{ link.viewValue }}
-                            </a>
-                        }
-                    </nav>
-                }
+            <div class="docs-component-navbar layout-padding-top-s">
+                <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
+                    @for (link of links; track link) {
+                        <a [routerLink]="link.value" kbqTabLink routerLinkActive="kbq-selected">
+                            {{ link.viewValue }}
+                        </a>
+                    }
+                </nav>
             </div>
         </div>
 
