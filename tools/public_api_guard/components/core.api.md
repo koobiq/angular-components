@@ -1099,6 +1099,18 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
 
 // @public
+export type KbqCodeBlockLocaleConfiguration = {
+    softWrapOnTooltip: string;
+    softWrapOffTooltip: string;
+    downloadTooltip: string;
+    copiedTooltip: string;
+    copyTooltip: string;
+    viewAllText: string;
+    viewLessText: string;
+    openExternalSystemTooltip: string;
+};
+
+// @public
 export class KbqCommonModule {
     constructor(_sanityChecksEnabled: boolean);
     // (undocumented)

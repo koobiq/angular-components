@@ -5,157 +5,132 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
-import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
-import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i3 from '@koobiq/components/button';
-import * as i4 from '@koobiq/components/tooltip';
-import * as i5 from '@koobiq/components/icon';
-import * as i6 from '@koobiq/components/tabs';
 import { InjectionToken } from '@angular/core';
-import { KbqLocaleService } from '@koobiq/components/core';
-import { KbqTabChangeEvent } from '@koobiq/components/tabs';
-import { KbqTabGroup } from '@koobiq/components/tabs';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { OnDestroy } from '@angular/core';
-import { Renderer2 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { KbqButtonStyles } from '@koobiq/components/button';
+import { KbqCodeBlockLocaleConfiguration } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
+import { Provider } from '@angular/core';
 
-// @public (undocumented)
-export const COPIED_MESSAGE_TOOLTIP_TIMEOUT = 100;
+// @public
+export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE: InjectionToken<string>;
 
-// @public (undocumented)
-export const DEFAULT_EXTENSION = "txt";
+// @public
+export const KBQ_CODE_BLOCK_FALLBACK_FILE_NAME: InjectionToken<string>;
 
-// @public (undocumented)
-export const KBQ_CODE_BLOCK_CONFIGURATION: InjectionToken<any>;
+// @public
+export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLocaleConfiguration>;
 
-// @public (undocumented)
-export const KBQ_CODE_BLOCK_DEFAULT_CONFIGURATION: {
-    softWrapOnTooltip: string;
-    softWrapOffTooltip: string;
-    downloadTooltip: string;
-    copiedTooltip: string;
-    copyTooltip: string;
-    viewAllText: string;
-    viewLessText: string;
-    openExternalSystemTooltip: string;
-};
-
-// @public (undocumented)
-export class KbqCodeBlockComponent implements AfterViewInit, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, clipboard: Clipboard_2, renderer: Renderer2, focusMonitor: FocusMonitor, configuration?: KbqCodeBlockConfiguration | undefined, localeService?: KbqLocaleService | undefined);
-    actionbarHidden?: boolean;
+// @public
+export class KbqCodeBlock implements AfterViewInit {
+    constructor();
+    set activeFileIndex(index: number);
     // (undocumented)
-    canLoad: boolean;
+    get activeFileIndex(): number;
     // (undocumented)
-    canShowFocus(currentCodeContent: HTMLPreElement): boolean;
+    protected readonly buttonStyle: typeof KbqButtonStyles;
     // (undocumented)
-    checkOverflow(currentCodeContentElement: HTMLElement): void;
-    // (undocumented)
-    get codeFiles(): KbqCodeBlockFile[];
+    protected get calculatedMaxHeight(): number | null;
+    canCopy: boolean;
+    canDownload: boolean;
+    // @deprecated (undocumented)
+    set canLoad(value: boolean);
+    canToggleSoftWrap: boolean;
+    protected get codeContentTabIndex(): number;
+    // @deprecated (undocumented)
     set codeFiles(files: KbqCodeBlockFile[]);
-    config: KbqCodeBlockConfiguration;
     // (undocumented)
-    protected configuration?: KbqCodeBlockConfiguration | undefined;
+    protected readonly componentColor: typeof KbqComponentColors;
+    protected copyCode(): void;
+    protected downloadCode(): void;
     // (undocumented)
-    copied: boolean;
-    // (undocumented)
-    copyCode(): void;
-    // (undocumented)
-    readonly currentCodeBlock: Subject<HTMLElement>;
-    // (undocumented)
-    protected readonly document: Document;
-    // (undocumented)
-    downloadCode(): void;
-    // (undocumented)
+    protected readonly fallbackFileName: string;
+    files: KbqCodeBlockFile[];
     filled: boolean;
+    height: number | null;
+    set hideTabs(value: boolean);
     // (undocumented)
-    getMaxHeight(): string;
-    // (undocumented)
-    hasKeyboardFocus: boolean;
-    hideActionBarIfNoHeader(event?: FocusEvent | null): void;
-    // (undocumented)
-    isTopOverflow: boolean;
-    // (undocumented)
+    get hideTabs(): boolean;
     lineNumbers: boolean;
-    // (undocumented)
-    protected localeService?: KbqLocaleService | undefined;
-    // (undocumented)
+    protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
     maxHeight: number;
     // (undocumented)
-    multiLine: boolean;
+    static ngAcceptInputType_activeFileIndex: unknown;
+    // (undocumented)
+    static ngAcceptInputType_canCopy: unknown;
+    // (undocumented)
+    static ngAcceptInputType_canDownload: unknown;
+    // (undocumented)
+    static ngAcceptInputType_canLoad: unknown;
+    // (undocumented)
+    static ngAcceptInputType_canToggleSoftWrap: unknown;
+    // (undocumented)
+    static ngAcceptInputType_filled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_height: unknown;
+    // (undocumented)
+    static ngAcceptInputType_hideTabs: unknown;
+    // (undocumented)
+    static ngAcceptInputType_lineNumbers: unknown;
+    // (undocumented)
+    static ngAcceptInputType_maxHeight: unknown;
+    // (undocumented)
+    static ngAcceptInputType_noBorder: unknown;
+    // (undocumented)
+    static ngAcceptInputType_softWrap: unknown;
+    // (undocumented)
+    static ngAcceptInputType_viewAll: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    get noHeader(): any;
-    // (undocumented)
-    onEnter(currentCodeBlock: HTMLPreElement): void;
-    // (undocumented)
-    onHighlighted(): void;
-    // (undocumented)
-    onSelectTab($event: KbqTabChangeEvent): void;
-    // (undocumented)
-    onShowMoreClick(currentCodeContentElement: HTMLPreElement): void;
-    // (undocumented)
-    openExternalSystem(): void;
-    // (undocumented)
-    readonly resizeStream: Subject<Event>;
-    // (undocumented)
-    selectedTabIndex: number;
-    showActionBarIfNecessary(): void;
-    // (undocumented)
-    get singleFile(): boolean;
-    // (undocumented)
+    noBorder: boolean;
+    protected onSelectedTabChange(index: number): void;
+    protected onViewAllEnterKeydown(): void;
+    protected openLink(): void;
     softWrap: boolean;
-    // (undocumented)
-    tabGroup: KbqTabGroup;
-    // (undocumented)
+    readonly softWrapChange: EventEmitter<boolean>;
     toggleSoftWrap(): void;
-    // (undocumented)
     toggleViewAll(): void;
-    // (undocumented)
-    updateHeader: () => void;
-    // (undocumented)
     viewAll: boolean;
+    readonly viewAllChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlockComponent, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "height": { "alias": "height"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; }, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockComponent, [null, null, null, null, null, { optional: true; }, { optional: true; }]>;
-}
-
-// @public (undocumented)
-export interface KbqCodeBlockConfiguration {
-    // (undocumented)
-    copiedTooltip: string;
-    // (undocumented)
-    copyTooltip: string;
-    // (undocumented)
-    downloadTooltip: string;
-    // (undocumented)
-    openExternalSystemTooltip: string;
-    // (undocumented)
-    softWrapOffTooltip: string;
-    // (undocumented)
-    softWrapOnTooltip: string;
-    // (undocumented)
-    viewAllText: string;
-    // (undocumented)
-    viewLessText: string;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }
 
 // @public
+export const kbqCodeBlockFallbackFileLanguageProvider: (language: string) => Provider;
+
+// @public
+export const kbqCodeBlockFallbackFileNameProvider: (fileName: string) => Provider;
+
+// @public
 export type KbqCodeBlockFile = {
-    filename: string;
     content: string;
-    language: string;
+    filename?: string;
+    language?: string;
     link?: string;
 };
+
+// @public
+export class KbqCodeBlockHighlight {
+    constructor();
+    set file({ language, content }: KbqCodeBlockFile);
+    // (undocumented)
+    static ngAcceptInputType_singleLine: unknown;
+    // (undocumented)
+    static ngAcceptInputType_startFrom: unknown;
+    singleLine: boolean;
+    startFrom: number;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqCodeBlockHighlight, "code[kbqCodeBlockHighlight]", never, { "file": { "alias": "file"; "required": true; }; "startFrom": { "alias": "startFrom"; "required": false; }; "singleLine": { "alias": "singleLine"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlockHighlight, never>;
+}
+
+// @public
+export const kbqCodeBlockLocaleConfigurationProvider: (configuration: KbqCodeBlockLocaleConfiguration) => Provider;
 
 // @public (undocumented)
 export class KbqCodeBlockModule {
@@ -164,35 +139,13 @@ export class KbqCodeBlockModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqCodeBlockModule>;
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, [typeof i1.KbqCodeBlockComponent, typeof i2.KbqActionBarComponent], [typeof i3.KbqButtonModule, typeof i4.KbqToolTipModule, typeof i5.KbqIconModule, typeof i6.KbqTabsModule, typeof i7.KbqCodeBlockContent], [typeof i1.KbqCodeBlockComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCodeBlockModule, never, [typeof i1.KbqCodeBlock], [typeof i1.KbqCodeBlock]>;
 }
 
 // @public @deprecated (undocumented)
 export type KbqCodeFile = KbqCodeBlockFile;
-
-// @public (undocumented)
-export const LANGUAGES_EXTENSIONS: {
-    html: string;
-    css: string;
-    php: string;
-    java: string;
-    bash: string;
-    javascript: string;
-    typescript: string;
-    python: string;
-    ruby: string;
-    c: string;
-    'c++': string;
-    'c#': string;
-    csharp: string;
-    lua: string;
-    xml: string;
-    json: string;
-};
 
 // (No @packageDocumentation comment for this package)
 
