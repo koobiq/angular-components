@@ -1,11 +1,6 @@
-@use './filter-bar-theme' as *;
-
-.kbq-filters {
-    margin-right: 8px;
-
-    .kbq-icon {
-        margin-right: 4px;
-    }
+.kbq-pipe {
+    display: flex;
+    flex-direction: row;
 
     .kbq-button {
         border-bottom-right-radius: unset;
@@ -19,6 +14,3 @@
         border-top-left-radius: unset;
     }
 }
-
-@include kbq-filter-bar-theme();
-@include kbq-filter-bar-typography();

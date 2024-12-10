@@ -1,6 +1,8 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFilterBarModule } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -18,7 +20,9 @@ export class DemoComponent {}
         BrowserModule,
         BrowserAnimationsModule,
         KbqIconModule,
-        KbqFilterBarModule
+        KbqFilterBarModule,
+        KbqDividerModule,
+        KbqButtonModule
     ],
     bootstrap: [DemoComponent]
 })

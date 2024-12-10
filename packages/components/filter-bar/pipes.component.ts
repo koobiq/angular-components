@@ -4,22 +4,19 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqFormFieldModule } from '../form-field';
+import { KbqIcon } from '../icon';
+import { KbqInputModule } from '../input';
+import { KbqTitleModule } from '../title';
+import { KbqPipe } from './pipes/pipe.component';
 
 @Component({
     standalone: true,
-    selector: 'kbq-filters',
+    selector: 'kbq-pipes',
     template: `
-        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" [kbqDropdownTriggerFor]="dropdown" kbq-button>
-            <ng-content />
-        </button>
-
-        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button>
-            <i kbq-icon="kbq-floppy-disk_16" kbqPrefix></i>
-        </button>
+        @for (filter of filters; track filter) {
+            <kbq-pipe />
+        }
 
         <kbq-dropdown #dropdown="kbqDropdown">
             <kbq-form-field kbqFormFieldWithoutBorders>
@@ -41,11 +38,11 @@ import { KbqTitleModule } from '@koobiq/components/title';
             <button disabled kbq-dropdown-item>Disabled</button>
         </kbq-dropdown>
     `,
-    styleUrls: ['filters.component.scss', 'filter-bar-tokens.scss'],
+    styleUrls: ['pipes.component.scss', 'filter-bar-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-filters'
+        class: 'kbq-pipes'
     },
     imports: [
         KbqButtonModule,
@@ -55,10 +52,11 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqTitleModule,
         KbqFormFieldModule,
         KbqInputModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        KbqPipe
     ]
 })
-export class KbqFilters {
+export class KbqPipes {
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
 
