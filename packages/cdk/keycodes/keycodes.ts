@@ -1,3 +1,5 @@
+import { _getEventTarget } from '@angular/cdk/platform';
+
 export const MAC_ENTER = 3;
 export const BACKSPACE = 8;
 export const TAB = 9;
@@ -173,9 +175,9 @@ export function isCopy(event: KeyboardEvent): boolean {
 }
 
 export function isInput(event: Event): boolean {
-    const target = getEventTargetWithShadowRoot(event);
+    const target = _getEventTarget<HTMLElement>(event);
 
-    return target.tagName === 'INPUT' || target.tagName === 'TEXTAREA';
+    return !!target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA');
 }
 
 export function isLeftBracket(event: KeyboardEvent): boolean {
@@ -188,15 +190,4 @@ export function isRightBracket(event: KeyboardEvent): boolean {
 
 export function isDigit({ keyCode }: KeyboardEvent): boolean {
     return [ZERO, ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE].includes(keyCode);
-}
-
-/*
- * Events bubbling up from Shadow DOM have their event.target property retargeted to the host element.
- * This commit corrects the target property to reflect the actual event origin.
- * See, for example: https://stackoverflow.com/questions/57963312/get-event-target-inside-a-web-component
- */
-export function getEventTargetWithShadowRoot(event: Event): Element {
-    const target = event.target! as Element;
-
-    return target?.shadowRoot && event.composedPath ? (event.composedPath()[0] as Element) : target;
 }
