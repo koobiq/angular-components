@@ -1,6 +1,9 @@
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { DemoModule } from './module';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { CodeBlockDev } from './module';
 
-platformBrowserDynamic()
-    .bootstrapModule(DemoModule)
-    .catch((error) => console.error(error));
+bootstrapApplication(CodeBlockDev, {
+    providers: [
+        provideAnimations()
+    ]
+}).catch((error) => console.error(error));

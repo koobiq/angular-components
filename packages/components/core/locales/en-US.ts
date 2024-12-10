@@ -1,3 +1,5 @@
+import { KbqCodeBlockLocaleConfiguration } from './types';
+
 export const enUSLocaleData = {
     select: { hiddenItemsText: '{{ number }} more' },
     datepicker: {
@@ -36,7 +38,7 @@ export const enUSLocaleData = {
         viewAllText: 'Show all',
         viewLessText: 'Show less',
         openExternalSystemTooltip: 'Open in the external system'
-    },
+    } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'City or time zone'
     }

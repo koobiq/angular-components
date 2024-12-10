@@ -25,12 +25,7 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
     template: `
         Loading document...
         <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
-            <kbq-code-block
-                [codeFiles]="[{ content: contentToCopy }]"
-                [filled]="true"
-                [lineNumbers]="true"
-                [canLoad]="false"
-            />
+            <kbq-code-block [files]="[{ content: contentToCopy }]" filled lineNumbers />
         </ng-template>
     `,
     host: {

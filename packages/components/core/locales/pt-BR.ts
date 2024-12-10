@@ -1,3 +1,5 @@
+import { KbqCodeBlockLocaleConfiguration } from './types';
+
 export const ptBRLocaleData = {
     select: { hiddenItemsText: '{{ number }} mais' },
     datepicker: {
@@ -35,7 +37,7 @@ export const ptBRLocaleData = {
         viewAllText: 'Mostrar todos',
         viewLessText: 'Mostrar menos',
         openExternalSystemTooltip: 'Abrir em sistema externo'
-    },
+    } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'Cidade ou fuso horário'
     }

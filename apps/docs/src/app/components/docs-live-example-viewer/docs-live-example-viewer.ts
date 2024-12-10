@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, Type, ViewEncapsulation } from '@angular/core';
-import { KbqCodeFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile } from '@koobiq/components/code-block';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -26,7 +26,7 @@ interface ExampleFileData {
 export class DocsLiveExampleViewer {
     isSourceShown: boolean = false;
 
-    files: KbqCodeFile[] = [];
+    files: KbqCodeBlockFile[] = [];
 
     @Input() fileOrder = ['HTML', 'TS', 'CSS'];
 
