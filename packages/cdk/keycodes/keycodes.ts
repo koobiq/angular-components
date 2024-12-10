@@ -1,3 +1,5 @@
+import { _getEventTarget } from '@angular/cdk/platform';
+
 export const MAC_ENTER = 3;
 export const BACKSPACE = 8;
 export const TAB = 9;
@@ -172,8 +174,10 @@ export function isCopy(event: KeyboardEvent): boolean {
     return (event.ctrlKey || event.metaKey) && event.keyCode === C;
 }
 
-export function isInput(event): boolean {
-    return event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA';
+export function isInput(event: Event): boolean {
+    const target = _getEventTarget<HTMLElement>(event);
+
+    return !!target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA');
 }
 
 export function isLeftBracket(event: KeyboardEvent): boolean {
