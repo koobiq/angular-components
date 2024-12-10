@@ -82,7 +82,7 @@ Use tabs in the following cases:
 Don't use tabs in the following cases:
 
 -   When you can place all content on a single page or screen. There's no need to hide some of its parts under tabs.
--   For selecting values in forms. Don't confuse tabs with input boxes: [radiobuttons](/components/radio) and [button toggles](/components/button-toggle).
+-   For selecting values in forms. Don't confuse tabs with input boxes: [radio buttons](/components/radio) and [button toggles](/components/button-toggle).
 -   For main navigation. Use the [Navbar](/components/navbar) component instead.
 -   When you need to change the view for the same type of data (list, tile, or table). Instead, use a [button menu](/components/dropdown) or [button toggle](/components/button-toggle).
 -   When there's already content in a tab. You can't use both vertical and horizontal tabs at the same time. Instead, use fewer tabs, use only one type of tab, a button toggle, or button menu.
