@@ -2,7 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { codeHTML, codeXML } from '../../components-dev/code-block/code-files-example';
 import { KbqCodeBlock } from './code-block';
 import { KbqCodeBlockModule } from './code-block.module';
 
@@ -78,13 +77,13 @@ class KbqCodeBlockDefault {
     codeFiles = [
         {
             filename: 'index.html',
-            content: codeHTML,
+            content: `codeHTML`,
             language: 'html',
             link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html'
         },
         {
             filename: 'menu.xml',
-            content: codeXML,
+            content: `codeXML`,
             language: 'xml',
             link: 'https://stackblitz.com/edit/web-platform-f5jywg?file=index.html'
         }

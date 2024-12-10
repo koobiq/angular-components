@@ -172,7 +172,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'code-block',
                     hasApi: true,
                     apiId: 'code-block',
-                    hasExamples: false,
+                    hasExamples: true,
                     examples: ['code-block-types']
                 },
 
