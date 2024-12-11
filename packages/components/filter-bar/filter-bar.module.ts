@@ -3,13 +3,13 @@ import { KbqFilterBarActions } from './filter-bar-actions.component';
 import { KbqFilterBar } from './filter-bar.component';
 import { KbqFilters } from './filters.component';
 import { KbqPipes } from './pipes.component';
-import { KbqPipe } from './pipes/pipe.component';
+import { KbqPipeComponent } from './pipes/pipe.component';
 
 const COMPONENTS = [
     KbqFilterBar,
     KbqFilters,
     KbqPipes,
-    KbqPipe,
+    KbqPipeComponent,
     KbqFilterBarActions
 ];
 

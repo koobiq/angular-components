@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -8,6 +8,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqFilterBar } from './filter-bar.component';
 
 @Component({
     standalone: true,
@@ -32,7 +33,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 
             <kbq-divider />
 
-            @for (filter of filters; track filter) {
+            @for (filter of filterBar.filters; track filter) {
                 <button kbq-dropdown-item>{{ filter.name }}</button>
             }
 
@@ -59,23 +60,10 @@ import { KbqTitleModule } from '@koobiq/components/title';
     ]
 })
 export class KbqFilters {
+    protected readonly filterBar = inject(KbqFilterBar);
+
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
 
     value: string;
-
-    filters = [
-        {
-            name: 'filter 1',
-            value: '1'
-        },
-        {
-            name: 'filter 2',
-            value: '2'
-        },
-        {
-            name: 'filter 3',
-            value: '3'
-        }
-    ];
 }

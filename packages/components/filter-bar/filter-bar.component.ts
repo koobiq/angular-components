@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { KbqFilter } from './filter-bar.types';
 
 @Component({
     standalone: true,
@@ -17,4 +18,13 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
         class: 'kbq-filter-bar'
     }
 })
-export class KbqFilterBar {}
+export class KbqFilterBar {
+    @Input() filters: KbqFilter[];
+    @Input() activeFilter: KbqFilter;
+
+    @Output() readonly changes: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly onSelectFilter: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly onAddFilter: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly onSaveFilter: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly onSaveReset: EventEmitter<void> = new EventEmitter<void>();
+}
