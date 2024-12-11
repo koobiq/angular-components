@@ -10,33 +10,15 @@ import { KbqPipe } from '../filter-bar.types';
 
 @Component({
     standalone: true,
-    selector: 'kbq-pipe, [kbq-pipe]',
+    selector: 'kbq-pipe[multi-tree-select]',
     template: `
-        <button [color]="colors.ContrastFade" [kbqDropdownTriggerFor]="dropdown" [kbqStyle]="styles.Outline" kbq-button>
+        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button>
             {{ data.name }}
         </button>
 
         <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button>
             <i kbq-icon="kbq-xmark-s_16"></i>
         </button>
-
-        <kbq-dropdown #dropdown="kbqDropdown">
-            <kbq-form-field kbqFormFieldWithoutBorders>
-                <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-
-                <input [value]="''" kbqInput placeholder="Placeholder" />
-
-                <kbq-cleaner />
-            </kbq-form-field>
-
-            <kbq-divider />
-
-            <button kbq-dropdown-item>filter.name</button>
-
-            <kbq-divider />
-
-            <button disabled kbq-dropdown-item>Disabled</button>
-        </kbq-dropdown>
     `,
     styleUrls: ['pipe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,7 +35,7 @@ import { KbqPipe } from '../filter-bar.types';
         KbqDividerModule
     ]
 })
-export class KbqPipeComponent {
+export class KbqPipeMultiTreeSelectComponent {
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
 
