@@ -5,10 +5,12 @@ const {
     mapGlobals,
     mapBorderRadius,
     mapShadows,
-    // mapSemanticPalette,
     outputTypographyTable,
-    outputTable
+    outputTable,
+    outputPage
 } = require('./templates');
+const { updateObject, sortSections } = require('./utils');
+const { DEFAULT_MARKDOWN_HEADER_LEVEL, LINE_SEP, NO_HEADER } = require('./config');
 
 module.exports = (StyleDictionary) => {
     StyleDictionary.registerTransform({
@@ -34,12 +36,35 @@ module.exports = (StyleDictionary) => {
     StyleDictionary.registerFormat({
         name: 'docs/colors',
         formatter: function ({ dictionary }) {
-            dictionary.allTokens = dictionary.allTokens.filter(
-                (token, pos, allTokens) => allTokens.indexOf(token) === pos
-            );
+            // filter duplicates (light/dark)
+            dictionary.allTokens = dictionary.allTokens.filter((token, pos, allTokens) => {
+                const foundIndex = allTokens.findIndex(({ name }) => name === token.name);
+                return foundIndex !== pos;
+            });
 
-            const mappedTokens = dictionary.allTokens.map(mapColors);
-            return outputTable(mappedTokens);
+            // group tokens by types
+            const groupedTokens = dictionary.allTokens.reduce((res, currentToken) => {
+                const section =
+                    typeof currentToken.original.value === 'string' &&
+                    currentToken.original.value.startsWith('{palette')
+                        ? NO_HEADER
+                        : currentToken.attributes.type;
+                return updateObject(res, section, currentToken);
+            }, {});
+            // since there is only 1 group with recursive data
+            // made it manually to not overload the logic
+            groupedTokens.states = groupedTokens.states?.reduce((res, currentToken) => {
+                const section = !currentToken.attributes.subitem ? NO_HEADER : currentToken.attributes.item;
+                return updateObject(res, section, currentToken);
+            }, {});
+
+            const mappedTokens = Object.entries(groupedTokens).map(mapColors);
+
+            // sort token tables, so those of them without the header
+            // will be under the higher header
+            mappedTokens.sort(sortSections);
+            mappedTokens.forEach(({ sections }) => sections?.sort(sortSections));
+            return outputPage(DEFAULT_MARKDOWN_HEADER_LEVEL, mappedTokens).join(LINE_SEP);
         }
     });
 
@@ -52,20 +77,6 @@ module.exports = (StyleDictionary) => {
 
             const mappedTokens = dictionary.allTokens.map(mapPalette);
             return outputTable(mappedTokens);
-        }
-    });
-
-    StyleDictionary.registerFormat({
-        name: 'docs/semantic-palette',
-        formatter: function ({ dictionary }) {
-            console.log(dictionary.allTokens);
-            dictionary.allTokens = dictionary.allTokens.filter(
-                (token, pos, allTokens) => allTokens.indexOf(token) === pos
-            );
-
-            // const mappedTokens = dictionary.allTokens.map(mapSemanticPalette);
-            return 'semantic-palette';
-            // return outputTable(mappedTokens);
         }
     });
 
@@ -89,7 +100,6 @@ module.exports = (StyleDictionary) => {
                 return 0;
             });
             const mappedTokens = filtered.map(mapTypography);
-
             return outputTypographyTable(mappedTokens);
         }
     });
@@ -113,11 +123,6 @@ module.exports = (StyleDictionary) => {
     StyleDictionary.registerFormat({
         name: 'docs/shadows',
         formatter: function ({ dictionary }) {
-            dictionary.allTokens = dictionary.allTokens.map((token) => {
-                token.name = token.name.replace(/(light|dark)-/, '');
-                return token;
-            });
-
             const mappedTokens = dictionary.allTokens.map(mapShadows);
             return outputTable(mappedTokens);
         }

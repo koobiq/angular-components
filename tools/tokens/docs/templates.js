@@ -1,16 +1,17 @@
-const { LINE_SEP } = require('./config');
+const { LINE_SEP, NO_HEADER } = require('./config');
+const { capitalize } = require('./utils');
 
 const descriptionTemplate = (token) =>
     `<div class="kbq-design-token-example__value kbq-mono-normal">${token.value}</div>`;
-
-const varTypographyTemplate = (token) =>
-    `<div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-${token.attributes.type}</code></div>`;
 
 const defaultVarTemplate = (token) =>
     `<div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">--${token.name}</code>${descriptionTemplate(token)}</div>`;
 
 const exampleTemplate = (designToken) =>
     `<div class="kbq-design-token-example__dimensions" style="${designToken}"></div>`;
+
+const varTypographyTemplate = (token) =>
+    `<div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-${token.attributes.type}</code></div>`;
 
 const shadowsTemplate = (designToken) => `<div class="kbq-design-token-example__shadows" style="${designToken}"></div>`;
 
@@ -20,28 +21,61 @@ const sizesTemplate = (designToken) => {
 };
 
 const exampleTypographyTemplate = (typographyType) => {
-    const typographyTypeOutput = typographyType
-        .split('-')
-        .map((word) => word[0].toUpperCase() + word.substring(1))
-        .join(' ');
+    const typographyTypeOutput = capitalize(typographyType, { separator: '-' });
     return `<div class="kbq-design-token-example__typography kbq-${typographyType}">${typographyTypeOutput}</div>`;
 };
+
+const outputTable = (tokens) => {
+    return (
+        `| | Токен | Значение |\r\n| :--- | :---| :---|\r\n` +
+        tokens
+            .map(({ example, varSnippet, description }) => {
+                return `| ${example} | ${varSnippet} | ${description} |`;
+            })
+            .join(LINE_SEP)
+    );
+};
+
+const mapColor = (token) => ({
+    varSnippet: defaultVarTemplate(token),
+    example: exampleTemplate(`background-color: var(--${token.name})`),
+    description: descriptionTemplate(token)
+});
+
+const mapColors = ([type, tokens]) => {
+    const output = {
+        type: capitalize(type)
+    };
+    if (Array.isArray(tokens)) {
+        output.tokens = tokens.map(mapColor);
+        return output;
+    }
+    output.sections = Object.entries(tokens).map(mapColors);
+    return output;
+};
+
+const outputPage = (headerLevel, pageInfo) =>
+    pageInfo.map(({ type, tokens, sections }) => {
+        // Create a markdown header level string (e.g., '##' for headerLevel 2).
+        const markdownLevel = Array.from({ length: headerLevel }, () => '#').join('');
+        if (tokens && tokens.length) {
+            const header = type.toLowerCase() === NO_HEADER ? '' : `${markdownLevel} ${type}${LINE_SEP}`;
+            return `${header}${outputTable(tokens)}${LINE_SEP}`;
+        }
+        if (sections && sections.length) {
+            return `${markdownLevel} ${type}${LINE_SEP}` + outputPage(headerLevel + 1, sections).join(LINE_SEP);
+        }
+    });
 
 module.exports = {
     descriptionTemplate,
     defaultVarTemplate,
     varTypographyTemplate,
     exampleTemplate,
-    outputTable: (tokens) => {
-        return (
-            `| | Токен | Значение |\r\n| :--- | :---| :---|\r\n` +
-            tokens
-                .map(({ example, varSnippet, description }) => {
-                    return `| ${example} | ${varSnippet} | ${description} |`;
-                })
-                .join(LINE_SEP)
-        );
-    },
+    outputTable,
+    mapColor,
+    mapColors,
+    outputPage,
 
     outputTypographyTable: (tokens) => {
         return `<table id="base-typography-table">
@@ -58,27 +92,11 @@ module.exports = {
              </table>`;
     },
 
-    mapColors: (token) => ({
-        varSnippet: defaultVarTemplate(token),
-        example: exampleTemplate(`background-color: var(--${token.name})`),
-        description: descriptionTemplate(token)
-    }),
-
     mapPalette: (token) => ({
         varSnippet: defaultVarTemplate(token),
         example: exampleTemplate(`background-color: var(--${token.name})`),
         description: descriptionTemplate(token)
     }),
-
-    // mapSemanticPalette: (token) => {
-    //     const section = token.ca
-    //
-    //     const data = {
-    //         varSnippet: defaultVarTemplate(token),
-    //         example: exampleTemplate(`background-color: var(--${token.name})`),
-    //         description: descriptionTemplate(token)
-    //     }
-    // },
 
     mapTypography: (token) => ({
         varSnippet: varTypographyTemplate(token),

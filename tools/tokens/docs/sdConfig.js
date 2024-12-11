@@ -23,12 +23,6 @@ module.exports = {
                     prefix: 'kbq'
                 },
                 {
-                    filter: (token) => token.attributes.item === 'palette',
-                    destination: 'semantic-palette.md',
-                    format: 'docs/semantic-palette',
-                    prefix: 'kbq'
-                },
-                {
                     filter: (token) => token.attributes.category === 'typography',
                     destination: 'tokens-typography.md',
                     format: 'docs/typography',

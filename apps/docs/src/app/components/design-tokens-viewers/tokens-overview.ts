@@ -22,7 +22,7 @@ export class TokensOverview extends BaseOverviewComponent {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) return null;
 
-        const currentTokensSection = this.currentUrl.split('/').filter(Boolean).pop();
+        const currentTokensSection = this.router.parseUrl(this.router.url).root.children.primary.segments.pop()?.path;
 
         return `docs-content/overviews/${currentTokensSection}.html`;
     }
