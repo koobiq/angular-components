@@ -5,7 +5,7 @@ module.exports = {
     platforms: {
         css: {
             buildPath: BUILD_PATH,
-            transformGroup: 'kbq/css',
+            transformGroup: 'kbq/css-extended',
             files: [
                 {
                     filter: (token) =>
@@ -14,6 +14,18 @@ module.exports = {
                         !token.attributes.category.includes('palette'),
                     destination: 'colors.md',
                     format: 'docs/colors',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) => token.attributes.category === 'palette',
+                    destination: 'palette.md',
+                    format: 'docs/palette',
+                    prefix: 'kbq'
+                },
+                {
+                    filter: (token) => token.attributes.item === 'palette',
+                    destination: 'semantic-palette.md',
+                    format: 'docs/semantic-palette',
                     prefix: 'kbq'
                 },
                 {

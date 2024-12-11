@@ -64,6 +64,22 @@ module.exports = {
         description: descriptionTemplate(token)
     }),
 
+    mapPalette: (token) => ({
+        varSnippet: defaultVarTemplate(token),
+        example: exampleTemplate(`background-color: var(--${token.name})`),
+        description: descriptionTemplate(token)
+    }),
+
+    // mapSemanticPalette: (token) => {
+    //     const section = token.ca
+    //
+    //     const data = {
+    //         varSnippet: defaultVarTemplate(token),
+    //         example: exampleTemplate(`background-color: var(--${token.name})`),
+    //         description: descriptionTemplate(token)
+    //     }
+    // },
+
     mapTypography: (token) => ({
         varSnippet: varTypographyTemplate(token),
         example: exampleTypographyTemplate(token.attributes.type)

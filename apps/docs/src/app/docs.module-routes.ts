@@ -26,6 +26,8 @@ export const APP_ROUTES: Routes = [
             { path: 'border-radius', component: TokensOverview, pathMatch: 'full' },
             { path: 'sizes', component: TokensOverview, pathMatch: 'full' },
             { path: 'tokens-typography', component: TokensOverview, pathMatch: 'full' },
+            { path: 'semantic-palette', component: TokensOverview, pathMatch: 'full' },
+            { path: 'palette', component: TokensOverview, pathMatch: 'full' },
             { path: '**', redirectTo: 'colors' }
         ]
     },
