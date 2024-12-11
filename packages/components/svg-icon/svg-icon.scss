@@ -1,0 +1,15 @@
+@use 'sass:meta';
+@use 'sass:map';
+
+@use './svg-icon-theme' as *;
+
+.kbq-svg-icon {
+    display: inline-block;
+    font-style: normal;
+
+    svg {
+        display: block !important;
+    }
+}
+
+@include kbq-svg-icon-theme();
