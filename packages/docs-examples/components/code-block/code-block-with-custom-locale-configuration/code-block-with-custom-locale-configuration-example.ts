@@ -14,6 +14,8 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
     selector: 'code-block-with-custom-locale-configuration-example',
     imports: [KbqCodeBlockModule],
     providers: [
+        // Disable global KBQ_LOCALE_SERVICE for locale configuration overriding
+        { provide: KBQ_LOCALE_SERVICE, useValue: null },
         kbqCodeBlockLocaleConfigurationProvider({
             softWrapOnTooltip: '*CUSTOM* Enable word wrap',
             softWrapOffTooltip: '*CUSTOM* Disable word wrap',
@@ -23,9 +25,7 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
             viewAllText: '*CUSTOM* Show all',
             viewLessText: '*CUSTOM* Show less',
             openExternalSystemTooltip: '*CUSTOM* Open in the external system'
-        }),
-        // Disable global locale service for example
-        { provide: KBQ_LOCALE_SERVICE, useValue: null }
+        })
     ],
     template: `
         <kbq-code-block [files]="files" canToggleSoftWrap maxHeight="200" lineNumbers canDownload />

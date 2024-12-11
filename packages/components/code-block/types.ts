@@ -1,9 +1,13 @@
-/** Code block file type. */
+/** Code block file object. */
 export type KbqCodeBlockFile = {
+    /**
+     * Code content.
+     */
     content: string;
 
     /**
      * File name, which will be displayed in UI and when downloading.
+     * If not provided, will be set to `KBQ_CODE_BLOCK_FALLBACK_FILE_NAME`.
      */
     filename?: string;
 
@@ -16,6 +20,10 @@ export type KbqCodeBlockFile = {
      */
     language?: string;
 
+    /**
+     * Link to the file, which will be opened in a new window.
+     * Adds `openExternalSystem` button.
+     */
     link?: string;
 };
 
