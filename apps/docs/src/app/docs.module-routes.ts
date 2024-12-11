@@ -7,6 +7,8 @@ import {
     ComponentOverviewComponent,
     ComponentViewerComponent
 } from './components/component-viewer/component-viewer.component';
+import { DesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
+import { TokensOverview } from './components/design-tokens-viewers/tokens-overview';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
 import { IconsViewerComponent } from './containers/icons-viewer/icons-viewer.component';
@@ -14,6 +16,20 @@ import { IconsViewerComponent } from './containers/icons-viewer/icons-viewer.com
 export const APP_ROUTES: Routes = [
     { path: '', component: WelcomeComponent },
     { path: 'main', redirectTo: 'main/installation', pathMatch: 'full' },
+    {
+        path: 'main/design-tokens',
+        component: DesignTokensViewer,
+        children: [
+            { path: '', redirectTo: 'colors', pathMatch: 'full' },
+            { path: 'colors', component: TokensOverview, pathMatch: 'full' },
+            { path: 'shadows', component: TokensOverview, pathMatch: 'full' },
+            { path: 'border-radius', component: TokensOverview, pathMatch: 'full' },
+            { path: 'sizes', component: TokensOverview, pathMatch: 'full' },
+            { path: 'tokens-typography', component: TokensOverview, pathMatch: 'full' },
+            { path: 'palette', component: TokensOverview, pathMatch: 'full' },
+            { path: '**', redirectTo: 'colors' }
+        ]
+    },
     {
         path: 'main/:id',
         component: ComponentViewerComponent,

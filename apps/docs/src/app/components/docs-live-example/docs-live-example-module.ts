@@ -6,6 +6,7 @@ import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { CodeSnippet } from '../code-snippet/code-snippet';
 import { CopyButtonModule } from '../copy-button/copy-button';
 import { DocsExampleSource } from '../docs-example-source/docs-example-source';
 import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-example-viewer';
@@ -23,7 +24,8 @@ import { DocsLiveExample } from './docs-live-example';
         CopyButtonModule,
         PortalModule,
         KbqCodeBlockModule,
-        NgComponentOutlet
+        NgComponentOutlet,
+        CodeSnippet
     ],
     declarations: [DocsLiveExample, DocsLiveExampleViewer, DocsExampleSource],
     exports: [DocsLiveExample, DocsLiveExampleViewer, DocsExampleSource]
