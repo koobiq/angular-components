@@ -50,7 +50,7 @@ module.exports = {
                             .map(({ example, varSnippet }) => {
                                 return `<tr>
                                         <td align="left">${example}</td>
-                                        <td align="left" style="vertical-align: baseline">${varSnippet}</td>
+                                        <td align="left" style="vertical-align: bottom">${varSnippet}</td>
                                     </tr>`;
                             })
                             .join(LINE_SEP)}

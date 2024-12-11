@@ -12,14 +12,13 @@ module.exports = {
                         ['light', 'dark'].includes(token.attributes.category) &&
                         token.attributes.item !== 'palette' &&
                         !token.attributes.category.includes('palette'),
-                    fileHeader: ['### Colors'],
                     destination: 'colors.md',
                     format: 'docs/colors',
                     prefix: 'kbq'
                 },
                 {
                     filter: (token) => token.attributes.category === 'typography',
-                    destination: 'typography.md',
+                    destination: 'tokens-typography.md',
                     format: 'docs/typography',
                     prefix: 'kbq'
                 },
