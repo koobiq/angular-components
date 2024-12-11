@@ -69,7 +69,7 @@
         border-radius: var(--kbq-code-block-size-container-border-radius);
 
         .kbq-code-block__code {
-            tab-size: 4;
+            tab-size: var(--kbq-code-block-tab-size);
             padding: var(--kbq-code-block-size-with-header-content-padding-top)
                 var(--kbq-code-block-size-with-header-content-padding-horizontal)
                 var(--kbq-code-block-size-with-header-content-padding-bottom)
