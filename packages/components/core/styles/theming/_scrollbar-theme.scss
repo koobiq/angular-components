@@ -58,7 +58,8 @@
             scrollbar-color: var(--kbq-scrollbar-thumb-default-background) transparent;
         }
 
-        // webkit
+        &::-webkit-scrollbar-track,
+        &::-webkit-scrollbar-corner,
         &::-webkit-scrollbar,
         ::-webkit-scrollbar {
             background-color: transparent;
