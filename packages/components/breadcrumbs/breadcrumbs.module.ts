@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
-
-import { BreadcrumbsComponent } from './breadcrumbs.component';
+import { KbqBreadcrumbs } from './breadcrumbs.component';
 
 @NgModule({
-    imports: [],
+    imports: [KbqBreadcrumbs],
     exports: [],
-    declarations: [BreadcrumbsComponent],
+    declarations: [],
     providers: []
 })
 export class BreadcrumbsModule {}
