@@ -1,13 +1,15 @@
 @use './filter-bar-theme' as *;
 
 .kbq-filters {
+    display: flex;
+
     margin-right: 8px;
 
     .kbq-icon {
-        margin-right: 4px;
+        //margin-right: 4px;
     }
 
-    .kbq-button {
+    .kbq-button.kbq-button_changed-filter {
         border-bottom-right-radius: unset;
         border-top-right-radius: unset;
     }
@@ -17,6 +19,23 @@
 
         border-bottom-left-radius: unset;
         border-top-left-radius: unset;
+    }
+
+    .kbq-button_changed-saved-filter {
+        &::after {
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: -2px;
+
+            width: 8px;
+            height: 8px;
+
+            border: 2px solid white;
+            border-radius: 6px;
+
+            background: var(--kbq-icon-warning);
+        }
     }
 }
 
