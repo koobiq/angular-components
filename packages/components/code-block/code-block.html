@@ -27,6 +27,7 @@
             @if (canToggleSoftWrap) {
                 <button
                     kbq-button
+                    class="kbq-code-block__actionbar__soft-wrap-button"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="
@@ -45,6 +46,7 @@
             @if (canDownload) {
                 <button
                     kbq-button
+                    class="kbq-code-block__actionbar__download-button"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration.downloadTooltip"
@@ -58,6 +60,7 @@
                 <div #copyButtonTooltip="kbqTooltip" [kbqTooltip]="localeConfiguration.copyTooltip">
                     <button
                         kbq-button
+                        class="kbq-code-block__actionbar__copy-button"
                         [color]="componentColor.Contrast"
                         [kbqStyle]="buttonStyle.Transparent"
                         (click)="copyCode()"
@@ -70,6 +73,7 @@
             @if (file.link) {
                 <button
                     kbq-button
+                    class="kbq-code-block__actionbar__link-button"
                     [color]="componentColor.Contrast"
                     [kbqStyle]="buttonStyle.Transparent"
                     [kbqTooltip]="localeConfiguration.openExternalSystemTooltip"
@@ -88,9 +92,6 @@
     cdkScrollable
     kbqTabNavPanel
     class="kbq-code-block__content kbq-scrollbar"
-    [class.kbq-code-block__content_soft-wrap]="softWrap"
-    [class.kbq-code-block__content_view-all]="viewAll"
-    [style.height.px]="height"
     [style.max-height.px]="calculatedMaxHeight"
     [tabIndex]="codeContentTabIndex"
 ><code kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file"></code></pre>
@@ -104,6 +105,7 @@
         <div class="kbq-code-block__view-all__wrapper">
             <button
                 kbq-button
+                class="kbq-code-block__view-all__button"
                 [color]="componentColor.Theme"
                 [kbqStyle]="buttonStyle.Transparent"
                 (click)="toggleViewAll()"

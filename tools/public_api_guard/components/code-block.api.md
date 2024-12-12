@@ -25,9 +25,9 @@ export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLoc
 // @public
 export class KbqCodeBlock implements AfterViewInit {
     constructor();
-    set activeFileIndex(index: number);
+    activeFileIndex: number;
     // (undocumented)
-    get activeFileIndex(): number;
+    readonly activeFileIndexChange: EventEmitter<number>;
     // (undocumented)
     protected readonly buttonStyle: typeof KbqButtonStyles;
     // (undocumented)
@@ -46,9 +46,10 @@ export class KbqCodeBlock implements AfterViewInit {
     protected downloadCode(): void;
     // (undocumented)
     protected readonly fallbackFileName: string;
-    files: KbqCodeBlockFile[];
+    set files(files: KbqCodeBlockFile[]);
+    // (undocumented)
+    get files(): KbqCodeBlockFile[];
     filled: boolean;
-    height: number | null;
     set hideTabs(value: boolean);
     // (undocumented)
     get hideTabs(): boolean;
@@ -67,8 +68,6 @@ export class KbqCodeBlock implements AfterViewInit {
     static ngAcceptInputType_canToggleSoftWrap: unknown;
     // (undocumented)
     static ngAcceptInputType_filled: unknown;
-    // (undocumented)
-    static ngAcceptInputType_height: unknown;
     // (undocumented)
     static ngAcceptInputType_hideTabs: unknown;
     // (undocumented)
@@ -94,7 +93,7 @@ export class KbqCodeBlock implements AfterViewInit {
     viewAll: boolean;
     readonly viewAllChange: EventEmitter<boolean>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "height": { "alias": "height"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCodeBlock, "kbq-code-block", ["kbqCodeBlock"], { "lineNumbers": { "alias": "lineNumbers"; "required": false; }; "filled": { "alias": "filled"; "required": false; }; "canToggleSoftWrap": { "alias": "canToggleSoftWrap"; "required": false; }; "softWrap": { "alias": "softWrap"; "required": false; }; "viewAll": { "alias": "viewAll"; "required": false; }; "maxHeight": { "alias": "maxHeight"; "required": false; }; "canLoad": { "alias": "canLoad"; "required": false; }; "canDownload": { "alias": "canDownload"; "required": false; }; "canCopy": { "alias": "canCopy"; "required": false; }; "codeFiles": { "alias": "codeFiles"; "required": false; }; "files": { "alias": "files"; "required": false; }; "activeFileIndex": { "alias": "activeFileIndex"; "required": false; }; "noBorder": { "alias": "noBorder"; "required": false; }; "hideTabs": { "alias": "hideTabs"; "required": false; }; }, { "softWrapChange": "softWrapChange"; "viewAllChange": "viewAllChange"; "activeFileIndexChange": "activeFileIndexChange"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCodeBlock, never>;
 }

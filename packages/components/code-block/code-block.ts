@@ -86,13 +86,15 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
         '[class.kbq-code-block_outline]': '!filled',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers',
         '[class.kbq-code-block_hide-tabs]': 'hideTabs',
-        '[class.kbq-code-block_no-border]': 'noBorder'
+        '[class.kbq-code-block_no-border]': 'noBorder',
+        '[class.kbq-code-block_soft-wrap]': 'softWrap',
+        '[class.kbq-code-block_view-all]': 'viewAll'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqCodeBlock implements AfterViewInit {
-    @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip: KbqTooltipTrigger;
+    @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;
     @ViewChild(CdkScrollable) private readonly scrollableCodeContent: CdkScrollable;
 
     /** Whether to display line numbers. */
@@ -110,9 +112,6 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Event emitted when `softWrap` is changed. */
     @Output() readonly softWrapChange = new EventEmitter<boolean>();
 
-    /** Sets height of the code block, added scrollbar if necessary. */
-    @Input({ transform: numberAttribute }) height: number | null = null;
-
     /**
      * Allows to view all the code, otherwise it will be hidden.
      * Works only with `maxHeight` property.
@@ -123,8 +122,8 @@ export class KbqCodeBlock implements AfterViewInit {
     @Output() readonly viewAllChange = new EventEmitter<boolean>();
 
     /**
-     * Maximum height of the code block, other parts will be hidden.
-     * Works with `viewAll` property.
+     * Maximum height of the code block content, other parts will be hidden.
+     * Can be toggled by `viewAll` property.
      */
     @Input({ transform: numberAttribute }) maxHeight: number;
 
@@ -155,19 +154,29 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * Files to display.
      */
-    @Input() files: KbqCodeBlockFile[];
+    @Input()
+    set files(files: KbqCodeBlockFile[]) {
+        this._files = files;
+
+        if (this._files.length < this.activeFileIndex) {
+            this.onSelectedTabChange(0);
+        }
+
+        if (this._files.length === 1 && !this._files[0].filename) {
+            this.hideTabs = true;
+        }
+    }
+
+    get files(): KbqCodeBlockFile[] {
+        return this._files;
+    }
+
+    private _files: KbqCodeBlockFile[] = [];
 
     /** Defines which file (index) is active. */
-    @Input({ transform: numberAttribute })
-    set activeFileIndex(index: number) {
-        this._activeFileIndex = index;
-    }
+    @Input({ transform: numberAttribute }) activeFileIndex = 0;
 
-    get activeFileIndex() {
-        return this._activeFileIndex;
-    }
-
-    private _activeFileIndex: number = 0;
+    @Output() readonly activeFileIndexChange = new EventEmitter<number>();
 
     /** Whether to hide border. */
     @Input({ transform: booleanAttribute }) noBorder: boolean = false;
@@ -177,17 +186,14 @@ export class KbqCodeBlock implements AfterViewInit {
      * Always `true` if there is only one file without filename.
      * Makes actionbar floating if tabs are hidden.
      */
-
     @Input({ transform: booleanAttribute })
     set hideTabs(value: boolean) {
         this._hideTabs = value;
+
+        this.setupActionbarDisplay();
     }
 
     get hideTabs(): boolean {
-        if (this.files.length === 1 && !this.files[0].filename) {
-            return true;
-        }
-
         return this._hideTabs;
     }
 
@@ -240,11 +246,11 @@ export class KbqCodeBlock implements AfterViewInit {
         this.handleHover();
 
         // Setup initial actionbar display state
-        this.setupActionbarDisplay(false);
+        this.setupActionbarDisplay();
 
-        this.copyButtonTooltip.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isVisible) => {
+        this.copyButtonTooltip?.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isVisible) => {
             if (isVisible) {
-                this.copyButtonTooltip.content = this.localeConfiguration.copyTooltip;
+                this.copyButtonTooltip!.content = this.localeConfiguration.copyTooltip;
             }
         });
     }
@@ -289,6 +295,7 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onSelectedTabChange(index: number): void {
         if (this.activeFileIndex !== index) {
             this.activeFileIndex = index;
+            this.activeFileIndexChange.emit(this.activeFileIndex);
             this.scrollableCodeContent.scrollTo({ top: 0, behavior: 'instant' });
         }
     }
@@ -342,7 +349,7 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * @param shouldShowActionbar - A boolean indicating whether the actionbar should be visible.
      */
-    private setupActionbarDisplay(shouldShowActionbar: boolean): void {
+    private setupActionbarDisplay(shouldShowActionbar?: boolean): void {
         const className = 'kbq-code-block_show-actionbar';
 
         // Should always show actionbar on Mobile devices
@@ -354,6 +361,10 @@ export class KbqCodeBlock implements AfterViewInit {
         // Should always show actionbar when tabs are visible
         if (!this.hideTabs) {
             this.renderer.addClass(this.elementRef.nativeElement, className);
+            return;
+        }
+
+        if (typeof shouldShowActionbar === 'undefined') {
             return;
         }
 
@@ -391,7 +402,7 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     protected copyCode(): void {
         const file = this.files[this.activeFileIndex];
-        if (this.clipboard.copy(file.content)) {
+        if (this.clipboard.copy(file.content) && this.copyButtonTooltip) {
             this.copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
         }
     }

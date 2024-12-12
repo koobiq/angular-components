@@ -55,9 +55,7 @@ export class KbqCodeBlockHighlight {
         if (!window) return;
 
         if (!language || !hljs.getLanguage(language)) {
-            console.warn(
-                `[KbqCodeBlock] Unknown code language: "${language}". Setting to "${this.fallbackFileLanguage}".`
-            );
+            console.warn(`[KbqCodeBlock] Unknown language: "${language}". Setting to "${this.fallbackFileLanguage}".`);
             language = this.fallbackFileLanguage;
         }
 
@@ -71,11 +69,11 @@ export class KbqCodeBlockHighlight {
         });
 
         if (illegal) {
-            console.warn('[KbqCodeBlock] Code contains illegal characters.');
+            console.warn('[KbqCodeBlock] Content contains illegal characters.');
         }
 
         if (relevance === 0) {
-            console.warn('[KbqCodeBlock] Code does not match the specified programming language.');
+            console.warn('[KbqCodeBlock] Content does not match the specified programming language.');
         }
 
         const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML);

@@ -482,7 +482,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
   },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
-    "title": "Code-block with custom locale configuration",
+    "title": "Code-block with custom locale configuration, without KBQ_LOCALE_SERVICE",
     "componentName": "CodeBlockWithCustomLocaleConfigurationExample",
     "files": [
       "code-block-with-custom-locale-configuration-example.ts"
