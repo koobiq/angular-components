@@ -15,7 +15,30 @@ import { KbqIconModule } from '@koobiq/components/icon';
 export class DemoComponent {
     filters: KbqFilter[] = [
         {
+            name: 'Filter 0',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            unsaved: false,
+            pipes: [
+                {
+                    name: 'pipe 1',
+                    value: '1',
+                    type: 'text',
+                    readonly: false,
+                    empty: false,
+                    disabled: false,
+                    changed: false,
+                    multiple: false
+                }
+            ]
+        },
+        {
             name: 'Filter 1',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            unsaved: true,
             pipes: [
                 {
                     name: 'pipe 1',
@@ -67,19 +90,19 @@ export class DemoComponent {
                     changed: false,
                     multiple: false
                 }
-            ],
-            type: '',
-            readonly: false,
-            disabled: false,
-            changed: false
+            ]
         },
         {
             name: 'Filter 2',
+            readonly: false,
+            disabled: false,
+            changed: true,
+            unsaved: false,
             pipes: [
                 {
                     name: 'pipe 1',
                     value: '1',
-                    type: '',
+                    type: 'text',
                     readonly: false,
                     empty: false,
                     disabled: false,
@@ -89,7 +112,7 @@ export class DemoComponent {
                 {
                     name: 'pipe 2',
                     value: '2',
-                    type: '',
+                    type: 'select',
                     readonly: false,
                     empty: false,
                     disabled: false,
@@ -99,18 +122,14 @@ export class DemoComponent {
                 {
                     name: 'pipe 3',
                     value: '3',
-                    type: '',
+                    type: 'multi-select',
                     readonly: false,
                     empty: false,
                     disabled: false,
                     changed: false,
                     multiple: false
                 }
-            ],
-            type: '',
-            readonly: false,
-            disabled: false,
-            changed: false
+            ]
         }
     ];
 }
