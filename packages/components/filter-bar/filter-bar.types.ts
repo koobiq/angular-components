@@ -1,12 +1,12 @@
 export interface KbqFilter {
     name: string;
-    type: string;
 
     pipes: KbqPipe[];
 
     readonly: boolean;
     disabled: boolean;
     changed: boolean;
+    unsaved: boolean;
 }
 
 export interface KbqPipe<T = unknown> {

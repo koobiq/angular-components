@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { KbqFilter } from './filter-bar.types';
 
 @Component({
@@ -20,11 +21,19 @@ import { KbqFilter } from './filter-bar.types';
 })
 export class KbqFilterBar {
     @Input() filters: KbqFilter[];
-    @Input() activeFilter: KbqFilter;
+    @Input() activeFilter: KbqFilter | null;
 
     @Output() readonly changes: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onSelectFilter: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onAddFilter: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onSaveFilter: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onSaveReset: EventEmitter<void> = new EventEmitter<void>();
+
+    readonly activeFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
+
+    constructor() {
+        this.activeFilterChanges.subscribe((filter) => {
+            this.activeFilter = filter;
+        });
+    }
 }
