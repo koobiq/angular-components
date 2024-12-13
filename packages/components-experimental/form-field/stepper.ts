@@ -17,7 +17,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
     imports: [KbqIconModule],
     template: `
         <i
-            class="kbq-stepper_step-up"
+            class="kbq-stepper__step-up"
             [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
@@ -26,7 +26,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
             kbq-icon-button="kbq-chevron-down_16"
         ></i>
         <i
-            class="kbq-stepper_step-down"
+            class="kbq-stepper__step-down"
             [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
