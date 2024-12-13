@@ -86,7 +86,7 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
         '[class.kbq-code-block_outline]': '!filled',
         '[class.kbq-code-block_hide-line-numbers]': '!lineNumbers',
         '[class.kbq-code-block_hide-tabs]': 'hideTabs',
-        '[class.kbq-code-block_no-border]': 'noBorder',
+        '[class.kbq-code-block_no-border]': 'noBorder || filled',
         '[class.kbq-code-block_soft-wrap]': 'softWrap',
         '[class.kbq-code-block_view-all]': 'viewAll'
     },

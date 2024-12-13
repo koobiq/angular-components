@@ -17,8 +17,7 @@
     .kbq-code-block__header {
         display: flex;
         align-items: center;
-        padding: var(--kbq-code-block-size-header-padding-vertical) var(--kbq-code-block-size-header-padding-right)
-            var(--kbq-code-block-size-header-padding-vertical) var(--kbq-code-block-size-header-padding-left);
+        padding: var(--kbq-size-s) var(--kbq-size-m);
 
         .kbq-code-block__header-tabs {
             overflow: hidden;
@@ -122,10 +121,7 @@
             position: absolute;
             top: 0;
             right: 0;
-            padding: var(--kbq-code-block-size-header-padding-vertical)
-                var(--kbq-code-block-size-no-header-content-padding-horizontal)
-                var(--kbq-code-block-size-header-padding-vertical)
-                var(--kbq-code-block-size-no-header-content-padding-horizontal);
+            padding: var(--kbq-size-s) var(--kbq-size-m);
         }
 
         .kbq-code-block__content {

@@ -151,6 +151,16 @@ describe(KbqCodeBlock.name, () => {
         expect(codeBlock.classes['kbq-code-block_no-border']).toBeTruthy();
     });
 
+    it('should hide the code block border when filled', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+        const codeBlock = geCodeBlockDebugElement(debugElement);
+        expect(codeBlock.classes['kbq-code-block_no-border']).toBeFalsy();
+        componentInstance.filled = true;
+        fixture.detectChanges();
+        expect(codeBlock.classes['kbq-code-block_no-border']).toBeTruthy();
+    });
+
     it('should hide tabs', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
