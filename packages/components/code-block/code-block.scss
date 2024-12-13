@@ -55,7 +55,7 @@
         flex-grow: 1;
         margin: 0;
         flex-direction: column;
-        border-width: 1px;
+        border-width: var(--kbq-code-block-size-container-border-width);
         border-style: solid;
         border-radius: var(--kbq-code-block-size-container-border-radius);
 
