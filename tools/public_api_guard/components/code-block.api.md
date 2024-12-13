@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -86,6 +87,8 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(): void;
     protected openLink(): void;
+    // (undocumented)
+    readonly scrollableCodeContent: CdkScrollable;
     softWrap: boolean;
     readonly softWrapChange: EventEmitter<boolean>;
     toggleSoftWrap(): void;

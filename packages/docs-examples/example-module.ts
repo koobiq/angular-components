@@ -516,6 +516,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-with-line-numbers-example.ts",
     "importPath": "components/code-block"
   },
+  "code-block-with-link": {
+    "packagePath": "components/code-block/code-block-with-link",
+    "title": "Code-block with link",
+    "componentName": "CodeBlockWithLinkExample",
+    "files": [
+      "code-block-with-link-example.ts"
+    ],
+    "selector": "code-block-with-link-example",
+    "additionalComponents": [],
+    "primaryFile": "code-block-with-link-example.ts",
+    "importPath": "components/code-block"
+  },
   "code-block-with-max-height": {
     "packagePath": "components/code-block/code-block-with-max-height",
     "title": "Code-block with maxHeight attribute",
@@ -550,6 +562,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "code-block-with-soft-wrap-example",
     "additionalComponents": [],
     "primaryFile": "code-block-with-soft-wrap-example.ts",
+    "importPath": "components/code-block"
+  },
+  "code-block-with-tabs-and-shadow": {
+    "packagePath": "components/code-block/code-block-with-tabs-and-shadow",
+    "title": "Code-block with tabs and shadow",
+    "componentName": "CodeBlockWithTabsAndShadowExample",
+    "files": [
+      "code-block-with-tabs-and-shadow-example.ts"
+    ],
+    "selector": "code-block-with-tabs-and-shadow-example",
+    "additionalComponents": [],
+    "primaryFile": "code-block-with-tabs-and-shadow-example.ts",
     "importPath": "components/code-block"
   },
   "code-block-with-tabs": {
@@ -3508,11 +3532,15 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-line-numbers':
 return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-with-link':
+return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-max-height':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-noborder':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-soft-wrap':
+return import('@koobiq/docs-examples/components/code-block');
+  case 'code-block-with-tabs-and-shadow':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-tabs':
 return import('@koobiq/docs-examples/components/code-block');
