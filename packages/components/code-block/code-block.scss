@@ -158,6 +158,11 @@
         width: 100%;
         position: absolute;
         bottom: 0;
+        border-radius: var(--kbq-code-block-size-container-border-radius);
+
+        .kbq-code-block__view-all__wrapper {
+            border-radius: var(--kbq-size-border-radius);
+        }
 
         &.kbq-code-block__view-all_collapsed {
             padding-top: var(--kbq-code-block-size-collapse-collapsed-padding-top);
