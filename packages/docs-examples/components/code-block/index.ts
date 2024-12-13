@@ -5,6 +5,7 @@ import { CodeBlockWithLineNumbersExample } from './code-block-with-line-numbers/
 import { CodeBlockWithMaxHeightExample } from './code-block-with-max-height/code-block-with-max-height-example';
 import { CodeBlockWithNoborderExample } from './code-block-with-noborder/code-block-with-noborder-example';
 import { CodeBlockWithSoftWrapExample } from './code-block-with-soft-wrap/code-block-with-soft-wrap-example';
+import { CodeBlockWithTabsAndShadowExample } from './code-block-with-tabs-and-shadow/code-block-with-tabs-and-shadow-example';
 import { CodeBlockWithTabsExample } from './code-block-with-tabs/code-block-with-tabs-example';
 
 export {
@@ -14,6 +15,7 @@ export {
     CodeBlockWithMaxHeightExample,
     CodeBlockWithNoborderExample,
     CodeBlockWithSoftWrapExample,
+    CodeBlockWithTabsAndShadowExample,
     CodeBlockWithTabsExample
 };
 
@@ -24,7 +26,8 @@ const EXAMPLES = [
     CodeBlockWithFilledExample,
     CodeBlockWithNoborderExample,
     CodeBlockWithLineNumbersExample,
-    CodeBlockWithCustomLocaleConfigurationExample
+    CodeBlockWithCustomLocaleConfigurationExample,
+    CodeBlockWithTabsAndShadowExample
 ];
 
 @NgModule({

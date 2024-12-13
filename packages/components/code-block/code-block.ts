@@ -95,7 +95,7 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
 })
 export class KbqCodeBlock implements AfterViewInit {
     @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;
-    @ViewChild(CdkScrollable) private readonly scrollableCodeContent: CdkScrollable;
+    @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
 
     /** Whether to display line numbers. */
     @Input({ transform: booleanAttribute }) lineNumbers = false;

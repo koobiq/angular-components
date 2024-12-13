@@ -1,33 +1,28 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
-import { KbqToggleModule } from '@koobiq/components/toggle';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { KbqCodeBlock, KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 
 /**
- * @title Code-block with tabs
+ * @title Code-block with tabs and shadow
  */
 @Component({
     standalone: true,
-    selector: 'code-block-with-tabs-example',
-    imports: [
-        KbqCodeBlockModule,
-        KbqToggleModule,
-        FormsModule
-    ],
+    selector: 'code-block-with-tabs-and-shadow-example',
+    imports: [KbqCodeBlockModule],
     template: `
-        <kbq-toggle [(ngModel)]="hideTabs">Hide tabs</kbq-toggle>
         <kbq-code-block
             [files]="files"
-            [hideTabs]="hideTabs"
-            activeFileIndex="1"
+            [style.height.px]="350"
+            activeFileIndex="2"
             lineNumbers
             canToggleSoftWrap
-            canDownload
+            softWrap
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockWithTabsExample {
+export class CodeBlockWithTabsAndShadowExample implements AfterViewInit {
+    @ViewChild(KbqCodeBlock) readonly codeBlock: KbqCodeBlock;
+
     readonly files: KbqCodeBlockFile[] = [
         {
             language: 'html',
@@ -46,5 +41,7 @@ export class CodeBlockWithTabsExample {
         }
     ];
 
-    hideTabs: boolean = false;
+    ngAfterViewInit(): void {
+        this.codeBlock.scrollableCodeContent.scrollTo({ bottom: 0, behavior: 'instant' });
+    }
 }
