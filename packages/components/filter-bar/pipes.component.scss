@@ -10,7 +10,9 @@
         margin-right: 4px;
     }
 
-    gap: 8px;
+    .kbq-pipe {
+        margin-right: 8px;
+    }
 }
 
 @include kbq-filter-bar-theme();
