@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -9,6 +9,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqFilterBarButton } from './filter-bar-button.component';
 import { KbqFilterBar } from './filter-bar.component';
 import { KbqFilter } from './filter-bar.types';
 
@@ -17,10 +18,11 @@ import { KbqFilter } from './filter-bar.types';
     selector: 'kbq-filters',
     template: `
         <button
-            [ngClass]="{ 'kbq-button_changed-filter': activeFilter!.changed || activeFilter!.unsaved }"
             [color]="colors.ContrastFade"
             [kbqStyle]="styles.Outline"
             [kbqDropdownTriggerFor]="savedFilters"
+            [filter]="activeFilter"
+            kbq-filter-bar-button
             kbq-button
         >
             @if (!activeFilter) {
@@ -30,21 +32,26 @@ import { KbqFilter } from './filter-bar.types';
             }
         </button>
 
-        @if (activeFilter!.unsaved) {
-            <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button>
-                <i kbq-icon="kbq-floppy-disk_16" kbqPrefix></i>
+        @if (activeFilter?.unsaved) {
+            <button
+                [color]="colors.Empty"
+                [filter]="activeFilter"
+                kbq-filter-bar-button
+                kbq-button>
+                <i kbq-icon="kbq-floppy-disk_16"></i>
             </button>
         }
 
-        @if (activeFilter!.changed) {
+        @if (activeFilter?.changed) {
             <button
                 [ngClass]="{ 'kbq-button_changed-saved-filter': !activeFilter!.unsaved }"
-                [color]="colors.ContrastFade"
-                [kbqStyle]="styles.Outline"
+                [color]="colors.Empty"
                 [kbqDropdownTriggerFor]="filterActions"
+                [filter]="activeFilter"
+                kbq-filter-bar-button
                 kbq-button
             >
-                <i kbq-icon="kbq-ellipsis-vertical_16" kbqPrefix></i>
+                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
             </button>
         }
 
@@ -109,11 +116,13 @@ import { KbqFilter } from './filter-bar.types';
         KbqFormFieldModule,
         KbqInputModule,
         ReactiveFormsModule,
-        NgClass
+        NgClass,
+        KbqFilterBarButton
     ]
 })
 export class KbqFilters {
     protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
@@ -122,6 +131,12 @@ export class KbqFilters {
 
     get activeFilter(): KbqFilter | null {
         return this.filterBar.activeFilter;
+    }
+
+    constructor() {
+        this.filterBar.activeFilterChanges.subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
     }
 
     onSelectFilter(filter: KbqFilter) {
