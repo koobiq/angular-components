@@ -57,7 +57,7 @@ npm install highlight.js@^11
 
 Когда блок кода должен занять весь контейнер или экран, то лучше использовать оформление без рамки и фона, настраивается при помощи атрибута `noBorder`.
 
-<!-- example(code-block-with-noborder) -->
+<!-- example(code-block-with-no-border) -->
 
 ### Панель действий
 

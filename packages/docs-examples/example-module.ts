@@ -540,16 +540,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-with-max-height-example.ts",
     "importPath": "components/code-block"
   },
-  "code-block-with-noborder": {
-    "packagePath": "components/code-block/code-block-with-noborder",
+  "code-block-with-no-border": {
+    "packagePath": "components/code-block/code-block-with-no-border",
     "title": "Code-block with noBorder attribute",
-    "componentName": "CodeBlockWithNoborderExample",
+    "componentName": "CodeBlockWithNoBorderExample",
     "files": [
-      "code-block-with-noborder-example.ts"
+      "code-block-with-no-border-example.ts"
     ],
-    "selector": "code-block-with-noborder-example",
+    "selector": "code-block-with-no-border-example",
     "additionalComponents": [],
-    "primaryFile": "code-block-with-noborder-example.ts",
+    "primaryFile": "code-block-with-no-border-example.ts",
     "importPath": "components/code-block"
   },
   "code-block-with-soft-wrap": {
@@ -3536,7 +3536,7 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-max-height':
 return import('@koobiq/docs-examples/components/code-block');
-  case 'code-block-with-noborder':
+  case 'code-block-with-no-border':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-soft-wrap':
 return import('@koobiq/docs-examples/components/code-block');
