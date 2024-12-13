@@ -231,9 +231,6 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
             return null;
         }
 
-        console.log(this.componentDocItem);
-        console.log(this.currentUrl);
-
         return `docs-content/overviews/${this.componentDocItem.id}.html`;
     }
 
