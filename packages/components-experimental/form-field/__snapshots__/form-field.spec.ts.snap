@@ -88,9 +88,9 @@ DebugElement {
     <span
       class="kbq-hint__text"
     >
-       Min length
-       (6/8)
-
+       Min length 
+       (6/8) 
+      
     </span>
   </kbq-password-hint>,
 }
@@ -109,9 +109,9 @@ DebugElement {
     <span
       class="kbq-hint__text"
     >
-       Min length
-       (0/8)
-
+       Min length 
+       (0/8) 
+      
     </span>
   </kbq-password-hint>,
 }
@@ -130,8 +130,8 @@ DebugElement {
     <span
       class="kbq-hint__text"
     >
-       Min length
-
+       Min length 
+      
     </span>
   </kbq-password-hint>,
 }
