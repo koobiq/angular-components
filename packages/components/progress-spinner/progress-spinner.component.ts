@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, Directive, ElementRef, Input, ViewEncapsulation } from '@angular/core';
 import { CanColor, CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/components/core';
+import { KbqDefaultSizes } from '../breadcrumbs';
 
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
-export type ProgressSpinnerSize = 'compact' | 'big';
+export type ProgressSpinnerSize = Exclude<KbqDefaultSizes, 'normal'>;
 
 let id = 0;
 

@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { KbqBreadcrumbs } from './breadcrumbs.component';
+import { KbqBreadcrumbs } from './breadcrumbs';
 
 @NgModule({
     imports: [KbqBreadcrumbs],

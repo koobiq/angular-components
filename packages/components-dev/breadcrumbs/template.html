@@ -1,1 +1,23 @@
-<kbq-breadcrumbs>hello world!</kbq-breadcrumbs>
+<kbq-breadcrumbs>
+    @for (section of data; track section; let last = $last) {
+        <kbq-breadcrumb *kbqBreadcrumbItem [class]="last ? 'kbq-breadcrumb_current' : null">
+            {{ section }}
+        </kbq-breadcrumb>
+    }
+</kbq-breadcrumbs>
+
+<div style="margin-top: 16px">
+    <kbq-breadcrumbs>
+        @for (section of data; track section) {
+            <button *kbqBreadcrumbItem kbq-button kbqBreadcrumb>{{ section }}</button>
+        }
+    </kbq-breadcrumbs>
+</div>
+
+<div style="margin-top: 16px">
+    <kbq-breadcrumbs>
+        @for (section of data; track section) {
+            <a *kbqBreadcrumbItem href="#" rdxRovingFocusItem>{{ section }}</a>
+        }
+    </kbq-breadcrumbs>
+</div>

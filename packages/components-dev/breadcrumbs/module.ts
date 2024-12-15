@@ -1,10 +1,19 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqBreadcrumbs } from '../../components/breadcrumbs';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
+import { KbqBreadcrumb, KbqBreadcrumbs, KbqBreadcrumbsItem, KbqDefaultBreadcrumb } from '../../components/breadcrumbs';
 
 @Component({
     standalone: true,
     imports: [
-        KbqBreadcrumbs
+        KbqBreadcrumb,
+        KbqBreadcrumbs,
+        KbqBreadcrumbsItem,
+        KbqDefaultBreadcrumb,
+        KbqLinkModule,
+        RdxRovingFocusItemDirective,
+        KbqButtonModule
     ],
     selector: 'app',
     templateUrl: './template.html',
@@ -12,4 +21,6 @@ import { KbqBreadcrumbs } from '../../components/breadcrumbs';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Breadcrumbs {}
+export class Breadcrumbs {
+    data = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
+}
