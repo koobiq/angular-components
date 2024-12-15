@@ -1,1 +1,15 @@
-<ng-content />
+<!-- first -->
+@for (item of items; track item; let last = $last) {
+    <!--   частное решение-->
+    <ng-container *ngTemplateOutlet="item" />
+    <!-- TODO @CUSTOMIZABLE-->
+    @if (!last) {
+        <i kbq-icon="kbq-chevron-right-s_16" [color]="KbqComponentColors.ContrastFade"></i>
+    }
+}
+
+<!--<kbq-breadcrumb-item>-->
+<!--    <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>-->
+<!--</kbq-breadcrumb-item>-->
+
+<!-- rest -->

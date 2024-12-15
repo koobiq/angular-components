@@ -1,0 +1,28 @@
+:host {
+    display: flex;
+    align-items: center;
+}
+
+// TOKENS
+.kbq-breadcrumb {
+    &.kbq-button,
+    &.kbq-button-icon {
+        --kbq-button-size-horizontal-padding: 6px;
+        --kbq-button-size-height: var(--kbq-size-xxl);
+        --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast-secondary);
+
+        padding-top: 1px;
+        padding-bottom: 1px;
+    }
+}
+
+.kbq-breadcrumb_current {
+    .kbq-button,
+    .kbq-button-icon {
+        &.kbq-button_transparent.kbq-contrast {
+            --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast);
+        }
+    }
+
+    color: var(--kbq-foreground-contrast);
+}
