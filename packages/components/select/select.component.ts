@@ -435,6 +435,7 @@ export class KbqSelect
 
     /**
      * Minimum width of the panel.
+     * If minWidth is larger than window width, it will be ignored.
      */
     @Input({ transform: numberAttribute }) panelMinWidth: number;
 
@@ -1360,6 +1361,8 @@ export class KbqSelect
         if (leftOverflow > 0 || rightOverflow > 0) {
             [offsetX, overlayMaxWidth] = this.calculateOverlayXPosition(overlayRect, windowWidth, offsetX);
             this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
+            // reset the minWidth property
+            this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
         }
 
         // Set the offset directly in order to avoid having to go through change detection and
