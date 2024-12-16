@@ -19,7 +19,7 @@ import { timezones } from '../mock';
     imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOptionModule, KbqIconModule],
     template: `
         <kbq-form-field>
-            <kbq-timezone-select [(value)]="selected" panelWidth="auto">
+            <kbq-timezone-select [(value)]="selected">
                 <kbq-timezone-select-trigger>
                     <div class="layout-row layout-align-start-center">
                         <i color="contrast-fade" kbq-icon="kbq-clock_16" style="margin-right: 8px"></i>

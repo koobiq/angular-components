@@ -18,7 +18,7 @@ import { timezones } from '../mock';
     imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOptionModule],
     template: `
         <kbq-form-field>
-            <kbq-timezone-select [(value)]="selected" panelWidth="auto">
+            <kbq-timezone-select [(value)]="selected">
                 @for (group of data; track group) {
                     <kbq-optgroup [label]="group.countryName">
                         @for (timezone of group.zones; track timezone) {
