@@ -19,6 +19,7 @@ import * as i8 from '@koobiq/components/core';
 import * as i9 from '@koobiq/components/select';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
+import { KbqSelectPanelWidth } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { OnDestroy } from '@angular/core';
 import { PipeTransform } from '@angular/core';
@@ -103,6 +104,8 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     customTrigger: KbqTimezoneSelectTrigger;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    panelWidth: KbqSelectPanelWidth;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], false, never>;
     // (undocumented)
