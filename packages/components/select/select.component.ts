@@ -36,7 +36,8 @@ import {
     ViewEncapsulation,
     booleanAttribute,
     inject,
-    isDevMode
+    isDevMode,
+    numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
@@ -200,7 +201,7 @@ export class KbqSelect
 {
     protected readonly isBrowser = inject(Platform).isBrowser;
 
-    private readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
+    protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -431,6 +432,8 @@ export class KbqSelect
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     @Input() panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || null;
+
+    @Input({ transform: numberAttribute }) panelMinWidth: number;
 
     /** Value of the select control. */
     @Input()
@@ -721,7 +724,7 @@ export class KbqSelect
         }
 
         this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
-        this.overlayMinWidth = this.overlayWidth ? '' : this.triggerRect.width;
+        this.overlayMinWidth = this.panelMinWidth || (this.overlayWidth ? '' : this.triggerRect.width);
 
         this.panelOpen = true;
 

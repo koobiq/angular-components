@@ -31,7 +31,8 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     @ContentChild(KbqTimezoneSelectTrigger, { static: false }) customTrigger: KbqTimezoneSelectTrigger;
 
-    override panelWidth: KbqSelectPanelWidth = 'auto';
+    override panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || 'auto';
+    override panelMinWidth: number = 640;
 
     ngAfterContentInit() {
         super.ngAfterContentInit();
