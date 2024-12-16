@@ -1,6 +1,12 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component, EventEmitter,
+    inject,
+    Output,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -67,7 +73,7 @@ import { KbqFilter } from './filter-bar.types';
             <kbq-divider />
 
             @for (filter of filterBar.filters; track filter) {
-                <button (click)="onSelectFilter(filter)" kbq-dropdown-item>{{ filter.name }}</button>
+                <button (click)="selectFilter(filter)" kbq-dropdown-item>{{ filter.name }}</button>
             }
 
             <kbq-divider />
@@ -115,7 +121,6 @@ import { KbqFilter } from './filter-bar.types';
         KbqTitleModule,
         KbqFormFieldModule,
         KbqInputModule,
-        ReactiveFormsModule,
         NgClass,
         KbqFilterBarButton
     ]
@@ -129,6 +134,9 @@ export class KbqFilters {
 
     value: string;
 
+    @Output()
+    onSelectFilter = new EventEmitter<KbqFilter>();
+
     get activeFilter(): KbqFilter | null {
         return this.filterBar.activeFilter;
     }
@@ -139,8 +147,9 @@ export class KbqFilters {
         });
     }
 
-    onSelectFilter(filter: KbqFilter) {
+    selectFilter(filter: KbqFilter) {
         this.filterBar.activeFilterChanges.next(filter);
+        this.onSelectFilter.next(filter);
     }
 
     onSave() {

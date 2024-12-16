@@ -19,6 +19,10 @@
         flex-direction: row;
         flex-wrap: wrap;
     }
+
+    .kbq-filter-add {
+        margin-right: 8px;
+    }
 }
 
 @include kbq-filter-bar-theme();

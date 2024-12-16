@@ -5,14 +5,12 @@ import { KbqFilterBarButton } from './filter-bar-button.component';
 import { KbqFilterReset } from './filter-bar-reset.component';
 import { KbqFilterBar } from './filter-bar.component';
 import { KbqFilters } from './filters.component';
-import { KbqPipes } from './pipes.component';
-import { KbqPipeComponent } from './pipes/pipe.component';
+import { KbqPipesComponent } from './pipes.component';
 
 const COMPONENTS = [
     KbqFilterBar,
     KbqFilters,
-    KbqPipes,
-    KbqPipeComponent,
+    KbqPipesComponent,
     KbqFilterBarActions,
     KbqFilterBarButton,
     KbqFilterReset,

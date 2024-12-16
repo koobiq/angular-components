@@ -3,6 +3,7 @@ export * from './filter-bar.module';
 export * from './filter-bar.types';
 export * from './filters.component';
 export * from './pipes.component';
+export * from './pipes/pipe-date.component';
 export * from './pipes/pipe-multi-select.component';
 export * from './pipes/pipe-multi-tree-select.component';
 export * from './pipes/pipe-select.component';

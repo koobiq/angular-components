@@ -7,6 +7,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPipe } from '../filter-bar.types';
+import { KbqPipeBase } from './pipe.component';
 
 @Component({
     standalone: true,
@@ -16,7 +17,7 @@ import { KbqPipe } from '../filter-bar.types';
             {{ data.name }}
         </button>
 
-        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button>
+        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button (click)="onDelete()">
             <i kbq-icon="kbq-xmark-s_16"></i>
         </button>
     `,
@@ -35,7 +36,7 @@ import { KbqPipe } from '../filter-bar.types';
         KbqDividerModule
     ]
 })
-export class KbqPipeTextComponent {
+export class KbqPipeTextComponent extends KbqPipeBase {
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
 

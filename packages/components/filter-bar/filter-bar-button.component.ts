@@ -25,8 +25,11 @@ export class KbqFilterBarButton {
 
     @Input()
     set filter(value: KbqFilter | null) {
-        console.log('set filter: ');
         this._filter = value;
+
+        this.computedStyles = '';
+        this.button.kbqStyle = KbqButtonStyles.Outline;
+        this.button.color = KbqComponentColors.ContrastFade;
 
         if (this.filter) {
             this.computedStyles = {
@@ -37,10 +40,6 @@ export class KbqFilterBarButton {
                 this.button.kbqStyle = 'changed-filter';
                 this.button.color = KbqComponentColors.Empty;
             }
-        } else {
-            this.computedStyles = '';
-            this.button.kbqStyle = KbqButtonStyles.Outline;
-            this.button.color = KbqComponentColors.ContrastFade;
         }
     }
 
