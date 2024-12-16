@@ -11,7 +11,7 @@ import { KbqPipeBase } from './pipe.component';
 
 @Component({
     standalone: true,
-    selector: 'kbq-pipe[multi-tree-select]',
+    selector: 'kbq-pipe[date]',
     template: `
         <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button>
             {{ data.name }}
@@ -34,9 +34,15 @@ import { KbqPipeBase } from './pipe.component';
         KbqIcon,
         KbqInputModule,
         KbqDividerModule
+    ],
+    providers: [
+        {
+            provide: KbqPipeBase,
+            useExisting: KbqPipeDateComponent
+        }
     ]
 })
-export class KbqPipeMultiTreeSelectComponent extends KbqPipeBase {
+export class KbqPipeDateComponent extends KbqPipeBase {
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
 

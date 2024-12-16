@@ -1,6 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef,
+    Component,
+    EventEmitter, inject,
+    Input,
+    Output,
+    ViewEncapsulation
+} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { KbqFilter } from './filter-bar.types';
+import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 
 @Component({
     standalone: true,
@@ -20,12 +27,29 @@ import { KbqFilter } from './filter-bar.types';
     }
 })
 export class KbqFilterBar {
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     @Input() filters: KbqFilter[];
-    @Input() activeFilter: KbqFilter | null;
+
+    @Input()
+    get activeFilter(): KbqFilter | null {
+        return this._activeFilter;
+    }
+
+    set activeFilter(value: KbqFilter | null) {
+        this._activeFilter = value;
+
+        this.changeDetectorRef.markForCheck();
+    }
+
+    private _activeFilter: KbqFilter | null;
+
+    templates: KbqPipeTemplate[];
 
     @Output() readonly changes: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onSelectFilter: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onAddFilter: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly onAddPipe: EventEmitter<KbqPipeTemplate> = new EventEmitter<KbqPipeTemplate>();
     @Output() readonly onSaveFilter: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onSaveReset: EventEmitter<void> = new EventEmitter<void>();
 
@@ -33,7 +57,12 @@ export class KbqFilterBar {
 
     constructor() {
         this.activeFilterChanges.subscribe((filter) => {
-            this.activeFilter = filter;
+            this._activeFilter = filter;
+        });
+
+        this.onAddPipe.subscribe((pipe: KbqPipe) => {
+            // this.activeFilter?.pipes.push(pipe);
+            console.log('onAddPipe: ', pipe);
         });
     }
 }
