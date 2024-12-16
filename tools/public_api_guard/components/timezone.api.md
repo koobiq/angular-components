@@ -105,6 +105,8 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    panelMinWidth: number;
+    // (undocumented)
     panelWidth: KbqSelectPanelWidth;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTimezoneSelect, "kbq-timezone-select", ["kbqTimezoneSelect"], {}, {}, ["customTrigger"], ["kbq-timezone-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "*"], false, never>;

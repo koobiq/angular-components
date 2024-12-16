@@ -433,6 +433,9 @@ export class KbqSelect
      */
     @Input() panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || null;
 
+    /**
+     * Minimum width of the panel.
+     */
     @Input({ transform: numberAttribute }) panelMinWidth: number;
 
     /** Value of the select control. */
