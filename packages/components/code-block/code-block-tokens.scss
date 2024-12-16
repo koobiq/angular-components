@@ -6,15 +6,10 @@
     --kbq-code-block-size-with-header-content-padding-horizontal: var(--kbq-size-xl);
     --kbq-code-block-size-with-header-content-content-gap-horizontal: var(--kbq-size-m);
     --kbq-code-block-size-no-header-content-padding-vertical: 14px;
-    --kbq-code-block-size-no-header-content-padding-horizontal: 20px;
+    --kbq-code-block-size-no-header-content-padding-horizontal: var(--kbq-size-xl);
     --kbq-code-block-size-no-header-content-content-gap-horizontal: var(--kbq-size-m);
-    --kbq-code-block-size-header-padding-vertical: var(--kbq-size-s);
-    --kbq-code-block-size-header-padding-left: var(--kbq-size-m);
-    --kbq-code-block-size-header-padding-right: var(--kbq-size-s);
     --kbq-code-block-size-header-content-gap-horizontal: var(--kbq-size-l);
     --kbq-code-block-size-actionbar-content-gap-horizontal: var(--kbq-size-3xs);
-    --kbq-code-block-size-actionbar-padding-vertical: var(--kbq-size-s);
-    --kbq-code-block-size-actionbar-padding-horizontal: var(--kbq-size-m);
     --kbq-code-block-size-actionbar-fade-gradient-width: var(--kbq-size-3xl);
     --kbq-code-block-size-collapse-expanded-padding-top: 0;
     --kbq-code-block-size-collapse-expanded-padding-bottom: var(--kbq-size-l);
@@ -136,8 +131,8 @@
     --kbq-code-block-filled-collapse-expanded-background: transparent;
     --kbq-code-block-filled-collapse-collapsed-background: linear-gradient(
         180deg,
-        hsla(225, 15%, 95%, 0%) 0%,
-        hsla(225, 15%, 95%, 100%) 100%
+        transparent,
+        var(--kbq-background-bg-secondary) 100%
     );
     --kbq-code-block-filled-collapse-button-expand-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-outline-container-background: var(--kbq-background-card);
@@ -149,8 +144,8 @@
     --kbq-code-block-outline-collapse-expanded-background: transparent;
     --kbq-code-block-outline-collapse-collapsed-background: linear-gradient(
         180deg,
-        hsla(0, 0%, 100%, 0%) 0%,
-        hsla(0, 0%, 100%, 100%) 100%
+        transparent,
+        var(--kbq-background-bg) 100%
     );
     --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-card);
     --kbq-code-block-hljs-addition-background: var(--kbq-palette-green-95);
@@ -160,7 +155,7 @@
     --kbq-code-block-hljs-attribute-background: null;
     --kbq-code-block-hljs-attribute-color: null;
     --kbq-code-block-hljs-built-in-background: null;
-    --kbq-code-block-hljs-built-in-color: null;
+    --kbq-code-block-hljs-built-in-color: var(--kbq-palette-blue-35);
     --kbq-code-block-hljs-bullet-background: null;
     --kbq-code-block-hljs-bullet-color: null;
     --kbq-code-block-hljs-char-escape-background: null;
@@ -256,4 +251,5 @@
     --kbq-code-block-hljs-variable-constant-color: null;
     --kbq-code-block-hljs-variable-language-background: null;
     --kbq-code-block-hljs-variable-language-color: null;
+    --kbq-code-block-tab-size: 4;
 }

@@ -4,29 +4,48 @@ import {
     Directive,
     ElementRef,
     inject,
+    InjectionToken,
     Input,
     numberAttribute,
+    Provider,
     Renderer2,
     SecurityContext
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import hljs from 'highlight.js';
-import { KbqCodeBlockFile } from './code-block.types';
+import { KbqCodeBlockFile } from './types';
 
-const KBQ_CODE_BLOCK_FALLBACK_LANGUAGE = 'plaintext';
+/**
+ * Fallback language for code block if language is not supported/specified.
+ *
+ * List of supported languages:
+ * @link https://highlightjs.readthedocs.io/en/stable/supported-languages.html
+ */
+export const KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE = new InjectionToken<string>(
+    'KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE',
+    { factory: () => 'plaintext' }
+);
 
+/** Utility provider for `KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE`. */
+export const kbqCodeBlockFallbackFileLanguageProvider = (language: string): Provider => ({
+    provide: KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE,
+    useValue: language
+});
+
+/** Directive which applies syntax highlighting to the code block content. */
 @Directive({
     standalone: true,
-    selector: '[kbqCodeBlockContent]',
+    selector: 'code[kbqCodeBlockHighlight]',
     host: {
         class: 'hljs'
     }
 })
-export class KbqCodeBlockContent {
-    protected readonly document = inject<Document>(DOCUMENT);
+export class KbqCodeBlockHighlight {
     private readonly nativeElement = inject(ElementRef).nativeElement;
+    private readonly document = inject<Document>(DOCUMENT);
     private readonly renderer = inject(Renderer2);
     private readonly domSanitizer = inject(DomSanitizer);
+    private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
 
     /** The code file. */
     @Input({ required: true })
@@ -35,11 +54,28 @@ export class KbqCodeBlockContent {
 
         if (!window) return;
 
-        if (!hljs.getLanguage(language)) {
-            console.warn(`[KBQ] Unknown language: "${language}". Setting to "${KBQ_CODE_BLOCK_FALLBACK_LANGUAGE}".`);
-            language = KBQ_CODE_BLOCK_FALLBACK_LANGUAGE;
+        if (!language || !hljs.getLanguage(language)) {
+            console.warn(`[KbqCodeBlock] Unknown language: "${language}". Setting to "${this.fallbackFileLanguage}".`);
+            language = this.fallbackFileLanguage;
         }
-        const { value: highlightedHTML, language: highlightedLanguage } = hljs.highlight(content, { language });
+
+        const {
+            value: highlightedHTML,
+            language: highlightedLanguage,
+            illegal,
+            relevance
+        } = hljs.highlight(content, {
+            language: language!
+        });
+
+        if (illegal) {
+            console.warn('[KbqCodeBlock] Content contains illegal characters.');
+        }
+
+        if (relevance === 0) {
+            console.warn('[KbqCodeBlock] Content does not match the specified programming language.');
+        }
+
         const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML);
         const highlightedHTMLWithLineNumbers = window['hljs'].lineNumbersValue(safeHTML, {
             startFrom: this.startFrom,
@@ -65,13 +101,17 @@ export class KbqCodeBlockContent {
         return this.document?.defaultView || window;
     }
 
+    /**
+     * Initialize the HighlightJS line numbers plugin. This method is called once when
+     * the component is constructed.
+     */
     private initLineNumbersPlugin(): void {
         const window = this.getWindow();
 
         if (!window) return;
 
         window['hljs'] = hljs;
-        this.highlightJSLineNumbersPlugin();
+        this.highlightJSLineNumbersPlugin(this.document, window);
     }
 
     /**
@@ -79,11 +119,8 @@ export class KbqCodeBlockContent {
      * Changes may lead to unpredictable behavior.
      * Source code: https://github.com/wcoder/highlightjs-line-numbers.js/blob/v2.9.0/src/highlightjs-line-numbers.js
      */
-    private highlightJSLineNumbersPlugin(): void {
+    private highlightJSLineNumbersPlugin(d: Document, w: Window): void {
         'use strict';
-
-        const d = this.document;
-        const w = this.getWindow();
 
         if (!w) return;
 

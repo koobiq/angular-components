@@ -1,3 +1,5 @@
+import { KbqCodeBlockLocaleConfiguration } from './types';
+
 export const ruRULocaleData = {
     select: { hiddenItemsText: 'еще {{ number }}' },
     datepicker: {
@@ -36,7 +38,7 @@ export const ruRULocaleData = {
         viewAllText: 'Показать все',
         viewLessText: 'Свернуть',
         openExternalSystemTooltip: 'Открыть во внешней системе'
-    },
+    } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'Город или часовой пояс'
     }

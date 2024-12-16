@@ -1,3 +1,5 @@
+import { KbqCodeBlockLocaleConfiguration } from './types';
+
 export const esLALocaleData = {
     select: { hiddenItemsText: '{{ number }} más' },
     datepicker: {
@@ -35,7 +37,7 @@ export const esLALocaleData = {
         viewAllText: 'Mostrar todo',
         viewLessText: 'Mostrar menos',
         openExternalSystemTooltip: 'Abrir en el sistema externo'
-    },
+    } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'Ciudad o zona horaria'
     }
