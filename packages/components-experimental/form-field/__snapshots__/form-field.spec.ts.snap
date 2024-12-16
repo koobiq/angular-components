@@ -41,7 +41,7 @@ DebugElement {
     id="kbq-hint-3"
   >
     <span
-      class="kbq-hint_text"
+      class="kbq-hint__text"
     >
       Error
     </span>
@@ -56,7 +56,7 @@ DebugElement {
     id="kbq-hint-0"
   >
     <span
-      class="kbq-hint_text"
+      class="kbq-hint__text"
     >
       Hint
     </span>
@@ -86,7 +86,7 @@ DebugElement {
       kbq-icon=""
     />
     <span
-      class="kbq-hint_text"
+      class="kbq-hint__text"
     >
        Min length 
        (6/8) 
@@ -107,7 +107,7 @@ DebugElement {
       kbq-icon=""
     />
     <span
-      class="kbq-hint_text"
+      class="kbq-hint__text"
     >
        Min length 
        (0/8) 
@@ -128,7 +128,7 @@ DebugElement {
       kbq-icon=""
     />
     <span
-      class="kbq-hint_text"
+      class="kbq-hint__text"
     >
        Min length 
       

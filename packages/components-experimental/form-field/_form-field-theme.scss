@@ -1,7 +1,7 @@
-@use '../../components/core/styles/common/tokens' as *;
+@use '../../components/core/styles/common/tokens';
 
 @mixin kbq-form-field-state($state-name) {
-    .kbq-form-field_container {
+    .kbq-form-field__container {
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
         background-color: var(--kbq-form-field-#{$state-name}-background);
     }
@@ -42,7 +42,7 @@
         &.kbq-form-field_focused {
             @include kbq-form-field-state(states-focused);
 
-            & .kbq-form-field_container {
+            & .kbq-form-field__container {
                 box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
             }
         }
@@ -50,7 +50,7 @@
         &.kbq-form-field_invalid {
             @include kbq-form-field-state(states-error);
 
-            &.kbq-form-field_focused .kbq-form-field_container {
+            &.kbq-form-field_focused .kbq-form-field__container {
                 box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
             }
         }
@@ -69,8 +69,8 @@
         }
     }
 
-    .kbq-form-field_prefix,
-    .kbq-form-field_suffix {
+    .kbq-form-field__prefix,
+    .kbq-form-field__suffix {
         .kbq-icon {
             color: var(--kbq-icon-contrast-fade);
         }
@@ -79,10 +79,10 @@
 
 @mixin kbq-form-field-typography() {
     .kbq-form-field___EXPERIMENTAL {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
-        .kbq-hint___EXPERIMENTAL:not(.kbq-password-hint___EXPERIMENTAL) .kbq-hint_text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        .kbq-hint___EXPERIMENTAL:not(.kbq-password-hint___EXPERIMENTAL) .kbq-hint__text {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }

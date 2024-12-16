@@ -1,4 +1,4 @@
-@use '../../components/core/styles/common/tokens' as *;
+@use '../../components/core/styles/common/tokens';
 
 @mixin kbq-hint-color($type, $style-name) {
     color: var(--kbq-hint-#{$type}-#{$style-name}-text);
@@ -48,12 +48,12 @@
 
 @mixin kbq-hint-typography() {
     .kbq-hint___EXPERIMENTAL {
-        .kbq-hint_text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+        .kbq-hint__text {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
         }
 
-        &.kbq-hint_compact .kbq-hint_text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        &.kbq-hint_compact .kbq-hint__text {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }

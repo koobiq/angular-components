@@ -101,7 +101,7 @@ export class KbqError extends KbqHint {
     template: `
         <i [ngClass]="icon" kbq-icon=""></i>
 
-        <span class="kbq-hint_text">
+        <span class="kbq-hint__text">
             <ng-content />
         </span>
     `,
