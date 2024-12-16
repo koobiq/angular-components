@@ -2,16 +2,15 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    inject,
-    OnInit,
+    inject, Input,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqButtonModule, KbqButtonStyles } from '../button';
+import { KbqComponentColors } from '../core';
+import { KbqDividerModule } from '../divider';
 import { KbqIcon } from '../icon';
 import { KbqFilterBar } from './filter-bar.component';
-import { KbqFilter } from './filter-bar.types';
+import { KbqPipe, KbqPipeTypes } from './filter-bar.types';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select.component';
 import { KbqPipeMultiTreeSelectComponent } from './pipes/pipe-multi-tree-select.component';
 import { KbqPipeSelectComponent } from './pipes/pipe-select.component';
@@ -22,16 +21,18 @@ import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select.component';
     standalone: true,
     selector: 'kbq-pipes',
     template: `
-        @for (pipe of activeFilter?.pipes; track pipe) {
-            @if (pipe.type === 'text') {
+        @for (pipe of pipes; track pipe) {
+            @if (pipe.type === pipeTypes.Text) {
                 <kbq-pipe [data]="pipe" text />
-            } @else if (pipe.type === 'select') {
+            } @else if (pipe.type === pipeTypes.Select) {
                 <kbq-pipe [data]="pipe" select />
-            } @else if (pipe.type === 'multi-select') {
+            } @else if (pipe.type === pipeTypes.MultiSelect) {
                 <kbq-pipe [data]="pipe" multi-select />
-            } @else if (pipe.type === 'tree-select') {
+            } @else if (pipe.type === pipeTypes.TreeSelect) {
                 <kbq-pipe [data]="pipe" tree-select />
-            } @else if (pipe.type === 'multi-tree-select') {
+            } @else if (pipe.type === pipeTypes.MultiTreeSelect) {
+                <kbq-pipe [data]="pipe" multi-tree-select />
+            } @else if (pipe.type === pipeTypes.Date) {
                 <kbq-pipe [data]="pipe" multi-tree-select />
             }
         }
@@ -53,27 +54,26 @@ import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select.component';
         KbqPipeMultiTreeSelectComponent
     ]
 })
-export class KbqPipes implements OnInit {
+export class KbqPipesComponent {
+    protected readonly pipeTypes = KbqPipeTypes;
     protected readonly filterBar = inject(KbqFilterBar);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
 
-    value: string;
-    activeFilter: KbqFilter | null;
-
-    constructor() {
-        this.filterBar.activeFilterChanges.subscribe(this.updateActiveFilter);
+    @Input()
+    get pipes(): KbqPipe[] {
+        return this._pipes;
     }
 
-    ngOnInit(): void {
-        this.updateActiveFilter(this.filterBar.activeFilter);
+    set pipes(value: KbqPipe[]) {
+        this._pipes = value;
     }
 
-    updateActiveFilter = (filter: KbqFilter | null) => {
-        this.activeFilter = filter;
+    private _pipes!: KbqPipe[];
 
-        this.changeDetectorRef.markForCheck();
-    };
+    deletePipe(pipe: KbqPipe) {
+        this.pipes.splice(this.pipes.indexOf(pipe), 1);
+    }
 }
