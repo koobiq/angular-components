@@ -131,8 +131,8 @@
     --kbq-code-block-filled-collapse-expanded-background: transparent;
     --kbq-code-block-filled-collapse-collapsed-background: linear-gradient(
         180deg,
-        hsla(225, 15%, 95%, 0%) 0%,
-        hsla(225, 15%, 95%, 100%) 100%
+        transparent,
+        var(--kbq-background-bg-secondary) 100%
     );
     --kbq-code-block-filled-collapse-button-expand-background: var(--kbq-background-bg-secondary);
     --kbq-code-block-outline-container-background: var(--kbq-background-card);
@@ -144,8 +144,8 @@
     --kbq-code-block-outline-collapse-expanded-background: transparent;
     --kbq-code-block-outline-collapse-collapsed-background: linear-gradient(
         180deg,
-        hsla(0, 0%, 100%, 0%) 0%,
-        hsla(0, 0%, 100%, 100%) 100%
+        transparent,
+        var(--kbq-background-bg) 100%
     );
     --kbq-code-block-outline-collapse-button-expand-background: var(--kbq-background-card);
     --kbq-code-block-hljs-addition-background: var(--kbq-palette-green-95);
