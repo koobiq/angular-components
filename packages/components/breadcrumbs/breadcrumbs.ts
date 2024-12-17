@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    ContentChild,
     ContentChildren,
     Directive,
     forwardRef,
@@ -11,8 +13,10 @@ import {
     TemplateRef,
     ViewEncapsulation
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
@@ -22,8 +26,21 @@ export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
     selector: '[kbqBreadcrumbItem]',
     standalone: true
 })
-export class KbqBreadcrumbsItem {
-    protected readonly templateRef = inject(TemplateRef);
+export class KbqBreadcrumbItem implements AfterViewInit {
+    readonly templateRef = inject(TemplateRef);
+    readonly routerLink = inject(RouterLink, { optional: true, host: true });
+
+    ngAfterViewInit() {
+        console.log(this.routerLink);
+    }
+}
+
+@Directive({
+    selector: '[kbqBreadcrumbsSeparator]',
+    standalone: true
+})
+export class KbqBreadcrumbsSeparator {
+    readonly templateRef = inject(TemplateRef);
 }
 
 @Directive({
@@ -40,23 +57,16 @@ export class KbqBreadcrumb {}
 
 @Component({
     standalone: true,
-    selector: 'kbq-breadcrumb',
+    selector: 'kbq-breadcrumb,[kbq-breadcrumb]',
     imports: [
         KbqButtonModule,
         KbqBreadcrumb
     ],
     encapsulation: ViewEncapsulation.None,
     template: `
-        <a href="#">
-            <button
-                [color]="KbqComponentColors.Contrast"
-                [kbqStyle]="KbqButtonStyles.Transparent"
-                kbqBreadcrumb
-                kbq-button
-            >
-                <ng-content />
-            </button>
-        </a>
+        <button [color]="KbqComponentColors.Contrast" [kbqStyle]="KbqButtonStyles.Transparent" kbqBreadcrumb kbq-button>
+            <ng-content />
+        </button>
     `
 })
 export class KbqDefaultBreadcrumb {
@@ -74,23 +84,30 @@ export class KbqDefaultBreadcrumb {
     imports: [
         CommonModule,
         KbqIconModule,
-        KbqBreadcrumbsItem,
+        KbqBreadcrumbItem,
         KbqButtonModule,
-        KbqDefaultBreadcrumb
+        KbqDefaultBreadcrumb,
+        KbqBreadcrumb,
+        KbqDropdownModule,
+        RouterLink
     ],
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
 export class KbqBreadcrumbs {
-    @ContentChildren(forwardRef(() => KbqBreadcrumbsItem), { read: TemplateRef })
+    @ContentChildren(forwardRef(() => KbqBreadcrumbItem), { read: TemplateRef })
     items: QueryList<TemplateRef<any>>;
+
+    @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
+    itemsWithLinks: QueryList<KbqBreadcrumbItem>;
+
+    @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
+    separator?: TemplateRef<any>;
 
     @Input()
     size: number;
 
     @Input()
-    max: number;
-
-    @Input() icon: string;
+    max: number = 4;
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
