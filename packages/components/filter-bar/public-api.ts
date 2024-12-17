@@ -7,6 +7,7 @@ export * from './pipes/pipe-date.component';
 export * from './pipes/pipe-multi-select.component';
 export * from './pipes/pipe-multi-tree-select.component';
 export * from './pipes/pipe-select.component';
+export * from './pipes/pipe-states.component';
 export * from './pipes/pipe-text.component';
 export * from './pipes/pipe-tree-select.component';
 export * from './pipes/pipe.component';
