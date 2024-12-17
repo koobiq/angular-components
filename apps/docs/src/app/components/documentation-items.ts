@@ -147,6 +147,15 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     examples: ['badge-types']
                 },
                 {
+                    id: 'breadcrumbs',
+                    name: 'Breadcrumbs',
+                    svgPreview: 'breadcrumbs',
+                    hasApi: true,
+                    apiId: 'breadcrumbs',
+                    hasExamples: false,
+                    examples: ['breadcrumbs-types']
+                },
+                {
                     id: 'button',
                     name: 'Button',
                     svgPreview: 'button',

@@ -1,9 +1,8 @@
-:host {
+kbq-breadcrumbs {
     display: flex;
     align-items: center;
 }
 
-// TOKENS
 .kbq-breadcrumb {
     &.kbq-button,
     &.kbq-button-icon {
@@ -14,6 +13,10 @@
         padding-top: 1px;
         padding-bottom: 1px;
     }
+}
+
+.kbq-breadcrumb__more.kbq-button-icon {
+    --kbq-button-icon-size-horizontal-padding: 4px;
 }
 
 .kbq-breadcrumb_current {

@@ -1,10 +1,26 @@
 <kbq-breadcrumbs>
     @for (section of data; track section; let last = $last) {
-        <kbq-breadcrumb *kbqBreadcrumbItem [class]="last ? 'kbq-breadcrumb_current' : null">
+        <a *kbqBreadcrumbItem kbq-breadcrumb [class]="last ? 'kbq-breadcrumb_current' : null" [routerLink]="section">
             {{ section }}
-        </kbq-breadcrumb>
+        </a>
     }
 </kbq-breadcrumbs>
+
+<div style="margin-top: 16px">
+    <kbq-breadcrumbs>
+        @for (section of data; track section; let last = $last) {
+            <a
+                *kbqBreadcrumbItem
+                kbq-breadcrumb
+                [class]="last ? 'kbq-breadcrumb_current' : null"
+                [routerLink]="section"
+            >
+                <i kbq-icon="kbq-linux_16"></i>
+                {{ section }}
+            </a>
+        }
+    </kbq-breadcrumbs>
+</div>
 
 <div style="margin-top: 16px">
     <kbq-breadcrumbs>
@@ -17,7 +33,10 @@
 <div style="margin-top: 16px">
     <kbq-breadcrumbs>
         @for (section of data; track section) {
-            <a *kbqBreadcrumbItem href="#" kbqBreadcrumb>{{ section }}</a>
+            <a *kbqBreadcrumbItem kbqBreadcrumb [routerLink]="section">{{ section }}</a>
         }
+        <span *kbqBreadcrumbsSeparator>&nbsp;/&nbsp;</span>
     </kbq-breadcrumbs>
 </div>
+
+<button (click)="add()">add</button>
