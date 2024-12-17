@@ -17,7 +17,7 @@ import { KbqPipeBase } from './pipe.component';
             {{ data.name }}
         </button>
 
-        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" kbq-button (click)="onDelete()">
+        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDelete()" kbq-button>
             <i kbq-icon="kbq-xmark-s_16"></i>
         </button>
     `,

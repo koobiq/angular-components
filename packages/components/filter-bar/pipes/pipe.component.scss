@@ -1,7 +1,9 @@
 .kbq-pipe {
     display: flex;
     flex-direction: row;
+}
 
+.kbq-pipe:not(.kbq-pipe_readonly, .kbq-pipe_empty) {
     .kbq-button {
         border-bottom-right-radius: unset;
         border-top-right-radius: unset;
@@ -12,5 +14,26 @@
 
         border-bottom-left-radius: unset;
         border-top-left-radius: unset;
+    }
+}
+
+.kbq-pipe_select {
+    .kbq-pipe__name {
+        color: var(--kbq-foreground-contrast-secondary);;
+    }
+
+    .kbq-pipe__value {
+        margin-left: 4px;
+    }
+
+    &.kbq-pipe_empty,
+    &.kbq-pipe_readonly {
+        .kbq-pipe__delete {
+            display: none;
+        }
+    }
+
+    &.kbq-pipe_disabled {
+
     }
 }

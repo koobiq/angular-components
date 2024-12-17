@@ -1,10 +1,4 @@
-import {
-    Directive,
-    ElementRef,
-    inject,
-    Input,
-    ViewChild
-} from '@angular/core';
+import { Directive, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '../button';
 import { KbqComponentColors } from '../core';
 import { KbqFilter } from './filter-bar.types';

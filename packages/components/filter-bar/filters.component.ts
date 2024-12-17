@@ -2,7 +2,8 @@ import { NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component, EventEmitter,
+    Component,
+    EventEmitter,
     inject,
     Output,
     ViewEncapsulation
@@ -39,11 +40,7 @@ import { KbqFilter } from './filter-bar.types';
         </button>
 
         @if (activeFilter?.unsaved) {
-            <button
-                [color]="colors.Empty"
-                [filter]="activeFilter"
-                kbq-filter-bar-button
-                kbq-button>
+            <button [color]="colors.Empty" [filter]="activeFilter" kbq-filter-bar-button kbq-button>
                 <i kbq-icon="kbq-floppy-disk_16"></i>
             </button>
         }

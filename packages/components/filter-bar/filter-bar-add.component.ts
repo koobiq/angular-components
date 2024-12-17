@@ -1,8 +1,4 @@
-import {
-    AfterContentInit,
-    Component,
-    inject, Input
-} from '@angular/core';
+import { AfterContentInit, Component, inject, Input } from '@angular/core';
 import { KbqButtonModule } from '../button';
 import { KbqDropdownModule } from '../dropdown';
 import { KbqIcon } from '../icon';
@@ -13,11 +9,7 @@ import { KbqPipeTemplate } from './filter-bar.types';
     standalone: true,
     selector: 'kbq-filter-add',
     template: `
-        <button
-            kbq-button
-            [color]="'contrast-fade'"
-            [kbqStyle]="'outline'"
-            [kbqDropdownTriggerFor]="newPipes">
+        <button [color]="'contrast-fade'" [kbqStyle]="'outline'" [kbqDropdownTriggerFor]="newPipes" kbq-button>
             <i kbq-icon="kbq-plus_16"></i>
             <ng-content />
         </button>

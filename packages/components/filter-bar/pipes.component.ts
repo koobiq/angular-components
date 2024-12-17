@@ -1,10 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    inject, Input,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '../button';
 import { KbqComponentColors } from '../core';
 import { KbqDividerModule } from '../divider';

@@ -22,12 +22,32 @@ export class DemoComponent {
             unsaved: false,
             pipes: [
                 {
-                    name: 'pipe 1',
+                    name: 'readonly',
+                    value: '1',
+                    type: KbqPipeTypes.Select,
+                    readonly: true,
+                    empty: false,
+                    disabled: false,
+                    changed: false,
+                    multiple: false
+                },
+                {
+                    name: 'empty',
+                    value: '1',
+                    type: KbqPipeTypes.Select,
+                    readonly: false,
+                    empty: true,
+                    disabled: false,
+                    changed: false,
+                    multiple: false
+                },
+                {
+                    name: 'disabled',
                     value: '1',
                     type: KbqPipeTypes.Select,
                     readonly: false,
                     empty: false,
-                    disabled: false,
+                    disabled: true,
                     changed: false,
                     multiple: false
                 }
@@ -135,17 +155,22 @@ export class DemoComponent {
     activeFilter: KbqFilter | null = this.filters[0];
     pipeTemplates: KbqPipeTemplate[] = [
         {
-            name: 'name 1',
+            name: 'Вердикт',
             type: KbqPipeTypes.Select,
-            values: ['select element 1', 'select element 2', 'select element 3', 'select element 4'],
+            values: [
+                { name: 'Не определен', value: '1' },
+                { name: 'Легитимное действие', value: '2' },
+                { name: 'Ложный', value: '3' },
+                { name: 'Подтвержден', value: '4' }
+            ],
             readonly: false,
-            empty: false,
+            empty: true,
             disabled: false,
             changed: false,
             multiple: false
         },
         {
-            name: 'name 2',
+            name: 'Автор',
             type: KbqPipeTypes.Text,
             values: [],
             readonly: false,
@@ -157,7 +182,12 @@ export class DemoComponent {
         {
             name: 'name 3',
             type: KbqPipeTypes.MultiSelect,
-            values: ['multiSelect element 1', 'multiSelect element 2', 'multiSelect element 3'],
+            values: [
+                { name: 'multiSelect element 1', value: '1' },
+                { name: 'multiSelect element 2', value: '2' },
+                { name: 'multiSelect element 3', value: '3' },
+                { name: 'multiSelect element 4', value: '4' }
+            ],
             readonly: false,
             empty: false,
             disabled: false,
