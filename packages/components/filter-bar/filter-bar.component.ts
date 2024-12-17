@@ -1,7 +1,9 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
-    EventEmitter, inject,
+    EventEmitter,
+    inject,
     Input,
     Output,
     ViewEncapsulation
