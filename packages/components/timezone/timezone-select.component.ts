@@ -9,7 +9,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_OPTION_PARENT_COMPONENT, ruRULocaleData } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { KbqSelect } from '@koobiq/components/select';
+import { KbqSelect, KbqSelectPanelWidth } from '@koobiq/components/select';
 
 @Directive({ selector: 'kbq-timezone-select-trigger' })
 export class KbqTimezoneSelectTrigger {}
@@ -30,6 +30,9 @@ const defaultSearchPlaceholder = ruRULocaleData.timezone.searchPlaceholder;
 })
 export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     @ContentChild(KbqTimezoneSelectTrigger, { static: false }) customTrigger: KbqTimezoneSelectTrigger;
+
+    override panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || 'auto';
+    override panelMinWidth: number = 640;
 
     ngAfterContentInit() {
         super.ngAfterContentInit();

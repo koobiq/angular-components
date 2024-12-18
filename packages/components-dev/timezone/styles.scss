@@ -1,6 +1,9 @@
 @use '../main';
 
-.demo-timezone {
-    width: 400px;
-    padding: 0 16px;
+app {
+    display: block;
+}
+
+hr {
+    margin: var(--kbq-size-3xl) 0;
 }

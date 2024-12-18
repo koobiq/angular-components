@@ -1,80 +1,11 @@
-<div class="demo-timezone kbq-text-big">
-    <h2>With kbq-timezone-option</h2>
-    <kbq-form-field>
-        <kbq-timezone-select [(value)]="selected">
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                <input kbqInput type="text" [formControl]="searchControl" />
-            </kbq-form-field>
+<timezone-overview-example />
 
-            <div kbq-select-search-empty-result>Ничего не найдено</div>
+<hr />
 
-            @for (group of filteredOptions$ | async; track group) {
-                <kbq-optgroup [label]="group.countryName">
-                    @for (timezone of group.zones; track timezone) {
-                        <kbq-timezone-option [highlightText]="searchPattern" [timezone]="timezone" />
-                    }
-                </kbq-optgroup>
-            }
-        </kbq-timezone-select>
-    </kbq-form-field>
+<timezone-search-overview-example />
 
-    <pre>Selected: {{ selected }}</pre>
+<hr />
 
-    <br />
+<timezone-trigger-overview-example />
 
-    <h2>With kbq-option</h2>
-    <kbq-form-field>
-        <kbq-timezone-select [(value)]="selected">
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                <input kbqInput type="text" [formControl]="searchControl" />
-                <kbq-cleaner />
-            </kbq-form-field>
-
-            <div kbq-select-search-empty-result>Ничего не найдено</div>
-
-            @for (group of filteredOptions$ | async; track group) {
-                @for (timezone of group.zones; track timezone) {
-                    <kbq-option [value]="timezone.id">
-                        {{ timezone.id }}
-                    </kbq-option>
-                }
-            }
-        </kbq-timezone-select>
-    </kbq-form-field>
-
-    <pre>Selected: {{ selected }}</pre>
-
-    <br />
-
-    <h2>With custom trigger</h2>
-    <kbq-form-field>
-        <kbq-timezone-select [(value)]="selected">
-            <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-                <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                <input
-                    kbqInput
-                    type="text"
-                    [formControl]="searchControl"
-                    [placeholder]="'Placeholder Город или часовой пояс'"
-                />
-                <kbq-cleaner />
-            </kbq-form-field>
-
-            <kbq-timezone-select-trigger>custom trigger: {{ selected }}</kbq-timezone-select-trigger>
-
-            <div kbq-select-search-empty-result>Ничего не найдено</div>
-
-            @for (group of filteredOptions$ | async; track group) {
-                @for (timezone of group.zones; track timezone) {
-                    <kbq-option [value]="timezone.id">
-                        {{ timezone.id }}
-                    </kbq-option>
-                }
-            }
-        </kbq-timezone-select>
-    </kbq-form-field>
-
-    <pre>Selected: {{ selected }}</pre>
-</div>
+<hr />
