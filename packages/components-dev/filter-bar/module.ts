@@ -15,41 +15,132 @@ import { KbqIconModule } from '@koobiq/components/icon';
 export class DemoComponent {
     filters: KbqFilter[] = [
         {
-            name: 'Filter 0',
+            name: 'Select',
             readonly: false,
             disabled: false,
             changed: false,
             unsaved: false,
             pipes: [
                 {
-                    name: 'readonly',
-                    value: '1',
+                    name: 'required',
+                    // required - не может быть пустым, всегда есть дефолтное значение
+                    value: { name: 'Не определен', value: '1' },
                     type: KbqPipeTypes.Select,
-                    readonly: true,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'empty',
-                    value: '1',
                     type: KbqPipeTypes.Select,
-                    readonly: false,
-                    empty: true,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    value: { name: 'Не определен', value: '1' },
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'removable',
+                    value: { name: 'Не определен', value: '1' },
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
                 },
                 {
                     name: 'disabled',
-                    value: '1',
+                    value: { name: 'Не определен', value: '1' },
                     type: KbqPipeTypes.Select,
-                    readonly: false,
-                    empty: false,
-                    disabled: true,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: true
+                }
+            ]
+        },
+        {
+            name: 'MultiSelect',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            unsaved: false,
+            pipes: [
+                {
+                    name: 'required',
+                    value: [
+                        { name: 'Не определен', value: '1' },
+                        { name: 'Легитимное действие', value: '2' }
+                    ],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'required',
+                    value: [{ name: 'Не определен', value: '1' }],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'empty',
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    value: [{ name: 'Не определен', value: '1' }],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'removable',
+                    value: [{ name: 'Не определен', value: '1' }],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    value: [{ name: 'Не определен', value: '1' }],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: true
                 }
             ]
         },
@@ -64,51 +155,51 @@ export class DemoComponent {
                     name: 'pipe 1',
                     value: '1',
                     type: KbqPipeTypes.Text,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'pipe 2',
                     value: '2',
                     type: KbqPipeTypes.Select,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'pipe 3',
                     value: '3',
                     type: KbqPipeTypes.MultiSelect,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'pipe 4',
                     value: '3',
                     type: KbqPipeTypes.TreeSelect,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'pipe 5',
                     value: '3',
                     type: KbqPipeTypes.MultiTreeSelect,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 }
             ]
         },
@@ -123,36 +214,36 @@ export class DemoComponent {
                     name: 'pipe 1',
                     value: '1',
                     type: KbqPipeTypes.Text,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'pipe 2',
                     value: '2',
                     type: KbqPipeTypes.Select,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'pipe 3',
                     value: '3',
                     type: KbqPipeTypes.MultiSelect,
-                    readonly: false,
-                    empty: false,
-                    disabled: false,
-                    changed: false,
-                    multiple: false
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
                 }
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[0];
+    activeFilter: KbqFilter | null = this.filters[1];
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Вердикт',
@@ -163,36 +254,36 @@ export class DemoComponent {
                 { name: 'Ложный', value: '3' },
                 { name: 'Подтвержден', value: '4' }
             ],
-            readonly: false,
-            empty: true,
-            disabled: false,
-            changed: false,
-            multiple: false
+
+            required: false,
+            cleanable: false,
+            removable: false,
+            disabled: false
         },
         {
             name: 'Автор',
             type: KbqPipeTypes.Text,
             values: [],
-            readonly: false,
-            empty: false,
-            disabled: false,
-            changed: false,
-            multiple: false
+
+            required: false,
+            cleanable: false,
+            removable: false,
+            disabled: false
         },
         {
             name: 'name 3',
             type: KbqPipeTypes.MultiSelect,
             values: [
-                { name: 'multiSelect element 1', value: '1' },
-                { name: 'multiSelect element 2', value: '2' },
-                { name: 'multiSelect element 3', value: '3' },
-                { name: 'multiSelect element 4', value: '4' }
+                { name: 'Не определен', value: '1' },
+                { name: 'Легитимное действие', value: '2' },
+                { name: 'Ложный', value: '3' },
+                { name: 'Подтвержден', value: '4' }
             ],
-            readonly: false,
-            empty: false,
-            disabled: false,
-            changed: false,
-            multiple: false
+
+            required: false,
+            cleanable: false,
+            removable: false,
+            disabled: false
         }
     ];
 

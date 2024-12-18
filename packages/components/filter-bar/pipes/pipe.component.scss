@@ -1,6 +1,17 @@
 .kbq-pipe {
     display: flex;
     flex-direction: row;
+
+    .kbq-pipe__name {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    &.kbq-pipe_disabled {
+        .kbq-pipe__name,
+        .kbq-pipe__value {
+            color: var(--kbq-states-foreground-disabled);
+        }
+    }
 }
 
 .kbq-pipe:not(.kbq-pipe_readonly, .kbq-pipe_empty) {
@@ -18,22 +29,17 @@
 }
 
 .kbq-pipe_select {
-    .kbq-pipe__name {
-        color: var(--kbq-foreground-contrast-secondary);;
+    .kbq-pipe__value {
+        margin-left: 4px;
     }
+}
 
+.kbq-pipe_multi-select {
     .kbq-pipe__value {
         margin-left: 4px;
     }
 
-    &.kbq-pipe_empty,
-    &.kbq-pipe_readonly {
-        .kbq-pipe__delete {
-            display: none;
-        }
-    }
-
-    &.kbq-pipe_disabled {
-
+    .kbq-badge {
+        margin-left: 6px;
     }
 }
