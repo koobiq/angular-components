@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BreadcrumbItem, KbqBreadcrumbBehavior, KbqBreadcrumbs, KbqDefaultSizes } from '@koobiq/components/breadcrumbs';
+import { BreadcrumbItem, KbqBreadcrumbBehavior, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqLinkModule } from '@koobiq/components/link';
 
@@ -10,7 +11,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
  */
 @Component({
     standalone: true,
-    selector: 'breadcrumbs-sizes-example',
+    selector: 'breadcrumbs-size-example',
     template: `
         <kbq-dl [vertical]="true">
             @for (size of sizes; track size) {
@@ -45,7 +46,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqDlModule
     ]
 })
-export class BreadcrumbSizesExample {
+export class BreadcrumbsSizeExample {
     data = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
     sizes: KbqDefaultSizes[] = ['compact', 'normal', 'big'];
 }

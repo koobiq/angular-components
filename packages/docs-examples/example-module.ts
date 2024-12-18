@@ -286,6 +286,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "badge-tooltip-example.ts",
     "importPath": "components/badge"
   },
+  "breadcrumbs-overview": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-overview",
+    "title": "Breadcrumbs overview",
+    "componentName": "BreadcrumbsOverviewExample",
+    "files": [
+      "breadcrumbs-overview-example.ts"
+    ],
+    "selector": "breadcrumbs-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-overview-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-size": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-size",
+    "title": "Breadcrumbs sizes",
+    "componentName": "BreadcrumbsSizeExample",
+    "files": [
+      "breadcrumbs-size-example.ts"
+    ],
+    "selector": "breadcrumbs-size-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-size-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
   "button-toggle-alignment-overview": {
     "packagePath": "components/button-toggle/button-toggle-alignment-overview",
     "title": "Button toggle alignment",
@@ -3533,6 +3557,10 @@ return import('@koobiq/docs-examples/components/badge');
 return import('@koobiq/docs-examples/components/badge');
   case 'badge-tooltip':
 return import('@koobiq/docs-examples/components/badge');
+  case 'breadcrumbs-overview':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-size':
+return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'button-toggle-alignment-overview':
 return import('@koobiq/docs-examples/components/button-toggle');
   case 'button-toggle-disabled-all-overview':
