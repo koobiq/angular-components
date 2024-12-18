@@ -17,7 +17,7 @@ import { KbqPipeBase } from './pipe.component';
             {{ data.name }}
         </button>
 
-        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDelete()" kbq-button>
+        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDeleteOrClear()" kbq-button>
             <i kbq-icon="kbq-xmark-s_16"></i>
         </button>
     `,
@@ -41,4 +41,8 @@ export class KbqPipeTextComponent extends KbqPipeBase {
     protected readonly colors = KbqComponentColors;
 
     @Input() data!: KbqPipe;
+
+    get isEmpty(): boolean {
+        return false;
+    }
 }

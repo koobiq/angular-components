@@ -1,7 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
-import { KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -17,13 +15,18 @@ import { KbqPipeBase } from './pipe.component';
     standalone: true,
     selector: 'kbq-pipe[select]',
     template: `
-        <kbq-select #select [value]="selected" [disabled]="data.disabled || data.readonly" (selectionChange)="onSelect($event.value)">
+        <kbq-select
+            #select
+            [value]="selected"
+            [disabled]="data.disabled"
+            [compareWith]="compareByValue"
+            (selectionChange)="onSelect($event.value)"
+        >
             <button
                 [ngClass]="{ 'kbq-active': select.panelOpen }"
-                [pipe]="data"
                 [disabled]="data.disabled"
+                [kbq-pipe-states]="data"
                 kbq-button
-                kbq-pipe-states
                 kbq-select-matcher
             >
                 <span class="kbq-pipe__name">{{ data.name }}</span>
@@ -35,26 +38,33 @@ import { KbqPipeBase } from './pipe.component';
             }
         </kbq-select>
 
-        <button
-            class="kbq-pipe__delete"
-            [pipe]="data"
-            [disabled]="data.disabled"
-            (click)="onDelete()"
-            kbq-button
-            kbq-pipe-states
-        >
-            <i kbq-icon="kbq-xmark-s_16"></i>
-        </button>
+        @if (!data.required && !isEmpty) {
+            <button
+                class="kbq-pipe__delete"
+                [disabled]="data.disabled"
+                [kbq-pipe-states]="data"
+                (click)="onDeleteOrClear()"
+                kbq-button
+            >
+                <i kbq-icon="kbq-xmark-s_16"></i>
+            </button>
+        }
     `,
     styleUrls: ['pipe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pipe kbq-pipe_select',
-        '[class.kbq-pipe_readonly]': 'data.readonly',
-        '[class.kbq-pipe_disabled]': 'data.disabled',
-        '[class.kbq-pipe_empty]': 'data.empty'
+        '[class.kbq-pipe_empty]': 'isEmpty',
+        '[class.kbq-pipe_readonly]': 'data.required',
+        '[class.kbq-pipe_disabled]': 'data.disabled'
     },
+    providers: [
+        {
+            provide: KbqPipeBase,
+            useExisting: this
+        }
+    ],
     imports: [
         KbqButtonModule,
         KbqDropdownModule,
@@ -69,18 +79,30 @@ import { KbqPipeBase } from './pipe.component';
 })
 export class KbqPipeSelectComponent extends KbqPipeBase {
     protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    protected readonly styles = KbqButtonStyles;
-    protected readonly colors = KbqComponentColors;
-    selected: any;
-
-    onSelect(item) {
-        console.log('onSelect: ');
-
-        this.data = {
-            ...this.data,
-            value: item.value,
-            empty: false
-        };
+    get isEmpty(): boolean {
+        return this.data.value === undefined;
     }
+
+    get selected() {
+        return this.data.value;
+    }
+
+    override onDeleteOrClear() {
+        if (this.data.cleanable) {
+            this.data.value = undefined;
+        } else if (this.data.removable) {
+            super.onDeleteOrClear();
+        }
+
+        this.stateChanges.next();
+    }
+
+    onSelect(item: unknown) {
+        this.data.value = item;
+        this.stateChanges.next();
+    }
+
+    compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.value === o2.value;
 }

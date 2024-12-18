@@ -1,4 +1,5 @@
 import { AfterContentInit, ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
+import { Subject } from 'rxjs';
 import { KbqFilterBar } from '../filter-bar.component';
 import { KbqPipe, KbqPipeTemplate } from '../filter-bar.types';
 import { KbqPipesComponent } from '../pipes.component';
@@ -6,7 +7,9 @@ import { KbqPipesComponent } from '../pipes.component';
 @Directive({
     standalone: true
 })
-export class KbqPipeBase implements AfterContentInit {
+export abstract class KbqPipeBase implements AfterContentInit {
+    readonly stateChanges = new Subject<void>();
+
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly filterBar = inject(KbqFilterBar);
     protected readonly pipes = inject(KbqPipesComponent);
@@ -14,6 +17,8 @@ export class KbqPipeBase implements AfterContentInit {
     @Input() data!: KbqPipe;
 
     values: KbqPipeTemplate[];
+
+    abstract isEmpty: boolean;
 
     constructor() {
         console.log('KbqPipeBase: ');
@@ -27,7 +32,7 @@ export class KbqPipeBase implements AfterContentInit {
         }
     }
 
-    onDelete() {
+    onDeleteOrClear() {
         this.pipes.deletePipe(this.data);
     }
 }

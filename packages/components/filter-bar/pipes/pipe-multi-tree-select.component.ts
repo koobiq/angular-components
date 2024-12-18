@@ -17,7 +17,7 @@ import { KbqPipeBase } from './pipe.component';
             {{ data.name }}
         </button>
 
-        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDelete()" kbq-button>
+        <button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDeleteOrClear()" kbq-button>
             <i kbq-icon="kbq-xmark-s_16"></i>
         </button>
     `,
@@ -41,4 +41,12 @@ export class KbqPipeMultiTreeSelectComponent extends KbqPipeBase {
     protected readonly colors = KbqComponentColors;
 
     @Input() data!: KbqPipe;
+
+    get isEmpty(): boolean {
+        if (Array.isArray(this.data.value)) {
+            return this.data.value.length === 0;
+        }
+
+        return false;
+    }
 }

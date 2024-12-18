@@ -21,13 +21,12 @@ export interface KbqFilter {
 export interface KbqPipe<T = unknown> {
     name: string;
     type: KbqPipeTypes;
-    value: T;
+    value?: T | T[];
 
-    readonly: boolean;
-    empty: boolean;
+    required: boolean;
+    cleanable: boolean;
+    removable: boolean;
     disabled: boolean;
-    changed: boolean;
-    multiple: boolean;
 }
 
 export interface KbqPipeTemplate<T = unknown> {
@@ -35,9 +34,8 @@ export interface KbqPipeTemplate<T = unknown> {
     type: KbqPipeTypes;
     values: T[];
 
-    readonly: boolean;
-    empty: boolean;
+    required: boolean;
+    cleanable: boolean;
+    removable: boolean;
     disabled: boolean;
-    changed: boolean;
-    multiple: boolean;
 }
