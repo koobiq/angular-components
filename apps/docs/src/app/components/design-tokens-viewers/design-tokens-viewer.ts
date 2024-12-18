@@ -5,13 +5,10 @@ import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { AnchorsModule } from '../anchors/anchors.module';
-import { CodeSnippet } from '../code-snippet/code-snippet';
 import { ComponentViewerComponent } from '../component-viewer/component-viewer.component';
 import { DocsLiveExampleModule } from '../docs-live-example/docs-live-example-module';
 import { DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
-import { NavbarModule } from '../navbar';
-import { SidenavModule } from '../sidenav/sidenav.module';
 
 @Component({
     standalone: true,
@@ -45,10 +42,7 @@ import { SidenavModule } from '../sidenav/sidenav.module';
         AnchorsModule,
         KbqTabsModule,
         RouterModule,
-        DocsLiveExampleModule,
-        SidenavModule,
-        NavbarModule,
-        CodeSnippet
+        DocsLiveExampleModule
     ],
     encapsulation: ViewEncapsulation.None
 })

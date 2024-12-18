@@ -19,6 +19,7 @@ import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { filter, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DocsLocale, DocsLocaleService } from 'src/app/services/docs-locale.service';
 import { AnchorsComponent } from '../anchors/anchors.component';
 import { DocItem, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
@@ -89,6 +90,7 @@ export class BaseOverviewComponent {
     protected router = inject(Router);
     protected changeDetectorRef = inject(ChangeDetectorRef);
     protected titleService = inject(Title);
+    protected docsLocaleService = inject(DocsLocaleService);
 
     readonly animationDone = new Subject<boolean>();
 
@@ -96,7 +98,6 @@ export class BaseOverviewComponent {
 
     currentUrl: string;
     routeSeparator: string = '/overview';
-    documentLost: boolean = false;
 
     componentDocItem: DocItem;
 
@@ -144,14 +145,12 @@ export class BaseOverviewComponent {
     }
 
     scrollToSelectedContentSection() {
-        this.documentLost = false;
         this.showView();
 
         this.anchors?.setScrollPosition();
     }
 
     showDocumentLostAlert() {
-        this.documentLost = true;
         this.showView();
 
         this.anchors?.setScrollPosition();
@@ -230,8 +229,8 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
         if (!this.componentDocItem) {
             return null;
         }
-
-        return `docs-content/overviews/${this.componentDocItem.id}.html`;
+        const { locale } = this.docsLocaleService;
+        return `docs-content/overviews/${this.componentDocItem.id}${locale === DocsLocale.Ru ? '' : `.${locale}`}.html`;
     }
 
     constructor() {
