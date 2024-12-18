@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { BreadcrumbOverviewExample } from './breadcrumb-overview/breadcrumb-overview-example';
-import { BreadcrumbSizesExample } from './breadcrumbs-sizes/breadcrumb-sizes-example';
+import { BreadcrumbsOverviewExample } from './breadcrumbs-overview/breadcrumbs-overview-example';
+import { BreadcrumbsSizeExample } from './breadcrumbs-size/breadcrumbs-size-example';
 
-export { BreadcrumbOverviewExample, BreadcrumbSizesExample };
+export { BreadcrumbsOverviewExample, BreadcrumbsSizeExample };
 
 const EXAMPLES = [
-    BreadcrumbOverviewExample,
-    BreadcrumbSizesExample
+    BreadcrumbsOverviewExample,
+    BreadcrumbsSizeExample
 ];
 
 @NgModule({

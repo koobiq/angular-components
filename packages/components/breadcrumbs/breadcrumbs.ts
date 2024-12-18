@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
@@ -43,8 +43,6 @@ export const kbqBreadcrumbsConfigurationProvider = (configuration: KbqBreadcrumb
     provide: KBQ_BREADCRUMBS_CONFIGURATION,
     useValue: configuration
 });
-
-export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 
 @Directive({
     selector: '[kbqBreadcrumbsSeparator]',

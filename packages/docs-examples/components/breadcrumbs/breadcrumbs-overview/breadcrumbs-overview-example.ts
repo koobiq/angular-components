@@ -59,6 +59,6 @@ import { RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
         KbqBreadcrumbBehavior
     ]
 })
-export class BreadcrumbOverviewExample {
+export class BreadcrumbsOverviewExample {
     data = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
 }
