@@ -1,55 +1,46 @@
-@if (itemsWithLinks.length <= 2) {
-    @for (item of itemsWithLinks; track item; let last = $last) {
-        <ng-container *ngTemplateOutlet="item.templateRef" />
-        @if (!last) {
-            <ng-container *ngTemplateOutlet="separatorTemplate" />
-        }
+@let breadcrumbs = items.changes | async;
+
+<!--@if (items.length <= 2 || max === null) {-->
+@for (item of items; track item; let last = $last) {
+    <ng-container [ngTemplateOutlet]="item.templateRef" />
+    @if (!last) {
+        <ng-container [ngTemplateOutlet]="separatorTemplate" />
     }
 }
+<!--}-->
 
-@if (itemsWithLinks.length > 2) {
-    @let visibleItems = max - 2;
+<!--@if (items.length > 2 && max !== null) {-->
+<!--    @let visibleItems = max - 2;-->
 
-    <ng-container *ngTemplateOutlet="itemsWithLinks.first.templateRef" />
-    <ng-container *ngTemplateOutlet="separatorTemplate" />
+<!--    <ng-container *ngTemplateOutlet="items.first.templateRef" />-->
+<!--    <ng-container *ngTemplateOutlet="separatorTemplate" />-->
 
-    @defer (on immediate) {
-        <button
-            kbq-button
-            kbqBreadcrumb
-            class="kbq-breadcrumb__more"
-            [color]="KbqComponentColors.Contrast"
-            [kbqDropdownTriggerFor]="breadcrumbsDropdown"
-            [kbqStyle]="KbqButtonStyles.Transparent"
-            [openByArrowDown]="false"
-        >
-            <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>
-        </button>
-        <ng-container *ngTemplateOutlet="separatorTemplate" />
+<!--    @defer (on immediate) {-->
+<!--        <button-->
+<!--            kbq-button-->
+<!--            rdxRovingFocusItem-->
+<!--            class="kbq-breadcrumb__more"-->
+<!--            [color]="KbqComponentColors.Contrast"-->
+<!--            [kbqStyle]="KbqButtonStyles.Transparent"-->
+<!--            [openByArrowDown]="false"-->
+<!--        >-->
+<!--            <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>-->
+<!--        </button>-->
+<!--        <ng-container [ngTemplateOutlet]="separatorTemplate" />-->
 
-        @for (item of itemsWithLinks.toArray().slice(-1 * visibleItems); track item; let last = $last) {
-            <ng-container *ngTemplateOutlet="item.templateRef" />
-            @if (!last) {
-                <ng-container *ngTemplateOutlet="separatorTemplate" />
-            }
-        }
-    }
-}
-
-<kbq-dropdown #breadcrumbsDropdown="kbqDropdown">
-    @let hiddenItems = itemsWithLinks.toArray().slice(1, 2 - max);
-    @for (item of hiddenItems; track item) {
-        <span kbq-dropdown-item>
-            <ng-container *ngTemplateOutlet="item.templateRef" />
-        </span>
-        <!-- dropdown item template custom-->
-    }
-</kbq-dropdown>
+<!--        @for (item of items.toArray().slice(-1 * visibleItems); track item; let last = $last) {-->
+<!--            <ng-container *ngTemplateOutlet="item.templateRef" />-->
+<!--            @if (!last) {-->
+<!--                <ng-container [ngTemplateOutlet]="separatorTemplate" />-->
+<!--            }-->
+<!--        }-->
+<!--    }-->
+<!--}-->
 
 <ng-template #separatorTemplate>
     @if (separator) {
-        <ng-container *ngTemplateOutlet="separator" />
+        <ng-container [ngTemplateOutlet]="separator" />
     } @else {
-        <i kbq-icon="kbq-chevron-right-s_16" [color]="KbqComponentColors.ContrastFade"></i>
+        <i kbq-icon="" class="kbq-breadcrumb__separator" [color]="KbqComponentColors.ContrastFade">&nbsp;/&nbsp;</i>
     }
 </ng-template>

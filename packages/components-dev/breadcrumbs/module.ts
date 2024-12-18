@@ -4,27 +4,21 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
-import {
-    KbqBreadcrumb,
-    KbqBreadcrumbItem,
-    KbqBreadcrumbs,
-    KbqBreadcrumbsSeparator,
-    KbqDefaultBreadcrumb
-} from '../../components/breadcrumbs';
+import { BreadcrumbItem, KbqBreadcrumbs, KbqBreadcrumbsSeparator } from '../../components/breadcrumbs';
+import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadcrumbs';
 
 @Component({
     standalone: true,
     imports: [
-        KbqBreadcrumb,
         KbqBreadcrumbs,
-        KbqBreadcrumbItem,
         KbqBreadcrumbsSeparator,
-        KbqDefaultBreadcrumb,
         KbqLinkModule,
         RdxRovingFocusItemDirective,
         KbqButtonModule,
         KbqIconModule,
-        RouterModule
+        RouterModule,
+        BreadcrumbsExamplesModule,
+        BreadcrumbItem
     ],
     selector: 'app',
     templateUrl: './template.html',

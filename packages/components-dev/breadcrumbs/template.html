@@ -1,42 +1,5 @@
-<kbq-breadcrumbs>
-    @for (section of data; track section; let last = $last) {
-        <a *kbqBreadcrumbItem kbq-breadcrumb [class]="last ? 'kbq-breadcrumb_current' : null" [routerLink]="section">
-            {{ section }}
-        </a>
-    }
-</kbq-breadcrumbs>
+<breadcrumbs-overview-example />
 
-<div style="margin-top: 16px">
-    <kbq-breadcrumbs>
-        @for (section of data; track section; let last = $last) {
-            <a
-                *kbqBreadcrumbItem
-                kbq-breadcrumb
-                [class]="last ? 'kbq-breadcrumb_current' : null"
-                [routerLink]="section"
-            >
-                <i kbq-icon="kbq-linux_16"></i>
-                {{ section }}
-            </a>
-        }
-    </kbq-breadcrumbs>
-</div>
+<br />
 
-<div style="margin-top: 16px">
-    <kbq-breadcrumbs>
-        @for (section of data; track section) {
-            <button *kbqBreadcrumbItem kbq-button kbqBreadcrumb>{{ section }}</button>
-        }
-    </kbq-breadcrumbs>
-</div>
-
-<div style="margin-top: 16px">
-    <kbq-breadcrumbs>
-        @for (section of data; track section) {
-            <a *kbqBreadcrumbItem kbqBreadcrumb [routerLink]="section">{{ section }}</a>
-        }
-        <span *kbqBreadcrumbsSeparator>&nbsp;/&nbsp;</span>
-    </kbq-breadcrumbs>
-</div>
-
-<button (click)="add()">add</button>
+<breadcrumbs-sizes-example />
