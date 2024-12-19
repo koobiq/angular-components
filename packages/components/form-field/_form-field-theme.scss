@@ -1,7 +1,7 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-form-field-state($state-name) {
-    .kbq-form-field__container {
+    .kbq-form-field__container:before {
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
         background-color: var(--kbq-form-field-#{$state-name}-background);
     }

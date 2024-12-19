@@ -33,7 +33,7 @@
         z-index: 2;
     }
 
-    &.kbq-form-field_without-borders .kbq-form-field__container {
+    &.kbq-form-field_without-borders .kbq-form-field__container:before {
         border-color: transparent !important;
         box-shadow: none !important;
     }
@@ -64,11 +64,20 @@
 
 .kbq-form-field__container {
     position: relative;
-
-    border-width: var(--kbq-form-field-size-border-width);
-    border-style: solid;
-    border-color: transparent;
     border-radius: var(--kbq-form-field-size-border-radius);
+
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border-width: var(--kbq-form-field-size-border-width);
+        border-style: solid;
+        border-color: transparent;
+        border-radius: var(--kbq-form-field-size-border-radius);
+    }
 }
 
 .kbq-form-field__prefix,
@@ -81,6 +90,10 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+.kbq-form-field__infix {
+    position: relative;
 }
 
 .kbq-form-field__prefix {

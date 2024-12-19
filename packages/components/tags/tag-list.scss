@@ -52,9 +52,7 @@
 
 .kbq-form-field-type-tag-list {
     & .kbq-form-field__container {
-        padding: kbq-difference-series-css-variables([tag-input-size-padding-vertical, form-field-size-border-width])
-            var(--kbq-tag-input-size-padding-right)
-            kbq-difference-series-css-variables([tag-input-size-padding-vertical, form-field-size-border-width])
-            var(--kbq-tag-input-size-padding-left);
+        padding: var(--kbq-tag-input-size-padding-vertical) var(--kbq-tag-input-size-padding-right)
+            var(--kbq-tag-input-size-padding-vertical) var(--kbq-tag-input-size-padding-left);
     }
 }
