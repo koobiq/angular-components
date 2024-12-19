@@ -16,17 +16,14 @@ import { KbqTreeModule } from '@koobiq/components/tree';
 import { AnchorsModule } from './components/anchors/anchors.module';
 import { ComponentViewerModule } from './components/component-viewer/component-viewer.module';
 import { DesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
-import { DocumentationItems } from './components/documentation-items';
 import { DocStates } from './components/doс-states';
-import { FooterModule } from './components/footer/footer.module';
 import { IconItems } from './components/icons-items/icon-items';
-import { NavbarModule } from './components/navbar';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { SidenavModule } from './components/sidenav/sidenav.module';
+import { DocsNavbarComponent } from './components/navbar/navbar.component';
+import { DocsSidenavComponent } from './components/sidenav/sidenav.component';
 import { WelcomeModule } from './components/welcome/welcome.module';
 import { DocsAppComponent } from './containers/docs-app/docs-app.component';
 import { IconsViewerModule } from './containers/icons-viewer/icons-viewer.module';
-import { APP_ROUTES } from './docs.module-routes';
+import { DocsRoutingModule } from './docs-routing.module';
 
 @NgModule({
     imports: [
@@ -42,24 +39,18 @@ import { APP_ROUTES } from './docs.module-routes';
         KbqLinkModule,
         KbqDividerModule,
         KbqToastModule,
-        NavbarModule,
-        FooterModule,
+        DocsNavbarComponent,
         WelcomeModule,
         FormsModule,
         HttpClientModule,
-        RouterModule.forRoot(APP_ROUTES, {
-            scrollPositionRestoration: 'disabled',
-            onSameUrlNavigation: 'reload'
-        }),
+        DocsRoutingModule,
         ComponentViewerModule,
         IconsViewerModule,
-        SidenavModule,
+        DocsSidenavComponent,
         DesignTokensViewer
-
     ],
-    declarations: [DocsAppComponent, PageNotFoundComponent],
+    declarations: [DocsAppComponent],
     providers: [
-        DocumentationItems,
         DocStates,
         IconItems,
         {

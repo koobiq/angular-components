@@ -123,7 +123,7 @@ export class DocExampleViewer implements OnDestroy {
     /** Show an error that occurred when fetching a document. */
     private showError(url: string, error: HttpErrorResponse) {
         console.error(error);
-        this.elementRef.nativeElement.innerText = `Failed to load document: ${url}. Error: ${error.statusText}`;
+        this.elementRef.nativeElement.innerHtml = `Failed to load document: ${url}. Error: ${error.statusText}. <a href="https://github.com/koobiq/angular-components/issues/new" class="kbq-markdown__a">Create issue</a>`;
 
         this.ngZone.onStable
             .pipe(take(1))

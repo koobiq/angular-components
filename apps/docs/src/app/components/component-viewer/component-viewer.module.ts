@@ -12,10 +12,6 @@ import { AnchorsModule } from '../anchors/anchors.module';
 import { CodeSnippet } from '../code-snippet/code-snippet';
 import { DocExampleViewerModule } from '../doc-example-viewer/doc-example-viewer-module';
 import { DocsLiveExampleModule } from '../docs-live-example/docs-live-example-module';
-import { DocumentationItems } from '../documentation-items';
-import { FooterModule } from '../footer/footer.module';
-import { NavbarModule } from '../navbar';
-import { SidenavModule } from '../sidenav/sidenav.module';
 import {
     CdkApiComponent,
     CdkOverviewComponent,
@@ -28,7 +24,6 @@ import {
 @NgModule({
     imports: [
         AnchorsModule,
-        FooterModule,
         KbqTabsModule,
         KbqMarkdownModule,
         KbqDropdownModule,
@@ -38,8 +33,6 @@ import {
         RouterModule,
         DocsLiveExampleModule,
         DocExampleViewerModule,
-        SidenavModule,
-        NavbarModule,
         KbqIconModule,
         KbqLinkModule,
         CodeSnippet
@@ -52,6 +45,6 @@ import {
         CdkOverviewComponent,
         CdkApiComponent
     ],
-    providers: [DocumentationItems, KbqSidepanelService]
+    providers: [KbqSidepanelService]
 })
 export class ComponentViewerModule {}

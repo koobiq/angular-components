@@ -1,20 +1,8 @@
-@if (documentLost) {
-    <div class="layout-margin-top-xl kbq-alert kbq-alert_error kbq-alert_dismissible">
-        <span>
-            Oops, {{ componentDocItem.id }} component seems to be lost... But you can help us find it! Just send a Pull
-            Request to this repository:
-            <a href="#" class="kbq-markdown__a">Koobiq</a>
-        </span>
-    </div>
-}
-
-@if (!documentLost) {
-    <docs-live-example
-        [documentUrl]="docItemUrl"
-        (contentRendered)="scrollToSelectedContentSection()"
-        (contentRenderFailed)="showDocumentLostAlert()"
-    />
-}
+<docs-live-example
+    [documentUrl]="docItemUrl"
+    (contentRendered)="scrollToSelectedContentSection()"
+    (contentRenderFailed)="showDocumentLostAlert()"
+/>
 
 <div class="sticky-wrapper">
     <docs-anchors [headerSelectors]="'.docs-header-link'" />
