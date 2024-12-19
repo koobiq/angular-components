@@ -25,6 +25,31 @@
     }
 }
 
+.kbq-pipe__popover {
+    .kbq-popover__container {
+        min-width: 320px;
+    }
+
+    .kbq-popover__content {
+        padding: 12px 12px 1px !important;
+    }
+
+    .kbq-popover__footer {
+        padding: 4px;
+
+        & .kbq-button:not(.kbq-disabled) {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: flex-start;
+
+            & .kbq-button_hot-key {
+                color: var(--kbq-foreground-contrast-secondary);
+            }
+        }
+    }
+}
+
 @include kbq-filter-bar-theme();
 @include kbq-button_changed-filter();
 @include kbq-filter-bar-typography();
