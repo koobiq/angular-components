@@ -3,11 +3,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEnca
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '../../select';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqFilterBar } from '../filter-bar.component';
 import { KbqPipeStates } from './pipe-states.component';
 import { KbqPipeBase } from './pipe.component';
@@ -75,10 +72,7 @@ import { KbqPipeBase } from './pipe.component';
     ],
     imports: [
         KbqButtonModule,
-        KbqDropdownModule,
-        KbqFormFieldModule,
         KbqIcon,
-        KbqInputModule,
         KbqDividerModule,
         KbqSelectModule,
         NgClass,
