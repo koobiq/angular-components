@@ -1,12 +1,12 @@
 import { inject, NgModule } from '@angular/core';
 import { CanMatchFn, Route, RouterModule, Routes, UrlSegment } from '@angular/router';
 import {
-    CdkApiComponent,
-    CdkOverviewComponent,
-    ComponentApiComponent,
-    ComponentExamplesComponent,
-    ComponentOverviewComponent,
-    ComponentViewerComponent
+    DocsCdkApiComponent,
+    DocsCdkOverviewComponent,
+    DocsComponentApiComponent,
+    DocsComponentExamplesComponent,
+    DocsComponentOverviewComponent,
+    DocsComponentViewerComponent
 } from './components/component-viewer/component-viewer.component';
 import { DesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
 import { TokensOverview } from './components/design-tokens-viewers/tokens-overview';
@@ -50,10 +50,10 @@ const ROUTES: Routes = [
             },
             {
                 path: 'main/:id',
-                component: ComponentViewerComponent,
+                component: DocsComponentViewerComponent,
                 children: [
                     { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    { path: 'overview', component: ComponentOverviewComponent },
+                    { path: 'overview', component: DocsComponentOverviewComponent },
                     { path: '**', redirectTo: 'overview' }
                 ]
             },
@@ -64,12 +64,12 @@ const ROUTES: Routes = [
             { path: 'components', redirectTo: 'components/alert', pathMatch: 'full' },
             {
                 path: 'components/:id',
-                component: ComponentViewerComponent,
+                component: DocsComponentViewerComponent,
                 children: [
                     { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    { path: 'overview', component: ComponentOverviewComponent, pathMatch: 'full' },
-                    { path: 'api', component: ComponentApiComponent, pathMatch: 'full' },
-                    { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
+                    { path: 'overview', component: DocsComponentOverviewComponent, pathMatch: 'full' },
+                    { path: 'api', component: DocsComponentApiComponent, pathMatch: 'full' },
+                    { path: 'examples', component: DocsComponentExamplesComponent, pathMatch: 'full' },
                     { path: '**', redirectTo: 'overview' }
                 ]
             },
@@ -80,12 +80,12 @@ const ROUTES: Routes = [
             { path: 'other', redirectTo: 'other/date-formatter', pathMatch: 'full' },
             {
                 path: 'other/:id',
-                component: ComponentViewerComponent,
+                component: DocsComponentViewerComponent,
                 children: [
                     { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    { path: 'overview', component: ComponentOverviewComponent, pathMatch: 'full' },
-                    { path: 'api', component: ComponentApiComponent, pathMatch: 'full' },
-                    { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
+                    { path: 'overview', component: DocsComponentOverviewComponent, pathMatch: 'full' },
+                    { path: 'api', component: DocsComponentApiComponent, pathMatch: 'full' },
+                    { path: 'examples', component: DocsComponentExamplesComponent, pathMatch: 'full' },
                     { path: '**', redirectTo: 'overview' }
                 ]
             },
@@ -96,12 +96,12 @@ const ROUTES: Routes = [
             { path: 'cdk', redirectTo: 'cdk/a11y', pathMatch: 'full' },
             {
                 path: 'cdk/:id',
-                component: ComponentViewerComponent,
+                component: DocsComponentViewerComponent,
                 children: [
                     { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    { path: 'overview', component: CdkOverviewComponent, pathMatch: 'full' },
-                    { path: 'api', component: CdkApiComponent, pathMatch: 'full' },
-                    { path: 'examples', component: ComponentExamplesComponent, pathMatch: 'full' },
+                    { path: 'overview', component: DocsCdkOverviewComponent, pathMatch: 'full' },
+                    { path: 'api', component: DocsCdkApiComponent, pathMatch: 'full' },
+                    { path: 'examples', component: DocsComponentExamplesComponent, pathMatch: 'full' },
                     { path: '**', redirectTo: 'overview' }
                 ]
             },

@@ -14,7 +14,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToastModule } from '@koobiq/components/toast';
 import { KbqTreeModule } from '@koobiq/components/tree';
 import { AnchorsModule } from './components/anchors/anchors.module';
-import { ComponentViewerModule } from './components/component-viewer/component-viewer.module';
 import { DesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
 import { DocStates } from './components/doс-states';
 import { IconItems } from './components/icons-items/icon-items';
@@ -44,7 +43,6 @@ import { DocsRoutingModule } from './docs-routing.module';
         FormsModule,
         HttpClientModule,
         DocsRoutingModule,
-        ComponentViewerModule,
         IconsViewerModule,
         DocsSidenavComponent,
         DesignTokensViewer
