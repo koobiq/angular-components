@@ -240,7 +240,7 @@ export class KbqSelect
 
     /**
      * This position config ensures that the top "start" corner of the overlay
-     * is aligned with with the top "start" of the origin by default (overlapping
+     * is aligned with the top "start" of the origin by default (overlapping
      * the trigger completely). If the panel cannot fit below the trigger, it
      * will fall back to a position above the trigger.
      */
@@ -249,13 +249,15 @@ export class KbqSelect
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top'
+            overlayY: 'top',
+            offsetY: this.offsetY
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom'
+            overlayY: 'bottom',
+            offsetY: -this.offsetY
         }
     ];
 
@@ -1331,7 +1333,7 @@ export class KbqSelect
     }
 
     /**
-     * Sets the x-offset of the overlay panel in relation to the trigger's top start corner.
+     * Sets the x-offset and y-offset of the overlay panel in relation to the trigger's top start corner.
      * This must be adjusted to align the selected option text over the trigger text when
      * the panel opens. Will change based on LTR or RTL text direction. Note that the offset
      * can't be calculated until the panel has been attached, because we need to know the
@@ -1348,7 +1350,7 @@ export class KbqSelect
         let offsetX: number = SELECT_PANEL_PADDING_X;
         let overlayMaxWidth: number;
 
-        // Invert the offset in LTR.
+        // Invert the offsetX in LTR.
         if (!isRtl) {
             offsetX *= -1;
         }

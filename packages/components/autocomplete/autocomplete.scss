@@ -10,16 +10,13 @@
     overflow: hidden auto;
     -webkit-overflow-scrolling: touch; // for momentum scroll on mobile
 
-    margin-top: -1px;
-
+    box-sizing: border-box;
     min-width: 100%;
     width: 100%;
     max-width: none;
 
-    max-height: var(--kbq-autocomplete-size-panel-max-height);
-
-    border-bottom-left-radius: var(--kbq-autocomplete-size-panel-border-radius);
-    border-bottom-right-radius: var(--kbq-autocomplete-size-panel-border-radius);
+    border-radius: var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius));
+    max-height: var(--kbq-select-panel-size-max-height,);
 
     padding: var(--kbq-size-xxs);
 
@@ -49,11 +46,6 @@
         &:after {
             left: calc(100% + var(--kbq-size-3xs)); // outline size
         }
-    }
-
-    .kbq-autocomplete-panel-above & {
-        border-radius: var(--kbq-autocomplete-size-panel-border-radius) var(--kbq-autocomplete-size-panel-border-radius)
-            0 0;
     }
 
     // We need to offset horizontal dividers by their height, because

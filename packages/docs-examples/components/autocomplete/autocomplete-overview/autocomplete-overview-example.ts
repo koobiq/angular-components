@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { Observable } from 'rxjs';
@@ -18,21 +19,26 @@ import { map, startWith } from 'rxjs/operators';
         KbqAutocompleteModule,
         KbqInputModule,
         ReactiveFormsModule,
-        AsyncPipe
+        AsyncPipe,
+        KbqFormsModule
     ],
     template: `
-        <label>Enter countries to see autocomplete</label>
-        <kbq-form-field>
-            <input [formControl]="control" [kbqAutocomplete]="auto" kbqInput type="text" />
+        <div class="kbq-form kbq-form-vertical">
+            <div class="kbq-form__row">
+                <label class="kbq-form__label">Enter countries to see autocomplete</label>
+                <kbq-form-field>
+                    <input [formControl]="control" [kbqAutocomplete]="auto" kbqInput type="text" />
 
-            <kbq-autocomplete #auto="kbqAutocomplete">
-                @for (option of filteredOptions | async; track option) {
-                    <kbq-option [value]="option">
-                        {{ option }}
-                    </kbq-option>
-                }
-            </kbq-autocomplete>
-        </kbq-form-field>
+                    <kbq-autocomplete #auto="kbqAutocomplete">
+                        @for (option of filteredOptions | async; track option) {
+                            <kbq-option [value]="option">
+                                {{ option }}
+                            </kbq-option>
+                        }
+                    </kbq-autocomplete>
+                </kbq-form-field>
+            </div>
+        </div>
     `
 })
 export class AutocompleteOverviewExample implements OnInit {
