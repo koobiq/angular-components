@@ -32,7 +32,7 @@ export const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration 
     size: 'normal'
 };
 
-/** Localization configuration provider. */
+/** Breadcrumbs options global configuration provider. */
 export const KBQ_BREADCRUMBS_CONFIGURATION = new InjectionToken<KbqBreadcrumbsConfiguration>(
     'KBQ_CODE_BLOCK_LOCALE_CONFIGURATION',
     { factory: () => KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION }

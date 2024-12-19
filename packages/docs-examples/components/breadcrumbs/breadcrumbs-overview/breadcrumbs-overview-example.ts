@@ -9,7 +9,6 @@ import {
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
 /**
  * @title Breadcrumbs overview
@@ -28,6 +27,20 @@ import { RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
                     </a>
                 </breadcrumb-item>
             }
+        </nav>
+
+        <h3>Test</h3>
+        <nav kbq-breadcrumbs size="compact">
+            <breadcrumb-item>
+                <a [queryParams]="{ name: 'ferret' }" routerLink="'test'">
+                    <button kbq-button kbqBreadcrumb>test</button>
+                </a>
+            </breadcrumb-item>
+            <breadcrumb-item>
+                <a [queryParams]="{ name: 'ferret' }" routerLink="'test'">
+                    <button kbq-button kbqBreadcrumb>test</button>
+                </a>
+            </breadcrumb-item>
         </nav>
 
         <nav kbq-breadcrumbs>
@@ -54,7 +67,6 @@ import { RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
         BreadcrumbItem,
         KbqBreadcrumbsSeparator,
         KbqButtonModule,
-        RdxRovingFocusItemDirective,
         KbqLinkModule,
         KbqBreadcrumbBehavior
     ]
