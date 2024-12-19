@@ -2,8 +2,11 @@
 
 @mixin kbq-form-field-state($state-name) {
     .kbq-form-field__container {
-        border-color: var(--kbq-form-field-#{$state-name}-border-color);
         background-color: var(--kbq-form-field-#{$state-name}-background);
+    }
+
+    .kbq-form-field__container:before {
+        border-color: var(--kbq-form-field-#{$state-name}-border-color);
     }
 
     .kbq-input,
