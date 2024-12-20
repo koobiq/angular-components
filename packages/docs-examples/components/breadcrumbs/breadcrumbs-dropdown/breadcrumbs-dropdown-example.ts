@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BreadcrumbItem, KbqBreadcrumbBehavior, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbItem, KbqBreadcrumbs, KbqDefaultBreadcrumbStyler } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
 /**
  * @title Breadcrumbs sizes
@@ -11,59 +13,59 @@ import { KbqIconModule } from '@koobiq/components/icon';
     standalone: true,
     selector: 'breadcrumbs-dropdown-example',
     template: `
-        <nav kbq-breadcrumbs>
-            @if (true) {}
-            <breadcrumb-item>
-                <a
-                    [queryParams]="{ queryParams: 'queryParams' }"
-                    [fragment]="'fragment'"
-                    kbq-button
-                    kbqBreadcrumb
-                    routerLink="Information Security"
-                >
-                    Information Security
-                </a>
-            </breadcrumb-item>
+        <nav>
+            <a
+                *kbqBreadcrumbItem
+                [queryParams]="{ queryParams: 'queryParams' }"
+                [fragment]="'fragment'"
+                kbq-button
+                kbqBreadcrumb
+                routerLink="Information Security"
+            >
+                Information Security
+            </a>
 
-            <breadcrumb-item>
-                <a
-                    [queryParams]="{ queryParams: 'queryParams' }"
-                    [fragment]="'fragment'"
-                    kbq-button
-                    kbqBreadcrumb
-                    routerLink="Access Control"
-                >
-                    Access Control
-                </a>
-            </breadcrumb-item>
-            <breadcrumb-item>
-                <a
-                    [queryParams]="{ queryParams: 'queryParams' }"
-                    [fragment]="'fragment'"
-                    kbq-button
-                    kbqBreadcrumb
-                    routerLink="Authorization"
-                >
-                    Authorization
-                </a>
-            </breadcrumb-item>
+            <a
+                *kbqBreadcrumbItem
+                [queryParams]="{ queryParams: 'queryParams' }"
+                [fragment]="'fragment'"
+                kbq-button
+                kbqBreadcrumb
+                routerLink="Access Control"
+            >
+                Access Control
+            </a>
+            <a
+                *kbqBreadcrumbItem
+                [queryParams]="{ queryParams: 'queryParams' }"
+                [fragment]="'fragment'"
+                kbq-button
+                kbqBreadcrumb
+                routerLink="Authorization"
+            >
+                Authorization
+            </a>
 
-            <breadcrumb-item>
+            <ng-container *kbqBreadcrumbItem>
                 <button kbq-button kbqBreadcrumb>
                     Access Control
                     <i kbq-icon="kbq-chevron-down-s_16"></i>
                 </button>
-            </breadcrumb-item>
+            </ng-container>
         </nav>
     `,
     imports: [
         KbqBreadcrumbs,
         RouterLink,
-        BreadcrumbItem,
         KbqButtonModule,
-        KbqBreadcrumbBehavior,
-        KbqIconModule
+        KbqDefaultBreadcrumbStyler,
+        KbqIconModule,
+        KbqDropdownModule,
+        KbqBreadcrumbItem,
+        RdxRovingFocusItemDirective
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsDropdownExample {}
+export class BreadcrumbsDropdownExample {
+    data = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
+}

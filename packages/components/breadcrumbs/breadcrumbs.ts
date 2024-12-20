@@ -5,19 +5,19 @@ import {
     ContentChild,
     ContentChildren,
     Directive,
-    forwardRef,
     inject,
     InjectionToken,
     Input,
+    OnInit,
     Provider,
     QueryList,
     TemplateRef,
-    ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
@@ -54,20 +54,12 @@ export class KbqBreadcrumbsSeparator {
 
 @Directive({
     standalone: true,
-    selector: '[kbqBreadcrumb]',
-    hostDirectives: [
-        RdxRovingFocusItemDirective
-    ],
-    host: {
-        class: 'kbq-breadcrumb',
-        '[attr.aria-current]': `last ? 'page' : null`
-    }
+    selector: '[kbq-button][kbqBreadcrumb]'
 })
-export class KbqBreadcrumbBehavior {
-    @Input() last = false;
+export class KbqDefaultBreadcrumbStyler implements OnInit {
     button = inject(KbqButton, { optional: true, host: true });
 
-    constructor() {
+    ngOnInit() {
         if (this.button) {
             this.button.color = KbqComponentColors.Contrast;
             this.button.kbqStyle = KbqButtonStyles.Transparent;
@@ -75,21 +67,12 @@ export class KbqBreadcrumbBehavior {
     }
 }
 
-/**
- * Component used to output
- */
-@Component({
-    selector: 'breadcrumb-item',
-    template: `
-        <ng-template #breadcrumbTemplate>
-            <ng-content />
-        </ng-template>
-    `,
-    standalone: true
+@Directive({
+    standalone: true,
+    selector: '[kbqBreadcrumbItem]'
 })
-export class BreadcrumbItem {
-    @ViewChild('breadcrumbTemplate') templateRef!: TemplateRef<any>;
-    routerLink: RouterLink | null = inject(RouterLink, { optional: true, host: true });
+export class KbqBreadcrumbItem {
+    templateRef = inject(TemplateRef);
 }
 
 @Component({
@@ -105,7 +88,8 @@ export class BreadcrumbItem {
         KbqButtonModule,
         RdxRovingFocusItemDirective,
         RouterLink,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        KbqDropdownModule
     ],
     host: {
         '[class]': 'class',
@@ -116,8 +100,8 @@ export class BreadcrumbItem {
 export class KbqBreadcrumbs {
     protected readonly options = inject(KBQ_BREADCRUMBS_CONFIGURATION);
 
-    @ContentChildren(forwardRef(() => BreadcrumbItem))
-    items: QueryList<BreadcrumbItem>;
+    @ContentChildren(KbqBreadcrumbItem)
+    items: QueryList<KbqBreadcrumbItem>;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     separator?: TemplateRef<any>;
