@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { BreadcrumbItem, KbqBreadcrumbBehavior, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbItem, KbqBreadcrumbs, KbqDefaultBreadcrumbStyler } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
@@ -19,17 +19,16 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 <kbq-dd>
                     <nav [size]="size" kbq-breadcrumbs>
                         @for (section of data; track section; let last = $last) {
-                            <breadcrumb-item>
-                                <a
-                                    [routerLink]="section"
-                                    [queryParams]="{ queryParams: 'queryParams' }"
-                                    [fragment]="'fragment'"
-                                >
-                                    <button [last]="last" [disabled]="last" kbq-button kbqBreadcrumb>
-                                        {{ section }}
-                                    </button>
-                                </a>
-                            </breadcrumb-item>
+                            <a
+                                *kbqBreadcrumbItem
+                                [routerLink]="section"
+                                [queryParams]="{ queryParams: 'queryParams' }"
+                                [fragment]="'fragment'"
+                            >
+                                <button [disabled]="last" kbq-button kbqBreadcrumb>
+                                    {{ section }}
+                                </button>
+                            </a>
                         }
                     </nav>
                 </kbq-dd>
@@ -39,11 +38,11 @@ import { KbqLinkModule } from '@koobiq/components/link';
     imports: [
         KbqBreadcrumbs,
         RouterLink,
-        BreadcrumbItem,
         KbqButtonModule,
         KbqLinkModule,
-        KbqBreadcrumbBehavior,
-        KbqDlModule
+        KbqDefaultBreadcrumbStyler,
+        KbqDlModule,
+        KbqBreadcrumbItem
     ]
 })
 export class BreadcrumbsSizeExample {
