@@ -32,7 +32,7 @@ export interface KbqPipe<T = unknown> {
 export interface KbqPipeTemplate<T = unknown> {
     name: string;
     type: KbqPipeTypes;
-    values: T[];
+    values: T;
 
     required: boolean;
     cleanable: boolean;

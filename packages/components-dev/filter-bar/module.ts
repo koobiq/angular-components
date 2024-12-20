@@ -154,7 +154,7 @@ export class DemoComponent {
                 {
                     name: 'required',
                     // required - не может быть пустым, всегда есть дефолтное значение
-                    value: { name: 'Не определен', value: '1' },
+                    value: 'Pictures',
                     type: KbqPipeTypes.TreeSelect,
 
                     required: true,
@@ -509,7 +509,7 @@ export class DemoComponent {
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[4];
+    activeFilter: KbqFilter | null = this.filters[2];
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Вердикт',
@@ -546,6 +546,52 @@ export class DemoComponent {
                 { name: 'Подтвержден', value: '4' }
             ],
 
+            required: false,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'name 3',
+            type: KbqPipeTypes.TreeSelect,
+            values: {
+                rootNode_1: 'app',
+                Pictures: {
+                    Sun: 'png',
+                    Woods: 'jpg',
+                    PhotoBoothLibrary: {
+                        Contents: 'dir',
+                        Pictures_2: 'dir'
+                    }
+                },
+                Documents: {
+                    Pictures_3: 'Pictures',
+                    angular: {
+                        src1: {
+                            core: 'ts',
+                            compiler: 'ts'
+                        }
+                    },
+                    material2: {
+                        src2: {
+                            button: 'ts',
+                            checkbox: 'ts',
+                            input: 'ts'
+                        }
+                    }
+                },
+                Downloads: {
+                    Tutorial: 'html',
+                    November: 'pdf',
+                    October: 'pdf'
+                },
+                Applications: {
+                    Chrome: 'app',
+                    Calendar: 'app',
+                    Webstorm: 'app'
+                },
+                rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app'
+            },
             required: false,
             cleanable: false,
             removable: false,

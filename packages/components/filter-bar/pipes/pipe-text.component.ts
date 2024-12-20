@@ -7,7 +7,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { PopUpSizes } from '../../core';
+import { PopUpPlacements } from '../../core';
 import { KbqPopoverModule } from '../../popover';
 import { KbqTextareaModule } from '../../textarea';
 import { KbqFilterBar } from '../filter-bar.component';
@@ -25,6 +25,7 @@ import { KbqPipeBase } from './pipe.component';
             [kbq-pipe-states]="data"
             [kbqPopoverContent]="content"
             [kbqPopoverFooter]="footer"
+            [kbqPopoverPlacement]="placements.BottomLeft"
             [kbqPopoverClass]="'kbq-pipe__popover'"
             kbq-button
             kbqPopover
@@ -77,7 +78,7 @@ import { KbqPipeBase } from './pipe.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
-        class: 'kbq-pipe kbq-pipe_select',
+        class: 'kbq-pipe kbq-pipe_text',
         '[class.kbq-pipe_empty]': 'isEmpty',
         '[class.kbq-pipe_readonly]': 'data.required',
         '[class.kbq-pipe_disabled]': 'data.disabled'
@@ -105,7 +106,7 @@ import { KbqPipeBase } from './pipe.component';
 export class KbqPipeTextComponent extends KbqPipeBase {
     protected readonly filterBar = inject(KbqFilterBar);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    readonly popoverSizes = PopUpSizes;
+    readonly placements = PopUpPlacements;
 
     get isEmpty(): boolean {
         return this.data.value === undefined;
