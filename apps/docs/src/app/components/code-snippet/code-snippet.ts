@@ -4,18 +4,20 @@ import { KbqToastService } from '@koobiq/components/toast';
 
 @Directive({
     standalone: true,
+    // @TODO should be renamed to `docsCodeSnippet`
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[kbq-code-snippet]',
     host: {
-        class: 'kbq-docs-code-snippet',
+        class: 'docs-code-snippet',
         '(click)': 'copy()'
     }
 })
-export class CodeSnippet {
+export class DocsCodeSnippetComponent {
     @Input() tooltip = 'Скопировать';
 
-    private clipboard = inject(Clipboard);
-    private toastService = inject(KbqToastService);
-    private element = inject(ElementRef);
+    private readonly clipboard = inject(Clipboard);
+    private readonly toastService = inject(KbqToastService);
+    private readonly element = inject(ElementRef);
 
     copy() {
         this.clipboard.copy(this.element.nativeElement.textContent);

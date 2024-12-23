@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -7,21 +8,23 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { map, Observable } from 'rxjs';
+import { DocsNavbarState, DocStates } from '../../services/doс-states';
 import { DocsearchDirective } from '../docsearch/docsearch.directive';
-import { DocStates, DocsNavbarState } from '../doс-states';
 import { NavbarProperty } from './navbar-property';
 
 @Component({
     standalone: true,
     imports: [
-        RouterModule,
+        RouterLink,
         KbqButtonModule,
         KbqDropdownModule,
         KbqLinkModule,
         KbqIconModule,
         KbqSelectModule,
         KbqNavbarModule,
-        DocsearchDirective
+        DocsearchDirective,
+        AsyncPipe
     ],
     selector: 'docs-navbar',
     templateUrl: 'navbar.template.html',
@@ -29,10 +32,11 @@ import { NavbarProperty } from './navbar-property';
     host: {
         class: 'docs-navbar'
     },
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    encapsulation: ViewEncapsulation.None
 })
 export class DocsNavbarComponent implements OnDestroy {
+    readonly docStates = inject(DocStates);
+
     readonly themeSwitch: NavbarProperty;
 
     // To add for checking of current color theme of OS preferences
@@ -56,12 +60,11 @@ export class DocsNavbarComponent implements OnDestroy {
         }
     ];
 
-    opened: boolean;
+    readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
+        map((state) => state === DocsNavbarState.opened)
+    );
 
-    constructor(
-        private themeService: ThemeService,
-        public docStates: DocStates
-    ) {
+    constructor(private themeService: ThemeService) {
         // set custom theme configs for light/dark themes
         this.themeService.setThemes(this.kbqThemes);
 
@@ -85,8 +88,6 @@ export class DocsNavbarComponent implements OnDestroy {
                 console.error(errSafari);
             }
         }
-
-        this.docStates.navbarMenu.subscribe((state) => (this.opened = state === DocsNavbarState.opened));
     }
 
     ngOnDestroy() {

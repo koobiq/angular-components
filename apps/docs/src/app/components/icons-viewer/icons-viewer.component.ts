@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { AsyncPipe, Location, NgClass } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     ChangeDetectionStrategy,
@@ -10,19 +10,42 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ThemePalette } from '@koobiq/components/core';
-import { KbqModalService } from '@koobiq/components/modal';
+import { KbqHighlightModule, ThemePalette } from '@koobiq/components/core';
+import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqToastModule } from '@koobiq/components/toast';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import { IconItem, IconItems } from 'src/app/components/icons-items/icon-items';
-import { DocStates } from '../../components/doс-states';
-import { IconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
+import { IconItem, IconItems } from 'src/app/services/icon-items';
+import { DocStates } from '../../services/doс-states';
+import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
+import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
 
 const SEARCH_DEBOUNCE_TIME = 300;
 
 @Component({
+    standalone: true,
+    imports: [
+        AsyncPipe,
+        KbqFormFieldModule,
+        KbqInputModule,
+        DocsRegisterHeaderDirective,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqHighlightModule,
+        KbqEmptyStateModule,
+        NgClass,
+
+        // Prevents: "NullInjectorError: No provider for KbqModalService!"
+        KbqModalModule,
+        // Prevents: "NullInjectorError: No provider for KbqToastService!"
+        KbqToastModule
+    ],
     selector: 'docs-icons-viewer',
     templateUrl: './icons-viewer.template.html',
     styleUrls: ['./icons-viewer.scss'],
@@ -32,7 +55,18 @@ const SEARCH_DEBOUNCE_TIME = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class IconsViewerComponent {
+export class DocsIconsViewerComponent {
+    private readonly http = inject(HttpClient);
+    private readonly modalService = inject(KbqModalService);
+    private readonly activeRoute = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly location = inject(Location);
+    private readonly titleService = inject(Title);
+    private readonly docStates = inject(DocStates);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly elementRef = inject(ElementRef);
+    private readonly destroyRef = inject(DestroyRef);
+
     themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
@@ -42,19 +76,8 @@ export class IconsViewerComponent {
 
     private iconItems: IconItems;
     private queryParamMap: { [key: string]: string };
-    private readonly destroyRef = inject(DestroyRef);
 
-    constructor(
-        private http: HttpClient,
-        private modalService: KbqModalService,
-        private activeRoute: ActivatedRoute,
-        private router: Router,
-        private location: Location,
-        private titleService: Title,
-        private docStates: DocStates,
-        private changeDetectorRef: ChangeDetectorRef,
-        private elementRef: ElementRef
-    ) {
+    constructor() {
         this.http.get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' }).subscribe((data) => {
             this.iconItems = new IconItems(data);
 
@@ -138,9 +161,10 @@ export class IconsViewerComponent {
     openIconPreview(iconItem: IconItem): void {
         this.modalService
             .open({
-                kbqComponent: IconPreviewModalComponent,
+                kbqComponent: DocsIconPreviewModalComponent,
                 kbqComponentParams: { iconItem },
                 kbqClassName: 'icon-preview-modal',
+                kbqMaskClosable: true,
                 kbqWidth: 400
             })
             .afterClose.subscribe((result) => {

@@ -1,23 +1,21 @@
-import { ScrollDispatcher } from '@angular/cdk/overlay';
-import { Component, ElementRef, NgZone, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { KbqModalService } from '@koobiq/components/modal';
-import { KbqSidepanelService } from '@koobiq/components/sidepanel';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { AnchorsModule } from '../anchors/anchors.module';
-import { ComponentViewerComponent } from '../component-viewer/component-viewer.component';
-import { DocsLiveExampleModule } from '../docs-live-example/docs-live-example-module';
-import { DocumentationItems } from '../documentation-items';
-import { DocStates } from '../doс-states';
+import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
     standalone: true,
+    imports: [
+        KbqTabsModule,
+        RouterOutlet,
+        RouterLink,
+        RouterLinkActive,
+        DocsRegisterHeaderDirective
+    ],
     selector: 'docs-component-viewer',
     template: `
         <div class="docs-component-header">
-            <div class="docs-component-name" docs-header>
-                {{ docItem.name }}
-            </div>
+            <div class="docs-component-name" docsRegisterHeader>Дизайн-токены</div>
             <div class="docs-component-navbar layout-padding-top-s">
                 <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
                     @for (link of links; track link) {
@@ -38,15 +36,10 @@ import { DocStates } from '../doс-states';
         class: 'docs-component-viewer kbq-scrollbar',
         '[attr.data-docsearch-category]': 'docCategoryName'
     },
-    imports: [
-        AnchorsModule,
-        KbqTabsModule,
-        RouterModule,
-        DocsLiveExampleModule
-    ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DesignTokensViewer extends ComponentViewerComponent implements OnInit, OnDestroy {
+export class DesignTokensViewer {
     links = [
         { viewValue: 'Цвета', value: 'colors' },
         { viewValue: 'Тени', value: 'shadows' },
@@ -55,28 +48,4 @@ export class DesignTokensViewer extends ComponentViewerComponent implements OnIn
         { viewValue: 'Типографика', value: 'tokens-typography' },
         { viewValue: 'Инженерная палитра', value: 'palette' }
     ];
-
-    constructor(
-        routeActivated: ActivatedRoute,
-        router: Router,
-        docItems: DocumentationItems,
-        sidepanelService: KbqSidepanelService,
-        modalService: KbqModalService,
-        docStates: DocStates,
-        elementRef: ElementRef<HTMLElement>,
-        scrollDispatcher: ScrollDispatcher,
-        ngZone: NgZone
-    ) {
-        super(
-            routeActivated,
-            router,
-            docItems,
-            sidepanelService,
-            modalService,
-            docStates,
-            elementRef,
-            scrollDispatcher,
-            ngZone
-        );
-    }
 }

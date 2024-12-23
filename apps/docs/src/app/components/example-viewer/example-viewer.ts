@@ -18,7 +18,7 @@ import {
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
-import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-example-viewer';
+import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
 @Injectable({ providedIn: 'root' })
 export class DocFetcher {
@@ -38,7 +38,9 @@ export class DocFetcher {
 }
 
 @Component({
-    selector: 'doc-example-viewer',
+    standalone: true,
+    imports: [],
+    selector: 'docs-example-viewer',
     template: `
         Loading document...
     `,
@@ -46,7 +48,7 @@ export class DocFetcher {
         class: 'docs-live-example kbq-markdown'
     }
 })
-export class DocExampleViewer implements OnDestroy {
+export class DocsExampleViewerComponent implements OnDestroy {
     private portalHosts: DomPortalOutlet[] = [];
     private documentFetchSubscription: Subscription | undefined;
 
@@ -66,7 +68,7 @@ export class DocExampleViewer implements OnDestroy {
     /** The document text. It should not be HTML encoded. */
     textContent = '';
 
-    private static initExampleViewer(exampleViewerComponent: DocsLiveExampleViewer, example: string) {
+    private static initExampleViewer(exampleViewerComponent: DocsLiveExampleViewerComponent, example: string) {
         exampleViewerComponent.example = example;
     }
 
@@ -112,7 +114,7 @@ export class DocExampleViewer implements OnDestroy {
         this.elementRef.nativeElement.innerHTML = rawDocument;
         this.textContent = this.elementRef.nativeElement.textContent;
 
-        this.loadComponents('koobiq-docs-example', DocsLiveExampleViewer);
+        this.loadComponents('koobiq-docs-example', DocsLiveExampleViewerComponent);
 
         // Resolving and creating components dynamically in Angular happens synchronously, but since
         // we want to emit the output if the components are actually rendered completely, we wait
@@ -140,9 +142,9 @@ export class DocExampleViewer implements OnDestroy {
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
             const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
-            const exampleViewerComponent = exampleViewer.instance as DocsLiveExampleViewer;
+            const exampleViewerComponent = exampleViewer.instance as DocsLiveExampleViewerComponent;
             if (example !== null) {
-                DocExampleViewer.initExampleViewer(exampleViewerComponent, example);
+                DocsExampleViewerComponent.initExampleViewer(exampleViewerComponent, example);
             }
             this.portalHosts.push(portalHost);
         });
