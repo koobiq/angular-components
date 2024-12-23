@@ -18,6 +18,7 @@ import * as i6 from '@koobiq/components/button';
 import * as i7 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/title';
 import * as i9 from '@angular/common';
+import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
@@ -73,6 +74,9 @@ export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
     // (undocumented)
     kbqOnOk?: OnClickCallback<T>;
 }
+
+// @public
+export const KBQ_MODAL_DATA: InjectionToken<unknown>;
 
 // @public (undocumented)
 export class KbqModalBody {
