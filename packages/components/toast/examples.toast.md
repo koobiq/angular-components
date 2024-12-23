@@ -5,3 +5,7 @@
 #### Кнопка «Закрыть»
 
 <!-- example(toast-progress-bar-overview) -->
+
+#### Доступ к пользовательским данным
+
+<!-- example(toast-user-data) -->

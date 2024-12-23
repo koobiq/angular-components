@@ -3022,6 +3022,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toast-types-overview-example.ts",
     "importPath": "components/toast"
   },
+  "toast-user-data": {
+    "packagePath": "components/toast/toast-user-data",
+    "title": "Toast user data",
+    "componentName": "ToastUserDataExample",
+    "files": [
+      "toast-user-data-example.ts",
+      "toast-user-data-example.html"
+    ],
+    "selector": "toast-user-data-example",
+    "additionalComponents": [],
+    "primaryFile": "toast-user-data-example.ts",
+    "importPath": "components/toast"
+  },
   "toggle-overview": {
     "packagePath": "components/toggle/toggle-overview",
     "title": "Toggle",
@@ -3935,6 +3948,8 @@ return import('@koobiq/docs-examples/components/toast');
   case 'toast-report-overview':
 return import('@koobiq/docs-examples/components/toast');
   case 'toast-types-overview':
+return import('@koobiq/docs-examples/components/toast');
+  case 'toast-user-data':
 return import('@koobiq/docs-examples/components/toast');
   case 'toggle-overview':
 return import('@koobiq/docs-examples/components/toggle');

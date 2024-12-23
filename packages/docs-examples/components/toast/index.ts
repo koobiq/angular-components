@@ -7,6 +7,7 @@ import { ToastOverviewExample } from './toast-overview/toast-overview-example';
 import { ToastProgressBarOverviewExample } from './toast-progress-bar-overview/toast-progress-bar-overview-example';
 import { ToastReportOverviewExample } from './toast-report-overview/toast-report-overview-example';
 import { ToastTypesOverviewExample } from './toast-types-overview/toast-types-overview-example';
+import { ToastUserDataExample } from './toast-user-data/toast-user-data-example';
 
 export {
     ToastActionsOverviewExample,
@@ -15,7 +16,8 @@ export {
     ToastOverviewExample,
     ToastProgressBarOverviewExample,
     ToastReportOverviewExample,
-    ToastTypesOverviewExample
+    ToastTypesOverviewExample,
+    ToastUserDataExample
 };
 
 const EXAMPLES = [
@@ -25,7 +27,8 @@ const EXAMPLES = [
     ToastProgressBarOverviewExample,
     ToastReportOverviewExample,
     ToastTypesOverviewExample,
-    ToastHideOverviewExample
+    ToastHideOverviewExample,
+    ToastUserDataExample
 ];
 
 @NgModule({
