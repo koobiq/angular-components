@@ -37,7 +37,10 @@ import { KbqModalRef } from './modal-ref.class';
 import { modalUtilObject as ModalUtil } from './modal-util';
 import { IModalButtonOptions, ModalOptions, ModalSize, ModalType, OnClickCallback } from './modal.type';
 
-// Duration when perform animations (ms)
+/**
+ * Duration when perform animations (ms)
+ * @docs-private
+ */
 export const MODAL_ANIMATE_DURATION = 200;
 
 type AnimationState = 'enter' | 'leave' | null;
@@ -617,8 +620,6 @@ export class KbqModalComponent<T = any, R = any>
         }
     }
 }
-
-////////////
 
 function isPromise(obj: unknown | void): boolean {
     return (

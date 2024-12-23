@@ -12,7 +12,10 @@ import { ConfirmType, IModalOptionsForService, ModalOptions } from './modal.type
 /** Injection token that can be used to access the data that was passed in to a modal. */
 export const KBQ_MODAL_DATA = new InjectionToken<unknown>('KbqModalData');
 
-// A builder used for managing service creating modals
+/**
+ * A builder used for managing service creating modals
+ * @docs-private
+ */
 export class ModalBuilderForService {
     // Modal ComponentRef, "null" means it has been destroyed
     private modalRef: ComponentRef<KbqModalComponent> | null;
