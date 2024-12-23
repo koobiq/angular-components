@@ -337,6 +337,20 @@ export class KbqModalTitle {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqModalTitle, never>;
 }
 
+// @public
+export const MODAL_ANIMATE_DURATION = 200;
+
+// @public
+export class ModalBuilderForService {
+    constructor(overlay: Overlay, options: IModalOptionsForService, injector: Injector);
+    // (undocumented)
+    destroyModal(): void;
+    // (undocumented)
+    getInstance(): KbqModalComponent | null;
+    // (undocumented)
+    readonly options: IModalOptionsForService;
+}
+
 // @public (undocumented)
 export interface ModalOptions<C = any, R = any> {
     data?: any;
