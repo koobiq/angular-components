@@ -716,7 +716,9 @@ export class KbqSelect
             return;
         }
 
-        this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+        this.triggerRect = this.parentFormField
+            ? this.parentFormField.getConnectedOverlayOrigin().nativeElement.getBoundingClientRect()
+            : this.trigger.nativeElement.getBoundingClientRect();
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
@@ -1333,7 +1335,7 @@ export class KbqSelect
     }
 
     /**
-     * Sets the x-offset and y-offset of the overlay panel in relation to the trigger's top start corner.
+     * Sets the x-offset of the overlay panel in relation to the trigger's top start corner.
      * This must be adjusted to align the selected option text over the trigger text when
      * the panel opens. Will change based on LTR or RTL text direction. Note that the offset
      * can't be calculated until the panel has been attached, because we need to know the
