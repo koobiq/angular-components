@@ -34,25 +34,31 @@
 
         cursor: pointer;
 
-        height: var(--kbq-form-field-size-height, var(--kbq-size-3xl));
+        height: calc(var(--kbq-form-field-size-height, var(--kbq-size-3xl)) - calc(var(--kbq-size-border-width) * 2));
     }
 
     .kbq-select__trigger.kbq-select__trigger_single,
     .kbq-select__trigger.kbq-select__trigger_multiple.kbq-select__trigger_empty {
         & .kbq-select__matcher {
-            padding: var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs))
-                var(--kbq-select-size-single-padding-right, var(--kbq-size-xxs))
-                var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs))
-                var(--kbq-select-size-single-padding-left, var(--kbq-size-m));
+            padding: calc(
+                    var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs)) - var(--kbq-size-border-width)
+                )
+                calc(var(--kbq-select-size-single-padding-right, var(--kbq-size-xxs)) - var(--kbq-size-border-width))
+                calc(var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs)) - var(--kbq-size-border-width))
+                calc(var(--kbq-select-size-single-padding-left, var(--kbq-size-m)) - var(--kbq-size-border-width));
         }
     }
 
     .kbq-select__trigger.kbq-select__trigger_multiple:not(.kbq-select__trigger_empty) {
         & .kbq-select__matcher {
-            padding: var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xs))
-                var(--kbq-select-size-multiple-padding-right, var(--kbq-size-xxs))
-                var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xs))
-                var(--kbq-select-size-multiple-padding-left, var(--kbq-size-m));
+            padding: calc(
+                    var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) - var(--kbq-size-border-width)
+                )
+                calc(var(--kbq-select-size-multiple-padding-right, var(--kbq-size-xxs)) - var(--kbq-size-border-width))
+                calc(
+                    var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) - var(--kbq-size-border-width)
+                )
+                calc(var(--kbq-select-size-multiple-padding-left, var(--kbq-size-xxs)) - var(--kbq-size-border-width));
 
             .kbq-select__match-container {
                 display: flex;
