@@ -1,0 +1,18 @@
+<div style="height: 50px; border: 1px solid red">
+    <kbq-filter-bar [activeFilter]="activeFilter" [filters]="filters" (onAddPipe)="onAddPipe($event)">
+        <kbq-filters (onSelectFilter)="onSelectFilter($event)">
+            <i kbq-icon="kbq-list_16"></i>
+            Фильтры
+        </kbq-filters>
+
+        <kbq-divider [vertical]="true" />
+
+        <kbq-pipes [pipes]="activeFilter!.pipes" />
+
+        <kbq-filter-add [templates]="pipeTemplates" />
+
+        <kbq-filter-reset (onResetActiveFilter)="resetActiveFilter($event)">Сбросить</kbq-filter-reset>
+
+        <kbq-filter-bar-actions />
+    </kbq-filter-bar>
+</div>
