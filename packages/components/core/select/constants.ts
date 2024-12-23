@@ -5,9 +5,9 @@ import { InjectionToken } from '@angular/core';
 export const SELECT_PANEL_MAX_HEIGHT = 224;
 
 /** The panel's padding on the x-axis */
-export const SELECT_PANEL_PADDING_X = 1;
+export const SELECT_PANEL_PADDING_X = 0;
 
-/** The panel's x axis padding if it is indented (e.g. there is an option group). */
+/** The panel's x-axis padding if it is indented (e.g. there is an option group). */
 export const SELECT_PANEL_INDENT_PADDING_X = SELECT_PANEL_PADDING_X * 2;
 
 /**
