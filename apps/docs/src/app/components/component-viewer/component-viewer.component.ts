@@ -19,7 +19,7 @@ import { KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { filter, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DocsLocale, DocsLocaleService } from 'src/app/services/docs-locale.service';
+import { DocsLocaleService } from 'src/app/services/docs-locale.service';
 import { AnchorsComponent } from '../anchors/anchors.component';
 import { DocItem, DocumentationItems } from '../documentation-items';
 import { DocStates } from '../doс-states';
@@ -205,7 +205,7 @@ export class CdkOverviewComponent extends BaseOverviewComponent {
             return null;
         }
 
-        return `docs-content/cdk/${this.componentDocItem.id}.html`;
+        return `docs-content/cdk/${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
     }
 
     constructor() {
@@ -229,8 +229,8 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
         if (!this.componentDocItem) {
             return null;
         }
-        const { locale } = this.docsLocaleService;
-        return `docs-content/overviews/${this.componentDocItem.id}${locale === DocsLocale.Ru ? '' : `.${locale}`}.html`;
+
+        return `docs-content/overviews/${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
     }
 
     constructor() {
@@ -305,7 +305,7 @@ export class ComponentExamplesComponent extends BaseOverviewComponent {
             return null;
         }
 
-        return `docs-content/examples/examples.${this.componentDocItem.id}.html`;
+        return `docs-content/examples/examples.${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
     }
 
     constructor() {
