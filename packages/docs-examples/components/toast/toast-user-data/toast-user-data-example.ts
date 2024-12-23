@@ -27,12 +27,12 @@ export class ToastUserDataExample {
 
         this.toastService.show(<ExtendedUserData>{
             style: KbqToastStyle.Success,
-            title: 'Доступно обновление агента',
-            caption: 'Версия 2.03.15 от 15 мая 2022',
+            title: 'Agent update available',
+            caption: 'Version 2.03.15 from May 15, 2022',
             actions,
             closeButton: true,
             userData: 'AnyUserData',
-            userButtonName: 'Обновить'
+            userButtonName: 'Update'
         });
     }
 }
