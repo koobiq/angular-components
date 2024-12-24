@@ -6,7 +6,6 @@
 
 import { AbstractControlDirective } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -46,7 +45,8 @@ export class KbqError extends KbqHint {
 }
 
 // @public
-export class KbqFormField implements AfterContentInit, AfterViewInit {
+export class KbqFormField implements AfterContentInit {
+    constructor();
     // (undocumented)
     canCleanerClearByEsc: boolean;
     get control(): KbqFormFieldControl<unknown>;
@@ -71,8 +71,6 @@ export class KbqFormField implements AfterContentInit, AfterViewInit {
     static ngAcceptInputType_noBorders: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngAfterViewInit(): void;
     noBorders: boolean | undefined;
     protected onContainerClick(event: MouseEvent): void;
     protected onKeyDown(event: KeyboardEvent): void;
