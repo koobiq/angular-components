@@ -1,9 +1,12 @@
+import { NgComponentOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Input, Type, ViewEncapsulation } from '@angular/core';
-import { KbqCodeBlockFile } from '@koobiq/components/code-block';
+import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
 
 /** Preferred order for files of an example displayed in the viewer. */
 const preferredExampleFileOrder = ['HTML', 'TS', 'CSS'];
@@ -15,6 +18,13 @@ interface ExampleFileData {
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        DocsStackblitzButtonComponent,
+        KbqLinkModule,
+        KbqCodeBlockModule,
+        NgComponentOutlet
+    ],
     selector: 'docs-live-example-viewer',
     templateUrl: './docs-live-example-viewer.html',
     styleUrls: ['./docs-live-example-viewer.scss'],
@@ -23,7 +33,7 @@ interface ExampleFileData {
     },
     encapsulation: ViewEncapsulation.None
 })
-export class DocsLiveExampleViewer {
+export class DocsLiveExampleViewerComponent {
     isSourceShown: boolean = false;
 
     files: KbqCodeBlockFile[] = [];

@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DocsearchDirective } from './docsearch.directive';
 
 @Component({
-    selector: 'test-app',
     standalone: true,
     template: '<docs-docsearch />',
     imports: [DocsearchDirective]

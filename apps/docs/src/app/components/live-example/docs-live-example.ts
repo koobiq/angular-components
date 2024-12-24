@@ -16,11 +16,21 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
-import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-example-viewer';
+import { DocsCodeSnippetComponent } from '../code-snippet/code-snippet';
+import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqCodeBlockModule,
+        DocsCodeSnippetComponent,
+        KbqToolTipModule,
+        CdkPortal
+    ],
     selector: 'docs-live-example',
     template: `
         Loading document...
@@ -35,7 +45,7 @@ import { DocsLiveExampleViewer } from '../docs-live-example-viewer/docs-live-exa
         class: 'docs-live-example kbq-markdown'
     }
 })
-export class DocsLiveExample implements OnDestroy {
+export class DocsLiveExampleComponent implements OnDestroy {
     @ViewChild(CdkPortal) codeTemplate: CdkPortal;
     @ViewChild('codeSnippet', { read: CdkPortal }) codeSnippetTemplate: CdkPortal;
     /** The URL of the document to display. */
@@ -116,7 +126,7 @@ export class DocsLiveExample implements OnDestroy {
         this.nativeElement.innerHTML = rawDocument;
         this.textContent = this.nativeElement.textContent || '';
 
-        this.loadComponents('koobiq-docs-example', DocsLiveExampleViewer);
+        this.loadComponents('koobiq-docs-example', DocsLiveExampleViewerComponent);
         this.initCodeBlocks();
         this.initCodeSnippets();
 
@@ -141,7 +151,7 @@ export class DocsLiveExample implements OnDestroy {
             const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
             // todo проверить, что достается из атрибута ?
-            (exampleViewer.instance as DocsLiveExampleViewer).example = element.getAttribute(componentName);
+            (exampleViewer.instance as DocsLiveExampleViewerComponent).example = element.getAttribute(componentName);
 
             this.portalHosts.push(portalHost);
         });

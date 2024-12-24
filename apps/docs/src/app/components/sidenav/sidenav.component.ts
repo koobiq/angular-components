@@ -1,7 +1,7 @@
 import { Location, ViewportScroller } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
@@ -12,9 +12,9 @@ import {
     KbqTreeModule,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { DocsLocaleService } from 'src/app/services/docs-locale.service';
-import { DocCategory, DOCS_ITEM_SECTIONS, DocumentationItems } from '../documentation-items';
-import { DocStates } from '../doс-states';
+import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocCategory, DOCS_ITEM_SECTIONS, DocumentationItems } from '../../services/documentation-items';
+import { DocStates } from '../../services/doс-states';
 import { DocsFooterComponent } from '../footer/footer.component';
 
 enum TreeNodeType {
@@ -66,7 +66,8 @@ function buildTree(categories: DocCategory[]): TreeNode[] {
         KbqTreeModule,
         KbqDividerModule,
         DocsFooterComponent,
-        KbqScrollbarModule
+        KbqScrollbarModule,
+        RouterLink
     ],
     selector: 'docs-sidenav',
     templateUrl: './sidenav.component.html',

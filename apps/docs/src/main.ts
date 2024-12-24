@@ -1,17 +1,21 @@
+import { provideHttpClient } from '@angular/common/http';
 import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { AppModule } from './app/';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
+import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { DocsAppComponent } from './app/app.component';
+import { DOCS_ROUTES } from './app/routes';
 import { environment } from './environments/environment';
-import { unregisterServiceWorkers } from './unregister-service-workers';
-
-// Unregister all installed service workers and force reload the page if there was
-// an old service worker from a previous version of the docs.
-unregisterServiceWorkers().then((hadServiceWorker) => hadServiceWorker && location.reload());
 
 if (environment.production) {
     enableProdMode();
 }
 
-platformBrowserDynamic()
-    .bootstrapModule(AppModule)
-    .catch((err) => console.error(err));
+bootstrapApplication(DocsAppComponent, {
+    providers: [
+        provideAnimations(),
+        provideHttpClient(),
+        provideRouter(DOCS_ROUTES),
+        { provide: KBQ_LOCALE_SERVICE, useClass: KbqLocaleService }]
+}).catch((error) => console.error(error));

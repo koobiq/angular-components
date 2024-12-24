@@ -1,12 +1,25 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, ElementRef, OnInit, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 import { ThemeService } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { DocCategory, DocumentationItems } from '../documentation-items';
-import { DocStates } from '../doс-states';
+import { DocCategory, DocumentationItems } from '../../services/documentation-items';
+import { DocStates } from '../../services/doс-states';
+import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqIconModule,
+        KbqLinkModule,
+        RouterLink,
+        AsyncPipe,
+        DocsRegisterHeaderDirective
+    ],
     selector: 'docs-welcome',
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.scss'],
@@ -15,7 +28,7 @@ import { DocStates } from '../doс-states';
     },
     encapsulation: ViewEncapsulation.None
 })
-export class WelcomeComponent implements OnInit {
+export class DocsWelcomeComponent implements OnInit {
     docCategories: DocCategory[];
     currentTheme$: Observable<string>;
 

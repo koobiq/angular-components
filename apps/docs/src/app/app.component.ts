@@ -1,11 +1,25 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, ViewEncapsulation } from '@angular/core';
-import { DocStates, DocsNavbarState } from '../../components/doс-states';
+import { AsyncPipe } from '@angular/common';
+import { Component, inject, ViewEncapsulation } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { map, Observable } from 'rxjs';
+import { DocsNavbarComponent } from './components/navbar/navbar.component';
+import { DocsSidenavComponent } from './components/sidenav/sidenav.component';
+import { DocsNavbarState, DocStates } from './services/doс-states';
 
 @Component({
+    standalone: true,
+    imports: [
+        RouterOutlet,
+        KbqDividerModule,
+        DocsNavbarComponent,
+        DocsSidenavComponent,
+        AsyncPipe
+    ],
     selector: 'docs-app',
-    templateUrl: 'docs-app.component.html',
-    styleUrls: ['docs-app.component.scss'],
+    templateUrl: 'app.component.html',
+    styleUrl: 'app.component.scss',
     host: {
         class: 'docs-app'
     },
@@ -42,11 +56,9 @@ import { DocStates, DocsNavbarState } from '../../components/doс-states';
     ]
 })
 export class DocsAppComponent {
-    opened: boolean;
+    readonly docStates = inject(DocStates);
 
-    constructor(public docStates: DocStates) {
-        this.docStates.navbarMenu.subscribe(
-            (navbarMenuState) => (this.opened = navbarMenuState === DocsNavbarState.opened)
-        );
-    }
+    readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
+        map((state) => state === DocsNavbarState.opened)
+    );
 }

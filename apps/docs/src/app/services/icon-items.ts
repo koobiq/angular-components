@@ -10,7 +10,7 @@ export interface IconItem {
     tags: string | string[];
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class IconItems {
     allIcons: IconItem[] = [];
     sizes: Set<number> = new Set();

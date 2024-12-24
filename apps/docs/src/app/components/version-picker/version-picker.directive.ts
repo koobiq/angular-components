@@ -10,10 +10,11 @@ interface DocVersion {
 }
 
 @Directive({
-    exportAs: 'kbqDocVersionPicker',
-    selector: '[kbq-docs-version-picker]'
+    standalone: true,
+    exportAs: 'docsVersionPicker',
+    selector: '[docsVersionPicker]'
 })
-export class VersionPickerDirective {
+export class DocsVersionPickerDirective {
     selected: DocVersion;
     versions: DocVersion[] = [];
     isNext: boolean = false;

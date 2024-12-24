@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, NgClass } from '@angular/common';
 import {
     ChangeDetectorRef,
     Component,
@@ -11,7 +11,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { filter, fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { PopUpPlacements } from '../../../../../../packages/components/core';
@@ -30,15 +31,21 @@ interface KbqDocsAnchor {
 const NEXT_ROUTE_KEY = 'KBQ_nextRoute';
 
 @Component({
+    standalone: true,
+    imports: [
+        RouterLink,
+        NgClass,
+        KbqTitleModule
+    ],
     selector: 'docs-anchors',
     templateUrl: './anchors.component.html',
-    styleUrls: ['./anchors.scss'],
+    styleUrls: ['./anchors.component.scss'],
     host: {
         class: 'docs-anchors'
     },
     encapsulation: ViewEncapsulation.None
 })
-export class AnchorsComponent implements OnDestroy, OnInit {
+export class DocsAnchorsComponent implements OnDestroy, OnInit {
     @Input() anchors: KbqDocsAnchor[] = [];
     @Input() headerSelectors: string;
 

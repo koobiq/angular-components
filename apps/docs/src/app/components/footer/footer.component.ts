@@ -6,10 +6,10 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { distinctUntilKeyChanged } from 'rxjs';
-import { DocsLocale, DocsLocaleService } from 'src/app/services/docs-locale.service';
+import { DocsLocale, DocsLocaleService } from 'src/app/services/locale.service';
 import { koobiqVersion } from '../../version';
 import { NavbarProperty } from '../navbar/navbar-property';
-import { VersionPickerModule } from '../version-picker';
+import { DocsVersionPickerDirective } from '../version-picker/version-picker.directive';
 
 @Component({
     standalone: true,
@@ -17,7 +17,7 @@ import { VersionPickerModule } from '../version-picker';
         KbqIconModule,
         KbqLinkModule,
         KbqDropdownModule,
-        VersionPickerModule
+        DocsVersionPickerDirective
     ],
     selector: 'docs-footer',
     templateUrl: './footer.component.html',

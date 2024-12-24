@@ -1,26 +1,21 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    NgModule,
-    ViewEncapsulation
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 @Component({
-    selector: 'copy-button',
+    standalone: true,
+    imports: [KbqIconModule, KbqLinkModule],
+    selector: 'docs-copy-button',
     templateUrl: './copy-button.html',
     styleUrls: ['./copy-button.scss'],
     host: {
-        class: 'kbq-docs-copy-button'
+        class: 'docs-copy-button'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CopyButton {
+export class DocsCopyButtonComponent {
     @Input() contentToCopy: string;
 
     @Input() successLabelText = 'Скопировано';
@@ -47,10 +42,3 @@ export class CopyButton {
         }, this.successLabelDisplayDelay);
     }
 }
-
-@NgModule({
-    imports: [KbqIconModule, KbqLinkModule],
-    exports: [CopyButton],
-    declarations: [CopyButton]
-})
-export class CopyButtonModule {}

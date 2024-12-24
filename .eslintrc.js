@@ -19,6 +19,7 @@ const config = {
     rules: {
         // plugin:file-progress
         'file-progress/activate': isCI ? 0 : 1,
+
         // plugin:eslint-comments
         'eslint-comments/no-unused-disable': 1
     },
@@ -34,6 +35,7 @@ const config = {
                 'no-useless-escape': 0,
                 'no-self-assign': 0,
                 'no-prototype-builtins': 0,
+
                 // plugin:promise
                 'promise/catch-or-return': 0,
                 'promise/always-return': 0
@@ -77,6 +79,7 @@ const config = {
                 '@angular-eslint/no-output-native': 0,
                 '@angular-eslint/no-async-lifecycle-method': 1,
                 '@angular-eslint/contextual-decorator': 1,
+
                 // plugin:rxjs
                 'rxjs/no-implicit-any-catch': 0,
                 'rxjs/no-sharereplay': 0,
@@ -84,6 +87,41 @@ const config = {
                 'rxjs/no-unbound-methods': 0,
                 'rxjs/no-topromise': 1,
                 'rxjs/throw-error': 1
+            }
+        },
+        {
+            // Override rules for docs app
+            files: ['./apps/docs/**/*.ts'],
+            rules: {
+                // plugin:eslint
+                'no-console': [1, { allow: ['warn', 'error'] }],
+
+                // plugin:@angular-eslint
+                '@angular-eslint/directive-selector': [
+                    1,
+                    {
+                        type: 'attribute',
+                        prefix: 'docs',
+                        style: 'camelCase'
+                    }
+                ],
+                '@angular-eslint/component-selector': [
+                    1,
+                    {
+                        type: 'element',
+                        prefix: 'docs',
+                        style: 'kebab-case'
+                    }
+                ],
+                '@angular-eslint/prefer-standalone-component': 1,
+                '@angular-eslint/use-component-selector': 1
+            }
+        },
+        {
+            // Override rules for test files
+            files: ['*.spec.ts', '*.karma-spec.ts'],
+            rules: {
+                '@angular-eslint/use-component-selector': 0
             }
         },
         {
