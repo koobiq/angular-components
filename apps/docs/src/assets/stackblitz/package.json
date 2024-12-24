@@ -20,6 +20,7 @@
         "@angular/router": "^18.2.6",
         "@koobiq/cdk": "${version}",
         "@koobiq/components": "${version}",
+        "@koobiq/components-experimental": "${version}",
         "@koobiq/icons": "9.2.0",
         "@koobiq/angular-luxon-adapter": "${version}",
         "@koobiq/angular-moment-adapter": "${version}",
