@@ -1,6 +1,6 @@
 import {
     AfterContentInit,
-    AfterViewInit,
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -93,7 +93,7 @@ export const getKbqFormFieldMissingControlError = (): Error => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
-export class KbqFormField implements AfterContentInit, AfterViewInit {
+export class KbqFormField implements AfterContentInit {
     /** Disables form field borders and shadows. */
     @Input({ transform: booleanAttribute }) noBorders: boolean | undefined;
 
@@ -196,16 +196,18 @@ export class KbqFormField implements AfterContentInit, AfterViewInit {
 
     private _hovered: boolean = false;
 
+    constructor() {
+        afterNextRender(() => {
+            // Because the above changes a value used in the template after it was checked, we need
+            // to trigger CD or the change might not be reflected if there is no other CD scheduled.
+            this.changeDetectorRef.detectChanges();
+        });
+    }
+
     ngAfterContentInit(): void {
         this.initializeControl();
         this.initializePrefixAndSuffix();
         this.initializeHint();
-    }
-
-    ngAfterViewInit(): void {
-        // Because the above changes a value used in the template after it was checked, we need
-        // to trigger CD or the change might not be reflected if there is no other CD scheduled.
-        this.changeDetectorRef.detectChanges();
     }
 
     /** Focuses the control. */

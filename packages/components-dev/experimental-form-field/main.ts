@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { ExperimentalFormField } from './module';
+import { ExperimentalFormFieldDev } from './module';
 
-bootstrapApplication(ExperimentalFormField, {
+bootstrapApplication(ExperimentalFormFieldDev, {
     providers: [
         provideAnimations()
     ]

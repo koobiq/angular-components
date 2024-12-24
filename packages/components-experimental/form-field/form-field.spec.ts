@@ -26,62 +26,66 @@ import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqSuffix } from './suffix';
 
-const createComponent = async <T>(component: Type<T>, providers: any[] = []): Promise<ComponentFixture<T>> => {
-    await TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
     fixture.autoDetectChanges();
     return fixture;
 };
 
-const getErrorDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getErrorDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqError));
 };
 
-const getHintDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getHintDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqHint));
 };
 
-const getCleanerDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getCleanerDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqCleaner));
 };
 
-const getFormFieldDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getFormFieldDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqFormField));
 };
 
-const getLabelDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getLabelDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqLabel));
 };
 
-const getSuffixDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getSuffixDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqSuffix));
 };
 
-const getPasswordToggleDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getPasswordToggleDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqPasswordToggle));
 };
 
-const getPasswordHintDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getPasswordHintDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqPasswordHint));
 };
 
-const getLabelNativeElement = (debugElement: DebugElement): HTMLLabelElement | null => {
+const getLabelNativeElement = (debugElement: DebugElement): HTMLLabelElement => {
     return debugElement.query(By.css('label')).nativeElement;
 };
 
-const getPrefixDebugElement = (debugElement: DebugElement): DebugElement | null => {
+const getPrefixDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqPrefix));
 };
 
-const getInputNativeElement = (debugElement: DebugElement): HTMLInputElement | null => {
-    return debugElement.query(By.directive(KbqInput)).nativeElement;
+const getInputDebugElement = (debugElement: DebugElement): DebugElement => {
+    return debugElement.query(By.directive(KbqInput));
 };
 
-const getPasswordInputNativeElement = (debugElement: DebugElement): HTMLInputElement | null => {
+const getInputNativeElement = (debugElement: DebugElement): HTMLInputElement => {
+    return getInputDebugElement(debugElement).nativeElement;
+};
+
+const getPasswordInputNativeElement = (debugElement: DebugElement): HTMLInputElement => {
     return debugElement.query(By.directive(KbqInputPassword)).nativeElement;
 };
 
-const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElement | null => {
+const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElement => {
     return debugElement.query(By.css('[type="submit"]')).nativeElement;
 };
 
@@ -253,62 +257,62 @@ export class PasswordFormField {
 }
 
 describe(KbqFormField.name, () => {
-    it('should display kbq-hint', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
+    it('should display kbq-hint', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         expect(getHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display kbq-error', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
+    it('should display kbq-error', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const input = getInputNativeElement(debugElement);
-        input?.focus();
-        input?.blur();
+        input.focus();
+        input.blur();
         expect(getErrorDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should hide kbq-error', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
+    it('should hide kbq-error', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         expect(getErrorDebugElement(debugElement)).toBeNull();
     });
 
-    it('should display kbqPrefix', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithPrefixAndSuffix);
+    it('should display kbqPrefix', () => {
+        const { debugElement } = createComponent(InputFormFieldWithPrefixAndSuffix);
         expect(getPrefixDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display kbqSuffix', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithPrefixAndSuffix);
+    it('should display kbqSuffix', () => {
+        const { debugElement } = createComponent(InputFormFieldWithPrefixAndSuffix);
         expect(getSuffixDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should hide kbq-cleaner', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithCleaner);
+    it('should hide kbq-cleaner', () => {
+        const { debugElement } = createComponent(InputFormFieldWithCleaner);
         expect(getCleanerDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display kbq-cleaner', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithCleaner);
+    it('should display kbq-cleaner', () => {
+        const { debugElement } = createComponent(InputFormFieldWithCleaner);
         const input = getInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
         expect(getCleanerDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should clean field by kbq-cleaner', async () => {
-        const { debugElement, componentInstance } = await createComponent(InputFormFieldWithCleaner);
+    it('should clean field by kbq-cleaner', () => {
+        const { debugElement, componentInstance } = createComponent(InputFormFieldWithCleaner);
         const input = getInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
         expect(componentInstance.control.value).toBe('koobiq');
         const cleaner = getCleanerDebugElement(debugElement);
-        cleaner?.nativeElement.click();
+        cleaner.nativeElement.click();
         expect(componentInstance.control.value).toBeNull();
     });
 
-    it('should throw Error for kbq-form-field without KbqFormFieldControl', async () => {
+    it('should throw Error for kbq-form-field without KbqFormFieldControl', () => {
         let caught = false;
         try {
-            await createComponent(InputFormFieldWithoutFormFieldControl);
+            createComponent(InputFormFieldWithoutFormFieldControl);
         } catch (error) {
             expect(error.message).toBe(getKbqFormFieldMissingControlError().message);
             caught = true;
@@ -316,147 +320,155 @@ describe(KbqFormField.name, () => {
         expect(caught).toBeTruthy();
     });
 
-    it('should add ng-untouched selector for kbq-form-field initially', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
-        expect(getFormFieldDebugElement(debugElement)?.classes['ng-untouched']).toBeTruthy();
+    it('should add ng-untouched selector for kbq-form-field initially', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        expect(getFormFieldDebugElement(debugElement).classes['ng-untouched']).toBeTruthy();
     });
 
-    it('should add ng-touched selector for kbq-form-field after blur', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
+    it('should add ng-touched selector for kbq-form-field after blur', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField?.classes['ng-touched']).toBeFalsy();
+        expect(formField.classes['ng-touched']).toBeFalsy();
         const input = getInputNativeElement(debugElement);
-        input?.focus();
-        input?.blur();
-        expect(formField?.classes['ng-touched']).toBeTruthy();
+        input.focus();
+        input.blur();
+        expect(formField.classes['ng-touched']).toBeTruthy();
     });
 
-    it('should add ng-pristine selector for kbq-form-field initially', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
-        expect(getFormFieldDebugElement(debugElement)?.classes['ng-pristine']).toBeTruthy();
+    it('should add ng-pristine selector for kbq-form-field initially', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        expect(getFormFieldDebugElement(debugElement).classes['ng-pristine']).toBeTruthy();
     });
 
-    it('should add ng-dirty selector for kbq-form-field after form control change', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
+    it('should add ng-dirty selector for kbq-form-field after form control change', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField?.classes['ng-dirty']).toBeFalsy();
+        expect(formField.classes['ng-dirty']).toBeFalsy();
         const input = getInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
-        expect(formField?.classes['ng-dirty']).toBeTruthy();
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
+        expect(formField.classes['ng-dirty']).toBeTruthy();
     });
 
-    it('should add ng-valid selector for kbq-form-field when form control is valid', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
+    it('should add ng-valid selector for kbq-form-field when form control is valid', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const input = getInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
-        expect(getFormFieldDebugElement(debugElement)?.classes['ng-valid']).toBeTruthy();
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
+        expect(getFormFieldDebugElement(debugElement).classes['ng-valid']).toBeTruthy();
     });
 
-    it('should add ng-invalid selector for kbq-form-field initially', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
-        expect(getFormFieldDebugElement(debugElement)?.classes['ng-invalid']).toBeTruthy();
+    it('should add ng-invalid selector for kbq-form-field initially', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        expect(getFormFieldDebugElement(debugElement).classes['ng-invalid']).toBeTruthy();
     });
 
-    it('should add ng-pending selector for kbq-form-field when form control is pending', async () => {
-        const fixture = await createComponent(InputFormFieldWithHintAndError);
+    it('should add ng-pending selector for kbq-form-field when form control is pending', () => {
+        const fixture = createComponent(InputFormFieldWithHintAndError);
         const { debugElement, componentInstance } = fixture;
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField?.classes['ng-pending']).toBeFalsy();
+        expect(formField.classes['ng-pending']).toBeFalsy();
         componentInstance.control.markAsPending();
         fixture.detectChanges();
-        expect(formField?.classes['ng-pending']).toBeTruthy();
+        expect(formField.classes['ng-pending']).toBeTruthy();
     });
 
-    it('should add kbq-form-field_focused selector for kbq-form-field when form control is focused', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithHintAndError);
+    it('should add kbq-form-field_focused selector for form-field by calling focus() method', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField?.classes['kbq-form-field_focused']).toBeFalsy();
-        getInputNativeElement(debugElement)?.focus();
-        expect(formField?.classes['kbq-form-field_focused']).toBeTruthy();
+        expect(formField.classes['kbq-form-field_focused']).toBeFalsy();
+        getFormFieldDebugElement(debugElement).componentInstance.focus();
+        expect(formField.classes['kbq-form-field_focused']).toBeTruthy();
     });
 
-    it('should add kbq-form-field_disabled selector for kbq-form-field when form control is disabled', async () => {
-        const fixture = await createComponent(InputFormFieldWithHintAndError);
+    it('should add kbq-form-field_focused selector for form-field by calling native input focus() method', () => {
+        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
+        const formField = getFormFieldDebugElement(debugElement);
+        expect(formField.classes['kbq-form-field_focused']).toBeFalsy();
+        getInputNativeElement(debugElement).focus();
+        expect(formField.classes['kbq-form-field_focused']).toBeTruthy();
+    });
+
+    it('should add kbq-form-field_disabled selector for kbq-form-field when form control is disabled', () => {
+        const fixture = createComponent(InputFormFieldWithHintAndError);
         const { debugElement, componentInstance } = fixture;
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField?.classes['kbq-form-field_disabled']).toBeFalsy();
+        expect(formField.classes['kbq-form-field_disabled']).toBeFalsy();
         componentInstance.control.disable();
         fixture.detectChanges();
-        expect(formField?.classes['kbq-form-field_disabled']).toBeTruthy();
+        expect(formField.classes['kbq-form-field_disabled']).toBeTruthy();
     });
 
-    it('should add kbq-form-field_invalid selector for kbq-form-field initially', async () => {
-        const { debugElement } = await createComponent(FormGroupWithCustomErrorStateMatcher);
-        expect(getFormFieldDebugElement(debugElement)?.classes['kbq-form-field_invalid']).toBeTruthy();
+    it('should add kbq-form-field_invalid selector for kbq-form-field initially', () => {
+        const { debugElement } = createComponent(FormGroupWithCustomErrorStateMatcher);
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_invalid']).toBeTruthy();
     });
 
-    it('should add kbq-form-field_invalid selector for kbq-form-field initially', async () => {
-        const { debugElement } = await createComponent(FormGroupWithCustomErrorStateMatcher);
-        expect(getFormFieldDebugElement(debugElement)?.classes['kbq-form-field_invalid']).toBeTruthy();
+    it('should add kbq-form-field_invalid selector for kbq-form-field initially', () => {
+        const { debugElement } = createComponent(FormGroupWithCustomErrorStateMatcher);
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_invalid']).toBeTruthy();
     });
 
-    it('should display kbq-error initially', async () => {
-        const { debugElement } = await createComponent(FormGroupWithCustomErrorStateMatcher);
+    it('should display kbq-error initially', () => {
+        const { debugElement } = createComponent(FormGroupWithCustomErrorStateMatcher);
         expect(getErrorDebugElement(debugElement)).toBeTruthy();
     });
 
-    it('should add kbq-form-field_invalid selector for kbq-form-field on form submission', async () => {
-        const fixture = await createComponent(FormGroupWithCustomErrorStateMatcher);
+    it('should add kbq-form-field_invalid selector for kbq-form-field on form submission', () => {
+        const fixture = createComponent(FormGroupWithCustomErrorStateMatcher);
         const { debugElement, componentInstance } = fixture;
         componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
         fixture.detectChanges();
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField?.classes['kbq-form-field_invalid']).toBeFalsy();
-        getSubmitButtonNativeElement(debugElement)?.click();
-        expect(formField?.classes['kbq-form-field_invalid']).toBeTruthy();
+        expect(formField.classes['kbq-form-field_invalid']).toBeFalsy();
+        getSubmitButtonNativeElement(debugElement).click();
+        expect(formField.classes['kbq-form-field_invalid']).toBeTruthy();
     });
 
-    it('should display kbq-error on form submission', async () => {
-        const fixture = await createComponent(FormGroupWithCustomErrorStateMatcher);
+    it('should display kbq-error on form submission', () => {
+        const fixture = createComponent(FormGroupWithCustomErrorStateMatcher);
         const { debugElement, componentInstance } = fixture;
         componentInstance.errorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
         fixture.detectChanges();
         expect(getErrorDebugElement(debugElement)).toBeFalsy();
-        getSubmitButtonNativeElement(debugElement)?.click();
+        getSubmitButtonNativeElement(debugElement).click();
         expect(getErrorDebugElement(debugElement)).toBeTruthy();
     });
 
-    it('should display kbq-label', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithLabel);
+    it('should display kbq-label', () => {
+        const { debugElement } = createComponent(InputFormFieldWithLabel);
         expect(getLabelDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should add attribute.for for label', async () => {
-        const { debugElement, componentInstance } = await createComponent(InputFormFieldWithLabel);
-        expect(getLabelNativeElement(debugElement)?.getAttribute('for')).toBe(componentInstance.id);
+    it('should add attribute.for for label', () => {
+        const { debugElement, componentInstance } = createComponent(InputFormFieldWithLabel);
+        expect(getLabelNativeElement(debugElement).getAttribute('for')).toBe(componentInstance.id);
     });
 
-    it('should focus input by click on label', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithLabel);
+    it('should focus input by click on label', () => {
+        const { debugElement } = createComponent(InputFormFieldWithLabel);
         const input = getInputNativeElement(debugElement);
         expect(document.activeElement).not.toBe(input);
-        getLabelDebugElement(debugElement)?.nativeElement.click();
+        getLabelDebugElement(debugElement).nativeElement.click();
         expect(document.activeElement).toBe(input);
     });
 
-    it('should add kbq-form-field_no-borders selector for kbq-form-field by attribute', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithBorderCustomization);
-        expect(getFormFieldDebugElement(debugElement)?.classes['kbq-form-field_no-borders']).toBeTruthy();
+    it('should add kbq-form-field_no-borders selector for kbq-form-field by attribute', () => {
+        const { debugElement } = createComponent(InputFormFieldWithBorderCustomization);
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeTruthy();
     });
 
-    it('should remove kbq-form-field_no-borders selector for kbq-form-field by attribute', async () => {
-        const fixture = await createComponent(InputFormFieldWithBorderCustomization);
+    it('should remove kbq-form-field_no-borders selector for kbq-form-field by attribute', () => {
+        const fixture = createComponent(InputFormFieldWithBorderCustomization);
         const { debugElement, componentInstance } = fixture;
-        expect(getFormFieldDebugElement(debugElement)?.classes['kbq-form-field_no-borders']).toBeTruthy();
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeTruthy();
         componentInstance.noBorders = false;
         fixture.detectChanges();
-        expect(getFormFieldDebugElement(debugElement)?.classes['kbq-form-field_no-borders']).toBeFalsy();
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeFalsy();
     });
 
-    it('should add kbq-form-field_no-borders selector for kbq-form-field by KBQ_FORM_FIELD_DEFAULT_OPTIONS', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithLabel, [
+    it('should add kbq-form-field_no-borders selector for kbq-form-field by KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
+        const { debugElement } = createComponent(InputFormFieldWithLabel, [
             {
                 provide: KBQ_FORM_FIELD_DEFAULT_OPTIONS,
                 useValue: {
@@ -464,62 +476,62 @@ describe(KbqFormField.name, () => {
                 } satisfies KbqFormFieldDefaultOptions
             }
         ]);
-        expect(getFormFieldDebugElement(debugElement)?.classes['kbq-form-field_no-borders']).toBeTruthy();
+        expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeTruthy();
     });
 
-    it('should hide kbq-password-toggle initially', async () => {
-        const { debugElement } = await createComponent(PasswordFormField);
+    it('should hide kbq-password-toggle initially', () => {
+        const { debugElement } = createComponent(PasswordFormField);
         expect(getPasswordToggleDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display kbq-password-toggle by input', async () => {
-        const { debugElement } = await createComponent(PasswordFormField);
+    it('should display kbq-password-toggle by input', () => {
+        const { debugElement } = createComponent(PasswordFormField);
         const input = getPasswordInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
         expect(getPasswordToggleDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display password by click on kbq-password-toggle', async () => {
-        const { debugElement } = await createComponent(PasswordFormField);
+    it('should display password by click on kbq-password-toggle', () => {
+        const { debugElement } = createComponent(PasswordFormField);
         const input = getPasswordInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
-        expect(input!.type).toBe('password');
-        getPasswordToggleDebugElement(debugElement)?.nativeElement.click();
-        expect(input!.type).toBe('text');
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
+        expect(input.type).toBe('password');
+        getPasswordToggleDebugElement(debugElement).nativeElement.click();
+        expect(input.type).toBe('text');
     });
 
-    it('should change kbq-password-toggle icon by click', async () => {
-        const { debugElement } = await createComponent(PasswordFormField);
+    it('should change kbq-password-toggle icon by click', () => {
+        const { debugElement } = createComponent(PasswordFormField);
         const input = getPasswordInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
         const passwordToggle = getPasswordToggleDebugElement(debugElement);
-        passwordToggle?.nativeElement.click();
+        passwordToggle.nativeElement.click();
         expect(passwordToggle).toMatchSnapshot();
     });
 
-    it('should display kbq-password-hint initially', async () => {
-        const { debugElement } = await createComponent(PasswordFormField);
+    it('should display kbq-password-hint initially', () => {
+        const { debugElement } = createComponent(PasswordFormField);
         expect(getPasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display kbq-password-hint error for invalid password', async () => {
-        const { debugElement } = await createComponent(PasswordFormField);
+    it('should display kbq-password-hint error for invalid password', () => {
+        const { debugElement } = createComponent(PasswordFormField);
         const input = getPasswordInputNativeElement(debugElement);
-        input!.value = 'koobiq';
-        input?.dispatchEvent(new Event('input'));
-        input?.dispatchEvent(new Event('blur'));
+        input.value = 'koobiq';
+        input.dispatchEvent(new Event('input'));
+        input.dispatchEvent(new Event('blur'));
         expect(getPasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
-    it('should display kbq-password-hint success for valid password', async () => {
-        const { debugElement } = await createComponent(PasswordFormField);
+    it('should display kbq-password-hint success for valid password', () => {
+        const { debugElement } = createComponent(PasswordFormField);
         const input = getPasswordInputNativeElement(debugElement);
-        input!.value = 'koobiq-is-awesome';
-        input?.dispatchEvent(new Event('input'));
-        input?.dispatchEvent(new Event('blur'));
+        input.value = 'koobiq-is-awesome';
+        input.dispatchEvent(new Event('input'));
+        input.dispatchEvent(new Event('blur'));
         expect(getPasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 });
