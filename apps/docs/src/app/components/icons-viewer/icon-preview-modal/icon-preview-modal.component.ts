@@ -1,4 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     AfterViewInit,
@@ -9,20 +10,35 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqModalRef } from '@koobiq/components/modal';
+import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIcon, KbqIconModule } from '@koobiq/components/icon';
+import { KbqModalModule, KbqModalRef } from '@koobiq/components/modal';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
-import { IconItem } from 'src/app/components/icons-items/icon-items';
+import { IconItem } from 'src/app/services/icon-items';
 
 @Component({
-    selector: 'icon-preview-modal-component',
+    standalone: true,
+    imports: [
+        TitleCasePipe,
+        KbqIconModule,
+        KbqFormFieldModule,
+        KbqSelectModule,
+        NgClass,
+        KbqButtonModule,
+        KbqModalModule,
+        KbqDlModule
+    ],
+    selector: 'docs-icon-preview-modal-component',
     templateUrl: './icon-preview-modal.template.html',
     styleUrls: ['./icon-preview-modal.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class IconPreviewModalComponent implements AfterViewInit {
+export class DocsIconPreviewModalComponent implements AfterViewInit {
     @ViewChild('iconPreview') iconPreview: KbqIcon;
     @ViewChild('wordExample') wordExample: ElementRef;
 

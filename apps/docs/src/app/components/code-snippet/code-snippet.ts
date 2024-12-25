@@ -1,24 +1,28 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Directive, ElementRef, inject, Input } from '@angular/core';
-import { KbqToastService } from '@koobiq/components/toast';
+import { Component, ElementRef, inject, Input } from '@angular/core';
+import { KbqToastModule, KbqToastService } from '@koobiq/components/toast';
 
-@Directive({
+@Component({
     standalone: true,
+    imports: [KbqToastModule],
+    template: ``,
+    // @TODO should be renamed to `docsCodeSnippet`
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: '[kbq-code-snippet]',
     host: {
-        class: 'kbq-docs-code-snippet',
+        class: 'docs-code-snippet',
         '(click)': 'copy()'
     }
 })
-export class CodeSnippet {
+export class DocsCodeSnippetComponent {
     @Input() tooltip = 'Скопировать';
 
-    private clipboard = inject(Clipboard);
-    private toastService = inject(KbqToastService);
-    private element = inject(ElementRef);
+    private readonly clipboard = inject(Clipboard);
+    private readonly toastService = inject(KbqToastService);
+    private readonly elementRef = inject(ElementRef);
 
     copy() {
-        this.clipboard.copy(this.element.nativeElement.textContent);
+        this.clipboard.copy(this.elementRef.nativeElement.textContent);
         this.showSuccessfullyCopiedToast();
     }
 

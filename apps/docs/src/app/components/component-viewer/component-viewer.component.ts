@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     Directive,
@@ -14,17 +15,33 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationStart, Router, UrlSegment } from '@angular/router';
-import { KbqModalService } from '@koobiq/components/modal';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
+import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
-import { filter, Subject } from 'rxjs';
+import { KbqTabsModule } from '@koobiq/components/tabs';
+import { combineLatest, filter, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DocsLocaleService } from 'src/app/services/docs-locale.service';
-import { AnchorsComponent } from '../anchors/anchors.component';
-import { DocItem, DocumentationItems } from '../documentation-items';
-import { DocStates } from '../doс-states';
+import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocItem, DocumentationItems } from '../../services/documentation-items';
+import { DocStates } from '../../services/doс-states';
+import { DocsAnchorsComponent } from '../anchors/anchors.component';
+import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
+import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
+import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqTabsModule,
+        RouterOutlet,
+        RouterLink,
+        RouterLinkActive,
+        DocsRegisterHeaderDirective,
+
+        // Prevents: "NullInjectorError: No provider for KbqModalService!"
+        KbqModalModule
+    ],
+    providers: [KbqSidepanelService],
     selector: 'docs-component-viewer',
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],
@@ -32,29 +49,26 @@ import { DocStates } from '../doс-states';
         class: 'docs-component-viewer kbq-scrollbar',
         '[attr.data-docsearch-category]': 'docCategoryName'
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComponentViewerComponent extends CdkScrollable implements OnInit, OnDestroy {
+export class DocsComponentViewerComponent extends CdkScrollable implements OnInit, OnDestroy {
     docItem: DocItem;
     docCategoryName: string;
 
-    constructor(
-        private routeActivated: ActivatedRoute,
-        private router: Router,
-        private docItems: DocumentationItems,
-        private sidepanelService: KbqSidepanelService,
-        private modalService: KbqModalService,
-        private docStates: DocStates,
+    private readonly activatedRoute = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly docItems = inject(DocumentationItems);
+    private readonly sidepanelService = inject(KbqSidepanelService);
+    private readonly modalService = inject(KbqModalService);
+    private readonly docStates = inject(DocStates);
 
-        elementRef: ElementRef<HTMLElement>,
-        scrollDispatcher: ScrollDispatcher,
-        ngZone: NgZone
-    ) {
+    constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone) {
         super(elementRef, scrollDispatcher, ngZone);
 
         // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
         // parent route for the section (koobiq/cdk).
-        this.routeActivated.url
+        this.activatedRoute.url
             .pipe(
                 map(([{ path: section }, { path: id }]: UrlSegment[]) => this.docItems.getItemById(id, section)),
                 takeUntilDestroyed()
@@ -85,63 +99,40 @@ export class ComponentViewerComponent extends CdkScrollable implements OnInit, O
 
 @Directive()
 export class BaseOverviewComponent {
-    protected routeActivated = inject(ActivatedRoute);
-    protected docItems = inject(DocumentationItems);
-    protected router = inject(Router);
-    protected changeDetectorRef = inject(ChangeDetectorRef);
-    protected titleService = inject(Title);
-    protected docsLocaleService = inject(DocsLocaleService);
+    private readonly activatedRoute = inject(ActivatedRoute);
+    private readonly docItems = inject(DocumentationItems);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly titleService = inject(Title);
+    protected readonly docsLocaleService = inject(DocsLocaleService);
 
     readonly animationDone = new Subject<boolean>();
 
     animationState: 'fadeIn' | 'fadeOut' = 'fadeOut';
 
-    currentUrl: string;
-    routeSeparator: string = '/overview';
+    componentDocItem: DocItem | null = null;
 
-    componentDocItem: DocItem;
-
-    @ViewChild(AnchorsComponent, { static: false }) anchors: AnchorsComponent;
-
-    get docItemUrl(): string | null {
-        if (!this.componentDocItem) {
-            return null;
-        }
-
-        return `docs-content/overviews/components/${this.componentDocItem.id}.html`;
-    }
+    @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
 
     constructor() {
         // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
         // parent route for the section (koobiq/cdk).
-        this.routeActivated
+        this.activatedRoute
             .parent!.url.pipe(
                 map(([{ path: section }, { path: id }]: UrlSegment[]) => this.docItems.getItemById(id, section)),
                 filter((p) => !!p),
                 takeUntilDestroyed()
             )
-            .subscribe((d) => (this.componentDocItem = d!));
+            .subscribe((d) => (this.componentDocItem = d));
 
-        this.currentUrl = this.getRoute(this.router.url);
+        this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.resetAnimation);
 
-        this.router.events
-            .pipe(
-                filter((event) => event instanceof NavigationStart),
-                takeUntilDestroyed()
-            )
-            .subscribe((event: any) => {
-                const rootUrl = this.getRoute(event.url);
-
-                if (this.currentUrl !== rootUrl) {
-                    this.currentUrl = rootUrl;
-                }
-            });
-
-        this.animationDone.subscribe(this.resetAnimation);
-    }
-
-    getRoute(route: string): string {
-        return route.split(this.routeSeparator)[0];
+        // Should update the view after locale/url change
+        combineLatest([
+            this.activatedRoute.url,
+            this.docsLocaleService.changes
+        ])
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
     scrollToSelectedContentSection() {
@@ -156,8 +147,8 @@ export class BaseOverviewComponent {
         this.anchors?.setScrollPosition();
     }
 
-    showView() {
-        const documentName = this.componentDocItem.id;
+    private showView() {
+        const documentName = this.componentDocItem?.id;
         let title = 'Koobiq';
 
         if (documentName) {
@@ -179,7 +170,7 @@ export class BaseOverviewComponent {
     };
 }
 
-export const animations = [
+export const COMPONENT_VIEWER_ANIMATIONS = [
     trigger('fadeInOut', [
         state('fadeIn', style({ opacity: 1 })),
         state('fadeOut', style({ opacity: 0 })),
@@ -189,6 +180,11 @@ export const animations = [
 ];
 
 @Component({
+    standalone: true,
+    imports: [
+        DocsAnchorsComponent,
+        DocsLiveExampleComponent
+    ],
     selector: 'docs-cdk-overview',
     templateUrl: './component-overview.template.html',
     host: {
@@ -196,10 +192,11 @@ export const animations = [
         '[@fadeInOut]': 'animationState',
         '(@fadeInOut.done)': 'animationDone.next(true)'
     },
-    animations,
-    encapsulation: ViewEncapsulation.None
+    animations: COMPONENT_VIEWER_ANIMATIONS,
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkOverviewComponent extends BaseOverviewComponent {
+export class DocsCdkOverviewComponent extends BaseOverviewComponent {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -207,13 +204,14 @@ export class CdkOverviewComponent extends BaseOverviewComponent {
 
         return `docs-content/cdk/${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
     }
-
-    constructor() {
-        super();
-    }
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        DocsAnchorsComponent,
+        DocsLiveExampleComponent
+    ],
     selector: 'docs-component-overview',
     templateUrl: './component-overview.template.html',
     host: {
@@ -221,10 +219,11 @@ export class CdkOverviewComponent extends BaseOverviewComponent {
         '[@fadeInOut]': 'animationState',
         '(@fadeInOut.done)': 'animationDone.next(true)'
     },
-    animations,
-    encapsulation: ViewEncapsulation.None
+    animations: COMPONENT_VIEWER_ANIMATIONS,
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComponentOverviewComponent extends BaseOverviewComponent {
+export class DocsComponentOverviewComponent extends BaseOverviewComponent {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -232,13 +231,14 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
 
         return `docs-content/overviews/${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
     }
-
-    constructor() {
-        super();
-    }
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        DocsAnchorsComponent,
+        DocsLiveExampleComponent
+    ],
     selector: 'docs-component-api',
     templateUrl: './component-overview.template.html',
     host: {
@@ -246,10 +246,11 @@ export class ComponentOverviewComponent extends BaseOverviewComponent {
         '[@fadeInOut]': 'animationState',
         '(@fadeInOut.done)': 'animationDone.next(true)'
     },
-    animations,
-    encapsulation: ViewEncapsulation.None
+    animations: COMPONENT_VIEWER_ANIMATIONS,
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComponentApiComponent extends BaseOverviewComponent {
+export class DocsComponentApiComponent extends BaseOverviewComponent {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -257,13 +258,14 @@ export class ComponentApiComponent extends BaseOverviewComponent {
 
         return `docs-content/api-docs/components-${this.componentDocItem.apiId}.html`;
     }
-
-    constructor() {
-        super();
-    }
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        DocsAnchorsComponent,
+        DocsLiveExampleComponent
+    ],
     selector: 'docs-cdk-api',
     templateUrl: './component-overview.template.html',
     host: {
@@ -271,10 +273,11 @@ export class ComponentApiComponent extends BaseOverviewComponent {
         '[@fadeInOut]': 'animationState',
         '(@fadeInOut.done)': 'animationDone.next(true)'
     },
-    animations,
-    encapsulation: ViewEncapsulation.None
+    animations: COMPONENT_VIEWER_ANIMATIONS,
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CdkApiComponent extends BaseOverviewComponent {
+export class DocsCdkApiComponent extends BaseOverviewComponent {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -282,33 +285,41 @@ export class CdkApiComponent extends BaseOverviewComponent {
 
         return `docs-content/api-docs/cdk-${this.componentDocItem.id}.html`;
     }
-
-    constructor() {
-        super();
-    }
 }
 
 @Component({
-    selector: 'docs-component-example',
-    templateUrl: 'component-example.template.html',
+    standalone: true,
+    imports: [
+        DocsExampleViewerComponent,
+        DocsAnchorsComponent
+    ],
+    selector: 'docs-component-examples',
+    template: `
+        <docs-example-viewer
+            [documentUrl]="docItemUrl"
+            (contentRendered)="scrollToSelectedContentSection()"
+            (contentRenderFailed)="showDocumentLostAlert()"
+        />
+
+        <div class="sticky-wrapper">
+            <docs-anchors [headerSelectors]="'.docs-header-link'" />
+        </div>
+    `,
     host: {
         class: 'component-overview',
         '[@fadeInOut]': 'animationState',
         '(@fadeInOut.done)': 'animationDone.next(true)'
     },
-    animations,
-    encapsulation: ViewEncapsulation.None
+    animations: COMPONENT_VIEWER_ANIMATIONS,
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComponentExamplesComponent extends BaseOverviewComponent {
+export class DocsComponentExamplesComponent extends BaseOverviewComponent {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
         }
 
         return `docs-content/examples/examples.${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
-    }
-
-    constructor() {
-        super();
     }
 }

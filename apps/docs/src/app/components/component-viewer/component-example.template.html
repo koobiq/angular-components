@@ -1,9 +1,0 @@
-<doc-example-viewer
-    [documentUrl]="docItemUrl"
-    (contentRendered)="scrollToSelectedContentSection()"
-    (contentRenderFailed)="showDocumentLostAlert()"
-/>
-
-<div class="sticky-wrapper">
-    <docs-anchors [headerSelectors]="'.docs-header-link'" />
-</div>

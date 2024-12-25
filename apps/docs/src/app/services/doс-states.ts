@@ -7,7 +7,7 @@ export enum DocsNavbarState {
     closed
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DocStates {
     readonly viewerTopOverflown = new BehaviorSubject<boolean>(false);
     readonly navbarTopOverflown = new BehaviorSubject<boolean>(false);
