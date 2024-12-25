@@ -11,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 
-const mcLoaderOverlayParent = 'kbq-loader-overlay_parent';
+const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 
 @Directive({
     selector: '[kbq-loader-overlay-indicator]',
@@ -59,6 +59,8 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @Input() compact: boolean = false;
     @Input() transparent: boolean = true;
 
+    private parent: HTMLElement | null = null;
+
     get isExternalIndicator(): boolean {
         return !!this.externalIndicator;
     }
@@ -89,10 +91,12 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.renderer.addClass(this.elementRef.nativeElement.parentElement, mcLoaderOverlayParent);
+        this.parent = this.elementRef.nativeElement.parentElement;
+
+        this.renderer.addClass(this.parent, kbqLoaderOverlayParent);
     }
 
     ngOnDestroy(): void {
-        this.renderer.removeClass(this.elementRef.nativeElement.parentElement, mcLoaderOverlayParent);
+        this.renderer.removeClass(this.parent, kbqLoaderOverlayParent);
     }
 }
