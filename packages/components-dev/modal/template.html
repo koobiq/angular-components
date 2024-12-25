@@ -1,78 +1,21 @@
-<p class="kbq-headline">Confirm</p>
+<modal-overview-example />
 
-<button kbq-button style="margin-right: 16px" [kbqDropdownTriggerFor]="dropdown">
-    dropdown
-    <i kbq-icon="kbq-chevron-down-s_16"></i>
-</button>
+<hr />
 
-<kbq-dropdown #dropdown>
-    <ng-template kbqDropdownContent>
-        <button kbq-dropdown-item (click)="showConfirm()">Confirm</button>
-    </ng-template>
-</kbq-dropdown>
+<modal-component-example />
 
-<button #confirmButton kbq-button style="margin-right: 16px" [kbqTooltip]="'Tooltip text'" (click)="showConfirm()">
-    Confirm
-</button>
-<button #deleteButton kbq-button [kbqTooltip]="'Tooltip text'" (click)="showDeleteConfirm()">Delete</button>
+<hr />
 
-<p class="kbq-headline">Modal from service</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="createTplModal(tplContent, tplTitle, tplFooter)">
-    <span>Template</span>
-</button>
-<ng-template #tplTitle>
-    <span>
-        Заголовок окнаЗаголовок окнаЗаголовок окнаЗаголовок окнаЗаголовок окнаЗаголовок окнаЗаголовок окнаЗаголовок
-        окнаЗаголовок окнаЗаголовок окнаЗаголовок окна
-    </span>
-</ng-template>
-<ng-template #tplContent>
-    <p>some contents...</p>
-    <p>some contents...</p>
-    <p>some contents...</p>
-    <p>some contents...</p>
-    <p>some contents...</p>
-</ng-template>
-<ng-template #tplFooter>
-    <button kbq-button kbq-modal-main-action [color]="componentColors.Contrast" (click)="destroyTplModal()">
-        Close after submit
-    </button>
-</ng-template>
+<modal-template-example />
 
-<p class="kbq-headline">Modal with custom component</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="createComponentModal()">Open</button>
+<hr />
 
-<p class="kbq-headline">Modal with looong component</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="createLongModal()">Open</button>
+<modal-scroll-example />
 
-<p class="kbq-headline">Modal with way too long title</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="createModalWithLongTitle()">Open</button>
+<hr />
 
-<p class="kbq-headline">Modal with way too long title injected via template</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="createModalWithLongTitleTemplate(longHeader)">
-    Open
-</button>
+<modal-sizes-example />
 
-<p class="kbq-headline">Many many modals</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="openAndCloseAll()">
-    Open more modals then close all after 10s
-</button>
-<kbq-modal
-    [kbqCancelText]="'Cancel'"
-    [kbqMask]="true"
-    [kbqOkText]="'Accept'"
-    [kbqTitle]="'Non-service html modal'"
-    [(kbqVisible)]="htmlModalVisible"
->
-    This is a non-service html modal
-</kbq-modal>
+<hr />
 
-<p class="kbq-headline">Modal with looong component</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="createModalComponent()">Open Component</button>
-
-<p class="kbq-headline">Modal without footer</p>
-<button kbq-button [color]="componentColors.Contrast" (click)="createTplModal(tplContent)">
-    <span>Template</span>
-</button>
-
-<ng-template #longHeader>Modal Title Modal Title Modal Title Modal Title Modal Title Modal Title</ng-template>
+<modal-multiple-example />

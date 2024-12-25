@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
  * @title Modal sizes
@@ -8,59 +8,58 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 @Component({
     standalone: true,
     selector: 'modal-sizes-example',
-    imports: [KbqButtonModule],
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
-        <div class="layout-column" style="width: 200px">
-            <button (click)="showSmallModal()" style="margin-bottom: 16px" kbq-button>Small</button>
+        <button (click)="showModal(modalSize.Small)" kbq-button>Small</button>
 
-            <button (click)="showDefaultModal()" style="margin-bottom: 16px" kbq-button>Medium</button>
+        <button (click)="showModal(modalSize.Medium)" kbq-button>Medium</button>
 
-            <button (click)="showLargeModal()" style="margin-bottom: 16px" kbq-button>Large</button>
+        <button (click)="showModal(modalSize.Large)" kbq-button>Large</button>
 
-            <button (click)="showCustomModal()" kbq-button>Custom width</button>
-        </div>
-    `
+        <button (click)="showCustomModal()" kbq-button>Custom width</button>
+    `,
+    styles: [
+        `
+            :host {
+                display: flex;
+                flex-direction: column;
+                width: 200px;
+            }
+
+            button:not(:last-child) {
+                margin-bottom: var(--kbq-size-m);
+            }
+        `
+
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalSizesExample {
-    constructor(private modalService: KbqModalService) {}
+    private readonly modalService = inject(KbqModalService);
 
-    showSmallModal() {
+    readonly modalSize = ModalSize;
+
+    showModal(kbqSize: ModalSize): void {
         this.modalService.confirm({
-            kbqSize: ModalSize.Small,
+            kbqSize,
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
-        });
-    }
-
-    showDefaultModal() {
-        this.modalService.confirm({
-            kbqContent: 'Save changes?',
-            kbqOkText: 'Save',
-            kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
-        });
-    }
-
-    showLargeModal() {
-        this.modalService.confirm({
-            kbqSize: ModalSize.Large,
-            kbqContent: 'Save changes?',
-            kbqOkText: 'Save',
-            kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Delete'),
+            kbqOnOk: () => console.log('Save'),
             kbqOnCancel: () => console.log('Cancel')
         });
     }
 
-    showCustomModal() {
+    showCustomModal(): void {
         this.modalService.confirm({
             kbqWidth: '600px',
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('Delete'),
+            kbqOnOk: () => console.log('Save'),
             kbqOnCancel: () => console.log('Cancel')
         });
     }

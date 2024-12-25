@@ -1876,7 +1876,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "modal-component-example",
     "additionalComponents": [
-      "KbqModalCustomComponent"
+      "CustomModalComponent"
     ],
     "primaryFile": "modal-component-example.ts",
     "importPath": "components/modal"
@@ -1914,7 +1914,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "modal-scroll-example",
     "additionalComponents": [
-      "KbqLongComponent"
+      "CustomModalComponent"
     ],
     "primaryFile": "modal-scroll-example.ts",
     "importPath": "components/modal"
