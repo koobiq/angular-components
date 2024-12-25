@@ -462,8 +462,8 @@ describe(KbqFormField.name, () => {
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeFalsy();
     });
 
-    it('should add kbq-form-field_no-borders selector for kbq-form-field by KBQ_FORM_FIELD_DEFAULT_OPTIONS', async () => {
-        const { debugElement } = await createComponent(InputFormFieldWithLabel, [
+    it('should add kbq-form-field_no-borders selector for kbq-form-field by KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
+        const { debugElement } = createComponent(InputFormFieldWithLabel, [
             kbqFormFieldDefaultOptionsProvider({ noBorders: true })
         ]);
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeTruthy();
