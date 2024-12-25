@@ -13,12 +13,7 @@ import { By } from '@angular/platform-browser';
 import { ErrorStateMatcher, PasswordValidators, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqInput, KbqInputModule, KbqInputPassword } from '@koobiq/components/input';
 import { KbqCleaner } from './cleaner';
-import {
-    KBQ_FORM_FIELD_DEFAULT_OPTIONS,
-    KbqFormField,
-    KbqFormFieldDefaultOptions,
-    getKbqFormFieldMissingControlError
-} from './form-field';
+import { KbqFormField, getKbqFormFieldMissingControlError, kbqFormFieldDefaultOptionsProvider } from './form-field';
 import { KbqFormFieldModule } from './form-field.module';
 import { KbqError, KbqHint, KbqPasswordHint } from './hint';
 import { KbqLabel } from './label';
@@ -467,14 +462,9 @@ describe(KbqFormField.name, () => {
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeFalsy();
     });
 
-    it('should add kbq-form-field_no-borders selector for kbq-form-field by KBQ_FORM_FIELD_DEFAULT_OPTIONS', () => {
-        const { debugElement } = createComponent(InputFormFieldWithLabel, [
-            {
-                provide: KBQ_FORM_FIELD_DEFAULT_OPTIONS,
-                useValue: {
-                    noBorders: true
-                } satisfies KbqFormFieldDefaultOptions
-            }
+    it('should add kbq-form-field_no-borders selector for kbq-form-field by KBQ_FORM_FIELD_DEFAULT_OPTIONS', async () => {
+        const { debugElement } = await createComponent(InputFormFieldWithLabel, [
+            kbqFormFieldDefaultOptionsProvider({ noBorders: true })
         ]);
         expect(getFormFieldDebugElement(debugElement).classes['kbq-form-field_no-borders']).toBeTruthy();
     });

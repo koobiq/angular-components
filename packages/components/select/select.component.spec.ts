@@ -54,7 +54,8 @@ import {
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError
+    getKbqSelectNonFunctionValueError,
+    kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -3073,7 +3074,7 @@ describe(KbqSelect.name, () => {
             TestBed.resetTestingModule().configureTestingModule({
                 imports: [KbqSelectModule, ReactiveFormsModule, FormsModule, NoopAnimationsModule],
                 declarations: [SelectInsideFormGroup],
-                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }]
+                providers: [kbqErrorStateMatcherProvider(errorStateMatcher)]
             });
 
             const errorFixture = TestBed.createComponent(SelectInsideFormGroup);

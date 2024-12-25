@@ -1,5 +1,22 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Provider, Type } from '@angular/core';
 import { AbstractControl, FormGroupDirective, NgForm } from '@angular/forms';
+
+/** Utility provider for `ErrorStateMatcher`. */
+export const kbqErrorStateMatcherProvider = (
+    errorStateMatcher: Type<ErrorStateMatcher> | ErrorStateMatcher
+): Provider => {
+    if (errorStateMatcher instanceof Type) {
+        return {
+            provide: ErrorStateMatcher,
+            useClass: errorStateMatcher
+        };
+    }
+
+    return {
+        provide: ErrorStateMatcher,
+        useValue: errorStateMatcher
+    };
+};
 
 /**
  * Error state matcher that matches when a control is invalid and form is submitted.
