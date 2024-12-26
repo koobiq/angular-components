@@ -786,6 +786,7 @@ describe('KbqTagList', () => {
 
             it('should blur the form field when the active tag is blurred', () => {
                 const formField: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field');
+                fixture.componentInstance.formField.runFocusMonitor();
 
                 nativeTags[0].focus();
                 fixture.detectChanges();
@@ -1299,6 +1300,7 @@ class BasicTagList {
     tabIndexOverride: number;
     selectable: boolean = true;
 
+    @ViewChild(KbqFormField, { static: false }) formField: KbqFormField;
     @ViewChild(KbqTagList, { static: false }) tagList: KbqTagList;
     @ViewChildren(KbqTag) tags: QueryList<KbqTag>;
 }
