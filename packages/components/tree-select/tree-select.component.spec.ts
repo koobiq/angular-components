@@ -53,7 +53,8 @@ import {
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError
+    getKbqSelectNonFunctionValueError,
+    kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -3309,7 +3310,7 @@ describe(KbqTreeSelect.name, () => {
                     NoopAnimationsModule
                 ],
                 declarations: [SelectInsideFormGroup],
-                providers: [{ provide: ErrorStateMatcher, useValue: errorStateMatcher }]
+                providers: [kbqErrorStateMatcherProvider(errorStateMatcher)]
             });
 
             const errorFixture = TestBed.createComponent(SelectInsideFormGroup);

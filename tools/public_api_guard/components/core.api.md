@@ -41,6 +41,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { RendererFactory2 } from '@angular/core';
@@ -1178,6 +1179,9 @@ export class KbqDecimalPipe implements PipeTransform {
 
 // @public (undocumented)
 export const KbqDefaultThemes: KbqTheme[];
+
+// @public
+export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMatcher> | ErrorStateMatcher) => Provider;
 
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {

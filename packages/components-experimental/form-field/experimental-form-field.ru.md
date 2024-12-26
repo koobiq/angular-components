@@ -106,16 +106,11 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 Для всех полей, при помощи _Dependency Injection_ c использованием `KBQ_FORM_FIELD_DEFAULT_OPTIONS` токена:
 
 ```ts
-import { KBQ_FORM_FIELD_DEFAULT_OPTIONS, KbqFormFieldDefaultOptions } from '@koobiq/components-experimental/form-field';
+import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components-experimental/form-field';
 
 @NgModule({
     providers: [
-        {
-            provide: KBQ_FORM_FIELD_DEFAULT_OPTIONS,
-            useValue: {
-                noBorders: true
-            } satisfies KbqFormFieldDefaultOptions
-        }
+        kbqFormFieldDefaultOptionsProvider({ noBorders: true })
     ]
 })
 ```
