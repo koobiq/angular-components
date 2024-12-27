@@ -113,7 +113,7 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     // (undocumented)
     prefix: QueryList<KbqPrefix>;
     // (undocumented)
-    runFocusMonitor(): void;
+    runFocusMonitor: () => void;
     shouldForward(prop: keyof NgControl): boolean;
     // (undocumented)
     stepper: KbqStepper;
