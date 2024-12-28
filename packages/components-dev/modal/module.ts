@@ -1,21 +1,29 @@
-import { Component, inject, Input, NgModule, TemplateRef, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
 import { KBQ_MODAL_DATA } from '../../components/modal/modal.service';
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqModalModule,
+        KbqIconModule,
+        KbqButtonModule,
+        KbqDropdownModule,
+        KbqToolTipModule,
+        ModalExamplesModule
+    ],
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class ModalDemoComponent {
+export class ModalDev {
     componentColors = KbqComponentColors;
 
     isVisible = false;
@@ -188,6 +196,8 @@ export class ModalDemoComponent {
 }
 
 @Component({
+    standalone: true,
+    imports: [],
     selector: 'kbq-modal-custom-long-component',
     template: `
         @for (item of longText; track item) {
@@ -206,6 +216,8 @@ export class KbqModalLongCustomComponent {
 }
 
 @Component({
+    standalone: true,
+    imports: [KbqButtonModule],
     selector: 'kbq-modal-custom-component',
     template: `
         <div>
@@ -238,6 +250,8 @@ export class KbqModalCustomComponent {
 }
 
 @Component({
+    standalone: true,
+    imports: [KbqModalModule, KbqButtonModule],
     selector: 'kbq-modal-full-custom-component',
     template: `
         <kbq-modal-title>
@@ -274,23 +288,3 @@ export class KbqModalFullCustomComponent {
         this.modal.destroy({ data: 'this the result data' });
     }
 }
-
-@NgModule({
-    declarations: [
-        ModalDemoComponent,
-        KbqModalCustomComponent,
-        KbqModalLongCustomComponent,
-        KbqModalFullCustomComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqModalModule,
-        KbqDropdownModule,
-        KbqToolTipModule
-    ],
-    bootstrap: [ModalDemoComponent]
-})
-export class DemoModule {}

@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
  * @title Modal
@@ -8,43 +8,61 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 @Component({
     standalone: true,
     selector: 'modal-overview-example',
-    imports: [KbqButtonModule],
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
-        <div class="layout-column" style="width: 200px">
-            <button (click)="showConfirmModal()" style="margin-bottom: 16px" kbq-button>Open Confirm Modal</button>
+        <button (click)="showConfirmModal()" kbq-button>Open Confirm Modal</button>
 
-            <button (click)="showSuccessModal()" style="margin-bottom: 16px" kbq-button>Open Success Modal</button>
+        <button (click)="showSuccessModal()" kbq-button>Open Success Modal</button>
 
-            <button (click)="showDeleteModal()" kbq-button>Open Delete Modal</button>
-        </div>
-    `
+        <button (click)="showDeleteModal()" kbq-button>Open Delete Modal</button>
+    `,
+    styles: [
+        `
+            :host {
+                display: flex;
+                flex-direction: column;
+                width: 200px;
+            }
+
+            button:not(:last-child) {
+                margin-bottom: var(--kbq-size-m);
+            }
+        `
+
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalOverviewExample {
-    constructor(private modalService: KbqModalService) {}
+    private readonly modalService = inject(KbqModalService);
 
-    showConfirmModal() {
+    showConfirmModal(): void {
         this.modalService.confirm({
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
+            kbqOnOk: () => console.log('Save'),
+            kbqOnCancel: () => console.log('Cancel')
         });
     }
 
-    showSuccessModal() {
+    showSuccessModal(): void {
         this.modalService.success({
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
+            kbqOnOk: () => console.log('OK'),
+            kbqOnCancel: () => console.log('Cancel')
         });
     }
 
-    showDeleteModal() {
+    showDeleteModal(): void {
         this.modalService.delete({
             kbqContent:
                 'The tasks, policies and tags associated with the customer will be deleted too. Delete selected customer?',

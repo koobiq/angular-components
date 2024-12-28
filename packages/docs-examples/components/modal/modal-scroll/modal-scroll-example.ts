@@ -1,24 +1,19 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 @Component({
     standalone: true,
-    selector: 'kbq-long-component',
+    selector: 'custom-modal',
     template: `
-        @for (item of longText; track item) {
+        @for (item of items; track item) {
             <p>{{ item }}</p>
         }
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqLongComponent {
-    longText: any = [];
-
-    constructor() {
-        for (let i = 0; i < 50; i++) {
-            this.longText.push(`text lint - ${i}`);
-        }
-    }
+export class CustomModalComponent {
+    items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
 }
 
 /**
@@ -27,21 +22,27 @@ export class KbqLongComponent {
 @Component({
     standalone: true,
     selector: 'modal-scroll-example',
-    imports: [KbqButtonModule],
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
         <button (click)="createLongModal()" kbq-button>Open Modal</button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalScrollExample {
-    constructor(private modalService: KbqModalService) {}
+    private readonly modalService = inject(KbqModalService);
 
-    createLongModal() {
+    createLongModal(): void {
         this.modalService.create({
             kbqSize: ModalSize.Small,
             kbqTitle: 'Modal Title',
-            kbqContent: KbqLongComponent,
+            kbqContent: CustomModalComponent,
             kbqOkText: 'Yes',
-            kbqCancelText: 'No'
+            kbqCancelText: 'No',
+            kbqOnOk: () => console.log('Yes'),
+            kbqOnCancel: () => console.log('No')
         });
     }
 }

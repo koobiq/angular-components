@@ -1,6 +1,36 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
+
+@Component({
+    standalone: true,
+    selector: 'custom-modal',
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
+    template: `
+        <kbq-modal-title>{{ title }}</kbq-modal-title>
+
+        <kbq-modal-body>{{ subtitle }}</kbq-modal-body>
+
+        <div kbq-modal-footer>
+            <button [color]="'contrast'" (click)="destroyModal('save')" kbq-button>Save</button>
+            <button (click)="destroyModal('close')" kbq-button autofocus>Close</button>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CustomModalComponent {
+    private readonly modalRef = inject(KbqModalRef);
+
+    @Input() title: string;
+    @Input() subtitle: string;
+
+    destroyModal(action: 'save' | 'close') {
+        this.modalRef.destroy(action);
+    }
+}
 
 /**
  * @title Modal component
@@ -8,22 +38,27 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
 @Component({
     standalone: true,
     selector: 'modal-component-example',
-    imports: [KbqButtonModule],
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
         <button (click)="openModal()" kbq-button>Open Modal</button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalComponentExample {
-    modalRef: KbqModalRef<KbqModalCustomComponent, 'save' | 'close'>;
+    private readonly modalService = inject(KbqModalService);
 
-    constructor(private modalService: KbqModalService) {}
+    modalRef: KbqModalRef<CustomModalComponent, 'save' | 'close'>;
 
-    openModal() {
+    openModal(): void {
         this.modalRef = this.modalService.open({
-            kbqComponent: KbqModalCustomComponent,
+            kbqComponent: CustomModalComponent,
             kbqComponentParams: {
-                title: 'Title',
-                subtitle: 'Subtitle'
+                title: 'DoS attack',
+                subtitle:
+                    'In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to make a machine or network resource unavailable to its intended users by temporarily or indefinitely disrupting services of a host connected to a network.'
             }
         });
 
@@ -34,43 +69,5 @@ export class ModalComponentExample {
         this.modalRef.afterClose.subscribe((action) => {
             console.log(`[afterClose] emitted, chosen action: ${action}`);
         });
-    }
-}
-
-@Component({
-    standalone: true,
-    selector: 'kbq-modal-full-custom-component',
-    imports: [
-        KbqModalModule,
-        KbqButtonModule
-    ],
-    template: `
-        <kbq-modal-title>Modal Title</kbq-modal-title>
-
-        <kbq-modal-body>
-            <h2>{{ title }}</h2>
-            <h4>{{ subtitle }}</h4>
-            <p>
-                <span>Get Modal instance in component</span>
-                <button [color]="'contrast'" (click)="destroyModal('close')" kbq-button>
-                    destroy modal in the component
-                </button>
-            </p>
-        </kbq-modal-body>
-
-        <div kbq-modal-footer>
-            <button [color]="'contrast'" (click)="destroyModal('save')" kbq-button>Save</button>
-            <button (click)="destroyModal('close')" kbq-button autofocus>Close</button>
-        </div>
-    `
-})
-export class KbqModalCustomComponent {
-    @Input() title: string;
-    @Input() subtitle: string;
-
-    constructor(private modal: KbqModalRef<KbqModalCustomComponent, 'save' | 'close'>) {}
-
-    destroyModal(action: 'save' | 'close') {
-        this.modal.destroy(action);
     }
 }
