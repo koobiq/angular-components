@@ -66,7 +66,7 @@ const localeDataSet = {
             padding: var(--kbq-size-l);
         }
 
-        kbq-form-field {
+        .kbq-form-field-type-select {
             width: 320px;
         }
     `

@@ -241,13 +241,15 @@ export class KbqTreeSelect
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top'
+            overlayY: 'top',
+            offsetY: this.offsetY
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom'
+            overlayY: 'bottom',
+            offsetY: -this.offsetY
         }
     ];
 
