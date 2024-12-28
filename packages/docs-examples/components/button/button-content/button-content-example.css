@@ -1,8 +1,7 @@
 .content__example-button-group {
     display: inline-flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     gap: 32px;
-    max-width: 480px;
 }
 
 .content__example-button-group .example-button {
