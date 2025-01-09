@@ -286,6 +286,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "badge-tooltip-example.ts",
     "importPath": "components/badge"
   },
+  "breadcrumbs-custom-template": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-custom-template",
+    "title": "Breadcrumbs custom-template",
+    "componentName": "BreadcrumbsCustomTemplateExample",
+    "files": [
+      "breadcrumbs-custom-template-example.ts"
+    ],
+    "selector": "breadcrumbs-custom-template-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-custom-template-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-dropdown": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-dropdown",
+    "title": "Breadcrumbs sizes",
+    "componentName": "BreadcrumbsDropdownExample",
+    "files": [
+      "breadcrumbs-dropdown-example.ts"
+    ],
+    "selector": "breadcrumbs-dropdown-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-dropdown-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
   "breadcrumbs-overview": {
     "packagePath": "components/breadcrumbs/breadcrumbs-overview",
     "title": "Breadcrumbs overview",
@@ -3557,6 +3581,10 @@ return import('@koobiq/docs-examples/components/badge');
 return import('@koobiq/docs-examples/components/badge');
   case 'badge-tooltip':
 return import('@koobiq/docs-examples/components/badge');
+  case 'breadcrumbs-custom-template':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-dropdown':
+return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-overview':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-size':
