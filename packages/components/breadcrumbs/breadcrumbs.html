@@ -1,25 +1,6 @@
-@if (viewBreadcrumbs.length) {
-    @for (item of viewBreadcrumbs; track item; let last = $last) {
-        <ng-container [ngTemplateOutlet]="item" />
-        @if (!last) {
-            <ng-container [ngTemplateOutlet]="separatorTemplate" />
-        }
-    }
-}
-
 @if (items.length <= 3 || max === null || max === items.length) {
     @for (item of items; track item; let last = $last) {
         <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
-        <a [routerLink]="item.routerLink?.urlTree">
-            <button
-                kbq-button
-                kbqBreadcrumb
-                [attr.aria-current]="last ? 'page' : null"
-                [disabled]="item.disabled || last"
-            >
-                {{ item.text }}
-            </button>
-        </a>
         @if (!last) {
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
         }
@@ -28,11 +9,6 @@
 
 @if (items.length > 3 && max !== null && max !== items.length) {
     @let visibleItemsCount = max - 2;
-    <a [routerLink]="items.first.routerLink?.urlTree">
-        <button kbq-button kbqBreadcrumb [disabled]="items.first.disabled">
-            {{ items.first.text }}
-        </button>
-    </a>
     <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
     <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
@@ -56,23 +32,10 @@
             }
         </kbq-dropdown>
     }
-
     <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
     @for (item of items.toArray().slice(-1 * visibleItemsCount); track item; let last = $last) {
-        <a [routerLink]="item.routerLink?.urlTree">
-            <button
-                kbq-button
-                kbqBreadcrumb
-                [attr.aria-current]="last ? 'page' : null"
-                [disabled]="item.disabled || last"
-            >
-                {{ item.text }}
-            </button>
-        </a>
-
         <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
-
         @if (!last) {
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
         }

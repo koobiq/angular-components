@@ -3,9 +3,7 @@ import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadc
 
 @Component({
     standalone: true,
-    imports: [
-        BreadcrumbsExamplesModule
-    ],
+    imports: [BreadcrumbsExamplesModule],
     selector: 'app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
