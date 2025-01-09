@@ -48,7 +48,7 @@ export class DocsLocaleService {
 
     /** Checks if a given locale code is supported. */
     isSupportedLocale(locale: string): locale is DocsLocale {
-        return (DOCS_SUPPORTED_LOCALES as string[]).includes(locale);
+        return DOCS_SUPPORTED_LOCALES.includes(locale);
     }
 
     /** Extracts the locale from the given URL if it is present and supported */

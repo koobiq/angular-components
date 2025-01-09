@@ -5,4 +5,4 @@ export enum DocsLocale {
 
 export const DOCS_DEFAULT_LOCALE = DocsLocale.Ru;
 
-export const DOCS_SUPPORTED_LOCALES = Object.values(DocsLocale);
+export const DOCS_SUPPORTED_LOCALES = Object.values<string>(DocsLocale);
