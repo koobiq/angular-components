@@ -2,13 +2,7 @@ import { Location } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-export enum DocsLocale {
-    En = 'en',
-    Ru = 'ru'
-}
-
-export const DOCS_DEFAULT_LOCALE_CODE = DocsLocale.Ru;
+import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
 
 @Injectable({ providedIn: 'root' })
 export class DocsLocaleService {
@@ -16,30 +10,29 @@ export class DocsLocaleService {
     private readonly location = inject(Location);
 
     /** Current locale code. */
-    private locale$ = new BehaviorSubject<string>(
-        this.getLocaleFromURL(this.location.path()) || DOCS_DEFAULT_LOCALE_CODE
+    private locale$ = new BehaviorSubject<DocsLocale>(
+        this.getLocaleFromURL(this.location.path()) || DOCS_DEFAULT_LOCALE
     );
 
     /** Returns the current locale code. */
-    get locale(): string {
+    get locale(): DocsLocale {
         return this.locale$.getValue();
     }
 
     /** A stream that emits the current locale code when it changes. */
-    get changes(): Observable<string> {
+    get changes(): Observable<DocsLocale> {
         return this.locale$.asObservable();
-    }
-
-    /** Returns an array of all supported locale codes. */
-    get supportedLocales(): string[] {
-        return Object.values(DocsLocale);
     }
 
     /**
      * Sets the current locale code and emits the change to subscribers.
      * Updates URL with the new locale code, if URL doesn't contain locale, navigation will be skipped.
      */
-    setLocale(locale: string): void {
+    setLocale(locale: DocsLocale): void {
+        if (!this.isSupportedLocale(locale)) {
+            throw new Error(`[DocsLocaleService] Unsupported locale: ${locale}`);
+        }
+
         this.locale$.next(locale);
 
         // should update only URL which contain locale
@@ -54,12 +47,12 @@ export class DocsLocaleService {
     }
 
     /** Checks if a given locale code is supported. */
-    isSupportedLocale(locale: string): boolean {
-        return this.supportedLocales.includes(locale);
+    isSupportedLocale(locale: string): locale is DocsLocale {
+        return DOCS_SUPPORTED_LOCALES.includes(locale);
     }
 
     /** Extracts the locale from the given URL if it is present and supported */
-    getLocaleFromURL(url: string): string | null {
+    getLocaleFromURL(url: string): DocsLocale | null {
         const locale = url.split('/')[1];
         return locale && this.isSupportedLocale(locale) ? locale : null;
     }

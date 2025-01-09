@@ -13,7 +13,8 @@ import { TokensOverview } from './components/design-tokens-viewers/tokens-overvi
 import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
-import { DOCS_DEFAULT_LOCALE_CODE, DocsLocaleService } from './services/locale.service';
+import { DOCS_DEFAULT_LOCALE } from './constants/locale';
+import { DocsLocaleService } from './services/locale.service';
 
 const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[]): boolean => {
     const { path } = segments[0];
@@ -23,7 +24,7 @@ const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[])
 };
 
 export const DOCS_ROUTES: Routes = [
-    { path: '', redirectTo: DOCS_DEFAULT_LOCALE_CODE, pathMatch: 'full' },
+    { path: '', redirectTo: DOCS_DEFAULT_LOCALE, pathMatch: 'full' },
     {
         path: ':lang',
         canMatch: [canMatchLocaleRoutes],
