@@ -177,7 +177,7 @@
         "docs": "yarn run build:cdk && yarn run build:components && yarn run build:components-experimental && yarn run styles:build-all && yarn run build:angular-luxon-adapter && yarn run build:angular-moment-adapter && yarn run build:docs-content && yarn run build:package-docs-content && yarn run build:docs-examples-module && yarn run build:docs-examples && yarn run docs:start:dev",
         "docs:start:dev": "ng serve --configuration=development koobiq-docs",
         "docs:start:prod": "ng serve --configuration=production koobiq-docs",
-        "docs:generate-sitemap": "node ./apps/docs/scripts/generate-sitemap.js",
+        "docs:generate-sitemap": "ts-node tools/generate-sitemap.ts",
         "docs:build": "ng build koobiq-docs --configuration production",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
         "docs:api-gen": "rimraf dist/api-gen && rollup -c tools/api-gen/rollup.config.js && node dist/api-gen/generate-api-docs.mjs",
