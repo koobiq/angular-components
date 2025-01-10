@@ -5,6 +5,7 @@ import { KbqDividerModule } from '../divider';
 import { KbqIcon } from '../icon';
 import { KbqFilterBar } from './filter-bar.component';
 import { KbqPipe, KbqPipeTypes } from './filter-bar.types';
+import { KbqPipeDateComponent } from './pipes/pipe-date.component';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select.component';
 import { KbqPipeMultiTreeSelectComponent } from './pipes/pipe-multi-tree-select.component';
 import { KbqPipeSelectComponent } from './pipes/pipe-select.component';
@@ -27,7 +28,7 @@ import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select.component';
             } @else if (pipe.type === pipeTypes.MultiTreeSelect) {
                 <kbq-pipe [data]="pipe" multi-tree-select />
             } @else if (pipe.type === pipeTypes.Date) {
-                <kbq-pipe [data]="pipe" multi-tree-select />
+                <kbq-pipe [data]="pipe" date />
             }
         }
     `,
@@ -45,7 +46,8 @@ import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select.component';
         KbqPipeSelectComponent,
         KbqPipeMultiSelectComponent,
         KbqPipeTreeSelectComponent,
-        KbqPipeMultiTreeSelectComponent
+        KbqPipeMultiTreeSelectComponent,
+        KbqPipeDateComponent
     ]
 })
 export class KbqPipesComponent {
