@@ -1,13 +1,13 @@
 <!-- example(breadcrumbs-overview) -->
 
-## Size
+## Размеры
 
 <!-- example(breadcrumbs-size) -->
 
-## Breadcrumb as dropdown trigger
+## Выпадающие элементы в хлебных крошках
 
 <!-- example(breadcrumbs-dropdown) -->
 
-## Custom Template
+## Пользовательский шаблон
 
 <!-- example(breadcrumbs-custom-template) -->

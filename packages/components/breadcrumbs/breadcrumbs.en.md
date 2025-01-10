@@ -1,5 +1,13 @@
-🚧 **Documentation in progress** 🚧
+<!-- example(breadcrumbs-overview) -->
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+## Size
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(breadcrumbs-size) -->
+
+## Breadcrumb as dropdown trigger
+
+<!-- example(breadcrumbs-dropdown) -->
+
+## Custom Template
+
+<!-- example(breadcrumbs-custom-template) -->
