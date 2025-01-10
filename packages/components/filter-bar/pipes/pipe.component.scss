@@ -46,3 +46,23 @@
         margin-left: 6px;
     }
 }
+
+.kbq-pipe-date__popover {
+    & .kbq-popover__content {
+        padding: 4px 0;
+    }
+
+    & .kbq-list-option {
+        & .kbq-list-text {
+            display: flex;
+            flex-direction: row;
+        }
+
+        & .kbq-icon {
+            margin-left: 8px;
+            align-self: center;
+
+            color: var(--kbq-icon-fade-contrast-color);
+        }
+    }
+}

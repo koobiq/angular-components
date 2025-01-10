@@ -509,7 +509,7 @@ export class DemoComponent {
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[2];
+    activeFilter: KbqFilter | null = this.filters[5];
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Вердикт',
