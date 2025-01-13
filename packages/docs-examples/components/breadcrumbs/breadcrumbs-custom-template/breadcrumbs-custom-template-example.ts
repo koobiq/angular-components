@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
-    KbqBreadcrumb,
+    KbqBreadcrumbItem,
     KbqBreadcrumbs,
     KbqBreadcrumbView,
     KbqDefaultBreadcrumbStyler
@@ -44,7 +44,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqDefaultBreadcrumbStyler,
         KbqDlModule,
         KbqBreadcrumbView,
-        KbqBreadcrumb,
+        KbqBreadcrumbItem,
         KbqIcon
     ]
 })

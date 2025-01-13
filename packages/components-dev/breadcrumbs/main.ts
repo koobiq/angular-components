@@ -1,9 +1,9 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { Breadcrumbs } from './module';
+import { BreadcrumbsDev } from './module';
 
-bootstrapApplication(Breadcrumbs, {
+bootstrapApplication(BreadcrumbsDev, {
     providers: [
         provideAnimations(),
         provideRouter([])]

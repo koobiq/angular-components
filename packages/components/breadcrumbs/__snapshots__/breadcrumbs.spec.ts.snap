@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqBreadcrumbs core should apply the default size class to the breadcrumbs container 1`] = `
+DOMTokenList {
+  "0": "kbq-breadcrumbs_normal",
+}
+`;

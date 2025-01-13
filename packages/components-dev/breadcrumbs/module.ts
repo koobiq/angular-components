@@ -10,4 +10,4 @@ import { BreadcrumbsExamplesModule } from '../../docs-examples/components/breadc
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Breadcrumbs {}
+export class BreadcrumbsDev {}

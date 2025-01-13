@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumb, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 
@@ -31,7 +31,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
     `,
     imports: [
         RouterLink,
-        KbqBreadcrumb,
+        KbqBreadcrumbItem,
         KbqBreadcrumbs,
         KbqDlModule
     ]

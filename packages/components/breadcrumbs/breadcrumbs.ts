@@ -69,7 +69,7 @@ export class KbqBreadcrumbsSeparator {
     standalone: true,
     hostDirectives: [RdxRovingFocusItemDirective],
     selector: '[kbq-button][kbqBreadcrumb]',
-    host: { class: 'kbq-breadcrumb' }
+    host: { class: 'kbq-breadcrumb-item' }
 })
 export class KbqDefaultBreadcrumbStyler implements OnInit {
     button = inject(KbqButton, { optional: true, host: true });
@@ -103,10 +103,10 @@ export class KbqBreadcrumbView {
         <ng-content />
     `,
     host: {
-        class: 'kbq-breadcrumb'
+        class: 'kbq-breadcrumb-item'
     }
 })
-export class KbqBreadcrumb {
+export class KbqBreadcrumbItem {
     @Input() text: string;
     @Input({ transform: booleanAttribute }) disabled: boolean;
 
@@ -129,7 +129,7 @@ export class KbqBreadcrumb {
         KbqIconModule,
         KbqButtonModule,
         KbqDropdownModule,
-        KbqBreadcrumb,
+        KbqBreadcrumbItem,
         KbqDefaultBreadcrumbStyler
     ],
     host: {
@@ -150,8 +150,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     separator?: TemplateRef<any>;
 
-    @ContentChildren(KbqBreadcrumb)
-    items: QueryList<KbqBreadcrumb>;
+    @ContentChildren(KbqBreadcrumbItem)
+    items: QueryList<KbqBreadcrumbItem>;
 
     get class(): string[] {
         return [`kbq-breadcrumbs_${this.size}`];

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumb, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
 
 /**
  * @title Breadcrumbs overview
@@ -22,7 +22,7 @@ import { KbqBreadcrumb, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
     `,
     imports: [
         RouterLink,
-        KbqBreadcrumb,
+        KbqBreadcrumbItem,
         KbqBreadcrumbs
     ]
 })
