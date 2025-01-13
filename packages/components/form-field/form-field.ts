@@ -128,7 +128,7 @@ export class KbqFormField
     private _focusOrigin: FocusOrigin;
 
     get hasFocus(): boolean {
-        return this.control.focused;
+        return this.control?.focused;
     }
 
     get hasHint(): boolean {

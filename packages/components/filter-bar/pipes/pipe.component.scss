@@ -48,21 +48,118 @@
 }
 
 .kbq-pipe-date__popover {
-    & .kbq-popover__content {
-        padding: 4px 0;
+    & .kbq-popover__container {
+        max-height: unset;
     }
 
-    & .kbq-list-option {
-        & .kbq-list-text {
-            display: flex;
-            flex-direction: row;
+    & .kbq-popover__content {
+        padding: 0;
+    }
+
+    & .kbq-date-list {
+        margin: 4px 0;
+
+        & .kbq-list-option {
+            & .kbq-list-text {
+                display: flex;
+                flex-direction: row;
+            }
+
+            & .kbq-icon {
+                margin-left: 8px;
+                align-self: center;
+
+                color: var(--kbq-icon-fade-contrast-color);
+            }
+        }
+    }
+
+    & .kbq-date-period {
+        min-width: 320px;
+
+        & .kbq-date-period__header {
+            padding-top: 6px;
+            padding-left: 4px;
+            padding-right: 4px;
+
+
+            & .kbq-button {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
 
-        & .kbq-icon {
-            margin-left: 8px;
-            align-self: center;
+        & .kbq-divider {
+            margin: 4px 16px;
+        }
 
-            color: var(--kbq-icon-fade-contrast-color);
+        & .kbq-date-period__content {
+            display: flex;
+            flex-direction: column;
+
+            padding: 0;
+
+            gap: 8px;
+
+            & .kbq-date-period__content-header {
+                padding-top: 8px;
+                padding-left: 16px;
+                padding-right: 16px;
+
+                color: var(--kbq-foreground-contrast-secondary);
+            }
+
+            & .kbq-form__row {
+                padding-left: 16px;
+                padding-right: 16px;
+
+                & .kbq-date-period__date {
+                    & .kbq-form-field__container {
+                        border-top-right-radius: unset;
+                        border-bottom-right-radius: unset;
+                    }
+                }
+
+                & .kbq-date-period__time {
+                    margin-left: -1px;
+
+                    & .kbq-form-field__container {
+                        border-top-left-radius: unset;
+                        border-bottom-left-radius: unset;
+                    }
+                }
+            }
+
+            & .kbq-calendar {
+                position: relative;
+
+                padding: 8px 8px 12px;
+
+                background-color: var(--kbq-background-bg-tertiary);
+
+                &:after {
+                    content: '';
+                    position: absolute;
+
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                }
+
+                &.kbq-calendar_hidden {
+                    display: none;
+                }
+            }
+        }
+
+        & .kbq-date-period__footer {
+            padding: 4px;
+
+            & .kbq-button {
+                width: 100%;
+                justify-content: flex-start;
+            }
         }
     }
 }
