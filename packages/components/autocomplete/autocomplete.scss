@@ -15,8 +15,8 @@
     width: 100%;
     max-width: none;
 
-    border-radius: var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius));
-    max-height: var(--kbq-select-panel-size-max-height,);
+    border-radius: var(--kbq-autocomplete-size-panel-border-radius, var(--kbq-size-border-radius));
+    max-height: var(--kbq-autocomplete-size-panel-max-height);
 
     padding: var(--kbq-size-xxs);
 

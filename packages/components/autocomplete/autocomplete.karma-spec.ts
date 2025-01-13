@@ -181,7 +181,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
         widthFixture.componentInstance.trigger.closePanel();
         widthFixture.detectChanges();
@@ -193,7 +193,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.detectChanges();
 
         // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(498);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
     });
 
     it('should update the width while the panel is open', () => {
@@ -208,7 +208,7 @@ describe('KbqAutocomplete', () => {
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         const input = widthFixture.debugElement.query(By.css('input')).nativeElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
         widthFixture.componentInstance.width = 500;
         widthFixture.detectChanges();
@@ -217,7 +217,7 @@ describe('KbqAutocomplete', () => {
         dispatchFakeEvent(input, 'input');
         widthFixture.detectChanges();
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(498);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
     });
 
     it('should update the panel width if the window is resized', fakeAsync(() => {
@@ -231,7 +231,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
         widthFixture.componentInstance.width = 400;
         widthFixture.detectChanges();
@@ -239,7 +239,7 @@ describe('KbqAutocomplete', () => {
         dispatchFakeEvent(window, 'resize');
         tick(20);
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(398);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
     }));
 
     it('should have panel width match host width by default', () => {
@@ -253,7 +253,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
     });
 });
 
