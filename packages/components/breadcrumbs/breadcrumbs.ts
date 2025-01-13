@@ -27,9 +27,13 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
 export interface KbqBreadcrumbsConfiguration {
+    /**
+     * Specifies the maximum number of breadcrumb items to display.
+     * - If a number is provided, only that many items will be shown.
+     * - If `null`, no limit is applied, and all breadcrumb items are displayed.
+     */
     max: number | null;
     size: KbqDefaultSizes;
-    separator?: string;
 }
 
 export const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
@@ -90,11 +94,14 @@ export class KbqBreadcrumbView {
 }
 
 /**
- * Directive represents an individual breadcrumb item with optional support for router navigation and styling.
+ * Component represents an individual breadcrumb item with optional support for router navigation and styling.
  */
-@Directive({
+@Component({
     standalone: true,
     selector: 'kbq-breadcrumb-item',
+    template: `
+        <ng-content />
+    `,
     host: {
         class: 'kbq-breadcrumb'
     }
@@ -132,15 +139,13 @@ export class KbqBreadcrumb {
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
 export class KbqBreadcrumbs implements AfterContentInit {
-    protected readonly options = inject(KBQ_BREADCRUMBS_CONFIGURATION);
-    protected readonly destroyRef = inject(DestroyRef);
-    protected readonly cdr = inject(ChangeDetectorRef);
+    protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
 
     @Input()
-    size: KbqDefaultSizes = this.options.size;
+    size: KbqDefaultSizes = this.configuration.size;
 
     @Input()
-    max: number | null = this.options.max;
+    max: number | null = this.configuration.max;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     separator?: TemplateRef<any>;
@@ -152,10 +157,12 @@ export class KbqBreadcrumbs implements AfterContentInit {
         return [`kbq-breadcrumbs_${this.size}`];
     }
 
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly cdr = inject(ChangeDetectorRef);
+    protected readonly KbqComponentColors = KbqComponentColors;
+    protected readonly KbqButtonStyles = KbqButtonStyles;
+
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
-
-    protected readonly KbqComponentColors = KbqComponentColors;
-    protected readonly KbqButtonStyles = KbqButtonStyles;
 }
