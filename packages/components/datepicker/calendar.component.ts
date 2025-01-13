@@ -17,6 +17,7 @@ import { DateAdapter } from '@koobiq/components/core';
 import { Subject, Subscription } from 'rxjs';
 import { KbqCalendarCellCssClasses } from './calendar-body.component';
 import { createMissingDateImplError } from './datepicker-errors';
+import { KbqDatepickerInput } from './datepicker-input.directive';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqMonthView } from './month-view.component';
 
@@ -139,7 +140,13 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
      */
     stateChanges = new Subject<void>();
 
+    /** The input element this datepicker is associated with. */
+    datepickerInput: KbqDatepickerInput<D>;
+
     private readonly intlChanges: Subscription;
+
+    /** Subscription to value changes in the associated input element. */
+    private inputSubscription = Subscription.EMPTY;
 
     constructor(
         intl: KbqDatepickerIntl,
@@ -162,6 +169,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
     ngOnDestroy() {
         this.intlChanges.unsubscribe();
+        this.inputSubscription.unsubscribe();
         this.stateChanges.complete();
     }
 
@@ -178,6 +186,24 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         }
 
         this.stateChanges.next();
+    }
+
+    /**
+     * Register an input with this calendar.
+     * @param input The calendar input to register with this calendar.
+     */
+    registerInput(input: KbqDatepickerInput<D>): void {
+        if (this.datepickerInput) {
+            throw Error('A KbqDatepicker can only be associated with a single input.');
+        }
+
+        this.datepickerInput = input;
+        this.inputSubscription = this.datepickerInput.valueChange.subscribe((value: D | null) => {
+            this.selected = value;
+
+            this.monthView?.init();
+            this.activeDate = value as D;
+        });
     }
 
     /** Updates today's date after an update of the active date */

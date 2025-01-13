@@ -122,7 +122,7 @@ export class KbqFormField
     private readonly destroyRef = inject(DestroyRef);
 
     get hasFocus(): boolean {
-        return this.control.focused;
+        return this.control?.focused;
     }
 
     get hasHint(): boolean {
