@@ -52,6 +52,7 @@ import {
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqWarningTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
+import { KbqCalendar } from './calendar.component';
 import { createMissingDateImplError } from './datepicker-errors';
 import { KbqDatepicker } from './datepicker.component';
 
@@ -206,7 +207,7 @@ interface DateTimeObject {
 
 /** Directive used to connect an input to a KbqDatepicker. */
 @Directive({
-    selector: 'input[kbqDatepicker]',
+    selector: 'input[kbqDatepicker], input[kbqCalendar]',
     exportAs: 'kbqDatepickerInput',
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
@@ -240,6 +241,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     focused: boolean = false;
 
     datepicker: KbqDatepicker<D>;
+    calendar: KbqCalendar<D>;
 
     dateFilter: (date: D | null) => boolean;
 
@@ -291,6 +293,17 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             this.onTouched();
             this.dateChange.emit(new KbqDatepickerInputEvent(this, this.elementRef.nativeElement));
         });
+    }
+
+    /** The calendar that this input is associated with. */
+    @Input()
+    set kbqCalendar(value: KbqCalendar<D>) {
+        if (!value) {
+            return;
+        }
+
+        this.calendar = value;
+        this.calendar.registerInput(this);
     }
 
     /** Function that can be used to filter out dates within the datepicker. */
@@ -578,9 +591,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         } else if (this.isKeyForClose(event)) {
             event.preventDefault();
 
-            this.datepicker.close();
+            this.datepicker?.close();
         } else if (keyCode === TAB) {
-            this.datepicker.close(false);
+            this.datepicker?.close(false);
         } else if (this.isKeyForByPass(event)) {
             return;
         } else if (keyCode === SPACE) {
@@ -977,7 +990,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getMaxDate(date: D): number {
-        if (this.datepicker.maxDate && this.isMaxYear(date) && this.isMaxMonth(date)) {
+        if (this.datepicker?.maxDate && this.isMaxYear(date) && this.isMaxMonth(date)) {
             return this.adapter.getDate(this.datepicker.maxDate);
         }
 
@@ -985,7 +998,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getMinDate(date: D): number {
-        if (this.datepicker.minDate && this.isMinYear(date) && this.isMinMonth(date)) {
+        if (this.datepicker?.minDate && this.isMinYear(date) && this.isMinMonth(date)) {
             return this.adapter.getDate(this.datepicker.minDate);
         }
 
@@ -993,7 +1006,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getMaxMonth(date: D): number {
-        if (this.datepicker.maxDate && this.isMaxYear(date)) {
+        if (this.datepicker?.maxDate && this.isMaxYear(date)) {
             return this.adapter.getMonth(this.datepicker.maxDate);
         }
 
@@ -1001,7 +1014,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getMinMonth(date: D): number {
-        if (this.datepicker.minDate && this.isMinYear(date)) {
+        if (this.datepicker?.minDate && this.isMinYear(date)) {
             return this.adapter.getMonth(this.datepicker.minDate);
         }
 
@@ -1009,7 +1022,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getMaxYear(): number {
-        if (this.datepicker.maxDate) {
+        if (this.datepicker?.maxDate) {
             return this.adapter.getYear(this.datepicker.maxDate);
         }
 
@@ -1017,7 +1030,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     private getMinYear(): number {
-        if (this.datepicker.minDate) {
+        if (this.datepicker?.minDate) {
             return this.adapter.getYear(this.datepicker.minDate);
         }
 

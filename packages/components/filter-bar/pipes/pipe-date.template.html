@@ -1,0 +1,104 @@
+<button
+    kbq-button
+    kbqPopover
+    [color]="colors.ContrastFade"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverClass]="'kbq-pipe-date__popover'"
+    [kbqPopoverContent]="content"
+    [kbqPopoverOffset]="0"
+    [kbqPopoverPlacement]="placements.BottomLeft"
+    [kbqStyle]="styles.Outline"
+>
+    {{ data.name }}
+</button>
+
+<button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDeleteOrClear()">
+    <i kbq-icon="kbq-xmark-s_16"></i>
+</button>
+
+<ng-template #content>
+    @if (list) {
+        <div class="kbq-date-list">
+            <kbq-list-selection>
+                <kbq-list-option [value]="0" (click)="list = false">
+                    Произвольный период
+                    <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
+                </kbq-list-option>
+                <kbq-list-option [value]="1">Последний час</kbq-list-option>
+                <kbq-list-option [value]="2">Последние 3 часа</kbq-list-option>
+                <kbq-list-option [value]="3">Последние 24 часа</kbq-list-option>
+                <kbq-list-option [value]="4">Последние 3 дня</kbq-list-option>
+                <kbq-list-option [value]="5">Последние 7 дней</kbq-list-option>
+                <kbq-list-option [value]="6">Последние 30 дней</kbq-list-option>
+                <kbq-list-option [value]="7">Последние 90 дней</kbq-list-option>
+                <kbq-list-option [value]="8">Последний год</kbq-list-option>
+            </kbq-list-selection>
+        </div>
+    } @else {
+        <div class="kbq-date-period kbq-datepicker__content">
+            <div class="kbq-date-period__header">
+                <button
+                    kbq-button
+                    [color]="colors.Theme"
+                    [kbqStyle]="styles.Transparent"
+                    (click)="list = true"
+                >
+                    <i kbq-icon="kbq-chevron-left_16"></i>
+                    Назад к выбору периода
+                </button>
+            </div>
+
+            <kbq-divider />
+
+            <div class="kbq-date-period__content kbq-form-horizontal">
+                <div class="kbq-date-period__content-header">Произвольный период</div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-10">c</label>
+
+                    <kbq-form-field #startDateField class="kbq-date-period__date kbq-form__control flex-45">
+                        <input [kbqCalendar]="startDateCalendar" [ngModel]="startDate" />
+                        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                    </kbq-form-field>
+
+                    <kbq-form-field class="kbq-date-period__time kbq-form__control flex-45">
+                        <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                        <input kbqTimepicker [ngModel]="startDate" />
+                    </kbq-form-field>
+                </div>
+
+                <kbq-calendar
+                    [class.kbq-calendar_hidden]="!startDateField.hasFocus"
+                    #startDateCalendar>
+                </kbq-calendar>
+
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-10">по</label>
+
+                    <kbq-form-field #endDateField class="kbq-date-period__date kbq-form__control flex-45">
+                        <input [kbqCalendar]="endDateCalendar" [ngModel]="endDate" />
+                        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                        <kbq-datepicker #datepicker />
+                    </kbq-form-field>
+
+                    <kbq-form-field class="kbq-date-period__time kbq-form__control flex-45">
+                        <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                        <input kbqTimepicker [ngModel]="endDate" />
+                    </kbq-form-field>
+                </div>
+
+                <kbq-calendar
+                    [class.kbq-calendar_hidden]="!endDateField.hasFocus"
+                    #endDateCalendar>
+                </kbq-calendar>
+            </div>
+
+            <div class="kbq-date-period__footer">
+                <button kbq-button [color]="'theme'" [disabled]="isEmpty" [kbqStyle]="'transparent'">
+                    <span>Применить</span>
+                    &nbsp;
+                    <span class="kbq-button_hot-key">Ctrl + Enter</span>
+                </button>
+            </div>
+        </div>
+    }
+</ng-template>
