@@ -716,9 +716,10 @@ export class KbqSelect
             return;
         }
 
-        this.triggerRect = this.parentFormField
-            ? this.parentFormField.getConnectedOverlayOrigin().nativeElement.getBoundingClientRect()
-            : this.trigger.nativeElement.getBoundingClientRect();
+        // add check for form-field bounding rectangles, since it adds extra padding around the trigger
+        this.triggerRect = (
+            this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
+        ).getBoundingClientRect();
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.

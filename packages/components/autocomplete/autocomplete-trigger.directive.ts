@@ -622,6 +622,7 @@ export class KbqAutocompleteTrigger
                     originY: 'bottom',
                     overlayX: 'start',
                     overlayY: 'top',
+                    // @TODO: should be moved to separate constant within refactoring (#DS-3298)
                     offsetY: 2
                 },
                 {
@@ -629,6 +630,7 @@ export class KbqAutocompleteTrigger
                     originY: 'top',
                     overlayX: 'start',
                     overlayY: 'bottom',
+                    // @TODO: should be moved to separate constant within refactoring (#DS-3298)
                     offsetY: -2
                 }
             ] as ConnectedPosition[]);

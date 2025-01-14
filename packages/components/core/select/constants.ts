@@ -1,13 +1,25 @@
 import { Overlay, RepositionScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { InjectionToken } from '@angular/core';
 
-/** The max height of the select's overlay panel */
+/**
+ * @TODO: should be removed within refactoring (#DS-3298)
+ * The max height of the select's overlay panel
+ * @deprecated
+ */
 export const SELECT_PANEL_MAX_HEIGHT = 224;
 
-/** The panel's padding on the x-axis */
+/**
+ * @TODO: should be removed within refactoring (#DS-3298)
+ * The panel's padding on the x-axis
+ * @deprecated
+ */
 export const SELECT_PANEL_PADDING_X = 0;
 
-/** The panel's x-axis padding if it is indented (e.g. there is an option group). */
+/**
+ * @TODO: should be removed within refactoring (#DS-3298)
+ * The panel's x-axis padding if it is indented (e.g. there is an option group).
+ * @deprecated
+ */
 export const SELECT_PANEL_INDENT_PADDING_X = SELECT_PANEL_PADDING_X * 2;
 
 /**
