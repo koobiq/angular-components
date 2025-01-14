@@ -240,7 +240,7 @@ export class KbqSelect
 
     /**
      * This position config ensures that the top "start" corner of the overlay
-     * is aligned with with the top "start" of the origin by default (overlapping
+     * is aligned with the top "start" of the origin by default (overlapping
      * the trigger completely). If the panel cannot fit below the trigger, it
      * will fall back to a position above the trigger.
      */
@@ -249,13 +249,15 @@ export class KbqSelect
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top'
+            overlayY: 'top',
+            offsetY: this.offsetY
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom'
+            overlayY: 'bottom',
+            offsetY: -this.offsetY
         }
     ];
 
@@ -714,7 +716,10 @@ export class KbqSelect
             return;
         }
 
-        this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+        // add check for form-field bounding rectangles, since it adds extra padding around the trigger
+        this.triggerRect = (
+            this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
+        ).getBoundingClientRect();
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
@@ -1348,7 +1353,7 @@ export class KbqSelect
         let offsetX: number = SELECT_PANEL_PADDING_X;
         let overlayMaxWidth: number;
 
-        // Invert the offset in LTR.
+        // Invert the offsetX in LTR.
         if (!isRtl) {
             offsetX *= -1;
         }

@@ -97,77 +97,80 @@ describe('KbqAutocomplete', () => {
         let fixture: ComponentFixture<SimpleAutocomplete>;
         let DOWN_ARROW_EVENT: KeyboardEvent;
         let UP_ARROW_EVENT: KeyboardEvent;
+        let trigger: KbqAutocompleteTrigger;
+        let panel: KbqAutocomplete;
 
         beforeEach(fakeAsync(() => {
             fixture = createComponent(SimpleAutocomplete);
             fixture.detectChanges();
+            trigger = fixture.componentInstance.trigger;
 
             DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
             UP_ARROW_EVENT = createKeyboardEvent('keydown', UP_ARROW);
 
-            fixture.componentInstance.trigger.openPanel();
+            trigger.openPanel();
             fixture.detectChanges();
             zone.simulateZoneExit();
         }));
 
-        it('should scroll to active options below the fold', () => {
-            const trigger = fixture.componentInstance.trigger;
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
+        beforeEach(() => {
+            panel = fixture.componentInstance.panel;
+        });
 
+        it('should scroll to active options below the fold', () => {
             trigger.handleKeydown(DOWN_ARROW_EVENT);
             fixture.detectChanges();
-            expect(scrollContainer.scrollTop).withContext(`Expected panel not to scroll.`).toEqual(0);
+            expect(panel.getScrollTop()).withContext(`Expected panel not to scroll.`).toEqual(0);
+            expect(panel.keyManager.activeItemIndex).toEqual(0);
 
-            // These down arrows will set the 6th option active, below the fold.
-            [1, 2, 3, 4, 5, 6, 7, 8].forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
+            // These down arrows will set the 9 option active, below the fold.
+            Array.from({ length: 8 }).forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
+            fixture.detectChanges();
 
-            // Expect option bottom minus the panel height (288 - 256 - 4 = 32)
-            expect(scrollContainer.scrollTop).withContext(`Expected panel to reveal the sixth option.`).toEqual(28);
+            expect(panel.getScrollTop())
+                .withContext(`Expected to try to place scrolled element in the middle of scrollContainer`)
+                .toEqual(104);
+            expect(panel.keyManager.activeItemIndex).toEqual(8);
         });
 
         it('should not scroll to active options that are fully in the panel', () => {
-            const trigger = fixture.componentInstance.trigger;
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
-
             trigger.handleKeydown(DOWN_ARROW_EVENT);
             fixture.detectChanges();
 
-            expect(scrollContainer.scrollTop).withContext(`Expected panel not to scroll.`).toEqual(0);
+            expect(panel.getScrollTop()).withContext(`Expected panel not to scroll.`).toEqual(0);
 
             // These down arrows will set the 6th option active, below the fold.
-            [1, 2, 3, 4, 5, 6, 7, 8].forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
+            Array.from({ length: 8 }).forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
 
-            // Expect option bottom minus the panel height (288 - 256 - 4 = 28)
-            expect(scrollContainer.scrollTop).withContext(`Expected panel to reveal the sixth option.`).toEqual(28);
+            expect(panel.getScrollTop())
+                .withContext(`Expected to try to place scrolled element in the middle of autocomplete panel`)
+                .toEqual(104);
 
             // These up arrows will set the 2nd option active
-            [4, 3, 2, 1].forEach(() => trigger.handleKeydown(UP_ARROW_EVENT));
+            Array.from({ length: 4 }).forEach(() => trigger.handleKeydown(UP_ARROW_EVENT));
 
             // Expect no scrolling to have occurred. Still showing bottom of 6th option.
-            expect(scrollContainer.scrollTop)
-                .withContext(`Expected panel not to scroll up since sixth option still fully visible.`)
-                .toEqual(28);
+            expect(panel.getScrollTop())
+                .withContext(`Expected to try to place scrolled element in the middle of autocomplete panel`)
+                .toEqual(104);
         });
 
         it('should scroll to active options that are above the panel', () => {
-            const trigger = fixture.componentInstance.trigger;
-            const scrollContainer = document.querySelector('.cdk-overlay-pane .kbq-autocomplete-panel')!;
-
             trigger.handleKeydown(DOWN_ARROW_EVENT);
             fixture.detectChanges();
 
-            expect(scrollContainer.scrollTop).withContext(`Expected panel not to scroll.`).toEqual(0);
+            expect(panel.getScrollTop()).withContext(`Expected panel not to scroll.`).toEqual(0);
 
-            // These down arrows will set the 7th option active, below the fold.
-            [1, 2, 3, 4, 5, 6, 7, 8].forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
+            // These down arrows will set the 8th option active, below the fold.
+            Array.from({ length: 8 }).forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
 
             // These up arrows will set the 2nd option active
-            [7, 6, 5, 4, 3, 2, 1].forEach(() => trigger.handleKeydown(UP_ARROW_EVENT));
+            Array.from({ length: 6 }).forEach(() => trigger.handleKeydown(UP_ARROW_EVENT));
 
             // Expect to show the top of the 2nd option at the top of the panel
-            expect(scrollContainer.scrollTop)
-                .withContext(`Expected panel to scroll up when option is above panel.`)
-                .toEqual(28);
+            expect(panel.getScrollTop())
+                .withContext(`Expected to try to place scrolled element in the middle of autocomplete panel`)
+                .toEqual(0);
         });
     });
 
@@ -181,7 +184,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
         widthFixture.componentInstance.trigger.closePanel();
         widthFixture.detectChanges();
@@ -193,7 +196,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.detectChanges();
 
         // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(498);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
     });
 
     it('should update the width while the panel is open', () => {
@@ -208,7 +211,7 @@ describe('KbqAutocomplete', () => {
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
         const input = widthFixture.debugElement.query(By.css('input')).nativeElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
         widthFixture.componentInstance.width = 500;
         widthFixture.detectChanges();
@@ -217,7 +220,7 @@ describe('KbqAutocomplete', () => {
         dispatchFakeEvent(input, 'input');
         widthFixture.detectChanges();
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(498);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(500);
     });
 
     it('should update the panel width if the window is resized', fakeAsync(() => {
@@ -231,7 +234,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 
         widthFixture.componentInstance.width = 400;
         widthFixture.detectChanges();
@@ -239,7 +242,7 @@ describe('KbqAutocomplete', () => {
         dispatchFakeEvent(window, 'resize');
         tick(20);
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(398);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(400);
     }));
 
     it('should have panel width match host width by default', () => {
@@ -253,7 +256,7 @@ describe('KbqAutocomplete', () => {
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(298);
+        expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
     });
 });
 

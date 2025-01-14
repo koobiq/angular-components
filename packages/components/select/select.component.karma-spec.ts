@@ -54,6 +54,14 @@ const getOverlayPanelElement = (overlayContainer: OverlayContainer): HTMLElement
     return overlayContainer.getContainerElement().querySelector('.cdk-overlay-pane') as HTMLElement;
 };
 
+function getFormFieldDebugElement<T>(fixture: ComponentFixture<T>): DebugElement {
+    return fixture.debugElement.query(By.css('.kbq-form-field'));
+}
+
+function getSelectTriggerDebugElement<T>(fixture: ComponentFixture<T>): DebugElement {
+    return fixture.debugElement.query(By.css('.kbq-select__trigger'));
+}
+
 /** Finish initializing the virtual scroll component at the beginning of a test. */
 function finishInit(fixture: ComponentFixture<any>) {
     // On the first cycle we render and measure the viewport.
@@ -341,6 +349,7 @@ class NgIfSelect {
 })
 class BasicSelectInitiallyHidden {
     isVisible = false;
+    @ViewChild(KbqSelect, { static: false }) select: KbqSelect;
 }
 
 @Component({
@@ -572,12 +581,15 @@ describe(KbqSelect.name, () => {
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(BasicSelect);
                 fixture.detectChanges();
-                trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+                trigger = getSelectTriggerDebugElement(fixture).nativeElement;
                 flush();
             }));
 
             it('should set the width of the overlay based on the trigger', fakeAsync(() => {
+                const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
                 trigger.style.width = '200px';
+                triggerParent.style.width = trigger.style.width;
+                fixture.detectChanges();
 
                 trigger.click();
                 fixture.detectChanges();
@@ -595,7 +607,7 @@ describe(KbqSelect.name, () => {
 
                 fixture.componentInstance.control.disable();
                 fixture.detectChanges();
-                const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+                const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
 
                 expect(getComputedStyle(trigger).getPropertyValue('cursor'))
                     .withContext(`Expected cursor to be default arrow on disabled control.`)
@@ -754,7 +766,7 @@ describe(KbqSelect.name, () => {
             flush();
 
             fixture.detectChanges();
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
             expect(getComputedStyle(trigger).getPropertyValue('cursor'))
                 .withContext(`Expected cursor to be default arrow on disabled control.`)
                 .toEqual('default');
@@ -803,8 +815,11 @@ describe(KbqSelect.name, () => {
             fixture.componentInstance.isShowing = true;
             fixture.detectChanges();
 
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+            const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
             trigger.style.width = '300px';
+            triggerParent.style.width = trigger.style.width;
+            fixture.detectChanges();
 
             trigger.click();
             fixture.detectChanges();
@@ -831,9 +846,11 @@ describe(KbqSelect.name, () => {
         it('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
             fixture.detectChanges();
+            const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+            const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
 
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
             trigger.style.width = '200px';
+            triggerParent.style.width = trigger.style.width;
             fixture.componentInstance.isVisible = true;
             fixture.detectChanges();
 
@@ -853,7 +870,7 @@ describe(KbqSelect.name, () => {
             const fixture = TestBed.createComponent(BasicSelectNoPlaceholder);
 
             fixture.detectChanges();
-            const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
 
             trigger.click();
             fixture.detectChanges();
@@ -906,7 +923,7 @@ describe(KbqSelect.name, () => {
             fixture = TestBed.createComponent(SelectWithLongOptionText);
             fixture.detectChanges();
 
-            trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            trigger = getSelectTriggerDebugElement(fixture).nativeElement;
             flush();
         }));
 
@@ -963,7 +980,7 @@ describe(KbqSelect.name, () => {
         afterEach(fakeAsync(() => flush()));
 
         it('should calculate hidden items with virtual options', fakeAsync(() => {
-            const triggerEl: HTMLElement = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+            const triggerEl: HTMLElement = getSelectTriggerDebugElement(fixture).nativeElement;
 
             fixture.componentInstance.style = { width: '100px' };
 

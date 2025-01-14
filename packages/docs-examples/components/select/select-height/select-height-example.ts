@@ -48,9 +48,8 @@ const localeDataSet = {
             width: 320px;
         }
 
-        ::ng-deep .select-height-example .kbq-select__content {
-            max-height: 392px;
-            box-sizing: border-box;
+        ::ng-deep .select-height-example.kbq-select__panel {
+            --kbq-select-panel-size-max-height: 392px;
         }
     `
 })
