@@ -1,10 +1,12 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, inject, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { DateTime } from 'luxon';
 
 @Component({
     selector: 'app',
@@ -13,6 +15,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
+    protected readonly adapter = inject(DateAdapter<DateTime>);
+
     filters: KbqFilter[] = [
         {
             name: 'Select',
@@ -351,17 +355,7 @@ export class DemoComponent {
             pipes: [
                 {
                     name: 'required',
-                    value: 'value',
-                    type: KbqPipeTypes.Date,
-
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'required',
-                    value: 'value',
+                    value: { name: 'Последний час', value: { start: null, end: null } },
                     type: KbqPipeTypes.Date,
 
                     required: true,
@@ -380,7 +374,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'cleanable',
-                    value: 'value',
+                    value: { name: 'Последний час', value: { start: null, end: null } },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -390,7 +384,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: 'value',
+                    value: { name: 'Последний час', value: { start: null, end: null } },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -400,7 +394,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: 'value',
+                    value: { name: 'Последний час', value: { start: null, end: null } },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -530,6 +524,25 @@ export class DemoComponent {
             name: 'Автор',
             type: KbqPipeTypes.Text,
             values: [],
+
+            required: false,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Создан',
+            type: KbqPipeTypes.Date,
+            values: [
+                { name: 'Последний час', value: this.adapter.today().minus({ hours: 1 }) },
+                { name: 'Последние 3 часа', value: this.adapter.today().minus({ hours: 3 }) },
+                { name: 'Последние 24 часа', value: this.adapter.today().minus({ hours: 24 }) },
+                { name: 'Последние 3 дня', value: this.adapter.today().minus({ days: 3 }) },
+                { name: 'Последние 7 дней', value: this.adapter.today().minus({ days: 7 }) },
+                { name: 'Последние 30 дней', value: this.adapter.today().minus({ days: 30 }) },
+                { name: 'Последние 90 дней', value: this.adapter.today().minus({ days: 90 }) },
+                { name: 'Последний год', value: this.adapter.today().minus({ years: 1 }) }
+            ],
 
             required: false,
             cleanable: false,
