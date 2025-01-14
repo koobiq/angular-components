@@ -1,0 +1,7 @@
+<button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+    {{ data.name }}
+</button>
+
+<button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDeleteOrClear()">
+    <i kbq-icon="kbq-xmark-s_16"></i>
+</button>

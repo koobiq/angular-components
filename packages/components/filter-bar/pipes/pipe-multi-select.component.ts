@@ -12,49 +12,7 @@ import { KbqPipeBase } from './pipe.component';
 @Component({
     standalone: true,
     selector: 'kbq-pipe[multi-select]',
-    template: `
-        <kbq-select
-            #select
-            [value]="selected"
-            [disabled]="data.disabled"
-            [compareWith]="compareByValue"
-            (selectionChange)="onSelect($event.value)"
-            multiple
-        >
-            <button
-                [ngClass]="{ 'kbq-active': select.panelOpen }"
-                [disabled]="data.disabled"
-                [kbq-pipe-states]="data"
-                kbq-button
-                kbq-select-matcher
-            >
-                <span class="kbq-pipe__name">{{ data.name }}</span>
-                @if (select.triggerValues!.length === 1) {
-                    <span class="kbq-pipe__value">{{ select.triggerValue }}</span>
-                } @else if (select.triggerValues!.length > 1) {
-                    <kbq-badge [badgeColor]="'contrast'" [compact]="true">
-                        {{ select.triggerValues!.length }}
-                    </kbq-badge>
-                }
-            </button>
-
-            @for (item of values; track item) {
-                <kbq-option [value]="item">{{ item.name }}</kbq-option>
-            }
-        </kbq-select>
-
-        @if (!data.required && !isEmpty) {
-            <button
-                class="kbq-pipe__delete"
-                [disabled]="data.disabled"
-                [kbq-pipe-states]="data"
-                (click)="onDeleteOrClear()"
-                kbq-button
-            >
-                <i kbq-icon="kbq-xmark-s_16"></i>
-            </button>
-        }
-    `,
+    templateUrl: 'pipe-multi-select.template.html',
     styleUrls: ['pipe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

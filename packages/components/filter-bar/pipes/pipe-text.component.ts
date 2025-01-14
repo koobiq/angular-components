@@ -17,63 +17,7 @@ import { KbqPipeBase } from './pipe.component';
 @Component({
     standalone: true,
     selector: 'kbq-pipe[text]',
-    template: `
-        <button
-            #popover="kbqPopover"
-            [ngClass]="{ 'kbq-active': popover.isOpen }"
-            [disabled]="data.disabled"
-            [kbq-pipe-states]="data"
-            [kbqPopoverContent]="content"
-            [kbqPopoverFooter]="footer"
-            [kbqPopoverPlacement]="placements.BottomLeft"
-            [kbqPopoverClass]="'kbq-pipe__popover'"
-            kbq-button
-            kbqPopover
-        >
-            <span class="kbq-pipe__name">{{ data.name }}</span>
-            <span class="kbq-pipe__value">{{ data.value }}</span>
-        </button>
-
-        <ng-template #content>
-            <kbq-form-field>
-                <textarea
-                    [ngModel]="data.value"
-                    [canGrow]="false"
-                    (ngModelChange)="onChange($event)"
-                    (keydown)="onCtrlEnter($event)"
-                    kbqTextarea
-                    placeholder="Placeholder"
-                    rows="2"
-                ></textarea>
-            </kbq-form-field>
-        </ng-template>
-
-        <ng-template #footer>
-            <button
-                [color]="'theme'"
-                [kbqStyle]="'transparent'"
-                [disabled]="isEmpty && !viewValue"
-                (click)="onApply()"
-                kbq-button
-            >
-                <span>Применить</span>
-                &nbsp;
-                <span class="kbq-button_hot-key">Ctrl + Enter</span>
-            </button>
-        </ng-template>
-
-        @if (!data.required && !isEmpty) {
-            <button
-                class="kbq-pipe__delete"
-                [disabled]="data.disabled"
-                [kbq-pipe-states]="data"
-                (click)="onDeleteOrClear()"
-                kbq-button
-            >
-                <i kbq-icon="kbq-xmark-s_16"></i>
-            </button>
-        }
-    `,
+    templateUrl: 'pipe-text.template.html',
     styleUrls: ['pipe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

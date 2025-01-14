@@ -11,42 +11,7 @@ import { KbqPipeBase } from './pipe.component';
 @Component({
     standalone: true,
     selector: 'kbq-pipe[select]',
-    template: `
-        <kbq-select
-            #select
-            [value]="selected"
-            [disabled]="data.disabled"
-            [compareWith]="compareByValue"
-            (selectionChange)="onSelect($event.value)"
-        >
-            <button
-                [ngClass]="{ 'kbq-active': select.panelOpen }"
-                [disabled]="data.disabled"
-                [kbq-pipe-states]="data"
-                kbq-button
-                kbq-select-matcher
-            >
-                <span class="kbq-pipe__name">{{ data.name }}</span>
-                <span class="kbq-pipe__value">{{ select.triggerValue }}</span>
-            </button>
-
-            @for (item of values; track item) {
-                <kbq-option [value]="item">{{ item.name }}</kbq-option>
-            }
-        </kbq-select>
-
-        @if (!data.required && !isEmpty) {
-            <button
-                class="kbq-pipe__delete"
-                [disabled]="data.disabled"
-                [kbq-pipe-states]="data"
-                (click)="onDeleteOrClear()"
-                kbq-button
-            >
-                <i kbq-icon="kbq-xmark-s_16"></i>
-            </button>
-        }
-    `,
+    templateUrl: 'pipe-select.template.html',
     styleUrls: ['pipe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

@@ -18,7 +18,7 @@ export interface KbqFilter {
     unsaved: boolean;
 }
 
-export interface KbqPipe<T = unknown> {
+export interface KbqPipe<T = any> {
     name: string;
     type: KbqPipeTypes;
     value?: T | T[];

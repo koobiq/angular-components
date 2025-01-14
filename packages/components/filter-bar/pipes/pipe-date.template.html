@@ -1,20 +1,30 @@
 <button
+    #popover="kbqPopover"
     kbq-button
     kbqPopover
-    [color]="colors.ContrastFade"
+    [disabled]="data.disabled"
+    [kbq-pipe-states]="data"
     [kbqPopoverArrow]="false"
     [kbqPopoverClass]="'kbq-pipe-date__popover'"
     [kbqPopoverContent]="content"
     [kbqPopoverOffset]="0"
     [kbqPopoverPlacement]="placements.BottomLeft"
-    [kbqStyle]="styles.Outline"
 >
-    {{ data.name }}
+    <span class="kbq-pipe__name">{{ data.name }}</span>
+    <span class="kbq-pipe__value">{{ data.value?.name }}</span>
 </button>
 
-<button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDeleteOrClear()">
-    <i kbq-icon="kbq-xmark-s_16"></i>
-</button>
+@if (!data.required && !isEmpty) {
+    <button
+        kbq-button
+        class="kbq-pipe__delete"
+        [disabled]="data.disabled"
+        [kbq-pipe-states]="data"
+        (click)="onDeleteOrClear()"
+    >
+        <i kbq-icon="kbq-xmark-s_16"></i>
+    </button>
+}
 
 <ng-template #content>
     @if (list) {
@@ -24,25 +34,16 @@
                     Произвольный период
                     <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
                 </kbq-list-option>
-                <kbq-list-option [value]="1">Последний час</kbq-list-option>
-                <kbq-list-option [value]="2">Последние 3 часа</kbq-list-option>
-                <kbq-list-option [value]="3">Последние 24 часа</kbq-list-option>
-                <kbq-list-option [value]="4">Последние 3 дня</kbq-list-option>
-                <kbq-list-option [value]="5">Последние 7 дней</kbq-list-option>
-                <kbq-list-option [value]="6">Последние 30 дней</kbq-list-option>
-                <kbq-list-option [value]="7">Последние 90 дней</kbq-list-option>
-                <kbq-list-option [value]="8">Последний год</kbq-list-option>
+
+                @for (item of values; track item) {
+                    <kbq-list-option [value]="item" (click)="onSelect(item)">{{ item.name }}</kbq-list-option>
+                }
             </kbq-list-selection>
         </div>
     } @else {
-        <div class="kbq-date-period kbq-datepicker__content">
+        <div class="kbq-date-period kbq-datepicker__content" (keydown)="onKeydown($event)">
             <div class="kbq-date-period__header">
-                <button
-                    kbq-button
-                    [color]="colors.Theme"
-                    [kbqStyle]="styles.Transparent"
-                    (click)="list = true"
-                >
+                <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent" (click)="list = true">
                     <i kbq-icon="kbq-chevron-left_16"></i>
                     Назад к выбору периода
                 </button>
@@ -66,10 +67,7 @@
                     </kbq-form-field>
                 </div>
 
-                <kbq-calendar
-                    [class.kbq-calendar_hidden]="!startDateField.hasFocus"
-                    #startDateCalendar>
-                </kbq-calendar>
+                <kbq-calendar #startDateCalendar [class.kbq-calendar_hidden]="!startDateField.hasFocus" />
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-10">по</label>
@@ -86,10 +84,7 @@
                     </kbq-form-field>
                 </div>
 
-                <kbq-calendar
-                    [class.kbq-calendar_hidden]="!endDateField.hasFocus"
-                    #endDateCalendar>
-                </kbq-calendar>
+                <kbq-calendar #endDateCalendar [class.kbq-calendar_hidden]="!endDateField.hasFocus" />
             </div>
 
             <div class="kbq-date-period__footer">
