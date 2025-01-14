@@ -1108,7 +1108,7 @@ export class KbqTreeSelect
 
             this.options.forEach((option) => {
                 if (hasDeselectedOptions && !option.disabled) {
-                    option.select();
+                    option.select(false);
                 } else {
                     option.deselect();
                 }
