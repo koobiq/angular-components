@@ -180,6 +180,8 @@ export class TreeSelectDev implements OnInit {
     }
 
     onSelectionChange($event: KbqTreeSelectChange) {
+        if (!$event.value.length) return;
+
         const option: KbqTreeOption = $event.value;
         console.log(`onSelectionChange: ${$event.value}`);
 

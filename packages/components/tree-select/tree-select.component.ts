@@ -698,6 +698,8 @@ export class KbqTreeSelect
         this.setSelectionByValue([]);
 
         this.onChange(this.selectedValues);
+
+        this.selectionChange.emit(new KbqTreeSelectChange(this, this.selectedValues));
     }
 
     /** `View -> model callback called when value changes` */
