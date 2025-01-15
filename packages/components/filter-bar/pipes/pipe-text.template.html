@@ -2,16 +2,16 @@
     #popover="kbqPopover"
     kbq-button
     kbqPopover
-    [disabled]="data.disabled"
-    [kbq-pipe-states]="data"
+    [disabled]="basePipe.data.disabled"
+    [kbq-pipe-states]="basePipe.data"
     [kbqPopoverClass]="'kbq-pipe__popover'"
     [kbqPopoverContent]="content"
     [kbqPopoverFooter]="footer"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [ngClass]="{ 'kbq-active': popover.isOpen }"
 >
-    <span class="kbq-pipe__name">{{ data.name }}</span>
-    <span class="kbq-pipe__value">{{ data.value }}</span>
+    <span class="kbq-pipe__name">{{ basePipe.data.name }}</span>
+    <span class="kbq-pipe__value">{{ basePipe.data.value }}</span>
 </button>
 
 <ng-template #content>
@@ -21,7 +21,7 @@
             placeholder="Placeholder"
             rows="2"
             [canGrow]="false"
-            [ngModel]="data.value"
+            [ngModel]="basePipe.data.value"
             (keydown)="onCtrlEnter($event)"
             (ngModelChange)="onChange($event)"
         ></textarea>
@@ -32,7 +32,7 @@
     <button
         kbq-button
         [color]="'theme'"
-        [disabled]="isEmpty && !viewValue"
+        [disabled]="basePipe.isEmpty && !viewValue"
         [kbqStyle]="'transparent'"
         (click)="onApply()"
     >
@@ -41,15 +41,3 @@
         <span class="kbq-button_hot-key">Ctrl + Enter</span>
     </button>
 </ng-template>
-
-@if (!data.required && !isEmpty) {
-    <button
-        kbq-button
-        class="kbq-pipe__delete"
-        [disabled]="data.disabled"
-        [kbq-pipe-states]="data"
-        (click)="onDeleteOrClear()"
-    >
-        <i kbq-icon="kbq-xmark-s_16"></i>
-    </button>
-}

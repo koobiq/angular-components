@@ -1,34 +1,22 @@
 <kbq-select
     #select
     [compareWith]="compareByValue"
-    [disabled]="data.disabled"
+    [disabled]="basePipe.data.disabled"
     [value]="selected"
     (selectionChange)="onSelect($event.value)"
 >
     <button
         kbq-button
         kbq-select-matcher
-        [disabled]="data.disabled"
-        [kbq-pipe-states]="data"
+        [disabled]="basePipe.data.disabled"
+        [kbq-pipe-states]="basePipe.data"
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
-        <span class="kbq-pipe__name">{{ data.name }}</span>
+        <span class="kbq-pipe__name">{{ basePipe.data.name }}</span>
         <span class="kbq-pipe__value">{{ select.triggerValue }}</span>
     </button>
 
-    @for (item of values; track item) {
+    @for (item of basePipe.values; track item) {
         <kbq-option [value]="item">{{ item.name }}</kbq-option>
     }
 </kbq-select>
-
-@if (!data.required && !isEmpty) {
-    <button
-        kbq-button
-        class="kbq-pipe__delete"
-        [disabled]="data.disabled"
-        [kbq-pipe-states]="data"
-        (click)="onDeleteOrClear()"
-    >
-        <i kbq-icon="kbq-xmark-s_16"></i>
-    </button>
-}

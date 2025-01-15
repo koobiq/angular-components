@@ -1,5 +1,9 @@
-<div style="height: 50px; border: 1px solid red">
-    <kbq-filter-bar [activeFilter]="activeFilter" [filters]="filters" (onAddPipe)="onAddPipe($event)">
+<div style="min-height: 50px; border: 1px solid red">
+    <kbq-filter-bar
+        [activeFilter]="activeFilter"
+        [filters]="filters"
+        [templates]="pipeTemplates"
+        (onAddPipe)="onAddPipe($event)">
         <kbq-filters (onSelectFilter)="onSelectFilter($event)">
             <i kbq-icon="kbq-list_16"></i>
             Фильтры
@@ -7,9 +11,11 @@
 
         <kbq-divider [vertical]="true" />
 
-        <kbq-pipes [pipes]="activeFilter!.pipes" />
+        @for (pipe of activeFilter!.pipes; track pipe) {
+            <kbq-pipe [data]="pipe" />
+        }
 
-        <kbq-filter-add [templates]="pipeTemplates" />
+        <kbq-filter-add />
 
         <kbq-filter-reset (onResetActiveFilter)="resetActiveFilter($event)">Сбросить</kbq-filter-reset>
 

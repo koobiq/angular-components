@@ -21,8 +21,8 @@ import {
 } from '../../tree';
 import { KbqTreeSelectModule } from '../../tree-select';
 import { KbqFilterBar } from '../filter-bar.component';
+import { KbqPipeComponent } from '../pipe.component';
 import { KbqPipeStates } from './pipe-states.component';
-import { KbqPipeBase } from './pipe.component';
 
 class FileNode {
     children: FileNode[];
@@ -64,23 +64,10 @@ function buildFileTree(value: any, level: number): FileNode[] {
 
 @Component({
     standalone: true,
-    selector: 'kbq-pipe[tree-select]',
+    selector: 'kbq-pipe-tree-select',
     templateUrl: 'pipe-tree-select.template.html',
-    styleUrls: ['pipe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'kbq-pipe kbq-pipe_tree-select',
-        '[class.kbq-pipe_empty]': 'isEmpty',
-        '[class.kbq-pipe_readonly]': 'data.required',
-        '[class.kbq-pipe_disabled]': 'data.disabled'
-    },
-    providers: [
-        {
-            provide: KbqPipeBase,
-            useExisting: this
-        }
-    ],
     imports: [
         FormsModule,
         KbqButtonModule,
@@ -92,25 +79,20 @@ function buildFileTree(value: any, level: number): FileNode[] {
         KbqPipeStates
     ]
 })
-export class KbqPipeTreeSelectComponent extends KbqPipeBase implements AfterContentInit {
+export class KbqPipeTreeSelectComponent implements AfterContentInit {
     protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly basePipe = inject(KbqPipeComponent);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     treeControl: FlatTreeControl<FileFlatNode>;
     treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    get isEmpty(): boolean {
-        return this.data.value === undefined;
-    }
-
     get selected() {
-        return this.data.value;
+        return this.basePipe.data.value;
     }
 
     constructor() {
-        super();
-
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
         this.treeControl = new FlatTreeControl<FileFlatNode>(
@@ -125,19 +107,17 @@ export class KbqPipeTreeSelectComponent extends KbqPipeBase implements AfterCont
     }
 
     ngAfterContentInit(): void {
-        super.ngAfterContentInit();
-
-        this.dataSource.data = buildFileTree(this.values, 0);
+        this.dataSource.data = buildFileTree(this.basePipe.values, 0);
     }
 
-    override onDeleteOrClear() {
-        if (this.data.cleanable) {
-            this.data.value = undefined;
-        } else if (this.data.removable) {
-            super.onDeleteOrClear();
+    onDeleteOrClear() {
+        if (this.basePipe.data.cleanable) {
+            this.basePipe.data.value = undefined;
+        } else if (this.basePipe.data.removable) {
+            this.basePipe.onDeleteOrClear();
         }
 
-        this.stateChanges.next();
+        this.basePipe.stateChanges.next();
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {
@@ -145,8 +125,8 @@ export class KbqPipeTreeSelectComponent extends KbqPipeBase implements AfterCont
     }
 
     onSelect(item: any) {
-        this.data.value = item.value;
-        this.stateChanges.next();
+        this.basePipe.data.value = item.value;
+        this.basePipe.stateChanges.next();
     }
 
     compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.value === o2.value;
