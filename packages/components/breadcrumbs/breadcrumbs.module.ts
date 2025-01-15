@@ -1,10 +1,22 @@
 import { NgModule } from '@angular/core';
-import { KbqBreadcrumbs } from './breadcrumbs';
+import {
+    KbqBreadcrumbItem,
+    KbqBreadcrumbs,
+    KbqBreadcrumbsSeparator,
+    KbqBreadcrumbView,
+    KbqDefaultBreadcrumbStyler
+} from './breadcrumbs';
+
+const COMPONENTS = [
+    KbqBreadcrumbs,
+    KbqBreadcrumbItem,
+    KbqBreadcrumbView,
+    KbqBreadcrumbsSeparator,
+    KbqDefaultBreadcrumbStyler
+];
 
 @NgModule({
-    imports: [KbqBreadcrumbs],
-    exports: [],
-    declarations: [],
-    providers: []
+    imports: COMPONENTS,
+    exports: COMPONENTS
 })
-export class BreadcrumbsModule {}
+export class KbqBreadcrumbsModule {}
