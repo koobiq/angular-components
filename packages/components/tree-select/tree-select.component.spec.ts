@@ -37,6 +37,7 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
+    createFakeEvent,
     createKeyboardEvent,
     dispatchEvent,
     dispatchFakeEvent,
@@ -426,7 +427,7 @@ class SelectWithSearch implements OnInit {
     selector: 'select-with-change-event',
     template: `
         <kbq-form-field>
-            <kbq-tree-select (selectionChange)="changeListener($event)">
+            <kbq-tree-select (selectionChange)="selectionChangeListener($event)">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -442,7 +443,9 @@ class SelectWithSearch implements OnInit {
     `
 })
 class SelectWithChangeEvent {
-    changeListener = jest.fn();
+    @ViewChild(KbqTreeSelect) treeSelect: KbqTreeSelect;
+
+    selectionChangeListener = jest.fn();
 
     treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
@@ -2894,7 +2897,15 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
             flush();
 
-            expect(fixture.componentInstance.changeListener).toHaveBeenCalled();
+            expect(fixture.componentInstance.selectionChangeListener).toHaveBeenCalled();
+        }));
+
+        it('should emit an event on clearValue', fakeAsync(() => {
+            expect(fixture.componentInstance.selectionChangeListener).not.toHaveBeenCalled();
+
+            fixture.componentInstance.treeSelect.clearValue(createFakeEvent('click'));
+
+            expect(fixture.componentInstance.selectionChangeListener).toHaveBeenCalled();
         }));
         // todo эта проверка для ситуации когда нельзя снять выделение с элемента,
         // но для этого требуется реализация параметра noUnselect, поэтому пока этот TC добавлен в исключения.
@@ -2909,7 +2920,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
             flush();
 
-            expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.selectionChangeListener).toHaveBeenCalledTimes(1);
         }));
 
         it('should only emit one event when pressing arrow keys on closed select', fakeAsync(() => {
@@ -2918,7 +2929,7 @@ describe(KbqTreeSelect.name, () => {
 
             flush();
 
-            expect(fixture.componentInstance.changeListener).toHaveBeenCalledTimes(1);
+            expect(fixture.componentInstance.selectionChangeListener).toHaveBeenCalledTimes(1);
         }));
     });
 
