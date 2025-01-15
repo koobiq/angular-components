@@ -1,5 +1,13 @@
-🚧 **Documentation in progress** 🚧
+#### Selecting a tab by identifier
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(tabs-active-tab-id) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+#### Selecting a tab by index
+
+<!-- example(tabs-active-tab-index) -->
+
+#### With other components
+
+It's convenient to place action buttons in the same panel with underlined tabs.
+
+<!-- example(tabs-actionbar) -->
