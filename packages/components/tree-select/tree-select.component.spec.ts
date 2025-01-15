@@ -1080,7 +1080,7 @@ class SelectWithCustomTrigger {
     selector: 'ng-model-compare-with',
     template: `
         <kbq-form-field>
-            <kbq-tree-select [ngModel]="selected" [compareWith]="comparator" (ngModelChange)="setFoodByCopy($event)">
+            <kbq-tree-select [ngModel]="selected" (ngModelChange)="setFoodByCopy($event)">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -1097,7 +1097,6 @@ class SelectWithCustomTrigger {
 })
 class NgModelCompareWithSelect {
     selected: { name: string; type: string } = { name: 'rootNode_1', type: 'app' };
-    comparator: ((f1: any, f2: any) => boolean) | null;
 
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
