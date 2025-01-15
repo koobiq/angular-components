@@ -1,7 +1,30 @@
-<button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
-    {{ data.name }}
-</button>
+<kbq-tree-select
+    #select
+    [compareWith]="compareByValue"
+    [disabled]="basePipe.data.disabled"
+    [multiple]="true"
+    [ngModel]="selected"
+    (selectionChange)="onSelect($event.value)"
+>
+    <button
+        kbq-button
+        kbq-select-matcher
+        [disabled]="basePipe.data.disabled"
+        [kbq-pipe-states]="basePipe.data"
+        [ngClass]="{ 'kbq-active': select.panelOpen }"
+    >
+        <span class="kbq-pipe__name">{{ basePipe.data.name }}</span>
+        <span class="kbq-pipe__value">{{ select.triggerValue }}</span>
+    </button>
 
-<button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline" (click)="onDeleteOrClear()">
-    <i kbq-icon="kbq-xmark-s_16"></i>
-</button>
+    <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+        <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            <span [innerHTML]="treeControl.getViewValue(node)"></span>
+        </kbq-tree-option>
+
+        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+            <kbq-tree-node-toggle [node]="node" />
+            <span [innerHTML]="treeControl.getViewValue(node)"></span>
+        </kbq-tree-option>
+    </kbq-tree-selection>
+</kbq-tree-select>

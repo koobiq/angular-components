@@ -46,7 +46,16 @@ export class KbqFilterBar {
 
     private _activeFilter: KbqFilter | null;
 
-    templates: KbqPipeTemplate[];
+    @Input()
+    set templates(value: KbqPipeTemplate[]) {
+        this._templates = value;
+    }
+
+    get templates(): KbqPipeTemplate[] {
+        return this._templates;
+    }
+
+    private _templates: KbqPipeTemplate[];
 
     @Output() readonly changes: EventEmitter<void> = new EventEmitter<void>();
     @Output() readonly onSelectFilter: EventEmitter<void> = new EventEmitter<void>();

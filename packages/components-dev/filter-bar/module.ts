@@ -158,7 +158,7 @@ export class DemoComponent {
                 {
                     name: 'required',
                     // required - не может быть пустым, всегда есть дефолтное значение
-                    value: 'Pictures',
+                    value: [{ name: 'Не определен', value: '1' }],
                     type: KbqPipeTypes.TreeSelect,
 
                     required: true,
@@ -208,7 +208,7 @@ export class DemoComponent {
             ]
         },
         {
-            name: 'MultiSelect',
+            name: 'MultiTreeSelect',
             readonly: false,
             disabled: false,
             changed: false,
@@ -216,10 +216,7 @@ export class DemoComponent {
             pipes: [
                 {
                     name: 'required',
-                    value: [
-                        { name: 'Не определен', value: '1' },
-                        { name: 'Легитимное действие', value: '2' }
-                    ],
+                    value: ['Pictures'],
                     type: KbqPipeTypes.MultiTreeSelect,
 
                     required: true,

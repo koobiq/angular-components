@@ -2,7 +2,7 @@ import { Directive, inject, Input, OnInit } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPipe } from '../filter-bar.types';
-import { KbqPipeBase } from './pipe.component';
+import { KbqPipeComponent } from '../pipe.component';
 
 @Directive({
     standalone: true,
@@ -10,7 +10,7 @@ import { KbqPipeBase } from './pipe.component';
 })
 export class KbqPipeStates implements OnInit {
     private readonly button = inject(KbqButton);
-    private readonly basePipe = inject(KbqPipeBase);
+    private readonly basePipe = inject(KbqPipeComponent);
 
     @Input({ alias: 'kbq-pipe-states' })
     set pipe(pipe: KbqPipe | null) {

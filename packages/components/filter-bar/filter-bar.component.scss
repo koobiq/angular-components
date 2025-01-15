@@ -19,10 +19,12 @@
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-    }
 
-    .kbq-filter-add {
-        margin-right: 8px;
+        gap: 8px;
+
+        .kbq-button > .kbq-icon {
+            margin-right: 4px;
+        }
     }
 }
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { ENTER } from '@koobiq/cdk/keycodes';
@@ -14,26 +14,15 @@ import { KbqDatepickerModule } from '../../datepicker';
 import { KbqPopoverTrigger } from '../../popover';
 import { KbqTimepickerModule } from '../../timepicker';
 import { KbqFilterBar } from '../filter-bar.component';
-import { KbqPipe } from '../filter-bar.types';
+import { KbqPipeComponent } from '../pipe.component';
 import { KbqPipeStates } from './pipe-states.component';
-import { KbqPipeBase } from './pipe.component';
 
 @Component({
     standalone: true,
-    selector: 'kbq-pipe[date]',
+    selector: 'kbq-pipe-date',
     templateUrl: 'pipe-date.template.html',
-    styleUrls: [
-        'pipe.component.scss',
-        '../../datepicker/datepicker-tokens.scss'
-    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'kbq-pipe kbq-pipe_date',
-        '[class.kbq-pipe_empty]': 'isEmpty',
-        '[class.kbq-pipe_readonly]': 'data.required',
-        '[class.kbq-pipe_disabled]': 'data.disabled'
-    },
     imports: [
         FormsModule,
         KbqFormFieldModule,
@@ -47,16 +36,11 @@ import { KbqPipeBase } from './pipe.component';
         KbqTimepickerModule,
         KbqLuxonDateModule,
         KbqPipeStates
-    ],
-    providers: [
-        {
-            provide: KbqPipeBase,
-            useExisting: KbqPipeDateComponent
-        }
     ]
 })
-export class KbqPipeDateComponent extends KbqPipeBase {
+export class KbqPipeDateComponent {
     protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly basePipe = inject(KbqPipeComponent);
 
     protected readonly placements = PopUpPlacements;
     protected readonly styles = KbqButtonStyles;
@@ -68,12 +52,6 @@ export class KbqPipeDateComponent extends KbqPipeBase {
 
     @ViewChild('popover') popover: KbqPopoverTrigger;
 
-    @Input() data!: KbqPipe;
-
-    get isEmpty(): boolean {
-        return this.data.value === undefined;
-    }
-
     protected readonly onkeydown = onkeydown;
 
     onKeydown($event: KeyboardEvent) {
@@ -83,21 +61,21 @@ export class KbqPipeDateComponent extends KbqPipeBase {
     }
 
     onSelect(item: unknown) {
-        this.data.value = item;
-        this.stateChanges.next();
+        this.basePipe.data.value = item;
+        this.basePipe.stateChanges.next();
 
         this.popover.hide();
 
         console.log('onSelect: ');
     }
 
-    override onDeleteOrClear() {
-        if (this.data.cleanable) {
-            this.data.value = undefined;
-        } else if (this.data.removable) {
-            super.onDeleteOrClear();
+    onDeleteOrClear() {
+        if (this.basePipe.data.cleanable) {
+            this.basePipe.data.value = undefined;
+        } else if (this.basePipe.data.removable) {
+            this.basePipe.onDeleteOrClear();
         }
 
-        this.stateChanges.next();
+        this.basePipe.stateChanges.next();
     }
 }

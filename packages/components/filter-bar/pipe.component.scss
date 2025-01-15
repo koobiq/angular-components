@@ -1,3 +1,5 @@
+@use './filter-bar-theme' as *;
+
 .kbq-pipe {
     display: flex;
     flex-direction: row;
@@ -163,3 +165,7 @@
         }
     }
 }
+
+
+@include kbq-filter-bar-theme();
+@include kbq-filter-bar-typography();

@@ -6,28 +6,15 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqFilterBar } from '../filter-bar.component';
+import { KbqPipeComponent } from '../pipe.component';
 import { KbqPipeStates } from './pipe-states.component';
-import { KbqPipeBase } from './pipe.component';
 
 @Component({
     standalone: true,
-    selector: 'kbq-pipe[multi-select]',
+    selector: 'kbq-pipe-multi-select',
     templateUrl: 'pipe-multi-select.template.html',
-    styleUrls: ['pipe.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    host: {
-        class: 'kbq-pipe kbq-pipe_multi-select',
-        '[class.kbq-pipe_empty]': 'isEmpty',
-        '[class.kbq-pipe_readonly]': 'data.required',
-        '[class.kbq-pipe_disabled]': 'data.disabled'
-    },
-    providers: [
-        {
-            provide: KbqPipeBase,
-            useExisting: this
-        }
-    ],
     imports: [
         KbqButtonModule,
         KbqIcon,
@@ -38,36 +25,29 @@ import { KbqPipeBase } from './pipe.component';
         KbqBadgeModule
     ]
 })
-export class KbqPipeMultiSelectComponent extends KbqPipeBase {
+export class KbqPipeMultiSelectComponent {
     protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly basePipe = inject(KbqPipeComponent);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    get isEmpty(): boolean {
-        if (Array.isArray(this.data.value)) {
-            return this.data.value.length === 0;
-        }
-
-        return true;
-    }
-
     get selected() {
-        return this.data.value;
+        return this.basePipe.data.value;
     }
 
-    override onDeleteOrClear() {
-        if (this.data.cleanable) {
-            this.data.value = [];
-        } else if (this.data.removable) {
-            super.onDeleteOrClear();
+    onDeleteOrClear() {
+        if (this.basePipe.data.cleanable) {
+            this.basePipe.data.value = [];
+        } else if (this.basePipe.data.removable) {
+            this.basePipe.onDeleteOrClear();
         }
 
-        this.stateChanges.next();
+        this.basePipe.stateChanges.next();
     }
 
     onSelect(item: unknown) {
         console.log('onSelect: ');
-        this.data.value = item;
-        this.stateChanges.next();
+        this.basePipe.data.value = item;
+        this.basePipe.stateChanges.next();
     }
 
     compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.value === o2.value;

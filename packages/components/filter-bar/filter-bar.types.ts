@@ -1,10 +1,10 @@
 export enum KbqPipeTypes {
-    Text,
-    Select,
-    MultiSelect,
-    TreeSelect,
-    MultiTreeSelect,
-    Date
+    Text = 'text',
+    Select = 'select',
+    MultiSelect = 'multiselect',
+    TreeSelect = 'tree-select',
+    MultiTreeSelect = 'multitree-select',
+    Date = 'date'
 }
 
 export interface KbqFilter {
