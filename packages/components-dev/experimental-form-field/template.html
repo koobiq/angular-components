@@ -1,140 +1,35 @@
-<h3>Form field with error</h3>
-<kbq-form-field>
-    <kbq-label>Email</kbq-label>
-    <input kbqInput placeholder="mail@koobiq.io" [formControl]="formControl1" />
-    <kbq-hint>Enter email</kbq-hint>
-    <kbq-error>
-        @if (formControl1.hasError('required')) {
-            Should enter a value
-        } @else {
-            Invalid email
-        }
-    </kbq-error>
-</kbq-form-field>
+<form-field-password-overview-example />
 
 <hr />
 
-<h3>Form field with stepper</h3>
-<kbq-form-field>
-    <input kbqNumberInput placeholder="type number" [formControl]="formControl2" [step]="0.5" />
-    <kbq-stepper />
-</kbq-form-field>
+<form-field-with-cleaner-example />
 
 <hr />
 
-<h3>Form field with password-toggle and password-hint</h3>
-<kbq-form-field>
-    <input kbqInputPassword placeholder="password" [formControl]="formControl3" [maxLength]="20" />
-    <kbq-password-toggle />
-    <kbq-password-hint [hasError]="formControl3.hasError('minLength')">
-        Min length
-        @let minLength = formControl3.getError('minLength');
-        @if (minLength) {
-            ({{ minLength.actual }}/{{ minLength.min }})
-        }
-    </kbq-password-hint>
-    <kbq-password-hint [hasError]="formControl3.hasError('minUppercase')">
-        Uppercase characters
-        @let minUppercaseError = formControl3.getError('minUppercase');
-        @if (minUppercaseError) {
-            ({{ minUppercaseError.actual }}/{{ minUppercaseError.min }})
-        }
-    </kbq-password-hint>
-    <kbq-password-hint [hasError]="formControl3.hasError('minLowercase')">
-        Lowercase characters
-        @let minLowercaseError = formControl3.getError('minLowercase');
-        @if (minLowercaseError) {
-            ({{ minLowercaseError?.actual }}/{{ minLowercaseError?.min }})
-        }
-    </kbq-password-hint>
-    <kbq-password-hint [hasError]="formControl3.hasError('minNumber')">
-        Number characters
-        @let minNumberError = formControl3.getError('minNumber');
-        @if (minNumberError) {
-            ({{ minNumberError.actual }}/{{ minNumberError.min }})
-        }
-    </kbq-password-hint>
-    <kbq-password-hint [hasError]="formControl3.hasError('minSpecial')">
-        Special characters
-        @let minSpecialError = formControl3.getError('minSpecial');
-        @if (minSpecialError) {
-            ({{ minSpecialError.actual }}/{{ minSpecialError.min }})
-        }
-    </kbq-password-hint>
-    @if (formControl3.hasError('required')) {
-        <kbq-error>Should enter password</kbq-error>
-    }
-</kbq-form-field>
+<form-field-with-custom-error-state-matcher-set-by-attribute-example />
 
 <hr />
 
-<h3>Form field with select</h3>
-<kbq-form-field>
-    <kbq-label>Select an option</kbq-label>
-    <kbq-select placeholder="Select an option">
-        <kbq-option [value]="null">None</kbq-option>
-        <kbq-option value="option1">Option 1</kbq-option>
-        <kbq-option value="option2">Option 2</kbq-option>
-    </kbq-select>
-</kbq-form-field>
+<form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example />
 
 <hr />
 
-<kbq-form-field>
-    <kbq-label>Article title</kbq-label>
-    <input kbqInput placeholder="Enter the title of the article" [formControl]="formControl5" [maxlength]="20" />
-    <kbq-hint>Max 20 chars ({{ formControl5.value?.length || 0 }}/20)</kbq-hint>
-</kbq-form-field>
+<form-field-with-error-example />
 
 <hr />
 
-<h3>Form field with prefix, suffix and cleaner</h3>
-<kbq-form-field>
-    <kbq-label>Form field with prefix and suffix</kbq-label>
-    <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-    <input kbqInput placeholder="Search" [formControl]="formControl5" />
-    <i kbq-icon="kbq-info-circle_16" kbqSuffix></i>
-    <kbq-cleaner />
-</kbq-form-field>
+<form-field-with-hint-example />
 
 <hr />
 
-<h3>Form field with cleaner</h3>
-<kbq-form-field>
-    <kbq-label>Form field with cleaner</kbq-label>
-    <input kbqInput placeholder="Enter some input" [formControl]="formControl6" />
-    <kbq-cleaner />
-</kbq-form-field>
+<form-field-with-label-example />
 
 <hr />
 
-<validate-on-form-submit />
+<form-field-without-borders-example />
 
 <hr />
 
-<h3>Show validation error on form submit, using ShowOnFormSubmitErrorStateMatcher by errorStateMatcher attribute</h3>
-<form [formGroup]="formGroup1">
-    <kbq-form-field>
-        <input formControlName="email" kbqInput placeholder="mail@koobiq.io" [errorStateMatcher]="errorStateMatcher1" />
-        <kbq-hint>Enter email</kbq-hint>
-        <kbq-error>
-            @if (formGroup1.get('email')?.hasError('required')) {
-                Should enter a value
-            } @else {
-                Invalid email
-            }
-        </kbq-error>
-    </kbq-form-field>
-
-    <button type="submit">Submit form</button>
-</form>
-
-<hr />
-
-<validate-on-control-dirty />
-
-<hr />
-
-<field-without-borders />
+<form-field-with-prefix-and-suffix-example />
 
 <hr />

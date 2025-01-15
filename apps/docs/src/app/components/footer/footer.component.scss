@@ -1,41 +1,32 @@
-@use '../../../styles/koobiq/default-theme/variables' as *;
-
 .docs-footer {
     box-sizing: border-box;
-
     display: flex;
     flex-direction: column;
-
     will-change: transform;
-
-    padding: $size-l $size-xxl;
-
-    gap: $size-l;
-
+    padding: var(--kbq-size-l) var(--kbq-size-xxl);
+    gap: var(--kbq-size-l);
     min-height: 112px;
-}
 
-.docs-footer__item {
-    display: flex;
-    flex-direction: column;
+    .docs-footer__item {
+        display: flex;
+        flex-direction: column;
 
-    .docs-footer__control {
-        display: inline-flex;
-        align-items: baseline;
+        .docs-footer__control {
+            display: inline-flex;
+            align-items: baseline;
 
-        gap: $size-3xs;
+            gap: var(--kbq-size-3xs);
 
-        cursor: pointer;
+            cursor: pointer;
+        }
     }
-}
 
-@media (width <= 768px) {
-    .docs-footer {
-        padding: $size-xxl $size-l;
+    @media (width <= 768px) {
+        padding: var(--kbq-size-xxl) var(--kbq-size-l);
         min-height: 140px;
 
         .docs-footer__label {
-            margin-bottom: $size-3xs;
+            margin-bottom: var(--kbq-size-3xs);
         }
     }
 }

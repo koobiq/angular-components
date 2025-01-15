@@ -1,3 +1,17 @@
+# 18.10.0 (2024-12-11)
+
+### Cdk
+
+ * bug fix  resolve event target within shadow-root ([#DS-2632](https://github.com/koobiq/angular-components/issues/issue/DS-2632)) ([#475](https://github.com/koobiq/angular-components/issues/475)) ([b41f2ea](https://github.com/koobiq/angular-components/commit/b41f2ea5d0f36d86d31397ed72a7073438ecac09))
+
+### Koobiq
+
+ * bug fix  **docs:** added build-tokens script missing transform ([#474](https://github.com/koobiq/angular-components/issues/474)) ([f1b873b](https://github.com/koobiq/angular-components/commit/f1b873b1a14ebc36c96432cf67997390d4b73b18))
+ * bug fix  **sidepanel:** prevent capturing focus on initialization without backdrop ([#DS-3073](https://github.com/koobiq/angular-components/issues/issue/DS-3073)) ([#471](https://github.com/koobiq/angular-components/issues/471)) ([bf0f569](https://github.com/koobiq/angular-components/commit/bf0f569fa80f14157f7814102b8868c10d5b82dc))
+ * feature  **docs:** design-tokens page ([#DS-2997](https://github.com/koobiq/angular-components/issues/issue/DS-2997)) ([#468](https://github.com/koobiq/angular-components/issues/468)) ([44f09b4](https://github.com/koobiq/angular-components/commit/44f09b42cdc1d443e986ab996b3fb9e23617fafa))
+ * feature  **form-field:** autofill backgrounds ([#DS-2873](https://github.com/koobiq/angular-components/issues/issue/DS-2873)) ([#476](https://github.com/koobiq/angular-components/issues/476)) ([16e43f6](https://github.com/koobiq/angular-components/commit/16e43f66fdd105fa4275265aaf7ef1f8b518ed4e))
+ * feature  **markdown:** code with links styles ([#DS-3218](https://github.com/koobiq/angular-components/issues/issue/DS-3218)) ([#473](https://github.com/koobiq/angular-components/issues/473)) ([3605e00](https://github.com/koobiq/angular-components/commit/3605e0067087c7853ff2097b025d29381cc77105))
+
 ## 18.9.1 (2024-12-04)
 
 ### Koobiq

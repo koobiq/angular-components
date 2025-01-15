@@ -41,6 +41,7 @@ import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { PipeTransform } from '@angular/core';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import { RendererFactory2 } from '@angular/core';
@@ -1099,6 +1100,18 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
 
 // @public
+export type KbqCodeBlockLocaleConfiguration = {
+    softWrapOnTooltip: string;
+    softWrapOffTooltip: string;
+    downloadTooltip: string;
+    copiedTooltip: string;
+    copyTooltip: string;
+    viewAllText: string;
+    viewLessText: string;
+    openExternalSystemTooltip: string;
+};
+
+// @public
 export class KbqCommonModule {
     constructor(_sanityChecksEnabled: boolean);
     // (undocumented)
@@ -1166,6 +1179,9 @@ export class KbqDecimalPipe implements PipeTransform {
 
 // @public (undocumented)
 export const KbqDefaultThemes: KbqTheme[];
+
+// @public
+export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMatcher> | ErrorStateMatcher) => Provider;
 
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
@@ -2372,14 +2388,14 @@ export const ruRULocaleData: {
     };
 };
 
-// @public
+// @public @deprecated
 export const SELECT_PANEL_INDENT_PADDING_X: number;
 
-// @public
+// @public @deprecated
 export const SELECT_PANEL_MAX_HEIGHT = 224;
 
-// @public
-export const SELECT_PANEL_PADDING_X = 1;
+// @public @deprecated
+export const SELECT_PANEL_PADDING_X = 0;
 
 // @public
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;

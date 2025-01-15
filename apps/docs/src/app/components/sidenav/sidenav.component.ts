@@ -1,18 +1,27 @@
-import { ViewportScroller } from '@angular/common';
-import { AfterViewInit, Component, DestroyRef, inject, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { KbqScrollbar } from '@koobiq/components/scrollbar';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeSelection } from '@koobiq/components/tree';
-import { delay } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { DocCategory, DocumentationItems, documentationItemSections } from '../documentation-items';
-import { DocStates } from '../doс-states';
+import { Location, ViewportScroller } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import {
+    FlatTreeControl,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener,
+    KbqTreeModule,
+    KbqTreeSelection
+} from '@koobiq/components/tree';
+import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocCategory, DOCS_ITEM_SECTIONS, DocumentationItems } from '../../services/documentation-items';
+import { DocStates } from '../../services/doс-states';
+import { DocsFooterComponent } from '../footer/footer.component';
 
 enum TreeNodeType {
     Category = 'Category',
     Item = 'Item'
 }
+
 class TreeNode {
     constructor(
         public id: string,
@@ -23,7 +32,7 @@ class TreeNode {
 }
 
 /** Flat node with expandable and level information */
-export class TreeFlatNode {
+class TreeFlatNode {
     id: string;
     name: string;
     level: number;
@@ -32,7 +41,7 @@ export class TreeFlatNode {
     type: TreeNodeType;
 }
 
-export function buildTree(categories: DocCategory[]): TreeNode[] {
+function buildTree(categories: DocCategory[]): TreeNode[] {
     const data: any[] = [];
 
     for (const cat of categories) {
@@ -50,34 +59,38 @@ export function buildTree(categories: DocCategory[]): TreeNode[] {
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqIconModule,
+        KbqTreeModule,
+        KbqDividerModule,
+        DocsFooterComponent,
+        KbqScrollbarModule,
+        RouterLink
+    ],
     selector: 'docs-sidenav',
     templateUrl: './sidenav.component.html',
-    styleUrls: ['./sidenav.scss'],
+    styleUrls: ['./sidenav.component.scss'],
     host: {
         class: 'docs-sidenav'
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ComponentSidenav implements AfterViewInit, OnInit {
-    @ViewChild(KbqScrollbar) sidenavMenuContainer: KbqScrollbar;
-    @ViewChild('tree') tree: KbqTreeSelection;
+export class DocsSidenavComponent implements AfterViewInit {
+    @ViewChild(KbqScrollbar) readonly sidenavMenuContainer: KbqScrollbar;
+    @ViewChild(KbqTreeSelection) readonly tree: KbqTreeSelection;
 
-    set category(value: string) {
-        if (!value || value === this._category) {
-            return;
-        }
+    private readonly docsLocaleService = inject(DocsLocaleService);
+    protected readonly docStates = inject(DocStates);
+    private readonly docItems = inject(DocumentationItems);
+    private readonly router = inject(Router);
+    private readonly viewportScroller = inject(ViewportScroller);
+    private readonly location = inject(Location);
 
-        this.dataSource.data = buildTree(this.docItems.getCategories(value));
-
-        this._category = value;
-    }
-
-    private _category: string;
-
-    treeControl: FlatTreeControl<TreeFlatNode>;
-    treeFlattener: KbqTreeFlattener<TreeNode, TreeFlatNode>;
-
-    dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
+    readonly treeControl: FlatTreeControl<TreeFlatNode>;
+    readonly dataSource: KbqTreeFlatDataSource<TreeNode, TreeFlatNode>;
 
     get selectedItem(): string {
         return this._selectedItem;
@@ -90,7 +103,7 @@ export class ComponentSidenav implements AfterViewInit, OnInit {
 
         this._selectedItem = value;
 
-        this.router.navigateByUrl(value);
+        this.router.navigateByUrl(`${this.docsLocaleService.locale}/${value}`);
 
         this.docStates.closeNavbarMenu();
 
@@ -98,64 +111,38 @@ export class ComponentSidenav implements AfterViewInit, OnInit {
     }
 
     private _selectedItem: string;
-    private readonly destroyRef = inject(DestroyRef);
 
-    constructor(
-        public docStates: DocStates,
-        private docItems: DocumentationItems,
-        private router: Router,
-        private routeActivated: ActivatedRoute,
-        private viewportScroller: ViewportScroller
-    ) {
-        this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-
+    constructor() {
+        const treeFlattener = new KbqTreeFlattener(
+            this.transformer,
+            this.getLevel,
+            this.isExpandable,
+            this.getChildren
+        );
         this.treeControl = new FlatTreeControl<TreeFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
             this.getViewValue
         );
-
-        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
+        this.dataSource = new KbqTreeFlatDataSource(this.treeControl, treeFlattener);
         this.dataSource.data = buildTree(this.docItems.getCategories());
     }
 
-    ngOnInit() {
-        this.routeActivated.url
-            .pipe(
-                map(([first, second]: UrlSegment[]) => {
-                    if (second) {
-                        return [first.path, second?.path].join('/');
-                    }
-
-                    return first.path;
-                }),
-                delay(0),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe((url: string) => {
-                if (!url) {
-                    this.needSelectDefaultItem();
-                }
-            });
-    }
-
     ngAfterViewInit() {
+        this.selectDefaultItem();
         this.treeControl.expandAll();
-
         this.docStates.registerNavbarScrollContainer(this.sidenavMenuContainer.contentElement.nativeElement);
     }
 
-    needSelectDefaultItem = () => {
+    private selectDefaultItem(): void {
         // remove extra path endpoints so tree node can be selected
-        this._selectedItem = documentationItemSections.reduce(
+        this._selectedItem = DOCS_ITEM_SECTIONS.reduce(
             (resUrl, currentValue) => resUrl.replace(new RegExp(`\\/${currentValue}.*`), ''),
-            this.router.url.replace('/', '')
+            this.location.path().replace(`/${this.docsLocaleService.locale}/`, '')
         );
-
         setTimeout(() => this.tree.highlightSelectedOption());
-    };
+    }
 
     hasChild(_: number, nodeData: TreeFlatNode) {
         return nodeData.expandable;
@@ -171,7 +158,6 @@ export class ComponentSidenav implements AfterViewInit, OnInit {
 
     private transformer = (node: TreeNode, level: number, parent: any) => {
         const flatNode = new TreeFlatNode();
-
         flatNode.id = parent ? `${parent.id}/${node.id}` : `${node.id}`;
         flatNode.name = node.name;
         flatNode.parent = parent;

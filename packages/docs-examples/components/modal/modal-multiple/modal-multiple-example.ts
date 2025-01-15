@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/modal';
 
 /**
  * @title Modal multiple
@@ -8,16 +8,19 @@ import { KbqModalService, ModalSize } from '@koobiq/components/modal';
 @Component({
     standalone: true,
     selector: 'modal-multiple-example',
-    imports: [KbqButtonModule],
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
         <button (click)="showConfirmModal()" kbq-button>Open two modals</button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalMultipleExample {
-    // use modalService to prevent multiple overlaid masks
-    constructor(private modalService: KbqModalService) {}
+    private readonly modalService = inject(KbqModalService);
 
-    showConfirmModal() {
+    showConfirmModal(): void {
         this.modalService.confirm({
             kbqSize: ModalSize.Medium,
             kbqBodyStyle: { height: '120px' },
@@ -25,20 +28,22 @@ export class ModalMultipleExample {
             kbqContent: 'Save changes?',
             kbqOkText: 'Save',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
+            kbqOnOk: () => console.log('Save'),
+            kbqOnCancel: () => console.log('Cancel')
         });
 
         this.showSuccessModal();
     }
 
-    showSuccessModal() {
+    showSuccessModal(): void {
         this.modalService.success({
             kbqSize: ModalSize.Small,
             kbqMaskClosable: true,
             kbqContent: 'All changes are saved!',
             kbqOkText: 'ОК',
             kbqCancelText: 'Cancel',
-            kbqOnOk: () => console.log('OK')
+            kbqOnOk: () => console.log('OK'),
+            kbqOnCancel: () => console.log('Cancel')
         });
     }
 }

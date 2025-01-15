@@ -1,4 +1,4 @@
-import { ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 
 export interface NavbarPropertyParameters {
     // name of local storage property
@@ -6,8 +6,7 @@ export interface NavbarPropertyParameters {
     // data array for dropdown
     data: any[];
 
-    updateTemplate: boolean;
-    updateSelected: boolean;
+    updateSelected?: boolean;
 }
 
 export interface NavbarPropertyChange {
@@ -16,74 +15,54 @@ export interface NavbarPropertyChange {
 }
 
 export class NavbarProperty {
-    data: any[];
-    currentValue: any;
-
-    changes = new ReplaySubject<NavbarPropertyChange>(1);
-
-    private readonly property: string;
-
-    private readonly updateTemplate: boolean;
-    private readonly updateSelected: boolean;
-
-    constructor(parameters: NavbarPropertyParameters) {
-        this.data = parameters.data;
-        this.currentValue = this.data[0];
-        this.property = parameters.property;
-
-        this.updateTemplate = parameters.updateTemplate;
-        this.updateSelected = parameters.updateSelected;
-
-        this.init();
+    get data(): any[] {
+        return this._data;
     }
 
-    setValue(i: number) {
-        this.currentValue = this.data[i];
-        localStorage.setItem(this.property, `${i}`);
+    private _data: any[];
 
-        this.changes.next({ name: 'setValue', value: this.currentValue });
-
-        if (this.updateTemplate) {
-            this.updateTemplateValues();
-        }
-
-        if (this.updateSelected) {
-            this.updateSelectedValues(i);
-        }
+    get currentValue(): any {
+        return this._currentValue;
     }
 
-    init() {
-        const currentValue = parseInt(localStorage.getItem(this.property) as string) || 0;
+    private _currentValue!: any;
 
-        if (Number.isInteger(currentValue)) {
-            this.setValue(currentValue);
-        } else {
-            localStorage.setItem(this.property, '0');
-
-            this.changes.next({ name: 'init', value: currentValue });
-        }
+    get changes(): Observable<NavbarPropertyChange> {
+        return this._changes;
     }
 
-    private updateTemplateValues() {
-        if (!this.currentValue) {
+    private _changes = new ReplaySubject<NavbarPropertyChange>(1);
+
+    constructor(readonly parameters: NavbarPropertyParameters) {
+        this._data = parameters.data;
+
+        const index =
+            parseInt(localStorage.getItem(this.parameters.property) || '') ||
+            this.data.findIndex((item) => item.selected);
+        this.setValue(index >= 0 ? index : 0);
+    }
+
+    setValue(index: number): void {
+        if (this.currentValue === this.data[index]) {
             return;
         }
 
-        for (const color of this.data) {
-            document.body.classList.remove(color.className);
+        this._currentValue = this.data[index];
+        localStorage.setItem(this.parameters.property, index.toString());
+
+        this._changes.next({ name: 'setValue', value: this.currentValue });
+
+        if (this.parameters.updateSelected) {
+            this.updateSelectedValues(index);
         }
-
-        document.body.classList.add(this.currentValue.className);
-
-        this.changes.next({ name: 'updateTemplateValues', value: this.currentValue });
     }
 
-    private updateSelectedValues(i: number) {
-        if (this.data[i]) {
-            this.data.forEach((color) => (color.selected = false));
-            this.data[i].selected = true;
+    private updateSelectedValues(index: number): void {
+        if (this.data[index]) {
+            this.data.forEach((item) => (item.selected = false));
+            this.data[index].selected = true;
 
-            this.changes.next({ name: 'updateSelectedValues', value: this.currentValue });
+            this._changes.next({ name: 'updateSelectedValues', value: this.currentValue });
         }
     }
 }

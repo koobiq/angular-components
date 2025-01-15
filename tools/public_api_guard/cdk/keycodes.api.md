@@ -175,7 +175,7 @@ export function isFunctionKey({ keyCode }: KeyboardEvent): boolean;
 export function isHorizontalMovement({ keyCode }: KeyboardEvent): boolean;
 
 // @public (undocumented)
-export function isInput(event: any): boolean;
+export function isInput(event: Event): boolean;
 
 // @public (undocumented)
 export function isLeftBracket(event: KeyboardEvent): boolean;

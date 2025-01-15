@@ -4,14 +4,14 @@
     justify-content: center;
     align-items: center;
 
-    .kbq-stepper_step-up,
-    .kbq-stepper_step-down {
+    .kbq-stepper__step-up,
+    .kbq-stepper__step-down {
         cursor: pointer;
         width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
     }
 
-    .kbq-stepper_step-up {
+    .kbq-stepper__step-up {
         transform: scaleY(-1);
     }
 

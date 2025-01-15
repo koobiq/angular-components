@@ -36,7 +36,8 @@ import {
     ViewEncapsulation,
     booleanAttribute,
     inject,
-    isDevMode
+    isDevMode,
+    numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
@@ -200,7 +201,7 @@ export class KbqSelect
 {
     protected readonly isBrowser = inject(Platform).isBrowser;
 
-    private readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
+    protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -239,7 +240,7 @@ export class KbqSelect
 
     /**
      * This position config ensures that the top "start" corner of the overlay
-     * is aligned with with the top "start" of the origin by default (overlapping
+     * is aligned with the top "start" of the origin by default (overlapping
      * the trigger completely). If the panel cannot fit below the trigger, it
      * will fall back to a position above the trigger.
      */
@@ -248,13 +249,15 @@ export class KbqSelect
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top'
+            overlayY: 'top',
+            offsetY: this.offsetY
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom'
+            overlayY: 'bottom',
+            offsetY: -this.offsetY
         }
     ];
 
@@ -431,6 +434,12 @@ export class KbqSelect
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     @Input() panelWidth: KbqSelectPanelWidth = this.defaultOptions?.panelWidth || null;
+
+    /**
+     * Minimum width of the panel.
+     * If minWidth is larger than window width, it will be ignored.
+     */
+    @Input({ transform: numberAttribute }) panelMinWidth: number;
 
     /** Value of the select control. */
     @Input()
@@ -707,7 +716,10 @@ export class KbqSelect
             return;
         }
 
-        this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
+        // add check for form-field bounding rectangles, since it adds extra padding around the trigger
+        this.triggerRect = (
+            this.parentFormField?.getConnectedOverlayOrigin().nativeElement || this.trigger.nativeElement
+        ).getBoundingClientRect();
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
@@ -721,7 +733,7 @@ export class KbqSelect
         }
 
         this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
-        this.overlayMinWidth = this.overlayWidth ? '' : this.triggerRect.width;
+        this.overlayMinWidth = this.panelMinWidth || (this.overlayWidth ? '' : this.triggerRect.width);
 
         this.panelOpen = true;
 
@@ -1341,7 +1353,7 @@ export class KbqSelect
         let offsetX: number = SELECT_PANEL_PADDING_X;
         let overlayMaxWidth: number;
 
-        // Invert the offset in LTR.
+        // Invert the offsetX in LTR.
         if (!isRtl) {
             offsetX *= -1;
         }
@@ -1354,6 +1366,8 @@ export class KbqSelect
         if (leftOverflow > 0 || rightOverflow > 0) {
             [offsetX, overlayMaxWidth] = this.calculateOverlayXPosition(overlayRect, windowWidth, offsetX);
             this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
+            // reset the minWidth property
+            this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
         }
 
         // Set the offset directly in order to avoid having to go through change detection and

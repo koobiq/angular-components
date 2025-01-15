@@ -1,4 +1,4 @@
-import highlightJs, { HighlightResult } from 'highlight.js';
+import highlightJs from 'highlight.js';
 import { Renderer as MarkedRenderer } from 'marked';
 import { splitLines } from '../transforms/code-transforms';
 
@@ -8,7 +8,7 @@ import { splitLines } from '../transforms/code-transforms';
  */
 export const renderer: Partial<MarkedRenderer> = {
     code(code: string, language: string): string {
-        let highlightResult: HighlightResult;
+        let highlightResult;
         // Use try catch because there are existing content issues when there is provided nonexistent
         // language, like `typescript=` etc. In that case when there will be an error thrown `Could not
         // find the language 'typescript=', did you forget to load/include a language module?`

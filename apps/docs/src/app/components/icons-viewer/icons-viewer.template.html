@@ -1,0 +1,46 @@
+<div class="docs-icons-viewer__header">
+    <span docsRegisterHeader class="docs-icons-viewer__header-text docs-component-name">Иконки</span>
+
+    <kbq-form-field>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [color]="themePalette.Secondary"></i>
+        <input kbqInput placeholder="Название иконки" [formControl]="searchControl" />
+        <kbq-cleaner />
+    </kbq-form-field>
+</div>
+
+<div class="docs-icons-viewer__table">
+    @if (filteredIcons | async; as icons) {
+        @for (size of availableSizes; track size) {
+            @if (filterBySize(icons, size).length) {
+                <div class="layout-column">
+                    <div class="docs-icons-viewer__table-row-header">{{ size }}px</div>
+                    <div class="docs-icons-viewer__table-row docs-icons-viewer__table-row_{{ size }}">
+                        @for (icon of filterBySize(icons, size); track icon) {
+                            <div
+                                tabindex="0"
+                                class="docs-icons-viewer__table-cell docs-icons-viewer__table-cell_{{ size }}"
+                                (click)="setActiveIcon(icon)"
+                                (keyup.enter)="setActiveIcon(icon)"
+                            >
+                                <i kbq-icon [ngClass]="icon.cssClass"></i>
+                                <span
+                                    class="docs-icons-viewer__table-cell-name"
+                                    [innerHtml]="icon.name | mcHighlight: searchControl.value"
+                                    [kbqTooltip]="icon.name"
+                                ></span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        }
+    }
+
+    @if (searchControl.value && !filteredIcons.value) {
+        <div class="docs-icons-viewer__table-empty-results">
+            <kbq-empty-state [big]="true">
+                <div kbq-empty-state-title>Ничего не найдено</div>
+            </kbq-empty-state>
+        </div>
+    }
+</div>

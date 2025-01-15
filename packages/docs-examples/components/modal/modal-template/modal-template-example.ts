@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
@@ -8,49 +8,57 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
 @Component({
     standalone: true,
     selector: 'modal-template-example',
-    imports: [KbqButtonModule, KbqModalModule],
+    imports: [
+        KbqModalModule,
+        KbqButtonModule
+    ],
     template: `
-        <button class="modal-example-button" (click)="createTplModal(tplTitle, tplContent, tplFooter)" kbq-button>
-            Delete
-        </button>
+        <button (click)="createModal(title, content, footer)" kbq-button>Open Modal</button>
 
-        <ng-template #tplTitle>
-            <span>Заголовок окна</span>
+        <ng-template #title>DoS attack</ng-template>
+
+        <ng-template #content>
+            In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to
+            make a machine or network resource unavailable to its intended users by temporarily or indefinitely
+            disrupting services of a host connected to a network.
         </ng-template>
-        <ng-template #tplContent>
-            Кибербезопасность сегодня — это целое направление информационных технологий, которое затрагивает практически
-            все сферы жизни человека.
-        </ng-template>
-        <ng-template #tplFooter>
+
+        <ng-template #footer>
             <div class="layout-row flex-grow layout-align-space-between">
-                <button (click)="destroyTplModal()" kbq-button>Доп. действие</button>
+                <button (click)="destroyModal()" kbq-button>Add. action</button>
 
-                <span>
-                    <button [color]="'contrast'" (click)="destroyTplModal()" kbq-button kbq-modal-main-action>
-                        Сохранить
+                <div>
+                    <button
+                        class="layout-margin-right-m"
+                        [color]="'contrast'"
+                        (click)="destroyModal()"
+                        kbq-button
+                        kbq-modal-main-action
+                    >
+                        Save
                     </button>
-                    <button (click)="destroyTplModal()" kbq-button>Отмена</button>
-                </span>
+                    <button (click)="destroyModal()" kbq-button>Cancel</button>
+                </div>
             </div>
         </ng-template>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModalTemplateExample {
-    tplModal: KbqModalRef;
+    private readonly modalService = inject(KbqModalService);
 
-    constructor(private modalService: KbqModalService) {}
+    modalRef: KbqModalRef;
 
-    createTplModal(tplTitle: TemplateRef<object>, tplContent: TemplateRef<object>, tplFooter: TemplateRef<object>) {
-        this.modalService.create({
-            kbqTitle: tplTitle,
-            kbqContent: tplContent,
-            kbqFooter: tplFooter,
-            kbqOnOk: () => console.log('Click ok')
+    createModal(kbqTitle: TemplateRef<object>, kbqContent: TemplateRef<object>, kbqFooter: TemplateRef<object>): void {
+        this.modalRef = this.modalService.create({
+            kbqTitle,
+            kbqContent,
+            kbqFooter,
+            kbqOnOk: () => console.log('OK')
         });
     }
 
-    destroyTplModal() {
-        this.tplModal.triggerOk();
-        this.tplModal.destroy();
+    destroyModal(): void {
+        this.modalRef.triggerOk();
     }
 }

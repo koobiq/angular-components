@@ -241,13 +241,15 @@ export class KbqTreeSelect
             originX: 'start',
             originY: 'bottom',
             overlayX: 'start',
-            overlayY: 'top'
+            overlayY: 'top',
+            offsetY: this.offsetY
         },
         {
             originX: 'start',
             originY: 'top',
             overlayX: 'start',
-            overlayY: 'bottom'
+            overlayY: 'bottom',
+            offsetY: -this.offsetY
         }
     ];
 
@@ -1106,7 +1108,7 @@ export class KbqTreeSelect
 
             this.options.forEach((option) => {
                 if (hasDeselectedOptions && !option.disabled) {
-                    option.select();
+                    option.select(false);
                 } else {
                     option.deselect();
                 }

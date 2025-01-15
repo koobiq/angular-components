@@ -11,6 +11,7 @@ The menu uses the top row and allows content to occupy the full screen width. Th
 ### Vertical menu
 
 The vertical menu is convenient for long pages. When unfolded, it takes more place on a screen. When collapsed, it shows sections as icons. In some cases, it may be a challenge to pick a clear visual representation for a section.
+
 <!-- example(navbar-vertical) -->
 
 ### Unfolded menu that overlays content

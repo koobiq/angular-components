@@ -1,0 +1,18 @@
+@let opened = opened$ | async;
+
+<docs-sidenav
+    class="kbq-scrollbar"
+    [class.docs-sidenav_closed]="!opened"
+    [class.docs-sidenav_opened]="opened"
+    [@openCloseSidenav]="opened ? 'open' : 'closed'"
+/>
+
+<div class="docs-app-container layout-column flex">
+    <docs-navbar [class.docs-top-overflown]="docStates.viewerTopOverflown | async" />
+
+    <kbq-divider />
+
+    <router-outlet />
+
+    <div class="docs-overlay" [@fadeInOutSidenav]="opened ? 'fadeIn' : 'fadeOut'"></div>
+</div>

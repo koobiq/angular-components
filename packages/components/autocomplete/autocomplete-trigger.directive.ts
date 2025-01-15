@@ -47,8 +47,6 @@ import { KbqAutocomplete } from './autocomplete.component';
 /** The total height of the autocomplete panel. */
 export const AUTOCOMPLETE_PANEL_HEIGHT = 256;
 
-export const AUTOCOMPLETE_BORDER_WIDTH: number = 2;
-
 /** Injection token that determines the scroll handling while the autocomplete panel is open. */
 export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY = new InjectionToken<() => ScrollStrategy>(
     'kbq-autocomplete-scroll-strategy'
@@ -623,18 +621,17 @@ export class KbqAutocompleteTrigger
                     originX: 'start',
                     originY: 'bottom',
                     overlayX: 'start',
-                    overlayY: 'top'
+                    overlayY: 'top',
+                    // @TODO: should be moved to separate constant within refactoring (#DS-3298)
+                    offsetY: 2
                 },
                 {
                     originX: 'start',
                     originY: 'top',
                     overlayX: 'start',
                     overlayY: 'bottom',
-
-                    // The overlay edge connected to the trigger should have squared corners, while
-                    // the opposite end has rounded corners. We apply a CSS class to swap the
-                    // border-radius based on the overlay position.
-                    panelClass: 'kbq-autocomplete-panel-above'
+                    // @TODO: should be moved to separate constant within refactoring (#DS-3298)
+                    offsetY: -2
                 }
             ] as ConnectedPosition[]);
 
@@ -650,7 +647,7 @@ export class KbqAutocompleteTrigger
     }
 
     private getPanelWidth(): number | string {
-        return this.autocomplete.panelWidth || this.getHostWidth() - AUTOCOMPLETE_BORDER_WIDTH;
+        return this.autocomplete.panelWidth || this.getHostWidth();
     }
 
     private getHostWidth(): number {

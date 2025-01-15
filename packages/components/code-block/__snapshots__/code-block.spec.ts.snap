@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqCodeBlock should provide custom locale configuration 1`] = `
+{
+  "copiedTooltip": "*unit_test* ✓ Copied",
+  "copyTooltip": "*unit_test* Copy",
+  "downloadTooltip": "*unit_test* Download",
+  "openExternalSystemTooltip": "*unit_test* Open in the external system",
+  "softWrapOffTooltip": "*unit_test* Disable word wrap",
+  "softWrapOnTooltip": "*unit_test* Enable word wrap",
+  "viewAllText": "*unit_test* Show all",
+  "viewLessText": "*unit_test* Show less",
+}
+`;

@@ -1,5 +1,5 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectorRef, Component, ElementRef, Input, NgModule, NgZone, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, NgZone, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
@@ -7,6 +7,9 @@ import { ExampleData } from '@koobiq/docs-examples';
 import { StackblitzWriter } from './stackblitz-writer';
 
 @Component({
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule, KbqLinkModule],
+    providers: [StackblitzWriter],
     selector: 'docs-stackblitz-button',
     template: `
         <span class="kbq-link__text">StackBlitz</span>
@@ -19,7 +22,7 @@ import { StackblitzWriter } from './stackblitz-writer';
     },
     encapsulation: ViewEncapsulation.None
 })
-export class StackblitzButton extends KbqLink {
+export class DocsStackblitzButtonComponent extends KbqLink {
     @Input()
     set exampleId(value: string | undefined) {
         if (value) {
@@ -53,7 +56,7 @@ export class StackblitzButton extends KbqLink {
         if (this.openStackBlitzFn) {
             this.openStackBlitzFn();
         } else {
-            console.log('StackBlitz is not ready yet. Please try again in a few seconds.');
+            console.warn('StackBlitz is not ready yet. Please try again in a few seconds.');
         }
     }
 
@@ -63,11 +66,3 @@ export class StackblitzButton extends KbqLink {
         });
     }
 }
-
-@NgModule({
-    imports: [KbqButtonModule, KbqIconModule, KbqLinkModule],
-    exports: [StackblitzButton],
-    declarations: [StackblitzButton],
-    providers: [StackblitzWriter]
-})
-export class StackblitzButtonModule {}

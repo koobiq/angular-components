@@ -1,6 +1,6 @@
 import {
     AfterContentInit,
-    AfterViewInit,
+    afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -12,6 +12,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    Provider,
     QueryList,
     ViewChild,
     ViewEncapsulation
@@ -42,6 +43,12 @@ export type KbqFormFieldDefaultOptions = Partial<{
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<KbqFormFieldDefaultOptions>(
     'KBQ_FORM_FIELD_DEFAULT_OPTIONS'
 );
+
+/** Utility provider for `KBQ_FORM_FIELD_DEFAULT_OPTIONS`. */
+export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultOptions): Provider => ({
+    provide: KBQ_FORM_FIELD_DEFAULT_OPTIONS,
+    useValue: options
+});
 
 /** @docs-private */
 export const getKbqFormFieldMissingControlError = (): Error => {
@@ -75,7 +82,7 @@ export const getKbqFormFieldMissingControlError = (): Error => {
         '[class.kbq-form-field_invalid]': 'invalid',
         '[class.kbq-form-field_focused]': 'focused',
         '[class.kbq-form-field_disabled]': 'disabled',
-        '[class.kbq-form-field_no-borders]': 'shouldDisableBorders',
+        '[class.kbq-form-field_no-borders]': 'noBorders',
 
         '[class.ng-untouched]': 'shouldBeForwarded("untouched")',
         '[class.ng-touched]': 'shouldBeForwarded("touched")',
@@ -93,9 +100,14 @@ export const getKbqFormFieldMissingControlError = (): Error => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
-export class KbqFormField implements AfterContentInit, AfterViewInit {
+export class KbqFormField implements AfterContentInit {
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly elementRef = inject(ElementRef);
+    private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
+
     /** Disables form field borders and shadows. */
-    @Input({ transform: booleanAttribute }) noBorders: boolean | undefined;
+    @Input({ transform: booleanAttribute }) noBorders: boolean | undefined = this.defaultOptions?.noBorders;
 
     @ContentChild(KbqFormFieldControl) private readonly _control: KbqFormFieldControl<unknown>;
     @ViewChild('connectionContainer') private readonly connectionContainerRef: ElementRef;
@@ -111,22 +123,12 @@ export class KbqFormField implements AfterContentInit, AfterViewInit {
 
     canCleanerClearByEsc: boolean = true;
 
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly elementRef = inject(ElementRef);
-    private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
-
     /** The form field's control. */
     get control() {
         if (!this._control) {
             throw getKbqFormFieldMissingControlError();
         }
         return this._control;
-    }
-
-    /** Determines if borders and shadows should be disabled. */
-    get shouldDisableBorders(): boolean {
-        return this.noBorders || !!this.defaultOptions?.noBorders;
     }
 
     /** Whether the form field control is focused. */
@@ -196,16 +198,17 @@ export class KbqFormField implements AfterContentInit, AfterViewInit {
 
     private _hovered: boolean = false;
 
+    constructor() {
+        afterNextRender(() => {
+            // Should be called after the view has been initialized
+            this.changeDetectorRef.detectChanges();
+        });
+    }
+
     ngAfterContentInit(): void {
         this.initializeControl();
         this.initializePrefixAndSuffix();
         this.initializeHint();
-    }
-
-    ngAfterViewInit(): void {
-        // Because the above changes a value used in the template after it was checked, we need
-        // to trigger CD or the change might not be reflected if there is no other CD scheduled.
-        this.changeDetectorRef.detectChanges();
     }
 
     /** Focuses the control. */

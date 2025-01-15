@@ -18,7 +18,7 @@
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="docsLanguageDropdown">
                 Интерфейс
-                <div class="kbq-dropdown-item__caption">Русский</div>
+                <div class="kbq-dropdown-item__caption">{{ docsLanguageSwitch.currentValue.value }}</div>
             </button>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="examplesLanguageDropdown">
@@ -29,14 +29,26 @@
     </div>
 
     <kbq-dropdown #docsLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
-        @for (language of docsLanguageSwitch.data; track language; let i = $index) {
+        @for (item of docsLanguageSwitch.data; track item; let index = $index) {
             <button
                 kbq-dropdown-item
-                [class.kbq-selected]="language.selected"
-                [disabled]="language.id !== 'ru-RU'"
-                (click)="setLanguage(i)"
+                [class.kbq-selected]="item.selected"
+                [disabled]="item.disabled"
+                (click)="docsLanguageSwitch.setValue(index)"
             >
-                {{ language.value }}
+                {{ item.value }}
+            </button>
+        }
+    </kbq-dropdown>
+
+    <kbq-dropdown #examplesLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
+        @for (item of examplesLanguageSwitch.data; track item; let index = $index) {
+            <button
+                kbq-dropdown-item
+                [class.kbq-selected]="item.selected"
+                (click)="examplesLanguageSwitch.setValue(index)"
+            >
+                {{ item.value }}
             </button>
         }
     </kbq-dropdown>
@@ -47,8 +59,8 @@
     <div>
         <div
             #versionDropdownDropdownTrigger="kbqDropdownTrigger"
-            #versionPicker="kbqDocVersionPicker"
-            kbq-docs-version-picker
+            #versionPicker="docsVersionPicker"
+            docsVersionPicker
             class="docs-footer__control"
             [class.kbq-active]="versionDropdownDropdownTrigger.opened"
             [kbqDropdownTriggerFor]="versionDropdown"
@@ -71,14 +83,6 @@
                         (click)="versionPicker.goToVersion(version)"
                     >
                         <div>{{ version.name }}</div>
-                    </button>
-                }
-            </kbq-dropdown>
-
-            <kbq-dropdown #examplesLanguageDropdown="kbqDropdown" [class]="'docs-dropdown'">
-                @for (language of examplesLanguageSwitch.data; track language; let i = $index) {
-                    <button kbq-dropdown-item [class.kbq-selected]="language.selected" (click)="setLanguage(i)">
-                        {{ language.value }}
                     </button>
                 }
             </kbq-dropdown>

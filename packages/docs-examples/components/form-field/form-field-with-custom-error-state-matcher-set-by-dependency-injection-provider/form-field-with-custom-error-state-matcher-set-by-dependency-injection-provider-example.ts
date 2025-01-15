@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ErrorStateMatcher } from '@koobiq/components/core';
+import { ErrorStateMatcher, kbqErrorStateMatcherProvider } from '@koobiq/components/core';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -33,12 +33,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
         ReactiveFormsModule,
         KbqButtonModule
     ],
-    providers: [
-        {
-            provide: ErrorStateMatcher,
-            useClass: CustomErrorStateMatcher
-        }
-    ],
+    providers: [kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>

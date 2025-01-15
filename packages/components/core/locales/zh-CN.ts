@@ -1,3 +1,5 @@
+import { KbqCodeBlockLocaleConfiguration } from './types';
+
 export const zhCNLocaleData = {
     select: { hiddenItemsText: '另外 {{ number }} 个' },
     datepicker: {
@@ -35,7 +37,7 @@ export const zhCNLocaleData = {
         viewAllText: '显示全部',
         viewLessText: '显示部分',
         openExternalSystemTooltip: '在外部系统中打开'
-    },
+    } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: '城市或时区'
     }

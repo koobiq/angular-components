@@ -1,22 +1,42 @@
-import { Component, Inject, ViewEncapsulation } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
-import { koobiqVersion, koobiqVersionFull } from '../../version';
-import { NavbarProperty, NavbarPropertyParameters } from '../navbar/navbar-property';
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { distinctUntilKeyChanged } from 'rxjs';
+import { DocsLocale } from 'src/app/constants/locale';
+import { DocsLocaleService } from 'src/app/services/locale.service';
+import { koobiqVersion } from '../../version';
+import { NavbarProperty } from '../navbar/navbar-property';
+import { DocsVersionPickerDirective } from '../version-picker/version-picker.directive';
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqIconModule,
+        KbqLinkModule,
+        KbqDropdownModule,
+        DocsVersionPickerDirective
+    ],
     selector: 'docs-footer',
     templateUrl: './footer.component.html',
-    styleUrls: ['./footer.component.scss'],
+    styleUrl: './footer.component.scss',
     host: {
         class: 'docs-footer'
     },
+    changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class FooterComponent {
-    version = koobiqVersion;
+export class DocsFooterComponent {
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE);
+    private readonly location = inject(Location);
+    private readonly docsLocaleService = inject(DocsLocaleService);
 
-    examplesLanguageSwitch: NavbarProperty;
-    docsLanguageSwitch: NavbarProperty;
+    readonly version = koobiqVersion;
+    readonly examplesLanguageSwitch: NavbarProperty;
+    readonly docsLanguageSwitch: NavbarProperty;
 
     get selectedLanguages(): string {
         if (this.docsLanguageSwitch.currentValue.value === this.examplesLanguageSwitch.currentValue.value) {
@@ -26,51 +46,53 @@ export class FooterComponent {
         return `${this.docsLanguageSwitch.currentValue.value}, ${this.examplesLanguageSwitch.currentValue.value}`;
     }
 
-    private docsLanguageProperty: NavbarPropertyParameters = {
-        property: 'docs_language',
-        data: [
-            {
-                name: 'Интерфейс',
-                value: 'Русский',
-                id: 'ru-RU',
-                selected: false
-            },
-            {
-                name: 'Interface',
-                value: 'English',
-                id: 'en-US',
-                selected: false
-            }
-        ],
-        updateTemplate: false,
-        updateSelected: true
-    };
+    constructor() {
+        this.docsLanguageSwitch = new NavbarProperty({
+            property: 'docs_language',
+            data: [
+                {
+                    name: 'Интерфейс',
+                    value: 'Русский',
+                    id: DocsLocale.Ru,
+                    selected: false
+                },
+                {
+                    name: 'Interface',
+                    value: 'English',
+                    id: DocsLocale.En,
+                    selected: false,
+                    disabled: true
+                }
+            ],
+            updateSelected: true
+        });
 
-    private examplesLanguageProperty: NavbarPropertyParameters = {
-        property: 'docs_examples-language',
-        data: [],
-        updateTemplate: false,
-        updateSelected: true
-    };
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        console.debug(koobiqVersionFull);
-        this.examplesLanguageProperty.data.push(
-            ...localeService.locales.items
+        this.examplesLanguageSwitch = new NavbarProperty({
+            property: 'docs_examples-language',
+            data: this.localeService.locales.items
                 // exclude fa-IR (DS-2219)
                 .filter((item) => item.id !== 'fa-IR')
-                .map((item) => ({ id: item.id, value: item.name, selected: false }))
-        );
+                .map((item) => ({ id: item.id, value: item.name, selected: false })),
+            updateSelected: true
+        });
 
-        this.docsLanguageSwitch = new NavbarProperty(this.docsLanguageProperty);
-        this.examplesLanguageSwitch = new NavbarProperty(this.examplesLanguageProperty);
+        const index = this.docsLanguageSwitch.data.findIndex(
+            (item) => item.id === this.docsLocaleService.getLocaleFromURL(this.location.path())
+        );
+        if (index >= 0) {
+            this.docsLanguageSwitch.setValue(index);
+        }
+
+        this.docsLanguageSwitch.changes
+            .pipe(distinctUntilKeyChanged('value'), takeUntilDestroyed())
+            .subscribe(({ value: { id } }) => {
+                this.docsLocaleService.setLocale(id);
+            });
 
         this.examplesLanguageSwitch.changes
-            // .pipe(filter(({ name }) => ['init', 'setValue'].includes(name)))
-            .subscribe(({ value: { id } }) => this.localeService.setLocale(id));
-    }
-
-    setLanguage(i) {
-        this.examplesLanguageSwitch.setValue(i);
+            .pipe(distinctUntilKeyChanged('value'), takeUntilDestroyed())
+            .subscribe(({ value: { id } }) => {
+                this.localeService.setLocale(id);
+            });
     }
 }

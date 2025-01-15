@@ -5,17 +5,15 @@
 
 @use '../dist/components/core/styles/koobiq-theme' as *;
 
-@use '../app/containers/docs-app/docs-app-theme';
-@use '../app/containers/icons-viewer/icons-viewer-theme';
+@use '../app/app-theme';
+@use '../app/components/icons-viewer/icons-viewer-theme';
 @use '../app/components/component-viewer/component-viewer-theme';
 @use '../app/components/anchors/anchors-theme';
 @use '../app/components/footer/footer-theme';
 @use '../app/components/sidenav/sidenav-theme';
 @use '../app/components/navbar/navbar-theme';
 @use '../app/components/welcome/welcome-theme';
-
-@use '../app/components/docs-live-example-viewer/docs-live-example-viewer-theme';
-@use '../app/components/docs-example-source/docs-example-source-theme';
+@use '../app/components/live-example-viewer/live-example-viewer-theme';
 @use '../app/components/page-not-found/page-not-found-theme';
 
 @use '../styles/hot-keys';
@@ -35,23 +33,21 @@
     @include footer-theme.kbq-docs-footer-typography();
     @include sidenav-theme.kbq-docs-sidenav-typography();
     @include navbar-theme.kbq-docs-navbar-typography();
-    @include docs-example-source-theme.kbq-docs-example-source-typography();
     @include icons-viewer-theme.kbq-docs-icons-viewer-typography();
     @include welcome-theme.kbq-docs-welcome-typography();
-    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-typography();
+    @include live-example-viewer-theme.kbq-docs-live-example-viewer-typography();
 }
 
 // Include all theme styles for the components.
 @mixin docs-components-theme() {
-    @include docs-app-theme.kbq-docs-app-theme();
+    @include app-theme.kbq-docs-app-theme();
     @include component-viewer-theme.kbq-docs-component-viewer-theme();
     @include anchors-theme.kbq-docs-anchors-theme();
     @include footer-theme.kbq-docs-footer-theme();
     @include sidenav-theme.kbq-docs-sidenav-theme();
     @include navbar-theme.kbq-docs-navbar-theme();
     @include icons-viewer-theme.kbq-docs-icons-viewer-theme();
-    @include docs-live-example-viewer-theme.kbq-docs-live-example-viewer-theme();
-    @include docs-example-source-theme.kbq-docs-example-source-theme();
+    @include live-example-viewer-theme.kbq-docs-live-example-viewer-theme();
     @include hot-keys.hot-key-button-theme();
     @include page-not-found-theme.kbq-docs-page-not-found-theme();
     @include welcome-theme.kbq-docs-welcome-theme();

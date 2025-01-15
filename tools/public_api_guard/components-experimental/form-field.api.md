@@ -6,7 +6,6 @@
 
 import { AbstractControlDirective } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
-import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
@@ -14,6 +13,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqInputPassword } from '@koobiq/components/input';
 import { KbqNumberInput } from '@koobiq/components/input';
+import { Provider } from '@angular/core';
 
 // @public
 export const getKbqFormFieldMissingControlError: () => Error;
@@ -46,7 +46,8 @@ export class KbqError extends KbqHint {
 }
 
 // @public
-export class KbqFormField implements AfterContentInit, AfterViewInit {
+export class KbqFormField implements AfterContentInit {
+    constructor();
     // (undocumented)
     canCleanerClearByEsc: boolean;
     get control(): KbqFormFieldControl<unknown>;
@@ -71,13 +72,10 @@ export class KbqFormField implements AfterContentInit, AfterViewInit {
     static ngAcceptInputType_noBorders: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
-    // (undocumented)
-    ngAfterViewInit(): void;
     noBorders: boolean | undefined;
     protected onContainerClick(event: MouseEvent): void;
     protected onKeyDown(event: KeyboardEvent): void;
     protected shouldBeForwarded(property: keyof AbstractControlDirective): boolean;
-    get shouldDisableBorders(): boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; }; }, {}, ["_control", "stepper", "cleaner", "label", "passwordToggle", "hint", "passwordHint", "suffix", "prefix", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "[kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint"], true, never>;
     // (undocumented)
@@ -88,6 +86,9 @@ export class KbqFormField implements AfterContentInit, AfterViewInit {
 export type KbqFormFieldDefaultOptions = Partial<{
     noBorders: boolean;
 }>;
+
+// @public
+export const kbqFormFieldDefaultOptionsProvider: (options: KbqFormFieldDefaultOptions) => Provider;
 
 // @public (undocumented)
 export class KbqFormFieldModule {
