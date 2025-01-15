@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { KbqButtonModule } from '../button';
 import { KbqDropdownModule } from '../dropdown';
 import { KbqIcon } from '../icon';
@@ -15,7 +15,7 @@ import { KbqPipeTemplate } from './filter-bar.types';
         </button>
 
         <kbq-dropdown #newPipes="kbqDropdown">
-            @for (pipe of templates; track pipe) {
+            @for (pipe of filterBar.templates; track pipe) {
                 <button (click)="add(pipe)" kbq-dropdown-item>{{ pipe.name }}</button>
             }
         </kbq-dropdown>
@@ -29,23 +29,8 @@ import { KbqPipeTemplate } from './filter-bar.types';
         KbqIcon
     ]
 })
-export class KbqFilterAdd implements AfterContentInit {
+export class KbqFilterAdd {
     protected readonly filterBar = inject(KbqFilterBar);
-
-    @Input()
-    set templates(value: KbqPipeTemplate[]) {
-        this._templates = value;
-    }
-
-    get templates(): KbqPipeTemplate[] {
-        return this._templates;
-    }
-
-    private _templates: KbqPipeTemplate[];
-
-    ngAfterContentInit(): void {
-        this.filterBar.templates = this.templates;
-    }
 
     add(pipe: KbqPipeTemplate) {
         this.filterBar.onAddPipe.next(pipe);
