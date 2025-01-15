@@ -1,5 +1,12 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
+import {
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -72,7 +79,7 @@ function buildFileTree(value: any, level: number): FileNode[] {
         KbqPipeStates
     ]
 })
-export class KbqPipeMultiTreeSelectComponent {
+export class KbqPipeMultiTreeSelectComponent implements AfterContentInit {
     protected readonly filterBar = inject(KbqFilterBar);
     protected readonly basePipe = inject(KbqPipeComponent);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);

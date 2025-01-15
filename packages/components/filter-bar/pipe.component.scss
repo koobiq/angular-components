@@ -84,7 +84,6 @@
             padding-left: 4px;
             padding-right: 4px;
 
-
             & .kbq-button {
                 width: 100%;
                 justify-content: flex-start;
@@ -165,7 +164,6 @@
         }
     }
 }
-
 
 @include kbq-filter-bar-theme();
 @include kbq-filter-bar-typography();
