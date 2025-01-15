@@ -22,14 +22,14 @@
     }
 }
 
+.kbq-breadcrumb-item__link-behavior {
+    text-decoration: none;
+}
+
 .kbq-breadcrumb__more {
     &.kbq-button-icon {
         --kbq-button-icon-size-horizontal-padding: 4px;
     }
-}
-
-.kbq-dropdown-item__link-wrapper {
-    text-decoration: none;
 }
 
 // theme

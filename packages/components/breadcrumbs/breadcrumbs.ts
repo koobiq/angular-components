@@ -1,4 +1,4 @@
-import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -9,6 +9,7 @@ import {
     ContentChildren,
     DestroyRef,
     Directive,
+    forwardRef,
     inject,
     InjectionToken,
     Input,
@@ -48,7 +49,7 @@ export const KBQ_BREADCRUMBS_CONFIGURATION = new InjectionToken<KbqBreadcrumbsCo
 );
 
 /** Utility provider for `KBQ_BREADCRUMBS_CONFIGURATION`. */
-export const kbqBreadcrumbsConfigurationProvider = (configuration: KbqBreadcrumbsConfiguration): Provider => ({
+export const provideKbqBreadcrumbsConfiguration = (configuration: KbqBreadcrumbsConfiguration): Provider => ({
     provide: KBQ_BREADCRUMBS_CONFIGURATION,
     useValue: configuration
 });
@@ -67,9 +68,9 @@ export class KbqBreadcrumbsSeparator {
  */
 @Directive({
     standalone: true,
-    hostDirectives: [RdxRovingFocusItemDirective],
     selector: '[kbq-button][kbqBreadcrumb]',
-    host: { class: 'kbq-breadcrumb-item' }
+    host: { class: 'kbq-breadcrumb-item' },
+    hostDirectives: [RdxRovingFocusItemDirective]
 })
 export class KbqDefaultBreadcrumbStyler implements OnInit {
     button = inject(KbqButton, { optional: true, host: true });
@@ -123,17 +124,20 @@ export class KbqBreadcrumbItem {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        AsyncPipe,
         NgTemplateOutlet,
         RouterLink,
         KbqIconModule,
         KbqButtonModule,
         KbqDropdownModule,
         KbqBreadcrumbItem,
-        KbqDefaultBreadcrumbStyler
+        KbqDefaultBreadcrumbStyler,
+        RdxRovingFocusGroupDirective,
+        RdxRovingFocusItemDirective
     ],
     host: {
-        '[class]': 'class',
+        '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
+        '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
+        '[class.kbq-breadcrumbs_big]': 'size === "big"',
         '[attr.aria-label]': "'breadcrumb'"
     },
     hostDirectives: [RdxRovingFocusGroupDirective]
@@ -141,21 +145,17 @@ export class KbqBreadcrumbItem {
 export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
 
-    @Input()
-    size: KbqDefaultSizes = this.configuration.size;
+    @Input() size: KbqDefaultSizes = this.configuration.size;
 
-    @Input()
-    max: number | null = this.configuration.max;
+    @Input() max: number | null = this.configuration.max;
+
+    @Input({ transform: booleanAttribute }) disabled: boolean = false;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     separator?: TemplateRef<any>;
 
-    @ContentChildren(KbqBreadcrumbItem)
+    @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
     items: QueryList<KbqBreadcrumbItem>;
-
-    get class(): string[] {
-        return [`kbq-breadcrumbs_${this.size}`];
-    }
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);

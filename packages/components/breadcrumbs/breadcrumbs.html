@@ -8,31 +8,34 @@
 }
 
 @if (items.length > 3 && max !== null && max !== items.length) {
-    @let visibleItemsCount = max - 2;
     <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
     <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
-    @defer (on immediate) {
+    <!-- delay rendering for proper elements order -->
+    @if (true) {
         <button
             kbq-button
             kbqBreadcrumb
             class="kbq-breadcrumb__more"
             [color]="KbqComponentColors.Contrast"
-            [kbqDropdownTriggerFor]="hiddenBreadcrumbs"
+            [kbqDropdownTriggerFor]="hiddenBreadcrumbsDropdown"
             [kbqStyle]="KbqButtonStyles.Transparent"
             [openByArrowDown]="false"
         >
             <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>
         </button>
-        <kbq-dropdown #hiddenBreadcrumbs="kbqDropdown">
+        <ng-container [ngTemplateOutlet]="separatorTemplate" />
+
+        <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
             @for (item of items.toArray().slice(1, -1 * visibleItemsCount); track item) {
-                <a class="kbq-dropdown-item__link-wrapper" [routerLink]="item.routerLink?.urlTree">
+                <a class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
                     <button kbq-dropdown-item [disabled]="item.disabled">{{ item.text }}</button>
                 </a>
             }
         </kbq-dropdown>
     }
-    <ng-container [ngTemplateOutlet]="separatorTemplate" />
+
+    @let visibleItemsCount = max - 2;
 
     @for (item of items.toArray().slice(-1 * visibleItemsCount); track item; let last = $last) {
         <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
@@ -46,7 +49,7 @@
     @if (item.customTemplateRef) {
         <ng-container [ngTemplateOutlet]="item.customTemplateRef" />
     } @else {
-        <a [routerLink]="item.routerLink?.urlTree">
+        <a tabindex="-1" class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
             <button
                 kbq-button
                 kbqBreadcrumb
