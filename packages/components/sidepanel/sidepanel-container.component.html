@@ -3,7 +3,7 @@
         <div class="kbq-sidepanel-indent" (click)="exit()"></div>
     }
 
-    <div cdkTrapFocus class="kbq-sidepanel-content" [cdkTrapFocusAutoCapture]="trapFocusAutoCapture">
+    <div class="kbq-sidepanel-content" [cdkTrapFocus]="trapFocus" [cdkTrapFocusAutoCapture]="trapFocusAutoCapture">
         <ng-template cdkPortalOutlet />
     </div>
 </div>

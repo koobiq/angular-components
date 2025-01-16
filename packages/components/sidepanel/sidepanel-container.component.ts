@@ -70,6 +70,10 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         return this.sidepanelConfig.trapFocusAutoCapture ?? !!this.sidepanelConfig.hasBackdrop;
     }
 
+    get trapFocus(): boolean {
+        return this.sidepanelConfig.trapFocus ?? !!this.sidepanelConfig.hasBackdrop;
+    }
+
     /** Whether the component has been destroyed. */
     private destroyed: boolean;
 
