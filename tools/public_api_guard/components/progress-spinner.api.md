@@ -10,7 +10,6 @@ import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/common';
-import { KbqDefaultSizes } from '@koobiq/components/core';
 
 // @public (undocumented)
 export class KbqProgressSpinner extends KbqProgressSpinnerMixinBase implements CanColor {
@@ -78,7 +77,7 @@ export class KbqProgressSpinnerText {
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
 // @public (undocumented)
-export type ProgressSpinnerSize = Exclude<KbqDefaultSizes, 'normal'>;
+export type ProgressSpinnerSize = 'compact' | 'big';
 
 // (No @packageDocumentation comment for this package)
 

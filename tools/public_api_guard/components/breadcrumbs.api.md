@@ -25,7 +25,7 @@ export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfigu
 export const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration;
 
 // @public
-export class KbqBreadcrumb {
+export class KbqBreadcrumbItem {
     // (undocumented)
     customTemplateRef: TemplateRef<any>;
     // (undocumented)
@@ -37,19 +37,19 @@ export class KbqBreadcrumb {
     // (undocumented)
     text: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumb, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumb, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
 }
 
 // @public (undocumented)
 export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
-    get class(): string[];
-    // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     // (undocumented)
-    items: QueryList<KbqBreadcrumb>;
+    disabled: boolean;
+    // (undocumented)
+    items: QueryList<KbqBreadcrumbItem>;
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
@@ -57,13 +57,15 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     max: number | null;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     separator?: TemplateRef<any>;
     // (undocumented)
     size: KbqDefaultSizes;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -74,9 +76,6 @@ export interface KbqBreadcrumbsConfiguration {
     // (undocumented)
     size: KbqDefaultSizes;
 }
-
-// @public
-export const kbqBreadcrumbsConfigurationProvider: (configuration: KbqBreadcrumbsConfiguration) => Provider;
 
 // @public (undocumented)
 export class KbqBreadcrumbsSeparator {
@@ -109,6 +108,9 @@ export class KbqDefaultBreadcrumbStyler implements OnInit {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDefaultBreadcrumbStyler, never>;
 }
+
+// @public
+export const provideKbqBreadcrumbsConfiguration: (configuration: KbqBreadcrumbsConfiguration) => Provider;
 
 // (No @packageDocumentation comment for this package)
 
