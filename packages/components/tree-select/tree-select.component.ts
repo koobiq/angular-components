@@ -61,6 +61,7 @@ import {
     HasTabIndex,
     HasTabIndexCtor,
     KBQ_LOCALE_SERVICE,
+    KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqLocaleService,
     KbqSelectMatcher,
@@ -178,7 +179,8 @@ const KbqTreeSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorS
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqTreeSelect },
-        { provide: KbqTree, useExisting: KbqTreeSelect }
+        { provide: KbqTree, useExisting: KbqTreeSelect },
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqTreeSelect }
     ]
 })
 export class KbqTreeSelect

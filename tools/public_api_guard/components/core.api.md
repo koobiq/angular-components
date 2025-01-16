@@ -1059,6 +1059,9 @@ export const KBQ_OPTION_PARENT_COMPONENT: InjectionToken<KbqOptionParentComponen
 // @public (undocumented)
 export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 
+// @public
+export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
+
 // @public (undocumented)
 export const KBQ_SANITY_CHECKS: InjectionToken<boolean>;
 
@@ -1519,6 +1522,12 @@ export class KbqOptionSelectionChange<T = KbqOption> {
     isUserInput: boolean;
     // (undocumented)
     source: T;
+}
+
+// @public (undocumented)
+export interface KbqParentPopup {
+    // (undocumented)
+    closedStream: Observable<boolean>;
 }
 
 // @public (undocumented)

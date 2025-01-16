@@ -10,6 +10,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqParentPopup } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
@@ -142,6 +143,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected originSelector: string;
     // (undocumented)
     protected overlayConfig: OverlayConfig;
+    // (undocumented)
+    protected parentPopup: KbqParentPopup | null;
     // (undocumented)
     placementChange: EventEmitter<any>;
     relativeToPointer: boolean;

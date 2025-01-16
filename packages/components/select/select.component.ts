@@ -69,6 +69,7 @@ import {
     HasTabIndexCtor,
     KBQ_LOCALE_SERVICE,
     KBQ_OPTION_PARENT_COMPONENT,
+    KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqLocaleService,
     KbqOptgroup,
@@ -181,7 +182,8 @@ const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorState
     ],
     providers: [
         { provide: KbqFormFieldControl, useExisting: KbqSelect },
-        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect }
+        { provide: KBQ_OPTION_PARENT_COMPONENT, useExisting: KbqSelect },
+        { provide: KBQ_PARENT_POPUP, useExisting: KbqSelect }
     ]
 })
 export class KbqSelect

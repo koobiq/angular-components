@@ -1,3 +1,15 @@
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
+
+export interface KbqParentPopup {
+    closedStream: Observable<boolean>;
+}
+
+/**
+ * InjectionToken for providing component with popup. Used in select and tree-select for tooltip.
+ */
+export const KBQ_PARENT_POPUP = new InjectionToken<KbqParentPopup>('kbq-parent-popup');
+
 export enum PopUpPlacements {
     Top = 'top',
     TopLeft = 'topLeft',

@@ -22,8 +22,11 @@ import {
     inject,
     numberAttribute
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
+    KBQ_PARENT_POPUP,
     KbqComponentColors,
+    KbqParentPopup,
     KbqPopUp,
     KbqPopUpTrigger,
     POSITION_TO_CSS_MAP,
@@ -128,6 +131,7 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
 })
 export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements OnDestroy {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
+    protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
 
     @Input('kbqVisible')
@@ -266,6 +270,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     constructor() {
         super();
+
+        this.parentPopup?.closedStream.pipe(takeUntilDestroyed()).subscribe(() => this.hide());
 
         this.focusMonitor.monitor(this.elementRef.nativeElement);
     }
