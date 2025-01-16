@@ -13,6 +13,7 @@ import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { OnInit } from '@angular/core';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';
@@ -27,9 +28,13 @@ export const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration;
 // @public
 export class KbqBreadcrumbItem {
     // (undocumented)
+    current: boolean;
+    // (undocumented)
     customTemplateRef: TemplateRef<any>;
     // (undocumented)
     disabled: boolean;
+    // (undocumented)
+    static ngAcceptInputType_current: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -37,7 +42,7 @@ export class KbqBreadcrumbItem {
     // (undocumented)
     text: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "current": { "alias": "current"; "required": false; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
 }
@@ -60,6 +65,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
     separator?: TemplateRef<any>;
     // (undocumented)
