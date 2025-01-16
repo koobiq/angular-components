@@ -334,17 +334,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "breadcrumbs-size-example.ts",
     "importPath": "components/breadcrumbs"
   },
-  "breadcrumbs-truncate-items": {
-    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-items",
-    "title": "Breadcrumbs Truncate Items",
-    "componentName": "BreadcrumbsTruncateItemsExample",
+  "breadcrumbs-truncate-by-abbrev-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-by-abbrev-items",
+    "title": "Breadcrumbs Truncate By Abbreviation Items",
+    "componentName": "BreadcrumbsTruncateByAbbrevItemsExample",
     "files": [
-      "breadcrumbs-truncate-items-example.ts",
-      "breadcrumbs-truncate-items-example.scss"
+      "breadcrumbs-truncate-by-abbrev-items-example.ts"
     ],
-    "selector": "breadcrumbs-truncate-items-example",
+    "selector": "breadcrumbs-truncate-by-abbrev-items-example",
     "additionalComponents": [],
-    "primaryFile": "breadcrumbs-truncate-items-example.ts",
+    "primaryFile": "breadcrumbs-truncate-by-abbrev-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-truncate-head-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-head-items",
+    "title": "Breadcrumbs Truncate Head Items",
+    "componentName": "BreadcrumbsTruncateHeadItemsExample",
+    "files": [
+      "breadcrumbs-truncate-head-items-example.ts",
+      "./breadcrumbs-truncate-head-items-example.scss"
+    ],
+    "selector": "breadcrumbs-truncate-head-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-head-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-truncate-tail-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-tail-items",
+    "title": "Breadcrumbs Truncate Tail Items",
+    "componentName": "BreadcrumbsTruncateTailItemsExample",
+    "files": [
+      "breadcrumbs-truncate-tail-items-example.ts",
+      "breadcrumbs-truncate-tail-items-example.scss"
+    ],
+    "selector": "breadcrumbs-truncate-tail-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-tail-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
   "button-toggle-alignment-overview": {
@@ -3602,7 +3627,11 @@ return import('@koobiq/docs-examples/components/breadcrumbs');
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-size':
 return import('@koobiq/docs-examples/components/breadcrumbs');
-  case 'breadcrumbs-truncate-items':
+  case 'breadcrumbs-truncate-by-abbrev-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-head-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-tail-items':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'button-toggle-alignment-overview':
 return import('@koobiq/docs-examples/components/button-toggle');
