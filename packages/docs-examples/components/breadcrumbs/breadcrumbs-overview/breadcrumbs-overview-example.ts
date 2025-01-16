@@ -27,5 +27,5 @@ import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumb
     ]
 })
 export class BreadcrumbsOverviewExample {
-    data = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
+    data = ['Main', 'Standards', 'Advanced Encryption Standard', 'Edit'];
 }

@@ -52,9 +52,12 @@
         <a tabindex="-1" class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
             <button
                 kbq-button
+                kbq-title
                 kbqBreadcrumb
                 [attr.aria-current]="last ? 'page' : null"
                 [disabled]="item.disabled || last"
+                [kbqPlacementPriority]="PopUpPlacements.Bottom"
+                [kbqTooltipArrow]="false"
             >
                 {{ item.text }}
             </button>

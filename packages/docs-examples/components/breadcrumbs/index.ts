@@ -3,19 +3,22 @@ import { BreadcrumbsCustomTemplateExample } from './breadcrumbs-custom-template/
 import { BreadcrumbsDropdownExample } from './breadcrumbs-dropdown/breadcrumbs-dropdown-example';
 import { BreadcrumbsOverviewExample } from './breadcrumbs-overview/breadcrumbs-overview-example';
 import { BreadcrumbsSizeExample } from './breadcrumbs-size/breadcrumbs-size-example';
+import { BreadcrumbsTruncateItemsExample } from './breadcrumbs-truncate-items/breadcrumbs-truncate-items-example';
 
 export {
     BreadcrumbsCustomTemplateExample,
     BreadcrumbsDropdownExample,
     BreadcrumbsOverviewExample,
-    BreadcrumbsSizeExample
+    BreadcrumbsSizeExample,
+    BreadcrumbsTruncateItemsExample
 };
 
 const EXAMPLES = [
     BreadcrumbsOverviewExample,
     BreadcrumbsSizeExample,
     BreadcrumbsDropdownExample,
-    BreadcrumbsCustomTemplateExample
+    BreadcrumbsCustomTemplateExample,
+    BreadcrumbsTruncateItemsExample
 ];
 
 @NgModule({

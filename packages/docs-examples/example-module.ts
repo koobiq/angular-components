@@ -334,6 +334,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "breadcrumbs-size-example.ts",
     "importPath": "components/breadcrumbs"
   },
+  "breadcrumbs-truncate-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-items",
+    "title": "Breadcrumbs Truncate Items",
+    "componentName": "BreadcrumbsTruncateItemsExample",
+    "files": [
+      "breadcrumbs-truncate-items-example.ts",
+      "breadcrumbs-truncate-items-example.scss"
+    ],
+    "selector": "breadcrumbs-truncate-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
   "button-toggle-alignment-overview": {
     "packagePath": "components/button-toggle/button-toggle-alignment-overview",
     "title": "Button toggle alignment",
@@ -3588,6 +3601,8 @@ return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-overview':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-size':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-items':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'button-toggle-alignment-overview':
 return import('@koobiq/docs-examples/components/button-toggle');

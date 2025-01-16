@@ -22,9 +22,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
 export interface KbqBreadcrumbsConfiguration {
@@ -102,14 +103,12 @@ export class KbqBreadcrumbView {
     selector: 'kbq-breadcrumb-item',
     template: `
         <ng-content />
-    `,
-    host: {
-        class: 'kbq-breadcrumb-item'
-    }
+    `
 })
 export class KbqBreadcrumbItem {
     @Input() text: string;
     @Input({ transform: booleanAttribute }) disabled: boolean;
+    @Input({ transform: booleanAttribute }) current: boolean = false;
 
     @ContentChild(KbqBreadcrumbView, { read: TemplateRef }) customTemplateRef: TemplateRef<any>;
 
@@ -132,7 +131,8 @@ export class KbqBreadcrumbItem {
         KbqBreadcrumbItem,
         KbqDefaultBreadcrumbStyler,
         RdxRovingFocusGroupDirective,
-        RdxRovingFocusItemDirective
+        RdxRovingFocusItemDirective,
+        KbqTitleModule
     ],
     host: {
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
@@ -165,4 +165,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
+
+    protected readonly PopUpPlacements = PopUpPlacements;
 }

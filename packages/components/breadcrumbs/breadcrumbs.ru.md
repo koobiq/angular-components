@@ -11,3 +11,7 @@
 ## Пользовательский шаблон
 
 <!-- example(breadcrumbs-custom-template) -->
+
+## Сокращение пунктов
+
+<!-- example(breadcrumbs-custom-template) -->

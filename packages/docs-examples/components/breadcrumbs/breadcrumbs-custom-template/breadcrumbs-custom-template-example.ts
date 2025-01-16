@@ -7,9 +7,7 @@ import {
     KbqDefaultBreadcrumbStyler
 } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqIcon } from '@koobiq/components/icon';
-import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
  * @title Breadcrumbs custom-template
@@ -40,9 +38,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqBreadcrumbs,
         RouterLink,
         KbqButtonModule,
-        KbqLinkModule,
         KbqDefaultBreadcrumbStyler,
-        KbqDlModule,
         KbqBreadcrumbView,
         KbqBreadcrumbItem,
         KbqIcon

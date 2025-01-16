@@ -1,3 +1,4 @@
+import { TitleCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
@@ -13,7 +14,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
     template: `
         <kbq-dl [vertical]="true">
             @for (size of sizes; track size) {
-                <kbq-dt class="kbq-text-normal">{{ size }}</kbq-dt>
+                <kbq-dt class="kbq-text-normal">{{ size | titlecase }}</kbq-dt>
                 <kbq-dd>
                     <nav [size]="size" kbq-breadcrumbs>
                         @for (section of data; track section; let last = $last) {
@@ -33,7 +34,8 @@ import { KbqDlModule } from '@koobiq/components/dl';
         RouterLink,
         KbqBreadcrumbItem,
         KbqBreadcrumbs,
-        KbqDlModule
+        KbqDlModule,
+        TitleCasePipe
     ]
 })
 export class BreadcrumbsSizeExample {
