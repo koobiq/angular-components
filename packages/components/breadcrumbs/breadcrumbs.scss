@@ -1,6 +1,6 @@
 @use '../core/styles/common/tokens' as tokens;
 
-[kbq-breadcrumbs] {
+.kbq-breadcrumbs {
     display: flex;
     align-items: center;
 }
@@ -8,8 +8,8 @@
 .kbq-breadcrumb-item {
     &.kbq-button,
     &.kbq-button-icon {
-        --kbq-button-size-horizontal-padding: 6px;
-        --kbq-button-size-height: var(--kbq-size-xxl);
+        --kbq-button-size-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
+        --kbq-button-size-height: var(--kbq-breadcrumb-item-height);
         --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast-secondary);
 
         padding-top: 1px;
@@ -26,13 +26,16 @@
     text-decoration: none;
 }
 
-.kbq-breadcrumb__more {
+.kbq-breadcrumb__expand {
     &.kbq-button-icon {
-        --kbq-button-icon-size-horizontal-padding: 4px;
+        --kbq-button-icon-size-horizontal-padding: var(--kbq-breadcrumb-item-expand-horizontal-padding);
+
+        .kbq-icon {
+            color: var(--kbq-icon-contrast-fade) !important;
+        }
     }
 }
 
-// theme
 .kbq-breadcrumb_current {
     .kbq-button,
     .kbq-button-icon {

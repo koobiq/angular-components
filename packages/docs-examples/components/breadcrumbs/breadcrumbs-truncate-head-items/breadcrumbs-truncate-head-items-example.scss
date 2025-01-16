@@ -1,0 +1,16 @@
+::ng-deep .kbq-breadcrumbs_truncate-by-length {
+    .kbq-breadcrumb-item {
+        max-width: 100px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        .kbq-button-wrapper {
+            display: inline-block;
+            flex-grow: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+}

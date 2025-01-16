@@ -16,7 +16,7 @@ import { KbqIcon } from '@koobiq/components/icon';
     standalone: true,
     selector: 'breadcrumbs-custom-template-example',
     template: `
-        <nav [max]="4" kbq-breadcrumbs>
+        <nav kbq-breadcrumbs>
             @for (section of data; track section; let last = $last) {
                 <kbq-breadcrumb-item
                     [routerLink]="section"

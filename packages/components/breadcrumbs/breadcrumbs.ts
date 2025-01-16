@@ -119,7 +119,7 @@ export class KbqBreadcrumbItem {
     standalone: true,
     selector: 'kbq-breadcrumbs,[kbq-breadcrumbs]',
     templateUrl: './breadcrumbs.html',
-    styleUrls: ['./breadcrumbs.scss'],
+    styleUrls: ['./breadcrumbs.scss', './breadcrumbs-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -135,6 +135,7 @@ export class KbqBreadcrumbItem {
         KbqTitleModule
     ],
     host: {
+        class: 'kbq-breadcrumbs',
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
@@ -161,10 +162,9 @@ export class KbqBreadcrumbs implements AfterContentInit {
     private readonly cdr = inject(ChangeDetectorRef);
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
+    protected readonly PopUpPlacements = PopUpPlacements;
 
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
-
-    protected readonly PopUpPlacements = PopUpPlacements;
 }

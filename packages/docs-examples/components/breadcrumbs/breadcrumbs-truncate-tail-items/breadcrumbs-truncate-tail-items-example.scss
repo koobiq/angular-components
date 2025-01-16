@@ -1,0 +1,17 @@
+::ng-deep .kbq-breadcrumbs_truncate-last-by-length-reverse {
+    .kbq-breadcrumb-item:last-of-type {
+        max-width: 100px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        .kbq-button-wrapper {
+            display: inline-block;
+            flex-grow: 1;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            direction: rtl;
+        }
+    }
+}
