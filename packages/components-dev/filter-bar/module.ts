@@ -352,7 +352,11 @@ export class DemoComponent {
             pipes: [
                 {
                     name: 'required',
-                    value: { name: 'Последний час', value: { start: null, end: null } },
+                    value: {
+                        start: this.adapter.today(),
+                        end: this.adapter.today().minus({ days: 3 }),
+                        showTime: true
+                    },
                     type: KbqPipeTypes.Date,
 
                     required: true,
@@ -371,7 +375,11 @@ export class DemoComponent {
                 },
                 {
                     name: 'cleanable',
-                    value: { name: 'Последний час', value: { start: null, end: null } },
+                    value: {
+                        start: this.adapter.today(),
+                        end: this.adapter.today().minus({ days: 3 }),
+                        showTime: false
+                    },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -381,7 +389,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: { name: 'Последний час', value: { start: null, end: null } },
+                    value: { name: 'Последний час', start: null, end: null },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -391,7 +399,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: { name: 'Последний час', value: { start: null, end: null } },
+                    value: { name: 'Последний час', start: null, end: null },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -531,14 +539,14 @@ export class DemoComponent {
             name: 'Создан',
             type: KbqPipeTypes.Date,
             values: [
-                { name: 'Последний час', value: this.adapter.today().minus({ hours: 1 }) },
-                { name: 'Последние 3 часа', value: this.adapter.today().minus({ hours: 3 }) },
-                { name: 'Последние 24 часа', value: this.adapter.today().minus({ hours: 24 }) },
-                { name: 'Последние 3 дня', value: this.adapter.today().minus({ days: 3 }) },
-                { name: 'Последние 7 дней', value: this.adapter.today().minus({ days: 7 }) },
-                { name: 'Последние 30 дней', value: this.adapter.today().minus({ days: 30 }) },
-                { name: 'Последние 90 дней', value: this.adapter.today().minus({ days: 90 }) },
-                { name: 'Последний год', value: this.adapter.today().minus({ years: 1 }) }
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
+                { name: 'Последние 3 дня', start: null, end: { days: -3 } },
+                { name: 'Последние 7 дней', start: null, end: { days: -7 } },
+                { name: 'Последние 30 дней', start: null, end: { days: -30 } },
+                { name: 'Последние 90 дней', start: null, end: { days: -90 } },
+                { name: 'Последний год', start: null, end: { years: -1 } }
             ],
 
             required: false,
