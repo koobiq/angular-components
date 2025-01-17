@@ -77,7 +77,7 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     readonly defaultErrorStateMatcher: ErrorStateMatcher = inject(ErrorStateMatcher);
     readonly elementRef: ElementRef;
 
-    /** implemented as part of base class. Decided not use mixinErrorState, not to over */
+    /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate */
     updateErrorState() {
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;
