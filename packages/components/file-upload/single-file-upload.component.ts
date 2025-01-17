@@ -4,22 +4,22 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    DestroyRef,
+    DoCheck,
     ElementRef,
     EventEmitter,
-    Inject,
+    inject,
     Input,
     OnDestroy,
-    Optional,
     Output,
     QueryList,
     Renderer2,
-    Self,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormControlStatus, NgControl } from '@angular/forms';
-import { CanDisable, KBQ_LOCALE_SERVICE, KbqLocaleService, ruRULocaleData } from '@koobiq/components/core';
+import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
+import { CanDisable, ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject, Subscription } from 'rxjs';
@@ -29,6 +29,7 @@ import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
+    KbqFileUploadBase,
     KbqFileValidatorFn,
     KbqInputFile,
     KbqInputFileLabel
@@ -49,7 +50,8 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
     }
 })
 export class KbqSingleFileUploadComponent
-    implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor
+    extends KbqFileUploadBase
+    implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -66,6 +68,9 @@ export class KbqSingleFileUploadComponent
      * @deprecated use FormControl for validation
      */
     @Input() customValidation?: KbqFileValidatorFn[];
+
+    /** An object used to control the error state of the component. */
+    @Input() errorStateMatcher: ErrorStateMatcher;
 
     private _file: KbqFileItem | null = null;
 
@@ -111,16 +116,22 @@ export class KbqSingleFileUploadComponent
         return this.hint.length > 0;
     }
 
-    constructor(
-        private cdr: ChangeDetectorRef,
-        private renderer: Renderer2,
-        @Optional() @Inject(KBQ_FILE_UPLOAD_CONFIGURATION) public readonly configuration: KbqInputFileLabel,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService,
-        @Optional() @Self() public ngControl?: NgControl
-    ) {
+    get invalid(): boolean {
+        return !!this.file?.hasError || this.errorState;
+    }
+
+    private cdr = inject(ChangeDetectorRef);
+    private renderer = inject(Renderer2);
+    private destroyRef = inject(DestroyRef);
+    readonly configuration: KbqInputFileLabel | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
+        optional: true
+    });
+
+    constructor() {
+        super();
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
-        if (!localeService) {
+        if (!this.localeService) {
             this.initDefaultParams();
         }
 
@@ -134,7 +145,7 @@ export class KbqSingleFileUploadComponent
     ngAfterViewInit() {
         // FormControl specific errors update
         this.statusChangeSubscription = this.ngControl?.statusChanges
-            ?.pipe(distinctUntilChanged())
+            ?.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe((status: FormControlStatus) => {
                 if (this._file) {
                     this._file.hasError = status === 'INVALID';
@@ -142,6 +153,17 @@ export class KbqSingleFileUploadComponent
                 this.errors = Object.values(this.ngControl?.errors || {});
                 this.cdr.markForCheck();
             });
+
+        this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
+    }
+
+    ngDoCheck() {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
+        }
     }
 
     ngOnDestroy() {

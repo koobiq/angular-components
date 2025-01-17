@@ -1,5 +1,7 @@
-import { InjectionToken } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { ElementRef, inject, InjectionToken } from '@angular/core';
+import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface KbqFile extends File {
     /* used when directory dropped */
@@ -52,3 +54,40 @@ export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
 
     return false;
 };
+
+/** @docs-private */
+export abstract class KbqFileUploadBase implements CanUpdateErrorState {
+    /** Whether the component is in an error state. */
+    errorState: boolean = false;
+
+    /** An object used to control the error state of the component. */
+    abstract errorStateMatcher: ErrorStateMatcher;
+
+    /**
+     * Emits whenever the component state changes and should cause the parent
+     * form-field to update. Implemented as part of `KbqFormFieldControl`.
+     * @docs-private
+     */
+    readonly stateChanges = new Subject<void>();
+
+    readonly localeService: KbqLocaleService | null = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    readonly ngControl: NgControl | null = inject(NgControl, { optional: true, self: true });
+    readonly parentForm: NgForm | null = inject(NgForm, { optional: true });
+    readonly parentFormGroup: FormGroupDirective | null = inject(FormGroupDirective, { optional: true });
+    readonly defaultErrorStateMatcher: ErrorStateMatcher = inject(ErrorStateMatcher);
+    readonly elementRef: ElementRef;
+
+    /** implemented as part of base class. Decided not use mixinErrorState, not to over */
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
+    }
+}

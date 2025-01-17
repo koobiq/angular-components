@@ -90,10 +90,24 @@
             }
 
             &:not(.kbq-disabled) {
-                .kbq-file-upload__row.error {
+                &.kbq-error {
+                    background-color: var(--kbq-background-error-less);
+                    border-color: var(--kbq-line-error) !important;
+
                     :not(.kbq-link),
                     .kbq-icon {
-                        color: var(--kbq-file-upload-multiple-states-error-text-block-color);
+                        color: var(--kbq-foreground-error);
+                    }
+                }
+
+                .multiple__uploaded-item {
+                    &:has(.kbq-file-upload__row.error) {
+                        background-color: var(--kbq-background-error-less);
+
+                        :not(.kbq-link),
+                        .kbq-icon {
+                            color: var(--kbq-foreground-error);
+                        }
                     }
                 }
             }

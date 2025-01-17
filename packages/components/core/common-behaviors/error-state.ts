@@ -18,11 +18,11 @@ export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
 /** @docs-private */
 export interface HasErrorState {
-    parentFormGroup: FormGroupDirective;
-    parentForm: NgForm;
+    parentFormGroup: FormGroupDirective | null;
+    parentForm: NgForm | null;
     defaultErrorStateMatcher: ErrorStateMatcher;
 
-    ngControl: NgControl;
+    ngControl: NgControl | null;
     stateChanges: Subject<void>;
 }
 

@@ -61,6 +61,7 @@
                     formControlName="file-upload"
                     class="layout-margin-bottom-s"
                     [disabled]="disabled"
+                    [errorStateMatcher]="ShowOnFormSubmitErrorStateMatcher"
                     (fileQueueChange)="$event === null ? form.reset() : null"
                 >
                     <i kbq-icon="kbq-info-circle_16"></i>
@@ -70,6 +71,12 @@
                 </kbq-file-upload>
                 <button kbq-button type="submit" (click)="onSubmit()">Submit</button>
             </form>
+        </div>
+
+        <div class="dev-container">
+            <div class="kbq-subheading">Single file-upload, required validation</div>
+            <br />
+            <file-upload-single-required-reactive-validation-example />
         </div>
 
         <div class="dev-container">
@@ -163,6 +170,12 @@
             </kbq-file-upload>
         </div>
 
+        <div class="dev-container">
+            <div class="kbq-subheading">Multiple file-upload, required validation</div>
+            <br />
+            <file-upload-multiple-required-reactive-validation-example />
+        </div>
+
         <div custom-text class="dev-container">
             <div class="kbq-subheading">Multiple file-upload, default UX validation</div>
             <br />
@@ -179,25 +192,7 @@
         <div class="dev-container">
             <div class="kbq-subheading">Multiple file-upload, default UX validation with Reactive Forms</div>
             <br />
-            <kbq-file-upload
-                multiple
-                class="layout-margin-bottom-s"
-                [progressMode]="'indeterminate'"
-                (fileRemoved)="onFileRemoved($event)"
-                (filesAdded)="onFilesAddedForListWithDefaultValidation($event)"
-            >
-                <ng-template #kbqFileIcon>
-                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
-                </ng-template>
-
-                @for (control of this.fileList.controls; track $index) {
-                    <kbq-hint color="error">
-                        @if (control.hasError('maxFileSize')) {
-                            {{ control.value?.file?.name }} - maxFileSize
-                        }
-                    </kbq-hint>
-                }
-            </kbq-file-upload>
+            <file-upload-multiple-default-validation-reactive-forms-overview-example />
         </div>
 
         <div custom-text class="dev-container">

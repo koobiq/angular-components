@@ -7,10 +7,13 @@
 import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CanDisable } from '@koobiq/components/core';
-import { ChangeDetectorRef } from '@angular/core';
+import { CanUpdateErrorState } from '@koobiq/components/core';
 import { ControlValueAccessor } from '@angular/forms';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
+import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i10 from '@koobiq/components/form-field';
 import * as i11 from '@koobiq/components/ellipsis-center';
@@ -26,10 +29,11 @@ import * as i9 from '@koobiq/components/list';
 import { InjectionToken } from '@angular/core';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { QueryList } from '@angular/core';
-import { Renderer2 } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
@@ -79,6 +83,26 @@ export interface KbqFileItem {
     loading?: BehaviorSubject<boolean>;
     // (undocumented)
     progress?: BehaviorSubject<number>;
+}
+
+// @public
+export abstract class KbqFileUploadBase implements CanUpdateErrorState {
+    // (undocumented)
+    readonly defaultErrorStateMatcher: ErrorStateMatcher;
+    // (undocumented)
+    readonly elementRef: ElementRef;
+    errorState: boolean;
+    abstract errorStateMatcher: ErrorStateMatcher;
+    // (undocumented)
+    readonly localeService: KbqLocaleService | null;
+    // (undocumented)
+    readonly ngControl: NgControl | null;
+    // (undocumented)
+    readonly parentForm: NgForm | null;
+    // (undocumented)
+    readonly parentFormGroup: FormGroupDirective | null;
+    readonly stateChanges: Subject<void>;
+    updateErrorState(): void;
 }
 
 // @public (undocumented)
@@ -136,8 +160,8 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 }
 
 // @public (undocumented)
-export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor {
-    constructor(cdr: ChangeDetectorRef, renderer: Renderer2, configuration: KbqInputFileMultipleLabel, localeService?: KbqLocaleService | undefined, ngControl?: NgControl | undefined);
+export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck {
+    constructor();
     // (undocumented)
     accept?: string[];
     // (undocumented)
@@ -150,7 +174,7 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     // (undocumented)
     config: KbqInputFileMultipleLabel;
     // (undocumented)
-    readonly configuration: KbqInputFileMultipleLabel;
+    readonly configuration: KbqInputFileMultipleLabel | null;
     // (undocumented)
     customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
@@ -162,6 +186,7 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     disabled: boolean;
     // @deprecated (undocumented)
     errors: string[];
+    errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     fileQueueChanged: EventEmitter<KbqFileItem[]>;
     fileRemoved: EventEmitter<[KbqFileItem, number]>;
@@ -183,7 +208,7 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngControl?: NgControl | undefined;
+    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -209,14 +234,14 @@ export class KbqMultipleFileUploadComponent implements AfterViewInit, OnDestroy,
     statusChangeSubscription?: Subscription;
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "files": { "alias": "files"; "required": false; }; }, { "fileQueueChanged": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; }, { "fileQueueChanged": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, [null, null, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, never>;
 }
 
 // @public (undocumented)
-export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor {
-    constructor(cdr: ChangeDetectorRef, renderer: Renderer2, configuration: KbqInputFileLabel, localeService?: KbqLocaleService | undefined, ngControl?: NgControl | undefined);
+export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck {
+    constructor();
     // (undocumented)
     accept?: string[];
     // (undocumented)
@@ -224,7 +249,7 @@ export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, K
     // (undocumented)
     config: KbqInputFileLabel;
     // (undocumented)
-    readonly configuration: KbqInputFileLabel;
+    readonly configuration: KbqInputFileLabel | null;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
     cvaOnChange: (_: KbqFileItem | null) => void;
@@ -234,6 +259,7 @@ export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, K
     disabled: boolean;
     // @deprecated (undocumented)
     errors: string[];
+    errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     get file(): KbqFileItem | null;
     set file(currentFile: KbqFileItem | null);
@@ -246,9 +272,11 @@ export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, K
     // (undocumented)
     inputId: string;
     // (undocumented)
+    get invalid(): boolean;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
-    ngControl?: NgControl | undefined;
+    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -266,9 +294,9 @@ export class KbqSingleFileUploadComponent implements AfterViewInit, OnDestroy, K
     statusChangeSubscription?: Subscription;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "file": { "alias": "file"; "required": false; }; }, { "fileQueueChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; }, { "fileQueueChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, [null, null, { optional: true; }, { optional: true; }, { optional: true; self: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, never>;
 }
 
 // (No @packageDocumentation comment for this package)
