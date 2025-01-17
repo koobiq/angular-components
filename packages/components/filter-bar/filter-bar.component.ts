@@ -76,4 +76,8 @@ export class KbqFilterBar {
             console.log('onAddPipe: ', pipe);
         });
     }
+
+    applyPipe(pipe: KbqPipe) {
+        console.log('need apply pipe: ', pipe);
+    }
 }

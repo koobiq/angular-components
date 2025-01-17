@@ -18,6 +18,13 @@ export interface KbqFilter {
     unsaved: boolean;
 }
 
+export interface KbqPipeValue<T> {
+    name?: string;
+    start?: T;
+    end?: T;
+    showTime?: boolean;
+}
+
 export interface KbqPipe<T = any> {
     name: string;
     type: KbqPipeTypes;
