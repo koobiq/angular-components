@@ -77,13 +77,12 @@ describe(KbqBreadcrumbs.name, () => {
         });
 
         it('should enforce the max limit of breadcrumb items displayed', () => {
-            const MORE_BUTTON_NODE_COUNT = 1;
             component.max = 4;
             component.items.push({ text: 'New Item1', disabled: false });
             component.items.push({ text: 'New Item2', disabled: false });
             fixture.detectChanges();
             const breadcrumbItems = findAllBreadcrumbItems(debugElement);
-            expect(breadcrumbItems.length).toBe(component.max - MORE_BUTTON_NODE_COUNT);
+            expect(breadcrumbItems.length).toBe(component.max);
         });
     });
 

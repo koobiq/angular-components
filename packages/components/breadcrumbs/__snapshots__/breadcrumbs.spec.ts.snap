@@ -2,6 +2,7 @@
 
 exports[`KbqBreadcrumbs core should apply the default size class to the breadcrumbs container 1`] = `
 DOMTokenList {
-  "0": "kbq-breadcrumbs_normal",
+  "0": "kbq-breadcrumbs",
+  "1": "kbq-breadcrumbs_normal",
 }
 `;
