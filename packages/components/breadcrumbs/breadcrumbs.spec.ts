@@ -81,8 +81,9 @@ describe(KbqBreadcrumbs.name, () => {
             component.items.push({ text: 'New Item1', disabled: false });
             component.items.push({ text: 'New Item2', disabled: false });
             fixture.detectChanges();
-            const breadcrumbItems = findAllBreadcrumbItems(debugElement);
-            expect(breadcrumbItems.length).toBe(component.max);
+            const displayedBreadcrumbItems = findAllBreadcrumbItems(debugElement);
+            expect(component.items.length).toBeGreaterThan(component.max);
+            expect(displayedBreadcrumbItems.length).toBe(component.max);
         });
     });
 
