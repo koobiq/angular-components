@@ -1,11 +1,13 @@
-import { NgComponentOutlet } from '@angular/common';
+import { AsyncPipe, NgComponentOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, Input, Type, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, inject, Input, Type, ViewEncapsulation } from '@angular/core';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
-import { Observable, forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DocsLocale } from 'src/app/constants/locale';
+import { DocsLocaleService } from 'src/app/services/locale.service';
 import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
 
 /** Preferred order for files of an example displayed in the viewer. */
@@ -23,7 +25,8 @@ interface ExampleFileData {
         DocsStackblitzButtonComponent,
         KbqLinkModule,
         KbqCodeBlockModule,
-        NgComponentOutlet
+        NgComponentOutlet,
+        AsyncPipe
     ],
     selector: 'docs-live-example-viewer',
     templateUrl: './docs-live-example-viewer.html',
@@ -71,10 +74,11 @@ export class DocsLiveExampleViewerComponent {
 
     private _example: string | null;
 
-    constructor(
-        private readonly elementRef: ElementRef<HTMLElement>,
-        private http: HttpClient
-    ) {}
+    readonly docsLocaleService = inject(DocsLocaleService);
+    private readonly elementRef = inject(ElementRef);
+    private readonly httpClient = inject(HttpClient);
+
+    readonly DocsLocale = DocsLocale;
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;
@@ -144,7 +148,7 @@ export class DocsLiveExampleViewerComponent {
      * @returns Observable emitting the text content of the file.
      */
     private fetchCode(importPath: string): Observable<string> {
-        return this.http.get(importPath, { responseType: 'text' });
+        return this.httpClient.get(importPath, { responseType: 'text' });
     }
 
     private async loadExampleComponent() {

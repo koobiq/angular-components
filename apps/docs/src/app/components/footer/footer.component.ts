@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { AsyncPipe, Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
@@ -18,7 +18,8 @@ import { DocsVersionPickerDirective } from '../version-picker/version-picker.dir
         KbqIconModule,
         KbqLinkModule,
         KbqDropdownModule,
-        DocsVersionPickerDirective
+        DocsVersionPickerDirective,
+        AsyncPipe
     ],
     selector: 'docs-footer',
     templateUrl: './footer.component.html',
@@ -32,8 +33,9 @@ import { DocsVersionPickerDirective } from '../version-picker/version-picker.dir
 export class DocsFooterComponent {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE);
     private readonly location = inject(Location);
-    private readonly docsLocaleService = inject(DocsLocaleService);
+    readonly docsLocaleService = inject(DocsLocaleService);
 
+    readonly DocsLocale = DocsLocale;
     readonly version = koobiqVersion;
     readonly examplesLanguageSwitch: NavbarProperty;
     readonly docsLanguageSwitch: NavbarProperty;
@@ -51,17 +53,14 @@ export class DocsFooterComponent {
             property: 'docs_language',
             data: [
                 {
-                    name: 'Интерфейс',
                     value: 'Русский',
                     id: DocsLocale.Ru,
                     selected: false
                 },
                 {
-                    name: 'Interface',
                     value: 'English',
                     id: DocsLocale.En,
-                    selected: false,
-                    disabled: true
+                    selected: false
                 }
             ],
             updateSelected: true

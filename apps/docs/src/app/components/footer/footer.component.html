@@ -1,5 +1,10 @@
+@let locale = docsLocaleService.changes | async;
+@let isRuLocale = locale === DocsLocale.Ru;
+
 <div class="docs-footer__item">
-    <div class="docs-footer__label">Язык интерфейса и примеров</div>
+    <div class="docs-footer__label">
+        {{ isRuLocale ? 'Язык интерфейса и примеров' : 'Interface and examples language' }}
+    </div>
     <div>
         <div
             #languageDropdownTrigger="kbqDropdownTrigger"
@@ -13,16 +18,16 @@
 
         <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
             <div class="kbq-dropdown__group-header">
-                <span class="kbq-caps-compact-strong">ЯЗЫК</span>
+                <span class="kbq-caps-compact-strong">{{ isRuLocale ? 'ЯЗЫК' : 'LANGUAGE' }}</span>
             </div>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="docsLanguageDropdown">
-                Интерфейс
+                {{ isRuLocale ? 'Интерфейс' : 'Interface' }}
                 <div class="kbq-dropdown-item__caption">{{ docsLanguageSwitch.currentValue.value }}</div>
             </button>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="examplesLanguageDropdown">
-                Примеры
+                {{ isRuLocale ? 'Примеры' : 'Examples' }}
                 <div class="kbq-dropdown-item__caption">{{ examplesLanguageSwitch.currentValue.value }}</div>
             </button>
         </kbq-dropdown>
@@ -55,7 +60,9 @@
 </div>
 
 <div class="docs-footer__item">
-    <div class="docs-footer__label">Версия</div>
+    <div class="docs-footer__label">
+        {{ isRuLocale ? 'Версия' : 'Version' }}
+    </div>
     <div>
         <div
             #versionDropdownDropdownTrigger="kbqDropdownTrigger"
@@ -73,7 +80,9 @@
 
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">
-                    <div class="kbq-caps-compact-strong">ВЕРСИЯ</div>
+                    <div class="kbq-caps-compact-strong">
+                        {{ isRuLocale ? 'ВЕРСИЯ' : 'VERSION' }}
+                    </div>
                 </div>
 
                 @for (version of versionPicker.versions; track version) {
@@ -82,7 +91,13 @@
                         [class.kbq-selected]="version.selected"
                         (click)="versionPicker.goToVersion(version)"
                     >
-                        <div>{{ version.name }}</div>
+                        <div>
+                            {{ version.name }}
+
+                            @if (version.latest) {
+                                <span>{{ isRuLocale ? ' (последняя)' : ' (latest)' }}</span>
+                            }
+                        </div>
                     </button>
                 }
             </kbq-dropdown>

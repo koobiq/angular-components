@@ -1,13 +1,34 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { DocsLocale } from 'src/app/constants/locale';
+import { DocsLocaleService } from 'src/app/services/locale.service';
 
 @Component({
     standalone: true,
-    imports: [KbqIconModule, KbqLinkModule],
+    imports: [
+        KbqIconModule,
+        KbqLinkModule,
+        AsyncPipe
+    ],
     selector: 'docs-copy-button',
-    templateUrl: './copy-button.html',
+    template: `
+        @let locale = docsLocaleService.changes | async;
+        @let isRuLocale = locale === DocsLocale.Ru;
+
+        @if (isLabelSuccessVisible) {
+            <span disabled kbq-link pseudo>
+                <i class="kbq kbq-check_16"></i>
+                <span class="kbq-link__text">{{ isRuLocale ? 'Скопировано' : 'Copied' }}</span>
+            </span>
+        } @else {
+            <span kbq-link pseudo>
+                <i class="kbq kbq-square-multiple-o_16" (click)="copyContent()"></i>
+            </span>
+        }
+    `,
     styleUrls: ['./copy-button.scss'],
     host: {
         class: 'docs-copy-button'
@@ -18,27 +39,26 @@ import { KbqLinkModule } from '@koobiq/components/link';
 export class DocsCopyButtonComponent {
     @Input() contentToCopy: string;
 
-    @Input() successLabelText = 'Скопировано';
-    @Input() successLabelDisplayDelay = 1000;
-
     isLabelSuccessVisible = false;
 
-    constructor(
-        private clipboard: Clipboard,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {}
+    private readonly clipboard = inject(Clipboard);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    readonly docsLocaleService = inject(DocsLocaleService);
+
+    readonly DocsLocale = DocsLocale;
 
     copyContent(): void {
         if (!this.contentToCopy) {
             return;
         }
 
-        this.clipboard.copy(this.contentToCopy);
-        this.isLabelSuccessVisible = true;
+        if (this.clipboard.copy(this.contentToCopy)) {
+            this.isLabelSuccessVisible = true;
 
-        setTimeout(() => {
-            this.isLabelSuccessVisible = false;
-            this.changeDetectorRef.markForCheck();
-        }, this.successLabelDisplayDelay);
+            setTimeout(() => {
+                this.isLabelSuccessVisible = false;
+                this.changeDetectorRef.markForCheck();
+            }, 1000);
+        }
     }
 }

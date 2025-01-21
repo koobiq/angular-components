@@ -1,5 +1,6 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
+import { AsyncPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -21,9 +22,10 @@ import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { combineLatest, filter, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocStates } from '../../services/doc-states';
 import { DocItem, DocumentationItems } from '../../services/documentation-items';
-import { DocStates } from '../../services/doс-states';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
@@ -37,6 +39,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         RouterLink,
         RouterLinkActive,
         DocsRegisterHeaderDirective,
+        AsyncPipe,
 
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule
@@ -47,14 +50,14 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     styleUrls: ['./component-viewer.scss'],
     host: {
         class: 'docs-component-viewer kbq-scrollbar',
-        '[attr.data-docsearch-category]': 'docCategoryName'
+        '[attr.data-docsearch-category]': 'docCategory'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsComponentViewerComponent extends CdkScrollable implements OnInit, OnDestroy {
     docItem: DocItem;
-    docCategoryName: string;
+    docCategory: string;
 
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -62,6 +65,9 @@ export class DocsComponentViewerComponent extends CdkScrollable implements OnIni
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocStates);
+    readonly docsLocaleService = inject(DocsLocaleService);
+
+    readonly DocsLocale = DocsLocale;
 
     constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone) {
         super(elementRef, scrollDispatcher, ngZone);
@@ -82,7 +88,7 @@ export class DocsComponentViewerComponent extends CdkScrollable implements OnIni
                 }
 
                 this.docItem = docItem!;
-                this.docCategoryName = this.docItems.getCategoryById(this.docItem.packageName!)!.name;
+                this.docCategory = this.docItems.getCategoryById(this.docItem.packageName!)!.id;
             });
 
         this.docStates.registerHeaderScrollContainer(elementRef.nativeElement);

@@ -1,5 +1,5 @@
 import { Directive, ElementRef, inject } from '@angular/core';
-import { DocStates } from '../../services/doс-states';
+import { DocStates } from '../../services/doc-states';
 
 @Directive({
     standalone: true,

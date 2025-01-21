@@ -1,6 +1,8 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, ElementRef, inject, Input } from '@angular/core';
+import { Component, ElementRef, inject } from '@angular/core';
 import { KbqToastModule, KbqToastService } from '@koobiq/components/toast';
+import { DocsLocale } from 'src/app/constants/locale';
+import { DocsLocaleService } from 'src/app/services/locale.service';
 
 @Component({
     standalone: true,
@@ -15,18 +17,17 @@ import { KbqToastModule, KbqToastService } from '@koobiq/components/toast';
     }
 })
 export class DocsCodeSnippetComponent {
-    @Input() tooltip = 'Скопировать';
-
     private readonly clipboard = inject(Clipboard);
     private readonly toastService = inject(KbqToastService);
     private readonly elementRef = inject(ElementRef);
+    private readonly docsLocaleService = inject(DocsLocaleService);
 
     copy() {
-        this.clipboard.copy(this.elementRef.nativeElement.textContent);
-        this.showSuccessfullyCopiedToast();
-    }
-
-    private showSuccessfullyCopiedToast() {
-        this.toastService.show({ style: 'success', title: 'Скопировано' });
+        if (this.clipboard.copy(this.elementRef.nativeElement.textContent)) {
+            this.toastService.show({
+                style: 'success',
+                title: this.docsLocaleService.locale === DocsLocale.Ru ? 'Скопировано' : 'Copied'
+            });
+        }
     }
 }

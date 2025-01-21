@@ -1,9 +1,14 @@
+@let locale = docsLocaleService.changes | async;
+@let isRuLocale = locale === DocsLocale.Ru;
+
 <div class="docs-icons-viewer__header">
-    <span docsRegisterHeader class="docs-icons-viewer__header-text docs-component-name">Иконки</span>
+    <span docsRegisterHeader class="docs-icons-viewer__header-text docs-component-name">
+        {{ isRuLocale ? 'Иконки' : 'Icons' }}
+    </span>
 
     <kbq-form-field>
         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [color]="themePalette.Secondary"></i>
-        <input kbqInput placeholder="Название иконки" [formControl]="searchControl" />
+        <input kbqInput [formControl]="searchControl" [placeholder]="isRuLocale ? 'Название иконки' : 'Icon name'" />
         <kbq-cleaner />
     </kbq-form-field>
 </div>
@@ -39,7 +44,7 @@
     @if (searchControl.value && !filteredIcons.value) {
         <div class="docs-icons-viewer__table-empty-results">
             <kbq-empty-state [big]="true">
-                <div kbq-empty-state-title>Ничего не найдено</div>
+                <div kbq-empty-state-title>{{ isRuLocale ? 'Ничего не найдено' : 'Nothing found' }}</div>
             </kbq-empty-state>
         </div>
     }

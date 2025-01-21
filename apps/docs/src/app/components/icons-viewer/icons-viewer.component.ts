@@ -21,8 +21,10 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqToastModule } from '@koobiq/components/toast';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
+import { DocsLocale } from 'src/app/constants/locale';
 import { IconItem, IconItems } from 'src/app/services/icon-items';
-import { DocStates } from '../../services/doс-states';
+import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocStates } from '../../services/doc-states';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
 
@@ -40,6 +42,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
         KbqHighlightModule,
         KbqEmptyStateModule,
         NgClass,
+        AsyncPipe,
 
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule,
@@ -66,8 +69,10 @@ export class DocsIconsViewerComponent {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
+    readonly docsLocaleService = inject(DocsLocaleService);
 
-    themePalette = ThemePalette;
+    readonly DocsLocale = DocsLocale;
+    readonly themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
     filteredIcons = new BehaviorSubject<IconItem[]>([]);

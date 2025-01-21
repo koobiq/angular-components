@@ -1,3 +1,6 @@
+@let locale = docsLocaleService.changes | async;
+@let isRuLocale = locale === DocsLocale.Ru;
+
 <kbq-modal-title>
     {{ iconItem.name }}
     <button kbq-button class="kbq-modal-close kbq-button_transparent" [color]="'contrast'" (click)="modal.close()">
@@ -11,7 +14,7 @@
     </div>
     <div class="icon-preview-modal__content">
         <kbq-form-field>
-            <kbq-select [placeholder]="'Цвет'" [(value)]="selectedColorTheme">
+            <kbq-select [placeholder]="isRuLocale ? 'Цвет' : 'Color'" [(value)]="selectedColorTheme">
                 <kbq-select-trigger>
                     <i
                         kbq-icon="kbq-circle-xs_16"
@@ -37,17 +40,17 @@
         <div class="icon-preview-modal__buttons">
             <a download href="{{ SVGLink }}" kbq-button>
                 <i kbq-icon="kbq-arrow-down-to-line_16"></i>
-                Скачать SVG
+                {{ isRuLocale ? 'Скачать SVG' : 'Download SVG' }}
             </a>
 
             <button kbq-button (click)="copySVG()">
                 <i kbq-icon="kbq-file-multiple-o_16"></i>
-                Скопировать SVG
+                {{ isRuLocale ? 'Скопировать SVG' : 'Copy SVG' }}
             </button>
         </div>
 
         <kbq-dl class="icon-preview-modal__description" [vertical]="true">
-            <kbq-dt>Размер</kbq-dt>
+            <kbq-dt>{{ isRuLocale ? 'Размер' : 'Size' }}</kbq-dt>
             <kbq-dd>{{ iconItem.size }}px</kbq-dd>
 
             <kbq-dt>HTML</kbq-dt>
@@ -55,18 +58,18 @@
                 <code [innerText]="getCodeExampleText()"></code>
             </kbq-dd>
 
-            <kbq-dt>Для MS Word</kbq-dt>
+            <kbq-dt>{{ isRuLocale ? 'Для MS Word' : 'For MS Word' }}</kbq-dt>
             <kbq-dd>
-                <span #wordExample kbqTooltip="Скопировать" (click)="copyWordExample()">
+                <span #wordExample [kbqTooltip]="isRuLocale ? 'Скопировать' : 'Copy'" (click)="copyWordExample()">
                     [#{{ getHexColor() }}]
                     <span class="icon-unicode" [innerHtml]="getUnicode()"></span>
                 </span>
             </kbq-dd>
 
-            <kbq-dt>Описание</kbq-dt>
+            <kbq-dt>{{ isRuLocale ? 'Описание' : 'Description' }}</kbq-dt>
             <kbq-dd>{{ iconItem.description }}</kbq-dd>
 
-            <kbq-dt>Ключевые слова</kbq-dt>
+            <kbq-dt>{{ isRuLocale ? 'Ключевые слова' : 'Key words' }}</kbq-dt>
             <kbq-dd class="icon-preview-modal__key-words">
                 @for (tag of iconItem.tags; track tag) {
                     <kbq-badge

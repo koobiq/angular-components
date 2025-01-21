@@ -6,7 +6,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { map, Observable } from 'rxjs';
 import { DocsNavbarComponent } from './components/navbar/navbar.component';
 import { DocsSidenavComponent } from './components/sidenav/sidenav.component';
-import { DocsNavbarState, DocStates } from './services/doс-states';
+import { DocsNavbarState, DocStates } from './services/doc-states';
 
 @Component({
     standalone: true,
