@@ -40,28 +40,32 @@ import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select.component';
             <kbq-pipe-date />
         }
 
-        @if (!data.required && data.removable) {
-            <button
-                class="kbq-pipe__delete"
-                [disabled]="data.disabled"
-                [kbq-pipe-states]="data"
-                (click)="onDelete()"
-                kbq-button
-            >
-                <i kbq-icon="kbq-xmark-s_16"></i>
-            </button>
-        }
+        @if (!data.required) {
+            <kbq-divider class="kbq-pipe__separator" [vertical]="true" [paddings]="false" />
 
-        @if (!data.required && data.cleanable && !isEmpty) {
-            <button
-                class="kbq-pipe__delete"
-                [disabled]="data.disabled"
-                [kbq-pipe-states]="data"
-                (click)="onClear()"
-                kbq-button
-            >
-                <i kbq-icon="kbq-xmark-s_16"></i>
-            </button>
+            @if (data.removable) {
+                <button
+                    class="kbq-pipe__delete"
+                    [disabled]="data.disabled"
+                    [kbq-pipe-states]="data"
+                    (click)="onDelete()"
+                    kbq-button
+                >
+                    <i kbq-icon="kbq-xmark-s_16"></i>
+                </button>
+            }
+
+            @if (data.cleanable && !isEmpty) {
+                <button
+                    class="kbq-pipe__delete"
+                    [disabled]="data.disabled"
+                    [kbq-pipe-states]="data"
+                    (click)="onClear()"
+                    kbq-button
+                >
+                    <i kbq-icon="kbq-xmark-s_16"></i>
+                </button>
+            }
         }
     `,
     styleUrls: ['pipe.component.scss', 'filter-bar-tokens.scss'],

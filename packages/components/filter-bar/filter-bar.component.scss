@@ -6,7 +6,7 @@
     flex-direction: row;
     justify-content: space-between;
 
-    .kbq-divider {
+    & .kbq-filter-bar__separator {
         align-self: center;
 
         height: 12px !important;

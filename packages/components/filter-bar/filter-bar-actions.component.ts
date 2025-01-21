@@ -11,7 +11,7 @@ import { KbqIconModule } from '../icon';
             <i kbq-icon="kbq-magnifying-glass_16"></i>
         </button>
 
-        <kbq-divider [vertical]="true" />
+        <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
 
         <button [color]="'contrast'" [kbqStyle]="'transparent'" kbq-button>
             <i kbq-icon="kbq-arrow-rotate-right_16"></i>
