@@ -5,16 +5,16 @@ import { KbqFilterBarButton } from './filter-bar-button.component';
 import { KbqFilterReset } from './filter-bar-reset.component';
 import { KbqFilterBar } from './filter-bar.component';
 import { KbqFilters } from './filters.component';
-import { KbqPipeComponent } from './pipe.component';
+import { KbqPipeDirective } from './pipe.directive';
 
 const COMPONENTS = [
     KbqFilterBar,
     KbqFilters,
-    KbqPipeComponent,
     KbqFilterBarActions,
     KbqFilterBarButton,
     KbqFilterReset,
-    KbqFilterAdd
+    KbqFilterAdd,
+    KbqPipeDirective
 ];
 
 @NgModule({

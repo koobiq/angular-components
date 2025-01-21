@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -10,16 +10,22 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { PopUpPlacements } from '../../core';
 import { KbqPopoverModule } from '../../popover';
 import { KbqTextareaModule } from '../../textarea';
-import { KbqFilterBar } from '../filter-bar.component';
-import { KbqPipeComponent } from '../pipe.component';
-import { KbqPipeStates } from './pipe-states.component';
+import { KbqBasePipe } from './base-pipe';
+import { KbqPipeState } from './pipe-state';
 
 @Component({
     standalone: true,
     selector: 'kbq-pipe-text',
-    templateUrl: 'pipe-text.template.html',
+    templateUrl: 'pipe-text.html',
+    styleUrls: ['base-pipe.scss', 'pipe-text.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: KbqBasePipe,
+            useExisting: this
+        }
+    ],
     imports: [
         KbqButtonModule,
         KbqFormFieldModule,
@@ -27,46 +33,30 @@ import { KbqPipeStates } from './pipe-states.component';
         KbqIcon,
         KbqInputModule,
         KbqDividerModule,
-        KbqPipeStates,
-        KbqFormFieldModule,
+        KbqPipeState,
         FormsModule,
         KbqTextareaModule,
         NgClass
     ]
 })
-export class KbqPipeTextComponent {
-    protected readonly filterBar = inject(KbqFilterBar);
-    protected readonly basePipe = inject(KbqPipeComponent);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+export class KbqPipeTextComponent extends KbqBasePipe {
     readonly placements = PopUpPlacements;
 
-    get isEmpty(): boolean {
-        return !!this.basePipe.data.value;
-    }
-
     viewValue: string;
-
-    constructor() {
-        this.basePipe.stateChanges.subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-        });
-
-        this.basePipe.pipeInstance = this;
-    }
 
     onChange(value: string) {
         this.viewValue = value;
     }
 
     onApply() {
-        this.basePipe.data.value = this.viewValue;
-        this.basePipe.stateChanges.next();
+        this.data.value = this.viewValue;
+        this.stateChanges.next();
     }
 
     onCtrlEnter({ ctrlKey, keyCode }) {
         if (ctrlKey && keyCode === ENTER) {
-            this.basePipe.data.value = this.viewValue;
-            this.basePipe.stateChanges.next();
+            this.data.value = this.viewValue;
+            this.stateChanges.next();
         }
     }
 }

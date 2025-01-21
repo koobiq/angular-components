@@ -1,0 +1,64 @@
+@use '../filter-bar-theme' as *;
+
+.kbq-pipe {
+    display: flex;
+    flex-direction: row;
+
+    max-height: 32px;
+
+    .kbq-pipe__name {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    .kbq-pipe__value {
+        margin-left: 4px;
+    }
+
+    .kbq-pipe__separator {
+        z-index: 1;
+
+        margin-left: -1px;
+        margin-right: 0;
+
+        height: 12px;
+
+        align-self: center;;
+
+        color: var(--kbq-line-contrast-less);
+    }
+
+    .kbq-button.cdk-keyboard-focused {
+        z-index: 1;
+    }
+
+    &.kbq-pipe_disabled {
+        .kbq-pipe__name,
+        .kbq-pipe__value {
+            color: var(--kbq-states-foreground-disabled);
+        }
+    }
+}
+
+.kbq-pipe.kbq-pipe_removable,
+.kbq-pipe.kbq-pipe_cleanable:not(.kbq-pipe_empty) {
+    .kbq-button {
+        border-bottom-right-radius: unset;
+        border-top-right-radius: unset;
+
+        &:not(.cdk-keyboard-focused) {
+            border-right-color: transparent;
+        }
+    }
+
+    .kbq-button-icon {
+        border-bottom-left-radius: unset;
+        border-top-left-radius: unset;
+
+        &:not(.cdk-keyboard-focused) {
+            border-left-color: transparent;
+        }
+    }
+}
+
+@include kbq-filter-bar-theme();
+@include kbq-filter-bar-typography();
