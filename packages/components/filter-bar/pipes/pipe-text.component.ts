@@ -40,20 +40,18 @@ export class KbqPipeTextComponent {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     readonly placements = PopUpPlacements;
 
-    get selected() {
-        return this.basePipe.data.value;
+    get isEmpty(): boolean {
+        return !!this.basePipe.data.value;
     }
 
     viewValue: string;
 
-    onDeleteOrClear() {
-        if (this.basePipe.data.cleanable) {
-            this.basePipe.data.value = undefined;
-        } else if (this.basePipe.data.removable) {
-            this.basePipe.onDeleteOrClear();
-        }
+    constructor() {
+        this.basePipe.stateChanges.subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
 
-        this.basePipe.stateChanges.next();
+        this.basePipe.pipeInstance = this;
     }
 
     onChange(value: string) {

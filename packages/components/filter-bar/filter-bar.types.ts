@@ -22,7 +22,7 @@ export interface KbqPipeValue<T> {
     name?: string;
     start?: T;
     end?: T;
-    showTime?: boolean;
+    time?: boolean;
 }
 
 export interface KbqPipe<T = any> {

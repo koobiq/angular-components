@@ -92,6 +92,10 @@ export class KbqPipeTreeSelectComponent implements AfterContentInit {
         return this.basePipe.data.value;
     }
 
+    get isEmpty(): boolean {
+        return this.basePipe.data.value === null || this.basePipe.data.value === undefined;
+    }
+
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
@@ -104,20 +108,16 @@ export class KbqPipeTreeSelectComponent implements AfterContentInit {
             defaultCompareViewValues
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+        this.basePipe.stateChanges.subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
+
+        this.basePipe.pipeInstance = this;
     }
 
     ngAfterContentInit(): void {
         this.dataSource.data = buildFileTree(this.basePipe.values, 0);
-    }
-
-    onDeleteOrClear() {
-        if (this.basePipe.data.cleanable) {
-            this.basePipe.data.value = undefined;
-        } else if (this.basePipe.data.removable) {
-            this.basePipe.onDeleteOrClear();
-        }
-
-        this.basePipe.stateChanges.next();
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {
