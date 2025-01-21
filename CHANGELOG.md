@@ -1,3 +1,24 @@
+# 18.11.0 (2025-01-21)
+
+### Koobiq
+
+ * bug fix  **docs:** injected locale service for stackblitz example ([#DS-3291](https://github.com/koobiq/angular-components/issues/issue/DS-3291)) ([#498](https://github.com/koobiq/angular-components/issues/498)) ([0c7dac7](https://github.com/koobiq/angular-components/commit/0c7dac7446f1958ddcb36c301d836ebc15f6516d))
+ * bug fix  **experimental:** form-field focus ([#DS-3273](https://github.com/koobiq/angular-components/issues/issue/DS-3273)) ([#490](https://github.com/koobiq/angular-components/issues/490)) ([6ff773d](https://github.com/koobiq/angular-components/commit/6ff773d5407db7cdfd9e7a0a72765c912bdcc1da))
+ * bug fix  **experimental:** form-field selectors ([#480](https://github.com/koobiq/angular-components/issues/480)) ([0bb7dea](https://github.com/koobiq/angular-components/commit/0bb7deaf161f896f88f8eacad6de2c24259f308b))
+ * bug fix  **form-field:** focus state in shadowRoot ([#DS-3280](https://github.com/koobiq/angular-components/issues/issue/DS-3280)) ([#495](https://github.com/koobiq/angular-components/issues/495)) ([ea20bc3](https://github.com/koobiq/angular-components/commit/ea20bc3fd44135476ceaa30a1540f44b15c25fe6))
+ * bug fix  **loader-overlay:** typeError in mc-loader-overlay ([#DS-3226](https://github.com/koobiq/angular-components/issues/issue/DS-3226)) ([#494](https://github.com/koobiq/angular-components/issues/494)) ([ec455dd](https://github.com/koobiq/angular-components/commit/ec455dd0585cf0e0910f0bc985d26adfc2492b0a))
+ * bug fix  **modal:** added modal-data token to public-api ([#DS-3044](https://github.com/koobiq/angular-components/issues/issue/DS-3044)) ([#488](https://github.com/koobiq/angular-components/issues/488)) ([fb7f58f](https://github.com/koobiq/angular-components/commit/fb7f58f4122ba2d02a4656c69e2891e0c555f039))
+ * bug fix  **select:** dropdown positioning and sizing ([#DS-3234](https://github.com/koobiq/angular-components/issues/issue/DS-3234))  ([#485](https://github.com/koobiq/angular-components/issues/485)) ([f1fbe69](https://github.com/koobiq/angular-components/commit/f1fbe697ee54b6f8bf150b5c2b5c6c38533100d0))
+ * bug fix  **sidepanel:** disable capturing focus without backdrop ([#DS-3073](https://github.com/koobiq/angular-components/issues/issue/DS-3073)) ([#504](https://github.com/koobiq/angular-components/issues/504)) ([7f4841f](https://github.com/koobiq/angular-components/commit/7f4841fadf10f1cac4b0675087db0b5c019fff38))
+ * bug fix  **tooltip:** tooltips inside select options ([#DS-3252](https://github.com/koobiq/angular-components/issues/issue/DS-3252)) ([#500](https://github.com/koobiq/angular-components/issues/500)) ([e2be788](https://github.com/koobiq/angular-components/commit/e2be788be8d1d2f67bd01df98c521e94aab47122))
+ * bug fix  **tree-select:** emit selectionChange event on clear ([#DS-3292](https://github.com/koobiq/angular-components/issues/issue/DS-3292)) ([#501](https://github.com/koobiq/angular-components/issues/501)) ([4643c34](https://github.com/koobiq/angular-components/commit/4643c345ca19ee1d288cb7e3d210a0dddda84af3))
+ * bug fix  **tree-select:** multiple focus frames in options ([#DS-3135](https://github.com/koobiq/angular-components/issues/issue/DS-3135)) ([#499](https://github.com/koobiq/angular-components/issues/499)) ([d179f8f](https://github.com/koobiq/angular-components/commit/d179f8fcb4a854e1bf953813bd2fd3f9eb3c8697))
+ * feature  **code-block:** refactored KbqCodeBlockModule ([#DS-3175](https://github.com/koobiq/angular-components/issues/issue/DS-3175)) ([#478](https://github.com/koobiq/angular-components/issues/478)) ([92b870d](https://github.com/koobiq/angular-components/commit/92b870dcfbc8a7114aaa78b61b06bad3b0c6539a))
+ * feature  **docs:** added example with user data in toast ([#DS-3122](https://github.com/koobiq/angular-components/issues/issue/DS-3122)) ([#487](https://github.com/koobiq/angular-components/issues/487)) ([589044e](https://github.com/koobiq/angular-components/commit/589044e85364171db79d4d39a2f87f51844d5fca))
+ * feature  **experimental:** added utility provider functions ([#492](https://github.com/koobiq/angular-components/issues/492)) ([bd8197e](https://github.com/koobiq/angular-components/commit/bd8197e87f36304df73627d9561d67b4483d5911))
+ * feature  **timezone:** select search fix ([#DS-3213](https://github.com/koobiq/angular-components/issues/issue/DS-3213))  ([#479](https://github.com/koobiq/angular-components/issues/479)) ([78a05c9](https://github.com/koobiq/angular-components/commit/78a05c9733237c96122100bab437baf1bc294998))
+ * feature  **timezone:** set panelWidth to 'auto', panelMinWidth to '640' by default ([#DS-3186](https://github.com/koobiq/angular-components/issues/issue/DS-3186))  ([#472](https://github.com/koobiq/angular-components/issues/472)) ([b64ebb9](https://github.com/koobiq/angular-components/commit/b64ebb93ec0229755b505c323c6f2f96c3dde4ab))
+
 # 18.10.0 (2024-12-11)
 
 ### Cdk
