@@ -2,38 +2,38 @@ import { Directive, inject, Input, OnInit } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPipe } from '../filter-bar.types';
-import { KbqPipeComponent } from '../pipe.component';
+import { KbqBasePipe } from './base-pipe';
 
 @Directive({
     standalone: true,
-    selector: '[kbq-pipe-states]'
+    selector: '[kbq-pipe-state]'
 })
-export class KbqPipeStates implements OnInit {
+export class KbqPipeState implements OnInit {
     private readonly button = inject(KbqButton);
-    private readonly basePipe = inject(KbqPipeComponent);
+    private readonly pipe = inject(KbqBasePipe);
 
-    @Input({ alias: 'kbq-pipe-states' })
-    set pipe(pipe: KbqPipe | null) {
-        this._pipe = pipe;
+    @Input({ alias: 'kbq-pipe-state' })
+    set state(pipe: KbqPipe | null) {
+        this._state = pipe;
 
         this.updateState();
     }
 
-    get pipe(): KbqPipe | null {
-        return this._pipe;
+    get state(): KbqPipe | null {
+        return this._state;
     }
 
-    private _pipe: KbqPipe | null = null;
+    private _state: KbqPipe | null = null;
 
     ngOnInit(): void {
-        this.basePipe.stateChanges.subscribe(this.updateState);
+        this.pipe.stateChanges.subscribe(this.updateState);
     }
 
     updateState = () => {
         this.button.kbqStyle = KbqButtonStyles.Outline;
         this.button.color = KbqComponentColors.ContrastFade;
 
-        if (!this.basePipe.isEmpty) {
+        if (!this.pipe.isEmpty) {
             this.button.kbqStyle = KbqButtonStyles.Filled;
             this.button.color = KbqComponentColors.ContrastFade;
         }
