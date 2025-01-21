@@ -11,6 +11,7 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { KbqDividerModule } from '../divider';
 import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
+import { KbqPipeDirective } from './pipe.directive';
 
 @Component({
     standalone: true,
@@ -21,7 +22,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 
             <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
 
-            <ng-content select="kbq-pipe" />
+            <ng-content />
 
             <ng-content select="kbq-filter-add" />
 
@@ -34,7 +35,8 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        KbqDividerModule
+        KbqDividerModule,
+        KbqPipeDirective
     ],
     host: {
         class: 'kbq-filter-bar'

@@ -3,7 +3,7 @@
     kbq-button
     kbqPopover
     [disabled]="data.disabled"
-    [kbq-pipe-states]="data"
+    [kbq-pipe-state]="data"
     [kbqPopoverArrow]="false"
     [kbqPopoverClass]="'kbq-pipe-date__popover'"
     [kbqPopoverContent]="content"
@@ -15,6 +15,20 @@
     <span class="kbq-pipe__value">{{ formattedValue }}</span>
 </button>
 
+@if (!data.required && (data.removable || (data.cleanable && !isEmpty))) {
+    <kbq-divider class="kbq-pipe__separator" [paddings]="false" [vertical]="true" />
+
+    <button
+        kbq-button
+        class="kbq-pipe__delete"
+        [disabled]="data.disabled"
+        [kbq-pipe-state]="data"
+        (click)="data.cleanable ? onClear() : onDelete()"
+    >
+        <i kbq-icon="kbq-xmark-s_16"></i>
+    </button>
+}
+
 <ng-template #content>
     @if (list) {
         <div class="kbq-date-list">
@@ -24,7 +38,7 @@
                     <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
                 </kbq-list-option>
 
-                @for (item of basePipe.values; track item) {
+                @for (item of values; track item) {
                     <kbq-list-option [value]="item" (click)="onSelect(item)" (keydown.enter)="onSelect(item)">
                         {{ item.name }}
                     </kbq-list-option>

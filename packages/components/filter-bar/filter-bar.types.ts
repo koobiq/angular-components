@@ -36,6 +36,17 @@ export interface KbqPipe<T = any> {
     disabled: boolean;
 }
 
+export class KbqPipeData<T> {
+    name: string;
+    type: KbqPipeTypes;
+    value?: T | T[];
+
+    required: boolean;
+    cleanable: boolean;
+    removable: boolean;
+    disabled: boolean;
+}
+
 export interface KbqPipeTemplate<T = unknown> {
     name: string;
     type: KbqPipeTypes;

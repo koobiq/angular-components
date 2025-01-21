@@ -1,0 +1,41 @@
+<button
+    #popover="kbqPopover"
+    kbq-button
+    kbqPopover
+    [kbqPopoverClass]="'kbq-pipe__popover'"
+    [kbqPopoverContent]="content"
+    [kbqPopoverFooter]="footer"
+    [kbqPopoverPlacement]="placements.BottomLeft"
+    [ngClass]="{ 'kbq-active': popover.isOpen }"
+>
+    <span class="kbq-pipe__name">name</span>
+    <span class="kbq-pipe__value">value</span>
+</button>
+
+@if (!data.required && data.cleanable && !isEmpty) {
+    <kbq-divider class="kbq-pipe__separator" [paddings]="false" [vertical]="true" />
+
+    <button
+        kbq-button
+        class="kbq-pipe__delete"
+        [disabled]="data.disabled"
+        [kbq-pipe-state]="data"
+        (click)="data.cleanable ? onClear() : onDelete()"
+    >
+        <i kbq-icon="kbq-xmark-s_16"></i>
+    </button>
+}
+
+<ng-template #content>
+    <kbq-form-field>
+        <textarea kbqTextarea placeholder="Placeholder" rows="2" [canGrow]="false"></textarea>
+    </kbq-form-field>
+</ng-template>
+
+<ng-template #footer>
+    <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
+        <span>Применить</span>
+        &nbsp;
+        <span class="kbq-button_hot-key">Ctrl + Enter</span>
+    </button>
+</ng-template>

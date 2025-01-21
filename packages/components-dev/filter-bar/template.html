@@ -11,7 +11,7 @@
         </kbq-filters>
 
         @for (pipe of activeFilter!.pipes; track pipe) {
-            <kbq-pipe [data]="pipe" />
+            <ng-container *kbq-pipe="pipe"></ng-container>
         }
 
         <kbq-filter-add />

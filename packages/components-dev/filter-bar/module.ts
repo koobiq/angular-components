@@ -7,6 +7,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
+import { KbqLuxonDateModule } from '../../../dist/angular-luxon-adapter/adapter';
 
 @Component({
     selector: 'app',
@@ -360,8 +361,8 @@ export class DemoComponent {
                     type: KbqPipeTypes.Date,
 
                     required: false,
-                    cleanable: true,
-                    removable: false,
+                    cleanable: false,
+                    removable: true,
                     disabled: false
                 },
                 {
@@ -632,7 +633,8 @@ export class DemoComponent {
         KbqIconModule,
         KbqFilterBarModule,
         KbqDividerModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqLuxonDateModule
     ],
     bootstrap: [DemoComponent]
 })
