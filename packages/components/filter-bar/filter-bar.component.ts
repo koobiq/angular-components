@@ -9,6 +9,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { KbqDividerModule } from '../divider';
 import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 
 @Component({
@@ -16,7 +17,15 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     selector: 'kbq-filter-bar, [kbq-filter-bar]',
     template: `
         <div class="kbq-filter-bar__left">
-            <ng-content />
+            <ng-content select="kbq-filters" />
+
+            <kbq-divider [vertical]="true" />
+
+            <ng-content select="kbq-pipe" />
+
+            <ng-content select="kbq-filter-add" />
+
+            <ng-content select="kbq-filter-reset" />
         </div>
 
         <ng-content select="kbq-filter-bar-actions, [kbq-filter-bar-actions]" />
@@ -24,6 +33,9 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     styleUrls: ['filter-bar.component.scss', 'filter-bar-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqDividerModule
+    ],
     host: {
         class: 'kbq-filter-bar'
     }
@@ -78,6 +90,13 @@ export class KbqFilterBar {
     }
 
     applyPipe(pipe: KbqPipe) {
+        console.log('need apply pipe: ', pipe);
+    }
+
+    deletePipe(pipe: KbqPipe) {
+        this.activeFilter?.pipes.splice(this.activeFilter?.pipes.indexOf(pipe), 1);
+
+        this.changeDetectorRef.detectChanges();
         console.log('need apply pipe: ', pipe);
     }
 }

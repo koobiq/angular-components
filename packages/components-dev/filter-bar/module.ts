@@ -28,7 +28,7 @@ export class DemoComponent {
                 {
                     name: 'required',
                     // required - не может быть пустым, всегда есть дефолтное значение
-                    value: { name: 'Не определен', value: '1' },
+                    value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
                     required: true,
@@ -47,7 +47,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'cleanable',
-                    value: { name: 'Не определен', value: '1' },
+                    value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
                     required: false,
@@ -57,7 +57,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: { name: 'Не определен', value: '1' },
+                    value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
                     required: false,
@@ -67,10 +67,10 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: { name: 'Не определен', value: '1' },
+                    value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
+                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -87,8 +87,8 @@ export class DemoComponent {
                 {
                     name: 'required',
                     value: [
-                        { name: 'Не определен', value: '1' },
-                        { name: 'Легитимное действие', value: '2' }
+                        { name: 'Не определен', id: '1' },
+                        { name: 'Легитимное действие', id: '2' }
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
@@ -99,7 +99,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'required',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
                     required: true,
@@ -118,7 +118,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'cleanable',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
                     required: false,
@@ -128,7 +128,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
                     required: false,
@@ -138,10 +138,10 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
+                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -158,7 +158,7 @@ export class DemoComponent {
                 {
                     name: 'required',
                     // required - не может быть пустым, всегда есть дефолтное значение
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.TreeSelect,
 
                     required: true,
@@ -177,7 +177,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'cleanable',
-                    value: { name: 'Не определен', value: '1' },
+                    value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.TreeSelect,
 
                     required: false,
@@ -187,7 +187,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: { name: 'Не определен', value: '1' },
+                    value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.TreeSelect,
 
                     required: false,
@@ -197,10 +197,10 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: { name: 'Не определен', value: '1' },
+                    value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.TreeSelect,
 
-                    required: false,
+                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -226,7 +226,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'required',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiTreeSelect,
 
                     required: true,
@@ -245,7 +245,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'cleanable',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiTreeSelect,
 
                     required: false,
@@ -255,7 +255,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiTreeSelect,
 
                     required: false,
@@ -265,10 +265,10 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: [{ name: 'Не определен', value: '1' }],
+                    value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiTreeSelect,
 
-                    required: false,
+                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -282,16 +282,6 @@ export class DemoComponent {
             changed: false,
             unsaved: false,
             pipes: [
-                {
-                    name: 'required',
-                    value: 'value',
-                    type: KbqPipeTypes.Text,
-
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
                 {
                     name: 'required',
                     value: 'value',
@@ -355,7 +345,7 @@ export class DemoComponent {
                     value: {
                         start: this.adapter.today(),
                         end: this.adapter.today().minus({ days: 3 }),
-                        showTime: true
+                        time: true
                     },
                     type: KbqPipeTypes.Date,
 
@@ -366,6 +356,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'empty',
+                    value: null,
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -378,7 +369,7 @@ export class DemoComponent {
                     value: {
                         start: this.adapter.today(),
                         end: this.adapter.today().minus({ days: 3 }),
-                        showTime: false
+                        time: false
                     },
                     type: KbqPipeTypes.Date,
 
@@ -402,7 +393,7 @@ export class DemoComponent {
                     value: { name: 'Последний час', start: null, end: null },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
+                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -514,10 +505,10 @@ export class DemoComponent {
             name: 'Вердикт',
             type: KbqPipeTypes.Select,
             values: [
-                { name: 'Не определен', value: '1' },
-                { name: 'Легитимное действие', value: '2' },
-                { name: 'Ложный', value: '3' },
-                { name: 'Подтвержден', value: '4' }
+                { name: 'Не определен', id: '1' },
+                { name: 'Легитимное действие', id: '2' },
+                { name: 'Ложный', id: '3' },
+                { name: 'Подтвержден', id: '4' }
             ],
 
             required: false,
