@@ -5,6 +5,9 @@
 }
 
 @mixin kbq-filter-bar-typography() {
+    .kbq-hint.kbq-date-period__hint .kbq-hint__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+    }
 }
 
 @mixin _icon($left-icon, $right-icon) {

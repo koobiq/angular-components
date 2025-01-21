@@ -1,12 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, viewChild, ViewChild, ViewEncapsulation } from '@angular/core';
 import {
-    AbstractControl,
-    FormControl,
-    FormGroup,
-    ReactiveFormsModule,
-    ValidationErrors,
-    ValidatorFn
-} from '@angular/forms';
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    viewChild,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -18,7 +19,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqButton } from '../../button';
-import { KbqFormattersModule } from '../../core';
+import { KBQ_VALIDATION, KbqFormattersModule } from '../../core';
 import { KbqDatepickerModule } from '../../datepicker';
 import { KbqListSelection } from '../../list';
 import { KbqPopoverTrigger } from '../../popover';
@@ -27,29 +28,18 @@ import { KbqFilterBar } from '../filter-bar.component';
 import { KbqPipeComponent } from '../pipe.component';
 import { KbqPipeStates } from './pipe-states.component';
 
-function groupValidator(adapter): ValidatorFn {
-    return (g: AbstractControl | FormGroup): ValidationErrors | null => {
-        const start = g.get('start')?.value;
-        const end = g.get('end')?.value;
-
-        if (!start || !end) return null;
-
-        if (adapter.compareDateTime(start, end) > 0) {
-            return { start: true };
-        } else if (adapter.compareDateTime(end, start) < 0) {
-            return { end: true };
-        }
-
-        return null;
-    };
-}
-
 @Component({
     standalone: true,
     selector: 'kbq-pipe-date',
     templateUrl: 'pipe-date.template.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: KBQ_VALIDATION,
+            useValue: { useValidation: false }
+        }
+    ],
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -71,6 +61,7 @@ export class KbqPipeDateComponent {
     protected readonly basePipe = inject(KbqPipeComponent);
     protected readonly adapter = inject(DateAdapter);
     protected readonly formatter = inject(DateFormatter);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected readonly placements = PopUpPlacements;
     protected readonly styles = KbqButtonStyles;
@@ -79,15 +70,16 @@ export class KbqPipeDateComponent {
     protected list = true;
 
     protected formGroup: FormGroup;
+    protected showTimepicker: boolean = false;
 
     get formattedValue(): string {
-        const { start, end, showTime } = this.basePipe.data.value || {};
+        const { start, end, time } = this.data.value || {};
 
         if (start && end) {
-            return showTime ? this.formatter.rangeShortDateTime(start, end) : this.formatter.rangeShortDate(start, end);
+            return time ? this.formatter.rangeShortDateTime(start, end) : this.formatter.rangeShortDate(start, end);
         }
 
-        return this.basePipe.data.value?.name;
+        return this.data.value?.name;
     }
 
     @ViewChild('popover') popover: KbqPopoverTrigger;
@@ -97,15 +89,33 @@ export class KbqPipeDateComponent {
     protected readonly onkeydown = onkeydown;
 
     constructor() {
-        this.formGroup = new FormGroup(
-            {
-                start: new FormControl(this.basePipe.data.value?.start),
-                end: new FormControl(this.basePipe.data.value?.end)
-            },
-            {
-                validators: [groupValidator(this.adapter)]
-            }
+        this.formGroup = new FormGroup({
+            start: new FormControl(this.data.value?.start),
+            end: new FormControl(this.data.value?.end)
+        });
+
+        this.showTimepicker = this.data.value?.time;
+
+        this.basePipe.stateChanges.subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
+
+        this.basePipe.pipeInstance = this;
+    }
+
+    get isEmpty(): boolean {
+        if (this.data.value === null) return true;
+
+        if (this.data.value?.name) return false;
+
+        return (
+            !this.adapter.isDateInstance(this.formGroup.get('start')?.value) ||
+            !this.adapter.isDateInstance(this.formGroup.get('end')?.value)
         );
+    }
+
+    get data() {
+        return this.basePipe.data;
     }
 
     onKeydown($event: KeyboardEvent) {
@@ -115,16 +125,18 @@ export class KbqPipeDateComponent {
     }
 
     onApply() {
-        this.basePipe.data.value.start = this.formGroup.get('start')?.value;
-        this.basePipe.data.value.end = this.formGroup.get('end')?.value;
+        this.data.value = {
+            start: this.formGroup.get('start')?.value,
+            end: this.formGroup.get('end')?.value
+        };
 
-        this.filterBar.applyPipe(this.basePipe.data);
+        this.filterBar.applyPipe(this.data);
 
         this.popover.hide();
     }
 
     onSelect(item: unknown) {
-        this.basePipe.data.value = item;
+        this.data.value = item;
         this.basePipe.stateChanges.next();
 
         this.popover.hide();
@@ -140,15 +152,5 @@ export class KbqPipeDateComponent {
         this.list = true;
 
         setTimeout(() => this.listSelection().focus());
-    }
-
-    onDeleteOrClear() {
-        if (this.basePipe.data.cleanable) {
-            this.basePipe.data.value = undefined;
-        } else if (this.basePipe.data.removable) {
-            this.basePipe.onDeleteOrClear();
-        }
-
-        this.basePipe.stateChanges.next();
     }
 }

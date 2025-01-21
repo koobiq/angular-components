@@ -1,10 +1,10 @@
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     inject,
     Input,
+    ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -40,12 +40,24 @@ import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select.component';
             <kbq-pipe-date />
         }
 
-        @if (!data.required && !isEmpty) {
+        @if (!data.required && data.removable) {
             <button
                 class="kbq-pipe__delete"
                 [disabled]="data.disabled"
                 [kbq-pipe-states]="data"
-                (click)="onDeleteOrClear()"
+                (click)="onDelete()"
+                kbq-button
+            >
+                <i kbq-icon="kbq-xmark-s_16"></i>
+            </button>
+        }
+
+        @if (!data.required && data.cleanable && !isEmpty) {
+            <button
+                class="kbq-pipe__delete"
+                [disabled]="data.disabled"
+                [kbq-pipe-states]="data"
+                (click)="onClear()"
                 kbq-button
             >
                 <i kbq-icon="kbq-xmark-s_16"></i>
@@ -57,7 +69,7 @@ import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select.component';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'kbq-pipe',
-        '[class]': '"kbq-pipe_" + data.type',
+        '[class]': '"kbq-pipe__" + data.type',
         '[class.kbq-pipe_empty]': 'isEmpty',
         '[class.kbq-pipe_readonly]': 'data.required',
         '[class.kbq-pipe_disabled]': 'data.disabled'
@@ -80,12 +92,13 @@ export class KbqPipeComponent implements AfterContentInit {
 
     protected readonly pipeTypes = KbqPipeTypes;
     protected readonly filterBar = inject(KbqFilterBar);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected readonly viewContainerRef = inject(ViewContainerRef);
 
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
 
     values: KbqPipeTemplate[];
+    pipeInstance;
 
     @Input()
     get data(): KbqPipe {
@@ -99,21 +112,7 @@ export class KbqPipeComponent implements AfterContentInit {
     private _data!: KbqPipe;
 
     get isEmpty(): boolean {
-        if (
-            [this.pipeTypes.Text, this.pipeTypes.Select, this.pipeTypes.TreeSelect, this.pipeTypes.Date].includes(
-                this.data.type
-            )
-        ) {
-            return this.data.value === undefined;
-        } else if ([this.pipeTypes.MultiSelect, this.pipeTypes.MultiTreeSelect].includes(this.data.type)) {
-            if (Array.isArray(this.data.value)) {
-                return this.data.value.length === 0;
-            }
-
-            return true;
-        }
-
-        throw new Error(`Unknown type: ${this.data.type}`);
+        return !!this.pipeInstance?.isEmpty;
     }
 
     ngAfterContentInit(): void {
@@ -124,11 +123,15 @@ export class KbqPipeComponent implements AfterContentInit {
         }
     }
 
-    onDeleteOrClear() {
-        // this.pipes.deletePipe(this.data);
+    onDelete() {
+        this.filterBar.deletePipe(this.data);
+
+        this.stateChanges.next();
     }
 
-    // deletePipe(pipe: KbqPipe) {
-    // this.pipes.splice(this.pipes.indexOf(pipe), 1);
-    // }
+    onClear() {
+        this.data.value = null;
+
+        this.stateChanges.next();
+    }
 }

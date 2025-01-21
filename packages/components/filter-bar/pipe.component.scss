@@ -36,10 +36,10 @@
     }
 }
 
-.kbq-pipe_select {
+.kbq-pipe__select {
 }
 
-.kbq-pipe_multi-select {
+.kbq-pipe__multiselect {
     .kbq-pipe__value {
         margin-left: 4px;
     }
@@ -77,7 +77,7 @@
     }
 
     & .kbq-date-period {
-        min-width: 320px;
+        width: 320px;
 
         & .kbq-date-period__header {
             padding-top: 6px;
@@ -114,19 +114,29 @@
                 padding-left: 16px;
                 padding-right: 16px;
 
-                & .kbq-date-period__date {
-                    & .kbq-form-field__container {
-                        border-top-right-radius: unset;
-                        border-bottom-right-radius: unset;
-                    }
+                & .kbq-date-period__date,
+                & .kbq-date-period__time {
+                    flex: 1;
                 }
 
-                & .kbq-date-period__time {
-                    margin-left: -1px;
+                &.kbq-form__row_with-time {
+                    & .kbq-date-period__date {
+                        max-width: 45%;
 
-                    & .kbq-form-field__container {
-                        border-top-left-radius: unset;
-                        border-bottom-left-radius: unset;
+                        & .kbq-form-field__container {
+                            border-top-right-radius: unset;
+                            border-bottom-right-radius: unset;
+                        }
+                    }
+
+                    & .kbq-date-period__time {
+                        margin-left: -1px;
+                        max-width: 45%;
+
+                        & .kbq-form-field__container {
+                            border-top-left-radius: unset;
+                            border-bottom-left-radius: unset;
+                        }
                     }
                 }
             }
@@ -154,8 +164,8 @@
             }
 
             & .kbq-hint {
-                padding-left: 16px;
-                padding-right: 16px;
+                padding-left: 12px;
+                padding-right: 12px;
             }
         }
 

@@ -2,8 +2,8 @@
     #popover="kbqPopover"
     kbq-button
     kbqPopover
-    [disabled]="basePipe.data.disabled"
-    [kbq-pipe-states]="basePipe.data"
+    [disabled]="data.disabled"
+    [kbq-pipe-states]="data"
     [kbqPopoverArrow]="false"
     [kbqPopoverClass]="'kbq-pipe-date__popover'"
     [kbqPopoverContent]="content"
@@ -11,7 +11,7 @@
     [kbqPopoverPlacement]="placements.BottomLeft"
     (kbqPopoverVisibleChange)="list = true"
 >
-    <span class="kbq-pipe__name">{{ basePipe.data.name }}</span>
+    <span class="kbq-pipe__name">{{ data.name }}</span>
     <span class="kbq-pipe__value">{{ formattedValue }}</span>
 </button>
 
@@ -51,41 +51,49 @@
 
             <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
                 <div class="kbq-date-period__content-header">Произвольный период</div>
-                <div class="kbq-form__row">
+                <div class="kbq-form__row" [class.kbq-form__row_with-time]="showTimepicker">
                     <label class="kbq-form__label flex-10">c</label>
 
-                    <kbq-form-field #startDateField class="kbq-date-period__date kbq-form__control flex-45">
-                        <input formControlName="start" [kbqCalendar]="startDateCalendar" />
+                    <kbq-form-field #startDateField class="kbq-date-period__date kbq-form__control">
+                        <input
+                            formControlName="start"
+                            [kbqCalendar]="startDateCalendar"
+                            [max]="formGroup.controls.end.value"
+                        />
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                     </kbq-form-field>
 
-                    <kbq-form-field class="kbq-date-period__time kbq-form__control flex-45">
-                        <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                        <input formControlName="start" kbqTimepicker />
-                    </kbq-form-field>
+                    @if (showTimepicker) {
+                        <kbq-form-field class="kbq-date-period__time kbq-form__control">
+                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                            <input formControlName="start" kbqTimepicker />
+                        </kbq-form-field>
+                    }
                 </div>
 
                 <kbq-calendar #startDateCalendar [class.kbq-calendar_hidden]="!startDateField.hasFocus" />
 
-                <div class="kbq-form__row">
+                <div class="kbq-form__row" [class.kbq-form__row_with-time]="showTimepicker">
                     <label class="kbq-form__label flex-10">по</label>
 
-                    <kbq-form-field #endDateField class="kbq-date-period__date kbq-form__control flex-45">
+                    <kbq-form-field #endDateField class="kbq-date-period__date kbq-form__control">
                         <input formControlName="end" [kbqCalendar]="endDateCalendar" />
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                         <kbq-datepicker #datepicker />
                     </kbq-form-field>
 
-                    <kbq-form-field class="kbq-date-period__time kbq-form__control flex-45">
-                        <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                        <input formControlName="end" kbqTimepicker />
-                    </kbq-form-field>
+                    @if (showTimepicker) {
+                        <kbq-form-field class="kbq-date-period__time kbq-form__control">
+                            <i kbq-icon="kbq-clock_16" kbqPrefix></i>
+                            <input formControlName="end" kbqTimepicker />
+                        </kbq-form-field>
+                    }
                 </div>
 
-                @if (formGroup.errors?.start) {
-                    <kbq-hint [color]="'error'">Начало периода не может быть позже окончания</kbq-hint>
-                } @else if (formGroup.errors?.end) {
-                    <kbq-hint [color]="'error'">Окончание периода не может быть раньше начала</kbq-hint>
+                @if (formGroup.controls.start.invalid) {
+                    <kbq-hint class="kbq-date-period__hint" [color]="'error'">
+                        Начало периода не может быть позже окончания
+                    </kbq-hint>
                 }
 
                 <kbq-calendar #endDateCalendar [class.kbq-calendar_hidden]="!endDateField.hasFocus" />
@@ -95,7 +103,7 @@
                 <button
                     kbq-button
                     [color]="'theme'"
-                    [disabled]="basePipe.isEmpty"
+                    [disabled]="isEmpty"
                     [kbqStyle]="'transparent'"
                     (click)="onApply()"
                     (keydown.enter)="onApply()"

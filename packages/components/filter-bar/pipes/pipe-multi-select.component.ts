@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -16,6 +17,7 @@ import { KbqPipeStates } from './pipe-states.component';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
+        FormsModule,
         KbqButtonModule,
         KbqIcon,
         KbqDividerModule,
@@ -34,21 +36,22 @@ export class KbqPipeMultiSelectComponent {
         return this.basePipe.data.value;
     }
 
-    onDeleteOrClear() {
-        if (this.basePipe.data.cleanable) {
-            this.basePipe.data.value = [];
-        } else if (this.basePipe.data.removable) {
-            this.basePipe.onDeleteOrClear();
-        }
+    get isEmpty(): boolean {
+        return !this.basePipe.data.value?.length;
+    }
 
-        this.basePipe.stateChanges.next();
+    constructor() {
+        this.basePipe.stateChanges.subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
+
+        this.basePipe.pipeInstance = this;
     }
 
     onSelect(item: unknown) {
-        console.log('onSelect: ');
         this.basePipe.data.value = item;
         this.basePipe.stateChanges.next();
     }
 
-    compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.value === o2.value;
+    compareByValue = (o1: any, o2: any): boolean => o1?.value === o2?.id;
 }

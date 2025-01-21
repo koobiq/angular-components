@@ -10,8 +10,6 @@
             Фильтры
         </kbq-filters>
 
-        <kbq-divider [vertical]="true" />
-
         @for (pipe of activeFilter!.pipes; track pipe) {
             <kbq-pipe [data]="pipe" />
         }
@@ -23,3 +21,5 @@
         <kbq-filter-bar-actions />
     </kbq-filter-bar>
 </div>
+
+<pre> {{ activeFilter | json }}</pre>

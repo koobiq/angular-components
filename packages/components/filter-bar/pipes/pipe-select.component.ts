@@ -32,14 +32,16 @@ export class KbqPipeSelectComponent {
         return this.basePipe.data.value;
     }
 
-    onDeleteOrClear() {
-        if (this.basePipe.data.cleanable) {
-            this.basePipe.data.value = undefined;
-        } else if (this.basePipe.data.removable) {
-            this.basePipe.onDeleteOrClear();
-        }
+    get isEmpty(): boolean {
+        return this.basePipe.data.value === null || this.basePipe.data.value === undefined;
+    }
 
-        this.basePipe.stateChanges.next();
+    constructor() {
+        this.basePipe.stateChanges.subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
+
+        this.basePipe.pipeInstance = this;
     }
 
     onSelect(item: unknown) {
@@ -47,5 +49,5 @@ export class KbqPipeSelectComponent {
         this.basePipe.stateChanges.next();
     }
 
-    compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.value === o2.value;
+    compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.id === o2.id;
 }
