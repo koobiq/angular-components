@@ -82,6 +82,10 @@ export class KbqPipeDateComponent {
         return this.data.value?.name;
     }
 
+    get disabled(): boolean {
+        return this.isEmpty || this.formGroup.controls.start.invalid;
+    }
+
     @ViewChild('popover') popover: KbqPopoverTrigger;
     listSelection = viewChild.required('listSelection', { read: KbqListSelection });
     returnButton = viewChild.required('returnButton', { read: KbqButton });
