@@ -1,25 +1,21 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
     standalone: true,
     imports: [
         KbqIconModule,
-        KbqLinkModule,
-        AsyncPipe
+        KbqLinkModule
     ],
     selector: 'docs-copy-button',
     template: `
-        @let isRuLocale = docsLocaleService.isRuLocale | async;
-
         @if (isLabelSuccessVisible) {
             <span disabled kbq-link pseudo>
                 <i class="kbq kbq-check_16"></i>
-                <span class="kbq-link__text">{{ isRuLocale ? 'Скопировано' : 'Copied' }}</span>
+                <span class="kbq-link__text">{{ isRuLocale() ? 'Скопировано' : 'Copied' }}</span>
             </span>
         } @else {
             <span kbq-link pseudo>
@@ -34,14 +30,13 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsCopyButtonComponent {
+export class DocsCopyButtonComponent extends DocsLocaleState {
     @Input() contentToCopy: string;
 
     isLabelSuccessVisible = false;
 
     private readonly clipboard = inject(Clipboard);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
-    readonly docsLocaleService = inject(DocsLocaleService);
 
     copyContent(): void {
         if (!this.contentToCopy || !this.clipboard.copy(this.contentToCopy)) {

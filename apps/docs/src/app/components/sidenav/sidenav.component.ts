@@ -1,4 +1,4 @@
-import { AsyncPipe, Location, ViewportScroller } from '@angular/common';
+import { Location, ViewportScroller } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,7 +13,7 @@ import {
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import { DocsLocale } from 'src/app/constants/locale';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocStates } from '../../services/doc-states';
 import { DocCategory, DOCS_ITEM_SECTIONS, DocumentationItems } from '../../services/documentation-items';
 import { DocsFooterComponent } from '../footer/footer.component';
@@ -68,8 +68,7 @@ function buildTree(categories: DocCategory[]): TreeNode[] {
         KbqDividerModule,
         DocsFooterComponent,
         KbqScrollbarModule,
-        RouterLink,
-        AsyncPipe
+        RouterLink
     ],
     selector: 'docs-sidenav',
     templateUrl: './sidenav.component.html',
@@ -80,11 +79,10 @@ function buildTree(categories: DocCategory[]): TreeNode[] {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsSidenavComponent implements AfterViewInit {
+export class DocsSidenavComponent extends DocsLocaleState implements AfterViewInit {
     @ViewChild(KbqScrollbar) readonly sidenavMenuContainer: KbqScrollbar;
     @ViewChild(KbqTreeSelection) readonly tree: KbqTreeSelection;
 
-    readonly docsLocaleService = inject(DocsLocaleService);
     protected readonly docStates = inject(DocStates);
     private readonly docItems = inject(DocumentationItems);
     private readonly router = inject(Router);
@@ -105,7 +103,7 @@ export class DocsSidenavComponent implements AfterViewInit {
 
         this._selectedItem = value;
 
-        this.router.navigateByUrl(`${this.docsLocaleService.locale}/${value}`);
+        this.router.navigateByUrl(`${this.locale()}/${value}`);
 
         this.docStates.closeNavbarMenu();
 
@@ -115,6 +113,8 @@ export class DocsSidenavComponent implements AfterViewInit {
     private _selectedItem: string;
 
     constructor() {
+        super();
+
         const treeFlattener = new KbqTreeFlattener(
             this.transformer,
             this.getLevel,
@@ -141,7 +141,7 @@ export class DocsSidenavComponent implements AfterViewInit {
         // remove extra path endpoints so tree node can be selected
         this._selectedItem = DOCS_ITEM_SECTIONS.reduce(
             (resUrl, currentValue) => resUrl.replace(new RegExp(`\\/${currentValue}.*`), ''),
-            this.location.path().replace(`/${this.docsLocaleService.locale}/`, '')
+            this.location.path().replace(`/${this.locale()}/`, '')
         );
         setTimeout(() => this.tree.highlightSelectedOption());
     }

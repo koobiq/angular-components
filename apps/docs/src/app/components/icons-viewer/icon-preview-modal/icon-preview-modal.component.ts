@@ -1,5 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { AsyncPipe, NgClass, TitleCasePipe } from '@angular/common';
+import { NgClass, TitleCasePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
     AfterViewInit,
@@ -20,9 +20,8 @@ import { KbqModalModule, KbqModalRef } from '@koobiq/components/modal';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { DocsLocale } from 'src/app/constants/locale';
 import { IconItem } from 'src/app/services/icon-items';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
     standalone: true,
@@ -35,7 +34,6 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
         KbqButtonModule,
         KbqModalModule,
         KbqDlModule,
-        AsyncPipe,
         KbqToolTipModule
     ],
     selector: 'docs-icon-preview-modal-component',
@@ -44,7 +42,7 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsIconPreviewModalComponent implements AfterViewInit {
+export class DocsIconPreviewModalComponent extends DocsLocaleState implements AfterViewInit {
     @ViewChild('iconPreview') iconPreview: KbqIcon;
     @ViewChild('wordExample') wordExample: ElementRef;
 
@@ -65,7 +63,6 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
 
     readonly componentColors = KbqComponentColors;
 
-    readonly docsLocaleService = inject(DocsLocaleService);
     private readonly clipboard = inject(Clipboard);
     private readonly toastService = inject(KbqToastService);
     private readonly httpClient = inject(HttpClient);
@@ -122,7 +119,7 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
     private showSuccessfullyCopiedToast() {
         this.toastService.show({
             style: 'success',
-            title: this.docsLocaleService.locale === DocsLocale.Ru ? 'Скопировано' : 'Copied'
+            title: this.isRuLocale() ? 'Скопировано' : 'Copied'
         });
     }
 

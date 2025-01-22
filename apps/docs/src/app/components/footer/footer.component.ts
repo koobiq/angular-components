@@ -1,4 +1,4 @@
-import { AsyncPipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
@@ -7,7 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { distinctUntilKeyChanged } from 'rxjs';
 import { DocsLocale } from 'src/app/constants/locale';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { koobiqVersion } from '../../version';
 import { NavbarProperty } from '../navbar/navbar-property';
 import { DocsVersionPickerDirective } from '../version-picker/version-picker.directive';
@@ -18,8 +18,7 @@ import { DocsVersionPickerDirective } from '../version-picker/version-picker.dir
         KbqIconModule,
         KbqLinkModule,
         KbqDropdownModule,
-        DocsVersionPickerDirective,
-        AsyncPipe
+        DocsVersionPickerDirective
     ],
     selector: 'docs-footer',
     templateUrl: './footer.component.html',
@@ -30,10 +29,9 @@ import { DocsVersionPickerDirective } from '../version-picker/version-picker.dir
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DocsFooterComponent {
+export class DocsFooterComponent extends DocsLocaleState {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE);
     private readonly location = inject(Location);
-    readonly docsLocaleService = inject(DocsLocaleService);
 
     readonly version = koobiqVersion;
     readonly examplesLanguageSwitch: NavbarProperty;
@@ -48,6 +46,8 @@ export class DocsFooterComponent {
     }
 
     constructor() {
+        super();
+
         this.docsLanguageSwitch = new NavbarProperty({
             property: 'docs_language',
             data: [

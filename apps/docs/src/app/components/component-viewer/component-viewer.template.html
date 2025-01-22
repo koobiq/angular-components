@@ -1,22 +1,19 @@
-@let locale = docsLocaleService.changes | async;
-@let isRuLocale = docsLocaleService.isRuLocale | async;
-
 <div class="docs-component-header">
     <div docsRegisterHeader class="docs-component-name">
-        {{ docItem.name[locale] }}
+        {{ docItem.name[locale()!] }}
     </div>
     @if (!docItem.isGuide) {
         <div class="docs-component-navbar layout-row layout-padding-top-s">
             <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                 <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'overview'">
-                    {{ isRuLocale ? 'Обзор' : 'Overview' }}
+                    {{ isRuLocale() ? 'Обзор' : 'Overview' }}
                 </a>
                 @if (docItem.hasApi) {
                     <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'api'">API</a>
                 }
                 @if (docItem.hasExamples) {
                     <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'examples'">
-                        {{ isRuLocale ? 'Примеры' : 'Examples' }}
+                        {{ isRuLocale() ? 'Примеры' : 'Examples' }}
                     </a>
                 }
             </nav>

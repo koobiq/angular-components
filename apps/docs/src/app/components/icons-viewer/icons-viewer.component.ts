@@ -22,7 +22,7 @@ import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqToastModule } from '@koobiq/components/toast';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { IconItem, IconItems } from 'src/app/services/icon-items';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocStates } from '../../services/doc-states';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
@@ -41,7 +41,6 @@ const SEARCH_DEBOUNCE_TIME = 300;
         KbqHighlightModule,
         KbqEmptyStateModule,
         NgClass,
-        AsyncPipe,
 
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
         KbqModalModule,
@@ -57,7 +56,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DocsIconsViewerComponent {
+export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly http = inject(HttpClient);
     private readonly modalService = inject(KbqModalService);
     private readonly activeRoute = inject(ActivatedRoute);
@@ -68,7 +67,6 @@ export class DocsIconsViewerComponent {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
-    readonly docsLocaleService = inject(DocsLocaleService);
 
     readonly themePalette = ThemePalette;
 
@@ -81,6 +79,8 @@ export class DocsIconsViewerComponent {
     private queryParamMap: { [key: string]: string };
 
     constructor() {
+        super();
+
         this.http.get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' }).subscribe((data) => {
             this.iconItems = new IconItems(data);
 

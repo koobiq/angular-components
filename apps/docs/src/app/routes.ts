@@ -14,7 +14,7 @@ import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
-import { DocsLocaleService } from './services/locale.service';
+import { DocsLocaleService } from './services/locale';
 
 const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[]): boolean => {
     const { path } = segments[0];

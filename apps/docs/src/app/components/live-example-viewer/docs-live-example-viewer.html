@@ -1,5 +1,3 @@
-@let isRuLocale = docsLocaleService.isRuLocale | async;
-
 <div class="docs-live-example__container">
     @if (exampleData) {
         <div class="docs-live-example__example docs-live-example__example_{{ exampleId }}">
@@ -13,10 +11,10 @@
         <span kbq-link pseudo (click)="toggleSourceView()" (keydown.enter)="toggleSourceView()">
             {{
                 isSourceShown
-                    ? isRuLocale
+                    ? isRuLocale()
                         ? 'Скрыть пример кода'
                         : 'Hide example code'
-                    : isRuLocale
+                    : isRuLocale()
                       ? 'Показать пример кода'
                       : 'Show example code'
             }}
@@ -31,7 +29,7 @@
         <kbq-code-block [codeFiles]="files" [filled]="true" [lineNumbers]="true" />
     }
 } @else {
-    @if (isRuLocale) {
+    @if (isRuLocale()) {
         <div>
             <p>К сожалению, пример кода для этого раздела не найден.</p>
             <p>

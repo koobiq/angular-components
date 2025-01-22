@@ -1,5 +1,4 @@
 import { CdkPortal, ComponentPortal, DomPortalOutlet } from '@angular/cdk/portal';
-import { AsyncPipe } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
     ApplicationRef,
@@ -22,7 +21,7 @@ import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetComponent } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
@@ -32,14 +31,11 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
         KbqCodeBlockModule,
         DocsCodeSnippetComponent,
         KbqToolTipModule,
-        CdkPortal,
-        AsyncPipe
+        CdkPortal
     ],
     selector: 'docs-live-example',
     template: `
-        @let isRuLocale = docsLocaleService.isRuLocale | async;
-
-        {{ isRuLocale ? 'Загрузка документа...' : 'Loading document...' }}
+        {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
         <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
             <kbq-code-block [files]="[{ content: contentToCopy }]" filled lineNumbers />
         </ng-template>
@@ -47,7 +43,7 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
             <span
                 class="kbq-mono-normal"
                 [innerHTML]="htmlContent"
-                [kbqTooltip]="isRuLocale ? 'Скопировать' : 'Copy'"
+                [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'"
                 kbq-code-snippet
             ></span>
         </ng-template>
@@ -56,7 +52,7 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
         class: 'docs-live-example kbq-markdown'
     }
 })
-export class DocsLiveExampleComponent implements OnDestroy {
+export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestroy {
     @ViewChild(CdkPortal) private readonly codeTemplate: CdkPortal;
     @ViewChild('codeSnippet', { read: CdkPortal }) private readonly codeSnippetTemplate: CdkPortal;
     /** The URL of the document to display. */
@@ -84,7 +80,6 @@ export class DocsLiveExampleComponent implements OnDestroy {
     private portalHosts: DomPortalOutlet[] = [];
     private documentFetchSubscription: Subscription;
 
-    readonly docsLocaleService = inject(DocsLocaleService);
     private readonly appRef = inject(ApplicationRef);
     private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
     private readonly elementRef = inject(ElementRef);

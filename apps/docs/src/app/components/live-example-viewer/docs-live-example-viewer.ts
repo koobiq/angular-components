@@ -1,4 +1,4 @@
-import { AsyncPipe, NgComponentOutlet } from '@angular/common';
+import { NgComponentOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, inject, Input, Type, ViewEncapsulation } from '@angular/core';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
@@ -6,7 +6,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
 
 /** Preferred order for files of an example displayed in the viewer. */
@@ -24,8 +24,7 @@ interface ExampleFileData {
         DocsStackblitzButtonComponent,
         KbqLinkModule,
         KbqCodeBlockModule,
-        NgComponentOutlet,
-        AsyncPipe
+        NgComponentOutlet
     ],
     selector: 'docs-live-example-viewer',
     templateUrl: './docs-live-example-viewer.html',
@@ -35,7 +34,7 @@ interface ExampleFileData {
     },
     encapsulation: ViewEncapsulation.None
 })
-export class DocsLiveExampleViewerComponent {
+export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     isSourceShown: boolean = false;
 
     files: KbqCodeBlockFile[] = [];
@@ -73,7 +72,6 @@ export class DocsLiveExampleViewerComponent {
 
     private _example: string | null;
 
-    readonly docsLocaleService = inject(DocsLocaleService);
     private readonly elementRef = inject(ElementRef);
     private readonly httpClient = inject(HttpClient);
 

@@ -1,5 +1,4 @@
 @let opened = opened$ | async;
-@let isRuLocale = docsLocaleService.isRuLocale | async;
 
 <a routerLink="/" class="docs-navbar__left">
     <!-- prettier-ignore -->
@@ -62,12 +61,12 @@
 
         <kbq-dropdown #themeDropdown="kbqDropdown" [class]="'docs-dropdown'">
             <div class="kbq-dropdown__group-header">
-                <span class="kbq-caps-compact-strong">{{ isRuLocale ? 'ТЕМА' : 'THEME' }}</span>
+                <span class="kbq-caps-compact-strong">{{ isRuLocale() ? 'ТЕМА' : 'THEME' }}</span>
             </div>
 
             @for (theme of themeSwitch.data; track theme; let index = $index) {
                 <button kbq-dropdown-item [class.kbq-selected]="theme.selected" (click)="setTheme(index)">
-                    {{ theme.title[locale] }}
+                    {{ theme.title[locale()] }}
                 </button>
             }
         </kbq-dropdown>

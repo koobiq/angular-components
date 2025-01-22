@@ -2,7 +2,7 @@ import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
 import { UAParser } from 'ua-parser-js';
-import { DocsLocaleService } from '../../services/locale.service';
+import { DocsLocaleState } from '../../services/locale';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
@@ -33,14 +33,15 @@ const CONFIG: _DocSearchProps = {
         class: 'layout-align-center-center'
     }
 })
-export class DocsearchDirective {
+export class DocsearchDirective extends DocsLocaleState {
     /** should transform item URL to work docsearch on DEV stand */
     private readonly shouldTransformItemURL = location.host !== HOST || location.protocol !== PROTOCOL;
 
-    private readonly docsLocaleService = inject(DocsLocaleService);
     private readonly destroyRef = inject(DestroyRef);
 
     constructor() {
+        super();
+
         afterNextRender(() => {
             this.initDocsearch();
         });

@@ -8,7 +8,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { DocStates } from 'src/app/services/doc-states';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocCategory, DocumentationItems } from '../../services/documentation-items';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
@@ -19,8 +19,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         KbqLinkModule,
         RouterLink,
         AsyncPipe,
-        DocsRegisterHeaderDirective,
-        AsyncPipe
+        DocsRegisterHeaderDirective
     ],
     selector: 'docs-welcome',
     templateUrl: './welcome.component.html',
@@ -30,16 +29,17 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     },
     encapsulation: ViewEncapsulation.None
 })
-export class DocsWelcomeComponent implements OnInit {
+export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     docCategories: DocCategory[];
     currentTheme$: Observable<string>;
 
     private readonly elementRef = inject(ElementRef);
     private readonly docStates = inject(DocStates);
     private readonly docItems = inject(DocumentationItems);
-    readonly docsLocaleService = inject(DocsLocaleService);
 
     constructor(private readonly themeService: ThemeService) {
+        super();
+
         fromEvent(this.elementRef.nativeElement, 'scroll')
             .pipe(debounceTime(10), takeUntilDestroyed())
             .subscribe(this.checkOverflow);

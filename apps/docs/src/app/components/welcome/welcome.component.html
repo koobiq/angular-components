@@ -1,12 +1,10 @@
-@let isRuLocale = docsLocaleService.isRuLocale | async;
-
 <header docsRegisterHeader class="docs-welcome__header">
-    {{ isRuLocale ? 'Дизайн-система Koobiq' : 'Koobiq design system' }}
+    {{ isRuLocale() ? 'Дизайн-система Koobiq' : 'Koobiq design system' }}
 </header>
 
 <div class="docs-welcome__description">
     {{
-        isRuLocale
+        isRuLocale()
             ? 'Набор принципов и инструментов для создания веб-приложений. Дизайн-система упрощает создание продуктов и обеспечивает единообразие их интерфейсов.'
             : 'A set of principles and tools for creating web applications. The design system simplifies product development and ensures consistency across their interfaces.'
     }}
@@ -14,7 +12,7 @@
 
 @for (category of docCategories; track category) {
     <div class="docs-welcome__category">
-        <div class="docs-welcome__category-title">{{ category.name[locale] }}</div>
+        <div class="docs-welcome__category-title">{{ category.name[locale()] }}</div>
         <div class="docs-welcome__category-items layout-row layout-margin-top-l">
             @for (item of category.items; track item) {
                 <a class="docs-welcome__category-item" [routerLink]="[category.id, item.id]">
@@ -23,7 +21,7 @@
                         class="docs-welcome__category-item-preview"
                         [alt]="item.id"
                     />
-                    <div class="docs-welcome__category-item-title">{{ item.name[locale] }}</div>
+                    <div class="docs-welcome__category-item-title">{{ item.name[locale()] }}</div>
                 </a>
             }
         </div>

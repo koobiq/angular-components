@@ -1,8 +1,6 @@
-@let isRuLocale = docsLocaleService.isRuLocale | async;
-
 <div class="docs-footer__item">
     <div class="docs-footer__label">
-        {{ isRuLocale ? 'Язык интерфейса и примеров' : 'Interface and examples language' }}
+        {{ isRuLocale() ? 'Язык интерфейса и примеров' : 'Interface and examples language' }}
     </div>
     <div>
         <div
@@ -17,16 +15,16 @@
 
         <kbq-dropdown #languageDropdown="kbqDropdown" [class]="'docs-dropdown'">
             <div class="kbq-dropdown__group-header">
-                <span class="kbq-caps-compact-strong">{{ isRuLocale ? 'ЯЗЫК' : 'LANGUAGE' }}</span>
+                <span class="kbq-caps-compact-strong">{{ isRuLocale() ? 'ЯЗЫК' : 'LANGUAGE' }}</span>
             </div>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="docsLanguageDropdown">
-                {{ isRuLocale ? 'Интерфейс' : 'Interface' }}
+                {{ isRuLocale() ? 'Интерфейс' : 'Interface' }}
                 <div class="kbq-dropdown-item__caption">{{ docsLanguageSwitch.currentValue.value }}</div>
             </button>
 
             <button kbq-dropdown-item [kbqDropdownTriggerFor]="examplesLanguageDropdown">
-                {{ isRuLocale ? 'Примеры' : 'Examples' }}
+                {{ isRuLocale() ? 'Примеры' : 'Examples' }}
                 <div class="kbq-dropdown-item__caption">{{ examplesLanguageSwitch.currentValue.value }}</div>
             </button>
         </kbq-dropdown>
@@ -60,7 +58,7 @@
 
 <div class="docs-footer__item">
     <div class="docs-footer__label">
-        {{ isRuLocale ? 'Версия' : 'Version' }}
+        {{ isRuLocale() ? 'Версия' : 'Version' }}
     </div>
     <div>
         <div
@@ -80,7 +78,7 @@
             <kbq-dropdown #versionDropdown="kbqDropdown" [class]="'docs-dropdown'">
                 <div class="kbq-dropdown__group-header">
                     <div class="kbq-caps-compact-strong">
-                        {{ isRuLocale ? 'ВЕРСИЯ' : 'VERSION' }}
+                        {{ isRuLocale() ? 'ВЕРСИЯ' : 'VERSION' }}
                     </div>
                 </div>
 
@@ -94,7 +92,7 @@
                             {{ version.name }}
 
                             @if (version.latest) {
-                                <span>{{ isRuLocale ? ' (последняя)' : ' (latest)' }}</span>
+                                <span>{{ isRuLocale() ? ' (последняя)' : ' (latest)' }}</span>
                             }
                         </div>
                     </button>

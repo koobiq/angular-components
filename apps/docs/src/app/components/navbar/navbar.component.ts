@@ -10,7 +10,7 @@ import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { map, Observable } from 'rxjs';
 import { DocsLocale } from 'src/app/constants/locale';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsNavbarState, DocStates } from '../../services/doc-states';
 import { DocsearchDirective } from '../docsearch/docsearch.directive';
 import { NavbarProperty } from './navbar-property';
@@ -36,9 +36,8 @@ import { NavbarProperty } from './navbar-property';
     },
     encapsulation: ViewEncapsulation.None
 })
-export class DocsNavbarComponent implements OnDestroy {
+export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     readonly docStates = inject(DocStates);
-    readonly docsLocaleService = inject(DocsLocaleService);
 
     readonly themeSwitch: NavbarProperty;
 
@@ -80,6 +79,8 @@ export class DocsNavbarComponent implements OnDestroy {
     );
 
     constructor(private readonly themeService: ThemeService) {
+        super();
+
         // set custom theme configs for light/dark themes
         this.themeService.setThemes(this.kbqThemes);
 

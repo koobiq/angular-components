@@ -1,9 +1,8 @@
-import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { DocsLocale } from 'src/app/constants/locale';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -13,20 +12,17 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         RouterOutlet,
         RouterLink,
         RouterLinkActive,
-        DocsRegisterHeaderDirective,
-        AsyncPipe
+        DocsRegisterHeaderDirective
     ],
     selector: 'docs-component-viewer',
     template: `
-        @let locale = docsLocaleService.changes | async;
-
         <div class="docs-component-header">
             <div class="docs-component-name" docsRegisterHeader>Дизайн-токены</div>
             <div class="docs-component-navbar layout-padding-top-s">
                 <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
                     @for (link of links; track link) {
                         <a [routerLink]="link.value" kbqTabLink routerLinkActive="kbq-selected">
-                            {{ link.title[locale] }}
+                            {{ link.title[locale()] }}
                         </a>
                     }
                 </nav>
@@ -39,15 +35,12 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     `,
     styleUrls: ['../component-viewer/component-viewer.scss'],
     host: {
-        class: 'docs-component-viewer kbq-scrollbar',
-        '[attr.data-docsearch-category]': 'docCategoryName'
+        class: 'docs-component-viewer kbq-scrollbar'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DesignTokensViewer {
-    readonly docsLocaleService = inject(DocsLocaleService);
-
+export class DesignTokensViewer extends DocsLocaleState {
     readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
         {
             title: {

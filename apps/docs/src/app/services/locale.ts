@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
-import { inject, Injectable } from '@angular/core';
+import { Directive, inject, Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
@@ -63,4 +64,11 @@ export class DocsLocaleService {
         const locale = url.split('/')[1];
         return locale && this.isSupportedLocale(locale) ? locale : null;
     }
+}
+
+@Directive()
+export class DocsLocaleState {
+    readonly docsLocaleService = inject(DocsLocaleService);
+    readonly isRuLocale = toSignal(this.docsLocaleService.isRuLocale);
+    readonly locale = toSignal(this.docsLocaleService.changes);
 }
