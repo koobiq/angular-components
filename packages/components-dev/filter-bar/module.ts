@@ -1,10 +1,16 @@
-import { Component, inject, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, inject, NgModule, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    KbqFilter,
+    KbqFilterBar,
+    KbqFilterBarModule,
+    KbqPipeTemplate,
+    KbqPipeTypes
+} from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 import { KbqLuxonDateModule } from '../../../dist/angular-luxon-adapter/adapter';
@@ -17,6 +23,8 @@ import { KbqLuxonDateModule } from '../../../dist/angular-luxon-adapter/adapter'
 })
 export class DemoComponent {
     protected readonly adapter = inject(DateAdapter<DateTime>);
+
+    @ViewChild('filterBar') filterBar: KbqFilterBar;
 
     filters: KbqFilter[] = [
         {
@@ -611,6 +619,7 @@ export class DemoComponent {
 
     onAddPipe(pipe) {
         if (this.activeFilter) {
+            this.activeFilter.changed = true;
             this.activeFilter = { ...this.activeFilter, pipes: [...this.activeFilter!.pipes, pipe] };
         }
         console.log('onAddPipe: ', pipe);
@@ -620,8 +629,14 @@ export class DemoComponent {
         this.activeFilter = filter;
     }
 
-    resetActiveFilter(resetedFilter: KbqFilter | null) {
-        this.activeFilter = this.filters.find((filter) => filter.name === resetedFilter?.name) || null;
+    resetActiveFilter(resettedFilter: KbqFilter | null) {
+        console.log('resetActiveFilter: ');
+        this.activeFilter = resettedFilter;
+    }
+
+    onFilterChange(filter: KbqFilter | null) {
+        console.log('onFilterChange: ');
+        this.activeFilter = filter;
     }
 }
 
