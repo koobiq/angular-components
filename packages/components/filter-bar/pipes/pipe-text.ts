@@ -11,6 +11,7 @@ import { PopUpPlacements } from '../../core';
 import { KbqPopoverModule } from '../../popover';
 import { KbqTextareaModule } from '../../textarea';
 import { KbqBasePipe } from './base-pipe';
+import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 
 @Component({
@@ -36,7 +37,8 @@ import { KbqPipeState } from './pipe-state';
         KbqPipeState,
         FormsModule,
         KbqTextareaModule,
-        NgClass
+        NgClass,
+        KbqPipeButton
     ]
 })
 export class KbqPipeTextComponent extends KbqBasePipe {

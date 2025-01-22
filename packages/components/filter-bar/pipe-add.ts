@@ -7,7 +7,7 @@ import { KbqPipeTemplate } from './filter-bar.types';
 
 @Component({
     standalone: true,
-    selector: 'kbq-filter-add',
+    selector: 'kbq-pipe-add',
     template: `
         <button [color]="'contrast-fade'" [kbqStyle]="'outline'" [kbqDropdownTriggerFor]="newPipes" kbq-button>
             <i kbq-icon="kbq-plus_16"></i>
@@ -21,7 +21,7 @@ import { KbqPipeTemplate } from './filter-bar.types';
         </kbq-dropdown>
     `,
     host: {
-        class: 'kbq-filter-add'
+        class: 'kbq-pipe-add'
     },
     imports: [
         KbqDropdownModule,
@@ -29,7 +29,7 @@ import { KbqPipeTemplate } from './filter-bar.types';
         KbqIcon
     ]
 })
-export class KbqFilterAdd {
+export class KbqPipeAdd {
     protected readonly filterBar = inject(KbqFilterBar);
 
     add(pipe: KbqPipeTemplate) {

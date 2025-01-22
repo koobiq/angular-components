@@ -7,6 +7,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqBasePipe } from './base-pipe';
+import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 
 @Component({
@@ -30,7 +31,8 @@ import { KbqPipeState } from './pipe-state';
         KbqSelectModule,
         NgClass,
         KbqPipeState,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqPipeButton
     ]
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe {

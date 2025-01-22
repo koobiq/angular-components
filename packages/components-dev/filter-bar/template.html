@@ -1,9 +1,12 @@
 <div style="min-height: 50px; border: 1px solid red">
     <kbq-filter-bar
+        #filterBar
         [activeFilter]="activeFilter"
         [filters]="filters"
         [templates]="pipeTemplates"
         (onAddPipe)="onAddPipe($event)"
+        (onFilterChange)="onFilterChange($event)"
+        (onReset)="resetActiveFilter($event)"
     >
         <kbq-filters (onSelectFilter)="onSelectFilter($event)">
             <i kbq-icon="kbq-list_16"></i>
@@ -11,12 +14,12 @@
         </kbq-filters>
 
         @for (pipe of activeFilter!.pipes; track pipe) {
-            <ng-container *kbq-pipe="pipe"></ng-container>
+            <ng-container *kbq-pipe="pipe" />
         }
 
-        <kbq-filter-add />
+        <kbq-pipe-add />
 
-        <kbq-filter-reset (onResetActiveFilter)="resetActiveFilter($event)">Сбросить</kbq-filter-reset>
+        <kbq-filter-reset>Сбросить</kbq-filter-reset>
 
         <kbq-filter-bar-actions />
     </kbq-filter-bar>

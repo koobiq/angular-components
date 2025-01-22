@@ -1,0 +1,87 @@
+<button
+    kbq-button
+    kbq-filter-bar-button
+    [color]="colors.ContrastFade"
+    [filter]="activeFilter"
+    [kbqDropdownTriggerFor]="savedFilters"
+    [kbqStyle]="styles.Outline"
+    (dropdownOpened)="input.focus()"
+>
+    @if (!activeFilter) {
+        <ng-content />
+    } @else {
+        {{ activeFilter.name }}
+    }
+</button>
+
+@if (activeFilter?.unsaved) {
+    <button kbq-button kbq-filter-bar-button [color]="colors.Empty" [filter]="activeFilter">
+        <i kbq-icon="kbq-floppy-disk_16"></i>
+    </button>
+}
+
+@if (activeFilter?.changed) {
+    <button
+        kbq-button
+        kbq-filter-bar-button
+        [color]="colors.Empty"
+        [filter]="activeFilter"
+        [kbqDropdownTriggerFor]="filterActions"
+        [ngClass]="{ 'kbq-button_changed-saved-filter': !activeFilter!.unsaved }"
+    >
+        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+    </button>
+}
+
+<kbq-dropdown #savedFilters="kbqDropdown">
+    <kbq-form-field kbqFormFieldWithoutBorders>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+
+        <input
+            #input
+            autocomplete="off"
+            kbqInput
+            placeholder="Placeholder"
+            [formControl]="searchControl"
+            (click)="stopEventPropagation($event)"
+            (keydown)="stopEventPropagation($event)"
+        />
+        <kbq-cleaner />
+    </kbq-form-field>
+
+    <kbq-divider />
+
+    @for (filter of filteredOptions | async; track filter) {
+        <button kbq-dropdown-item (click)="selectFilter(filter)">{{ filter.name }}</button>
+    }
+
+    <kbq-divider />
+
+    <button kbq-dropdown-item [disabled]="!activeFilter?.changed">Disabled</button>
+</kbq-dropdown>
+
+<kbq-dropdown #filterActions="kbqDropdown">
+    <button kbq-dropdown-item (click)="onSave()" (keydown.enter)="onSave()">
+        <i kbq-icon="kbq-floppy-disk_16"></i>
+        Сохранить изменения
+    </button>
+    <button kbq-dropdown-item (click)="onSaveAsNew()" (keydown.enter)="onSaveAsNew()">
+        <i kbq-icon="kbq-plus-s_16"></i>
+        Сохранить как новый
+    </button>
+    <button kbq-dropdown-item (click)="onChange()" (keydown.enter)="onChange()">
+        <i kbq-icon="kbq-pencil_16"></i>
+        Изменить
+    </button>
+
+    <kbq-divider />
+
+    <button kbq-dropdown-item (click)="onReset()" (keydown.enter)="onReset()">
+        <i kbq-icon="kbq-xmark-circle_16"></i>
+        Сбросить изменения
+    </button>
+    <button kbq-dropdown-item (click)="onDelete()" (keydown.enter)="onDelete()">
+        <i kbq-icon="kbq-trash_16"></i>
+        Удалить
+    </button>
+</kbq-dropdown>

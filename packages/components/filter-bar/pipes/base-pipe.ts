@@ -27,7 +27,9 @@ export class KbqBasePipe {
         return this.data.value === null || this.data.value === undefined;
     }
 
-    protected readonly onkeydown = onkeydown;
+    get showRemoveButton(): boolean {
+        return !this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty));
+    }
 
     constructor() {
         this.stateChanges.subscribe(() => {
@@ -41,8 +43,8 @@ export class KbqBasePipe {
         }
     }
 
-    onDelete() {
-        this.filterBar.deletePipe(this.data);
+    onRemove() {
+        this.filterBar.removePipe(this.data);
 
         this.stateChanges.next();
     }

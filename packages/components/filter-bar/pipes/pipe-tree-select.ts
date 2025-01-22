@@ -14,6 +14,7 @@ import {
 } from '../../tree';
 import { KbqTreeSelectModule } from '../../tree-select';
 import { KbqBasePipe } from './base-pipe';
+import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 
 class FileNode {
@@ -75,7 +76,8 @@ function buildFileTree(value: any, level: number): FileNode[] {
         KbqTreeModule,
         KbqTreeSelectModule,
         NgClass,
-        KbqPipeState
+        KbqPipeState,
+        KbqPipeButton
     ]
 })
 export class KbqPipeTreeSelectComponent extends KbqBasePipe implements AfterContentInit {
