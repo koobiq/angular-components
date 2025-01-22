@@ -11,7 +11,6 @@ import {
 import { BehaviorSubject } from 'rxjs';
 import { KbqDividerModule } from '../divider';
 import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
-import { KbqPipeDirective } from './pipe.directive';
 
 @Component({
     standalone: true,
@@ -24,9 +23,11 @@ import { KbqPipeDirective } from './pipe.directive';
 
             <ng-content />
 
-            <ng-content select="kbq-filter-add" />
+            <ng-content select="kbq-pipe-add" />
 
-            <ng-content select="kbq-filter-reset" />
+            @if (activeFilter?.changed) {
+                <ng-content select="kbq-filter-reset" />
+            }
         </div>
 
         <ng-content select="kbq-filter-bar-actions, [kbq-filter-bar-actions]" />
@@ -35,8 +36,7 @@ import { KbqPipeDirective } from './pipe.directive';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        KbqDividerModule,
-        KbqPipeDirective
+        KbqDividerModule
     ],
     host: {
         class: 'kbq-filter-bar'
@@ -44,6 +44,7 @@ import { KbqPipeDirective } from './pipe.directive';
 })
 export class KbqFilterBar {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private savedFilter: KbqFilter;
 
     @Input() filters: KbqFilter[];
 
@@ -53,6 +54,11 @@ export class KbqFilterBar {
     }
 
     set activeFilter(value: KbqFilter | null) {
+        if (value && this.activeFilter === null) {
+            console.log('value && this.activeFilter === null: ');
+            this.saveFilterState(value);
+        }
+
         this._activeFilter = value;
 
         this.changeDetectorRef.markForCheck();
@@ -71,23 +77,20 @@ export class KbqFilterBar {
 
     private _templates: KbqPipeTemplate[];
 
-    @Output() readonly changes: EventEmitter<void> = new EventEmitter<void>();
-    @Output() readonly onSelectFilter: EventEmitter<void> = new EventEmitter<void>();
-    @Output() readonly onAddFilter: EventEmitter<void> = new EventEmitter<void>();
-    @Output() readonly onAddPipe: EventEmitter<KbqPipeTemplate> = new EventEmitter<KbqPipeTemplate>();
-    @Output() readonly onSaveFilter: EventEmitter<void> = new EventEmitter<void>();
-    @Output() readonly onSaveReset: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly onFilterChange = new EventEmitter<KbqFilter | null>();
+    @Output() readonly onSelectFilter = new EventEmitter<void>();
+    @Output() readonly onAddFilter = new EventEmitter<void>();
+    @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
+    @Output() readonly onSaveFilter = new EventEmitter<void>();
+    @Output() readonly onReset = new EventEmitter<KbqFilter | null>();
 
     readonly activeFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
 
     constructor() {
         this.activeFilterChanges.subscribe((filter) => {
             this._activeFilter = filter;
-        });
 
-        this.onAddPipe.subscribe((pipe: KbqPipe) => {
-            // this.activeFilter?.pipes.push(pipe);
-            console.log('onAddPipe: ', pipe);
+            this.onFilterChange.emit(this.activeFilter);
         });
     }
 
@@ -95,10 +98,33 @@ export class KbqFilterBar {
         console.log('need apply pipe: ', pipe);
     }
 
-    deletePipe(pipe: KbqPipe) {
+    removePipe(pipe: KbqPipe) {
         this.activeFilter?.pipes.splice(this.activeFilter?.pipes.indexOf(pipe), 1);
 
         this.changeDetectorRef.detectChanges();
-        console.log('need apply pipe: ', pipe);
+    }
+
+    saveFilterState(filter?: KbqFilter) {
+        if (filter) {
+            this.savedFilter = filter;
+        } else if (this.activeFilter) {
+            this.savedFilter = { ...this.activeFilter };
+        }
+    }
+
+    restoreFilterState(filter?: KbqFilter) {
+        if (filter) {
+            this.activeFilter = filter;
+        } else {
+            this.activeFilter = this.savedFilter;
+        }
+    }
+
+    resetFilterState(filter?: KbqFilter) {
+        if (filter) {
+            this.activeFilter = filter;
+        } else {
+            this.activeFilter = { ...this.savedFilter, changed: false };
+        }
     }
 }

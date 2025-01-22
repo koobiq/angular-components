@@ -29,16 +29,6 @@
     </kbq-tree-selection>
 </kbq-tree-select>
 
-@if (!data.required && data.cleanable && !isEmpty) {
-    <kbq-divider class="kbq-pipe__separator" [paddings]="false" [vertical]="true" />
-
-    <button
-        kbq-button
-        class="kbq-pipe__delete"
-        [disabled]="data.disabled"
-        [kbq-pipe-state]="data"
-        (click)="data.cleanable ? onClear() : onDelete()"
-    >
-        <i kbq-icon="kbq-xmark-s_16"></i>
-    </button>
+@if (showRemoveButton) {
+    <kbq-pipe-button />
 }

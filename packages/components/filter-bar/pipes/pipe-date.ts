@@ -16,6 +16,7 @@ import { KbqListSelection } from '../../list';
 import { KbqPopoverTrigger } from '../../popover';
 import { KbqTimepickerModule } from '../../timepicker';
 import { KbqBasePipe } from './base-pipe';
+import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 
 @Component({
@@ -48,7 +49,8 @@ import { KbqPipeState } from './pipe-state';
         KbqTimepickerModule,
         KbqLuxonDateModule,
         KbqPipeState,
-        KbqFormattersModule
+        KbqFormattersModule,
+        KbqPipeButton
     ]
 })
 export class KbqPipeDateComponent extends KbqBasePipe {
@@ -78,7 +80,7 @@ export class KbqPipeDateComponent extends KbqBasePipe {
         return this.isEmpty || this.formGroup.controls.start.invalid;
     }
 
-    get isEmpty(): boolean {
+    override get isEmpty(): boolean {
         if (this.data.value === null) return true;
 
         if (this.data.value?.name) return false;
@@ -146,7 +148,7 @@ export class KbqPipeDateComponent extends KbqBasePipe {
         if (this.data.cleanable) {
             this.data.value = null;
         } else {
-            this.filterBar.deletePipe(this.data);
+            this.filterBar.removePipe(this.data);
         }
 
         // this.stateChanges.next();
