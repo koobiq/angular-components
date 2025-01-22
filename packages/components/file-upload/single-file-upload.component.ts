@@ -4,13 +4,11 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
-    DestroyRef,
     DoCheck,
     ElementRef,
     EventEmitter,
     inject,
     Input,
-    OnDestroy,
     Output,
     QueryList,
     Renderer2,
@@ -22,7 +20,7 @@ import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
 import { CanDisable, ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import {
     isCorrectExtension,
@@ -51,7 +49,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck
+    implements AfterViewInit, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -96,8 +94,6 @@ export class KbqSingleFileUploadComponent
 
     separatedCaptionText: string[];
 
-    statusChangeSubscription?: Subscription = Subscription.EMPTY;
-
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
      */
@@ -122,7 +118,6 @@ export class KbqSingleFileUploadComponent
 
     private cdr = inject(ChangeDetectorRef);
     private renderer = inject(Renderer2);
-    private destroyRef = inject(DestroyRef);
     readonly configuration: KbqInputFileLabel | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
@@ -144,7 +139,7 @@ export class KbqSingleFileUploadComponent
 
     ngAfterViewInit() {
         // FormControl specific errors update
-        this.statusChangeSubscription = this.ngControl?.statusChanges
+        this.ngControl?.statusChanges
             ?.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
             .subscribe((status: FormControlStatus) => {
                 if (this._file) {
@@ -164,10 +159,6 @@ export class KbqSingleFileUploadComponent
             // that whatever logic is in here has to be super lean or we risk destroying the performance.
             this.updateErrorState();
         }
-    }
-
-    ngOnDestroy() {
-        this.statusChangeSubscription?.unsubscribe();
     }
 
     /** Implemented as part of ControlValueAccessor.

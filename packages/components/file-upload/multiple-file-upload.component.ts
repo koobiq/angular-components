@@ -5,13 +5,11 @@ import {
     Component,
     ContentChild,
     ContentChildren,
-    DestroyRef,
     DoCheck,
     ElementRef,
     EventEmitter,
     inject,
     Input,
-    OnDestroy,
     Output,
     QueryList,
     Renderer2,
@@ -24,7 +22,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { CanDisable, ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import {
     isCorrectExtension,
     KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -64,7 +62,7 @@ export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipl
 })
 export class KbqMultipleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, OnDestroy, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck
+    implements AfterViewInit, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.
@@ -129,8 +127,6 @@ export class KbqMultipleFileUploadComponent
     separatedCaptionTextWhenSelected: string[];
     separatedCaptionTextForCompactSize: string[];
 
-    statusChangeSubscription?: Subscription = Subscription.EMPTY;
-
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
      * @docs-private
      */
@@ -157,7 +153,6 @@ export class KbqMultipleFileUploadComponent
 
     private cdr = inject(ChangeDetectorRef);
     private renderer = inject(Renderer2);
-    private destroyRef = inject(DestroyRef);
     readonly configuration: KbqInputFileMultipleLabel | null = inject<KbqInputFileMultipleLabel>(
         KBQ_FILE_UPLOAD_CONFIGURATION,
         {
@@ -182,12 +177,10 @@ export class KbqMultipleFileUploadComponent
 
     ngAfterViewInit() {
         // FormControl specific errors update
-        this.statusChangeSubscription = this.ngControl?.statusChanges
-            ?.pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.errors = Object.values(this.ngControl?.errors || {});
-                this.cdr.markForCheck();
-            });
+        this.ngControl?.statusChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.errors = Object.values(this.ngControl?.errors || {});
+            this.cdr.markForCheck();
+        });
 
         this.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
@@ -199,10 +192,6 @@ export class KbqMultipleFileUploadComponent
             // that whatever logic is in here has to be super lean or we risk destroying the performance.
             this.updateErrorState();
         }
-    }
-
-    ngOnDestroy() {
-        this.statusChangeSubscription?.unsubscribe();
     }
 
     /** Implemented as part of ControlValueAccessor.
