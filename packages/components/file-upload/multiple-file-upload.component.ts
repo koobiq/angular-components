@@ -151,14 +151,15 @@ export class KbqMultipleFileUploadComponent
         return this.hint.length > 0;
     }
 
-    private cdr = inject(ChangeDetectorRef);
-    private renderer = inject(Renderer2);
-    readonly configuration: KbqInputFileMultipleLabel | null = inject<KbqInputFileMultipleLabel>(
-        KBQ_FILE_UPLOAD_CONFIGURATION,
-        {
-            optional: true
-        }
-    );
+    get invalid(): boolean {
+        return this.errorState;
+    }
+
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly renderer = inject(Renderer2);
+    readonly configuration = inject<KbqInputFileMultipleLabel>(KBQ_FILE_UPLOAD_CONFIGURATION, {
+        optional: true
+    });
 
     constructor() {
         super();

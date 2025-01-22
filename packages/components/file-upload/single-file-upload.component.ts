@@ -116,8 +116,8 @@ export class KbqSingleFileUploadComponent
         return !!this.file?.hasError || this.errorState;
     }
 
-    private cdr = inject(ChangeDetectorRef);
-    private renderer = inject(Renderer2);
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly renderer = inject(Renderer2);
     readonly configuration: KbqInputFileLabel | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });

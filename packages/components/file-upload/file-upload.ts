@@ -1,6 +1,6 @@
 import { DestroyRef, ElementRef, inject, InjectionToken } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 
 export interface KbqFile extends File {
@@ -71,12 +71,12 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     readonly stateChanges = new Subject<void>();
 
     protected readonly destroyRef = inject(DestroyRef);
-    protected readonly localeService: KbqLocaleService | null = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    protected readonly ngControl: NgControl | null = inject(NgControl, { optional: true, self: true });
-    protected readonly parentForm: NgForm | null = inject(NgForm, { optional: true });
-    protected readonly parentFormGroup: FormGroupDirective | null = inject(FormGroupDirective, { optional: true });
-    protected readonly defaultErrorStateMatcher: ErrorStateMatcher = inject(ErrorStateMatcher);
-    protected readonly elementRef: ElementRef;
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    protected readonly ngControl = inject(NgControl, { optional: true, self: true });
+    protected readonly parentForm = inject(NgForm, { optional: true });
+    protected readonly parentFormGroup = inject(FormGroupDirective, { optional: true });
+    protected readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    protected readonly elementRef = inject(ElementRef);
 
     /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate */
     updateErrorState() {

@@ -61,7 +61,7 @@
                     formControlName="file-upload"
                     class="layout-margin-bottom-s"
                     [disabled]="disabled"
-                    [errorStateMatcher]="ShowOnFormSubmitErrorStateMatcher"
+                    [errorStateMatcher]="showOnFormSubmitErrorStateMatcher"
                     (fileQueueChange)="$event === null ? form.reset() : null"
                 >
                     <i kbq-icon="kbq-info-circle_16"></i>

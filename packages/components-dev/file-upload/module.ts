@@ -308,7 +308,7 @@ export class DemoComponent {
         }
     }
 
-    protected readonly ShowOnFormSubmitErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+    protected readonly showOnFormSubmitErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 }
 
 @Directive({

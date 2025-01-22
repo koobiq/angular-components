@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title File Upload Single Required Reactive Validation Example
@@ -14,8 +14,6 @@ import { KbqIcon } from '@koobiq/components/icon';
     selector: 'file-upload-single-required-reactive-validation-example',
     template: `
         <form [formGroup]="formMultiple" (ngSubmit)="onSubmit()">
-            <button class="layout-margin-bottom-m" kbq-button type="submit">Submit</button>
-
             <kbq-file-upload
                 class="layout-margin-bottom-s"
                 #kbqFileUpload
@@ -25,10 +23,11 @@ import { KbqIcon } from '@koobiq/components/icon';
                 <ng-template #kbqFileIcon>
                     <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
-                @if (formMultiple.controls.fileUpload.hasError('required') && kbqFileUpload.errorState) {
+                @if (formMultiple.controls.fileUpload.invalid && kbqFileUpload.invalid) {
                     <kbq-hint color="error">File required</kbq-hint>
                 }
             </kbq-file-upload>
+            <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
     `,
     imports: [
@@ -36,10 +35,11 @@ import { KbqIcon } from '@koobiq/components/icon';
         KbqFormFieldModule,
         FormsModule,
         KbqButtonModule,
-        KbqIcon,
+        KbqIconModule,
         ReactiveFormsModule
     ],
-    providers: [kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)]
+    providers: [kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleRequiredReactiveValidationExample {
     formMultiple = new FormGroup(

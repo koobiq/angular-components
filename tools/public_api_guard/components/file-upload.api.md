@@ -91,7 +91,7 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     // (undocumented)
     protected readonly destroyRef: DestroyRef;
     // (undocumented)
-    protected readonly elementRef: ElementRef;
+    protected readonly elementRef: ElementRef<any>;
     errorState: boolean;
     abstract errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
@@ -206,6 +206,8 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     // (undocumented)
     input: ElementRef<HTMLInputElement>;
     inputId: string;
+    // (undocumented)
+    get invalid(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
