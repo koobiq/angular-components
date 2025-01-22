@@ -71,7 +71,7 @@ export class DocsIconsViewerComponent {
     private readonly destroyRef = inject(DestroyRef);
     readonly docsLocaleService = inject(DocsLocaleService);
 
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
     readonly themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');

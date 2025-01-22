@@ -64,13 +64,13 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
     selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Theme;
 
     readonly componentColors = KbqComponentColors;
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 
     readonly docsLocaleService = inject(DocsLocaleService);
     private readonly clipboard = inject(Clipboard);
     private readonly toastService = inject(KbqToastService);
     private readonly httpClient = inject(HttpClient);
-    public readonly modal = inject(KbqModalRef);
+    readonly modal = inject(KbqModalRef);
 
     ngAfterViewInit(): void {
         this.SVGLink = `assets/SVGIcons/${this.iconItem.id}.svg`;

@@ -40,7 +40,7 @@ export class DocsWelcomeComponent implements OnInit {
     private readonly docItems = inject(DocumentationItems);
     readonly docsLocaleService = inject(DocsLocaleService);
 
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 
     constructor(private readonly themeService: ThemeService) {
         fromEvent(this.elementRef.nativeElement, 'scroll')

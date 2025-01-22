@@ -38,7 +38,7 @@ export class DocsearchDirective {
     /** should transform item URL to work docsearch on DEV stand */
     private readonly shouldTransformItemURL = location.host !== HOST || location.protocol !== PROTOCOL;
 
-    private readonly localeService = inject(DocsLocaleService);
+    private readonly docsLocaleService = inject(DocsLocaleService);
     private readonly destroyRef = inject(DestroyRef);
 
     constructor() {
@@ -48,7 +48,7 @@ export class DocsearchDirective {
     }
 
     private initDocsearch(): void {
-        this.localeService.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((locale) => {
+        this.docsLocaleService.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((locale) => {
             docsearch({
                 ...CONFIG,
                 placeholder: locale === DocsLocale.Ru ? 'Поиск' : 'Search',

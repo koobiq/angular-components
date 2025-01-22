@@ -15,7 +15,7 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
     selector: 'docs-page-not-found',
     template: `
         @let locale = docsLocaleService.changes | async;
-        @let isRuLocale = locale === DocsLocale.Ru;
+        @let isRuLocale = locale === docsLocale.Ru;
 
         <div class="kbq-display-compact">{{ isRuLocale ? 'Страница не найдена' : 'Page not found' }}</div>
 
@@ -32,5 +32,5 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
 })
 export class PageNotFoundComponent {
     readonly docsLocaleService = inject(DocsLocaleService);
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 }

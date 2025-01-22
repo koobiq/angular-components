@@ -16,7 +16,7 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
     selector: 'docs-copy-button',
     template: `
         @let locale = docsLocaleService.changes | async;
-        @let isRuLocale = locale === DocsLocale.Ru;
+        @let isRuLocale = locale === docsLocale.Ru;
 
         @if (isLabelSuccessVisible) {
             <span disabled kbq-link pseudo>
@@ -45,7 +45,7 @@ export class DocsCopyButtonComponent {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     readonly docsLocaleService = inject(DocsLocaleService);
 
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 
     copyContent(): void {
         if (!this.contentToCopy) {

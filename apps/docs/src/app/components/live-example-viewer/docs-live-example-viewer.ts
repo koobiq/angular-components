@@ -78,7 +78,7 @@ export class DocsLiveExampleViewerComponent {
     private readonly elementRef = inject(ElementRef);
     private readonly httpClient = inject(HttpClient);
 
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;

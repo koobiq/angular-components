@@ -1,5 +1,5 @@
 @let locale = docsLocaleService.changes | async;
-@let isRuLocale = locale === DocsLocale.Ru;
+@let isRuLocale = locale === docsLocale.Ru;
 
 <header docsRegisterHeader class="docs-welcome__header">
     {{ isRuLocale ? 'Дизайн-система Koobiq' : 'Koobiq design system' }}

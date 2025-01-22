@@ -39,7 +39,7 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
     selector: 'docs-live-example',
     template: `
         @let locale = docsLocaleService.changes | async;
-        @let isRuLocale = locale === DocsLocale.Ru;
+        @let isRuLocale = locale === docsLocale.Ru;
 
         {{ isRuLocale ? 'Загрузка документа...' : 'Loading document...' }}
         <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
@@ -96,7 +96,7 @@ export class DocsLiveExampleComponent implements OnDestroy {
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly httpClient = inject(HttpClient);
 
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 
     ngOnDestroy() {
         this.clearLiveExamples();

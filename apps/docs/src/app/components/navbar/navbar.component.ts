@@ -41,7 +41,7 @@ export class DocsNavbarComponent implements OnDestroy {
     readonly docsLocaleService = inject(DocsLocaleService);
 
     readonly themeSwitch: NavbarProperty;
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 
     // To add for checking of current color theme of OS preferences
     private readonly colorAutomaticTheme = window.matchMedia('(prefers-color-scheme: light)');

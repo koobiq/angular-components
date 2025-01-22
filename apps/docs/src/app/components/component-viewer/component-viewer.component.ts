@@ -67,7 +67,7 @@ export class DocsComponentViewerComponent extends CdkScrollable implements OnIni
     private readonly docStates = inject(DocStates);
     readonly docsLocaleService = inject(DocsLocaleService);
 
-    readonly DocsLocale = DocsLocale;
+    readonly docsLocale = DocsLocale;
 
     constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone) {
         super(elementRef, scrollDispatcher, ngZone);
