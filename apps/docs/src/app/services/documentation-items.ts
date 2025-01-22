@@ -1,25 +1,23 @@
 import { Injectable } from '@angular/core';
+import { DocsLocale } from '../constants/locale';
 
-export interface DocItem {
+export type DocItem = {
     id: string;
-    name: string;
+    name: Record<DocsLocale, string>;
     hasApi: boolean;
     hasExamples: boolean;
     isGuide?: boolean;
     apiId?: string;
     svgPreview?: string;
-    summary?: string;
     packageName?: string;
-    examples?: string[];
-}
+};
 
-export interface DocCategory {
+export type DocCategory = {
     id: string;
-    name: string;
+    name: Record<DocsLocale, string>;
     items: DocItem[];
-    summary?: string;
     isPreviewed?: boolean;
-}
+};
 
 function updatePackageName(categories, name) {
     categories.forEach((category) => category.items.forEach((doc) => (doc.packageName = name)));
@@ -37,69 +35,86 @@ const DOCS: { [key: string]: DocCategory[] } = {
     [MAIN]: [
         {
             id: 'main',
-            name: 'Основное',
+            name: {
+                ru: 'Основное',
+                en: 'Main'
+            },
             isPreviewed: true,
             items: [
                 {
                     id: 'installation',
-                    name: 'Установка',
+                    name: {
+                        ru: 'Установка',
+                        en: 'Installation'
+                    },
                     svgPreview: 'install',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    examples: []
+                    hasExamples: false
                 },
                 {
                     id: 'versioning',
-                    name: 'Версионирование',
+                    name: {
+                        ru: 'Версионирование',
+                        en: 'Versioning'
+                    },
                     svgPreview: 'versioning',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    examples: []
+                    hasExamples: false
                 },
                 {
                     id: 'directory-structure',
-                    name: 'Структура каталогов',
+                    name: {
+                        ru: 'Структура каталогов',
+                        en: 'Directory structure'
+                    },
                     svgPreview: 'catalog structure',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    examples: []
+                    hasExamples: false
                 },
                 {
                     id: 'component-health',
-                    name: 'Статус компонентов',
+                    name: {
+                        ru: 'Статус компонентов',
+                        en: 'Component statuses'
+                    },
                     svgPreview: 'component statuses',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    examples: []
+                    hasExamples: false
                 },
                 {
                     id: 'theming',
-                    name: 'Подключение и настройка тем',
+                    name: {
+                        ru: 'Темизация',
+                        en: 'Theming'
+                    },
                     svgPreview: 'themes',
                     isGuide: true,
                     hasApi: false,
-                    hasExamples: false,
-                    examples: []
+                    hasExamples: false
                 },
                 {
                     id: 'typography',
-                    name: 'Типографика',
+                    name: {
+                        ru: 'Типографика',
+                        en: 'Typography'
+                    },
                     svgPreview: 'typography',
                     hasApi: false,
-                    hasExamples: false,
-                    examples: ['typography-types']
+                    hasExamples: false
                 },
                 {
                     id: 'design-tokens',
-                    name: 'Дизайн-токены',
+                    name: {
+                        ru: 'Дизайн-токены',
+                        en: 'Design tokens'
+                    },
                     svgPreview: '',
                     hasApi: false,
-                    hasExamples: false,
-                    examples: []
+                    hasExamples: false
                 }
             ]
         }
@@ -107,167 +122,206 @@ const DOCS: { [key: string]: DocCategory[] } = {
     [COMPONENTS]: [
         {
             id: 'components',
-            name: 'Компоненты',
+            name: {
+                ru: 'Компоненты',
+                en: 'Components'
+            },
             isPreviewed: true,
             items: [
                 {
                     id: 'alert',
-                    name: 'Alert',
+                    name: {
+                        ru: 'Alert',
+                        en: 'Alert'
+                    },
                     svgPreview: 'alerts',
                     hasApi: true,
                     apiId: 'alert',
-                    hasExamples: false,
-                    examples: ['alert-types']
+                    hasExamples: false
                 },
                 {
                     id: 'accordion',
-                    name: 'Accordion',
+                    name: {
+                        ru: 'Accordion',
+                        en: 'Accordion'
+                    },
                     svgPreview: 'accordion',
                     hasApi: true,
                     apiId: 'accordion',
-                    hasExamples: false,
-                    examples: ['accordion-types']
+                    hasExamples: false
                 },
                 {
                     id: 'autocomplete',
-                    name: 'Autocomplete',
+                    name: {
+                        ru: 'Autocomplete',
+                        en: 'Autocomplete'
+                    },
                     svgPreview: 'autocomplete',
                     hasApi: true,
                     apiId: 'autocomplete',
-                    hasExamples: false,
-                    examples: ['autocomplete-types']
+                    hasExamples: false
                 },
                 {
                     id: 'badge',
-                    name: 'Badge',
+                    name: {
+                        ru: 'Badge',
+                        en: 'Badge'
+                    },
                     svgPreview: 'badges',
                     hasApi: true,
                     apiId: 'badge',
-                    hasExamples: false,
-                    examples: ['badge-types']
+                    hasExamples: false
                 },
                 {
                     id: 'button',
-                    name: 'Button',
+                    name: {
+                        ru: 'Button',
+                        en: 'Button'
+                    },
                     svgPreview: 'button',
                     hasApi: true,
                     apiId: 'button',
-                    hasExamples: false,
-                    summary: 'An interactive button with a range of presentation options.',
-                    examples: ['button-types']
+                    hasExamples: false
                 },
                 {
                     id: 'button-toggle',
-                    name: 'Button toggle',
+                    name: {
+                        ru: 'Button toggle',
+                        en: 'Button toggle'
+                    },
                     svgPreview: 'button toggle',
                     hasApi: true,
                     apiId: 'button-toggle',
-                    hasExamples: false,
-                    examples: ['button-toggle-types']
+                    hasExamples: false
                 },
                 {
                     id: 'checkbox',
-                    name: 'Checkbox',
+                    name: {
+                        ru: 'Checkbox',
+                        en: 'Checkbox'
+                    },
                     svgPreview: 'checkbox',
                     hasApi: true,
                     apiId: 'checkbox',
-                    hasExamples: false,
-                    examples: ['checkbox-types']
+                    hasExamples: false
                 },
                 {
                     id: 'code-block',
-                    name: 'Code block',
+                    name: {
+                        ru: 'Code block',
+                        en: 'Code block'
+                    },
                     svgPreview: 'code-block',
                     hasApi: true,
                     apiId: 'code-block',
-                    hasExamples: true,
-                    examples: ['code-block-types']
+                    hasExamples: true
                 },
 
                 {
                     id: 'datepicker',
-                    name: 'Datepicker',
+                    name: {
+                        ru: 'Datepicker',
+                        en: 'Datepicker'
+                    },
                     svgPreview: 'datepicker',
                     hasApi: true,
                     apiId: 'datepicker',
-                    hasExamples: false,
-                    examples: ['datepicker-types']
+                    hasExamples: false
                 },
                 {
                     id: 'divider',
-                    name: 'Divider',
+                    name: {
+                        ru: 'Divider',
+                        en: 'Divider'
+                    },
                     svgPreview: 'divider',
                     hasApi: true,
                     apiId: 'divider',
-                    hasExamples: false,
-                    examples: ['divider-types']
+                    hasExamples: false
                 },
                 {
                     id: 'dl',
-                    name: 'Description list',
+                    name: {
+                        ru: 'Description list',
+                        en: 'Description list'
+                    },
                     svgPreview: 'description list',
                     hasApi: true,
                     apiId: 'dl',
-                    hasExamples: false,
-                    examples: ['dl-types']
+                    hasExamples: false
                 },
                 {
                     id: 'dropdown',
-                    name: 'Dropdown',
+                    name: {
+                        ru: 'Dropdown',
+                        en: 'Dropdown'
+                    },
                     svgPreview: 'dropdown',
                     hasApi: true,
                     apiId: 'dropdown',
-                    hasExamples: false,
-                    examples: ['dropdown-types']
+                    hasExamples: false
                 },
                 {
                     id: 'empty-state',
-                    name: 'Empty state',
+                    name: {
+                        ru: 'Empty state',
+                        en: 'Empty state'
+                    },
                     svgPreview: 'empty-state',
                     hasApi: true,
                     apiId: 'empty-state',
-                    hasExamples: false,
-                    examples: ['empty-state-types']
+                    hasExamples: false
                 },
                 {
                     id: 'icon',
-                    name: 'Icon',
+                    name: {
+                        ru: 'Icon',
+                        en: 'Icon'
+                    },
                     svgPreview: 'icons',
                     hasApi: true,
                     apiId: 'icon',
-                    hasExamples: false,
-                    examples: ['icon-types']
+                    hasExamples: false
                 },
                 {
                     id: 'icon-item',
-                    name: 'Icon Item',
+                    name: {
+                        ru: 'Icon Item',
+                        en: 'Icon Item'
+                    },
                     svgPreview: 'icon-item',
                     hasApi: true,
                     apiId: 'icon',
-                    hasExamples: false,
-                    examples: ['icon-types']
+                    hasExamples: false
                 },
                 {
                     id: 'input',
-                    name: 'Input',
+                    name: {
+                        ru: 'Input',
+                        en: 'Input'
+                    },
                     svgPreview: 'input',
                     hasApi: true,
                     apiId: 'input',
-                    hasExamples: false,
-                    examples: ['input-types']
+                    hasExamples: false
                 },
                 {
                     id: 'file-upload',
-                    name: 'File upload',
+                    name: {
+                        ru: 'File upload',
+                        en: 'File upload'
+                    },
                     svgPreview: 'file upload',
                     hasApi: true,
                     apiId: 'file-upload',
-                    hasExamples: true,
-                    examples: ['file-upload-types']
+                    hasExamples: true
                 },
                 {
                     id: 'experimental-form-field',
-                    name: 'Form field (experimental)',
+                    name: {
+                        ru: 'Form field (experimental)',
+                        en: 'Form field (experimental)'
+                    },
                     svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'experimental-form-field',
@@ -275,105 +329,130 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'layout-flex',
-                    name: 'Layout flex',
+                    name: {
+                        ru: 'Layout flex',
+                        en: 'Layout flex'
+                    },
                     svgPreview: 'layout flex',
                     hasApi: false,
-                    hasExamples: false,
-                    examples: ['layout-flex-types']
+                    hasExamples: false
                 },
                 {
                     id: 'link',
-                    name: 'Link',
+                    name: {
+                        ru: 'Link',
+                        en: 'Link'
+                    },
                     svgPreview: 'link',
                     hasApi: true,
                     apiId: 'link',
-                    hasExamples: false,
-                    examples: ['link-types']
+                    hasExamples: false
                 },
                 {
                     id: 'list',
-                    name: 'List',
+                    name: {
+                        ru: 'List',
+                        en: 'List'
+                    },
                     svgPreview: 'list',
                     hasApi: true,
                     apiId: 'list',
-                    hasExamples: false,
-                    examples: ['list-types']
+                    hasExamples: false
                 },
                 {
                     id: 'loader-overlay',
-                    name: 'Overlay',
+                    name: {
+                        ru: 'Overlay',
+                        en: 'Overlay'
+                    },
                     svgPreview: 'overlay',
                     hasApi: true,
                     apiId: 'loader-overlay',
-                    hasExamples: false,
-                    examples: ['loader-overlay-types']
+                    hasExamples: false
                 },
                 {
                     id: 'markdown',
-                    name: 'Markdown',
+                    name: {
+                        ru: 'Markdown',
+                        en: 'Markdown'
+                    },
                     svgPreview: 'markdown',
                     hasApi: true,
                     apiId: 'markdown',
-                    hasExamples: true,
-                    examples: ['markdown-types']
+                    hasExamples: true
                 },
                 {
                     id: 'modal',
-                    name: 'Modal',
+                    name: {
+                        ru: 'Modal',
+                        en: 'Modal'
+                    },
                     svgPreview: 'modal',
                     hasApi: true,
                     apiId: 'modal',
-                    hasExamples: false,
-                    examples: ['modal-types']
+                    hasExamples: false
                 },
                 {
                     id: 'navbar',
-                    name: 'Navbar',
+                    name: {
+                        ru: 'Navbar',
+                        en: 'Navbar'
+                    },
                     svgPreview: 'navbar',
                     hasApi: true,
                     apiId: 'navbar',
-                    hasExamples: false,
-                    examples: ['navbar-types']
+                    hasExamples: false
                 },
                 {
                     id: 'popover',
-                    name: 'Popover',
+                    name: {
+                        ru: 'Popover',
+                        en: 'Popover'
+                    },
                     svgPreview: 'popover',
                     hasApi: true,
                     apiId: 'popover',
-                    hasExamples: false,
-                    examples: ['popover-types']
+                    hasExamples: false
                 },
                 {
                     id: 'progress-bar',
-                    name: 'Progress bar',
+                    name: {
+                        ru: 'Progress bar',
+                        en: 'Progress bar'
+                    },
                     svgPreview: 'progress-bar',
                     hasApi: true,
                     apiId: 'progress-bar',
-                    hasExamples: false,
-                    examples: ['progress-bar-types']
+                    hasExamples: false
                 },
                 {
                     id: 'progress-spinner',
-                    name: 'Progress spinner',
+                    name: {
+                        ru: 'Progress spinner',
+                        en: 'Progress spinner'
+                    },
                     svgPreview: 'progress-spinner',
                     hasApi: true,
                     apiId: 'progress-spinner',
-                    hasExamples: false,
-                    examples: ['progress-spinner-types']
+                    hasExamples: false
                 },
                 {
                     id: 'radio',
-                    name: 'Radio',
+                    name: {
+                        ru: 'Radio',
+                        en: 'Radio'
+                    },
                     svgPreview: 'radio',
                     hasApi: true,
                     apiId: 'radio',
-                    hasExamples: false,
-                    examples: ['radio-types']
+                    hasExamples: false
                 },
                 {
                     id: 'scrollbar',
-                    name: 'Scrollbar',
+                    name: {
+                        ru: 'Scrollbar',
+                        en: 'Scrollbar'
+                    },
                     svgPreview: 'scrollbar',
                     hasApi: true,
                     apiId: 'scrollbar',
@@ -381,156 +460,190 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 },
                 {
                     id: 'select',
-                    name: 'Select',
+                    name: {
+                        ru: 'Select',
+                        en: 'Select'
+                    },
                     svgPreview: 'select',
                     hasApi: true,
                     apiId: 'select',
-                    hasExamples: false,
-                    examples: ['select-types']
+                    hasExamples: false
                 },
                 {
                     id: 'sidepanel',
-                    name: 'Sidepanel',
+                    name: {
+                        ru: 'Sidepanel',
+                        en: 'Sidepanel'
+                    },
                     svgPreview: 'sidepanel',
                     hasApi: true,
                     apiId: 'sidepanel',
-                    hasExamples: false,
-                    examples: ['sidepanel-types']
+                    hasExamples: false
                 },
                 {
                     id: 'splitter',
-                    name: 'Splitter',
+                    name: {
+                        ru: 'Splitter',
+                        en: 'Splitter'
+                    },
                     svgPreview: 'splitter',
                     hasApi: true,
                     apiId: 'splitter',
-                    hasExamples: false,
-                    examples: ['splitter-types']
+                    hasExamples: false
                 },
                 {
                     id: 'table',
-                    name: 'Table',
+                    name: {
+                        ru: 'Table',
+                        en: 'Table'
+                    },
                     svgPreview: 'table',
                     hasApi: true,
                     apiId: 'table',
-                    hasExamples: false,
-                    examples: ['table-types']
+                    hasExamples: false
                 },
                 {
                     id: 'tabs',
-                    name: 'Tabs',
+                    name: {
+                        ru: 'Tabs',
+                        en: 'Tabs'
+                    },
                     svgPreview: 'tabs',
                     hasApi: true,
                     apiId: 'tabs',
-                    hasExamples: true,
-                    examples: ['tabs-types']
+                    hasExamples: true
                 },
                 {
                     id: 'tag',
-                    name: 'Tag',
+                    name: {
+                        ru: 'Tag',
+                        en: 'Tag'
+                    },
                     svgPreview: 'tags',
                     hasApi: true,
                     apiId: 'tag',
-                    hasExamples: false,
-                    examples: ['tag-types']
+                    hasExamples: false
                 },
                 {
                     id: 'tag-autocomplete',
-                    name: 'Tag autocomplete',
+                    name: {
+                        ru: 'Tag autocomplete',
+                        en: 'Tag autocomplete'
+                    },
                     svgPreview: 'tags autocomplete',
                     hasApi: true,
                     apiId: 'tag',
-                    hasExamples: true,
-                    examples: ['tag-autocomplete-types']
+                    hasExamples: true
                 },
                 {
                     id: 'tag-input',
-                    name: 'Tag input',
+                    name: {
+                        ru: 'Tag input',
+                        en: 'Tag input'
+                    },
                     svgPreview: 'tags input',
                     hasApi: true,
                     apiId: 'tag',
-                    hasExamples: true,
-                    examples: ['tag-input-types']
+                    hasExamples: true
                 },
                 {
                     id: 'tag-list',
-                    name: 'Tag list',
+                    name: {
+                        ru: 'Tag list',
+                        en: 'Tag list'
+                    },
                     svgPreview: 'tags list',
                     hasApi: true,
                     apiId: 'tag',
-                    hasExamples: false,
-                    examples: ['tag-list-types']
+                    hasExamples: false
                 },
                 {
                     id: 'textarea',
-                    name: 'Textarea',
+                    name: {
+                        ru: 'Textarea',
+                        en: 'Textarea'
+                    },
                     svgPreview: 'textarea',
                     hasApi: true,
                     apiId: 'textarea',
-                    hasExamples: false,
-                    examples: ['textarea-types']
+                    hasExamples: false
                 },
                 {
                     id: 'timepicker',
-                    name: 'Timepicker',
+                    name: {
+                        ru: 'Timepicker',
+                        en: 'Timepicker'
+                    },
                     svgPreview: 'timepicker',
                     hasApi: true,
                     apiId: 'timepicker',
-                    hasExamples: false,
-                    examples: ['timepicker-types']
+                    hasExamples: false
                 },
                 {
                     id: 'timezone',
-                    name: 'Timezone',
+                    name: {
+                        ru: 'Timezone',
+                        en: 'Timezone'
+                    },
                     svgPreview: 'timezone',
                     hasApi: true,
                     apiId: 'timezone',
-                    hasExamples: false,
-                    examples: ['timezone-types']
+                    hasExamples: false
                 },
                 {
                     id: 'toast',
-                    name: 'Toast',
+                    name: {
+                        ru: 'Toast',
+                        en: 'Toast'
+                    },
                     svgPreview: 'toast',
                     hasApi: true,
                     apiId: 'toast',
-                    hasExamples: true,
-                    examples: ['toast-types']
+                    hasExamples: true
                 },
                 {
                     id: 'toggle',
-                    name: 'Toggle',
+                    name: {
+                        ru: 'Toggle',
+                        en: 'Toggle'
+                    },
                     svgPreview: 'toggle',
                     hasApi: true,
                     apiId: 'toggle',
-                    hasExamples: false,
-                    examples: ['toggle-types']
+                    hasExamples: false
                 },
                 {
                     id: 'tooltip',
-                    name: 'Tooltip',
+                    name: {
+                        ru: 'Tooltip',
+                        en: 'Tooltip'
+                    },
                     svgPreview: 'tooltip',
                     hasApi: true,
                     apiId: 'tooltip',
-                    hasExamples: false,
-                    examples: ['tooltip-types']
+                    hasExamples: false
                 },
                 {
                     id: 'tree',
-                    name: 'Tree',
+                    name: {
+                        ru: 'Tree',
+                        en: 'Tree'
+                    },
                     svgPreview: 'tree',
                     hasApi: true,
                     apiId: 'tree',
-                    hasExamples: true,
-                    examples: ['tree-types']
+                    hasExamples: true
                 },
                 {
                     id: 'tree-select',
-                    name: 'Tree select',
+                    name: {
+                        ru: 'Tree select',
+                        en: 'Tree select'
+                    },
                     svgPreview: 'tree-select',
                     hasApi: true,
                     apiId: 'tree-select',
-                    hasExamples: false,
-                    examples: ['treeSelect-types']
+                    hasExamples: false
                 }
             ]
         }
@@ -538,44 +651,54 @@ const DOCS: { [key: string]: DocCategory[] } = {
     [OTHER]: [
         {
             id: OTHER,
-            name: 'Другое',
+            name: {
+                ru: 'Другое',
+                en: 'Other'
+            },
             isPreviewed: true,
-            summary: '',
             items: [
                 {
                     id: 'date-formatter',
-                    name: 'Date formatter',
+                    name: {
+                        ru: 'Date formatter',
+                        en: 'Date formatter'
+                    },
                     svgPreview: 'date',
                     hasApi: false,
                     apiId: 'date-formatter',
-                    hasExamples: false,
-                    examples: ['date-formatter-types']
+                    hasExamples: false
                 },
                 {
                     id: 'forms',
-                    name: 'Forms',
+                    name: {
+                        ru: 'Forms',
+                        en: 'Forms'
+                    },
                     svgPreview: 'forms',
                     hasApi: false,
                     apiId: 'forms',
-                    hasExamples: false,
-                    examples: ['forms-types']
+                    hasExamples: false
                 },
                 {
                     id: 'number-formatter',
-                    name: 'Number formatter',
+                    name: {
+                        ru: 'Number formatter',
+                        en: 'Number formatter'
+                    },
                     svgPreview: 'number',
                     hasApi: false,
                     apiId: 'number-formatter',
-                    hasExamples: false,
-                    examples: ['number-formatter-types']
+                    hasExamples: false
                 },
                 {
                     id: 'validation',
-                    name: 'Validation',
+                    name: {
+                        ru: 'Validation',
+                        en: 'Validation'
+                    },
                     svgPreview: 'validation',
                     hasApi: false,
-                    hasExamples: false,
-                    examples: ['validation-types']
+                    hasExamples: false
                 }
             ]
         }
@@ -583,34 +706,42 @@ const DOCS: { [key: string]: DocCategory[] } = {
     [ICONS]: [
         {
             id: 'icons',
-            name: 'Иконки',
+            name: {
+                ru: 'Иконки',
+                en: 'Icons'
+            },
             isPreviewed: false,
-            summary: '',
             items: []
         }
     ],
     [CDK]: [
         {
             id: 'cdk',
-            name: 'CDK',
+            name: {
+                ru: 'CDK',
+                en: 'CDK'
+            },
             isPreviewed: false,
-            summary: '',
             items: [
                 {
                     id: 'a11y',
-                    name: 'Key managers',
+                    name: {
+                        ru: 'Key managers',
+                        en: 'Key managers'
+                    },
                     hasApi: true,
                     apiId: 'a11y',
-                    hasExamples: false,
-                    examples: ['key-managers-types']
+                    hasExamples: false
                 },
                 {
                     id: 'keycodes',
-                    name: 'Keycodes',
+                    name: {
+                        ru: 'Keycodes',
+                        en: 'Keycodes'
+                    },
                     hasApi: true,
                     apiId: 'keycodes',
-                    hasExamples: false,
-                    examples: ['keycodes-types']
+                    hasExamples: false
                 }
             ]
         }

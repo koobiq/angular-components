@@ -6,6 +6,7 @@ import {
     ComponentFactoryResolver,
     ElementRef,
     EventEmitter,
+    inject,
     Injector,
     Input,
     NgZone,
@@ -20,6 +21,7 @@ import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetComponent } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
@@ -33,21 +35,26 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
     ],
     selector: 'docs-live-example',
     template: `
-        Loading document...
+        {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
         <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
             <kbq-code-block [files]="[{ content: contentToCopy }]" filled lineNumbers />
         </ng-template>
         <ng-template #codeSnippet cdkPortal let-htmlContent>
-            <span class="kbq-mono-normal" [innerHTML]="htmlContent" kbq-code-snippet kbqTooltip="Скопировать"></span>
+            <span
+                class="kbq-mono-normal"
+                [innerHTML]="htmlContent"
+                [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'"
+                kbq-code-snippet
+            ></span>
         </ng-template>
     `,
     host: {
         class: 'docs-live-example kbq-markdown'
     }
 })
-export class DocsLiveExampleComponent implements OnDestroy {
-    @ViewChild(CdkPortal) codeTemplate: CdkPortal;
-    @ViewChild('codeSnippet', { read: CdkPortal }) codeSnippetTemplate: CdkPortal;
+export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestroy {
+    @ViewChild(CdkPortal) private readonly codeTemplate: CdkPortal;
+    @ViewChild('codeSnippet', { read: CdkPortal }) private readonly codeSnippetTemplate: CdkPortal;
     /** The URL of the document to display. */
     @Input()
     set documentUrl(url: string) {
@@ -58,8 +65,8 @@ export class DocsLiveExampleComponent implements OnDestroy {
         this.getDocument(url);
     }
 
-    @Output() contentRendered = new EventEmitter<void>();
-    @Output() contentRenderFailed = new EventEmitter<void>();
+    @Output() readonly contentRendered = new EventEmitter<void>();
+    @Output() readonly contentRenderFailed = new EventEmitter<void>();
 
     get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
@@ -73,16 +80,14 @@ export class DocsLiveExampleComponent implements OnDestroy {
     private portalHosts: DomPortalOutlet[] = [];
     private documentFetchSubscription: Subscription;
 
-    constructor(
-        private appRef: ApplicationRef,
-        private componentFactoryResolver: ComponentFactoryResolver,
-        private elementRef: ElementRef,
-        private injector: Injector,
-        private viewContainerRef: ViewContainerRef,
-        private ngZone: NgZone,
-        private domSanitizer: DomSanitizer,
-        private http: HttpClient
-    ) {}
+    private readonly appRef = inject(ApplicationRef);
+    private readonly componentFactoryResolver = inject(ComponentFactoryResolver);
+    private readonly elementRef = inject(ElementRef);
+    private readonly injector = inject(Injector);
+    private readonly viewContainerRef = inject(ViewContainerRef);
+    private readonly ngZone = inject(NgZone);
+    private readonly domSanitizer = inject(DomSanitizer);
+    private readonly httpClient = inject(HttpClient);
 
     ngOnDestroy() {
         this.clearLiveExamples();
@@ -94,7 +99,7 @@ export class DocsLiveExampleComponent implements OnDestroy {
             return this.cache[url];
         }
 
-        const stream = this.http.get(url, { responseType: 'text' }).pipe(shareReplay(1));
+        const stream = this.httpClient.get(url, { responseType: 'text' }).pipe(shareReplay(1));
 
         return stream.pipe(tap(() => (this.cache[url] = stream)));
     }

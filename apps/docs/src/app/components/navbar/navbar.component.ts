@@ -9,7 +9,9 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { map, Observable } from 'rxjs';
-import { DocsNavbarState, DocStates } from '../../services/doс-states';
+import { DocsLocale } from 'src/app/constants/locale';
+import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsNavbarState, DocStates } from '../../services/doc-states';
 import { DocsearchDirective } from '../docsearch/docsearch.directive';
 import { NavbarProperty } from './navbar-property';
 
@@ -34,7 +36,7 @@ import { NavbarProperty } from './navbar-property';
     },
     encapsulation: ViewEncapsulation.None
 })
-export class DocsNavbarComponent implements OnDestroy {
+export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     readonly docStates = inject(DocStates);
 
     readonly themeSwitch: NavbarProperty;
@@ -42,21 +44,33 @@ export class DocsNavbarComponent implements OnDestroy {
     // To add for checking of current color theme of OS preferences
     private readonly colorAutomaticTheme = window.matchMedia('(prefers-color-scheme: light)');
 
-    private readonly kbqThemes: KbqTheme[] = [
+    private readonly kbqThemes: (KbqTheme & { title: Record<DocsLocale, string> })[] = [
         {
-            name: 'Как в системе',
+            name: 'system',
             className: this.colorAutomaticTheme.matches ? KbqThemeSelector.Default : KbqThemeSelector.Dark,
-            selected: false
+            selected: false,
+            title: {
+                ru: 'Как в системе',
+                en: 'Same as system'
+            }
         },
         {
-            name: 'Светлая',
+            name: 'light',
             className: KbqThemeSelector.Default,
-            selected: false
+            selected: false,
+            title: {
+                ru: 'Светлая',
+                en: 'Light'
+            }
         },
         {
-            name: 'Тёмная',
+            name: 'dark',
             className: KbqThemeSelector.Dark,
-            selected: false
+            selected: false,
+            title: {
+                ru: 'Тёмная',
+                en: 'Dark'
+            }
         }
     ];
 
@@ -64,7 +78,9 @@ export class DocsNavbarComponent implements OnDestroy {
         map((state) => state === DocsNavbarState.opened)
     );
 
-    constructor(private themeService: ThemeService) {
+    constructor(private readonly themeService: ThemeService) {
+        super();
+
         // set custom theme configs for light/dark themes
         this.themeService.setThemes(this.kbqThemes);
 

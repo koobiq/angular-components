@@ -6,6 +6,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    inject,
     Input,
     ViewChild,
     ViewEncapsulation
@@ -18,7 +19,9 @@ import { KbqIcon, KbqIconModule } from '@koobiq/components/icon';
 import { KbqModalModule, KbqModalRef } from '@koobiq/components/modal';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { IconItem } from 'src/app/services/icon-items';
+import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
     standalone: true,
@@ -30,7 +33,8 @@ import { IconItem } from 'src/app/services/icon-items';
         NgClass,
         KbqButtonModule,
         KbqModalModule,
-        KbqDlModule
+        KbqDlModule,
+        KbqToolTipModule
     ],
     selector: 'docs-icon-preview-modal-component',
     templateUrl: './icon-preview-modal.template.html',
@@ -38,7 +42,7 @@ import { IconItem } from 'src/app/services/icon-items';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsIconPreviewModalComponent implements AfterViewInit {
+export class DocsIconPreviewModalComponent extends DocsLocaleState implements AfterViewInit {
     @ViewChild('iconPreview') iconPreview: KbqIcon;
     @ViewChild('wordExample') wordExample: ElementRef;
 
@@ -46,7 +50,7 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
 
     SVGLink: string;
 
-    themePalettes = [
+    readonly themePalettes = [
         KbqComponentColors.Theme,
         KbqComponentColors.Contrast,
         KbqComponentColors.ContrastFade,
@@ -59,12 +63,10 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
 
     readonly componentColors = KbqComponentColors;
 
-    constructor(
-        public modal: KbqModalRef,
-        private http: HttpClient,
-        private clipboard: Clipboard,
-        private toastService: KbqToastService
-    ) {}
+    private readonly clipboard = inject(Clipboard);
+    private readonly toastService = inject(KbqToastService);
+    private readonly httpClient = inject(HttpClient);
+    readonly modal = inject(KbqModalRef);
 
     ngAfterViewInit(): void {
         this.SVGLink = `assets/SVGIcons/${this.iconItem.id}.svg`;
@@ -85,7 +87,7 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
     }
 
     copySVG(): void {
-        this.http.get(this.SVGLink, { responseType: 'text' }).subscribe((data) => {
+        this.httpClient.get(this.SVGLink, { responseType: 'text' }).subscribe((data) => {
             this.clipboard.copy(data);
             this.showSuccessfullyCopiedToast();
         });
@@ -115,7 +117,10 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
     }
 
     private showSuccessfullyCopiedToast() {
-        this.toastService.show({ style: 'success', title: 'Скопировано' });
+        this.toastService.show({
+            style: 'success',
+            title: this.isRuLocale() ? 'Скопировано' : 'Copied'
+        });
     }
 
     private parseColor(color: string) {

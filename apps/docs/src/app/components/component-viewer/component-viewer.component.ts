@@ -1,5 +1,4 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -7,9 +6,6 @@ import {
     Directive,
     ElementRef,
     inject,
-    NgZone,
-    OnDestroy,
-    OnInit,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -19,11 +15,11 @@ import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, Url
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { combineLatest, filter, Subject } from 'rxjs';
+import { filter, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocaleState } from 'src/app/services/locale';
+import { DocStates } from '../../services/doc-states';
 import { DocItem, DocumentationItems } from '../../services/documentation-items';
-import { DocStates } from '../../services/doс-states';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
@@ -47,14 +43,14 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     styleUrls: ['./component-viewer.scss'],
     host: {
         class: 'docs-component-viewer kbq-scrollbar',
-        '[attr.data-docsearch-category]': 'docCategoryName'
+        '[attr.data-docsearch-category]': 'docCategory'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsComponentViewerComponent extends CdkScrollable implements OnInit, OnDestroy {
+export class DocsComponentViewerComponent extends DocsLocaleState {
     docItem: DocItem;
-    docCategoryName: string;
+    docCategory: string;
 
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -62,9 +58,10 @@ export class DocsComponentViewerComponent extends CdkScrollable implements OnIni
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocStates);
+    private readonly elementRef = inject(ElementRef);
 
-    constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone) {
-        super(elementRef, scrollDispatcher, ngZone);
+    constructor() {
+        super();
 
         // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
         // parent route for the section (koobiq/cdk).
@@ -82,28 +79,19 @@ export class DocsComponentViewerComponent extends CdkScrollable implements OnIni
                 }
 
                 this.docItem = docItem!;
-                this.docCategoryName = this.docItems.getCategoryById(this.docItem.packageName!)!.name;
+                this.docCategory = this.docItems.getCategoryById(this.docItem.packageName!)!.id;
             });
 
-        this.docStates.registerHeaderScrollContainer(elementRef.nativeElement);
-    }
-
-    ngOnInit(): void {
-        this.scrollDispatcher.register(this);
-    }
-
-    ngOnDestroy() {
-        this.scrollDispatcher.deregister(this);
+        this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
 }
 
 @Directive()
-export class BaseOverviewComponent {
+export class BaseOverviewComponent extends DocsLocaleState {
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly docItems = inject(DocumentationItems);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly titleService = inject(Title);
-    protected readonly docsLocaleService = inject(DocsLocaleService);
 
     readonly animationDone = new Subject<boolean>();
 
@@ -114,6 +102,8 @@ export class BaseOverviewComponent {
     @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
 
     constructor() {
+        super();
+
         // Listen to changes on the current route for the doc id (e.g. button/checkbox) and the
         // parent route for the section (koobiq/cdk).
         this.activatedRoute
@@ -126,13 +116,8 @@ export class BaseOverviewComponent {
 
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.resetAnimation);
 
-        // Should update the view after locale/url change
-        combineLatest([
-            this.activatedRoute.url,
-            this.docsLocaleService.changes
-        ])
-            .pipe(takeUntilDestroyed())
-            .subscribe(() => this.changeDetectorRef.markForCheck());
+        // Should update the view after url change
+        this.activatedRoute.url.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
     scrollToSelectedContentSection() {
@@ -202,7 +187,7 @@ export class DocsCdkOverviewComponent extends BaseOverviewComponent {
             return null;
         }
 
-        return `docs-content/cdk/${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
+        return `docs-content/cdk/${this.componentDocItem.id}.${this.locale()}.html`;
     }
 }
 
@@ -229,7 +214,7 @@ export class DocsComponentOverviewComponent extends BaseOverviewComponent {
             return null;
         }
 
-        return `docs-content/overviews/${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
+        return `docs-content/overviews/${this.componentDocItem.id}.${this.locale()}.html`;
     }
 }
 
@@ -320,6 +305,6 @@ export class DocsComponentExamplesComponent extends BaseOverviewComponent {
             return null;
         }
 
-        return `docs-content/examples/examples.${this.componentDocItem.id}.${this.docsLocaleService.locale}.html`;
+        return `docs-content/examples/examples.${this.componentDocItem.id}.${this.locale()}.html`;
     }
 }

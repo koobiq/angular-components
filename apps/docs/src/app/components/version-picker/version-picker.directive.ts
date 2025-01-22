@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Directive } from '@angular/core';
+import { ChangeDetectorRef, Directive, inject } from '@angular/core';
 
-interface DocVersion {
-    selected: boolean;
-    url: string;
-    name: string;
+type DocsVersion = {
     version: string;
     date: string;
-}
+    url: string;
+    selected: boolean;
+    name: string;
+    latest: boolean;
+};
 
 @Directive({
     standalone: true,
@@ -15,35 +16,37 @@ interface DocVersion {
     selector: '[docsVersionPicker]'
 })
 export class DocsVersionPickerDirective {
-    selected: DocVersion;
-    versions: DocVersion[] = [];
+    selected: DocsVersion;
+    versions: DocsVersion[] = [];
     isNext: boolean = false;
 
-    constructor(
-        private http: HttpClient,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {
-        this.http.get('https://next.koobiq.io/assets/versions.json', { responseType: 'json' }).subscribe((data) => {
-            Object.entries(data)
-                .reverse()
-                .forEach(([name, value], index) => {
-                    if (index === 1) {
-                        name += ' (последняя)';
-                        value.url = 'https://koobiq.io/';
-                    }
+    private readonly httpClient = inject(HttpClient);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-                    if (name === 'next' || parseInt(name) >= 8) {
-                        this.versions.push({ name, selected: false, ...value });
-                    }
-                });
+    constructor() {
+        this.httpClient
+            .get('https://next.koobiq.io/assets/versions.json', { responseType: 'json' })
+            .subscribe((data) => {
+                Object.entries(data)
+                    .reverse()
+                    .forEach(([name, value], index) => {
+                        if (index === 1) {
+                            value.url = 'https://koobiq.io/';
+                            value.latest = true;
+                        }
 
-            this.setSelectedVersion();
+                        if (name === 'next' || parseInt(name) >= 8) {
+                            this.versions.push({ name, selected: false, ...value });
+                        }
+                    });
 
-            this.changeDetectorRef.markForCheck();
-        });
+                this.setSelectedVersion();
+
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
-    goToVersion(version: DocVersion) {
+    goToVersion(version: DocsVersion) {
         if (!version.url.startsWith(window.location.href)) {
             window.location.assign(version.url);
         }

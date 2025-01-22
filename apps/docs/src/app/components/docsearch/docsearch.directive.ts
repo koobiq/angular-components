@@ -1,12 +1,29 @@
-import { afterNextRender, Directive } from '@angular/core';
+import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
 import { UAParser } from 'ua-parser-js';
+import { DocsLocaleState } from '../../services/locale';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
 const SELECTOR = 'docs-docsearch';
+
 const HOST = 'koobiq.io';
+
 const PROTOCOL = 'https:';
+
+const CONFIG: _DocSearchProps = {
+    container: SELECTOR,
+    appId: '7N2W9AKEM6',
+    apiKey: '0f0df042e7b349df5cb381e72f268b4d',
+    indexName: 'koobiq',
+    maxResultsPerGroup: 20,
+    searchParameters: {
+        hitsPerPage: 40
+    },
+    disableUserPersonalization: false,
+    resultsFooterComponent: () => null
+} as const;
 
 /** Algolia DocSearch component implementation */
 @Directive({
@@ -16,35 +33,28 @@ const PROTOCOL = 'https:';
         class: 'layout-align-center-center'
     }
 })
-export class DocsearchDirective {
-    private readonly DOCSEARCH_CONFIG: _DocSearchProps = {
-        container: SELECTOR,
-        appId: '7N2W9AKEM6',
-        apiKey: '0f0df042e7b349df5cb381e72f268b4d',
-        indexName: 'koobiq',
-        maxResultsPerGroup: 20,
-        searchParameters: {
-            hitsPerPage: 40
-        },
-        disableUserPersonalization: false,
-        resultsFooterComponent: () => null,
-        placeholder: 'Поиск'
-    };
-
+export class DocsearchDirective extends DocsLocaleState {
     /** should transform item URL to work docsearch on DEV stand */
     private readonly shouldTransformItemURL = location.host !== HOST || location.protocol !== PROTOCOL;
 
+    private readonly destroyRef = inject(DestroyRef);
+
     constructor() {
+        super();
+
         afterNextRender(() => {
             this.initDocsearch();
         });
     }
 
     private initDocsearch(): void {
-        docsearch({
-            ...this.DOCSEARCH_CONFIG,
-            transformItems: this.transformItems,
-            translations: this.translations()
+        this.docsLocaleService.isRuLocale.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isRuLocale) => {
+            docsearch({
+                ...CONFIG,
+                placeholder: isRuLocale ? 'Поиск' : 'Search',
+                transformItems: this.transformItems,
+                translations: this.translations(isRuLocale)
+            });
         });
     }
 
@@ -67,58 +77,64 @@ export class DocsearchDirective {
         });
     };
 
-    private readonly translations = (): _DocSearchProps['translations'] => {
+    private readonly translations = (isRuLocale: boolean): _DocSearchProps['translations'] => {
         const uaParser = new UAParser();
         const osName = uaParser.getOS().name || '';
-        let buttonText = 'Поиск';
+        let buttonText = isRuLocale ? 'Поиск' : 'Search';
         if (osName.includes('Win')) {
             buttonText += ' Ctrl+K';
         }
         if (osName.includes('Mac')) {
             buttonText += ' ⌘K';
         }
-        return {
-            button: {
-                buttonText,
-                buttonAriaLabel: 'Поиск'
-            },
-            modal: {
-                searchBox: {
-                    resetButtonTitle: 'Очистить запрос',
-                    resetButtonAriaLabel: 'Очистить запрос',
-                    cancelButtonText: 'Отмена',
-                    cancelButtonAriaLabel: 'Отмена',
-                    searchInputLabel: 'Поиск'
-                },
-                startScreen: {
-                    recentSearchesTitle: 'Недавние',
-                    noRecentSearchesText: 'Нет недавних поисков',
-                    saveRecentSearchButtonTitle: 'Сохранить этот поиск',
-                    removeRecentSearchButtonTitle: 'Удалить этот поиск из истории',
-                    favoriteSearchesTitle: 'Избранное',
-                    removeFavoriteSearchButtonTitle: 'Удалить этот поиск из избранного'
-                },
-                errorScreen: {
-                    titleText: 'Не удалось получить результаты',
-                    helpText: 'Возможно, вам следует проверить соединение с интернетом.'
-                },
-                footer: {
-                    selectText: 'Выбрать',
-                    selectKeyAriaLabel: 'Клавиша Enter',
-                    navigateText: 'Вниз (вверх)',
-                    navigateUpKeyAriaLabel: 'Клавиша стрелка вверх',
-                    navigateDownKeyAriaLabel: 'Клавиша стрелка вниз',
-                    closeText: 'Закрыть',
-                    closeKeyAriaLabel: 'Клавиша Escape',
-                    searchByText: 'Поиск'
-                },
-                noResultsScreen: {
-                    noResultsText: 'Нет результатов для',
-                    suggestedQueryText: 'Попробуйте поискать',
-                    reportMissingResultsText: 'Считаете, что этот запрос должен вернуть результаты?',
-                    reportMissingResultsLinkText: 'Сообщите нам.'
-                }
-            }
-        };
+        return isRuLocale
+            ? {
+                  button: {
+                      buttonText,
+                      buttonAriaLabel: 'Поиск'
+                  },
+                  modal: {
+                      searchBox: {
+                          resetButtonTitle: 'Очистить запрос',
+                          resetButtonAriaLabel: 'Очистить запрос',
+                          cancelButtonText: 'Отмена',
+                          cancelButtonAriaLabel: 'Отмена',
+                          searchInputLabel: 'Поиск'
+                      },
+                      startScreen: {
+                          recentSearchesTitle: 'Недавние',
+                          noRecentSearchesText: 'Нет недавних поисков',
+                          saveRecentSearchButtonTitle: 'Сохранить этот поиск',
+                          removeRecentSearchButtonTitle: 'Удалить этот поиск из истории',
+                          favoriteSearchesTitle: 'Избранное',
+                          removeFavoriteSearchButtonTitle: 'Удалить этот поиск из избранного'
+                      },
+                      errorScreen: {
+                          titleText: 'Не удалось получить результаты',
+                          helpText: 'Возможно, вам следует проверить соединение с интернетом.'
+                      },
+                      footer: {
+                          selectText: 'Выбрать',
+                          selectKeyAriaLabel: 'Клавиша Enter',
+                          navigateText: 'Вниз (вверх)',
+                          navigateUpKeyAriaLabel: 'Клавиша стрелка вверх',
+                          navigateDownKeyAriaLabel: 'Клавиша стрелка вниз',
+                          closeText: 'Закрыть',
+                          closeKeyAriaLabel: 'Клавиша Escape',
+                          searchByText: 'Поиск'
+                      },
+                      noResultsScreen: {
+                          noResultsText: 'Нет результатов для',
+                          suggestedQueryText: 'Попробуйте поискать',
+                          reportMissingResultsText: 'Считаете, что этот запрос должен вернуть результаты?',
+                          reportMissingResultsLinkText: 'Сообщите нам.'
+                      }
+                  }
+              }
+            : {
+                  button: {
+                      buttonText
+                  }
+              };
     };
 }

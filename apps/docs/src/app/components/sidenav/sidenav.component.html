@@ -15,7 +15,7 @@
     >
         <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" class="docs-sidenav__category">
             <div class="docs-sidenav__category-text" (click)="toggle($event, node)">
-                <span>{{ node.name }}</span>
+                <span>{{ node.name[locale()] }}</span>
                 <i
                     kbq-icon-button="kbq-chevron-down-s_16"
                     kbq-tree-node-toggle
@@ -27,7 +27,7 @@
         </kbq-tree-option>
 
         <kbq-tree-option *kbqTreeNodeDef="let node" class="docs-sidenav__item">
-            {{ node.name }}
+            {{ node.name[locale()] }}
         </kbq-tree-option>
     </kbq-tree-selection>
 </div>

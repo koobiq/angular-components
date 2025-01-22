@@ -1,13 +1,28 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
     standalone: true,
-    imports: [KbqIconModule, KbqLinkModule],
+    imports: [
+        KbqIconModule,
+        KbqLinkModule
+    ],
     selector: 'docs-copy-button',
-    templateUrl: './copy-button.html',
+    template: `
+        @if (isLabelSuccessVisible) {
+            <span disabled kbq-link pseudo>
+                <i class="kbq kbq-check_16"></i>
+                <span class="kbq-link__text">{{ isRuLocale() ? 'Скопировано' : 'Copied' }}</span>
+            </span>
+        } @else {
+            <span kbq-link pseudo>
+                <i class="kbq kbq-square-multiple-o_16" (click)="copyContent()"></i>
+            </span>
+        }
+    `,
     styleUrls: ['./copy-button.scss'],
     host: {
         class: 'docs-copy-button'
@@ -15,30 +30,24 @@ import { KbqLinkModule } from '@koobiq/components/link';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsCopyButtonComponent {
+export class DocsCopyButtonComponent extends DocsLocaleState {
     @Input() contentToCopy: string;
-
-    @Input() successLabelText = 'Скопировано';
-    @Input() successLabelDisplayDelay = 1000;
 
     isLabelSuccessVisible = false;
 
-    constructor(
-        private clipboard: Clipboard,
-        private changeDetectorRef: ChangeDetectorRef
-    ) {}
+    private readonly clipboard = inject(Clipboard);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     copyContent(): void {
-        if (!this.contentToCopy) {
+        if (!this.contentToCopy || !this.clipboard.copy(this.contentToCopy)) {
             return;
         }
 
-        this.clipboard.copy(this.contentToCopy);
         this.isLabelSuccessVisible = true;
 
         setTimeout(() => {
             this.isLabelSuccessVisible = false;
             this.changeDetectorRef.markForCheck();
-        }, this.successLabelDisplayDelay);
+        }, 1000);
     }
 }

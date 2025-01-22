@@ -12,9 +12,10 @@ import {
     KbqTreeModule,
     KbqTreeSelection
 } from '@koobiq/components/tree';
-import { DocsLocaleService } from 'src/app/services/locale.service';
+import { DocsLocale } from 'src/app/constants/locale';
+import { DocsLocaleState } from 'src/app/services/locale';
+import { DocStates } from '../../services/doc-states';
 import { DocCategory, DOCS_ITEM_SECTIONS, DocumentationItems } from '../../services/documentation-items';
-import { DocStates } from '../../services/doс-states';
 import { DocsFooterComponent } from '../footer/footer.component';
 
 enum TreeNodeType {
@@ -26,7 +27,7 @@ class TreeNode {
     constructor(
         public id: string,
         public children: TreeNode[] | null,
-        public name: string,
+        public name: Record<DocsLocale, string>,
         public type: TreeNodeType
     ) {}
 }
@@ -34,7 +35,7 @@ class TreeNode {
 /** Flat node with expandable and level information */
 class TreeFlatNode {
     id: string;
-    name: string;
+    name: Record<DocsLocale, string>;
     level: number;
     expandable: boolean;
     parent: any;
@@ -42,18 +43,18 @@ class TreeFlatNode {
 }
 
 function buildTree(categories: DocCategory[]): TreeNode[] {
-    const data: any[] = [];
+    const data: TreeNode[] = [];
 
-    for (const cat of categories) {
-        const node = new TreeNode(
-            cat.id,
-            cat.items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item)),
-            cat.name,
-            TreeNodeType.Category
+    categories.forEach(({ id, name, items }) => {
+        data.push(
+            new TreeNode(
+                id,
+                items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item)),
+                name,
+                TreeNodeType.Category
+            )
         );
-
-        data.push(node);
-    }
+    });
 
     return data;
 }
@@ -78,11 +79,10 @@ function buildTree(categories: DocCategory[]): TreeNode[] {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsSidenavComponent implements AfterViewInit {
+export class DocsSidenavComponent extends DocsLocaleState implements AfterViewInit {
     @ViewChild(KbqScrollbar) readonly sidenavMenuContainer: KbqScrollbar;
     @ViewChild(KbqTreeSelection) readonly tree: KbqTreeSelection;
 
-    private readonly docsLocaleService = inject(DocsLocaleService);
     protected readonly docStates = inject(DocStates);
     private readonly docItems = inject(DocumentationItems);
     private readonly router = inject(Router);
@@ -103,7 +103,7 @@ export class DocsSidenavComponent implements AfterViewInit {
 
         this._selectedItem = value;
 
-        this.router.navigateByUrl(`${this.docsLocaleService.locale}/${value}`);
+        this.router.navigateByUrl(`${this.locale()}/${value}`);
 
         this.docStates.closeNavbarMenu();
 
@@ -113,6 +113,8 @@ export class DocsSidenavComponent implements AfterViewInit {
     private _selectedItem: string;
 
     constructor() {
+        super();
+
         const treeFlattener = new KbqTreeFlattener(
             this.transformer,
             this.getLevel,
@@ -139,7 +141,7 @@ export class DocsSidenavComponent implements AfterViewInit {
         // remove extra path endpoints so tree node can be selected
         this._selectedItem = DOCS_ITEM_SECTIONS.reduce(
             (resUrl, currentValue) => resUrl.replace(new RegExp(`\\/${currentValue}.*`), ''),
-            this.location.path().replace(`/${this.docsLocaleService.locale}/`, '')
+            this.location.path().replace(`/${this.locale()}/`, '')
         );
         setTimeout(() => this.tree.highlightSelectedOption());
     }
@@ -168,11 +170,11 @@ export class DocsSidenavComponent implements AfterViewInit {
         return flatNode;
     };
 
-    private getLevel = (node: TreeFlatNode) => {
+    private getLevel = (node: TreeFlatNode): number => {
         return node.level;
     };
 
-    private isExpandable = (node: TreeFlatNode) => {
+    private isExpandable = (node: TreeFlatNode): boolean => {
         return node.expandable;
     };
 
@@ -180,11 +182,11 @@ export class DocsSidenavComponent implements AfterViewInit {
         return node.children;
     };
 
-    private getValue = (node: TreeFlatNode) => {
+    private getValue = (node: TreeFlatNode): string => {
         return node.id;
     };
 
     private getViewValue = (node: TreeFlatNode): string => {
-        return node.name;
+        return node.id;
     };
 }

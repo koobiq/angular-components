@@ -9,8 +9,8 @@ import { DocsearchDirective } from './docsearch.directive';
 })
 class TestApp {}
 
-const render = async (): Promise<ComponentFixture<TestApp>> => {
-    await TestBed.configureTestingModule({ imports: [TestApp] }).compileComponents();
+const render = (): ComponentFixture<TestApp> => {
+    TestBed.configureTestingModule({ imports: [TestApp] }).compileComponents();
     const fixture = TestBed.createComponent(TestApp);
     fixture.autoDetectChanges();
     return fixture;
@@ -26,12 +26,12 @@ const getDocsearchModal = (): HTMLDivElement => {
 
 describe(DocsearchDirective.name, () => {
     it(`should render docsearch button`, async () => {
-        await render();
+        render();
         expect(getDocsearchButton()).toBeInstanceOf(HTMLButtonElement);
     });
 
     it(`should open docsearch modal`, async () => {
-        await render();
+        render();
         expect(getDocsearchModal()).toBeUndefined();
         getDocsearchButton().click();
         expect(getDocsearchModal()).toBeInstanceOf(HTMLDivElement);

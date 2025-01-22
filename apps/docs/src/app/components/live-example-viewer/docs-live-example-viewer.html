@@ -9,7 +9,15 @@
 
     <div class="docs-live-example__footer">
         <span kbq-link pseudo (click)="toggleSourceView()" (keydown.enter)="toggleSourceView()">
-            {{ isSourceShown ? 'Скрыть пример кода' : 'Показать пример кода' }}
+            {{
+                isSourceShown
+                    ? isRuLocale()
+                        ? 'Скрыть пример кода'
+                        : 'Hide example code'
+                    : isRuLocale()
+                      ? 'Показать пример кода'
+                      : 'Show example code'
+            }}
         </span>
 
         <docs-stackblitz-button [exampleId]="exampleId" />
@@ -21,10 +29,23 @@
         <kbq-code-block [codeFiles]="files" [filled]="true" [lineNumbers]="true" />
     }
 } @else {
-    <div class="kbq-alert kbq-alert_error kbq-alert_dismissible kbq-markdown">
-        <span>
-            Oops, this code example is lost... But you can help us find it! Just send a Pull Request to this repository:
-            <a href="#" class="kbq-markdown__a">Koobiq</a>
-        </span>
-    </div>
+    @if (isRuLocale()) {
+        <div>
+            <p>К сожалению, пример кода для этого раздела не найден.</p>
+            <p>
+                Если вы хотите помочь в написании документации или у вас есть вопросы, пожалуйста,
+                <a href="https://github.com/koobiq/angular-components/issues" target="_blank">создайте issue</a>
+                в нашем репозитории на GitHub.
+            </p>
+        </div>
+    } @else {
+        <div>
+            <p>Unfortunately, the code example for this section was not found.</p>
+            <p>
+                If you would like to contribute to the documentation or have any questions, please feel free to
+                <a href="https://github.com/koobiq/angular-components/issues" target="_blank">open an issue</a>
+                in our GitHub repository.
+            </p>
+        </div>
+    }
 }

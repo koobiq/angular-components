@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { DocsLocale } from 'src/app/constants/locale';
+import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -20,7 +22,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
                 <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
                     @for (link of links; track link) {
                         <a [routerLink]="link.value" kbqTabLink routerLinkActive="kbq-selected">
-                            {{ link.viewValue }}
+                            {{ link.title[locale()] }}
                         </a>
                     }
                 </nav>
@@ -33,19 +35,54 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     `,
     styleUrls: ['../component-viewer/component-viewer.scss'],
     host: {
-        class: 'docs-component-viewer kbq-scrollbar',
-        '[attr.data-docsearch-category]': 'docCategoryName'
+        class: 'docs-component-viewer kbq-scrollbar'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DesignTokensViewer {
-    links = [
-        { viewValue: 'Цвета', value: 'colors' },
-        { viewValue: 'Тени', value: 'shadows' },
-        { viewValue: 'Скругления', value: 'border-radius' },
-        { viewValue: 'Размеры', value: 'sizes' },
-        { viewValue: 'Типографика', value: 'tokens-typography' },
-        { viewValue: 'Инженерная палитра', value: 'palette' }
+export class DesignTokensViewer extends DocsLocaleState {
+    readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
+        {
+            title: {
+                ru: 'Цвета',
+                en: 'Colors'
+            },
+            value: 'colors'
+        },
+        {
+            title: {
+                ru: 'Тени',
+                en: 'Shadows'
+            },
+            value: 'shadows'
+        },
+        {
+            title: {
+                ru: 'Скругления',
+                en: 'Border radius'
+            },
+            value: 'border-radius'
+        },
+        {
+            title: {
+                ru: 'Размеры',
+                en: 'Sizes'
+            },
+            value: 'sizes'
+        },
+        {
+            title: {
+                ru: 'Типографика',
+                en: 'Typography'
+            },
+            value: 'tokens-typography'
+        },
+        {
+            title: {
+                ru: 'Инженерная палитра',
+                en: 'Engineer palette'
+            },
+            value: 'palette'
+        }
     ];
 }

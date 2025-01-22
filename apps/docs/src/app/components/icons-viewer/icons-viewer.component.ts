@@ -22,7 +22,8 @@ import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqToastModule } from '@koobiq/components/toast';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { IconItem, IconItems } from 'src/app/services/icon-items';
-import { DocStates } from '../../services/doс-states';
+import { DocsLocaleState } from 'src/app/services/locale';
+import { DocStates } from '../../services/doc-states';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
 
@@ -55,7 +56,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class DocsIconsViewerComponent {
+export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly http = inject(HttpClient);
     private readonly modalService = inject(KbqModalService);
     private readonly activeRoute = inject(ActivatedRoute);
@@ -67,7 +68,7 @@ export class DocsIconsViewerComponent {
     private readonly elementRef = inject(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
 
-    themePalette = ThemePalette;
+    readonly themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
     filteredIcons = new BehaviorSubject<IconItem[]>([]);
@@ -78,6 +79,8 @@ export class DocsIconsViewerComponent {
     private queryParamMap: { [key: string]: string };
 
     constructor() {
+        super();
+
         this.http.get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' }).subscribe((data) => {
             this.iconItems = new IconItems(data);
 
