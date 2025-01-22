@@ -1,11 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-    KbqBreadcrumbItem,
-    KbqBreadcrumbs,
-    KbqBreadcrumbView,
-    KbqDefaultBreadcrumbStyler
-} from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -18,12 +13,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'breadcrumbs-truncate-by-abbrev-items-example',
     template: `
         <nav kbq-breadcrumbs>
-            @for (section of abbreviations; track section; let last = $last) {
+            @for (navLink of navLinks; track navLink; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="section.longText"
-                    [queryParams]="{ queryParams: section }"
-                    [fragment]="section.longText"
-                    [text]="section.longText"
+                    [routerLink]="navLink.longText"
+                    [queryParams]="{ queryParams: navLink }"
+                    [fragment]="navLink.longText"
+                    [text]="navLink.longText"
                 >
                     <a *kbqBreadcrumbView>
                         <button
@@ -31,12 +26,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                             [disabled]="last"
                             [kbqPlacementPriority]="PopUpPlacements.Bottom"
                             [kbqTooltipArrow]="false"
-                            [kbqTooltip]="section.longText"
-                            [kbqTooltipDisabled]="!section.shortText"
+                            [kbqTooltip]="navLink.longText"
+                            [kbqTooltipDisabled]="!navLink.shortText"
                             kbq-button
                             kbqBreadcrumb
                         >
-                            {{ section.shortText || section.longText }}
+                            {{ navLink.shortText || navLink.longText }}
                         </button>
                     </a>
                 </kbq-breadcrumb-item>
@@ -45,16 +40,13 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     `,
     imports: [
         RouterLink,
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem,
-        KbqDefaultBreadcrumbStyler,
-        KbqBreadcrumbView,
+        KbqBreadcrumbsModule,
         KbqButtonModule,
         KbqToolTipModule
     ]
 })
 export class BreadcrumbsTruncateByAbbrevItemsExample {
-    abbreviations: { shortText?: string; longText: string }[] = [
+    navLinks: { shortText?: string; longText: string }[] = [
         { longText: 'Main' },
         { longText: 'Reviews' },
         { longText: 'Advanced Encryption Standard', shortText: 'AES' }];

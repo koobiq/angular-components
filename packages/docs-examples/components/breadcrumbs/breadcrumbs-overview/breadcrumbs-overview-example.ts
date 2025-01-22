@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
 /**
  * @title Breadcrumbs overview
@@ -10,22 +10,21 @@ import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumb
     selector: 'breadcrumbs-overview-example',
     template: `
         <nav kbq-breadcrumbs>
-            @for (section of data; track section; let last = $last) {
+            @for (navLink of navLinks; track navLink; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="section"
-                    [queryParams]="{ queryParams: section }"
-                    [fragment]="section"
-                    [text]="section"
+                    [routerLink]="navLink"
+                    [queryParams]="{ queryParams: navLink }"
+                    [fragment]="navLink"
+                    [text]="navLink"
                 />
             }
         </nav>
     `,
     imports: [
         RouterLink,
-        KbqBreadcrumbItem,
-        KbqBreadcrumbs
+        KbqBreadcrumbsModule
     ]
 })
 export class BreadcrumbsOverviewExample {
-    data = ['Main', 'Standards', 'Advanced Encryption Standard', 'Edit'];
+    navLinks = ['Main', 'Standards', 'Advanced Encryption Standard', 'Edit'];
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
 /**
  * @title Breadcrumbs Truncate Head Items
@@ -11,22 +11,21 @@ import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumb
     styleUrls: ['./breadcrumbs-truncate-head-items-example.scss'],
     template: `
         <nav class="kbq-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
-            @for (link of data; track link) {
+            @for (navLink of navLinks; track navLink) {
                 <kbq-breadcrumb-item
-                    [routerLink]="link"
-                    [queryParams]="{ queryParams: link }"
-                    [fragment]="link"
-                    [text]="link"
+                    [routerLink]="navLink"
+                    [queryParams]="{ queryParams: navLink }"
+                    [fragment]="navLink"
+                    [text]="navLink"
                 />
             }
         </nav>
     `,
     imports: [
         RouterLink,
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem
+        KbqBreadcrumbsModule
     ]
 })
 export class BreadcrumbsTruncateHeadItemsExample {
-    data = ['Main', 'Upper-level system', 'Users'];
+    navLinks = ['Main', 'Upper-level system', 'Users'];
 }

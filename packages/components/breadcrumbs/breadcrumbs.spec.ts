@@ -37,81 +37,105 @@ function findAllCustomSeparators(debugElement: DebugElement): DebugElement[] {
 
 describe(KbqBreadcrumbs.name, () => {
     describe('core', () => {
-        let fixture: ComponentFixture<SimpleBreadcrumbs>;
-        let debugElement: DebugElement;
-        let component: SimpleBreadcrumbs;
-
-        beforeEach(() => {
-            fixture = createComponent(SimpleBreadcrumbs, [
+        it('should have the correct number of breadcrumb items', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
                 {
                     provide: KBQ_BREADCRUMBS_CONFIGURATION,
                     useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
                 }
             ]);
-            debugElement = fixture.debugElement;
-            component = fixture.componentInstance;
-        });
-
-        it('should have the correct number of breadcrumb items', () => {
+            const { debugElement, componentInstance } = fixture;
             const breadcrumbItems = findAllBreadcrumbItems(debugElement);
-            expect(breadcrumbItems.length).toBe(component.items.length);
+            expect(breadcrumbItems.length).toBe(componentInstance.items.length);
         });
 
         it('should apply the default size class to the breadcrumbs container', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [
+                provideRouter([]),
+                {
+                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
+                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
+                }
+            ]);
+            const { debugElement } = fixture;
             const { nativeElement } = getBreadcrumbsDebugElement(debugElement);
             expect(nativeElement.classList).toMatchSnapshot();
         });
 
         it('should update when items change', () => {
-            const updatedLength = component.items.push({ text: 'New Item', disabled: false });
+            const fixture = createComponent(SimpleBreadcrumbs, [
+                provideRouter([]),
+                {
+                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
+                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
+                }
+            ]);
+            const { debugElement, componentInstance } = fixture;
+            const updatedLength = componentInstance.items.push({ text: 'New Item', disabled: false });
             fixture.autoDetectChanges();
             const breadcrumbItems = findAllBreadcrumbItems(debugElement);
             expect(breadcrumbItems.length).toBe(updatedLength);
         });
 
         it('should apply the disabled state correctly to specific breadcrumb items', () => {
-            fixture.detectChanges();
-            const disabledItem = findAllBreadcrumbItems(debugElement)[2];
-            expect(disabledItem).toBeTruthy();
-        });
-
-        it('should enforce the max limit of breadcrumb items displayed', () => {
-            component.max = 4;
-            component.items.push({ text: 'New Item1', disabled: false });
-            component.items.push({ text: 'New Item2', disabled: false });
-            fixture.detectChanges();
-            const displayedBreadcrumbItems = findAllBreadcrumbItems(debugElement);
-            expect(component.items.length).toBeGreaterThan(component.max);
-            expect(displayedBreadcrumbItems.length).toBe(component.max);
-        });
-    });
-
-    describe('customization', () => {
-        let fixture: ComponentFixture<BreadcrumbsCustomization>;
-        let debugElement: DebugElement;
-        let component: BreadcrumbsCustomization;
-
-        beforeEach(() => {
-            fixture = createComponent(BreadcrumbsCustomization, [
+            const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
                 {
                     provide: KBQ_BREADCRUMBS_CONFIGURATION,
                     useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
                 }
             ]);
-            debugElement = fixture.debugElement;
-            component = fixture.componentInstance;
+            const { debugElement } = fixture;
+            fixture.detectChanges();
+            const disabledItem = findAllBreadcrumbItems(debugElement)[2];
+            expect(disabledItem).toBeTruthy();
         });
 
+        it('should enforce the max limit of breadcrumb items displayed', () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [
+                provideRouter([]),
+                {
+                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
+                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
+                }
+            ]);
+            const { debugElement, componentInstance } = fixture;
+            componentInstance.max = 4;
+            componentInstance.items.push({ text: 'New Item1', disabled: false });
+            componentInstance.items.push({ text: 'New Item2', disabled: false });
+            fixture.detectChanges();
+            const displayedBreadcrumbItems = findAllBreadcrumbItems(debugElement);
+            expect(componentInstance.items.length).toBeGreaterThan(componentInstance.max);
+            expect(displayedBreadcrumbItems.length).toBe(componentInstance.max);
+        });
+    });
+
+    describe('customization', () => {
         it('should use the custom separator template', () => {
+            const fixture = createComponent(BreadcrumbsCustomization, [
+                provideRouter([]),
+                {
+                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
+                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
+                }
+            ]);
+            const { debugElement, componentInstance } = fixture;
             const customSeparators = findAllCustomSeparators(debugElement);
-            expect(customSeparators.length).toBe(component.items.length - 1);
+            expect(customSeparators.length).toBe(componentInstance.items.length - 1);
         });
 
         it('should use the custom view template', () => {
+            const fixture = createComponent(BreadcrumbsCustomization, [
+                provideRouter([]),
+                {
+                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
+                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
+                }
+            ]);
+            const { debugElement, componentInstance } = fixture;
             const customBreadcrumbs = findAllCustomBreadcrumbItems(debugElement);
-            expect(customBreadcrumbs.length).toBe(component.items.length);
+            expect(customBreadcrumbs.length).toBe(componentInstance.items.length);
         });
     });
 });

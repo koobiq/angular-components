@@ -1,11 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import {
-    KbqBreadcrumbItem,
-    KbqBreadcrumbs,
-    KbqBreadcrumbView,
-    KbqDefaultBreadcrumbStyler
-} from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -21,21 +16,21 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <kbq-breadcrumb-item
                 [queryParams]="{ queryParams: 'queryParams' }"
                 [fragment]="'fragment'"
-                routerLink="Information Security"
+                routerLink="./info-sec"
                 text="Information Security"
             />
 
             <kbq-breadcrumb-item
                 [queryParams]="{ queryParams: 'queryParams' }"
                 [fragment]="'fragment'"
-                routerLink="Access Control"
+                routerLink="./access-control"
                 text="Access Control"
             />
 
             <kbq-breadcrumb-item
                 [queryParams]="{ queryParams: 'queryParams' }"
                 [fragment]="'fragment'"
-                routerLink="Authorization"
+                routerLink="./authorization"
                 text="Authorization"
             />
 
@@ -61,10 +56,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     `,
     imports: [
         RouterLink,
-        KbqBreadcrumbItem,
-        KbqBreadcrumbView,
-        KbqDefaultBreadcrumbStyler,
-        KbqBreadcrumbs,
+        KbqBreadcrumbsModule,
         KbqButtonModule,
         KbqIconModule,
         KbqDropdownModule

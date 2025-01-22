@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { PopUpPlacements } from '@koobiq/components/core';
 
 /**
@@ -11,12 +11,12 @@ import { PopUpPlacements } from '@koobiq/components/core';
     selector: 'breadcrumbs-truncate-tail-items-example',
     template: `
         <nav class="kbq-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
-            @for (link of navLinks; track link) {
+            @for (navLink of navLinks; track navLink) {
                 <kbq-breadcrumb-item
-                    [routerLink]="link"
-                    [queryParams]="{ queryParams: link }"
-                    [fragment]="link"
-                    [text]="link"
+                    [routerLink]="navLink"
+                    [queryParams]="{ queryParams: navLink }"
+                    [fragment]="navLink"
+                    [text]="navLink"
                 />
             }
         </nav>
@@ -24,8 +24,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
     styleUrls: ['breadcrumbs-truncate-tail-items-example.scss'],
     imports: [
         RouterLink,
-        KbqBreadcrumbs,
-        KbqBreadcrumbItem
+        KbqBreadcrumbsModule
     ]
 })
 export class BreadcrumbsTruncateTailItemsExample {

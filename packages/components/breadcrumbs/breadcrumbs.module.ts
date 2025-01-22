@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import {
+    KbqBreadcrumbButton,
     KbqBreadcrumbItem,
     KbqBreadcrumbs,
     KbqBreadcrumbsSeparator,
-    KbqBreadcrumbView,
-    KbqDefaultBreadcrumbStyler
+    KbqBreadcrumbView
 } from './breadcrumbs';
 
 const COMPONENTS = [
@@ -12,7 +12,7 @@ const COMPONENTS = [
     KbqBreadcrumbItem,
     KbqBreadcrumbView,
     KbqBreadcrumbsSeparator,
-    KbqDefaultBreadcrumbStyler
+    KbqBreadcrumbButton
 ];
 
 @NgModule({

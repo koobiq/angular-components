@@ -8,7 +8,6 @@ import { AfterContentInit } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@radix-ng/primitives/roving-focus';
 import { InjectionToken } from '@angular/core';
-import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDefaultSizes } from '@koobiq/components/core';
@@ -22,8 +21,15 @@ import { TemplateRef } from '@angular/core';
 // @public
 export const KBQ_BREADCRUMBS_CONFIGURATION: InjectionToken<KbqBreadcrumbsConfiguration>;
 
-// @public (undocumented)
-export const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration;
+// @public
+export class KbqBreadcrumbButton implements OnInit {
+    // (undocumented)
+    ngOnInit(): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbButton, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof i1.RdxRovingFocusItemDirective; inputs: {}; outputs: {}; }]>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbButton, never>;
+}
 
 // @public
 export class KbqBreadcrumbItem {
@@ -38,7 +44,7 @@ export class KbqBreadcrumbItem {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    routerLink: RouterLink | null;
+    readonly routerLink: RouterLink | null;
     // (undocumented)
     text: string;
     // (undocumented)
@@ -54,13 +60,14 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     disabled: boolean;
     // (undocumented)
-    items: QueryList<KbqBreadcrumbItem>;
+    protected readonly items: QueryList<KbqBreadcrumbItem>;
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
     // (undocumented)
     max: number | null;
+    readonly minVisibleItems = 3;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -68,7 +75,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
-    separator?: TemplateRef<any>;
+    protected readonly separator?: TemplateRef<any>;
     // (undocumented)
     size: KbqDefaultSizes;
     // (undocumented)
@@ -78,10 +85,21 @@ export class KbqBreadcrumbs implements AfterContentInit {
 }
 
 // @public (undocumented)
-export interface KbqBreadcrumbsConfiguration {
+export type KbqBreadcrumbsConfiguration = {
     max: number | null;
-    // (undocumented)
     size: KbqDefaultSizes;
+};
+
+// @public (undocumented)
+export class KbqBreadcrumbsModule {
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbsModule, never>;
+    // (undocumented)
+    static ɵinj: i0.ɵɵInjectorDeclaration<KbqBreadcrumbsModule>;
+    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBreadcrumbsModule, never, [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton], [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton]>;
 }
 
 // @public (undocumented)
@@ -97,23 +115,11 @@ export class KbqBreadcrumbsSeparator {
 // @public
 export class KbqBreadcrumbView {
     // (undocumented)
-    templateRef: TemplateRef<any>;
+    readonly templateRef: TemplateRef<any>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbView, "[kbqBreadcrumbView]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbView, never>;
-}
-
-// @public
-export class KbqDefaultBreadcrumbStyler implements OnInit {
-    // (undocumented)
-    button: KbqButton | null;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDefaultBreadcrumbStyler, "[kbq-button][kbqBreadcrumb]", never, {}, {}, never, never, true, [{ directive: typeof i1.RdxRovingFocusItemDirective; inputs: {}; outputs: {}; }]>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDefaultBreadcrumbStyler, never>;
 }
 
 // @public

@@ -1,7 +1,7 @@
 import { TitleCasePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumbItem, KbqBreadcrumbs } from '@koobiq/components/breadcrumbs';
+import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 
@@ -17,12 +17,12 @@ import { KbqDlModule } from '@koobiq/components/dl';
                 <kbq-dt class="kbq-text-normal">{{ size | titlecase }}</kbq-dt>
                 <kbq-dd>
                     <nav [size]="size" kbq-breadcrumbs>
-                        @for (section of data; track section; let last = $last) {
+                        @for (navLink of navLinks; track navLink; let last = $last) {
                             <kbq-breadcrumb-item
-                                [routerLink]="section"
+                                [routerLink]="navLink"
                                 [queryParams]="{ queryParams: 'queryParams' }"
                                 [fragment]="'fragment'"
-                                [text]="section"
+                                [text]="navLink"
                             />
                         }
                     </nav>
@@ -32,13 +32,12 @@ import { KbqDlModule } from '@koobiq/components/dl';
     `,
     imports: [
         RouterLink,
-        KbqBreadcrumbItem,
-        KbqBreadcrumbs,
+        KbqBreadcrumbsModule,
         KbqDlModule,
         TitleCasePipe
     ]
 })
 export class BreadcrumbsSizeExample {
-    data = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
+    navLinks = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
     sizes: KbqDefaultSizes[] = ['compact', 'normal', 'big'];
 }

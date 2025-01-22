@@ -28,7 +28,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
-export interface KbqBreadcrumbsConfiguration {
+export type KbqBreadcrumbsConfiguration = {
     /**
      * Specifies the maximum number of breadcrumb items to display.
      * - If a number is provided, only that many items will be shown.
@@ -36,9 +36,9 @@ export interface KbqBreadcrumbsConfiguration {
      */
     max: number | null;
     size: KbqDefaultSizes;
-}
+};
 
-export const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
+const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
     size: 'normal'
 };
@@ -57,7 +57,10 @@ export const provideKbqBreadcrumbsConfiguration = (configuration: KbqBreadcrumbs
 
 @Directive({
     selector: '[kbqBreadcrumbsSeparator]',
-    standalone: true
+    standalone: true,
+    host: {
+        class: 'kbq-breadcrumbs-separator'
+    }
 })
 export class KbqBreadcrumbsSeparator {
     readonly templateRef = inject(TemplateRef);
@@ -73,8 +76,8 @@ export class KbqBreadcrumbsSeparator {
     host: { class: 'kbq-breadcrumb-item' },
     hostDirectives: [RdxRovingFocusItemDirective]
 })
-export class KbqDefaultBreadcrumbStyler implements OnInit {
-    button = inject(KbqButton, { optional: true, host: true });
+export class KbqBreadcrumbButton implements OnInit {
+    private readonly button = inject(KbqButton, { optional: true, host: true });
 
     ngOnInit() {
         if (this.button) {
@@ -92,7 +95,7 @@ export class KbqDefaultBreadcrumbStyler implements OnInit {
     selector: '[kbqBreadcrumbView]'
 })
 export class KbqBreadcrumbView {
-    templateRef = inject(TemplateRef);
+    readonly templateRef = inject(TemplateRef);
 }
 
 /**
@@ -112,7 +115,7 @@ export class KbqBreadcrumbItem {
 
     @ContentChild(KbqBreadcrumbView, { read: TemplateRef }) customTemplateRef: TemplateRef<any>;
 
-    routerLink = inject(RouterLink, { optional: true, host: true });
+    readonly routerLink = inject(RouterLink, { optional: true, host: true });
 }
 
 @Component({
@@ -129,7 +132,7 @@ export class KbqBreadcrumbItem {
         KbqButtonModule,
         KbqDropdownModule,
         KbqBreadcrumbItem,
-        KbqDefaultBreadcrumbStyler,
+        KbqBreadcrumbButton,
         RdxRovingFocusGroupDirective,
         RdxRovingFocusItemDirective,
         KbqTitleModule
@@ -153,10 +156,17 @@ export class KbqBreadcrumbs implements AfterContentInit {
     @Input({ transform: booleanAttribute }) disabled: boolean = false;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
-    separator?: TemplateRef<any>;
+    protected readonly separator?: TemplateRef<any>;
 
     @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
-    items: QueryList<KbqBreadcrumbItem>;
+    protected readonly items: QueryList<KbqBreadcrumbItem>;
+
+    /**
+     * Ensures at least minimum number of breadcrumb items are shown.
+     *
+     * This prevents the appearance of unnecessary expand button that would hide only a single breadcrumb.
+     */
+    readonly minVisibleItems = 3;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);
