@@ -35,7 +35,6 @@ export class DocsFooterComponent {
     private readonly location = inject(Location);
     readonly docsLocaleService = inject(DocsLocaleService);
 
-    readonly docsLocale = DocsLocale;
     readonly version = koobiqVersion;
     readonly examplesLanguageSwitch: NavbarProperty;
     readonly docsLanguageSwitch: NavbarProperty;

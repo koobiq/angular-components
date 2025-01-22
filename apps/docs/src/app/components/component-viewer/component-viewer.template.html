@@ -1,5 +1,5 @@
 @let locale = docsLocaleService.changes | async;
-@let isRuLocale = locale === docsLocale.Ru;
+@let isRuLocale = docsLocaleService.isRuLocale | async;
 
 <div class="docs-component-header">
     <div docsRegisterHeader class="docs-component-name">

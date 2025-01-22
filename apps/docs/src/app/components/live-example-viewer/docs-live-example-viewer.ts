@@ -6,7 +6,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleService } from 'src/app/services/locale.service';
 import { DocsStackblitzButtonComponent } from '../stackblitz/stackblitz-button';
 
@@ -77,8 +76,6 @@ export class DocsLiveExampleViewerComponent {
     readonly docsLocaleService = inject(DocsLocaleService);
     private readonly elementRef = inject(ElementRef);
     private readonly httpClient = inject(HttpClient);
-
-    readonly docsLocale = DocsLocale;
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;

@@ -7,7 +7,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { DocsLocale } from 'src/app/constants/locale';
 import { DocStates } from 'src/app/services/doc-states';
 import { DocsLocaleService } from 'src/app/services/locale.service';
 import { DocCategory, DocumentationItems } from '../../services/documentation-items';
@@ -39,8 +38,6 @@ export class DocsWelcomeComponent implements OnInit {
     private readonly docStates = inject(DocStates);
     private readonly docItems = inject(DocumentationItems);
     readonly docsLocaleService = inject(DocsLocaleService);
-
-    readonly docsLocale = DocsLocale;
 
     constructor(private readonly themeService: ThemeService) {
         fromEvent(this.elementRef.nativeElement, 'scroll')

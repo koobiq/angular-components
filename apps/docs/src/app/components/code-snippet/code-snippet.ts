@@ -23,11 +23,13 @@ export class DocsCodeSnippetComponent {
     private readonly docsLocaleService = inject(DocsLocaleService);
 
     copy() {
-        if (this.clipboard.copy(this.elementRef.nativeElement.textContent)) {
-            this.toastService.show({
-                style: 'success',
-                title: this.docsLocaleService.locale === DocsLocale.Ru ? 'Скопировано' : 'Copied'
-            });
+        if (!this.clipboard.copy(this.elementRef.nativeElement.textContent)) {
+            return;
         }
+
+        this.toastService.show({
+            style: 'success',
+            title: this.docsLocaleService.locale === DocsLocale.Ru ? 'Скопировано' : 'Copied'
+        });
     }
 }

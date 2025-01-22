@@ -1,8 +1,10 @@
 import { Location } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../constants/locale';
+
+export const isRuLocale = (locale: DocsLocale): boolean => locale === DocsLocale.Ru;
 
 @Injectable({ providedIn: 'root' })
 export class DocsLocaleService {
@@ -10,7 +12,7 @@ export class DocsLocaleService {
     private readonly location = inject(Location);
 
     /** Current locale code. */
-    private locale$ = new BehaviorSubject<DocsLocale>(
+    private readonly locale$ = new BehaviorSubject<DocsLocale>(
         this.getLocaleFromURL(this.location.path()) || DOCS_DEFAULT_LOCALE
     );
 
@@ -22,6 +24,11 @@ export class DocsLocaleService {
     /** A stream that emits the current locale code when it changes. */
     get changes(): Observable<DocsLocale> {
         return this.locale$.asObservable();
+    }
+
+    /** A stream that emits whether the current locale is Russian. */
+    get isRuLocale(): Observable<boolean> {
+        return this.changes.pipe(map(isRuLocale));
     }
 
     /**

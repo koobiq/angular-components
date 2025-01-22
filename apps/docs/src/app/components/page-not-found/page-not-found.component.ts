@@ -2,7 +2,6 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleService } from 'src/app/services/locale.service';
 
 @Component({
@@ -14,8 +13,7 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
     ],
     selector: 'docs-page-not-found',
     template: `
-        @let locale = docsLocaleService.changes | async;
-        @let isRuLocale = locale === docsLocale.Ru;
+        @let isRuLocale = docsLocaleService.isRuLocale | async;
 
         <div class="kbq-display-compact">{{ isRuLocale ? 'Страница не найдена' : 'Page not found' }}</div>
 
@@ -32,5 +30,4 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
 })
 export class PageNotFoundComponent {
     readonly docsLocaleService = inject(DocsLocaleService);
-    readonly docsLocale = DocsLocale;
 }

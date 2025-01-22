@@ -2,7 +2,6 @@ import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
 import { UAParser } from 'ua-parser-js';
-import { DocsLocale } from '../../constants/locale';
 import { DocsLocaleService } from '../../services/locale.service';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
@@ -48,12 +47,12 @@ export class DocsearchDirective {
     }
 
     private initDocsearch(): void {
-        this.docsLocaleService.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((locale) => {
+        this.docsLocaleService.isRuLocale.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isRuLocale) => {
             docsearch({
                 ...CONFIG,
-                placeholder: locale === DocsLocale.Ru ? 'Поиск' : 'Search',
+                placeholder: isRuLocale ? 'Поиск' : 'Search',
                 transformItems: this.transformItems,
-                translations: this.translations(locale)
+                translations: this.translations(isRuLocale)
             });
         });
     }
@@ -77,8 +76,7 @@ export class DocsearchDirective {
         });
     };
 
-    private readonly translations = (locale: DocsLocale): _DocSearchProps['translations'] => {
-        const isRuLocale = locale === DocsLocale.Ru;
+    private readonly translations = (isRuLocale: boolean): _DocSearchProps['translations'] => {
         const uaParser = new UAParser();
         const osName = uaParser.getOS().name || '';
         let buttonText = isRuLocale ? 'Поиск' : 'Search';

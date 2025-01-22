@@ -22,7 +22,6 @@ import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { combineLatest, filter, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleService } from 'src/app/services/locale.service';
 import { DocStates } from '../../services/doc-states';
 import { DocItem, DocumentationItems } from '../../services/documentation-items';
@@ -66,8 +65,6 @@ export class DocsComponentViewerComponent extends CdkScrollable implements OnIni
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocStates);
     readonly docsLocaleService = inject(DocsLocaleService);
-
-    readonly docsLocale = DocsLocale;
 
     constructor(elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, ngZone: NgZone) {
         super(elementRef, scrollDispatcher, ngZone);

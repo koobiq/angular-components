@@ -3,7 +3,6 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleService } from 'src/app/services/locale.service';
 
 @Component({
@@ -15,8 +14,7 @@ import { DocsLocaleService } from 'src/app/services/locale.service';
     ],
     selector: 'docs-copy-button',
     template: `
-        @let locale = docsLocaleService.changes | async;
-        @let isRuLocale = locale === docsLocale.Ru;
+        @let isRuLocale = docsLocaleService.isRuLocale | async;
 
         @if (isLabelSuccessVisible) {
             <span disabled kbq-link pseudo>
@@ -45,20 +43,16 @@ export class DocsCopyButtonComponent {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     readonly docsLocaleService = inject(DocsLocaleService);
 
-    readonly docsLocale = DocsLocale;
-
     copyContent(): void {
-        if (!this.contentToCopy) {
+        if (!this.contentToCopy || !this.clipboard.copy(this.contentToCopy)) {
             return;
         }
 
-        if (this.clipboard.copy(this.contentToCopy)) {
-            this.isLabelSuccessVisible = true;
+        this.isLabelSuccessVisible = true;
 
-            setTimeout(() => {
-                this.isLabelSuccessVisible = false;
-                this.changeDetectorRef.markForCheck();
-            }, 1000);
-        }
+        setTimeout(() => {
+            this.isLabelSuccessVisible = false;
+            this.changeDetectorRef.markForCheck();
+        }, 1000);
     }
 }

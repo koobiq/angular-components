@@ -64,7 +64,6 @@ export class DocsIconPreviewModalComponent implements AfterViewInit {
     selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Theme;
 
     readonly componentColors = KbqComponentColors;
-    readonly docsLocale = DocsLocale;
 
     readonly docsLocaleService = inject(DocsLocaleService);
     private readonly clipboard = inject(Clipboard);

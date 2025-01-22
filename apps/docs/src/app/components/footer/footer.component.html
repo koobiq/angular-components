@@ -1,5 +1,4 @@
-@let locale = docsLocaleService.changes | async;
-@let isRuLocale = locale === docsLocale.Ru;
+@let isRuLocale = docsLocaleService.isRuLocale | async;
 
 <div class="docs-footer__item">
     <div class="docs-footer__label">

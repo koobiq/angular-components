@@ -1,6 +1,5 @@
 @let opened = opened$ | async;
-@let locale = docsLocaleService.changes | async;
-@let isRuLocale = locale === docsLocale.Ru;
+@let isRuLocale = docsLocaleService.isRuLocale | async;
 
 <a routerLink="/" class="docs-navbar__left">
     <!-- prettier-ignore -->

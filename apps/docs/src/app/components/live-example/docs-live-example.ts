@@ -22,7 +22,6 @@ import { KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
-import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleService } from 'src/app/services/locale.service';
 import { DocsCodeSnippetComponent } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
@@ -38,8 +37,7 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
     ],
     selector: 'docs-live-example',
     template: `
-        @let locale = docsLocaleService.changes | async;
-        @let isRuLocale = locale === docsLocale.Ru;
+        @let isRuLocale = docsLocaleService.isRuLocale | async;
 
         {{ isRuLocale ? 'Загрузка документа...' : 'Loading document...' }}
         <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
@@ -95,8 +93,6 @@ export class DocsLiveExampleComponent implements OnDestroy {
     private readonly ngZone = inject(NgZone);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly httpClient = inject(HttpClient);
-
-    readonly docsLocale = DocsLocale;
 
     ngOnDestroy() {
         this.clearLiveExamples();

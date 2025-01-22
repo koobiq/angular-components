@@ -21,7 +21,6 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqToastModule } from '@koobiq/components/toast';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import { DocsLocale } from 'src/app/constants/locale';
 import { IconItem, IconItems } from 'src/app/services/icon-items';
 import { DocsLocaleService } from 'src/app/services/locale.service';
 import { DocStates } from '../../services/doc-states';
@@ -71,7 +70,6 @@ export class DocsIconsViewerComponent {
     private readonly destroyRef = inject(DestroyRef);
     readonly docsLocaleService = inject(DocsLocaleService);
 
-    readonly docsLocale = DocsLocale;
     readonly themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
