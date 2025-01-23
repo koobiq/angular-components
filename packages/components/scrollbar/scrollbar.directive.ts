@@ -1,3 +1,4 @@
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { Directive, Inject, Input, NgZone, OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
 import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarEvents, KbqScrollbarOptions, KbqScrollbarTarget } from './scrollbar.types';
@@ -51,7 +52,8 @@ const createDefer = (): Defer => {
  */
 @Directive({
     standalone: true,
-    selector: '[kbqScrollbar]'
+    selector: '[kbqScrollbar]',
+    hostDirectives: [CdkScrollable]
 })
 export class KbqScrollbarDirective implements OnDestroy {
     private requestDefer: ReturnType<typeof createDefer>[0];
