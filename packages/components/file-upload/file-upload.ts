@@ -57,7 +57,8 @@ export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
 
 /** @docs-private */
 export abstract class KbqFileUploadBase implements CanUpdateErrorState {
-    /** Whether the component is in an error state. */
+    /** Tracks whether the component is in an error state based on the control, parent form,
+     * and `errorStateMatcher`, triggering visual updates and state changes if needed. */
     errorState: boolean = false;
 
     /** An object used to control the error state of the component. */

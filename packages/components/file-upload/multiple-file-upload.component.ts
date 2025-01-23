@@ -149,6 +149,10 @@ export class KbqMultipleFileUploadComponent
         return this.hint.length > 0;
     }
 
+    /**
+     * Indicates an invalid state based on `errorState`,
+     * applying a CSS class in HTML for visual feedback.
+     */
     get invalid(): boolean {
         return this.errorState;
     }

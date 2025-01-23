@@ -110,6 +110,10 @@ export class KbqSingleFileUploadComponent
         return this.hint.length > 0;
     }
 
+    /**
+     * Indicates an invalid state based on file errors or `errorState`,
+     * applying a CSS class in HTML for visual feedback.
+     */
     get invalid(): boolean {
         return !!this.file?.hasError || this.errorState;
     }

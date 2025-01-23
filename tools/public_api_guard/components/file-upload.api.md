@@ -212,7 +212,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     // (undocumented)
     input: ElementRef<HTMLInputElement>;
     inputId: string;
-    // (undocumented)
     get invalid(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -276,7 +275,6 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     input: ElementRef<HTMLInputElement>;
     // (undocumented)
     inputId: string;
-    // (undocumented)
     get invalid(): boolean;
     // (undocumented)
     ngAfterViewInit(): void;
