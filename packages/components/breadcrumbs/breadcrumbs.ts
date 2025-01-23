@@ -67,8 +67,9 @@ export class KbqBreadcrumbsSeparator {
 }
 
 /**
- * This directive is used to style breadcrumb buttons with default styling rules.
- *
+ * Directive to style and configure buttons used as breadcrumb items.
+ * - Inherits focus management behavior from `RdxRovingFocusItemDirective`.
+ * - Optionally injects `KbqButton` to customize its style for breadcrumb usage.
  */
 @Directive({
     standalone: true,
@@ -106,7 +107,8 @@ export class KbqBreadcrumbView {
     selector: 'kbq-breadcrumb-item',
     template: `
         <ng-content />
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqBreadcrumbItem {
     /**
@@ -193,7 +195,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
      *
      * This prevents the appearance of unnecessary expand button that would hide only a single breadcrumb.
      */
-    readonly minVisibleItems = 3;
+    readonly minVisibleItems = 2;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);
@@ -203,15 +205,15 @@ export class KbqBreadcrumbs implements AfterContentInit {
 
     /** @docs-private */
     protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null) return [];
-        const visibleItemsCount = this.max - 2;
+        if (this.max === null || this.max <= this.minVisibleItems) return [];
+        const visibleItemsCount = this.max - this.minVisibleItems;
         return this.items.toArray().slice(1, -visibleItemsCount);
     }
 
     /** @docs-private */
     protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null) return [];
-        const visibleItemsCount = this.max - 2;
+        if (this.max === null || this.max <= this.minVisibleItems) return [];
+        const visibleItemsCount = this.max - this.minVisibleItems;
         return this.items.toArray().slice(-visibleItemsCount);
     }
 

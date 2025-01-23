@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
@@ -8,7 +8,24 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 @Component({
     standalone: true,
     selector: 'breadcrumbs-truncate-head-items-example',
-    styleUrls: ['./breadcrumbs-truncate-head-items-example.scss'],
+    styles: `
+        .kbq-breadcrumbs_truncate-by-length {
+            .kbq-breadcrumb-item {
+                max-width: 124px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+
+                .kbq-button-wrapper {
+                    display: inline-block;
+                    flex-grow: 1;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
+        }
+    `,
     template: `
         <nav class="kbq-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
             @for (breadcrumbs of breadcrumbs; track breadcrumbs) {
@@ -25,6 +42,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
         RouterLink,
         KbqBreadcrumbsModule
     ],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateHeadItemsExample {

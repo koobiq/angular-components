@@ -1,13 +1,11 @@
-@if (items.length <= minVisibleItems || max === null || max === items.length) {
+@if (items.length <= minVisibleItems || max === null || max <= minVisibleItems || max >= items.length) {
     @for (item of items; track item; let last = $last) {
         <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
         @if (!last) {
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
         }
     }
-}
-
-@if (items.length > minVisibleItems && max !== null && max !== items.length) {
+} @else {
     <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
     <ng-container [ngTemplateOutlet]="separatorTemplate" />
 

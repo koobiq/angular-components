@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -21,11 +21,30 @@ import { PopUpPlacements } from '@koobiq/components/core';
             }
         </nav>
     `,
-    styleUrls: ['breadcrumbs-truncate-tail-items-example.scss'],
+    styles: `
+        .kbq-breadcrumbs_truncate-last-by-length-reverse {
+            .kbq-breadcrumb-item:last-of-type {
+                max-width: 100px;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+
+                .kbq-button-wrapper {
+                    display: inline-block;
+                    flex-grow: 1;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    direction: rtl;
+                }
+            }
+        }
+    `,
     imports: [
         RouterLink,
         KbqBreadcrumbsModule
     ],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateTailItemsExample {

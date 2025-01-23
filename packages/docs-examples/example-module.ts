@@ -352,7 +352,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BreadcrumbsTruncateHeadItemsExample",
     "files": [
       "breadcrumbs-truncate-head-items-example.ts",
-      "./breadcrumbs-truncate-head-items-example.scss"
+      "./breadcrumbs-truncate-head-items-example.css"
     ],
     "selector": "breadcrumbs-truncate-head-items-example",
     "additionalComponents": [],
@@ -365,7 +365,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "BreadcrumbsTruncateTailItemsExample",
     "files": [
       "breadcrumbs-truncate-tail-items-example.ts",
-      "breadcrumbs-truncate-tail-items-example.scss"
+      "breadcrumbs-truncate-tail-items-example.css"
     ],
     "selector": "breadcrumbs-truncate-tail-items-example",
     "additionalComponents": [],
