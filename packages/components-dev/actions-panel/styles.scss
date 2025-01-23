@@ -1,0 +1,12 @@
+@use '../main';
+
+app {
+    max-width: 858px;
+    min-height: 400px;
+    display: block;
+    border: 1px solid cyan;
+}
+
+hr {
+    margin: var(--kbq-size-xxl) 0;
+}
