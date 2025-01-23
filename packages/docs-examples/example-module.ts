@@ -130,6 +130,19 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "accordion-states-example.ts",
     "importPath": "components/accordion"
   },
+  "actions-panel-overview": {
+    "packagePath": "components/actions-panel/actions-panel-overview",
+    "title": "Actions panel overview",
+    "componentName": "ActionsPanelOverviewExample",
+    "files": [
+      "actions-panel-overview-example.ts",
+      "actions-panel-overview-example.html"
+    ],
+    "selector": "actions-panel-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "actions-panel-overview-example.ts",
+    "importPath": "components/actions-panel"
+  },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
     "title": "Alert close",
@@ -3735,6 +3748,8 @@ return import('@koobiq/docs-examples/components/accordion');
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-states':
 return import('@koobiq/docs-examples/components/accordion');
+  case 'actions-panel-overview':
+return import('@koobiq/docs-examples/components/actions-panel');
   case 'alert-close':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-content':

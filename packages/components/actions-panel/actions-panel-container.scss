@@ -1,0 +1,13 @@
+.kbq-actions-panel-container {
+    background: var(--kbq-actions-panel-background-color);
+    color: var(--kbq-actions-panel-text-color);
+    box-shadow: var(--kbq-actions-panel-box-shadow);
+    height: var(--kbq-actions-panel-height);
+    padding: var(--kbq-actions-panel-padding);
+    border-radius: var(--kbq-actions-panel-border-radius);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    box-sizing: border-box;
+    flex-grow: 1;
+}
