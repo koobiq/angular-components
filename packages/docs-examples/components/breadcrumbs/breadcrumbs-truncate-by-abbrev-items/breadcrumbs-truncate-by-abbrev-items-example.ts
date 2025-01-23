@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -13,12 +13,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'breadcrumbs-truncate-by-abbrev-items-example',
     template: `
         <nav kbq-breadcrumbs>
-            @for (navLink of navLinks; track navLink; let last = $last) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="navLink.longText"
-                    [queryParams]="{ queryParams: navLink }"
-                    [fragment]="navLink.longText"
-                    [text]="navLink.longText"
+                    [routerLink]="breadcrumb.longText"
+                    [queryParams]="{ queryParams: breadcrumb }"
+                    [fragment]="breadcrumb.longText"
+                    [text]="breadcrumb.longText"
                 >
                     <a *kbqBreadcrumbView>
                         <button
@@ -26,12 +26,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                             [disabled]="last"
                             [kbqPlacementPriority]="PopUpPlacements.Bottom"
                             [kbqTooltipArrow]="false"
-                            [kbqTooltip]="navLink.longText"
-                            [kbqTooltipDisabled]="!navLink.shortText"
+                            [kbqTooltip]="breadcrumb.longText"
+                            [kbqTooltipDisabled]="!breadcrumb.shortText"
                             kbq-button
                             kbqBreadcrumb
                         >
-                            {{ navLink.shortText || navLink.longText }}
+                            {{ breadcrumb.shortText || breadcrumb.longText }}
                         </button>
                     </a>
                 </kbq-breadcrumb-item>
@@ -43,10 +43,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqBreadcrumbsModule,
         KbqButtonModule,
         KbqToolTipModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateByAbbrevItemsExample {
-    navLinks: { shortText?: string; longText: string }[] = [
+    breadcrumbs: { shortText?: string; longText: string }[] = [
         { longText: 'Main' },
         { longText: 'Reviews' },
         { longText: 'Advanced Encryption Standard', shortText: 'AES' }];

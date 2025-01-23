@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -12,16 +12,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'breadcrumbs-custom-template-example',
     template: `
         <nav kbq-breadcrumbs>
-            @for (navLink of navLinks; track navLink; let last = $last) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="navLink"
-                    [queryParams]="{ queryParams: navLink }"
-                    [fragment]="navLink"
-                    [text]="navLink"
+                    [routerLink]="breadcrumb"
+                    [queryParams]="{ queryParams: breadcrumb }"
+                    [fragment]="breadcrumb"
+                    [text]="breadcrumb"
                 >
                     <a *kbqBreadcrumbView>
                         <button [disabled]="last" [attr.aria-current]="last ? 'page' : null" kbq-button kbqBreadcrumb>
-                            {{ navLink }}
+                            {{ breadcrumb }}
                             <i kbq-icon="kbq-file-code-o_16"></i>
                         </button>
                     </a>
@@ -34,8 +34,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqButtonModule,
         KbqIconModule,
         KbqBreadcrumbsModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsCustomTemplateExample {
-    navLinks = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
+    breadcrumbs = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
@@ -11,12 +11,12 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     styleUrls: ['./breadcrumbs-truncate-head-items-example.scss'],
     template: `
         <nav class="kbq-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
-            @for (navLink of navLinks; track navLink) {
+            @for (breadcrumbs of breadcrumbs; track breadcrumbs) {
                 <kbq-breadcrumb-item
-                    [routerLink]="navLink"
-                    [queryParams]="{ queryParams: navLink }"
-                    [fragment]="navLink"
-                    [text]="navLink"
+                    [routerLink]="breadcrumbs"
+                    [queryParams]="{ queryParams: breadcrumbs }"
+                    [fragment]="breadcrumbs"
+                    [text]="breadcrumbs"
                 />
             }
         </nav>
@@ -24,8 +24,9 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     imports: [
         RouterLink,
         KbqBreadcrumbsModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateHeadItemsExample {
-    navLinks = ['Main', 'Upper-level system', 'Users'];
+    breadcrumbs = ['Main', 'Upper-level system', 'Users'];
 }

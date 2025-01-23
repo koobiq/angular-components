@@ -33,19 +33,14 @@ export class KbqBreadcrumbButton implements OnInit {
 
 // @public
 export class KbqBreadcrumbItem {
-    // (undocumented)
     current: boolean;
-    // (undocumented)
     customTemplateRef: TemplateRef<any>;
-    // (undocumented)
     disabled: boolean;
     // (undocumented)
     static ngAcceptInputType_current: unknown;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
-    // (undocumented)
     readonly routerLink: RouterLink | null;
-    // (undocumented)
     text: string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbItem, "kbq-breadcrumb-item", never, { "text": { "alias": "text"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "current": { "alias": "current"; "required": false; }; }, {}, ["customTemplateRef"], ["*"], true, never>;
@@ -57,15 +52,14 @@ export class KbqBreadcrumbItem {
 export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
-    // (undocumented)
     disabled: boolean;
+    protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[];
     // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
-    // (undocumented)
     max: number | null;
     readonly minVisibleItems = 3;
     // (undocumented)
@@ -76,8 +70,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly PopUpPlacements: typeof PopUpPlacements;
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
-    // (undocumented)
     size: KbqDefaultSizes;
+    protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[];
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)

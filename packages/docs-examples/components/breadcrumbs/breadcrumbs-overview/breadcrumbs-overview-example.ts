@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
@@ -10,12 +10,12 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     selector: 'breadcrumbs-overview-example',
     template: `
         <nav kbq-breadcrumbs>
-            @for (navLink of navLinks; track navLink; let last = $last) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="navLink"
-                    [queryParams]="{ queryParams: navLink }"
-                    [fragment]="navLink"
-                    [text]="navLink"
+                    [routerLink]="breadcrumb"
+                    [queryParams]="{ queryParams: breadcrumb }"
+                    [fragment]="breadcrumb"
+                    [text]="breadcrumb"
                 />
             }
         </nav>
@@ -23,8 +23,9 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     imports: [
         RouterLink,
         KbqBreadcrumbsModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsOverviewExample {
-    navLinks = ['Main', 'Standards', 'Advanced Encryption Standard', 'Edit'];
+    breadcrumbs = ['Main', 'Standards', 'Advanced Encryption Standard', 'Edit'];
 }

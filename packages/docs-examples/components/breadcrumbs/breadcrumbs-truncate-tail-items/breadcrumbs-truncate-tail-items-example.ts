@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -11,12 +11,12 @@ import { PopUpPlacements } from '@koobiq/components/core';
     selector: 'breadcrumbs-truncate-tail-items-example',
     template: `
         <nav class="kbq-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
-            @for (navLink of navLinks; track navLink) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item
-                    [routerLink]="navLink"
-                    [queryParams]="{ queryParams: navLink }"
-                    [fragment]="navLink"
-                    [text]="navLink"
+                    [routerLink]="breadcrumb"
+                    [queryParams]="{ queryParams: breadcrumb }"
+                    [fragment]="breadcrumb"
+                    [text]="breadcrumb"
                 />
             }
         </nav>
@@ -25,9 +25,10 @@ import { PopUpPlacements } from '@koobiq/components/core';
     imports: [
         RouterLink,
         KbqBreadcrumbsModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateTailItemsExample {
-    navLinks = ['Main', 'Users', 'Report №123456789'];
+    breadcrumbs = ['Main', 'Users', 'Report №123456789'];
     protected readonly PopUpPlacements = PopUpPlacements;
 }

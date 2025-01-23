@@ -26,7 +26,7 @@
         <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
         <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
-            @for (item of items.toArray().slice(1, -1 * visibleItemsCount); track item) {
+            @for (item of hiddenBreadcrumbItems; track item) {
                 <a class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
                     <button kbq-dropdown-item [disabled]="item.disabled">{{ item.text }}</button>
                 </a>
@@ -34,9 +34,7 @@
         </kbq-dropdown>
     }
 
-    @let visibleItemsCount = max - 2;
-
-    @for (item of items.toArray().slice(-1 * visibleItemsCount); track item; let last = $last) {
+    @for (item of visibleBreadcrumbItems; track item; let last = $last) {
         <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
         @if (!last) {
             <ng-container [ngTemplateOutlet]="separatorTemplate" />

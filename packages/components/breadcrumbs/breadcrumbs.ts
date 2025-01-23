@@ -109,12 +109,29 @@ export class KbqBreadcrumbView {
     `
 })
 export class KbqBreadcrumbItem {
+    /**
+     * The text displayed for the breadcrumb item.
+     * This text will be shown if breadcrumb item is hidden in dropdown.
+     */
     @Input() text: string;
+    /**
+     * Indicates whether the breadcrumb item is disabled.
+     */
     @Input({ transform: booleanAttribute }) disabled: boolean;
+    /**
+     * Indicates whether the breadcrumb item is the current/active item.
+     * Defaults to `false`.
+     */
     @Input({ transform: booleanAttribute }) current: boolean = false;
-
+    /**
+     * A reference to a custom template provided for the breadcrumb item content.
+     * The template can be used to override the default appearance of the breadcrumb.
+     */
     @ContentChild(KbqBreadcrumbView, { read: TemplateRef }) customTemplateRef: TemplateRef<any>;
-
+    /**
+     * An optional `RouterLink` instance for navigating to a specific route.
+     * Injected from the host element, if available and projecting to the hidden breadcrumb item in dropdown.
+     */
     readonly routerLink = inject(RouterLink, { optional: true, host: true });
 }
 
@@ -148,11 +165,21 @@ export class KbqBreadcrumbItem {
 })
 export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
-
+    /**
+     * Size of the breadcrumbs. Affects font size.
+     * Default value is taken from the global configuration.
+     */
     @Input() size: KbqDefaultSizes = this.configuration.size;
-
+    /**
+     * Maximum number of visible breadcrumb items.
+     * Remaining items are collapsed into a dropdown if the total exceeds this value.
+     * Default value is taken from the global configuration.
+     */
     @Input() max: number | null = this.configuration.max;
-
+    /**
+     * Indicates whether the breadcrumbs are disabled.
+     * When disabled, user interactions are blocked.
+     */
     @Input({ transform: booleanAttribute }) disabled: boolean = false;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
@@ -173,6 +200,20 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+
+    /** @docs-private */
+    protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[] {
+        if (this.max === null) return [];
+        const visibleItemsCount = this.max - 2;
+        return this.items.toArray().slice(1, -visibleItemsCount);
+    }
+
+    /** @docs-private */
+    protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[] {
+        if (this.max === null) return [];
+        const visibleItemsCount = this.max - 2;
+        return this.items.toArray().slice(-visibleItemsCount);
+    }
 
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
