@@ -1,4 +1,5 @@
-import { Directive, Inject, Input, NgZone, OnDestroy } from '@angular/core';
+import { CdkScrollable, ScrollDispatcher } from '@angular/cdk/overlay';
+import { Directive, ElementRef, Inject, Input, NgZone, OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';
 import { KBQ_SCROLLBAR_CONFIG, KbqScrollbarEvents, KbqScrollbarOptions, KbqScrollbarTarget } from './scrollbar.types';
 
@@ -53,7 +54,7 @@ const createDefer = (): Defer => {
     standalone: true,
     selector: '[kbqScrollbar]'
 })
-export class KbqScrollbarDirective implements OnDestroy {
+export class KbqScrollbarDirective extends CdkScrollable implements OnDestroy {
     private requestDefer: ReturnType<typeof createDefer>[0];
     private cancelDefer: ReturnType<typeof createDefer>[1];
 
@@ -95,9 +96,13 @@ export class KbqScrollbarDirective implements OnDestroy {
     scrollbarInstance?: OverlayScrollbars;
 
     constructor(
-        private ngZone: NgZone,
+        ngZone: NgZone,
+        elementRef: ElementRef<HTMLElement>,
+        scrollDispatcher: ScrollDispatcher,
         @Inject(KBQ_SCROLLBAR_CONFIG) private scrollbarConfig?: KbqScrollbarOptions
     ) {
+        super(elementRef, scrollDispatcher, ngZone);
+
         const [requestDefer, cancelDefer] = createDefer();
         this.requestDefer = requestDefer;
         this.cancelDefer = cancelDefer;

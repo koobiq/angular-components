@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { EventListenerArgs } from 'overlayscrollbars';
@@ -21,6 +22,7 @@ import { PartialOptions } from 'overlayscrollbars';
 import { Provider } from '@angular/core';
 import { ScrollbarsAutoHideBehavior } from 'overlayscrollbars';
 import { ScrollbarsVisibilityBehavior } from 'overlayscrollbars';
+import { ScrollDispatcher } from '@angular/cdk/overlay';
 
 // @public (undocumented)
 export const KBQ_SCROLLBAR_CONFIG: InjectionToken<{
@@ -85,8 +87,8 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
 }
 
 // @public
-export class KbqScrollbarDirective implements OnDestroy {
-    constructor(ngZone: NgZone, scrollbarConfig?: KbqScrollbarOptions | undefined);
+export class KbqScrollbarDirective extends CdkScrollable implements OnDestroy {
+    constructor(ngZone: NgZone, elementRef: ElementRef<HTMLElement>, scrollDispatcher: ScrollDispatcher, scrollbarConfig?: KbqScrollbarOptions | undefined);
     defer?: boolean | IdleRequestOptions;
     set events(value: KbqScrollbarEvents);
     // (undocumented)
