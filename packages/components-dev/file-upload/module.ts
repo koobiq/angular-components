@@ -11,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -21,7 +21,8 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqDataSizePipe,
     KbqLocaleService,
-    KbqLocaleServiceModule
+    KbqLocaleServiceModule,
+    ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -35,6 +36,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
+import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { maxFileExceededFiveMbs, maxFileSize } from './validation';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
@@ -105,7 +107,9 @@ export class DemoComponent {
 
     form = new FormGroup(
         {
-            'file-upload': new FormControl<KbqFileItem | null>(null, FileValidators.maxFileSize(MAX_FILE_SIZE))
+            'file-upload': new FormControl<KbqFileItem | null>(null, [
+                Validators.required,
+                FileValidators.maxFileSize(MAX_FILE_SIZE)])
         },
         { updateOn: 'submit' }
     );
@@ -123,14 +127,8 @@ export class DemoComponent {
     secondControl = new FormControl<File | KbqFileItem | null>(null);
     multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileSize);
 
-    languageList = [
-        { id: 'ru-RU' },
-        { id: 'en-US' },
-        { id: 'pt-BR' },
-        { id: 'es-LA' },
-        { id: 'zh-CN' },
-        { id: 'fa-IR' }];
-    selectedLanguage: any = this.languageList[0];
+    languageList: { id: string; name: string }[];
+    selectedLanguage: { id: string; name: string };
 
     get fileListValidationOnSubmit(): FormArray {
         return this.formMultiple.get('file-list') as FormArray;
@@ -140,6 +138,10 @@ export class DemoComponent {
         private cdr: ChangeDetectorRef,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
+        this.languageList = this.localeService.locales.items;
+        this.selectedLanguage =
+            this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
+
         this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: KbqFileItem | null) => {
             // can be used mapped file item
             // this.secondControl.setValue(value);
@@ -179,7 +181,7 @@ export class DemoComponent {
     }
 
     setFormat($event: KbqRadioChange): void {
-        this.selectedLanguage = this.languageList.find(({ id }) => id === $event.value.id);
+        this.selectedLanguage = this.languageList.find(({ id }) => id === $event.value.id) || this.languageList[0];
 
         this.localeService.setLocale($event.value.id);
     }
@@ -257,10 +259,6 @@ export class DemoComponent {
 
     initLoadingForMultiple() {
         const files: KbqFileItem[] = [];
-        // const fileControlValue = this.formMultipleLoadOnAdded.get('file-upload')?.value;
-        // if (fileControlValue) {
-        //     files = fileControlValue.filter((file: KbqFileItem) => !file.hasError);
-        // }
 
         for (const file of files) {
             file?.loading?.next(true);
@@ -282,12 +280,6 @@ export class DemoComponent {
     ]) {
         this.fileListValidationOnSubmit.removeAt(index);
         this.fileList.removeAt(index);
-    }
-
-    onFilesAddedForListWithDefaultValidation($event: KbqFileItem[]) {
-        for (const fileItem of $event.slice()) {
-            this.fileList.push(new FormControl(fileItem, FileValidators.maxFileSize(MAX_FILE_SIZE)));
-        }
     }
 
     onFilesAddedForListWithLoadOnAdd($event: KbqFileItem[]) {
@@ -315,6 +307,8 @@ export class DemoComponent {
             }
         }
     }
+
+    protected readonly showOnFormSubmitErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 }
 
 @Directive({
@@ -357,7 +351,8 @@ export class CustomTextDirective {}
         KbqIconModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqDataSizePipe
+        KbqDataSizePipe,
+        FileUploadExamplesModule
     ],
     bootstrap: [DemoComponent]
 })

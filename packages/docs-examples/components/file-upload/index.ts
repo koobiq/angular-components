@@ -6,8 +6,10 @@ import { FileUploadMultipleCustomTextOverviewExample } from './file-upload-multi
 import { FileUploadMultipleDefaultOverviewExample } from './file-upload-multiple-default-overview/file-upload-multiple-default-overview-example';
 import { FileUploadMultipleDefaultValidationReactiveFormsOverviewExample } from './file-upload-multiple-default-validation-reactive-forms-overview/file-upload-multiple-default-validation-reactive-forms-overview-example';
 import { FileUploadMultipleErrorOverviewExample } from './file-upload-multiple-error-overview/file-upload-multiple-error-overview-example';
+import { FileUploadMultipleRequiredReactiveValidationExample } from './file-upload-multiple-required-reactive-validation/file-upload-multiple-required-reactive-validation-example';
 import { FileUploadSingleErrorOverviewExample } from './file-upload-single-error-overview/file-upload-single-error-overview-example';
 import { FileUploadSingleOverviewExample } from './file-upload-single-overview/file-upload-single-overview-example';
+import { FileUploadSingleRequiredReactiveValidationExample } from './file-upload-single-required-reactive-validation/file-upload-single-required-reactive-validation-example';
 import { FileUploadSingleValidationReactiveFormsOverviewExample } from './file-upload-single-validation-reactive-forms-overview/file-upload-single-validation-reactive-forms-overview-example';
 
 export {
@@ -18,8 +20,10 @@ export {
     FileUploadMultipleDefaultOverviewExample,
     FileUploadMultipleDefaultValidationReactiveFormsOverviewExample,
     FileUploadMultipleErrorOverviewExample,
+    FileUploadMultipleRequiredReactiveValidationExample,
     FileUploadSingleErrorOverviewExample,
     FileUploadSingleOverviewExample,
+    FileUploadSingleRequiredReactiveValidationExample,
     FileUploadSingleValidationReactiveFormsOverviewExample
 };
 
@@ -33,7 +37,9 @@ const EXAMPLES = [
     FileUploadMultipleDefaultOverviewExample,
     FileUploadMultipleCustomTextOverviewExample,
     FileUploadIndeterminateLoadingOverviewExample,
-    FileUploadMultipleCompactOverviewExample
+    FileUploadMultipleCompactOverviewExample,
+    FileUploadSingleRequiredReactiveValidationExample,
+    FileUploadMultipleRequiredReactiveValidationExample
 ];
 
 @NgModule({
