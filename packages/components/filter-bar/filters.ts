@@ -20,15 +20,15 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { KbqFilterBarButton } from './filter-bar-button.component';
-import { KbqFilterBar } from './filter-bar.component';
+import { KbqFilterBar } from './filter-bar';
+import { KbqFilterBarButton } from './filter-bar-button';
 import { KbqFilter } from './filter-bar.types';
 
 @Component({
     standalone: true,
     selector: 'kbq-filters',
-    templateUrl: 'filters.component.html',
-    styleUrls: ['filters.component.scss', 'filter-bar-tokens.scss'],
+    templateUrl: 'filters.html',
+    styleUrls: ['filters.scss', 'filter-bar-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -65,9 +65,7 @@ export class KbqFilters implements OnInit {
     }
 
     constructor() {
-        this.filterBar.activeFilterChanges.subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-        });
+        this.filterBar.changes.subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
     ngOnInit(): void {
@@ -83,6 +81,9 @@ export class KbqFilters implements OnInit {
     }
 
     onSave() {
+        this.filterBar.saveFilterState();
+        this.filterBar.resetFilterChangedState();
+        this.filterBar.onSaveFilter.emit(this.filterBar.activeFilter!);
         console.log('onSave: ');
     }
 

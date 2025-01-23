@@ -110,17 +110,17 @@ export class KbqPipeDateComponent extends KbqBasePipe {
 
     onKeydown($event: KeyboardEvent) {
         if ($event.ctrlKey && $event.keyCode === ENTER) {
-            this.onApply();
+            this.onApplyPeriod();
         }
     }
 
-    onApply() {
+    onApplyPeriod() {
         this.data.value = {
             start: this.formGroup.get('start')?.value,
             end: this.formGroup.get('end')?.value
         };
 
-        this.filterBar.applyPipe(this.data);
+        this.filterBar.onChangePipe.next(this.data);
 
         this.popover.hide();
     }
@@ -128,6 +128,8 @@ export class KbqPipeDateComponent extends KbqBasePipe {
     onSelect(item: unknown) {
         this.data.value = item;
         this.stateChanges.next();
+
+        this.filterBar.onChangePipe.next(this.data);
 
         this.popover.hide();
     }

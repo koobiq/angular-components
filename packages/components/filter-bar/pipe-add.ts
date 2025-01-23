@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { KbqButtonModule } from '../button';
 import { KbqDropdownModule } from '../dropdown';
 import { KbqIcon } from '../icon';
-import { KbqFilterBar } from './filter-bar.component';
+import { KbqFilterBar } from './filter-bar';
 import { KbqPipeTemplate } from './filter-bar.types';
 
 @Component({
@@ -34,5 +34,6 @@ export class KbqPipeAdd {
 
     add(pipe: KbqPipeTemplate) {
         this.filterBar.onAddPipe.next(pipe);
+        this.filterBar.changes.next();
     }
 }

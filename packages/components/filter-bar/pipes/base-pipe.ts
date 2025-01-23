@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Directive, inject } from '@angular/core';
 import { Subject } from 'rxjs';
-import { KbqFilterBar } from '../filter-bar.component';
+import { KbqFilterBar } from '../filter-bar';
 import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
 
 @Directive({
