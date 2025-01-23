@@ -157,133 +157,133 @@ export class DemoComponent {
                 }
             ]
         },
-        {
-            name: 'TreeSelect',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            unsaved: false,
-            pipes: [
-                {
-                    name: 'required',
-                    // required - не может быть пустым, всегда есть дефолтное значение
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.TreeSelect,
-
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'empty',
-                    type: KbqPipeTypes.TreeSelect,
-
-                    required: false,
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'cleanable',
-                    value: { name: 'Не определен', id: '1' },
-                    type: KbqPipeTypes.TreeSelect,
-
-                    required: false,
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'removable',
-                    value: { name: 'Не определен', id: '1' },
-                    type: KbqPipeTypes.TreeSelect,
-
-                    required: false,
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'disabled',
-                    value: { name: 'Не определен', id: '1' },
-                    type: KbqPipeTypes.TreeSelect,
-
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                }
-            ]
-        },
-        {
-            name: 'MultiTreeSelect',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            unsaved: false,
-            pipes: [
-                {
-                    name: 'required',
-                    value: ['Pictures'],
-                    type: KbqPipeTypes.MultiTreeSelect,
-
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'required',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiTreeSelect,
-
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'empty',
-                    type: KbqPipeTypes.MultiTreeSelect,
-
-                    required: false,
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'cleanable',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiTreeSelect,
-
-                    required: false,
-                    cleanable: true,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'removable',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiTreeSelect,
-
-                    required: false,
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                },
-                {
-                    name: 'disabled',
-                    value: [{ name: 'Не определен', id: '1' }],
-                    type: KbqPipeTypes.MultiTreeSelect,
-
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: true
-                }
-            ]
-        },
+        // {
+        //     name: 'TreeSelect',
+        //     readonly: false,
+        //     disabled: false,
+        //     changed: false,
+        //     unsaved: false,
+        //     pipes: [
+        //         {
+        //             name: 'required',
+        //             // required - не может быть пустым, всегда есть дефолтное значение
+        //             value: [{ name: 'Не определен', id: '1' }],
+        //             type: KbqPipeTypes.TreeSelect,
+        //
+        //             required: true,
+        //             cleanable: false,
+        //             removable: false,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'empty',
+        //             type: KbqPipeTypes.TreeSelect,
+        //
+        //             required: false,
+        //             cleanable: true,
+        //             removable: false,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'cleanable',
+        //             value: { name: 'Не определен', id: '1' },
+        //             type: KbqPipeTypes.TreeSelect,
+        //
+        //             required: false,
+        //             cleanable: true,
+        //             removable: false,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'removable',
+        //             value: { name: 'Не определен', id: '1' },
+        //             type: KbqPipeTypes.TreeSelect,
+        //
+        //             required: false,
+        //             cleanable: false,
+        //             removable: true,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'disabled',
+        //             value: { name: 'Не определен', id: '1' },
+        //             type: KbqPipeTypes.TreeSelect,
+        //
+        //             required: true,
+        //             cleanable: false,
+        //             removable: false,
+        //             disabled: true
+        //         }
+        //     ]
+        // },
+        // {
+        //     name: 'MultiTreeSelect',
+        //     readonly: false,
+        //     disabled: false,
+        //     changed: false,
+        //     unsaved: false,
+        //     pipes: [
+        //         {
+        //             name: 'required',
+        //             value: ['Pictures'],
+        //             type: KbqPipeTypes.MultiTreeSelect,
+        //
+        //             required: true,
+        //             cleanable: false,
+        //             removable: false,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'required',
+        //             value: [{ name: 'Не определен', id: '1' }],
+        //             type: KbqPipeTypes.MultiTreeSelect,
+        //
+        //             required: true,
+        //             cleanable: false,
+        //             removable: false,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'empty',
+        //             type: KbqPipeTypes.MultiTreeSelect,
+        //
+        //             required: false,
+        //             cleanable: true,
+        //             removable: false,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'cleanable',
+        //             value: [{ name: 'Не определен', id: '1' }],
+        //             type: KbqPipeTypes.MultiTreeSelect,
+        //
+        //             required: false,
+        //             cleanable: true,
+        //             removable: false,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'removable',
+        //             value: [{ name: 'Не определен', id: '1' }],
+        //             type: KbqPipeTypes.MultiTreeSelect,
+        //
+        //             required: false,
+        //             cleanable: false,
+        //             removable: true,
+        //             disabled: false
+        //         },
+        //         {
+        //             name: 'disabled',
+        //             value: [{ name: 'Не определен', id: '1' }],
+        //             type: KbqPipeTypes.MultiTreeSelect,
+        //
+        //             required: true,
+        //             cleanable: false,
+        //             removable: false,
+        //             disabled: true
+        //         }
+        //     ]
+        // },
         {
             name: 'Text',
             readonly: false,
@@ -508,7 +508,7 @@ export class DemoComponent {
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[5];
+    activeFilter: KbqFilter | null = this.filters[3];
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Вердикт',

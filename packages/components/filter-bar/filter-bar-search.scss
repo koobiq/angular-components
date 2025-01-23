@@ -1,0 +1,10 @@
+.kbq-filter-bar-search {
+    display: flex;
+    align-items: center;
+
+    max-width: 260px;
+
+    & .kbq-input {
+        width: 260px;
+    }
+}

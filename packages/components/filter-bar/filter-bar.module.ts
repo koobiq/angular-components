@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
-import { KbqFilterBarActions } from './filter-bar-actions.component';
-import { KbqFilterBarButton } from './filter-bar-button.component';
-import { KbqFilterReset } from './filter-bar-reset.component';
-import { KbqFilterBar } from './filter-bar.component';
-import { KbqFilters } from './filters.component';
+import { KbqFilterBar } from './filter-bar';
+import { KbqFilterBarButton } from './filter-bar-button';
+import { KbqFilterBarRefresher } from './filter-bar-refresher';
+import { KbqFilterReset } from './filter-bar-reset';
+import { KbqFilterBarSearch } from './filter-bar-search';
+import { KbqFilters } from './filters';
 import { KbqPipeAdd } from './pipe-add';
 import { KbqPipeDirective } from './pipe.directive';
 import { KbqPipeButton } from './pipes/pipe-button';
@@ -11,12 +12,13 @@ import { KbqPipeButton } from './pipes/pipe-button';
 const COMPONENTS = [
     KbqFilterBar,
     KbqFilters,
-    KbqFilterBarActions,
+    KbqFilterBarRefresher,
     KbqFilterBarButton,
     KbqFilterReset,
     KbqPipeAdd,
     KbqPipeDirective,
-    KbqPipeButton
+    KbqPipeButton,
+    KbqFilterBarSearch
 ];
 
 @NgModule({

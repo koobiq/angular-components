@@ -26,6 +26,11 @@
             margin-right: 4px;
         }
     }
+
+    .kbq-filter-bar__right {
+        display: flex;
+        flex-direction: row;
+    }
 }
 
 .kbq-pipe__popover {
