@@ -41,7 +41,7 @@
             #input
             autocomplete="off"
             kbqInput
-            placeholder="Placeholder"
+            placeholder="Поиск"
             [formControl]="searchControl"
             (click)="stopEventPropagation($event)"
             (keydown)="stopEventPropagation($event)"
@@ -53,11 +53,16 @@
 
     @for (filter of filteredOptions | async; track filter) {
         <button kbq-dropdown-item (click)="selectFilter(filter)">{{ filter.name }}</button>
+    } @empty {
+        <button kbq-dropdown-item [disabled]="true">Ничего не найдено</button>
     }
 
     <kbq-divider />
 
-    <button kbq-dropdown-item [disabled]="!activeFilter?.changed">Disabled</button>
+    <button kbq-dropdown-item [disabled]="!activeFilter?.changed">
+        <i kbq-icon="kbq-plus-s_16"></i>
+        Сохранить как новый фильтр
+    </button>
 </kbq-dropdown>
 
 <kbq-dropdown #filterActions="kbqDropdown">
