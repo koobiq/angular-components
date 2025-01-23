@@ -1,7 +1,6 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChildren,
     DoCheck,
@@ -11,7 +10,6 @@ import {
     Input,
     Output,
     QueryList,
-    Renderer2,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -116,8 +114,6 @@ export class KbqSingleFileUploadComponent
         return !!this.file?.hasError || this.errorState;
     }
 
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly renderer = inject(Renderer2);
     readonly configuration: KbqInputFileLabel | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });

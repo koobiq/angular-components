@@ -8,6 +8,7 @@ import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { CanDisable } from '@koobiq/components/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DestroyRef } from '@angular/core';
 import { DoCheck } from '@angular/core';
@@ -33,6 +34,7 @@ import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
@@ -87,6 +89,8 @@ export interface KbqFileItem {
 // @public
 export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     // (undocumented)
+    protected readonly cdr: ChangeDetectorRef;
+    // (undocumented)
     protected readonly defaultErrorStateMatcher: ErrorStateMatcher;
     // (undocumented)
     protected readonly destroyRef: DestroyRef;
@@ -102,6 +106,8 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
     protected readonly parentForm: NgForm | null;
     // (undocumented)
     protected readonly parentFormGroup: FormGroupDirective | null;
+    // (undocumented)
+    protected readonly renderer: Renderer2;
     readonly stateChanges: Subject<void>;
     updateErrorState(): void;
 }

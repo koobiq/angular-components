@@ -1,7 +1,6 @@
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -12,7 +11,6 @@ import {
     Input,
     Output,
     QueryList,
-    Renderer2,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
@@ -155,8 +153,6 @@ export class KbqMultipleFileUploadComponent
         return this.errorState;
     }
 
-    private readonly cdr = inject(ChangeDetectorRef);
-    private readonly renderer = inject(Renderer2);
     readonly configuration = inject<KbqInputFileMultipleLabel>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });

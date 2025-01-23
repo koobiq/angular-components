@@ -1,4 +1,4 @@
-import { DestroyRef, ElementRef, inject, InjectionToken } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, ElementRef, inject, InjectionToken, Renderer2 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -70,6 +70,8 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
      */
     readonly stateChanges = new Subject<void>();
 
+    protected readonly cdr = inject(ChangeDetectorRef);
+    protected readonly renderer = inject(Renderer2);
     protected readonly destroyRef = inject(DestroyRef);
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });

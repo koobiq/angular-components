@@ -16,10 +16,10 @@ This section provides an example implementation of a file uploader that supports
 
 #### Required Field
 
--   **For Single File Uploader**: An example of a file uploader that ensures a file must be uploaded.
+-   **Single File**: An example of a file uploader that ensures a file must be uploaded.
 <!-- example(file-upload-single-required-reactive-validation) -->
 
--   **For Multiple File Uploader**: An example of a file uploader that requires multiple files to be uploaded.
+-   **Multiple Files**: An example of a file uploader that requires multiple files to be uploaded.
 <!-- example(file-upload-multiple-required-reactive-validation) -->
 
 #### File Size Validation
