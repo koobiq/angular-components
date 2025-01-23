@@ -24,7 +24,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <ng-template #kbqFileIcon>
                     <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
-                @if (formMultiple.controls.fileUpload.invalid) {
+                @if (kbqFileUpload.invalid) {
                     <kbq-hint color="error">File required</kbq-hint>
                 }
             </kbq-file-upload>
