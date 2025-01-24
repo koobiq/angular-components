@@ -31,6 +31,10 @@
     .kbq-select__search-container {
         border-bottom-color: var(--kbq-divider-color, var(--kbq-line-contrast-less));
     }
+
+    .kbq-select__no-options-message {
+        color: var(--kbq-foreground-contrast-secondary);
+    }
 }
 
 @mixin kbq-tree-select-typography() {
