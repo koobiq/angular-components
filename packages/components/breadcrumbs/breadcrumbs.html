@@ -9,7 +9,7 @@
     <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
     <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
-    <!-- delay rendering for proper elements order -->
+    <!-- @TODO delay rendering for proper elements order (#DS-3334)--->
     @if (true) {
         <button
             kbq-button

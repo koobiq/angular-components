@@ -163,6 +163,7 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
         '[attr.aria-label]': "'breadcrumb'"
     },
+    // @TODO add support for Home,End keys interaction  (#DS-3334)
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
 export class KbqBreadcrumbs implements AfterContentInit {
