@@ -54,7 +54,6 @@ import {
     ThemePalette,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError,
     kbqErrorStateMatcherProvider
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -1080,7 +1079,7 @@ class SelectWithCustomTrigger {
     selector: 'ng-model-compare-with',
     template: `
         <kbq-form-field>
-            <kbq-tree-select [ngModel]="selected" (ngModelChange)="setFoodByCopy($event)">
+            <kbq-tree-select [ngModel]="selectedModel">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -1095,19 +1094,24 @@ class SelectWithCustomTrigger {
         </kbq-form-field>
     `
 })
-class NgModelCompareWithSelect {
-    selected: { name: string; type: string } = { name: 'rootNode_1', type: 'app' };
+class NgModelCompareWithFlatTreeControl {
+    selectedModel: { name: string; type: string };
 
     @ViewChild(KbqTreeSelect, { static: false }) select: KbqTreeSelect;
     @ViewChildren(KbqTreeOption) options: QueryList<KbqTreeOption>;
 
-    treeControl = new FlatTreeControl<FileFlatNode>(getLevel, isExpandable, getValue, getValue);
+    treeControl = new FlatTreeControl<FileFlatNode>(
+        getLevel,
+        isExpandable,
+        (node) => node,
+        getValue,
+        this.compareValues
+    );
     treeFlattener = new KbqTreeFlattener(transformer, getLevel, isExpandable, getChildren);
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
     constructor() {
-        this.useCompareByValue();
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         // Build the tree nodes from Json object. The result is a list of `FileNode` with nested
@@ -1119,28 +1123,8 @@ class NgModelCompareWithSelect {
         return nodeData.expandable;
     }
 
-    useCompareByValue() {
-        this.comparator = this.compareByValue;
-    }
-
-    useCompareByReference() {
-        this.comparator = this.compareByReference;
-    }
-
-    useNullComparator() {
-        this.comparator = null;
-    }
-
-    compareByValue(f1: any, f2: any) {
-        return f1 && f2 && f1.value === f2.value;
-    }
-
-    compareByReference(f1: any, f2: any) {
-        return f1 === f2;
-    }
-
-    setFoodByCopy(newValue: { name: string; type: string }) {
-        this.selected = { ...{}, ...newValue };
+    compareValues(firstValue: FileFlatNode, secondValue: { name: string; type: string }): boolean {
+        return firstValue.name === secondValue?.name;
     }
 }
 
@@ -1381,11 +1365,7 @@ class ChildSelection {
         </kbq-form-field>
     `
 })
-class LocalizedTreeSelect extends BasicTreeSelect {
-    constructor() {
-        super();
-    }
-}
+class LocalizedTreeSelect extends BasicTreeSelect {}
 
 describe(KbqTreeSelect.name, () => {
     let overlayContainer: OverlayContainer;
@@ -3154,74 +3134,29 @@ describe(KbqTreeSelect.name, () => {
         }));
     });
 
-    // todo fix
-    xdescribe('with ngModel using compareWith', () => {
-        beforeEach(() => configureKbqTreeSelectTestingModule([NgModelCompareWithSelect]));
+    describe('with using compareValues in FlatTreeControl', () => {
+        beforeEach(() => configureKbqTreeSelectTestingModule([NgModelCompareWithFlatTreeControl]));
 
-        let fixture: ComponentFixture<NgModelCompareWithSelect>;
-        let instance: NgModelCompareWithSelect;
+        let fixture: ComponentFixture<NgModelCompareWithFlatTreeControl>;
 
         beforeEach(fakeAsync(() => {
-            fixture = TestBed.createComponent(NgModelCompareWithSelect);
-            instance = fixture.componentInstance;
+            fixture = TestBed.createComponent(NgModelCompareWithFlatTreeControl);
             fixture.detectChanges();
+
+            tick(0);
         }));
 
-        describe('comparing by value', () => {
-            xit('should have a selection', fakeAsync(() => {
-                const selectedOption = instance.select.selected as KbqTreeOption;
-                expect(selectedOption.value).toEqual('rootNode_1');
-            }));
-
-            xit('should update when making a new selection', fakeAsync(() => {
-                const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
-                trigger.click();
-                fixture.detectChanges();
-
-                instance.options.last.selectViaInteraction();
-                fixture.detectChanges();
-                flush();
-
-                const selectedOption = instance.select.selected as KbqTreeOption;
-                expect(instance.selected.name).toEqual('tacos-2');
-                expect(selectedOption.value).toEqual('tacos-2');
-            }));
-        });
-
-        describe('comparing by reference', () => {
-            let compareByReferenceSpyFn: jest.SpyInstance;
-
-            beforeEach(fakeAsync(() => {
-                compareByReferenceSpyFn = jest.spyOn(instance, 'compareByReference');
-                instance.useCompareByReference();
-                fixture.detectChanges();
-                flush();
-            }));
-
-            it('should use the comparator', fakeAsync(() => {
-                expect(compareByReferenceSpyFn).toHaveBeenCalled();
-            }));
-
-            it('should initialize with no selection despite having a value', fakeAsync(() => {
-                expect(instance.selected.name).toBe('rootNode_1');
+        describe('comparing by name', () => {
+            it('should have a selection', fakeAsync(() => {
+                const instance = fixture.componentInstance;
                 expect(instance.select.selected).toBeUndefined();
-            }));
 
-            it('should not update the selection if value is copied on change', fakeAsync(() => {
-                instance.options.first.selectViaInteraction();
+                instance.selectedModel = { name: 'rootNode_1', type: 'app' };
                 fixture.detectChanges();
-                flush();
+                tick(0);
 
-                expect(instance.selected.name).toEqual('steak-0');
-                expect(instance.select.selected).toBeUndefined();
-            }));
-
-            it('should throw an error when using a non-function comparator', fakeAsync(() => {
-                instance.useNullComparator();
-
-                expect(() => {
-                    fixture.detectChanges();
-                }).toThrowError(wrappedErrorMessage(getKbqSelectNonFunctionValueError()));
+                const selectedOption = instance.select.selected as FileFlatNode;
+                expect(selectedOption.name).toEqual('rootNode_1');
             }));
         });
     });
