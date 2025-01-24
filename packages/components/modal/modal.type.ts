@@ -1,5 +1,5 @@
 import { OverlayRef } from '@angular/cdk/overlay';
-import { EventEmitter, TemplateRef, Type } from '@angular/core';
+import { EventEmitter, Injector, TemplateRef, Type } from '@angular/core';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type OnClickCallback<T> = (instance: T) => (false | void | {}) | Promise<false | void | {}>;
@@ -61,6 +61,7 @@ export interface ModalOptions<C = any, R = any> {
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
     kbqOnOk?: OnClickCallback<T>;
     kbqOnCancel?: OnClickCallback<T>;
+    injector?: Injector;
 }
 
 export interface IModalButtonOptions<T = any> {
