@@ -61,9 +61,18 @@ export class KbqFilters implements OnInit {
     filteredOptions: Observable<KbqFilter[]>;
 
     @Output() onSelectFilter = new EventEmitter<KbqFilter>();
+    @Output() onSave = new EventEmitter<KbqFilter | null>();
+    @Output() onSaveAsNew = new EventEmitter<KbqFilter | null>();
+    @Output() onChangeFilter = new EventEmitter<KbqFilter | null>();
+    @Output() onResetFilter = new EventEmitter<KbqFilter | null>();
+    @Output() onDeleteFilter = new EventEmitter<KbqFilter | null>();
 
     get activeFilter(): KbqFilter | null {
         return this.filterBar.activeFilter;
+    }
+
+    get savedFilterChanged(): boolean {
+        return !!(this.filterBar.activeFilter?.saved && this.filterBar.activeFilter?.changed);
     }
 
     constructor() {
@@ -82,27 +91,10 @@ export class KbqFilters implements OnInit {
         this.onSelectFilter.next(filter);
     }
 
-    onSave() {
+    save() {
         this.filterBar.saveFilterState();
         this.filterBar.resetFilterChangedState();
-        this.filterBar.onSaveFilter.emit(this.filterBar.activeFilter!);
-        console.log('onSave: ');
-    }
-
-    onSaveAsNew() {
-        console.log('onSaveAsNew: ');
-    }
-
-    onChange() {
-        console.log('onChange: ');
-    }
-
-    onReset() {
-        console.log('onReset: ');
-    }
-
-    onDelete() {
-        console.log('onDelete: ');
+        this.onSave.emit(this.filterBar.activeFilter!);
     }
 
     stopEventPropagation(event: MouseEvent | KeyboardEvent) {
