@@ -49,7 +49,7 @@
 @mixin kbq-hint-typography() {
     .kbq-hint___EXPERIMENTAL {
         .kbq-hint__text {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         &.kbq-hint_compact .kbq-hint__text {
