@@ -101,7 +101,7 @@ export class KbqBreadcrumbsSeparator {
     // (undocumented)
     readonly templateRef: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbsSeparator, "[kbqBreadcrumbsSeparator]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbsSeparator, "ng-template[kbqBreadcrumbsSeparator]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbsSeparator, never>;
 }
