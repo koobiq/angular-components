@@ -32,7 +32,7 @@ export class DemoComponent {
             readonly: false,
             disabled: false,
             changed: false,
-            unsaved: false,
+            saved: false,
             pipes: [
                 {
                     name: 'required',
@@ -91,7 +91,7 @@ export class DemoComponent {
             readonly: false,
             disabled: false,
             changed: false,
-            unsaved: false,
+            saved: false,
             pipes: [
                 {
                     name: 'required',
@@ -157,139 +157,12 @@ export class DemoComponent {
                 }
             ]
         },
-        // {
-        //     name: 'TreeSelect',
-        //     readonly: false,
-        //     disabled: false,
-        //     changed: false,
-        //     unsaved: false,
-        //     pipes: [
-        //         {
-        //             name: 'required',
-        //             // required - не может быть пустым, всегда есть дефолтное значение
-        //             value: [{ name: 'Не определен', id: '1' }],
-        //             type: KbqPipeTypes.TreeSelect,
-        //
-        //             required: true,
-        //             cleanable: false,
-        //             removable: false,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'empty',
-        //             type: KbqPipeTypes.TreeSelect,
-        //
-        //             required: false,
-        //             cleanable: true,
-        //             removable: false,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'cleanable',
-        //             value: { name: 'Не определен', id: '1' },
-        //             type: KbqPipeTypes.TreeSelect,
-        //
-        //             required: false,
-        //             cleanable: true,
-        //             removable: false,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'removable',
-        //             value: { name: 'Не определен', id: '1' },
-        //             type: KbqPipeTypes.TreeSelect,
-        //
-        //             required: false,
-        //             cleanable: false,
-        //             removable: true,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'disabled',
-        //             value: { name: 'Не определен', id: '1' },
-        //             type: KbqPipeTypes.TreeSelect,
-        //
-        //             required: true,
-        //             cleanable: false,
-        //             removable: false,
-        //             disabled: true
-        //         }
-        //     ]
-        // },
-        // {
-        //     name: 'MultiTreeSelect',
-        //     readonly: false,
-        //     disabled: false,
-        //     changed: false,
-        //     unsaved: false,
-        //     pipes: [
-        //         {
-        //             name: 'required',
-        //             value: ['Pictures'],
-        //             type: KbqPipeTypes.MultiTreeSelect,
-        //
-        //             required: true,
-        //             cleanable: false,
-        //             removable: false,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'required',
-        //             value: [{ name: 'Не определен', id: '1' }],
-        //             type: KbqPipeTypes.MultiTreeSelect,
-        //
-        //             required: true,
-        //             cleanable: false,
-        //             removable: false,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'empty',
-        //             type: KbqPipeTypes.MultiTreeSelect,
-        //
-        //             required: false,
-        //             cleanable: true,
-        //             removable: false,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'cleanable',
-        //             value: [{ name: 'Не определен', id: '1' }],
-        //             type: KbqPipeTypes.MultiTreeSelect,
-        //
-        //             required: false,
-        //             cleanable: true,
-        //             removable: false,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'removable',
-        //             value: [{ name: 'Не определен', id: '1' }],
-        //             type: KbqPipeTypes.MultiTreeSelect,
-        //
-        //             required: false,
-        //             cleanable: false,
-        //             removable: true,
-        //             disabled: false
-        //         },
-        //         {
-        //             name: 'disabled',
-        //             value: [{ name: 'Не определен', id: '1' }],
-        //             type: KbqPipeTypes.MultiTreeSelect,
-        //
-        //             required: true,
-        //             cleanable: false,
-        //             removable: false,
-        //             disabled: true
-        //         }
-        //     ]
-        // },
         {
             name: 'Text',
             readonly: false,
             disabled: false,
             changed: false,
-            unsaved: false,
+            saved: false,
             pipes: [
                 {
                     name: 'required',
@@ -347,14 +220,13 @@ export class DemoComponent {
             readonly: false,
             disabled: false,
             changed: false,
-            unsaved: false,
+            saved: false,
             pipes: [
                 {
                     name: 'required',
                     value: {
                         start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 }),
-                        time: true
+                        end: this.adapter.today().minus({ days: 3 })
                     },
                     type: KbqPipeTypes.Date,
 
@@ -377,8 +249,7 @@ export class DemoComponent {
                     name: 'cleanable',
                     value: {
                         start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 }),
-                        time: false
+                        end: this.adapter.today().minus({ days: 3 })
                     },
                     type: KbqPipeTypes.Date,
 
@@ -410,11 +281,76 @@ export class DemoComponent {
             ]
         },
         {
-            name: 'Filter 1',
+            name: 'Datetime',
             readonly: false,
             disabled: false,
             changed: false,
-            unsaved: true,
+            saved: false,
+            pipes: [
+                {
+                    name: 'required',
+                    value: {
+                        start: this.adapter.today(),
+                        end: this.adapter.today().minus({ days: 3 })
+                    },
+                    type: KbqPipeTypes.Datetime,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'empty',
+                    value: null,
+                    type: KbqPipeTypes.Datetime,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    value: {
+                        start: this.adapter.today(),
+                        end: this.adapter.today().minus({ days: 3 })
+                    },
+                    type: KbqPipeTypes.Datetime,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'removable',
+                    value: { name: 'Последний час', start: null, end: null },
+                    type: KbqPipeTypes.Datetime,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    value: { name: 'Последний час', start: null, end: null },
+                    type: KbqPipeTypes.Datetime,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: true
+                }
+            ]
+        },
+        {
+            name: 'SAVED',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: true,
             pipes: [
                 {
                     name: 'pipe 1',
@@ -438,28 +374,8 @@ export class DemoComponent {
                 },
                 {
                     name: 'pipe 3',
-                    value: '3',
+                    value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
-
-                    required: false,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 4',
-                    value: '3',
-                    type: KbqPipeTypes.TreeSelect,
-
-                    required: false,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                },
-                {
-                    name: 'pipe 5',
-                    value: '3',
-                    type: KbqPipeTypes.MultiTreeSelect,
 
                     required: false,
                     cleanable: false,
@@ -469,11 +385,11 @@ export class DemoComponent {
             ]
         },
         {
-            name: 'Filter 2',
+            name: 'CHANGED',
             readonly: false,
             disabled: false,
             changed: true,
-            unsaved: false,
+            saved: false,
             pipes: [
                 {
                     name: 'pipe 1',
@@ -508,16 +424,16 @@ export class DemoComponent {
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[3];
+    activeFilter: KbqFilter | null;
     pipeTemplates: KbqPipeTemplate[] = [
         {
-            name: 'Вердикт',
+            name: 'Select',
             type: KbqPipeTypes.Select,
             values: [
-                { name: 'Не определен', id: '1' },
-                { name: 'Легитимное действие', id: '2' },
-                { name: 'Ложный', id: '3' },
-                { name: 'Подтвержден', id: '4' }
+                { name: 'Option 1', id: '1' },
+                { name: 'Option 2', id: '2' },
+                { name: 'Option 3', id: '3' },
+                { name: 'Option 4', id: '4' }
             ],
 
             required: false,
@@ -526,7 +442,27 @@ export class DemoComponent {
             disabled: false
         },
         {
-            name: 'Автор',
+            name: 'MultiSelect',
+            type: KbqPipeTypes.MultiSelect,
+            values: [
+                { name: 'Option 1', id: '1' },
+                { name: 'Option 2', id: '2' },
+                { name: 'Option 3', id: '3' },
+                { name: 'Option 4', id: '4' },
+                { name: 'Option 5', id: '5' },
+                { name: 'Option 6', id: '6' },
+                { name: 'Option 7', id: '7' },
+                { name: 'Option 8', id: '8' },
+                { name: 'Option 9', id: '9' },
+                { name: 'Option 10', id: '10' }
+            ],
+            required: false,
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'Text',
             type: KbqPipeTypes.Text,
             values: [],
 
@@ -536,7 +472,7 @@ export class DemoComponent {
             disabled: false
         },
         {
-            name: 'Создан',
+            name: 'Date',
             type: KbqPipeTypes.Date,
             values: [
                 { name: 'Последний час', start: null, end: { hours: -1 } },
@@ -548,70 +484,26 @@ export class DemoComponent {
                 { name: 'Последние 90 дней', start: null, end: { days: -90 } },
                 { name: 'Последний год', start: null, end: { years: -1 } }
             ],
-
             required: false,
             cleanable: false,
             removable: false,
             disabled: false
         },
         {
-            name: 'name 3',
-            type: KbqPipeTypes.MultiSelect,
+            name: 'Datetime',
+            type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Не определен', value: '1' },
-                { name: 'Легитимное действие', value: '2' },
-                { name: 'Ложный', value: '3' },
-                { name: 'Подтвержден', value: '4' }
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
+                { name: 'Последние 3 дня', start: null, end: { days: -3 } },
+                { name: 'Последние 7 дней', start: null, end: { days: -7 } },
+                { name: 'Последние 30 дней', start: null, end: { days: -30 } },
+                { name: 'Последние 90 дней', start: null, end: { days: -90 } },
+                { name: 'Последний год', start: null, end: { years: -1 } }
             ],
-
             required: false,
-            cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'name 3',
-            type: KbqPipeTypes.TreeSelect,
-            values: {
-                rootNode_1: 'app',
-                Pictures: {
-                    Sun: 'png',
-                    Woods: 'jpg',
-                    PhotoBoothLibrary: {
-                        Contents: 'dir',
-                        Pictures_2: 'dir'
-                    }
-                },
-                Documents: {
-                    Pictures_3: 'Pictures',
-                    angular: {
-                        src1: {
-                            core: 'ts',
-                            compiler: 'ts'
-                        }
-                    },
-                    material2: {
-                        src2: {
-                            button: 'ts',
-                            checkbox: 'ts',
-                            input: 'ts'
-                        }
-                    }
-                },
-                Downloads: {
-                    Tutorial: 'html',
-                    November: 'pdf',
-                    October: 'pdf'
-                },
-                Applications: {
-                    Chrome: 'app',
-                    Calendar: 'app',
-                    Webstorm: 'app'
-                },
-                rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app'
-            },
-            required: false,
-            cleanable: false,
+            cleanable: true,
             removable: false,
             disabled: false
         }

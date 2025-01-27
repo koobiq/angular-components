@@ -25,6 +25,10 @@
         .kbq-button > .kbq-icon {
             margin-right: 4px;
         }
+
+        & > .kbq-icon {
+            align-self: center;
+        }
     }
 
     .kbq-filter-bar__right {

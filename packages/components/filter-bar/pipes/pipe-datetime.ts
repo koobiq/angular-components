@@ -21,8 +21,8 @@ import { KbqPipeState } from './pipe-state';
 
 @Component({
     standalone: true,
-    selector: 'kbq-pipe-date',
-    templateUrl: 'pipe-date.html',
+    selector: 'kbq-pipe-datetime',
+    templateUrl: 'pipe-datetime.html',
     styleUrls: ['base-pipe.scss', 'pipe-date.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -53,7 +53,7 @@ import { KbqPipeState } from './pipe-state';
         KbqPipeButton
     ]
 })
-export class KbqPipeDateComponent extends KbqBasePipe {
+export class KbqPipeDatetimeComponent extends KbqBasePipe {
     protected readonly adapter = inject(DateAdapter);
     protected readonly formatter = inject(DateFormatter);
 
@@ -69,7 +69,7 @@ export class KbqPipeDateComponent extends KbqBasePipe {
         const { start, end } = this.data.value || {};
 
         if (start && end) {
-            return this.formatter.rangeShortDate(start, end);
+            return this.formatter.rangeShortDateTime(start, end);
         }
 
         return this.data.value?.name;
@@ -149,7 +149,5 @@ export class KbqPipeDateComponent extends KbqBasePipe {
         } else {
             this.filterBar.removePipe(this.data);
         }
-
-        // this.stateChanges.next();
     }
 }
