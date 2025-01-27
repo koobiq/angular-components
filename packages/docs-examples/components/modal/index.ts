@@ -9,6 +9,7 @@ import { ModalTemplateExample } from './modal-template/modal-template-example';
 
 export {
     ModalComponentExample,
+    ModalComponentWithInjectorExample,
     ModalMultipleExample,
     ModalOverviewExample,
     ModalScrollExample,
