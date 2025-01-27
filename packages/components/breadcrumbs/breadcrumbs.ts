@@ -78,7 +78,7 @@ export class KbqBreadcrumbsSeparator {
     hostDirectives: [RdxRovingFocusItemDirective]
 })
 export class KbqBreadcrumbButton implements OnInit {
-    private readonly button = inject(KbqButton, { optional: true, host: true });
+    private readonly button = inject(KbqButton, { optional: true, self: true });
 
     ngOnInit() {
         if (this.button) {
