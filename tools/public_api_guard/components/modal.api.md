@@ -69,7 +69,6 @@ export interface IModalButtonOptions<T = any> {
 
 // @public (undocumented)
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
-    // (undocumented)
     injector?: Injector;
     // (undocumented)
     kbqOnCancel?: OnClickCallback<T>;

@@ -61,6 +61,10 @@ export interface ModalOptions<C = any, R = any> {
 export interface IModalOptionsForService<T = any> extends ModalOptions<T> {
     kbqOnOk?: OnClickCallback<T>;
     kbqOnCancel?: OnClickCallback<T>;
+    /**
+     * The injector used to create the component that will be attached.
+     * If specified, it overrides the injector provided by `KbqModalService`.
+     */
     injector?: Injector;
 }
 

@@ -3,7 +3,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 
 @Injectable()
-export class CustomService {
+export class ComponentLevelService {
     action() {
         console.log('Hello world!');
     }
@@ -21,7 +21,7 @@ export class CustomService {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomComponent {
-    protected readonly customService = inject(CustomService);
+    protected readonly customService = inject(ComponentLevelService);
 }
 
 @Component({
@@ -33,12 +33,11 @@ export class CustomComponent {
     ],
     template: `
         <kbq-modal-title>title</kbq-modal-title>
-
         <kbq-modal-body>subtitle</kbq-modal-body>
 
         <div kbq-modal-footer>
             <button [color]="'contrast'" (click)="customService.action()" kbq-button>
-                Call injected service method
+                Call method from injected service
             </button>
             <button (click)="destroyModal('close')" kbq-button autofocus>Close</button>
         </div>
@@ -47,7 +46,7 @@ export class CustomComponent {
 })
 export class CustomModalComponent {
     private readonly modalRef = inject(KbqModalRef);
-    protected readonly customService = inject(CustomService);
+    protected readonly customService = inject(ComponentLevelService);
 
     destroyModal(action: 'save' | 'close') {
         this.modalRef.destroy(action);
@@ -55,7 +54,7 @@ export class CustomModalComponent {
 }
 
 /**
- * @title Modal component With Injectors
+ * @title Modal component With Injector
  */
 @Component({
     standalone: true,
@@ -70,7 +69,7 @@ export class CustomModalComponent {
         <custom-component />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [CustomService]
+    providers: [ComponentLevelService]
 })
 export class ModalComponentWithInjectorExample {
     private readonly modalService = inject(KbqModalService);
@@ -81,6 +80,7 @@ export class ModalComponentWithInjectorExample {
     openModal(): void {
         this.modalRef = this.modalService.open({
             kbqComponent: CustomModalComponent,
+            // provide injector, so `ComponentLevelService` will be accessible inside `CustomModalComponent`
             injector: this.injector,
             kbqComponentParams: {
                 title: 'DoS attack',
