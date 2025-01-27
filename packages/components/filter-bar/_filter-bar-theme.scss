@@ -49,19 +49,17 @@
                 background: var(--kbq-states-background-theme-fade-active);
             }
 
+            &.cdk-keyboard-focused {
+                $focused-color: var(--kbq-states-line-focus-theme);
+                outline: 1px solid $focused-color;
+                border-color: $focused-color;
+            }
+
             &.kbq-disabled {
                 color: var(--kbq-states-foreground-disable);
                 background: var(--kbq-states-background-disable);
 
                 @include _icon(var(--kbq-states-icon-disabled), var(--kbq-states-icon-disabled));
-            }
-        }
-
-        &.kbq-button_changed-filter {
-            &.cdk-keyboard-focused {
-                $focused-color: var(--kbq-states-line-focus-theme);
-                outline: 1px solid $focused-color;
-                border-color: $focused-color;
             }
         }
     }

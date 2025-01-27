@@ -2,32 +2,36 @@
     kbq-button
     kbq-filter-bar-button
     [color]="colors.ContrastFade"
-    [filter]="activeFilter"
     [kbqDropdownTriggerFor]="savedFilters"
     [kbqStyle]="styles.Outline"
     (dropdownOpened)="input.focus()"
 >
-    @if (!activeFilter) {
-        <ng-content />
+    @if (activeFilter?.name) {
+        {{ activeFilter!.name }}
     } @else {
-        {{ activeFilter.name }}
+        <ng-content />
     }
 </button>
 
-@if (activeFilter?.unsaved) {
-    <button kbq-button kbq-filter-bar-button [color]="colors.Empty" [filter]="activeFilter">
+@if (activeFilter?.changed && !activeFilter?.saved) {
+    <button
+        kbq-button
+        kbq-filter-bar-button
+        kbqTooltip="Сохранить новый фильтр"
+        [color]="colors.Empty"
+        (click)="onSaveAsNew()"
+    >
         <i kbq-icon="kbq-floppy-disk_16"></i>
     </button>
 }
 
-@if (activeFilter?.changed) {
+@if (activeFilter?.saved) {
     <button
         kbq-button
         kbq-filter-bar-button
         [color]="colors.Empty"
-        [filter]="activeFilter"
         [kbqDropdownTriggerFor]="filterActions"
-        [ngClass]="{ 'kbq-button_changed-saved-filter': !activeFilter!.unsaved }"
+        [ngClass]="{ 'kbq-button_changed-saved-filter': activeFilter!.saved }"
     >
         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
     </button>
@@ -69,6 +73,7 @@
     <button kbq-dropdown-item (click)="onSave()" (keydown.enter)="onSave()">
         <i kbq-icon="kbq-floppy-disk_16"></i>
         Сохранить изменения
+        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
     </button>
     <button kbq-dropdown-item (click)="onSaveAsNew()" (keydown.enter)="onSaveAsNew()">
         <i kbq-icon="kbq-plus-s_16"></i>

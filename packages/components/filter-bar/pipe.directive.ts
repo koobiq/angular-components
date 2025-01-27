@@ -1,11 +1,10 @@
 import { AfterContentInit, Directive, inject, Injector, Input, ViewContainerRef } from '@angular/core';
 import { KbqPipe, KbqPipeData, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
+import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
 import { KbqPipeSelectComponent } from './pipes/pipe-select';
 import { KbqPipeTextComponent } from './pipes/pipe-text';
-import { KbqPipeMultiTreeSelectComponent } from './pipes/pipe-tree-multiselect';
-import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select';
 
 @Directive({
     standalone: true,
@@ -40,12 +39,10 @@ export class KbqPipeDirective<T> implements AfterContentInit {
             this.viewContainerRef.createComponent(KbqPipeSelectComponent, options);
         } else if (this.data.type === KbqPipeTypes.MultiSelect) {
             this.viewContainerRef.createComponent(KbqPipeMultiSelectComponent, options);
-        } else if (this.data.type === KbqPipeTypes.TreeSelect) {
-            this.viewContainerRef.createComponent(KbqPipeTreeSelectComponent, options);
-        } else if (this.data.type === KbqPipeTypes.MultiTreeSelect) {
-            this.viewContainerRef.createComponent(KbqPipeMultiTreeSelectComponent, options);
         } else if (this.data.type === KbqPipeTypes.Date) {
             this.viewContainerRef.createComponent(KbqPipeDateComponent, options);
+        } else if (this.data.type === KbqPipeTypes.Datetime) {
+            this.viewContainerRef.createComponent(KbqPipeDatetimeComponent, options);
         }
     }
 

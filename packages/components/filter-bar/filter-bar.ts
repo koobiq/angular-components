@@ -8,6 +8,7 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqIcon } from '@koobiq/components/icon';
 import { BehaviorSubject, merge } from 'rxjs';
 import { KbqDividerModule } from '../divider';
 import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
@@ -19,7 +20,11 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
         <div class="kbq-filter-bar__left">
             <ng-content select="kbq-filters" />
 
-            <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
+            @if (activeFilter?.saved) {
+                <i [color]="'theme'" kbq-icon="kbq-chevron-right-s_16"></i>
+            } @else {
+                <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
+            }
 
             <ng-content />
 
@@ -42,7 +47,8 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        KbqDividerModule
+        KbqDividerModule,
+        KbqIcon
     ],
     host: {
         class: 'kbq-filter-bar'
@@ -50,7 +56,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 })
 export class KbqFilterBar {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private savedFilter: KbqFilter;
+    private savedFilter: KbqFilter | null = null;
 
     @Input() filters: KbqFilter[];
 
@@ -61,7 +67,6 @@ export class KbqFilterBar {
 
     set activeFilter(value: KbqFilter | null) {
         if (value && this.activeFilter === null) {
-            console.log('value && this.activeFilter === null: ');
             this.saveFilterState(value);
         }
 
@@ -121,6 +126,25 @@ export class KbqFilterBar {
         });
     }
 
+    addPipe(pipe: KbqPipe) {
+        if (!this.activeFilter) {
+            this.activeFilter = {
+                name: '',
+                pipes: [],
+
+                readonly: false,
+                disabled: false,
+                changed: true,
+                saved: false
+            };
+        }
+
+        this.activeFilter!.pipes.push(pipe);
+
+        this.onAddPipe.next(pipe);
+        this.onFilterChange.emit(this.activeFilter);
+    }
+
     removePipe(pipe: KbqPipe) {
         this.activeFilter?.pipes.splice(this.activeFilter?.pipes.indexOf(pipe), 1);
 
@@ -146,8 +170,10 @@ export class KbqFilterBar {
     resetFilterChangedState(filter?: KbqFilter) {
         if (filter) {
             this.activeFilter = filter;
-        } else {
+        } else if (this.savedFilter) {
             this.activeFilter = { ...this.savedFilter, changed: false };
+        } else {
+            this.activeFilter = null;
         }
     }
 }

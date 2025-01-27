@@ -1,45 +1,27 @@
-import { Directive, ElementRef, inject, Input, ViewChild } from '@angular/core';
+import { Directive, ElementRef, inject, ViewChild } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '../button';
 import { KbqComponentColors } from '../core';
-import { KbqFilter } from './filter-bar.types';
+import { KbqFilterBar } from './filter-bar';
 
 @Directive({
     standalone: true,
-    selector: '[kbq-filter-bar-button]',
-    host: {
-        '[class]': 'computedStyles'
-    }
+    selector: '[kbq-filter-bar-button]'
 })
 export class KbqFilterBarButton {
     private readonly button = inject(KbqButton);
-
-    protected computedStyles;
+    private readonly filterBar = inject(KbqFilterBar);
 
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
-    @Input()
-    set filter(value: KbqFilter | null) {
-        this._filter = value;
+    constructor() {
+        this.filterBar.changes.subscribe(() => {
+            this.button.kbqStyle = KbqButtonStyles.Outline;
+            this.button.color = KbqComponentColors.ContrastFade;
 
-        this.computedStyles = '';
-        this.button.kbqStyle = KbqButtonStyles.Outline;
-        this.button.color = KbqComponentColors.ContrastFade;
-
-        if (this.filter) {
-            this.computedStyles = {
-                'kbq-button_changed-filter': this.filter.changed || this.filter.unsaved
-            };
-
-            if (this.filter.changed || this.filter.unsaved) {
+            if (this.filterBar.activeFilter?.changed || this.filterBar.activeFilter?.saved) {
                 this.button.kbqStyle = 'changed-filter';
                 this.button.color = KbqComponentColors.Empty;
             }
-        }
+        });
     }
-
-    get filter(): KbqFilter | null {
-        return this._filter;
-    }
-
-    private _filter: KbqFilter | null = null;
 }

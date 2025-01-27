@@ -33,7 +33,6 @@ export class KbqPipeAdd {
     protected readonly filterBar = inject(KbqFilterBar);
 
     add(pipe: KbqPipeTemplate) {
-        this.filterBar.onAddPipe.next(pipe);
-        this.filterBar.changes.next();
+        this.filterBar.addPipe(pipe);
     }
 }
