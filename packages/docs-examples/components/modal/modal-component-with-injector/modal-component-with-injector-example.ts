@@ -11,21 +11,6 @@ export class ComponentLevelService {
 
 @Component({
     standalone: true,
-    selector: 'custom-component',
-    imports: [
-        KbqButtonModule
-    ],
-    template: `
-        <button [color]="'contrast'" (click)="customService.action()" kbq-button>Call injected service method</button>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class CustomComponent {
-    protected readonly customService = inject(ComponentLevelService);
-}
-
-@Component({
-    standalone: true,
     selector: 'custom-modal',
     imports: [
         KbqModalModule,
@@ -61,12 +46,10 @@ export class CustomModalComponent {
     selector: 'modal-component-with-injector-example',
     imports: [
         KbqModalModule,
-        KbqButtonModule,
-        CustomComponent
+        KbqButtonModule
     ],
     template: `
         <button (click)="openModal()" kbq-button>Open Modal</button>
-        <custom-component />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ComponentLevelService]
@@ -81,12 +64,7 @@ export class ModalComponentWithInjectorExample {
         this.modalRef = this.modalService.open({
             kbqComponent: CustomModalComponent,
             // provide injector, so `ComponentLevelService` will be accessible inside `CustomModalComponent`
-            injector: this.injector,
-            kbqComponentParams: {
-                title: 'DoS attack',
-                subtitle:
-                    'In computing, a denial-of-service attack (DoS attack) is a cyber-attack in which the perpetrator seeks to make a machine or network resource unavailable to its intended users by temporarily or indefinitely disrupting services of a host connected to a network.'
-            }
+            injector: this.injector
         });
 
         this.modalRef.afterOpen.subscribe(() => {

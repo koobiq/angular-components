@@ -1,6 +1,6 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, EventEmitter, NgModule } from '@angular/core';
+import { Component, EventEmitter, Injectable, Injector, NgModule, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, TAB } from '@koobiq/cdk/keycodes';
@@ -13,30 +13,37 @@ import { KbqModalRef } from './modal-ref.class';
 import { KbqModalModule } from './modal.module';
 import { KbqModalService } from './modal.service';
 
+const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
+    const fixture = TestBed.createComponent<T>(component);
+    fixture.autoDetectChanges();
+    return fixture;
+};
+
 describe('KbqModal', () => {
-    let modalService: KbqModalService;
-    let overlayContainer: OverlayContainer;
-    let overlayContainerElement: HTMLElement;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [ModalTestModule]
-        }).compileComponents();
-    });
-
-    beforeEach(inject([KbqModalService, OverlayContainer], (ms: KbqModalService, oc: OverlayContainer) => {
-        modalService = ms;
-        overlayContainer = oc;
-        overlayContainerElement = oc.getContainerElement();
-    }));
-
-    afterEach(() => {
-        overlayContainer.ngOnDestroy();
-    });
-
     describe('created by service', () => {
         let fixture: ComponentFixture<ModalByServiceComponent>;
         let buttonElement: HTMLButtonElement;
+
+        let modalService: KbqModalService;
+        let overlayContainer: OverlayContainer;
+        let overlayContainerElement: HTMLElement;
+
+        beforeEach(() => {
+            TestBed.configureTestingModule({
+                imports: [ModalTestModule]
+            }).compileComponents();
+        });
+
+        beforeEach(inject([KbqModalService, OverlayContainer], (ms: KbqModalService, oc: OverlayContainer) => {
+            modalService = ms;
+            overlayContainer = oc;
+            overlayContainerElement = oc.getContainerElement();
+        }));
+
+        afterEach(() => {
+            overlayContainer.ngOnDestroy();
+        });
 
         beforeEach(() => {
             fixture = TestBed.createComponent(ModalByServiceComponent);
@@ -480,7 +487,86 @@ describe('KbqModal', () => {
             flush();
         }));
     });
+
+    describe('with dynamic injectors', () => {
+        it('should throw error if custom parent injector not provided for feature service', () => {
+            const fixture = createComponent(CustomComponent);
+            try {
+                fixture.componentInstance.modalService.open({
+                    kbqComponent: CustomModalComponent
+                });
+            } catch (error) {
+                expect(error.message.includes('NullInjectorError')).toBeTruthy();
+            }
+        });
+        it('should use custom parent injector when creating dynamic component', () => {
+            const customInjectionTokenProvider: Provider = { provide: 'CUSTOM-TOKEN', useValue: 'CUSTOM-TOKEN-VALUE' };
+            const fixture = createComponent(CustomComponent);
+            const updatedInjector = Injector.create({
+                parent: fixture.componentInstance.injector,
+                providers: [customInjectionTokenProvider]
+            });
+            const modalRef = fixture.componentInstance.modalService.open({
+                kbqComponent: CustomModalComponent,
+                injector: updatedInjector
+            });
+            fixture.autoDetectChanges();
+            expect(
+                modalRef.getInstance().getContentComponentRef().injector.get(customInjectionTokenProvider.provide)
+            ).toEqual(customInjectionTokenProvider.useValue);
+            expect(fixture.componentInstance.injector.get(TestComponentLevelService)).toEqual(
+                modalRef.getInstance().getContentComponentRef().injector.get(TestComponentLevelService)
+            );
+        });
+    });
 });
+
+@Injectable()
+class TestComponentLevelService {
+    action() {
+        return true;
+    }
+}
+
+@Component({
+    standalone: true,
+    selector: 'custom-modal-component',
+    imports: [KbqModalModule],
+    template: `
+        <button (click)="componentLevelService.action()">Button</button>
+    `
+})
+export class CustomModalComponent {
+    constructor(
+        public componentLevelService: TestComponentLevelService,
+        public injector: Injector
+    ) {}
+}
+
+@Component({
+    standalone: true,
+    selector: 'custom-component',
+    providers: [
+        TestComponentLevelService
+    ],
+    imports: [KbqModalModule, KbqButtonModule],
+    template: `
+        <button (click)="open()" kbq-button>Button</button>
+    `
+})
+export class CustomComponent {
+    constructor(
+        public modalService: KbqModalService,
+        public injector: Injector
+    ) {}
+
+    open() {
+        return this.modalService.open({
+            kbqComponent: CustomModalComponent,
+            injector: this.injector
+        });
+    }
+}
 
 @Component({
     template: `
