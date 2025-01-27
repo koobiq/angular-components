@@ -422,6 +422,45 @@ export class DemoComponent {
                     disabled: false
                 }
             ]
+        },
+        {
+            name: 'SAVED/CHANGED',
+            readonly: false,
+            disabled: false,
+            changed: true,
+            saved: true,
+            pipes: [
+                {
+                    name: 'pipe 1',
+                    value: '1',
+                    type: KbqPipeTypes.Text,
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'pipe 2',
+                    value: '2',
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'pipe 3',
+                    value: '3',
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
         }
     ];
     activeFilter: KbqFilter | null;
@@ -433,7 +472,13 @@ export class DemoComponent {
                 { name: 'Option 1', id: '1' },
                 { name: 'Option 2', id: '2' },
                 { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' }
+                { name: 'Option 4', id: '4' },
+                { name: 'Option 5', id: '5' },
+                { name: 'Option 6', id: '6' },
+                { name: 'Option 7', id: '7' },
+                { name: 'Option 8', id: '8' },
+                { name: 'Option 9', id: '9' },
+                { name: 'Option 10', id: '10' }
             ],
 
             required: false,
@@ -517,10 +562,6 @@ export class DemoComponent {
         console.log('onAddPipe: ', pipe);
     }
 
-    onSelectFilter(filter: KbqFilter) {
-        this.activeFilter = filter;
-    }
-
     resetActiveFilter(resettedFilter: KbqFilter | null) {
         console.log('resetActiveFilter: ');
         this.activeFilter = resettedFilter;
@@ -529,6 +570,52 @@ export class DemoComponent {
     onFilterChange(filter: KbqFilter | null) {
         console.log('onFilterChange: ');
         this.activeFilter = filter;
+    }
+
+    onSelectFilter(filter: KbqFilter) {
+        this.activeFilter = filter;
+    }
+
+    onSaveAsNewFilter(filter: KbqFilter | null) {
+        console.log('filter to save as new: ', filter);
+
+        alert('Нужно сбросить флаг и сохранить новый фильтр');
+
+        filter!.saved = true;
+        this.activeFilter = filter;
+    }
+
+    onSaveFilter(filter: KbqFilter | null) {
+        console.log('filter to save: ', filter);
+
+        alert('Нужно сбросить флаг и сохранить фильтр');
+
+        filter!.saved = true;
+        this.activeFilter = filter;
+    }
+
+    onChangeFilter(filter: KbqFilter | null) {
+        console.log('filter to change: ', filter);
+
+        alert('Нужно что то изменить в фильтре');
+
+        filter!.changed = true;
+        this.activeFilter = filter;
+    }
+
+    onResetFilter(filter: KbqFilter | null) {
+        console.log('filter to reset: ', filter);
+
+        alert('Нужно сбросить изменения в фильтре');
+
+        filter!.changed = false;
+        this.activeFilter = filter;
+    }
+
+    onDeleteFilter(filter: KbqFilter | null) {
+        console.log('filter to delete: ', filter);
+
+        alert('Нужно удалить фильтр');
     }
 }
 
