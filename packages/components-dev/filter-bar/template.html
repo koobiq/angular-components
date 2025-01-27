@@ -13,7 +13,7 @@
             Фильтры
         </kbq-filters>
 
-        @for (pipe of activeFilter!.pipes; track pipe) {
+        @for (pipe of activeFilter?.pipes; track pipe) {
             <ng-container *kbq-pipe="pipe" />
         }
 

@@ -18,6 +18,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
@@ -45,7 +46,8 @@ import { KbqFilter } from './filter-bar.types';
         KbqInputModule,
         NgClass,
         KbqFilterBarButton,
-        AsyncPipe
+        AsyncPipe,
+        KbqTooltipTrigger
     ]
 })
 export class KbqFilters implements OnInit {
