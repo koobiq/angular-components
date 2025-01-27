@@ -56,7 +56,7 @@ export const provideKbqBreadcrumbsConfiguration = (configuration: KbqBreadcrumbs
 });
 
 @Directive({
-    selector: '[kbqBreadcrumbsSeparator]',
+    selector: 'ng-template[kbqBreadcrumbsSeparator]',
     standalone: true,
     host: {
         class: 'kbq-breadcrumbs-separator'
@@ -90,6 +90,7 @@ export class KbqBreadcrumbButton implements OnInit {
 
 /**
  * Directive provides a way to define a custom template for breadcrumb rendering, leveraging TemplateRef
+ *
  */
 @Directive({
     standalone: true,
