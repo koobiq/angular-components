@@ -19,7 +19,7 @@
         kbq-filter-bar-button
         kbqTooltip="Сохранить новый фильтр"
         [color]="colors.Empty"
-        (click)="onSaveAsNew()"
+        (click)="onSaveAsNew.next(this.activeFilter)"
     >
         <i kbq-icon="kbq-floppy-disk_16"></i>
     </button>
@@ -31,7 +31,7 @@
         kbq-filter-bar-button
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
-        [ngClass]="{ 'kbq-button_changed-saved-filter': activeFilter!.saved }"
+        [ngClass]="{ 'kbq-button_changed-saved-filter': savedFilterChanged }"
     >
         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
     </button>
@@ -63,34 +63,36 @@
 
     <kbq-divider />
 
-    <button kbq-dropdown-item [disabled]="!activeFilter?.changed">
+    <button kbq-dropdown-item [disabled]="!activeFilter?.changed" (click)="onSaveAsNew.next(this.activeFilter)">
         <i kbq-icon="kbq-plus-s_16"></i>
         Сохранить как новый фильтр
     </button>
 </kbq-dropdown>
 
 <kbq-dropdown #filterActions="kbqDropdown">
-    <button kbq-dropdown-item (click)="onSave()" (keydown.enter)="onSave()">
+    <button kbq-dropdown-item [ngClass]="{ 'kbq-button_changed-saved-filter': savedFilterChanged }" (click)="save()">
         <i kbq-icon="kbq-floppy-disk_16"></i>
         Сохранить изменения
-        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+        @if (savedFilterChanged) {
+            <i class="kbq kbq-icon kbq-icon-button kbq-xmark-circle-s_16 kbq-warning layout-margin-left-m"></i>
+        }
     </button>
-    <button kbq-dropdown-item (click)="onSaveAsNew()" (keydown.enter)="onSaveAsNew()">
+    <button kbq-dropdown-item (click)="onSaveAsNew.next(this.activeFilter)">
         <i kbq-icon="kbq-plus-s_16"></i>
         Сохранить как новый
     </button>
-    <button kbq-dropdown-item (click)="onChange()" (keydown.enter)="onChange()">
+    <button kbq-dropdown-item (click)="onChangeFilter.next(this.activeFilter)">
         <i kbq-icon="kbq-pencil_16"></i>
         Изменить
     </button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item (click)="onReset()" (keydown.enter)="onReset()">
+    <button kbq-dropdown-item (click)="onResetFilter.next(this.activeFilter)">
         <i kbq-icon="kbq-xmark-circle_16"></i>
         Сбросить изменения
     </button>
-    <button kbq-dropdown-item (click)="onDelete()" (keydown.enter)="onDelete()">
+    <button kbq-dropdown-item (click)="onDeleteFilter.next(this.activeFilter)">
         <i kbq-icon="kbq-trash_16"></i>
         Удалить
     </button>

@@ -8,7 +8,14 @@
         (onFilterChange)="onFilterChange($event)"
         (onReset)="resetActiveFilter($event)"
     >
-        <kbq-filters (onSelectFilter)="onSelectFilter($event)">
+        <kbq-filters
+            (onChangeFilter)="onChangeFilter($event)"
+            (onDeleteFilter)="onDeleteFilter($event)"
+            (onResetFilter)="onResetFilter($event)"
+            (onSave)="onSaveFilter($event)"
+            (onSaveAsNew)="onSaveAsNewFilter($event)"
+            (onSelectFilter)="onSelectFilter($event)"
+        >
             <i kbq-icon="kbq-list_16"></i>
             Фильтры
         </kbq-filters>
