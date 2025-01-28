@@ -36,7 +36,7 @@ export class KbqBasePipe {
             this.changeDetectorRef.markForCheck();
         });
 
-        const template = this.filterBar.templates.find((template) => template.type === this.data?.type);
+        const template = this.filterBar.pipeTemplates.find((template) => template.type === this.data?.type);
 
         if (template) {
             this.values = template.values as KbqPipeTemplate[];

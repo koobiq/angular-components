@@ -2,13 +2,11 @@
     <kbq-filter-bar
         #filterBar
         [activeFilter]="activeFilter"
-        [filters]="filters"
-        [templates]="pipeTemplates"
-        (onAddPipe)="onAddPipe($event)"
+        [pipeTemplates]="pipeTemplates"
         (onFilterChange)="onFilterChange($event)"
-        (onReset)="resetActiveFilter($event)"
     >
         <kbq-filters
+            [filters]="filters"
             (onChangeFilter)="onChangeFilter($event)"
             (onDeleteFilter)="onDeleteFilter($event)"
             (onResetFilter)="onResetFilter($event)"
@@ -24,14 +22,19 @@
             <ng-container *kbq-pipe="pipe" />
         }
 
-        <kbq-pipe-add />
+        <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-        <kbq-filter-reset>Сбросить</kbq-filter-reset>
+        <kbq-filter-reset (onReset)="onReset($event)">Сбросить</kbq-filter-reset>
 
-        <kbq-filter-bar-search />
+        <kbq-filter-bar-search (onSearch)="onSearch($event)" />
 
-        <kbq-filter-bar-refresher />
+<!--        <kbq-filter-bar-refresher />-->
     </kbq-filter-bar>
 </div>
+
+<br>
+
+<!--<button kbq-button (click)="filterBar.saveFilterState()">Save filter state</button> &nbsp;-->
+<!--<button kbq-button (click)="filterBar.restoreFilterState()">Restore filter state</button>-->
 
 <pre> {{ activeFilter | json }}</pre>
