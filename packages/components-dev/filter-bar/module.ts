@@ -612,12 +612,15 @@ export class DemoComponent {
         console.log('onSelectFilter: ', filter);
     }
 
-    onSaveAsNewFilter(filter: KbqFilter | null) {
+    onSaveAsNewFilter(filter: KbqFilter) {
         console.log('filter to save as new: ', filter);
 
         alert('Нужно сбросить флаг и сохранить новый фильтр');
 
         filter!.saved = true;
+        filter!.changed = false;
+        filter!.name = 'Новый фильтр';
+        this.filters.push(filter);
         this.activeFilter = filter;
     }
 

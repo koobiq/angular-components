@@ -85,7 +85,6 @@ export class KbqFilterBar {
     private _templates: KbqPipeTemplate[];
 
     @Output() readonly onFilterChange = new EventEmitter<KbqFilter | null>();
-    @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
     @Output() readonly onDeletePipe = new EventEmitter<KbqPipe>();
 
@@ -99,13 +98,7 @@ export class KbqFilterBar {
             this.onFilterChange.emit(this.activeFilter);
         });
 
-        merge(
-            this.onFilterChange,
-            this.onAddPipe,
-            this.onChangePipe,
-            this.onDeletePipe,
-            this.activeFilterChanges
-        ).subscribe(() => {
+        merge(this.onFilterChange, this.onChangePipe, this.onDeletePipe, this.activeFilterChanges).subscribe(() => {
             this.changes.next();
             this.changeDetectorRef.markForCheck();
         });

@@ -8,7 +8,7 @@ import { KbqFilter } from './filter-bar.types';
     selector: 'kbq-filter-reset',
     template: `
         <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="handleClick()" kbq-button>
-            <ng-content />
+            <ng-content>Сбросить</ng-content>
         </button>
     `,
     host: {

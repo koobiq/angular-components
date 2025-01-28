@@ -13,10 +13,7 @@
             (onSave)="onSaveFilter($event)"
             (onSaveAsNew)="onSaveAsNewFilter($event)"
             (onSelectFilter)="onSelectFilter($event)"
-        >
-            <i kbq-icon="kbq-list_16"></i>
-            Фильтры
-        </kbq-filters>
+        />
 
         @for (pipe of activeFilter?.pipes; track pipe) {
             <ng-container *kbq-pipe="pipe" />
@@ -24,15 +21,15 @@
 
         <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-        <kbq-filter-reset (onReset)="onReset($event)">Сбросить</kbq-filter-reset>
+        <kbq-filter-reset (onReset)="onReset($event)" />
 
         <kbq-filter-bar-search (onSearch)="onSearch($event)" />
 
-<!--        <kbq-filter-bar-refresher />-->
+        <!--        <kbq-filter-bar-refresher />-->
     </kbq-filter-bar>
 </div>
 
-<br>
+<br />
 
 <!--<button kbq-button (click)="filterBar.saveFilterState()">Save filter state</button> &nbsp;-->
 <!--<button kbq-button (click)="filterBar.restoreFilterState()">Restore filter state</button>-->

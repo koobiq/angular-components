@@ -9,7 +9,10 @@
     @if (activeFilter?.name) {
         {{ activeFilter!.name }}
     } @else {
-        <ng-content />
+        <ng-content>
+            <i kbq-icon="kbq-list_16"></i>
+            Фильтры
+        </ng-content>
     }
 </button>
 
