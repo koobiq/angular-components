@@ -118,7 +118,7 @@ export class KbqModalService {
         }
 
         const injector = Injector.create({
-            parent: this.injector,
+            parent: options.injector || this.injector,
             providers: [{ provide: KBQ_MODAL_DATA, useValue: options.data }]
         });
 

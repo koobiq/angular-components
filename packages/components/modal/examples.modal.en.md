@@ -1,5 +1,7 @@
-🚧 **Documentation in progress** 🚧
+### Custom Injector for Modal Component
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+When you need to use component-level services within dynamically created modal components, include information about the current `injector` instance.  
+To achieve this, pass the `injector` instance from the parent component as an argument to the `modalService.open` method.
+This ensures proper behavior and access to the required dependencies.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(modal-component-with-injector) -->

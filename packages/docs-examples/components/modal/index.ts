@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ModalComponentWithInjectorExample } from './modal-component-with-injector/modal-component-with-injector-example';
 import { ModalComponentExample } from './modal-component/modal-component-example';
 import { ModalMultipleExample } from './modal-multiple/modal-multiple-example';
 import { ModalOverviewExample } from './modal-overview/modal-overview-example';
@@ -8,6 +9,7 @@ import { ModalTemplateExample } from './modal-template/modal-template-example';
 
 export {
     ModalComponentExample,
+    ModalComponentWithInjectorExample,
     ModalMultipleExample,
     ModalOverviewExample,
     ModalScrollExample,
@@ -18,6 +20,7 @@ export {
 const EXAMPLES = [
     ModalOverviewExample,
     ModalComponentExample,
+    ModalComponentWithInjectorExample,
     ModalTemplateExample,
     ModalScrollExample,
     ModalSizesExample,
