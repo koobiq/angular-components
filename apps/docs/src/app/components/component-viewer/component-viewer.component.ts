@@ -15,6 +15,7 @@ import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, Url
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
+import { KbqToastModule } from '@koobiq/components/toast';
 import { filter, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
@@ -195,7 +196,9 @@ export class DocsCdkOverviewComponent extends BaseOverviewComponent {
     standalone: true,
     imports: [
         DocsAnchorsComponent,
-        DocsLiveExampleComponent
+        DocsLiveExampleComponent,
+        // Prevents: "NullInjectorError: No provider for InjectionToken KbqToastFactory"
+        KbqToastModule
     ],
     selector: 'docs-component-overview',
     templateUrl: './component-overview.template.html',
@@ -276,7 +279,9 @@ export class DocsCdkApiComponent extends BaseOverviewComponent {
     standalone: true,
     imports: [
         DocsExampleViewerComponent,
-        DocsAnchorsComponent
+        DocsAnchorsComponent,
+        // Prevents: "NullInjectorError: No provider for InjectionToken KbqToastFactory"
+        KbqToastModule
     ],
     selector: 'docs-component-examples',
     template: `

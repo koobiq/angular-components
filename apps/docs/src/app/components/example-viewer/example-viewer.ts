@@ -16,7 +16,6 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { KbqToastModule } from '@koobiq/components/toast';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
@@ -40,7 +39,7 @@ export class DocFetcher {
 
 @Component({
     standalone: true,
-    imports: [KbqToastModule],
+    imports: [],
     selector: 'docs-example-viewer',
     template: `
         Loading document...
