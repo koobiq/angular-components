@@ -4,7 +4,8 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    inject, Input,
+    inject,
+    Input,
     OnInit,
     Output,
     ViewEncapsulation
