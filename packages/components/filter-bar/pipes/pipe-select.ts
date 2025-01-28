@@ -2,7 +2,6 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe } from './base-pipe';
@@ -24,7 +23,6 @@ import { KbqPipeState } from './pipe-state';
     ],
     imports: [
         KbqButtonModule,
-        KbqIcon,
         KbqDividerModule,
         KbqSelectModule,
         NgClass,
