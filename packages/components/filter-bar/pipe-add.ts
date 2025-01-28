@@ -10,13 +10,14 @@ import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
     selector: 'kbq-pipe-add',
     template: `
         <button [color]="'contrast-fade'" [kbqStyle]="'outline'" [kbqDropdownTriggerFor]="newPipes" kbq-button>
-            <i kbq-icon="kbq-plus_16"></i>
-            <ng-content />
+            <ng-content>
+                <i kbq-icon="kbq-plus_16"></i>
+            </ng-content>
         </button>
 
         <kbq-dropdown #newPipes="kbqDropdown">
-            @for (pipe of filterBar.pipeTemplates; track pipe) {
-                <button (click)="addPipeFromTemplate(pipe)" kbq-dropdown-item>{{ pipe.name }}</button>
+            @for (template of filterBar.pipeTemplates; track template) {
+                <button (click)="addPipeFromTemplate(template)" kbq-dropdown-item>{{ template.name }}</button>
             }
         </kbq-dropdown>
     `,
@@ -43,15 +44,15 @@ export class KbqPipeAdd {
         saved: false
     };
 
-    addPipeFromTemplate(pipe: KbqPipeTemplate) {
+    addPipeFromTemplate(template: KbqPipeTemplate) {
         if (!this.filterBar.activeFilter) {
-            this.filterBar.activeFilter = { ...this.filterTemplate, pipes: [] };
+            this.filterBar.activeFilter = Object.assign({}, this.filterTemplate, { pipes: [] });
         }
 
         this.filterBar.activeFilter.changed = true;
-        this.filterBar.activeFilter.pipes.push(pipe);
+        this.filterBar.activeFilter.pipes.push(Object.assign({}, template, { values: undefined }));
 
-        this.onAddPipe.next(pipe);
+        this.onAddPipe.next(template);
         this.filterBar.onFilterChange.emit(this.filterBar.activeFilter);
     }
 }
