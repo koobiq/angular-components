@@ -2,14 +2,16 @@
     #popover="kbqPopover"
     kbq-button
     kbqPopover
+    [kbqPopoverArrow]="false"
     [kbqPopoverClass]="'kbq-pipe__popover'"
     [kbqPopoverContent]="content"
     [kbqPopoverFooter]="footer"
+    [kbqPopoverOffset]="0"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [ngClass]="{ 'kbq-active': popover.isOpen }"
 >
-    <span class="kbq-pipe__name">name</span>
-    <span class="kbq-pipe__value">value</span>
+    <span kbq-title class="kbq-pipe__name">{{ data.name }}</span>
+    <span kbq-title class="kbq-pipe__value">{{ data.value }}</span>
 </button>
 
 @if (showRemoveButton) {
@@ -17,13 +19,13 @@
 }
 
 <ng-template #content>
-    <kbq-form-field>
-        <textarea kbqTextarea placeholder="Placeholder" rows="2" [canGrow]="false"></textarea>
+    <kbq-form-field (keydown)="onKeydown($event)">
+        <textarea kbqTextarea placeholder="Placeholder" rows="2" [canGrow]="false" [formControl]="control"></textarea>
     </kbq-form-field>
 </ng-template>
 
 <ng-template #footer>
-    <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
+    <button kbq-button [color]="'theme'" [disabled]="disabled" [kbqStyle]="'transparent'" (click)="onApply()">
         <span>Применить</span>
         &nbsp;
         <span class="kbq-button_hot-key">Ctrl + Enter</span>

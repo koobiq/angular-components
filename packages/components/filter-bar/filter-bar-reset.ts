@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { KbqButtonModule } from '../button';
 import { KbqFilterBar } from './filter-bar';
+import { KbqFilter } from './filter-bar.types';
 
 @Component({
     standalone: true,
@@ -20,10 +21,11 @@ import { KbqFilterBar } from './filter-bar';
 export class KbqFilterReset {
     protected readonly filterBar = inject(KbqFilterBar);
 
+    @Output() readonly onReset = new EventEmitter<KbqFilter>();
+
     handleClick() {
         this.filterBar.resetFilterChangedState();
 
-        this.filterBar.onReset.next(this.filterBar.activeFilter);
-        this.filterBar.changes.next();
+        this.onReset.next(this.filterBar.activeFilter!);
     }
 }

@@ -8,6 +8,7 @@ import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
@@ -413,7 +414,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'pipe 3',
-                    value: '3',
+                    value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
                     required: false,
@@ -452,10 +453,49 @@ export class DemoComponent {
                 },
                 {
                     name: 'pipe 3',
-                    value: '3',
+                    value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
                     required: false,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        },
+        {
+            name: 'READONLY',
+            readonly: true,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'pipe 1',
+                    value: '1',
+                    type: KbqPipeTypes.Text,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'pipe 2',
+                    value: '2',
+                    type: KbqPipeTypes.Select,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'pipe 3',
+                    value: ['3'],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -554,17 +594,13 @@ export class DemoComponent {
         }
     ];
 
-    onAddPipe(pipe) {
-        if (this.activeFilter) {
-            this.activeFilter.changed = true;
-            this.activeFilter = { ...this.activeFilter, pipes: [...this.activeFilter!.pipes, pipe] };
-        }
+    onAddPipe(pipe: KbqPipe) {
         console.log('onAddPipe: ', pipe);
     }
 
-    resetActiveFilter(resettedFilter: KbqFilter | null) {
-        console.log('resetActiveFilter: ');
-        this.activeFilter = resettedFilter;
+    onReset(filter: KbqFilter | null) {
+        console.log('onReset: ', filter);
+        this.activeFilter = null;
     }
 
     onFilterChange(filter: KbqFilter | null) {
@@ -573,7 +609,7 @@ export class DemoComponent {
     }
 
     onSelectFilter(filter: KbqFilter) {
-        this.activeFilter = filter;
+        console.log('onSelectFilter: ', filter);
     }
 
     onSaveAsNewFilter(filter: KbqFilter | null) {
@@ -616,6 +652,16 @@ export class DemoComponent {
         console.log('filter to delete: ', filter);
 
         alert('Нужно удалить фильтр');
+
+        const currentFilterIndex = this.filters.findIndex(({ name }) => name === filter?.name);
+
+        this.filters.splice(currentFilterIndex, 1);
+
+        this.activeFilter = null;
+    }
+
+    onSearch(value: string) {
+        console.log('onSearch: ', value);
     }
 }
 

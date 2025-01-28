@@ -38,7 +38,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
         <div class="kbq-filter-bar__right">
             <ng-content select="kbq-filter-bar-search, [kbq-filter-bar-search]" />
 
-            <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
+<!--            <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />-->
 
             <ng-content select="kbq-filter-bar-refresher, [kbq-filter-bar-refresher]" />
         </div>
@@ -58,8 +58,6 @@ export class KbqFilterBar {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     private savedFilter: KbqFilter | null = null;
 
-    @Input() filters: KbqFilter[];
-
     @Input()
     get activeFilter(): KbqFilter | null {
         return this._activeFilter;
@@ -70,34 +68,27 @@ export class KbqFilterBar {
             this.saveFilterState(value);
         }
 
-        this._activeFilter = value;
-
-        this.changeDetectorRef.markForCheck();
+        this.activeFilterChanges.next(value);
     }
 
     private _activeFilter: KbqFilter | null;
 
     @Input()
-    set templates(value: KbqPipeTemplate[]) {
+    set pipeTemplates(value: KbqPipeTemplate[]) {
         this._templates = value;
     }
 
-    get templates(): KbqPipeTemplate[] {
+    get pipeTemplates(): KbqPipeTemplate[] {
         return this._templates;
     }
 
     private _templates: KbqPipeTemplate[];
 
     @Output() readonly onFilterChange = new EventEmitter<KbqFilter | null>();
-    @Output() readonly onSelectFilter = new EventEmitter<void>();
-    @Output() readonly onAddFilter = new EventEmitter<void>();
     @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
     @Output() readonly onDeletePipe = new EventEmitter<KbqPipe>();
-    @Output() readonly onSaveFilter = new EventEmitter<KbqFilter>();
-    @Output() readonly onReset = new EventEmitter<KbqFilter | null>();
 
-    // readonly changes = new BehaviorSubject<void>(undefined);
     readonly changes = new BehaviorSubject<void>(undefined);
     readonly activeFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
 
@@ -110,39 +101,14 @@ export class KbqFilterBar {
 
         merge(
             this.onFilterChange,
-            this.onSelectFilter,
-            this.onAddFilter,
             this.onAddPipe,
+            this.onChangePipe,
             this.onDeletePipe,
-            this.onSaveFilter,
-            this.onReset
+            this.activeFilterChanges
         ).subscribe(() => {
             this.changes.next();
             this.changeDetectorRef.markForCheck();
         });
-
-        this.onChangePipe.subscribe(() => {
-            console.log('this.onChangePipe: ');
-        });
-    }
-
-    addPipe(pipe: KbqPipe) {
-        if (!this.activeFilter) {
-            this.activeFilter = {
-                name: '',
-                pipes: [],
-
-                readonly: false,
-                disabled: false,
-                changed: true,
-                saved: false
-            };
-        }
-
-        this.activeFilter!.pipes.push(pipe);
-
-        this.onAddPipe.next(pipe);
-        this.onFilterChange.emit(this.activeFilter);
     }
 
     removePipe(pipe: KbqPipe) {
@@ -172,8 +138,6 @@ export class KbqFilterBar {
             this.activeFilter = filter;
         } else if (this.savedFilter) {
             this.activeFilter = { ...this.savedFilter, changed: false };
-        } else {
-            this.activeFilter = null;
         }
     }
 }

@@ -11,8 +11,8 @@
     [kbqPopoverPlacement]="placements.BottomLeft"
     (kbqPopoverVisibleChange)="list = true"
 >
-    <span class="kbq-pipe__name">{{ data.name }}</span>
-    <span class="kbq-pipe__value">{{ formattedValue }}</span>
+    <span kbq-title class="kbq-pipe__name">{{ data.name }}</span>
+    <span kbq-title class="kbq-pipe__value">{{ formattedValue }}</span>
 </button>
 
 @if (showRemoveButton) {
@@ -44,7 +44,6 @@
                     [color]="colors.Theme"
                     [kbqStyle]="styles.Transparent"
                     (click)="openList()"
-                    (keydown.enter)="openList()"
                 >
                     <i kbq-icon="kbq-chevron-left_16"></i>
                     Назад к выбору периода
@@ -106,7 +105,6 @@
                     [disabled]="disabled"
                     [kbqStyle]="'transparent'"
                     (click)="onApplyPeriod()"
-                    (keydown.enter)="onApplyPeriod()"
                 >
                     <span>Применить</span>
                     &nbsp;

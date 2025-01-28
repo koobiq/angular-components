@@ -1,9 +1,9 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { KbqButtonModule } from '../button';
 import { KbqDropdownModule } from '../dropdown';
 import { KbqIcon } from '../icon';
 import { KbqFilterBar } from './filter-bar';
-import { KbqPipeTemplate } from './filter-bar.types';
+import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
 
 @Component({
     standalone: true,
@@ -15,8 +15,8 @@ import { KbqPipeTemplate } from './filter-bar.types';
         </button>
 
         <kbq-dropdown #newPipes="kbqDropdown">
-            @for (pipe of filterBar.templates; track pipe) {
-                <button (click)="add(pipe)" kbq-dropdown-item>{{ pipe.name }}</button>
+            @for (pipe of filterBar.pipeTemplates; track pipe) {
+                <button (click)="addPipeFromTemplate(pipe)" kbq-dropdown-item>{{ pipe.name }}</button>
             }
         </kbq-dropdown>
     `,
@@ -32,7 +32,26 @@ import { KbqPipeTemplate } from './filter-bar.types';
 export class KbqPipeAdd {
     protected readonly filterBar = inject(KbqFilterBar);
 
-    add(pipe: KbqPipeTemplate) {
-        this.filterBar.addPipe(pipe);
+    @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
+    @Input() filterTemplate: KbqFilter = {
+        name: '',
+        pipes: [],
+
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false
+    };
+
+    addPipeFromTemplate(pipe: KbqPipeTemplate) {
+        if (!this.filterBar.activeFilter) {
+            this.filterBar.activeFilter = { ...this.filterTemplate, pipes: [] };
+        }
+
+        this.filterBar.activeFilter.changed = true;
+        this.filterBar.activeFilter.pipes.push(pipe);
+
+        this.onAddPipe.next(pipe);
+        this.filterBar.onFilterChange.emit(this.filterBar.activeFilter);
     }
 }

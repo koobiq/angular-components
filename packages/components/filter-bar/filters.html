@@ -19,7 +19,7 @@
         kbq-filter-bar-button
         kbqTooltip="Сохранить новый фильтр"
         [color]="colors.Empty"
-        (click)="onSaveAsNew.next(this.activeFilter)"
+        (click)="onSaveAsNew.next(this.activeFilter!)"
     >
         <i kbq-icon="kbq-floppy-disk_16"></i>
     </button>
@@ -63,7 +63,7 @@
 
     <kbq-divider />
 
-    <button kbq-dropdown-item [disabled]="!activeFilter?.changed" (click)="onSaveAsNew.next(this.activeFilter)">
+    <button kbq-dropdown-item [disabled]="!activeFilter?.changed" (click)="onSaveAsNew.next(this.activeFilter!)">
         <i kbq-icon="kbq-plus-s_16"></i>
         Сохранить как новый фильтр
     </button>
@@ -77,22 +77,22 @@
             <i class="kbq kbq-icon kbq-icon-button kbq-xmark-circle-s_16 kbq-warning layout-margin-left-m"></i>
         }
     </button>
-    <button kbq-dropdown-item (click)="onSaveAsNew.next(this.activeFilter)">
+    <button kbq-dropdown-item (click)="onSaveAsNew.next(this.activeFilter!)">
         <i kbq-icon="kbq-plus-s_16"></i>
         Сохранить как новый
     </button>
-    <button kbq-dropdown-item (click)="onChangeFilter.next(this.activeFilter)">
+    <button kbq-dropdown-item (click)="onChangeFilter.next(this.activeFilter!)">
         <i kbq-icon="kbq-pencil_16"></i>
         Изменить
     </button>
 
     <kbq-divider />
 
-    <button kbq-dropdown-item (click)="onResetFilter.next(this.activeFilter)">
+    <button kbq-dropdown-item (click)="onResetFilter.next(this.activeFilter!)">
         <i kbq-icon="kbq-xmark-circle_16"></i>
         Сбросить изменения
     </button>
-    <button kbq-dropdown-item (click)="onDeleteFilter.next(this.activeFilter)">
+    <button kbq-dropdown-item (click)="onDeleteFilter.next(this.activeFilter!)">
         <i kbq-icon="kbq-trash_16"></i>
         Удалить
     </button>

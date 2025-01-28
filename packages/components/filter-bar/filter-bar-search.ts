@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -26,6 +26,7 @@ import { KbqIconModule } from '../icon';
             <input
                 [formControl]="searchControl"
                 (focusout)="closeSearch()"
+                (keydown.enter)="onEnter()"
                 autocomplete="off"
                 kbqInput
                 placeholder="Поиск"
@@ -56,6 +57,8 @@ export class KbqFilterBarSearch {
 
     isSearchActive: boolean = false;
 
+    @Output() readonly onSearch = new EventEmitter<string>();
+
     openSearch(): void {
         this.isSearchActive = true;
 
@@ -64,5 +67,9 @@ export class KbqFilterBarSearch {
 
     closeSearch(): void {
         this.isSearchActive = false;
+    }
+
+    onEnter() {
+        this.onSearch.emit(this.searchControl.value);
     }
 }
