@@ -10,45 +10,45 @@ import { KbqPipeTextComponent } from './pipes/pipe-text';
     standalone: true,
     selector: '[kbq-pipe]'
 })
-export class KbqPipeDirective<T> implements AfterContentInit {
+export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     private injector = inject(Injector);
     protected readonly viewContainerRef = inject(ViewContainerRef);
 
     values: KbqPipeTemplate[];
 
     @Input({ alias: 'kbq-pipe' })
-    get data(): KbqPipe {
-        return this._data;
+    get pipe(): T {
+        return this._pipe;
     }
 
-    set data(value: KbqPipe) {
-        this._data = value;
+    set pipe(value: T) {
+        this._pipe = value;
     }
 
-    private _data!: KbqPipe;
+    private _pipe!: T;
 
     ngAfterContentInit(): void {
         const options = {
-            injector: this.getInjector(this.data)
+            injector: this.getInjector(this.pipe)
         };
 
         // this for extend and configure
-        if (this.data.type === KbqPipeTypes.Text) {
+        if (this.pipe.type === KbqPipeTypes.Text) {
             this.viewContainerRef.createComponent(KbqPipeTextComponent, options);
-        } else if (this.data.type === KbqPipeTypes.Select) {
+        } else if (this.pipe.type === KbqPipeTypes.Select) {
             this.viewContainerRef.createComponent(KbqPipeSelectComponent, options);
-        } else if (this.data.type === KbqPipeTypes.MultiSelect) {
+        } else if (this.pipe.type === KbqPipeTypes.MultiSelect) {
             this.viewContainerRef.createComponent(KbqPipeMultiSelectComponent, options);
-        } else if (this.data.type === KbqPipeTypes.Date) {
+        } else if (this.pipe.type === KbqPipeTypes.Date) {
             this.viewContainerRef.createComponent(KbqPipeDateComponent, options);
-        } else if (this.data.type === KbqPipeTypes.Datetime) {
+        } else if (this.pipe.type === KbqPipeTypes.Datetime) {
             this.viewContainerRef.createComponent(KbqPipeDatetimeComponent, options);
         }
     }
 
-    getInjector(data: KbqPipeData<T>): Injector {
+    getInjector(pipe: T): Injector {
         return Injector.create({
-            providers: [{ provide: KbqPipeData, useValue: data }],
+            providers: [{ provide: KbqPipeData, useValue: pipe }],
             parent: this.injector
         });
     }
