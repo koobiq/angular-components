@@ -10,6 +10,7 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqPopoverModule } from '@koobiq/components/popover';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { KBQ_VALIDATION, KbqFormattersModule } from '../../core';
 import { KbqDatepickerModule } from '../../datepicker';
 import { KbqListSelection } from '../../list';
@@ -50,7 +51,8 @@ import { KbqPipeState } from './pipe-state';
         KbqLuxonDateModule,
         KbqPipeState,
         KbqFormattersModule,
-        KbqPipeButton
+        KbqPipeButton,
+        KbqTitleModule
     ]
 })
 export class KbqPipeDateComponent extends KbqBasePipe {

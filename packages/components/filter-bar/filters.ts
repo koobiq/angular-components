@@ -4,7 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
-    inject,
+    inject, Input,
     OnInit,
     Output,
     ViewEncapsulation
@@ -60,12 +60,14 @@ export class KbqFilters implements OnInit {
     searchControl: UntypedFormControl = new UntypedFormControl();
     filteredOptions: Observable<KbqFilter[]>;
 
+    @Input() filters: KbqFilter[];
+
     @Output() onSelectFilter = new EventEmitter<KbqFilter>();
-    @Output() onSave = new EventEmitter<KbqFilter | null>();
-    @Output() onSaveAsNew = new EventEmitter<KbqFilter | null>();
+    @Output() onSave = new EventEmitter<KbqFilter>();
+    @Output() onSaveAsNew = new EventEmitter<KbqFilter>();
     @Output() onChangeFilter = new EventEmitter<KbqFilter | null>();
-    @Output() onResetFilter = new EventEmitter<KbqFilter | null>();
-    @Output() onDeleteFilter = new EventEmitter<KbqFilter | null>();
+    @Output() onResetFilter = new EventEmitter<KbqFilter>();
+    @Output() onDeleteFilter = new EventEmitter<KbqFilter>();
 
     get activeFilter(): KbqFilter | null {
         return this.filterBar.activeFilter;
@@ -81,7 +83,7 @@ export class KbqFilters implements OnInit {
 
     ngOnInit(): void {
         this.filteredOptions = merge(
-            of(this.filterBar.filters),
+            of(this.filters),
             this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
     }
@@ -105,7 +107,7 @@ export class KbqFilters implements OnInit {
         const searchFilter = value && value.new ? value.value : value;
 
         return searchFilter
-            ? this.filterBar.filters.filter((filter) => filter.name.toLowerCase().includes(searchFilter.toLowerCase()))
-            : this.filterBar.filters;
+            ? this.filters.filter((filter) => filter.name.toLowerCase().includes(searchFilter.toLowerCase()))
+            : this.filters;
     }
 }
