@@ -18,16 +18,16 @@ export interface KbqFilter {
     saved: boolean;
 }
 
-export interface KbqPipeValue<T> {
+export interface KbqPipeValue {
     name?: string;
-    start?: T;
-    end?: T;
+    start?;
+    end?;
 }
 
-export interface KbqPipe<T = any> {
+export interface KbqPipe {
     name: string;
     type: KbqPipeTypes;
-    value?: T | T[];
+    value?;
 
     search?: boolean;
 
@@ -37,10 +37,10 @@ export interface KbqPipe<T = any> {
     disabled: boolean;
 }
 
-export class KbqPipeData<T> {
+export class KbqPipeData {
     name: string;
     type: KbqPipeTypes;
-    value?: T | T[];
+    value?;
 
     required: boolean;
     cleanable: boolean;
@@ -48,13 +48,7 @@ export class KbqPipeData<T> {
     disabled: boolean;
 }
 
-export interface KbqPipeTemplate<T = unknown> {
-    name: string;
-    type: KbqPipeTypes;
-    values?: T;
-
-    required: boolean;
-    cleanable: boolean;
-    removable: boolean;
-    disabled: boolean;
+export interface KbqPipeTemplate extends KbqPipe {
+    id?: string | number;
+    values?: unknown[];
 }
