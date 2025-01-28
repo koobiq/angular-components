@@ -18,6 +18,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { KbqToastModule } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
@@ -31,6 +32,7 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
         KbqCodeBlockModule,
         DocsCodeSnippetComponent,
         KbqToolTipModule,
+        KbqToastModule,
         CdkPortal
     ],
     selector: 'docs-live-example',
