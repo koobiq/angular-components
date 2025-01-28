@@ -38,7 +38,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
         <div class="kbq-filter-bar__right">
             <ng-content select="kbq-filter-bar-search, [kbq-filter-bar-search]" />
 
-<!--            <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />-->
+            <!--            <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />-->
 
             <ng-content select="kbq-filter-bar-refresher, [kbq-filter-bar-refresher]" />
         </div>
