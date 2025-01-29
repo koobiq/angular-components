@@ -72,7 +72,6 @@ import {
     SELECT_PANEL_VIEWPORT_PADDING,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    getKbqSelectNonFunctionValueError,
     kbqSelectAnimations,
     mixinDisabled,
     mixinErrorState,
@@ -408,34 +407,9 @@ export class KbqTreeSelect
 
     private _autoSelect: boolean = true;
 
-    /**
-     * Function to compare the option values with the selected values. The first argument
-     * is a value from an option. The second is a value from the selection. A boolean
-     * should be returned.
-     */
-    @Input()
-    get compareWith() {
-        return this._compareWith;
-    }
-
-    set compareWith(fn: (o1: any, o2: any) => boolean) {
-        if (typeof fn !== 'function') {
-            throw getKbqSelectNonFunctionValueError();
-        }
-
-        this._compareWith = fn;
-
-        if (this.selectionModel) {
-            // A different comparator means the selection could change.
-            this.initializeSelection();
-        }
-    }
-
     get value(): any {
         return this.tree.getSelectedValues();
     }
-
-    private _value: any = null;
 
     @Input()
     get id(): string {
@@ -1157,14 +1131,6 @@ export class KbqTreeSelect
         this.changeDetectorRef.detectChanges();
     }
 
-    private initializeSelection() {
-        // Defer setting the value in order to avoid the "Expression
-        // has changed after it was checked" errors from Angular.
-        Promise.resolve().then(() => {
-            this.setSelectionByValue(this.ngControl ? this.ngControl.value : this._value);
-        });
-    }
-
     /**
      * Sets the selected option based on a value. If no option can be
      * found with the designated value, the select trigger is cleared.
@@ -1279,9 +1245,6 @@ export class KbqTreeSelect
         this.overlayDir.offsetX = Math.round(offsetX);
         this.overlayDir.overlayRef.updatePosition();
     }
-
-    /** Comparison function to specify which option is displayed. Defaults to object equality. */
-    private _compareWith = (o1: any, o2: any) => o1 === o2;
 
     private subscribeOnSearchChanges() {
         if (!this.search?.ngControl.valueChanges) {
