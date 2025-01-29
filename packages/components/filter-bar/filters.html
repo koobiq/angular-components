@@ -40,6 +40,12 @@
     </button>
 }
 
+@if (activeFilter?.saved) {
+    <i kbq-icon="kbq-chevron-right-s_16" class="kbq-filter-bar__arrow" [color]="'theme'"></i>
+} @else {
+    <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
+}
+
 <kbq-dropdown #savedFilters="kbqDropdown">
     <kbq-form-field kbqFormFieldWithoutBorders>
         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
