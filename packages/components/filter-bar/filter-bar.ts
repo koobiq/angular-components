@@ -8,9 +8,9 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { BehaviorSubject, merge } from 'rxjs';
-import { KbqDividerModule } from '../divider';
 import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 
 @Component({

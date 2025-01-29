@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqIconModule } from '../icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
     standalone: true,
