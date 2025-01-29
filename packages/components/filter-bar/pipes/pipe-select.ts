@@ -36,8 +36,13 @@ export class KbqPipeSelectComponent extends KbqBasePipe {
         return this.data.value;
     }
 
+    get isEmpty(): boolean {
+        return !this.data.value;
+    }
+
     onSelect(item: unknown) {
         this.data.value = item;
+        this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
     }
 
