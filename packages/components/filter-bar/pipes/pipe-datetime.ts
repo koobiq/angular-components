@@ -3,19 +3,23 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { DateAdapter, DateFormatter, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import {
+    DateAdapter,
+    DateFormatter,
+    KBQ_VALIDATION,
+    KbqComponentColors,
+    KbqFormattersModule,
+    PopUpPlacements
+} from '@koobiq/components/core';
+import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqListModule } from '@koobiq/components/list';
-import { KbqPopoverModule } from '@koobiq/components/popover';
+import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
+import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KBQ_VALIDATION, KbqFormattersModule } from '../../core';
-import { KbqDatepickerModule } from '../../datepicker';
-import { KbqListSelection } from '../../list';
-import { KbqPopoverTrigger } from '../../popover';
-import { KbqTimepickerModule } from '../../timepicker';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { KbqButtonModule } from '../button';
-import { KbqDropdownModule } from '../dropdown';
-import { KbqIcon } from '../icon';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
 

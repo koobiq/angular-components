@@ -3,13 +3,13 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulatio
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { PopUpPlacements } from '../../core';
-import { KbqPopoverModule, KbqPopoverTrigger } from '../../popover';
-import { KbqTextareaModule } from '../../textarea';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 
@@ -46,7 +46,7 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
     @ViewChild('popover') popover: KbqPopoverTrigger;
 
     get disabled(): boolean {
-        return !this.control.value;
+        return !this.control.value || this.control.pristine;
     }
 
     control = new FormControl<string>('');
@@ -59,13 +59,14 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
         this.data.value = this.control.value;
         this.stateChanges.next();
 
+        this.control.markAsPristine();
         this.popover.hide();
 
         this.filterBar.onChangePipe.next(this.data);
     }
 
     onKeydown($event: KeyboardEvent) {
-        if ($event.ctrlKey && $event.keyCode === ENTER) {
+        if (!this.disabled && $event.ctrlKey && $event.keyCode === ENTER) {
             this.onApply();
         }
     }

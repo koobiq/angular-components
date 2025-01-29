@@ -503,7 +503,7 @@ export class DemoComponent {
             ]
         }
     ];
-    activeFilter: KbqFilter | null;
+    activeFilter: KbqFilter | null = this.filters[2];
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',
@@ -549,7 +549,6 @@ export class DemoComponent {
         {
             name: 'Text',
             type: KbqPipeTypes.Text,
-            values: [],
 
             required: false,
             cleanable: false,

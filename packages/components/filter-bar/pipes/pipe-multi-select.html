@@ -10,18 +10,21 @@
     <button
         kbq-button
         kbq-select-matcher
+        kbq-title
         [disabled]="data.disabled"
         [kbq-pipe-state]="data"
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
-        <span kbq-title class="kbq-pipe__name">{{ data.name }}</span>
-        @if (select.triggerValues!.length === 1) {
-            <span kbq-title class="kbq-pipe__value">{{ select.triggerValue }}</span>
-        } @else if (select.triggerValues!.length > 1) {
-            <kbq-badge [badgeColor]="'contrast'" [compact]="true">
-                {{ select.triggerValues!.length }}
-            </kbq-badge>
-        }
+        <span #kbqTitleText class="kbq-title-text">
+            <span class="kbq-pipe__name">{{ data.name }}</span>
+            @if (select.triggerValues!.length === 1) {
+                <span class="kbq-pipe__value">{{ select.triggerValue }}</span>
+            } @else if (select.triggerValues!.length > 1) {
+                <kbq-badge [badgeColor]="'contrast'" [compact]="true">
+                    {{ select.triggerValues!.length }}
+                </kbq-badge>
+            }
+        </span>
     </button>
 
     @for (item of values; track item) {

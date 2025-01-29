@@ -8,11 +8,16 @@
     max-height: 32px;
 
     .kbq-button-wrapper {
-        max-width: 320px;
+        & .kbq-title-text {
+            max-width: 320px;
+            display: flex;
+        }
     }
 
     .kbq-pipe__name {
         @include common.kbq-truncate-line();
+
+        flex: 1 1 auto;
 
         color: var(--kbq-foreground-contrast-secondary);
     }
@@ -20,7 +25,7 @@
     .kbq-pipe__value {
         @include common.kbq-truncate-line();
 
-        flex: 1;
+        flex: 1 1 auto;
         margin-left: 4px;
     }
 

@@ -3,8 +3,8 @@ import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { KbqIconModule } from '../icon';
 
 @Component({
     standalone: true,
