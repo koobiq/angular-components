@@ -43,7 +43,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                         kbqBreadcrumb
                     >
                         Access Control
-                        <i kbq-icon="kbq-chevron-down-s_16" color="contrast-fade"></i>
+                        <i kbq-icon="kbq-chevron-down-s_16"></i>
                     </button>
                 </div>
             </kbq-breadcrumb-item>

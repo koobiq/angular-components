@@ -1,5 +1,8 @@
 :where(.kbq-breadcrumbs) {
     --kbq-breadcrumb-item-horizontal-padding: 6px;
-    --kbq-breadcrumb-item-height: var(--kbq-size-xxl);
+    --kbq-breadcrumb-item-height: var(--kbq-size-3xl);
     --kbq-breadcrumb-item-expand-horizontal-padding: 4px;
+    --kbq-breadcrumb-item-border-radius: var(--kbq-size-xs);
+    --kbq-breadcrumb-item-icon-color: var(--kbq-icon-contrast-fade);
+    --kbq-breadcrumbs-gap: 0;
 }

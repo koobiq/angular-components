@@ -4,6 +4,7 @@ import { BreadcrumbsDropdownExample } from './breadcrumbs-dropdown/breadcrumbs-d
 import { BreadcrumbsOverviewExample } from './breadcrumbs-overview/breadcrumbs-overview-example';
 import { BreadcrumbsSizeExample } from './breadcrumbs-size/breadcrumbs-size-example';
 import { BreadcrumbsTruncateByAbbrevItemsExample } from './breadcrumbs-truncate-by-abbrev-items/breadcrumbs-truncate-by-abbrev-items-example';
+import { BreadcrumbsTruncateCenterItemsExample } from './breadcrumbs-truncate-center-items/breadcrumbs-truncate-center-items-example';
 import { BreadcrumbsTruncateHeadItemsExample } from './breadcrumbs-truncate-head-items/breadcrumbs-truncate-head-items-example';
 import { BreadcrumbsTruncateTailItemsExample } from './breadcrumbs-truncate-tail-items/breadcrumbs-truncate-tail-items-example';
 
@@ -13,18 +14,20 @@ export {
     BreadcrumbsOverviewExample,
     BreadcrumbsSizeExample,
     BreadcrumbsTruncateByAbbrevItemsExample,
+    BreadcrumbsTruncateCenterItemsExample,
     BreadcrumbsTruncateHeadItemsExample,
     BreadcrumbsTruncateTailItemsExample
 };
 
 const EXAMPLES = [
+    BreadcrumbsCustomTemplateExample,
+    BreadcrumbsDropdownExample,
     BreadcrumbsOverviewExample,
     BreadcrumbsSizeExample,
-    BreadcrumbsDropdownExample,
-    BreadcrumbsCustomTemplateExample,
+    BreadcrumbsTruncateByAbbrevItemsExample,
+    BreadcrumbsTruncateCenterItemsExample,
     BreadcrumbsTruncateHeadItemsExample,
-    BreadcrumbsTruncateTailItemsExample,
-    BreadcrumbsTruncateByAbbrevItemsExample
+    BreadcrumbsTruncateTailItemsExample
 ];
 
 @NgModule({
