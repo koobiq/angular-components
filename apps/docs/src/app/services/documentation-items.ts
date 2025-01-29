@@ -328,6 +328,15 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: true
                 },
                 {
+                    id: 'filter-bar',
+                    name: 'Filter Bar',
+                    svgPreview: '',
+                    hasApi: true,
+                    apiId: 'filter-bar',
+                    hasExamples: true,
+                    examples: ['filter-bar-types']
+                },
+                {
                     id: 'experimental-form-field',
                     name: {
                         ru: 'Form field (experimental)',
