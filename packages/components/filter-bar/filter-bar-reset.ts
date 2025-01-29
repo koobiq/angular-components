@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
-import { KbqButtonModule } from '../button';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilter } from './filter-bar.types';
 

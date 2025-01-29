@@ -1,6 +1,6 @@
 import { Directive, ElementRef, inject, ViewChild } from '@angular/core';
-import { KbqButton, KbqButtonStyles } from '../button';
-import { KbqComponentColors } from '../core';
+import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFilterBar } from './filter-bar';
 
 @Directive({
