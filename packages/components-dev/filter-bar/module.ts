@@ -1,6 +1,7 @@
 import { Component, inject, NgModule, ViewChild, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -14,7 +15,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import { KbqLuxonDateModule } from '../../../dist/angular-luxon-adapter/adapter';
+import { FilterBarOverviewExample } from '../../docs-examples/components/filter-bar';
 
 @Component({
     selector: 'app',
@@ -676,7 +677,8 @@ export class DemoComponent {
         KbqFilterBarModule,
         KbqDividerModule,
         KbqButtonModule,
-        KbqLuxonDateModule
+        KbqLuxonDateModule,
+        FilterBarOverviewExample
     ],
     bootstrap: [DemoComponent]
 })

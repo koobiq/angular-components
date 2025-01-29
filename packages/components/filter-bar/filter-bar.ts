@@ -9,7 +9,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqIcon } from '@koobiq/components/icon';
 import { BehaviorSubject, merge } from 'rxjs';
 import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 
@@ -19,12 +18,6 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     template: `
         <div class="kbq-filter-bar__left">
             <ng-content select="kbq-filters" />
-
-            @if (activeFilter?.saved) {
-                <i [color]="'theme'" kbq-icon="kbq-chevron-right-s_16"></i>
-            } @else {
-                <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
-            }
 
             <ng-content />
 
@@ -38,8 +31,6 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
         <div class="kbq-filter-bar__right">
             <ng-content select="kbq-filter-bar-search, [kbq-filter-bar-search]" />
 
-            <!--            <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />-->
-
             <ng-content select="kbq-filter-bar-refresher, [kbq-filter-bar-refresher]" />
         </div>
     `,
@@ -47,8 +38,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
-        KbqDividerModule,
-        KbqIcon
+        KbqDividerModule
     ],
     host: {
         class: 'kbq-filter-bar'
@@ -82,7 +72,7 @@ export class KbqFilterBar {
         return this._templates;
     }
 
-    private _templates: KbqPipeTemplate[];
+    private _templates: KbqPipeTemplate[] = [];
 
     @Output() readonly onFilterChange = new EventEmitter<KbqFilter | null>();
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();

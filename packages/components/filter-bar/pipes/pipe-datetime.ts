@@ -123,7 +123,7 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
             end: this.formGroup.get('end')?.value
         };
 
-        this.filterBar.onChangePipe.next(this.data);
+        this.filterBar?.onChangePipe.next(this.data);
 
         this.popover.hide();
     }
@@ -132,7 +132,7 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
         this.data.value = item;
         this.stateChanges.next();
 
-        this.filterBar.onChangePipe.next(this.data);
+        this.filterBar?.onChangePipe.next(this.data);
 
         this.popover.hide();
     }
@@ -153,7 +153,7 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
         if (this.data.cleanable) {
             this.data.value = null;
         } else {
-            this.filterBar.removePipe(this.data);
+            this.filterBar?.removePipe(this.data);
         }
     }
 }

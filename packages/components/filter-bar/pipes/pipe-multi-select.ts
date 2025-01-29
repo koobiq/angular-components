@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe } from './base-pipe';
@@ -27,7 +26,6 @@ import { KbqPipeState } from './pipe-state';
     imports: [
         FormsModule,
         KbqButtonModule,
-        KbqIcon,
         KbqDividerModule,
         KbqSelectModule,
         NgClass,
@@ -46,10 +44,16 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe {
         return !this.data.value?.length;
     }
 
-    onSelect(item: unknown) {
+    onSelect(item: unknown[]) {
         this.data.value = item;
         this.stateChanges.next();
     }
 
-    compareByValue = (o1: any, o2: any): boolean => o1?.value === o2?.id;
+    onClear() {
+        this.data.value = [];
+
+        this.stateChanges.next();
+    }
+
+    compareByValue = (o1: any, o2: any): boolean => o1?.id === o2?.id;
 }

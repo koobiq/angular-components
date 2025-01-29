@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqFilterBar } from '../filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeState } from './pipe-state';
 
@@ -39,4 +40,10 @@ import { KbqPipeState } from './pipe-state';
 })
 export class KbqPipeButton {
     protected readonly pipe = inject(KbqBasePipe);
+    protected readonly filterBar = inject(KbqFilterBar, { optional: true });
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    constructor() {
+        this.filterBar?.changes.subscribe(() => this.changeDetectorRef.markForCheck());
+    }
 }

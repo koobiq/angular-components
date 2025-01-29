@@ -62,7 +62,7 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
         this.control.markAsPristine();
         this.popover.hide();
 
-        this.filterBar.onChangePipe.next(this.data);
+        this.filterBar?.onChangePipe.next(this.data);
     }
 
     onKeydown($event: KeyboardEvent) {

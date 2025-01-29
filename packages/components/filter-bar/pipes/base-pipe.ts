@@ -18,7 +18,7 @@ export class KbqBasePipe {
     readonly stateChanges = new Subject<void>();
     readonly data = inject(KbqPipeData);
 
-    protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly filterBar = inject(KbqFilterBar, { optional: true });
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected values: KbqPipeTemplate[];
@@ -36,7 +36,7 @@ export class KbqBasePipe {
             this.changeDetectorRef.markForCheck();
         });
 
-        const template = this.filterBar.pipeTemplates.find((template) => template.type === this.data?.type);
+        const template = this.filterBar?.pipeTemplates.find((template) => template.type === this.data?.type);
 
         if (template) {
             this.values = template.values as KbqPipeTemplate[];
@@ -44,7 +44,7 @@ export class KbqBasePipe {
     }
 
     onRemove() {
-        this.filterBar.removePipe(this.data);
+        this.filterBar?.removePipe(this.data);
 
         this.stateChanges.next();
     }

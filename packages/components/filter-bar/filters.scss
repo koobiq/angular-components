@@ -7,6 +7,21 @@
         margin-right: 4px;
     }
 
+    & .kbq-filter-bar__separator {
+        align-self: center;
+
+        height: 12px !important;
+
+        margin-left: calc(8px + 6px) !important;
+        margin-right: 6px !important;
+    }
+
+    & .kbq-filter-bar__arrow {
+        align-self: center;
+
+        margin-left: 8px;
+    }
+
     .kbq-button.kbq-button_changed-filter {
         border-bottom-right-radius: unset;
         border-top-right-radius: unset;

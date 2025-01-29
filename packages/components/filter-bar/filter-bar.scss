@@ -6,15 +6,6 @@
     flex-direction: row;
     justify-content: space-between;
 
-    & .kbq-filter-bar__separator {
-        align-self: center;
-
-        height: 12px !important;
-
-        margin-left: 6px !important;
-        margin-right: 6px !important;
-    }
-
     .kbq-filter-bar__left {
         display: flex;
         flex-direction: row;
