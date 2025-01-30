@@ -19,7 +19,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
-import { KbqToastModule } from '@koobiq/components/toast';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
 import { IconItem, IconItems } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
@@ -43,9 +42,7 @@ const SEARCH_DEBOUNCE_TIME = 300;
         NgClass,
 
         // Prevents: "NullInjectorError: No provider for KbqModalService!"
-        KbqModalModule,
-        // Prevents: "NullInjectorError: No provider for KbqToastService!"
-        KbqToastModule
+        KbqModalModule
     ],
     selector: 'docs-icons-viewer',
     templateUrl: './icons-viewer.template.html',

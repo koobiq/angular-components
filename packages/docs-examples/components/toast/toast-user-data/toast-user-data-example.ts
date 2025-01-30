@@ -1,23 +1,23 @@
-import { Component, inject, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqToastData, KbqToastModule, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
+import { KbqToastData, KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
  * @title Toast user data
  */
 @Component({
     standalone: true,
-    selector: 'toast-user-data-example',
     imports: [
         KbqLinkModule,
-        KbqButtonModule,
-        KbqToastModule
+        KbqButtonModule
     ],
-    templateUrl: 'toast-user-data-example.html'
+    selector: 'toast-user-data-example',
+    templateUrl: 'toast-user-data-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastUserDataExample {
-    toastService = inject(KbqToastService);
+    readonly toastService = inject(KbqToastService);
 
     showToast(actions: TemplateRef<any>) {
         interface ExtendedUserData extends KbqToastData {

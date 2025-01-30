@@ -3,13 +3,11 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    NgModule,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -27,9 +25,9 @@ import {
     KbqToastService,
     KbqToastStyle
 } from '@koobiq/components/toast';
-import { KbqButtonModule } from '../../components/button';
 
 @Component({
+    standalone: true,
     selector: 'kbq-new-toast',
     template: '<div>MyToastComponent</div>',
     host: {
@@ -52,12 +50,40 @@ export class MyToastComponent extends KbqToastComponent {
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqButtonModule,
+        KbqIconModule,
+        KbqLinkModule,
+        KbqToastModule,
+        KbqProgressBarModule,
+        KbqDropdownModule,
+        KbqModalModule,
+        KbqSidepanelModule,
+        KbqScrollbarModule
+    ],
+    providers: [
+        {
+            provide: KBQ_TOAST_CONFIG,
+            useValue: {
+                position: KbqToastPosition.TOP_RIGHT,
+                duration: 5000,
+                delay: 2000,
+                onTop: false
+            }
+        }
+        // {
+        //     provide: KbqToastComponent,
+        //     useFactory: () => MyToastComponent
+        // }
+    ],
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: './styles.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastDemoComponent {
+export class ToastDev {
     themePalette = ThemePalette;
 
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
@@ -183,40 +209,3 @@ export class ToastDemoComponent {
         });
     }
 }
-
-@NgModule({
-    declarations: [
-        ToastDemoComponent,
-        MyToastComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqLinkModule,
-        KbqToastModule,
-        KbqProgressBarModule,
-        KbqDropdownModule,
-        KbqModalModule,
-        KbqSidepanelModule,
-        KbqScrollbarModule
-    ],
-    bootstrap: [ToastDemoComponent],
-    providers: [
-        {
-            provide: KBQ_TOAST_CONFIG,
-            useValue: {
-                position: KbqToastPosition.TOP_RIGHT,
-                duration: 5000,
-                delay: 2000,
-                onTop: false
-            }
-        }
-        // {
-        //     provide: KbqToastComponent,
-        //     useFactory: () => MyToastComponent
-        // }
-    ]
-})
-export class DemoModule {}

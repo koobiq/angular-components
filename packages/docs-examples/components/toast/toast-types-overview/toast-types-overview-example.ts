@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -10,18 +10,19 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  */
 @Component({
     standalone: true,
-    selector: 'toast-types-overview-example',
-    templateUrl: 'toast-types-overview-example.html',
     imports: [
         KbqLinkModule,
         NgTemplateOutlet,
         KbqButtonModule
-    ]
+    ],
+    selector: 'toast-types-overview-example',
+    templateUrl: 'toast-types-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastTypesOverviewExample {
     themePalette = ThemePalette;
 
-    constructor(private toastService: KbqToastService) {}
+    readonly toastService = inject(KbqToastService);
 
     showContrastToast(actions: TemplateRef<any>) {
         this.toastService.show({

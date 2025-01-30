@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
@@ -8,11 +8,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
  */
 @Component({
     standalone: true,
-    selector: 'toast-report-overview-example',
     imports: [
         KbqLinkModule,
         KbqButtonModule
     ],
+    selector: 'toast-report-overview-example',
     template: `
         <ng-template #toastContentTemplate>
             Отчет&nbsp;
@@ -25,10 +25,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
         </ng-template>
 
         <button (click)="showToast(toastContentTemplate, toastActionsTemplate)" kbq-button>Отчет</button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastReportOverviewExample {
-    constructor(private toastService: KbqToastService) {}
+    readonly toastService = inject(KbqToastService);
 
     showToast(caption: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show({ style: KbqToastStyle.Success, caption, actions }, 0);

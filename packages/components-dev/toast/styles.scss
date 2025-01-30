@@ -1,4 +1,4 @@
-@import '@koobiq/design-tokens/web/variables';
+@use '../main';
 
 body {
     overflow: hidden;
@@ -31,6 +31,6 @@ p {
     width: 0;
 
     & .example-button {
-        margin-bottom: $size-m;
+        margin-bottom: var(--kbq-size-m);
     }
 }

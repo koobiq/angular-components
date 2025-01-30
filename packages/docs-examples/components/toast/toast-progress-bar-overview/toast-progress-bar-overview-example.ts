@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
@@ -9,12 +9,12 @@ import { KbqToastService } from '@koobiq/components/toast';
  */
 @Component({
     standalone: true,
-    selector: 'toast-progress-bar-overview-example',
     imports: [
         KbqProgressBarModule,
         KbqLinkModule,
         KbqButtonModule
     ],
+    selector: 'toast-progress-bar-overview-example',
     template: `
         <ng-template #toastStickyContentTemplate let-toast>
             <kbq-progress-bar class="layout-margin-top-m layout-margin-bottom-m" [mode]="'indeterminate'" />
@@ -27,10 +27,11 @@ import { KbqToastService } from '@koobiq/components/toast';
         <button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)" kbq-button>
             Тост с прогресс-баром, кнопкой Отмена и без крестика
         </button>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastProgressBarOverviewExample {
-    constructor(private toastService: KbqToastService) {}
+    readonly toastService = inject(KbqToastService);
 
     showStickyToast(content: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show(
