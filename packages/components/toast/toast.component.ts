@@ -1,5 +1,6 @@
 import { AnimationEvent } from '@angular/animations';
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -13,6 +14,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqTitleModule } from '@koobiq/components/title';
 import { BehaviorSubject, merge } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { kbqToastAnimations } from './toast-animations';
@@ -20,6 +23,7 @@ import { KbqToastService } from './toast.service';
 import { KbqToastData, KbqToastStyle } from './toast.type';
 
 @Directive({
+    standalone: true,
     selector: '[kbq-toast-close-button]',
     host: {
         class: 'kbq-toast__close-button'
@@ -30,6 +34,14 @@ export class KbqToastCloseButton {}
 let id = 0;
 
 @Component({
+    standalone: true,
+    imports: [
+        NgTemplateOutlet,
+        KbqIconModule,
+        NgClass,
+        KbqTitleModule,
+        KbqToastCloseButton
+    ],
     selector: 'kbq-toast',
     templateUrl: './toast.component.html',
     styleUrls: ['./toast.component.scss', './toast-tokens.scss'],

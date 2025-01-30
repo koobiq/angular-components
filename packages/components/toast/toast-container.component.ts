@@ -20,6 +20,7 @@ import { KbqToastService } from './toast.service';
 import { KbqToastData } from './toast.type';
 
 @Component({
+    standalone: true,
     selector: 'kbq-toast-container',
     template: '<ng-container #container />',
     styleUrls: ['./toast-container.component.scss'],
