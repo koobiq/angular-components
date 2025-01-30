@@ -97,6 +97,16 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false
                 },
                 {
+                    id: 'fonts',
+                    name: {
+                        ru: 'Шрифты',
+                        en: 'Fonts'
+                    },
+                    isGuide: true,
+                    hasApi: false,
+                    hasExamples: false
+                },
+                {
                     id: 'typography',
                     name: {
                         ru: 'Типографика',
