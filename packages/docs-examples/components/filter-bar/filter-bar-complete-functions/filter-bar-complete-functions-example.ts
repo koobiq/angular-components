@@ -1,32 +1,53 @@
-import { Component, inject, NgModule, ViewChild, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Component, inject } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
-import {
-    KbqFilter,
-    KbqFilterBar,
-    KbqFilterBarModule,
-    KbqPipe,
-    KbqPipeTemplate,
-    KbqPipeTypes
-} from '@koobiq/components/filter-bar';
-import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { DateTime } from 'luxon';
-import { FilterBarCompleteFunctionsExample } from '../../docs-examples/components/filter-bar';
 
+/**
+ * @title filter-bar-complete-functions
+ */
 @Component({
-    selector: 'app',
-    templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
-})
-export class DemoComponent {
-    protected readonly adapter = inject(DateAdapter<DateTime>);
+    standalone: true,
+    selector: 'filter-bar-complete-functions-example',
+    imports: [
+        KbqFilterBarModule,
+        KbqLuxonDateModule
+    ],
+    template: `
+        <kbq-filter-bar
+            #filterBar
+            [activeFilter]="activeFilter"
+            [pipeTemplates]="pipeTemplates"
+            (onFilterChange)="onFilterChange($event)"
+            style="height: 160px; align-items: center;"
+        >
+            <kbq-filters
+                [filters]="filters"
+                (onChangeFilter)="onChangeFilter($event)"
+                (onDeleteFilter)="onDeleteFilter($event)"
+                (onResetFilter)="onResetFilter($event)"
+                (onSave)="onSaveFilter($event)"
+                (onSaveAsNew)="onSaveAsNewFilter($event)"
+                (onSelectFilter)="onSelectFilter($event)"
+            />
 
-    @ViewChild('filterBar') filterBar: KbqFilterBar;
+            @for (pipe of activeFilter?.pipes; track pipe) {
+                <ng-container *kbq-pipe="pipe" />
+            }
+
+            <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
+
+            <kbq-filter-reset (onReset)="onReset($event)" />
+
+            <kbq-filter-bar-search (onSearch)="onSearch($event)" />
+
+            <!--        <kbq-filter-bar-refresher />-->
+        </kbq-filter-bar>
+    `
+})
+export class FilterBarCompleteFunctionsExample {
+    protected readonly adapter = inject(DateAdapter<DateTime>);
 
     filters: KbqFilter[] = [
         {
@@ -504,7 +525,7 @@ export class DemoComponent {
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[2];
+    activeFilter: KbqFilter | null;
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',
@@ -667,19 +688,3 @@ export class DemoComponent {
         console.log('onSearch: ', value);
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqIconModule,
-        KbqFilterBarModule,
-        KbqDividerModule,
-        KbqButtonModule,
-        KbqLuxonDateModule,
-        FilterBarCompleteFunctionsExample
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

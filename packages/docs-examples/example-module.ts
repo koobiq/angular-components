@@ -1315,6 +1315,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-cleanable-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-complete-functions": {
+    "packagePath": "components/filter-bar/filter-bar-complete-functions",
+    "title": "filter-bar-complete-functions",
+    "componentName": "FilterBarCompleteFunctionsExample",
+    "files": [
+      "filter-bar-complete-functions-example.ts"
+    ],
+    "selector": "filter-bar-complete-functions-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-complete-functions-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-empty-removable": {
+    "packagePath": "components/filter-bar/filter-bar-empty-removable",
+    "title": "filter-bar-empty-removable",
+    "componentName": "FilterBarEmptyRemovableExample",
+    "files": [
+      "filter-bar-empty-removable-example.ts"
+    ],
+    "selector": "filter-bar-empty-removable-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-empty-removable-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-operating-modes": {
     "packagePath": "components/filter-bar/filter-bar-operating-modes",
     "title": "filter-bar-operating-modes",
@@ -4049,6 +4073,10 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-validation-reactive-forms-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'filter-bar-cleanable':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-complete-functions':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-empty-removable':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-operating-modes':
 return import('@koobiq/docs-examples/components/filter-bar');
