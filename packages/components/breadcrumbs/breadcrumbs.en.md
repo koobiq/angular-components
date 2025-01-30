@@ -33,6 +33,12 @@ Used in cases where highlighting a unique identifier at the end of the name is n
 
 <!-- example(breadcrumbs-truncate-tail-items) -->
 
+### Middle Section Truncation
+
+For cases when it is necessary to highlight the beginning and the end of the title.
+
+<!-- example(breadcrumbs-truncate-center-items) -->
+
 ### Using Abbreviations
 
 For cases where a name can be replaced with a shortened version using a well-known abbreviation. It is important that this abbreviation is already familiar to the service's user audience.
