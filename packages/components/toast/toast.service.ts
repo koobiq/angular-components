@@ -18,7 +18,9 @@ import { KbqToastContainerComponent } from './toast-container.component';
 import { KbqToastComponent } from './toast.component';
 import { KBQ_TOAST_CONFIG, KbqToastConfig, KbqToastData, KbqToastPosition } from './toast.type';
 
-export const KBQ_TOAST_FACTORY = new InjectionToken('KbqToastFactory');
+export const KBQ_TOAST_FACTORY = new InjectionToken('KBQ_TOAST_FACTORY', {
+    factory: () => KbqToastComponent
+});
 
 export const defaultToastConfig: KbqToastConfig = {
     position: KbqToastPosition.TOP_RIGHT,

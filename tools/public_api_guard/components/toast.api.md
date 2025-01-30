@@ -13,12 +13,6 @@ import { ElementRef } from '@angular/core';
 import { EmbeddedViewRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i3 from '@angular/cdk/overlay';
-import * as i4 from '@koobiq/components/title';
-import * as i5 from '@angular/cdk/a11y';
-import * as i6 from '@koobiq/components/icon';
-import * as i7 from '@koobiq/components/button';
-import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
 import { NgZone } from '@angular/core';
@@ -39,12 +33,12 @@ export const defaultToastConfig: KbqToastConfig;
 export const KBQ_TOAST_CONFIG: InjectionToken<unknown>;
 
 // @public (undocumented)
-export const KBQ_TOAST_FACTORY: InjectionToken<unknown>;
+export const KBQ_TOAST_FACTORY: InjectionToken<typeof KbqToastComponent>;
 
 // @public (undocumented)
 export class KbqToastCloseButton {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqToastCloseButton, "[kbq-toast-close-button]", never, {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqToastCloseButton, "[kbq-toast-close-button]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastCloseButton, never>;
 }
@@ -89,7 +83,7 @@ export class KbqToastComponent implements OnDestroy {
     // (undocumented)
     ttl: any;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastComponent, "kbq-toast", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastComponent, "kbq-toast", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastComponent, never>;
 }
@@ -124,7 +118,7 @@ export class KbqToastContainerComponent extends CdkScrollable {
     // (undocumented)
     viewContainer: ViewContainerRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastContainerComponent, "kbq-toast-container", never, {}, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToastContainerComponent, "kbq-toast-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToastContainerComponent, never>;
 }
@@ -159,7 +153,7 @@ export class KbqToastModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, [typeof i1.KbqToastComponent, typeof i2.KbqToastContainerComponent, typeof i1.KbqToastCloseButton], [typeof i3.OverlayModule, typeof i4.KbqTitleModule, typeof i5.A11yModule, typeof i6.KbqIconModule, typeof i7.KbqButtonModule, typeof i8.NgTemplateOutlet, typeof i8.NgClass], [typeof i1.KbqToastComponent, typeof i2.KbqToastContainerComponent, typeof i1.KbqToastCloseButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToastModule, never, [typeof i1.KbqToastComponent, typeof i1.KbqToastCloseButton, typeof i2.KbqToastContainerComponent], [typeof i1.KbqToastComponent, typeof i1.KbqToastCloseButton, typeof i2.KbqToastContainerComponent]>;
 }
 
 // @public (undocumented)
