@@ -46,11 +46,11 @@ Filter Button — элемент управления из панели фил
 
 Когда значение фильтра не заданы, то компонент имеет сдержанное незаметное оформление. В режиме Removable показывается кнопка сброса.
 
-<!-- example(filter-bar-overview) -->
+<!-- example(filter-bar-empty) -->
 
 В режиме Cleanable у пустого фильтра нет кнопки сброса.
 
-<!-- example(filter-bar-overview) -->
+<!-- example(filter-bar-empty-cleanable) -->
 
 А в режиме Required фильтр не может быть пустым.
 
