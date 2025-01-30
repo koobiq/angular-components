@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -10,18 +10,19 @@ import { take } from 'rxjs/operators';
  */
 @Component({
     standalone: true,
-    selector: 'toast-actions-overview-example',
     imports: [
         KbqLinkModule,
         KbqDropdownModule,
         KbqButtonModule
     ],
-    templateUrl: 'toast-actions-overview-example.html'
+    selector: 'toast-actions-overview-example',
+    templateUrl: 'toast-actions-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastActionsOverviewExample {
     @ViewChild('dropdown') dropdown: KbqDropdown;
 
-    constructor(private toastService: KbqToastService) {}
+    readonly toastService = inject(KbqToastService);
 
     showSingleActionToast(title: TemplateRef<any>, actions: TemplateRef<any>) {
         this.toastService.show({ style: KbqToastStyle.Success, title, actions });

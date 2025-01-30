@@ -1,11 +1,10 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, ElementRef, inject } from '@angular/core';
-import { KbqToastModule, KbqToastService } from '@koobiq/components/toast';
+import { KbqToastService } from '@koobiq/components/toast';
 import { DocsLocaleState } from 'src/app/services/locale';
 
 @Component({
     standalone: true,
-    imports: [KbqToastModule],
     template: ``,
     // @TODO should be renamed to `docsCodeSnippet`
     // eslint-disable-next-line @angular-eslint/component-selector

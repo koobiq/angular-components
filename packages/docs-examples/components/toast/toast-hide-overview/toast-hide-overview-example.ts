@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -11,21 +11,22 @@ import { switchMap, timer } from 'rxjs';
  * @title Toast hide
  */
 @Component({
-    selector: 'toast-hide-overview-example',
     standalone: true,
-    templateUrl: 'toast-hide-overview-example.html',
     imports: [
         KbqButtonModule,
         KbqLinkModule,
         KbqProgressBarModule,
         NgTemplateOutlet
-    ]
+    ],
+    selector: 'toast-hide-overview-example',
+    templateUrl: 'toast-hide-overview-example.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToastHideOverviewExample {
     themePalette = ThemePalette;
     progress: boolean;
 
-    constructor(private toastService: KbqToastService) {}
+    readonly toastService = inject(KbqToastService);
 
     showDefaultToast(actions: TemplateRef<any>) {
         this.toastService.show({

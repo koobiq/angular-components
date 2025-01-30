@@ -1817,17 +1817,15 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
-                        "outputPath": {
-                            "base": "dist/components-dev/toast"
-                        },
+                        "outputPath": "dist/components-dev/toast",
                         "tsConfig": "packages/components-dev/toast/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
+                        "browser": "packages/components-dev/toast/main.ts",
                         "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
-                        "namedChunks": true,
-                        "browser": "packages/components-dev/toast/main.ts"
+                        "namedChunks": true
                     }
                 },
                 "serve": {
