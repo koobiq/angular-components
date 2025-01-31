@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, viewChild, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
@@ -52,7 +51,6 @@ import { KbqPipeState } from './pipe-state';
         KbqListModule,
         KbqDatepickerModule,
         KbqTimepickerModule,
-        KbqLuxonDateModule,
         KbqPipeState,
         KbqFormattersModule,
         KbqPipeButton,
