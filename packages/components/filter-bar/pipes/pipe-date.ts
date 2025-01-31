@@ -22,6 +22,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
+import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     standalone: true,
@@ -54,7 +55,8 @@ import { KbqPipeState } from './pipe-state';
         KbqPipeState,
         KbqFormattersModule,
         KbqPipeButton,
-        KbqTitleModule
+        KbqTitleModule,
+        KbqPipeTitleDirective
     ]
 })
 export class KbqPipeDateComponent extends KbqBasePipe {
