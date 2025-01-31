@@ -222,3 +222,40 @@ export const zhCNFormattersData = {
         }
     }
 };
+
+export const tkTMFormattersData = {
+    formatters: {
+        number: {
+            rounding: {
+                separator: '',
+                groupSeparator: '.',
+                thousand: 'K',
+                million: 'M',
+                billion: 'B',
+                trillion: 'T'
+            }
+        }
+    },
+    input: {
+        number: {
+            groupSeparator: [','],
+            fractionSeparator: '.'
+        }
+    },
+    sizeUnits: {
+        defaultUnitSystem: 'SI',
+        defaultPrecision: 2,
+        unitSystems: {
+            SI: {
+                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
+                base: 10,
+                power: 3
+            },
+            IEC: {
+                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
+                base: 2,
+                power: 10
+            }
+        }
+    }
+};
