@@ -12,6 +12,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
+import { KbqPipeState } from './pipe-state';
+import { KbqPipeTitleDirective } from './pipe-title';
 
 @Component({
     standalone: true,
@@ -37,7 +39,9 @@ import { KbqPipeButton } from './pipe-button';
         NgClass,
         KbqPipeButton,
         ReactiveFormsModule,
-        KbqTitleModule
+        KbqTitleModule,
+        KbqPipeState,
+        KbqPipeTitleDirective
     ]
 })
 export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {

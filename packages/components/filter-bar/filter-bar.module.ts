@@ -8,6 +8,7 @@ import { KbqFilters } from './filters';
 import { KbqPipeAdd } from './pipe-add';
 import { KbqPipeDirective } from './pipe.directive';
 import { KbqPipeButton } from './pipes/pipe-button';
+import { KbqPipeTitleDirective } from './pipes/pipe-title';
 
 const COMPONENTS = [
     KbqFilterBar,
@@ -18,7 +19,8 @@ const COMPONENTS = [
     KbqPipeAdd,
     KbqPipeDirective,
     KbqPipeButton,
-    KbqFilterBarSearch
+    KbqFilterBarSearch,
+    KbqPipeTitleDirective
 ];
 
 @NgModule({

@@ -2,6 +2,7 @@
     #select
     [compareWith]="compareByValue"
     [disabled]="data.disabled"
+    [kbq-pipe-title]="pipeTooltip"
     [panelClass]="'kbq-pipe-select__panel'"
     [value]="selected"
     (selectionChange)="onSelect($event.value)"
@@ -9,15 +10,12 @@
     <button
         kbq-button
         kbq-select-matcher
-        kbq-title
         [disabled]="data.disabled"
         [kbq-pipe-state]="data"
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText class="kbq-title-text">
-            <span class="kbq-pipe__name">{{ data.name }}</span>
-            <span class="kbq-pipe__value">{{ select.triggerValue }}</span>
-        </span>
+        <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText class="kbq-pipe__value">{{ select.triggerValue }}</span>
     </button>
 
     @for (item of values; track item) {
@@ -28,3 +26,8 @@
 @if (showRemoveButton) {
     <kbq-pipe-button />
 }
+
+<ng-template #pipeTooltip>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ select.triggerValue }}</div>
+</ng-template>

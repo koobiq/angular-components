@@ -8,14 +8,13 @@
     max-height: 32px;
 
     .kbq-button-wrapper {
-        & .kbq-title-text {
-            max-width: 320px;
-            display: flex;
-        }
+        max-width: 320px;
     }
 
     .kbq-pipe__name {
         @include common.kbq-truncate-line();
+
+        min-width: 15%;
 
         flex: 1 1 auto;
 
@@ -24,6 +23,8 @@
 
     .kbq-pipe__value {
         @include common.kbq-truncate-line();
+
+        min-width: 15%;
 
         flex: 1 1 auto;
         margin-left: 4px;
@@ -73,6 +74,14 @@
             border-left-color: transparent;
         }
     }
+}
+
+.kbq-pipe-tooltip__name {
+    color: var(--kbq-foreground-white-secondary);
+}
+
+.kbq-pipe-tooltip__value {
+    color: var(--kbq-foreground-white);
 }
 
 @include kbq-filter-bar-theme();

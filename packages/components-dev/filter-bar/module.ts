@@ -167,7 +167,7 @@ export class DemoComponent {
             saved: false,
             pipes: [
                 {
-                    name: 'required',
+                    name: 'requiredrequiredrequiredrequiredrequiredrequiredrequiredrequiredrequiredrequiredrequired',
                     value: 'value',
                     type: KbqPipeTypes.Text,
 
@@ -179,6 +179,7 @@ export class DemoComponent {
                 {
                     name: 'empty',
                     type: KbqPipeTypes.Text,
+                    value: 'valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue',
 
                     required: false,
                     cleanable: true,
@@ -186,8 +187,8 @@ export class DemoComponent {
                     disabled: false
                 },
                 {
-                    name: 'cleanable',
-                    value: 'value',
+                    name: 'cleanablecleanablecleanablecleanablecleanablecleanablecleanablecleanablecleanablecleanable',
+                    value: 'valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue',
                     type: KbqPipeTypes.Text,
 
                     required: false,
