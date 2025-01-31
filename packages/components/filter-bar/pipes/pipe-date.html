@@ -1,10 +1,10 @@
 <button
     #popover="kbqPopover"
     kbq-button
-    kbq-title
     kbqPopover
     [disabled]="data.disabled"
     [kbq-pipe-state]="data"
+    [kbq-pipe-title]="pipeTooltip"
     [kbqPopoverArrow]="false"
     [kbqPopoverClass]="'kbq-pipe-date__popover'"
     [kbqPopoverContent]="content"
@@ -12,10 +12,8 @@
     [kbqPopoverPlacement]="placements.BottomLeft"
     (kbqPopoverVisibleChange)="list = true"
 >
-    <span #kbqTitleText class="kbq-title-text">
-        <span class="kbq-pipe__name">{{ data.name }}</span>
-        <span class="kbq-pipe__value">{{ formattedValue }}</span>
-    </span>
+    <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+    <span #kbqTitleText class="kbq-pipe__value">{{ formattedValue }}</span>
 </button>
 
 @if (showRemoveButton) {
@@ -106,4 +104,9 @@
             </div>
         </div>
     }
+</ng-template>
+
+<ng-template #pipeTooltip>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ formattedValue }}</div>
 </ng-template>
