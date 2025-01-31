@@ -67,6 +67,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     set activeDate(value: D | null);
     dateClass: (date: D) => KbqCalendarCellCssClasses;
     dateFilter: (date: D) => boolean;
+    datepickerInput: any;
     dateSelected(date: D): void;
     get maxDate(): D | null;
     set maxDate(value: D | null);
@@ -80,6 +81,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
     ngOnChanges(changes: SimpleChanges): void;
     // (undocumented)
     ngOnDestroy(): void;
+    registerInput(input: any): void;
     get selected(): D | null;
     set selected(value: D | null);
     readonly selectedChange: EventEmitter<D>;
@@ -269,6 +271,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     readonly adapter: DateAdapter<D>;
     // (undocumented)
+    calendar: KbqCalendar<D>;
+    // (undocumented)
     controlType: string;
     readonly dateChange: EventEmitter<KbqDatepickerInputEvent<D>>;
     // (undocumented)
@@ -300,6 +304,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     incorrectInput: EventEmitter<void>;
     // (undocumented)
     get isReadOnly(): boolean;
+    set kbqCalendar(value: KbqCalendar<D>);
     set kbqDatepicker(value: KbqDatepicker<D>);
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
     // (undocumented)
@@ -353,7 +358,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     writeValue(value: D): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker]", ["kbqDatepickerInput"], { "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, [null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
