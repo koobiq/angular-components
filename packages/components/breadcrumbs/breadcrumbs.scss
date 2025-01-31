@@ -9,15 +9,12 @@
     .kbq-breadcrumb-item {
         &.kbq-button,
         &.kbq-button-icon {
-            --kbq-button-size-border-radius: var(--kbq-breadcrumb-item-border-radius);
-            --kbq-button-size-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
             --kbq-button-size-height: var(--kbq-breadcrumb-item-height);
+            --kbq-button-size-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
+            --kbq-button-size-border-radius: var(--kbq-breadcrumb-item-border-radius);
             --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast-secondary);
             --kbq-button-transparent-contrast-fade-on-right-icon: var(--kbq-breadcrumb-item-icon-color);
             --kbq-button-transparent-contrast-fade-on-left-icon: var(--kbq-breadcrumb-item-icon-color);
-
-            padding-top: 1px;
-            padding-bottom: 1px;
 
             &[aria-current='page'] {
                 --kbq-button-transparent-contrast-fade-on-states-disabled-foreground: var(--kbq-foreground-contrast);
@@ -68,12 +65,11 @@
 
     .kbq-breadcrumb__expand {
         &.kbq-button-icon {
-            --kbq-button-size-height: var(--kbq-size-xxl);
-            width: var(--kbq-size-xxl);
             --kbq-button-icon-size-horizontal-padding: var(--kbq-breadcrumb-item-expand-horizontal-padding);
+            --kbq-button-transparent-contrast-fade-on-left-icon: var(--kbq-breadcrumb-expand-icon-color);
 
             .kbq-icon {
-                --kbq-button-transparent-contrast-fade-on-left-icon: var(--kbq-icon-contrast-fade);
+                --kbq-breadcrumb-expand-icon-color: var(--kbq-icon-contrast-fade);
             }
 
             &:not(.kbq-disabled) {
@@ -81,16 +77,14 @@
                 &.kbq-hover,
                 &.cdk-keyboard-focused {
                     .kbq-icon {
-                        --kbq-button-transparent-contrast-fade-on-left-icon: var(--kbq-states-icon-contrast-fade-hover);
+                        --kbq-breadcrumb-expand-icon-color: var(--kbq-states-icon-contrast-fade-hover);
                     }
                 }
 
                 &:active,
                 &.kbq-active {
                     .kbq-icon {
-                        --kbq-button-transparent-contrast-fade-on-left-icon: var(
-                            --kbq-states-icon-contrast-fade-active
-                        );
+                        --kbq-breadcrumb-expand-icon-color: var(--kbq-states-icon-contrast-fade-active);
                     }
                 }
             }
@@ -115,24 +109,36 @@
     }
 
     &.kbq-breadcrumbs_compact {
-        --kbq-breadcrumb-item-height: var(--kbq-size-xxl);
+        .kbq-breadcrumb-item {
+            &.kbq-button,
+            &.kbq-button-icon {
+                --kbq-breadcrumb-item-height: var(--kbq-size-xxl);
+                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            }
+        }
 
-        .kbq-button,
-        .kbq-button-icon {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        .kbq-breadcrumb__expand {
+            &.kbq-button-icon {
+                --kbq-breadcrumb-item-expand-horizontal-padding: var(--kbq-size-xxs);
+            }
         }
     }
 
     &.kbq-breadcrumbs_normal {
-        .kbq-button,
-        .kbq-button-icon {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+        .kbq-breadcrumb-item {
+            &.kbq-button,
+            &.kbq-button-icon {
+                --kbq-button-size-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
+
+                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+            }
         }
     }
 
     &.kbq-breadcrumbs_big {
         .kbq-button,
         .kbq-button-icon {
+            --kbq-button-size-height: var(--kbq-breadcrumb-item-height);
             @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
     }

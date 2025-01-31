@@ -14,26 +14,24 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'breadcrumbs-truncate-center-items-example',
     template: `
         <nav class="kbq-breadcrumbs_truncate-last-by-center" size="compact" kbq-breadcrumbs>
-            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
-                <kbq-breadcrumb-item
-                    [routerLink]="breadcrumb"
-                    [queryParams]="{ queryParams: breadcrumb }"
-                    [fragment]="breadcrumb"
-                    [text]="breadcrumb"
-                >
-                    <a *kbqBreadcrumbView>
-                        <button [attr.aria-current]="last ? 'page' : null" [disabled]="last" kbq-button kbqBreadcrumb>
+            <kbq-breadcrumb-item routerLink="./groups" text="Groups" />
+            <kbq-breadcrumb-item routerLink="./users" text="Users" />
+
+            <kbq-breadcrumb-item text="Report dated 28.08.2018">
+                <ng-container *kbqBreadcrumbView>
+                    <a routerLink="./report">
+                        <button aria-current="page" disabled kbq-button kbqBreadcrumb>
                             <span
-                                [kbqEllipsisCenter]="breadcrumb"
                                 [minVisibleLength]="15"
                                 [charWidth]="5"
                                 [kbqPlacementPriority]="PopUpPlacements.Bottom"
                                 [kbqTooltipArrow]="false"
+                                kbqEllipsisCenter="Report dated 28.08.2018"
                             ></span>
                         </button>
                     </a>
-                </kbq-breadcrumb-item>
-            }
+                </ng-container>
+            </kbq-breadcrumb-item>
         </nav>
     `,
     styles: `
