@@ -25,6 +25,11 @@ const exampleTypographyTemplate = (typographyType) => {
     return `<div class="kbq-design-token-example__typography kbq-${typographyType}">${typographyTypeOutput}</div>`;
 };
 
+const simpleExampleTypographyTemplate = (typographyType) => {
+    const typographyTypeOutput = capitalize(typographyType, { separator: '-' });
+    return `<div class="kbq-${typographyType}">${typographyTypeOutput}</div>`;
+};
+
 const outputTable = (tokens) => {
     return (
         `| | Токен | Значение |\r\n| :--- | :---| :---|\r\n` +
@@ -71,6 +76,7 @@ module.exports = {
     descriptionTemplate,
     defaultVarTemplate,
     varTypographyTemplate,
+    simpleExampleTypographyTemplate,
     exampleTemplate,
     outputTable,
     mapColor,
@@ -85,6 +91,21 @@ module.exports = {
                                 return `<tr>
                                         <td align="left">${example}</td>
                                         <td align="left" style="vertical-align: bottom">${varSnippet}</td>
+                                    </tr>`;
+                            })
+                            .join(LINE_SEP)}
+                    </tbody>
+             </table>`;
+    },
+
+    outputExampleTypographyTable: (tokens) => {
+        return `<table id="base-typography-table" kbq-table [border]="true">
+                    <tbody>
+                        ${tokens
+                            .map(({ example, varSnippet }) => {
+                                return `<tr>
+                                        <td>${example}</td>
+                                        <td>${varSnippet}</td>
                                     </tr>`;
                             })
                             .join(LINE_SEP)}

@@ -3,6 +3,18 @@ const { BASE_PATH, BUILD_PATH } = require('./config');
 module.exports = {
     source: [`${BASE_PATH}/properties/*.json5`],
     platforms: {
+        html: {
+            buildPath: 'packages/docs-examples/components/',
+            transformGroup: 'kbq/css-extended',
+            files: [
+                {
+                    filter: (token) => token.attributes.category === 'typography',
+                    destination: 'typography/typography-overview/typography-overview-example.html',
+                    format: 'example/typography',
+                    prefix: 'kbq'
+                }
+            ]
+        },
         css: {
             buildPath: BUILD_PATH,
             transformGroup: 'kbq/css-extended',

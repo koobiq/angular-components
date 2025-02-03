@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqTableModule } from '@koobiq/components/table';
 
 /**
  * @title Typography
@@ -6,6 +7,9 @@ import { Component } from '@angular/core';
 @Component({
     standalone: true,
     selector: 'typography-overview-example',
-    templateUrl: 'typography-overview-example.html'
+    templateUrl: 'typography-overview-example.html',
+    styleUrls: ['typography-overview-example.css'],
+    imports: [KbqTableModule],
+    encapsulation: ViewEncapsulation.None
 })
 export class TypographyOverviewExample {}
