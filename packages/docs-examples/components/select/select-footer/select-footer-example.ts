@@ -1,25 +1,10 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqLocaleService } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Select footer
@@ -51,22 +36,8 @@ const localeDataSet = {
     `
 })
 export class SelectFooterExample {
-    selectedButton = '';
-    selectedCaption = '';
-    selectedLink = '';
+    options = inject<Signal<string[]>>('LOCALIZED_SELECT_OPTIONS_EXAMPLE' as any);
 
-    options: string[] = [];
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
-    }
-
-    update = (locale: string) => {
-        this.options = localeDataSet[locale].items;
-        this.selectedButton = localeDataSet[locale].items[0];
-        this.selectedCaption = localeDataSet[locale].items[0];
-        this.selectedLink = localeDataSet[locale].items[0];
-    };
-    protected readonly colors = KbqComponentColors;
-    protected readonly styles = KbqButtonStyles;
+    readonly colors = KbqComponentColors;
+    readonly styles = KbqButtonStyles;
 }

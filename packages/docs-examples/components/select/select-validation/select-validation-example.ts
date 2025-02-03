@@ -1,22 +1,7 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqFormsModule, KbqLocaleService } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
+import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Select validation
@@ -68,16 +53,5 @@ const localeDataSet = {
     `
 })
 export class SelectValidationExample {
-    selected = '';
-
-    options: string[] = [];
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
-    }
-
-    update = (locale: string) => {
-        this.options = localeDataSet[locale].items;
-        this.selected = localeDataSet[locale].items[0];
-    };
+    options = inject<Signal<string[]>>('LOCALIZED_SELECT_OPTIONS_EXAMPLE' as any);
 }

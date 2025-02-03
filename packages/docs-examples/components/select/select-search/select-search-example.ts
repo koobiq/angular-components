@@ -1,28 +1,13 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { KBQ_LOCALE_SERVICE, KbqHighlightModule, KbqLocaleService } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component, inject, Signal } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { Observable, merge, of } from 'rxjs';
+import { merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Select search
@@ -72,22 +57,7 @@ const localeDataSet = {
     `
 })
 export class SelectSearchExample {
-    options: string[] = [];
-    selected = '';
-
-    searchControl: FormControl = new FormControl();
-    filteredOptions: Observable<string[]>;
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
-    }
-
-    update = (locale: string) => {
-        this.options = localeDataSet[locale].items;
-        this.selected = localeDataSet[locale].items[0];
-
-        this.init();
-    };
+    options = inject<Signal<string[]>>('LOCALIZED_SELECT_OPTIONS_EXAMPLE' as any);
 
     init(): void {
         this.filteredOptions = merge(
