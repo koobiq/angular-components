@@ -1,58 +1,60 @@
 <!-- example(typography-overview) -->
 
-### Использование и переопределение
+### Шрифты
 
-```scss
-@use '~@koobiq/components/theming';
+Koobiq по умолчанию использует шрифты [Inter](https://github.com/rsms/inter) и [JetBrains Mono](https://github.com/JetBrains/JetBrainsMono).
 
-// returns default typography config
-$typography: kbq-typography-config();
-//If you need to get font size of mosaic small-text and don`t want to use .kbq-small-text class
-.some-selector {
-    font-size: kbq-font-size($typography-config, small-text);
-}
+| Шрифт          | Жирность | Стиль   |
+| -------------- | -------- | ------- |
+| JetBrains Mono | 400      | Обычный |
+| JetBrains Mono | 700      | Обычный |
+| Inter          | 400      | Обычный |
+| Inter          | 400      | Курсив  |
+| Inter          | 500      | Обычный |
+| Inter          | 500      | Курсив  |
+| Inter          | 600      | Обычный |
+| Inter          | 700      | Обычный |
+
+#### Добавление шрифтов
+
+Добавьте их в ваше приложение при помощи [Fontsource](#fontsource) или [Google Fonts CDN](#google-fonts-cdn).
+
+##### Fontsource
+
+Установите пакеты:
+
+```bash
+yarn add @fontsource/inter @fontsource/jetbrains-mono
 ```
 
-#### Частичное переопределение конфигурации
+Затем добавьте следующий код в ваши глобальные стили:
 
 ```scss
-//kbq-typography-level($font-size, $line-height: $font-size, $letter-spacing: normal, $font-weight: normal, $font-family: null, $text-transform: null)
-$typography: kbq-typography-config(
-    $body: kbq-typography-level(45px, 45px, 0.55px)
-);
+// Inter
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/400-italic.css';
+@import '@fontsource/inter/500-italic.css';
+
+// JetBrains Mono
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/700.css';
 ```
 
-#### Полное переопределение конфигурации
+##### Google Fonts CDN
 
-```scss
-$fonts: (
-    base: (
-        font-family: #{Roboto,
-        -apple-system,
-        BlinkMacSystemFont,
-        'Segoe UI',
-        'Helvetica Neue',
-        Arial,
-        sans-serif}
-    ),
-    mono: (
-        font-family: #{'Roboto Mono',
-        'Consolas',
-        'Menlo',
-        'Monaco',
-        monospace}
-    )
-);
+Добавьте следующий код в тег `<head>`:
 
-$font-family: map.get(map.get($fonts, base), font-family);
-$font-family-mono: map.get(map.get($fonts, mono), font-family);
-
-$typography: kbq-typography-config(
-    $font-family,
-    $font-family-mono,
-    $headline: kbq-typography-level(24px, 32px),
-    $title: kbq-typography-level(20px, 28px, 0.15px, 500),
-    $subheading: kbq-typography-level(15px, 20px, 0.15px, 700),
-    $small-text: kbq-typography-level(13px, 16px, 0.25px)
-);
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- Inter -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
+    rel="stylesheet"
+/>
+<!-- JetBrains Mono -->
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
 ```
