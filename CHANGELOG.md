@@ -1,3 +1,15 @@
+# 18.12.0 (2025-02-03)
+
+### Koobiq
+
+ * bug fix  **file-upload:** added invalid empty state ([#DS-3168](https://github.com/koobiq/angular-components/issues/issue/DS-3168)) ([#505](https://github.com/koobiq/angular-components/issues/505)) ([e2ccb92](https://github.com/koobiq/angular-components/commit/e2ccb92ff9fd5271877a8d1b99e072053f6ced4e))
+ * bug fix  **input:** updated hint typography from text-normal-medium to text-normal ([#DS-3189](https://github.com/koobiq/angular-components/issues/issue/DS-3189)) ([#508](https://github.com/koobiq/angular-components/issues/508)) ([d61aade](https://github.com/koobiq/angular-components/commit/d61aadee0e28f4ddee5a6a84ceca9eae318d5807))
+ * bug fix  **scrollbar:** select dropdowns do not scroll with the field ([#DS-3308](https://github.com/koobiq/angular-components/issues/issue/DS-3308)) ([#507](https://github.com/koobiq/angular-components/issues/507)) ([c1f56ba](https://github.com/koobiq/angular-components/commit/c1f56baeaab8a1422f06358128b2edc625844149))
+ * bug fix  **tree-select:** color for kbq-select-search-empty-result ([#DS-3138](https://github.com/koobiq/angular-components/issues/issue/DS-3138)) ([#509](https://github.com/koobiq/angular-components/issues/509)) ([44751b0](https://github.com/koobiq/angular-components/commit/44751b0199c582381f88c64556b75711550f9fc6))
+ * bug fix  **tree-select:** delete unused code ([#DS-3275](https://github.com/koobiq/angular-components/issues/issue/DS-3275)) ([#503](https://github.com/koobiq/angular-components/issues/503)) ([1fcada4](https://github.com/koobiq/angular-components/commit/1fcada431d817a6008f06b8a56cdf92294723494))
+ * feature  **modal:** injector for modal ([#DS-3025](https://github.com/koobiq/angular-components/issues/issue/DS-3025)) ([#510](https://github.com/koobiq/angular-components/issues/510)) ([78be3f8](https://github.com/koobiq/angular-components/commit/78be3f87d35a424c726c724dcdd83757e80d16d2))
+ * feature  **toast:** migrated module to standalone ([#DS-3328](https://github.com/koobiq/angular-components/issues/issue/DS-3328)) ([#513](https://github.com/koobiq/angular-components/issues/513)) ([83ffa1b](https://github.com/koobiq/angular-components/commit/83ffa1b5883355189fcc2c8598a97746a132b661))
+
 # 18.11.0 (2025-01-21)
 
 ### Koobiq
