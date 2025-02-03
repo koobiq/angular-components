@@ -35,3 +35,7 @@
     --kbq-form-field-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
 }
+
+:where(.kbq-dark) {
+    --kbq-form-field-states-error-placeholder: var(--kbq-foreground-error-secondary);
+}
