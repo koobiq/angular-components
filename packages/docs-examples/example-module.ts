@@ -322,6 +322,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "breadcrumbs-overview-example.ts",
     "importPath": "components/breadcrumbs"
   },
+  "breadcrumbs-routing": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-routing",
+    "title": "Breadcrumbs Routing",
+    "componentName": "BreadcrumbsRoutingExample",
+    "files": [
+      "breadcrumbs-routing-example.ts"
+    ],
+    "selector": "breadcrumbs-routing-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-routing-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
   "breadcrumbs-size": {
     "packagePath": "components/breadcrumbs/breadcrumbs-size",
     "title": "Breadcrumbs sizes",
@@ -344,6 +356,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "breadcrumbs-truncate-by-abbrev-items-example",
     "additionalComponents": [],
     "primaryFile": "breadcrumbs-truncate-by-abbrev-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-truncate-center-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-center-items",
+    "title": "Breadcrumbs Truncate Center Items",
+    "componentName": "BreadcrumbsTruncateCenterItemsExample",
+    "files": [
+      "breadcrumbs-truncate-center-items-example.ts"
+    ],
+    "selector": "breadcrumbs-truncate-center-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-center-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
   "breadcrumbs-truncate-head-items": {
@@ -1974,6 +1998,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "markdown-table-example.ts",
     "importPath": "components/markdown"
+  },
+  "modal-component-with-injector": {
+    "packagePath": "components/modal/modal-component-with-injector",
+    "title": "Modal component With Injector",
+    "componentName": "ModalComponentWithInjectorExample",
+    "files": [
+      "modal-component-with-injector-example.ts"
+    ],
+    "selector": "modal-component-with-injector-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
+    "primaryFile": "modal-component-with-injector-example.ts",
+    "importPath": "components/modal"
   },
   "modal-component": {
     "packagePath": "components/modal/modal-component",
@@ -3623,9 +3661,13 @@ return import('@koobiq/docs-examples/components/breadcrumbs');
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-overview':
 return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-routing':
+return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-size':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-truncate-by-abbrev-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-center-items':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-truncate-head-items':
 return import('@koobiq/docs-examples/components/breadcrumbs');
@@ -3889,6 +3931,8 @@ return import('@koobiq/docs-examples/components/markdown');
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-table':
 return import('@koobiq/docs-examples/components/markdown');
+  case 'modal-component-with-injector':
+return import('@koobiq/docs-examples/components/modal');
   case 'modal-component':
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-multiple':
