@@ -1025,6 +1025,85 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             searchPlaceholder: string;
         };
     };
+    'tk-TM': {
+        formatters: {
+            number: {
+                rounding: {
+                    separator: string;
+                    groupSeparator: string;
+                    thousand: string;
+                    million: string;
+                    billion: string;
+                    trillion: string;
+                };
+            };
+        };
+        input: {
+            number: {
+                groupSeparator: string[];
+                fractionSeparator: string;
+            };
+        };
+        sizeUnits: {
+            defaultUnitSystem: string;
+            defaultPrecision: number;
+            unitSystems: {
+                SI: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+                IEC: {
+                    abbreviations: string[];
+                    base: number;
+                    power: number;
+                };
+            };
+        };
+        select: {
+            hiddenItemsText: string;
+        };
+        datepicker: {
+            placeholder: string;
+            dateInput: string;
+        };
+        timepicker: {
+            placeholder: {
+                full: string;
+                short: string;
+            };
+        };
+        fileUpload: {
+            single: {
+                captionText: string;
+                browseLink: string;
+            };
+            multiple: {
+                captionText: string;
+                captionTextWhenSelected: string;
+                captionTextForCompactSize: string;
+                browseLink: string;
+                title: string;
+                gridHeaders: {
+                    file: string;
+                    size: string;
+                };
+            };
+        };
+        codeBlock: {
+            softWrapOnTooltip: string;
+            softWrapOffTooltip: string;
+            downloadTooltip: string;
+            copiedTooltip: string;
+            copyTooltip: string;
+            viewAllText: string;
+            viewLessText: string;
+            openExternalSystemTooltip: string;
+        };
+        timezone: {
+            searchPlaceholder: string;
+        };
+    };
 };
 
 // @public (undocumented)
@@ -2503,6 +2582,91 @@ export class ThemeService<T extends KbqTheme | null = KbqTheme> implements OnDes
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<ThemeService<any>>;
 }
+
+// @public (undocumented)
+export const tkTMFormattersData: {
+    formatters: {
+        number: {
+            rounding: {
+                separator: string;
+                groupSeparator: string;
+                thousand: string;
+                million: string;
+                billion: string;
+                trillion: string;
+            };
+        };
+    };
+    input: {
+        number: {
+            groupSeparator: string[];
+            fractionSeparator: string;
+        };
+    };
+    sizeUnits: {
+        defaultUnitSystem: string;
+        defaultPrecision: number;
+        unitSystems: {
+            SI: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+            IEC: {
+                abbreviations: string[];
+                base: number;
+                power: number;
+            };
+        };
+    };
+};
+
+// @public (undocumented)
+export const tkTMLocaleData: {
+    select: {
+        hiddenItemsText: string;
+    };
+    datepicker: {
+        placeholder: string;
+        dateInput: string;
+    };
+    timepicker: {
+        placeholder: {
+            full: string;
+            short: string;
+        };
+    };
+    fileUpload: {
+        single: {
+            captionText: string;
+            browseLink: string;
+        };
+        multiple: {
+            captionText: string;
+            captionTextWhenSelected: string;
+            captionTextForCompactSize: string;
+            browseLink: string;
+            title: string;
+            gridHeaders: {
+                file: string;
+                size: string;
+            };
+        };
+    };
+    codeBlock: {
+        softWrapOnTooltip: string;
+        softWrapOffTooltip: string;
+        downloadTooltip: string;
+        copiedTooltip: string;
+        copyTooltip: string;
+        viewAllText: string;
+        viewLessText: string;
+        openExternalSystemTooltip: string;
+    };
+    timezone: {
+        searchPlaceholder: string;
+    };
+};
 
 // @public @deprecated
 export function toBoolean(value: unknown): boolean;
