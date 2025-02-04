@@ -48,7 +48,6 @@ export const DOCS_ROUTES: Routes = [
                     { path: 'shadows', component: TokensOverview, pathMatch: 'full' },
                     { path: 'border-radius', component: TokensOverview, pathMatch: 'full' },
                     { path: 'sizes', component: TokensOverview, pathMatch: 'full' },
-                    { path: 'tokens-typography', component: TokensOverview, pathMatch: 'full' },
                     { path: 'palette', component: TokensOverview, pathMatch: 'full' },
                     { path: '**', redirectTo: 'colors' }
                 ]

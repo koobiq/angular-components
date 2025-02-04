@@ -23,12 +23,6 @@
     max-width: 280px;
 }
 
-.kbq-design-token-example__typography {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
 .kbq-design-token-example__var {
     display: inline-flex;
     height: 100%;
@@ -39,13 +33,25 @@
     display: none;
 }
 
-#base-typography-table.kbq-markdown__table {
+#font-classes-table {
     .kbq-markdown__tr {
         border-bottom: 1px solid var(--kbq-line-contrast-less);
-    }
 
-    .kbq-markdown__td:last-child {
-        vertical-align: baseline;
+        .kbq-markdown__td {
+            > .kbq-markdown__code[kbq-code-snippet] {
+                cursor: pointer;
+            }
+
+            &:first-child > div {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+
+            &:last-child {
+                vertical-align: baseline;
+            }
+        }
     }
 }
 
@@ -54,7 +60,6 @@
 }
 
 // standard breakpoint
-
 @media (max-width: 768px) {
     .kbq-markdown .kbq-markdown__table .kbq-markdown__thead {
         display: none;
@@ -87,29 +92,37 @@
 }
 
 @media (max-width: 768px) {
-    #base-typography-table.kbq-markdown__table .kbq-markdown__tr .kbq-markdown__td:first-child {
+    .kbq-markdown__table .kbq-markdown__thead {
+        display: none;
+    }
+
+    #font-classes-table .kbq-markdown__tr .kbq-markdown__td:first-child {
         width: 90%;
     }
 }
 
 @media (769px <= width <= 1279px) {
-    .kbq-design-token-example__typography {
-        max-width: 217px;
+    #font-classes-table {
+        .kbq-markdown__tr {
+            .kbq-markdown__td:first-child > div {
+                max-width: 217px;
+            }
+        }
     }
 }
 
 @media (1280px <= width <= 1920px) {
-    .kbq-design-token-example__typography {
-        max-width: 394px;
+    #font-classes-table {
+        .kbq-markdown__tr {
+            .kbq-markdown__td:first-child > div {
+                max-width: 394px;
+            }
+        }
     }
 }
 
 @media (769px <= width <= 1560px) {
     .kbq-design-token-example__value {
-        display: none;
-    }
-
-    .kbq-markdown .kbq-markdown__table .kbq-markdown__thead {
         display: none;
     }
 

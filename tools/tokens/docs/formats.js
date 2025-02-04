@@ -7,9 +7,7 @@ const {
     mapShadows,
     outputTypographyTable,
     outputTable,
-    outputPage,
-    outputExampleTypographyTable,
-    simpleExampleTypographyTemplate
+    outputPage
 } = require('./templates');
 const { updateObject, sortSections } = require('./utils');
 const { DEFAULT_MARKDOWN_HEADER_LEVEL, LINE_SEP, NO_HEADER } = require('./config');
@@ -103,33 +101,6 @@ module.exports = (StyleDictionary) => {
             });
             const mappedTokens = filtered.map(mapTypography);
             return outputTypographyTable(mappedTokens);
-        }
-    });
-
-    StyleDictionary.registerFormat({
-        name: 'example/typography',
-        formatter: function ({ dictionary }) {
-            const filtered = [];
-            for (const token of dictionary.allTokens) {
-                const isTypographyTypeMissing =
-                    filtered.findIndex(({ attributes }) => attributes.type === token.attributes.type) === -1;
-                if (isTypographyTypeMissing && token.attributes.item === 'font-size') {
-                    filtered.push(token);
-                }
-            }
-            // Sort by font-size
-            filtered.sort((a, b) => {
-                const aFontSize = parseInt(a.value);
-                const bFontSize = parseInt(b.value);
-                if (aFontSize < bFontSize) return 1;
-                if (aFontSize > bFontSize) return -1;
-                return 0;
-            });
-            const mappedTokens = filtered.map((token) => ({
-                varSnippet: `kbq-${token.attributes.type}`,
-                example: simpleExampleTypographyTemplate(token.attributes.type)
-            }));
-            return outputExampleTypographyTable(mappedTokens);
         }
     });
 

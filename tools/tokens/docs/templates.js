@@ -1,4 +1,4 @@
-const { LINE_SEP, NO_HEADER } = require('./config');
+const { LINE_SEP, NO_HEADER, TYPOGRAPHY_TABLE_ID } = require('./config');
 const { capitalize } = require('./utils');
 
 const descriptionTemplate = (token) =>
@@ -10,19 +10,13 @@ const defaultVarTemplate = (token) =>
 const exampleTemplate = (designToken) =>
     `<div class="kbq-design-token-example__dimensions" style="${designToken}"></div>`;
 
-const varTypographyTemplate = (token) =>
-    `<div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">.kbq-${token.attributes.type}</code></div>`;
+const varTypographyTemplate = (token) => `<code kbq-code-snippet>kbq-${token.attributes.type}</code>`;
 
 const shadowsTemplate = (designToken) => `<div class="kbq-design-token-example__shadows" style="${designToken}"></div>`;
 
 const sizesTemplate = (designToken) => {
     const varTemplate = `var(--${designToken.name})`;
     return `<div class="kbq-design-token-example__sizes" style="width: ${varTemplate};"></div>`;
-};
-
-const exampleTypographyTemplate = (typographyType) => {
-    const typographyTypeOutput = capitalize(typographyType, { separator: '-' });
-    return `<div class="kbq-design-token-example__typography kbq-${typographyType}">${typographyTypeOutput}</div>`;
 };
 
 const simpleExampleTypographyTemplate = (typographyType) => {
@@ -84,29 +78,20 @@ module.exports = {
     outputPage,
 
     outputTypographyTable: (tokens) => {
-        return `<table id="base-typography-table">
+        return `<table id="${TYPOGRAPHY_TABLE_ID}">
+                    <thead>
+                       <tr>
+                            <th>Typography Example</th>
+                            <th>CSS Class Name</th>
+                       </tr>
+                    </thead>
                     <tbody>
                         ${tokens
                             .map(({ example, varSnippet }) => {
                                 return `<tr>
-                                        <td align="left">${example}</td>
-                                        <td align="left" style="vertical-align: bottom">${varSnippet}</td>
-                                    </tr>`;
-                            })
-                            .join(LINE_SEP)}
-                    </tbody>
-             </table>`;
-    },
-
-    outputExampleTypographyTable: (tokens) => {
-        return `<table id="base-typography-table" kbq-table [border]="true">
-                    <tbody>
-                        ${tokens
-                            .map(({ example, varSnippet }) => {
-                                return `<tr>
-                                        <td>${example}</td>
-                                        <td>${varSnippet}</td>
-                                    </tr>`;
+                                            <td>${example}</td>
+                                            <td>${varSnippet}</td>
+                                        </tr>`;
                             })
                             .join(LINE_SEP)}
                     </tbody>
@@ -121,7 +106,7 @@ module.exports = {
 
     mapTypography: (token) => ({
         varSnippet: varTypographyTemplate(token),
-        example: exampleTypographyTemplate(token.attributes.type)
+        example: simpleExampleTypographyTemplate(token.attributes.type)
     }),
 
     mapGlobals: (token) => ({

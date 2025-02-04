@@ -4,16 +4,17 @@ module.exports = {
     source: [`${BASE_PATH}/properties/*.json5`],
     platforms: {
         html: {
-            buildPath: 'packages/docs-examples/components/',
+            buildPath: 'packages/components/core/styles/typography/',
             transformGroup: 'kbq/css-extended',
             files: [
                 {
                     filter: (token) => token.attributes.category === 'typography',
-                    destination: 'typography/typography-overview/typography-overview-example.html',
-                    format: 'example/typography',
+                    destination: 'tmp.typography.html',
+                    format: 'docs/typography',
                     prefix: 'kbq'
                 }
-            ]
+            ],
+            actions: ['insert_table']
         },
         css: {
             buildPath: BUILD_PATH,
@@ -32,12 +33,6 @@ module.exports = {
                     filter: (token) => token.attributes.category === 'palette',
                     destination: 'palette.md',
                     format: 'docs/palette',
-                    prefix: 'kbq'
-                },
-                {
-                    filter: (token) => token.attributes.category === 'typography',
-                    destination: 'tokens-typography.md',
-                    format: 'docs/typography',
                     prefix: 'kbq'
                 },
                 {
