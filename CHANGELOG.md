@@ -1,3 +1,9 @@
+## 18.12.1 (2025-02-04)
+
+### Koobiq
+
+ * bug fix  **docs:** added missing CdkScrollable for DocsComponentViewerComponent ([#DS-3361](https://github.com/koobiq/angular-components/issues/issue/DS-3361)) ([#518](https://github.com/koobiq/angular-components/issues/518)) ([cc6d34e](https://github.com/koobiq/angular-components/commit/cc6d34ea49f0a5e3fe554f850745080743f28500))
+
 # 18.12.0 (2025-02-03)
 
 ### Koobiq
