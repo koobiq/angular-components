@@ -1,4 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -38,6 +39,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         KbqModalModule
     ],
     providers: [KbqSidepanelService],
+    hostDirectives: [CdkScrollable],
     selector: 'docs-component-viewer',
     templateUrl: './component-viewer.template.html',
     styleUrls: ['./component-viewer.scss'],
