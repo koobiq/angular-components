@@ -1,6 +1,6 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { TypographyExamplesModule } from '../../docs-examples/components/typography';
+import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
     selector: 'app',
@@ -16,7 +16,7 @@ export class DemoComponent {}
     ],
     imports: [
         BrowserModule,
-        TypographyExamplesModule
+        KbqTableModule
     ],
     bootstrap: [
         DemoComponent
