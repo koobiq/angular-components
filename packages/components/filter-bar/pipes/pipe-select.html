@@ -3,6 +3,7 @@
     [compareWith]="compareByValue"
     [disabled]="data.disabled"
     [kbq-pipe-title]="pipeTooltip"
+    [ngClass]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-select__panel'"
     [value]="selected"
     (selectionChange)="onSelect($event.value)"

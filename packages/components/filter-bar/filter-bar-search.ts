@@ -5,6 +5,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
     standalone: true,
@@ -16,6 +17,7 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
             [kbqStyle]="'transparent'"
             (click)="openSearch()"
             kbq-button
+            kbqTooltip="Поиск"
         >
             <i kbq-icon="kbq-magnifying-glass_16"></i>
         </button>
@@ -41,6 +43,7 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
     imports: [
         KbqDividerModule,
         KbqButtonModule,
+        KbqToolTipModule,
         KbqIconModule,
         KbqFormFieldModule,
         KbqInputModule,

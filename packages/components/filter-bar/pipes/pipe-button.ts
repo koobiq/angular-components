@@ -11,8 +11,6 @@ import { KbqPipeState } from './pipe-state';
     standalone: true,
     selector: 'kbq-pipe-button',
     template: `
-        <kbq-divider class="kbq-pipe__separator" [paddings]="false" [vertical]="true" />
-
         <button
             class="kbq-pipe__remove-button"
             [disabled]="pipe.data.disabled"

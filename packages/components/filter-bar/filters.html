@@ -21,6 +21,7 @@
         kbq-button
         kbq-filter-bar-button
         kbqTooltip="Сохранить новый фильтр"
+        class="kbq-button_action"
         [color]="colors.Empty"
         (click)="onSaveAsNew.next(this.activeFilter!)"
     >
@@ -32,6 +33,7 @@
     <button
         kbq-button
         kbq-filter-bar-button
+        class="kbq-button_action"
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
         [ngClass]="{ 'kbq-button_changed-saved-filter': savedFilterChanged }"
