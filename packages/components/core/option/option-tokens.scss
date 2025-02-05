@@ -4,6 +4,7 @@
     --kbq-option-size-horizontal-padding: var(--kbq-size-m);
     --kbq-option-size-height: var(--kbq-size-3xl);
     --kbq-option-size-border-width: 2px;
+    --kbq-option-border-radius: var(--kbq-size-xs);
     /* LIST THEME TOKENS */
     @include list-tokens.list-theme-tokens;
 }

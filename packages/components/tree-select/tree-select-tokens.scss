@@ -3,3 +3,7 @@
     --kbq-select-panel-dropdown-background: var(--kbq-background-card);
     --kbq-select-panel-dropdown-shadow: var(--kbq-shadow-popup);
 }
+
+.kbq-tree-select__panel .kbq-tree-selection {
+    --kbq-tree-option-border-radius: var(--kbq-size-xs);
+}

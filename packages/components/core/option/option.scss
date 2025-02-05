@@ -4,6 +4,7 @@
 
 .kbq-option {
     @include common.kbq-list-item-base();
+    border-radius: var(--kbq-option-border-radius);
 
     &:not(.kbq-disabled) {
         cursor: pointer;

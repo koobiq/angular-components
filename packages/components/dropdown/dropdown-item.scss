@@ -2,6 +2,7 @@
 
 .kbq-dropdown-item {
     width: 100%;
+    border-radius: var(--kbq-dropdown-item-border-radius);
 
     @include common.user-select(none);
     @include common.kbq-list-item-base();
