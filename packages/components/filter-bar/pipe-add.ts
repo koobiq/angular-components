@@ -2,6 +2,7 @@ import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
 
@@ -9,7 +10,13 @@ import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
     standalone: true,
     selector: 'kbq-pipe-add',
     template: `
-        <button [color]="'contrast-fade'" [kbqStyle]="'outline'" [kbqDropdownTriggerFor]="newPipes" kbq-button>
+        <button
+            [color]="'contrast-fade'"
+            [kbqStyle]="'outline'"
+            [kbqDropdownTriggerFor]="newPipes"
+            kbq-button
+            kbqTooltip="Добавить фильтр"
+        >
             <ng-content>
                 <i kbq-icon="kbq-plus_16"></i>
             </ng-content>
@@ -26,6 +33,7 @@ import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
     },
     imports: [
         KbqDropdownModule,
+        KbqToolTipModule,
         KbqButtonModule,
         KbqIcon
     ]

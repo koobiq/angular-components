@@ -43,6 +43,21 @@
         color: var(--kbq-line-contrast-less);
     }
 
+    .kbq-select:not(:hover, .kbq-active),
+    .kbq-button:not(:hover, .kbq-active) {
+        & + .kbq-pipe-button:not(:hover, .kbq-active)::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+
+            width: 1px;
+            height: 12px;
+
+            background: var(--kbq-line-contrast-less);
+        }
+    }
+
     .kbq-button.cdk-keyboard-focused {
         z-index: 1;
     }
