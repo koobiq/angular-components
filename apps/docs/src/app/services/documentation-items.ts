@@ -390,7 +390,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'modal',
                     hasApi: true,
                     apiId: 'modal',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: 'navbar',
