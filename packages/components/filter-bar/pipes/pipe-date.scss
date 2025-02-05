@@ -126,6 +126,10 @@
             & .kbq-button {
                 width: 100%;
                 justify-content: flex-start;
+
+                &:not(.kbq-disabled) .kbq-button_hot-key {
+                    color: var(--kbq-foreground-contrast-secondary);
+                }
             }
         }
     }

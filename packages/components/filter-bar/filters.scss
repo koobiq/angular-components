@@ -38,17 +38,29 @@
         &::after {
             content: '';
             position: absolute;
-            right: -2px;
-            top: -2px;
+            right: -4px;
+            top: -4px;
 
             width: 8px;
             height: 8px;
 
-            border: 2px solid white;
+            border: 2px solid var(--kbq-background-bg);
             border-radius: 6px;
 
             background: var(--kbq-icon-warning);
         }
+    }
+
+    .kbq-button:not(:hover, .kbq-active) + .kbq-button_action:not(:hover, .kbq-active)::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 10px;
+
+        width: 1px;
+        height: 12px;
+
+        background: var(--kbq-line-contrast-less);
     }
 }
 
