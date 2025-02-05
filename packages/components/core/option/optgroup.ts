@@ -10,6 +10,7 @@ let uniqueOptgroupIdCounter = 0;
 
 /**
  * Component that is used to group instances of `kbq-option`.
+ * When options aren't provided as `ng-content`, used as a Group Header with styling.
  */
 @Component({
     selector: 'kbq-optgroup',
