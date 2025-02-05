@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { KBQ_LUXON_DATE_FORMATS, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -65,6 +65,7 @@ export class AbsoluteDateFormatterExample {
     constructor(
         private adapter: DateAdapter<DateTime>,
         private dateFormatter: DateFormatter<DateTime>,
+        private changeDetectorRef: ChangeDetectorRef,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
@@ -75,6 +76,8 @@ export class AbsoluteDateFormatterExample {
 
         this.populateAbsoluteLong();
         this.populateAbsoluteShort();
+
+        this.changeDetectorRef.markForCheck();
     };
 
     private populateAbsoluteShort() {

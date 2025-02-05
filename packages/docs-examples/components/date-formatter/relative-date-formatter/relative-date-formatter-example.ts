@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { KBQ_LUXON_DATE_FORMATS, LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -85,6 +85,7 @@ export class RelativeDateFormatterExample {
     constructor(
         private adapter: DateAdapter<DateTime>,
         private dateFormatter: DateFormatter<DateTime>,
+        private changeDetectorRef: ChangeDetectorRef,
         @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
     ) {
         this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
@@ -95,6 +96,8 @@ export class RelativeDateFormatterExample {
 
         this.populateRelativeLong(locale);
         this.populateRelativeShort(locale);
+
+        this.changeDetectorRef.markForCheck();
     };
 
     private populateRelativeShort(locale: string) {
