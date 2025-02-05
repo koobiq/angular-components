@@ -1,6 +1,6 @@
 ### Typography styles
 
-<!-- font-classes-table -->
+<!-- DO NOT EDIT DIRECTLY font-classes-table -->
 <table id="font-classes-table">
   <thead>
     <tr>
@@ -202,7 +202,7 @@
   </tbody>
 </table>
 
-<!-- END font-classes-table -->
+<!-- DO NOT EDIT DIRECTLY font-classes-table END -->
 
 ### Installing Fonts
 
