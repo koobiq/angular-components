@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors, KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -67,7 +67,8 @@ export class DemoComponent {
         KbqButtonModule,
         KbqDropdownModule,
         KbqTitleModule,
-        KbqDividerModule
+        KbqDividerModule,
+        KbqOptionModule
     ],
     bootstrap: [
         DemoComponent

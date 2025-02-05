@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
+import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -24,7 +25,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqIconModule,
         KbqTitleModule,
         KbqFormFieldModule,
-        KbqInputModule
+        KbqInputModule,
+        KbqOptionModule
     ],
     templateUrl: 'dropdown-open-by-arrow-down-example.html'
 })
