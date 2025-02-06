@@ -31,7 +31,12 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { KbqOption, KbqOptionSelectionChange, KeyboardNavigationHandler } from '@koobiq/components/core';
+import {
+    KbqOption,
+    KbqOptionSelectionChange,
+    KeyboardNavigationHandler,
+    defaultOffsetY
+} from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { Observable, Subject, Subscription, defer, fromEvent, merge, of as observableOf } from 'rxjs';
 import { delay, filter, map, switchMap, take, tap } from 'rxjs/operators';
@@ -622,16 +627,14 @@ export class KbqAutocompleteTrigger
                     originY: 'bottom',
                     overlayX: 'start',
                     overlayY: 'top',
-                    // @TODO: should be moved to separate constant within refactoring (#DS-3298)
-                    offsetY: 2
+                    offsetY: defaultOffsetY
                 },
                 {
                     originX: 'start',
                     originY: 'top',
                     overlayX: 'start',
                     overlayY: 'bottom',
-                    // @TODO: should be moved to separate constant within refactoring (#DS-3298)
-                    offsetY: -2
+                    offsetY: -defaultOffsetY
                 }
             ] as ConnectedPosition[]);
 

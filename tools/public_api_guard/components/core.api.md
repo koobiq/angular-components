@@ -215,6 +215,9 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
     static ɵprov: i0.ɵɵInjectableDeclaration<DateFormatter<any>>;
 }
 
+// @public
+export const defaultOffsetY: number;
+
 // @public (undocumented)
 export const enUSFormattersData: {
     formatters: {
