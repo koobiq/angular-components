@@ -112,7 +112,7 @@ export class KbqPipeDateComponent extends KbqBasePipe {
     }
 
     onKeydown($event: KeyboardEvent) {
-        if ($event.ctrlKey && $event.keyCode === ENTER) {
+        if (($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApplyPeriod();
         }
     }

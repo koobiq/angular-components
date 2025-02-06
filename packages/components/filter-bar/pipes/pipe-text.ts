@@ -70,7 +70,7 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
     }
 
     onKeydown($event: KeyboardEvent) {
-        if (!this.disabled && $event.ctrlKey && $event.keyCode === ENTER) {
+        if (!this.disabled && ($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApply();
         }
     }
