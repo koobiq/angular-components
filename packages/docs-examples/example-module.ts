@@ -1891,6 +1891,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "markdown-table-example.ts",
     "importPath": "components/markdown"
   },
+  "modal-component-with-injector": {
+    "packagePath": "components/modal/modal-component-with-injector",
+    "title": "Modal component With Injector",
+    "componentName": "ModalComponentWithInjectorExample",
+    "files": [
+      "modal-component-with-injector-example.ts"
+    ],
+    "selector": "modal-component-with-injector-example",
+    "additionalComponents": [
+      "CustomModalComponent"
+    ],
+    "primaryFile": "modal-component-with-injector-example.ts",
+    "importPath": "components/modal"
+  },
   "modal-component": {
     "packagePath": "components/modal/modal-component",
     "title": "Modal component",
@@ -3791,6 +3805,8 @@ return import('@koobiq/docs-examples/components/markdown');
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-table':
 return import('@koobiq/docs-examples/components/markdown');
+  case 'modal-component-with-injector':
+return import('@koobiq/docs-examples/components/modal');
   case 'modal-component':
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-multiple':
