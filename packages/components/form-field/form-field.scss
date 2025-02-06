@@ -29,6 +29,7 @@
         z-index: 1;
     }
 
+    &.cdk-focused,
     &.kbq-focused {
         z-index: 2;
     }

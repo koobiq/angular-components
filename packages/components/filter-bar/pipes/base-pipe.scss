@@ -77,7 +77,7 @@
         border-top-right-radius: unset;
 
         &:not(.cdk-keyboard-focused) {
-            border-right-color: transparent;
+            border-right: none;
         }
     }
 
@@ -86,7 +86,7 @@
         border-top-left-radius: unset;
 
         &:not(.cdk-keyboard-focused) {
-            border-left-color: transparent;
+            border-left: none;
         }
     }
 }
