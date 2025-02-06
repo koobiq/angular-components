@@ -1,3 +1,4 @@
+import { Platform } from '@angular/cdk/platform';
 import { ChangeDetectorRef, Directive, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { KbqFilterBar } from '../filter-bar';
@@ -15,6 +16,7 @@ import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
     }
 })
 export class KbqBasePipe {
+    protected readonly platform = inject(Platform);
     readonly stateChanges = new Subject<void>();
     readonly data = inject(KbqPipeData);
 
