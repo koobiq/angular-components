@@ -1,19 +1,22 @@
 <button
     kbq-button
     kbq-filter-bar-button
+    kbq-title
     [color]="colors.ContrastFade"
     [kbqDropdownTriggerFor]="savedFilters"
     [kbqStyle]="styles.Outline"
     (dropdownOpened)="input.focus()"
 >
-    @if (activeFilter?.name) {
-        {{ activeFilter!.name }}
-    } @else {
-        <ng-content>
-            <i kbq-icon="kbq-list_16"></i>
-            Фильтры
-        </ng-content>
-    }
+    <span #kbqTitleText class="kbq-filters__filter-name">
+        @if (activeFilter?.name) {
+            {{ activeFilter!.name }}
+        } @else {
+            <ng-content>
+                <i kbq-icon="kbq-list_16"></i>
+                Фильтры
+            </ng-content>
+        }
+    </span>
 </button>
 
 @if (activeFilter?.changed && !activeFilter?.saved) {
@@ -48,7 +51,7 @@
     <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
 }
 
-<kbq-dropdown #savedFilters="kbqDropdown">
+<kbq-dropdown #savedFilters="kbqDropdown" [class]="'kbq-filters__dropdown'">
     <kbq-form-field kbqFormFieldWithoutBorders>
         <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
@@ -80,7 +83,7 @@
     </button>
 </kbq-dropdown>
 
-<kbq-dropdown #filterActions="kbqDropdown">
+<kbq-dropdown #filterActions="kbqDropdown" [class]="'kbq-filters__dropdown'">
     <button kbq-dropdown-item [ngClass]="{ 'kbq-button_changed-saved-filter': savedFilterChanged }" (click)="save()">
         <i kbq-icon="kbq-floppy-disk_16"></i>
         Сохранить изменения
