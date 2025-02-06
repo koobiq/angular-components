@@ -3400,19 +3400,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-overview-example.ts",
     "importPath": "components/tree"
   },
-  "typography-overview": {
-    "packagePath": "components/typography/typography-overview",
-    "title": "Typography",
-    "componentName": "TypographyOverviewExample",
-    "files": [
-      "typography-overview-example.ts",
-      "typography-overview-example.html"
-    ],
-    "selector": "typography-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "typography-overview-example.ts",
-    "importPath": "components/typography"
-  },
   "validation-composite": {
     "packagePath": "components/validation/validation-composite",
     "title": "Validation composite",
@@ -4049,8 +4036,6 @@ return import('@koobiq/docs-examples/components/tree');
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-overview':
 return import('@koobiq/docs-examples/components/tree');
-  case 'typography-overview':
-return import('@koobiq/docs-examples/components/typography');
   case 'validation-composite':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-global-one-required':

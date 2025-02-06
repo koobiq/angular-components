@@ -72,13 +72,6 @@ export class DesignTokensViewer extends DocsLocaleState {
         },
         {
             title: {
-                ru: 'Типографика',
-                en: 'Typography'
-            },
-            value: 'tokens-typography'
-        },
-        {
-            title: {
                 ru: 'Инженерная палитра',
                 en: 'Engineer palette'
             },

@@ -1,10 +1,12 @@
-import { Component, NgModule } from '@angular/core';
+import { Component, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss']
+    styleUrls: ['../main.scss'],
+    encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {}
 
@@ -13,7 +15,8 @@ export class DemoComponent {}
         DemoComponent
     ],
     imports: [
-        BrowserModule
+        BrowserModule,
+        KbqTableModule
     ],
     bootstrap: [
         DemoComponent
