@@ -40,7 +40,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     @Input({ alias: 'kbq-pipe-title' }) viewValue: TemplateRef<any>;
 
     get parent(): HTMLElement {
-        return this.parentContainer.nativeElement || this.parentContainer;
+        return this.parentContainer?.nativeElement || this.parentContainer;
     }
 
     get child(): HTMLElement {

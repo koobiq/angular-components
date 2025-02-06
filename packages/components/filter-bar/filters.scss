@@ -1,10 +1,23 @@
+@use '../core/styles/common';
 @use './filter-bar-theme' as *;
 
 .kbq-filters {
     display: flex;
 
+    > .kbq-button {
+        max-width: 320px;
+
+        & .kbq-button-wrapper {
+            width: 100%;
+        }
+    }
+
     > .kbq-button .kbq-icon {
         margin-right: 4px;
+    }
+
+    & .kbq-filters__filter-name {
+        @include common.kbq-truncate-line();
     }
 
     & .kbq-filter-bar__separator {
@@ -35,7 +48,7 @@
     }
 
     .kbq-button_changed-saved-filter {
-        &::after {
+        &::before {
             content: '';
             position: absolute;
             right: -4px;
