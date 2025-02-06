@@ -28,6 +28,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
+import { defaultOffsetY } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
@@ -479,6 +480,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
             offsetX = NESTED_PANEL_LEFT_PADDING;
         } else {
             if (!this.dropdown.overlapTriggerY) {
+                offsetY = defaultOffsetY;
                 originY = overlayY === 'top' ? 'bottom' : 'top';
                 originFallbackY = overlayFallbackY === 'top' ? 'bottom' : 'top';
             }

@@ -23,7 +23,7 @@ import {
     ViewContainerRef,
     ViewEncapsulation
 } from '@angular/core';
-import { DateAdapter } from '@koobiq/components/core';
+import { DateAdapter, defaultOffsetY } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Subject, Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -462,13 +462,15 @@ export class KbqDatepicker<D> implements OnDestroy {
                     originX: 'start',
                     originY: 'bottom',
                     overlayX: 'start',
-                    overlayY: 'top'
+                    overlayY: 'top',
+                    offsetY: defaultOffsetY
                 },
                 {
                     originX: 'start',
                     originY: 'top',
                     overlayX: 'start',
-                    overlayY: 'bottom'
+                    overlayY: 'bottom',
+                    offsetY: -defaultOffsetY
                 },
                 {
                     originX: 'end',

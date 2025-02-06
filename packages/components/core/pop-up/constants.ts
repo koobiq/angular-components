@@ -45,3 +45,9 @@ export enum PopUpSizes {
     Normal = 'medium',
     Large = 'large'
 }
+
+/**
+ * Default value when configuring overlay in popups (Autocomplete, Datepicker, Dropdown, Select, Tags Autocomplete,
+ * Tags Input, Timezone, TreeSelect).
+ */
+export const defaultOffsetY: number = 4;

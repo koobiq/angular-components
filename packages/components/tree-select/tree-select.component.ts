@@ -70,6 +70,7 @@ import {
     MultipleMode,
     SELECT_PANEL_PADDING_X,
     SELECT_PANEL_VIEWPORT_PADDING,
+    defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     kbqSelectAnimations,
@@ -229,7 +230,7 @@ export class KbqTreeSelect
      * This must be adjusted to align the selected option text over the trigger text.
      * when the panel opens. Will change based on the y-position of the selected option.
      */
-    offsetY = 2;
+    offsetY = defaultOffsetY;
 
     /**
      * This position config ensures that the top "start" corner of the overlay
