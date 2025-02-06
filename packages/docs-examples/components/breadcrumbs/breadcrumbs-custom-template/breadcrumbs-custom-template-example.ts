@@ -13,15 +13,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <nav kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
-                <kbq-breadcrumb-item
-                    [routerLink]="breadcrumb"
-                    [queryParams]="{ queryParams: breadcrumb }"
-                    [fragment]="breadcrumb"
-                    [text]="breadcrumb"
-                >
-                    <a *kbqBreadcrumbView>
+                <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
+                    <a *kbqBreadcrumbView [routerLink]="breadcrumb.url" tabindex="-1">
                         <button [disabled]="last" [attr.aria-current]="last ? 'page' : null" kbq-button kbqBreadcrumb>
-                            {{ breadcrumb }}
+                            {{ breadcrumb.label }}
                             <i kbq-icon="kbq-file-code-o_16"></i>
                         </button>
                     </a>
@@ -38,5 +33,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsCustomTemplateExample {
-    breadcrumbs = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
+    breadcrumbs = [
+        { label: 'Information Security', url: '/information-security' },
+        { label: 'Access Control', url: '/information-security/access-control' },
+        { label: 'Authorization', url: '/information-security/access-control/authorization' },
+        { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
+        { label: 'Roles', url: '/information-security/access-control/authorization/rbac/roles' }
+    ];
 }

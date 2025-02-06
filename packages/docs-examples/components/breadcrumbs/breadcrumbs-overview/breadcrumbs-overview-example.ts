@@ -12,10 +12,10 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
         <nav kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="breadcrumb"
-                    [queryParams]="{ queryParams: breadcrumb }"
-                    [fragment]="breadcrumb"
-                    [text]="breadcrumb"
+                    [routerLink]="breadcrumb.url"
+                    [queryParams]="{ queryParams: 'queryParam' }"
+                    [fragment]="'fragment'"
+                    [text]="breadcrumb.label"
                 />
             }
         </nav>
@@ -27,5 +27,10 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsOverviewExample {
-    breadcrumbs = ['Main', 'Standards', 'Advanced Encryption Standard', 'Edit'];
+    breadcrumbs = [
+        { label: 'Main', url: '/main' },
+        { label: 'Standards', url: '/main/standards' },
+        { label: 'Advanced Encryption Standard', url: '/main/standards/advanced-encryption-standard' },
+        { label: 'Edit', url: '/main/standards/advanced-encryption-standard/edit' }
+    ];
 }

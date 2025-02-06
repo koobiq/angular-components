@@ -15,12 +15,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <nav kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="breadcrumb.longText"
+                    [routerLink]="breadcrumb.url"
                     [queryParams]="{ queryParams: breadcrumb }"
                     [fragment]="breadcrumb.longText"
                     [text]="breadcrumb.longText"
                 >
-                    <a *kbqBreadcrumbView>
+                    <a *kbqBreadcrumbView [routerLink]="breadcrumb.url" tabindex="-1">
                         <button
                             [attr.aria-current]="last ? 'page' : null"
                             [disabled]="last"
@@ -47,9 +47,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateByAbbrevItemsExample {
-    breadcrumbs: { shortText?: string; longText: string }[] = [
-        { longText: 'Main' },
-        { longText: 'Reviews' },
-        { longText: 'Advanced Encryption Standard', shortText: 'AES' }];
+    breadcrumbs = [
+        { longText: 'Main', url: '/main' },
+        { longText: 'Reviews', url: '/main/reviews' },
+        {
+            longText: 'Advanced Encryption Standard',
+            shortText: 'AES',
+            url: '/main/reviews/advanced-encryption-standard'
+        }
+    ];
     protected readonly PopUpPlacements = PopUpPlacements;
 }

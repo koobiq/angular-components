@@ -13,10 +13,10 @@ import { PopUpPlacements } from '@koobiq/components/core';
         <nav class="kbq-breadcrumbs_truncate-last-by-length-reverse" kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb) {
                 <kbq-breadcrumb-item
-                    [routerLink]="breadcrumb"
-                    [queryParams]="{ queryParams: breadcrumb }"
-                    [fragment]="breadcrumb"
-                    [text]="breadcrumb"
+                    [routerLink]="breadcrumb.url"
+                    [queryParams]="{ queryParams: 'queryParams' }"
+                    [fragment]="'fragment'"
+                    [text]="breadcrumb.label"
                 />
             }
         </nav>
@@ -48,6 +48,10 @@ import { PopUpPlacements } from '@koobiq/components/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateTailItemsExample {
-    breadcrumbs = ['Main', 'Users', 'Report №123456789'];
+    breadcrumbs = [
+        { label: 'Main', url: '/main' },
+        { label: 'Users', url: '/main/users' },
+        { label: 'Report №123456789', url: '/main/users/report-123456789' }
+    ];
     protected readonly PopUpPlacements = PopUpPlacements;
 }

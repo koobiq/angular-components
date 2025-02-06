@@ -28,12 +28,12 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     `,
     template: `
         <nav class="kbq-breadcrumbs_truncate-by-length" kbq-breadcrumbs>
-            @for (breadcrumbs of breadcrumbs; track breadcrumbs) {
+            @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item
-                    [routerLink]="breadcrumbs"
-                    [queryParams]="{ queryParams: breadcrumbs }"
-                    [fragment]="breadcrumbs"
-                    [text]="breadcrumbs"
+                    [routerLink]="breadcrumb.url"
+                    [queryParams]="{ queryParams: 'queryParam' }"
+                    [fragment]="'fragment'"
+                    [text]="breadcrumb.label"
                 />
             }
         </nav>
@@ -46,5 +46,12 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsTruncateHeadItemsExample {
-    breadcrumbs = ['Main', 'Upper-level system', 'Users'];
+    breadcrumbs = [
+        { label: 'Components', url: '/components' },
+        { label: 'Commit', url: '/components/commit' },
+        {
+            label: 'cacb86c728451b57740706d19429e6629140b7c5',
+            url: '/components/commit/cacb86c728451b57740706d19429e6629140b7c5'
+        }
+    ];
 }

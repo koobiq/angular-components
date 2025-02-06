@@ -19,10 +19,10 @@ import { KbqDlModule } from '@koobiq/components/dl';
                     <nav [size]="size" kbq-breadcrumbs>
                         @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                             <kbq-breadcrumb-item
-                                [routerLink]="breadcrumb"
+                                [routerLink]="breadcrumb.url"
                                 [queryParams]="{ queryParams: 'queryParams' }"
                                 [fragment]="'fragment'"
-                                [text]="breadcrumb"
+                                [text]="breadcrumb.label"
                             />
                         }
                     </nav>
@@ -39,6 +39,12 @@ import { KbqDlModule } from '@koobiq/components/dl';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BreadcrumbsSizeExample {
-    breadcrumbs = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
+    breadcrumbs = [
+        { label: 'Information Security', url: '/information-security' },
+        { label: 'Access Control', url: '/information-security/access-control' },
+        { label: 'Authorization', url: '/information-security/access-control/authorization' },
+        { label: 'RBAC', url: '/information-security/access-control/authorization/rbac' },
+        { label: 'Roles', url: '/information-security/access-control/authorization/rbac/roles' }
+    ];
     sizes: KbqDefaultSizes[] = ['compact', 'normal', 'big'];
 }

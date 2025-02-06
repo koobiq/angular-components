@@ -63,6 +63,4 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsDropdownExample {
-    breadcrumbs = ['Information Security', 'Access Control', 'Authorization', 'RBAC', 'Roles'];
-}
+export class BreadcrumbsDropdownExample {}
