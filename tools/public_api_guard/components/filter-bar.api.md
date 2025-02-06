@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { DateAdapter } from '@koobiq/components/core';
@@ -21,11 +22,14 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
+import { TemplateRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ViewContainerRef } from '@angular/core';
 
@@ -133,9 +137,10 @@ export class KbqFilterBarModule {
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i9" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqFilterBarSearch], [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqFilterBarSearch]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqFilterBarSearch, typeof i10.KbqPipeTitleDirective], [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqFilterBarSearch, typeof i10.KbqPipeTitleDirective]>;
 }
 
 // @public (undocumented)
@@ -492,6 +497,32 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeTextComponent, "kbq-pipe-text", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTextComponent, never>;
+}
+
+// @public (undocumented)
+export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+    // (undocumented)
+    get child(): HTMLElement;
+    // (undocumented)
+    handleElementEnter(): void;
+    // (undocumented)
+    hideTooltip(): void;
+    // (undocumented)
+    get isOverflown(): boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    // (undocumented)
+    get parent(): HTMLElement;
+    // (undocumented)
+    readonly resizeStream: Subject<Event>;
+    // (undocumented)
+    viewValue: TemplateRef<any>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeTitleDirective, "[kbq-pipe-title]", ["kbqPipeTitle"], { "viewValue": { "alias": "kbq-pipe-title"; "required": false; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTitleDirective, never>;
 }
 
 // @public (undocumented)
