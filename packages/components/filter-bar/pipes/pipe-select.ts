@@ -4,7 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqBasePipe } from './base-pipe';
+import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
@@ -30,7 +30,8 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeState,
         KbqPipeButton,
         KbqTitleModule,
-        KbqPipeTitleDirective
+        KbqPipeTitleDirective,
+        KbqPipeMinWidth
     ]
 })
 export class KbqPipeSelectComponent extends KbqBasePipe {
