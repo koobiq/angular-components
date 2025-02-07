@@ -27,6 +27,9 @@ const paths = [
     'components/badge/overview',
     'components/badge/api',
 
+    'components/breadcrumbs/overview',
+    'components/breadcrumbs/api',
+
     'components/button/overview',
     'components/button/api',
 

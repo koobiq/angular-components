@@ -286,6 +286,114 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "badge-tooltip-example.ts",
     "importPath": "components/badge"
   },
+  "breadcrumbs-custom-template": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-custom-template",
+    "title": "Breadcrumbs custom-template",
+    "componentName": "BreadcrumbsCustomTemplateExample",
+    "files": [
+      "breadcrumbs-custom-template-example.ts"
+    ],
+    "selector": "breadcrumbs-custom-template-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-custom-template-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-dropdown": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-dropdown",
+    "title": "Breadcrumbs sizes",
+    "componentName": "BreadcrumbsDropdownExample",
+    "files": [
+      "breadcrumbs-dropdown-example.ts"
+    ],
+    "selector": "breadcrumbs-dropdown-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-dropdown-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-overview": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-overview",
+    "title": "Breadcrumbs overview",
+    "componentName": "BreadcrumbsOverviewExample",
+    "files": [
+      "breadcrumbs-overview-example.ts"
+    ],
+    "selector": "breadcrumbs-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-overview-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-routing": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-routing",
+    "title": "Breadcrumbs Routing",
+    "componentName": "BreadcrumbsRoutingExample",
+    "files": [
+      "breadcrumbs-routing-example.ts"
+    ],
+    "selector": "breadcrumbs-routing-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-routing-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-size": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-size",
+    "title": "Breadcrumbs sizes",
+    "componentName": "BreadcrumbsSizeExample",
+    "files": [
+      "breadcrumbs-size-example.ts"
+    ],
+    "selector": "breadcrumbs-size-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-size-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-truncate-by-abbrev-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-by-abbrev-items",
+    "title": "Breadcrumbs Truncate By Abbreviation Items",
+    "componentName": "BreadcrumbsTruncateByAbbrevItemsExample",
+    "files": [
+      "breadcrumbs-truncate-by-abbrev-items-example.ts"
+    ],
+    "selector": "breadcrumbs-truncate-by-abbrev-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-by-abbrev-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-truncate-center-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-center-items",
+    "title": "Breadcrumbs Truncate Center Items",
+    "componentName": "BreadcrumbsTruncateCenterItemsExample",
+    "files": [
+      "breadcrumbs-truncate-center-items-example.ts"
+    ],
+    "selector": "breadcrumbs-truncate-center-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-center-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-truncate-head-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-head-items",
+    "title": "Breadcrumbs Truncate Head Items",
+    "componentName": "BreadcrumbsTruncateHeadItemsExample",
+    "files": [
+      "breadcrumbs-truncate-head-items-example.ts"
+    ],
+    "selector": "breadcrumbs-truncate-head-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-head-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-truncate-tail-items": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-truncate-tail-items",
+    "title": "Breadcrumbs Truncate Tail Items",
+    "componentName": "BreadcrumbsTruncateTailItemsExample",
+    "files": [
+      "breadcrumbs-truncate-tail-items-example.ts"
+    ],
+    "selector": "breadcrumbs-truncate-tail-items-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-truncate-tail-items-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
   "button-toggle-alignment-overview": {
     "packagePath": "components/button-toggle/button-toggle-alignment-overview",
     "title": "Button toggle alignment",
@@ -3534,6 +3642,24 @@ return import('@koobiq/docs-examples/components/badge');
 return import('@koobiq/docs-examples/components/badge');
   case 'badge-tooltip':
 return import('@koobiq/docs-examples/components/badge');
+  case 'breadcrumbs-custom-template':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-dropdown':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-overview':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-routing':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-size':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-by-abbrev-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-center-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-head-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-truncate-tail-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'button-toggle-alignment-overview':
 return import('@koobiq/docs-examples/components/button-toggle');
   case 'button-toggle-disabled-all-overview':

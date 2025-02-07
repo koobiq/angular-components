@@ -3,6 +3,7 @@ import { CanColor, CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/
 
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
+//@TODO use Exclude<KbqDefaultSizes, 'normal'> from '@koobiq/components/core' instead
 export type ProgressSpinnerSize = 'compact' | 'big';
 
 let id = 0;

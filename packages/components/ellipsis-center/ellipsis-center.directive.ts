@@ -22,6 +22,8 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
     @Input() minVisibleLength: number = MIN_VISIBLE_LENGTH;
 
+    @Input() charWidth = 7;
+
     readonly resizeStream = new Subject<Event>();
 
     private _kbqEllipsisCenter: string;
@@ -71,7 +73,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
                 start = '';
                 end = this._kbqEllipsisCenter;
             } else {
-                const averageCharWidth = 7;
+                const averageCharWidth = this.charWidth;
                 const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / averageCharWidth);
                 const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length - lastCharsLength);
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);

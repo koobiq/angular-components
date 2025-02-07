@@ -1,0 +1,69 @@
+@if (items.length <= minVisibleItems || max === null || max <= minVisibleItems || max >= items.length) {
+    @for (item of items; track item; let last = $last) {
+        <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
+        @if (!last) {
+            <ng-container [ngTemplateOutlet]="separatorTemplate" />
+        }
+    }
+} @else {
+    <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
+    <ng-container [ngTemplateOutlet]="separatorTemplate" />
+
+    <!-- @TODO delay rendering for proper elements order (#DS-3334)--->
+    @if (true) {
+        <button
+            kbq-button
+            kbqBreadcrumb
+            class="kbq-breadcrumb__expand"
+            [kbqDropdownTriggerFor]="hiddenBreadcrumbsDropdown"
+            [kbqStyle]="KbqButtonStyles.Transparent"
+            [openByArrowDown]="false"
+        >
+            <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>
+        </button>
+        <ng-container [ngTemplateOutlet]="separatorTemplate" />
+
+        <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
+            @for (item of hiddenBreadcrumbItems; track item) {
+                <a class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
+                    <button kbq-dropdown-item [disabled]="item.disabled">{{ item.text }}</button>
+                </a>
+            }
+        </kbq-dropdown>
+    }
+
+    @for (item of visibleBreadcrumbItems; track item; let last = $last) {
+        <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
+        @if (!last) {
+            <ng-container [ngTemplateOutlet]="separatorTemplate" />
+        }
+    }
+}
+
+<ng-template #breadcrumbTemplate let-item let-last="last">
+    @if (item.customTemplateRef) {
+        <ng-container [ngTemplateOutlet]="item.customTemplateRef" />
+    } @else {
+        <a tabindex="-1" class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
+            <button
+                kbq-button
+                kbq-title
+                kbqBreadcrumb
+                [attr.aria-current]="last ? 'page' : null"
+                [disabled]="item.disabled || last"
+                [kbqPlacementPriority]="PopUpPlacements.Bottom"
+                [kbqTooltipArrow]="false"
+            >
+                {{ item.text }}
+            </button>
+        </a>
+    }
+</ng-template>
+
+<ng-template #separatorTemplate>
+    @if (separator) {
+        <ng-container [ngTemplateOutlet]="separator" />
+    } @else {
+        <i kbq-icon="" class="kbq-breadcrumb__separator" [color]="KbqComponentColors.ContrastFade">&nbsp;/&nbsp;</i>
+    }
+</ng-template>

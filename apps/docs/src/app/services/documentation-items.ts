@@ -173,6 +173,17 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false
                 },
                 {
+                    id: 'breadcrumbs',
+                    name: {
+                        ru: 'Breadcrumbs',
+                        en: 'Breadcrumbs'
+                    },
+                    svgPreview: 'breadcrumbs',
+                    hasApi: true,
+                    apiId: 'breadcrumbs',
+                    hasExamples: true
+                },
+                {
                     id: 'button',
                     name: {
                         ru: 'Button',

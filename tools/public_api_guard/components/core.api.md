@@ -1183,6 +1183,9 @@ export class KbqDecimalPipe implements PipeTransform {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqDecimalPipe>;
 }
 
+// @public
+export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
+
 // @public (undocumented)
 export const KbqDefaultThemes: KbqTheme[];
 
