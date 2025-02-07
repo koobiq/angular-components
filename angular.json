@@ -1923,6 +1923,35 @@
                 }
             }
         },
+        "dev-top-menu": {
+            "projectType": "application",
+            "root": "packages/components-dev/top-menu",
+            "sourceRoot": "packages/components-dev/top-menu",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/top-menu"
+                        },
+                        "tsConfig": "packages/components-dev/top-menu/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/top-menu/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-top-menu:build"
+                    }
+                }
+            }
+        },
         "dev-tooltip": {
             "projectType": "application",
             "root": "packages/components-dev/tooltip",
