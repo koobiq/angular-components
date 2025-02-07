@@ -1,6 +1,7 @@
 import { Platform } from '@angular/cdk/platform';
-import { ChangeDetectorRef, Directive, inject } from '@angular/core';
+import { afterNextRender, ChangeDetectorRef, Directive, ElementRef, inject } from '@angular/core';
 import { Subject } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { KbqFilterBar } from '../filter-bar';
 import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
 
@@ -56,4 +57,36 @@ export class KbqBasePipe {
 
         this.stateChanges.next();
     }
+}
+
+@Directive({
+    standalone: true,
+    selector: '[kbq-pipe-min-width]',
+    host: {
+        '[style.min-width]': 'minWidth'
+    }
+})
+export class KbqPipeMinWidth {
+    protected readonly filterBar = inject(KbqFilterBar, { optional: true });
+
+    protected readonly elementRef = inject(ElementRef);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    minWidth: string;
+    maxSymbolsForFitContent: number = 20;
+
+    get textLength(): number {
+        return this.elementRef.nativeElement.innerText.length || 0;
+    }
+
+    constructor() {
+        this.filterBar?.changes.pipe(delay(0)).subscribe(this.update);
+
+        afterNextRender({ read: this.update });
+    }
+
+    update = () => {
+        this.minWidth = this.textLength < this.maxSymbolsForFitContent ? 'fit-content' : 'unset';
+        this.changeDetectorRef.markForCheck();
+    };
 }

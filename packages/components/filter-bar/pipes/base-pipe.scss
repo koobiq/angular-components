@@ -14,8 +14,6 @@
     .kbq-pipe__name {
         @include common.kbq-truncate-line();
 
-        min-width: 15%;
-
         flex: 1 1 auto;
 
         color: var(--kbq-foreground-contrast-secondary);
@@ -23,8 +21,6 @@
 
     .kbq-pipe__value {
         @include common.kbq-truncate-line();
-
-        min-width: 15%;
 
         flex: 1 1 auto;
         margin-left: 4px;
