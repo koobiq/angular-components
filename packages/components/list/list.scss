@@ -15,6 +15,8 @@
 
     @include list.kbq-list-item-base();
 
+    border-radius: var(--kbq-size-border-radius);
+
     &:not(.kbq-disabled) {
         cursor: pointer;
     }

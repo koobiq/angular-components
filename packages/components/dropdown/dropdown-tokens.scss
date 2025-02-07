@@ -8,6 +8,7 @@
     /* THEME TOKENS */
     --kbq-dropdown-container-background: var(--kbq-background-card);
     --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
+    --kbq-dropdown-item-border-radius: var(--kbq-size-xs);
     /* LIST THEME TOKENS */
     @include list-tokens.list-theme-tokens;
 }
