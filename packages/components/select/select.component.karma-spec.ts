@@ -77,6 +77,10 @@ function finishInit(fixture: ComponentFixture<any>) {
     fixture.autoDetectChanges();
 }
 
+const OPTGROUP_HEIGHT = 32;
+
+const DEFAULT_OPTION_HEIGHT = 32;
+
 /** The debounce interval when typing letters to select an option. */
 const LETTER_KEY_DEBOUNCE_INTERVAL = 200;
 
@@ -695,6 +699,12 @@ describe(KbqSelect.name, () => {
 
             it('should skip option group labels', fakeAsync(() => {
                 fixture.destroy();
+                const GROUPS_SKIPPED_COUNT = 2;
+                const OPTIONS_SKIPPED_COUNT = 3;
+                const EXPECTED_SCROLL_TOP =
+                    GROUPS_SKIPPED_COUNT * OPTGROUP_HEIGHT +
+                    OPTIONS_SKIPPED_COUNT * DEFAULT_OPTION_HEIGHT +
+                    DEFAULT_OPTION_HEIGHT / 2;
 
                 const groupFixture = TestBed.createComponent(SelectWithGroups);
 
@@ -713,7 +723,13 @@ describe(KbqSelect.name, () => {
 
                 // Note that we press down 5 times, but it will skip
                 // 3 options because the second group is disabled.
-                expect(Math.floor(panel.scrollTop)).withContext('Expected scroll to be at the 9th option.').toBe(158);
+                expect(Math.floor(panel.scrollTop))
+                    .withContext('Expected to place active option in the middle of overlay.')
+                    .toBe(EXPECTED_SCROLL_TOP);
+
+                expect(groupFixture.componentInstance.select.keyManager.activeItemIndex)
+                    .withContext('Expected scroll to be at the 9th option')
+                    .toBe(8);
             }));
 
             it('should scroll top the top when pressing HOME', fakeAsync(() => {

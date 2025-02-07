@@ -46,6 +46,7 @@
     @include common.user-select(none);
     @include common.kbq-list-header-base();
 
+    // @deprecated, use <kbq-optgroup label="Label" /> instead. Will be removed in the next major release
     &.kbq-dropdown__group-header_small {
         @include common.kbq-list-subheading-base();
     }

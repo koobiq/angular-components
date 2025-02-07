@@ -56,6 +56,7 @@
     }
 
     .kbq-dropdown__group-header {
+        // @deprecated, use <kbq-optgroup label="Label" /> instead. Will be removed in the next major release
         &.kbq-dropdown__group-header_small {
             color: var(--kbq-foreground-contrast-secondary);
         }
@@ -79,6 +80,7 @@
     .kbq-dropdown__group-header {
         @include kbq-typography-level-to-styles-css-variables(typography, big-strong);
 
+        // @deprecated, use <kbq-optgroup label="Label" /> instead. Will be removed in the next major release
         &.kbq-dropdown__group-header_small {
             @include kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
         }

@@ -1,17 +1,18 @@
-@use '../styles/common/tokens' as *;
+@use '../styles/common/tokens';
 
 @mixin kbq-optgroup-theme() {
     .kbq-optgroup-label {
-        color: var(--kbq-foreground-contrast);
+        --kbq-optgroup-label-color: var(--kbq-foreground-contrast-secondary);
+        color: var(--kbq-optgroup-label-color);
     }
 
     .kbq-disabled .kbq-optgroup-label {
-        color: var(--kbq-states-foreground-disabled);
+        --kbq-optgroup-label-color: var(--kbq-states-foreground-disabled);
     }
 }
 
 @mixin kbq-optgroup-typography() {
     .kbq-optgroup-label {
-        @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
     }
 }

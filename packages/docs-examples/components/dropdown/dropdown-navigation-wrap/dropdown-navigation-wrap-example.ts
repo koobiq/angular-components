@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -14,7 +15,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqDropdownModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqDividerModule
+        KbqDividerModule,
+        KbqOptionModule
     ],
     templateUrl: 'dropdown-navigation-wrap-example.html'
 })

@@ -25,17 +25,17 @@
 <div class="layout-row example-row">
     <div class="kbq-form__label">Для групп</div>
     <kbq-form-field>
-        <kbq-select [value]="pokemonTypes[0].pokemon[0].value">
-            @for (group of pokemonTypes; track group) {
-                <kbq-optgroup [disabled]="group.disabled" [label]="group.name">
-                    @for (pokemon of group.pokemon; track pokemon) {
-                        <kbq-option [value]="pokemon.value">
-                            {{ pokemon.viewValue }}
+        <kbq-select [(value)]="securityCategories[0].securityItems[0].id">
+            @for (category of securityCategories; track category) {
+                <kbq-optgroup [disabled]="category.disabled" [label]="category.categoryName">
+                    @for (securityItem of category.securityItems; track securityItem.id) {
+                        <kbq-option [value]="securityItem.id">
+                            {{ securityItem.displayName }}
                         </kbq-option>
                     }
                 </kbq-optgroup>
             }
-            <kbq-option [value]="'mime-11'">Mr. Mime</kbq-option>
+            <kbq-option [value]="'rbac-11'">Role-Based Access Control (RBAC)</kbq-option>
         </kbq-select>
     </kbq-form-field>
 </div>
