@@ -1,0 +1,17 @@
+@use '../core/styles/common/tokens';
+
+.kbq-top-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+    position: var(--kbq-top-bar-position);
+    background-color: var(--kbq-top-bar-background);
+
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    .kbq-top-menu__spacer {
+        min-width: var(--kbq-top-menu-spacer-min-width);
+        height: 100%;
+    }
+}

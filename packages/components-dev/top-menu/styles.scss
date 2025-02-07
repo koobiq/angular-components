@@ -1,0 +1,25 @@
+@use '../main';
+
+.app-shell {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    padding: 20px;
+    border-radius: var(--kbq-size-border-radius);
+
+    .app-sidebar {
+        height: 100%;
+        width: 300px;
+        background-color: var(--kbq-background-bg-secondary);
+    }
+
+    .app-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .app-content {
+            height: 100%;
+        }
+    }
+}

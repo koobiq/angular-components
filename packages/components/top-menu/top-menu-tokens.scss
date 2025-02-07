@@ -1,0 +1,10 @@
+.kbq-top-menu {
+    --kbq-top-menu-position: sticky;
+    --kbq-top-menu-background: var(--kbq-background-bg);
+    --kbq-top-menu-spacer-min-width: 80px;
+    --kbq-top-menu-padding-vertical: var(--kbq-size-xl);
+    --kbq-top-menu-padding-horizontal: var(--kbq-size-xxl);
+    --kbq-top-menu-border-radius: 0;
+    --kbq-top-menu-left-gap: 0;
+    --kbq-top-menu-right-gap: var(--kbq-size-s);
+}

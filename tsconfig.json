@@ -75,6 +75,7 @@
             "@koobiq/components/toast": ["packages/components/toast/index.ts"],
             "@koobiq/components/toggle": ["packages/components/toggle/index.ts"],
             "@koobiq/components/tooltip": ["packages/components/tooltip/index.ts"],
+            "@koobiq/components/top-menu": ["packages/components/top-menu/index.ts"],
             "@koobiq/components/tree": ["packages/components/tree/index.ts"],
             "@koobiq/components/tree-select": ["packages/components/tree-select/index.ts"],
             "@koobiq/components/vertical-navbar": ["packages/components/vertical-navbar/index.ts"],
