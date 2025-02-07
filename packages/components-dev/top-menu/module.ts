@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { TopMenuExamplesModule } from '../../docs-examples/components/top-menu';
 
 @Component({
@@ -8,7 +9,10 @@ import { TopMenuExamplesModule } from '../../docs-examples/components/top-menu';
     encapsulation: ViewEncapsulation.None,
     templateUrl: './template.html',
     imports: [
-        TopMenuExamplesModule
+        TopMenuExamplesModule,
+        KbqButtonModule
     ]
 })
-export class TopMenuDev {}
+export class TopMenuDev {
+    navbarUnpinned = false;
+}

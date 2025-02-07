@@ -8,11 +8,11 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 import { KbqTopMenuModule } from 'packages/components/top-menu';
 
 /**
- * @title TopMenu
+ * @title TopMenu Breadcrumbs
  */
 @Component({
     standalone: true,
-    selector: 'top-menu-overview-example',
+    selector: 'top-menu-breadcrumbs-example',
     imports: [
         KbqTopMenuModule,
         KbqButtonModule,
@@ -21,10 +21,10 @@ import { KbqTopMenuModule } from 'packages/components/top-menu';
         AsyncPipe,
         KbqTooltipTrigger
     ],
-    styleUrls: ['./top-menu-overview-example.css'],
+    styleUrls: ['./top-menu-breadcrumbs-example.css'],
     template: `
         @let isDesktopMatches = isDesktop | async;
-        <kbq-top-menu class="kbq-top-menu-overflow">
+        <kbq-top-menu class="kbq-top-menu-breadcrumbs">
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
                 @if (iconVisible) {
                     <i class="layout-row layout-padding-m" kbq-icon="kbq-dashboard_16"></i>
@@ -63,7 +63,7 @@ import { KbqTopMenuModule } from 'packages/components/top-menu';
         </kbq-top-menu>
     `
 })
-export class TopMenuOverviewExample {
+export class TopMenuBreadcrumbsExample {
     @Input() iconVisible: boolean = true;
     isDesktop = inject(BreakpointObserver).observe('(min-width: 800px)');
     protected readonly KbqComponentColors = KbqComponentColors;

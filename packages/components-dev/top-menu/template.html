@@ -1,7 +1,14 @@
 <div class="app-shell">
-    <aside class="app-sidebar">app-sidebar</aside>
+    <aside class="app-sidebar">
+        app-sidebar
+        <button kbq-button (click)="navbarUnpinned = !navbarUnpinned">Unpin navbar</button>
+    </aside>
     <div class="app-container">
-        <top-menu-overview-example />
+        <top-menu-overview-example [iconVisible]="navbarUnpinned" />
+        <hr />
+        <top-menu-overflow-example [iconVisible]="navbarUnpinned" />
+        <hr />
+        <top-menu-breadcrumbs-example />
         <div class="app-content"></div>
     </div>
 </div>

@@ -4,9 +4,7 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
     standalone: true,
     selector: 'kbq-top-menu',
     template: `
-        <div class="kbq-top-menu__left">test</div>
-        <div class="kbq-top-menu__spacer"></div>
-        <div class="kbq-top-menu__right">test</div>
+        <ng-content />
     `,
     styleUrls: [
         './top-menu.scss',
