@@ -15,8 +15,8 @@
         [kbq-pipe-state]="data"
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
-        <span #kbqTitleText class="kbq-pipe__value">{{ select.triggerValue }}</span>
+        <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__value">{{ select.triggerValue }}</span>
     </button>
 
     @for (item of values; track item) {
