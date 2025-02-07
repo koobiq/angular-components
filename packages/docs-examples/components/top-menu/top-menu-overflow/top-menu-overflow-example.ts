@@ -8,11 +8,11 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
 import { KbqTopMenuModule } from 'packages/components/top-menu';
 
 /**
- * @title TopMenu
+ * @title TopMenu Overflow
  */
 @Component({
     standalone: true,
-    selector: 'top-menu-overview-example',
+    selector: 'top-menu-overflow-example',
     imports: [
         KbqTopMenuModule,
         KbqButtonModule,
@@ -21,7 +21,7 @@ import { KbqTopMenuModule } from 'packages/components/top-menu';
         AsyncPipe,
         KbqTooltipTrigger
     ],
-    styleUrls: ['./top-menu-overview-example.css'],
+    styleUrls: ['./top-menu-overflow-example.css'],
     template: `
         @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu class="kbq-top-menu-overflow">
@@ -63,7 +63,7 @@ import { KbqTopMenuModule } from 'packages/components/top-menu';
         </kbq-top-menu>
     `
 })
-export class TopMenuOverviewExample {
+export class TopMenuOverflowExample {
     @Input() iconVisible: boolean = true;
     isDesktop = inject(BreakpointObserver).observe('(min-width: 800px)');
     protected readonly KbqComponentColors = KbqComponentColors;
