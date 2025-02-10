@@ -75,4 +75,8 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
             this.onApply();
         }
     }
+
+    override open() {
+        this.popover.show();
+    }
 }

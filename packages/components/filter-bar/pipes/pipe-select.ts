@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
@@ -35,6 +35,8 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ]
 })
 export class KbqPipeSelectComponent extends KbqBasePipe {
+    @ViewChild('select') select: KbqSelect;
+
     get selected() {
         return this.data.value;
     }
@@ -50,4 +52,8 @@ export class KbqPipeSelectComponent extends KbqBasePipe {
     }
 
     compareByValue = (o1: any, o2: any): boolean => o1 && o2 && o1.id === o2.id;
+
+    override open() {
+        this.select.open();
+    }
 }

@@ -14,6 +14,7 @@ import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
             [color]="'contrast-fade'"
             [kbqStyle]="'outline'"
             [kbqDropdownTriggerFor]="newPipes"
+            [kbqDropdownTriggerRestoreFocus]="false"
             kbq-button
             kbqTooltip="Добавить фильтр"
         >
@@ -58,7 +59,7 @@ export class KbqPipeAdd {
         }
 
         this.filterBar.activeFilter.changed = true;
-        this.filterBar.activeFilter.pipes.push(Object.assign({}, template, { values: undefined }));
+        this.filterBar.activeFilter.pipes.push(Object.assign({}, template, { values: undefined, openOnAdd: true }));
 
         this.onAddPipe.next(template);
         this.filterBar.onFilterChange.emit(this.filterBar.activeFilter);
