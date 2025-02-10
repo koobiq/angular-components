@@ -1,5 +1,5 @@
 import { Platform } from '@angular/cdk/platform';
-import { afterNextRender, ChangeDetectorRef, Directive, ElementRef, inject } from '@angular/core';
+import { afterNextRender, AfterViewInit, ChangeDetectorRef, Directive, ElementRef, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { KbqFilterBar } from '../filter-bar';
@@ -16,7 +16,7 @@ import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
         '[class.kbq-pipe_disabled]': 'data.disabled'
     }
 })
-export class KbqBasePipe {
+export abstract class KbqBasePipe implements AfterViewInit {
     protected readonly platform = inject(Platform);
     readonly stateChanges = new Subject<void>();
     readonly data = inject(KbqPipeData);
@@ -46,6 +46,12 @@ export class KbqBasePipe {
         }
     }
 
+    ngAfterViewInit(): void {
+        if (this.data.openOnAdd) {
+            this.open();
+        }
+    }
+
     onRemove() {
         this.filterBar?.removePipe(this.data);
 
@@ -57,6 +63,8 @@ export class KbqBasePipe {
 
         this.stateChanges.next();
     }
+
+    abstract open(): void;
 }
 
 @Directive({

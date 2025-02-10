@@ -46,6 +46,8 @@ export class KbqPipeData {
     cleanable: boolean;
     removable: boolean;
     disabled: boolean;
+
+    openOnAdd?: boolean;
 }
 
 export interface KbqPipeTemplate extends KbqPipe {
