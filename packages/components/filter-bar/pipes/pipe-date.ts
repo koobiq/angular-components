@@ -158,4 +158,8 @@ export class KbqPipeDateComponent extends KbqBasePipe {
 
         // this.stateChanges.next();
     }
+
+    override open() {
+        this.popover.show();
+    }
 }

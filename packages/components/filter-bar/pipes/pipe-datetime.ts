@@ -156,4 +156,8 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
             this.filterBar?.removePipe(this.data);
         }
     }
+
+    override open() {
+        this.popover.show();
+    }
 }
