@@ -10,10 +10,7 @@ describe('KbqFilterBar', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqFilterBarModule],
-            declarations: [
-                TestApp,
-                KbqFilterBar
-            ]
+            declarations: [TestApp]
         }).compileComponents();
     });
 
