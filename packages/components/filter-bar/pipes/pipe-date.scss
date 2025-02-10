@@ -1,4 +1,7 @@
+@use '../../datepicker/datepicker-theme' as *;
 @use '../filter-bar-theme' as *;
+
+@use '../../datepicker/datepicker-tokens' as *;
 
 .kbq-pipe-date__popover {
     & .kbq-popover__container {
@@ -99,16 +102,6 @@
 
                 background-color: var(--kbq-background-bg-tertiary);
 
-                &:after {
-                    content: '';
-                    position: absolute;
-
-                    top: 0;
-                    right: 0;
-                    bottom: 0;
-                    left: 0;
-                }
-
                 &.kbq-calendar_hidden {
                     display: none;
                 }
@@ -134,3 +127,6 @@
         }
     }
 }
+
+@include kbq-datepicker-theme();
+@include kbq-datepicker-typography();

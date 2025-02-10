@@ -1,5 +1,4 @@
 @use './filter-bar-theme' as *;
-@use '../datepicker/datepicker-theme' as *;
 
 .kbq-filter-bar {
     display: flex;
@@ -57,7 +56,5 @@
     }
 }
 
-@include kbq-datepicker-theme();
 @include kbq-button-changed-filter();
 @include kbq-filter-bar-typography();
-@include kbq-datepicker-typography();
