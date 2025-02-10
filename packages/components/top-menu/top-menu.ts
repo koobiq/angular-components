@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { booleanAttribute, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
     standalone: true,
@@ -11,9 +11,12 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
         './top-menu-tokens.scss'
     ],
     host: {
-        class: 'kbq-top-menu'
+        class: 'kbq-top-menu',
+        '[class.kbq-top-menu-overflow]': 'hasOverflow'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqTopMenu {}
+export class KbqTopMenu {
+    @Input({ transform: booleanAttribute }) hasOverflow = false;
+}

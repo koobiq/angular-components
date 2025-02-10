@@ -5,7 +5,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { KbqTopMenuModule } from 'packages/components/top-menu';
+import { KbqTopMenuModule } from '@koobiq/components/top-menu';
 
 /**
  * @title TopMenu Breadcrumbs
@@ -21,7 +21,7 @@ import { KbqTopMenuModule } from 'packages/components/top-menu';
         AsyncPipe,
         KbqTooltipTrigger
     ],
-    styleUrls: ['./top-menu-breadcrumbs-example.css'],
+    styleUrls: ['top-menu-breadcrumbs-example.css'],
     template: `
         @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu class="kbq-top-menu-breadcrumbs">
