@@ -3303,6 +3303,45 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-style-example.ts",
     "importPath": "components/tooltip"
   },
+  "top-menu-breadcrumbs": {
+    "packagePath": "components/top-menu/top-menu-breadcrumbs",
+    "title": "TopMenu Breadcrumbs",
+    "componentName": "TopMenuBreadcrumbsExample",
+    "files": [
+      "top-menu-breadcrumbs-example.ts",
+      "top-menu-breadcrumbs-example.css"
+    ],
+    "selector": "top-menu-breadcrumbs-example",
+    "additionalComponents": [],
+    "primaryFile": "top-menu-breadcrumbs-example.ts",
+    "importPath": "components/top-menu"
+  },
+  "top-menu-overflow": {
+    "packagePath": "components/top-menu/top-menu-overflow",
+    "title": "TopMenu Overflow",
+    "componentName": "TopMenuOverflowExample",
+    "files": [
+      "top-menu-overflow-example.ts",
+      "top-menu-overflow-example.css"
+    ],
+    "selector": "top-menu-overflow-example",
+    "additionalComponents": [],
+    "primaryFile": "top-menu-overflow-example.ts",
+    "importPath": "components/top-menu"
+  },
+  "top-menu-overview": {
+    "packagePath": "components/top-menu/top-menu-overview",
+    "title": "TopMenu",
+    "componentName": "TopMenuOverviewExample",
+    "files": [
+      "top-menu-overview-example.ts",
+      "top-menu-overview-example.css"
+    ],
+    "selector": "top-menu-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "top-menu-overview-example.ts",
+    "importPath": "components/top-menu"
+  },
   "tree-select-child-selection-overview": {
     "packagePath": "components/tree-select/tree-select-child-selection-overview",
     "title": "Tree-select child selection",
@@ -4127,6 +4166,12 @@ return import('@koobiq/docs-examples/components/tooltip');
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-style':
 return import('@koobiq/docs-examples/components/tooltip');
+  case 'top-menu-breadcrumbs':
+return import('@koobiq/docs-examples/components/top-menu');
+  case 'top-menu-overflow':
+return import('@koobiq/docs-examples/components/top-menu');
+  case 'top-menu-overview':
+return import('@koobiq/docs-examples/components/top-menu');
   case 'tree-select-child-selection-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-footer-overview':

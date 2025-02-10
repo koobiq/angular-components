@@ -1,11 +1,13 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
-import { KbqTopMenuModule } from 'packages/components/top-menu';
+import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { Observable } from 'rxjs';
+import { auditTime, map } from 'rxjs/operators';
 
 /**
  * @title TopMenu Overflow
@@ -19,12 +21,12 @@ import { KbqTopMenuModule } from 'packages/components/top-menu';
         KbqToolTipModule,
         KbqIcon,
         AsyncPipe,
-        KbqTooltipTrigger
+        KbqTooltipTrigger,
+        CdkScrollable
     ],
-    styleUrls: ['./top-menu-overflow-example.css'],
+    styleUrls: ['top-menu-overflow-example.css'],
     template: `
-        @let isDesktopMatches = isDesktop | async;
-        <kbq-top-menu class="kbq-top-menu-overflow">
+        <kbq-top-menu [hasOverflow]="hasOverflow | async">
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
                 @if (iconVisible) {
                     <i class="layout-row layout-padding-m" kbq-icon="kbq-dashboard_16"></i>
@@ -36,36 +38,36 @@ import { KbqTopMenuModule } from 'packages/components/top-menu';
                 <button
                     [kbqStyle]="KbqButtonStyles.Transparent"
                     [color]="KbqComponentColors.Contrast"
-                    [kbqTooltipDisabled]="!!isDesktopMatches?.matches"
                     kbq-button
                     kbqTooltip="Добавить виджет"
                 >
                     <i kbq-icon="kbq-plus_16"></i>
-                    @if (isDesktopMatches?.matches) {
-                        Добавить виджет
-                    }
                 </button>
                 <button [kbqStyle]="KbqButtonStyles.Outline" [color]="KbqComponentColors.ContrastFade" kbq-button>
                     Отмена
                 </button>
-                <button
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqTooltipDisabled]="!!isDesktopMatches?.matches"
-                    kbq-button
-                    kbqTooltip="Сохранить"
-                >
+                <button [color]="KbqComponentColors.Contrast" kbq-button kbqTooltip="Сохранить">
                     <i kbq-icon="kbq-floppy-disk_16"></i>
-                    @if (isDesktopMatches?.matches) {
-                        Сохранить
-                    }
+                    Сохранить
                 </button>
             </div>
         </kbq-top-menu>
+        <div class="overflow-content" cdkScrollable>
+            <div style="height: 600px">Overflow Content</div>
+        </div>
     `
 })
-export class TopMenuOverflowExample {
+export class TopMenuOverflowExample implements AfterViewInit {
     @Input() iconVisible: boolean = true;
-    isDesktop = inject(BreakpointObserver).observe('(min-width: 800px)');
+    @ViewChild(CdkScrollable) scrollable: CdkScrollable;
+    hasOverflow: Observable<boolean>;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
+
+    ngAfterViewInit() {
+        this.hasOverflow = this.scrollable.elementScrolled().pipe(
+            auditTime(300),
+            map(() => this.scrollable.measureScrollOffset('top') > 0)
+        );
+    }
 }
