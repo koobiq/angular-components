@@ -55,8 +55,7 @@
     }
 }
 
-@include kbq-filter-bar-theme();
 @include kbq-datepicker-theme();
-@include kbq-button_changed-filter();
+@include kbq-button-changed-filter();
 @include kbq-filter-bar-typography();
 @include kbq-datepicker-typography();
