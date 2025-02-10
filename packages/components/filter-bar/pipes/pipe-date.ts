@@ -59,7 +59,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeTitleDirective
     ]
 })
-export class KbqPipeDateComponent extends KbqBasePipe {
+export class KbqPipeDateComponent<D> extends KbqBasePipe {
     protected readonly adapter = inject(DateAdapter);
     protected readonly formatter = inject(DateFormatter);
 
@@ -70,6 +70,9 @@ export class KbqPipeDateComponent extends KbqBasePipe {
     protected list = true;
 
     protected formGroup: FormGroup;
+
+    protected showStartCalendar: boolean = false;
+    protected showEndCalendar: boolean = false;
 
     get formattedValue(): string {
         const { start, end } = this.data.value || {};
@@ -139,6 +142,8 @@ export class KbqPipeDateComponent extends KbqBasePipe {
 
     openPeriod() {
         this.list = false;
+        this.showStartCalendar = false;
+        this.showEndCalendar = false;
 
         setTimeout(() => this.returnButton().focus());
     }
@@ -161,5 +166,28 @@ export class KbqPipeDateComponent extends KbqBasePipe {
 
     override open() {
         this.popover.show();
+    }
+
+    onSelectStart(value: D) {
+        this.formGroup.controls.start.setValue(value);
+    }
+
+    onSelectEnd(value: D) {
+        this.formGroup.controls.end.setValue(value);
+    }
+
+    onFocusStartInput() {
+        this.showStartCalendar = true;
+        this.showEndCalendar = false;
+    }
+
+    onFocusEndInput() {
+        this.showEndCalendar = true;
+        this.showStartCalendar = false;
+    }
+
+    onTabOut() {
+        this.showStartCalendar = false;
+        this.showEndCalendar = false;
     }
 }
