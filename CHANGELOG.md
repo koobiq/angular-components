@@ -1,3 +1,15 @@
+# 18.13.0 (2025-02-10)
+
+### Koobiq
+
+ * bug fix  **common:** added defaultOffsetY for popups ([#DS-3205](https://github.com/koobiq/angular-components/issues/issue/DS-3205)) ([#524](https://github.com/koobiq/angular-components/issues/524)) ([b772d0d](https://github.com/koobiq/angular-components/commit/b772d0dd74a26442ccbf08e84952a12755f90209))
+ * bug fix  **docs,modal:** reveal modal examples section ([#523](https://github.com/koobiq/angular-components/issues/523)) ([721c3c5](https://github.com/koobiq/angular-components/commit/721c3c50c4d6301686ca0b6124032f99adaae934))
+ * feature  **docs:** typography page actualization ([#DS-2787](https://github.com/koobiq/angular-components/issues/issue/DS-2787)) ([#517](https://github.com/koobiq/angular-components/issues/517)) ([cacb86c](https://github.com/koobiq/angular-components/commit/cacb86c728451b57740706d19429e6629140b7c5))
+ * feature  init breadcrumbs component ([#DS-2464](https://github.com/koobiq/angular-components/issues/issue/DS-2464)) ([#497](https://github.com/koobiq/angular-components/issues/497)) ([0fed0ab](https://github.com/koobiq/angular-components/commit/0fed0ab2d947073db2f1d2b64e03ef39d6de0f59))
+ * feature  **visual:** bg-less shade for colored alert background ([#DS-3321](https://github.com/koobiq/angular-components/issues/issue/DS-3321)) ([#511](https://github.com/koobiq/angular-components/issues/511)) ([40a63c9](https://github.com/koobiq/angular-components/commit/40a63c9db92dfaa286095047521662ba51009c3b))
+ * feature  **visual:** border-radius in сombobox options ([#DS-3290](https://github.com/koobiq/angular-components/issues/issue/DS-3290)) ([#522](https://github.com/koobiq/angular-components/issues/522)) ([ef8a570](https://github.com/koobiq/angular-components/commit/ef8a570a9fc76aaeaf04fbca9c63482336174fb4))
+ * feature  **visual:** removed legacy styling from optgroup-label ([#DS-2652](https://github.com/koobiq/angular-components/issues/issue/DS-2652)) ([#521](https://github.com/koobiq/angular-components/issues/521)) ([bbb1233](https://github.com/koobiq/angular-components/commit/bbb1233ed092105edbbedccb24bb2ae4c49e0847))
+
 ## 18.12.1 (2025-02-04)
 
 ### Koobiq
