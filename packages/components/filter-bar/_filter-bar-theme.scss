@@ -1,9 +1,5 @@
 @use '../core/styles/common/tokens' as *;
 
-@mixin kbq-filter-bar-theme() {
-
-}
-
 @mixin kbq-filter-bar-typography() {
     .kbq-hint.kbq-date-period__hint .kbq-hint__text {
         @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
@@ -24,7 +20,7 @@
     }
 }
 
-@mixin kbq-button_changed-filter() {
+@mixin kbq-button-changed-filter() {
     .kbq-button-overlay {
         display: none;
     }
@@ -64,4 +60,3 @@
         }
     }
 }
-

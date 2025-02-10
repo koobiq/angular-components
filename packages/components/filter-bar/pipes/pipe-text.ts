@@ -19,7 +19,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
     standalone: true,
     selector: 'kbq-pipe-text',
     templateUrl: 'pipe-text.html',
-    styleUrls: ['base-pipe.scss', 'pipe-text.scss'],
+    styleUrls: ['base-pipe.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
