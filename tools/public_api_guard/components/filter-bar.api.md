@@ -26,6 +26,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Platform } from '@angular/cdk/platform';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
@@ -48,6 +49,8 @@ export class KbqBasePipe {
     onClear(): void;
     // (undocumented)
     onRemove(): void;
+    // (undocumented)
+    protected readonly platform: Platform;
     // (undocumented)
     get showRemoveButton(): boolean;
     // (undocumented)
@@ -418,6 +421,29 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeDirective<any>, "[kbq-pipe]", never, { "pipe": { "alias": "kbq-pipe"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDirective<any>, never>;
+}
+
+// @public (undocumented)
+export class KbqPipeMinWidth {
+    constructor();
+    // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly elementRef: ElementRef<any>;
+    // (undocumented)
+    protected readonly filterBar: KbqFilterBar | null;
+    // (undocumented)
+    maxSymbolsForFitContent: number;
+    // (undocumented)
+    minWidth: string;
+    // (undocumented)
+    get textLength(): number;
+    // (undocumented)
+    update: () => void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeMinWidth, "[kbq-pipe-min-width]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeMinWidth, never>;
 }
 
 // @public (undocumented)

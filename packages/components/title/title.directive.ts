@@ -36,7 +36,7 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     }
 
     get parent(): HTMLElement {
-        return this.parentContainer.nativeElement || this.parentContainer;
+        return this.parentContainer?.nativeElement || this.parentContainer;
     }
 
     get child(): HTMLElement {
