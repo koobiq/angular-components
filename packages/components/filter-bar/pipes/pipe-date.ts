@@ -85,7 +85,11 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
     }
 
     get disabled(): boolean {
-        return this.isEmpty || this.formGroup.controls.start.invalid;
+        return (
+            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
+            !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
+            this.formGroup.controls.start.invalid
+        );
     }
 
     override get isEmpty(): boolean {
@@ -94,8 +98,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
         if (this.data.value?.name) return false;
 
         return (
-            !this.adapter.isDateInstance(this.formGroup.get('start')?.value) ||
-            !this.adapter.isDateInstance(this.formGroup.get('end')?.value)
+            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
+            !this.adapter.isDateInstance(this.formGroup.controls.end.value)
         );
     }
 
@@ -122,8 +126,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
 
     onApplyPeriod() {
         this.data.value = {
-            start: this.formGroup.get('start')?.value,
-            end: this.formGroup.get('end')?.value
+            start: this.formGroup.controls.start.value,
+            end: this.formGroup.controls.end.value
         };
 
         this.filterBar?.onChangePipe.next(this.data);
@@ -168,11 +172,11 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
         this.popover.show();
     }
 
-    onSelectStart(value: D) {
+    onSelectStartDate(value: D) {
         this.formGroup.controls.start.setValue(value);
     }
 
-    onSelectEnd(value: D) {
+    onSelectEndDate(value: D) {
         this.formGroup.controls.end.setValue(value);
     }
 
@@ -186,7 +190,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
         this.showStartCalendar = false;
     }
 
-    onTabOut() {
+    hideCalendars() {
         this.showStartCalendar = false;
         this.showEndCalendar = false;
     }

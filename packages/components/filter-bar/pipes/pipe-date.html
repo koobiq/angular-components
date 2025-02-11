@@ -59,7 +59,6 @@
                     <label class="kbq-form__label flex-10">c</label>
 
                     <kbq-form-field
-                        #startDateField
                         class="kbq-date-period__date kbq-form__control"
                         [class.kbq-focused]="showStartCalendar"
                     >
@@ -68,7 +67,7 @@
                             [kbqCalendar]="startDateCalendar"
                             [max]="formGroup.controls.end.value"
                             (focusin)="onFocusStartInput()"
-                            (keydown.tab)="onTabOut()"
+                            (keydown.tab)="hideCalendars()"
                         />
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                     </kbq-form-field>
@@ -77,15 +76,13 @@
                 <kbq-calendar
                     #startDateCalendar
                     [class.kbq-calendar_hidden]="!showStartCalendar"
-                    [selected]="formGroup.controls.start.value"
-                    (selectedChange)="onSelectStart($event)"
+                    (selectedChange)="onSelectStartDate($event)"
                 />
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-10">по</label>
 
                     <kbq-form-field
-                        #endDateField
                         class="kbq-date-period__date kbq-form__control"
                         [class.kbq-focused]="showEndCalendar"
                     >
@@ -93,7 +90,7 @@
                             formControlName="end"
                             [kbqCalendar]="endDateCalendar"
                             (focusin)="onFocusEndInput()"
-                            (keydown.tab)="onTabOut()"
+                            (keydown.tab)="hideCalendars()"
                         />
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                     </kbq-form-field>
@@ -108,8 +105,7 @@
                 <kbq-calendar
                     #endDateCalendar
                     [class.kbq-calendar_hidden]="!showEndCalendar"
-                    [selected]="formGroup.controls.end.value"
-                    (selectedChange)="onSelectEnd($event)"
+                    (selectedChange)="onSelectEndDate($event)"
                 />
             </form>
 
