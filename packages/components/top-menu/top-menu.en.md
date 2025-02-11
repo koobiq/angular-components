@@ -20,7 +20,7 @@ For a more compact layout, replace breadcrumbs with a title that reflects the cu
 
 The last breadcrumb in the navigation is always active and can be used for various actions.
 
-<!-- example(top-menu-breadcrumbs) -->
+<!-- example(top-menu-active-breadcrumb) -->
 
 ### Minimum Spacing Between Elements
 
