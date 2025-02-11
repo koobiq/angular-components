@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -28,9 +28,9 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
         @let isDesktopMatches = !!(isDesktop | async)?.matches;
         <kbq-top-menu>
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
-                @if (iconVisible) {
-                    <i class="layout-row layout-padding-m" kbq-icon="kbq-dashboard_16"></i>
-                }
+                <div class="layout-row layout-padding-m flex-none">
+                    <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
+                </div>
                 <div class="kbq-title kbq-text-ellipsis">Дашборд</div>
             </div>
             <div class="kbq-top-menu__spacer"></div>
@@ -54,7 +54,8 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                 }
             </div>
         </kbq-top-menu>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopMenuOverviewExample {
     @Input() iconVisible: boolean = true;

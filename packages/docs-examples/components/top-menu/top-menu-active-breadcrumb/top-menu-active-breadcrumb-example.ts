@@ -1,31 +1,40 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, Input, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqPopoverModule } from '@koobiq/components/popover';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
 
 /**
- * @title TopMenu Breadcrumbs
+ * @title TopMenu Active Breadcrumb
  */
 @Component({
     standalone: true,
-    selector: 'top-menu-breadcrumbs-example',
+    selector: 'top-menu-active-breadcrumb-example',
     imports: [
+        FormsModule,
         AsyncPipe,
         RouterLink,
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIcon,
-        KbqBreadcrumbsModule
+        KbqBreadcrumbsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTextareaModule,
+        KbqPopoverModule
     ],
     styleUrls: [],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @let isDesktopMatches = !!(isDesktop | async)?.matches;
         <kbq-top-menu>
@@ -34,14 +43,45 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-top-menu__breadcrumbs">
-                    <nav [max]="3" kbq-breadcrumbs>
+                    <nav kbq-breadcrumbs>
                         <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
-                        <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
-                        <kbq-breadcrumb-item text="Widgets" routerLink="./dashboards/dashboard123/widgets" />
-                        <kbq-breadcrumb-item
-                            text="widget123"
-                            routerLink="./dashboards/dashboard123/widgets/widget123"
-                        />
+
+                        <kbq-breadcrumb-item text="Dashboards">
+                            <a *kbqBreadcrumbView tabindex="-1">
+                                <button
+                                    #kbqPopover="kbqPopover"
+                                    [kbqPopoverContent]="popoverContent"
+                                    [kbqPopoverPlacement]="PopUpPlacements.BottomLeft"
+                                    [kbqTooltipDisabled]="isDesktopMatches"
+                                    [kbqPlacement]="PopUpPlacements.Bottom"
+                                    [kbqTooltip]="breadcrumbActionText"
+                                    kbqPopoverClass="dashboard__input"
+                                    kbq-button
+                                    kbqBreadcrumb
+                                    kbqPopover
+                                >
+                                    @if (isDesktopMatches) {
+                                        {{ breadcrumbActionText }}
+                                    }
+                                    <i kbq-icon="kbq-pencil_16"></i>
+                                </button>
+
+                                <ng-template #popoverContent>
+                                    <kbq-form-field class="layout-margin-bottom-l">
+                                        <input
+                                            [ngModel]="value()"
+                                            (ngModelChange)="value.set($event)"
+                                            kbqInput
+                                            placeholder="Название*"
+                                        />
+                                    </kbq-form-field>
+
+                                    <kbq-form-field>
+                                        <textarea placeholder="Описание" kbqTextarea></textarea>
+                                    </kbq-form-field>
+                                </ng-template>
+                            </a>
+                        </kbq-breadcrumb-item>
                     </nav>
                 </div>
             </div>
@@ -54,7 +94,7 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                         [kbqTooltipDisabled]="isDesktopMatches"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
-                        [disabled]="action.disabled"
+                        [disabled]="action.disabled && action.disabled()"
                         kbq-button
                     >
                         @if (!isDesktopMatches && action.icon) {
@@ -67,9 +107,14 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                 }
             </div>
         </kbq-top-menu>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopMenuBreadcrumbsExample {
+export class TopMenuActiveBreadcrumbExample {
+    @Input() iconVisible: boolean = true;
+    value = signal(null);
+
+    readonly breadcrumbActionText = 'Новый дашборд';
     readonly actions = [
         {
             title: 'Add widget',
@@ -87,7 +132,7 @@ export class TopMenuBreadcrumbsExample {
             title: 'Save',
             color: KbqComponentColors.Contrast,
             icon: 'kbq-floppy-disk_16',
-            disabled: true
+            disabled: computed(() => !this.value())
         }
     ];
 
