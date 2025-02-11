@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -25,11 +25,14 @@ import { auditTime, map } from 'rxjs/operators';
         KbqTooltipTrigger,
         CdkScrollable
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @let isDesktopMatches = !!(isDesktop | async)?.matches;
         <kbq-top-menu [hasOverflow]="hasOverflow | async">
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
-                <i class="layout-row layout-padding-m" kbq-icon="kbq-dashboard_16"></i>
+                <div class="layout-row layout-padding-m flex-none">
+                    <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
+                </div>
                 <div class="kbq-title kbq-text-ellipsis">Дашборд</div>
             </div>
             <div class="kbq-top-menu__spacer"></div>
@@ -98,6 +101,7 @@ export class TopMenuOverflowExample implements AfterViewInit {
             icon: 'kbq-floppy-disk_16'
         }
     ];
+
     protected readonly isDesktop = inject(BreakpointObserver).observe('(min-width: 768px)');
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;
