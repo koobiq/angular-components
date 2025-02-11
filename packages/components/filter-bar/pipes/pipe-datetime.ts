@@ -59,7 +59,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeTitleDirective
     ]
 })
-export class KbqPipeDatetimeComponent extends KbqBasePipe {
+export class KbqPipeDatetimeComponent<D> extends KbqBasePipe {
     protected readonly adapter = inject(DateAdapter);
     protected readonly formatter = inject(DateFormatter);
 
@@ -70,6 +70,9 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
     protected list = true;
 
     protected formGroup: FormGroup;
+
+    protected showStartCalendar: boolean = false;
+    protected showEndCalendar: boolean = false;
 
     get formattedValue(): string {
         const { start, end } = this.data.value || {};
@@ -82,7 +85,11 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
     }
 
     get disabled(): boolean {
-        return this.isEmpty || this.formGroup.controls.start.invalid;
+        return (
+            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
+            !this.adapter.isDateInstance(this.formGroup.controls.end.value) ||
+            this.formGroup.controls.start.invalid
+        );
     }
 
     override get isEmpty(): boolean {
@@ -91,8 +98,8 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
         if (this.data.value?.name) return false;
 
         return (
-            !this.adapter.isDateInstance(this.formGroup.get('start')?.value) ||
-            !this.adapter.isDateInstance(this.formGroup.get('end')?.value)
+            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
+            !this.adapter.isDateInstance(this.formGroup.controls.end.value)
         );
     }
 
@@ -119,8 +126,8 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
 
     onApplyPeriod() {
         this.data.value = {
-            start: this.formGroup.get('start')?.value,
-            end: this.formGroup.get('end')?.value
+            start: this.formGroup.controls.start.value,
+            end: this.formGroup.controls.end.value
         };
 
         this.filterBar?.onChangePipe.next(this.data);
@@ -139,6 +146,8 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
 
     openPeriod() {
         this.list = false;
+        this.showStartCalendar = false;
+        this.showEndCalendar = false;
 
         setTimeout(() => this.returnButton().focus());
     }
@@ -159,5 +168,28 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
 
     override open() {
         this.popover.show();
+    }
+
+    onSelectStartDate(value: D) {
+        this.formGroup.controls.start.setValue(value);
+    }
+
+    onSelectEndDate(value: D) {
+        this.formGroup.controls.end.setValue(value);
+    }
+
+    onFocusStartInput() {
+        this.showStartCalendar = true;
+        this.showEndCalendar = false;
+    }
+
+    onFocusEndInput() {
+        this.showEndCalendar = true;
+        this.showStartCalendar = false;
+    }
+
+    hideCalendars() {
+        this.showStartCalendar = false;
+        this.showEndCalendar = false;
     }
 }
