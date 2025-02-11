@@ -22,6 +22,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
@@ -35,7 +36,7 @@ import { UntypedFormControl } from '@angular/forms';
 import { ViewContainerRef } from '@angular/core';
 
 // @public (undocumented)
-export class KbqBasePipe {
+export abstract class KbqBasePipe implements AfterViewInit {
     constructor();
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
@@ -46,9 +47,13 @@ export class KbqBasePipe {
     // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
     onClear(): void;
     // (undocumented)
     onRemove(): void;
+    // (undocumented)
+    abstract open(): void;
     // (undocumented)
     protected readonly platform: Platform;
     // (undocumented)
@@ -297,6 +302,8 @@ export class KbqPipeData {
     // (undocumented)
     name: string;
     // (undocumented)
+    openOnAdd?: boolean;
+    // (undocumented)
     removable: boolean;
     // (undocumented)
     required: boolean;
@@ -307,7 +314,7 @@ export class KbqPipeData {
 }
 
 // @public (undocumented)
-export class KbqPipeDateComponent extends KbqBasePipe {
+export class KbqPipeDateComponent<D> extends KbqBasePipe {
     constructor();
     // (undocumented)
     protected readonly adapter: DateAdapter<any>;
@@ -322,6 +329,8 @@ export class KbqPipeDateComponent extends KbqBasePipe {
     // (undocumented)
     protected formGroup: FormGroup;
     // (undocumented)
+    hideCalendars(): void;
+    // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
     protected list: boolean;
@@ -332,11 +341,21 @@ export class KbqPipeDateComponent extends KbqBasePipe {
     // (undocumented)
     onDelete(): void;
     // (undocumented)
+    onFocusEndInput(): void;
+    // (undocumented)
+    onFocusStartInput(): void;
+    // (undocumented)
     onKeydown($event: KeyboardEvent): void;
     // (undocumented)
     protected readonly onkeydown: ((this: Window, ev: KeyboardEvent) => any) | null;
     // (undocumented)
     onSelect(item: unknown): void;
+    // (undocumented)
+    onSelectEndDate(value: D): void;
+    // (undocumented)
+    onSelectStartDate(value: D): void;
+    // (undocumented)
+    open(): void;
     // (undocumented)
     openList(): void;
     // (undocumented)
@@ -348,15 +367,19 @@ export class KbqPipeDateComponent extends KbqBasePipe {
     // (undocumented)
     returnButton: Signal<KbqButton>;
     // (undocumented)
+    protected showEndCalendar: boolean;
+    // (undocumented)
+    protected showStartCalendar: boolean;
+    // (undocumented)
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDateComponent, "kbq-pipe-date", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDateComponent<any>, "kbq-pipe-date", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDateComponent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDateComponent<any>, never>;
 }
 
 // @public (undocumented)
-export class KbqPipeDatetimeComponent extends KbqBasePipe {
+export class KbqPipeDatetimeComponent<D> extends KbqBasePipe {
     constructor();
     // (undocumented)
     protected readonly adapter: DateAdapter<any>;
@@ -371,6 +394,8 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
     // (undocumented)
     protected formGroup: FormGroup;
     // (undocumented)
+    hideCalendars(): void;
+    // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
     protected list: boolean;
@@ -381,11 +406,21 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
     // (undocumented)
     onDelete(): void;
     // (undocumented)
+    onFocusEndInput(): void;
+    // (undocumented)
+    onFocusStartInput(): void;
+    // (undocumented)
     onKeydown($event: KeyboardEvent): void;
     // (undocumented)
     protected readonly onkeydown: ((this: Window, ev: KeyboardEvent) => any) | null;
     // (undocumented)
     onSelect(item: unknown): void;
+    // (undocumented)
+    onSelectEndDate(value: D): void;
+    // (undocumented)
+    onSelectStartDate(value: D): void;
+    // (undocumented)
+    open(): void;
     // (undocumented)
     openList(): void;
     // (undocumented)
@@ -397,11 +432,15 @@ export class KbqPipeDatetimeComponent extends KbqBasePipe {
     // (undocumented)
     returnButton: Signal<KbqButton>;
     // (undocumented)
+    protected showEndCalendar: boolean;
+    // (undocumented)
+    protected showStartCalendar: boolean;
+    // (undocumented)
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDatetimeComponent, "kbq-pipe-datetime", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDatetimeComponent<any>, "kbq-pipe-datetime", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDatetimeComponent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeDatetimeComponent<any>, never>;
 }
 
 // @public (undocumented)
@@ -457,6 +496,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe {
     // (undocumented)
     onSelect(item: unknown[]): void;
     // (undocumented)
+    open(): void;
+    // (undocumented)
+    select: KbqSelect;
+    // (undocumented)
     get selected(): any;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeMultiSelectComponent, "kbq-pipe-multi-select", never, {}, {}, never, never, true, never>;
@@ -472,6 +515,10 @@ export class KbqPipeSelectComponent extends KbqBasePipe {
     get isEmpty(): boolean;
     // (undocumented)
     onSelect(item: unknown): void;
+    // (undocumented)
+    open(): void;
+    // (undocumented)
+    select: KbqSelect;
     // (undocumented)
     get selected(): any;
     // (undocumented)
@@ -515,6 +562,8 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
     onApply(): void;
     // (undocumented)
     onKeydown($event: KeyboardEvent): void;
+    // (undocumented)
+    open(): void;
     // (undocumented)
     readonly placements: typeof PopUpPlacements;
     // (undocumented)

@@ -58,35 +58,51 @@
                 <div class="kbq-form__row kbq-form__row_with-time">
                     <label class="kbq-form__label flex-10">c</label>
 
-                    <kbq-form-field #startDateField class="kbq-date-period__date kbq-form__control">
+                    <kbq-form-field
+                        class="kbq-date-period__date kbq-form__control"
+                        [class.kbq-focused]="showStartCalendar"
+                    >
                         <input
                             formControlName="start"
                             [kbqCalendar]="startDateCalendar"
                             [max]="formGroup.controls.end.value"
+                            (focusin)="onFocusStartInput()"
+                            (keydown.tab)="hideCalendars()"
                         />
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                     </kbq-form-field>
 
                     <kbq-form-field class="kbq-date-period__time kbq-form__control">
                         <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                        <input formControlName="start" kbqTimepicker />
+                        <input formControlName="start" kbqTimepicker (focusin)="hideCalendars()" />
                     </kbq-form-field>
                 </div>
 
-                <kbq-calendar #startDateCalendar [class.kbq-calendar_hidden]="!startDateField.hasFocus" />
+                <kbq-calendar
+                    #startDateCalendar
+                    [class.kbq-calendar_hidden]="!showStartCalendar"
+                    (selectedChange)="onSelectStartDate($event)"
+                />
 
                 <div class="kbq-form__row kbq-form__row_with-time">
                     <label class="kbq-form__label flex-10">по</label>
 
-                    <kbq-form-field #endDateField class="kbq-date-period__date kbq-form__control">
-                        <input formControlName="end" [kbqCalendar]="endDateCalendar" />
+                    <kbq-form-field
+                        class="kbq-date-period__date kbq-form__control"
+                        [class.kbq-focused]="showEndCalendar"
+                    >
+                        <input
+                            formControlName="end"
+                            [kbqCalendar]="endDateCalendar"
+                            (focusin)="onFocusEndInput()"
+                            (keydown.tab)="hideCalendars()"
+                        />
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
-                        <kbq-datepicker #datepicker />
                     </kbq-form-field>
 
                     <kbq-form-field class="kbq-date-period__time kbq-form__control">
                         <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                        <input formControlName="end" kbqTimepicker />
+                        <input formControlName="end" kbqTimepicker (focusin)="hideCalendars()" />
                     </kbq-form-field>
                 </div>
 
@@ -96,7 +112,11 @@
                     </kbq-hint>
                 }
 
-                <kbq-calendar #endDateCalendar [class.kbq-calendar_hidden]="!endDateField.hasFocus" />
+                <kbq-calendar
+                    #endDateCalendar
+                    [class.kbq-calendar_hidden]="!showEndCalendar"
+                    (selectedChange)="onSelectEndDate($event)"
+                />
             </form>
 
             <div class="kbq-date-period__footer">
