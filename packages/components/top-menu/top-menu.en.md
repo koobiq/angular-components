@@ -1,5 +1,3 @@
-### Top Menu
-
 The `Top Menu` is a toolbar that remains visible on the page at all times, providing quick access to navigation and
 controls. Depending on the interface requirements, it can include breadcrumbs, a title, action buttons, and other
 elements. Below are various ways to use the toolbar and recommendations for adapting it to different scenarios.
