@@ -3321,8 +3321,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "TopMenu Overflow",
     "componentName": "TopMenuOverflowExample",
     "files": [
-      "top-menu-overflow-example.ts",
-      "top-menu-overflow-example.css"
+      "top-menu-overflow-example.ts"
     ],
     "selector": "top-menu-overflow-example",
     "additionalComponents": [],
