@@ -36,7 +36,8 @@ import {
     PopUpPlacements,
     PopUpSizes,
     PopUpTriggers,
-    applyPopupMargins
+    applyPopupMargins,
+    defaultOffsetY
 } from '@koobiq/components/core';
 import { NEVER, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -329,7 +330,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // @TODO add realization for arrow (#DS-2514)
     @Input({ alias: 'kbqPopoverArrow', transform: booleanAttribute }) arrow: boolean = true;
 
-    @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = null;
+    @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetY;
     
     @Output('kbqPopoverPlacementChange') placementChange = new EventEmitter();
 

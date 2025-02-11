@@ -54,11 +54,15 @@ export class KbqFilterBar {
     }
 
     set activeFilter(value: KbqFilter | null) {
+        if (this._activeFilter === value) return;
+
         if (value && this.activeFilter === null) {
             this.saveFilterState(value);
         }
 
-        this.activeFilterChanges.next(value);
+        this._activeFilter = value;
+
+        this.changes.next();
     }
 
     private _activeFilter: KbqFilter | null;
