@@ -15,34 +15,32 @@ import { DateTime } from 'luxon';
         KbqLuxonDateModule
     ],
     template: `
-        <div style="height: 160px; display: flex; align-items: center; justify-content: center">
-            <kbq-filter-bar
-                #filterBar
-                [activeFilter]="activeFilter"
-                [pipeTemplates]="pipeTemplates"
-                (onFilterChange)="onFilterChange($event)"
-            >
-                <kbq-filters
-                    [filters]="filters"
-                    (onChangeFilter)="onChangeFilter($event)"
-                    (onDeleteFilter)="onDeleteFilter($event)"
-                    (onResetFilter)="onResetFilter($event)"
-                    (onSave)="onSaveFilter($event)"
-                    (onSaveAsNew)="onSaveAsNewFilter($event)"
-                    (onSelectFilter)="onSelectFilter($event)"
-                />
+        <kbq-filter-bar
+            #filterBar
+            [activeFilter]="activeFilter"
+            [pipeTemplates]="pipeTemplates"
+            (onFilterChange)="onFilterChange($event)"
+        >
+            <kbq-filters
+                [filters]="filters"
+                (onChangeFilter)="onChangeFilter($event)"
+                (onDeleteFilter)="onDeleteFilter($event)"
+                (onResetFilter)="onResetFilter($event)"
+                (onSave)="onSaveFilter($event)"
+                (onSaveAsNew)="onSaveAsNewFilter($event)"
+                (onSelectFilter)="onSelectFilter($event)"
+            />
 
-                @for (pipe of activeFilter?.pipes; track pipe) {
-                    <ng-container *kbq-pipe="pipe" />
-                }
+            @for (pipe of activeFilter?.pipes; track pipe) {
+                <ng-container *kbq-pipe="pipe" />
+            }
 
-                <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
+            <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-                <kbq-filter-reset (onReset)="onReset($event)" />
+            <kbq-filter-reset (onReset)="onReset($event)" />
 
-                <kbq-filter-bar-search (onSearch)="onSearch($event)" />
-            </kbq-filter-bar>
-        </div>
+            <kbq-filter-bar-search (onSearch)="onSearch($event)" />
+        </kbq-filter-bar>
     `
 })
 export class FilterBarCompleteFunctionsExample {

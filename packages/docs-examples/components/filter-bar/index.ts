@@ -1,30 +1,33 @@
 import { NgModule } from '@angular/core';
 import { FilterBarCleanableExample } from './filter-bar-cleanable/filter-bar-cleanable-example';
 import { FilterBarCompleteFunctionsExample } from './filter-bar-complete-functions/filter-bar-complete-functions-example';
-import { FilterBarEmptyRemovableExample } from './filter-bar-empty-removable/filter-bar-empty-removable-example';
-import { FilterBarOperatingModesExample } from './filter-bar-operating-modes/filter-bar-operating-modes-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
+import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
 import { FilterBarRemovableExample } from './filter-bar-removable/filter-bar-removable-example';
 import { FilterBarRequiredExample } from './filter-bar-required/filter-bar-required-example';
+import { FilterBarSavedFiltersExample } from './filter-bar-saved-filters/filter-bar-saved-filters-example';
+import { FilterBarSearchExample } from './filter-bar-search/filter-bar-search-example';
 
 export {
     FilterBarCleanableExample,
     FilterBarCompleteFunctionsExample,
-    FilterBarEmptyRemovableExample,
-    FilterBarOperatingModesExample,
     FilterBarOverviewExample,
+    FilterBarPipeTypesExample,
     FilterBarRemovableExample,
-    FilterBarRequiredExample
+    FilterBarRequiredExample,
+    FilterBarSavedFiltersExample,
+    FilterBarSearchExample
 };
 
 const EXAMPLES = [
     FilterBarOverviewExample,
-    FilterBarOperatingModesExample,
+    FilterBarPipeTypesExample,
     FilterBarRemovableExample,
     FilterBarCleanableExample,
     FilterBarRequiredExample,
-    FilterBarEmptyRemovableExample,
-    FilterBarCompleteFunctionsExample
+    FilterBarSearchExample,
+    FilterBarCompleteFunctionsExample,
+    FilterBarSavedFiltersExample
 ];
 
 @NgModule({

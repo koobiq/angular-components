@@ -98,8 +98,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
         if (this.data.value?.name) return false;
 
         return (
-            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
-            !this.adapter.isDateInstance(this.formGroup.controls.end.value)
+            !this.adapter.isDateInstance(this.data.value?.start) && !this.adapter.isDateInstance(this.data.value?.end)
         );
     }
 

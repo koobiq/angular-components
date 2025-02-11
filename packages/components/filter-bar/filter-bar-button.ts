@@ -1,4 +1,4 @@
-import { Directive, ElementRef, inject, ViewChild } from '@angular/core';
+import { Directive, inject } from '@angular/core';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFilterBar } from './filter-bar';
@@ -10,8 +10,6 @@ import { KbqFilterBar } from './filter-bar';
 export class KbqFilterBarButton {
     private readonly button = inject(KbqButton);
     private readonly filterBar = inject(KbqFilterBar);
-
-    @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
 
     constructor() {
         this.filterBar.changes.subscribe(() => {

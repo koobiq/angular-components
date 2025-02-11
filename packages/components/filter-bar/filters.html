@@ -2,9 +2,7 @@
     kbq-button
     kbq-filter-bar-button
     kbq-title
-    [color]="colors.ContrastFade"
     [kbqDropdownTriggerFor]="savedFilters"
-    [kbqStyle]="styles.Outline"
     (dropdownOpened)="input.focus()"
 >
     <span #kbqTitleText class="kbq-filters__filter-name">
