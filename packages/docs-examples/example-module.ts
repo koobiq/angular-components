@@ -1327,30 +1327,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-complete-functions-example.ts",
     "importPath": "components/filter-bar"
   },
-  "filter-bar-empty-removable": {
-    "packagePath": "components/filter-bar/filter-bar-empty-removable",
-    "title": "filter-bar-empty-removable",
-    "componentName": "FilterBarEmptyRemovableExample",
-    "files": [
-      "filter-bar-empty-removable-example.ts"
-    ],
-    "selector": "filter-bar-empty-removable-example",
-    "additionalComponents": [],
-    "primaryFile": "filter-bar-empty-removable-example.ts",
-    "importPath": "components/filter-bar"
-  },
-  "filter-bar-operating-modes": {
-    "packagePath": "components/filter-bar/filter-bar-operating-modes",
-    "title": "filter-bar-operating-modes",
-    "componentName": "FilterBarOperatingModesExample",
-    "files": [
-      "filter-bar-operating-modes-example.ts"
-    ],
-    "selector": "filter-bar-operating-modes-example",
-    "additionalComponents": [],
-    "primaryFile": "filter-bar-operating-modes-example.ts",
-    "importPath": "components/filter-bar"
-  },
   "filter-bar-overview": {
     "packagePath": "components/filter-bar/filter-bar-overview",
     "title": "filter bar",
@@ -1361,6 +1337,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "filter-bar-overview-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-overview-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-pipe-types": {
+    "packagePath": "components/filter-bar/filter-bar-pipe-types",
+    "title": "filter-bar-pipe-types",
+    "componentName": "FilterBarPipeTypesExample",
+    "files": [
+      "filter-bar-pipe-types-example.ts"
+    ],
+    "selector": "filter-bar-pipe-types-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-pipe-types-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-removable": {
@@ -1385,6 +1373,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "filter-bar-required-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-required-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-saved-filters": {
+    "packagePath": "components/filter-bar/filter-bar-saved-filters",
+    "title": "filter-bar-saved-filters",
+    "componentName": "FilterBarSavedFiltersExample",
+    "files": [
+      "filter-bar-saved-filters-example.ts"
+    ],
+    "selector": "filter-bar-saved-filters-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-saved-filters-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-search": {
+    "packagePath": "components/filter-bar/filter-bar-search",
+    "title": "filter-bar-search",
+    "componentName": "FilterBarSearchExample",
+    "files": [
+      "filter-bar-search-example.ts"
+    ],
+    "selector": "filter-bar-search-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-search-example.ts",
     "importPath": "components/filter-bar"
   },
   "form-field-password-overview": {
@@ -4076,15 +4088,17 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-complete-functions':
 return import('@koobiq/docs-examples/components/filter-bar');
-  case 'filter-bar-empty-removable':
-return import('@koobiq/docs-examples/components/filter-bar');
-  case 'filter-bar-operating-modes':
-return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-pipe-types':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-removable':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-required':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-saved-filters':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-search':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'form-field-password-overview':
 return import('@koobiq/docs-examples/components/form-field');

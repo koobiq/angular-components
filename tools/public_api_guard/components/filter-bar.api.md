@@ -123,8 +123,6 @@ export class KbqFilterBar {
 export class KbqFilterBarButton {
     constructor();
     // (undocumented)
-    textElement: ElementRef;
-    // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbq-filter-bar-button]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarButton, never>;
