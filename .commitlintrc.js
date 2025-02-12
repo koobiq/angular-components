@@ -28,6 +28,7 @@ const config = {
                 'cli',
                 'experimental',
                 'schematics',
+                'dev',
 
                 // core
                 'common',
