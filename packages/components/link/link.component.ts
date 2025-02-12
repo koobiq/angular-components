@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
+    AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
     ContentChild,
@@ -48,7 +49,7 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[attr.print]': 'printUrl'
     }
 })
-export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex, CanDisable {
+export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestroy, HasTabIndex, CanDisable {
     /** Whether the link is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -102,9 +103,11 @@ export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex,
     ) {
         super();
 
-        this.focusMonitor.monitor(elementRef.nativeElement, true);
-
         this.updatePrintUrl();
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
     }
 
     ngOnDestroy() {

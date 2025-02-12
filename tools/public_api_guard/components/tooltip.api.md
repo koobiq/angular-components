@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
@@ -96,8 +97,7 @@ export class KbqToolTipModule {
 export function kbqTooltipScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements OnDestroy {
-    constructor();
+export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnDestroy {
     // (undocumented)
     protected applyRelativeToPointer(): void;
     // (undocumented)
@@ -135,6 +135,8 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     static ngAcceptInputType_offset: unknown;
     // (undocumented)
     static ngAcceptInputType_relativeToPointer: unknown;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

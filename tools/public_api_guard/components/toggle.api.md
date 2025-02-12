@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterViewInit } from '@angular/core';
 import { CanColor } from '@koobiq/components/core';
 import { CanColorCtor } from '@koobiq/components/core';
 import { CanDisable } from '@koobiq/components/core';
@@ -36,8 +37,8 @@ export class KbqToggleChange {
 }
 
 // @public (undocumented)
-export class KbqToggleComponent extends KbqToggleMixinBase implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy {
-    constructor(elementRef: ElementRef, _focusMonitor: FocusMonitor, _changeDetectorRef: ChangeDetectorRef);
+export class KbqToggleComponent extends KbqToggleMixinBase implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy {
+    constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     ariaLabel: string;
     // (undocumented)
@@ -70,6 +71,8 @@ export class KbqToggleComponent extends KbqToggleMixinBase implements ControlVal
     labelPosition: ToggleLabelPositionType;
     // (undocumented)
     name: string | null;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

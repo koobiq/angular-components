@@ -158,7 +158,7 @@ export class KbqNavbarDivider {}
         '(blur)': 'blur()'
     }
 })
-export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentInit, OnDestroy {
+export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     @ContentChild(KbqNavbarTitle) title: KbqNavbarTitle;
 
     @ContentChild(KbqButton) button: KbqButton;
@@ -215,12 +215,14 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
         private ngZone: NgZone
     ) {}
 
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef);
+    }
+
     ngAfterContentInit(): void {
         if (this.button) {
             this.button.tabIndex = -1;
         }
-
-        this.focusMonitor.monitor(this.elementRef);
     }
 
     ngOnDestroy() {

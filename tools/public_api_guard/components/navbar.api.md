@@ -32,7 +32,7 @@ import { TemplateRef } from '@angular/core';
 import { TooltipModifier } from '@koobiq/components/tooltip';
 
 // @public (undocumented)
-export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
+export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
     constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef, focusMonitor: FocusMonitor);
     // (undocumented)
     blur(): void;
@@ -52,6 +52,8 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
     keyManager: FocusKeyManager<KbqNavbarFocusableItem>;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -147,7 +149,7 @@ export class KbqNavbarDivider {
 }
 
 // @public (undocumented)
-export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentInit, OnDestroy {
+export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, OnDestroy, IFocusableOption {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, ngZone: NgZone);
     // (undocumented)
     blur(): void;
@@ -170,6 +172,8 @@ export class KbqNavbarFocusableItem implements IFocusableOption, AfterContentIni
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

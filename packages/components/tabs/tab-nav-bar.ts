@@ -236,11 +236,9 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
     private readonly renderer = inject(Renderer2);
     private readonly tabNavBar = inject(KbqTabNavBar);
 
-    constructor() {
-        this.focusMonitor.monitor(this.elementRef.nativeElement);
-    }
-
     ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef.nativeElement);
+
         this.addClassModifierForIcons(Array.from(this.elementRef.nativeElement.querySelectorAll('.kbq-icon')));
     }
 

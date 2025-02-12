@@ -2,6 +2,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -148,7 +149,10 @@ export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButt
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
 })
-export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor, KbqTitleTextRef {
+export class KbqButton
+    extends KbqButtonMixinBase
+    implements OnDestroy, AfterViewInit, CanDisable, CanColor, KbqTitleTextRef
+{
     hasFocus: boolean = false;
 
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -183,7 +187,9 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisab
         private styler: KbqButtonCssStyler
     ) {
         super(elementRef);
+    }
 
+    ngAfterViewInit(): void {
         this.runFocusMonitor();
     }
 

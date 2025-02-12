@@ -87,14 +87,12 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
         @Inject(KBQ_OPTION_ACTION_PARENT) private option: KbqOptionActionParent
     ) {
         super();
-
-        this.focusMonitor.monitor(this.elementRef.nativeElement);
     }
 
     ngAfterViewInit(): void {
-        if (!this.option.dropdownTrigger) {
-            return;
-        }
+        this.focusMonitor.monitor(this.elementRef.nativeElement);
+
+        if (!this.option.dropdownTrigger) return;
 
         this.option.dropdownTrigger.restoreFocus = false;
 

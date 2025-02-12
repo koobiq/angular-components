@@ -31,7 +31,7 @@ import {
 export type KbqNavbarContainerPositionType = 'left' | 'right';
 
 @Directive()
-export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
+export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
     @ContentChildren(forwardRef(() => KbqNavbarFocusableItem), { descendants: true })
     focusableItems: QueryList<KbqNavbarFocusableItem>;
 
@@ -65,11 +65,7 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
         protected readonly changeDetectorRef: ChangeDetectorRef,
         protected readonly elementRef: ElementRef,
         protected readonly focusMonitor: FocusMonitor
-    ) {
-        this.focusMonitor.monitor(elementRef).subscribe((focusOrigin) => {
-            this.keyManager.setFocusOrigin(focusOrigin);
-        });
-    }
+    ) {}
 
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarFocusableItem>(this.focusableItems).withTypeAhead();
@@ -88,6 +84,12 @@ export class KbqFocusableComponent implements AfterContentInit, OnDestroy {
 
             // Check to see if we need to update our tab index
             this.updateTabIndex();
+        });
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef).subscribe((focusOrigin) => {
+            this.keyManager.setFocusOrigin(focusOrigin);
         });
     }
 

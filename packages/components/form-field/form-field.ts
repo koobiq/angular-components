@@ -19,7 +19,6 @@ import {
     Self,
     ViewChild,
     ViewEncapsulation,
-    afterNextRender,
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -170,8 +169,6 @@ export class KbqFormField
         private focusMonitor: FocusMonitor
     ) {
         super(elementRef);
-
-        afterNextRender(this.runFocusMonitor);
     }
 
     ngAfterContentInit() {
@@ -212,6 +209,8 @@ export class KbqFormField
     }
 
     ngAfterViewInit() {
+        this.runFocusMonitor();
+
         // Avoid animations on load.
         this.changeDetectorRef.detectChanges();
     }
