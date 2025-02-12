@@ -18,6 +18,9 @@ const paths = [
     'components/alert/overview',
     'components/alert/api',
 
+    'components/actions-panel/overview',
+    'components/actions-panel/api',
+
     'components/accordion/overview',
     'components/accordion/api',
 
