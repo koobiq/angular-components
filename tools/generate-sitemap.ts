@@ -93,6 +93,9 @@ const paths = [
     'components/navbar/overview',
     'components/navbar/api',
 
+    'components/overflow-items/overview',
+    'components/overflow-items/api',
+
     'components/popover/overview',
     'components/popover/api',
 
