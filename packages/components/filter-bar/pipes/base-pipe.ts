@@ -48,6 +48,8 @@ export abstract class KbqBasePipe implements AfterViewInit {
 
     ngAfterViewInit(): void {
         if (this.data.openOnAdd) {
+            delete this.data.openOnAdd;
+
             this.open();
         }
     }
