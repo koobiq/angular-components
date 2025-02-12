@@ -1345,6 +1345,35 @@
                 }
             }
         },
+        "dev-overflow-items": {
+            "projectType": "application",
+            "root": "packages/components-dev/overflow-items",
+            "sourceRoot": "packages/components-dev/overflow-items",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/overflow-items"
+                        },
+                        "tsConfig": "packages/components-dev/overflow-items/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/overflow-items/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-overflow-items:build"
+                    }
+                }
+            }
+        },
         "dev-panel": {
             "projectType": "application",
             "root": "packages/components-dev/panel",

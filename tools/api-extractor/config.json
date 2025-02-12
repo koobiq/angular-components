@@ -26,6 +26,7 @@
         "loader-overlay",
         "modal",
         "navbar",
+        "overflow-items",
         "popover",
         "progress-bar",
         "progress-spinner",

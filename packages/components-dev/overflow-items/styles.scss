@@ -1,0 +1,13 @@
+@use '../main';
+
+app {
+    max-width: 800px;
+    display: block;
+    border: 1px solid cyan;
+    overflow: hidden;
+    resize: horizontal;
+}
+
+hr {
+    margin: var(--kbq-size-xxl) 0;
+}

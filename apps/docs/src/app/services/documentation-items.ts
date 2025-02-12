@@ -415,6 +415,16 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false
                 },
                 {
+                    id: 'overflow-items',
+                    name: {
+                        ru: 'Overflow items',
+                        en: 'Overflow items'
+                    },
+                    hasApi: true,
+                    apiId: 'overflow-items',
+                    hasExamples: false
+                },
+                {
                     id: 'popover',
                     name: {
                         ru: 'Popover',
