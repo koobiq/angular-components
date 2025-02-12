@@ -228,18 +228,18 @@ export const tkTMFormattersData = {
         number: {
             rounding: {
                 separator: '',
-                groupSeparator: '.',
-                thousand: 'K',
-                million: 'M',
-                billion: 'B',
-                trillion: 'T'
+                groupSeparator: ' ',
+                thousand: 'M',
+                million: 'Mn',
+                billion: 'Mr',
+                trillion: 'Tn'
             }
         }
     },
     input: {
         number: {
-            groupSeparator: [','],
-            fractionSeparator: '.'
+            groupSeparator: [' '],
+            fractionSeparator: ','
         }
     },
     sizeUnits: {
