@@ -111,7 +111,12 @@ export class KbqOverflowItem {
         }
 
         @for (item of items(); track item.id()) {
-            <div class="kbq-overflow-items__item" #itemRef [class.kbq-overflow-items__item_hidden]="item.hidden()">
+            <div
+                class="kbq-overflow-items__item"
+                #itemRef
+                [attr.aria-hidden]="item.hidden()"
+                [class.kbq-overflow-items__item_hidden]="item.hidden()"
+            >
                 <ng-container [ngTemplateOutlet]="item.templateRef" />
             </div>
         }
@@ -124,6 +129,7 @@ export class KbqOverflowItem {
             <div
                 class="kbq-overflow-items__result"
                 #resultRef
+                [attr.aria-hidden]="resultHidden()"
                 [class.kbq-overflow-items__result_hidden]="resultHidden()"
             >
                 <ng-container
