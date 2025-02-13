@@ -3303,13 +3303,24 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-style-example.ts",
     "importPath": "components/tooltip"
   },
+  "top-menu-active-breadcrumb": {
+    "packagePath": "components/top-menu/top-menu-active-breadcrumb",
+    "title": "TopMenu Active Breadcrumb",
+    "componentName": "TopMenuActiveBreadcrumbExample",
+    "files": [
+      "top-menu-active-breadcrumb-example.ts"
+    ],
+    "selector": "top-menu-active-breadcrumb-example",
+    "additionalComponents": [],
+    "primaryFile": "top-menu-active-breadcrumb-example.ts",
+    "importPath": "components/top-menu"
+  },
   "top-menu-breadcrumbs": {
     "packagePath": "components/top-menu/top-menu-breadcrumbs",
     "title": "TopMenu Breadcrumbs",
     "componentName": "TopMenuBreadcrumbsExample",
     "files": [
-      "top-menu-breadcrumbs-example.ts",
-      "top-menu-breadcrumbs-example.css"
+      "top-menu-breadcrumbs-example.ts"
     ],
     "selector": "top-menu-breadcrumbs-example",
     "additionalComponents": [],
@@ -4165,6 +4176,8 @@ return import('@koobiq/docs-examples/components/tooltip');
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-style':
 return import('@koobiq/docs-examples/components/tooltip');
+  case 'top-menu-active-breadcrumb':
+return import('@koobiq/docs-examples/components/top-menu');
   case 'top-menu-breadcrumbs':
 return import('@koobiq/docs-examples/components/top-menu');
   case 'top-menu-overflow':
