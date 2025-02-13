@@ -4,6 +4,7 @@ import { Point } from '@angular/cdk/drag-drop';
 import { Overlay, OverlayConfig, ScrollStrategy } from '@angular/cdk/overlay';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     Directive,
@@ -129,7 +130,7 @@ export const KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         '(touchend)': 'handleTouchend()'
     }
 })
-export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements OnDestroy {
+export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> implements AfterViewInit, OnDestroy {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_TOOLTIP_SCROLL_STRATEGY);
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
@@ -268,9 +269,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
 
     protected modifier: TooltipModifier = TooltipModifier.Default;
 
-    constructor() {
-        super();
-
+    ngAfterViewInit(): void {
         this.parentPopup?.closedStream.pipe(takeUntilDestroyed()).subscribe(() => this.hide());
 
         this.focusMonitor.monitor(this.elementRef.nativeElement);

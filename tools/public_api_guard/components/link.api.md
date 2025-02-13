@@ -4,6 +4,7 @@
 
 ```ts
 
+import { AfterViewInit } from '@angular/core';
 import { CanDisable } from '@koobiq/components/core';
 import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -20,7 +21,7 @@ import { OnDestroy } from '@angular/core';
 export const baseURLRegex: RegExp;
 
 // @public (undocumented)
-export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex, CanDisable {
+export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestroy, HasTabIndex, CanDisable {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, changeDetector: ChangeDetectorRef);
     // (undocumented)
     big: boolean;
@@ -48,6 +49,8 @@ export class KbqLink extends KbqLinkMixinBase implements OnDestroy, HasTabIndex,
     static ngAcceptInputType_pseudo: unknown;
     // (undocumented)
     static ngAcceptInputType_useVisited: unknown;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

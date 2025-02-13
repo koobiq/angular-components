@@ -1,6 +1,7 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -79,7 +80,7 @@ export class KbqToggleChange {
 })
 export class KbqToggleComponent
     extends KbqToggleMixinBase
-    implements ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy
+    implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy
 {
     @Input() big: boolean = false;
 
@@ -108,7 +109,7 @@ export class KbqToggleComponent
     set disabled(value: any) {
         if (value !== this._disabled) {
             this._disabled = value;
-            this._changeDetectorRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
         }
     }
 
@@ -122,7 +123,7 @@ export class KbqToggleComponent
     set checked(value: boolean) {
         if (value !== this._checked) {
             this._checked = value;
-            this._changeDetectorRef.markForCheck();
+            this.changeDetectorRef.markForCheck();
         }
     }
 
@@ -134,22 +135,24 @@ export class KbqToggleComponent
 
     constructor(
         public elementRef: ElementRef,
-        private _focusMonitor: FocusMonitor,
-        private _changeDetectorRef: ChangeDetectorRef
+        private focusMonitor: FocusMonitor,
+        private changeDetectorRef: ChangeDetectorRef
     ) {
         super(elementRef);
 
         this.id = this.uniqueId;
+    }
 
-        this._focusMonitor.monitor(this.elementRef.nativeElement, true);
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
     }
 
     ngOnDestroy() {
-        this._focusMonitor.stopMonitoring(this.elementRef.nativeElement);
+        this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
     }
 
     focus(): void {
-        this._focusMonitor.focusVia(this.inputElement.nativeElement, 'keyboard');
+        this.focusMonitor.focusVia(this.inputElement.nativeElement, 'keyboard');
     }
 
     getAriaChecked(): boolean {
@@ -164,7 +167,7 @@ export class KbqToggleComponent
     }
 
     onLabelTextChange() {
-        this._changeDetectorRef.markForCheck();
+        this.changeDetectorRef.markForCheck();
     }
 
     onInputClick(event: MouseEvent) {

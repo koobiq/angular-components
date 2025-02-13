@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { CanColor } from '@koobiq/components/core';
 import { CanColorCtor } from '@koobiq/components/core';
 import { CanDisable } from '@koobiq/components/core';
@@ -33,7 +34,7 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public (undocumented)
-export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisable, CanColor, KbqTitleTextRef {
+export class KbqButton extends KbqButtonMixinBase implements OnDestroy, AfterViewInit, CanDisable, CanColor, KbqTitleTextRef {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
     // (undocumented)
     get disabled(): any;
@@ -51,6 +52,8 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, CanDisab
     // (undocumented)
     get kbqStyle(): string;
     set kbqStyle(value: string | KbqButtonStyles);
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

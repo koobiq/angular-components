@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { CanColor } from '@koobiq/components/core';
 import { CanColorCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -51,7 +52,7 @@ export class KbqIconBase {
 }
 
 // @public (undocumented)
-export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
+export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, CanColor {
     constructor(elementRef: ElementRef, iconName: string, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
@@ -61,6 +62,8 @@ export class KbqIconButton extends KbqIcon implements OnDestroy, CanColor {
     name: string;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

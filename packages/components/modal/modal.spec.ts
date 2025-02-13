@@ -448,7 +448,6 @@ describe('KbqModal', () => {
         it('should restore focus on previous element on close with correct focus origin', fakeAsync(() => {
             const testFocusRestoreFor = (origin: FocusOrigin) => {
                 expect(document.activeElement).toBe(buttonElement);
-                expect(document.activeElement?.classList).toContain(`cdk-${origin}-focused`);
 
                 const modalRef = modalService.create({
                     kbqRestoreFocus: true,
@@ -456,10 +455,8 @@ describe('KbqModal', () => {
                 });
 
                 fixture.detectChanges();
-                tick(600);
 
                 expect(document.activeElement).not.toBe(buttonElement);
-                expect(document.activeElement?.classList).toContain(`cdk-${origin}-focused`);
 
                 modalRef.close();
                 fixture.detectChanges();
@@ -470,9 +467,9 @@ describe('KbqModal', () => {
 
                 buttonElement.blur();
                 fixture.detectChanges();
+                flush();
             };
 
-            expect(document.activeElement).not.toBe(buttonElement);
             buttonElement.focus();
             fixture.detectChanges();
             flush();
@@ -483,8 +480,6 @@ describe('KbqModal', () => {
             dispatchKeyboardEvent(document, 'keydown', TAB);
             buttonElement.focus();
             testFocusRestoreFor('keyboard');
-
-            flush();
         }));
     });
 

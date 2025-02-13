@@ -325,7 +325,6 @@ export const KbqTabLabelWrapperMixinBase: CanDisableCtor & typeof KbqTabLabelWra
 
 // @public
 export class KbqTabLink implements OnDestroy, AfterViewInit {
-    constructor();
     get active(): boolean;
     set active(value: boolean);
     protected get ariaControls(): string | null;

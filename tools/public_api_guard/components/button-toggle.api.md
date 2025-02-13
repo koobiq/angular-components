@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
@@ -24,7 +25,7 @@ import { QueryList } from '@angular/core';
 export const KBQ_BUTTON_TOGGLE_GROUP_VALUE_ACCESSOR: any;
 
 // @public
-export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
+export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     constructor(buttonToggleGroup: KbqButtonToggleGroup, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor, element: ElementRef);
     // (undocumented)
     buttonToggleGroup: KbqButtonToggleGroup;
@@ -44,6 +45,8 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
     mcButton: KbqButton;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

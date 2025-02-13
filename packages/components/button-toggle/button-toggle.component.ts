@@ -3,6 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -312,7 +313,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         '[class]': '"kbq-button-toggle" + iconType'
     }
 })
-export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
+export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit, OnDestroy {
     @ContentChildren(KbqIcon, { descendants: true }) icons: QueryList<KbqIcon>;
 
     /** Whether the button is checked. */
@@ -376,8 +377,6 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
         if (this.buttonToggleGroup && this.buttonToggleGroup.isPrechecked(this)) {
             this.checked = true;
         }
-
-        this.focusMonitor.monitor(this.element.nativeElement, true);
     }
 
     ngAfterContentInit(): void {
@@ -387,6 +386,10 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, OnDestroy {
             ).length;
             this.iconType = nodesWithoutComments === this.icons.length ? '-icon' : '-icon-text';
         }
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.element.nativeElement, true);
     }
 
     ngOnDestroy() {

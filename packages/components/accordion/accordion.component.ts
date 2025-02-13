@@ -1,5 +1,14 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    Input,
+    OnDestroy,
+    ViewEncapsulation
+} from '@angular/core';
 import { RdxAccordionRootDirective, RdxAccordionType } from '@radix-ng/primitives/accordion';
 
 export type KbqAccordionType = RdxAccordionType;
@@ -27,13 +36,13 @@ export enum KbqAccordionVariant {
         class: 'kbq-accordion'
     }
 })
-export class KbqAccordion implements OnDestroy {
+export class KbqAccordion implements OnDestroy, AfterViewInit {
+    protected readonly focusMonitor = inject(FocusMonitor);
+    protected readonly elementRef = inject(ElementRef<HTMLElement>);
+
     @Input() variant: KbqAccordionVariant | string = KbqAccordionVariant.fill;
 
-    constructor(
-        private focusMonitor: FocusMonitor,
-        private elementRef: ElementRef<HTMLElement>
-    ) {
+    ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef, true);
     }
 
