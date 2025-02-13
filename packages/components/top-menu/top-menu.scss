@@ -25,8 +25,7 @@
         gap: var(--kbq-top-menu-right-gap);
     }
 
-    &.kbq-top-menu-overflow,
-    &.kbq-top-menu-shadow-on-hover:hover {
+    &.kbq-top-menu-overflow {
         box-shadow: var(--kbq-top-menu-shadow-bottom);
         transition: box-shadow var(--kbq-top-menu-overflow-transition);
     }
