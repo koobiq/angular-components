@@ -20,6 +20,12 @@ The last breadcrumb in the navigation is always active and can be used for vario
 
 <!-- example(top-menu-active-breadcrumb) -->
 
+### Additional Actions
+
+Additional (secondary) actions are placed in a dropdown menu for better UI convenience.
+
+<!-- example(top-menu-secondary-actions) -->
+
 ### Minimum Spacing Between Elements
 
 <!-- cspell:ignore Dashbo -->
