@@ -72,12 +72,12 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                                             [ngModel]="value()"
                                             (ngModelChange)="value.set($event)"
                                             kbqInput
-                                            placeholder="Название*"
+                                            placeholder="Name*"
                                         />
                                     </kbq-form-field>
 
                                     <kbq-form-field>
-                                        <textarea placeholder="Описание" kbqTextarea></textarea>
+                                        <textarea placeholder="Description" kbqTextarea></textarea>
                                     </kbq-form-field>
                                 </ng-template>
                             </a>
@@ -114,7 +114,7 @@ export class TopMenuActiveBreadcrumbExample {
     @Input() iconVisible: boolean = true;
     value = signal(null);
 
-    readonly breadcrumbActionText = 'Новый дашборд';
+    readonly breadcrumbActionText = 'New dashboard';
     readonly actions = [
         {
             title: 'Add widget',

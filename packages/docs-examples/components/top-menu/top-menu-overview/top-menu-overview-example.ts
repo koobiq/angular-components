@@ -31,7 +31,7 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
-                <div class="kbq-title kbq-text-ellipsis">Дашборд</div>
+                <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
             <div class="kbq-top-menu__spacer"></div>
             <div class="kbq-top-menu-container__right layout-row">
