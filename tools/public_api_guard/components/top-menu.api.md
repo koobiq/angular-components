@@ -9,13 +9,10 @@ import * as i0 from '@angular/core';
 // @public (undocumented)
 export class KbqTopMenu {
     hasOverflow: boolean;
-    isShadowOnHoverEnabled: boolean;
     // (undocumented)
     static ngAcceptInputType_hasOverflow: unknown;
     // (undocumented)
-    static ngAcceptInputType_isShadowOnHoverEnabled: unknown;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopMenu, "kbq-top-menu", never, { "hasOverflow": { "alias": "hasOverflow"; "required": false; }; "isShadowOnHoverEnabled": { "alias": "isShadowOnHoverEnabled"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopMenu, "kbq-top-menu", never, { "hasOverflow": { "alias": "hasOverflow"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopMenu, never>;
 }

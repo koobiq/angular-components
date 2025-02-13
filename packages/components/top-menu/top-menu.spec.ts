@@ -37,18 +37,6 @@ describe(KbqTopMenu.name, () => {
         fixture.detectChanges();
         expect(menuElement.classList.contains('kbq-top-menu-overflow')).toBeFalsy();
     });
-
-    it('should add box-shadow on hover class by default when isShadowOnHoverEnabled not provided', () => {
-        fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu-shadow-on-hover')).toBeTruthy();
-    });
-
-    it('should remove box-shadow on hover class when isShadowOnHoverEnabled is false', () => {
-        fixture.detectChanges();
-        fixture.componentInstance.topMenu.isShadowOnHoverEnabled = false;
-        fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu-shadow-on-hover')).toBeFalsy();
-    });
 });
 
 @Component({
