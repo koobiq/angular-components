@@ -2141,6 +2141,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "number-formatter-overview-example.ts",
     "importPath": "components/number-formatter"
   },
+  "overflow-items-overview": {
+    "packagePath": "components/overflow-items/overflow-items-overview",
+    "title": "Overflow items overview",
+    "componentName": "OverflowItemsOverviewExample",
+    "files": [
+      "overflow-items-overview-example.ts"
+    ],
+    "selector": "overflow-items-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "overflow-items-overview-example.ts",
+    "importPath": "components/overflow-items"
+  },
   "popover-close": {
     "packagePath": "components/popover/popover-close",
     "title": "Popover close",
@@ -3940,6 +3952,8 @@ return import('@koobiq/docs-examples/components/navbar');
 return import('@koobiq/docs-examples/components/navbar');
   case 'number-formatter-overview':
 return import('@koobiq/docs-examples/components/number-formatter');
+  case 'overflow-items-overview':
+return import('@koobiq/docs-examples/components/overflow-items');
   case 'popover-close':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-common':
