@@ -300,6 +300,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
+    // @TODO add realization for arrow (#DS-2514)
+    arrow: boolean = true;
+
     @Output('kbqPopoverPlacementChange') placementChange = new EventEmitter();
 
     @Output('kbqPopoverVisibleChange') visibleChange = new EventEmitter<boolean>();
@@ -351,7 +354,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         this.overlayRef = this.createOverlay();
 
         const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)
-            .withPositions(this.getPrioritizedPositions())
+            .withPositions(this.getAdjustedPositions())
             .withPush(true);
 
         if (reapplyPosition) {

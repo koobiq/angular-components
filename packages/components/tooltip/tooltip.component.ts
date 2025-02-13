@@ -317,6 +317,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
         this.instance.arrow = this.arrow;
         this.instance.offset = this.offset;
         this.instance.detectChanges();
+        this.updatePosition(true);
     }
 
     closingActions() {

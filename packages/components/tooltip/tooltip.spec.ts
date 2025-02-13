@@ -1,14 +1,27 @@
-import { OverlayContainer } from '@angular/cdk/overlay';
+import { coerceElement } from '@angular/cdk/coercion';
+import { FlexibleConnectedPositionStrategy, OverlayContainer } from '@angular/cdk/overlay';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, inject, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TAB } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
+import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from './tooltip.component';
 import { KbqToolTipModule } from './tooltip.module';
 
 const tooltipDefaultEnterDelayWithDefer = 410;
 const tickTime = 100;
+
+function openAndAssertTooltip<T>(componentFixture: ComponentFixture<T>, triggerElement: ElementRef) {
+    dispatchMouseEvent(coerceElement(triggerElement), 'mouseenter');
+    tick();
+    componentFixture.detectChanges();
+
+    const tooltip = componentFixture.debugElement.query(By.css('.kbq-tooltip'));
+    expect(tooltip).toBeTruthy();
+    return tooltip;
+}
 
 describe('KbqTooltip', () => {
     let overlayContainer: OverlayContainer;
@@ -234,7 +247,75 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toEqual(component.tooltipContext.content);
         }));
     });
+
+    describe('Overlay offset', () => {
+        let fixture: ComponentFixture<TooltipSimple>;
+        let componentInstance: TooltipSimple;
+
+        beforeEach(() => {
+            fixture = TestBed.createComponent(TooltipSimple);
+            componentInstance = fixture.componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should add offset for position config if element is less than arrow margin', fakeAsync(() => {
+            const rect = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT * 2 - 1;
+            componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
+                width: rect,
+                height: rect
+            });
+            fixture.detectChanges();
+
+            openAndAssertTooltip(fixture, componentInstance.triggerElementRef);
+
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
+                .createOverlay()
+                .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+            expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeTruthy();
+        }));
+
+        it('should not add offset to tooltip position config if element is large', fakeAsync(() => {
+            componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
+                width: 100,
+                height: 100
+            });
+            fixture.detectChanges();
+
+            openAndAssertTooltip(fixture, componentInstance.triggerElementRef);
+
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
+                .createOverlay()
+                .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+            expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
+        }));
+
+        it('should not apply adjusted positions if tooltip initialized without arrow', fakeAsync(() => {
+            componentInstance.tooltipTrigger.arrow = false;
+            fixture.detectChanges();
+
+            openAndAssertTooltip(fixture, componentInstance.triggerElementRef);
+
+            const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
+                .createOverlay()
+                .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+            expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
+        }));
+    });
 });
+
+@Component({
+    standalone: true,
+    selector: 'tooltip-simple',
+    imports: [KbqToolTipModule],
+    template: `
+        <button [kbqTooltip]="'MOST-SIMPLE'">Show</button>
+    `
+})
+export class TooltipSimple {
+    @ViewChild(KbqTooltipTrigger) tooltipTrigger: KbqTooltipTrigger;
+    @ViewChild(KbqTooltipTrigger, { read: ElementRef }) triggerElementRef: ElementRef;
+}
+
 @Component({
     selector: 'kbq-tooltip-test-new',
     template: `

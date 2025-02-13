@@ -16,6 +16,10 @@
             </div>
 
             <div class="kbq-form__row">
+                <kbq-toggle [(ngModel)]="hasArrow">Has Arrow</kbq-toggle>
+            </div>
+
+            <div class="kbq-form__row">
                 <label for="element" class="kbq-form__label">Choose color</label>
 
                 <kbq-form-field id="color" class="kbq-form__control">
@@ -228,6 +232,7 @@
                         [kbqPlacementPriority]="multipleSelected"
                         [kbqRelativeToPointer]="true"
                         [kbqTooltip]="inputText"
+                        [kbqTooltipArrow]="hasArrow"
                         [kbqTooltipColor]="selectedColor"
                         [kbqTrigger]="selectedTrigger"
                         (kbqPlacementChange)="onPlacementChange($event)"
@@ -242,7 +247,7 @@
                         [kbqExtendedTooltip]="tooltipContent"
                         [kbqPlacement]="selectedPlacement"
                         [kbqPlacementPriority]="multipleSelected"
-                        [kbqTooltipArrow]="false"
+                        [kbqTooltipArrow]="hasArrow"
                         [kbqTooltipClass]="'tooltip-485'"
                         [kbqTooltipColor]="selectedColor"
                         [kbqTooltipContext]="toolTipContext"
@@ -263,6 +268,7 @@
                             [kbqPlacement]="selectedPlacement"
                             [kbqPlacementPriority]="multipleSelected"
                             [kbqTooltip]="inputText"
+                            [kbqTooltipArrow]="hasArrow"
                             [kbqTooltipColor]="selectedColor"
                             [kbqTrigger]="selectedTrigger"
                             [(ngModel)]="content"
@@ -278,6 +284,7 @@
                             [kbqPlacement]="selectedPlacement"
                             [kbqPlacementPriority]="multipleSelected"
                             [kbqTooltip]="inputText"
+                            [kbqTooltipArrow]="hasArrow"
                             [kbqTooltipColor]="selectedColor"
                             [kbqTrigger]="selectedTrigger"
                             (kbqPlacementChange)="onPlacementChange($event)"

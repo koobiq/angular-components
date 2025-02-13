@@ -10,6 +10,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
@@ -60,6 +61,7 @@ export class DemoComponent {
              добра и зла», написанного в 45 году до нашей эры. Впервые этот текст был применен для набора шрифтовых образцов
             неизвестным печатником еще в XVI веке.`
     };
+    hasArrow = true;
 
     constructor() {
         this.tooltipActiveStage = 1;
@@ -129,7 +131,8 @@ export class DemoComponent {
         KbqFormFieldModule,
         KbqCheckboxModule,
         KbqSelectModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqToggleModule
     ],
     bootstrap: [DemoComponent]
 })
