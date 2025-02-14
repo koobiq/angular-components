@@ -1,4 +1,5 @@
-<button kbq-button (click)="open(actionsPanel)">open</button>
+<button kbq-button (click)="openFromTemplate(actionsPanel)">open from template</button>
+<button kbq-button (click)="openFromTemplate(actionsPanel)">open from component</button>
 
 <ng-template #actionsPanel let-actionsPanelRef="actionsPanelRef">
     <div class="example-custom-content">Selected: N</div>
