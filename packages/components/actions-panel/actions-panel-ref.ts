@@ -1,26 +1,13 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { ESCAPE, hasModifierKey } from '@angular/cdk/keycodes';
-import { ComponentRef } from '@angular/core';
 import { filter, Observable, Subject, take } from 'rxjs';
+import { KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelContainer } from './actions-panel-container';
 
 /**
  * Reference to actions panel opened by `KbqActionsPanel` service.
  */
 export class KbqActionsPanelRef<I = unknown, R = unknown> {
-    /** The instance of the component making up the content of the actions panel. */
-    get instance(): I {
-        return this.dialogRef.componentInstance!;
-    }
-
-    /**
-     * `ComponentRef` of the component opened into the actions panel.
-     * Will be null when the actions panel is opened using a `TemplateRef`.
-     */
-    get componentRef(): ComponentRef<I> | null {
-        return this.dialogRef.componentRef;
-    }
-
     /**
      * Instance of the component into which the actions panel content is projected.
      *
@@ -43,10 +30,7 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
         return this._afterOpened;
     }
 
-    /** Whether the user is allowed to close the actions panel. */
-    get disableClose(): boolean | undefined {
-        return this.dialogRef.disableClose;
-    }
+    readonly disableClose: boolean | undefined;
 
     private readonly _afterOpened = new Subject<void>();
 
@@ -58,9 +42,11 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
 
     constructor(
         private readonly dialogRef: DialogRef<R, I>,
+        private readonly config: KbqActionsPanelConfig,
         containerInstance: KbqActionsPanelContainer
     ) {
         this.containerInstance = containerInstance;
+        this.disableClose = this.config.disableClose;
         this.handleAnimation();
         this.handleOverlayDetachments();
         this.handleKeydown();

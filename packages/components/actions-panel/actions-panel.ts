@@ -41,34 +41,12 @@ export class KbqActionsPanel implements OnDestroy {
     private readonly overlay = inject(Overlay);
     private readonly dialog = inject(Dialog);
     private readonly defaultConfig = inject(KBQ_ACTIONS_PANEL_DEFAULT_CONFIG);
-    private readonly parentActionsPanel = inject(KbqActionsPanel, { skipSelf: true, optional: true });
 
-    /**
-     * Reference to the current DI level actions panel ref.
-     */
-    private currentDILevelActionsPanelRef: KbqActionsPanelRef | null = null;
-
-    /**
-     * The currently opened actions panel ref of any DI level.
-     *
-     * @docs-private
-     */
-    get openedActionsPanelRef(): KbqActionsPanelRef | null {
-        return this.parentActionsPanel
-            ? this.parentActionsPanel.openedActionsPanelRef
-            : this.currentDILevelActionsPanelRef;
-    }
-
-    set openedActionsPanelRef(value: KbqActionsPanelRef | null) {
-        if (this.parentActionsPanel) {
-            this.parentActionsPanel.openedActionsPanelRef = value;
-        } else {
-            this.currentDILevelActionsPanelRef = value;
-        }
-    }
+    /** The reference to the currently opened actions panel. */
+    private openedActionsPanelRef: KbqActionsPanelRef | null = null;
 
     ngOnDestroy() {
-        this.currentDILevelActionsPanelRef?.close();
+        this.openedActionsPanelRef?.close();
     }
 
     /**
@@ -100,7 +78,6 @@ export class KbqActionsPanel implements OnDestroy {
         config?: KbqActionsPanelConfig<D>
     ): KbqActionsPanelRef<T, R> {
         const _config: KbqActionsPanelConfig<D> = {
-            ...new KbqActionsPanelConfig<D>(),
             ...(this.defaultConfig as KbqActionsPanelConfig<D>),
             ...config
         };
@@ -141,8 +118,12 @@ export class KbqActionsPanel implements OnDestroy {
                 ...config,
                 container: KbqActionsPanelContainer,
                 hasBackdrop: false,
+                // Disable closing since we need to sync it up to the animation ourselves
                 closeOnOverlayDetachments: false,
-                closeOnDestroy: true,
+                // Disable closing since we need to sync it up to the animation ourselves
+                closeOnDestroy: false,
+                // Disable closing since we need to sync it up to the animation ourselves
+                disableClose: true,
                 positionStrategy: config.overlayConnectedTo
                     ? position.flexibleConnectedTo(config.overlayConnectedTo).withPositions([
                           { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'bottom' }])
@@ -158,7 +139,11 @@ export class KbqActionsPanel implements OnDestroy {
                     providers: [{ provide: KbqActionsPanelConfig, useValue: config }]
                 }),
                 providers: (dialogRef, _dialogConfig, container) => {
-                    actionsPanelRef = new KbqActionsPanelRef<T, R>(dialogRef, container as KbqActionsPanelContainer);
+                    actionsPanelRef = new KbqActionsPanelRef<T, R>(
+                        dialogRef,
+                        config,
+                        container as KbqActionsPanelContainer
+                    );
                     return [
                         { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
                         { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }
