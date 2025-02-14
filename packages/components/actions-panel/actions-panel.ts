@@ -87,6 +87,11 @@ export class KbqActionsPanel implements OnDestroy {
         return actionsPanelRef;
     }
 
+    /** Closes the currently opened actions panel. */
+    close(): void {
+        this.openedActionsPanelRef?.close();
+    }
+
     private animate<T = unknown, R = unknown>(actionsPanelRef: KbqActionsPanelRef<T, R>): void {
         // When the actions panel is closed, clear the reference to it.
         actionsPanelRef.afterClosed.subscribe(() => {
