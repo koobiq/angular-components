@@ -21,7 +21,11 @@ import {
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqAnimationCurves, KbqAnimationDurations } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 
 /**
@@ -53,10 +57,23 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
  */
 @Component({
     standalone: true,
-    imports: [CdkPortalOutlet],
+    imports: [
+        CdkPortalOutlet,
+        KbqDividerModule,
+        KbqButtonModule,
+        KbqIconModule
+    ],
     selector: 'kbq-actions-panel-container',
     template: `
-        <ng-template cdkPortalOutlet />
+        <div class="kbq-actions-panel-container__content">
+            <ng-template cdkPortalOutlet />
+        </div>
+        @if (!config.disableClose) {
+            <kbq-divider class="kbq-actions-panel-container__vertical-divider" [vertical]="true" />
+            <button class="layout-margin-left-xxs" [tabIndex]="-1" (click)="close()" color="contrast" kbq-button>
+                <i kbq-icon="kbq-xmark-circle_16"></i>
+            </button>
+        }
     `,
     styleUrls: [
         './actions-panel-tokens.scss',
@@ -92,13 +109,29 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     /** Whether the actions panel container has been destroyed. */
     private destroyed: boolean;
 
-    private readonly config = inject(KbqActionsPanelConfig);
+    /**
+     * Actions panel configuration.
+     *
+     * @docs-private
+     */
+    readonly config = inject(KbqActionsPanelConfig);
+
+    private readonly actionsPanel = inject(KbqActionsPanel);
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject(ElementRef);
 
     override ngOnDestroy() {
         super.ngOnDestroy();
         this.destroyed = true;
+    }
+
+    /**
+     * Close the actions panel.
+     *
+     * @docs-private
+     */
+    protected close(): void {
+        this.actionsPanel.close();
     }
 
     /**

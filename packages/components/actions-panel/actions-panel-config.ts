@@ -113,6 +113,6 @@ export class KbqActionsPanelConfig<D = unknown> {
      */
     autoFocus?: AutoFocusTarget | string = null!;
 
-    /** Whether the user can use ESC to close the actions panel. */
+    /** Whether the user can use ESC or click on close button to close the actions panel. */
     disableClose?: boolean = false;
 }
