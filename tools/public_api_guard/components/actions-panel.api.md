@@ -4,18 +4,21 @@
 
 ```ts
 
-import { ComponentPortal } from '@angular/cdk/portal';
-import { ComponentRef } from '@angular/core';
+import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
+import { AutoFocusTarget } from '@angular/cdk/dialog';
+import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentType } from '@angular/cdk/overlay';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Direction } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
-import { EmbeddedViewRef } from '@angular/core';
+import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
+import { Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
-import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 
@@ -27,13 +30,11 @@ export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG: InjectionToken<KbqActionsPanelCon
 
 // @public
 export class KbqActionsPanel implements OnDestroy {
+    close(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    get openedActionsPanelRef(): KbqActionsPanelRef | null;
-    set openedActionsPanelRef(value: KbqActionsPanelRef | null);
-    openFromComponent<T, D = unknown>(component: ComponentType<T>, config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef<T>;
-    // Warning: (ae-forgotten-export) The symbol "KbqActionsPanelTemplateContext" needs to be exported by the entry point index.d.ts
-    openFromTemplate<D>(template: TemplateRef<KbqActionsPanelTemplateContext<D>>, config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef<EmbeddedViewRef<KbqActionsPanelTemplateContext<D>>>;
+    open<T, D = unknown, R = unknown>(component: ComponentType<T>, config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef<T, R>;
+    open<T, D = unknown, R = unknown>(template: TemplateRef<T>, config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef<T, R>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanel, never>;
     // (undocumented)
@@ -42,22 +43,38 @@ export class KbqActionsPanel implements OnDestroy {
 
 // @public
 export class KbqActionsPanelConfig<D = unknown> {
+    autoFocus?: AutoFocusTarget | string;
     closeOnNavigation?: boolean;
     containerClass?: string | string[];
     data?: D | null;
+    direction?: Direction;
+    disableClose?: boolean;
+    injector?: Injector;
     maxWidth?: number | string;
     minWidth?: number | string;
     overlayConnectedTo?: ElementRef;
     overlayPanelClass?: string | string[];
+    restoreFocus?: boolean | string | HTMLElement;
+    scrollStrategy?: ScrollStrategy;
     viewContainerRef?: ViewContainerRef;
-    width?: number | string;
+    width?: string;
 }
 
-// @public (undocumented)
-export class KbqActionsPanelContainer {
-    attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T>;
-    attachTemplatePortal<C>(portal: TemplatePortal<C>): EmbeddedViewRef<C>;
-    config: KbqActionsPanelConfig;
+// @public
+export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
+    protected animationState: 'void' | 'visible' | 'hidden';
+    readonly animationStateChanged: EventEmitter<AnimationEvent_2>;
+    protected _captureInitialFocus(): void;
+    protected close(): void;
+    readonly config: KbqActionsPanelConfig<any>;
+    protected _contentAttached(): void;
+    readonly isRTL: boolean;
+    // (undocumented)
+    ngOnDestroy(): void;
+    protected onAnimationDone(event: AnimationEvent_2): void;
+    protected onAnimationStart(event: AnimationEvent_2): void;
+    startCloseAnimation(): void;
+    startOpenAnimation(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionsPanelContainer, "kbq-actions-panel-container", never, {}, {}, never, never, true, never>;
     // (undocumented)
@@ -81,11 +98,21 @@ export class KbqActionsPanelModule {
 
 // @public
 export class KbqActionsPanelRef<I = unknown, R = unknown> {
-    constructor(overlayRef: OverlayRef);
+    constructor(dialogRef: DialogRef<R, I>, config: KbqActionsPanelConfig, containerInstance: KbqActionsPanelContainer);
+    get afterClosed(): Observable<R | undefined>;
+    get afterOpened(): Observable<void>;
     close(result?: R): void;
-    get closed(): Observable<R | undefined>;
-    instance: I;
+    containerInstance: KbqActionsPanelContainer;
+    // (undocumented)
+    readonly disableClose: boolean | undefined;
+    get keydownEvents(): Observable<KeyboardEvent>;
 }
+
+// @public
+export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown> = {
+    $implicit?: D | null;
+    actionsPanelRef: KbqActionsPanelRef<T, R>;
+};
 
 // (No @packageDocumentation comment for this package)
 
