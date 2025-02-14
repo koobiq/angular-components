@@ -143,6 +143,9 @@ export enum AnimationCurves {
 // @public (undocumented)
 export const applyPopupMargins: (renderer: Renderer2, element: HTMLElement, name: string, value: string) => void;
 
+// @public
+export const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT: number;
+
 // @public (undocumented)
 export class BaseFormatterPipe<D> {
     // (undocumented)
@@ -1677,6 +1680,8 @@ export abstract class KbqPopUp implements OnDestroy {
 // @public (undocumented)
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
+    abstract arrow: boolean;
+    // (undocumented)
     protected readonly availablePositions: {
         [key: string]: ConnectionPositionPair;
     };
@@ -1709,6 +1714,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly elementRef: ElementRef;
     // (undocumented)
     enterDelay: number;
+    protected getAdjustedPositions(): ConnectionPositionPair[];
     // (undocumented)
     abstract getOverlayHandleComponentType(): Type<T>;
     // (undocumented)

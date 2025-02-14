@@ -147,6 +147,8 @@ export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollS
 // @public (undocumented)
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
     // (undocumented)
+    arrow: boolean;
+    // (undocumented)
     backdropClass: string;
     get closeOnScroll(): boolean | null;
     set closeOnScroll(value: boolean);

@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core';
+import { TooltipSizeArrowSize } from '@koobiq/design-tokens';
 import { Observable } from 'rxjs';
 
 export interface KbqParentPopup {
@@ -51,3 +52,10 @@ export enum PopUpSizes {
  * Tags Input, Timezone, TreeSelect).
  */
 export const defaultOffsetY: number = 4;
+
+/**
+ * Variable used for offsetY(X) calculations when applying Angular Overlay
+ *
+ * @docs-private
+ */
+export const ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT = Math.round(parseInt(TooltipSizeArrowSize) * Math.sqrt(2));

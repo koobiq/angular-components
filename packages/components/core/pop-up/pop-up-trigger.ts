@@ -34,7 +34,47 @@ import {
     POSITION_PRIORITY_STRATEGY,
     POSITION_TO_CSS_MAP
 } from '../overlay/overlay-position-map';
-import { PopUpPlacements, PopUpTriggers } from './constants';
+import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT, PopUpPlacements, PopUpTriggers } from './constants';
+
+type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
+
+const getOffset = (
+    { originX, overlayX, originY, overlayY }: ConnectionPositionPair,
+    { width, height }: DOMRect
+): KbqPopupTriggerOffset => {
+    const offset: KbqPopupTriggerOffset = {};
+    const elementWidthHalf = width / 2;
+    const elementHeightHalf = height / 2;
+
+    // alignment should be applied only if the element is small
+    if (ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT > elementWidthHalf) {
+        const PADDING = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT - elementWidthHalf;
+
+        if (originX === overlayX) {
+            if (originX === 'start') {
+                offset.offsetX = -PADDING;
+            }
+            if (originX === 'end') {
+                offset.offsetX = PADDING;
+            }
+        }
+    }
+
+    // alignment should be applied only if the element is small
+    if (ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT > elementHeightHalf) {
+        const PADDING = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT - elementHeightHalf;
+        if (originY === overlayY) {
+            if (originY === 'top') {
+                offset.offsetY = -PADDING;
+            }
+            if (originY === 'bottom') {
+                offset.offsetY = PADDING;
+            }
+        }
+    }
+
+    return offset;
+};
 
 @Directive()
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
@@ -54,6 +94,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     leaveDelay: number = 0;
 
     abstract disabled: boolean;
+    abstract arrow: boolean;
     abstract trigger: string;
     abstract customClass: string;
     abstract content: string | TemplateRef<any>;
@@ -304,12 +345,31 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.subscribeOnClosingActions();
 
         const position = (this.overlayRef.getConfig().positionStrategy as FlexibleConnectedPositionStrategy)
-            .withPositions(this.getPrioritizedPositions())
+            .withPositions(this.getAdjustedPositions())
             .withPush(true);
 
         if (reapplyPosition) {
             setTimeout(() => position.reapplyLastPosition());
         }
+    }
+
+    /**
+     * Returns a list of positions that are aligned with the element's dimensions and offsets.
+     * @protected
+     */
+    protected getAdjustedPositions(): ConnectionPositionPair[] {
+        const res: ConnectionPositionPair[] = [];
+        for (const pos of this.getPrioritizedPositions()) {
+            const offset: KbqPopupTriggerOffset = this.arrow
+                ? getOffset(pos, this.elementRef.nativeElement.getBoundingClientRect())
+                : {};
+
+            res.push({
+                ...pos,
+                ...offset
+            });
+        }
+        return res;
     }
 
     protected getPriorityPlacementStrategy(value: string | string[]): ConnectionPositionPair[] {
