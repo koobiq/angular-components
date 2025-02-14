@@ -193,11 +193,11 @@ export class ActionsPanelOverviewExample implements OnDestroy {
     readonly actionID = ExampleActionID;
     readonly color = KbqComponentColors;
 
-    readonly actionsPanel = inject(KbqActionsPanel);
+    readonly actionsPanel = inject(KbqActionsPanel, { self: true });
 
     openFromTemplate(templateRef: TemplateRef<any>): void {
         const actionsPanelRef = this.actionsPanel.open(templateRef, {
-            width: '877'
+            width: '877px'
         });
         actionsPanelRef.afterOpened.subscribe(() => console.log('actionsPanel template afterOpened'));
         actionsPanelRef.afterClosed.subscribe(() => console.log('actionsPanel template afterClosed'));
@@ -205,7 +205,7 @@ export class ActionsPanelOverviewExample implements OnDestroy {
 
     openFromComponent(): void {
         const actionsPanelRef = this.actionsPanel.open(ActionsPanelExampleComponent, {
-            width: '877'
+            width: '877px'
         });
         actionsPanelRef.afterOpened.subscribe(() => console.log('actionsPanel component afterOpened'));
         actionsPanelRef.afterClosed.subscribe(() => console.log('actionsPanel component afterClosed'));

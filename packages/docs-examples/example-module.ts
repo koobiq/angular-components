@@ -139,7 +139,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "actions-panel-overview-example.html"
     ],
     "selector": "actions-panel-overview-example",
-    "additionalComponents": [],
+    "additionalComponents": [
+      "ActionsPanelExampleComponent"
+    ],
     "primaryFile": "actions-panel-overview-example.ts",
     "importPath": "components/actions-panel"
   },
