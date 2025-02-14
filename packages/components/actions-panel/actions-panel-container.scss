@@ -11,4 +11,17 @@
     align-items: center;
     overflow: hidden;
     box-sizing: border-box;
+
+    .kbq-actions-panel-container__content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        overflow: hidden;
+    }
+
+    .kbq-actions-panel-container__vertical-divider {
+        background-color: var(--kbq-actions-panel-vertical-divider-background-color);
+        height: var(--kbq-actions-panel-vertical-divider-height) !important;
+        margin: var(--kbq-actions-panel-vertical-divider-margin);
+    }
 }

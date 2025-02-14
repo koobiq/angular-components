@@ -1,7 +1,6 @@
-<button kbq-button (click)="openFromTemplate(actionsPanel)">open from template</button>
-<button kbq-button (click)="openFromTemplate(actionsPanel)">open from component</button>
+<button kbq-button (click)="open(actionsPanel)">open</button>
 
-<ng-template #actionsPanel let-actionsPanelRef="actionsPanelRef">
+<ng-template #actionsPanel>
     <div class="example-custom-content">Selected: N</div>
     <kbq-divider class="example-divider-vertical" [vertical]="true" />
 
@@ -89,11 +88,6 @@
             </kbq-dropdown>
         </ng-template>
     </kbq-overflow-items>
-
-    <kbq-divider class="example-divider-vertical" [vertical]="true" />
-    <button kbq-button class="layout-margin-left-xxs" [color]="color.Contrast" (click)="actionsPanelRef.close()">
-        <i kbq-icon="kbq-xmark-circle_16"></i>
-    </button>
 
     <kbq-dropdown #archiveDropdown="kbqDropdown">
         <button kbq-dropdown-item>
