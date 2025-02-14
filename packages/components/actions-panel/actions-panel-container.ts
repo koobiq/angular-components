@@ -70,7 +70,13 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         </div>
         @if (!config.disableClose) {
             <kbq-divider class="kbq-actions-panel-container__vertical-divider" [vertical]="true" />
-            <button class="layout-margin-left-xxs" [tabIndex]="-1" (click)="close()" color="contrast" kbq-button>
+            <button
+                class="kbq-actions-panel-container__close-button"
+                [tabIndex]="-1"
+                (click)="close()"
+                color="contrast"
+                kbq-button
+            >
                 <i kbq-icon="kbq-xmark-circle_16"></i>
             </button>
         }
@@ -82,6 +88,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
     animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION],
     host: {
         class: 'kbq-actions-panel-container',
+        '[class.kbq-actions-panel-container_rtl]': 'isRTL',
         '[@state]': 'animationState',
         '(@state.start)': 'onAnimationStart($event)',
         '(@state.done)': 'onAnimationDone($event)'
@@ -115,6 +122,13 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      * @docs-private
      */
     readonly config = inject(KbqActionsPanelConfig);
+
+    /**
+     * Whether the actions panel direction is RTL.
+     *
+     * @docs-private
+     */
+    readonly isRTL = this.config?.direction === 'rtl';
 
     private readonly actionsPanel = inject(KbqActionsPanel);
     private readonly renderer = inject(Renderer2);
