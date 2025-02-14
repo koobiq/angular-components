@@ -1,3 +1,4 @@
+import { Direction } from '@angular/cdk/bidi';
 import { AutoFocusTarget } from '@angular/cdk/dialog';
 import { NoopScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
 import { ElementRef, InjectionToken, Injector, Provider, ViewContainerRef } from '@angular/core';
@@ -82,7 +83,7 @@ export class KbqActionsPanelConfig<D = unknown> {
     maxWidth?: number | string = '80vw';
 
     /** Direction of the text in the actions panel. */
-    // direction?: Direction = 'ltr';
+    direction?: Direction = 'ltr';
 
     /**
      * Scroll strategy to be used for the actions panel.
@@ -100,7 +101,7 @@ export class KbqActionsPanelConfig<D = unknown> {
      * - `string` - focus will be restored to the first element that matches the CSS selector.
      * - `HTMLElement` - focus will be restored to the specific element.
      */
-    restoreFocus?: boolean | string | HTMLElement = true;
+    restoreFocus?: boolean | string | HTMLElement = false;
 
     /**
      * Where the actions-panel should focus on open.
@@ -110,8 +111,8 @@ export class KbqActionsPanelConfig<D = unknown> {
      * - `first-tabbable` - focus will be restored to the first tabbable element in the actions panel.
      * - `dialog` - focus will be restored to the actions panel container.
      */
-    autoFocus?: AutoFocusTarget | string;
+    autoFocus?: AutoFocusTarget | string = null!;
 
-    /** Whether the user can use escape or clicking outside to close the bottom sheet. */
+    /** Whether the user can use ESC to close the actions panel. */
     disableClose?: boolean = false;
 }
