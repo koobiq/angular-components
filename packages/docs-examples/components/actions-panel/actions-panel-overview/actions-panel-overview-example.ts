@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
-import { KbqActionsPanel } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -29,8 +29,8 @@ type ExampleAction = {
     template: `
         <button (click)="open(actionsPanel)" kbq-button>open</button>
 
-        <ng-template #actionsPanel>
-            <div class="example-custom-content">Selected: N</div>
+        <ng-template #actionsPanel let-data>
+            <div class="example-custom-content">Selected: {{ data.counter }}</div>
             <kbq-divider class="example-divider-vertical" [vertical]="true" />
             <kbq-overflow-items>
                 @for (action of actions; track action.id; let first = $first) {
@@ -92,14 +92,20 @@ export class ActionsPanelOverviewExample {
         { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', divider: true },
         { id: 'Remove', icon: 'kbq-trash_16' }
     ];
-
     readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    actionsPanelRef: KbqActionsPanelRef | null;
+    readonly data = { counter: 0 };
 
     open(templateRef: TemplateRef<unknown>): void {
-        const actionsPanelRef = this.actionsPanel.open(templateRef, {
-            width: '844px'
+        this.data.counter++;
+        if (this.actionsPanelRef) return;
+        this.actionsPanelRef = this.actionsPanel.open(templateRef, {
+            width: '844px',
+            data: this.data
         });
-        actionsPanelRef.afterOpened.subscribe(() => console.log('actionsPanel afterOpened'));
-        actionsPanelRef.afterClosed.subscribe(() => console.log('actionsPanel afterClosed'));
+        this.actionsPanelRef.afterClosed.subscribe(() => {
+            this.actionsPanelRef = null;
+            this.data.counter = 0;
+        });
     }
 }
