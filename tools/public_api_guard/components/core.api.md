@@ -128,7 +128,7 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export enum AnimationCurves {
     // (undocumented)
     AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
@@ -1186,6 +1186,28 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public @deprecated (undocumented)
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
+
+// @public
+export enum KbqAnimationCurves {
+    // (undocumented)
+    AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
+    // (undocumented)
+    DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
+    // (undocumented)
+    SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
+    // (undocumented)
+    StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
+}
+
+// @public
+export enum KbqAnimationDurations {
+    // (undocumented)
+    Complex = "350ms",
+    // (undocumented)
+    Entering = "200ms",
+    // (undocumented)
+    Exiting = "175ms"
+}
 
 // @public
 export type KbqCodeBlockLocaleConfiguration = {
