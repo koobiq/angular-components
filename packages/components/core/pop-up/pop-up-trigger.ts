@@ -36,8 +36,13 @@ import {
 } from '../overlay/overlay-position-map';
 import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT, PopUpPlacements, PopUpTriggers } from './constants';
 
-const getOffset = ({ originX, overlayX, originY, overlayY }: ConnectionPositionPair, { width, height }: DOMRect) => {
-    const offset: Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'> = {};
+type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
+
+const getOffset = (
+    { originX, overlayX, originY, overlayY }: ConnectionPositionPair,
+    { width, height }: DOMRect
+): KbqPopupTriggerOffset => {
+    const offset: KbqPopupTriggerOffset = {};
     const elementWidthHalf = width / 2;
     const elementHeightHalf = height / 2;
 
@@ -355,7 +360,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected getAdjustedPositions(): ConnectionPositionPair[] {
         const res: ConnectionPositionPair[] = [];
         for (const pos of this.getPrioritizedPositions()) {
-            const offset: Pick<ConnectionPositionPair, 'offsetY' | 'offsetX'> = this.arrow
+            const offset: KbqPopupTriggerOffset = this.arrow
                 ? getOffset(pos, this.elementRef.nativeElement.getBoundingClientRect())
                 : {};
 
