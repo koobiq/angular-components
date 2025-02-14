@@ -135,13 +135,10 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Actions panel overview",
     "componentName": "ActionsPanelOverviewExample",
     "files": [
-      "actions-panel-overview-example.ts",
-      "actions-panel-overview-example.html"
+      "actions-panel-overview-example.ts"
     ],
     "selector": "actions-panel-overview-example",
-    "additionalComponents": [
-      "ActionsPanelExampleComponent"
-    ],
+    "additionalComponents": [],
     "primaryFile": "actions-panel-overview-example.ts",
     "importPath": "components/actions-panel"
   },
