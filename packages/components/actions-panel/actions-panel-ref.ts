@@ -1,34 +1,136 @@
-import { OverlayRef } from '@angular/cdk/overlay';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { DialogRef } from '@angular/cdk/dialog';
+import { ESCAPE, hasModifierKey } from '@angular/cdk/keycodes';
+import { ComponentRef } from '@angular/core';
+import { filter, Observable, Subject, take } from 'rxjs';
+import { KbqActionsPanelContainer } from './actions-panel-container';
 
 /**
- * Reference to a actions panel opened via the KbqActionsPanel service.
- *
- * @see `KbqActionsPanel`
+ * Reference to actions panel opened by `KbqActionsPanel` service.
  */
 export class KbqActionsPanelRef<I = unknown, R = unknown> {
     /** The instance of the component making up the content of the actions panel. */
-    instance: I;
-
-    /** Emits when the actions panel has been closed. */
-    get closed(): Observable<R | undefined> {
-        return this._closed.asObservable();
+    get instance(): I {
+        return this.dialogRef.componentInstance!;
     }
 
-    private readonly _closed = new Subject<R | undefined>();
+    /**
+     * `ComponentRef` of the component opened into the actions panel.
+     * Will be null when the actions panel is opened using a `TemplateRef`.
+     */
+    get componentRef(): ComponentRef<I> | null {
+        return this.dialogRef.componentRef;
+    }
 
-    private readonly overlayRefDetachmentsSubscription: Subscription;
+    /**
+     * Instance of the component into which the actions panel content is projected.
+     *
+     * @docs-private
+     */
+    containerInstance: KbqActionsPanelContainer;
 
-    constructor(private readonly overlayRef: OverlayRef) {
-        this.overlayRef.addPanelClass('kbq-actions-panel-overlay');
-        this.overlayRefDetachmentsSubscription = this.overlayRef.detachments().subscribe(() => this.close());
+    /** Gets an observable that is notified when the actions panel is finished closing. */
+    get afterClosed(): Observable<R | undefined> {
+        return this.dialogRef.closed;
+    }
+
+    /** Gets an observable that emits when keydown events are targeted on the overlay. */
+    get keydownEvents(): Observable<KeyboardEvent> {
+        return this.dialogRef.keydownEvents;
+    }
+
+    /** Gets an observable that is notified when the actions panel has opened and appeared. */
+    get afterOpened(): Observable<void> {
+        return this._afterOpened;
+    }
+
+    /** Whether the user is allowed to close the actions panel. */
+    get disableClose(): boolean | undefined {
+        return this.dialogRef.disableClose;
+    }
+
+    private readonly _afterOpened = new Subject<void>();
+
+    /** Result to be passed down to the `afterClosed` stream. */
+    private result: R | undefined;
+
+    /** Handle to the timeout that's running as a fallback in case the close animation doesn't fire. */
+    private closeAnimationFallbackTimeout: ReturnType<typeof setTimeout>;
+
+    constructor(
+        private readonly dialogRef: DialogRef<R, I>,
+        containerInstance: KbqActionsPanelContainer
+    ) {
+        this.containerInstance = containerInstance;
+        this.handleAnimation();
+        this.handleOverlayDetachments();
+        this.handleKeydown();
     }
 
     /** Closes the actions panel. */
     close(result?: R): void {
-        this.overlayRefDetachmentsSubscription.unsubscribe();
-        this.overlayRef.dispose();
-        this._closed.next(result);
-        this._closed.complete();
+        if (!this.containerInstance) {
+            return;
+        }
+
+        this.containerInstance.animationStateChanged
+            .pipe(
+                filter((event) => event.phaseName === 'start'),
+                take(1)
+            )
+            .subscribe(({ totalTime }) => {
+                this.closeAnimationFallbackTimeout = setTimeout(
+                    () => this.dialogRef.close(this.result),
+                    totalTime + 100
+                );
+            });
+
+        this.result = result;
+        this.containerInstance.startCloseAnimation();
+        this.containerInstance = null!;
+    }
+
+    private handleAnimation(): void {
+        this.containerInstance.animationStateChanged
+            .pipe(
+                filter((event) => event.phaseName === 'done' && event.toState === 'visible'),
+                take(1)
+            )
+            .subscribe(() => {
+                this._afterOpened.next();
+                this._afterOpened.complete();
+            });
+
+        this.containerInstance.animationStateChanged
+            .pipe(
+                filter((event) => event.phaseName === 'done' && event.toState === 'hidden'),
+                take(1)
+            )
+            .subscribe(() => {
+                clearTimeout(this.closeAnimationFallbackTimeout);
+                this.dialogRef.close(this.result);
+            });
+    }
+
+    private handleKeydown(): void {
+        this.keydownEvents
+            .pipe(
+                filter((event) => event.keyCode === ESCAPE),
+                take(1)
+            )
+            .subscribe((event) => {
+                if (!this.disableClose && (event.type !== 'keydown' || !hasModifierKey(event))) {
+                    event.preventDefault();
+                    this.close();
+                }
+            });
+    }
+
+    private handleOverlayDetachments(): void {
+        this.dialogRef.overlayRef
+            .detachments()
+            .pipe(take(1))
+            .subscribe(() => {
+                this.dialogRef.close(this.result);
+            });
     }
 }

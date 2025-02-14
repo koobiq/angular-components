@@ -1,4 +1,6 @@
-import { ElementRef, InjectionToken, Provider, ViewContainerRef } from '@angular/core';
+import { AutoFocusTarget } from '@angular/cdk/dialog';
+import { NoopScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import { ElementRef, InjectionToken, Injector, Provider, ViewContainerRef } from '@angular/core';
 
 /** Injection token that can be used to specify default actions panel config. */
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG = new InjectionToken<KbqActionsPanelConfig>(
@@ -17,14 +19,20 @@ export const kbqActionsPanelDefaultConfigProvider = <D>(config: KbqActionsPanelC
 });
 
 /**
- * Configuration for opened a actions panel.
+ * Configuration for opened actions panel.
  */
 export class KbqActionsPanelConfig<D = unknown> {
     /**
-     * ViewContainerRef that used for dependency injection purposes.
-     * NOTE! This does not affect where the action panel is inserted in the DOM.
+     * The view container that serves as the parent for the actions panel for the purposes of dependency injection.
+     * Note! This does not affect where the actions panel is inserted in the DOM (use `overlayConnectedTo` for that).
      */
     viewContainerRef?: ViewContainerRef;
+
+    /**
+     * Injector used for the instantiation of the component to be attached. If provided, takes precedence over
+     * the injector indirectly provided by `ViewContainerRef`.
+     */
+    injector?: Injector;
 
     /**
      * Data being injected into the child component.
@@ -37,14 +45,8 @@ export class KbqActionsPanelConfig<D = unknown> {
     containerClass?: string | string[];
 
     /**
-     * Extra CSS classes to be added to the overlay panel.
-     */
-    overlayPanelClass?: string | string[];
-
-    /**
-     * Whether the actions panel should close when the user navigates backwards or forwards through browser history.
-     * This does not apply to navigation via anchor element unless using URL-hash based routing (`HashLocationStrategy`
-     * in the Angular router).
+     * Whether the actions panel should be closed of when the user goes backwards/forwards in history.
+     * NOTE! This does not apply to router navigation.
      *
      * @default true
      */
@@ -56,10 +58,14 @@ export class KbqActionsPanelConfig<D = unknown> {
     overlayConnectedTo?: ElementRef;
 
     /**
-     * Width of the actions panel.
-     *  If a number is provided, assumes pixel units.
+     * Extra CSS classes to be added to the overlay panel.
      */
-    width?: number | string;
+    overlayPanelClass?: string | string[];
+
+    /**
+     * Width of the actions panel.
+     */
+    width?: string;
 
     /**
      * Min-width of the actions panel.
@@ -71,7 +77,41 @@ export class KbqActionsPanelConfig<D = unknown> {
      * Max-width of the actions panel.
      * If a number is provided, assumes pixel units.
      *
-     * @default '80%'
+     * @default '80vw'
      */
-    maxWidth?: number | string = '80%';
+    maxWidth?: number | string = '80vw';
+
+    /** Direction of the text in the actions panel. */
+    // direction?: Direction = 'ltr';
+
+    /**
+     * Scroll strategy to be used for the actions panel.
+     *
+     * @default `NoopScrollStrategy`
+     */
+    scrollStrategy?: ScrollStrategy = new NoopScrollStrategy();
+
+    /**
+     * Whether the actions panel should restore focus to the previously-focused element upon closing.
+     *
+     * Has the following behavior based on the type that is passed in:
+     * - `boolean` - when true, will return focus to the element that was focused before the  actions panel was opened,
+     * otherwise won't restore focus at all.
+     * - `string` - focus will be restored to the first element that matches the CSS selector.
+     * - `HTMLElement` - focus will be restored to the specific element.
+     */
+    restoreFocus?: boolean | string | HTMLElement = true;
+
+    /**
+     * Where the actions-panel should focus on open.
+     *
+     * Has the following behavior based on the type that is passed in:
+     * - `string` - focus will be restored to the first element that matches the CSS selector.
+     * - `first-tabbable` - focus will be restored to the first tabbable element in the actions panel.
+     * - `dialog` - focus will be restored to the actions panel container.
+     */
+    autoFocus?: AutoFocusTarget | string;
+
+    /** Whether the user can use escape or clicking outside to close the bottom sheet. */
+    disableClose?: boolean = false;
 }

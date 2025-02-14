@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelContainer } from './actions-panel-container';
 
 const COMPONENTS = [
@@ -7,6 +8,7 @@ const COMPONENTS = [
 
 @NgModule({
     imports: COMPONENTS,
-    exports: COMPONENTS
+    exports: COMPONENTS,
+    providers: [KbqActionsPanel]
 })
 export class KbqActionsPanelModule {}
