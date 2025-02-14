@@ -130,7 +130,7 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export enum AnimationCurves {
     // (undocumented)
     AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",

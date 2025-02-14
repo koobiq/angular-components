@@ -1,20 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 
-enum ExampleActionID {
-    Responsible,
-    Status,
-    Verdict,
-    Incident,
-    Archive,
-    Remove
-}
+type ExampleAction = {
+    id: string;
+    icon: string;
+    divider?: boolean;
+};
 
 /**
  * @title Actions panel overview
@@ -30,7 +26,46 @@ enum ExampleActionID {
     ],
     providers: [KbqActionsPanel],
     selector: 'actions-panel-overview-example',
-    templateUrl: 'actions-panel-overview-example.html',
+    template: `
+        <button (click)="open(actionsPanel)" kbq-button>open</button>
+
+        <ng-template #actionsPanel>
+            <div class="example-custom-content">Selected: N</div>
+            <kbq-divider class="example-divider-vertical" [vertical]="true" />
+            <kbq-overflow-items>
+                @for (action of actions; track action.id; let first = $first) {
+                    <ng-container *kbqOverflowItem="action.id">
+                        @if (action.divider) {
+                            <kbq-divider class="example-divider-vertical" [vertical]="true" />
+                        }
+                        <button [class.layout-margin-left-xxs]="!first" color="contrast" kbq-button>
+                            <i [class]="action.icon" kbq-icon></i>
+                            {{ action.id }}
+                        </button>
+                    </ng-container>
+                }
+                <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+                    <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
+                        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                    </button>
+
+                    <kbq-dropdown #dropdown="kbqDropdown">
+                        @for (action of actions; track action.id; let index = $index) {
+                            @if (hiddenItemIDs.has(action.id)) {
+                                @if (action.divider && hiddenItemIDs.has(actions[index - 1]?.id)) {
+                                    <kbq-divider />
+                                }
+                                <button kbq-dropdown-item>
+                                    <i [class]="action.icon" kbq-icon></i>
+                                    {{ action.id }}
+                                </button>
+                            }
+                        }
+                    </kbq-dropdown>
+                </ng-template>
+            </kbq-overflow-items>
+        </ng-template>
+    `,
     styles: [
         `
             .example-custom-content {
@@ -38,9 +73,9 @@ enum ExampleActionID {
                 flex-shrink: 0;
             }
 
-            .kbq-divider.example-divider-vertical {
+            .example-divider-vertical {
                 background-color: var(--kbq-actions-panel-vertical-divider-background-color);
-                height: var(--kbq-actions-panel-vertical-divider-height);
+                height: var(--kbq-actions-panel-vertical-divider-height) !important;
                 margin: var(--kbq-actions-panel-vertical-divider-margin);
             }
         `
@@ -49,14 +84,20 @@ enum ExampleActionID {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelOverviewExample {
-    readonly actionID = ExampleActionID;
-    readonly color = KbqComponentColors;
+    readonly actions: ExampleAction[] = [
+        { id: 'Responsible', icon: 'kbq-user_16' },
+        { id: 'Status', icon: 'kbq-arrow-right-s_16' },
+        { id: 'Verdict', icon: 'kbq-question-circle_16' },
+        { id: 'Link to incident', icon: 'kbq-link_16', divider: true },
+        { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', divider: true },
+        { id: 'Remove', icon: 'kbq-trash_16' }
+    ];
 
     readonly actionsPanel = inject(KbqActionsPanel, { self: true });
 
     open(templateRef: TemplateRef<unknown>): void {
         const actionsPanelRef = this.actionsPanel.open(templateRef, {
-            width: '877px'
+            width: '844px'
         });
         actionsPanelRef.afterOpened.subscribe(() => console.log('actionsPanel afterOpened'));
         actionsPanelRef.afterClosed.subscribe(() => console.log('actionsPanel afterClosed'));
