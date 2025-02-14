@@ -1,6 +1,9 @@
-import { AfterViewInit, Directive, OnDestroy } from '@angular/core';
+import { ContentObserver } from '@angular/cdk/observers';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { AfterViewInit, Directive, inject, OnDestroy } from '@angular/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { Subscription } from 'rxjs';
 
 @Directive({
     selector: 'kbq-option',
@@ -12,8 +15,11 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
     }
 })
 export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    private resizeObserver: ResizeObserver;
-    private mutationObserver: MutationObserver;
+    private resizeObserver = inject(SharedResizeObserver);
+    private resizeObserverSubscription: Subscription | null = null;
+
+    private contentObserver = inject(ContentObserver);
+    private contentObserverSubscription: Subscription | null = null;
 
     get textElement(): HTMLElement {
         return this.option.textElement.nativeElement;
@@ -30,45 +36,35 @@ export class KbqOptionTooltip extends KbqTooltipTrigger implements AfterViewInit
     ngAfterViewInit() {
         this.content = this.option.viewValue;
 
-        this.resizeObserver = new ResizeObserver(() => (this.disabled = !this.isOverflown));
-
-        this.mutationObserver = new MutationObserver(() => (this.content = this.option.viewValue));
-
-        this.mutationObserver.observe(this.textElement, {
-            characterData: true,
-            attributes: false,
-            childList: true,
-            subtree: true
-        });
+        this.contentObserverSubscription = this.contentObserver
+            .observe(this.textElement)
+            .subscribe(() => (this.content = this.option.viewValue));
     }
 
     ngOnDestroy() {
         super.ngOnDestroy();
 
-        if (this.resizeObserver) {
-            this.resizeObserver.unobserve(this.textElement);
-            this.resizeObserver.disconnect();
-        }
-
-        if (this.mutationObserver) {
-            this.mutationObserver.disconnect();
-        }
+        this.resizeObserverSubscription?.unsubscribe();
+        this.contentObserverSubscription?.unsubscribe();
     }
 
     onMouseEnter() {
-        this.resizeObserver.observe(this.textElement);
+        this.resizeObserverSubscription = this.resizeObserver
+            .observe(this.textElement)
+            .subscribe(() => (this.disabled = !this.isOverflown));
 
         this.disabled = !this.isOverflown;
     }
 
     onMouseLeave() {
-        this.resizeObserver.unobserve(this.textElement);
+        this.resizeObserverSubscription?.unsubscribe();
 
         this.disabled = true;
     }
 
     onFocus() {
         this.disabled = !this.isOverflown;
+
         if (!this.disabled) {
             this.show();
         }
