@@ -1,7 +1,7 @@
 import { Platform } from '@angular/cdk/platform';
 import { afterNextRender, AfterViewInit, ChangeDetectorRef, Directive, ElementRef, inject } from '@angular/core';
 import { Subject } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { delay, filter } from 'rxjs/operators';
 import { KbqFilterBar } from '../filter-bar';
 import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
 
@@ -52,6 +52,12 @@ export abstract class KbqBasePipe implements AfterViewInit {
 
             this.open();
         }
+
+        this.filterBar?.openPipe.pipe(filter(Boolean)).subscribe((name) => {
+            if (this.data.name === name) {
+                this.open();
+            }
+        });
     }
 
     onRemove() {

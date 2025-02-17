@@ -1484,6 +1484,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get id(): string;
     get multiple(): boolean | undefined;
     // (undocumented)
+    static ngAcceptInputType_userSelect: unknown;
+    // (undocumented)
     ngAfterViewChecked(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -1501,10 +1503,12 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     readonly stateChanges: Subject<void>;
     // (undocumented)
     textElement: ElementRef;
+    // (undocumented)
+    userSelect: boolean;
     value: any;
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "userSelect": { "alias": "userSelect"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, [null, null, { optional: true; }, { optional: true; }]>;
 }

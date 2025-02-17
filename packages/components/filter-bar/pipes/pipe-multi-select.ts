@@ -38,7 +38,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ]
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe {
-    @ViewChild('select') select: KbqSelect;
+    @ViewChild(KbqSelect) select: KbqSelect;
 
     get selected() {
         return this.data.value;
@@ -50,12 +50,14 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe {
 
     onSelect(item: unknown[]) {
         this.data.value = item;
+        this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
     }
 
     onClear() {
         this.data.value = [];
 
+        this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
     }
 

@@ -85,6 +85,7 @@ export class KbqFilterBar {
     readonly onReset = new EventEmitter<void>();
     readonly changes = new BehaviorSubject<void>(undefined);
     readonly activeFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
+    readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
     constructor() {
         this.activeFilterChanges.subscribe((filter) => {
@@ -93,7 +94,7 @@ export class KbqFilterBar {
             this.onFilterChange.emit(this.activeFilter);
         });
 
-        this.onChangePipe.subscribe(() => {
+        merge(this.onChangePipe, this.onDeletePipe).subscribe(() => {
             if (this.activeFilter) {
                 this.activeFilter.changed = true;
             }

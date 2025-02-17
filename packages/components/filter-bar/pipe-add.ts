@@ -1,33 +1,42 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqOption, KbqOptionModule, KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqFilterBar } from './filter-bar';
-import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
+import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 
 @Component({
     standalone: true,
     selector: 'kbq-pipe-add',
     template: `
-        <button
-            [color]="'contrast-fade'"
-            [kbqStyle]="'outline'"
-            [kbqDropdownTriggerFor]="newPipes"
-            [kbqDropdownTriggerRestoreFocus]="false"
-            kbq-button
-            kbqTooltip="Добавить фильтр"
-        >
-            <ng-content>
+        <kbq-select #select [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
+            <button
+                [color]="'contrast-fade'"
+                [kbqStyle]="'outline'"
+                [ngClass]="{ 'kbq-active': select.panelOpen }"
+                kbq-button
+                kbqTooltip="Добавить фильтр"
+                kbq-select-matcher
+            >
                 <i kbq-icon="kbq-plus_16"></i>
-            </ng-content>
-        </button>
+            </button>
 
-        <kbq-dropdown #newPipes="kbqDropdown">
             @for (template of filterBar.pipeTemplates; track template) {
-                <button (click)="addPipeFromTemplate(template)" kbq-dropdown-item>{{ template.name }}</button>
+                <kbq-option
+                    #option
+                    [userSelect]="true"
+                    [value]="template"
+                    [showCheckbox]="false"
+                    (click)="addPipeFromTemplate(option)"
+                >
+                    {{ template.name }}
+                </kbq-option>
             }
-        </kbq-dropdown>
+        </kbq-select>
     `,
     host: {
         class: 'kbq-pipe-add'
@@ -36,13 +45,20 @@ import { KbqFilter, KbqPipeTemplate } from './filter-bar.types';
         KbqDropdownModule,
         KbqToolTipModule,
         KbqButtonModule,
-        KbqIcon
+        KbqIcon,
+        KbqOptionModule,
+        KbqSelectMatcher,
+        KbqSelectModule,
+        NgClass
     ]
 })
 export class KbqPipeAdd {
     protected readonly filterBar = inject(KbqFilterBar);
 
+    @ViewChild(KbqSelect) select: KbqSelect;
+
     @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
+
     @Input() filterTemplate: KbqFilter = {
         name: '',
         pipes: [],
@@ -53,15 +69,39 @@ export class KbqPipeAdd {
         saved: false
     };
 
-    addPipeFromTemplate(template: KbqPipeTemplate) {
-        if (!this.filterBar.activeFilter) {
-            this.filterBar.activeFilter = Object.assign({}, this.filterTemplate, { pipes: [] });
+    addedPipes: (string | number)[] = [];
+
+    constructor() {
+        this.filterBar.changes.subscribe(() => {
+            if (this.filterBar?.activeFilter) {
+                this.addedPipes = this.filterBar.activeFilter.pipes.map((pipe: KbqPipe) => pipe.id || pipe.name);
+            }
+        });
+    }
+
+    addPipeFromTemplate(option: KbqOption) {
+        if (option.selected) {
+            this.filterBar.openPipe.next(option.value.id || option.value.name);
+        } else {
+            option.select();
+
+            if (!this.filterBar.activeFilter) {
+                this.filterBar.activeFilter = structuredClone(this.filterTemplate);
+            }
+
+            this.filterBar.activeFilter.changed = true;
+            this.filterBar.activeFilter.pipes.push(
+                Object.assign({}, option.value, { values: undefined, openOnAdd: true })
+            );
+
+            this.onAddPipe.next(option.value);
+            this.filterBar.onFilterChange.emit(this.filterBar.activeFilter);
         }
 
-        this.filterBar.activeFilter.changed = true;
-        this.filterBar.activeFilter.pipes.push(Object.assign({}, template, { values: undefined, openOnAdd: true }));
+        this.select.close();
+    }
 
-        this.onAddPipe.next(template);
-        this.filterBar.onFilterChange.emit(this.filterBar.activeFilter);
+    compareWith(o1: KbqPipe, o2: string): boolean {
+        return (o1.id || o1.name) === o2;
     }
 }
