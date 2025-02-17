@@ -26,7 +26,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset />
+            <kbq-filter-reset (onReset)="onReset()" />
 
             <kbq-filter-bar-search />
         </kbq-filter-bar>
@@ -208,5 +208,35 @@ export class FilterBarSavedFiltersExample {
 
     onFilterChange(filter: KbqFilter | null) {
         this.activeFilter = filter;
+    }
+
+    onReset() {
+        this.activeFilter = this.getDefaultFilter();
+    }
+
+    getDefaultFilter(): KbqFilter {
+        return {
+            name: 'Saved Filter 1',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: true,
+            pipes: [
+                {
+                    name: 'Создан',
+                    value: {
+                        name: 'Последние 24 часа',
+                        start: null,
+                        end: { hours: -24 }
+                    },
+                    type: KbqPipeTypes.Date,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
     }
 }
