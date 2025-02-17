@@ -1,6 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Directive, OnDestroy } from '@angular/core';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { AfterViewInit, ChangeDetectorRef, Directive, inject, OnDestroy } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { Subscription } from 'rxjs';
 import { KbqTimezoneOption } from './timezone-option.component';
 
 export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
@@ -13,7 +15,8 @@ export const TOOLTIP_VISIBLE_ROWS_COUNT = 3;
     }
 })
 export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
-    private resizeObserver: ResizeObserver;
+    private resizeObserver = inject(SharedResizeObserver);
+    private resizeObserverSubscription: Subscription | null = null;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -26,32 +29,32 @@ export class KbqTimezoneOptionTooltip extends KbqTooltipTrigger implements After
     ngAfterViewInit(): void {
         this.content = this.option.viewValue;
         this.option.tooltipContentWrapper.nativeElement.style.webkitLineClamp = TOOLTIP_VISIBLE_ROWS_COUNT.toString();
-
-        this.resizeObserver = new ResizeObserver(() => this.checkTooltipDisabled());
-        this.resizeObserver.observe(this.option.tooltipContentWrapper.nativeElement);
     }
 
     ngOnDestroy(): void {
         super.ngOnDestroy();
-        this.resizeObserver?.unobserve(this.option.tooltipContentWrapper.nativeElement);
+        this.resizeObserverSubscription?.unsubscribe();
     }
 
     onMouseEnter(): void {
-        this.resizeObserver.observe(this.option.tooltipContentWrapper.nativeElement);
+        this.resizeObserver
+            .observe(this.option.tooltipContentWrapper.nativeElement)
+            .subscribe(this.checkTooltipDisabled);
+
         this.checkTooltipDisabled();
     }
 
     onMouseLeave(): void {
-        this.resizeObserver.unobserve(this.option.tooltipContentWrapper.nativeElement);
+        this.resizeObserverSubscription?.unsubscribe();
 
         this.disabled = true;
     }
 
-    private checkTooltipDisabled(): void {
+    private checkTooltipDisabled = () => {
         const count: number = this.option.tooltipContent.nativeElement.getClientRects().length;
 
         this.disabled = count <= TOOLTIP_VISIBLE_ROWS_COUNT;
 
         this.changeDetectorRef.detectChanges();
-    }
+    };
 }
