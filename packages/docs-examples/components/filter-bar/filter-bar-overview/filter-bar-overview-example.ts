@@ -26,6 +26,8 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
 
+            <kbq-filter-reset (onReset)="onReset()" />
+
             <kbq-filter-bar-search />
         </kbq-filter-bar>
     `
@@ -103,7 +105,7 @@ export class FilterBarOverviewExample {
         }
     ];
 
-    activeFilter: KbqFilter | null = null;
+    activeFilter: KbqFilter | null = this.getDefaultFilter();
 
     pipeTemplates: KbqPipeTemplate[] = [
         {
@@ -121,7 +123,7 @@ export class FilterBarOverviewExample {
             ],
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -138,8 +140,8 @@ export class FilterBarOverviewExample {
                 { name: 'Последний год', start: null, end: { years: -1 } }
             ],
             required: false,
-            cleanable: true,
-            removable: false,
+            cleanable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -159,7 +161,7 @@ export class FilterBarOverviewExample {
             ],
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -180,7 +182,7 @@ export class FilterBarOverviewExample {
 
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -189,12 +191,42 @@ export class FilterBarOverviewExample {
 
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         }
     ];
 
     onFilterChange(filter: KbqFilter | null) {
         this.activeFilter = filter;
+    }
+
+    onReset() {
+        this.activeFilter = this.getDefaultFilter();
+    }
+
+    getDefaultFilter(): KbqFilter {
+        return {
+            name: '',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'Создан',
+                    value: {
+                        name: 'Последние 24 часа',
+                        start: null,
+                        end: { hours: -24 }
+                    },
+                    type: KbqPipeTypes.Date,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
     }
 }
