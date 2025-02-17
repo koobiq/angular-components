@@ -20,7 +20,6 @@ import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
 
 // @public
 export const KBQ_ACTIONS_PANEL_DATA: InjectionToken<unknown>;
@@ -56,7 +55,6 @@ export class KbqActionsPanelConfig<D = unknown> {
     overlayPanelClass?: string | string[];
     restoreFocus?: boolean | string | HTMLElement;
     scrollStrategy?: ScrollStrategy;
-    viewContainerRef?: ViewContainerRef;
     width?: string;
 }
 
@@ -66,9 +64,8 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     readonly animationStateChanged: EventEmitter<AnimationEvent_2>;
     protected _captureInitialFocus(): void;
     protected close(): void;
-    readonly config: KbqActionsPanelConfig<any>;
+    protected readonly config: KbqActionsPanelConfig<any>;
     protected _contentAttached(): void;
-    readonly isRTL: boolean;
     // (undocumented)
     ngOnDestroy(): void;
     protected onAnimationDone(event: AnimationEvent_2): void;
@@ -103,8 +100,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     get afterOpened(): Observable<void>;
     close(result?: R): void;
     containerInstance: KbqActionsPanelContainer;
-    // (undocumented)
-    readonly disableClose: boolean | undefined;
     get keydownEvents(): Observable<KeyboardEvent>;
 }
 
