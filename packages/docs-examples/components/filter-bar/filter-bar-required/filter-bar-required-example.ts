@@ -13,11 +13,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar
-            [pipeTemplates]="pipeTemplates"
-            [activeFilter]="activeFilter"
-            (onFilterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [activeFilter]="activeFilter">
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbq-pipe="pipe" />
             }
@@ -134,13 +130,29 @@ export class FilterBarRequiredExample {
         }
     ];
 
-    onFilterChange(filter: KbqFilter | null) {
-        this.activeFilter = filter;
+    onReset() {
+        this.activeFilter = this.getDefaultFilter();
     }
 
-    onReset() {
-        if (this.activeFilter) {
-            this.activeFilter.pipes = this.activeFilter?.pipes.slice(0, 1);
-        }
+    getDefaultFilter(): KbqFilter {
+        return {
+            name: 'Select',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'Создан',
+                    type: KbqPipeTypes.Date,
+                    value: { name: 'Последний день', start: null, end: { days: -1 } },
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
     }
 }

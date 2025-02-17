@@ -93,6 +93,14 @@ export class KbqFilterBar {
             this.onFilterChange.emit(this.activeFilter);
         });
 
+        this.onChangePipe.subscribe(() => {
+            if (this.activeFilter) {
+                this.activeFilter.changed = true;
+            }
+
+            this.onFilterChange.emit(this.activeFilter);
+        });
+
         merge(this.onFilterChange, this.onChangePipe, this.onDeletePipe, this.activeFilterChanges).subscribe(() => {
             this.changes.next();
             this.changeDetectorRef.markForCheck();
