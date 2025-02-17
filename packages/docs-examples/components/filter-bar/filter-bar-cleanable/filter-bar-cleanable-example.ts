@@ -23,7 +23,7 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
 export class FilterBarCleanableExample {
     pipes: KbqPipe[] = [
         {
-            name: 'select',
+            name: 'Select',
             type: KbqPipeTypes.Select,
 
             required: false,
