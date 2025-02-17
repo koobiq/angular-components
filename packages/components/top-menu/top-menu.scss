@@ -13,8 +13,8 @@
     border: var(--kbq-top-menu-border-radius);
 
     .kbq-top-menu__spacer {
-        min-width: var(--kbq-top-menu-spacer-min-width);
         height: 100%;
+        flex: 1 1 var(--kbq-top-menu-spacer-min-width);
     }
 
     .kbq-top-menu-container__left {

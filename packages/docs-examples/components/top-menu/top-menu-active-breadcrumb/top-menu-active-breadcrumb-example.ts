@@ -49,6 +49,7 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                         <kbq-breadcrumb-item text="Dashboards">
                             <a *kbqBreadcrumbView tabindex="-1">
                                 <button
+                                    class="kbq-dropdown-trigger"
                                     #kbqPopover="kbqPopover"
                                     [kbqPopoverContent]="popoverContent"
                                     [kbqPopoverPlacement]="PopUpPlacements.BottomLeft"

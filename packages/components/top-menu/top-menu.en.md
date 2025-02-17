@@ -26,6 +26,12 @@ Additional (secondary) actions are placed in a dropdown menu for better UI conve
 
 <!-- example(top-menu-secondary-actions) -->
 
+### Responsive Behavior
+
+Additional actions can be moved into the dropdown menu as the screen width decreases, ensuring a seamless user experience across different devices.
+
+<!-- example(top-menu-secondary-actions-responsive) -->
+
 ### Minimum Spacing Between Elements
 
 <!-- cspell:ignore Dashbo -->

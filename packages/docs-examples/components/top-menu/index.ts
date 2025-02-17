@@ -3,14 +3,16 @@ import { TopMenuActiveBreadcrumbExample } from './top-menu-active-breadcrumb/top
 import { TopMenuBreadcrumbsExample } from './top-menu-breadcrumbs/top-menu-breadcrumbs-example';
 import { TopMenuOverflowExample } from './top-menu-overflow/top-menu-overflow-example';
 import { TopMenuOverviewExample } from './top-menu-overview/top-menu-overview-example';
-import { TopMenuSecondaryActions } from './top-menu-secondary-actions/top-menu-secondary-actions';
+import { TopMenuSecondaryActionsResponsiveExample } from './top-menu-secondary-actions-responsive/top-menu-secondary-actions-responsive-example';
+import { TopMenuSecondaryActionsExample } from './top-menu-secondary-actions/top-menu-secondary-actions-example';
 
 export {
     TopMenuActiveBreadcrumbExample,
     TopMenuBreadcrumbsExample,
     TopMenuOverflowExample,
     TopMenuOverviewExample,
-    TopMenuSecondaryActions
+    TopMenuSecondaryActionsExample,
+    TopMenuSecondaryActionsResponsiveExample
 };
 
 const EXAMPLES = [
@@ -18,7 +20,8 @@ const EXAMPLES = [
     TopMenuOverflowExample,
     TopMenuBreadcrumbsExample,
     TopMenuActiveBreadcrumbExample,
-    TopMenuSecondaryActions
+    TopMenuSecondaryActionsExample,
+    TopMenuSecondaryActionsResponsiveExample
 ];
 
 @NgModule({
