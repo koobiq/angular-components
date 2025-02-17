@@ -88,7 +88,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
     animations: [KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION],
     host: {
         class: 'kbq-actions-panel-container',
-        '[class.kbq-actions-panel-container_rtl]': 'isRTL',
+        '[class.kbq-actions-panel-container_rtl]': 'config.direction === "rtl"',
         '[@state]': 'animationState',
         '(@state.start)': 'onAnimationStart($event)',
         '(@state.done)': 'onAnimationDone($event)'
@@ -121,14 +121,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      *
      * @docs-private
      */
-    readonly config = inject(KbqActionsPanelConfig);
-
-    /**
-     * Whether the actions panel direction is RTL.
-     *
-     * @docs-private
-     */
-    readonly isRTL = this.config?.direction === 'rtl';
+    protected readonly config = inject(KbqActionsPanelConfig);
 
     private readonly actionsPanel = inject(KbqActionsPanel);
     private readonly renderer = inject(Renderer2);
