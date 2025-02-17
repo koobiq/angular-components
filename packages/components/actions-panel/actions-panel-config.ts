@@ -1,7 +1,7 @@
 import { Direction } from '@angular/cdk/bidi';
 import { AutoFocusTarget } from '@angular/cdk/dialog';
 import { NoopScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
-import { ElementRef, InjectionToken, Injector, Provider, ViewContainerRef } from '@angular/core';
+import { ElementRef, InjectionToken, Injector, Provider } from '@angular/core';
 
 /** Injection token that can be used to specify default actions panel config. */
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG = new InjectionToken<KbqActionsPanelConfig>(
@@ -21,17 +21,14 @@ export const kbqActionsPanelDefaultConfigProvider = <D>(config: KbqActionsPanelC
 
 /**
  * Configuration for opened actions panel.
+ * Based on cdk `DialogConfig`.
+ *
+ * @see `DialogConfig`
+ *
  */
 export class KbqActionsPanelConfig<D = unknown> {
     /**
-     * The view container that serves as the parent for the actions panel for the purposes of dependency injection.
-     * Note! This does not affect where the actions panel is inserted in the DOM (use `overlayConnectedTo` for that).
-     */
-    viewContainerRef?: ViewContainerRef;
-
-    /**
-     * Injector used for the instantiation of the component to be attached. If provided, takes precedence over
-     * the injector indirectly provided by `ViewContainerRef`.
+     * Injector used for the instantiation of the component to be attached.
      */
     injector?: Injector;
 
@@ -82,7 +79,11 @@ export class KbqActionsPanelConfig<D = unknown> {
      */
     maxWidth?: number | string = '80vw';
 
-    /** Direction of the text in the actions panel. */
+    /**
+     * Direction of the text in the actions panel.
+     *
+     * @default 'ltr'
+     */
     direction?: Direction = 'ltr';
 
     /**
@@ -100,6 +101,8 @@ export class KbqActionsPanelConfig<D = unknown> {
      * otherwise won't restore focus at all.
      * - `string` - focus will be restored to the first element that matches the CSS selector.
      * - `HTMLElement` - focus will be restored to the specific element.
+     *
+     * @default false
      */
     restoreFocus?: boolean | string | HTMLElement = false;
 
@@ -113,6 +116,10 @@ export class KbqActionsPanelConfig<D = unknown> {
      */
     autoFocus?: AutoFocusTarget | string = null!;
 
-    /** Whether the user can use ESC or click on close button to close the actions panel. */
+    /**
+     * Whether the user can use ESC or click on close button to close the actions panel.
+     *
+     * @default false
+     */
     disableClose?: boolean = false;
 }
