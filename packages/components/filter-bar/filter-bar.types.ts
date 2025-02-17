@@ -26,6 +26,7 @@ export interface KbqPipeValue {
 
 export interface KbqPipe {
     name: string;
+    id?: string | number;
     type: KbqPipeTypes;
     value?;
 
@@ -51,6 +52,5 @@ export class KbqPipeData {
 }
 
 export interface KbqPipeTemplate extends KbqPipe {
-    id?: string | number;
     values?: unknown[];
 }
