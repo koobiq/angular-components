@@ -82,6 +82,7 @@ export class KbqFilterBar {
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
     @Output() readonly onDeletePipe = new EventEmitter<KbqPipe>();
 
+    readonly onReset = new EventEmitter<void>();
     readonly changes = new BehaviorSubject<void>(undefined);
     readonly activeFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
 
