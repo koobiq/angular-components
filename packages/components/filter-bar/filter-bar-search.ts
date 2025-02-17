@@ -1,11 +1,21 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    inject,
+    Output,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqFilterBar } from './filter-bar';
 
 @Component({
     standalone: true,
@@ -27,14 +37,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
             <input
                 [formControl]="searchControl"
-                (focusout)="closeSearch()"
-                (keydown.enter)="onEnter()"
+                (blur)="onBlur()"
+                (keydown.escape)="onEscape()"
                 autocomplete="off"
                 kbqInput
                 placeholder="Поиск"
             />
 
-            <kbq-cleaner />
+            <kbq-cleaner (click)="onClear()" />
         </kbq-form-field>
     `,
     styleUrl: 'filter-bar-search.scss',
@@ -54,7 +64,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     }
 })
 export class KbqFilterBarSearch {
+    protected readonly filterBar = inject(KbqFilterBar);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     @ViewChild(KbqInput) input: KbqInput;
+    @ViewChild(KbqButton) button: KbqButton;
+    @ViewChild(KbqTooltipTrigger) tooltip: KbqTooltipTrigger;
 
     searchControl: UntypedFormControl = new UntypedFormControl();
 
@@ -62,17 +77,45 @@ export class KbqFilterBarSearch {
 
     @Output() readonly onSearch = new EventEmitter<string>();
 
+    constructor() {
+        this.searchControl.valueChanges.subscribe(this.onSearch);
+
+        this.filterBar.onReset.subscribe(this.onReset);
+    }
+
     openSearch(): void {
         this.isSearchActive = true;
 
         setTimeout(() => this.input.focus());
     }
 
-    closeSearch(): void {
-        this.isSearchActive = false;
+    onBlur(): void {
+        if (this.searchControl.value) return;
+
+        this.onEscape();
     }
 
-    onEnter() {
-        this.onSearch.emit(this.searchControl.value);
+    onEscape(): void {
+        this.isSearchActive = false;
+
+        this.button.focusViaKeyboard();
+
+        this.tooltip.hide();
     }
+
+    onClear() {
+        this.isSearchActive = false;
+
+        setTimeout(() => {
+            this.button.focus();
+
+            this.tooltip.hide();
+        });
+    }
+
+    onReset = () => {
+        this.isSearchActive = false;
+
+        this.changeDetectorRef.markForCheck();
+    };
 }
