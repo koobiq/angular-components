@@ -15,7 +15,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import { FilterBarCompleteFunctionsExample } from '../../docs-examples/components/filter-bar';
+import { FilterBarRequiredExample } from '../../docs-examples/components/filter-bar';
 
 @Component({
     selector: 'app',
@@ -263,7 +263,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: { name: 'Последний час', start: null, end: null },
+                    value: { name: 'Последний день', start: null, end: null },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -273,7 +273,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: { name: 'Последний час', start: null, end: null },
+                    value: { name: 'Последний день', start: null, end: null },
                     type: KbqPipeTypes.Date,
 
                     required: true,
@@ -328,7 +328,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'removable',
-                    value: { name: 'Последний час', start: null, end: null },
+                    value: { name: 'Последний день', start: null, end: null },
                     type: KbqPipeTypes.Datetime,
 
                     required: false,
@@ -338,7 +338,7 @@ export class DemoComponent {
                 },
                 {
                     name: 'disabled',
-                    value: { name: 'Последний час', start: null, end: null },
+                    value: { name: 'Последний день', start: null, end: null },
                     type: KbqPipeTypes.Datetime,
 
                     required: true,
@@ -561,9 +561,7 @@ export class DemoComponent {
             name: 'Date',
             type: KbqPipeTypes.Date,
             values: [
-                { name: 'Последний час', start: null, end: { hours: -1 } },
-                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
-                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
+                { name: 'Последний день', start: null, end: { days: -1 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -579,9 +577,7 @@ export class DemoComponent {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний час', start: null, end: { hours: -1 } },
-                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
-                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
+                { name: 'Последний день', start: null, end: { days: -1 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -679,7 +675,7 @@ export class DemoComponent {
         KbqDividerModule,
         KbqButtonModule,
         KbqLuxonDateModule,
-        FilterBarCompleteFunctionsExample
+        FilterBarRequiredExample
     ],
     bootstrap: [DemoComponent]
 })
