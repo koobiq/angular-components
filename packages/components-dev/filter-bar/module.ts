@@ -15,7 +15,6 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import { FilterBarRequiredExample } from '../../docs-examples/components/filter-bar';
 
 @Component({
     selector: 'app',
@@ -545,7 +544,7 @@ export class DemoComponent {
             ],
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -601,12 +600,14 @@ export class DemoComponent {
     }
 
     onFilterChange(filter: KbqFilter | null) {
-        console.log('onFilterChange: ');
-        this.activeFilter = filter;
+        console.log('onFilterChange: ', filter);
+        // this.activeFilter = filter;
     }
 
     onSelectFilter(filter: KbqFilter) {
         console.log('onSelectFilter: ', filter);
+
+        this.activeFilter = filter;
     }
 
     onSaveAsNewFilter(filter: KbqFilter) {
@@ -674,8 +675,7 @@ export class DemoComponent {
         KbqFilterBarModule,
         KbqDividerModule,
         KbqButtonModule,
-        KbqLuxonDateModule,
-        FilterBarRequiredExample
+        KbqLuxonDateModule
     ],
     bootstrap: [DemoComponent]
 })

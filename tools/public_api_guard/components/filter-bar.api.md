@@ -21,6 +21,7 @@ import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
+import { KbqOption } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -102,6 +103,10 @@ export class KbqFilterBar {
     readonly onDeletePipe: EventEmitter<KbqPipe>;
     // (undocumented)
     readonly onFilterChange: EventEmitter<KbqFilter | null>;
+    // (undocumented)
+    readonly onReset: EventEmitter<void>;
+    // (undocumented)
+    readonly openPipe: BehaviorSubject<string | number | null>;
     set pipeTemplates(value: KbqPipeTemplate[]);
     // (undocumented)
     get pipeTemplates(): KbqPipeTemplate[];
@@ -159,20 +164,33 @@ export class KbqFilterBarRefresher {
 
 // @public (undocumented)
 export class KbqFilterBarSearch {
+    constructor();
     // (undocumented)
-    closeSearch(): void;
+    button: KbqButton;
+    // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly filterBar: KbqFilterBar;
     // (undocumented)
     input: KbqInput;
     // (undocumented)
     isSearchActive: boolean;
     // (undocumented)
-    onEnter(): void;
+    onBlur(): void;
+    // (undocumented)
+    onClear(): void;
+    // (undocumented)
+    onEscape(): void;
+    // (undocumented)
+    onReset: () => void;
     // (undocumented)
     readonly onSearch: EventEmitter<string>;
     // (undocumented)
     openSearch(): void;
     // (undocumented)
     searchControl: UntypedFormControl;
+    // (undocumented)
+    tooltip: KbqTooltipTrigger;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-bar-search, [kbq-filter-bar-search]", never, {}, { "onSearch": "onSearch"; }, never, never, true, never>;
     // (undocumented)
@@ -247,6 +265,8 @@ export interface KbqPipe {
     // (undocumented)
     disabled: boolean;
     // (undocumented)
+    id?: string | number;
+    // (undocumented)
     name: string;
     // (undocumented)
     removable: boolean;
@@ -262,8 +282,13 @@ export interface KbqPipe {
 
 // @public (undocumented)
 export class KbqPipeAdd {
+    constructor();
     // (undocumented)
-    addPipeFromTemplate(template: KbqPipeTemplate): void;
+    addedPipes: (string | number)[];
+    // (undocumented)
+    addPipeFromTemplate(option: KbqOption): void;
+    // (undocumented)
+    compareWith(o1: KbqPipe, o2: string): boolean;
     // (undocumented)
     protected readonly filterBar: KbqFilterBar;
     // (undocumented)
@@ -271,7 +296,9 @@ export class KbqPipeAdd {
     // (undocumented)
     readonly onAddPipe: EventEmitter<KbqPipeTemplate>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; }; }, { "onAddPipe": "onAddPipe"; }, never, ["*"], true, never>;
+    select: KbqSelect;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeAdd, "kbq-pipe-add", never, { "filterTemplate": { "alias": "filterTemplate"; "required": false; }; }, { "onAddPipe": "onAddPipe"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeAdd, never>;
 }
@@ -542,8 +569,6 @@ export class KbqPipeState<T> implements OnInit {
 
 // @public (undocumented)
 export interface KbqPipeTemplate extends KbqPipe {
-    // (undocumented)
-    id?: string | number;
     // (undocumented)
     values?: unknown[];
 }

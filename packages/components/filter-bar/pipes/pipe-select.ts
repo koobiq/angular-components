@@ -35,7 +35,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ]
 })
 export class KbqPipeSelectComponent extends KbqBasePipe {
-    @ViewChild('select') select: KbqSelect;
+    @ViewChild(KbqSelect) select: KbqSelect;
 
     get selected() {
         return this.data.value;
