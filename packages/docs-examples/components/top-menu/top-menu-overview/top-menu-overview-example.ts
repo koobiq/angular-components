@@ -1,11 +1,10 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { CdkScrollable } from '@angular/cdk/overlay';
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
 
 /**
@@ -18,12 +17,9 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIcon,
-        AsyncPipe,
-        KbqTooltipTrigger,
-        CdkScrollable
+        KbqIconModule,
+        AsyncPipe
     ],
-    styleUrls: ['top-menu-overview-example.css'],
     template: `
         @let isDesktopMatches = !!(isDesktop | async)?.matches;
         <kbq-top-menu>
@@ -54,6 +50,13 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
                 }
             </div>
         </kbq-top-menu>
+    `,
+    styles: `
+        .kbq-text-ellipsis {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
