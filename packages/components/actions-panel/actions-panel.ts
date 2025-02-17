@@ -46,7 +46,7 @@ export class KbqActionsPanel implements OnDestroy {
     private openedActionsPanelRef: KbqActionsPanelRef | null = null;
 
     ngOnDestroy() {
-        this.openedActionsPanelRef?.close();
+        this.close();
     }
 
     /**
@@ -118,44 +118,43 @@ export class KbqActionsPanel implements OnDestroy {
     ): KbqActionsPanelRef<T, R> {
         let actionsPanelRef!: KbqActionsPanelRef<T, R>;
         const position = this.overlay.position();
-        this.dialog
-            .open<R, D, T>(componentOrTemplateRef, {
-                ...config,
-                container: KbqActionsPanelContainer,
-                hasBackdrop: false,
-                // Disable closing since we need to sync it up to the animation ourselves
-                closeOnOverlayDetachments: false,
-                // Disable closing since we need to sync it up to the animation ourselves
-                closeOnDestroy: false,
-                // Disable closing since we need to sync it up to the animation ourselves
-                disableClose: true,
-                positionStrategy: config.overlayConnectedTo
-                    ? position.flexibleConnectedTo(config.overlayConnectedTo).withPositions([
-                          { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'bottom' }])
-                    : position.global().centerHorizontally().bottom(),
-                templateContext: () => {
-                    return {
-                        $implicit: config.data,
-                        actionsPanelRef
-                    } satisfies KbqActionsPanelTemplateContext<T, D, R>;
-                },
-                injector: Injector.create({
-                    parent: config.injector || config.viewContainerRef?.injector || this.injector,
-                    providers: [{ provide: KbqActionsPanelConfig, useValue: config }]
-                }),
-                providers: (dialogRef, _dialogConfig, container) => {
-                    actionsPanelRef = new KbqActionsPanelRef<T, R>(
-                        dialogRef,
-                        config,
-                        container as KbqActionsPanelContainer
-                    );
-                    return [
-                        { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
-                        { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }
-                    ];
-                }
-            })
-            .addPanelClass('kbq-actions-panel-overlay');
+        const dialogRef = this.dialog.open<R, D, T>(componentOrTemplateRef, {
+            ...config,
+            container: KbqActionsPanelContainer,
+            hasBackdrop: false,
+            // Disable closing since we need to sync it up to the animation ourselves
+            closeOnOverlayDetachments: false,
+            // Disable closing since we need to sync it up to the animation ourselves
+            closeOnDestroy: false,
+            // Disable closing since we need to sync it up to the animation ourselves
+            disableClose: true,
+            positionStrategy: config.overlayConnectedTo
+                ? position.flexibleConnectedTo(config.overlayConnectedTo).withPositions([
+                      { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'bottom' }])
+                : position.global().centerHorizontally().bottom(),
+            templateContext: () => {
+                return {
+                    $implicit: config.data,
+                    actionsPanelRef
+                } satisfies KbqActionsPanelTemplateContext<T, D, R>;
+            },
+            injector: Injector.create({
+                parent: config.injector || this.injector,
+                providers: [{ provide: KbqActionsPanelConfig, useValue: config }]
+            }),
+            providers: (dialogRef, _dialogConfig, container) => {
+                actionsPanelRef = new KbqActionsPanelRef<T, R>(
+                    dialogRef,
+                    config,
+                    container as KbqActionsPanelContainer
+                );
+                return [
+                    { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
+                    { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }
+                ];
+            }
+        });
+        dialogRef.addPanelClass('kbq-actions-panel-overlay');
         return actionsPanelRef;
     }
 }

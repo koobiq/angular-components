@@ -30,8 +30,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
         return this._afterOpened;
     }
 
-    readonly disableClose: boolean | undefined;
-
     private readonly _afterOpened = new Subject<void>();
 
     /** Result to be passed down to the `afterClosed` stream. */
@@ -46,7 +44,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
         containerInstance: KbqActionsPanelContainer
     ) {
         this.containerInstance = containerInstance;
-        this.disableClose = this.config.disableClose;
         this.handleAnimation();
         this.handleOverlayDetachments();
         this.handleKeydown();
@@ -104,7 +101,7 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
                 take(1)
             )
             .subscribe((event) => {
-                if (!this.disableClose && (event.type !== 'keydown' || !hasModifierKey(event))) {
+                if (!this.config.disableClose && (event.type !== 'keydown' || !hasModifierKey(event))) {
                     event.preventDefault();
                     this.close();
                 }
