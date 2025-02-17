@@ -76,7 +76,7 @@
     <kbq-divider />
 
     <button kbq-dropdown-item [disabled]="!activeFilter?.changed" (click)="onSaveAsNew.next(this.activeFilter!)">
-        <i kbq-icon="kbq-plus-s_16"></i>
+        <i kbq-icon="kbq-plus_16"></i>
         Сохранить как новый фильтр
     </button>
 </kbq-dropdown>
@@ -90,7 +90,7 @@
         }
     </button>
     <button kbq-dropdown-item (click)="onSaveAsNew.next(this.activeFilter!)">
-        <i kbq-icon="kbq-plus-s_16"></i>
+        <i kbq-icon="kbq-plus_16"></i>
         Сохранить как новый
     </button>
     <button kbq-dropdown-item (click)="onChangeFilter.next(this.activeFilter!)">
