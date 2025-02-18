@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -45,10 +45,10 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeMinWidth
     ]
 })
-export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
+export class KbqPipeTextComponent extends KbqBasePipe implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;
 
-    @ViewChild('popover') popover: KbqPopoverTrigger;
+    @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
 
     get disabled(): boolean {
         return !this.control.value || this.control.pristine;
@@ -58,6 +58,12 @@ export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
 
     ngOnInit(): void {
         this.control.setValue(this.data.value);
+    }
+
+    ngAfterViewInit() {
+        super.ngAfterViewInit();
+
+        this.popover.visibleChange.subscribe(() => this.stateChanges.next());
     }
 
     onApply() {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
  * @title filter-bar-search
@@ -13,29 +13,19 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates">
-            @for (pipe of pipes; track pipe) {
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [activeFilter]="activeFilter">
+            @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbq-pipe="pipe" />
             }
 
-            <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
+            <kbq-pipe-add />
 
             <kbq-filter-bar-search />
         </kbq-filter-bar>
     `
 })
 export class FilterBarSearchExample {
-    pipes: KbqPipe[] = [
-        {
-            name: 'Select',
-            type: KbqPipeTypes.Select,
-
-            required: false,
-            cleanable: true,
-            removable: false,
-            disabled: false
-        }
-    ];
+    activeFilter: KbqFilter | null = this.getDefaultFilter();
 
     pipeTemplates: KbqPipeTemplate[] = [
         {
@@ -51,7 +41,7 @@ export class FilterBarSearchExample {
             ],
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -66,8 +56,8 @@ export class FilterBarSearchExample {
                 { name: 'Последний год', start: null, end: { years: -1 } }
             ],
             required: false,
-            cleanable: true,
-            removable: false,
+            cleanable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -87,7 +77,7 @@ export class FilterBarSearchExample {
             ],
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -108,7 +98,7 @@ export class FilterBarSearchExample {
 
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -117,12 +107,29 @@ export class FilterBarSearchExample {
 
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         }
     ];
 
-    onAddPipe(pipe) {
-        this.pipes.push({ ...pipe, openOnAdd: true });
+    getDefaultFilter(): KbqFilter {
+        return {
+            name: '',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'Select',
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                }
+            ]
+        };
     }
 }
