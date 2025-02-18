@@ -10,3 +10,7 @@ app {
 hr {
     margin: var(--kbq-size-xxl) 0;
 }
+
+*:focus {
+    border: 1px solid cyan !important;
+}
