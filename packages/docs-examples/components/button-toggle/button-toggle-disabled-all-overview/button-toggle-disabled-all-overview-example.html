@@ -1,5 +1,5 @@
 <div class="layout-margin-bottom-m">
-    <kbq-button-toggle-group #group1="kbqButtonToggleGroup" disabled [(ngModel)]="model">
+    <kbq-button-toggle-group #group1="kbqButtonToggleGroup" [disabled]="true" [(ngModel)]="model">
         <kbq-button-toggle [value]="1">
             <i kbq-icon="kbq-info-circle_16"></i>
             Курьером
@@ -16,7 +16,7 @@
 </div>
 
 <div>
-    <kbq-button-toggle-group #group2="kbqButtonToggleGroup" disabled>
+    <kbq-button-toggle-group #group2="kbqButtonToggleGroup" [disabled]="true">
         <kbq-button-toggle [value]="1">
             <i kbq-icon="kbq-info-circle_16"></i>
             Курьером
