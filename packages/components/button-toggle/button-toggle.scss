@@ -27,12 +27,19 @@
         min-height: var(--kbq-button-toggle-size-item-height);
 
         border-radius: var(--kbq-button-toggle-size-item-border-radius);
+        border: var(--kbq-size-border-width) solid transparent;
+
+        &.cdk-keyboard-focused {
+            outline: 1px solid var(--kbq-states-line-focus-theme);
+            border-color: var(--kbq-states-line-focus-theme);
+        }
 
         > .kbq-button,
         > .kbq-button-icon {
             height: inherit;
             min-height: inherit;
             border-radius: var(--kbq-button-toggle-size-item-border-radius);
+            border-width: 0;
 
             padding: kbq-difference-series-css-variables(
                     [ button-toggle-size-item-padding-vertical,
@@ -58,6 +65,10 @@
                 width: 100%;
 
                 gap: var(--kbq-button-toggle-size-item-content-gap-horizontal);
+            }
+
+            &.cdk-keyboard-focused {
+                outline: none;
             }
         }
     }
