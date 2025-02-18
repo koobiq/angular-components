@@ -4,8 +4,8 @@ import { AsyncPipe } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
-import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
 import { Observable } from 'rxjs';
 import { auditTime, map } from 'rxjs/operators';
@@ -17,13 +17,12 @@ import { auditTime, map } from 'rxjs/operators';
     standalone: true,
     selector: 'top-menu-overflow-example',
     imports: [
+        AsyncPipe,
+        CdkScrollable,
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIcon,
-        AsyncPipe,
-        KbqTooltipTrigger,
-        CdkScrollable
+        KbqIconModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `

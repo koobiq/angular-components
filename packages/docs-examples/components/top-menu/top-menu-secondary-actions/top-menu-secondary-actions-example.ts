@@ -19,13 +19,13 @@ type ExampleAction = {
     standalone: true,
     selector: 'top-menu-secondary-actions-example',
     imports: [
+        AsyncPipe,
         KbqTopMenuModule,
         KbqOverflowItemsModule,
         KbqDropdownModule,
         KbqButtonModule,
         KbqIconModule,
-        KbqOptionModule,
-        AsyncPipe
+        KbqOptionModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `

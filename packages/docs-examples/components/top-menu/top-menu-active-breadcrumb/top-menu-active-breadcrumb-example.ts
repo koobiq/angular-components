@@ -3,11 +3,11 @@ import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -27,7 +27,7 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIcon,
+        KbqIconModule,
         KbqBreadcrumbsModule,
         KbqFormFieldModule,
         KbqInputModule,
