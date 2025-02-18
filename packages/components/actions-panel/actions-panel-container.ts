@@ -14,7 +14,6 @@ import { CdkPortalOutlet } from '@angular/cdk/portal';
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
     EventEmitter,
     inject,
     OnDestroy,
@@ -70,13 +69,7 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         </div>
         @if (!config.disableClose) {
             <kbq-divider class="kbq-actions-panel-container__vertical-divider" [vertical]="true" />
-            <button
-                class="kbq-actions-panel-container__close-button"
-                [tabIndex]="-1"
-                (click)="close()"
-                color="contrast"
-                kbq-button
-            >
+            <button class="kbq-actions-panel-container__close-button" (click)="close()" color="contrast" kbq-button>
                 <i kbq-icon="kbq-xmark-circle_16"></i>
             </button>
         }
@@ -125,7 +118,6 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 
     private readonly actionsPanel = inject(KbqActionsPanel);
     private readonly renderer = inject(Renderer2);
-    private readonly elementRef = inject(ElementRef);
 
     override ngOnDestroy() {
         super.ngOnDestroy();
@@ -205,9 +197,9 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
         const { containerClass } = this.config;
         if (containerClass) {
             if (Array.isArray(containerClass)) {
-                containerClass.forEach((cssClass) => this.renderer.addClass(this.elementRef.nativeElement, cssClass));
+                containerClass.forEach((cssClass) => this.renderer.addClass(this._elementRef.nativeElement, cssClass));
             } else {
-                this.renderer.addClass(this.elementRef.nativeElement, containerClass);
+                this.renderer.addClass(this._elementRef.nativeElement, containerClass);
             }
         }
     }
