@@ -68,7 +68,6 @@ import {
     KbqSelectSearch,
     KbqSelectTrigger,
     MultipleMode,
-    SELECT_PANEL_PADDING_X,
     SELECT_PANEL_VIEWPORT_PADDING,
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
@@ -1220,18 +1219,11 @@ export class KbqTreeSelect
     private calculateOverlayOffsetX() {
         const overlayRect = this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
         const viewportSize = this.viewportRuler.getViewportSize();
-        const isRtl = this.isRtl();
-        const paddingWidth = SELECT_PANEL_PADDING_X * 2;
-        let offsetX: number = SELECT_PANEL_PADDING_X;
-
-        // Invert the offset in LTR.
-        if (!isRtl) {
-            offsetX *= -1;
-        }
+        let offsetX: number = 0;
 
         // Determine how much the select overflows on each side.
-        const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-        const rightOverflow = overlayRect.right + offsetX - viewportSize.width + (isRtl ? 0 : paddingWidth);
+        const leftOverflow = -overlayRect.left;
+        const rightOverflow = overlayRect.right - viewportSize.width;
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0) {

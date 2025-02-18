@@ -2488,15 +2488,6 @@ export const ruRULocaleData: {
     };
 };
 
-// @public @deprecated
-export const SELECT_PANEL_INDENT_PADDING_X: number;
-
-// @public @deprecated
-export const SELECT_PANEL_MAX_HEIGHT = 224;
-
-// @public @deprecated
-export const SELECT_PANEL_PADDING_X = 0;
-
 // @public
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
