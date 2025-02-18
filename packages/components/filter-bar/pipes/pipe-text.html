@@ -1,5 +1,4 @@
 <button
-    #popover="kbqPopover"
     kbq-button
     kbqPopover
     [disabled]="data.disabled"
@@ -10,7 +9,7 @@
     [kbqPopoverContent]="content"
     [kbqPopoverFooter]="footer"
     [kbqPopoverPlacement]="placements.BottomLeft"
-    [ngClass]="{ 'kbq-active': popover.isOpen }"
+    [ngClass]="{ 'kbq-active': popover?.isOpen }"
 >
     <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__name">{{ data.name }}</span>
     <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__value">{{ data.value }}</span>
