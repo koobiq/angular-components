@@ -1,3 +1,13 @@
+# 18.14.0 (2025-02-18)
+
+### Koobiq
+
+ * bug fix  **common:** errors in SSR ([#DS-3384](https://github.com/koobiq/angular-components/issues/issue/DS-3384)) ([#531](https://github.com/koobiq/angular-components/issues/531)) ([3141b03](https://github.com/koobiq/angular-components/commit/3141b0352a9da03cd1d2786883f89d096fd31808))
+ * bug fix  **common:** init focusMonitor in ngAfterViewInit ([#DS-3368](https://github.com/koobiq/angular-components/issues/issue/DS-3368)) ([#528](https://github.com/koobiq/angular-components/issues/528)) ([b576a46](https://github.com/koobiq/angular-components/commit/b576a46f30726f1dd732c417c244272a9729bb5b))
+ * feature  **formatter:** added Türkmen locale ([#DS-3302](https://github.com/koobiq/angular-components/issues/issue/DS-3302)) ([#520](https://github.com/koobiq/angular-components/issues/520)) ([71118c7](https://github.com/koobiq/angular-components/commit/71118c79ed8752f7edade45c3a5d53c89f2435ab))
+ * feature  **overflow-items:** added new KbqOverflowItemsModule ([#DS-3113](https://github.com/koobiq/angular-components/issues/issue/DS-3113)) ([#527](https://github.com/koobiq/angular-components/issues/527)) ([3cae73c](https://github.com/koobiq/angular-components/commit/3cae73c75c1d2e293ee0e9e7e3d8b67c086992ba))
+ * feature  **popover,tooltip:** added adjusted arrow positioning ([#DS-3369](https://github.com/koobiq/angular-components/issues/issue/DS-3369)) ([#529](https://github.com/koobiq/angular-components/issues/529)) ([0e85e3e](https://github.com/koobiq/angular-components/commit/0e85e3e0c36ae953adb23b61d481a05c66f29292))
+
 # 18.13.0 (2025-02-10)
 
 ### Koobiq
