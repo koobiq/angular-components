@@ -574,11 +574,13 @@ export interface KbqPipeTemplate extends KbqPipe {
 }
 
 // @public (undocumented)
-export class KbqPipeTextComponent extends KbqBasePipe implements OnInit {
+export class KbqPipeTextComponent extends KbqBasePipe implements AfterViewInit, OnInit {
     // (undocumented)
     control: FormControl<string | null>;
     // (undocumented)
     get disabled(): boolean;
+    // (undocumented)
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
