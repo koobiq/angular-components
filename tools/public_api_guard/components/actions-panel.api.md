@@ -28,8 +28,11 @@ export const KBQ_ACTIONS_PANEL_DATA: InjectionToken<unknown>;
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG: InjectionToken<KbqActionsPanelConfig<unknown>>;
 
 // @public
+export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = "kbq-actions-panel-overlay";
+
+// @public
 export class KbqActionsPanel implements OnDestroy {
-    close(): void;
+    close<R>(result?: R): void;
     // (undocumented)
     ngOnDestroy(): void;
     open<T, D = unknown, R = unknown>(component: ComponentType<T>, config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef<T, R>;
@@ -106,6 +109,7 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
 // @public
 export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown> = {
     $implicit?: D | null;
+    data?: D | null;
     actionsPanelRef: KbqActionsPanelRef<T, R>;
 };
 
