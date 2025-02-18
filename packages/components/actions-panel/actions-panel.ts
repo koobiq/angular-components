@@ -13,14 +13,28 @@ export const KBQ_ACTIONS_PANEL_DATA = new InjectionToken('KBQ_ACTIONS_PANEL_DATA
  */
 export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown> = {
     /**
+     * Data passed to actions panel.
+     *
      * Example:
      *
      * ```html
-     * <ng-template #actionsPanel let-data>...</ng-template>
+     * <ng-template #actionsPanel let-data>{{ data.KEY }}</ng-template>
      * ````
      */
     $implicit?: D | null;
     /**
+     * Data passed to actions panel.
+     *
+     * Example:
+     *
+     * ```html
+     * <ng-template #actionsPanel let-data="data">{{ data.KEY }}</ng-template>
+     * ````
+     */
+    data?: D | null;
+    /**
+     * Opened actions panel reference.
+     *
      * Example:
      *
      * ```html
@@ -31,6 +45,13 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
      */
     actionsPanelRef: KbqActionsPanelRef<T, R>;
 };
+
+/**
+ * Selector for actions panel overlay.
+ *
+ * @docs-private
+ */
+export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = 'kbq-actions-panel-overlay';
 
 /**
  * Service for opening actions panel.
@@ -88,12 +109,11 @@ export class KbqActionsPanel implements OnDestroy {
     }
 
     /** Closes the currently opened actions panel. */
-    close(): void {
-        this.openedActionsPanelRef?.close();
+    close<R>(result?: R): void {
+        this.openedActionsPanelRef?.close(result);
     }
 
     private animate<T = unknown, R = unknown>(actionsPanelRef: KbqActionsPanelRef<T, R>): void {
-        // When the actions panel is closed, clear the reference to it.
         actionsPanelRef.afterClosed.subscribe(() => {
             if (this.openedActionsPanelRef === actionsPanelRef) {
                 this.openedActionsPanelRef = null;
@@ -107,7 +127,6 @@ export class KbqActionsPanel implements OnDestroy {
             });
             this.openedActionsPanelRef.close();
         } else {
-            // If no actions panel is in view, enter the new one.
             actionsPanelRef.containerInstance.startOpenAnimation();
         }
     }
@@ -135,6 +154,7 @@ export class KbqActionsPanel implements OnDestroy {
             templateContext: () => {
                 return {
                     $implicit: config.data,
+                    data: config.data,
                     actionsPanelRef
                 } satisfies KbqActionsPanelTemplateContext<T, D, R>;
             },
@@ -154,7 +174,10 @@ export class KbqActionsPanel implements OnDestroy {
                 ];
             }
         });
-        dialogRef.addPanelClass('kbq-actions-panel-overlay');
+        dialogRef.addPanelClass(KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR);
+        if (config.overlayPanelClass) {
+            dialogRef.addPanelClass(config.overlayPanelClass);
+        }
         return actionsPanelRef;
     }
 }

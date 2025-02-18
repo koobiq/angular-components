@@ -11,7 +11,8 @@ import { DevThemeToggle } from '../theme-toggle';
     ],
     selector: 'page-1',
     templateUrl: './template.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class Page1 {}
 
@@ -24,7 +25,8 @@ export class Page1 {}
         <a routerLink="/page-1">Go to page-1</a>
         <hr />
     `,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class Page2 {}
 

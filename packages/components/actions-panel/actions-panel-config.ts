@@ -102,17 +102,19 @@ export class KbqActionsPanelConfig<D = unknown> {
      * - `string` - focus will be restored to the first element that matches the CSS selector.
      * - `HTMLElement` - focus will be restored to the specific element.
      *
-     * @default false
+     * @default true
      */
-    restoreFocus?: boolean | string | HTMLElement = false;
+    restoreFocus?: boolean | string | HTMLElement = true;
 
     /**
-     * Where the actions-panel should focus on open.
+     * Whether the actions panel should focus element when opened.
      *
      * Has the following behavior based on the type that is passed in:
      * - `string` - focus will be restored to the first element that matches the CSS selector.
      * - `first-tabbable` - focus will be restored to the first tabbable element in the actions panel.
      * - `dialog` - focus will be restored to the actions panel container.
+     *
+     * @default null
      */
     autoFocus?: AutoFocusTarget | string = null!;
 
