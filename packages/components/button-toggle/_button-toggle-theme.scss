@@ -30,10 +30,6 @@
                 &.kbq-selected:not(.kbq-disabled) {
                     @include kbq-button-toggle-state(states-selected);
 
-                    &:hover {
-                        @include kbq-button-toggle-state(states-selected-hover);
-                    }
-
                     &:active {
                         @include kbq-button-toggle-state(states-selected-active);
                     }
