@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
 
@@ -21,7 +21,7 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIcon,
+        KbqIconModule,
         KbqBreadcrumbsModule
     ],
     styleUrls: [],

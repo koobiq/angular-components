@@ -14,11 +14,11 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
     standalone: true,
     selector: 'top-menu-overview-example',
     imports: [
+        AsyncPipe,
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIconModule,
-        AsyncPipe
+        KbqIconModule
     ],
     template: `
         @let isDesktopMatches = !!(isDesktop | async)?.matches;
