@@ -22,14 +22,14 @@
 <ng-template #content>
     @if (list) {
         <div class="kbq-date-list">
-            <kbq-list-selection #listSelection>
+            <kbq-list-selection [ngModel]="data.value?.name">
                 <kbq-list-option (click)="openPeriod()" (keydown.enter)="openPeriod()">
                     Произвольный период
                     <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
                 </kbq-list-option>
 
                 @for (item of values; track item) {
-                    <kbq-list-option [value]="item" (click)="onSelect(item)" (keydown.enter)="onSelect(item)">
+                    <kbq-list-option [value]="item.name" (click)="onSelect(item)" (keydown.enter)="onSelect(item)">
                         {{ item.name }}
                     </kbq-list-option>
                 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, viewChild, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
@@ -56,7 +56,8 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqFormattersModule,
         KbqPipeButton,
         KbqTitleModule,
-        KbqPipeTitleDirective
+        KbqPipeTitleDirective,
+        FormsModule
     ]
 })
 export class KbqPipeDateComponent<D> extends KbqBasePipe {
