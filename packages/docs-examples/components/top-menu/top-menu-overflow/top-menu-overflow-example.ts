@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CdkScrollable } from '@angular/cdk/overlay';
-import { AsyncPipe, JsonPipe } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -31,8 +31,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIconModule,
-        JsonPipe
+        KbqIconModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -127,8 +126,6 @@ export class TopMenuOverflowExample implements AfterViewInit {
         this.scrollable
             .elementScrolled()
             .pipe(auditTime(300), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.hasOverflow.set(this.scrollable.measureScrollOffset('top') > 0);
-            });
+            .subscribe(() => this.hasOverflow.set(this.scrollable.measureScrollOffset('top') > 0));
     }
 }

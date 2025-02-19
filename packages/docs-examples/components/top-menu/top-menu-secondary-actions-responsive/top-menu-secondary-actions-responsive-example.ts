@@ -143,9 +143,15 @@ type ExampleAction = {
             white-space: nowrap;
         }
 
-        @media screen and (max-width: 1024px) {
+        @media screen and (max-width: 768px) {
             .kbq-overflow-items {
-                max-width: 300px;
+                max-width: 152px;
+            }
+        }
+
+        @media screen and (min-width: 1201px) {
+            .kbq-overflow-items {
+                max-width: 32px;
             }
         }
     `
