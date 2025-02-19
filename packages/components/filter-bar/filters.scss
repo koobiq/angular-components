@@ -77,4 +77,14 @@
     }
 }
 
+.kbq-filters__save-as-new-filter-popover {
+    & .kbq-popover__container {
+        width: 400px;
+    }
+
+    & .kbq-popover__content {
+        padding: 8px 24px;
+    }
+}
+
 @include kbq-filter-bar-typography();

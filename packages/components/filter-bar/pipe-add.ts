@@ -73,8 +73,8 @@ export class KbqPipeAdd {
 
     constructor() {
         this.filterBar.changes.subscribe(() => {
-            if (this.filterBar?.activeFilter) {
-                this.addedPipes = this.filterBar.activeFilter.pipes.map((pipe: KbqPipe) => pipe.id || pipe.name);
+            if (this.filterBar?.filter) {
+                this.addedPipes = this.filterBar.filter.pipes.map((pipe: KbqPipe) => pipe.id || pipe.name);
             }
         });
     }
@@ -85,17 +85,15 @@ export class KbqPipeAdd {
         } else {
             option.select();
 
-            if (!this.filterBar.activeFilter) {
-                this.filterBar.activeFilter = structuredClone(this.filterTemplate);
+            if (!this.filterBar.filter) {
+                this.filterBar.filter = structuredClone(this.filterTemplate);
             }
 
-            this.filterBar.activeFilter.changed = true;
-            this.filterBar.activeFilter.pipes.push(
-                Object.assign({}, option.value, { values: undefined, openOnAdd: true })
-            );
+            this.filterBar.filter.changed = true;
+            this.filterBar.filter.pipes.push(Object.assign({}, option.value, { values: undefined, openOnAdd: true }));
 
             this.onAddPipe.next(option.value);
-            this.filterBar.onFilterChange.emit(this.filterBar.activeFilter);
+            this.filterBar.filterChange.emit(this.filterBar.filter);
         }
 
         this.select.close();

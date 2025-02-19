@@ -408,13 +408,17 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     closingActionsForClick() {
         if (this.hasClickTrigger) {
-            return [
-                this.overlayRef!.backdropClick(),
-                this.hasBackdrop ? NEVER : this.overlayRef!.outsidePointerEvents()
-            ];
+            return this.defaultClosingActions();
         }
 
         return [];
+    }
+
+    defaultClosingActions() {
+        return [
+            this.overlayRef!.backdropClick(),
+            this.hasBackdrop ? NEVER : this.overlayRef!.outsidePointerEvents()
+        ];
     }
 
     closingActions() {
