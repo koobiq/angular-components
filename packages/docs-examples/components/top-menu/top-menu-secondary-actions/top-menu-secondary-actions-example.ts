@@ -40,28 +40,26 @@ type ExampleAction = {
 
             <kbq-overflow-items class="kbq-top-menu-container__right">
                 <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
-                    <div>
-                        <button
-                            [kbqStyle]="KbqButtonStyles.Transparent"
-                            [color]="KbqComponentColors.Contrast"
-                            [kbqDropdownTriggerFor]="appDropdown"
-                            kbq-button
-                        >
-                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                        </button>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        [kbqDropdownTriggerFor]="appDropdown"
+                        kbq-button
+                    >
+                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                    </button>
 
-                        <kbq-dropdown #appDropdown="kbqDropdown">
-                            <kbq-optgroup label="Actions" />
-                            @for (action of actions; track action.id; let index = $index) {
-                                @if (hiddenItemIDs.has(action.id)) {
-                                    <button kbq-dropdown-item>
-                                        <i [class]="action.icon" kbq-icon=""></i>
-                                        {{ action.id }}
-                                    </button>
-                                }
+                    <kbq-dropdown #appDropdown="kbqDropdown">
+                        <kbq-optgroup label="Actions" />
+                        @for (action of actions; track action.id; let index = $index) {
+                            @if (hiddenItemIDs.has(action.id)) {
+                                <button kbq-dropdown-item>
+                                    <i [class]="action.icon" kbq-icon=""></i>
+                                    {{ action.id }}
+                                </button>
                             }
-                        </kbq-dropdown>
-                    </div>
+                        }
+                    </kbq-dropdown>
                 </ng-template>
 
                 @for (action of actions; track index; let index = $index) {

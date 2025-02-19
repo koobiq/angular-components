@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
@@ -13,6 +13,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { map, startWith } from 'rxjs/operators';
 
 /**
  * @title TopMenu Active Breadcrumb
@@ -34,7 +35,6 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
         KbqTextareaModule,
         KbqPopoverModule
     ],
-    styleUrls: [],
     template: `
         @let isDesktopMatches = !!(isDesktop | async)?.matches;
         <kbq-top-menu>
@@ -112,8 +112,7 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopMenuActiveBreadcrumbExample {
-    @Input() iconVisible: boolean = true;
-    value = signal(null);
+    readonly value = signal(null);
 
     readonly breadcrumbActionText = 'New dashboard';
     readonly actions = [
@@ -136,8 +135,13 @@ export class TopMenuActiveBreadcrumbExample {
             disabled: computed(() => !this.value())
         }
     ];
+    readonly isDesktop = inject(BreakpointObserver)
+        .observe('(min-width: 900px)')
+        .pipe(
+            startWith({ matches: true }),
+            map(({ matches }) => matches)
+        );
 
-    protected readonly isDesktop = inject(BreakpointObserver).observe('(min-width: 900px)');
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

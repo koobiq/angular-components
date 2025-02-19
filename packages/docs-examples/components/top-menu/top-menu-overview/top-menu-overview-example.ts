@@ -1,11 +1,12 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { map, startWith } from 'rxjs/operators';
 
 /**
  * @title TopMenu
@@ -21,7 +22,7 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
         KbqIconModule
     ],
     template: `
-        @let isDesktopMatches = !!(isDesktop | async)?.matches;
+        @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu>
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
                 <div class="layout-row layout-padding-m flex-none">
@@ -61,11 +62,14 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopMenuOverviewExample {
-    @Input() iconVisible: boolean = true;
+    readonly isDesktop = inject(BreakpointObserver)
+        .observe('(min-width: 900px)')
+        .pipe(
+            startWith({ matches: true }),
+            map(({ matches }) => matches)
+        );
 
-    isDesktop = inject(BreakpointObserver).observe('(min-width: 900px)');
-
-    actions = [
+    readonly actions = [
         {
             title: 'Add widget',
             style: KbqButtonStyles.Transparent,
