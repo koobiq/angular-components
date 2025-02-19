@@ -55,5 +55,5 @@ export class KbqTopMenu {
     /**
      * Enables overflow behavior, applying `kbq-top-menu-overflow` to show a bottom shadow.
      */
-    @Input({ transform: booleanAttribute }) hasOverflow = false;
+    @Input({ transform: booleanAttribute }) hasOverflow: boolean = false;
 }

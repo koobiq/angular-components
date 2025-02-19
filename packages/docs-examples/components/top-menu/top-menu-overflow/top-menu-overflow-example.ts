@@ -1,13 +1,22 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { CdkScrollable } from '@angular/cdk/overlay';
-import { AsyncPipe } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    DestroyRef,
+    inject,
+    signal,
+    ViewChild,
+    WritableSignal
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
-import { Observable } from 'rxjs';
 import { auditTime, map, startWith } from 'rxjs/operators';
 
 /**
@@ -22,12 +31,13 @@ import { auditTime, map, startWith } from 'rxjs/operators';
         KbqTopMenuModule,
         KbqButtonModule,
         KbqToolTipModule,
-        KbqIconModule
+        KbqIconModule,
+        JsonPipe
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @let isDesktopMatches = !!(isDesktop | async);
-        <kbq-top-menu [hasOverflow]="hasOverflow | async">
+        <kbq-top-menu [hasOverflow]="hasOverflow()">
             <div class="layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
@@ -85,7 +95,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
 export class TopMenuOverflowExample implements AfterViewInit {
     @ViewChild(CdkScrollable) protected readonly scrollable: CdkScrollable;
 
-    hasOverflow: Observable<boolean>;
+    readonly hasOverflow: WritableSignal<boolean | undefined> = signal(false);
 
     readonly actions = [
         {
@@ -107,14 +117,18 @@ export class TopMenuOverflowExample implements AfterViewInit {
             startWith({ matches: true }),
             map(({ matches }) => !!matches)
         );
+
+    protected readonly destroyRef = inject(DestroyRef);
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
 
     ngAfterViewInit() {
-        this.hasOverflow = this.scrollable.elementScrolled().pipe(
-            auditTime(300),
-            map(() => this.scrollable.measureScrollOffset('top') > 0)
-        );
+        this.scrollable
+            .elementScrolled()
+            .pipe(auditTime(300), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.hasOverflow.set(this.scrollable.measureScrollOffset('top') > 0);
+            });
     }
 }
