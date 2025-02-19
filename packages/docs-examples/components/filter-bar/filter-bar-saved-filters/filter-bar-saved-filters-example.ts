@@ -13,7 +13,15 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
+        <kbq-filter-bar
+            [(filter)]="activeFilter"
+            [pipeTemplates]="pipeTemplates"
+            (filterChange)="onFilterChange($event)"
+            (onSave)="onSaveFilter($event)"
+            (onSaveAsNew)="onSaveAsNewFilter($event)"
+            (onResetFilter)="onResetFilter($event)"
+            (onDeleteFilter)="onDeleteFilter($event)"
+        >
             <kbq-filters [filters]="filters" />
 
             @for (pipe of activeFilter?.pipes; track pipe) {
@@ -22,7 +30,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset (onReset)="onReset()" />
+            <kbq-filter-reset />
 
             <kbq-filter-bar-search />
         </kbq-filter-bar>
@@ -199,36 +207,42 @@ export class FilterBarSavedFiltersExample {
     ];
 
     onFilterChange(filter: KbqFilter | null) {
-        this.activeFilter = filter;
+        console.log('onFilterChange: ', filter);
     }
 
-    onReset() {
-        this.activeFilter = this.getDefaultFilter();
+    onResetFilter(filter: KbqFilter | null) {
+        this.filters.splice(
+            this.filters.findIndex(({ name }) => name === filter?.name),
+            1,
+            filter!
+        );
     }
 
-    getDefaultFilter(): KbqFilter {
-        return {
-            name: 'Saved Filter 1',
-            readonly: false,
-            disabled: false,
-            changed: false,
-            saved: true,
-            pipes: [
-                {
-                    name: 'Создан',
-                    value: {
-                        name: 'Последний день',
-                        start: null,
-                        end: { days: -1 }
-                    },
-                    type: KbqPipeTypes.Date,
+    onDeleteFilter(filter: KbqFilter) {
+        const currentFilterIndex = this.filters.findIndex(({ name }) => name === filter?.name);
 
-                    required: true,
-                    cleanable: false,
-                    removable: false,
-                    disabled: false
-                }
-            ]
-        };
+        this.filters.splice(currentFilterIndex, 1);
+
+        this.activeFilter = null;
+    }
+
+    onSaveFilter({ filter, filterBar }) {
+        console.log('filter to save: ', filter);
+
+        this.filters.splice(
+            this.filters.findIndex(({ name }) => name === filter?.name),
+            1,
+            filter
+        );
+
+        filterBar.filterSavedSuccessfully();
+    }
+
+    onSaveAsNewFilter({ filter, filterBar }) {
+        if (filter) {
+            this.filters.push(filter);
+        }
+
+        filterBar.filterSavedSuccessfully();
     }
 }

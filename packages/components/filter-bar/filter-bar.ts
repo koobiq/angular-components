@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject, merge } from 'rxjs';
-import { KbqFilter, KbqPipe, KbqPipeTemplate, KbqSaveFilterError } from './filter-bar.types';
+import { KbqFilter, KbqPipe, KbqPipeTemplate, KbqSaveFilterError, KbqSaveFilterEvent } from './filter-bar.types';
 import { KbqFilters } from './filters';
 
 @Component({
@@ -23,9 +23,7 @@ import { KbqFilters } from './filters';
 
             <ng-content />
 
-            @if (!isReadOnly) {
-                <ng-content select="kbq-pipe-add" />
-            }
+            <ng-content select="kbq-pipe-add" />
 
             @if (isChanged) {
                 <ng-content select="kbq-filter-reset" />
@@ -88,7 +86,12 @@ export class KbqFilterBar {
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
     @Output() readonly onDeletePipe = new EventEmitter<KbqPipe>();
 
-    @Output() onResetFilter = new EventEmitter<KbqFilter | null>();
+    @Output() readonly onSelectFilter = new EventEmitter<KbqFilter>();
+    @Output() readonly onSave = new EventEmitter<KbqSaveFilterEvent>();
+    @Output() readonly onChangeFilter = new EventEmitter<KbqSaveFilterEvent>();
+    @Output() readonly onSaveAsNew = new EventEmitter<KbqSaveFilterEvent>();
+    @Output() readonly onDeleteFilter = new EventEmitter<KbqFilter>();
+    @Output() readonly onResetFilter = new EventEmitter<KbqFilter | null>();
 
     get isSavedAndChanged(): boolean {
         return this.isSaved && this.isChanged;

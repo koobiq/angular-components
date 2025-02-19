@@ -60,30 +60,33 @@
 }
 
 <kbq-dropdown #savedFilters="kbqDropdown" [class]="'kbq-filters__dropdown'">
-    <kbq-form-field kbqFormFieldWithoutBorders>
-        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+    <div [style.display]="isEmpty ? 'none' : 'initial'">
+        <kbq-form-field kbqFormFieldWithoutBorders>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
-        <input
-            #input
-            autocomplete="off"
-            kbqInput
-            placeholder="Поиск"
-            [formControl]="searchControl"
-            (click)="stopEventPropagation($event)"
-            (keydown)="stopEventPropagation($event)"
-        />
-        <kbq-cleaner />
-    </kbq-form-field>
+            <input
+                #input
+                autocomplete="off"
+                autofocus
+                kbqInput
+                placeholder="Поиск"
+                [formControl]="searchControl"
+                (click)="stopEventPropagation($event)"
+                (keydown)="stopEventPropagation($event)"
+            />
+            <kbq-cleaner />
+        </kbq-form-field>
 
-    <kbq-divider />
+        <kbq-divider />
 
-    @for (filter of filteredOptions | async; track filter) {
-        <button kbq-dropdown-item (click)="selectFilter(filter)">{{ filter.name }}</button>
-    } @empty {
-        <button kbq-dropdown-item [disabled]="true">Ничего не найдено</button>
-    }
+        @for (filter of filteredOptions | async; track filter) {
+            <button kbq-dropdown-item (click)="selectFilter(filter)">{{ filter.name }}</button>
+        } @empty {
+            <button kbq-dropdown-item [disabled]="true">Ничего не найдено</button>
+        }
 
-    <kbq-divider />
+        <kbq-divider />
+    </div>
 
     <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
@@ -92,7 +95,7 @@
 </kbq-dropdown>
 
 <kbq-dropdown #filterActions="kbqDropdown" [class]="'kbq-filters__dropdown'">
-    @if (filterBar.isSavedAndChanged) {
+    @if (filterBar.isSavedAndChanged && !filterBar.isReadOnly) {
         <button
             kbq-dropdown-item
             [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
@@ -128,7 +131,7 @@
         </button>
     }
     @if (!filterBar.isReadOnly) {
-        <button kbq-dropdown-item (click)="onDeleteFilter.next(this.filter!)">
+        <button kbq-dropdown-item (click)="this.filterBar.onDeleteFilter.next(this.filter!)">
             <i kbq-icon="kbq-trash_16"></i>
             Удалить
         </button>
@@ -139,7 +142,7 @@
 
 <ng-template #saveAsNewPopoverContent>
     @if (showFilterSavingError) {
-        <kbq-alert class="layout-margin-bottom-m" [alertColor]="'error'" [alertStyle]="'colored'">
+        <kbq-alert class="layout-margin-bottom-m" [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true">
             {{ filterSavingErrorText }}
         </kbq-alert>
     }
@@ -148,7 +151,7 @@
             <label class="kbq-form__label">Название</label>
 
             <kbq-form-field class="kbq-form__control">
-                <input kbqInput [formControl]="filterName" />
+                <input #input="kbqInput" kbqInput type="text" [formControl]="filterName" />
 
                 @if (filterName.hasError('filterNameAlreadyExist')) {
                     <kbq-hint [color]="'error'">Поиск с таким названием уже сущетсвует</kbq-hint>

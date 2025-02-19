@@ -172,6 +172,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get customClass(): string;
     set customClass(value: string);
     // (undocumented)
+    defaultClosingActions(): Observable<MouseEvent>[];
+    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
