@@ -13,7 +13,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     standalone: true,
     selector: 'kbq-pipe-add',
     template: `
-        <kbq-select #select [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
+        <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
             <button
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"

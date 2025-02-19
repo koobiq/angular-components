@@ -5,6 +5,7 @@
     [kbq-pipe-title]="pipeTooltip"
     [ngClass]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-select__panel'"
+    [tabIndex]="-1"
     [value]="selected"
     (selectionChange)="onSelect($event.value)"
 >
