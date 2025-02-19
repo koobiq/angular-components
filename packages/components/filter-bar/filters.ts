@@ -3,24 +3,13 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     inject,
     Input,
     OnInit,
-    Output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    AbstractControl,
-    FormControl,
-    FormsModule,
-    ReactiveFormsModule,
-    UntypedFormControl,
-    ValidationErrors,
-    ValidatorFn,
-    Validators
-} from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqFormsModule, PopUpPlacements, PopUpSizes } from '@koobiq/components/core';
@@ -37,16 +26,6 @@ import { filter, map } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
 import { KbqFilter, KbqSaveFilterError } from './filter-bar.types';
-
-export const filterNameAlreadyExistValidator = (names: string[]): ValidatorFn => {
-    return ({ value }: AbstractControl): ValidationErrors | null => {
-        if (!value) {
-            return null;
-        }
-
-        return names.includes(value) ? { filterNameAlreadyExist: true } : null;
-    };
-};
 
 @Component({
     standalone: true,
@@ -106,11 +85,6 @@ export class KbqFilters implements OnInit {
 
     @Input() filters: KbqFilter[];
 
-    @Output() onSelectFilter = new EventEmitter<KbqFilter>();
-    @Output() onSave = new EventEmitter<{ filter: KbqFilter | null; filterBar: KbqFilterBar }>();
-    @Output() onSaveAsNew = new EventEmitter<{ filter: KbqFilter | null; filterBar: KbqFilterBar }>();
-    @Output() onDeleteFilter = new EventEmitter<KbqFilter>();
-
     get opened(): boolean {
         return this.popover?.isOpen || this.dropdown?.opened;
     }
@@ -119,8 +93,8 @@ export class KbqFilters implements OnInit {
         return this.filterBar.filter;
     }
 
-    get existFilterNames(): string[] {
-        return this.filterBar.filters?.filters.map((filter) => filter.name) || [];
+    get isEmpty(): boolean {
+        return this.filters.length === 0;
     }
 
     constructor() {
@@ -135,10 +109,10 @@ export class KbqFilters implements OnInit {
     }
 
     selectFilter(filter: KbqFilter) {
-        this.filterBar.internalFilterChanges.next(filter);
+        this.filterBar.internalFilterChanges.next(structuredClone(filter));
 
-        this.filterBar.saveFilterState(filter);
-        this.onSelectFilter.next(filter);
+        this.filterBar.saveFilterState();
+        this.filterBar.onSelectFilter.next(filter);
     }
 
     saveChanges() {
@@ -151,28 +125,35 @@ export class KbqFilters implements OnInit {
 
         this.filterBar.internalFilterChanges.next(this.filterBar.filter);
 
-        this.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
+        this.filterBar.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
     }
 
     saveAsNew() {
         if (this.filterName.invalid) return;
 
-        const filter = structuredClone<KbqFilter>(this.filter as KbqFilter);
-
-        filter.name = this.filterName.value || '';
-        filter.saved = true;
-        filter.changed = false;
+        const name = this.filterName.value || '';
 
         if (this.saveNewFilter) {
-            this.onSaveAsNew.emit({ filter: filter, filterBar: this.filterBar });
+            // @todo default filter
+            const filter = structuredClone<KbqFilter>(this.filter as KbqFilter) || { pipes: [] };
+
+            filter.name = name;
+            filter.saved = true;
+            filter.changed = false;
+
+            this.filterBar.onSaveAsNew.emit({ filter, filterBar: this.filterBar });
         } else {
-            this.onSave.emit({ filter: filter, filterBar: this.filterBar });
+            this.filterBar.filter!.name = name;
+            this.filterBar.filter!.saved = true;
+            this.filterBar.filter!.changed = false;
+
+            this.filterBar.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
         }
     }
 
     showError(error?: KbqSaveFilterError) {
         if (error?.nameAlreadyExists) {
-            console.log('need set error in control: ');
+            this.filterName.setErrors({ filterNameAlreadyExist: true });
         }
 
         this.showFilterSavingError = true;
@@ -185,10 +166,8 @@ export class KbqFilters implements OnInit {
         this.button.focus();
     }
 
-    preparePopoverData() {
-        this.filterName = new FormControl<string>(this.filter?.name || '', [
-            Validators.required,
-            filterNameAlreadyExistValidator(this.existFilterNames)]);
+    preparePopover() {
+        this.filterName = new FormControl<string>(this.filter?.name || '', Validators.required);
 
         this.filterName.valueChanges.subscribe(() => (this.showFilterSavingError = false));
 
@@ -201,13 +180,13 @@ export class KbqFilters implements OnInit {
     openSaveAsNewFilterPopover() {
         this.saveNewFilter = true;
 
-        this.preparePopoverData();
+        this.preparePopover();
     }
 
     openChangeFilterNamePopover() {
         this.saveNewFilter = false;
 
-        this.preparePopoverData();
+        this.preparePopover();
     }
 
     closePopover = () => {

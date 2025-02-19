@@ -1,3 +1,5 @@
+import { KbqFilterBar } from './filter-bar';
+
 export enum KbqPipeTypes {
     Text = 'text',
     Select = 'select',
@@ -58,4 +60,9 @@ export interface KbqPipeTemplate extends KbqPipe {
 export interface KbqSaveFilterError {
     text?: string;
     nameAlreadyExists?: boolean;
+}
+
+export interface KbqSaveFilterEvent {
+    filter: KbqFilter | null;
+    filterBar: KbqFilterBar;
 }
