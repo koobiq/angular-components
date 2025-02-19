@@ -103,8 +103,11 @@ export class KbqActionsPanel implements OnDestroy {
             ...config
         };
         const actionsPanelRef = this.openDialog<T, D, R>(componentOrTemplateRef, _config);
+
         this.animate(actionsPanelRef);
+
         this.openedActionsPanelRef = actionsPanelRef as KbqActionsPanelRef;
+
         return actionsPanelRef;
     }
 
@@ -147,9 +150,20 @@ export class KbqActionsPanel implements OnDestroy {
             closeOnDestroy: false,
             // Disable closing since we need to sync it up to the animation ourselves
             disableClose: true,
+            scrollStrategy: config.scrollStrategy && config.scrollStrategy(this.overlay),
             positionStrategy: config.overlayConnectedTo
-                ? position.flexibleConnectedTo(config.overlayConnectedTo).withPositions([
-                      { originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'bottom' }])
+                ? position
+                      .flexibleConnectedTo(config.overlayConnectedTo)
+                      .withPositions([
+                          {
+                              originX: 'center',
+                              originY: 'bottom',
+                              overlayX: 'center',
+                              overlayY: 'bottom'
+                          }
+                      ])
+                      .withGrowAfterOpen()
+                      .withLockedPosition()
                 : position.global().centerHorizontally().bottom(),
             templateContext: () => {
                 return {
@@ -174,10 +188,13 @@ export class KbqActionsPanel implements OnDestroy {
                 ];
             }
         });
+
         dialogRef.addPanelClass(KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR);
+
         if (config.overlayPanelClass) {
             dialogRef.addPanelClass(config.overlayPanelClass);
         }
+
         return actionsPanelRef;
     }
 }

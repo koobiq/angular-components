@@ -28,7 +28,7 @@ export enum KbqAnimationCurves {
  * @docs-private
  */
 export enum KbqAnimationDurations {
-    Complex = '350ms',
-    Entering = '200ms',
-    Exiting = '175ms'
+    Complex = '250ms',
+    Entering = '150ms',
+    Exiting = '125ms'
 }
