@@ -1,14 +1,6 @@
+*                                                        @lskramarov @NikGurev @artembelik
+
 # Components
-/packages/components/*                                      @lskramarov
-
-# Tools
-/tools/api-extractor/*                                      @NikGurev
-/tools/api-gen/*                                            @NikGurev
-/tools/scss-compiler/*                                      @pimenovoleg
-/tools/validate-licenses/*                                  @pimenovoleg
-
-# Misc
-/.github/**                                                 @pimenovoleg
-/.husky/**                                                  @pimenovoleg
-/.github/CODEOWNERS                                         @pimenovoleg @lskramarov
-/.github/ISSUE_TEMPLATE/**                                  @pimenovoleg
+/packages/components/actions-panel/                      @artembelik
+/packages/components/breadcrumbs/                        @NikGurev
+/packages/components/filter-bar/                         @lskramarov
