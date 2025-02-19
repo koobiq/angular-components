@@ -11,7 +11,7 @@ body {
     height: 100%;
 }
 
-.app-shell {
+.app-shell-dev {
     display: flex;
     flex-direction: row;
     height: 100vh;
@@ -19,7 +19,7 @@ body {
     overflow-y: auto;
     scroll-behavior: smooth;
 
-    .app-sidebar {
+    .app-sidebar-dev {
         position: sticky;
         top: 0;
         max-height: 100%;
@@ -31,14 +31,7 @@ body {
         background-color: var(--kbq-background-bg-secondary);
     }
 
-    .app-container {
+    .app-container-dev {
         padding-bottom: 160px;
     }
-}
-
-app-article {
-    display: block;
-    border: 1px solid var(--kbq-line-contrast-less);
-    border-radius: var(--kbq-size-border-radius);
-    width: 100%;
 }
