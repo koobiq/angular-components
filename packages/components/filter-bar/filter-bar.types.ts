@@ -54,3 +54,8 @@ export class KbqPipeData {
 export interface KbqPipeTemplate extends KbqPipe {
     values?: unknown[];
 }
+
+export interface KbqSaveFilterError {
+    text?: string;
+    nameAlreadyExists?: boolean;
+}

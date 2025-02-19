@@ -17,15 +17,14 @@ import { DateTime } from 'luxon';
     template: `
         <kbq-filter-bar
             #filterBar
-            [activeFilter]="activeFilter"
+            [filter]="activeFilter"
             [pipeTemplates]="pipeTemplates"
-            (onFilterChange)="onFilterChange($event)"
+            (filterChange)="onFilterChange($event)"
+            (onResetFilter)="onResetFilter($event)"
         >
             <kbq-filters
                 [filters]="filters"
-                (onChangeFilter)="onChangeFilter($event)"
                 (onDeleteFilter)="onDeleteFilter($event)"
-                (onResetFilter)="onResetFilter($event)"
                 (onSave)="onSaveFilter($event)"
                 (onSaveAsNew)="onSaveAsNewFilter($event)"
                 (onSelectFilter)="onSelectFilter($event)"
@@ -37,7 +36,7 @@ import { DateTime } from 'luxon';
 
             <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-            <kbq-filter-reset (onReset)="onReset($event)" />
+            <kbq-filter-reset />
 
             <kbq-filter-bar-search (onSearch)="onSearch($event)" />
         </kbq-filter-bar>
@@ -626,25 +625,19 @@ export class FilterBarCompleteFunctionsExample {
         console.log('onSelectFilter: ', filter);
     }
 
-    onSaveAsNewFilter(filter: KbqFilter) {
+    onSaveAsNewFilter({ filter, filterBar }) {
         console.log('filter to save as new: ', filter);
+        console.log('filterBar: ', filterBar);
 
-        alert('Нужно сбросить флаг и сохранить новый фильтр');
-
-        filter!.saved = true;
-        filter!.changed = false;
-        filter!.name = 'Новый фильтр';
         this.filters.push(filter);
         this.activeFilter = filter;
     }
 
-    onSaveFilter(filter: KbqFilter | null) {
+    onSaveFilter({ filter, filterBar }) {
         console.log('filter to save: ', filter);
 
-        alert('Нужно сбросить флаг и сохранить фильтр');
-
-        filter!.saved = true;
         this.activeFilter = filter;
+        filterBar.filterSavedSuccessfully();
     }
 
     onChangeFilter(filter: KbqFilter | null) {

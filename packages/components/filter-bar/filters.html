@@ -2,12 +2,22 @@
     kbq-button
     kbq-filter-bar-button
     kbq-title
+    kbqPopover
     [kbqDropdownTriggerFor]="savedFilters"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverClass]="'kbq-filters__save-as-new-filter-popover'"
+    [kbqPopoverContent]="saveAsNewPopoverContent"
+    [kbqPopoverFooter]="saveAsNewPopoverFooter"
+    [kbqPopoverHeader]="saveAsNewPopoverHeader"
+    [kbqPopoverPlacement]="placements.BottomLeft"
+    [kbqPopoverSize]="popoverSize"
+    [kbqTrigger]="'manual'"
+    [ngClass]="{ 'kbq-active': opened }"
     (dropdownOpened)="input.focus()"
 >
     <span #kbqTitleText class="kbq-filters__filter-name">
-        @if (activeFilter?.name) {
-            {{ activeFilter!.name }}
+        @if (filter?.name) {
+            {{ filter!.name }}
         } @else {
             <ng-content>
                 <i kbq-icon="kbq-list_16"></i>
@@ -17,33 +27,33 @@
     </span>
 </button>
 
-@if (activeFilter?.changed && !activeFilter?.saved) {
+@if (filterBar.isChanged && !filterBar.isSaved) {
     <button
         kbq-button
         kbq-filter-bar-button
         kbqTooltip="Сохранить новый фильтр"
         class="kbq-button_action"
         [color]="colors.Empty"
-        (click)="onSaveAsNew.next(this.activeFilter!)"
+        (click)="openSaveAsNewFilterPopover()"
     >
         <i kbq-icon="kbq-floppy-disk_16"></i>
     </button>
 }
 
-@if (activeFilter?.saved) {
+@if (filterBar.isSaved) {
     <button
         kbq-button
         kbq-filter-bar-button
         class="kbq-button_action"
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
-        [ngClass]="{ 'kbq-button_changed-saved-filter': savedFilterChanged }"
+        [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
     >
         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
     </button>
 }
 
-@if (activeFilter?.saved) {
+@if (filterBar.isSaved) {
     <i kbq-icon="kbq-chevron-right-s_16" class="kbq-filter-bar__arrow" [color]="'theme'"></i>
 } @else {
     <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
@@ -75,37 +85,82 @@
 
     <kbq-divider />
 
-    <button kbq-dropdown-item [disabled]="!activeFilter?.changed" (click)="onSaveAsNew.next(this.activeFilter!)">
+    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
         Сохранить как новый фильтр
     </button>
 </kbq-dropdown>
 
 <kbq-dropdown #filterActions="kbqDropdown" [class]="'kbq-filters__dropdown'">
-    <button kbq-dropdown-item [ngClass]="{ 'kbq-button_changed-saved-filter': savedFilterChanged }" (click)="save()">
-        <i kbq-icon="kbq-floppy-disk_16"></i>
-        Сохранить изменения
-        @if (savedFilterChanged) {
-            <i class="kbq kbq-icon kbq-icon-button kbq-xmark-circle-s_16 kbq-warning layout-margin-left-m"></i>
-        }
-    </button>
-    <button kbq-dropdown-item (click)="onSaveAsNew.next(this.activeFilter!)">
+    @if (filterBar.isSavedAndChanged) {
+        <button
+            kbq-dropdown-item
+            [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+            (click)="saveChanges()"
+        >
+            <i kbq-icon="kbq-floppy-disk_16"></i>
+            Сохранить изменения
+            @if (filterBar.isSavedAndChanged) {
+                <i class="kbq kbq-icon kbq-icon-button kbq-xmark-circle-s_16 kbq-warning layout-margin-left-m"></i>
+            }
+        </button>
+    }
+    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
         Сохранить как новый
     </button>
-    <button kbq-dropdown-item (click)="onChangeFilter.next(this.activeFilter!)">
-        <i kbq-icon="kbq-pencil_16"></i>
-        Изменить
-    </button>
 
-    <kbq-divider />
+    @if (!filterBar.isReadOnly) {
+        <button kbq-dropdown-item (click)="openChangeFilterNamePopover()">
+            <i kbq-icon="kbq-pencil_16"></i>
+            Изменить
+        </button>
+    }
 
-    <button kbq-dropdown-item (click)="onResetFilter.next(this.activeFilter!)">
-        <i kbq-icon="kbq-xmark-circle_16"></i>
-        Сбросить изменения
-    </button>
-    <button kbq-dropdown-item (click)="onDeleteFilter.next(this.activeFilter!)">
-        <i kbq-icon="kbq-trash_16"></i>
-        Удалить
-    </button>
+    @if (filterBar.isSavedAndChanged || !filterBar.isReadOnly) {
+        <kbq-divider />
+    }
+
+    @if (filterBar.isSavedAndChanged) {
+        <button kbq-dropdown-item (click)="filterBar.resetFilterState()">
+            <i kbq-icon="kbq-xmark-circle_16"></i>
+            Сбросить изменения
+        </button>
+    }
+    @if (!filterBar.isReadOnly) {
+        <button kbq-dropdown-item (click)="onDeleteFilter.next(this.filter!)">
+            <i kbq-icon="kbq-trash_16"></i>
+            Удалить
+        </button>
+    }
 </kbq-dropdown>
+
+<ng-template #saveAsNewPopoverHeader>{{ popoverHeader }}</ng-template>
+
+<ng-template #saveAsNewPopoverContent>
+    @if (showFilterSavingError) {
+        <kbq-alert class="layout-margin-bottom-m" [alertColor]="'error'" [alertStyle]="'colored'">
+            {{ filterSavingErrorText }}
+        </kbq-alert>
+    }
+    <div class="kbq-form-vertical">
+        <div class="kbq-form__row">
+            <label class="kbq-form__label">Название</label>
+
+            <kbq-form-field class="kbq-form__control">
+                <input kbqInput [formControl]="filterName" />
+
+                @if (filterName.hasError('filterNameAlreadyExist')) {
+                    <kbq-hint [color]="'error'">Поиск с таким названием уже сущетсвует</kbq-hint>
+                }
+            </kbq-form-field>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #saveAsNewPopoverFooter>
+    <button kbq-button class="layout-margin-right-l" [color]="'contrast'" [kbqStyle]="'filled'" (click)="saveAsNew()">
+        Сохранить
+    </button>
+    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" (click)="closePopover()">Отмена</button>
+</ng-template>

@@ -13,11 +13,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar
-            [pipeTemplates]="pipeTemplates"
-            [activeFilter]="activeFilter"
-            (onFilterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (filterChange)="onFilterChange($event)">
             <kbq-filters [filters]="filters" />
 
             @for (pipe of activeFilter?.pipes; track pipe) {

@@ -16,7 +16,7 @@ export class KbqFilterBarButton {
             this.button.kbqStyle = KbqButtonStyles.Outline;
             this.button.color = KbqComponentColors.ContrastFade;
 
-            if (this.filterBar.activeFilter?.changed || this.filterBar.activeFilter?.saved) {
+            if (this.filterBar.filter?.changed || this.filterBar.filter?.saved) {
                 this.button.kbqStyle = 'changed-filter';
                 this.button.color = KbqComponentColors.Empty;
             }

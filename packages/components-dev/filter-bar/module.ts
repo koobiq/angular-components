@@ -15,6 +15,7 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
+import { FilterBarOverviewExample } from '../../docs-examples/components/filter-bar';
 
 @Component({
     selector: 'app',
@@ -594,14 +595,8 @@ export class DemoComponent {
         console.log('onAddPipe: ', pipe);
     }
 
-    onReset(filter: KbqFilter | null) {
-        console.log('onReset: ', filter);
-        this.activeFilter = null;
-    }
-
     onFilterChange(filter: KbqFilter | null) {
         console.log('onFilterChange: ', filter);
-        // this.activeFilter = filter;
     }
 
     onSelectFilter(filter: KbqFilter) {
@@ -610,43 +605,22 @@ export class DemoComponent {
         this.activeFilter = filter;
     }
 
-    onSaveAsNewFilter(filter: KbqFilter) {
-        console.log('filter to save as new: ', filter);
-
-        alert('Нужно сбросить флаг и сохранить новый фильтр');
-
-        filter!.saved = true;
-        filter!.changed = false;
-        filter!.name = 'Новый фильтр';
+    onSaveAsNewFilter({ filter, filterBar }) {
         this.filters.push(filter);
         this.activeFilter = filter;
+
+        filterBar.filterSavedSuccessfully();
+        // filterBar.filterSavedUnsuccessfully();
     }
 
-    onSaveFilter(filter: KbqFilter | null) {
+    onSaveFilter({ filter, filterBar }) {
         console.log('filter to save: ', filter);
 
-        alert('Нужно сбросить флаг и сохранить фильтр');
-
-        filter!.saved = true;
-        this.activeFilter = filter;
-    }
-
-    onChangeFilter(filter: KbqFilter | null) {
-        console.log('filter to change: ', filter);
-
-        alert('Нужно что то изменить в фильтре');
-
-        filter!.changed = true;
-        this.activeFilter = filter;
+        filterBar.filterSavedSuccessfully();
     }
 
     onResetFilter(filter: KbqFilter | null) {
         console.log('filter to reset: ', filter);
-
-        alert('Нужно сбросить изменения в фильтре');
-
-        filter!.changed = false;
-        this.activeFilter = filter;
     }
 
     onDeleteFilter(filter: KbqFilter | null) {
@@ -675,7 +649,8 @@ export class DemoComponent {
         KbqFilterBarModule,
         KbqDividerModule,
         KbqButtonModule,
-        KbqLuxonDateModule
+        KbqLuxonDateModule,
+        FilterBarOverviewExample
     ],
     bootstrap: [DemoComponent]
 })

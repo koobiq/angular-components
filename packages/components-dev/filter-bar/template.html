@@ -1,15 +1,16 @@
+<filter-bar-overview-example />
+
 <div style="min-height: 50px; border: 1px solid red">
     <kbq-filter-bar
         #filterBar
-        [activeFilter]="activeFilter"
         [pipeTemplates]="pipeTemplates"
-        (onFilterChange)="onFilterChange($event)"
+        [(filter)]="activeFilter"
+        (filterChange)="onFilterChange($event)"
+        (onResetFilter)="onResetFilter($event)"
     >
         <kbq-filters
             [filters]="filters"
-            (onChangeFilter)="onChangeFilter($event)"
             (onDeleteFilter)="onDeleteFilter($event)"
-            (onResetFilter)="onResetFilter($event)"
             (onSave)="onSaveFilter($event)"
             (onSaveAsNew)="onSaveAsNewFilter($event)"
             (onSelectFilter)="onSelectFilter($event)"
@@ -21,7 +22,7 @@
 
         <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-        <kbq-filter-reset (onReset)="onReset($event)" />
+        <kbq-filter-reset />
 
         <kbq-filter-bar-search (onSearch)="onSearch($event)" />
 
