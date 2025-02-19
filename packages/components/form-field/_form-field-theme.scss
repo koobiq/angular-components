@@ -40,7 +40,7 @@
             }
         }
 
-        &.cdk-focused {
+        &.cdk-keyboard-focused {
             @include kbq-form-field-state(states-focused);
 
             & .kbq-form-field__container {
@@ -52,7 +52,7 @@
         &.ng-invalid {
             @include kbq-form-field-state(states-error);
 
-            &.cdk-focused .kbq-form-field__container {
+            &.cdk-keyboard-focused .kbq-form-field__container {
                 box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
             }
         }
