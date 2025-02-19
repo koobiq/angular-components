@@ -71,18 +71,32 @@
     .kbq-button {
         border-bottom-right-radius: unset;
         border-top-right-radius: unset;
+        border-right: none;
 
-        &:not(.cdk-keyboard-focused) {
-            border-right: none;
+        &.cdk-keyboard-focused::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--kbq-states-line-focus-theme);
         }
     }
 
     .kbq-button-icon {
         border-bottom-left-radius: unset;
         border-top-left-radius: unset;
+        border-left: none;
 
-        &:not(.cdk-keyboard-focused) {
-            border-left: none;
+        &.cdk-keyboard-focused::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: var(--kbq-states-line-focus-theme);
         }
     }
 }
