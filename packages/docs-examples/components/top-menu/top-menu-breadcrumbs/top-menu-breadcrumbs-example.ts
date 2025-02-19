@@ -29,7 +29,7 @@ import { map, startWith } from 'rxjs/operators';
     template: `
         @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu>
-            <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
+            <div class="layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
@@ -45,8 +45,8 @@ import { map, startWith } from 'rxjs/operators';
                     </nav>
                 </div>
             </div>
-            <div class="kbq-top-menu__spacer"></div>
-            <div class="kbq-top-menu-container__right layout-row">
+            <div kbq-top-menu-spacer></div>
+            <div kbq-top-menu-container placement="right">
                 @for (action of actions; track index; let index = $index) {
                     <button
                         [kbqStyle]="action.style || ''"

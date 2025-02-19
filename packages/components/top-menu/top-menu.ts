@@ -1,4 +1,38 @@
-import { booleanAttribute, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    Directive,
+    input,
+    Input,
+    ViewEncapsulation
+} from '@angular/core';
+
+@Directive({
+    standalone: true,
+    selector: '[kbq-top-menu-spacer]',
+    host: {
+        class: 'kbq-top-menu-spacer'
+    }
+})
+export class KbqTopMenuSpacer {}
+
+/**
+ * Directive that dynamically applying CSS classes based on a placement value (left or right).
+ */
+@Directive({
+    standalone: true,
+    selector: '[kbq-top-menu-container]',
+    host: {
+        class: 'kbq-top-menu-container',
+        '[class.kbq-top-menu-container__left]': 'placement() === "left"',
+        '[class.kbq-top-menu-container__right]': 'placement() === "right"'
+    }
+})
+export class KbqTopMenuContainer {
+    // Conditionally applies a CSS class based on the value
+    placement = input.required<'left' | 'right'>();
+}
 
 @Component({
     standalone: true,
