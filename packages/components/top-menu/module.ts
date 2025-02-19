@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
-import { KbqTopMenu } from './top-menu';
+import { KbqTopMenu, KbqTopMenuContainer, KbqTopMenuSpacer } from './top-menu';
 
 const COMPONENTS = [
-    KbqTopMenu
+    KbqTopMenu,
+    KbqTopMenuContainer,
+    KbqTopMenuSpacer
 ];
 
 @NgModule({

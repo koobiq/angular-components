@@ -5,6 +5,7 @@
 ```ts
 
 import * as i0 from '@angular/core';
+import { InputSignal } from '@angular/core';
 
 // @public (undocumented)
 export class KbqTopMenu {
@@ -17,6 +18,16 @@ export class KbqTopMenu {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopMenu, never>;
 }
 
+// @public
+export class KbqTopMenuContainer {
+    // (undocumented)
+    placement: InputSignal<"left" | "right">;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopMenuContainer, "[kbq-top-menu-container]", never, { "placement": { "alias": "placement"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopMenuContainer, never>;
+}
+
 // @public (undocumented)
 export class KbqTopMenuModule {
     // (undocumented)
@@ -26,7 +37,15 @@ export class KbqTopMenuModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTopMenuModule, never, [typeof i1.KbqTopMenu], [typeof i1.KbqTopMenu]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTopMenuModule, never, [typeof i1.KbqTopMenu, typeof i1.KbqTopMenuContainer, typeof i1.KbqTopMenuSpacer], [typeof i1.KbqTopMenu, typeof i1.KbqTopMenuContainer, typeof i1.KbqTopMenuSpacer]>;
+}
+
+// @public (undocumented)
+export class KbqTopMenuSpacer {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopMenuSpacer, "[kbq-top-menu-spacer]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopMenuSpacer, never>;
 }
 
 // (No @packageDocumentation comment for this package)

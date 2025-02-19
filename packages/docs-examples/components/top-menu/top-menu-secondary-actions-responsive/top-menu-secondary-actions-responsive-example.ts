@@ -35,15 +35,16 @@ type ExampleAction = {
     template: `
         @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu>
-            <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
+            <div class="layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
-            <div class="kbq-top-menu__spacer"></div>
 
-            <div class="kbq-top-menu-container__right layout-row layout-align-end-center">
+            <div kbq-top-menu-spacer></div>
+
+            <div class="layout-align-end-center" kbq-top-menu-container placement="right">
                 <button
                     [kbqStyle]="KbqButtonStyles.Outline"
                     [color]="KbqComponentColors.ContrastFade"

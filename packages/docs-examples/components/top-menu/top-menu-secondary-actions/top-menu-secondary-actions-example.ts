@@ -30,15 +30,16 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-menu>
-            <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
+            <div class="layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
-            <div class="kbq-top-menu__spacer"></div>
 
-            <kbq-overflow-items class="kbq-top-menu-container__right">
+            <div kbq-top-menu-spacer></div>
+
+            <kbq-overflow-items kbq-top-menu-container placement="right">
                 <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
