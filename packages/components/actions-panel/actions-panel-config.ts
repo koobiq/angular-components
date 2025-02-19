@@ -1,6 +1,6 @@
 import { Direction } from '@angular/cdk/bidi';
 import { AutoFocusTarget } from '@angular/cdk/dialog';
-import { NoopScrollStrategy, ScrollStrategy } from '@angular/cdk/overlay';
+import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { ElementRef, InjectionToken, Injector, Provider } from '@angular/core';
 
 /** Injection token that can be used to specify default actions panel config. */
@@ -74,10 +74,8 @@ export class KbqActionsPanelConfig<D = unknown> {
     /**
      * Max-width of the actions panel.
      * If a number is provided, assumes pixel units.
-     *
-     * @default '80vw'
      */
-    maxWidth?: number | string = '80vw';
+    maxWidth?: number | string;
 
     /**
      * Direction of the text in the actions panel.
@@ -89,9 +87,9 @@ export class KbqActionsPanelConfig<D = unknown> {
     /**
      * Scroll strategy to be used for the actions panel.
      *
-     * @default `NoopScrollStrategy`
+     * @default `RepositionScrollStrategy`
      */
-    scrollStrategy?: ScrollStrategy = new NoopScrollStrategy();
+    scrollStrategy?: (overlay: Overlay) => ScrollStrategy = (overlay) => overlay.scrollStrategies.reposition();
 
     /**
      * Whether the actions panel should restore focus to the previously-focused element upon closing.

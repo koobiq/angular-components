@@ -36,14 +36,14 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
     transition(
         'visible => void, visible => hidden',
         group([
-            animate(`${KbqAnimationDurations.Complex} ${KbqAnimationCurves.AccelerationCurve}`),
+            animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.StandardCurve}`),
             query('@*', animateChild(), { optional: true })
         ])
     ),
     transition(
         'void => visible',
         group([
-            animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.DecelerationCurve}`),
+            animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.StandardCurve}`),
             query('@*', animateChild(), { optional: true })
         ])
     )
