@@ -8,6 +8,7 @@ import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { map, startWith } from 'rxjs/operators';
 
 /**
  * @title TopMenu Breadcrumbs
@@ -24,10 +25,9 @@ import { KbqTopMenuModule } from '@koobiq/components/top-menu';
         KbqIconModule,
         KbqBreadcrumbsModule
     ],
-    styleUrls: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = !!(isDesktop | async)?.matches;
+        @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu>
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
                 <div class="layout-row layout-padding-m flex-none">
@@ -90,8 +90,13 @@ export class TopMenuBreadcrumbsExample {
             disabled: true
         }
     ];
+    readonly isDesktop = inject(BreakpointObserver)
+        .observe('(min-width: 900px)')
+        .pipe(
+            startWith({ matches: true }),
+            map(({ matches }) => matches)
+        );
 
-    protected readonly isDesktop = inject(BreakpointObserver).observe('(min-width: 900px)');
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;

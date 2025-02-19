@@ -8,7 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
 import { Observable } from 'rxjs';
-import { auditTime, map } from 'rxjs/operators';
+import { auditTime, map, startWith } from 'rxjs/operators';
 
 /**
  * @title TopMenu Overflow
@@ -26,7 +26,7 @@ import { auditTime, map } from 'rxjs/operators';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = !!(isDesktop | async)?.matches;
+        @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu [hasOverflow]="hasOverflow | async">
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
                 <div class="layout-row layout-padding-m flex-none">
@@ -55,24 +55,24 @@ import { auditTime, map } from 'rxjs/operators';
                 }
             </div>
         </kbq-top-menu>
-        <div class="overflow-content kbq-scrollbar" cdkScrollable>
+        <div class="overflow-content-example kbq-scrollbar" cdkScrollable>
             <div style="height: 600px">Scroll down ⬇️ to see box-shadow</div>
         </div>
     `,
     styles: `
-        .kbq-text-ellipsis {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
         :host {
             display: flex;
             flex-direction: column;
             height: 400px;
         }
 
-        .overflow-content {
+        .kbq-text-ellipsis {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .overflow-content-example {
             height: 100%;
             overflow-y: auto;
             scroll-behavior: smooth;
@@ -83,7 +83,7 @@ import { auditTime, map } from 'rxjs/operators';
     `
 })
 export class TopMenuOverflowExample implements AfterViewInit {
-    @ViewChild(CdkScrollable) scrollable: CdkScrollable;
+    @ViewChild(CdkScrollable) protected readonly scrollable: CdkScrollable;
 
     hasOverflow: Observable<boolean>;
 
@@ -101,7 +101,12 @@ export class TopMenuOverflowExample implements AfterViewInit {
         }
     ];
 
-    protected readonly isDesktop = inject(BreakpointObserver).observe('(min-width: 768px)');
+    readonly isDesktop = inject(BreakpointObserver)
+        .observe('(min-width: 768px)')
+        .pipe(
+            startWith({ matches: true }),
+            map(({ matches }) => matches)
+        );
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;

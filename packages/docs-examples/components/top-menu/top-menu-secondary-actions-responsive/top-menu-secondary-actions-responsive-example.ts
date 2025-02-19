@@ -8,6 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { map, startWith } from 'rxjs/operators';
 
 type ExampleAction = {
     id: string;
@@ -32,7 +33,7 @@ type ExampleAction = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = !!(isDesktop | async)?.matches;
+        @let isDesktopMatches = isDesktop | async;
         <kbq-top-menu>
             <div class="kbq-top-menu-container__left layout-row layout-align-center-center">
                 <div class="layout-row layout-padding-m flex-none">
@@ -77,28 +78,26 @@ type ExampleAction = {
 
                 <kbq-overflow-items>
                     <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
-                        <div>
-                            <button
-                                [kbqStyle]="KbqButtonStyles.Transparent"
-                                [color]="KbqComponentColors.Contrast"
-                                [kbqDropdownTriggerFor]="appDropdown"
-                                kbq-button
-                            >
-                                <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                            </button>
+                        <button
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqDropdownTriggerFor]="appDropdown"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        </button>
 
-                            <kbq-dropdown #appDropdown="kbqDropdown">
-                                <kbq-optgroup label="Actions" />
-                                @for (action of secondaryActions; track action.id; let index = $index) {
-                                    @if (hiddenItemIDs.has(action.id)) {
-                                        <button kbq-dropdown-item>
-                                            <i [class]="action.icon" kbq-icon=""></i>
-                                            {{ action.id }}
-                                        </button>
-                                    }
+                        <kbq-dropdown #appDropdown="kbqDropdown">
+                            <kbq-optgroup label="Actions" />
+                            @for (action of secondaryActions; track action.id; let index = $index) {
+                                @if (hiddenItemIDs.has(action.id)) {
+                                    <button kbq-dropdown-item>
+                                        <i [class]="action.icon" kbq-icon=""></i>
+                                        {{ action.id }}
+                                    </button>
                                 }
-                            </kbq-dropdown>
-                        </div>
+                            }
+                        </kbq-dropdown>
                     </ng-template>
 
                     @for (action of secondaryActions; track index; let index = $index) {
@@ -151,12 +150,12 @@ type ExampleAction = {
     `
 })
 export class TopMenuSecondaryActionsResponsiveExample {
-    isDesktop = inject(BreakpointObserver).observe('(min-width: 900px)');
-
-    readonly mainActions: ExampleAction[] = [
-        { id: 'Cancel', icon: 'kbq-user_16' },
-        { id: 'Save', icon: 'kbq-arrow-right-s_16' }
-    ];
+    readonly isDesktop = inject(BreakpointObserver)
+        .observe('(min-width: 900px)')
+        .pipe(
+            startWith({ matches: true }),
+            map(({ matches }) => matches)
+        );
 
     readonly secondaryActions: ExampleAction[] = [
         { id: 'Verdict', icon: 'kbq-question-circle_16' },
