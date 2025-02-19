@@ -19,6 +19,7 @@ import { Injector } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
 import { KbqOption } from '@koobiq/components/core';
@@ -30,6 +31,7 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Platform } from '@angular/cdk/platform';
 import { PopUpPlacements } from '@koobiq/components/core';
+import { PopUpSizes } from '@koobiq/components/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -89,22 +91,48 @@ export interface KbqFilter {
 export class KbqFilterBar {
     constructor();
     // (undocumented)
-    get activeFilter(): KbqFilter | null;
-    set activeFilter(value: KbqFilter | null);
-    // (undocumented)
-    readonly activeFilterChanges: BehaviorSubject<KbqFilter | null>;
-    // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     readonly changes: BehaviorSubject<void>;
     // (undocumented)
+    get filter(): KbqFilter | null;
+    set filter(value: KbqFilter | null);
+    // (undocumented)
+    readonly filterChange: EventEmitter<KbqFilter | null>;
+    // (undocumented)
+    filters: KbqFilters;
+    // (undocumented)
+    filterSavedSuccessfully(): void;
+    // (undocumented)
+    filterSavedUnsuccessfully(error?: KbqSaveFilterError): void;
+    // (undocumented)
+    readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
+    // (undocumented)
+    get isChanged(): boolean;
+    // (undocumented)
+    get isDisabled(): boolean;
+    // (undocumented)
+    get isReadOnly(): boolean;
+    // (undocumented)
+    get isSaved(): boolean;
+    // (undocumented)
+    get isSavedAndChanged(): boolean;
+    // (undocumented)
+    readonly onChangeFilter: EventEmitter<KbqSaveFilterEvent>;
+    // (undocumented)
     readonly onChangePipe: EventEmitter<KbqPipe>;
+    // (undocumented)
+    readonly onDeleteFilter: EventEmitter<KbqFilter>;
     // (undocumented)
     readonly onDeletePipe: EventEmitter<KbqPipe>;
     // (undocumented)
-    readonly onFilterChange: EventEmitter<KbqFilter | null>;
+    readonly onResetFilter: EventEmitter<KbqFilter | null>;
     // (undocumented)
-    readonly onReset: EventEmitter<void>;
+    readonly onSave: EventEmitter<KbqSaveFilterEvent>;
+    // (undocumented)
+    readonly onSaveAsNew: EventEmitter<KbqSaveFilterEvent>;
+    // (undocumented)
+    readonly onSelectFilter: EventEmitter<KbqFilter>;
     // (undocumented)
     readonly openPipe: BehaviorSubject<string | number | null>;
     set pipeTemplates(value: KbqPipeTemplate[]);
@@ -113,13 +141,15 @@ export class KbqFilterBar {
     // (undocumented)
     removePipe(pipe: KbqPipe): void;
     // (undocumented)
-    resetFilterChangedState(filter?: KbqFilter): void;
+    resetFilterChangedState(): void;
+    // (undocumented)
+    resetFilterState(filter?: KbqFilter): void;
     // (undocumented)
     restoreFilterState(filter?: KbqFilter): void;
     // (undocumented)
     saveFilterState(filter?: KbqFilter): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "activeFilter": { "alias": "activeFilter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "onFilterChange": "onFilterChange"; "onChangePipe": "onChangePipe"; "onDeletePipe": "onDeletePipe"; }, never, ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-bar-search, [kbq-filter-bar-search]", "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onDeletePipe": "onDeletePipe"; "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onSaveAsNew": "onSaveAsNew"; "onDeleteFilter": "onDeleteFilter"; "onResetFilter": "onResetFilter"; }, ["filters"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-bar-search, [kbq-filter-bar-search]", "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -202,11 +232,7 @@ export class KbqFilterReset {
     // (undocumented)
     protected readonly filterBar: KbqFilterBar;
     // (undocumented)
-    handleClick(): void;
-    // (undocumented)
-    readonly onReset: EventEmitter<KbqFilter>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterReset, "kbq-filter-reset", never, {}, { "onReset": "onReset"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterReset, "kbq-filter-reset", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterReset, never>;
 }
@@ -215,45 +241,69 @@ export class KbqFilterReset {
 export class KbqFilters implements OnInit {
     constructor();
     // (undocumented)
-    get activeFilter(): KbqFilter | null;
+    button: KbqButton;
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
+    closePopover: () => void;
+    // (undocumented)
     protected readonly colors: typeof KbqComponentColors;
+    // (undocumented)
+    dropdown: KbqDropdownTrigger;
+    // (undocumented)
+    get filter(): KbqFilter | null;
     // (undocumented)
     protected readonly filterBar: KbqFilterBar;
     // (undocumented)
     filteredOptions: Observable<KbqFilter[]>;
     // (undocumented)
+    filterName: FormControl<string | null>;
+    // (undocumented)
     filters: KbqFilter[];
+    // (undocumented)
+    filterSavingErrorText: string;
+    // (undocumented)
+    get isEmpty(): boolean;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
-    onChangeFilter: EventEmitter<KbqFilter | null>;
+    openChangeFilterNamePopover(): void;
     // (undocumented)
-    onDeleteFilter: EventEmitter<KbqFilter>;
+    get opened(): boolean;
     // (undocumented)
-    onResetFilter: EventEmitter<KbqFilter>;
+    openSaveAsNewFilterPopover(): void;
     // (undocumented)
-    onSave: EventEmitter<KbqFilter>;
+    protected readonly placements: typeof PopUpPlacements;
     // (undocumented)
-    onSaveAsNew: EventEmitter<KbqFilter>;
+    popover: KbqPopoverTrigger;
     // (undocumented)
-    onSelectFilter: EventEmitter<KbqFilter>;
+    get popoverHeader(): string;
     // (undocumented)
-    save(): void;
+    popoverSize: PopUpSizes;
     // (undocumented)
-    get savedFilterChanged(): boolean;
+    preparePopover(): void;
+    // (undocumented)
+    restoreFocus(): void;
+    // (undocumented)
+    saveAsNew(): void;
+    // (undocumented)
+    saveChanges(): void;
+    // (undocumented)
+    saveNewFilter: boolean;
     // (undocumented)
     searchControl: UntypedFormControl;
     // (undocumented)
     selectFilter(filter: KbqFilter): void;
     // (undocumented)
+    showError(error?: KbqSaveFilterError): void;
+    // (undocumented)
+    showFilterSavingError: boolean;
+    // (undocumented)
     stopEventPropagation(event: MouseEvent | KeyboardEvent): void;
     // (undocumented)
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", never, { "filters": { "alias": "filters"; "required": false; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onSaveAsNew": "onSaveAsNew"; "onChangeFilter": "onChangeFilter"; "onResetFilter": "onResetFilter"; "onDeleteFilter": "onDeleteFilter"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", never, { "filters": { "alias": "filters"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilters, never>;
 }
@@ -647,6 +697,22 @@ export interface KbqPipeValue {
     name?: string;
     // (undocumented)
     start?: any;
+}
+
+// @public (undocumented)
+export interface KbqSaveFilterError {
+    // (undocumented)
+    nameAlreadyExists?: boolean;
+    // (undocumented)
+    text?: string;
+}
+
+// @public (undocumented)
+export interface KbqSaveFilterEvent {
+    // (undocumented)
+    filter: KbqFilter | null;
+    // (undocumented)
+    filterBar: KbqFilterBar;
 }
 
 // (No @packageDocumentation comment for this package)

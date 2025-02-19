@@ -386,7 +386,7 @@ export class KbqListSelection
         this._value = values;
 
         if (this.options) {
-            this.setOptionsFromValues(values || []);
+            this.setOptionsFromValues(Array.isArray(values) ? values : [values]);
         }
     }
 

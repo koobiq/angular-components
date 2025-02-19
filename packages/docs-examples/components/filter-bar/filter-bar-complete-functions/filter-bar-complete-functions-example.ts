@@ -21,14 +21,12 @@ import { DateTime } from 'luxon';
             [pipeTemplates]="pipeTemplates"
             (filterChange)="onFilterChange($event)"
             (onResetFilter)="onResetFilter($event)"
+            (onDeleteFilter)="onDeleteFilter($event)"
+            (onSave)="onSaveFilter($event)"
+            (onSaveAsNew)="onSaveAsNewFilter($event)"
+            (onSelectFilter)="onSelectFilter($event)"
         >
-            <kbq-filters
-                [filters]="filters"
-                (onDeleteFilter)="onDeleteFilter($event)"
-                (onSave)="onSaveFilter($event)"
-                (onSaveAsNew)="onSaveAsNewFilter($event)"
-                (onSelectFilter)="onSelectFilter($event)"
-            />
+            <kbq-filters [filters]="filters" />
 
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbq-pipe="pipe" />
