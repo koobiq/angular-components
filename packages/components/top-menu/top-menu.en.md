@@ -40,7 +40,7 @@ To ensure usability:
 
 -   Hide button text when the screen width decreases.
 -   Show a tooltip with the button text on hover.
--   Maintain a minimum spacing of **80px** (also applies to the title).
+-   Maintain a minimum spacing of **80px**, set via `--kbq-top-menu-spacer-min-width`. It applies to top menu elements, including the header.
 -   If a long title does not fit, truncate it with an ellipsis (**"Dashbo..."**).
 
 <!-- example(top-menu-overflow) -->

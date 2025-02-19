@@ -36,7 +36,7 @@ import { map, startWith } from 'rxjs/operators';
         KbqPopoverModule
     ],
     template: `
-        @let isDesktopMatches = !!(isDesktop | async)?.matches;
+        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-menu>
             <div class="layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
@@ -139,7 +139,7 @@ export class TopMenuActiveBreadcrumbExample {
         .observe('(min-width: 900px)')
         .pipe(
             startWith({ matches: true }),
-            map(({ matches }) => matches)
+            map(({ matches }) => !!matches)
         );
 
     protected readonly KbqComponentColors = KbqComponentColors;

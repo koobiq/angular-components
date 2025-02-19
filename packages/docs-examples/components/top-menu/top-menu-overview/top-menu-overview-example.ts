@@ -22,7 +22,7 @@ import { map, startWith } from 'rxjs/operators';
         KbqIconModule
     ],
     template: `
-        @let isDesktopMatches = isDesktop | async;
+        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-menu>
             <div class="layout-row layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
@@ -68,7 +68,7 @@ export class TopMenuOverviewExample {
         .observe('(min-width: 900px)')
         .pipe(
             startWith({ matches: true }),
-            map(({ matches }) => matches)
+            map(({ matches }) => !!matches)
         );
 
     readonly actions = [
