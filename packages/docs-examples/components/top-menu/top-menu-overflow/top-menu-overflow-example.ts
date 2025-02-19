@@ -26,7 +26,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = isDesktop | async;
+        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-menu [hasOverflow]="hasOverflow | async">
             <div class="layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
@@ -105,7 +105,7 @@ export class TopMenuOverflowExample implements AfterViewInit {
         .observe('(min-width: 768px)')
         .pipe(
             startWith({ matches: true }),
-            map(({ matches }) => matches)
+            map(({ matches }) => !!matches)
         );
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;

@@ -33,7 +33,7 @@ type ExampleAction = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = isDesktop | async;
+        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-menu>
             <div class="layout-align-center-center" kbq-top-menu-container placement="left">
                 <div class="layout-row layout-padding-m flex-none">
