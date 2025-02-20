@@ -331,7 +331,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     @Input({ alias: 'kbqPopoverArrow', transform: booleanAttribute }) arrow: boolean = true;
 
     @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetY;
-    
+
     @Output('kbqPopoverPlacementChange') placementChange = new EventEmitter();
 
     @Output('kbqPopoverVisibleChange') visibleChange = new EventEmitter<boolean>();
