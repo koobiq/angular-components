@@ -1353,12 +1353,12 @@ export class KbqSelect
         let overlayMaxWidth: number;
 
         // Determine if select overflows on either side.
-        const leftOverflow = overlayRect.left;
+        const leftOverflow = -overlayRect.left;
         const rightOverflow = overlayRect.right - windowWidth;
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0 || rightOverflow > 0) {
-            [offsetX, overlayMaxWidth] = this.calculateOverlayXPosition(overlayRect, windowWidth, offsetX);
+            [offsetX, overlayMaxWidth] = this.calculateOverlayXPosition(windowWidth);
             this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
             // reset the minWidth property
             this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
@@ -1371,16 +1371,17 @@ export class KbqSelect
         this.overlayDir.overlayRef.updatePosition();
     }
 
-    private calculateOverlayXPosition(overlayRect: DOMRect, windowWidth: number, basicOffsetX: number) {
-        let offsetX = basicOffsetX;
+    private calculateOverlayXPosition(windowWidth: number) {
+        let offsetX = 0;
         const { left: leftIndent, right: triggerRight, width: triggerWidth } = this.triggerRect;
+        const { width: overlayRectWidth } = this.getOverlayRect();
         const rightIndent = windowWidth - triggerRight;
         // Setting direction of dropdown expansion
         const isRightDirection = leftIndent <= rightIndent;
 
         const indent = isRightDirection ? rightIndent : leftIndent;
         const maxDropdownWidth = indent + triggerWidth - SELECT_PANEL_VIEWPORT_PADDING;
-        const overlayMaxWidth = overlayRect.width < maxDropdownWidth ? overlayRect.width : maxDropdownWidth;
+        const overlayMaxWidth = overlayRectWidth < maxDropdownWidth ? overlayRectWidth : maxDropdownWidth;
 
         if (!isRightDirection) {
             const leftOffset = triggerRight - overlayMaxWidth;
