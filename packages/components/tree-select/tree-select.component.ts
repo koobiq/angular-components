@@ -1,7 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, ViewportRuler } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
 import { Platform, _getEventTarget } from '@angular/cdk/platform';
 import {
     AfterContentInit,
@@ -509,7 +509,6 @@ export class KbqTreeSelect
     constructor(
         elementRef: ElementRef,
         readonly changeDetectorRef: ChangeDetectorRef,
-        private readonly viewportRuler: ViewportRuler,
         private readonly ngZone: NgZone,
         private readonly renderer: Renderer2,
         defaultErrorStateMatcher: ErrorStateMatcher,
@@ -1218,12 +1217,12 @@ export class KbqTreeSelect
      */
     private calculateOverlayOffsetX() {
         const overlayRect = this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
-        const viewportSize = this.viewportRuler.getViewportSize();
+        const windowWidth = this.overlayDir.overlayRef?.hostElement.clientWidth;
         let offsetX: number = 0;
 
         // Determine how much the select overflows on each side.
         const leftOverflow = -overlayRect.left;
-        const rightOverflow = overlayRect.right - viewportSize.width;
+        const rightOverflow = overlayRect.right - windowWidth;
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0) {

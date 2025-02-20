@@ -1348,7 +1348,7 @@ export class KbqSelect
 
         const overlayRect = this.getOverlayRect();
         // Window width without scrollbar
-        const windowWidth = this.scrollStrategy._overlayRef?.hostElement.clientWidth;
+        const windowWidth = this.overlayDir.overlayRef?.hostElement.clientWidth;
         let offsetX: number = 0;
         let overlayMaxWidth: number;
 
