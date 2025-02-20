@@ -30,6 +30,7 @@
             "@koobiq/cdk/keycodes": ["packages/cdk/keycodes/index.ts"],
             "@koobiq/cdk/testing": ["packages/cdk/testing/index.ts"],
             "@koobiq/components/accordion": ["packages/components/accordion/index.ts"],
+            "@koobiq/components/actions-panel": ["packages/components/actions-panel/index.ts"],
             "@koobiq/components/alert": ["packages/components/alert/index.ts"],
             "@koobiq/components/autocomplete": ["packages/components/autocomplete/index.ts"],
             "@koobiq/components/badge": ["packages/components/badge/index.ts"],
