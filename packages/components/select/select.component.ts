@@ -81,8 +81,6 @@ import {
     KbqSelectSearch,
     KbqSelectTrigger,
     KbqVirtualOption,
-    SELECT_PANEL_INDENT_PADDING_X,
-    SELECT_PANEL_PADDING_X,
     SELECT_PANEL_VIEWPORT_PADDING,
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
@@ -1350,24 +1348,17 @@ export class KbqSelect
 
         const overlayRect = this.getOverlayRect();
         // Window width without scrollbar
-        const windowWidth = this.scrollStrategy._overlayRef?.hostElement.clientWidth;
-        const isRtl = this.isRtl();
-        const paddingWidth = SELECT_PANEL_PADDING_X * 2;
-        let offsetX: number = SELECT_PANEL_PADDING_X;
+        const windowWidth = this.overlayDir.overlayRef?.hostElement.clientWidth;
+        let offsetX: number = 0;
         let overlayMaxWidth: number;
 
-        // Invert the offsetX in LTR.
-        if (!isRtl) {
-            offsetX *= -1;
-        }
-
         // Determine if select overflows on either side.
-        const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-        const rightOverflow = overlayRect.right + offsetX - windowWidth + (isRtl ? 0 : paddingWidth);
+        const leftOverflow = -overlayRect.left;
+        const rightOverflow = overlayRect.right - windowWidth;
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0 || rightOverflow > 0) {
-            [offsetX, overlayMaxWidth] = this.calculateOverlayXPosition(overlayRect, windowWidth, offsetX);
+            [offsetX, overlayMaxWidth] = this.calculateOverlayXPosition(windowWidth);
             this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
             // reset the minWidth property
             this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
@@ -1380,32 +1371,21 @@ export class KbqSelect
         this.overlayDir.overlayRef.updatePosition();
     }
 
-    private calculateOverlayXPosition(overlayRect, windowWidth, basicOffsetX) {
-        let offsetX = basicOffsetX;
-        const leftIndent = this.triggerRect.left;
-        const rightIndent = windowWidth - this.triggerRect.right;
+    private calculateOverlayXPosition(windowWidth: number) {
+        let offsetX = 0;
+        const { left: leftIndent, right: triggerRight, width: triggerWidth } = this.triggerRect;
+        const { width: overlayRectWidth } = this.getOverlayRect();
+        const rightIndent = windowWidth - triggerRight;
         // Setting direction of dropdown expansion
         const isRightDirection = leftIndent <= rightIndent;
 
-        let maxDropdownWidth: number;
-        let overlayMaxWidth: number;
-        const triggerWidth = this.triggerRect.width + SELECT_PANEL_INDENT_PADDING_X;
+        const indent = isRightDirection ? rightIndent : leftIndent;
+        const maxDropdownWidth = indent + triggerWidth - SELECT_PANEL_VIEWPORT_PADDING;
+        const overlayMaxWidth = overlayRectWidth < maxDropdownWidth ? overlayRectWidth : maxDropdownWidth;
 
-        if (isRightDirection) {
-            maxDropdownWidth = rightIndent + triggerWidth - SELECT_PANEL_VIEWPORT_PADDING;
-            overlayMaxWidth = overlayRect.width < maxDropdownWidth ? overlayRect.width : maxDropdownWidth;
-        } else {
-            let leftOffset;
-            maxDropdownWidth = leftIndent + triggerWidth - SELECT_PANEL_VIEWPORT_PADDING;
-
-            if (overlayRect.width < maxDropdownWidth) {
-                overlayMaxWidth = overlayRect.width;
-                leftOffset = this.triggerRect.right - overlayMaxWidth;
-            } else {
-                overlayMaxWidth = maxDropdownWidth;
-                leftOffset = this.triggerRect.right - (overlayMaxWidth - SELECT_PANEL_INDENT_PADDING_X);
-            }
-            offsetX -= this.triggerRect.left - leftOffset;
+        if (!isRightDirection) {
+            const leftOffset = triggerRight - overlayMaxWidth;
+            offsetX -= leftIndent - leftOffset;
         }
 
         return [offsetX, overlayMaxWidth];
