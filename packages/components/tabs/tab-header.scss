@@ -40,20 +40,6 @@
     background: var(--kbq-line-contrast-less);
 }
 
-.kbq-tab-list__active-tab-underline {
-    display: none;
-}
-
-.kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__active-tab-underline {
-    display: block;
-    position: absolute;
-    bottom: 0;
-    height: 3px;
-    border-radius: 2px 2px 0 0;
-    background: var(--kbq-line-contrast);
-    transition: all 0.2s ease-in-out;
-}
-
 .kbq-tab-header__container {
     display: flex;
     flex-grow: 1;
