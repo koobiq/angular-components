@@ -1,7 +1,9 @@
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { AfterContentInit, Directive, Inject, OnDestroy, Optional } from '@angular/core';
 import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
+import { SELECT_PANEL_VIEWPORT_PADDING } from './constants';
 
 @Directive({
     selector: 'kbq-select-trigger, [kbq-select-trigger]',
@@ -103,3 +105,73 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     standalone: true
 })
 export class KbqSelectSearchEmptyResult {}
+
+/**
+ * Common Select Behaviour
+ * @docs-private
+ */
+export abstract class KbqAbstractSelect {
+    protected abstract overlayDir: CdkConnectedOverlay;
+    protected abstract overlayPanelClass: string;
+    protected abstract triggerRect: DOMRect;
+
+    protected setOverlayPosition() {
+        this.resetOverlay();
+
+        const overlayRect = this.getOverlayRect();
+        // Window width without scrollbar
+        const windowWidth = this.overlayDir.overlayRef?.hostElement.clientWidth;
+        let offsetX: number = 0;
+        let overlayMaxWidth: number;
+
+        // Determine if select overflows on either side.
+        const leftOverflow = -overlayRect.left;
+        const rightOverflow = overlayRect.right - windowWidth;
+
+        // If the element overflows on either side, reduce the offset to allow it to fit.
+        if (leftOverflow > 0 || rightOverflow > 0) {
+            [offsetX, overlayMaxWidth] = this.calculateOverlayOffsetX(offsetX);
+            this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
+            // reset the minWidth property
+            this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
+        }
+
+        // Set the offset directly in order to avoid having to go through change detection and
+        // potentially triggering "changed after it was checked" errors. Round the value to avoid
+        // blurry content in some browsers.
+        this.overlayDir.offsetX = Math.round(offsetX);
+        this.overlayDir.overlayRef.updatePosition();
+    }
+
+    protected calculateOverlayOffsetX(baseOffsetX: number): number[] {
+        let offsetX = baseOffsetX;
+        const windowWidth = this.overlayDir.overlayRef?.hostElement.clientWidth;
+        const { left: leftIndent, right: triggerRight, width: triggerWidth } = this.triggerRect;
+        const { width: overlayRectWidth } = this.getOverlayRect();
+        const rightIndent = windowWidth - triggerRight;
+        // Setting direction of dropdown expansion
+        const isRightDirection = leftIndent <= rightIndent;
+
+        const indent = isRightDirection ? rightIndent : leftIndent;
+        const maxDropdownWidth = indent + triggerWidth - SELECT_PANEL_VIEWPORT_PADDING;
+        const overlayMaxWidth = overlayRectWidth < maxDropdownWidth ? overlayRectWidth : maxDropdownWidth;
+
+        if (!isRightDirection) {
+            const leftOffset = triggerRight - overlayMaxWidth;
+            offsetX -= leftIndent - leftOffset;
+        }
+
+        return [offsetX, overlayMaxWidth];
+    }
+
+    protected getOverlayRect(): DOMRect {
+        return this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
+    }
+
+    protected resetOverlay(): void {
+        this.overlayDir.overlayRef.hostElement.classList.add(this.overlayPanelClass);
+        this.overlayDir.offsetX = 0;
+        this.overlayDir.overlayRef.overlayElement.style.maxWidth = 'unset';
+        this.overlayDir.overlayRef.updatePosition();
+    }
+}
