@@ -101,10 +101,12 @@
 
     color: var(--kbq-#{$base-path}-text);
 
-    &.kbq-text-only,
-    &.kbq-text-with-icon .kbq-link__text,
-    &.kbq-text-with-dot .kbq-link__text {
-        border-bottom-color: var(--kbq-#{$base-path}-border-bottom);
+    &:not(.kbq-link_pseudo) {
+        &.kbq-text-only,
+        &.kbq-text-with-icon .kbq-link__text,
+        &.kbq-text-with-dot .kbq-link__text {
+            border-bottom-color: var(--kbq-#{$base-path}-border-bottom);
+        }
     }
 
     & .kbq-icon {
