@@ -27,9 +27,9 @@
         gap: var(--kbq-top-menu-right-gap);
     }
 
-    &.kbq-top-menu-overflow {
+    &.kbq-top-menu_with-shadow {
         box-shadow: var(--kbq-top-menu-shadow-bottom);
-        transition: box-shadow var(--kbq-top-menu-overflow-transition);
+        transition: box-shadow var(--kbq-top-menu-shadow-transition);
     }
 
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);

@@ -35,16 +35,16 @@ type ExampleAction = {
     template: `
         @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-menu>
-            <div class="layout-align-center-center" kbq-top-menu-container placement="left">
+            <div class="layout-align-center-center" kbqTopMenuContainer placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
 
-            <div kbq-top-menu-spacer></div>
+            <div kbqTopMenuSpacer></div>
 
-            <div class="layout-align-end-center" kbq-top-menu-container placement="right">
+            <div class="layout-align-end-center" kbqTopMenuContainer placement="right">
                 <button
                     [kbqStyle]="KbqButtonStyles.Outline"
                     [color]="KbqComponentColors.ContrastFade"
@@ -134,7 +134,7 @@ type ExampleAction = {
             gap: var(--kbq-top-menu-right-gap);
         }
 
-        .kbq-top-menu-container__right {
+        .kbqTopMenuContainer__right {
             display: flex;
             position: relative;
             flex-grow: 1;

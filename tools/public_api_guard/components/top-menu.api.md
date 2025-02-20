@@ -9,21 +9,20 @@ import { InputSignal } from '@angular/core';
 
 // @public (undocumented)
 export class KbqTopMenu {
-    hasOverflow: boolean;
     // (undocumented)
-    static ngAcceptInputType_hasOverflow: unknown;
+    static ngAcceptInputType_withShadow: unknown;
+    withShadow: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopMenu, "kbq-top-menu", never, { "hasOverflow": { "alias": "hasOverflow"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTopMenu, "kbq-top-menu", never, { "withShadow": { "alias": "withShadow"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopMenu, never>;
 }
 
 // @public
 export class KbqTopMenuContainer {
-    // (undocumented)
     placement: InputSignal<"left" | "right">;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopMenuContainer, "[kbq-top-menu-container]", never, { "placement": { "alias": "placement"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopMenuContainer, "[kbqTopMenuContainer]", never, { "placement": { "alias": "placement"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopMenuContainer, never>;
 }
@@ -43,7 +42,7 @@ export class KbqTopMenuModule {
 // @public (undocumented)
 export class KbqTopMenuSpacer {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopMenuSpacer, "[kbq-top-menu-spacer]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopMenuSpacer, "[kbqTopMenuSpacer]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTopMenuSpacer, never>;
 }

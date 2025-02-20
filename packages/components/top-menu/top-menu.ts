@@ -10,7 +10,7 @@ import {
 
 @Directive({
     standalone: true,
-    selector: '[kbq-top-menu-spacer]',
+    selector: '[kbqTopMenuSpacer]',
     host: {
         class: 'kbq-top-menu-spacer'
     }
@@ -22,7 +22,7 @@ export class KbqTopMenuSpacer {}
  */
 @Directive({
     standalone: true,
-    selector: '[kbq-top-menu-container]',
+    selector: '[kbqTopMenuContainer]',
     host: {
         class: 'kbq-top-menu-container',
         '[class.kbq-top-menu-container__left]': 'placement() === "left"',
@@ -30,7 +30,9 @@ export class KbqTopMenuSpacer {}
     }
 })
 export class KbqTopMenuContainer {
-    // Conditionally applies a CSS class based on the value
+    /**
+     * Conditionally applies a CSS class based on the value
+     */
     placement = input.required<'left' | 'right'>();
 }
 
@@ -46,7 +48,7 @@ export class KbqTopMenuContainer {
     ],
     host: {
         class: 'kbq-top-menu',
-        '[class.kbq-top-menu-overflow]': 'hasOverflow'
+        '[class.kbq-top-menu_with-shadow]': 'withShadow'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -55,5 +57,5 @@ export class KbqTopMenu {
     /**
      * Enables overflow behavior, applying `kbq-top-menu-overflow` to show a bottom shadow.
      */
-    @Input({ transform: booleanAttribute }) hasOverflow: boolean = false;
+    @Input({ transform: booleanAttribute }) withShadow: boolean = false;
 }

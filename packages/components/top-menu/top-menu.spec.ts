@@ -21,29 +21,29 @@ describe(KbqTopMenu.name, () => {
 
     it('should not have the overflow class by default', () => {
         fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu-overflow')).toBeFalsy();
+        expect(menuElement.classList.contains('kbq-top-menu_with-shadow')).toBeFalsy();
     });
 
-    it('should add the overflow class when hasOverflow is true', () => {
-        component.hasOverflow = true;
+    it('should add the overflow class when withShadow is true', () => {
+        component.withShadow = true;
         fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu-overflow')).toBeTruthy();
+        expect(menuElement.classList.contains('kbq-top-menu_with-shadow')).toBeTruthy();
     });
 
-    it('should remove the overflow class when hasOverflow is false', () => {
-        component.hasOverflow = true;
+    it('should remove the overflow class when withShadow is false', () => {
+        component.withShadow = true;
         fixture.detectChanges();
-        component.hasOverflow = false;
+        component.withShadow = false;
         fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu-overflow')).toBeFalsy();
+        expect(menuElement.classList.contains('kbq-top-menu_with-shadow')).toBeFalsy();
     });
 });
 
 @Component({
     selector: 'test-app',
-    template: '<kbq-top-menu [hasOverflow]="hasOverflow" />'
+    template: '<kbq-top-menu [withShadow]="withShadow" />'
 })
 class TestApp {
     @ViewChild(KbqTopMenu) topMenu: KbqTopMenu;
-    hasOverflow = false;
+    withShadow = false;
 }
