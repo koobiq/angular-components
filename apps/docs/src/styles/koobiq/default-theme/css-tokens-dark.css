@@ -97,6 +97,8 @@
   --kbq-states-background-warning-fade-active: hsla(38, 100%, 18%, 100%);
   --kbq-states-background-warning-less-hover: hsla(38, 100%, 11%, 100%);
   --kbq-states-background-warning-less-active: hsla(38, 100%, 12%, 100%);
+  --kbq-states-background-success-hover: hsla(104, 64%, 38%, 100%);
+  --kbq-states-background-success-active: hsla(104, 64%, 35%, 100%);
   --kbq-states-background-success-fade-hover: hsla(104, 64%, 17%, 100%);
   --kbq-states-background-success-fade-active: hsla(104, 64%, 19%, 100%);
   --kbq-states-background-success-less-hover: hsla(104, 64%, 11%, 100%);
