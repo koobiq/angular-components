@@ -208,6 +208,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.instance = this.overlayRef.attach(this.portal).instance;
 
+        this.instance.trigger = this;
+
         this.instance.afterHidden().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.detach);
 
         this.updateClassMap();
@@ -351,6 +353,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         if (reapplyPosition) {
             setTimeout(() => position.reapplyLastPosition());
         }
+    }
+
+    focus() {
+        this.elementRef.nativeElement.focus();
     }
 
     /**
