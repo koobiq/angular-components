@@ -107,13 +107,17 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
 export class KbqSelectSearchEmptyResult {}
 
 /**
- * Common Select Behaviour
+ * Abstract class representing a customizable select component with an overlay.
+ *
+ * This class provides base functionality for handling the overlay positioning.
  * @docs-private
  */
 export abstract class KbqAbstractSelect {
     protected abstract overlayDir: CdkConnectedOverlay;
-    protected abstract overlayPanelClass: string;
     protected abstract triggerRect: DOMRect;
+
+    /** Overlay panel class. */
+    protected readonly overlayPanelClass = 'kbq-select-overlay';
 
     protected setOverlayPosition() {
         this.resetOverlay();
