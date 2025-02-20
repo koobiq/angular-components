@@ -1349,19 +1349,12 @@ export class KbqSelect
         const overlayRect = this.getOverlayRect();
         // Window width without scrollbar
         const windowWidth = this.scrollStrategy._overlayRef?.hostElement.clientWidth;
-        const isRtl = this.isRtl();
-        const paddingWidth = 0;
         let offsetX: number = 0;
         let overlayMaxWidth: number;
 
-        // Invert the offsetX in LTR.
-        if (!isRtl) {
-            offsetX *= -1;
-        }
-
         // Determine if select overflows on either side.
-        const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-        const rightOverflow = overlayRect.right + offsetX - windowWidth + (isRtl ? 0 : paddingWidth);
+        const leftOverflow = overlayRect.left;
+        const rightOverflow = overlayRect.right - windowWidth;
 
         // If the element overflows on either side, reduce the offset to allow it to fit.
         if (leftOverflow > 0 || rightOverflow > 0) {
@@ -1378,7 +1371,7 @@ export class KbqSelect
         this.overlayDir.overlayRef.updatePosition();
     }
 
-    private calculateOverlayXPosition(overlayRect: DOMRect, windowWidth: Element['clientWidth'], basicOffsetX: number) {
+    private calculateOverlayXPosition(overlayRect: DOMRect, windowWidth: number, basicOffsetX: number) {
         let offsetX = basicOffsetX;
         const { left: leftIndent, right: triggerRight, width: triggerWidth } = this.triggerRect;
         const rightIndent = windowWidth - triggerRight;
