@@ -11,6 +11,19 @@
 
 <hr />
 
+<h3>Nav-bar tabs underlined</h3>
+<nav kbqTabNavBar underlined [tabNavPanel]="kbqTabNavPanel1">
+    @for (link of links; track link; let index = $index) {
+        @let disabled = index === 1;
+        <a kbqTabLink [active]="activeLink === link" [disabled]="disabled" (click)="activeLink = link">
+            {{ link }}
+        </a>
+    }
+</nav>
+<div #kbqTabNavPanel1="kbqTabNavPanel" kbqTabNavPanel>activeLink: {{ activeLink }}</div>
+
+<hr />
+
 <h3>Nav-bar tabs vertical</h3>
 <div class="layout-row">
     <nav kbqTabNavBar vertical [style.height.px]="160" [style.width.px]="120" [tabNavPanel]="kbqTabNavPanel2">
