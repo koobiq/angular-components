@@ -36,15 +36,15 @@ import { auditTime, map, startWith } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @let isDesktopMatches = !!(isDesktop | async);
-        <kbq-top-menu [hasOverflow]="hasOverflow()">
-            <div class="layout-align-center-center" kbq-top-menu-container placement="left">
+        <kbq-top-menu [withShadow]="hasOverflow()">
+            <div class="layout-align-center-center" kbqTopMenuContainer placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
-            <div kbq-top-menu-spacer></div>
-            <div kbq-top-menu-container placement="right">
+            <div kbqTopMenuSpacer></div>
+            <div kbqTopMenuContainer placement="right">
                 @for (action of actions; track index; let index = $index) {
                     <button
                         [kbqStyle]="action.style || ''"
