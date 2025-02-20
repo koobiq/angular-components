@@ -28,15 +28,15 @@ export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewIni
     private contentObserver = inject(ContentObserver);
 
     get isOverflown(): boolean {
-        return this.parent.offsetWidth < this.child.scrollWidth || this.parent.offsetHeight < this.child.scrollHeight;
+        return this.parent?.offsetWidth < this.child.scrollWidth || this.parent?.offsetHeight < this.child.scrollHeight;
     }
 
     get viewValue(): string {
-        return (this.parent.textContent || '').trim();
+        return (this.parent?.textContent || '').trim();
     }
 
     get parent(): HTMLElement {
-        return this.parentContainer.nativeElement || this.parentContainer;
+        return this.parentContainer?.nativeElement || this.parentContainer;
     }
 
     get child(): HTMLElement {

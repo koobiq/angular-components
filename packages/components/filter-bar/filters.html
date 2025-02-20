@@ -1,0 +1,169 @@
+<button
+    kbq-button
+    kbq-filter-bar-button
+    kbq-title
+    kbqPopover
+    [kbqDropdownTriggerFor]="savedFilters"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverClass]="'kbq-filters__save-as-new-filter-popover'"
+    [kbqPopoverContent]="saveAsNewPopoverContent"
+    [kbqPopoverFooter]="saveAsNewPopoverFooter"
+    [kbqPopoverHeader]="saveAsNewPopoverHeader"
+    [kbqPopoverPlacement]="placements.BottomLeft"
+    [kbqPopoverSize]="popoverSize"
+    [kbqTrigger]="'manual'"
+    [ngClass]="{ 'kbq-active': opened }"
+    (dropdownOpened)="input.focus()"
+>
+    <span #kbqTitleText class="kbq-filters__filter-name">
+        @if (filter?.name) {
+            {{ filter!.name }}
+        } @else {
+            <ng-content>
+                <i kbq-icon="kbq-list_16"></i>
+                Фильтры
+            </ng-content>
+        }
+    </span>
+</button>
+
+@if (filterBar.isChanged && !filterBar.isSaved) {
+    <button
+        kbq-button
+        kbq-filter-bar-button
+        kbqTooltip="Сохранить новый фильтр"
+        class="kbq-button_action"
+        [color]="colors.Empty"
+        (click)="openSaveAsNewFilterPopover()"
+    >
+        <i kbq-icon="kbq-floppy-disk_16"></i>
+    </button>
+}
+
+@if (filterBar.isSaved) {
+    <button
+        kbq-button
+        kbq-filter-bar-button
+        class="kbq-button_action"
+        [color]="colors.Empty"
+        [kbqDropdownTriggerFor]="filterActions"
+        [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+    >
+        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+    </button>
+}
+
+@if (filterBar.isSaved) {
+    <i kbq-icon="kbq-chevron-right-s_16" class="kbq-filter-bar__arrow" [color]="'theme'"></i>
+} @else {
+    <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
+}
+
+<kbq-dropdown #savedFilters="kbqDropdown" [class]="'kbq-filters__dropdown'">
+    <div [style.display]="isEmpty ? 'none' : 'initial'">
+        <kbq-form-field kbqFormFieldWithoutBorders>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+
+            <input
+                #input
+                autocomplete="off"
+                autofocus
+                kbqInput
+                placeholder="Поиск"
+                [formControl]="searchControl"
+                (click)="stopEventPropagation($event)"
+                (keydown)="stopEventPropagation($event)"
+            />
+            <kbq-cleaner />
+        </kbq-form-field>
+
+        <kbq-divider />
+
+        @for (filter of filteredOptions | async; track filter) {
+            <button kbq-dropdown-item (click)="selectFilter(filter)">{{ filter.name }}</button>
+        } @empty {
+            <button kbq-dropdown-item [disabled]="true">Ничего не найдено</button>
+        }
+
+        <kbq-divider />
+    </div>
+
+    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
+        <i kbq-icon="kbq-plus_16"></i>
+        Сохранить как новый фильтр
+    </button>
+</kbq-dropdown>
+
+<kbq-dropdown #filterActions="kbqDropdown" [class]="'kbq-filters__dropdown'">
+    @if (filterBar.isSavedAndChanged && !filterBar.isReadOnly) {
+        <button
+            kbq-dropdown-item
+            [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+            (click)="saveChanges()"
+        >
+            <i kbq-icon="kbq-floppy-disk_16"></i>
+            Сохранить изменения
+            @if (filterBar.isSavedAndChanged) {
+                <i class="kbq kbq-icon kbq-icon-button kbq-xmark-circle-s_16 kbq-warning layout-margin-left-m"></i>
+            }
+        </button>
+    }
+    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
+        <i kbq-icon="kbq-plus_16"></i>
+        Сохранить как новый
+    </button>
+
+    @if (!filterBar.isReadOnly) {
+        <button kbq-dropdown-item (click)="openChangeFilterNamePopover()">
+            <i kbq-icon="kbq-pencil_16"></i>
+            Изменить
+        </button>
+    }
+
+    @if (filterBar.isSavedAndChanged || !filterBar.isReadOnly) {
+        <kbq-divider />
+    }
+
+    @if (filterBar.isSavedAndChanged) {
+        <button kbq-dropdown-item (click)="filterBar.resetFilterState()">
+            <i kbq-icon="kbq-xmark-circle_16"></i>
+            Сбросить изменения
+        </button>
+    }
+    @if (!filterBar.isReadOnly) {
+        <button kbq-dropdown-item (click)="this.filterBar.onDeleteFilter.next(this.filter!)">
+            <i kbq-icon="kbq-trash_16"></i>
+            Удалить
+        </button>
+    }
+</kbq-dropdown>
+
+<ng-template #saveAsNewPopoverHeader>{{ popoverHeader }}</ng-template>
+
+<ng-template #saveAsNewPopoverContent>
+    @if (showFilterSavingError) {
+        <kbq-alert class="layout-margin-bottom-m" [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true">
+            {{ filterSavingErrorText }}
+        </kbq-alert>
+    }
+    <div class="kbq-form-vertical">
+        <div class="kbq-form__row">
+            <label class="kbq-form__label">Название</label>
+
+            <kbq-form-field class="kbq-form__control">
+                <input #input="kbqInput" kbqInput type="text" [formControl]="filterName" />
+
+                @if (filterName.hasError('filterNameAlreadyExist')) {
+                    <kbq-hint [color]="'error'">Поиск с таким названием уже сущетсвует</kbq-hint>
+                }
+            </kbq-form-field>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #saveAsNewPopoverFooter>
+    <button kbq-button class="layout-margin-right-l" [color]="'contrast'" [kbqStyle]="'filled'" (click)="saveAsNew()">
+        Сохранить
+    </button>
+    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" (click)="closePopover()">Отмена</button>
+</ng-template>

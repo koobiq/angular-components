@@ -1,0 +1,35 @@
+<kbq-select
+    #select
+    [compareWith]="compareByValue"
+    [disabled]="data.disabled"
+    [kbq-pipe-title]="pipeTooltip"
+    [ngClass]="{ 'kbq-active': select.panelOpen }"
+    [panelClass]="'kbq-pipe-select__panel'"
+    [tabIndex]="-1"
+    [value]="selected"
+    (selectionChange)="onSelect($event.value)"
+>
+    <button
+        kbq-button
+        kbq-select-matcher
+        [disabled]="data.disabled"
+        [kbq-pipe-state]="data"
+        [ngClass]="{ 'kbq-active': select.panelOpen }"
+    >
+        <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__value">{{ select.triggerValue }}</span>
+    </button>
+
+    @for (item of values; track item) {
+        <kbq-option [value]="item">{{ item.name }}</kbq-option>
+    }
+</kbq-select>
+
+@if (showRemoveButton) {
+    <kbq-pipe-button />
+}
+
+<ng-template #pipeTooltip>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ select.triggerValue }}</div>
+</ng-template>
