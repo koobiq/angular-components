@@ -226,7 +226,7 @@ module.exports = {
   "DarkStatesBackgroundThemeActive": "hsla(216, 100%, 39%, 100%)",
   "DarkStatesBackgroundThemeFadeHover": "hsla(216, 100%, 26%, 100%)",
   "DarkStatesBackgroundThemeFadeActive": "hsla(216, 100%, 28%, 100%)",
-  "DarkStatesBackgroundThemeLessHover": "hsla(216, 100%, 15%, 100%)",
+  "DarkStatesBackgroundThemeLessHover": "hsla(216, 100%, 17%, 100%)",
   "DarkStatesBackgroundThemeLessActive": "hsla(216, 100%, 19%, 100%)",
   "DarkStatesBackgroundContrastHover": "hsla(229, 15%, 80%, 100%)",
   "DarkStatesBackgroundContrastActive": "hsla(229, 15%, 55%, 100%)",
