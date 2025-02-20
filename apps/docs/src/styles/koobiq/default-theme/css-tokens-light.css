@@ -93,6 +93,8 @@
   --kbq-states-background-error-fade-active: hsla(7, 97%, 85%, 100%);
   --kbq-states-background-error-less-hover: hsla(7, 97%, 92%, 100%);
   --kbq-states-background-error-less-active: hsla(7, 97%, 89%, 100%);
+  --kbq-states-background-success-hover: hsla(104, 64%, 42%, 100%);
+  --kbq-states-background-success-active: hsla(104, 64%, 38%, 100%);
   --kbq-states-background-success-fade-hover: hsla(104, 64%, 76%, 100%);
   --kbq-states-background-success-fade-active: hsla(104, 64%, 84%, 100%);
   --kbq-states-background-success-less-hover: hsla(104, 64%, 84%, 100%);
