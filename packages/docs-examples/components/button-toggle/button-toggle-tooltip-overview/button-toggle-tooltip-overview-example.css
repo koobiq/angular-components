@@ -24,9 +24,3 @@
     > :not(:last-child) {
     margin-right: 4px;
 }
-
-.kbq-button-toggle-group .kbq-button-toggle > ::ng-deep .kbq-button .kbq-button-toggle-wrapper .kbq-icon,
-.kbq-button-toggle-group .kbq-button-toggle > ::ng-deep .kbq-button-icon .kbq-button-toggle-wrapper .kbq-icon {
-    position: relative;
-    top: -1px;
-}

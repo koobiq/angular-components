@@ -6,6 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqButtonModule } from '../../components/button';
 import { KbqButtonToggleModule } from '../../components/button-toggle';
+import { ButtonToggleExamplesModule } from '../../docs-examples/components/button-toggle';
 
 @Component({
     selector: 'app',
@@ -29,7 +30,8 @@ export class ButtonToggleDemoComponent {
         KbqButtonToggleModule,
         KbqIconModule,
         FormsModule,
-        KbqTitleModule
+        KbqTitleModule,
+        ButtonToggleExamplesModule
     ],
     bootstrap: [
         ButtonToggleDemoComponent
