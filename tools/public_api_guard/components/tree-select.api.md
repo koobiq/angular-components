@@ -31,6 +31,7 @@ import * as i5 from '@koobiq/components/tags';
 import * as i6 from '@koobiq/components/core';
 import * as i7 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -161,7 +162,6 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
     // (undocumented)
     panel: ElementRef;
