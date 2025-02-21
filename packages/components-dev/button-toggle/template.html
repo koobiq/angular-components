@@ -57,14 +57,9 @@
 
     <label>Group With Overflown text</label>
 
-    <kbq-button-toggle-group>
-        <kbq-button-toggle [value]="1">default 1</kbq-button-toggle>
-        <kbq-button-toggle [disabled]="true" [value]="2">default 2</kbq-button-toggle>
-        <kbq-button-toggle [value]="3">
-            <i kbq-icon="kbq-chevron-down-s_16"></i>
-            Long long long long long Long long long long long Long long long long long text
-        </kbq-button-toggle>
-    </kbq-button-toggle-group>
+    <div style="max-width: 300px" class="dev-container">
+        <button-toggle-tooltip-overview-example />
+    </div>
 
     <br />
 
