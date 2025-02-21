@@ -11,6 +11,7 @@ import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { BehaviorSubject } from 'rxjs';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
@@ -1186,6 +1187,23 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 
 // @public @deprecated (undocumented)
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
+
+// @public
+export abstract class KbqAbstractSelect {
+    // (undocumented)
+    protected calculateOverlayOffsetX(baseOffsetX: number): number[];
+    // (undocumented)
+    protected getOverlayRect(): DOMRect;
+    // (undocumented)
+    protected overlayDir: CdkConnectedOverlay;
+    protected readonly overlayPanelClass = "kbq-select-overlay";
+    // (undocumented)
+    protected resetOverlay(): void;
+    // (undocumented)
+    protected setOverlayPosition(): void;
+    // (undocumented)
+    protected triggerRect: DOMRect;
+}
 
 // @public
 export type KbqCodeBlockLocaleConfiguration = {
@@ -2487,15 +2505,6 @@ export const ruRULocaleData: {
         searchPlaceholder: string;
     };
 };
-
-// @public @deprecated
-export const SELECT_PANEL_INDENT_PADDING_X: number;
-
-// @public @deprecated
-export const SELECT_PANEL_MAX_HEIGHT = 224;
-
-// @public @deprecated
-export const SELECT_PANEL_PADDING_X = 0;
 
 // @public
 export const SELECT_PANEL_VIEWPORT_PADDING = 8;

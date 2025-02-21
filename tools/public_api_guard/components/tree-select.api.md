@@ -31,6 +31,7 @@ import * as i5 from '@koobiq/components/tags';
 import * as i6 from '@koobiq/components/core';
 import * as i7 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -55,7 +56,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
-import { ViewportRuler } from '@angular/cdk/overlay';
 
 // @public @deprecated (undocumented)
 export interface ITriggerValue extends KbqTreeSelectTriggerValue {
@@ -70,7 +70,7 @@ export const KBQ_TREE_SELECT_OPTIONS: InjectionToken<Partial<{
 //
 // @public (undocumented)
 export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterContentInit, AfterViewInit, OnChanges, OnDestroy, OnInit, DoCheck, ControlValueAccessor, CanDisable, HasTabIndex, KbqFormFieldControl<KbqTreeOption>, CanUpdateErrorState {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, viewportRuler: ViewportRuler, ngZone: NgZone, renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, scrollStrategyFactory: any, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, localeService?: KbqLocaleService | undefined);
+    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, ngZone: NgZone, renderer: Renderer2, defaultErrorStateMatcher: ErrorStateMatcher, scrollStrategyFactory: any, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, parentFormField: KbqFormField, ngControl: NgControl, localeService?: KbqLocaleService | undefined);
     // (undocumented)
     get autoSelect(): boolean;
     set autoSelect(value: boolean);
@@ -162,7 +162,6 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
     // (undocumented)
     panel: ElementRef;
@@ -215,7 +214,7 @@ export class KbqTreeSelect extends KbqTreeSelectMixinBase implements AfterConten
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeSelect, "kbq-tree-select", ["kbqTreeSelect"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "hiddenItemsText": { "alias": "hiddenItemsText"; "required": false; }; "panelClass": { "alias": "panelClass"; "required": false; }; "backdropClass": { "alias": "backdropClass"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "sortComparator": { "alias": "sortComparator"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "multiple": { "alias": "multiple"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "id": { "alias": "id"; "required": false; }; "hasBackdrop": { "alias": "hasBackdrop"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "hiddenItemsTextFormatter": { "alias": "hiddenItemsTextFormatter"; "required": false; }; }, { "openedChange": "openedChange"; "openedStream": "opened"; "closedStream": "closed"; "selectionChange": "selectionChange"; "valueChange": "valueChange"; }, ["cleaner", "customTrigger", "customMatcher", "customTagTemplateRef", "tree", "search"], ["kbq-select-matcher, [kbq-select-matcher]", "kbq-select-trigger", "kbq-cleaner", "[kbqSelectSearch]", "[kbq-select-search-empty-result]", "kbq-tree-selection", "kbq-select-footer,[kbq-tree-select-footer]"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeSelect, [null, null, null, null, null, null, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; }, { optional: true; self: true; }, { optional: true; }]>;
 }
 
 // @public

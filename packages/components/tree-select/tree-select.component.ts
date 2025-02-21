@@ -1,7 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition, ViewportRuler } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
 import { Platform, _getEventTarget } from '@angular/cdk/platform';
 import {
     AfterContentInit,
@@ -63,13 +63,12 @@ import {
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KbqAbstractSelect,
     KbqLocaleService,
     KbqSelectMatcher,
     KbqSelectSearch,
     KbqSelectTrigger,
     MultipleMode,
-    SELECT_PANEL_PADDING_X,
-    SELECT_PANEL_VIEWPORT_PADDING,
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
@@ -130,7 +129,7 @@ export class KbqTreeSelectChange {
 }
 
 /** @docs-private */
-class KbqTreeSelectBase {
+class KbqTreeSelectBase extends KbqAbstractSelect {
     /**
      * Emits whenever the component state changes and should cause the parent
      * form-field to update. Implemented as part of `KbqFormFieldControl`.
@@ -144,7 +143,9 @@ class KbqTreeSelectBase {
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
         public ngControl: NgControl
-    ) {}
+    ) {
+        super();
+    }
 }
 
 /** @docs-private */
@@ -466,9 +467,6 @@ export class KbqTreeSelect
     /** Min width of the overlay panel. */
     protected overlayMinWidth: string | number;
 
-    /** Overlay panel class. */
-    protected readonly overlayPanelClass = 'kbq-select-overlay';
-
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
 
@@ -510,7 +508,6 @@ export class KbqTreeSelect
     constructor(
         elementRef: ElementRef,
         readonly changeDetectorRef: ChangeDetectorRef,
-        private readonly viewportRuler: ViewportRuler,
         private readonly ngZone: NgZone,
         private readonly renderer: Renderer2,
         defaultErrorStateMatcher: ErrorStateMatcher,
@@ -868,7 +865,7 @@ export class KbqTreeSelect
     onAttached() {
         this.overlayDir.positionChange.pipe(take(1)).subscribe(() => {
             this.changeDetectorRef.detectChanges();
-            this.calculateOverlayOffsetX();
+            this.setOverlayPosition();
             this.panel.nativeElement.scrollTop = this.scrollTop;
 
             this.tree.updateScrollSize();
@@ -1208,43 +1205,6 @@ export class KbqTreeSelect
     /** Scrolls the active option into view. */
     private scrollActiveOptionIntoView() {
         this.tree.keyManager.activeItem?.focus();
-    }
-
-    /**
-     * Sets the x-offset of the overlay panel in relation to the trigger's top start corner.
-     * This must be adjusted to align the selected option text over the trigger text when
-     * the panel opens. Will change based on LTR or RTL text direction. Note that the offset
-     * can't be calculated until the panel has been attached, because we need to know the
-     * content width in order to constrain the panel within the viewport.
-     */
-    private calculateOverlayOffsetX() {
-        const overlayRect = this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
-        const viewportSize = this.viewportRuler.getViewportSize();
-        const isRtl = this.isRtl();
-        const paddingWidth = SELECT_PANEL_PADDING_X * 2;
-        let offsetX: number = SELECT_PANEL_PADDING_X;
-
-        // Invert the offset in LTR.
-        if (!isRtl) {
-            offsetX *= -1;
-        }
-
-        // Determine how much the select overflows on each side.
-        const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-        const rightOverflow = overlayRect.right + offsetX - viewportSize.width + (isRtl ? 0 : paddingWidth);
-
-        // If the element overflows on either side, reduce the offset to allow it to fit.
-        if (leftOverflow > 0) {
-            offsetX += leftOverflow + SELECT_PANEL_VIEWPORT_PADDING;
-        } else if (rightOverflow > 0) {
-            offsetX -= rightOverflow + SELECT_PANEL_VIEWPORT_PADDING;
-        }
-
-        // Set the offset directly in order to avoid having to go through change detection and
-        // potentially triggering "changed after it was checked" errors. Round the value to avoid
-        // blurry content in some browsers.
-        this.overlayDir.offsetX = Math.round(offsetX);
-        this.overlayDir.overlayRef.updatePosition();
     }
 
     private subscribeOnSearchChanges() {

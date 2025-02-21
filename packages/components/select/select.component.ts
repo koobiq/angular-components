@@ -71,6 +71,7 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KbqAbstractSelect,
     KbqLocaleService,
     KbqOptgroup,
     KbqOption,
@@ -81,9 +82,6 @@ import {
     KbqSelectSearch,
     KbqSelectTrigger,
     KbqVirtualOption,
-    SELECT_PANEL_INDENT_PADDING_X,
-    SELECT_PANEL_PADDING_X,
-    SELECT_PANEL_VIEWPORT_PADDING,
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
@@ -133,7 +131,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
 };
 
 /** @docs-private */
-export class KbqSelectBase {
+export class KbqSelectBase extends KbqAbstractSelect {
     /**
      * Emits whenever the component state changes and should cause the parent
      * form-field to update. Implemented as part of `KbqFormFieldControl`.
@@ -147,7 +145,9 @@ export class KbqSelectBase {
         public parentForm: NgForm,
         public parentFormGroup: FormGroupDirective,
         public ngControl: NgControl
-    ) {}
+    ) {
+        super();
+    }
 }
 
 /** @docs-private */
@@ -561,9 +561,6 @@ export class KbqSelect
 
     /** Min width of the overlay panel. */
     protected overlayMinWidth: string | number;
-
-    /** Overlay panel class. */
-    protected readonly overlayPanelClass = 'kbq-select-overlay';
 
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
@@ -1336,90 +1333,6 @@ export class KbqSelect
     /** Scrolls the active option into view. */
     private scrollActiveOptionIntoView(): void {
         this.keyManager.activeItem?.focus();
-    }
-
-    /**
-     * Sets the x-offset of the overlay panel in relation to the trigger's top start corner.
-     * This must be adjusted to align the selected option text over the trigger text when
-     * the panel opens. Will change based on LTR or RTL text direction. Note that the offset
-     * can't be calculated until the panel has been attached, because we need to know the
-     * content width in order to constrain the panel within the viewport.
-     */
-    private setOverlayPosition(): void {
-        this.resetOverlay();
-
-        const overlayRect = this.getOverlayRect();
-        // Window width without scrollbar
-        const windowWidth = this.scrollStrategy._overlayRef?.hostElement.clientWidth;
-        const isRtl = this.isRtl();
-        const paddingWidth = SELECT_PANEL_PADDING_X * 2;
-        let offsetX: number = SELECT_PANEL_PADDING_X;
-        let overlayMaxWidth: number;
-
-        // Invert the offsetX in LTR.
-        if (!isRtl) {
-            offsetX *= -1;
-        }
-
-        // Determine if select overflows on either side.
-        const leftOverflow = 0 - (overlayRect.left + offsetX - (isRtl ? paddingWidth : 0));
-        const rightOverflow = overlayRect.right + offsetX - windowWidth + (isRtl ? 0 : paddingWidth);
-
-        // If the element overflows on either side, reduce the offset to allow it to fit.
-        if (leftOverflow > 0 || rightOverflow > 0) {
-            [offsetX, overlayMaxWidth] = this.calculateOverlayXPosition(overlayRect, windowWidth, offsetX);
-            this.overlayDir.overlayRef.overlayElement.style.maxWidth = `${overlayMaxWidth}px`;
-            // reset the minWidth property
-            this.overlayDir.overlayRef.overlayElement.style.minWidth = '';
-        }
-
-        // Set the offset directly in order to avoid having to go through change detection and
-        // potentially triggering "changed after it was checked" errors. Round the value to avoid
-        // blurry content in some browsers.
-        this.overlayDir.offsetX = Math.round(offsetX);
-        this.overlayDir.overlayRef.updatePosition();
-    }
-
-    private calculateOverlayXPosition(overlayRect, windowWidth, basicOffsetX) {
-        let offsetX = basicOffsetX;
-        const leftIndent = this.triggerRect.left;
-        const rightIndent = windowWidth - this.triggerRect.right;
-        // Setting direction of dropdown expansion
-        const isRightDirection = leftIndent <= rightIndent;
-
-        let maxDropdownWidth: number;
-        let overlayMaxWidth: number;
-        const triggerWidth = this.triggerRect.width + SELECT_PANEL_INDENT_PADDING_X;
-
-        if (isRightDirection) {
-            maxDropdownWidth = rightIndent + triggerWidth - SELECT_PANEL_VIEWPORT_PADDING;
-            overlayMaxWidth = overlayRect.width < maxDropdownWidth ? overlayRect.width : maxDropdownWidth;
-        } else {
-            let leftOffset;
-            maxDropdownWidth = leftIndent + triggerWidth - SELECT_PANEL_VIEWPORT_PADDING;
-
-            if (overlayRect.width < maxDropdownWidth) {
-                overlayMaxWidth = overlayRect.width;
-                leftOffset = this.triggerRect.right - overlayMaxWidth;
-            } else {
-                overlayMaxWidth = maxDropdownWidth;
-                leftOffset = this.triggerRect.right - (overlayMaxWidth - SELECT_PANEL_INDENT_PADDING_X);
-            }
-            offsetX -= this.triggerRect.left - leftOffset;
-        }
-
-        return [offsetX, overlayMaxWidth];
-    }
-
-    private resetOverlay(): void {
-        this.overlayDir.overlayRef.hostElement.classList.add(this.overlayPanelClass);
-        this.overlayDir.offsetX = 0;
-        this.overlayDir.overlayRef.overlayElement.style.maxWidth = 'unset';
-        this.overlayDir.overlayRef.updatePosition();
-    }
-
-    private getOverlayRect(): DOMRect {
-        return this.overlayDir.overlayRef.overlayElement.getBoundingClientRect();
     }
 
     /** Gets how wide the overlay panel should be. */

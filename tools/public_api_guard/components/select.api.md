@@ -33,6 +33,7 @@ import * as i6 from '@koobiq/components/tags';
 import * as i7 from '@koobiq/components/tooltip';
 import * as i8 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
@@ -206,7 +207,6 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
     overlayDir: CdkConnectedOverlay;
     protected overlayMinWidth: string | number;
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-    protected readonly overlayPanelClass = "kbq-select-overlay";
     protected overlayWidth: string | number;
     // (undocumented)
     panel: ElementRef;
@@ -262,7 +262,7 @@ export class KbqSelect extends KbqSelectMixinBase implements AfterContentInit, A
 }
 
 // @public
-export class KbqSelectBase {
+export class KbqSelectBase extends KbqAbstractSelect {
     constructor(elementRef: ElementRef, defaultErrorStateMatcher: ErrorStateMatcher, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
     // (undocumented)
     defaultErrorStateMatcher: ErrorStateMatcher;
