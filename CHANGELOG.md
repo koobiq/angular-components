@@ -1,3 +1,15 @@
+# 18.15.0 (2025-02-21)
+
+### Koobiq
+
+ * bug fix  **button-toggle:** added 2px focus line for item ([#DS-3136](https://github.com/koobiq/angular-components/issues/issue/DS-3136)) ([#538](https://github.com/koobiq/angular-components/issues/538)) ([917d21a](https://github.com/koobiq/angular-components/commit/917d21aef401c757b336e6a30527d9ace92c14a0))
+ * bug fix  **link:** pseudo. removed bottom border in disabled state ([#DS-3262](https://github.com/koobiq/angular-components/issues/issue/DS-3262)) ([#534](https://github.com/koobiq/angular-components/issues/534)) ([1d4a8c6](https://github.com/koobiq/angular-components/commit/1d4a8c66e568eb7a1662b663789779f691cb06bc))
+ * bug fix  **select:** focus frame only for .cdk-keyboard-focused ([#DS-2606](https://github.com/koobiq/angular-components/issues/issue/DS-2606)) ([#537](https://github.com/koobiq/angular-components/issues/537)) ([0a1b900](https://github.com/koobiq/angular-components/commit/0a1b9004fbc5e1dc29c678be2fbcaa0a310cff04))
+ * bug fix  **tabs:** missing underline in tab-nav-bar ([#DS-3405](https://github.com/koobiq/angular-components/issues/issue/DS-3405)) ([#540](https://github.com/koobiq/angular-components/issues/540)) ([9537a16](https://github.com/koobiq/angular-components/commit/9537a16fd7a8e67c9022a718a387133ad4013d4e))
+ * bug fix  update licence ([65cb3c5](https://github.com/koobiq/angular-components/commit/65cb3c51a54c9c6d6d85312bbdb16be5a3723f2c))
+ * feature  **button-toggle,visual:** removed hover from selected item ([#DS-3278](https://github.com/koobiq/angular-components/issues/issue/DS-3278)) ([#532](https://github.com/koobiq/angular-components/issues/532)) ([f627751](https://github.com/koobiq/angular-components/commit/f627751e10ddd9091207432d58af08f4061cba0c))
+ * feature  **tree-select,select:** removed redundant constants ([#DS-3298](https://github.com/koobiq/angular-components/issues/issue/DS-3298)) ([#533](https://github.com/koobiq/angular-components/issues/533)) ([25454e7](https://github.com/koobiq/angular-components/commit/25454e748b5bb58d24df58779e859fbb5f067a7b))
+
 # 18.14.0 (2025-02-18)
 
 ### Koobiq
