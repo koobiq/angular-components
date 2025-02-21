@@ -247,7 +247,7 @@
         "dev:tree-select": "ng serve dev-tree-select --port 3003",
         "dev:typography": "ng serve dev-typography --port 3003",
         "dev:tooltip": "ng serve dev-tooltip --port 3003",
-        "dev:top-menu": "ng serve dev-top-menu --port 3003",
+        "dev:top-bar": "ng serve dev-top-bar --port 3003",
         "dev:timepicker": "ng serve dev-timepicker --port 3003",
         "dev:timezone": "ng serve dev-timezone --port 3003",
         "dev:title": "ng serve dev-title --port 3003",

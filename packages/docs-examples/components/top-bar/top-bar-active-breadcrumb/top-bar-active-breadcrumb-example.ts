@@ -12,20 +12,20 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map, startWith } from 'rxjs/operators';
 
 /**
- * @title TopMenu Active Breadcrumb
+ * @title TopBar Active Breadcrumb
  */
 @Component({
     standalone: true,
-    selector: 'top-menu-active-breadcrumb-example',
+    selector: 'top-bar-active-breadcrumb-example',
     imports: [
         FormsModule,
         AsyncPipe,
         RouterLink,
-        KbqTopMenuModule,
+        KbqTopBarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
@@ -37,12 +37,12 @@ import { map, startWith } from 'rxjs/operators';
     ],
     template: `
         @let isDesktopMatches = !!(isDesktop | async);
-        <kbq-top-menu>
-            <div class="layout-align-center-center" kbqTopMenuContainer placement="left">
+        <kbq-top-bar>
+            <div class="layout-align-center-center" kbqTopBarContainer placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
-                <div class="kbq-top-menu__breadcrumbs">
+                <div class="kbq-top-bar__breadcrumbs">
                     <nav kbq-breadcrumbs>
                         <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
 
@@ -86,8 +86,8 @@ import { map, startWith } from 'rxjs/operators';
                     </nav>
                 </div>
             </div>
-            <div kbqTopMenuSpacer></div>
-            <div kbqTopMenuContainer placement="right">
+            <div kbqTopBarSpacer></div>
+            <div kbqTopBarContainer placement="right">
                 @for (action of actions; track index; let index = $index) {
                     <button
                         [kbqStyle]="action.style || ''"
@@ -107,11 +107,11 @@ import { map, startWith } from 'rxjs/operators';
                     </button>
                 }
             </div>
-        </kbq-top-menu>
+        </kbq-top-bar>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopMenuActiveBreadcrumbExample {
+export class TopBarActiveBreadcrumbExample {
     readonly value = signal(null);
 
     readonly breadcrumbActionText = 'New dashboard';

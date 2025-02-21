@@ -645,14 +645,14 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false
                 },
                 {
-                    id: 'top-menu',
+                    id: 'top-bar',
                     name: {
-                        ru: 'Top Menu',
-                        en: 'Top Menu'
+                        ru: 'Top Bar',
+                        en: 'Top Bar'
                     },
-                    svgPreview: 'top-menu',
+                    svgPreview: 'top-bar',
                     hasApi: true,
-                    apiId: 'top-menu',
+                    apiId: 'top-bar',
                     hasExamples: false
                 },
                 {

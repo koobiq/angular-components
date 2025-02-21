@@ -1,33 +1,33 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { KbqTopMenuModule } from './module';
-import { KbqTopMenu } from './top-menu';
+import { KbqTopBarModule } from './module';
+import { KbqTopBar } from './top-bar';
 
-describe(KbqTopMenu.name, () => {
+describe(KbqTopBar.name, () => {
     let fixture: ComponentFixture<TestApp>;
     let component: TestApp;
     let menuElement: HTMLElement;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [KbqTopMenuModule],
+            imports: [KbqTopBarModule],
             declarations: [TestApp]
         }).compileComponents();
 
         fixture = TestBed.createComponent(TestApp);
         component = fixture.componentInstance;
-        menuElement = fixture.nativeElement.querySelector('kbq-top-menu');
+        menuElement = fixture.nativeElement.querySelector('kbq-top-bar');
     });
 
     it('should not have the overflow class by default', () => {
         fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu_with-shadow')).toBeFalsy();
+        expect(menuElement.classList.contains('kbq-top-bar_with-shadow')).toBeFalsy();
     });
 
     it('should add the overflow class when withShadow is true', () => {
         component.withShadow = true;
         fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu_with-shadow')).toBeTruthy();
+        expect(menuElement.classList.contains('kbq-top-bar_with-shadow')).toBeTruthy();
     });
 
     it('should remove the overflow class when withShadow is false', () => {
@@ -35,15 +35,15 @@ describe(KbqTopMenu.name, () => {
         fixture.detectChanges();
         component.withShadow = false;
         fixture.detectChanges();
-        expect(menuElement.classList.contains('kbq-top-menu_with-shadow')).toBeFalsy();
+        expect(menuElement.classList.contains('kbq-top-bar_with-shadow')).toBeFalsy();
     });
 });
 
 @Component({
     selector: 'test-app',
-    template: '<kbq-top-menu [withShadow]="withShadow" />'
+    template: '<kbq-top-bar [withShadow]="withShadow" />'
 })
 class TestApp {
-    @ViewChild(KbqTopMenu) topMenu: KbqTopMenu;
+    @ViewChild(KbqTopBar) topBar: KbqTopBar;
     withShadow = false;
 }

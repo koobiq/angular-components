@@ -16,19 +16,19 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { auditTime, map, startWith } from 'rxjs/operators';
 
 /**
- * @title TopMenu Overflow
+ * @title TopBar Overflow
  */
 @Component({
     standalone: true,
-    selector: 'top-menu-overflow-example',
+    selector: 'top-bar-overflow-example',
     imports: [
         AsyncPipe,
         CdkScrollable,
-        KbqTopMenuModule,
+        KbqTopBarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule
@@ -36,15 +36,15 @@ import { auditTime, map, startWith } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @let isDesktopMatches = !!(isDesktop | async);
-        <kbq-top-menu [withShadow]="hasOverflow()">
-            <div class="layout-align-center-center" kbqTopMenuContainer placement="left">
+        <kbq-top-bar [withShadow]="hasOverflow()">
+            <div class="layout-align-center-center" kbqTopBarContainer placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
-            <div kbqTopMenuSpacer></div>
-            <div kbqTopMenuContainer placement="right">
+            <div kbqTopBarSpacer></div>
+            <div kbqTopBarContainer placement="right">
                 @for (action of actions; track index; let index = $index) {
                     <button
                         [kbqStyle]="action.style || ''"
@@ -63,7 +63,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
                     </button>
                 }
             </div>
-        </kbq-top-menu>
+        </kbq-top-bar>
         <div class="overflow-content-example kbq-scrollbar" cdkScrollable>
             <div style="height: 600px">Scroll down ⬇️ to see box-shadow</div>
         </div>
@@ -91,7 +91,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
         }
     `
 })
-export class TopMenuOverflowExample implements AfterViewInit {
+export class TopBarOverflowExample implements AfterViewInit {
     @ViewChild(CdkScrollable) protected readonly scrollable: CdkScrollable;
 
     readonly hasOverflow: WritableSignal<boolean | undefined> = signal(false);

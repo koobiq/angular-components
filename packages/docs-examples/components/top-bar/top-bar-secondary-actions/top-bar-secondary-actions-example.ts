@@ -5,7 +5,7 @@ import { KbqComponentColors, KbqOptionModule, PopUpPlacements } from '@koobiq/co
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
-import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { KbqTopBarModule } from '@koobiq/components/top-bar';
 
 type ExampleAction = {
     id: string;
@@ -13,14 +13,14 @@ type ExampleAction = {
 };
 
 /**
- * @title TopMenu Secondary Actions Simple
+ * @title TopBar Secondary Actions Simple
  */
 @Component({
     standalone: true,
-    selector: 'top-menu-secondary-actions-example',
+    selector: 'top-bar-secondary-actions-example',
     imports: [
         AsyncPipe,
-        KbqTopMenuModule,
+        KbqTopBarModule,
         KbqOverflowItemsModule,
         KbqDropdownModule,
         KbqButtonModule,
@@ -29,17 +29,17 @@ type ExampleAction = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        <kbq-top-menu>
-            <div class="layout-align-center-center" kbqTopMenuContainer placement="left">
+        <kbq-top-bar>
+            <div class="layout-align-center-center" kbqTopBarContainer placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
 
-            <div kbqTopMenuSpacer></div>
+            <div kbqTopBarSpacer></div>
 
-            <kbq-overflow-items kbqTopMenuContainer placement="right">
+            <kbq-overflow-items kbqTopBarContainer placement="right">
                 <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
@@ -75,7 +75,7 @@ type ExampleAction = {
                     </button>
                 }
             </kbq-overflow-items>
-        </kbq-top-menu>
+        </kbq-top-bar>
     `,
     styles: `
         .kbq-text-ellipsis {
@@ -85,7 +85,7 @@ type ExampleAction = {
         }
     `
 })
-export class TopMenuSecondaryActionsExample {
+export class TopBarSecondaryActionsExample {
     readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
         { id: 'Status', icon: 'kbq-arrow-right-s_16' },

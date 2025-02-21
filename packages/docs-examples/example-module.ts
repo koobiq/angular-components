@@ -3303,77 +3303,77 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-style-example.ts",
     "importPath": "components/tooltip"
   },
-  "top-menu-active-breadcrumb": {
-    "packagePath": "components/top-menu/top-menu-active-breadcrumb",
-    "title": "TopMenu Active Breadcrumb",
-    "componentName": "TopMenuActiveBreadcrumbExample",
+  "top-bar-active-breadcrumb": {
+    "packagePath": "components/top-bar/top-bar-active-breadcrumb",
+    "title": "TopBar Active Breadcrumb",
+    "componentName": "TopBarActiveBreadcrumbExample",
     "files": [
-      "top-menu-active-breadcrumb-example.ts"
+      "top-bar-active-breadcrumb-example.ts"
     ],
-    "selector": "top-menu-active-breadcrumb-example",
+    "selector": "top-bar-active-breadcrumb-example",
     "additionalComponents": [],
-    "primaryFile": "top-menu-active-breadcrumb-example.ts",
-    "importPath": "components/top-menu"
+    "primaryFile": "top-bar-active-breadcrumb-example.ts",
+    "importPath": "components/top-bar"
   },
-  "top-menu-breadcrumbs": {
-    "packagePath": "components/top-menu/top-menu-breadcrumbs",
-    "title": "TopMenu Breadcrumbs",
-    "componentName": "TopMenuBreadcrumbsExample",
+  "top-bar-breadcrumbs": {
+    "packagePath": "components/top-bar/top-bar-breadcrumbs",
+    "title": "TopBar Breadcrumbs",
+    "componentName": "TopBarBreadcrumbsExample",
     "files": [
-      "top-menu-breadcrumbs-example.ts"
+      "top-bar-breadcrumbs-example.ts"
     ],
-    "selector": "top-menu-breadcrumbs-example",
+    "selector": "top-bar-breadcrumbs-example",
     "additionalComponents": [],
-    "primaryFile": "top-menu-breadcrumbs-example.ts",
-    "importPath": "components/top-menu"
+    "primaryFile": "top-bar-breadcrumbs-example.ts",
+    "importPath": "components/top-bar"
   },
-  "top-menu-overflow": {
-    "packagePath": "components/top-menu/top-menu-overflow",
-    "title": "TopMenu Overflow",
-    "componentName": "TopMenuOverflowExample",
+  "top-bar-overflow": {
+    "packagePath": "components/top-bar/top-bar-overflow",
+    "title": "TopBar Overflow",
+    "componentName": "TopBarOverflowExample",
     "files": [
-      "top-menu-overflow-example.ts"
+      "top-bar-overflow-example.ts"
     ],
-    "selector": "top-menu-overflow-example",
+    "selector": "top-bar-overflow-example",
     "additionalComponents": [],
-    "primaryFile": "top-menu-overflow-example.ts",
-    "importPath": "components/top-menu"
+    "primaryFile": "top-bar-overflow-example.ts",
+    "importPath": "components/top-bar"
   },
-  "top-menu-overview": {
-    "packagePath": "components/top-menu/top-menu-overview",
-    "title": "TopMenu",
-    "componentName": "TopMenuOverviewExample",
+  "top-bar-overview": {
+    "packagePath": "components/top-bar/top-bar-overview",
+    "title": "TopBar",
+    "componentName": "TopBarOverviewExample",
     "files": [
-      "top-menu-overview-example.ts"
+      "top-bar-overview-example.ts"
     ],
-    "selector": "top-menu-overview-example",
+    "selector": "top-bar-overview-example",
     "additionalComponents": [],
-    "primaryFile": "top-menu-overview-example.ts",
-    "importPath": "components/top-menu"
+    "primaryFile": "top-bar-overview-example.ts",
+    "importPath": "components/top-bar"
   },
-  "top-menu-secondary-actions-responsive": {
-    "packagePath": "components/top-menu/top-menu-secondary-actions-responsive",
-    "title": "TopMenu Secondary Actions Responsive",
-    "componentName": "TopMenuSecondaryActionsResponsiveExample",
+  "top-bar-secondary-actions-responsive": {
+    "packagePath": "components/top-bar/top-bar-secondary-actions-responsive",
+    "title": "TopBar Secondary Actions Responsive",
+    "componentName": "TopBarSecondaryActionsResponsiveExample",
     "files": [
-      "top-menu-secondary-actions-responsive-example.ts"
+      "top-bar-secondary-actions-responsive-example.ts"
     ],
-    "selector": "top-menu-secondary-actions-responsive-example",
+    "selector": "top-bar-secondary-actions-responsive-example",
     "additionalComponents": [],
-    "primaryFile": "top-menu-secondary-actions-responsive-example.ts",
-    "importPath": "components/top-menu"
+    "primaryFile": "top-bar-secondary-actions-responsive-example.ts",
+    "importPath": "components/top-bar"
   },
-  "top-menu-secondary-actions": {
-    "packagePath": "components/top-menu/top-menu-secondary-actions",
-    "title": "TopMenu Secondary Actions Simple",
-    "componentName": "TopMenuSecondaryActionsExample",
+  "top-bar-secondary-actions": {
+    "packagePath": "components/top-bar/top-bar-secondary-actions",
+    "title": "TopBar Secondary Actions Simple",
+    "componentName": "TopBarSecondaryActionsExample",
     "files": [
-      "top-menu-secondary-actions-example.ts"
+      "top-bar-secondary-actions-example.ts"
     ],
-    "selector": "top-menu-secondary-actions-example",
+    "selector": "top-bar-secondary-actions-example",
     "additionalComponents": [],
-    "primaryFile": "top-menu-secondary-actions-example.ts",
-    "importPath": "components/top-menu"
+    "primaryFile": "top-bar-secondary-actions-example.ts",
+    "importPath": "components/top-bar"
   },
   "tree-select-child-selection-overview": {
     "packagePath": "components/tree-select/tree-select-child-selection-overview",
@@ -4199,18 +4199,18 @@ return import('@koobiq/docs-examples/components/tooltip');
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-style':
 return import('@koobiq/docs-examples/components/tooltip');
-  case 'top-menu-active-breadcrumb':
-return import('@koobiq/docs-examples/components/top-menu');
-  case 'top-menu-breadcrumbs':
-return import('@koobiq/docs-examples/components/top-menu');
-  case 'top-menu-overflow':
-return import('@koobiq/docs-examples/components/top-menu');
-  case 'top-menu-overview':
-return import('@koobiq/docs-examples/components/top-menu');
-  case 'top-menu-secondary-actions-responsive':
-return import('@koobiq/docs-examples/components/top-menu');
-  case 'top-menu-secondary-actions':
-return import('@koobiq/docs-examples/components/top-menu');
+  case 'top-bar-active-breadcrumb':
+return import('@koobiq/docs-examples/components/top-bar');
+  case 'top-bar-breadcrumbs':
+return import('@koobiq/docs-examples/components/top-bar');
+  case 'top-bar-overflow':
+return import('@koobiq/docs-examples/components/top-bar');
+  case 'top-bar-overview':
+return import('@koobiq/docs-examples/components/top-bar');
+  case 'top-bar-secondary-actions-responsive':
+return import('@koobiq/docs-examples/components/top-bar');
+  case 'top-bar-secondary-actions':
+return import('@koobiq/docs-examples/components/top-bar');
   case 'tree-select-child-selection-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-footer-overview':

@@ -7,7 +7,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqTopMenuModule } from '@koobiq/components/top-menu';
+import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map, startWith } from 'rxjs/operators';
 
 type ExampleAction = {
@@ -16,14 +16,14 @@ type ExampleAction = {
 };
 
 /**
- * @title TopMenu Secondary Actions Responsive
+ * @title TopBar Secondary Actions Responsive
  */
 @Component({
     standalone: true,
-    selector: 'top-menu-secondary-actions-responsive-example',
+    selector: 'top-bar-secondary-actions-responsive-example',
     imports: [
         AsyncPipe,
-        KbqTopMenuModule,
+        KbqTopBarModule,
         KbqOverflowItemsModule,
         KbqDropdownModule,
         KbqButtonModule,
@@ -34,17 +34,17 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         @let isDesktopMatches = !!(isDesktop | async);
-        <kbq-top-menu>
-            <div class="layout-align-center-center" kbqTopMenuContainer placement="left">
+        <kbq-top-bar>
+            <div class="layout-align-center-center" kbqTopBarContainer placement="left">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
                 <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
             </div>
 
-            <div kbqTopMenuSpacer></div>
+            <div kbqTopBarSpacer></div>
 
-            <div class="layout-align-end-center" kbqTopMenuContainer placement="right">
+            <div class="layout-align-end-center" kbqTopBarContainer placement="right">
                 <button
                     [kbqStyle]="KbqButtonStyles.Outline"
                     [color]="KbqComponentColors.ContrastFade"
@@ -120,7 +120,7 @@ type ExampleAction = {
                     }
                 </kbq-overflow-items>
             </div>
-        </kbq-top-menu>
+        </kbq-top-bar>
     `,
     styles: `
         .kbq-text-ellipsis {
@@ -131,10 +131,10 @@ type ExampleAction = {
 
         .kbq-overflow-items {
             max-width: 451px;
-            gap: var(--kbq-top-menu-right-gap);
+            gap: var(--kbq-top-bar-right-gap);
         }
 
-        .kbqTopMenuContainer__right {
+        .kbq-top-bar-container__right {
             display: flex;
             position: relative;
             flex-grow: 1;
@@ -156,7 +156,7 @@ type ExampleAction = {
         }
     `
 })
-export class TopMenuSecondaryActionsResponsiveExample {
+export class TopBarSecondaryActionsResponsiveExample {
     readonly isDesktop = inject(BreakpointObserver)
         .observe('(min-width: 900px)')
         .pipe(

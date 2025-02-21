@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { TopMenuExamplesModule } from '../../docs-examples/components/top-menu';
+import { TopBarExamplesModule } from '../../docs-examples/components/top-bar';
 
 @Component({
     standalone: true,
@@ -8,10 +8,10 @@ import { TopMenuExamplesModule } from '../../docs-examples/components/top-menu';
     encapsulation: ViewEncapsulation.None,
     templateUrl: './template.html',
     imports: [
-        TopMenuExamplesModule
+        TopBarExamplesModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopMenuDev {
+export class TopBarDev {
     navbarUnpinned = false;
 }

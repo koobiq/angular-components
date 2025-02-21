@@ -1,9 +1,9 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
-import { TopMenuDev } from './module';
+import { TopBarDev } from './module';
 
-bootstrapApplication(TopMenuDev, {
+bootstrapApplication(TopBarDev, {
     providers: [
         provideAnimations(),
         provideRouter([])]
