@@ -271,14 +271,10 @@ export class KbqSelectBase extends KbqAbstractSelect {
     // (undocumented)
     ngControl: NgControl;
     // (undocumented)
-    protected overlayDir: CdkConnectedOverlay;
-    // (undocumented)
     parentForm: NgForm;
     // (undocumented)
     parentFormGroup: FormGroupDirective;
     readonly stateChanges: Subject<void>;
-    // (undocumented)
-    protected triggerRect: DOMRect;
 }
 
 // @public

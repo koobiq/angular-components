@@ -139,9 +139,6 @@ export class KbqSelectBase extends KbqAbstractSelect {
      */
     readonly stateChanges = new Subject<void>();
 
-    protected overlayDir: CdkConnectedOverlay;
-    protected triggerRect: DOMRect;
-
     constructor(
         public elementRef: ElementRef,
         public defaultErrorStateMatcher: ErrorStateMatcher,

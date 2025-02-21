@@ -1195,14 +1195,14 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected getOverlayRect(): DOMRect;
     // (undocumented)
-    protected abstract overlayDir: CdkConnectedOverlay;
+    protected overlayDir: CdkConnectedOverlay;
     protected readonly overlayPanelClass = "kbq-select-overlay";
     // (undocumented)
     protected resetOverlay(): void;
     // (undocumented)
     protected setOverlayPosition(): void;
     // (undocumented)
-    protected abstract triggerRect: DOMRect;
+    protected triggerRect: DOMRect;
 }
 
 // @public

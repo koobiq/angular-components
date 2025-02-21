@@ -113,8 +113,8 @@ export class KbqSelectSearchEmptyResult {}
  * @docs-private
  */
 export abstract class KbqAbstractSelect {
-    protected abstract overlayDir: CdkConnectedOverlay;
-    protected abstract triggerRect: DOMRect;
+    protected overlayDir: CdkConnectedOverlay;
+    protected triggerRect: DOMRect;
 
     /** Overlay panel class. */
     protected readonly overlayPanelClass = 'kbq-select-overlay';
