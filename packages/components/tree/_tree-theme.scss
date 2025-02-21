@@ -24,20 +24,11 @@
 }
 
 @mixin kbq-tree-theme() {
-    .kbq-tree-selection:focus {
-        outline: none;
-    }
-
     .kbq-tree-option {
         @include kbq-tree-option(default);
 
         &:hover:not(.kbq-disabled) {
             @include kbq-tree-option(states-hover);
-        }
-
-        &.kbq-focused,
-        &.kbq-active {
-            border-color: var(--kbq-tree-states-focused-focus-outline-color);
         }
 
         &.kbq-selected {
@@ -53,6 +44,18 @@
 
             & .kbq-icon {
                 color: var(--kbq-states-icon-disabled);
+            }
+        }
+    }
+
+    .kbq-tree-selection {
+        &:focus {
+            outline: none;
+        }
+
+        &.cdk-keyboard-focused {
+            & .kbq-tree-option.kbq-focused {
+                border-color: var(--kbq-tree-states-focused-focus-outline-color);
             }
         }
     }

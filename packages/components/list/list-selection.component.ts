@@ -1,8 +1,10 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
+    AfterViewInit,
     Attribute,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -132,8 +134,10 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
 })
 export class KbqListSelection
     extends KbqListSelectionMixinBase
-    implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor
+    implements CanDisable, HasTabIndex, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor
 {
+    protected readonly focusMonitor = inject(FocusMonitor);
+
     keyManager: FocusKeyManager<KbqListOption>;
 
     @ContentChildren(forwardRef(() => KbqListOption), { descendants: true }) options: QueryList<KbqListOption>;
@@ -232,6 +236,14 @@ export class KbqListSelection
         }
 
         this.selectionModel = new SelectionModel<KbqListOption>(this.multiple);
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef, true);
+    }
+
+    ngOnDestroy(): void {
+        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     /**

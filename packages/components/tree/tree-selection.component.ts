@@ -1,8 +1,10 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
+    AfterViewInit,
     Attribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -11,9 +13,11 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    inject,
     Input,
     IterableDiffer,
     IterableDiffers,
+    OnDestroy,
     Optional,
     Output,
     QueryList,
@@ -115,8 +119,10 @@ interface SelectionModelOption {
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>
-    implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex
+    implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy, CanDisable, HasTabIndex
 {
+    protected readonly focusMonitor = inject(FocusMonitor);
+
     renderedOptions = new QueryList<KbqTreeOption>();
 
     keyManager: FocusKeyManager<KbqTreeOption>;
@@ -246,6 +252,10 @@ export class KbqTreeSelection
         this.selectionModel = new SelectionModel<SelectionModelOption>(this.multiple);
     }
 
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef, true);
+    }
+
     ngAfterContentInit(): void {
         this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
 
@@ -292,6 +302,12 @@ export class KbqTreeSelection
                     option.markForCheck();
                 });
             });
+    }
+
+    ngOnDestroy(): void {
+        super.ngOnDestroy();
+
+        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     focus($event): void {
