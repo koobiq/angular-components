@@ -26,20 +26,6 @@
     flex-direction: column;
 }
 
-.kbq-tab-header_underlined:not(.kbq-tab-header_vertical) .kbq-tab-list__content {
-    padding: 8px 0;
-}
-
-.kbq-tab-header_underlined:not(.kbq-tab-header_vertical):after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    height: 1px;
-    background: var(--kbq-line-contrast-less);
-}
-
 .kbq-tab-header__container {
     display: flex;
     flex-grow: 1;
