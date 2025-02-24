@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { CanDisable } from '@koobiq/components/core';
 import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -13,6 +14,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@koobiq/components/core';
 import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
@@ -175,7 +177,7 @@ export class KbqListSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor {
+export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;
@@ -192,6 +194,8 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     // (undocumented)
     focus(): void;
     // (undocumented)
+    protected readonly focusMonitor: FocusMonitor;
+    // (undocumented)
     getHeight(): number;
     // (undocumented)
     getSelectedOptionValues(): string[];
@@ -207,6 +211,10 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     static ngAcceptInputType_horizontal: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     get noUnselectLast(): boolean;
     set noUnselectLast(value: boolean);

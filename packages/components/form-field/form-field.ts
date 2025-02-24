@@ -1,4 +1,4 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentChecked,
@@ -120,6 +120,12 @@ export class KbqFormField
     canCleanerClearByEsc: boolean = true;
 
     private readonly destroyRef = inject(DestroyRef);
+
+    get focusOrigin(): FocusOrigin {
+        return this._focusOrigin;
+    }
+
+    private _focusOrigin: FocusOrigin;
 
     get hasFocus(): boolean {
         return this.control.focused;
@@ -270,7 +276,10 @@ export class KbqFormField
     }
 
     runFocusMonitor = () => {
-        this.focusMonitor.monitor(this.elementRef.nativeElement, true);
+        this.focusMonitor
+            .monitor(this.elementRef.nativeElement, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((origin) => (this._focusOrigin = origin));
     };
 
     stopFocusMonitor() {

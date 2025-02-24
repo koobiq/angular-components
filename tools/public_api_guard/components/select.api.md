@@ -32,6 +32,7 @@ import * as i5 from '@koobiq/components/icon';
 import * as i6 from '@koobiq/components/tags';
 import * as i7 from '@koobiq/components/tooltip';
 import * as i8 from '@angular/common';
+import * as i9 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
 import { KbqFormField } from '@koobiq/components/form-field';
@@ -296,7 +297,7 @@ export class KbqSelectModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.OverlayModule, typeof i4.KbqOptionModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqToolTipModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i8.NgClass, typeof i8.NgTemplateOutlet], [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i4.KbqOptionModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSelectModule, [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip], [typeof i3.OverlayModule, typeof i4.KbqOptionModule, typeof i5.KbqIconModule, typeof i6.KbqTagsModule, typeof i7.KbqToolTipModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult, typeof i8.NgClass, typeof i8.NgTemplateOutlet, typeof i9.A11yModule], [typeof i1.KbqSelect, typeof i2.KbqOptionTooltip, typeof i4.KbqOptionModule, typeof i4.KbqSelectSearch, typeof i4.KbqSelectFooter, typeof i4.KbqSelectMatcher, typeof i4.KbqSelectTrigger, typeof i4.KbqSelectSearchEmptyResult]>;
 }
 
 // @public

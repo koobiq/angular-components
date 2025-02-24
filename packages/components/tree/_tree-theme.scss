@@ -24,6 +24,12 @@
 }
 
 @mixin kbq-tree-theme() {
+    .kbq-tree-selection {
+        &:focus {
+            outline: none;
+        }
+    }
+
     .kbq-tree-option {
         @include kbq-tree-option(default);
 
@@ -48,15 +54,9 @@
         }
     }
 
-    .kbq-tree-selection {
-        &:focus {
-            outline: none;
-        }
-
-        &.cdk-keyboard-focused {
-            & .kbq-tree-option.kbq-focused {
-                border-color: var(--kbq-tree-states-focused-focus-outline-color);
-            }
+    .cdk-keyboard-focused {
+        & .kbq-tree-option.kbq-focused {
+            border-color: var(--kbq-tree-states-focused-focus-outline-color);
         }
     }
 }
