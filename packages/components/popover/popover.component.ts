@@ -82,8 +82,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
             });
 
         this.cdkTrapFocus.focusTrap.focusFirstTabbableElement();
-
-        this.cdkTrapFocus.focusTrap.focusFirstTabbableElement();
     }
 
     onContentChange() {
