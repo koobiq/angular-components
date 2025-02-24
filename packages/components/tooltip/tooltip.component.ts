@@ -270,7 +270,7 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected modifier: TooltipModifier = TooltipModifier.Default;
 
     ngAfterViewInit(): void {
-        this.parentPopup?.closedStream.pipe(takeUntilDestroyed()).subscribe(() => this.hide());
+        this.parentPopup?.closedStream.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.hide());
 
         this.focusMonitor.monitor(this.elementRef.nativeElement);
     }

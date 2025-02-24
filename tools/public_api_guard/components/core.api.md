@@ -27,6 +27,7 @@ import { EventEmitter } from '@angular/core';
 import { FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
+import { FocusTrapInertStrategy } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
@@ -221,6 +222,14 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
 
 // @public
 export const defaultOffsetY: number;
+
+// @public (undocumented)
+export class EmptyFocusTrapStrategy implements FocusTrapInertStrategy {
+    // (undocumented)
+    allowFocus(): void;
+    // (undocumented)
+    preventFocus(): void;
+}
 
 // @public (undocumented)
 export const enUSFormattersData: {
@@ -1732,6 +1741,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly elementRef: ElementRef;
     // (undocumented)
     enterDelay: number;
+    // (undocumented)
+    focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
     // (undocumented)
     abstract getOverlayHandleComponentType(): Type<T>;

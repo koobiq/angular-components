@@ -1,3 +1,4 @@
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     CdkScrollable,
@@ -44,7 +45,7 @@ import { kbqPopoverAnimations } from './popover-animations';
     preserveWhitespaces: false,
     styleUrls: ['./popover.scss', './popover-tokens.scss'],
     host: {
-        '(keydown.esc)': 'hide(0)'
+        '(keydown.esc)': 'onEscape()'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,10 +57,13 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     header: string | TemplateRef<any>;
     footer: string | TemplateRef<any>;
 
+    trigger: KbqPopoverTrigger;
+
     isTrapFocus: boolean = false;
     hasCloseButton: boolean = false;
 
     @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
+    @ViewChild(CdkTrapFocus) cdkTrapFocus: CdkTrapFocus;
 
     private debounceTime = 15;
     private readonly destroyRef = inject(DestroyRef);
@@ -76,6 +80,8 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
             .subscribe((event) => {
                 this.checkContentOverflow(event.target as HTMLElement);
             });
+
+        this.cdkTrapFocus.focusTrap.focusFirstTabbableElement();
     }
 
     onContentChange() {
@@ -98,6 +104,12 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
 
     updateTrapFocus(isTrapFocus: boolean): void {
         this.isTrapFocus = isTrapFocus;
+    }
+
+    onEscape() {
+        this.hide(0);
+
+        this.trigger.focus();
     }
 
     protected readonly componentColors = KbqComponentColors;
