@@ -19,6 +19,7 @@ exports[`ng add '@koobiq/components' should add missing dependencies to 'package
   "@koobiq/icons": "^0.0.0",
   "@koobiq/tokens-builder": "^0.0.0",
   "@messageformat/core": "^0.0.0",
+  "@radix-ng/primitives": "^0.0.0",
   "luxon": "^0.0.0",
   "rxjs": "~7.8.0",
   "tslib": "^2.3.0",

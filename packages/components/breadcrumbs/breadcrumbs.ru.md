@@ -1,18 +1,5 @@
 Хлебные крошки – это элемент навигации, который позволяет пользователю легко ориентироваться на сайте и понимать, где он находится в данный момент относительно главной страницы.
 
-<div class="kbq-callout kbq-callout_theme">
-<div class="kbq-callout__header">Обрати внимание</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-Для работы компонента, необходимо наличие [`@radix-ng/primitives@^0.20.2`](https://github.com/radix-ng/primitives/tree/primitives%400.20.2) зависимости:
-
-```bash
-npm install @radix-ng/primitives@^0.20.2
-```
-
-</div>
-</div>
-
 <!-- example(breadcrumbs-overview) -->
 
 ## Размеры
