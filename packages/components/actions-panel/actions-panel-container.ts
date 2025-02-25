@@ -16,16 +16,41 @@ import {
     Component,
     EventEmitter,
     inject,
+    InjectionToken,
     OnDestroy,
+    Provider,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqAnimationCurves, KbqAnimationDurations } from '@koobiq/components/core';
+import {
+    KBQ_LOCALE_SERVICE,
+    KbqActionsPanelLocaleConfiguration,
+    KbqAnimationCurves,
+    KbqAnimationDurations,
+    ruRULocaleData
+} from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { map, of } from 'rxjs';
 import { KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
+
+/** Localization configuration provider. */
+export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION = new InjectionToken<KbqActionsPanelLocaleConfiguration>(
+    'KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION',
+    { factory: () => ruRULocaleData.actionsPanel }
+);
+
+/** Utility provider for `KBQ_CODE_BLOCK_LOCALE_CONFIGURATION`. */
+export const kbqActionsPanelLocaleConfigurationProvider = (
+    configuration: KbqActionsPanelLocaleConfiguration
+): Provider => ({
+    provide: KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION,
+    useValue: configuration
+});
 
 /**
  * Animation that shows and hides the actions panel.
@@ -60,7 +85,8 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         CdkPortalOutlet,
         KbqDividerModule,
         KbqButtonModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqToolTipModule
     ],
     selector: 'kbq-actions-panel-container',
     template: `
@@ -69,7 +95,14 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         </div>
         @if (!config.disableClose) {
             <kbq-divider class="kbq-actions-panel-container__vertical-divider" [vertical]="true" />
-            <button class="kbq-actions-panel-container__close-button" (click)="close()" color="contrast" kbq-button>
+            <button
+                class="kbq-actions-panel-container__close-button"
+                [kbqTooltip]="localeConfiguration()!.closeTooltip"
+                [kbqTooltipOffset]="16"
+                (click)="close()"
+                color="contrast"
+                kbq-button
+            >
                 <i kbq-icon="kbq-xmark-circle_16"></i>
             </button>
         }
@@ -118,6 +151,18 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 
     private readonly actionsPanel = inject(KbqActionsPanel);
     private readonly renderer = inject(Renderer2);
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    /**
+     * Actions panel locale configuration.
+     *
+     * @docs-private
+     */
+    readonly localeConfiguration = toSignal<KbqActionsPanelLocaleConfiguration>(
+        this.localeService
+            ? this.localeService.changes.pipe(map(() => this.localeService!.getParams('actionsPanel')))
+            : of(inject(KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION))
+    );
 
     override ngOnDestroy() {
         super.ngOnDestroy();
@@ -141,6 +186,8 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     startOpenAnimation(): void {
         if (!this.destroyed) {
             this.animationState = 'visible';
+            // animationState lives in host bindings and `detectChanges` does not refresh host bindings  so we have to
+            // call `markForCheck` to ensure the host view is refreshed eventually.
             this._changeDetectorRef.markForCheck();
             this._changeDetectorRef.detectChanges();
         }

@@ -1,4 +1,4 @@
-import { KbqCodeBlockLocaleConfiguration } from './types';
+import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
 
 export const ruRULocaleData = {
     select: { hiddenItemsText: 'еще {{ number }}' },
@@ -41,5 +41,8 @@ export const ruRULocaleData = {
     } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'Город или часовой пояс'
-    }
+    },
+    actionsPanel: {
+        closeTooltip: 'Отменить выбор'
+    } satisfies KbqActionsPanelLocaleConfiguration
 };
