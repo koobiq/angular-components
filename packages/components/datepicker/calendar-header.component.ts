@@ -35,8 +35,8 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     monthNames: MonthName[];
     selectedMonth: number;
 
-    years: { name: number; value: string }[] = [];
-    selectedYear: { name: number; value: string };
+    years: number[] = [];
+    selectedYear: number;
 
     @Input()
     get activeDate(): D {
@@ -182,10 +182,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.selectedMonth = this.monthNames[this.adapter.getMonth(this.activeDate)].value;
 
         const year = this.adapter.getYear(this.activeDate);
-        this.selectedYear = this.years.find(({ name }) => name === year) || {
-            name: year,
-            value: this.adapter.getYearName(this.activeDate)
-        };
+        this.selectedYear = this.years.find((item) => item === year) || this.years[0];
     }
 
     private updateSelectionOptions() {
@@ -200,7 +197,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.years = [];
 
         for (let key: number = minYear; key <= maxYear; key++) {
-            this.years.push({ name: key, value: this.adapter.getYearName(this.adapter.createDate(key)) });
+            this.years.push(key);
         }
     }
 
