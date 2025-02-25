@@ -314,6 +314,9 @@ export const enUSLocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public
@@ -411,6 +414,9 @@ export const esLALocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public (undocumented)
@@ -501,6 +507,9 @@ export const faIRLocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+    };
+    actionsPanel: {
+        closeTooltip: string;
     };
 };
 
@@ -648,6 +657,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'zh-CN': {
         formatters: {
@@ -724,6 +736,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+        };
+        actionsPanel: {
+            closeTooltip: string;
         };
     };
     'es-LA': {
@@ -803,6 +818,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'pt-BR': {
         formatters: {
@@ -880,6 +898,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+        };
+        actionsPanel: {
+            closeTooltip: string;
         };
     };
     'ru-RU': {
@@ -961,6 +982,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1040,6 +1064,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1118,6 +1145,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+        };
+        actionsPanel: {
+            closeTooltip: string;
         };
     };
 };
@@ -1213,6 +1243,11 @@ export abstract class KbqAbstractSelect {
     // (undocumented)
     protected triggerRect: DOMRect;
 }
+
+// @public
+export type KbqActionsPanelLocaleConfiguration = {
+    closeTooltip: string;
+};
 
 // @public
 export enum KbqAnimationCurves {
@@ -2280,6 +2315,9 @@ export const ptBRLocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public (undocumented)
@@ -2537,6 +2575,9 @@ export const ruRULocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public
@@ -2720,6 +2761,9 @@ export const tkTMLocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public @deprecated
@@ -2823,6 +2867,9 @@ export const zhCNLocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+    };
+    actionsPanel: {
+        closeTooltip: string;
     };
 };
 

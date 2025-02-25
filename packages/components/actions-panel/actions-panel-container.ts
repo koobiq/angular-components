@@ -44,7 +44,7 @@ export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION = new InjectionToken<KbqActi
     { factory: () => ruRULocaleData.actionsPanel }
 );
 
-/** Utility provider for `KBQ_CODE_BLOCK_LOCALE_CONFIGURATION`. */
+/** Utility provider for `KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION`. */
 export const kbqActionsPanelLocaleConfigurationProvider = (
     configuration: KbqActionsPanelLocaleConfiguration
 ): Provider => ({
