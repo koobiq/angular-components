@@ -1,7 +1,7 @@
 @use '../main';
 
 app {
-    max-width: 858px;
+    max-width: 600px;
     min-height: 2000px;
     display: block;
     border: 1px solid cyan;
@@ -11,6 +11,7 @@ hr {
     margin: var(--kbq-size-xxl) 0;
 }
 
+// for debugging autoFocus and restoreFocus
 *:focus {
     border: 1px solid cyan !important;
 }
