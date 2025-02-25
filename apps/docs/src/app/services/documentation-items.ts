@@ -145,8 +145,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                         ru: 'Actions panel',
                         en: 'Actions panel'
                     },
-                    // @TODO should add svgPreview
-                    // svgPreview: 'actions-panel',
+                    svgPreview: 'actions-panel',
                     hasApi: true,
                     apiId: 'actions-panel',
                     hasExamples: false
