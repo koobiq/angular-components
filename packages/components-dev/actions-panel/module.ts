@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { ActionsPanelExamplesModule } from 'packages/docs-examples/components/actions-panel';
+import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
@@ -34,11 +35,13 @@ export class Page2 {}
     standalone: true,
     imports: [
         DevThemeToggle,
+        DevLocaleSelector,
         RouterOutlet
     ],
     selector: 'app',
     template: `
         <dev-theme-toggle />
+        <dev-locale-selector />
         <hr />
         <router-outlet />
     `,
