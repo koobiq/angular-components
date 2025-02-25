@@ -209,6 +209,6 @@ export class KbqAutocomplete implements AfterContentInit {
     }
 
     private updateFocusClass() {
-        this._classList['cdk-keyboard-focused'] = this.parentFormField.focusOrigin === 'keyboard';
+        this._classList['cdk-keyboard-focused'] = this.parentFormField?.focusOrigin === 'keyboard';
     }
 }

@@ -1,3 +1,4 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -24,7 +25,8 @@ import { UtcOffsetPipe } from './utc-offset.pipe';
         KbqToolTipModule,
         KbqHighlightModule,
         NgClass,
-        KeyValuePipe
+        KeyValuePipe,
+        A11yModule
     ],
     declarations: [
         UtcOffsetPipe,
