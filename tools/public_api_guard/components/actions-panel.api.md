@@ -19,6 +19,7 @@ import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { KbqActionsPanelLocaleConfiguration } from '@koobiq/components/core';
 import { Location as Location_2 } from '@angular/common';
 import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -31,6 +32,7 @@ import { OverlayPositionBuilder } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollStrategyOptions } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -38,6 +40,9 @@ export const KBQ_ACTIONS_PANEL_DATA: InjectionToken<unknown>;
 
 // @public
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG: InjectionToken<KbqActionsPanelConfig<unknown>>;
+
+// @public
+export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION: InjectionToken<KbqActionsPanelLocaleConfiguration>;
 
 // @public
 export const KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR = "kbq-actions-panel-overlay-container";
@@ -84,6 +89,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     protected close(): void;
     protected readonly config: KbqActionsPanelConfig<any>;
     protected _contentAttached(): void;
+    readonly localeConfiguration: Signal<KbqActionsPanelLocaleConfiguration | undefined>;
     // (undocumented)
     ngOnDestroy(): void;
     protected onAnimationDone(event: AnimationEvent_2): void;
@@ -108,6 +114,9 @@ export class KbqActionsPanelDialog extends Dialog {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqActionsPanelDialog>;
 }
+
+// @public
+export const kbqActionsPanelLocaleConfigurationProvider: (configuration: KbqActionsPanelLocaleConfiguration) => Provider;
 
 // @public (undocumented)
 export class KbqActionsPanelModule {
