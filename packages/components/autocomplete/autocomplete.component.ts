@@ -10,6 +10,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    Optional,
     Output,
     QueryList,
     TemplateRef,
@@ -18,6 +19,7 @@ import {
 } from '@angular/core';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption } from '@koobiq/components/core';
+import { KbqFormField } from '@koobiq/components/form-field';
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
@@ -163,7 +165,8 @@ export class KbqAutocomplete implements AfterContentInit {
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef<HTMLElement>,
-        @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions
+        @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions,
+        @Optional() private readonly parentFormField: KbqFormField
     ) {
         this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
     }
@@ -188,6 +191,8 @@ export class KbqAutocomplete implements AfterContentInit {
         this._classList['kbq-autocomplete_visible'] = this.showPanel;
         this._classList['kbq-autocomplete_hidden'] = !this.showPanel;
 
+        this.updateFocusClass();
+
         this.changeDetectorRef.markForCheck();
     }
 
@@ -199,5 +204,11 @@ export class KbqAutocomplete implements AfterContentInit {
 
     onKeydown(event: KeyboardEvent): any {
         this.keyManager.onKeydown(event);
+
+        this.updateFocusClass();
+    }
+
+    private updateFocusClass() {
+        this._classList['cdk-keyboard-focused'] = this.parentFormField.focusOrigin === 'keyboard';
     }
 }
