@@ -1563,19 +1563,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "link-caption-example.ts",
     "importPath": "components/link"
   },
-  "link-color": {
-    "packagePath": "components/link/link-color",
-    "title": "Link color",
-    "componentName": "LinkColorExample",
-    "files": [
-      "link-color-example.ts",
-      "link-color-example.css"
-    ],
-    "selector": "link-color-example",
-    "additionalComponents": [],
-    "primaryFile": "link-color-example.ts",
-    "importPath": "components/link"
-  },
   "link-disabled": {
     "packagePath": "components/link/link-disabled",
     "title": "Link disabled",
@@ -3859,8 +3846,6 @@ return import('@koobiq/docs-examples/components/layout-flex');
   case 'link-application':
 return import('@koobiq/docs-examples/components/link');
   case 'link-caption':
-return import('@koobiq/docs-examples/components/link');
-  case 'link-color':
 return import('@koobiq/docs-examples/components/link');
   case 'link-disabled':
 return import('@koobiq/docs-examples/components/link');
