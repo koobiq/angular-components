@@ -6,7 +6,8 @@ import {
     inject,
     output,
     Signal,
-    signal
+    signal,
+    viewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KBQ_ACTIONS_PANEL_DATA, KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
@@ -85,6 +86,11 @@ export class ExampleTable {
         afterNextRender(() => this.change());
     }
 
+    reset(): void {
+        this.data.forEach((item) => (item.selected = false));
+        this.change();
+    }
+
     change(): void {
         this.selectedItems.emit(this.data.filter(({ selected }) => selected));
     }
@@ -101,15 +107,23 @@ export class ExampleTable {
     ],
     selector: 'example-actions-panel',
     template: `
-        <div class="example-content">Selected: {{ data().length }}</div>
-        <kbq-divider class="example-divider-vertical" [vertical]="true" />
         <kbq-overflow-items>
+            <ng-container *kbqOverflowItem="'content'">
+                <div class="example-content">Selected: {{ data().length }}</div>
+                <kbq-divider class="example-divider-vertical" [vertical]="true" />
+            </ng-container>
+
             @for (action of actions; track action.id; let first = $first) {
                 <ng-container *kbqOverflowItem="action.id">
                     @if (action.divider) {
                         <kbq-divider class="example-divider-vertical" [vertical]="true" />
                     }
-                    <button [class.layout-margin-left-xxs]="!first" color="contrast" kbq-button>
+                    <button
+                        [class.layout-margin-left-xxs]="!first"
+                        (click)="onAction(action)"
+                        color="contrast"
+                        kbq-button
+                    >
                         <i [class]="action.icon" kbq-icon></i>
                         {{ action.id }}
                     </button>
@@ -121,12 +135,17 @@ export class ExampleTable {
                 </button>
 
                 <kbq-dropdown #dropdown="kbqDropdown">
+                    @if (hiddenItemIDs.has('content')) {
+                        <div>Selected: {{ data().length }}</div>
+                        <kbq-divider />
+                    }
+
                     @for (action of actions; track action.id; let index = $index) {
                         @if (hiddenItemIDs.has(action.id)) {
                             @if (action.divider && hiddenItemIDs.has(actions[index - 1]?.id)) {
                                 <kbq-divider />
                             }
-                            <button kbq-dropdown-item>
+                            <button (click)="onAction(action)" kbq-dropdown-item>
                                 <i [class]="action.icon" kbq-icon></i>
                                 {{ action.id }}
                             </button>
@@ -139,14 +158,13 @@ export class ExampleTable {
     styles: `
         :host {
             display: flex;
-            align-items: center;
             overflow: hidden;
             flex-grow: 1;
         }
 
         .example-content {
             margin: 0 var(--kbq-size-m);
-            flex-basis: 75px;
+            width: 75px;
         }
 
         .example-divider-vertical {
@@ -169,6 +187,10 @@ export class ExampleActionsPanel {
         { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', divider: true },
         { id: 'Remove', icon: 'kbq-trash_16' }
     ];
+
+    onAction(action: ExampleAction): void {
+        this.actionsPanelRef.close(action.id);
+    }
 }
 
 /**
@@ -185,7 +207,7 @@ export class ExampleActionsPanel {
     styles: `
         :host {
             display: flex;
-            padding-bottom: 25px;
+            padding-bottom: var(--kbq-size-xxl);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -193,6 +215,7 @@ export class ExampleActionsPanel {
 export class ActionsPanelOverviewExample {
     private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     private readonly elementRef = inject(ElementRef);
+    private readonly exampleTable = viewChild.required(ExampleTable);
     private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null;
     private readonly data = signal<ExampleTableItem[]>([]);
 
@@ -208,13 +231,19 @@ export class ActionsPanelOverviewExample {
         }
 
         this.actionsPanelRef = this.actionsPanel.open(ExampleActionsPanel, {
-            width: '844px',
+            width: '100%',
             data: this.data,
-            overlayConnectedTo: this.elementRef
+            overlayContainer: this.elementRef
         });
 
-        this.actionsPanelRef.afterClosed.subscribe(() => {
+        this.actionsPanelRef.afterOpened.subscribe(() => {
+            console.log('ActionsPanel opened');
+        });
+
+        this.actionsPanelRef.afterClosed.subscribe((result) => {
+            console.log('ActionsPanel closed by action:', result);
             this.actionsPanelRef = null;
+            this.exampleTable().reset();
         });
     }
 }

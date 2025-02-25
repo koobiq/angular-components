@@ -7,18 +7,30 @@
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AutoFocusTarget } from '@angular/cdk/dialog';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
+import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
+import { Dialog } from '@angular/cdk/dialog';
+import { DialogConfig } from '@angular/cdk/dialog';
 import { DialogRef } from '@angular/cdk/dialog';
 import { Direction } from '@angular/cdk/bidi';
+import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { Location as Location_2 } from '@angular/common';
+import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
+import { Overlay } from '@angular/cdk/overlay';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { OverlayKeyboardDispatcher } from '@angular/cdk/overlay';
+import { OverlayOutsideClickDispatcher } from '@angular/cdk/overlay';
+import { OverlayPositionBuilder } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -26,6 +38,9 @@ export const KBQ_ACTIONS_PANEL_DATA: InjectionToken<unknown>;
 
 // @public
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG: InjectionToken<KbqActionsPanelConfig<unknown>>;
+
+// @public
+export const KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR = "kbq-actions-panel-overlay-container";
 
 // @public
 export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = "kbq-actions-panel-overlay";
@@ -54,10 +69,10 @@ export class KbqActionsPanelConfig<D = unknown> {
     injector?: Injector;
     maxWidth?: number | string;
     minWidth?: number | string;
-    overlayConnectedTo?: ElementRef;
+    overlayContainer?: ElementRef<HTMLElement>;
     overlayPanelClass?: string | string[];
     restoreFocus?: boolean | string | HTMLElement;
-    scrollStrategy?: ScrollStrategy;
+    scrollStrategy?: (overlay: Overlay) => ScrollStrategy;
     width?: string;
 }
 
@@ -84,6 +99,16 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 // @public
 export const kbqActionsPanelDefaultConfigProvider: <D>(config: KbqActionsPanelConfig<D>) => Provider;
 
+// @public
+export class KbqActionsPanelDialog extends Dialog {
+    constructor(overlay: KbqActionsPanelOverlay, injector: Injector, defaultOptions: DialogConfig, parentDialog: Dialog, overlayContainer: KbqActionsPanelOverlayContainer, scrollStrategy: any);
+    setOverlayContainerElement(containerElement?: HTMLElement): this;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanelDialog, [null, null, { optional: true; }, { optional: true; skipSelf: true; }, null, null]>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqActionsPanelDialog>;
+}
+
 // @public (undocumented)
 export class KbqActionsPanelModule {
     // (undocumented)
@@ -94,6 +119,25 @@ export class KbqActionsPanelModule {
     //
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqActionsPanelModule, never, [typeof i1.KbqActionsPanelContainer], [typeof i1.KbqActionsPanelContainer]>;
+}
+
+// @public
+export class KbqActionsPanelOverlay extends Overlay {
+    constructor(scrollStrategies: ScrollStrategyOptions, overlayContainer: KbqActionsPanelOverlayContainer, componentFactoryResolver: ComponentFactoryResolver, positionBuilder: OverlayPositionBuilder, keyboardDispatcher: OverlayKeyboardDispatcher, injector: Injector, ngZone: NgZone, document: any, directionality: Directionality, location: Location_2, outsideClickDispatcher: OverlayOutsideClickDispatcher, animationsModuleType?: string);
+    setOverlayContainerElement(containerElement?: HTMLElement): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanelOverlay, [null, null, null, null, null, null, null, null, null, null, null, { optional: true; }]>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqActionsPanelOverlay>;
+}
+
+// @public
+export class KbqActionsPanelOverlayContainer extends OverlayContainer {
+    setContainerElement(containerElement?: HTMLElement): void;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionsPanelOverlayContainer, never>;
+    // (undocumented)
+    static ɵprov: i0.ɵɵInjectableDeclaration<KbqActionsPanelOverlayContainer>;
 }
 
 // @public

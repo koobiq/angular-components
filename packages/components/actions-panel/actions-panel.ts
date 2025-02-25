@@ -1,6 +1,29 @@
-import { Dialog } from '@angular/cdk/dialog';
-import { ComponentType, Overlay } from '@angular/cdk/overlay';
-import { inject, Injectable, InjectionToken, Injector, OnDestroy, TemplateRef } from '@angular/core';
+import { Directionality } from '@angular/cdk/bidi';
+import { DEFAULT_DIALOG_CONFIG, Dialog, DIALOG_SCROLL_STRATEGY, DialogConfig } from '@angular/cdk/dialog';
+import {
+    ComponentType,
+    Overlay,
+    OverlayContainer,
+    OverlayKeyboardDispatcher,
+    OverlayOutsideClickDispatcher,
+    OverlayPositionBuilder,
+    ScrollStrategyOptions
+} from '@angular/cdk/overlay';
+import { DOCUMENT, Location } from '@angular/common';
+import {
+    ANIMATION_MODULE_TYPE,
+    ComponentFactoryResolver,
+    Inject,
+    inject,
+    Injectable,
+    InjectionToken,
+    Injector,
+    NgZone,
+    OnDestroy,
+    Optional,
+    SkipSelf,
+    TemplateRef
+} from '@angular/core';
 import { KBQ_ACTIONS_PANEL_DEFAULT_CONFIG, KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelContainer } from './actions-panel-container';
 import { KbqActionsPanelRef } from './actions-panel-ref';
@@ -54,13 +77,116 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
 export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = 'kbq-actions-panel-overlay';
 
 /**
+ * Selector for custom actions panel overlay container.
+ *
+ * @docs-private
+ */
+export const KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR = 'kbq-actions-panel-overlay-container';
+
+/**
+ * Actions panel overlay container.
+ *
+ * @docs-private
+ */
+@Injectable({ providedIn: 'root' })
+export class KbqActionsPanelOverlayContainer extends OverlayContainer {
+    /**
+     * Set the overlay container element.
+     *
+     * @param containerElement The element into which the overlay will be rendered.
+     * @returns Current OverlayContainer instance.
+     */
+    setContainerElement(containerElement?: HTMLElement): void {
+        this._containerElement = containerElement || this._document.body.querySelector('.cdk-overlay-container')!;
+    }
+}
+
+/**
+ * Actions panel overlay.
+ *
+ * @docs-private
+ */
+@Injectable({ providedIn: 'root' })
+export class KbqActionsPanelOverlay extends Overlay {
+    constructor(
+        scrollStrategies: ScrollStrategyOptions,
+        private readonly overlayContainer: KbqActionsPanelOverlayContainer,
+        componentFactoryResolver: ComponentFactoryResolver,
+        positionBuilder: OverlayPositionBuilder,
+        keyboardDispatcher: OverlayKeyboardDispatcher,
+        injector: Injector,
+        ngZone: NgZone,
+        @Inject(DOCUMENT) document: any,
+        directionality: Directionality,
+        location: Location,
+        outsideClickDispatcher: OverlayOutsideClickDispatcher,
+        @Inject(ANIMATION_MODULE_TYPE) @Optional() animationsModuleType?: string
+    ) {
+        super(
+            scrollStrategies,
+            overlayContainer,
+            componentFactoryResolver,
+            positionBuilder,
+            keyboardDispatcher,
+            injector,
+            ngZone,
+            document,
+            directionality,
+            location,
+            outsideClickDispatcher,
+            animationsModuleType
+        );
+    }
+
+    /**
+     * Set the overlay container element.
+     *
+     * @param containerElement The element into which the overlay will be rendered.
+     * @returns Current Overlay instance.
+     */
+    setOverlayContainerElement(containerElement?: HTMLElement): void {
+        this.overlayContainer.setContainerElement(containerElement);
+    }
+}
+
+/**
+ * Actions panel dialog service.
+ *
+ * @docs-private
+ */
+@Injectable({ providedIn: 'root' })
+export class KbqActionsPanelDialog extends Dialog {
+    constructor(
+        private readonly overlay: KbqActionsPanelOverlay,
+        injector: Injector,
+        @Optional() @Inject(DEFAULT_DIALOG_CONFIG) defaultOptions: DialogConfig,
+        @Optional() @SkipSelf() parentDialog: Dialog,
+        overlayContainer: KbqActionsPanelOverlayContainer,
+        @Inject(DIALOG_SCROLL_STRATEGY) scrollStrategy: any
+    ) {
+        super(overlay, injector, defaultOptions, parentDialog, overlayContainer, scrollStrategy);
+    }
+
+    /**
+     * Set the dialog overlay container element.
+     *
+     * @param containerElement The element into which the overlay will be rendered.
+     * @returns Current dialog instance.
+     */
+    setOverlayContainerElement(containerElement?: HTMLElement): this {
+        this.overlay.setOverlayContainerElement(containerElement);
+        return this;
+    }
+}
+
+/**
  * Service for opening actions panel.
  */
 @Injectable({ providedIn: 'root' })
 export class KbqActionsPanel implements OnDestroy {
     private readonly injector = inject(Injector);
-    private readonly overlay = inject(Overlay);
-    private readonly dialog = inject(Dialog);
+    private readonly overlay = inject(KbqActionsPanelOverlay);
+    private readonly dialog = inject(KbqActionsPanelDialog);
     private readonly defaultConfig = inject(KBQ_ACTIONS_PANEL_DEFAULT_CONFIG);
 
     /** The reference to the currently opened actions panel. */
@@ -104,7 +230,20 @@ export class KbqActionsPanel implements OnDestroy {
         };
         const actionsPanelRef = this.openDialog<T, D, R>(componentOrTemplateRef, _config);
 
-        this.animate(actionsPanelRef);
+        actionsPanelRef.afterClosed.subscribe(() => {
+            if (this.openedActionsPanelRef === actionsPanelRef) {
+                this.openedActionsPanelRef = null;
+            }
+        });
+
+        if (this.openedActionsPanelRef) {
+            this.openedActionsPanelRef.afterClosed.subscribe(() => {
+                actionsPanelRef.containerInstance?.startOpenAnimation();
+            });
+            this.openedActionsPanelRef.close();
+        } else {
+            actionsPanelRef.containerInstance.startOpenAnimation();
+        }
 
         this.openedActionsPanelRef = actionsPanelRef as KbqActionsPanelRef;
 
@@ -116,84 +255,60 @@ export class KbqActionsPanel implements OnDestroy {
         this.openedActionsPanelRef?.close(result);
     }
 
-    private animate<T = unknown, R = unknown>(actionsPanelRef: KbqActionsPanelRef<T, R>): void {
-        actionsPanelRef.afterClosed.subscribe(() => {
-            if (this.openedActionsPanelRef === actionsPanelRef) {
-                this.openedActionsPanelRef = null;
-            }
-        });
-
-        if (this.openedActionsPanelRef) {
-            // If the actions panel is already in view, close it and enter the new one after exit animation is complete.
-            this.openedActionsPanelRef.afterClosed.subscribe(() => {
-                actionsPanelRef.containerInstance?.startOpenAnimation();
-            });
-            this.openedActionsPanelRef.close();
-        } else {
-            actionsPanelRef.containerInstance.startOpenAnimation();
-        }
-    }
-
     private openDialog<T, D = unknown, R = unknown>(
         componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
         config: KbqActionsPanelConfig<D> = {}
     ): KbqActionsPanelRef<T, R> {
         let actionsPanelRef!: KbqActionsPanelRef<T, R>;
-        const position = this.overlay.position();
-        const dialogRef = this.dialog.open<R, D, T>(componentOrTemplateRef, {
-            ...config,
-            container: KbqActionsPanelContainer,
-            hasBackdrop: false,
-            // Disable closing since we need to sync it up to the animation ourselves
-            closeOnOverlayDetachments: false,
-            // Disable closing since we need to sync it up to the animation ourselves
-            closeOnDestroy: false,
-            // Disable closing since we need to sync it up to the animation ourselves
-            disableClose: true,
-            scrollStrategy: config.scrollStrategy && config.scrollStrategy(this.overlay),
-            positionStrategy: config.overlayConnectedTo
-                ? position
-                      .flexibleConnectedTo(config.overlayConnectedTo)
-                      .withPositions([
-                          {
-                              originX: 'center',
-                              originY: 'bottom',
-                              overlayX: 'center',
-                              overlayY: 'bottom'
-                          }
-                      ])
-                      .withGrowAfterOpen()
-                      .withLockedPosition()
-                : position.global().centerHorizontally().bottom(),
-            templateContext: () => {
-                return {
-                    $implicit: config.data,
-                    data: config.data,
-                    actionsPanelRef
-                } satisfies KbqActionsPanelTemplateContext<T, D, R>;
-            },
-            injector: Injector.create({
-                parent: config.injector || this.injector,
-                providers: [{ provide: KbqActionsPanelConfig, useValue: config }]
-            }),
-            providers: (dialogRef, _dialogConfig, container) => {
-                actionsPanelRef = new KbqActionsPanelRef<T, R>(
-                    dialogRef,
-                    config,
-                    container as KbqActionsPanelContainer
-                );
-                return [
-                    { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
-                    { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }
-                ];
-            }
-        });
+        const overlayContainerElement = config.overlayContainer?.nativeElement;
+        overlayContainerElement?.classList.add(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR);
+        const dialogRef = this.dialog
+            .setOverlayContainerElement(overlayContainerElement)
+            .open<R, D, T>(componentOrTemplateRef, {
+                ...config,
+                container: KbqActionsPanelContainer,
+                hasBackdrop: false,
+                // Disable closing since we need to sync it up to the animation ourselves
+                closeOnOverlayDetachments: false,
+                // Disable closing since we need to sync it up to the animation ourselves
+                closeOnDestroy: false,
+                // Disable closing since we need to sync it up to the animation ourselves
+                disableClose: true,
+                scrollStrategy: config.scrollStrategy && config.scrollStrategy(this.overlay),
+                positionStrategy: this.overlay.position().global().centerHorizontally().bottom(),
+                templateContext: () => {
+                    return {
+                        $implicit: config.data,
+                        data: config.data,
+                        actionsPanelRef
+                    } satisfies KbqActionsPanelTemplateContext<T, D, R>;
+                },
+                injector: Injector.create({
+                    parent: config.injector || this.injector,
+                    providers: [{ provide: KbqActionsPanelConfig, useValue: config }]
+                }),
+                providers: (dialogRef, _dialogConfig, container) => {
+                    actionsPanelRef = new KbqActionsPanelRef<T, R>(
+                        dialogRef,
+                        config,
+                        container as KbqActionsPanelContainer
+                    );
+                    return [
+                        { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
+                        { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }
+                    ];
+                }
+            });
 
         dialogRef.addPanelClass(KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR);
 
         if (config.overlayPanelClass) {
             dialogRef.addPanelClass(config.overlayPanelClass);
         }
+
+        actionsPanelRef?.afterClosed.subscribe(() => {
+            overlayContainerElement?.classList.remove(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR);
+        });
 
         return actionsPanelRef;
     }

@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
+import { ActionsPanelAdaptiveExample } from './actions-panel-adaptive/actions-panel-adaptive-example';
 import { ActionsPanelOverviewExample } from './actions-panel-overview/actions-panel-overview-example';
 
-export { ActionsPanelOverviewExample };
+export { ActionsPanelAdaptiveExample, ActionsPanelOverviewExample };
 
 const EXAMPLES = [
-    ActionsPanelOverviewExample
+    ActionsPanelOverviewExample,
+    ActionsPanelAdaptiveExample
 ];
 
 @NgModule({
