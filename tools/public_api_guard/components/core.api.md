@@ -1218,6 +1218,28 @@ export abstract class KbqAbstractSelect {
 }
 
 // @public
+export enum KbqAnimationCurves {
+    // (undocumented)
+    AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
+    // (undocumented)
+    DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
+    // (undocumented)
+    SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
+    // (undocumented)
+    StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
+}
+
+// @public
+export enum KbqAnimationDurations {
+    // (undocumented)
+    Complex = "250ms",
+    // (undocumented)
+    Entering = "150ms",
+    // (undocumented)
+    Exiting = "125ms"
+}
+
+// @public
 export type KbqCodeBlockLocaleConfiguration = {
     softWrapOnTooltip: string;
     softWrapOffTooltip: string;

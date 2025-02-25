@@ -1,13 +1,28 @@
 import { ESCAPE } from '@angular/cdk/keycodes';
-import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
+import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
-import { ChangeDetectionStrategy, Component, inject, Provider, TemplateRef, Type, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    Provider,
+    TemplateRef,
+    Type,
+    viewChild
+} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { lastValueFrom } from 'rxjs';
-import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
+import {
+    KBQ_ACTIONS_PANEL_DATA,
+    KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR,
+    KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR,
+    KbqActionsPanel,
+    KbqActionsPanelOverlayContainer
+} from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
 import { KbqActionsPanelModule } from './module';
@@ -23,7 +38,7 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
 };
 
 const getOverlayContainerElement = (): HTMLElement => {
-    return TestBed.inject(OverlayContainer).getContainerElement();
+    return TestBed.inject(KbqActionsPanelOverlayContainer).getContainerElement();
 };
 
 const getOverlayPaneElement = (): HTMLElement => {
@@ -82,6 +97,7 @@ export class ActionsPanelController {
     readonly actionsPanel = inject(KbqActionsPanel, { self: true });
     readonly template = viewChild.required('actionsPanel', { read: TemplateRef });
     readonly component = ActionsPanelComponent;
+    readonly elementRef = inject(ElementRef);
 
     openFromTemplate<D = string>(config?: KbqActionsPanelConfig<D>): KbqActionsPanelRef {
         return this.actionsPanel.open(this.template(), config);
@@ -356,7 +372,18 @@ describe(KbqActionsPanelModule.name, () => {
             enable: jest.fn(),
             disable: () => {}
         };
-        componentInstance.openFromTemplate({ scrollStrategy });
+        componentInstance.openFromTemplate({ scrollStrategy: () => scrollStrategy });
         expect(scrollStrategy.enable).toHaveBeenCalledTimes(1);
+    });
+
+    it('should apply custom overlay container', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
+        expect(
+            componentInstance.elementRef.nativeElement.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)
+        ).toBeFalsy();
+        componentInstance.openFromTemplate({ overlayContainer: componentInstance.elementRef });
+        expect(
+            componentInstance.elementRef.nativeElement.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)
+        ).toBeTruthy();
     });
 });
