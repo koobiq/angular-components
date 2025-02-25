@@ -208,6 +208,7 @@ export class ExampleActionsPanel {
         :host {
             display: flex;
             padding-bottom: var(--kbq-size-xxl);
+            overflow: hidden;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

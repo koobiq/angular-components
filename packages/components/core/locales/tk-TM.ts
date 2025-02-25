@@ -1,3 +1,5 @@
+import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
+
 export const tkTMLocaleData = {
     select: { hiddenItemsText: 'ýene {{ number }}' },
     datepicker: {
@@ -36,8 +38,11 @@ export const tkTMLocaleData = {
         viewAllText: 'Hemmesini görkezmek',
         viewLessText: 'Ýygyrmak',
         openExternalSystemTooltip: 'Daşarky ulgamda açmak'
-    },
+    } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'Şäher ýa-da sagat guşagy'
-    }
+    },
+    actionsPanel: {
+        closeTooltip: 'Saýlawy ýatyr'
+    } satisfies KbqActionsPanelLocaleConfiguration
 };

@@ -13,3 +13,10 @@ export type KbqCodeBlockLocaleConfiguration = {
 
     openExternalSystemTooltip: string;
 };
+
+/**
+ * Locale configuration for `KbqActionsPanelModule`.
+ */
+export type KbqActionsPanelLocaleConfiguration = {
+    closeTooltip: string;
+};
