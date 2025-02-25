@@ -13,6 +13,7 @@
     [kbqPopoverSize]="popoverSize"
     [kbqTrigger]="'manual'"
     [ngClass]="{ 'kbq-active': opened }"
+    (dropdownClosed)="searchControl.setValue('')"
     (dropdownOpened)="input.focus()"
 >
     <span #kbqTitleText class="kbq-filters__filter-name">
