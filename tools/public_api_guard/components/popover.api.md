@@ -8,6 +8,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
+import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
@@ -58,6 +59,8 @@ export const kbqPopoverAnimations: {
 // @public (undocumented)
 export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
+    cdkTrapFocus: CdkTrapFocus;
+    // (undocumented)
     checkContentOverflow(contentElement: HTMLElement): void;
     // (undocumented)
     protected readonly componentColors: typeof KbqComponentColors;
@@ -78,9 +81,13 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     // (undocumented)
     onContentChange(): void;
     // (undocumented)
+    onEscape(): void;
+    // (undocumented)
     popoverContent: ElementRef<HTMLDivElement>;
     // (undocumented)
     prefix: string;
+    // (undocumented)
+    trigger: KbqPopoverTrigger;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, size: PopUpSizes): void;
     // (undocumented)
