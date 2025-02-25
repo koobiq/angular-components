@@ -172,17 +172,11 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
     // (undocumented)
     selectedMonth: number;
     // (undocumented)
-    selectedYear: {
-        name: number;
-        value: string;
-    };
+    selectedYear: number;
     selectNextMonth(): void;
     selectPreviousMonth(): void;
     // (undocumented)
-    years: {
-        name: number;
-        value: string;
-    }[];
+    years: number[];
     // (undocumented)
     readonly yearSelected: EventEmitter<D>;
     // (undocumented)

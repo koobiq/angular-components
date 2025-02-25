@@ -31,7 +31,7 @@
         #yearSelect="kbqSelect"
         [panelClass]="'kbq-calendar-select-panel'"
         [value]="selectedYear"
-        (selectionChange)="onYearSelected($event.value.name)"
+        (selectionChange)="onYearSelected($event.value)"
     >
         <button
             kbq-button
@@ -42,14 +42,14 @@
             [kbqStyle]="'transparent'"
             [tabindex]="-1"
         >
-            {{ selectedYear.value }}
+            {{ selectedYear }}
 
             <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs"></i>
         </button>
 
-        @for (year of years; track year.name) {
+        @for (year of years; track year) {
             <kbq-option [kbqTooltipDisabled]="true" [value]="year">
-                {{ year.value }}
+                {{ year }}
             </kbq-option>
         }
     </kbq-select>
