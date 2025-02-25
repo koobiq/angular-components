@@ -45,7 +45,8 @@
         &.kbq-form-field-type-timepicker,
         &.kbq-form-field-type-datepicker,
         &.kbq-form-field-type-input-password,
-        &.kbq-form-field-type-tag-list {
+        &.kbq-form-field-type-tag-list,
+        &.kbq-form-field-type-select.cdk-keyboard-focused {
             &.cdk-focused {
                 @include kbq-form-field-state(states-focused);
 

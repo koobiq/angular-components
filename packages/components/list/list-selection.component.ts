@@ -188,6 +188,13 @@ export class KbqListSelection
 
     private _tabIndex = 0;
 
+    /**
+     * Function used for comparing an option against the selected value when determining which
+     * options should appear as selected. The first argument is the value of an options. The second
+     * one is a value from the selected value. A boolean must be returned.
+     */
+    @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
+
     userTabIndex: number | null = null;
 
     get showCheckbox(): boolean {
@@ -238,21 +245,6 @@ export class KbqListSelection
         this.selectionModel = new SelectionModel<KbqListOption>(this.multiple);
     }
 
-    ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true);
-    }
-
-    ngOnDestroy(): void {
-        this.focusMonitor.stopMonitoring(this.elementRef);
-    }
-
-    /**
-     * Function used for comparing an option against the selected value when determining which
-     * options should appear as selected. The first argument is the value of an options. The second
-     * one is a value from the selected value. A boolean must be returned.
-     */
-    @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
-
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqListOption>(this.options)
             .withTypeAhead()
@@ -290,6 +282,14 @@ export class KbqListSelection
         });
 
         this.updateScrollSize();
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef, true);
+    }
+
+    ngOnDestroy(): void {
+        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     focus(): void {
