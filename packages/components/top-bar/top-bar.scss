@@ -17,12 +17,12 @@
         flex: 1 0 var(--kbq-top-bar-spacer-min-width);
     }
 
-    .kbq-top-bar-container__left {
+    .kbq-top-bar-container__start {
         display: flex;
         gap: var(--kbq-top-bar-left-gap);
     }
 
-    .kbq-top-bar-container__right {
+    .kbq-top-bar-container__end {
         display: flex;
         gap: var(--kbq-top-bar-right-gap);
     }

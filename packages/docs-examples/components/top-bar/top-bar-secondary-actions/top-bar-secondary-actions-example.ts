@@ -30,7 +30,7 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
-            <div class="layout-align-center-center" kbqTopBarContainer placement="left">
+            <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
@@ -39,7 +39,7 @@ type ExampleAction = {
 
             <div kbqTopBarSpacer></div>
 
-            <kbq-overflow-items kbqTopBarContainer placement="right">
+            <kbq-overflow-items kbqTopBarContainer placement="end">
                 <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"

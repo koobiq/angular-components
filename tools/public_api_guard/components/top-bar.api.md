@@ -20,7 +20,7 @@ export class KbqTopBar {
 
 // @public
 export class KbqTopBarContainer {
-    placement: InputSignal<"left" | "right">;
+    placement: InputSignal<"start" | "end">;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTopBarContainer, "[kbqTopBarContainer]", never, { "placement": { "alias": "placement"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)

@@ -38,7 +38,7 @@ import { map, startWith } from 'rxjs/operators';
     template: `
         @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-bar>
-            <div class="layout-align-center-center" kbqTopBarContainer placement="left">
+            <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
@@ -87,7 +87,7 @@ import { map, startWith } from 'rxjs/operators';
                 </div>
             </div>
             <div kbqTopBarSpacer></div>
-            <div kbqTopBarContainer placement="right">
+            <div kbqTopBarContainer placement="end">
                 @for (action of actions; track index; let index = $index) {
                     <button
                         [kbqStyle]="action.style || ''"

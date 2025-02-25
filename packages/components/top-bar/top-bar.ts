@@ -25,15 +25,15 @@ export class KbqTopBarSpacer {}
     selector: '[kbqTopBarContainer]',
     host: {
         class: 'kbq-top-bar-container',
-        '[class.kbq-top-bar-container__left]': 'placement() === "left"',
-        '[class.kbq-top-bar-container__right]': 'placement() === "right"'
+        '[class.kbq-top-bar-container__start]': 'placement() === "start"',
+        '[class.kbq-top-bar-container__end]': 'placement() === "end"'
     }
 })
 export class KbqTopBarContainer {
     /**
      * Conditionally applies a CSS class based on the value
      */
-    placement = input.required<'left' | 'right'>();
+    placement = input.required<'start' | 'end'>();
 }
 
 @Component({
