@@ -1,5 +1,18 @@
 Breadcrumbs are a navigation element that helps users easily orient themselves on a website and understand their current location relative to the main page.
 
+<div class="kbq-callout kbq-callout_theme">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+For the component to work, the [`@radix-ng/primitives@^0.20.2`](https://github.com/radix-ng/primitives/tree/primitives%400.20.2) dependency is required:
+
+```bash
+npm install @radix-ng/primitives@^0.20.2
+```
+
+</div>
+</div>
+
 <!-- example(breadcrumbs-overview) -->
 
 ## Sizes

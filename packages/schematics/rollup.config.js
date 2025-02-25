@@ -50,7 +50,6 @@ module.exports = [
                 'VERSIONS.KOOBIQ_DESIGN_TOKENS': version(pkg.devDependencies['@koobiq/design-tokens']),
                 'VERSIONS.KOOBIQ_ICONS': version(pkg.dependencies['@koobiq/icons']),
                 'VERSIONS.MESSAGEFORMAT_CORE': version(pkg.devDependencies['@messageformat/core']),
-                'VERSIONS.RADIX_NG': version(pkg.dependencies['@radix-ng/primitives']),
                 'VERSIONS.LUXON': version(pkg.devDependencies.luxon)
             }),
             typescript({
