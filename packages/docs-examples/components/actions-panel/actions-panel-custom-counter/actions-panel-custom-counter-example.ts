@@ -8,6 +8,7 @@ import {
     viewChild
 } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -20,6 +21,9 @@ type ExampleAction = {
     divider?: boolean;
 };
 
+/**
+ * @title Actions panel custom counter
+ */
 @Component({
     standalone: true,
     imports: [
@@ -27,17 +31,21 @@ type ExampleAction = {
         KbqButtonModule,
         KbqIconModule,
         KbqDropdownModule,
-        KbqDividerModule
+        KbqDividerModule,
+        KbqBadgeModule
     ],
     providers: [KbqActionsPanel],
-    selector: 'example-actions-panel',
+    selector: 'actions-panel-custom-counter-example',
     template: `
         <button (click)="open()" kbq-button>open</button>
 
         <ng-template let-data>
             <kbq-overflow-items>
                 <ng-container *kbqOverflowItem="'content'">
-                    <div class="example-content">Selected: {{ data.length }}</div>
+                    <div class="example-content">
+                        <div>Selected: {{ data.selected }}</div>
+                        <kbq-badge [outline]="true" badgeColor="fade-contrast">+{{ data.counter }}</kbq-badge>
+                    </div>
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
                 </ng-container>
 
@@ -59,7 +67,7 @@ type ExampleAction = {
 
                     <kbq-dropdown #dropdown="kbqDropdown">
                         @if (hiddenItemIDs.has('content')) {
-                            <div>Selected: {{ data.length }}</div>
+                            <div>Selected: {{ data.selected }} (+{{ data.counter }})</div>
                             <kbq-divider />
                         }
 
@@ -85,15 +93,21 @@ type ExampleAction = {
             align-items: center;
             justify-content: center;
             height: 64px;
-            resize: horizontal;
-            max-width: 100%;
-            min-width: 110px;
             overflow: hidden;
         }
 
         .example-content {
+            display: flex;
+            align-items: center;
             margin: 0 var(--kbq-size-m);
-            width: 75px;
+        }
+
+        .example-content .kbq-badge {
+            color: inherit;
+            padding: 0 var(--kbq-size-xxs);
+            font-size: var(--kbq-typography-text-compact-font-size);
+            height: var(--kbq-size-l);
+            margin-left: var(--kbq-size-xxs);
         }
 
         .example-divider-vertical {
@@ -104,7 +118,7 @@ type ExampleAction = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ExampleActionsPanel {
+export class ActionsPanelCustomCounterExample {
     readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
         { id: 'Status', icon: 'kbq-arrow-right-s_16' },
@@ -124,37 +138,8 @@ export class ExampleActionsPanel {
     open(): void {
         this.actionsPanel.open(this.templateRef(), {
             width: '100%',
-            data: { length: 5 },
+            data: { selected: 3, counter: 6 },
             overlayContainer: this.elementRef
         });
     }
 }
-
-/**
- * @title Actions panel adaptive
- */
-@Component({
-    standalone: true,
-    imports: [
-        ExampleActionsPanel
-    ],
-    selector: 'actions-panel-adaptive-example',
-    template: `
-        <div>At first, the actions are hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="527" />
-
-        <div>Then hides the number of records</div>
-        <example-actions-panel [style.width.px]="234" />
-
-        <div>Everything is hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="110" />
-    `,
-    styles: `
-        div {
-            color: var(--kbq-foreground-contrast-secondary);
-            margin: var(--kbq-size-s) var(--kbq-size-s) 0;
-        }
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class ActionsPanelAdaptiveExample {}
