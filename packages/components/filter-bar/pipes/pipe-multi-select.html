@@ -3,7 +3,7 @@
     multiple
     [compareWith]="compareByValue"
     [disabled]="data.disabled"
-    [kbq-pipe-title]="pipeTooltip"
+    [kbqPipeTitle]="pipeTooltip"
     [ngClass]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-multiselect__panel'"
     [value]="selected"
@@ -13,7 +13,7 @@
         kbq-button
         kbq-select-matcher
         [disabled]="data.disabled"
-        [kbq-pipe-state]="data"
+        [kbqPipeState]="data"
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>

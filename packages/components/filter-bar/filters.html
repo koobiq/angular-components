@@ -1,7 +1,7 @@
 <button
     kbq-button
-    kbq-filter-bar-button
     kbq-title
+    kbqFilterBarButton
     kbqPopover
     [kbqDropdownTriggerFor]="savedFilters"
     [kbqPopoverArrow]="false"
@@ -31,7 +31,7 @@
 @if (filterBar.isChanged && !filterBar.isSaved) {
     <button
         kbq-button
-        kbq-filter-bar-button
+        kbqFilterBarButton
         kbqTooltip="Сохранить новый фильтр"
         class="kbq-button_action"
         [color]="colors.Empty"
@@ -44,7 +44,7 @@
 @if (filterBar.isSaved) {
     <button
         kbq-button
-        kbq-filter-bar-button
+        kbqFilterBarButton
         class="kbq-button_action"
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"

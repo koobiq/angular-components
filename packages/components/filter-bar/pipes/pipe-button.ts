@@ -14,7 +14,7 @@ import { KbqPipeState } from './pipe-state';
         <button
             class="kbq-pipe__remove-button"
             [disabled]="pipe.data.disabled"
-            [kbq-pipe-state]="pipe.data"
+            [kbqPipeState]="pipe.data"
             (click)="pipe.data.cleanable ? pipe.onClear() : pipe.onRemove()"
             kbq-button
             kbqTooltip="{{ pipe.data.cleanable ? 'Очистить' : 'Удалить' }}"

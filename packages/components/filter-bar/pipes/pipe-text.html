@@ -2,8 +2,8 @@
     kbq-button
     kbqPopover
     [disabled]="data.disabled"
-    [kbq-pipe-state]="data"
-    [kbq-pipe-title]="pipeTooltip"
+    [kbqPipeState]="data"
+    [kbqPipeTitle]="pipeTooltip"
     [kbqPopoverArrow]="false"
     [kbqPopoverClass]="'kbq-pipe__popover'"
     [kbqPopoverContent]="content"
@@ -11,8 +11,8 @@
     [kbqPopoverPlacement]="placements.BottomLeft"
     [ngClass]="{ 'kbq-active': popover?.isOpen }"
 >
-    <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__name">{{ data.name }}</span>
-    <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__value">{{ data.value }}</span>
+    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
+    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value">{{ data.value }}</span>
 </button>
 
 @if (showRemoveButton) {
