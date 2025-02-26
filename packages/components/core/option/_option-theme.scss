@@ -24,11 +24,6 @@
             @include kbq-option(states-hover);
         }
 
-        &.kbq-focused,
-        &.kbq-active {
-            border-color: var(--kbq-list-states-focused-focus-outline-color);
-        }
-
         &.kbq-selected {
             @include kbq-option(states-selected);
 
@@ -49,6 +44,13 @@
         &:is(.kbq-selected, .kbq-focused, .kbq-active) + :is(.kbq-selected, .kbq-focused, .kbq-active) {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
+        }
+    }
+
+    .cdk-keyboard-focused {
+        .kbq-option.kbq-focused,
+        .kbq-option.kbq-active {
+            border-color: var(--kbq-list-states-focused-focus-outline-color);
         }
     }
 }

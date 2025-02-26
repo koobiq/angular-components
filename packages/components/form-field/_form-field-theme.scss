@@ -40,20 +40,28 @@
             }
         }
 
-        &.cdk-keyboard-focused {
-            @include kbq-form-field-state(states-focused);
+        &.kbq-form-field-type-input,
+        &.kbq-form-field-type-textarea,
+        &.kbq-form-field-type-timepicker,
+        &.kbq-form-field-type-datepicker,
+        &.kbq-form-field-type-input-password,
+        &.kbq-form-field-type-tag-list,
+        &.kbq-form-field-type-select.cdk-keyboard-focused {
+            &.cdk-focused {
+                @include kbq-form-field-state(states-focused);
 
-            & .kbq-form-field__container {
-                box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+                & .kbq-form-field__container {
+                    box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+                }
             }
-        }
 
-        &.kbq-form-field_invalid,
-        &.ng-invalid {
-            @include kbq-form-field-state(states-error);
+            &.kbq-form-field_invalid,
+            &.ng-invalid {
+                @include kbq-form-field-state(states-error);
 
-            &.cdk-keyboard-focused .kbq-form-field__container {
-                box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
+                & .kbq-form-field__container {
+                    box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
+                }
             }
         }
 

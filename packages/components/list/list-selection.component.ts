@@ -1,8 +1,10 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
+    AfterViewInit,
     Attribute,
     booleanAttribute,
     ChangeDetectionStrategy,
@@ -132,8 +134,10 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
 })
 export class KbqListSelection
     extends KbqListSelectionMixinBase
-    implements CanDisable, HasTabIndex, AfterContentInit, ControlValueAccessor
+    implements CanDisable, HasTabIndex, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor
 {
+    protected readonly focusMonitor = inject(FocusMonitor);
+
     keyManager: FocusKeyManager<KbqListOption>;
 
     @ContentChildren(forwardRef(() => KbqListOption), { descendants: true }) options: QueryList<KbqListOption>;
@@ -183,6 +187,13 @@ export class KbqListSelection
     }
 
     private _tabIndex = 0;
+
+    /**
+     * Function used for comparing an option against the selected value when determining which
+     * options should appear as selected. The first argument is the value of an options. The second
+     * one is a value from the selected value. A boolean must be returned.
+     */
+    @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
 
     userTabIndex: number | null = null;
 
@@ -234,13 +245,6 @@ export class KbqListSelection
         this.selectionModel = new SelectionModel<KbqListOption>(this.multiple);
     }
 
-    /**
-     * Function used for comparing an option against the selected value when determining which
-     * options should appear as selected. The first argument is the value of an options. The second
-     * one is a value from the selected value. A boolean must be returned.
-     */
-    @Input() compareWith: (o1: any, o2: any) => boolean = (a1, a2) => a1 === a2;
-
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqListOption>(this.options)
             .withTypeAhead()
@@ -278,6 +282,14 @@ export class KbqListSelection
         });
 
         this.updateScrollSize();
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef, true);
+    }
+
+    ngOnDestroy(): void {
+        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     focus(): void {

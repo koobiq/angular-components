@@ -1,3 +1,4 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -29,7 +30,8 @@ import { KbqSelect } from './select.component';
         KbqSelectTrigger,
         KbqSelectSearchEmptyResult,
         NgClass,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        A11yModule
     ],
     exports: [
         KbqSelect,

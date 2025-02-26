@@ -559,9 +559,7 @@ export class KbqTreeSelect
     }
 
     ngAfterContentInit() {
-        if (!this.tree) {
-            return;
-        }
+        if (!this.tree) return;
 
         this.tree.resetFocusedItemOnBlur = false;
         this.tree.optionShouldHoldFocusOnBlur = true;

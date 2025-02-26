@@ -21,6 +21,7 @@ import { Directionality } from '@angular/cdk/bidi';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { HasTabIndex } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
@@ -552,7 +553,7 @@ export class KbqTreeSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, CanDisable, HasTabIndex {
+export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy, CanDisable, HasTabIndex {
     constructor(elementRef: ElementRef, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;
@@ -571,6 +572,8 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     // (undocumented)
     focus($event: any): void;
     // (undocumented)
+    protected readonly focusMonitor: FocusMonitor;
+    // (undocumented)
     getItemHeight(): number;
     // (undocumented)
     getSelectedValues(): any[];
@@ -588,6 +591,10 @@ export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAc
     readonly navigationChange: EventEmitter<KbqTreeNavigationChange<KbqTreeOption>>;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     // (undocumented)
     nodeOutlet: KbqTreeNodeOutlet;
     // (undocumented)

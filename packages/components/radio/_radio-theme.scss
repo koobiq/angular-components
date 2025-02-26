@@ -6,8 +6,6 @@
     & .kbq-radio-button__outer-circle {
         border-color: var(--kbq-#{$base-path}-outer-circle-border);
         background: var(--kbq-#{$base-path}-outer-circle-background);
-        // FIXME: move under &.cdk-keyboard-focused, because used only for focused state.
-        box-shadow: var(--kbq-#{$base-path}-outer-circle-shadow);
     }
 
     & .kbq-radio-button__inner-circle {
@@ -28,10 +26,22 @@
 
     &.cdk-keyboard-focused {
         @include kbq-radio-state($type-name, states-focused);
+
+        & .kbq-radio-button__outer-circle {
+            box-shadow: var(--kbq-radio-#{$type-name}-states-focused-outer-circle-shadow);
+        }
     }
 
     &.kbq-selected:not(.kbq-disabled) {
         @include kbq-radio-state($type-name, states-checked);
+    }
+
+    &.kbq-selected.cdk-keyboard-focused:not(.kbq-disabled) {
+        @include kbq-radio-state($type-name, states-checked-focused);
+
+        & .kbq-radio-button__outer-circle {
+            box-shadow: var(--kbq-radio-#{$type-name}-states-checked-focused-outer-circle-shadow);
+        }
     }
 
     &.kbq-selected.kbq-disabled {

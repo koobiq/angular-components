@@ -14,6 +14,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i10 from '@koobiq/components/icon';
@@ -69,6 +70,8 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     get disabled(): boolean;
     // (undocumented)
     elementRef: ElementRef;
+    // (undocumented)
+    get focusOrigin(): FocusOrigin;
     // (undocumented)
     focusViaKeyboard(): void;
     getConnectedOverlayOrigin(): ElementRef;
