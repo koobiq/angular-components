@@ -3,6 +3,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    ElementRef,
     inject,
     Input,
     OnInit,
@@ -65,6 +66,8 @@ export class KbqFilters implements OnInit {
     @ViewChild(KbqButton) button: KbqButton;
     @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
     @ViewChild(KbqDropdownTrigger) dropdown: KbqDropdownTrigger;
+    @ViewChild('search') search: ElementRef;
+    @ViewChild('newFilterName') newFilterName: ElementRef;
 
     protected readonly styles = KbqButtonStyles;
     protected readonly colors = KbqComponentColors;
@@ -175,6 +178,8 @@ export class KbqFilters implements OnInit {
 
         merge(...this.popover.defaultClosingActions()).subscribe(this.closePopover);
         this.popover.visibleChange.pipe(filter((state) => !state)).subscribe(this.closePopover);
+
+        setTimeout(() => this.newFilterName.nativeElement.focus());
     }
 
     openSaveAsNewFilterPopover() {
@@ -199,6 +204,10 @@ export class KbqFilters implements OnInit {
 
     stopEventPropagation(event: MouseEvent | KeyboardEvent) {
         event.stopPropagation();
+    }
+
+    onDropdownOpen() {
+        setTimeout(() => this.search.nativeElement.focus());
     }
 
     private getFilteredOptions(value): KbqFilter[] {

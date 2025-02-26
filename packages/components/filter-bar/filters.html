@@ -14,7 +14,7 @@
     [kbqTrigger]="'manual'"
     [ngClass]="{ 'kbq-active': opened }"
     (dropdownClosed)="searchControl.setValue('')"
-    (dropdownOpened)="input.focus()"
+    (dropdownOpened)="onDropdownOpen()"
 >
     <span #kbqTitleText class="kbq-filters__filter-name">
         @if (filter?.name) {
@@ -66,9 +66,8 @@
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
             <input
-                #input
+                #search
                 autocomplete="off"
-                autofocus
                 kbqInput
                 placeholder="Поиск"
                 [formControl]="searchControl"
@@ -152,7 +151,7 @@
             <label class="kbq-form__label">Название</label>
 
             <kbq-form-field class="kbq-form__control">
-                <input #input="kbqInput" kbqInput type="text" [formControl]="filterName" />
+                <input #newFilterName kbqInput type="text" [formControl]="filterName" />
 
                 @if (filterName.hasError('filterNameAlreadyExist')) {
                     <kbq-hint [color]="'error'">Поиск с таким названием уже сущетсвует</kbq-hint>
