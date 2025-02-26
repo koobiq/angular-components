@@ -52,6 +52,7 @@ type AnimationState = 'enter' | 'leave' | null;
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
+        class: 'kbq-modal',
         '(keydown)': 'onKeyDown($event)'
     }
 })
