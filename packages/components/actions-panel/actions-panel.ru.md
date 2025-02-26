@@ -18,7 +18,7 @@
 
 ### Взаимодействие с клавиатурой
 
-По умолчанию клавиша `ESCAPE` закрывает `KbqActionsPanel`. Хотя вы можете отключить это поведение с помощью свойства `disableClose` в `KbqActionsPanelConfig`.
+По умолчанию клавиша `ESCAPE` закрывает `KbqActionsPanel`, но вы можете отключить это поведение с помощью свойства `disableClose` в `KbqActionsPanelConfig`.
 
 ### Обмен данными с компонентом
 
