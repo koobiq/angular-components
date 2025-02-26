@@ -81,7 +81,7 @@
         <kbq-divider />
 
         @for (filter of filteredOptions | async; track filter) {
-            <button kbq-dropdown-item (click)="selectFilter(filter)">{{ filter.name }}</button>
+            <button kbq-dropdown-item kbq-title (click)="selectFilter(filter)">{{ filter.name }}</button>
         } @empty {
             <button kbq-dropdown-item [disabled]="true">Ничего не найдено</button>
         }
