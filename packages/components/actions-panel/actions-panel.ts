@@ -62,7 +62,7 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
      *
      * ```html
      * <ng-template #actionsPanel let-actionsPanelRef="actionsPanelRef">
-     *   <button (click)="actionsPanelRef.close()">Close</button>
+     *   <button (click)="actionsPanelRef.close()">close</button>
      * </ng-template>
      * ````
      */
