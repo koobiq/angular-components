@@ -39,6 +39,7 @@ import { KbqFormFieldControl } from './form-field-control';
 @Directive({
     selector: `
         input[kbqInput],
+        input[kbqNumberInput],
         input[kbqInputPassword],
         input[kbqTimepicker],
         input[kbqDatepicker],
