@@ -29,7 +29,6 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Platform } from '@angular/cdk/platform';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
 import { Signal } from '@angular/core';
@@ -50,6 +49,8 @@ export abstract class KbqBasePipe implements AfterViewInit {
     // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
+    isMac: boolean;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     onClear(): void;
@@ -57,8 +58,6 @@ export abstract class KbqBasePipe implements AfterViewInit {
     onRemove(): void;
     // (undocumented)
     abstract open(): void;
-    // (undocumented)
-    protected readonly platform: Platform;
     // (undocumented)
     get showRemoveButton(): boolean;
     // (undocumented)
@@ -158,7 +157,7 @@ export class KbqFilterBar {
 export class KbqFilterBarButton {
     constructor();
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbq-filter-bar-button]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFilterBarButton, "[kbqFilterBarButton]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarButton, never>;
 }
@@ -265,7 +264,11 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
+    newFilterName: ElementRef;
+    // (undocumented)
     ngOnInit(): void;
+    // (undocumented)
+    onDropdownOpen(): void;
     // (undocumented)
     openChangeFilterNamePopover(): void;
     // (undocumented)
@@ -290,6 +293,8 @@ export class KbqFilters implements OnInit {
     saveChanges(): void;
     // (undocumented)
     saveNewFilter: boolean;
+    // (undocumented)
+    search: ElementRef;
     // (undocumented)
     searchControl: UntypedFormControl;
     // (undocumented)
@@ -555,7 +560,7 @@ export class KbqPipeMinWidth {
     // (undocumented)
     update: () => void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeMinWidth, "[kbq-pipe-min-width]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeMinWidth, "[kbqPipeMinWidth]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeMinWidth, never>;
 }
@@ -612,7 +617,7 @@ export class KbqPipeState<T> implements OnInit {
     // (undocumented)
     updateState: () => void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbq-pipe-state]", never, { "state": { "alias": "kbq-pipe-state"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbqPipeState]", never, { "state": { "alias": "kbqPipeState"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeState<any>, never>;
 }
@@ -670,7 +675,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     // (undocumented)
     viewValue: TemplateRef<any>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeTitleDirective, "[kbq-pipe-title]", ["kbqPipeTitle"], { "viewValue": { "alias": "kbq-pipe-title"; "required": false; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeTitleDirective, "[kbqPipeTitle]", ["kbqPipeTitle"], { "viewValue": { "alias": "kbqPipeTitle"; "required": false; }; }, {}, ["parentContainer", "childContainer"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTitleDirective, never>;
 }
