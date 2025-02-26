@@ -1,7 +1,7 @@
-import { Platform } from '@angular/cdk/platform';
 import { afterNextRender, AfterViewInit, ChangeDetectorRef, Directive, ElementRef, inject } from '@angular/core';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
+import { UAParser } from 'ua-parser-js';
 import { KbqFilterBar } from '../filter-bar';
 import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
 
@@ -17,7 +17,6 @@ import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
     }
 })
 export abstract class KbqBasePipe implements AfterViewInit {
-    protected readonly platform = inject(Platform);
     readonly stateChanges = new Subject<void>();
     readonly data = inject(KbqPipeData);
 
@@ -25,6 +24,10 @@ export abstract class KbqBasePipe implements AfterViewInit {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected values: KbqPipeTemplate[];
+
+    private uaParser: UAParser.UAParserInstance = new UAParser();
+
+    isMac: boolean;
 
     get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
@@ -44,6 +47,8 @@ export abstract class KbqBasePipe implements AfterViewInit {
         if (template) {
             this.values = template.values as KbqPipeTemplate[];
         }
+
+        this.isMac = (this.uaParser.getOS().name || '').includes('Mac');
     }
 
     ngAfterViewInit(): void {
