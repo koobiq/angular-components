@@ -29,7 +29,7 @@
     <button kbq-button [color]="'theme'" [disabled]="disabled" [kbqStyle]="'transparent'" (click)="onApply()">
         <span>Применить</span>
         &nbsp;
-        <span class="kbq-button_hot-key">{{ platform.IOS ? '⌘' : 'Ctrl+' }}Enter</span>
+        <span class="kbq-button_hot-key">{{ isMac ? '⌘' : 'Ctrl+' }}Enter</span>
     </button>
 </ng-template>
 
