@@ -13,6 +13,7 @@ import * as i10 from '@koobiq/components/icon';
 import * as i11 from '@koobiq/components/tags';
 import * as i12 from '@koobiq/components/tooltip';
 import * as i13 from '@angular/common';
+import * as i14 from '@angular/cdk/a11y';
 import * as i6 from '@angular/cdk/overlay';
 import * as i7 from '@koobiq/components/form-field';
 import * as i8 from '@koobiq/components/core';
@@ -53,7 +54,7 @@ export class KbqTimezoneModule {
     // Warning: (ae-forgotten-export) The symbol "i5" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, [typeof i1.UtcOffsetPipe, typeof i2.CitiesByFilterPipe, typeof i3.KbqTimezoneSelect, typeof i4.KbqTimezoneOption, typeof i5.KbqTimezoneOptionTooltip, typeof i3.KbqTimezoneSelectTrigger], [typeof i6.OverlayModule, typeof i7.KbqFormFieldModule, typeof i8.KbqOptionModule, typeof i9.KbqSelectModule, typeof i10.KbqIconModule, typeof i11.KbqTagsModule, typeof i12.KbqToolTipModule, typeof i8.KbqHighlightModule, typeof i13.NgClass, typeof i13.KeyValuePipe], [typeof i3.KbqTimezoneSelect, typeof i4.KbqTimezoneOption, typeof i5.KbqTimezoneOptionTooltip, typeof i3.KbqTimezoneSelectTrigger]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTimezoneModule, [typeof i1.UtcOffsetPipe, typeof i2.CitiesByFilterPipe, typeof i3.KbqTimezoneSelect, typeof i4.KbqTimezoneOption, typeof i5.KbqTimezoneOptionTooltip, typeof i3.KbqTimezoneSelectTrigger], [typeof i6.OverlayModule, typeof i7.KbqFormFieldModule, typeof i8.KbqOptionModule, typeof i9.KbqSelectModule, typeof i10.KbqIconModule, typeof i11.KbqTagsModule, typeof i12.KbqToolTipModule, typeof i8.KbqHighlightModule, typeof i13.NgClass, typeof i13.KeyValuePipe, typeof i14.A11yModule], [typeof i3.KbqTimezoneSelect, typeof i4.KbqTimezoneOption, typeof i5.KbqTimezoneOptionTooltip, typeof i3.KbqTimezoneSelectTrigger]>;
 }
 
 // @public (undocumented)

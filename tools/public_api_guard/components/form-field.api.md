@@ -346,7 +346,7 @@ export class KbqValidateDirective implements AfterContentInit {
     // (undocumented)
     get validationControl(): any;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqValidateDirective, "        input[kbqInput],        input[kbqInputPassword],        input[kbqTimepicker],        input[kbqDatepicker],        textarea[kbqTextarea],        kbq-select,        kbq-tree-select,        kbq-tag-list    ", ["KbqValidate"], {}, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqValidateDirective, "        input[kbqInput],        input[kbqNumberInput],        input[kbqInputPassword],        input[kbqTimepicker],        input[kbqDatepicker],        textarea[kbqTextarea],        kbq-select,        kbq-tree-select,        kbq-tag-list    ", ["KbqValidate"], {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqValidateDirective, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, { optional: true; }, null]>;
 }
