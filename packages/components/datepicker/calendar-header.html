@@ -1,58 +1,62 @@
 <div class="kbq-calendar-header__select-group">
-    <kbq-select
-        #monthSelect="kbqSelect"
-        class="kbq-calendar-header__select"
-        [panelClass]="'kbq-calendar-select-panel'"
-        [value]="selectedMonth"
-        (selectionChange)="onMonthSelected($event.value)"
-    >
-        <button
-            kbq-button
-            kbq-select-matcher
-            class="layout-padding-right-xs"
-            [class.kbq-active]="monthSelect.panelOpen"
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
-            [tabindex]="-1"
+    <kbq-form-field kbqFormFieldWithoutBorders>
+        <kbq-select
+            #monthSelect="kbqSelect"
+            class="kbq-calendar-header__select"
+            [panelClass]="'kbq-calendar-select-panel'"
+            [value]="selectedMonth"
+            (selectionChange)="onMonthSelected($event.value)"
         >
-            {{ monthNames[selectedMonth].nameShort | titlecase }}
+            <button
+                kbq-button
+                kbq-select-matcher
+                class="layout-padding-right-xs"
+                [class.kbq-active]="monthSelect.panelOpen"
+                [color]="'contrast'"
+                [kbqStyle]="'transparent'"
+                [tabindex]="-1"
+            >
+                {{ monthNames[selectedMonth].nameShort | titlecase }}
 
-            <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs" [color]="'contrast'"></i>
-        </button>
+                <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs" [color]="'contrast'"></i>
+            </button>
 
-        @for (month of monthNames; track month.nameShort) {
-            <kbq-option [disabled]="month.disabled" [kbqTooltipDisabled]="true" [value]="month.value">
-                {{ month.name }}
-            </kbq-option>
-        }
-    </kbq-select>
+            @for (month of monthNames; track month.nameShort) {
+                <kbq-option [disabled]="month.disabled" [kbqTooltipDisabled]="true" [value]="month.value">
+                    {{ month.name }}
+                </kbq-option>
+            }
+        </kbq-select>
+    </kbq-form-field>
 
-    <kbq-select
-        #yearSelect="kbqSelect"
-        [panelClass]="'kbq-calendar-select-panel'"
-        [value]="selectedYear"
-        (selectionChange)="onYearSelected($event.value)"
-    >
-        <button
-            kbq-button
-            kbq-select-matcher
-            class="layout-padding-right-xs"
-            [class.kbq-active]="yearSelect.panelOpen"
-            [color]="'contrast'"
-            [kbqStyle]="'transparent'"
-            [tabindex]="-1"
+    <kbq-form-field kbqFormFieldWithoutBorders>
+        <kbq-select
+            #yearSelect="kbqSelect"
+            [panelClass]="'kbq-calendar-select-panel'"
+            [value]="selectedYear"
+            (selectionChange)="onYearSelected($event.value)"
         >
-            {{ selectedYear }}
+            <button
+                kbq-button
+                kbq-select-matcher
+                class="layout-padding-right-xs"
+                [class.kbq-active]="yearSelect.panelOpen"
+                [color]="'contrast'"
+                [kbqStyle]="'transparent'"
+                [tabindex]="-1"
+            >
+                {{ selectedYear }}
 
-            <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs"></i>
-        </button>
+                <i kbq-icon="kbq-chevron-down-s_16" class="layout-padding-left-3xs"></i>
+            </button>
 
-        @for (year of years; track year) {
-            <kbq-option [kbqTooltipDisabled]="true" [value]="year">
-                {{ year }}
-            </kbq-option>
-        }
-    </kbq-select>
+            @for (year of years; track year) {
+                <kbq-option [kbqTooltipDisabled]="true" [value]="year">
+                    {{ year }}
+                </kbq-option>
+            }
+        </kbq-select>
+    </kbq-form-field>
 </div>
 
 <div class="kbq-calendar-header__button-group">
