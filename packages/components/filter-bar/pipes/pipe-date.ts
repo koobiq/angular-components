@@ -149,7 +149,10 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
         this.showStartCalendar = false;
         this.showEndCalendar = false;
 
-        setTimeout(() => this.returnButton().focus());
+        setTimeout(() => {
+            this.popover.updatePosition(true);
+            this.returnButton().focus();
+        });
     }
 
     openList() {
