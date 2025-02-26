@@ -243,6 +243,8 @@ export class FilterBarSavedFiltersExample {
             this.filters.push(filter);
         }
 
+        this.activeFilter = filter;
+
         filterBar.filterSavedSuccessfully();
     }
 }
