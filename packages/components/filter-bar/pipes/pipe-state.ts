@@ -5,13 +5,13 @@ import { KbqBasePipe } from './base-pipe';
 
 @Directive({
     standalone: true,
-    selector: '[kbq-pipe-state]'
+    selector: '[kbqPipeState]'
 })
 export class KbqPipeState<T> implements OnInit {
     private readonly button = inject(KbqButton);
     private readonly pipe = inject(KbqBasePipe);
 
-    @Input({ alias: 'kbq-pipe-state' })
+    @Input({ alias: 'kbqPipeState' })
     set state(pipe: T | null) {
         this._state = pipe;
 

@@ -5,7 +5,7 @@ import { KbqFilterBar } from './filter-bar';
 
 @Directive({
     standalone: true,
-    selector: '[kbq-filter-bar-button]'
+    selector: '[kbqFilterBarButton]'
 })
 export class KbqFilterBarButton {
     private readonly button = inject(KbqButton);

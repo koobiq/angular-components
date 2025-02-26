@@ -17,7 +17,7 @@ import { debounceTime } from 'rxjs/operators';
 
 @Directive({
     standalone: true,
-    selector: '[kbq-pipe-title]',
+    selector: '[kbqPipeTitle]',
     exportAs: 'kbqPipeTitle',
     host: {
         '(mouseenter)': 'handleElementEnter()',
@@ -37,7 +37,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
         });
     }
 
-    @Input({ alias: 'kbq-pipe-title' }) viewValue: TemplateRef<any>;
+    @Input({ alias: 'kbqPipeTitle' }) viewValue: TemplateRef<any>;
 
     get parent(): HTMLElement {
         return this.parentContainer?.nativeElement || this.parentContainer;

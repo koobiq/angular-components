@@ -82,7 +82,7 @@ export abstract class KbqBasePipe implements AfterViewInit {
 
 @Directive({
     standalone: true,
-    selector: '[kbq-pipe-min-width]',
+    selector: '[kbqPipeMinWidth]',
     host: {
         '[style.min-width]': 'minWidth'
     }

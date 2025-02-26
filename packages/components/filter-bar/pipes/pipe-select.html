@@ -2,7 +2,7 @@
     #select
     [compareWith]="compareByValue"
     [disabled]="data.disabled"
-    [kbq-pipe-title]="pipeTooltip"
+    [kbqPipeTitle]="pipeTooltip"
     [ngClass]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-select__panel'"
     [tabIndex]="-1"
@@ -13,11 +13,11 @@
         kbq-button
         kbq-select-matcher
         [disabled]="data.disabled"
-        [kbq-pipe-state]="data"
+        [kbqPipeState]="data"
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
-        <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__name">{{ data.name }}</span>
-        <span #kbqTitleText kbq-pipe-min-width class="kbq-pipe__value">{{ select.triggerValue }}</span>
+        <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
+        <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value">{{ select.triggerValue }}</span>
     </button>
 
     @for (item of values; track item) {
