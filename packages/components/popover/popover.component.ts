@@ -330,7 +330,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     // @TODO add realization for arrow (#DS-2514)
     @Input({ alias: 'kbqPopoverArrow', transform: booleanAttribute }) arrow: boolean = true;
 
-    @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetY;
+    // todo need defaultOffsetY - 2 to make it look like select/dropdown
+    @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetY - 2;
 
     @Output('kbqPopoverPlacementChange') placementChange = new EventEmitter();
 
