@@ -3,12 +3,12 @@ import { ActionsPanelAdaptiveExample } from './actions-panel-adaptive/actions-pa
 import { ActionsPanelCustomCounterExample } from './actions-panel-custom-counter/actions-panel-custom-counter-example';
 import { ActionsPanelOverviewExample } from './actions-panel-overview/actions-panel-overview-example';
 
-export { ActionsPanelAdaptiveExample, ActionsPanelOverviewExample };
+export { ActionsPanelAdaptiveExample, ActionsPanelCustomCounterExample, ActionsPanelOverviewExample };
 
 const EXAMPLES = [
-    ActionsPanelOverviewExample,
     ActionsPanelAdaptiveExample,
-    ActionsPanelCustomCounterExample
+    ActionsPanelCustomCounterExample,
+    ActionsPanelOverviewExample
 ];
 
 @NgModule({
