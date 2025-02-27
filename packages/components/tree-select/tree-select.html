@@ -7,8 +7,6 @@
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
-    <select class="cdk-visually-hidden" [id]="id"></select>
-
     @if (!!customMatcher) {
         <ng-content select="kbq-select-matcher, [kbq-select-matcher]" />
     } @else {
