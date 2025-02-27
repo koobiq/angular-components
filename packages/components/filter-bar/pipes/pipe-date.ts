@@ -19,6 +19,7 @@ import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { KbqDateTimeValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
@@ -60,7 +61,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         FormsModule
     ]
 })
-export class KbqPipeDateComponent<D> extends KbqBasePipe {
+export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     protected readonly adapter = inject(DateAdapter);
     protected readonly formatter = inject(DateFormatter);
 
@@ -82,7 +83,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
             return this.formatter.rangeShortDate(start, end);
         }
 
-        return this.data.value?.name;
+        return this.data.value?.name ?? '';
     }
 
     get disabled(): boolean {
@@ -135,7 +136,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe {
         this.popover.hide();
     }
 
-    onSelect(item: unknown) {
+    onSelect(item: KbqDateTimeValue) {
         this.data.value = item;
         this.stateChanges.next();
 

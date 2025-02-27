@@ -1,5 +1,6 @@
 import { AfterContentInit, Directive, inject, Injector, Input, ViewContainerRef } from '@angular/core';
-import { KbqPipe, KbqPipeData, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
+import { KbqPipe, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
+import { KBQ_PIPE_DATA } from './pipes/base-pipe';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
 import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
@@ -8,7 +9,7 @@ import { KbqPipeTextComponent } from './pipes/pipe-text';
 
 @Directive({
     standalone: true,
-    selector: '[kbq-pipe]'
+    selector: '[kbqPipe]'
 })
 export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     private injector = inject(Injector);
@@ -16,7 +17,7 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 
     values: KbqPipeTemplate[];
 
-    @Input({ alias: 'kbq-pipe' })
+    @Input({ alias: 'kbqPipe' })
     get pipe(): T {
         return this._pipe;
     }
@@ -48,7 +49,7 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 
     getInjector(pipe: T): Injector {
         return Injector.create({
-            providers: [{ provide: KbqPipeData, useValue: pipe }],
+            providers: [{ provide: KBQ_PIPE_DATA, useValue: pipe }],
             parent: this.injector
         });
     }

@@ -45,7 +45,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeMinWidth
     ]
 })
-export class KbqPipeTextComponent extends KbqBasePipe implements AfterViewInit, OnInit {
+export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;
 
     @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
@@ -54,7 +54,7 @@ export class KbqPipeTextComponent extends KbqBasePipe implements AfterViewInit, 
         return !this.control.value || this.control.pristine;
     }
 
-    control = new FormControl<string>('');
+    control = new FormControl<typeof this.data.value>('');
 
     ngOnInit(): void {
         this.control.setValue(this.data.value);

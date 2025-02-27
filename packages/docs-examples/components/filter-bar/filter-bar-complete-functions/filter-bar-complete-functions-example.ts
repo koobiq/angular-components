@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { DateTime } from 'luxon';
 
 /**
@@ -29,7 +29,7 @@ import { DateTime } from 'luxon';
             <kbq-filters [filters]="filters" />
 
             @for (pipe of activeFilter?.pipes; track pipe) {
-                <ng-container *kbq-pipe="pipe" />
+                <ng-container *kbqPipe="pipe" />
             }
 
             <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
@@ -65,6 +65,7 @@ export class FilterBarCompleteFunctionsExample {
                 {
                     name: 'empty',
                     type: KbqPipeTypes.Select,
+                    value: null,
 
                     required: false,
                     cleanable: true,
@@ -136,6 +137,7 @@ export class FilterBarCompleteFunctionsExample {
                 {
                     name: 'empty',
                     type: KbqPipeTypes.MultiSelect,
+                    value: null,
 
                     required: false,
                     cleanable: true,
@@ -194,6 +196,7 @@ export class FilterBarCompleteFunctionsExample {
                 {
                     name: 'empty',
                     type: KbqPipeTypes.Text,
+                    value: null,
 
                     required: false,
                     cleanable: true,
@@ -605,7 +608,7 @@ export class FilterBarCompleteFunctionsExample {
         }
     ];
 
-    onAddPipe(pipe: KbqPipe) {
+    onAddPipe(pipe: KbqPipeTemplate) {
         console.log('onAddPipe: ', pipe);
     }
 

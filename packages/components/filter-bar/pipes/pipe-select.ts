@@ -34,7 +34,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeMinWidth
     ]
 })
-export class KbqPipeSelectComponent extends KbqBasePipe {
+export class KbqPipeSelectComponent extends KbqBasePipe<string> {
     @ViewChild(KbqSelect) select: KbqSelect;
 
     get selected() {
@@ -45,7 +45,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe {
         return !this.data.value;
     }
 
-    onSelect(item: unknown) {
+    onSelect(item: string) {
         this.data.value = item;
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();

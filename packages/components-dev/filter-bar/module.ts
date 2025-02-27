@@ -9,7 +9,6 @@ import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
-    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
@@ -50,6 +49,7 @@ export class DemoComponent {
                 {
                     name: 'empty',
                     type: KbqPipeTypes.Select,
+                    value: null,
 
                     required: false,
                     cleanable: true,
@@ -121,6 +121,7 @@ export class DemoComponent {
                 {
                     name: 'empty',
                     type: KbqPipeTypes.MultiSelect,
+                    value: null,
 
                     required: false,
                     cleanable: true,
@@ -591,7 +592,7 @@ export class DemoComponent {
         }
     ];
 
-    onAddPipe(pipe: KbqPipe) {
+    onAddPipe(pipe: KbqPipeTemplate) {
         console.log('onAddPipe: ', pipe);
     }
 
