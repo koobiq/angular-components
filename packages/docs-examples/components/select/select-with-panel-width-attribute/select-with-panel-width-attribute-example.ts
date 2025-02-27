@@ -16,7 +16,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div>
             <label class="kbq-form__label">Fixed panelWidth</label>
             <kbq-form-field>
-                <kbq-select [panelWidth]="400">
+                <kbq-select [panelWidth]="400" placeholder="Placeholder">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -28,7 +28,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div>
             <label class="kbq-form__label">Auto panelWidth</label>
             <kbq-form-field>
-                <kbq-select panelWidth="auto">
+                <kbq-select panelWidth="auto" placeholder="Placeholder">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -40,7 +40,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div>
             <label class="kbq-form__label">Without panelWidth attribute</label>
             <kbq-form-field>
-                <kbq-select>
+                <kbq-select placeholder="Placeholder">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }

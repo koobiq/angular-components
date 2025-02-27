@@ -1,22 +1,6 @@
-import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Selected prioritized selected
@@ -28,14 +12,10 @@ const localeDataSet = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selected" (openedChange)="openedChange($event)" multiple>
+            <kbq-select [(value)]="selected" (openedChange)="openedChange($event)" placeholder="Placeholder" multiple>
                 @for (option of options; track option) {
-                    <kbq-option [value]="option">
-                        <span [innerHTML]="option"></span>
-                    </kbq-option>
+                    <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
-
-                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `,
@@ -46,42 +26,25 @@ const localeDataSet = {
             padding: var(--kbq-size-l);
         }
 
-        kbq-form-field {
+        .kbq-form-field {
             width: 320px;
         }
     `
 })
-export class SelectPrioritizedSelectedExample implements OnInit {
-    selected: string[];
+export class SelectPrioritizedSelectedExample {
+    options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
+    readonly selected = [this.options.at(-1)!, this.options.at(-2)!];
 
-    defaultOptions: string[];
-    options: string[] = [];
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
+    constructor() {
+        this.groupSelectedOptions();
     }
 
-    update = (locale: string) => {
-        this.defaultOptions = localeDataSet[locale].items;
-        this.selected = [this.defaultOptions[10], this.defaultOptions[20]];
-        this.popSelectedOptionsUp();
-    };
-
-    ngOnInit() {
-        this.popSelectedOptionsUp();
+    openedChange(isOpened: boolean): void {
+        if (!isOpened) this.groupSelectedOptions();
     }
 
-    openedChange(isOpen: boolean) {
-        if (!isOpen) {
-            this.popSelectedOptionsUp();
-        }
-    }
-
-    popSelectedOptionsUp(): void {
-        const unselected = this.defaultOptions
-            .filter((option) => !this.selected.includes(option))
-            .sort((a, b) => this.defaultOptions.indexOf(a) - this.defaultOptions.indexOf(b));
-
+    private groupSelectedOptions(): void {
+        const unselected = this.options.filter((option) => !this.selected.includes(option));
         this.options = this.selected.concat(unselected);
     }
 }

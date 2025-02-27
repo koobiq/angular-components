@@ -1,72 +1,100 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqLocaleService } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Select footer
  */
 @Component({
     standalone: true,
+    imports: [
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqLinkModule
+    ],
     selector: 'select-footer-example',
-    templateUrl: 'select-footer-example.html',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqIconModule, KbqLinkModule],
+    template: `
+        <div class="example-row">
+            <div class="kbq-form__label">Button</div>
+            <kbq-form-field>
+                <kbq-select [value]="selected">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-select-footer class="example-select-footer-with-button">
+                        <button color="contrast" kbqStyle="transparent" kbq-button>
+                            <i kbq-icon="kbq-plus_16"></i>
+                            Button
+                        </button>
+                    </kbq-select-footer>
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+
+        <div class="example-row">
+            <div class="kbq-form__label">Caption</div>
+            <kbq-form-field>
+                <kbq-select [value]="selected">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-select-footer class="example-select-footer-with-caption">Caption ⌥+⌘+F</kbq-select-footer>
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+
+        <div class="example-row">
+            <div class="kbq-form__label">Link</div>
+            <kbq-form-field>
+                <kbq-select [value]="selected">
+                    @for (option of options; track option) {
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
+                    }
+                    <kbq-select-footer>
+                        <a class="kbq-link_external" kbq-link>
+                            <span class="kbq-link__text">Link</span>
+                            <i kbq-icon="kbq-north-east_16"></i>
+                        </a>
+                    </kbq-select-footer>
+                </kbq-select>
+            </kbq-form-field>
+        </div>
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     styles: `
         .example-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: var(--kbq-size-xxl);
             width: 400px;
             margin: 0 auto;
             padding: var(--kbq-size-l);
-            align-items: center;
-            gap: var(--kbq-size-xxl);
-            justify-content: flex-end;
         }
 
-        kbq-form-field {
+        .kbq-form-field {
             width: 320px;
         }
 
         .kbq-form__label {
-            white-space: nowrap;
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+
+        .example-select-footer-with-button {
+            padding-left: var(--kbq-size-xxs) !important;
+        }
+
+        .example-select-footer-with-caption {
             color: var(--kbq-foreground-contrast-secondary);
         }
     `
 })
 export class SelectFooterExample {
-    selectedButton = '';
-    selectedCaption = '';
-    selectedLink = '';
-
-    options: string[] = [];
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
-    }
-
-    update = (locale: string) => {
-        this.options = localeDataSet[locale].items;
-        this.selectedButton = localeDataSet[locale].items[0];
-        this.selectedCaption = localeDataSet[locale].items[0];
-        this.selectedLink = localeDataSet[locale].items[0];
-    };
-    protected readonly colors = KbqComponentColors;
-    protected readonly styles = KbqButtonStyles;
+    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    readonly selected = this.options[0];
 }
