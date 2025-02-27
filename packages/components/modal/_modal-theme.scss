@@ -1,7 +1,7 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-modal-theme() {
-    .kbq-modal {
+    .kbq-modal-container {
         background: var(--kbq-modal-container-background);
         box-shadow: var(--kbq-modal-container-shadow);
 
