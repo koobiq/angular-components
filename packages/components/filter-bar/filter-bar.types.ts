@@ -8,6 +8,12 @@ export enum KbqPipeTypes {
     Datetime = 'datetime'
 }
 
+export interface KbqDateTimeValue {
+    name?: string;
+    start?;
+    end?;
+}
+
 export interface KbqFilter {
     name: string;
 
@@ -20,17 +26,11 @@ export interface KbqFilter {
     saved: boolean;
 }
 
-export interface KbqPipeValue {
-    name?: string;
-    start?;
-    end?;
-}
-
 export interface KbqPipe {
     name: string;
     id?: string | number;
     type: KbqPipeTypes;
-    value?;
+    value: unknown | null;
 
     search?: boolean;
 
@@ -40,10 +40,10 @@ export interface KbqPipe {
     disabled: boolean;
 }
 
-export class KbqPipeData {
+export class KbqPipeData<T> {
     name: string;
     type: KbqPipeTypes;
-    value?;
+    value: T | null;
 
     required: boolean;
     cleanable: boolean;
@@ -53,8 +53,9 @@ export class KbqPipeData {
     openOnAdd?: boolean;
 }
 
-export interface KbqPipeTemplate extends KbqPipe {
+export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     values?: unknown[];
+    value?: unknown | null;
 }
 
 export interface KbqSaveFilterError {

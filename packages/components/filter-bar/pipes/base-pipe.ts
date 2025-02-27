@@ -1,9 +1,19 @@
-import { afterNextRender, AfterViewInit, ChangeDetectorRef, Directive, ElementRef, inject } from '@angular/core';
+import {
+    afterNextRender,
+    AfterViewInit,
+    ChangeDetectorRef,
+    Directive,
+    ElementRef,
+    inject,
+    InjectionToken
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
 import { UAParser } from 'ua-parser-js';
 import { KbqFilterBar } from '../filter-bar';
 import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
+
+export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
 
 @Directive({
     standalone: true,
@@ -16,9 +26,9 @@ import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
         '[class.kbq-pipe_disabled]': 'data.disabled'
     }
 })
-export abstract class KbqBasePipe implements AfterViewInit {
+export abstract class KbqBasePipe<V> implements AfterViewInit {
     readonly stateChanges = new Subject<void>();
-    readonly data = inject(KbqPipeData);
+    readonly data = inject<KbqPipeData<V>>(KBQ_PIPE_DATA);
 
     protected readonly filterBar = inject(KbqFilterBar, { optional: true });
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);

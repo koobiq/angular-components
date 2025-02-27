@@ -15,7 +15,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter">
             @for (pipe of activeFilter?.pipes; track pipe) {
-                <ng-container *kbq-pipe="pipe" />
+                <ng-container *kbqPipe="pipe" />
             }
 
             <kbq-pipe-add />

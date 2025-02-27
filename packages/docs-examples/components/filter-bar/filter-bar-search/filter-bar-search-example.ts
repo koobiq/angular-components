@@ -15,7 +15,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter">
             @for (pipe of activeFilter?.pipes; track pipe) {
-                <ng-container *kbq-pipe="pipe" />
+                <ng-container *kbqPipe="pipe" />
             }
 
             <kbq-pipe-add />
@@ -123,6 +123,7 @@ export class FilterBarSearchExample {
                 {
                     name: 'Select',
                     type: KbqPipeTypes.Select,
+                    value: null,
 
                     required: false,
                     cleanable: false,

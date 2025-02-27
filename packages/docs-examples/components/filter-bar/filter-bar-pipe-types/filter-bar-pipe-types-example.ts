@@ -15,7 +15,7 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates">
             @for (pipe of pipes; track pipe) {
-                <ng-container *kbq-pipe="pipe" />
+                <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
     `
@@ -25,6 +25,7 @@ export class FilterBarPipeTypesExample {
         {
             name: 'Select',
             type: KbqPipeTypes.Select,
+            value: null,
 
             required: false,
             cleanable: true,
@@ -34,6 +35,7 @@ export class FilterBarPipeTypesExample {
         {
             name: 'MultiSelect',
             type: KbqPipeTypes.MultiSelect,
+            value: null,
 
             required: false,
             cleanable: true,
@@ -43,6 +45,7 @@ export class FilterBarPipeTypesExample {
         {
             name: 'Text',
             type: KbqPipeTypes.Text,
+            value: null,
 
             required: false,
             cleanable: true,
@@ -52,6 +55,7 @@ export class FilterBarPipeTypesExample {
         {
             name: 'Date',
             type: KbqPipeTypes.Date,
+            value: null,
 
             required: false,
             cleanable: true,
@@ -61,6 +65,7 @@ export class FilterBarPipeTypesExample {
         {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
+            value: null,
 
             required: false,
             cleanable: true,
