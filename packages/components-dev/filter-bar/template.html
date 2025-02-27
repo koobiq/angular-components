@@ -1,0 +1,41 @@
+<filter-bar-saved-filters-example />
+<br />
+<br />
+<filter-bar-overview-example />
+<br />
+<br />
+<div style="min-height: 50px; border: 1px solid red">
+    <kbq-filter-bar
+        #filterBar
+        [pipeTemplates]="pipeTemplates"
+        [(filter)]="activeFilter"
+        (filterChange)="onFilterChange($event)"
+        (onChangeFilter)="onChangeFilter($event)"
+        (onDeleteFilter)="onDeleteFilter($event)"
+        (onResetFilter)="onResetFilter($event)"
+        (onSave)="onSaveFilter($event)"
+        (onSaveAsNew)="onSaveAsNewFilter($event)"
+        (onSelectFilter)="onSelectFilter($event)"
+    >
+        <kbq-filters [filters]="filters" />
+
+        @for (pipe of activeFilter?.pipes; track pipe) {
+            <ng-container *kbqPipe="pipe" />
+        }
+
+        <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
+
+        <kbq-filter-reset />
+
+        <kbq-filter-bar-search (onSearch)="onSearch($event)" />
+
+        <!--        <kbq-filter-bar-refresher />-->
+    </kbq-filter-bar>
+</div>
+
+<br />
+
+<!--<button kbq-button (click)="filterBar.saveFilterState()">Save filter state</button> &nbsp;-->
+<!--<button kbq-button (click)="filterBar.restoreFilterState()">Restore filter state</button>-->
+
+<pre> {{ activeFilter | json }}</pre>

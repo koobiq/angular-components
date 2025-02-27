@@ -1,0 +1,132 @@
+@use '../../datepicker/datepicker-theme' as *;
+@use '../filter-bar-theme' as *;
+
+@use '../../datepicker/datepicker-tokens' as *;
+
+.kbq-pipe-date__popover {
+    & .kbq-popover__container {
+        max-height: unset;
+    }
+
+    & .kbq-popover__content {
+        padding: 0;
+    }
+
+    & .kbq-date-list {
+        margin: 4px 0;
+
+        & .kbq-list-option {
+            & .kbq-list-text {
+                display: flex;
+                flex-direction: row;
+            }
+
+            & .kbq-icon {
+                margin-left: 8px;
+                align-self: center;
+
+                color: var(--kbq-icon-fade-contrast-color);
+            }
+        }
+    }
+
+    & .kbq-date-period {
+        width: 320px;
+
+        & .kbq-date-period__header {
+            padding-top: 6px;
+            padding-left: 4px;
+            padding-right: 4px;
+
+            & .kbq-button {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        & .kbq-divider {
+            margin: 4px 16px;
+        }
+
+        & .kbq-date-period__content {
+            display: flex;
+            flex-direction: column;
+
+            padding: 0;
+
+            gap: 8px;
+
+            & .kbq-date-period__content-header {
+                padding-top: 8px;
+                padding-left: 16px;
+                padding-right: 16px;
+
+                color: var(--kbq-foreground-contrast-secondary);
+            }
+
+            & .kbq-form__row {
+                padding-left: 16px;
+                padding-right: 16px;
+
+                & .kbq-date-period__date,
+                & .kbq-date-period__time {
+                    flex: 1;
+                }
+
+                &.kbq-form__row_with-time {
+                    & .kbq-date-period__date {
+                        max-width: 45%;
+
+                        & .kbq-form-field__container {
+                            border-top-right-radius: unset;
+                            border-bottom-right-radius: unset;
+                        }
+                    }
+
+                    & .kbq-date-period__time {
+                        margin-left: -1px;
+                        max-width: 45%;
+
+                        & .kbq-form-field__container {
+                            border-top-left-radius: unset;
+                            border-bottom-left-radius: unset;
+                        }
+                    }
+                }
+            }
+
+            & .kbq-calendar {
+                position: relative;
+
+                padding: 8px 8px 12px;
+
+                background-color: var(--kbq-background-bg-tertiary);
+
+                &.kbq-calendar_hidden {
+                    display: none;
+                }
+            }
+
+            & .kbq-hint {
+                padding-left: 12px;
+                padding-right: 12px;
+            }
+        }
+
+        & .kbq-date-period__footer {
+            padding: 4px;
+
+            & .kbq-button {
+                width: 100%;
+                justify-content: flex-start;
+
+                &:not(.kbq-disabled) .kbq-button_hot-key {
+                    color: var(--kbq-foreground-contrast-secondary);
+                }
+            }
+        }
+    }
+}
+
+@include kbq-datepicker-theme();
+@include kbq-datepicker-typography();
