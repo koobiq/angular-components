@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFormsModule } from '@koobiq/components/core';
+import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { KBQ_VALIDATION } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -9,13 +10,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     standalone: true,
     selector: 'select-validation-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqFormsModule],
+    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    providers: [{ provide: KBQ_VALIDATION, useValue: { useValidation: false } }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Valid</div>
             <kbq-form-field>
-                <kbq-select [value]="selected">
+                <kbq-select placeholder="Placeholder">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -25,8 +27,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
 
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Invalid</div>
-            <kbq-form-field class="kbq-form-field_invalid">
-                <kbq-select [value]="selected">
+            <kbq-form-field>
+                <kbq-select [formControl]="invalidControl" placeholder="Placeholder">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -43,13 +45,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-vertical {
             width: 50%;
         }
-
-        .kbq-form__label {
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     `
 })
 export class SelectValidationExample {
     readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    readonly selected = this.options[0];
+    readonly invalidControl = new FormControl(null, [Validators.required]);
+
+    constructor() {
+        afterNextRender(() => this.invalidControl.updateValueAndValidity());
+    }
 }

@@ -62,11 +62,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
         .kbq-form-field {
             width: 320px;
         }
-
-        .kbq-form__label {
-            white-space: nowrap;
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     `
 })
 export class SelectDisabledExample {

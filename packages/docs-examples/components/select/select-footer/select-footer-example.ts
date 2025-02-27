@@ -81,10 +81,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
             width: 320px;
         }
 
-        .kbq-form__label {
-            color: var(--kbq-foreground-contrast-secondary);
-        }
-
         .example-select-footer-with-button {
             padding-left: var(--kbq-size-xxs) !important;
         }
