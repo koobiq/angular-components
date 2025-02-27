@@ -40,6 +40,11 @@
             }
         }
 
+        &.kbq-form-field_invalid,
+        &.ng-invalid {
+            @include kbq-form-field-state(states-error);
+        }
+
         &.kbq-form-field-type-input,
         &.kbq-form-field-type-textarea,
         &.kbq-form-field-type-timepicker,
