@@ -21,7 +21,7 @@ npm install marked@^15
 
 <!-- example(markdown-paragraph) -->
 
-### Text Emphasis
+### Text emphasis
 
 <!-- example(markdown-selection) -->
 
@@ -33,15 +33,15 @@ npm install marked@^15
 
 <!-- example(markdown-list) -->
 
-### Inline Code
+### Inline code
 
 <!-- example(markdown-code) -->
 
-### Code Block
+### Code block
 
 <!-- example(markdown-code-block) -->
 
-### Horizontal Rule
+### Horizontal rule
 
 <!-- example(markdown-divider) -->
 
@@ -57,6 +57,6 @@ npm install marked@^15
 
 <!-- example(markdown-table) -->
 
-### Line Break
+### Line break
 
 <!-- example(markdown-line-break) -->
