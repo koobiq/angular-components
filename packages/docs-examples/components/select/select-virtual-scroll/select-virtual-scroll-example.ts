@@ -1,7 +1,7 @@
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
+import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 
 /**
  * @title Select virtual scroll
@@ -13,10 +13,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [value]="selected">
-                <cdk-virtual-scroll-viewport itemSize="32" maxBufferPx="800" minBufferPx="500">
-                    <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
-                        {{ option }}
+            <kbq-select [(value)]="selected" (openedChange)="openedChange($event)">
+                <cdk-virtual-scroll-viewport itemSize="32" minBufferPx="300" maxBufferPx="300">
+                    <kbq-option *cdkVirtualFor="let option of options" [value]="option">
+                        {{ option.label }}
                     </kbq-option>
                 </cdk-virtual-scroll-viewport>
             </kbq-select>
@@ -35,6 +35,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
     `
 })
 export class SelectVirtualScrollExample {
-    readonly options = Array.from({ length: 10000 }).map((_, i) => `Option #${i}`);
+    readonly options = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
     readonly selected = this.options[0];
+    readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
+    readonly select = viewChild.required(KbqSelect);
+
+    openedChange(isOpened: boolean): void {
+        if (!isOpened) return;
+        this.virtualScrollViewport().scrollToIndex(this.selected.id);
+    }
 }
