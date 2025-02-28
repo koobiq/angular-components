@@ -112,7 +112,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                         ru: 'Дизайн-токены',
                         en: 'Design tokens'
                     },
-                    svgPreview: '',
+                    svgPreview: 'tokens',
                     hasApi: false,
                     hasExamples: false
                 }
