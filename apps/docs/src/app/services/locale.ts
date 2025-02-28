@@ -7,8 +7,6 @@ import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../cons
 
 export const isRuLocale = (locale: DocsLocale): boolean => locale === DocsLocale.Ru;
 
-export const DOCS_LOCALE_ATTRIBUTE = 'docs-lang';
-
 @Injectable({ providedIn: 'root' })
 export class DocsLocaleService {
     private readonly router = inject(Router);
@@ -44,8 +42,7 @@ export class DocsLocaleService {
             throw new Error(`[DocsLocaleService] Unsupported locale: ${locale}`);
         }
 
-        // because KBQ_LOCALE_SERVICE uses 'lang' attribute, we should use DOCS_LOCALE_ATTRIBUTE
-        this.document.documentElement.setAttribute(DOCS_LOCALE_ATTRIBUTE, locale);
+        this.document.documentElement.lang = locale;
 
         this.locale$.next(locale);
 

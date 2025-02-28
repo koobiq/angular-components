@@ -2,7 +2,7 @@ import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
 import { UAParser } from 'ua-parser-js';
-import { DOCS_LOCALE_ATTRIBUTE, DocsLocaleState, isRuLocale } from '../../services/locale';
+import { DocsLocaleState, isRuLocale } from '../../services/locale';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
@@ -51,7 +51,7 @@ export class DocsearchDirective extends DocsLocaleState {
                 ...CONFIG,
                 searchParameters: {
                     hitsPerPage: 40,
-                    facetFilters: [`${DOCS_LOCALE_ATTRIBUTE}:${locale}`]
+                    facetFilters: [`lang:${locale}`]
                 },
                 placeholder: _isRuLocale ? 'Поиск' : 'Search',
                 transformItems: this.transformItems,

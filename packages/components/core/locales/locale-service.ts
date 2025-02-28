@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Inject, inject, Injectable, InjectionToken, Optional, Provider } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { enUSLocaleData } from './en-US';
 import { esLALocaleData } from './es-LA';
@@ -49,6 +49,29 @@ export const KBQ_LOCALE_DATA = new InjectionToken<any>('KBQ_LOCALE_DATA', {
 
 export const KBQ_LOCALE_SERVICE = new InjectionToken<KbqLocaleService>('KBQ_LOCALE_SERVICE');
 
+/**
+ * Attribute name to be used to set the locale in the html element.
+ *
+ * @default 'lang'
+ *
+ * @docs-private
+ */
+export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME = new InjectionToken<string>('KBQ_LOCALE_SERVICE_LANG_ATTR_NAME', {
+    factory: () => 'lang'
+});
+
+/**
+ * Utility provider to configure the attribute name to be used to set the locale in the html element.
+ *
+ * @see KBQ_LOCALE_SERVICE_LANG_ATTR_NAME
+ *
+ * @docs-private
+ */
+export const kbqLocaleServiceLangAttrNameProvider = (attrName: string): Provider => ({
+    provide: KBQ_LOCALE_SERVICE_LANG_ATTR_NAME,
+    useValue: attrName
+});
+
 @Injectable({ providedIn: 'root' })
 export class KbqLocaleService {
     readonly changes: BehaviorSubject<string>;
@@ -58,6 +81,8 @@ export class KbqLocaleService {
 
     id: string;
     current;
+
+    private readonly langAttrName = inject(KBQ_LOCALE_SERVICE_LANG_ATTR_NAME);
 
     constructor(@Optional() @Inject(KBQ_LOCALE_ID) id: string, @Optional() @Inject(KBQ_LOCALE_DATA) localeData) {
         this.locales = localeData;
@@ -72,7 +97,7 @@ export class KbqLocaleService {
         this.id = id;
         this.current = this.locales[this.id];
 
-        this.document.documentElement.lang = this.id;
+        this.document.documentElement.setAttribute(this.langAttrName, this.id);
 
         this.changes.next(this.id);
     }
