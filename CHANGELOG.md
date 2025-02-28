@@ -1,3 +1,20 @@
+# 18.16.0 (2025-02-28)
+
+### Koobiq
+
+ * bug fix  **common:** show focus frame only when interacting with keyboard ([#DS-1340](https://github.com/koobiq/angular-components/issues/issue/DS-1340)) ([#543](https://github.com/koobiq/angular-components/issues/543)) ([b7cd4c5](https://github.com/koobiq/angular-components/commit/b7cd4c596caef3eadeeaea6b130608c5d5a8a521))
+ * bug fix  **datepicker:** incorrect position for month and year selects ([#DS-3427](https://github.com/koobiq/angular-components/issues/issue/DS-3427)) ([#556](https://github.com/koobiq/angular-components/issues/556)) ([3e91ed9](https://github.com/koobiq/angular-components/commit/3e91ed964bba056a50726387558257e64006687b))
+ * bug fix  **datepicker:** losing selected year ([#DS-3396](https://github.com/koobiq/angular-components/issues/issue/DS-3396)) ([#547](https://github.com/koobiq/angular-components/issues/547)) ([da74071](https://github.com/koobiq/angular-components/commit/da740712404a52d06d15ade13e76bb628ec7780b))
+ * bug fix  **docs,link:** removed color section ([#DS-3398](https://github.com/koobiq/angular-components/issues/issue/DS-3398)) ([#551](https://github.com/koobiq/angular-components/issues/551)) ([260cf6e](https://github.com/koobiq/angular-components/commit/260cf6e16bee330e1cd65e86190b4023f59fa012))
+ * bug fix  **docs:** restored select stackblitz examples ([#DS-3330](https://github.com/koobiq/angular-components/issues/issue/DS-3330)) ([#552](https://github.com/koobiq/angular-components/issues/552)) ([f8a8348](https://github.com/koobiq/angular-components/commit/f8a834830dd1c61b3524165f65a0e3eb6bfc1969))
+ * bug fix  **input:** validation for kbqInputNumber is not working correctly ([#DS-3379](https://github.com/koobiq/angular-components/issues/issue/DS-3379)) ([#548](https://github.com/koobiq/angular-components/issues/548)) ([90574af](https://github.com/koobiq/angular-components/commit/90574afc2742225a5491338bc04e0ca069d64c6a))
+ * bug fix  **modal:** styles for backdrop ([#DS-3371](https://github.com/koobiq/angular-components/issues/issue/DS-3371)) ([#550](https://github.com/koobiq/angular-components/issues/550)) ([ea0374d](https://github.com/koobiq/angular-components/commit/ea0374daeeeda6af12fc05c74155d35aca631bf1))
+ * bug fix  **popover:** unexpected focus capture after closing ([#DS-3159](https://github.com/koobiq/angular-components/issues/issue/DS-3159)) ([#542](https://github.com/koobiq/angular-components/issues/542)) ([310cf22](https://github.com/koobiq/angular-components/commit/310cf22de14a6ba0fdd37ca461f755bd15cdbf38))
+ * bug fix  **schematics:** ng-add resolved deps ([#DS-3414](https://github.com/koobiq/angular-components/issues/issue/DS-3414)) ([#546](https://github.com/koobiq/angular-components/issues/546)) ([cf06ba1](https://github.com/koobiq/angular-components/commit/cf06ba113b4c80b283e4de0dea66f612c219b187))
+ * bug fix  **select:** frame for invalid state ([#DS-3430](https://github.com/koobiq/angular-components/issues/issue/DS-3430)) ([#554](https://github.com/koobiq/angular-components/issues/554)) ([8d67902](https://github.com/koobiq/angular-components/commit/8d67902034df73e18e8f044f1d2b4496a380c6f1))
+ * bug fix  **tabs:** incomplete underline styles in tab-nav-bar ([#DS-3416](https://github.com/koobiq/angular-components/issues/issue/DS-3416)) ([#545](https://github.com/koobiq/angular-components/issues/545)) ([58f40e2](https://github.com/koobiq/angular-components/commit/58f40e2baab1205adc9a81e82963bc2e464b151a))
+ * feature  **markdown:** bump marked version to 15 ([#553](https://github.com/koobiq/angular-components/issues/553)) ([86da2a6](https://github.com/koobiq/angular-components/commit/86da2a6497dfdfa0a96fd05c947331c53177222e))
+
 # 18.15.0 (2025-02-21)
 
 ### Koobiq
