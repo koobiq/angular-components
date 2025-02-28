@@ -2,12 +2,21 @@ import { Injectable } from '@angular/core';
 import { marked, MarkedOptions } from 'marked';
 import { CLASS_PREFIX, MARKDOWN_TAGS_TO_CLASS_ALIAS, MARKDOWN_WHOLE_TAGS_TO_CLASS_ALIAS } from './markdown.values';
 
-/** Service which allows to convert `Markdown` into `HTML` */
+/**
+ * Service for converting Markdown into HTML.
+ */
 @Injectable()
 export class KbqMarkdownService {
-    /** Parses `Markdown` into `HTML` */
+    /**
+     * Converts a given Markdown string into HTML.
+     * NOTE! Method does not sanitize the output HTML string.
+     *
+     * @param markdown - The Markdown string to be converted.
+     * @param options - Optional MarkedOptions to customize the parsing behavior.
+     * @returns The transformed HTML string.
+     */
     parseToHtml(markdown: string, options?: MarkedOptions): string {
-        return this.transform(marked.parse(markdown, options));
+        return this.transform(<string>marked.parse(markdown, options));
     }
 
     private transform(htmlContent: string): string {
