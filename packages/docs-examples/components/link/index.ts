@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { LinkApplicationExample } from './link-application/link-application-example';
 import { LinkCaptionExample } from './link-caption/link-caption-example';
-import { LinkColorExample } from './link-color/link-color-example';
 import { LinkDisabledExample } from './link-disabled/link-disabled-example';
 import { LinkExternalExample } from './link-external/link-external-example';
 import { LinkGeneralExample } from './link-general/link-general-example';
@@ -17,7 +16,6 @@ import { LinkVisitedExample } from './link-visited/link-visited-example';
 export {
     LinkApplicationExample,
     LinkCaptionExample,
-    LinkColorExample,
     LinkDisabledExample,
     LinkExternalExample,
     LinkGeneralExample,
@@ -42,7 +40,6 @@ const EXAMPLES = [
     LinkMultiLineExample,
     LinkPrepositionsExample,
     LinkIconsExample,
-    LinkColorExample,
     LinkVisitedExample,
     LinkDisabledExample,
     LinkCaptionExample
