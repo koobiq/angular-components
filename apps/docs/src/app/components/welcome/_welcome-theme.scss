@@ -9,9 +9,18 @@
         color: var(--kbq-foreground-contrast-secondary);
     }
 
-    .docs-welcome__category-item:hover {
-        .docs-welcome__category-item-title {
-            color: var(--kbq-states-foreground-theme-hover);
+    .docs-welcome__category-item {
+        border-radius: var(--kbq-size-border-radius);
+
+        &:hover,
+        &:focus-visible {
+            .docs-welcome__category-item-title {
+                color: var(--kbq-states-foreground-theme-hover);
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--kbq-states-foreground-theme-hover);
         }
     }
 
