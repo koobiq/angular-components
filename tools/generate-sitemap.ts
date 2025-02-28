@@ -156,6 +156,9 @@ const paths = [
     'components/tooltip/overview',
     'components/tooltip/api',
 
+    'components/top-bar/overview',
+    'components/top-bar/api',
+
     'components/tree/overview',
     'components/tree/api',
 
