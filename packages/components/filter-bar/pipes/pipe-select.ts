@@ -1,7 +1,11 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
@@ -31,10 +35,17 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeButton,
         KbqTitleModule,
         KbqPipeTitleDirective,
-        KbqPipeMinWidth
+        KbqPipeMinWidth,
+        NgTemplateOutlet,
+        KbqFormFieldModule,
+        KbqIcon,
+        KbqInputModule,
+        ReactiveFormsModule
     ]
 })
 export class KbqPipeSelectComponent extends KbqBasePipe<string> {
+    searchCtrl: UntypedFormControl = new UntypedFormControl();
+
     @ViewChild(KbqSelect) select: KbqSelect;
 
     get selected() {

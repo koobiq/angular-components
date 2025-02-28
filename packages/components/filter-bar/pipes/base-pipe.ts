@@ -5,8 +5,10 @@ import {
     Directive,
     ElementRef,
     inject,
-    InjectionToken
+    InjectionToken,
+    TemplateRef
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
 import { UAParser } from 'ua-parser-js';
@@ -33,11 +35,14 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected readonly filterBar = inject(KbqFilterBar, { optional: true });
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    protected values: KbqPipeTemplate[];
+    protected values;
+    protected valueTemplate?: TemplateRef<any> | string;
 
     private uaParser: UAParser.UAParserInstance = new UAParser();
 
     isMac: boolean;
+
+    $implicit: unknown;
 
     get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
@@ -47,16 +52,18 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         return !this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty));
     }
 
+    isTemplateRef(value): boolean {
+        return value instanceof TemplateRef;
+    }
+
     constructor() {
+        this.$implicit = this;
+
         this.stateChanges.subscribe(() => {
             this.changeDetectorRef.markForCheck();
         });
 
-        const template = this.filterBar?.pipeTemplates.find((template) => template.type === this.data?.type);
-
-        if (template) {
-            this.values = template.values as KbqPipeTemplate[];
-        }
+        this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
 
         this.isMac = (this.uaParser.getOS().name || '').includes('Mac');
     }
@@ -74,6 +81,15 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             }
         });
     }
+
+    updateTemplates = (templates: KbqPipeTemplate[] | null) => {
+        const template = templates?.find((template) => template.type === this.data?.type);
+
+        if (template?.values) {
+            this.values = template.values;
+            this.valueTemplate = template.valueTemplate;
+        }
+    };
 
     onRemove() {
         this.filterBar?.removePipe(this.data);

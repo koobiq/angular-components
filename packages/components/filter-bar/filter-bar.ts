@@ -74,6 +74,8 @@ export class KbqFilterBar {
     @Input()
     set pipeTemplates(value: KbqPipeTemplate[]) {
         this._templates = value;
+
+        this.internalTemplatesChanges.next(this._templates);
     }
 
     get pipeTemplates(): KbqPipeTemplate[] {
@@ -115,6 +117,7 @@ export class KbqFilterBar {
 
     readonly changes = new BehaviorSubject<void>(undefined);
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
+    readonly internalTemplatesChanges = new BehaviorSubject<KbqPipeTemplate[] | null>(null);
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
     constructor() {

@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { AfterViewInit, Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { KbqIcon } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 
 /**
@@ -12,7 +13,8 @@ import { DateTime } from 'luxon';
     selector: 'filter-bar-complete-functions-example',
     imports: [
         KbqFilterBarModule,
-        KbqLuxonDateModule
+        KbqLuxonDateModule,
+        KbqIcon
     ],
     template: `
         <kbq-filter-bar
@@ -38,10 +40,17 @@ import { DateTime } from 'luxon';
 
             <kbq-filter-bar-search (onSearch)="onSearch($event)" />
         </kbq-filter-bar>
+
+        <ng-template #optionTemplate let-option="option">
+            <i [color]="option.type" kbq-icon="kbq-square_16"></i>
+            {{ option.name }}
+        </ng-template>
     `
 })
-export class FilterBarCompleteFunctionsExample {
+export class FilterBarCompleteFunctionsExample implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
+
+    @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
 
     filters: KbqFilter[] = [
         {
@@ -523,90 +532,97 @@ export class FilterBarCompleteFunctionsExample {
         }
     ];
     activeFilter: KbqFilter | null;
-    pipeTemplates: KbqPipeTemplate[] = [
-        {
-            name: 'Select',
-            type: KbqPipeTypes.Select,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
-            ],
+    pipeTemplates: KbqPipeTemplate[];
 
-            required: false,
-            cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'MultiSelect',
-            type: KbqPipeTypes.MultiSelect,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
-            ],
-            required: false,
-            cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'Text',
-            type: KbqPipeTypes.Text,
+    ngAfterViewInit(): void {
+        this.pipeTemplates = [
+            {
+                name: 'Select',
+                type: KbqPipeTypes.Select,
+                values: [
+                    { name: 'Option 1', id: '1', type: 'error' },
+                    { name: 'Option 2', id: '2', type: 'warning' },
+                    { name: 'Option 3', id: '3', type: 'success' },
+                    { name: 'Option 4', id: '4', type: 'error' },
+                    { name: 'Option 5', id: '5', type: 'warning' },
+                    { name: 'Option 6', id: '6', type: 'success' },
+                    { name: 'Option 7', id: '7', type: 'error' },
+                    { name: 'Option 8', id: '8', type: 'warning' },
+                    { name: 'Option 9', id: '9', type: 'success' },
+                    { name: 'Option 10', id: '10', type: 'error' }
+                ],
+                valueTemplate: this.optionTemplate,
 
-            required: false,
-            cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'Date',
-            type: KbqPipeTypes.Date,
-            values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
-                { name: 'Последние 3 дня', start: null, end: { days: -3 } },
-                { name: 'Последние 7 дней', start: null, end: { days: -7 } },
-                { name: 'Последние 30 дней', start: null, end: { days: -30 } },
-                { name: 'Последние 90 дней', start: null, end: { days: -90 } },
-                { name: 'Последний год', start: null, end: { years: -1 } }
-            ],
-            required: false,
-            cleanable: false,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'Datetime',
-            type: KbqPipeTypes.Datetime,
-            values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
-                { name: 'Последние 3 дня', start: null, end: { days: -3 } },
-                { name: 'Последние 7 дней', start: null, end: { days: -7 } },
-                { name: 'Последние 30 дней', start: null, end: { days: -30 } },
-                { name: 'Последние 90 дней', start: null, end: { days: -90 } },
-                { name: 'Последний год', start: null, end: { years: -1 } }
-            ],
-            required: false,
-            cleanable: true,
-            removable: false,
-            disabled: false
-        }
-    ];
+                required: false,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiSelect',
+                type: KbqPipeTypes.MultiSelect,
+                values: [
+                    { name: 'Option 1', id: '1', type: 'error' },
+                    { name: 'Option 2', id: '2', type: 'warning' },
+                    { name: 'Option 3', id: '3', type: 'success' },
+                    { name: 'Option 4', id: '4', type: 'error' },
+                    { name: 'Option 5', id: '5', type: 'warning' },
+                    { name: 'Option 6', id: '6', type: 'success' },
+                    { name: 'Option 7', id: '7', type: 'error' },
+                    { name: 'Option 8', id: '8', type: 'warning' },
+                    { name: 'Option 9', id: '9', type: 'success' },
+                    { name: 'Option 10', id: '10', type: 'error' }
+                ],
+                valueTemplate: this.optionTemplate,
+
+                required: false,
+                cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
+                name: 'Text',
+                type: KbqPipeTypes.Text,
+
+                required: false,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Date',
+                type: KbqPipeTypes.Date,
+                values: [
+                    { name: 'Последний день', start: null, end: { days: -1 } },
+                    { name: 'Последние 3 дня', start: null, end: { days: -3 } },
+                    { name: 'Последние 7 дней', start: null, end: { days: -7 } },
+                    { name: 'Последние 30 дней', start: null, end: { days: -30 } },
+                    { name: 'Последние 90 дней', start: null, end: { days: -90 } },
+                    { name: 'Последний год', start: null, end: { years: -1 } }
+                ],
+                required: false,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'Datetime',
+                type: KbqPipeTypes.Datetime,
+                values: [
+                    { name: 'Последний день', start: null, end: { days: -1 } },
+                    { name: 'Последние 3 дня', start: null, end: { days: -3 } },
+                    { name: 'Последние 7 дней', start: null, end: { days: -7 } },
+                    { name: 'Последние 30 дней', start: null, end: { days: -30 } },
+                    { name: 'Последние 90 дней', start: null, end: { days: -90 } },
+                    { name: 'Последний год', start: null, end: { years: -1 } }
+                ],
+                required: false,
+                cleanable: true,
+                removable: false,
+                disabled: false
+            }
+        ];
+    }
 
     onAddPipe(pipe: KbqPipeTemplate) {
         console.log('onAddPipe: ', pipe);

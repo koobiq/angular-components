@@ -1,7 +1,7 @@
-<filter-bar-saved-filters-example />
-<br />
-<br />
-<filter-bar-overview-example />
+<!--<filter-bar-saved-filters-example />-->
+<!--<br />-->
+<!--<br />-->
+<filter-bar-complete-functions-example />
 <br />
 <br />
 <div style="min-height: 50px; border: 1px solid red">
@@ -32,6 +32,11 @@
         <!--        <kbq-filter-bar-refresher />-->
     </kbq-filter-bar>
 </div>
+
+<ng-template #optionTemplate let-option="option">
+    <i kbq-icon="kbq-square_16" [color]="option.type"></i>
+    {{ option.name }}
+</ng-template>
 
 <br />
 

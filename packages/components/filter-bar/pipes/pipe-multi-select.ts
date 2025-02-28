@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -34,10 +34,11 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqBadgeModule,
         KbqPipeButton,
         KbqTitleModule,
-        KbqPipeTitleDirective
+        KbqPipeTitleDirective,
+        NgTemplateOutlet
     ]
 })
-export class KbqPipeMultiSelectComponent extends KbqBasePipe<string[]> {
+export class KbqPipeMultiSelectComponent extends KbqBasePipe<unknown[]> {
     @ViewChild(KbqSelect) select: KbqSelect;
 
     get selected() {

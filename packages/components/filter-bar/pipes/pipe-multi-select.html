@@ -25,9 +25,20 @@
             </kbq-badge>
         }
     </button>
-
+    @if (data['search']) {
+        data['search']
+    }
     @for (item of values; track item) {
-        <kbq-option [value]="item">{{ item.name }}</kbq-option>
+        <kbq-option [value]="item">
+            @if (isTemplateRef(valueTemplate)) {
+                <ng-container
+                    [ngTemplateOutlet]="$any(valueTemplate)"
+                    [ngTemplateOutletContext]="{ $implicit, option: item }"
+                />
+            } @else {
+                {{ item.name }}
+            }
+        </kbq-option>
     }
 </kbq-select>
 

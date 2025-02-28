@@ -1,3 +1,4 @@
+import { TemplateRef } from '@angular/core';
 import { KbqFilterBar } from './filter-bar';
 
 export enum KbqPipeTypes {
@@ -56,6 +57,7 @@ export class KbqPipeData<T> {
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     values?: unknown[];
     value?: unknown | null;
+    valueTemplate?: TemplateRef<any> | string;
 }
 
 export interface KbqSaveFilterError {

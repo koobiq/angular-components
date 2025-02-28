@@ -20,8 +20,23 @@
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value">{{ select.triggerValue }}</span>
     </button>
 
+    <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+        <input kbqInput placeholder="Search" type="text" [formControl]="searchCtrl" />
+        <kbq-cleaner />
+    </kbq-form-field>
+
     @for (item of values; track item) {
-        <kbq-option [value]="item">{{ item.name }}</kbq-option>
+        <kbq-option [value]="item">
+            @if (isTemplateRef(valueTemplate)) {
+                <ng-container
+                    [ngTemplateOutlet]="$any(valueTemplate)"
+                    [ngTemplateOutletContext]="{ $implicit, option: item }"
+                />
+            } @else {
+                {{ item.name }}
+            }
+        </kbq-option>
     }
 </kbq-select>
 
