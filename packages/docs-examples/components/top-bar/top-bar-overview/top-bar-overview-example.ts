@@ -1,12 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /**
  * @title TopBar
@@ -22,23 +23,22 @@ import { map, startWith } from 'rxjs/operators';
         KbqIconModule
     ],
     template: `
-        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-bar>
             <div class="layout-row layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
-                <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
+                <div class="kbq-title kbq-truncate-line">Dashboard</div>
             </div>
 
             <div kbqTopBarSpacer></div>
 
             <div kbqTopBarContainer placement="end">
-                @for (action of actions; track index; let index = $index) {
+                @for (action of actions; track $index) {
                     <button
-                        [kbqStyle]="action.style || ''"
-                        [color]="action.color || ''"
-                        [kbqTooltipDisabled]="isDesktopMatches"
+                        [kbqStyle]="action.style"
+                        [color]="action.color"
+                        [kbqTooltipDisabled]="isDesktop"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
                         kbq-button
@@ -46,7 +46,7 @@ import { map, startWith } from 'rxjs/operators';
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktopMatches) {
+                        @if (isDesktop) {
                             {{ action.title }}
                         }
                     </button>
@@ -54,22 +54,10 @@ import { map, startWith } from 'rxjs/operators';
             </div>
         </kbq-top-bar>
     `,
-    styles: `
-        .kbq-text-ellipsis {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarOverviewExample {
-    readonly isDesktop = inject(BreakpointObserver)
-        .observe('(min-width: 900px)')
-        .pipe(
-            startWith({ matches: true }),
-            map(({ matches }) => !!matches)
-        );
+    isDesktop = true;
 
     readonly actions = [
         {
@@ -86,6 +74,7 @@ export class TopBarOverviewExample {
         },
         {
             title: 'Save',
+            style: '',
             color: KbqComponentColors.Contrast,
             icon: 'kbq-floppy-disk_16'
         }
@@ -94,4 +83,18 @@ export class TopBarOverviewExample {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+    protected readonly cdr = inject(ChangeDetectorRef);
+
+    constructor() {
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                map(({ matches }) => matches),
+                takeUntilDestroyed()
+            )
+            .subscribe((matches) => {
+                this.isDesktop = matches;
+                this.cdr.markForCheck();
+            });
+    }
 }

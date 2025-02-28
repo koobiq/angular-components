@@ -1,6 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -33,13 +34,12 @@ type ExampleAction = {
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
-                <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
+                <div class="kbq-title kbq-truncate-line">Dashboard</div>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -48,31 +48,31 @@ type ExampleAction = {
                 <button
                     [kbqStyle]="KbqButtonStyles.Outline"
                     [color]="KbqComponentColors.ContrastFade"
-                    [kbqTooltipDisabled]="isDesktopMatches"
+                    [kbqTooltipDisabled]="isDesktop"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="PopUpPlacements.Bottom"
                     kbqTooltip="Cancel"
                     kbq-button
                 >
-                    @if (!isDesktopMatches) {
+                    @if (!isDesktop) {
                         <i kbq-icon="kbq-undo_16"></i>
                     }
-                    @if (isDesktopMatches) {
+                    @if (isDesktop) {
                         Cancel
                     }
                 </button>
                 <button
                     [color]="KbqComponentColors.Contrast"
-                    [kbqTooltipDisabled]="isDesktopMatches"
+                    [kbqTooltipDisabled]="isDesktop"
                     [kbqTooltipArrow]="false"
                     [kbqPlacement]="PopUpPlacements.Bottom"
                     kbqTooltip="Save"
                     kbq-button
                 >
-                    @if (!isDesktopMatches) {
+                    @if (!isDesktop) {
                         <i kbq-icon="kbq-floppy-disk_16"></i>
                     }
-                    @if (isDesktopMatches) {
+                    @if (isDesktop) {
                         Save
                     }
                 </button>
@@ -90,7 +90,7 @@ type ExampleAction = {
 
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             <kbq-optgroup label="Actions" />
-                            @for (action of secondaryActions; track action.id; let index = $index) {
+                            @for (action of secondaryActions; track action.id) {
                                 @if (hiddenItemIDs.has(action.id)) {
                                     <button kbq-dropdown-item>
                                         <i [class]="action.icon" kbq-icon=""></i>
@@ -101,19 +101,19 @@ type ExampleAction = {
                         </kbq-dropdown>
                     </ng-template>
 
-                    @for (action of secondaryActions; track index; let index = $index) {
+                    @for (action of secondaryActions; track action.id) {
                         <button
                             *kbqOverflowItem="action.id"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
-                            [kbqTooltipDisabled]="isDesktopMatches"
+                            [kbqTooltipDisabled]="isDesktop"
                             [kbqTooltipArrow]="false"
                             [kbqPlacement]="PopUpPlacements.Bottom"
                             [kbqTooltip]="action.id"
                             kbq-button
                         >
                             <i [class]="action.icon" kbq-icon=""></i>
-                            @if (isDesktopMatches) {
+                            @if (isDesktop) {
                                 {{ action.id }}
                             }
                         </button>
@@ -123,12 +123,6 @@ type ExampleAction = {
         </kbq-top-bar>
     `,
     styles: `
-        .kbq-text-ellipsis {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
         .kbq-overflow-items {
             max-width: 451px;
             gap: var(--kbq-top-bar-right-gap);
@@ -157,12 +151,7 @@ type ExampleAction = {
     `
 })
 export class TopBarSecondaryActionsResponsiveExample {
-    readonly isDesktop = inject(BreakpointObserver)
-        .observe('(min-width: 900px)')
-        .pipe(
-            startWith({ matches: true }),
-            map(({ matches }) => matches)
-        );
+    isDesktop = true;
 
     readonly secondaryActions: ExampleAction[] = [
         { id: 'Verdict', icon: 'kbq-question-circle_16' },
@@ -174,4 +163,19 @@ export class TopBarSecondaryActionsResponsiveExample {
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
+    protected readonly cdr = inject(ChangeDetectorRef);
+
+    constructor() {
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                startWith({ matches: true }),
+                map(({ matches }) => !!matches),
+                takeUntilDestroyed()
+            )
+            .subscribe((matches) => {
+                this.isDesktop = matches;
+                this.cdr.markForCheck();
+            });
+    }
 }

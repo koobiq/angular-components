@@ -4,8 +4,8 @@ import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
-    DestroyRef,
     inject,
     signal,
     ViewChild,
@@ -35,21 +35,20 @@ import { auditTime, map, startWith } from 'rxjs/operators';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-bar [withShadow]="hasOverflow()">
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
-                <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
+                <div class="kbq-title kbq-truncate-line">Dashboard</div>
             </div>
             <div kbqTopBarSpacer></div>
             <div kbqTopBarContainer placement="end">
-                @for (action of actions; track index; let index = $index) {
+                @for (action of actions; track $index) {
                     <button
-                        [kbqStyle]="action.style || ''"
-                        [color]="action.color || ''"
-                        [kbqTooltipDisabled]="isDesktopMatches"
+                        [kbqStyle]="action.style"
+                        [color]="action.color"
+                        [kbqTooltipDisabled]="isDesktop"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
                         kbq-button
@@ -57,7 +56,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktopMatches) {
+                        @if (isDesktop) {
                             {{ action.title }}
                         }
                     </button>
@@ -75,12 +74,6 @@ import { auditTime, map, startWith } from 'rxjs/operators';
             height: 400px;
         }
 
-        .kbq-text-ellipsis {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
         .overflow-content-example {
             height: 100%;
             overflow-y: auto;
@@ -92,6 +85,8 @@ import { auditTime, map, startWith } from 'rxjs/operators';
     `
 })
 export class TopBarOverflowExample implements AfterViewInit {
+    isDesktop: boolean;
+
     @ViewChild(CdkScrollable) protected readonly scrollable: CdkScrollable;
 
     readonly hasOverflow: WritableSignal<boolean | undefined> = signal(false);
@@ -105,27 +100,35 @@ export class TopBarOverflowExample implements AfterViewInit {
         },
         {
             title: 'Save',
+            style: '',
             color: KbqComponentColors.Contrast,
             icon: 'kbq-floppy-disk_16'
         }
     ];
 
-    readonly isDesktop = inject(BreakpointObserver)
-        .observe('(min-width: 768px)')
-        .pipe(
-            startWith({ matches: true }),
-            map(({ matches }) => !!matches)
-        );
-
-    protected readonly destroyRef = inject(DestroyRef);
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
+    protected readonly cdr = inject(ChangeDetectorRef);
+
+    constructor() {
+        inject(BreakpointObserver)
+            .observe('(min-width: 768px)')
+            .pipe(
+                startWith({ matches: true }),
+                map(({ matches }) => !!matches),
+                takeUntilDestroyed()
+            )
+            .subscribe((matches) => {
+                this.isDesktop = matches;
+                this.cdr.markForCheck();
+            });
+    }
 
     ngAfterViewInit() {
         this.scrollable
             .elementScrolled()
-            .pipe(auditTime(300), takeUntilDestroyed(this.destroyRef))
+            .pipe(auditTime(300))
             .subscribe(() => this.hasOverflow.set(this.scrollable.measureScrollOffset('top') > 0));
     }
 }

@@ -1,6 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -27,7 +28,6 @@ import { map, startWith } from 'rxjs/operators';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-        @let isDesktopMatches = !!(isDesktop | async);
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-padding-m flex-none">
@@ -47,20 +47,20 @@ import { map, startWith } from 'rxjs/operators';
             </div>
             <div kbqTopBarSpacer></div>
             <div kbqTopBarContainer placement="end">
-                @for (action of actions; track index; let index = $index) {
+                @for (action of actions; track $index) {
                     <button
-                        [kbqStyle]="action.style || ''"
-                        [color]="action.color || ''"
-                        [kbqTooltipDisabled]="isDesktopMatches"
+                        [kbqStyle]="action.style"
+                        [color]="action.color"
+                        [kbqTooltipDisabled]="isDesktop"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
                         [disabled]="action.disabled"
                         kbq-button
                     >
-                        @if (!isDesktopMatches && action.icon) {
+                        @if (!isDesktop && action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktopMatches) {
+                        @if (isDesktop) {
                             {{ action.title }}
                         }
                     </button>
@@ -70,6 +70,8 @@ import { map, startWith } from 'rxjs/operators';
     `
 })
 export class TopBarBreadcrumbsExample {
+    isDesktop = true;
+
     readonly actions = [
         {
             title: 'Add widget',
@@ -85,19 +87,29 @@ export class TopBarBreadcrumbsExample {
         },
         {
             title: 'Save',
+            style: '',
             color: KbqComponentColors.Contrast,
             icon: 'kbq-floppy-disk_16',
             disabled: true
         }
     ];
-    readonly isDesktop = inject(BreakpointObserver)
-        .observe('(min-width: 900px)')
-        .pipe(
-            startWith({ matches: true }),
-            map(({ matches }) => !!matches)
-        );
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+    protected readonly cdr = inject(ChangeDetectorRef);
+
+    constructor() {
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                startWith({ matches: true }),
+                map(({ matches }) => !!matches),
+                takeUntilDestroyed()
+            )
+            .subscribe((matches) => {
+                this.isDesktop = matches;
+                this.cdr.markForCheck();
+            });
+    }
 }

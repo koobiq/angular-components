@@ -34,7 +34,7 @@ type ExampleAction = {
                 <div class="layout-row layout-padding-m flex-none">
                     <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
                 </div>
-                <div class="kbq-title kbq-text-ellipsis">Dashboard</div>
+                <div class="kbq-title kbq-truncate-line">Dashboard</div>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -52,7 +52,7 @@ type ExampleAction = {
 
                     <kbq-dropdown #appDropdown="kbqDropdown">
                         <kbq-optgroup label="Actions" />
-                        @for (action of actions; track action.id; let index = $index) {
+                        @for (action of actions; track action.id) {
                             @if (hiddenItemIDs.has(action.id)) {
                                 <button kbq-dropdown-item>
                                     <i [class]="action.icon" kbq-icon=""></i>
@@ -63,7 +63,7 @@ type ExampleAction = {
                     </kbq-dropdown>
                 </ng-template>
 
-                @for (action of actions; track index; let index = $index) {
+                @for (action of actions; track action.id) {
                     <button
                         *kbqOverflowItem="action.id"
                         [kbqStyle]="KbqButtonStyles.Transparent"
@@ -76,13 +76,6 @@ type ExampleAction = {
                 }
             </kbq-overflow-items>
         </kbq-top-bar>
-    `,
-    styles: `
-        .kbq-text-ellipsis {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
     `
 })
 export class TopBarSecondaryActionsExample {
