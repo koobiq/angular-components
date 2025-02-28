@@ -90,7 +90,9 @@ export class KbqPipeAdd {
             }
 
             this.filterBar.filter.changed = true;
-            this.filterBar.filter.pipes.push(Object.assign({}, option.value, { values: undefined, openOnAdd: true }));
+            this.filterBar.filter.pipes.push(
+                Object.assign({}, option.value, { values: undefined, valueTemplate: undefined, openOnAdd: true })
+            );
 
             this.onAddPipe.next(option.value);
             this.filterBar.filterChange.emit(this.filterBar.filter);
