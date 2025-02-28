@@ -129,17 +129,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
             isPreviewed: true,
             items: [
                 {
-                    id: 'alert',
-                    name: {
-                        ru: 'Alert',
-                        en: 'Alert'
-                    },
-                    svgPreview: 'alerts',
-                    hasApi: true,
-                    apiId: 'alert',
-                    hasExamples: false
-                },
-                {
                     id: 'accordion',
                     name: {
                         ru: 'Accordion',
@@ -148,6 +137,28 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'accordion',
                     hasApi: true,
                     apiId: 'accordion',
+                    hasExamples: false
+                },
+                {
+                    id: 'actions-panel',
+                    name: {
+                        ru: 'Actions panel',
+                        en: 'Actions panel'
+                    },
+                    svgPreview: 'actions-panel',
+                    hasApi: true,
+                    apiId: 'actions-panel',
+                    hasExamples: false
+                },
+                {
+                    id: 'alert',
+                    name: {
+                        ru: 'Alert',
+                        en: 'Alert'
+                    },
+                    svgPreview: 'alerts',
+                    hasApi: true,
+                    apiId: 'alert',
                     hasExamples: false
                 },
                 {

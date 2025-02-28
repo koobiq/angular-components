@@ -130,6 +130,47 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "accordion-states-example.ts",
     "importPath": "components/accordion"
   },
+  "actions-panel-adaptive": {
+    "packagePath": "components/actions-panel/actions-panel-adaptive",
+    "title": "Actions panel adaptive",
+    "componentName": "ActionsPanelAdaptiveExample",
+    "files": [
+      "actions-panel-adaptive-example.ts"
+    ],
+    "selector": "actions-panel-adaptive-example",
+    "additionalComponents": [
+      "ExampleActionsPanel"
+    ],
+    "primaryFile": "actions-panel-adaptive-example.ts",
+    "importPath": "components/actions-panel"
+  },
+  "actions-panel-custom-counter": {
+    "packagePath": "components/actions-panel/actions-panel-custom-counter",
+    "title": "Actions panel custom counter",
+    "componentName": "ActionsPanelCustomCounterExample",
+    "files": [
+      "actions-panel-custom-counter-example.ts"
+    ],
+    "selector": "actions-panel-custom-counter-example",
+    "additionalComponents": [],
+    "primaryFile": "actions-panel-custom-counter-example.ts",
+    "importPath": "components/actions-panel"
+  },
+  "actions-panel-overview": {
+    "packagePath": "components/actions-panel/actions-panel-overview",
+    "title": "Actions panel overview",
+    "componentName": "ActionsPanelOverviewExample",
+    "files": [
+      "actions-panel-overview-example.ts"
+    ],
+    "selector": "actions-panel-overview-example",
+    "additionalComponents": [
+      "ExampleTable",
+      "ExampleActionsPanel"
+    ],
+    "primaryFile": "actions-panel-overview-example.ts",
+    "importPath": "components/actions-panel"
+  },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
     "title": "Alert close",
@@ -3617,6 +3658,12 @@ return import('@koobiq/docs-examples/components/accordion');
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-states':
 return import('@koobiq/docs-examples/components/accordion');
+  case 'actions-panel-adaptive':
+return import('@koobiq/docs-examples/components/actions-panel');
+  case 'actions-panel-custom-counter':
+return import('@koobiq/docs-examples/components/actions-panel');
+  case 'actions-panel-overview':
+return import('@koobiq/docs-examples/components/actions-panel');
   case 'alert-close':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-content':
