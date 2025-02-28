@@ -1,3 +1,10 @@
+## 18.16.1 (2025-02-28)
+
+### Koobiq
+
+ * bug fix  **docs:** recover docsearch ([#DS-3364](https://github.com/koobiq/angular-components/issues/issue/DS-3364)) ([#557](https://github.com/koobiq/angular-components/issues/557)) ([b816288](https://github.com/koobiq/angular-components/commit/b8162889e2397bcefca15f699b890157c4eacfa7))
+ * bug fix  **docs:** welcome page image for design tokens ([#DS-3360](https://github.com/koobiq/angular-components/issues/issue/DS-3360)) ([#555](https://github.com/koobiq/angular-components/issues/555)) ([38a913e](https://github.com/koobiq/angular-components/commit/38a913eff4b56807c11d2e66daeacc00ed4b4a4a))
+
 # 18.16.0 (2025-02-28)
 
 ### Koobiq
