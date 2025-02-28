@@ -14,6 +14,7 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
+    Host,
     Inject,
     InjectionToken,
     Input,
@@ -515,7 +516,7 @@ export class KbqTreeSelect
         @Optional() private readonly dir: Directionality,
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
-        @Optional() private readonly parentFormField: KbqFormField,
+        @Host() @Optional() private readonly parentFormField: KbqFormField,
         @Optional() @Self() ngControl: NgControl,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {

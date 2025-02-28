@@ -7,6 +7,7 @@ import {
     ContentChildren,
     ElementRef,
     EventEmitter,
+    Host,
     Inject,
     InjectionToken,
     Input,
@@ -166,7 +167,7 @@ export class KbqAutocomplete implements AfterContentInit {
         private changeDetectorRef: ChangeDetectorRef,
         private elementRef: ElementRef<HTMLElement>,
         @Inject(KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS) defaults: KbqAutocompleteDefaultOptions,
-        @Optional() private readonly parentFormField: KbqFormField
+        @Host() @Optional() private readonly parentFormField: KbqFormField
     ) {
         this._autoActiveFirstOption = !!defaults.autoActiveFirstOption;
     }
