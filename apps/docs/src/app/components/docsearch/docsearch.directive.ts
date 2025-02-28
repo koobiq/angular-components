@@ -2,7 +2,7 @@ import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
 import { UAParser } from 'ua-parser-js';
-import { DocsLocaleState } from '../../services/locale';
+import { DOCS_LOCALE_ATTRIBUTE, DocsLocaleState, isRuLocale } from '../../services/locale';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
 
@@ -18,9 +18,6 @@ const CONFIG: _DocSearchProps = {
     apiKey: '0f0df042e7b349df5cb381e72f268b4d',
     indexName: 'koobiq',
     maxResultsPerGroup: 20,
-    searchParameters: {
-        hitsPerPage: 40
-    },
     disableUserPersonalization: false,
     resultsFooterComponent: () => null
 } as const;
@@ -48,12 +45,17 @@ export class DocsearchDirective extends DocsLocaleState {
     }
 
     private initDocsearch(): void {
-        this.docsLocaleService.isRuLocale.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((isRuLocale) => {
+        this.docsLocaleService.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((locale) => {
+            const _isRuLocale = isRuLocale(locale);
             docsearch({
                 ...CONFIG,
-                placeholder: isRuLocale ? 'Поиск' : 'Search',
+                searchParameters: {
+                    hitsPerPage: 40,
+                    facetFilters: [`${DOCS_LOCALE_ATTRIBUTE}:${locale}`]
+                },
+                placeholder: _isRuLocale ? 'Поиск' : 'Search',
                 transformItems: this.transformItems,
-                translations: this.translations(isRuLocale)
+                translations: this.translations(_isRuLocale)
             });
         });
     }

@@ -1,4 +1,4 @@
-import { Location } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import { Directive, inject, Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -7,10 +7,13 @@ import { DOCS_DEFAULT_LOCALE, DOCS_SUPPORTED_LOCALES, DocsLocale } from '../cons
 
 export const isRuLocale = (locale: DocsLocale): boolean => locale === DocsLocale.Ru;
 
+export const DOCS_LOCALE_ATTRIBUTE = 'docs-lang';
+
 @Injectable({ providedIn: 'root' })
 export class DocsLocaleService {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
+    private readonly document = inject(DOCUMENT);
 
     /** Current locale code. */
     private readonly locale$ = new BehaviorSubject<DocsLocale>(
@@ -40,6 +43,9 @@ export class DocsLocaleService {
         if (!this.isSupportedLocale(locale)) {
             throw new Error(`[DocsLocaleService] Unsupported locale: ${locale}`);
         }
+
+        // because KBQ_LOCALE_SERVICE uses 'lang' attribute, we should use DOCS_LOCALE_ATTRIBUTE
+        this.document.documentElement.setAttribute(DOCS_LOCALE_ATTRIBUTE, locale);
 
         this.locale$.next(locale);
 
