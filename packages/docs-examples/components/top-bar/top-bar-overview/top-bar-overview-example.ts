@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -38,7 +38,7 @@ import { map } from 'rxjs/operators';
                     <button
                         [kbqStyle]="action.style"
                         [color]="action.color"
-                        [kbqTooltipDisabled]="isDesktop"
+                        [kbqTooltipDisabled]="isDesktop()"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
                         kbq-button
@@ -46,7 +46,7 @@ import { map } from 'rxjs/operators';
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktop) {
+                        @if (isDesktop()) {
                             {{ action.title }}
                         }
                     </button>
@@ -57,7 +57,15 @@ import { map } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarOverviewExample {
-    isDesktop = true;
+    isDesktop = toSignal(
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                takeUntilDestroyed(),
+                map(({ matches }) => matches)
+            ),
+        { initialValue: true }
+    );
 
     readonly actions = [
         {
@@ -83,18 +91,4 @@ export class TopBarOverviewExample {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-    protected readonly cdr = inject(ChangeDetectorRef);
-
-    constructor() {
-        inject(BreakpointObserver)
-            .observe('(min-width: 900px)')
-            .pipe(
-                map(({ matches }) => matches),
-                takeUntilDestroyed()
-            )
-            .subscribe((matches) => {
-                this.isDesktop = matches;
-                this.cdr.markForCheck();
-            });
-    }
 }

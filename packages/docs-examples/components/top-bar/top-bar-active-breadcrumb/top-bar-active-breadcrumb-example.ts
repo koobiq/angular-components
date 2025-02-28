@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
@@ -14,7 +14,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /**
  * @title TopBar Active Breadcrumb
@@ -53,7 +53,7 @@ import { map, startWith } from 'rxjs/operators';
                                     #kbqPopover="kbqPopover"
                                     [kbqPopoverContent]="popoverContent"
                                     [kbqPopoverPlacement]="PopUpPlacements.BottomLeft"
-                                    [kbqTooltipDisabled]="isDesktop"
+                                    [kbqTooltipDisabled]="isDesktop()"
                                     [kbqPlacement]="PopUpPlacements.Bottom"
                                     [kbqTooltip]="breadcrumbActionText"
                                     kbqPopoverClass="dashboard__input"
@@ -61,7 +61,7 @@ import { map, startWith } from 'rxjs/operators';
                                     kbqBreadcrumb
                                     kbqPopover
                                 >
-                                    @if (isDesktop) {
+                                    @if (isDesktop()) {
                                         {{ breadcrumbActionText }}
                                     }
                                     <i kbq-icon="kbq-pencil_16"></i>
@@ -92,16 +92,16 @@ import { map, startWith } from 'rxjs/operators';
                     <button
                         [kbqStyle]="action.style"
                         [color]="action.color"
-                        [kbqTooltipDisabled]="isDesktop"
+                        [kbqTooltipDisabled]="isDesktop()"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
                         [disabled]="action.disabled && action.disabled()"
                         kbq-button
                     >
-                        @if (!isDesktop && action.icon) {
+                        @if (!isDesktop() && action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktop) {
+                        @if (isDesktop()) {
                             {{ action.title }}
                         }
                     </button>
@@ -112,7 +112,15 @@ import { map, startWith } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarActiveBreadcrumbExample {
-    isDesktop = true;
+    isDesktop = toSignal(
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                takeUntilDestroyed(),
+                map(({ matches }) => matches)
+            ),
+        { initialValue: true }
+    );
 
     readonly value = signal(null);
 
@@ -142,19 +150,4 @@ export class TopBarActiveBreadcrumbExample {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-    protected readonly cdr = inject(ChangeDetectorRef);
-
-    constructor() {
-        inject(BreakpointObserver)
-            .observe('(min-width: 900px)')
-            .pipe(
-                startWith({ matches: true }),
-                map(({ matches }) => !!matches),
-                takeUntilDestroyed()
-            )
-            .subscribe((matches) => {
-                this.isDesktop = matches;
-                this.cdr.markForCheck();
-            });
-    }
 }

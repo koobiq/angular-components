@@ -4,20 +4,19 @@ import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     inject,
     signal,
     ViewChild,
     WritableSignal
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { auditTime, map, startWith } from 'rxjs/operators';
+import { auditTime, map } from 'rxjs/operators';
 
 /**
  * @title TopBar Overflow
@@ -48,7 +47,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
                     <button
                         [kbqStyle]="action.style"
                         [color]="action.color"
-                        [kbqTooltipDisabled]="isDesktop"
+                        [kbqTooltipDisabled]="isDesktop()"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
                         kbq-button
@@ -56,7 +55,7 @@ import { auditTime, map, startWith } from 'rxjs/operators';
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktop) {
+                        @if (isDesktop()) {
                             {{ action.title }}
                         }
                     </button>
@@ -85,7 +84,15 @@ import { auditTime, map, startWith } from 'rxjs/operators';
     `
 })
 export class TopBarOverflowExample implements AfterViewInit {
-    isDesktop: boolean;
+    isDesktop = toSignal(
+        inject(BreakpointObserver)
+            .observe('(min-width: 768px)')
+            .pipe(
+                takeUntilDestroyed(),
+                map(({ matches }) => matches)
+            ),
+        { initialValue: true }
+    );
 
     @ViewChild(CdkScrollable) protected readonly scrollable: CdkScrollable;
 
@@ -109,21 +116,6 @@ export class TopBarOverflowExample implements AfterViewInit {
     protected readonly PopUpPlacements = PopUpPlacements;
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
-    protected readonly cdr = inject(ChangeDetectorRef);
-
-    constructor() {
-        inject(BreakpointObserver)
-            .observe('(min-width: 768px)')
-            .pipe(
-                startWith({ matches: true }),
-                map(({ matches }) => !!matches),
-                takeUntilDestroyed()
-            )
-            .subscribe((matches) => {
-                this.isDesktop = matches;
-                this.cdr.markForCheck();
-            });
-    }
 
     ngAfterViewInit() {
         this.scrollable

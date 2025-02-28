@@ -1,7 +1,7 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -9,7 +9,7 @@ import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
-import { map, startWith } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 /**
  * @title TopBar Breadcrumbs
@@ -51,16 +51,16 @@ import { map, startWith } from 'rxjs/operators';
                     <button
                         [kbqStyle]="action.style"
                         [color]="action.color"
-                        [kbqTooltipDisabled]="isDesktop"
+                        [kbqTooltipDisabled]="isDesktop()"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltip]="action.title"
                         [disabled]="action.disabled"
                         kbq-button
                     >
-                        @if (!isDesktop && action.icon) {
+                        @if (!isDesktop() && action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktop) {
+                        @if (isDesktop()) {
                             {{ action.title }}
                         }
                     </button>
@@ -70,7 +70,15 @@ import { map, startWith } from 'rxjs/operators';
     `
 })
 export class TopBarBreadcrumbsExample {
-    isDesktop = true;
+    isDesktop = toSignal(
+        inject(BreakpointObserver)
+            .observe('(min-width: 900px)')
+            .pipe(
+                takeUntilDestroyed(),
+                map(({ matches }) => matches)
+            ),
+        { initialValue: true }
+    );
 
     readonly actions = [
         {
@@ -97,19 +105,4 @@ export class TopBarBreadcrumbsExample {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-    protected readonly cdr = inject(ChangeDetectorRef);
-
-    constructor() {
-        inject(BreakpointObserver)
-            .observe('(min-width: 900px)')
-            .pipe(
-                startWith({ matches: true }),
-                map(({ matches }) => !!matches),
-                takeUntilDestroyed()
-            )
-            .subscribe((matches) => {
-                this.isDesktop = matches;
-                this.cdr.markForCheck();
-            });
-    }
 }
