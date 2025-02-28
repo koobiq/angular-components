@@ -101,7 +101,7 @@ export class KbqAutocomplete implements AfterContentInit {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqAutocomplete, "kbq-autocomplete", ["kbqAutocomplete"], { "displayWith": { "alias": "displayWith"; "required": false; }; "panelWidth": { "alias": "panelWidth"; "required": false; }; "classList": { "alias": "class"; "required": false; }; "autoActiveFirstOption": { "alias": "autoActiveFirstOption"; "required": false; }; "openOnFocus": { "alias": "openOnFocus"; "required": false; }; }, { "optionSelected": "optionSelected"; "opened": "opened"; "closed": "closed"; }, ["options", "optionGroups"], ["*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocomplete, [null, null, null, { optional: true; host: true; }]>;
 }
 
 // @public

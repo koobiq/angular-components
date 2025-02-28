@@ -16,6 +16,7 @@ import {
     DoCheck,
     ElementRef,
     EventEmitter,
+    Host,
     Inject,
     InjectionToken,
     Input,
@@ -577,7 +578,7 @@ export class KbqSelect
         @Optional() private readonly _dir: Directionality,
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,
-        @Optional() private readonly parentFormField: KbqFormField,
+        @Host() @Optional() private readonly parentFormField: KbqFormField,
         @Self() @Optional() ngControl: NgControl,
         @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?: KbqLocaleService
