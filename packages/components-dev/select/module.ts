@@ -11,9 +11,32 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { SelectExamplesModule } from 'packages/docs-examples/components/select';
-import { Observable, merge, of } from 'rxjs';
+import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { OPTIONS } from './options';
+
+@Component({
+    standalone: true,
+    imports: [SelectExamplesModule],
+    selector: 'select-examples',
+    template: `
+        <select-with-panel-width-attribute-example />
+        <select-virtual-scroll-example />
+        <select-validation-example />
+        <select-search-example />
+        <select-prioritized-selected-example />
+        <select-overview-example />
+        <select-multiple-example />
+        <select-icon-example />
+        <select-height-example />
+        <select-groups-example />
+        <select-cleaner-example />
+        <select-disabled-example />
+        <select-footer-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class SelectExamplesComponent {}
 
 @Component({
     standalone: true,
@@ -29,7 +52,7 @@ import { OPTIONS } from './options';
         KbqIconModule,
         ReactiveFormsModule,
         KbqTagsModule,
-        SelectExamplesModule
+        SelectExamplesComponent
     ],
     providers: [
         kbqSelectOptionsProvider({

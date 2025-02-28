@@ -1,22 +1,8 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqFormsModule, KbqLocaleService } from '@koobiq/components/core';
+import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { KBQ_VALIDATION } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { enUSLocaleDataSet } from '../en-US';
-import { esLALocaleDataSet } from '../es-LA';
-import { faIRLocaleDataSet } from '../fa-IR';
-import { ptBRLocaleDataSet } from '../pt-BR';
-import { ruRULocaleDataSet } from '../ru-RU';
-import { zhCNLocaleDataSet } from '../zh-CN';
-
-const localeDataSet = {
-    'en-US': enUSLocaleDataSet,
-    'zh-CN': zhCNLocaleDataSet,
-    'es-LA': esLALocaleDataSet,
-    'pt-BR': ptBRLocaleDataSet,
-    'ru-RU': ruRULocaleDataSet,
-    'fa-IR': faIRLocaleDataSet
-};
 
 /**
  * @title Select validation
@@ -24,29 +10,27 @@ const localeDataSet = {
 @Component({
     standalone: true,
     selector: 'select-validation-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqFormsModule],
+    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    providers: [{ provide: KBQ_VALIDATION, useValue: { useValidation: false } }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Valid</div>
             <kbq-form-field>
-                <kbq-select [(value)]="selected" [placeholder]="'Город'">
+                <kbq-select placeholder="Placeholder">
                     @for (option of options; track option) {
-                        <kbq-option [value]="option">
-                            <span [innerHTML]="option"></span>
-                        </kbq-option>
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
             </kbq-form-field>
         </div>
+
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Invalid</div>
-            <kbq-form-field class="kbq-form-field_invalid">
-                <kbq-select [placeholder]="'Город'">
+            <kbq-form-field>
+                <kbq-select [formControl]="invalidControl" placeholder="Placeholder">
                     @for (option of options; track option) {
-                        <kbq-option [value]="option">
-                            <span [innerHTML]="option"></span>
-                        </kbq-option>
+                        <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                 </kbq-select>
             </kbq-form-field>
@@ -55,29 +39,19 @@ const localeDataSet = {
     styles: `
         :host {
             display: flex;
-            gap: 16px;
+            gap: var(--kbq-size-l);
         }
 
         .kbq-form-vertical {
             width: 50%;
         }
-
-        .kbq-form__label {
-            color: var(--kbq-foreground-contrast-secondary);
-        }
     `
 })
 export class SelectValidationExample {
-    selected = '';
+    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
+    readonly invalidControl = new FormControl(null, [Validators.required]);
 
-    options: string[] = [];
-
-    constructor(@Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService) {
-        this.localeService.changes.subscribe(this.update);
+    constructor() {
+        afterNextRender(() => this.invalidControl.updateValueAndValidity());
     }
-
-    update = (locale: string) => {
-        this.options = localeDataSet[locale].items;
-        this.selected = localeDataSet[locale].items[0];
-    };
 }

@@ -1,4 +1,4 @@
-Селект — позволяет пользователю выбрать одно или несколько значений из предопределенного списка.
+`KbqSelect` — позволяет пользователю выбрать одно или несколько значений из предопределенного списка.
 
 <!-- example(select-overview) -->
 
@@ -58,7 +58,7 @@
 
 <!-- example(select-with-panel-width-attribute) -->
 
-Для всех выпадающих списков в модуле, используя _Dependency Injection_ при помощи `kbqSelectOptionsProvider` провайдера:
+Для всех выпадающих списков в модуле, используя `kbqSelectOptionsProvider`:
 
 ```ts
 import { kbqSelectOptionsProvider } from '@koobiq/components/select';
