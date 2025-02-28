@@ -31,8 +31,8 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     get isOverflown(): boolean {
         return this.childContainer.some(({ nativeElement }) => {
             return (
-                this.parent.offsetWidth < nativeElement.scrollWidth ||
-                this.parent.offsetHeight < nativeElement.scrollHeight
+                this.parent?.offsetWidth < nativeElement.scrollWidth ||
+                this.parent?.offsetHeight < nativeElement.scrollHeight
             );
         });
     }

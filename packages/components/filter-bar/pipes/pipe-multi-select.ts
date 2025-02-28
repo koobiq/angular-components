@@ -1,11 +1,17 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIcon } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { merge, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
@@ -35,10 +41,18 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeButton,
         KbqTitleModule,
         KbqPipeTitleDirective,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        KbqFormFieldModule,
+        KbqIcon,
+        KbqInputModule,
+        ReactiveFormsModule,
+        AsyncPipe
     ]
 })
-export class KbqPipeMultiSelectComponent extends KbqBasePipe<unknown[]> {
+export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit {
+    searchControl: UntypedFormControl = new UntypedFormControl();
+    filteredOptions: Observable<any[]>;
+
     @ViewChild(KbqSelect) select: KbqSelect;
 
     get selected() {
@@ -49,7 +63,14 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<unknown[]> {
         return !this.data.value?.length;
     }
 
-    onSelect(item: string[]) {
+    ngOnInit(): void {
+        this.filteredOptions = merge(
+            of(this.values),
+            this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
+        );
+    }
+
+    onSelect(item: KbqSelectValue[]) {
         this.data.value = item;
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
@@ -66,5 +87,11 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<unknown[]> {
 
     override open() {
         this.select.open();
+    }
+
+    private getFilteredOptions(value: string): KbqSelectValue[] {
+        return value
+            ? this.values.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+            : this.values;
     }
 }

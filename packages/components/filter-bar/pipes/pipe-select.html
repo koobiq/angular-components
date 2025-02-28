@@ -20,13 +20,17 @@
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value">{{ select.triggerValue }}</span>
     </button>
 
-    <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
-        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-        <input kbqInput placeholder="Search" type="text" [formControl]="searchCtrl" />
-        <kbq-cleaner />
-    </kbq-form-field>
+    @if (data.search) {
+        <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <input kbqInput placeholder="Search" type="text" [formControl]="searchControl" />
+            <kbq-cleaner />
+        </kbq-form-field>
+    }
 
-    @for (item of values; track item) {
+    <div kbq-select-search-empty-result>Ничего не найдено</div>
+
+    @for (item of filteredOptions | async; track item) {
         <kbq-option [value]="item">
             @if (isTemplateRef(valueTemplate)) {
                 <ng-container

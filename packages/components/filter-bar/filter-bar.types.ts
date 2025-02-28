@@ -15,6 +15,11 @@ export interface KbqDateTimeValue {
     end?;
 }
 
+export interface KbqSelectValue {
+    name: string;
+    value: unknown;
+}
+
 export interface KbqFilter {
     name: string;
 
@@ -51,6 +56,7 @@ export class KbqPipeData<T> {
     removable: boolean;
     disabled: boolean;
 
+    search?: boolean;
     openOnAdd?: boolean;
 }
 
