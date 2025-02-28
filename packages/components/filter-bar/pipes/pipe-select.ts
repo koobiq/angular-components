@@ -1,5 +1,5 @@
-import { NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -8,6 +8,9 @@ import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { merge, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { KbqSelectValue } from '../filter-bar.types';
 import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
@@ -40,11 +43,13 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqFormFieldModule,
         KbqIcon,
         KbqInputModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        AsyncPipe
     ]
 })
-export class KbqPipeSelectComponent extends KbqBasePipe<string> {
-    searchCtrl: UntypedFormControl = new UntypedFormControl();
+export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
+    searchControl: UntypedFormControl = new UntypedFormControl();
+    filteredOptions: Observable<any[]>;
 
     @ViewChild(KbqSelect) select: KbqSelect;
 
@@ -56,7 +61,14 @@ export class KbqPipeSelectComponent extends KbqBasePipe<string> {
         return !this.data.value;
     }
 
-    onSelect(item: string) {
+    ngOnInit(): void {
+        this.filteredOptions = merge(
+            of(this.values),
+            this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
+        );
+    }
+
+    onSelect(item: KbqSelectValue) {
         this.data.value = item;
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
@@ -66,5 +78,11 @@ export class KbqPipeSelectComponent extends KbqBasePipe<string> {
 
     override open() {
         this.select.open();
+    }
+
+    private getFilteredOptions(value: string): KbqSelectValue[] {
+        return value
+            ? this.values.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()))
+            : this.values;
     }
 }
