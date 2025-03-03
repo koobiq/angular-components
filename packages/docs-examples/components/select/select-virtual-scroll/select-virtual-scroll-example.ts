@@ -1,7 +1,7 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
  * @title Select virtual scroll
@@ -38,7 +38,6 @@ export class SelectVirtualScrollExample {
     readonly options = Array.from({ length: 10000 }).map((_, i) => ({ id: i, label: `Option #${i}` }));
     readonly selected = this.options[0];
     readonly virtualScrollViewport = viewChild.required(CdkVirtualScrollViewport);
-    readonly select = viewChild.required(KbqSelect);
 
     openedChange(isOpened: boolean): void {
         if (!isOpened) return;
