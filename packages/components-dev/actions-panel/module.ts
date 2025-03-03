@@ -6,9 +6,25 @@ import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
+    imports: [ActionsPanelExamplesModule],
+    selector: 'actions-panel-examples',
+    template: `
+        <actions-panel-custom-counter-example />
+        <hr />
+        <actions-panel-overview-example />
+        <hr />
+        <actions-panel-adaptive-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ActionsPanelExamples {}
+
+@Component({
+    standalone: true,
     imports: [
-        ActionsPanelExamplesModule,
-        RouterLink
+        RouterLink,
+        ActionsPanelExamples
     ],
     selector: 'page-1',
     templateUrl: './template.html',
