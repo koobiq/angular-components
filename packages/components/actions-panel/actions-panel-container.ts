@@ -230,13 +230,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
     /**
      * @docs-private
      */
-    protected override _captureInitialFocus(): void {}
-
-    /**
-     * @docs-private
-     */
     protected override _contentAttached(): void {
-        super._contentAttached();
         this.applyContainerClass();
     }
 
