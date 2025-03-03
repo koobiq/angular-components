@@ -67,6 +67,7 @@ type ExampleTableItem = {
         :host {
             height: 300px;
             overflow-y: scroll;
+            padding-bottom: 80px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -207,7 +208,6 @@ export class ExampleActionsPanel {
     styles: `
         :host {
             display: flex;
-            padding-bottom: var(--kbq-size-xxl);
             overflow: hidden;
         }
     `,
