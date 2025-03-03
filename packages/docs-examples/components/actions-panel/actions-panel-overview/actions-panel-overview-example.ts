@@ -27,7 +27,6 @@ type ExampleAction = {
 };
 
 type ExampleTableItem = {
-    id: number;
     threat: string;
     description: string;
     protectionMeasures: string;
@@ -53,7 +52,7 @@ type ExampleTableItem = {
                 </tr>
             </thead>
             <tbody>
-                @for (item of data; track item.id) {
+                @for (item of data; track item) {
                     <tr>
                         <td><kbq-checkbox [(ngModel)]="item.selected" (ngModelChange)="change()" /></td>
                         <td>{{ item.threat }}</td>
@@ -74,13 +73,34 @@ type ExampleTableItem = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleTable {
-    readonly data: ExampleTableItem[] = Array.from({ length: 10 }).map((_, id) => ({
-        id,
-        threat: 'DDoS attacks',
-        description: 'Overloading the system with requests to make it unavailable',
-        protectionMeasures: 'Using protective systems (e.g., CDN), traffic monitoring',
-        selected: id < 2
-    }));
+    readonly data: ExampleTableItem[] = Array.from({ length: 4 })
+        .map((_, index) => [
+            {
+                threat: 'DDoS attacks',
+                description: 'Overloading the system with requests to make it unavailable',
+                protectionMeasures: 'Using protective systems (e.g., CDN), traffic monitoring',
+                selected: index === 0
+            },
+            {
+                threat: 'Brute force attacks',
+                description: 'Password guessing to gain access to systems',
+                protectionMeasures: 'Using complex passwords and two-factor authentication',
+                selected: index === 0
+            },
+            {
+                threat: 'Fake Wi-Fi networks',
+                description: 'Creating fake access points to intercept data',
+                protectionMeasures: 'Using VPN, disabling automatic Wi-Fi connections',
+                selected: index === 0
+            },
+            {
+                threat: 'Supply chain attacks',
+                description: 'Injecting malicious code through third-party components',
+                protectionMeasures: 'Verifying third-party suppliers, using trusted sources',
+                selected: false
+            }
+        ])
+        .flat();
 
     readonly selectedItems = output<ExampleTableItem[]>();
 
