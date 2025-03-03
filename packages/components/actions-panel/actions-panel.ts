@@ -290,11 +290,7 @@ export class KbqActionsPanel implements OnDestroy {
                     providers: [{ provide: KbqActionsPanelConfig, useValue: config }]
                 }),
                 providers: (dialogRef, _dialogConfig, container) => {
-                    actionsPanelRef = new KbqActionsPanelRef<T, R>(
-                        dialogRef,
-                        config,
-                        container as KbqActionsPanelContainer
-                    );
+                    actionsPanelRef = new KbqActionsPanelRef<T, R>(dialogRef, container as KbqActionsPanelContainer);
                     return [
                         { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
                         { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }

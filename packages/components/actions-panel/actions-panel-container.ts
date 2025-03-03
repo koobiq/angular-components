@@ -117,7 +117,8 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
         '[class.kbq-actions-panel-container_rtl]': 'config.direction === "rtl"',
         '[@state]': 'animationState',
         '(@state.start)': 'onAnimationStart($event)',
-        '(@state.done)': 'onAnimationDone($event)'
+        '(@state.done)': 'onAnimationDone($event)',
+        '(keydown.escape)': 'handleEscape($event)'
     },
     // Uses the `Default` change detection strategy as parent `CdkDialogContainer`:
     // https://github.com/angular/components/blob/18.2.14/src/cdk/dialog/dialog-container.ts#L60
@@ -158,7 +159,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      *
      * @docs-private
      */
-    readonly localeConfiguration = toSignal<KbqActionsPanelLocaleConfiguration>(
+    protected readonly localeConfiguration = toSignal<KbqActionsPanelLocaleConfiguration>(
         this.localeService
             ? this.localeService.changes.pipe(map(() => this.localeService!.getParams('actionsPanel')))
             : of(inject(KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION))
@@ -225,6 +226,18 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
      */
     protected onAnimationStart(event: AnimationEvent): void {
         this.animationStateChanged.emit(event);
+    }
+
+    /**
+     * Handles escape key events.
+     *
+     * @docs-private
+     */
+    protected handleEscape(event: KeyboardEvent): void {
+        if (!this.config.disableClose) {
+            event.preventDefault();
+            this.close();
+        }
     }
 
     /**

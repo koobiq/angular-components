@@ -1,7 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
-import { ESCAPE, hasModifierKey } from '@angular/cdk/keycodes';
 import { filter, Observable, Subject, take } from 'rxjs';
-import { KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelContainer } from './actions-panel-container';
 
 /**
@@ -40,13 +38,11 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
 
     constructor(
         private readonly dialogRef: DialogRef<R, I>,
-        private readonly config: KbqActionsPanelConfig,
         containerInstance: KbqActionsPanelContainer
     ) {
         this.containerInstance = containerInstance;
         this.handleAnimation();
         this.handleOverlayDetachments();
-        this.handleKeydown();
     }
 
     /** Closes the actions panel. */
@@ -91,20 +87,6 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
             .subscribe(() => {
                 clearTimeout(this.closeAnimationFallbackTimeout);
                 this.dialogRef.close(this.result);
-            });
-    }
-
-    private handleKeydown(): void {
-        this.keydownEvents
-            .pipe(
-                filter((event) => event.keyCode === ESCAPE),
-                take(1)
-            )
-            .subscribe((event) => {
-                if (!this.config.disableClose && (event.type !== 'keydown' || !hasModifierKey(event))) {
-                    event.preventDefault();
-                    this.close();
-                }
             });
     }
 
