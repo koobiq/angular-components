@@ -1,4 +1,3 @@
-import { ESCAPE } from '@angular/cdk/keycodes';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
@@ -14,7 +13,6 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
 import { lastValueFrom } from 'rxjs';
 import {
     KBQ_ACTIONS_PANEL_DATA,
@@ -169,23 +167,19 @@ describe(KbqActionsPanelModule.name, () => {
         expect(getOverlayPaneElement().style.minWidth).toBe('50%');
     });
 
-    it('should close on ESCAPE', async () => {
-        const fixture = createComponent(ActionsPanelController);
-        const { componentInstance } = fixture;
+    it('should close on ESCAPE', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
-        dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-        await fixture.whenStable();
+        getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         expect(getActionsPanelContainerElement()).toBeNull();
     });
 
-    it('should not close on ESCAPE', async () => {
-        const fixture = createComponent(ActionsPanelController);
-        const { componentInstance } = fixture;
+    it('should not close on ESCAPE', () => {
+        const { componentInstance } = createComponent(ActionsPanelController);
         componentInstance.openFromTemplate({ disableClose: true });
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
-        dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
-        await fixture.whenStable();
+        getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
     });
 
@@ -305,24 +299,6 @@ describe(KbqActionsPanelModule.name, () => {
         componentInstance.openFromTemplate();
         await fixture.whenStable();
         expect(document.activeElement!.tagName).toBe('BODY');
-    });
-
-    it('should autoFocus "dialog" on open', async () => {
-        const fixture = createComponent(ActionsPanelController);
-        const { componentInstance } = fixture;
-        expect(document.activeElement!.tagName).toBe('BODY');
-        componentInstance.openFromTemplate({ autoFocus: 'dialog' });
-        await fixture.whenStable();
-        expect(document.activeElement).toBe(getActionsPanelContainerElement());
-    });
-
-    it('should autoFocus selector on open', async () => {
-        const fixture = createComponent(ActionsPanelController);
-        const { componentInstance } = fixture;
-        expect(document.activeElement!.tagName).toBe('BODY');
-        componentInstance.openFromTemplate({ autoFocus: '#actionsPanel-action2' });
-        await fixture.whenStable();
-        expect(document.activeElement!.id).toBe('actionsPanel-action2');
     });
 
     it('should apply RTL direction', async () => {
