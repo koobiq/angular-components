@@ -18,6 +18,7 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTableModule } from '@koobiq/components/table';
+import { KbqToastService } from '@koobiq/components/toast';
 
 type ExampleAction = {
     id: string;
@@ -179,6 +180,7 @@ export class ExampleTable {
 export class ExampleActionsPanel {
     readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
     readonly actionsPanelRef = inject(KbqActionsPanelRef);
+    readonly toast = inject(KbqToastService);
 
     readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
@@ -190,7 +192,7 @@ export class ExampleActionsPanel {
     ];
 
     onAction(action: ExampleAction): void {
-        this.actionsPanelRef.close(action.id);
+        this.toast.show({ title: `Action initiated ${action.id}` });
     }
 }
 
