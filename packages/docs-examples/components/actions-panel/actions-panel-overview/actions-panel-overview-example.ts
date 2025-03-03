@@ -138,7 +138,7 @@ export class ExampleTable {
 
                 <kbq-dropdown #dropdown="kbqDropdown">
                     @if (hiddenItemIDs.has('content')) {
-                        <div>Selected: {{ data().length }}</div>
+                        <div class="example-content">Selected: {{ data().length }}</div>
                         <kbq-divider />
                     }
 
@@ -167,6 +167,7 @@ export class ExampleTable {
         .example-content {
             margin: 0 var(--kbq-size-m);
             width: 75px;
+            user-select: none;
         }
 
         .example-divider-vertical {

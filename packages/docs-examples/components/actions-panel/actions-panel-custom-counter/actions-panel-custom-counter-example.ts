@@ -73,7 +73,7 @@ type ExampleAction = {
 
                     <kbq-dropdown #dropdown="kbqDropdown">
                         @if (hiddenItemIDs.has('content')) {
-                            <div>Selected: {{ data.selected }} (+{{ data.counter }})</div>
+                            <div class="example-content">Selected: {{ data.selected }} (+{{ data.counter }})</div>
                             <kbq-divider />
                         }
 
@@ -106,6 +106,7 @@ type ExampleAction = {
             display: flex;
             align-items: center;
             margin: 0 var(--kbq-size-m);
+            user-select: none;
         }
 
         .example-content .kbq-badge {

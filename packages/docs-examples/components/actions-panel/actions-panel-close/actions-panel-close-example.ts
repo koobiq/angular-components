@@ -50,6 +50,7 @@ import { KbqToastService } from '@koobiq/components/toast';
             display: flex;
             align-items: center;
             margin: 0 var(--kbq-size-m);
+            user-select: none;
         }
 
         .example-divider-vertical {
