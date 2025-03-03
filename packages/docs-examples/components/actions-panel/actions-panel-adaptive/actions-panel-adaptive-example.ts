@@ -7,12 +7,13 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
-import { KbqActionsPanel } from '@koobiq/components/actions-panel';
+import { KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
+import { KbqToastService } from '@koobiq/components/toast';
 
 type ExampleAction = {
     id: string;
@@ -46,7 +47,12 @@ type ExampleAction = {
                         @if (action.divider) {
                             <kbq-divider class="example-divider-vertical" [vertical]="true" />
                         }
-                        <button [class.layout-margin-left-xxs]="!first" color="contrast" kbq-button>
+                        <button
+                            [class.layout-margin-left-xxs]="!first"
+                            (click)="onAction(action)"
+                            color="contrast"
+                            kbq-button
+                        >
                             <i [class]="action.icon" kbq-icon></i>
                             {{ action.id }}
                         </button>
@@ -68,7 +74,7 @@ type ExampleAction = {
                                 @if (action.divider && hiddenItemIDs.has(actions[index - 1]?.id)) {
                                     <kbq-divider />
                                 }
-                                <button kbq-dropdown-item>
+                                <button (click)="onAction(action)" kbq-dropdown-item>
                                     <i [class]="action.icon" kbq-icon></i>
                                     {{ action.id }}
                                 </button>
@@ -113,20 +119,35 @@ export class ExampleActionsPanel {
         { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', divider: true },
         { id: 'Remove', icon: 'kbq-trash_16' }
     ];
-    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly elementRef = inject(ElementRef);
-    private readonly templateRef = viewChild.required(TemplateRef);
+    readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    readonly elementRef = inject(ElementRef);
+    readonly templateRef = viewChild.required(TemplateRef);
+    actionsPanelRef: KbqActionsPanelRef | null;
+    readonly toast = inject(KbqToastService);
 
     constructor() {
         afterNextRender(() => this.open());
     }
 
     open(): void {
-        this.actionsPanel.open(this.templateRef(), {
+        this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             width: '100%',
             data: { length: 5 },
             overlayContainer: this.elementRef
         });
+
+        this.actionsPanelRef.afterOpened.subscribe(() => {
+            console.log('ActionsPanel opened');
+        });
+
+        this.actionsPanelRef.afterClosed.subscribe((result) => {
+            console.log('ActionsPanel closed by action:', result);
+            this.actionsPanelRef = null;
+        });
+    }
+
+    onAction(action: ExampleAction): void {
+        this.toast.show({ title: `Action initiated ${action.id}` });
     }
 }
 
@@ -135,9 +156,7 @@ export class ExampleActionsPanel {
  */
 @Component({
     standalone: true,
-    imports: [
-        ExampleActionsPanel
-    ],
+    imports: [ExampleActionsPanel],
     selector: 'actions-panel-adaptive-example',
     template: `
         <div>At first, the actions are hidden under the dropdown menu</div>
