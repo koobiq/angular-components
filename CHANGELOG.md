@@ -1,3 +1,10 @@
+# 18.17.0 (2025-03-03)
+
+### Koobiq
+
+ * feature  **docs:** added lang facetFilters for docsearch ([#DS-3364](https://github.com/koobiq/angular-components/issues/issue/DS-3364)) ([#558](https://github.com/koobiq/angular-components/issues/558)) ([b1fdd16](https://github.com/koobiq/angular-components/commit/b1fdd16b053c81ad900a5653f8cd11f50ed00ecc))
+ * feature  **top-bar:** init component ([#DS-3126](https://github.com/koobiq/angular-components/issues/issue/DS-3126)) ([#525](https://github.com/koobiq/angular-components/issues/525)) ([bac92cb](https://github.com/koobiq/angular-components/commit/bac92cb6dcaced2a7410dfd337c2e7aab8f16d34))
+
 ## 18.16.1 (2025-02-28)
 
 ### Koobiq
