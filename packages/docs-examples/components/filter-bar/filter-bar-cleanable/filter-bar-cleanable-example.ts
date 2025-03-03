@@ -25,7 +25,7 @@ export class FilterBarCleanableExample {
         {
             name: 'Select',
             type: KbqPipeTypes.Select,
-            value: null,
+            value: { name: 'Option 1', id: '1' },
 
             required: false,
             cleanable: true,
@@ -65,10 +65,7 @@ export class FilterBarCleanableExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
             required: false,
             cleanable: false,
@@ -85,10 +82,7 @@ export class FilterBarCleanableExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
 
             required: false,

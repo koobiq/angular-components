@@ -74,7 +74,9 @@ export class FilterBarRemovableExample {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -96,10 +98,7 @@ export class FilterBarRemovableExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
             required: false,
             cleanable: false,
@@ -116,10 +115,7 @@ export class FilterBarRemovableExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
 
             required: false,

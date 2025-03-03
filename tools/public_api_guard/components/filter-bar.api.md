@@ -151,6 +151,8 @@ export class KbqFilterBar {
     // (undocumented)
     readonly onResetFilter: EventEmitter<KbqFilter | null>;
     // (undocumented)
+    readonly onResetFilterChanges: EventEmitter<KbqFilter | null>;
+    // (undocumented)
     readonly onSave: EventEmitter<KbqSaveFilterEvent>;
     // (undocumented)
     readonly onSaveAsNew: EventEmitter<KbqSaveFilterEvent>;
@@ -164,15 +166,17 @@ export class KbqFilterBar {
     // (undocumented)
     removePipe(pipe: KbqPipe): void;
     // (undocumented)
+    resetFilter(): void;
+    // (undocumented)
     resetFilterChangedState(): void;
     // (undocumented)
-    resetFilterState(filter?: KbqFilter): void;
+    resetFilterChanges(): void;
     // (undocumented)
     restoreFilterState(filter?: KbqFilter): void;
     // (undocumented)
     saveFilterState(filter?: KbqFilter): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onDeletePipe": "onDeletePipe"; "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onSaveAsNew": "onSaveAsNew"; "onDeleteFilter": "onDeleteFilter"; "onResetFilter": "onResetFilter"; }, ["filters"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-bar-search, [kbq-filter-bar-search]", "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onDeletePipe": "onDeletePipe"; "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onSaveAsNew": "onSaveAsNew"; "onDeleteFilter": "onDeleteFilter"; "onResetFilter": "onResetFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, ["filters"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-bar-search, [kbq-filter-bar-search]", "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }

@@ -46,17 +46,37 @@ export class FilterBarOverviewExample {
             saved: true,
             pipes: [
                 {
-                    name: 'Создан',
+                    name: 'Datetime',
                     value: {
-                        name: 'Последний день',
+                        name: 'Последние 7 дней',
                         start: null,
-                        end: { days: -1 }
+                        end: { days: -7 }
                     },
-                    type: KbqPipeTypes.Date,
+                    type: KbqPipeTypes.Datetime,
 
                     required: true,
                     cleanable: false,
                     removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Select',
+                    value: { name: 'Option 6', id: '6' },
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'Text',
+                    value: 'Angular Rules',
+                    type: KbqPipeTypes.Text,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
                     disabled: false
                 }
             ]
@@ -69,17 +89,45 @@ export class FilterBarOverviewExample {
             saved: true,
             pipes: [
                 {
-                    name: 'Создан',
+                    name: 'Datetime',
                     value: {
-                        name: 'Последний день',
+                        name: 'Последний год',
                         start: null,
-                        end: { days: -1 }
+                        end: { years: -1 }
                     },
-                    type: KbqPipeTypes.Date,
+                    type: KbqPipeTypes.Datetime,
 
                     required: true,
                     cleanable: false,
                     removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'MultiSelect',
+                    value: [
+                        { name: 'Option 1', id: '1' },
+                        { name: 'Option 3', id: '3' },
+                        { name: 'Option 4', id: '4' }
+                    ],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'Date',
+                    value: {
+                        name: 'Последние 7 дней',
+                        start: null,
+                        end: { days: -7 }
+                    },
+                    type: KbqPipeTypes.Date,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
                     disabled: false
                 }
             ]
@@ -92,17 +140,40 @@ export class FilterBarOverviewExample {
             saved: true,
             pipes: [
                 {
-                    name: 'Создан',
+                    name: 'Datetime',
                     value: {
                         name: 'Последние 3 дня',
                         start: null,
                         end: { days: -3 }
                     },
-                    type: KbqPipeTypes.Date,
+                    type: KbqPipeTypes.Datetime,
 
                     required: true,
                     cleanable: false,
                     removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Select',
+                    value: { name: 'Option 5', id: '5' },
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'MultiSelect',
+                    value: [
+                        { name: 'Option 1', id: '1' },
+                        { name: 'Option 2', id: '2' }
+                    ],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
                     disabled: false
                 }
             ]
@@ -132,7 +203,9 @@ export class FilterBarOverviewExample {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -154,10 +227,7 @@ export class FilterBarOverviewExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
             required: false,
             cleanable: false,
@@ -174,10 +244,7 @@ export class FilterBarOverviewExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
 
             required: false,
@@ -201,9 +268,8 @@ export class FilterBarOverviewExample {
     }
 
     onResetFilter() {
-        if (!this.activeFilter?.saved) {
-            this.activeFilter = this.getDefaultFilter();
-        }
+        console.log('onResetFilter: ');
+        this.activeFilter = this.getDefaultFilter();
     }
 
     onDeleteFilter(filter: KbqFilter) {
@@ -245,13 +311,9 @@ export class FilterBarOverviewExample {
             saved: false,
             pipes: [
                 {
-                    name: 'Создан',
-                    value: {
-                        name: 'Последний день',
-                        start: null,
-                        end: { days: -1 }
-                    },
-                    type: KbqPipeTypes.Date,
+                    name: 'Datetime',
+                    value: { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
+                    type: KbqPipeTypes.Datetime,
 
                     required: true,
                     cleanable: false,

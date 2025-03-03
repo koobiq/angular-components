@@ -125,7 +125,7 @@
     }
 
     @if (filterBar.isSavedAndChanged) {
-        <button kbq-dropdown-item (click)="filterBar.resetFilterState()">
+        <button kbq-dropdown-item (click)="filterBar.resetFilterChanges()">
             <i kbq-icon="kbq-xmark-circle_16"></i>
             Сбросить изменения
         </button>

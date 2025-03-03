@@ -13,19 +13,39 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (onResetFilter)="onResetFilter()">
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
             <kbq-pipe-add />
 
+            <kbq-filter-reset />
+
             <kbq-filter-bar-search />
         </kbq-filter-bar>
     `
 })
 export class FilterBarSearchExample {
-    activeFilter: KbqFilter | null = this.getDefaultFilter();
+    activeFilter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: true,
+        saved: false,
+        pipes: [
+            {
+                name: 'Select',
+                type: KbqPipeTypes.Select,
+                value: null,
+
+                required: false,
+                cleanable: false,
+                removable: true,
+                disabled: false
+            }
+        ]
+    };
 
     pipeTemplates: KbqPipeTemplate[] = [
         {
@@ -48,7 +68,9 @@ export class FilterBarSearchExample {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -70,10 +92,7 @@ export class FilterBarSearchExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
             required: false,
             cleanable: false,
@@ -90,10 +109,7 @@ export class FilterBarSearchExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
 
             required: false,
@@ -112,6 +128,11 @@ export class FilterBarSearchExample {
         }
     ];
 
+    onResetFilter() {
+        console.log('onResetFilter: ');
+        this.activeFilter = this.getDefaultFilter();
+    }
+
     getDefaultFilter(): KbqFilter {
         return {
             name: '',
@@ -119,18 +140,7 @@ export class FilterBarSearchExample {
             disabled: false,
             changed: false,
             saved: false,
-            pipes: [
-                {
-                    name: 'Select',
-                    type: KbqPipeTypes.Select,
-                    value: null,
-
-                    required: false,
-                    cleanable: false,
-                    removable: true,
-                    disabled: false
-                }
-            ]
+            pipes: []
         };
     }
 }

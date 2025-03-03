@@ -6,7 +6,7 @@ import { KbqFilterBar } from './filter-bar';
     standalone: true,
     selector: 'kbq-filter-reset',
     template: `
-        <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="filterBar.resetFilterState()" kbq-button>
+        <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="filterBar.resetFilter()" kbq-button>
             <ng-content>Сбросить</ng-content>
         </button>
     `,
