@@ -206,7 +206,7 @@
                         "ngVersionPlaceholder": "{{NG_VERSION}}"
                     }
                 },
-                "test": {
+                "jest-test": {
                     "builder": "@angular-builders/jest:run",
                     "options": {
                         "roots": ["packages/components"],
@@ -214,7 +214,7 @@
                         "tsConfig": "../../tsconfig.spec.json"
                     }
                 },
-                "karma-test": {
+                "test": {
                     "builder": "@angular-devkit/build-angular:karma",
                     "options": {
                         "karmaConfig": "packages/components/karma.conf.js",

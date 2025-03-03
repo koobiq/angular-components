@@ -254,7 +254,7 @@
         "dev:z-index": "ng serve dev-z-index --port 3003",
         "-----Unit Tests-----": "-------------------------------------------------------------------------------------",
         "unit:cdk": "ng test cdk",
-        "unit:components": "ng test components && ng run components:karma-test",
+        "unit:components": "ng test components && ng run components:jest-test",
         "unit:components-experimental": "ng test components-experimental",
         "unit:angular-moment-adapter": "ng test angular-moment-adapter",
         "unit:angular-luxon-adapter": "ng test angular-luxon-adapter",
