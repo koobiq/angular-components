@@ -5,7 +5,6 @@
 ```ts
 
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
-import { AutoFocusTarget } from '@angular/cdk/dialog';
 import { CdkDialogContainer } from '@angular/cdk/dialog';
 import { ComponentFactoryResolver } from '@angular/core';
 import { ComponentType } from '@angular/cdk/overlay';
@@ -65,7 +64,6 @@ export class KbqActionsPanel implements OnDestroy {
 
 // @public
 export class KbqActionsPanelConfig<D = unknown> {
-    autoFocus?: AutoFocusTarget | string;
     closeOnNavigation?: boolean;
     containerClass?: string | string[];
     data?: D | null;
@@ -76,7 +74,6 @@ export class KbqActionsPanelConfig<D = unknown> {
     minWidth?: number | string;
     overlayContainer?: ElementRef<HTMLElement>;
     overlayPanelClass?: string | string[];
-    restoreFocus?: boolean | string | HTMLElement;
     scrollStrategy?: (overlay: Overlay) => ScrollStrategy;
     width?: string;
 }
@@ -85,11 +82,11 @@ export class KbqActionsPanelConfig<D = unknown> {
 export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDestroy {
     protected animationState: 'void' | 'visible' | 'hidden';
     readonly animationStateChanged: EventEmitter<AnimationEvent_2>;
-    protected _captureInitialFocus(): void;
     protected close(): void;
     protected readonly config: KbqActionsPanelConfig<any>;
     protected _contentAttached(): void;
-    readonly localeConfiguration: Signal<KbqActionsPanelLocaleConfiguration | undefined>;
+    protected handleEscape(event: KeyboardEvent): void;
+    protected readonly localeConfiguration: Signal<KbqActionsPanelLocaleConfiguration | undefined>;
     // (undocumented)
     ngOnDestroy(): void;
     protected onAnimationDone(event: AnimationEvent_2): void;
@@ -151,7 +148,7 @@ export class KbqActionsPanelOverlayContainer extends OverlayContainer {
 
 // @public
 export class KbqActionsPanelRef<I = unknown, R = unknown> {
-    constructor(dialogRef: DialogRef<R, I>, config: KbqActionsPanelConfig, containerInstance: KbqActionsPanelContainer);
+    constructor(dialogRef: DialogRef<R, I>, containerInstance: KbqActionsPanelContainer);
     get afterClosed(): Observable<R | undefined>;
     get afterOpened(): Observable<void>;
     close(result?: R): void;
