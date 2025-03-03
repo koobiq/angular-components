@@ -116,6 +116,10 @@
     }
 }
 
+.kbq-truncate-line {
+    @include kbq-truncate-line();
+}
+
 .kbq-no-select {
     @include kbq-no-select;
 }
