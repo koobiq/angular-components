@@ -1137,6 +1137,9 @@ export const KBQ_LOCALE_ID: InjectionToken<string>;
 // @public (undocumented)
 export const KBQ_LOCALE_SERVICE: InjectionToken<KbqLocaleService>;
 
+// @public
+export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
+
 // Warning: (ae-forgotten-export) The symbol "ParsedDigitsInfo" needs to be exported by the entry point index.d.ts
 //
 // @public (undocumented)
@@ -1442,6 +1445,9 @@ export class KbqLocaleService {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqLocaleService>;
 }
+
+// @public
+export const kbqLocaleServiceLangAttrNameProvider: (attrName: string) => Provider;
 
 // @public (undocumented)
 export class KbqLocaleServiceModule {
