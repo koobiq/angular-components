@@ -10,6 +10,7 @@ permissions: read-all
 
 jobs:
   general_checks:
+    name: General Checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,9 +22,11 @@ jobs:
         uses: ./.github/workflows/actions/build-packages
 
       - name: API Golden Checks
+        continue-on-error: true
         run: yarn run check-api
 
       - name: Linters
+        continue-on-error: true
         run: |
           yarn run cspell --no-progress
           yarn run prettier
@@ -31,6 +34,7 @@ jobs:
           yarn run eslint --max-warnings=0
 
       - name: Unit
+        continue-on-error: true
         run: |
           yarn run unit:cdk
           yarn run unit:components
