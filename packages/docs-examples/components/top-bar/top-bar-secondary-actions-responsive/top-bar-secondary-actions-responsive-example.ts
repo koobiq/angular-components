@@ -126,15 +126,18 @@ type ExampleAction = {
         .kbq-overflow-items {
             max-width: 451px;
             gap: var(--kbq-top-bar-right-gap);
+            height: 100%;
+            padding-left: 1px;
         }
 
         .kbq-top-bar-container__end {
-            display: flex;
             position: relative;
             flex-grow: 1;
             overflow: hidden;
+            height: 100%;
             flex-wrap: nowrap;
             white-space: nowrap;
+            padding-left: 1px;
         }
 
         @media screen and (max-width: 768px) {
