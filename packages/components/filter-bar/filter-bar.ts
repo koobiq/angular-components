@@ -60,10 +60,6 @@ export class KbqFilterBar {
     set filter(value: KbqFilter | null) {
         if (this._filter === value) return;
 
-        if (value && this.filter === null) {
-            this.saveFilterState(value);
-        }
-
         this._filter = value;
 
         this.changes.next();
@@ -94,6 +90,7 @@ export class KbqFilterBar {
     @Output() readonly onSaveAsNew = new EventEmitter<KbqSaveFilterEvent>();
     @Output() readonly onDeleteFilter = new EventEmitter<KbqFilter>();
     @Output() readonly onResetFilter = new EventEmitter<KbqFilter | null>();
+    @Output() readonly onResetFilterChanges = new EventEmitter<KbqFilter | null>();
 
     get isSavedAndChanged(): boolean {
         return this.isSaved && this.isChanged;
@@ -168,11 +165,13 @@ export class KbqFilterBar {
         this.filters.showError(error);
     }
 
-    resetFilterState(filter?: KbqFilter) {
-        this.restoreFilterState(filter);
+    resetFilter() {
+        this.onResetFilter.emit(this.filter!);
+    }
+
+    resetFilterChanges() {
         this.resetFilterChangedState();
 
-        this.onResetFilter.emit(this.filter!);
-        this.internalFilterChanges.next(this.filter!);
+        this.onResetFilterChanges.emit(this.filter!);
     }
 }

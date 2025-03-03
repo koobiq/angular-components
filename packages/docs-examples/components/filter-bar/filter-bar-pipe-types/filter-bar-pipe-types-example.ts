@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
  * @title filter-bar-pipe-types
@@ -13,66 +13,17 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates">
-            @for (pipe of pipes; track pipe) {
+        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates" (onResetFilter)="onResetFilter()">
+            @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
+
+            <kbq-filter-reset />
         </kbq-filter-bar>
     `
 })
 export class FilterBarPipeTypesExample {
-    pipes: KbqPipe[] = [
-        {
-            name: 'Select',
-            type: KbqPipeTypes.Select,
-            value: null,
-
-            required: false,
-            cleanable: true,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'MultiSelect',
-            type: KbqPipeTypes.MultiSelect,
-            value: null,
-
-            required: false,
-            cleanable: true,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'Text',
-            type: KbqPipeTypes.Text,
-            value: null,
-
-            required: false,
-            cleanable: true,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'Date',
-            type: KbqPipeTypes.Date,
-            value: null,
-
-            required: false,
-            cleanable: true,
-            removable: false,
-            disabled: false
-        },
-        {
-            name: 'Datetime',
-            type: KbqPipeTypes.Datetime,
-            value: null,
-
-            required: false,
-            cleanable: true,
-            removable: false,
-            disabled: false
-        }
-    ];
+    activeFilter: KbqFilter = this.getDefaultFilter();
 
     pipeTemplates: KbqPipeTemplate[] = [
         {
@@ -95,7 +46,9 @@ export class FilterBarPipeTypesExample {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -117,10 +70,7 @@ export class FilterBarPipeTypesExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
             required: false,
             cleanable: false,
@@ -137,10 +87,7 @@ export class FilterBarPipeTypesExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
 
             required: false,
@@ -149,4 +96,71 @@ export class FilterBarPipeTypesExample {
             disabled: false
         }
     ];
+
+    onResetFilter() {
+        console.log('onResetFilter: ');
+        this.activeFilter = this.getDefaultFilter();
+    }
+
+    getDefaultFilter(): KbqFilter {
+        return {
+            name: '',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'Select',
+                    type: KbqPipeTypes.Select,
+                    value: null,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'MultiSelect',
+                    type: KbqPipeTypes.MultiSelect,
+                    value: null,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Text',
+                    type: KbqPipeTypes.Text,
+                    value: null,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Date',
+                    type: KbqPipeTypes.Date,
+                    value: null,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Datetime',
+                    type: KbqPipeTypes.Datetime,
+                    value: null,
+
+                    required: false,
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
+    }
 }

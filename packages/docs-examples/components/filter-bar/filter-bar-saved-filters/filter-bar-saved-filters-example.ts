@@ -19,7 +19,8 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
             (filterChange)="onFilterChange($event)"
             (onSave)="onSaveFilter($event)"
             (onSaveAsNew)="onSaveAsNewFilter($event)"
-            (onResetFilter)="onResetFilter($event)"
+            (onResetFilter)="onResetFilter()"
+            (onResetFilterChanges)="onResetFilterChanges($event)"
             (onDeleteFilter)="onDeleteFilter($event)"
         >
             <kbq-filters [filters]="filters" />
@@ -46,13 +47,13 @@ export class FilterBarSavedFiltersExample {
             saved: true,
             pipes: [
                 {
-                    name: 'Создан',
+                    name: 'Datetime',
                     value: {
-                        name: 'Последний день',
+                        name: 'Последние 7 дней',
                         start: null,
-                        end: { days: -1 }
+                        end: { days: -7 }
                     },
-                    type: KbqPipeTypes.Date,
+                    type: KbqPipeTypes.Datetime,
 
                     required: true,
                     cleanable: false,
@@ -61,8 +62,18 @@ export class FilterBarSavedFiltersExample {
                 },
                 {
                     name: 'Select',
-                    value: { name: 'Option 1', id: '1' },
+                    value: { name: 'Option 6', id: '6' },
                     type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'Text',
+                    value: 'Text: Edited filter with unsaved changes',
+                    type: KbqPipeTypes.Text,
 
                     required: false,
                     cleanable: false,
@@ -79,17 +90,45 @@ export class FilterBarSavedFiltersExample {
             saved: true,
             pipes: [
                 {
-                    name: 'Создан',
+                    name: 'Datetime',
                     value: {
-                        name: 'Последний день',
+                        name: 'Последний год',
                         start: null,
-                        end: { days: -1 }
+                        end: { years: -1 }
                     },
-                    type: KbqPipeTypes.Date,
+                    type: KbqPipeTypes.Datetime,
 
                     required: true,
                     cleanable: false,
                     removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'MultiSelect',
+                    value: [
+                        { name: 'Option 1', id: '1' },
+                        { name: 'Option 3', id: '3' },
+                        { name: 'Option 4', id: '4' }
+                    ],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'Date',
+                    value: {
+                        name: 'Последние 7 дней',
+                        start: null,
+                        end: { days: -7 }
+                    },
+                    type: KbqPipeTypes.Date,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
                     disabled: false
                 }
             ]
@@ -102,21 +141,92 @@ export class FilterBarSavedFiltersExample {
             saved: true,
             pipes: [
                 {
-                    name: 'Создан',
+                    name: 'Datetime',
                     value: {
                         name: 'Последние 3 дня',
                         start: null,
                         end: { days: -3 }
                     },
-                    type: KbqPipeTypes.Date,
+                    type: KbqPipeTypes.Datetime,
 
                     required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
+                },
+                {
+                    name: 'Select',
+                    value: { name: 'Option 5', id: '5' },
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'MultiSelect',
+                    value: [
+                        { name: 'Option 1', id: '1' },
+                        { name: 'Option 2', id: '2' }
+                    ],
+                    type: KbqPipeTypes.MultiSelect,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
                 }
             ]
         }
+    ];
+
+    savedFilters: KbqFilter[] = [
+        {
+            name: 'Saved Filter 1',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: true,
+            pipes: [
+                {
+                    name: 'Datetime',
+                    value: {
+                        name: 'Последние 7 дней',
+                        start: null,
+                        end: { days: -7 }
+                    },
+                    type: KbqPipeTypes.Datetime,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'Select',
+                    value: { name: 'Option 3', id: '3' },
+                    type: KbqPipeTypes.Select,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'Text',
+                    value: 'Angular Rules',
+                    type: KbqPipeTypes.Text,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                }
+            ]
+        },
+        structuredClone(this.filters[1]),
+        structuredClone(this.filters[2])
     ];
 
     activeFilter: KbqFilter | null = this.filters[0];
@@ -135,14 +245,16 @@ export class FilterBarSavedFiltersExample {
             ],
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -150,8 +262,8 @@ export class FilterBarSavedFiltersExample {
                 { name: 'Последний год', start: null, end: { years: -1 } }
             ],
             required: false,
-            cleanable: true,
-            removable: false,
+            cleanable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -164,14 +276,11 @@ export class FilterBarSavedFiltersExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -184,15 +293,12 @@ export class FilterBarSavedFiltersExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
 
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         },
         {
@@ -201,7 +307,7 @@ export class FilterBarSavedFiltersExample {
 
             required: false,
             cleanable: false,
-            removable: false,
+            removable: true,
             disabled: false
         }
     ];
@@ -210,12 +316,20 @@ export class FilterBarSavedFiltersExample {
         console.log('onFilterChange: ', filter);
     }
 
-    onResetFilter(filter: KbqFilter | null) {
+    onResetFilter() {
+        this.activeFilter = this.getDefaultFilter();
+    }
+
+    onResetFilterChanges(filter: KbqFilter | null) {
+        console.log('onResetFilterChanges: ');
+        const defaultFilter = structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
         this.filters.splice(
             this.filters.findIndex(({ name }) => name === filter?.name),
             1,
-            filter!
+            defaultFilter
         );
+
+        this.activeFilter = defaultFilter;
     }
 
     onDeleteFilter(filter: KbqFilter) {
@@ -246,5 +360,31 @@ export class FilterBarSavedFiltersExample {
         this.activeFilter = filter;
 
         filterBar.filterSavedSuccessfully();
+    }
+
+    getDefaultFilter(): KbqFilter {
+        return {
+            name: '',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'Datetime',
+                    value: {
+                        name: 'Последний день',
+                        start: null,
+                        end: { days: -1 }
+                    },
+                    type: KbqPipeTypes.Datetime,
+
+                    required: true,
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                }
+            ]
+        };
     }
 }

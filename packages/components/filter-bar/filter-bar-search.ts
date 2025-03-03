@@ -114,8 +114,6 @@ export class KbqFilterBarSearch {
     }
 
     onReset = () => {
-        this.isSearchActive = false;
-
         this.changeDetectorRef.markForCheck();
     };
 }

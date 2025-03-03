@@ -13,14 +13,14 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (onResetFilter)="onReset()">
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset (onReset)="onReset()" />
+            <kbq-filter-reset />
         </kbq-filter-bar>
     `
 })
@@ -33,9 +33,9 @@ export class FilterBarRequiredExample {
         saved: false,
         pipes: [
             {
-                name: 'Создан',
-                type: KbqPipeTypes.Date,
-                value: { name: 'Последний день', start: null, end: { days: -1 } },
+                name: 'Datetime',
+                type: KbqPipeTypes.Datetime,
+                value: { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
 
                 required: true,
                 cleanable: false,
@@ -66,7 +66,9 @@ export class FilterBarRequiredExample {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
+                { name: 'Последний час', start: null, end: { hours: -1 } },
+                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
+                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
                 { name: 'Последние 3 дня', start: null, end: { days: -3 } },
                 { name: 'Последние 7 дней', start: null, end: { days: -7 } },
                 { name: 'Последние 30 дней', start: null, end: { days: -30 } },
@@ -88,10 +90,7 @@ export class FilterBarRequiredExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
             required: false,
             cleanable: false,
@@ -108,10 +107,7 @@ export class FilterBarRequiredExample {
                 { name: 'Option 4', id: '4' },
                 { name: 'Option 5', id: '5' },
                 { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 8', id: '8' },
-                { name: 'Option 9', id: '9' },
-                { name: 'Option 10', id: '10' }
+                { name: 'Option 7', id: '7' }
             ],
 
             required: false,
@@ -136,16 +132,16 @@ export class FilterBarRequiredExample {
 
     getDefaultFilter(): KbqFilter {
         return {
-            name: 'Select',
+            name: '',
             readonly: false,
             disabled: false,
             changed: false,
             saved: false,
             pipes: [
                 {
-                    name: 'Создан',
-                    type: KbqPipeTypes.Date,
-                    value: { name: 'Последний день', start: null, end: { days: -1 } },
+                    name: 'Datetime',
+                    type: KbqPipeTypes.Datetime,
+                    value: { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
 
                     required: true,
                     cleanable: false,
