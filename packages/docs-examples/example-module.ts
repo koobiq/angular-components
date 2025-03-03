@@ -144,6 +144,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-adaptive-example.ts",
     "importPath": "components/actions-panel"
   },
+  "actions-panel-close": {
+    "packagePath": "components/actions-panel/actions-panel-close",
+    "title": "Actions panel close",
+    "componentName": "ActionsPanelCloseExample",
+    "files": [
+      "actions-panel-close-example.ts"
+    ],
+    "selector": "actions-panel-close-example",
+    "additionalComponents": [],
+    "primaryFile": "actions-panel-close-example.ts",
+    "importPath": "components/actions-panel"
+  },
   "actions-panel-custom-counter": {
     "packagePath": "components/actions-panel/actions-panel-custom-counter",
     "title": "Actions panel custom counter",
@@ -3777,6 +3789,8 @@ return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-states':
 return import('@koobiq/docs-examples/components/accordion');
   case 'actions-panel-adaptive':
+return import('@koobiq/docs-examples/components/actions-panel');
+  case 'actions-panel-close':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-custom-counter':
 return import('@koobiq/docs-examples/components/actions-panel');

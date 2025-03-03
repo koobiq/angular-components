@@ -15,6 +15,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <hr />
         <actions-panel-adaptive-example />
         <hr />
+        <actions-panel-close-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
