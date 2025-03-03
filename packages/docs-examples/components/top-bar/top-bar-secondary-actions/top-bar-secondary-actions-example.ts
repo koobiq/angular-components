@@ -76,6 +76,11 @@ type ExampleAction = {
                 }
             </kbq-overflow-items>
         </kbq-top-bar>
+    `,
+    styles: `
+        .kbq-overflow-items {
+            padding: 1px;
+        }
     `
 })
 export class TopBarSecondaryActionsExample {

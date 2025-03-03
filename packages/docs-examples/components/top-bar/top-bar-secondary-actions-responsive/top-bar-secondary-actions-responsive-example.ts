@@ -127,7 +127,7 @@ type ExampleAction = {
             max-width: 451px;
             gap: var(--kbq-top-bar-right-gap);
             height: 100%;
-            padding-left: 1px;
+            padding: 1px;
         }
 
         .kbq-top-bar-container__end {
@@ -137,7 +137,7 @@ type ExampleAction = {
             height: 100%;
             flex-wrap: nowrap;
             white-space: nowrap;
-            padding-left: 1px;
+            padding: 1px;
         }
 
         @media screen and (max-width: 768px) {
