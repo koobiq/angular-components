@@ -1,43 +1,117 @@
-import { Component, DebugElement, inject } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, DebugElement, inject, ViewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
+import {
+    KbqFilter,
+    KbqFilterBar,
+    KbqFilterBarModule,
+    KbqFilterBarSearch,
+    KbqFilters,
+    KbqPipeAdd,
+    KbqPipeTemplate,
+    KbqPipeTypes
+} from '@koobiq/components/filter-bar';
 import { DateTime } from 'luxon';
-import { KbqFilter, KbqFilterBar, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from './index';
 
 describe('KbqFilterBar', () => {
     let fixture: ComponentFixture<BaseFunctions>;
     let filterBarDebugElement: DebugElement;
+    let filtersDebugElement: DebugElement;
+    let pipeAddDebugElement: DebugElement;
+    // let filterResetDebugElement: DebugElement;
+    let filterBarSearchDebugElement: DebugElement;
 
     window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqFilterBarModule, KbqLuxonDateModule],
+            imports: [BrowserAnimationsModule, KbqFilterBarModule, KbqLuxonDateModule],
             declarations: [BaseFunctions]
         }).compileComponents();
     });
 
-    describe('default', () => {
+    describe('should init components', () => {
         beforeEach(() => {
             fixture = TestBed.createComponent(BaseFunctions);
             fixture.detectChanges();
 
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
+            pipeAddDebugElement = fixture.debugElement.query(By.directive(KbqPipeAdd));
+            // filterResetDebugElement = fixture.debugElement.query(By.directive(KbqFilterReset));
+            filterBarSearchDebugElement = fixture.debugElement.query(By.directive(KbqFilterBarSearch));
         });
 
-        it('should add classes', () => {
+        it('should add classes after init', () => {
             expect(filterBarDebugElement.nativeElement.classList).toContain('kbq-filter-bar');
+            expect(filtersDebugElement.nativeElement.classList).toContain('kbq-filters');
+            expect(pipeAddDebugElement.nativeElement.classList).toContain('kbq-pipe-add');
+            expect(filterBarSearchDebugElement.nativeElement.classList).toContain('kbq-filter-bar-search');
         });
     });
+
+    describe('KbqFilters', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(BaseFunctions);
+            fixture.detectChanges();
+
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
+        });
+
+        it('should have default text (empty)', () => {
+            expect(filtersDebugElement.nativeElement.innerText).toBe('Фильтры');
+        });
+
+        it('should have selected filter name', fakeAsync(() => {
+            expect(filtersDebugElement.nativeElement.innerText).toBe('Фильтры');
+
+            fixture.componentInstance.activeFilter = fixture.componentInstance.filters[0];
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+            flush();
+            expect(filtersDebugElement.nativeElement.innerText).toBe('Select');
+        }));
+
+        it('should open filters', () => {
+            expect(fixture.componentInstance.filtersTrigger.opened).toBeFalse();
+            filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
+            expect(fixture.componentInstance.filtersTrigger.opened).toBeTrue();
+        });
+
+        it('should have focus on search input', fakeAsync(() => {
+            filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
+            flush();
+            expect(document.activeElement?.classList).toContain('kbq-input');
+        }));
+
+        it('should have items and button saveAsNewFilter', fakeAsync(() => {
+            filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
+            flush();
+            const filterItems = document.querySelectorAll('.kbq-dropdown-item');
+
+            expect(filterItems.length).toBe(10);
+            expect(filterItems[filterItems.length - 1].innerHTML).toContain('Сохранить как новый фильтр');
+        }));
+    });
+
+    // describe('KbqPipeAdd', () => {});
+
+    // describe('KbqFilterReset', () => {});
+
+    // describe('KbqFilterBarSearch', () => {});
+
+    // describe('KbqPipes', () => {
+    //     describe('KbqFilterBarSearch', () => {});
+    // });
 });
 
 @Component({
     selector: 'test-app',
     template: `
         <kbq-filter-bar
-            #filterBar
             [(filter)]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             (filterChange)="onFilterChange($event)"
@@ -59,13 +133,14 @@ describe('KbqFilterBar', () => {
             <kbq-filter-reset />
 
             <kbq-filter-bar-search (onSearch)="onSearch($event)" />
-
-            <!--        <kbq-filter-bar-refresher />-->
         </kbq-filter-bar>
     `
 })
 class BaseFunctions {
-    protected readonly adapter = inject(DateAdapter<DateTime>);
+    readonly adapter = inject(DateAdapter<DateTime>);
+    readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    @ViewChild(KbqFilters, { static: false }) filtersTrigger: KbqFilters;
 
     filters: KbqFilter[] = [
         {
@@ -203,7 +278,7 @@ class BaseFunctions {
             name: 'Text',
             readonly: false,
             disabled: false,
-            changed: false,
+            changed: true,
             saved: false,
             pipes: [
                 {
@@ -545,7 +620,7 @@ class BaseFunctions {
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[2];
+    activeFilter: KbqFilter | null;
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',

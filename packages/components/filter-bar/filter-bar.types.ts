@@ -46,15 +46,8 @@ export interface KbqPipe {
     disabled: boolean;
 }
 
-export class KbqPipeData<T> {
-    name: string;
-    type: KbqPipeTypes;
-    value: T | null;
-
-    required: boolean;
-    cleanable: boolean;
-    removable: boolean;
-    disabled: boolean;
+export interface KbqPipeData<V> extends KbqPipe {
+    value: V | null;
 
     search?: boolean;
     openOnAdd?: boolean;
