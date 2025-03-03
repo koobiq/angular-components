@@ -212,6 +212,10 @@ export class ExampleActionsPanel {
             display: flex;
             overflow: hidden;
         }
+
+        ::ng-deep .docs-live-example__example:has(actions-panel-overview-example) {
+            padding: 0;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
