@@ -16,6 +16,12 @@ The component has an option to show an additional counter. The principle of oper
 
 <!-- example(actions-panel-custom-counter) -->
 
+### Close the panel when an action is started
+
+The panel usually remains open after the action is started. Sometimes there are commands that leave no selected items in the table, such as “Remove”. In such cases it is possible to close the panel.
+
+<!-- example(actions-panel-close) -->
+
 ### Keyboard interaction
 
 By default, the `ESCAPE` key closes `KbqActionsPanel`. While you can disable this behavior via the `disableClose` property of `KbqActionsPanelConfig`.
