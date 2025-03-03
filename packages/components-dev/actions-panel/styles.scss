@@ -10,8 +10,3 @@ app {
 hr {
     margin: var(--kbq-size-xxl) 0;
 }
-
-// for debugging autoFocus and restoreFocus
-*:focus {
-    border: 1px solid cyan !important;
-}

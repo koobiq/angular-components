@@ -267,6 +267,8 @@ export class KbqActionsPanel implements OnDestroy {
             .open<R, D, T>(componentOrTemplateRef, {
                 ...config,
                 container: KbqActionsPanelContainer,
+                restoreFocus: false,
+                autoFocus: null!,
                 hasBackdrop: false,
                 // Disable closing since we need to sync it up to the animation ourselves
                 closeOnOverlayDetachments: false,

@@ -1,5 +1,4 @@
 import { Direction } from '@angular/cdk/bidi';
-import { AutoFocusTarget } from '@angular/cdk/dialog';
 import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { ElementRef, InjectionToken, Injector, Provider } from '@angular/core';
 
@@ -90,31 +89,6 @@ export class KbqActionsPanelConfig<D = unknown> {
      * @default `RepositionScrollStrategy`
      */
     scrollStrategy?: (overlay: Overlay) => ScrollStrategy = (overlay) => overlay.scrollStrategies.reposition();
-
-    /**
-     * Whether the actions panel should restore focus to the previously-focused element upon closing.
-     *
-     * Has the following behavior based on the type that is passed in:
-     * - `boolean` - when true, will return focus to the element that was focused before the  actions panel was opened,
-     * otherwise won't restore focus at all.
-     * - `string` - focus will be restored to the first element that matches the CSS selector.
-     * - `HTMLElement` - focus will be restored to the specific element.
-     *
-     * @default true
-     */
-    restoreFocus?: boolean | string | HTMLElement = true;
-
-    /**
-     * Whether the actions panel should focus element when opened.
-     *
-     * Has the following behavior based on the type that is passed in:
-     * - `string` - focus will be restored to the first element that matches the CSS selector.
-     * - `first-tabbable` - focus will be restored to the first tabbable element in the actions panel.
-     * - `dialog` - focus will be restored to the actions panel container.
-     *
-     * @default null
-     */
-    autoFocus?: AutoFocusTarget | string = null!;
 
     /**
      * Whether the user can use ESC or click on close button to close the actions panel.
