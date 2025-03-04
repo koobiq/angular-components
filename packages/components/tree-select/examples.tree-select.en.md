@@ -1,5 +1,11 @@
-🚧 **Documentation in progress** 🚧
+#### kbq-select-trigger example
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+kbq-select-trigger - allows you to override the block that displays the selected value. Without affecting the placeholder, cleaner and icon.
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(tree-select-custom-trigger) -->
+
+#### kbq-select-matcher example
+
+kbq-select-matcher - allows you to replace the entire contents of kbq-select, including placeholder, cleaner and icon
+
+<!-- example(tree-select-custom-matcher) -->

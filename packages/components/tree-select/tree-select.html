@@ -19,7 +19,7 @@
             @if (!empty) {
                 <span>
                     @if (!!customTrigger) {
-                        <ng-content select="kbq-select-trigger" />
+                        <ng-content select="kbq-select-trigger, [kbq-select-trigger]" />
                     } @else {
                         <div class="kbq-select__match-container">
                             @if (multiple) {
