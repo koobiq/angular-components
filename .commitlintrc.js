@@ -29,7 +29,6 @@ const config = {
                 'experimental',
                 'schematics',
                 'dev',
-                'examples',
 
                 // core
                 'common',
