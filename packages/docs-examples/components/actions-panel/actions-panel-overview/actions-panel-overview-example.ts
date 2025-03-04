@@ -129,12 +129,9 @@ export class ExampleTable {
     ],
     selector: 'example-actions-panel',
     template: `
+        <div class="example-counter">Selected: {{ data().length }}</div>
+        <kbq-divider class="example-divider-vertical" [vertical]="true" />
         <kbq-overflow-items>
-            <ng-container *kbqOverflowItem="'content'">
-                <div class="example-content">Selected: {{ data().length }}</div>
-                <kbq-divider class="example-divider-vertical" [vertical]="true" />
-            </ng-container>
-
             @for (action of actions; track action.id; let first = $first) {
                 <ng-container *kbqOverflowItem="action.id">
                     @if (action.divider) {
@@ -157,10 +154,8 @@ export class ExampleTable {
                 </button>
 
                 <kbq-dropdown #dropdown="kbqDropdown">
-                    @if (hiddenItemIDs.has('content')) {
-                        <div class="example-content">Selected: {{ data().length }}</div>
-                        <kbq-divider />
-                    }
+                    <div class="example-counter-dropdown">Selected: {{ data().length }}</div>
+                    <kbq-divider />
 
                     @for (action of actions; track action.id; let index = $index) {
                         @if (hiddenItemIDs.has(action.id)) {
@@ -180,14 +175,32 @@ export class ExampleTable {
     styles: `
         :host {
             display: flex;
+            align-items: center;
             overflow: hidden;
             flex-grow: 1;
+            container-type: inline-size;
         }
 
-        .example-content {
+        @container (width < 765px) {
+            .example-counter,
+            .example-counter + .example-divider-vertical {
+                display: none;
+            }
+        }
+
+        .example-counter {
             margin: 0 var(--kbq-size-m);
             width: 75px;
+        }
+
+        .example-counter,
+        .example-counter-dropdown {
             user-select: none;
+        }
+
+        .example-counter-dropdown {
+            font-weight: var(--kbq-typography-text-normal-strong-font-weight);
+            margin: var(--kbq-size-s) var(--kbq-size-m);
         }
 
         .example-divider-vertical {
@@ -260,6 +273,7 @@ export class ActionsPanelOverviewExample {
 
         this.actionsPanelRef = this.actionsPanel.open(ExampleActionsPanel, {
             width: '100%',
+            maxWidth: 844,
             data: this.data,
             overlayContainer: this.elementRef
         });
