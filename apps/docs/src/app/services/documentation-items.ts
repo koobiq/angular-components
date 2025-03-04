@@ -675,7 +675,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'tree-select',
                     hasApi: true,
                     apiId: 'tree-select',
-                    hasExamples: false
+                    hasExamples: true
                 }
             ]
         }
