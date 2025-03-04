@@ -2407,8 +2407,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Select disabled",
     "componentName": "SelectDisabledExample",
     "files": [
-      "select-disabled-example.ts",
-      "select-disabled-example.html"
+      "select-disabled-example.ts"
     ],
     "selector": "select-disabled-example",
     "additionalComponents": [],
@@ -2420,8 +2419,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Select footer",
     "componentName": "SelectFooterExample",
     "files": [
-      "select-footer-example.ts",
-      "select-footer-example.html"
+      "select-footer-example.ts"
     ],
     "selector": "select-footer-example",
     "additionalComponents": [],
