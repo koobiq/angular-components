@@ -22,6 +22,7 @@ import { NgZone } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
 
 // @public (undocumented)
@@ -65,6 +66,8 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;
+    // (undocumented)
+    protected readonly renderer: Renderer2;
     get required(): boolean;
     set required(value: boolean);
     readonly stateChanges: Subject<void>;
