@@ -10,14 +10,15 @@ ng add @koobiq/components
 вам необходимо установить следующие зависимости:
 
 ```bash
-npm install
-npm install @koobiq/cdk
-npm install @koobiq/components
-npm install @koobiq/icons
-npm install @koobiq/design-tokens
-npm install @koobiq/angular-luxon-adapter
-npm install @koobiq/date-adapter
-npm install @koobiq/date-formatter
-npm install luxon
-npm install @messageformat/core
+npm install \
+    @koobiq/cdk \
+    @koobiq/components \
+    @koobiq/icons \
+    @koobiq/design-tokens \
+    @koobiq/angular-luxon-adapter \
+    @koobiq/date-adapter \
+    @koobiq/date-formatter \
+    luxon \
+    @messageformat/core \
+    @radix-ng/primitives@^0.14.0
 ```
