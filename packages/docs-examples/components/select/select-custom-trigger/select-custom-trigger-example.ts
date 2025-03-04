@@ -1,9 +1,4 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -12,7 +7,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     standalone: true,
     selector: 'select-custom-trigger-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule, AsyncPipe, KbqButtonModule, KbqHighlightModule],
+    imports: [KbqSelectModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-select #select="kbqSelect" [(value)]="selected">

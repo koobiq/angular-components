@@ -1,9 +1,5 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
@@ -12,7 +8,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 @Component({
     standalone: true,
     selector: 'select-custom-matcher-example',
-    imports: [KbqFormFieldModule, KbqSelectModule, KbqIconModule, AsyncPipe, KbqButtonModule, KbqHighlightModule],
+    imports: [KbqSelectModule, KbqButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-select
@@ -21,7 +17,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             [tabIndex]="-1"
             [class]="{ 'kbq-select': false, 'my-custom-select': true }"
         >
-            <button class="layout-padding-right-xs" kbq-button kbq-select-matcher>
+            <button kbq-button kbq-select-matcher>
                 {{ select.triggerValue }}
 
                 <i class="layout-padding-left-3xs" kbq-icon="kbq-chevron-down-s_16"></i>
