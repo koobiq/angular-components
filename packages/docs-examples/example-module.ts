@@ -2402,13 +2402,36 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-cleaner-example.ts",
     "importPath": "components/select"
   },
+  "select-custom-matcher": {
+    "packagePath": "components/select/select-custom-matcher",
+    "title": "select-custom-trigger",
+    "componentName": "SelectCustomMatcherExample",
+    "files": [
+      "select-custom-matcher-example.ts"
+    ],
+    "selector": "select-custom-matcher-example",
+    "additionalComponents": [],
+    "primaryFile": "select-custom-matcher-example.ts",
+    "importPath": "components/select"
+  },
+  "select-custom-trigger": {
+    "packagePath": "components/select/select-custom-trigger",
+    "title": "select-custom-trigger",
+    "componentName": "SelectCustomTriggerExample",
+    "files": [
+      "select-custom-trigger-example.ts"
+    ],
+    "selector": "select-custom-trigger-example",
+    "additionalComponents": [],
+    "primaryFile": "select-custom-trigger-example.ts",
+    "importPath": "components/select"
+  },
   "select-disabled": {
     "packagePath": "components/select/select-disabled",
     "title": "Select disabled",
     "componentName": "SelectDisabledExample",
     "files": [
-      "select-disabled-example.ts",
-      "select-disabled-example.html"
+      "select-disabled-example.ts"
     ],
     "selector": "select-disabled-example",
     "additionalComponents": [],
@@ -2420,8 +2443,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Select footer",
     "componentName": "SelectFooterExample",
     "files": [
-      "select-footer-example.ts",
-      "select-footer-example.html"
+      "select-footer-example.ts"
     ],
     "selector": "select-footer-example",
     "additionalComponents": [],
@@ -4052,6 +4074,10 @@ return import('@koobiq/docs-examples/components/scrollbar');
   case 'scrollbar-with-options':
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'select-cleaner':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-custom-matcher':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-custom-trigger':
 return import('@koobiq/docs-examples/components/select');
   case 'select-disabled':
 return import('@koobiq/docs-examples/components/select');
