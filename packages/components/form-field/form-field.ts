@@ -40,8 +40,6 @@ import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
-let nextUniqueId = 0;
-
 /** @docs-private */
 export class KbqFormFieldBase {
     constructor(public elementRef: ElementRef) {}
@@ -111,9 +109,6 @@ export class KbqFormField
     @ContentChildren(KbqPrefix) prefix: QueryList<KbqPrefix>;
 
     @ViewChild('connectionContainer', { static: true }) connectionContainerRef: ElementRef;
-
-    // Unique id for the internal form field label.
-    labelId = `kbq-form-field-label-${nextUniqueId++}`;
 
     hovered: boolean = false;
 
