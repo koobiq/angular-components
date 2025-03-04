@@ -1,4 +1,4 @@
-import { KbqCodeBlockLocaleConfiguration } from './types';
+import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
 
 export const enUSLocaleData = {
     select: { hiddenItemsText: '{{ number }} more' },
@@ -41,5 +41,8 @@ export const enUSLocaleData = {
     } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'City or time zone'
-    }
+    },
+    actionsPanel: {
+        closeTooltip: 'Deselect'
+    } satisfies KbqActionsPanelLocaleConfiguration
 };

@@ -207,10 +207,11 @@ export class KbqOverflowItems {
                 this.items().forEach(({ hidden }) => hidden.set(false));
             });
 
+        const dueTime = 100;
         merge(
-            toObservable(this.items),
-            this.resizeObserver.observe(this.elementRef.nativeElement),
-            this.contentObserver.observe(this.elementRef.nativeElement).pipe(debounceTime(0))
+            toObservable(this.items).pipe(debounceTime(dueTime)),
+            this.resizeObserver.observe(this.elementRef.nativeElement).pipe(debounceTime(dueTime)),
+            this.contentObserver.observe(this.elementRef.nativeElement).pipe(debounceTime(dueTime))
         )
             .pipe(takeUntilDestroyed())
             .subscribe(() => {
@@ -233,45 +234,38 @@ export class KbqOverflowItems {
      * (or end if `reverseOverflowOrder`), ensuring it fits within the visible area.
      */
     private updateItemsVisibility(): void {
+        const items = this.items();
         const itemElementRefs = this.itemElementRefs();
-        const items = this.items().map(({ hidden }, index, _items) => {
-            return {
-                hidden,
-                isFirst: index === 0,
-                isLast: index === _items.length - 1,
-                elementRef: itemElementRefs[index]
-            };
-        });
         const reverseOverflowOrder = this.reverseOverflowOrder();
-        const isEdgeItem = ({ isFirst, isLast }: (typeof items)[number]) => (reverseOverflowOrder ? isFirst : isLast);
-        const { offsetWidth: totalWidth, scrollWidth } = this.elementRef.nativeElement;
-        const isOverflown = scrollWidth > totalWidth;
-        if (isOverflown) {
-            const isVisibleItem = ({ hidden }: (typeof items)[number]) => !hidden();
-            const lastVisibleItem = !reverseOverflowOrder
-                ? this.findLast(items, isVisibleItem)
-                : items.find(isVisibleItem);
-            if (lastVisibleItem) {
-                lastVisibleItem.hidden.set(true);
-                if (!isEdgeItem(lastVisibleItem)) {
+        const resultElementWidth = this.resultElementRef()?.nativeElement.offsetWidth || 0;
+        const { offsetWidth: totalWidth } = this.elementRef.nativeElement;
+        const visibleItems = items.filter(this.isVisibleItem);
+        const visibleItemsTotalWidth = visibleItems.reduce(
+            (width, _, index) => width + itemElementRefs[index].nativeElement.offsetWidth,
+            0
+        );
+        const _resultElementWidth = items.length > visibleItems.length ? resultElementWidth : 0;
+        if (visibleItemsTotalWidth + _resultElementWidth > totalWidth) {
+            const lastVisibleItemIndex = reverseOverflowOrder
+                ? items.findIndex(this.isVisibleItem)
+                : this.findLastIndex(items, this.isVisibleItem);
+            if (lastVisibleItemIndex !== -1) {
+                items[lastVisibleItemIndex].hidden.set(true);
+                if (!this.isEdgeItemIndex(items, lastVisibleItemIndex, reverseOverflowOrder)) {
                     this.updateItemsVisibility();
                 }
             }
         } else {
-            const isHiddenItem = ({ hidden }: (typeof items)[number]) => hidden();
-            const firstHiddenItem = !reverseOverflowOrder
-                ? items.find(isHiddenItem)
-                : this.findLast(items, isHiddenItem);
-            if (firstHiddenItem) {
-                const firstHiddenItemWidth = firstHiddenItem.elementRef.nativeElement.offsetWidth;
-                const visibleItemsTotalWidth = items
-                    .filter(({ hidden }) => !hidden())
-                    .reduce((width, { elementRef }) => width + elementRef.nativeElement.offsetWidth, 0);
-                const _isEdgeItem = isEdgeItem(firstHiddenItem);
-                const resultWidth = _isEdgeItem ? 0 : this.resultElementRef()?.nativeElement.offsetWidth || 0;
-                if (firstHiddenItemWidth + visibleItemsTotalWidth + resultWidth <= totalWidth) {
-                    firstHiddenItem.hidden.set(false);
-                    if (!_isEdgeItem) {
+            const firstHiddenItemIndex = reverseOverflowOrder
+                ? this.findLastIndex(items, this.isHiddenItem)
+                : items.findIndex(this.isHiddenItem);
+            if (firstHiddenItemIndex !== -1) {
+                const firstHiddenItemWidth = itemElementRefs[firstHiddenItemIndex].nativeElement.offsetWidth;
+                const _isEdgeItemIndex = this.isEdgeItemIndex(items, firstHiddenItemIndex, reverseOverflowOrder);
+                const _resultElementWidth = _isEdgeItemIndex ? 0 : resultElementWidth;
+                if (firstHiddenItemWidth + visibleItemsTotalWidth + _resultElementWidth <= totalWidth) {
+                    items[firstHiddenItemIndex].hidden.set(false);
+                    if (!_isEdgeItemIndex) {
                         this.updateItemsVisibility();
                     }
                 }
@@ -279,13 +273,35 @@ export class KbqOverflowItems {
         }
     }
 
-    /** @TODO Should use `Array.prototype.findLast` after migrating to ES2023 */
-    private findLast<T>(array: T[], predicate: (value: T, index: number, array: T[]) => boolean): T | undefined {
+    /**
+     * Determines if the given item index is at the edge of the array (first or last element), based on the
+     * `reverseOverflowOrder` flag.
+     */
+    private isEdgeItemIndex<T>(array: readonly T[], index: number, reverseOverflowOrder: boolean): boolean {
+        return reverseOverflowOrder ? index === 0 : index === array.length - 1;
+    }
+
+    /**
+     * Determines if the given item is hidden.
+     */
+    private isHiddenItem = ({ hidden }: KbqOverflowItem) => hidden();
+
+    /**
+     * Determines if the given item is visible.
+     */
+    private isVisibleItem = ({ hidden }: KbqOverflowItem) => !hidden();
+
+    /** @TODO Should use `Array.prototype.findLastIndex` after migrating to ES2023 */
+    private findLastIndex<T>(
+        array: readonly T[],
+        predicate: (value: T, index: number, array: readonly T[]) => boolean
+    ): number {
         for (let i = array.length - 1; i >= 0; i--) {
             if (predicate(array[i], i, array)) {
-                return array[i];
+                return i;
             }
         }
-        return undefined;
+
+        return -1;
     }
 }

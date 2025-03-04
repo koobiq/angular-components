@@ -1,4 +1,4 @@
-import { KbqCodeBlockLocaleConfiguration } from './types';
+import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
 
 export const esLALocaleData = {
     select: { hiddenItemsText: '{{ number }} más' },
@@ -40,5 +40,8 @@ export const esLALocaleData = {
     } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'Ciudad o zona horaria'
-    }
+    },
+    actionsPanel: {
+        closeTooltip: 'Desmarque'
+    } satisfies KbqActionsPanelLocaleConfiguration
 };
