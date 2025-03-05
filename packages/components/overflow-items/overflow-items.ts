@@ -1,9 +1,9 @@
-import { ContentObserver } from '@angular/cdk/observers';
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { NgTemplateOutlet } from '@angular/common';
 import {
     booleanAttribute,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     computed,
     contentChild,
@@ -12,6 +12,7 @@ import {
     ElementRef,
     inject,
     input,
+    numberAttribute,
     signal,
     TemplateRef,
     viewChild,
@@ -88,7 +89,7 @@ export class KbqOverflowItem {
      *
      * @docs-private
      */
-    readonly hidden = signal<boolean>(false);
+    hidden: boolean = false;
 
     /**
      * TemplateRef for the item.
@@ -110,12 +111,12 @@ export class KbqOverflowItem {
             <ng-container [ngTemplateOutlet]="template" />
         }
 
-        @for (item of items(); track item.id()) {
+        @for (item of items(); track item) {
             <div
                 class="kbq-overflow-items__item"
                 #itemRef
-                [attr.aria-hidden]="item.hidden()"
-                [class.kbq-overflow-items__item_hidden]="item.hidden()"
+                [attr.aria-hidden]="item.hidden"
+                [class.kbq-overflow-items__item_hidden]="item.hidden"
             >
                 <ng-container [ngTemplateOutlet]="item.templateRef" />
             </div>
@@ -170,23 +171,21 @@ export class KbqOverflowItems {
      * @docs-private
      */
     protected readonly resultTemplateContext = computed<KbqOverflowItemsResultContext>(() => {
-        const hiddenItemIDs = new Set(
-            this.items()
-                .filter(({ hidden }) => hidden())
-                .map(({ id }) => id())
-        );
+        const hiddenItemIDs = this.hiddenItemIDs();
         return {
             $implicit: hiddenItemIDs,
             hiddenItemIDs: hiddenItemIDs
         };
     });
 
+    private readonly hiddenItemIDs = signal<ReadonlySet<unknown>>(new Set([]));
+
     /**
      * Whether the overflow result is hidden.
      *
      * @docs-private
      */
-    protected readonly resultHidden = computed(() => !this.items().some(({ hidden }) => hidden()));
+    protected readonly resultHidden = computed(() => this.hiddenItemIDs().size === 0);
 
     /**
      * Whether the overflow order should be reversed.
@@ -196,96 +195,76 @@ export class KbqOverflowItems {
      */
     readonly reverseOverflowOrder = input(false, { transform: booleanAttribute });
 
+    /**
+     * Debounce time for recalculating items visibility.
+     *
+     * @default 100
+     */
+    readonly debounceTime = input(100, { transform: numberAttribute });
+
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly contentObserver = inject(ContentObserver);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     constructor() {
-        toObservable(this.reverseOverflowOrder)
-            .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(() => {
-                this.items().forEach(({ hidden }) => hidden.set(false));
-            });
-
         merge(
             toObservable(this.items),
-            this.resizeObserver.observe(this.elementRef.nativeElement),
-            this.contentObserver.observe(this.elementRef.nativeElement).pipe(debounceTime(0))
+            toObservable(this.reverseOverflowOrder).pipe(skip(1)),
+            this.resizeObserver.observe(this.elementRef.nativeElement)
         )
-            .pipe(takeUntilDestroyed())
+            .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
-                this.updateItemsVisibility();
+                const items = this.items();
+                this.updateItemsVisibility(
+                    items,
+                    this.itemElementRefs(),
+                    this.reverseOverflowOrder(),
+                    this.resultElementRef(),
+                    this.elementRef.nativeElement
+                );
+                this.hiddenItemIDs.set(new Set(items.filter(this.isHiddenItem).map(({ id }) => id())));
+                this.changeDetectorRef.markForCheck();
             });
     }
 
     /**
-     * Updates the visibility of items based on the container width.
-     *
-     * This method calculates whether items should be hidden or shown by comparing the scroll width of the container
-     * with its visible width. It determines which items are visible and which are hidden, and applies the hiding logic
-     * based on the `reverseOverflowOrder` flag.
-     *
-     * The function operates recursively to adjust the visibility of items until the overflow condition is resolved.
-     *
-     * - If the container is overflown, it hides the last visible item from the end (or start if `reverseOverflowOrder`)
-     * and checks if further adjustments are needed.
-     * - If the container is not overflown, it reveals the first hidden item from the start
-     * (or end if `reverseOverflowOrder`), ensuring it fits within the visible area.
+     * Updates items visibility, based on the container width and the `reverseOverflowOrder` flag.
      */
-    private updateItemsVisibility(): void {
-        const itemElementRefs = this.itemElementRefs();
-        const items = this.items().map(({ hidden }, index, _items) => {
-            return {
-                hidden,
-                isFirst: index === 0,
-                isLast: index === _items.length - 1,
-                elementRef: itemElementRefs[index]
-            };
+    private updateItemsVisibility(
+        items: readonly KbqOverflowItem[],
+        itemElementRefs: readonly ElementRef<HTMLElement>[],
+        reverseOverflowOrder: boolean,
+        resultElementRef: ElementRef<HTMLElement> | undefined,
+        { offsetWidth: totalWidth }: HTMLElement
+    ): void {
+        items.forEach((item) => {
+            item.hidden = false;
         });
-        const reverseOverflowOrder = this.reverseOverflowOrder();
-        const isEdgeItem = ({ isFirst, isLast }: (typeof items)[number]) => (reverseOverflowOrder ? isFirst : isLast);
-        const { offsetWidth: totalWidth, scrollWidth } = this.elementRef.nativeElement;
-        const isOverflown = scrollWidth > totalWidth;
-        if (isOverflown) {
-            const isVisibleItem = ({ hidden }: (typeof items)[number]) => !hidden();
-            const lastVisibleItem = !reverseOverflowOrder
-                ? this.findLast(items, isVisibleItem)
-                : items.find(isVisibleItem);
-            if (lastVisibleItem) {
-                lastVisibleItem.hidden.set(true);
-                if (!isEdgeItem(lastVisibleItem)) {
-                    this.updateItemsVisibility();
-                }
-            }
-        } else {
-            const isHiddenItem = ({ hidden }: (typeof items)[number]) => hidden();
-            const firstHiddenItem = !reverseOverflowOrder
-                ? items.find(isHiddenItem)
-                : this.findLast(items, isHiddenItem);
-            if (firstHiddenItem) {
-                const firstHiddenItemWidth = firstHiddenItem.elementRef.nativeElement.offsetWidth;
-                const visibleItemsTotalWidth = items
-                    .filter(({ hidden }) => !hidden())
-                    .reduce((width, { elementRef }) => width + elementRef.nativeElement.offsetWidth, 0);
-                const _isEdgeItem = isEdgeItem(firstHiddenItem);
-                const resultWidth = _isEdgeItem ? 0 : this.resultElementRef()?.nativeElement.offsetWidth || 0;
-                if (firstHiddenItemWidth + visibleItemsTotalWidth + resultWidth <= totalWidth) {
-                    firstHiddenItem.hidden.set(false);
-                    if (!_isEdgeItem) {
-                        this.updateItemsVisibility();
-                    }
+        let itemsWidth = items.reduce((width, _, index) => width + itemElementRefs[index].nativeElement.offsetWidth, 0);
+        const startIndex = reverseOverflowOrder ? 0 : items.length - 1;
+        const endIndex = reverseOverflowOrder ? items.length : -1;
+        const step = reverseOverflowOrder ? 1 : -1;
+        const resultWidth = resultElementRef?.nativeElement.offsetWidth || 0;
+        for (let index = startIndex; index !== endIndex; index += step) {
+            const current = items[index];
+            const currentWidth = itemElementRefs[index].nativeElement.offsetWidth;
+            const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;
+            if (itemsWidth + _resultWidth > totalWidth) {
+                current.hidden = true;
+                itemsWidth -= currentWidth;
+            } else {
+                const isEdgeElement = reverseOverflowOrder ? index === 0 : index === items.length - 1;
+                const _resultWidth = isEdgeElement ? 0 : resultWidth;
+                if (itemsWidth + currentWidth + _resultWidth <= totalWidth) {
+                    current.hidden = false;
+                    itemsWidth += currentWidth;
                 }
             }
         }
     }
 
-    /** @TODO Should use `Array.prototype.findLast` after migrating to ES2023 */
-    private findLast<T>(array: T[], predicate: (value: T, index: number, array: T[]) => boolean): T | undefined {
-        for (let i = array.length - 1; i >= 0; i--) {
-            if (predicate(array[i], i, array)) {
-                return array[i];
-            }
-        }
-        return undefined;
-    }
+    /**
+     * Determines if the given item is hidden.
+     */
+    private isHiddenItem = ({ hidden }: KbqOverflowItem) => hidden;
 }

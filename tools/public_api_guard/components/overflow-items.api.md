@@ -9,11 +9,10 @@ import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class KbqOverflowItem {
-    readonly hidden: WritableSignal<boolean>;
+    hidden: boolean;
     readonly id: InputSignal<unknown>;
     readonly templateRef: TemplateRef<any>;
     // (undocumented)
@@ -25,13 +24,14 @@ export class KbqOverflowItem {
 // @public
 export class KbqOverflowItems {
     constructor();
+    readonly debounceTime: InputSignalWithTransform<number, unknown>;
     protected readonly items: Signal<readonly KbqOverflowItem[]>;
     protected readonly result: Signal<KbqOverflowItemsResult | undefined>;
     protected readonly resultHidden: Signal<boolean>;
     protected readonly resultTemplateContext: Signal<KbqOverflowItemsResultContext>;
     readonly reverseOverflowOrder: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOverflowItems, "kbq-overflow-items", never, { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; }, {}, ["items", "result"], never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOverflowItems, "kbq-overflow-items", never, { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, {}, ["items", "result"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItems, never>;
 }
