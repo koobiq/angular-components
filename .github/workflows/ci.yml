@@ -22,10 +22,12 @@ jobs:
         uses: ./.github/workflows/actions/build-packages
 
       - name: API Golden Checks
+        id: golden_checks
         continue-on-error: true
         run: yarn run check-api
 
       - name: Linters
+        id: linters
         continue-on-error: true
         run: |
           yarn run cspell --no-progress
@@ -34,6 +36,7 @@ jobs:
           yarn run eslint --max-warnings=0
 
       - name: Unit
+        id: units
         continue-on-error: true
         run: |
           yarn run unit:cdk
@@ -47,3 +50,10 @@ jobs:
 
       - name: License validation
         run: yarn run validate:license
+
+      - name: Check for errors
+        run: |
+          if [[ "${{ steps.golden_checks.outcome }}" == "failure" || "${{ steps.linters.outcome }}" == "failure" || "${{ steps.units.outcome }}" == "failure" ]]; then
+            echo "One or more steps failed. Marking job as failed."
+            exit 1
+          fi
