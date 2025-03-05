@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { SelectCleanerExample } from './select-cleaner/select-cleaner-example';
+import { SelectCustomMatcherExample } from './select-custom-matcher/select-custom-matcher-example';
+import { SelectCustomTriggerExample } from './select-custom-trigger/select-custom-trigger-example';
 import { SelectDisabledExample } from './select-disabled/select-disabled-example';
 import { SelectFooterExample } from './select-footer/select-footer-example';
 import { SelectGroupsExample } from './select-groups/select-groups-example';
@@ -15,6 +17,8 @@ import { SelectWithPanelWidthAttributeExample } from './select-with-panel-width-
 
 export {
     SelectCleanerExample,
+    SelectCustomMatcherExample,
+    SelectCustomTriggerExample,
     SelectDisabledExample,
     SelectFooterExample,
     SelectGroupsExample,
@@ -42,7 +46,9 @@ const EXAMPLES = [
     SelectFooterExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
-    SelectWithPanelWidthAttributeExample
+    SelectWithPanelWidthAttributeExample,
+    SelectCustomMatcherExample,
+    SelectCustomTriggerExample
 ];
 
 @NgModule({

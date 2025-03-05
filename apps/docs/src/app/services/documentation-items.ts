@@ -488,7 +488,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'select',
                     hasApi: true,
                     apiId: 'select',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: 'sidepanel',
@@ -675,7 +675,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'tree-select',
                     hasApi: true,
                     apiId: 'tree-select',
-                    hasExamples: false
+                    hasExamples: true
                 }
             ]
         }

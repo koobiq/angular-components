@@ -2402,6 +2402,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-cleaner-example.ts",
     "importPath": "components/select"
   },
+  "select-custom-matcher": {
+    "packagePath": "components/select/select-custom-matcher",
+    "title": "select-custom-trigger",
+    "componentName": "SelectCustomMatcherExample",
+    "files": [
+      "select-custom-matcher-example.ts"
+    ],
+    "selector": "select-custom-matcher-example",
+    "additionalComponents": [],
+    "primaryFile": "select-custom-matcher-example.ts",
+    "importPath": "components/select"
+  },
+  "select-custom-trigger": {
+    "packagePath": "components/select/select-custom-trigger",
+    "title": "select-custom-trigger",
+    "componentName": "SelectCustomTriggerExample",
+    "files": [
+      "select-custom-trigger-example.ts"
+    ],
+    "selector": "select-custom-trigger-example",
+    "additionalComponents": [],
+    "primaryFile": "select-custom-trigger-example.ts",
+    "importPath": "components/select"
+  },
   "select-disabled": {
     "packagePath": "components/select/select-disabled",
     "title": "Select disabled",
@@ -3385,6 +3409,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-child-selection-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-custom-matcher": {
+    "packagePath": "components/tree-select/tree-select-custom-matcher",
+    "title": "tree-select-custom-matcher",
+    "componentName": "TreeSelectCustomMatcherExample",
+    "files": [
+      "tree-select-custom-matcher-example.ts"
+    ],
+    "selector": "tree-select-custom-matcher-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-custom-matcher-example.ts",
+    "importPath": "components/tree-select"
+  },
+  "tree-select-custom-trigger": {
+    "packagePath": "components/tree-select/tree-select-custom-trigger",
+    "title": "tree-select-custom-trigger",
+    "componentName": "TreeSelectCustomTriggerExample",
+    "files": [
+      "tree-select-custom-trigger-example.ts"
+    ],
+    "selector": "tree-select-custom-trigger-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-custom-trigger-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-select-footer-overview": {
     "packagePath": "components/tree-select/tree-select-footer-overview",
     "title": "Tree-select footer",
@@ -4051,6 +4099,10 @@ return import('@koobiq/docs-examples/components/scrollbar');
 return import('@koobiq/docs-examples/components/scrollbar');
   case 'select-cleaner':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-custom-matcher':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-custom-trigger':
+return import('@koobiq/docs-examples/components/select');
   case 'select-disabled':
 return import('@koobiq/docs-examples/components/select');
   case 'select-footer':
@@ -4210,6 +4262,10 @@ return import('@koobiq/docs-examples/components/top-bar');
   case 'top-bar-secondary-actions':
 return import('@koobiq/docs-examples/components/top-bar');
   case 'tree-select-child-selection-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-custom-matcher':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-custom-trigger':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-footer-overview':
 return import('@koobiq/docs-examples/components/tree-select');
