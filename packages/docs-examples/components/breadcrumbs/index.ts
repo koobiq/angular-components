@@ -8,6 +8,7 @@ import { BreadcrumbsTruncateByAbbrevItemsExample } from './breadcrumbs-truncate-
 import { BreadcrumbsTruncateCenterItemsExample } from './breadcrumbs-truncate-center-items/breadcrumbs-truncate-center-items-example';
 import { BreadcrumbsTruncateHeadItemsExample } from './breadcrumbs-truncate-head-items/breadcrumbs-truncate-head-items-example';
 import { BreadcrumbsTruncateTailItemsExample } from './breadcrumbs-truncate-tail-items/breadcrumbs-truncate-tail-items-example';
+import { BreadcrumbsWrapExample } from './breadcrumbs-wrap/breadcrumbs-wrap-example';
 
 export {
     BreadcrumbsCustomTemplateExample,
@@ -18,7 +19,8 @@ export {
     BreadcrumbsTruncateByAbbrevItemsExample,
     BreadcrumbsTruncateCenterItemsExample,
     BreadcrumbsTruncateHeadItemsExample,
-    BreadcrumbsTruncateTailItemsExample
+    BreadcrumbsTruncateTailItemsExample,
+    BreadcrumbsWrapExample
 };
 
 const EXAMPLES = [
@@ -30,7 +32,8 @@ const EXAMPLES = [
     BreadcrumbsTruncateByAbbrevItemsExample,
     BreadcrumbsTruncateCenterItemsExample,
     BreadcrumbsTruncateHeadItemsExample,
-    BreadcrumbsTruncateTailItemsExample
+    BreadcrumbsTruncateTailItemsExample,
+    BreadcrumbsWrapExample
 ];
 
 @NgModule({
