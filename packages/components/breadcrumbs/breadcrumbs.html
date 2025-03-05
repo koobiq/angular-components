@@ -1,4 +1,10 @@
-@if (items.length <= minVisibleItems || max === null || max <= minVisibleItems || max >= items.length) {
+@if (
+    items.length <= minVisibleItems ||
+    max === null ||
+    max <= minVisibleItems ||
+    max >= items.length ||
+    wrapMode !== 'auto'
+) {
     @for (item of items; track item; let last = $last) {
         <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
         @if (!last) {

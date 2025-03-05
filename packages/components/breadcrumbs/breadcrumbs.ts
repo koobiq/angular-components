@@ -36,11 +36,19 @@ export type KbqBreadcrumbsConfiguration = {
      */
     max: number | null;
     size: KbqDefaultSizes;
+    /**
+     * Manages breadcrumb items when space is limited:
+     * - `auto`: Adjusts based on space and item count.
+     * - `wrap`: Moves items to the next line if needed.
+     * - `none`: Prevents wrapping, allowing overflow.
+     */
+    wrapMode: 'auto' | 'wrap' | 'none';
 };
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
-    size: 'normal'
+    size: 'normal',
+    wrapMode: 'auto'
 };
 
 /** Breadcrumbs options global configuration provider. */
@@ -162,6 +170,7 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
+        '[class.kbq-breadcrumbs_wrap]': 'wrapMode === "wrap"',
         '[attr.aria-label]': "'breadcrumb'"
     },
     // @TODO add support for Home,End keys interaction  (#DS-3334)
@@ -185,6 +194,10 @@ export class KbqBreadcrumbs implements AfterContentInit {
      * When disabled, user interactions are blocked.
      */
     @Input({ transform: booleanAttribute }) disabled: boolean = false;
+    /**
+     * Wrapping behavior of the breadcrumb items.
+     */
+    @Input() wrapMode: KbqBreadcrumbsConfiguration['wrapMode'] = this.configuration.wrapMode;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     protected readonly separator?: TemplateRef<any>;
