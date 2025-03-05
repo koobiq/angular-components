@@ -196,6 +196,7 @@ export class ExampleTable {
         .example-counter,
         .example-counter-dropdown {
             user-select: none;
+            white-space: nowrap;
         }
 
         .example-counter-dropdown {

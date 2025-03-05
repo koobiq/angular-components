@@ -108,7 +108,7 @@ type ExampleAction = {
             flex-grow: 1;
             container-type: inline-size;
 
-            @container (width < 810px) {
+            @container (width < 722px) {
                 .example-counter,
                 .example-counter + .example-divider-vertical {
                     display: none;
@@ -133,6 +133,7 @@ type ExampleAction = {
             display: flex;
             align-items: center;
             user-select: none;
+            white-space: nowrap;
         }
 
         .example-counter-dropdown {
@@ -159,7 +160,6 @@ type ExampleAction = {
 export class ActionsPanelCustomCounterExample {
     readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
-        { id: 'Status', icon: 'kbq-arrow-right-s_16' },
         { id: 'Verdict', icon: 'kbq-question-circle_16' },
         { id: 'Link to incident', icon: 'kbq-link_16', divider: true },
         { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', divider: true },
@@ -178,7 +178,7 @@ export class ActionsPanelCustomCounterExample {
     open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             width: '100%',
-            maxWidth: 873,
+            maxWidth: 782,
             data: { selected: 3, counter: 6 },
             overlayContainer: this.elementRef
         });

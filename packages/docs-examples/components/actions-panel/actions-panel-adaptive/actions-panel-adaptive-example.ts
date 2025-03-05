@@ -108,6 +108,7 @@ type ExampleAction = {
         .example-counter,
         .example-counter-dropdown {
             user-select: none;
+            white-space: nowrap;
         }
 
         .example-counter-dropdown {
@@ -174,7 +175,7 @@ export class ExampleActionsPanel {
         <example-actions-panel [style.width.px]="374" />
 
         <div>Then, the actions are hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="310" />
+        <example-actions-panel [style.width.px]="308" />
 
         <div>Everything is hidden under the dropdown menu</div>
         <example-actions-panel [style.width.px]="96" />
