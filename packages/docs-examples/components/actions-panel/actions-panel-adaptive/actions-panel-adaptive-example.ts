@@ -121,6 +121,11 @@ type ExampleAction = {
             height: var(--kbq-actions-panel-vertical-divider-height) !important;
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
+
+        .kbq-button,
+        .kbq-dropdown-trigger {
+            margin: var(--kbq-size-border-width);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -143,7 +148,7 @@ export class ExampleActionsPanel {
     open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             width: '100%',
-            maxWidth: 484,
+            maxWidth: 486,
             data: { length: 5 },
             overlayContainer: this.elementRef
         });
@@ -172,10 +177,10 @@ export class ExampleActionsPanel {
     selector: 'actions-panel-adaptive-example',
     template: `
         <div>First, the number of records is hidden</div>
-        <example-actions-panel [style.width.px]="374" />
+        <example-actions-panel [style.width.px]="378" />
 
         <div>Then, the actions are hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="308" />
+        <example-actions-panel [style.width.px]="313" />
 
         <div>Everything is hidden under the dropdown menu</div>
         <example-actions-panel [style.width.px]="96" />

@@ -181,7 +181,7 @@ export class ExampleTable {
             container-type: inline-size;
         }
 
-        @container (width < 765px) {
+        @container (width < 790px) {
             .example-counter,
             .example-counter + .example-divider-vertical {
                 display: none;
@@ -208,6 +208,11 @@ export class ExampleTable {
             background-color: var(--kbq-actions-panel-vertical-divider-background-color);
             height: var(--kbq-actions-panel-vertical-divider-height) !important;
             margin: var(--kbq-actions-panel-vertical-divider-margin);
+        }
+
+        .kbq-button,
+        .kbq-dropdown-trigger {
+            margin: var(--kbq-size-border-width);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -274,7 +279,7 @@ export class ActionsPanelOverviewExample {
 
         this.actionsPanelRef = this.actionsPanel.open(ExampleActionsPanel, {
             width: '100%',
-            maxWidth: 844,
+            maxWidth: 851,
             data: this.data,
             overlayContainer: this.elementRef
         });

@@ -59,6 +59,11 @@ import { KbqToastService } from '@koobiq/components/toast';
             height: var(--kbq-actions-panel-vertical-divider-height) !important;
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
+
+        .kbq-button,
+        .kbq-dropdown-trigger {
+            margin: var(--kbq-size-border-width);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -75,7 +80,7 @@ export class ActionsPanelCloseExample {
 
     open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
-            width: '332px',
+            width: '333px',
             data: { length: 3 },
             overlayContainer: this.elementRef
         });

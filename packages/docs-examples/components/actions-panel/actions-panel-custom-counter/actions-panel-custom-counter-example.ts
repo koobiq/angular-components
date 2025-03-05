@@ -108,7 +108,7 @@ type ExampleAction = {
             flex-grow: 1;
             container-type: inline-size;
 
-            @container (width < 722px) {
+            @container (width < 726px) {
                 .example-counter,
                 .example-counter + .example-divider-vertical {
                     display: none;
@@ -154,6 +154,11 @@ type ExampleAction = {
             height: var(--kbq-actions-panel-vertical-divider-height) !important;
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
+
+        .kbq-button,
+        .kbq-dropdown-trigger {
+            margin: var(--kbq-size-border-width);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -178,7 +183,7 @@ export class ActionsPanelCustomCounterExample {
     open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             width: '100%',
-            maxWidth: 783,
+            maxWidth: 788,
             data: { selected: 3, counter: 6 },
             overlayContainer: this.elementRef
         });
