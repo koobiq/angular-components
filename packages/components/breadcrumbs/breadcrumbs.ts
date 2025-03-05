@@ -40,12 +40,20 @@ export type KbqBreadcrumbsConfiguration = {
      * Determines if a negative margin should be applied to the first breadcrumb item.
      */
     firstItemNegativeMargin: boolean;
+    /**
+     * Manages breadcrumb items when space is limited:
+     * - `auto`: Adjusts based on space and item count.
+     * - `wrap`: Moves items to the next line if needed.
+     * - `none`: Prevents wrapping, allowing overflow.
+     */
+    wrapMode: 'auto' | 'wrap' | 'none';
 };
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
     size: 'normal',
-    firstItemNegativeMargin: true
+    firstItemNegativeMargin: true,
+    wrapMode: 'auto'
 };
 
 /** Breadcrumbs options global configuration provider. */
@@ -167,6 +175,7 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
+        '[class.kbq-breadcrumbs_wrap]': 'wrapMode === "wrap"',
         '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin',
         '[attr.aria-label]': "'breadcrumb'"
     },
@@ -198,6 +207,10 @@ export class KbqBreadcrumbs implements AfterContentInit {
      * When disabled, user interactions are blocked.
      */
     @Input({ transform: booleanAttribute }) disabled: boolean = false;
+    /**
+     * Wrapping behavior of the breadcrumb items.
+     */
+    @Input() wrapMode: KbqBreadcrumbsConfiguration['wrapMode'] = this.configuration.wrapMode;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     protected readonly separator?: TemplateRef<any>;
