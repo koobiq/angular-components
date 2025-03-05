@@ -178,7 +178,7 @@ export class ActionsPanelCustomCounterExample {
     open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             width: '100%',
-            maxWidth: 782,
+            maxWidth: 783,
             data: { selected: 3, counter: 6 },
             overlayContainer: this.elementRef
         });
