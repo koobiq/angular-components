@@ -9,6 +9,7 @@ import {
     KbqFilterBar,
     KbqFilterBarModule,
     KbqFilterBarSearch,
+    KbqFilterReset,
     KbqFilters,
     KbqPipeAdd,
     KbqPipeTemplate,
@@ -58,7 +59,6 @@ describe('KbqFilterBar', () => {
             fixture = TestBed.createComponent(BaseFunctions);
             fixture.detectChanges();
 
-            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
             filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
         });
 
@@ -66,14 +66,13 @@ describe('KbqFilterBar', () => {
             expect(filtersDebugElement.nativeElement.innerText).toBe('Фильтры');
         });
 
-        it('should have selected filter name', fakeAsync(() => {
+        it('should have selected filter name', () => {
             expect(filtersDebugElement.nativeElement.innerText).toBe('Фильтры');
 
             fixture.componentInstance.activeFilter = fixture.componentInstance.filters[0];
             fixture.componentInstance.changeDetectorRef.detectChanges();
-            flush();
             expect(filtersDebugElement.nativeElement.innerText).toBe('Select');
-        }));
+        });
 
         it('should open filters', () => {
             expect(fixture.componentInstance.filtersTrigger.opened).toBeFalse();
@@ -87,19 +86,119 @@ describe('KbqFilterBar', () => {
             expect(document.activeElement?.classList).toContain('kbq-input');
         }));
 
-        it('should have items and button saveAsNewFilter', fakeAsync(() => {
+        it('should have items and button saveAsNewFilter', () => {
             filtersDebugElement.query(By.css('.kbq-dropdown-trigger')).nativeElement.click();
-            flush();
             const filterItems = document.querySelectorAll('.kbq-dropdown-item');
 
             expect(filterItems.length).toBe(10);
             expect(filterItems[filterItems.length - 1].innerHTML).toContain('Сохранить как новый фильтр');
-        }));
+        });
     });
 
-    // describe('KbqPipeAdd', () => {});
+    describe('KbqPipeAdd', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(BaseFunctions);
+            fixture.detectChanges();
 
-    // describe('KbqFilterReset', () => {});
+            filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
+            pipeAddDebugElement = fixture.debugElement.query(By.directive(KbqPipeAdd));
+        });
+
+        it('should open', () => {
+            expect(fixture.componentInstance.pipeAdd.select.panelOpen).toBeFalse();
+            pipeAddDebugElement.query(By.css('.kbq-select')).nativeElement.click();
+            expect(fixture.componentInstance.pipeAdd.select.panelOpen).toBeTrue();
+        });
+
+        it('should contain templates', () => {
+            pipeAddDebugElement.query(By.css('.kbq-select')).nativeElement.click();
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+
+            const templates = fixture.debugElement.queryAll(By.css('.kbq-option'));
+            expect(templates.length).toBe(5);
+
+            for (let index = 0; index < templates.length; index++) {
+                expect(templates[index].nativeElement.innerText).toContain(
+                    fixture.componentInstance.pipeTemplates[index].name
+                );
+            }
+        });
+
+        it('should add pipe from template', () => {
+            pipeAddDebugElement.query(By.css('.kbq-select')).nativeElement.click();
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+
+            expect(fixture.componentInstance.activeFilter).toEqual(null);
+
+            const templates = fixture.debugElement.queryAll(By.css('.kbq-option'));
+
+            templates[0].nativeElement.click();
+
+            expect(fixture.componentInstance.activeFilter!.pipes.length).toBe(1);
+        });
+
+        it('should not add already added pipe', () => {
+            pipeAddDebugElement.query(By.css('.kbq-select')).nativeElement.click();
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+
+            expect(fixture.componentInstance.activeFilter).toBeNull();
+
+            let templates = fixture.debugElement.queryAll(By.css('.kbq-option'));
+
+            templates[0].nativeElement.click();
+
+            expect(fixture.componentInstance.activeFilter!.pipes.length).toBe(1);
+
+            pipeAddDebugElement.query(By.css('.kbq-select')).nativeElement.click();
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+
+            templates = fixture.debugElement.queryAll(By.css('.kbq-option'));
+
+            templates[0].nativeElement.click();
+
+            expect(fixture.componentInstance.activeFilter!.pipes.length).toBe(1);
+        });
+    });
+
+    describe('KbqFilterReset', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(BaseFunctions);
+            fixture.detectChanges();
+
+            pipeAddDebugElement = fixture.debugElement.query(By.directive(KbqPipeAdd));
+        });
+
+        it('should hide KbqResetButton on empty filter', () => {
+            expect(fixture.debugElement.query(By.directive(KbqFilterReset))).toBeNull();
+            expect(fixture.componentInstance.activeFilter).toEqual(null);
+
+            pipeAddDebugElement.query(By.css('.kbq-select')).nativeElement.click();
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+
+            fixture.debugElement.query(By.css('.kbq-option')).nativeElement.click();
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+
+            expect(fixture.componentInstance.activeFilter!.pipes.length).toBe(1);
+            expect(fixture.debugElement.query(By.directive(KbqFilterReset))).not.toBeNull();
+
+            fixture.componentInstance.activeFilter = null;
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+            expect(fixture.debugElement.query(By.directive(KbqFilterReset))).toBeNull();
+        });
+
+        it('should emit reset event', () => {
+            fixture.componentInstance.activeFilter = fixture.componentInstance.filters[6];
+            fixture.componentInstance.changeDetectorRef.detectChanges();
+
+            const resetButton = fixture.debugElement.query(By.directive(KbqFilterReset));
+
+            expect(fixture.componentInstance.onResetFilter).not.toHaveBeenCalled();
+
+            resetButton.query(By.css('button')).nativeElement.click();
+
+            expect(fixture.componentInstance.onResetFilter).toHaveBeenCalled();
+        });
+    });
 
     // describe('KbqFilterBarSearch', () => {});
 
@@ -140,7 +239,10 @@ class BaseFunctions {
     readonly adapter = inject(DateAdapter<DateTime>);
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    @ViewChild(KbqFilters, { static: false }) filtersTrigger: KbqFilters;
+    readonly onResetFilter = jasmine.createSpy('onResetFilterCallback');
+
+    @ViewChild(KbqFilters) filtersTrigger: KbqFilters;
+    @ViewChild(KbqPipeAdd) pipeAdd: KbqPipeAdd;
 
     filters: KbqFilter[] = [
         {
@@ -620,7 +722,7 @@ class BaseFunctions {
             ]
         }
     ];
-    activeFilter: KbqFilter | null;
+    activeFilter: KbqFilter | null = null;
     pipeTemplates: KbqPipeTemplate[] = [
         {
             name: 'Select',
@@ -745,10 +847,6 @@ class BaseFunctions {
         );
 
         filterBar.filterSavedSuccessfully();
-    }
-
-    onResetFilter(filter: KbqFilter | null) {
-        console.log('filter to reset: ', filter);
     }
 
     onDeleteFilter(filter: KbqFilter | null) {
