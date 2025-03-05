@@ -53,7 +53,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     disabled: boolean;
-    firstItemNegativeMargin: boolean;
     protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[];
     // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
@@ -66,8 +65,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    static ngAcceptInputType_firstItemNegativeMargin: unknown;
-    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
@@ -75,8 +72,9 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly separator?: TemplateRef<any>;
     size: KbqDefaultSizes;
     protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[];
+    wrapMode: KbqBreadcrumbsConfiguration['wrapMode'];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -85,11 +83,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
 export type KbqBreadcrumbsConfiguration = {
     max: number | null;
     size: KbqDefaultSizes;
-    firstItemNegativeMargin: boolean;
+    wrapMode: 'auto' | 'wrap' | 'none';
 };
-
-// @public
-export const kbqBreadcrumbsConfigurationProvider: (configuration: Partial<KbqBreadcrumbsConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqBreadcrumbsModule {
@@ -122,6 +117,9 @@ export class KbqBreadcrumbView {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbView, never>;
 }
+
+// @public
+export const provideKbqBreadcrumbsConfiguration: (configuration: KbqBreadcrumbsConfiguration) => Provider;
 
 // (No @packageDocumentation comment for this package)
 
