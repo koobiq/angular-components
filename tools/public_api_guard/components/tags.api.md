@@ -207,7 +207,7 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected elementRef: ElementRef<HTMLElement>;
+    readonly elementRef: ElementRef<HTMLElement>;
     get empty(): boolean;
     errorStateMatcher: ErrorStateMatcher;
     focus(): void;

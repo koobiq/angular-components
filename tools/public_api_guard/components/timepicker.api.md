@@ -53,6 +53,8 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
+    // (undocumented)
+    readonly elementRef: ElementRef;
     get empty(): boolean;
     // (undocumented)
     readonly errorState: boolean;

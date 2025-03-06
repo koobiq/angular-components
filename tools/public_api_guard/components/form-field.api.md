@@ -70,10 +70,10 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     get disabled(): boolean;
     // (undocumented)
     elementRef: ElementRef;
+    focus(options?: FocusOptions): void;
     // (undocumented)
     get focusOrigin(): FocusOrigin;
-    // (undocumented)
-    focusViaKeyboard(): void;
+    focusViaKeyboard(options?: FocusOptions): void;
     getConnectedOverlayOrigin(): ElementRef;
     // (undocumented)
     get hasCleaner(): boolean;
@@ -142,6 +142,7 @@ export class KbqFormFieldBase {
 export abstract class KbqFormFieldControl<T> {
     readonly controlType?: string;
     readonly disabled: boolean;
+    readonly elementRef: ElementRef<HTMLElement>;
     readonly empty: boolean;
     readonly errorState: boolean;
     abstract focus(options?: FocusOptions): void;

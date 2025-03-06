@@ -39,7 +39,7 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected elementRef: ElementRef;
+    readonly elementRef: ElementRef;
     get empty(): boolean;
     errorStateMatcher: ErrorStateMatcher;
     focus(): void;
