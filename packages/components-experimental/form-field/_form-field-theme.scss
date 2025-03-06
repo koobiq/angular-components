@@ -39,20 +39,23 @@
             }
         }
 
-        &.kbq-form-field_focused {
-            @include kbq-form-field-state(states-focused);
+        &.cdk-focused {
+            &:not(.kbq-form-field-type-select, .kbq-form-field_invalid),
+            &.kbq-form-field-type-select.cdk-keyboard-focused {
+                @include kbq-form-field-state(states-focused);
 
-            & .kbq-form-field__container {
-                box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+                & .kbq-form-field__container {
+                    box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+                }
+            }
+
+            &.kbq-form-field_invalid .kbq-form-field__container {
+                box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
             }
         }
 
         &.kbq-form-field_invalid {
             @include kbq-form-field-state(states-error);
-
-            &.kbq-form-field_focused .kbq-form-field__container {
-                box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
-            }
         }
 
         &.kbq-form-field_disabled {

@@ -217,7 +217,7 @@ export class KbqInput
     private inputValueAccessor: { value: any };
 
     constructor(
-        protected elementRef: ElementRef,
+        public readonly elementRef: ElementRef,
         @Optional() @Self() ngControl: NgControl,
         @Optional() @Self() public numberInput: KbqNumberInput,
         @Optional() parentForm: NgForm,
