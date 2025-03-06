@@ -2,12 +2,10 @@ import { Component, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
+import { createMouseEvent, dispatchEvent } from '@koobiq/cdk/testing';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTextarea, KbqTextareaModule } from './index';
-
-const MIN_TEXTAREA_HEIGHT = 50;
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -76,19 +74,6 @@ class KbqTextareaWithMonospace {
     `
 })
 class KbqTextareaForBehaviors {
-    value: string = 'test\ntest\ntest';
-    placeholder: string;
-    disabled: boolean = false;
-}
-
-@Component({
-    template: `
-        <kbq-form-field>
-            <textarea [(ngModel)]="value" [canGrow]="false" kbqTextarea></textarea>
-        </kbq-form-field>
-    `
-})
-class KbqTextareaGrowOff {
     value: string = 'test\ntest\ntest';
     placeholder: string;
     disabled: boolean = false;
@@ -205,93 +190,5 @@ describe('KbqTextarea', () => {
 
             expect(formFieldElement.classList.contains('kbq-form-field_without-borders')).toBe(true);
         });
-    });
-
-    describe('grow', () => {
-        // TODO Expected pixels
-        xit('should grow initially', fakeAsync(() => {
-            const fixture = createComponent(KbqTextareaForBehaviors);
-            fixture.detectChanges();
-
-            tick();
-
-            const textareaElement = fixture.debugElement.query(By.directive(KbqTextarea)).nativeElement;
-
-            expect(textareaElement.getBoundingClientRect().height).toBeGreaterThan(MIN_TEXTAREA_HEIGHT);
-        }));
-
-        // TODO Expected pixels
-        xit('should grow on input', fakeAsync(() => {
-            const fixture = createComponent(KbqTextareaForBehaviors);
-            fixture.componentInstance.value = 'test\ntest';
-            fixture.detectChanges();
-
-            tick();
-
-            const textareaElement = fixture.debugElement.query(By.directive(KbqTextarea)).nativeElement;
-
-            const firstSize = textareaElement.getBoundingClientRect().height;
-
-            expect(firstSize).toBeGreaterThan(MIN_TEXTAREA_HEIGHT);
-
-            textareaElement.value = 'test\ntest\ntest\ntest\ntest\ntest';
-            dispatchFakeEvent(textareaElement, 'input');
-
-            fixture.detectChanges();
-
-            tick();
-
-            const secondSize = textareaElement.getBoundingClientRect().height;
-
-            expect(firstSize).toBeLessThan(secondSize);
-        }));
-
-        // TODO Expected pixels
-        xit('should grow on input', fakeAsync(() => {
-            const fixture = createComponent(KbqTextareaForBehaviors);
-            fixture.componentInstance.value = 'test\ntest\ntest\ntest\ntest\ntest';
-            fixture.detectChanges();
-
-            tick();
-
-            const textareaElement = fixture.debugElement.query(By.directive(KbqTextarea)).nativeElement;
-
-            const firstSize = textareaElement.getBoundingClientRect().height;
-
-            expect(firstSize).toBeGreaterThan(MIN_TEXTAREA_HEIGHT);
-
-            textareaElement.value = 'test\ntest';
-            dispatchFakeEvent(textareaElement, 'input');
-
-            fixture.detectChanges();
-
-            tick();
-
-            const secondSize = textareaElement.getBoundingClientRect().height;
-
-            expect(firstSize).toBeGreaterThan(secondSize);
-        }));
-
-        it('should have the class when glow is off', fakeAsync(() => {
-            const fixture = createComponent(KbqTextareaGrowOff);
-            fixture.detectChanges();
-
-            tick();
-
-            const textareaElement = fixture.debugElement.query(By.directive(KbqTextarea)).nativeElement;
-
-            expect(textareaElement.classList.contains('kbq-textarea-resizable')).toBeTruthy();
-        }));
-
-        it('should not have the class when glow is on', fakeAsync(() => {
-            const fixture = createComponent(KbqTextareaForBehaviors);
-            fixture.detectChanges();
-
-            tick();
-
-            const textareaElement = fixture.debugElement.query(By.directive(KbqTextarea)).nativeElement;
-
-            expect(textareaElement.classList.contains('kbq-textarea-resizable')).toBeFalsy();
-        }));
     });
 });
