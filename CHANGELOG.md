@@ -1,3 +1,12 @@
+# 18.18.0 (2025-03-06)
+
+### Koobiq
+
+ * bug fix  **docs:** manual installation guide rewritten ([#DS-3415](https://github.com/koobiq/angular-components/issues/issue/DS-3415)) ([#560](https://github.com/koobiq/angular-components/issues/560)) ([434a285](https://github.com/koobiq/angular-components/commit/434a2854495fc09461581a601bd4cf053deb4fb0))
+ * bug fix  **docs:** non-blocking CI steps on error ([#DS-3404](https://github.com/koobiq/angular-components/issues/issue/DS-3404)) ([#561](https://github.com/koobiq/angular-components/issues/561)) ([ad07386](https://github.com/koobiq/angular-components/commit/ad073860196c796f3095ddc3267fde6166eea994))
+ * bug fix  **overflow-items:** infinite visibility update ([#DS-3450](https://github.com/koobiq/angular-components/issues/issue/DS-3450)) ([#567](https://github.com/koobiq/angular-components/issues/567)) ([9d17df5](https://github.com/koobiq/angular-components/commit/9d17df5f80a739e0058d0519a131c5ae8577fff0))
+ * feature  **docs:** added examples for kbq-select-trigger and kbq-select-matcher ([#DS-3397](https://github.com/koobiq/angular-components/issues/issue/DS-3397), [#DS-3393](https://github.com/koobiq/angular-components/issues/issue/DS-3393)) ([#563](https://github.com/koobiq/angular-components/issues/563)) ([c2eaced](https://github.com/koobiq/angular-components/commit/c2eaced215e2b46a02d1054c8668d595c475ef83))
+
 # 18.17.0 (2025-03-03)
 
 ### Koobiq
