@@ -25,6 +25,7 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
@@ -36,11 +37,19 @@ export type KbqBreadcrumbsConfiguration = {
      */
     max: number | null;
     size: KbqDefaultSizes;
+    /**
+     * Manages breadcrumb items when space is limited:
+     * - `auto`: Adjusts based on space and item count.
+     * - `wrap`: Moves items to the next line if needed.
+     * - `none`: Prevents wrapping, allowing overflow.
+     */
+    wrapMode: 'auto' | 'wrap' | 'none';
 };
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
-    size: 'normal'
+    size: 'normal',
+    wrapMode: 'auto'
 };
 
 /** Breadcrumbs options global configuration provider. */
@@ -155,13 +164,15 @@ export class KbqBreadcrumbItem {
         KbqBreadcrumbButton,
         RdxRovingFocusGroupDirective,
         RdxRovingFocusItemDirective,
-        KbqTitleModule
+        KbqTitleModule,
+        KbqOverflowItemsModule
     ],
     host: {
         class: 'kbq-breadcrumbs',
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
+        '[class.kbq-breadcrumbs_wrap]': 'wrapMode === "wrap"',
         '[attr.aria-label]': "'breadcrumb'"
     },
     // @TODO add support for Home,End keys interaction  (#DS-3334)
@@ -185,6 +196,10 @@ export class KbqBreadcrumbs implements AfterContentInit {
      * When disabled, user interactions are blocked.
      */
     @Input({ transform: booleanAttribute }) disabled: boolean = false;
+    /**
+     * Wrapping behavior of the breadcrumb items.
+     */
+    @Input() wrapMode: KbqBreadcrumbsConfiguration['wrapMode'] = this.configuration.wrapMode;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     protected readonly separator?: TemplateRef<any>;
@@ -204,20 +219,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-
-    /** @docs-private */
-    protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null || this.max <= this.minVisibleItems) return [];
-        const visibleItemsCount = this.max - this.minVisibleItems;
-        return this.items.toArray().slice(1, -visibleItemsCount);
-    }
-
-    /** @docs-private */
-    protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null || this.max <= this.minVisibleItems) return [];
-        const visibleItemsCount = this.max - this.minVisibleItems;
-        return this.items.toArray().slice(-visibleItemsCount);
-    }
 
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
