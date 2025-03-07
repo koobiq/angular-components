@@ -48,7 +48,6 @@ export class KbqError extends KbqHint {
 // @public
 export class KbqFormField implements AfterContentInit {
     constructor();
-    // (undocumented)
     canCleanerClearByEsc: boolean;
     get control(): KbqFormFieldControl<unknown>;
     get disabled(): boolean;
