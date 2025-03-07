@@ -1,4 +1,4 @@
-import { KbqCodeBlockLocaleConfiguration } from './types';
+import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
 
 export const faIRLocaleData = {
     select: { hiddenItemsText: '{{ number }} بیشتر' },
@@ -40,5 +40,8 @@ export const faIRLocaleData = {
     } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: ' شهر یا منطقه زمانی '
-    }
+    },
+    actionsPanel: {
+        closeTooltip: 'إلغاء التحديد'
+    } satisfies KbqActionsPanelLocaleConfiguration
 };

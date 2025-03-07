@@ -49,6 +49,18 @@
 		<loc>https://koobiq.io/ru/components/alert/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/actions-panel/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/actions-panel/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/actions-panel/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/actions-panel/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/accordion/overview</loc>
 	</url>
 	<url>
@@ -83,6 +95,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/badge/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/breadcrumbs/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/breadcrumbs/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/breadcrumbs/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/breadcrumbs/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/button/overview</loc>
@@ -337,6 +361,18 @@
 		<loc>https://koobiq.io/ru/components/navbar/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/overflow-items/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/overflow-items/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/overflow-items/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/overflow-items/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/popover/overview</loc>
 	</url>
 	<url>
@@ -575,6 +611,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/tooltip/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/top-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/top-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/top-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/top-bar/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/tree/overview</loc>
