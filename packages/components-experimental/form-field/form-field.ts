@@ -121,6 +121,9 @@ export class KbqFormField implements AfterContentInit {
     @ContentChildren(KbqPrefix) private readonly prefix: QueryList<KbqPrefix>;
     @ContentChildren(KbqError) private readonly error: QueryList<KbqError>;
 
+    /**
+     * @docs-private
+     */
     canCleanerClearByEsc: boolean = true;
 
     /** The form field's control. */
@@ -131,12 +134,20 @@ export class KbqFormField implements AfterContentInit {
         return this._control;
     }
 
-    /** Whether the form field control is focused. */
+    /**
+     * Whether the form field control is focused.
+     *
+     * @docs-private
+     */
     get focused(): boolean {
         return !!this.control?.focused;
     }
 
-    /** Whether the form field is hovered. */
+    /**
+     * Whether the form field is hovered.
+     *
+     * @docs-private
+     */
     get hovered(): boolean {
         return !!this._hovered;
     }
@@ -146,47 +157,83 @@ export class KbqFormField implements AfterContentInit {
         return !!this.control?.errorState;
     }
 
-    /** Checks whether the form-field contains kbq-hint */
+    /**
+     * Whether the form-field contains kbq-hint.
+     *
+     * @docs-private
+     */
     get hasHint(): boolean {
         return this.hint?.length > 0;
     }
 
-    /** Checks whether the form-field contains kbq-password-hint */
+    /**
+     * Whether the form-field contains kbq-password-hint.
+     *
+     * @docs-private
+     */
     get hasPasswordHint(): boolean {
         return this.passwordHint?.length > 0;
     }
 
-    /** Checks whether the form-field contains kbq-password-toggle */
+    /**
+     * Whether the form-field contains kbq-password-toggle.
+     *
+     * @docs-private
+     */
     get hasPasswordToggle(): boolean {
         return !!this.passwordToggle;
     }
 
-    /** Checks whether the form-field contains kbq-label */
+    /**
+     * Whether the form-field contains kbq-label.
+     *
+     * @docs-private
+     */
     get hasLabel(): boolean {
         return !!this.label;
     }
 
-    /** Checks whether the form-field contains kbqSuffix */
+    /**
+     * Whether the form-field contains kbqSuffix.
+     *
+     * @docs-private
+     */
     get hasSuffix(): boolean {
         return this.suffix?.length > 0;
     }
 
-    /** Checks whether the form-field contains kbqPrefix */
+    /**
+     * Whether the form-field contains kbqPrefix.
+     *
+     * @docs-private
+     */
     get hasPrefix(): boolean {
         return this.prefix?.length > 0;
     }
 
-    /** Checks whether the form-field contains kbq-cleaner */
+    /**
+     * Whether the form-field contains kbq-cleaner.
+     *
+     * @docs-private
+     */
     get hasCleaner(): boolean {
         return !!this.cleaner;
     }
 
-    /** Checks whether the form-field contains kbq-stepper */
+    /**
+     * Whether the form-field contains kbq-stepper.
+     *
+     * @docs-private
+     */
     get hasStepper(): boolean {
         return !!this.stepper;
     }
 
-    /** Checks whether the form-field contains kbq-error */
+    /**
+     * Whether the form-field contains kbq-error.
+     *
+     * @docs-private
+     */
     get hasError(): boolean {
         return this.error.length > 0;
     }
@@ -223,7 +270,11 @@ export class KbqFormField implements AfterContentInit {
         }
     }
 
-    /** Handles keydown events. */
+    /**
+     * Handles keydown events.
+     *
+     * @docs-private
+     */
     protected onKeyDown(event: KeyboardEvent): void {
         // @TODO should move into KbqPasswordToggle (#DS-2910)
         if (this.control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
@@ -236,12 +287,20 @@ export class KbqFormField implements AfterContentInit {
         }
     }
 
-    /** Handles mouseenter events. */
+    /**
+     * Handles mouseenter events.
+     *
+     * @docs-private
+     */
     protected mouseenter(_event: MouseEvent): void {
         this._hovered = true;
     }
 
-    /** Handles mouseleave events. */
+    /**
+     * Handles mouseleave events.
+     *
+     * @docs-private
+     */
     protected mouseleave(_event: MouseEvent): void {
         this._hovered = false;
     }
@@ -255,6 +314,8 @@ export class KbqFormField implements AfterContentInit {
 
     /**
      * Determines whether a class from the AbstractControlDirective should be forwarded to the host element.
+     *
+     * @docs-private
      */
     protected shouldBeForwarded(property: keyof AbstractControlDirective): boolean {
         return this.control.ngControl?.[property];

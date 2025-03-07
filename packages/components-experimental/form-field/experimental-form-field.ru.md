@@ -21,15 +21,15 @@
 
 Следующие компоненты предназначены для работы внутри `<kbq-form-field>` компонента:
 
--   [Autocomplete](https://koobiq.io/components/autocomplete/overview);
--   [Input](https://koobiq.io/components/input/overview);
--   [Select](https://koobiq.io/components/select/overview);
--   [Tag autocomplete](https://koobiq.io/components/tag-autocomplete/overview);
--   [Tag input](https://koobiq.io/components/tag-input/overview);
--   [Textarea](https://koobiq.io/components/textarea/overview);
--   [Timepicker](https://koobiq.io/components/timepicker/overview);
--   [Timezone](https://koobiq.io/components/timezone/overview);
--   [Tree select](https://koobiq.io/components/tree-select/overview);
+-   [Autocomplete](https://koobiq.io/ru/components/autocomplete/overview);
+-   [Input](https://koobiq.io/ru/components/input/overview);
+-   [Select](https://koobiq.io/ru/components/select/overview);
+-   [Tag autocomplete](https://koobiq.io/ru/components/tag-autocomplete/overview);
+-   [Tag input](https://koobiq.io/ru/components/tag-input/overview);
+-   [Textarea](https://koobiq.io/ru/components/textarea/overview);
+-   [Timepicker](https://koobiq.io/ru/components/timepicker/overview);
+-   [Timezone](https://koobiq.io/ru/components/timezone/overview);
+-   [Tree select](https://koobiq.io/ru/components/tree-select/overview);
 
 ### Лейбл
 
@@ -78,7 +78,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 <!-- example(form-field-with-custom-error-state-matcher-set-by-attribute) -->
 
-Для всех полей, при помощи _Dependency Injection_ c использованием `ErrorStateMatcher` токена:
+Для всех полей, при помощи `ErrorStateMatcher` токена:
 
 <!-- example(form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
 
@@ -103,7 +103,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 <!-- example(form-field-without-borders) -->
 
-Для всех полей, при помощи _Dependency Injection_ c использованием `KBQ_FORM_FIELD_DEFAULT_OPTIONS` токена:
+Для всех полей, при помощи `KBQ_FORM_FIELD_DEFAULT_OPTIONS` токена:
 
 ```ts
 import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components-experimental/form-field';
