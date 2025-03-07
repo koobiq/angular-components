@@ -181,7 +181,7 @@ export class ExampleTable {
             container-type: inline-size;
         }
 
-        @container (width < 790px) {
+        @container (width < 495px) {
             .example-counter,
             .example-counter + .example-divider-vertical {
                 display: none;
@@ -224,11 +224,8 @@ export class ExampleActionsPanel {
 
     readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
-        { id: 'Status', icon: 'kbq-arrow-right-s_16' },
-        { id: 'Verdict', icon: 'kbq-question-circle_16' },
-        { id: 'Link to incident', icon: 'kbq-link_16', divider: true },
-        { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16', divider: true },
-        { id: 'Remove', icon: 'kbq-trash_16' }
+        { id: 'Link to incident', icon: 'kbq-link_16' },
+        { id: 'Remove', icon: 'kbq-trash_16', divider: true }
     ];
 
     onAction(action: ExampleAction): void {
@@ -279,7 +276,8 @@ export class ActionsPanelOverviewExample {
 
         this.actionsPanelRef = this.actionsPanel.open(ExampleActionsPanel, {
             width: '100%',
-            maxWidth: 851,
+            minWidth: 106,
+            maxWidth: 568,
             data: this.data,
             overlayContainer: this.elementRef
         });

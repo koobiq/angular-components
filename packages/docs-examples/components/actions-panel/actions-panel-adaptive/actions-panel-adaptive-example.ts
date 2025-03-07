@@ -35,43 +35,41 @@ type ExampleAction = {
         <button (click)="open()" kbq-button>open</button>
 
         <ng-template let-data>
-            <div class="example-container">
-                <div class="example-counter">Selected: {{ data.length }}</div>
-                <kbq-divider class="example-divider-vertical" [vertical]="true" />
-                <kbq-overflow-items>
-                    @for (action of actions; track action.id; let first = $first) {
-                        <button
-                            *kbqOverflowItem="action.id"
-                            [class.layout-margin-left-xxs]="!first"
-                            (click)="onAction(action)"
-                            color="contrast"
-                            kbq-button
-                        >
-                            <i [class]="action.icon" kbq-icon></i>
-                            {{ action.id }}
-                        </button>
-                    }
-                    <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
-                        <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
-                            <i kbq-icon="kbq-ellipsis-vertical_16"></i>
-                        </button>
+            <div class="example-counter">Selected: {{ data.length }}</div>
+            <kbq-divider class="example-divider-vertical" [vertical]="true" />
+            <kbq-overflow-items>
+                @for (action of actions; track action.id; let first = $first) {
+                    <button
+                        *kbqOverflowItem="action.id"
+                        [class.layout-margin-left-xxs]="!first"
+                        (click)="onAction(action)"
+                        color="contrast"
+                        kbq-button
+                    >
+                        <i [class]="action.icon" kbq-icon></i>
+                        {{ action.id }}
+                    </button>
+                }
+                <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+                    <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
+                        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                    </button>
 
-                        <kbq-dropdown #dropdown="kbqDropdown">
-                            <div class="example-counter-dropdown">Selected: {{ data.length }}</div>
-                            <kbq-divider />
+                    <kbq-dropdown #dropdown="kbqDropdown">
+                        <div class="example-counter-dropdown">Selected: {{ data.length }}</div>
+                        <kbq-divider />
 
-                            @for (action of actions; track action.id; let index = $index) {
-                                @if (hiddenItemIDs.has(action.id)) {
-                                    <button (click)="onAction(action)" kbq-dropdown-item>
-                                        <i [class]="action.icon" kbq-icon></i>
-                                        {{ action.id }}
-                                    </button>
-                                }
+                        @for (action of actions; track action.id; let index = $index) {
+                            @if (hiddenItemIDs.has(action.id)) {
+                                <button (click)="onAction(action)" kbq-dropdown-item>
+                                    <i [class]="action.icon" kbq-icon></i>
+                                    {{ action.id }}
+                                </button>
                             }
-                        </kbq-dropdown>
-                    </ng-template>
-                </kbq-overflow-items>
-            </div>
+                        }
+                    </kbq-dropdown>
+                </ng-template>
+            </kbq-overflow-items>
         </ng-template>
     `,
     styles: `
@@ -82,17 +80,11 @@ type ExampleAction = {
             height: 64px;
             resize: horizontal;
             max-width: 100%;
-            min-width: 96px;
+            min-width: 110px;
             overflow: hidden;
-        }
-
-        .example-container {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
             container-type: inline-size;
 
-            @container (width < 422px) {
+            @container (width < 498px) {
                 .example-counter,
                 .example-counter + .example-divider-vertical {
                     display: none;
@@ -148,7 +140,8 @@ export class ExampleActionsPanel {
     open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             width: '100%',
-            maxWidth: 486,
+            maxWidth: 498,
+            minWidth: 106,
             data: { length: 5 },
             overlayContainer: this.elementRef
         });
@@ -177,13 +170,13 @@ export class ExampleActionsPanel {
     selector: 'actions-panel-adaptive-example',
     template: `
         <div>First, the number of records is hidden</div>
-        <example-actions-panel [style.width.px]="378" />
+        <example-actions-panel [style.width.px]="395" />
 
         <div>Then, the actions are hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="313" />
+        <example-actions-panel [style.width.px]="329" />
 
         <div>Everything is hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="96" />
+        <example-actions-panel [style.width.px]="106" />
     `,
     styles: `
         div {

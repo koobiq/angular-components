@@ -24,16 +24,6 @@
         height: var(--kbq-actions-panel-vertical-divider-height) !important;
         margin: var(--kbq-actions-panel-vertical-divider-margin);
     }
-
-    .kbq-actions-panel-container__close-button {
-        margin-left: var(--kbq-size-xxs);
-        margin-right: 0;
-    }
-
-    &.kbq-actions-panel-container_rtl .kbq-actions-panel-container__close-button {
-        margin-left: 0;
-        margin-right: var(--kbq-size-xxs);
-    }
 }
 
 .kbq-actions-panel-overlay-container {

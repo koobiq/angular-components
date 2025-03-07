@@ -80,7 +80,7 @@ export class ActionsPanelCloseExample {
 
     open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
-            width: '333px',
+            minWidth: 346,
             data: { length: 3 },
             overlayContainer: this.elementRef
         });
