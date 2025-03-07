@@ -333,7 +333,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                         ru: 'Filter Bar',
                         en: 'Filter Bar'
                     },
-                    svgPreview: '',
+                    svgPreview: 'filter-bar',
                     hasApi: true,
                     apiId: 'filter-bar',
                     hasExamples: true
