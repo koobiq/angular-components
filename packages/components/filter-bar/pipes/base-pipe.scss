@@ -23,7 +23,10 @@
         @include common.kbq-truncate-line();
 
         flex: 1 1 auto;
-        margin-left: 4px;
+
+        &:not(.kbq-pipe__value_empty) {
+            margin-left: 4px;
+        }
     }
 
     .kbq-pipe__separator {
