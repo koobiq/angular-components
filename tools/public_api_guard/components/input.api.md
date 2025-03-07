@@ -73,7 +73,7 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected elementRef: ElementRef;
+    readonly elementRef: ElementRef;
     get empty(): boolean;
     errorStateMatcher: ErrorStateMatcher;
     focus(): void;
@@ -167,7 +167,7 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
-    protected elementRef: ElementRef;
+    readonly elementRef: ElementRef;
     // (undocumented)
     elementType: string;
     get empty(): boolean;
@@ -218,6 +218,8 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     get disabled(): boolean;
     set disabled(value: boolean);
     disabledChange: EventEmitter<boolean>;
+    // (undocumented)
+    readonly elementRef: ElementRef;
     // (undocumented)
     empty: boolean;
     // (undocumented)

@@ -351,7 +351,7 @@ export class KbqTagList
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
-        protected elementRef: ElementRef<HTMLElement>,
+        public readonly elementRef: ElementRef<HTMLElement>,
         private changeDetectorRef: ChangeDetectorRef,
         defaultErrorStateMatcher: ErrorStateMatcher,
         @Optional() private dir: Directionality,

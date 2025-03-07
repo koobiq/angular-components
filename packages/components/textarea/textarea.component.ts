@@ -185,7 +185,7 @@ export class KbqTextarea
     private minHeight: number = 0;
 
     constructor(
-        protected elementRef: ElementRef,
+        public readonly elementRef: ElementRef,
         @Optional() @Self() ngControl: NgControl,
         @Optional() parentForm: NgForm,
         @Optional() parentFormGroup: FormGroupDirective,

@@ -1,3 +1,4 @@
+import { ElementRef } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 
@@ -5,6 +6,9 @@ import { Observable } from 'rxjs';
 export abstract class KbqFormFieldControl<T> {
     /** The value of the control. */
     value: T | null;
+
+    /** The ElementRef of the control. */
+    readonly elementRef: ElementRef<HTMLElement>;
 
     /**
      * Stream that emits whenever the state of the control changes such that the parent `KbqFormField`

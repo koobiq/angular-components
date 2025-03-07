@@ -38,7 +38,7 @@ exports[`KbqFormField should display kbq-error 1`] = `
 DebugElement {
   "nativeNode": <kbq-error
     class="kbq-hint___EXPERIMENTAL kbq-error"
-    id="kbq-hint-3"
+    id="test-error-id"
   >
     <span
       class="kbq-hint__text"
@@ -53,7 +53,7 @@ exports[`KbqFormField should display kbq-hint 1`] = `
 DebugElement {
   "nativeNode": <kbq-hint
     class="kbq-hint___EXPERIMENTAL"
-    id="kbq-hint-0"
+    id="test-hint-id"
   >
     <span
       class="kbq-hint__text"
@@ -68,7 +68,7 @@ exports[`KbqFormField should display kbq-label 1`] = `
 DebugElement {
   "nativeNode": <kbq-label
     class="kbq-label___EXPERIMENTAL"
-    id="kbq-label-0"
+    id="test-label-id"
   >
     Label
   </kbq-label>,
@@ -79,7 +79,7 @@ exports[`KbqFormField should display kbq-password-hint error for invalid passwor
 DebugElement {
   "nativeNode": <kbq-password-hint
     class="kbq-password-hint___EXPERIMENTAL kbq-hint___EXPERIMENTAL kbq-hint_fill-text-off kbq-error"
-    id="kbq-hint-36"
+    id="test-password-hint-id"
   >
     <i
       class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
@@ -100,7 +100,7 @@ exports[`KbqFormField should display kbq-password-hint initially 1`] = `
 DebugElement {
   "nativeNode": <kbq-password-hint
     class="kbq-password-hint___EXPERIMENTAL kbq-hint___EXPERIMENTAL kbq-contrast-fade kbq-hint_fill-text-off"
-    id="kbq-hint-35"
+    id="test-password-hint-id"
   >
     <i
       class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
@@ -121,7 +121,7 @@ exports[`KbqFormField should display kbq-password-hint success for valid passwor
 DebugElement {
   "nativeNode": <kbq-password-hint
     class="kbq-password-hint___EXPERIMENTAL kbq-hint___EXPERIMENTAL kbq-hint_fill-text-off kbq-success"
-    id="kbq-hint-37"
+    id="test-password-hint-id"
   >
     <i
       class="kbq kbq-icon kbq-empty kbq-check-s_16"

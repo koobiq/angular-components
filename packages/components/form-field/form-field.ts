@@ -221,8 +221,14 @@ export class KbqFormField
         this.changeDetectorRef.detectChanges();
     }
 
-    focusViaKeyboard(): void {
-        this.control.focus();
+    /** Focuses the control. */
+    focus(options?: FocusOptions): void {
+        this.control.focus(options);
+    }
+
+    /** Focuses the control via keyboard. */
+    focusViaKeyboard(options?: FocusOptions): void {
+        this.focusMonitor.focusVia(this.control.elementRef, 'keyboard', options);
     }
 
     clearValue($event) {

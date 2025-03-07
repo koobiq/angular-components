@@ -225,7 +225,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     private valueFromPaste: number | null;
 
     constructor(
-        private elementRef: ElementRef,
+        public readonly elementRef: ElementRef,
         private readonly renderer: Renderer2,
         @Attribute('step') step: string,
         @Attribute('big-step') bigStep: string,
