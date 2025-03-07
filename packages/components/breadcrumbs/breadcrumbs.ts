@@ -25,6 +25,7 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
@@ -163,7 +164,8 @@ export class KbqBreadcrumbItem {
         KbqBreadcrumbButton,
         RdxRovingFocusGroupDirective,
         RdxRovingFocusItemDirective,
-        KbqTitleModule
+        KbqTitleModule,
+        KbqOverflowItemsModule
     ],
     host: {
         class: 'kbq-breadcrumbs',
@@ -217,20 +219,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-
-    /** @docs-private */
-    protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null || this.max <= this.minVisibleItems) return [];
-        const visibleItemsCount = this.max - this.minVisibleItems;
-        return this.items.toArray().slice(1, -visibleItemsCount);
-    }
-
-    /** @docs-private */
-    protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null || this.max <= this.minVisibleItems) return [];
-        const visibleItemsCount = this.max - this.minVisibleItems;
-        return this.items.toArray().slice(-visibleItemsCount);
-    }
 
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());

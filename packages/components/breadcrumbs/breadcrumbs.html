@@ -15,35 +15,39 @@
     <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
     <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
-    <!-- @TODO delay rendering for proper elements order (#DS-3334)--->
-    @if (true) {
-        <button
-            kbq-button
-            kbqBreadcrumb
-            class="kbq-breadcrumb__expand"
-            [kbqDropdownTriggerFor]="hiddenBreadcrumbsDropdown"
-            [kbqStyle]="KbqButtonStyles.Transparent"
-            [openByArrowDown]="false"
-        >
-            <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>
-        </button>
-        <ng-container [ngTemplateOutlet]="separatorTemplate" />
-
-        <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
-            @for (item of hiddenBreadcrumbItems; track item) {
-                <a class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
-                    <button kbq-dropdown-item [disabled]="item.disabled">{{ item.text }}</button>
-                </a>
-            }
-        </kbq-dropdown>
-    }
-
-    @for (item of visibleBreadcrumbItems; track item; let last = $last) {
-        <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
-        @if (!last) {
+    <kbq-overflow-items reverseOverflowOrder>
+        <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+            <button
+                kbq-button
+                kbqBreadcrumb
+                class="kbq-breadcrumb__expand"
+                [kbqDropdownTriggerFor]="hiddenBreadcrumbsDropdown"
+                [kbqStyle]="KbqButtonStyles.Transparent"
+                [openByArrowDown]="false"
+            >
+                <i kbq-icon="kbq-ellipsis-horizontal_16" [color]="KbqComponentColors.ContrastFade"></i>
+            </button>
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
+
+            <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
+                @for (item of items; track item) {
+                    @if (hiddenItemIDs.has($index)) {
+                        <a class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
+                            <button kbq-dropdown-item [disabled]="item.disabled">{{ item.text }}</button>
+                        </a>
+                    }
+                }
+            </kbq-dropdown>
+        </ng-template>
+        @for (item of items.toArray().slice(1); track item; let last = $last) {
+            <ng-container *kbqOverflowItem="$index + 1">
+                <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
+                @if (!last) {
+                    <ng-container [ngTemplateOutlet]="separatorTemplate" />
+                }
+            </ng-container>
         }
-    }
+    </kbq-overflow-items>
 }
 
 <ng-template #breadcrumbTemplate let-item let-last="last">
