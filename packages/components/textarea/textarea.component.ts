@@ -15,6 +15,7 @@ import {
     OnDestroy,
     OnInit,
     Optional,
+    Renderer2,
     Self
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
@@ -75,6 +76,7 @@ export class KbqTextarea
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
     protected readonly isBrowser = inject(Platform).isBrowser;
+    protected readonly renderer = inject(Renderer2);
 
     @Input() canGrow: boolean = true;
 
@@ -263,14 +265,19 @@ export class KbqTextarea
 
         this.ngZone.runOutsideAngular(() => {
             const textarea = this.elementRef.nativeElement;
+            const clone = textarea.cloneNode(false);
+            this.renderer.appendChild(this.renderer.parentNode(textarea), clone);
 
             const outerHeight = parseInt(getComputedStyle(textarea).height!, 10);
-            const diff = outerHeight - textarea.clientHeight;
+            const diff = outerHeight - +textarea.clientHeight;
 
-            textarea.style.minHeight = 0; // this line is important to height recalculation
+            clone.style.minHeight = 0; // this line is important to height recalculation
 
-            const height = Math.max(this.minHeight, +textarea.scrollHeight + diff + this.freeRowsHeight);
+            const height = Math.max(this.minHeight, +clone.scrollHeight + diff + this.freeRowsHeight);
+
             textarea.style.minHeight = `${height}px`;
+
+            clone.remove();
         });
     };
 
