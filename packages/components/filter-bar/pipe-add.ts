@@ -1,5 +1,14 @@
 import { NgClass } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    Output,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqOptionModule, KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -38,6 +47,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
             }
         </kbq-select>
     `,
+    styleUrl: 'pipe-add.scss',
     host: {
         class: 'kbq-pipe-add'
     },
@@ -50,7 +60,9 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
         KbqSelectMatcher,
         KbqSelectModule,
         NgClass
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeAdd {
     protected readonly filterBar = inject(KbqFilterBar);
