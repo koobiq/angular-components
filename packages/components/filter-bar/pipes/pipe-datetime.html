@@ -12,7 +12,9 @@
     (kbqPopoverVisibleChange)="list = true"
 >
     <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
-    <span #kbqTitleText class="kbq-pipe__value">{{ formattedValue }}</span>
+    <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
+        {{ formattedValue }}
+    </span>
 </button>
 
 @if (showRemoveButton) {

@@ -18,7 +18,9 @@
     >
         <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
         @if (select.triggerValues!.length === 1) {
-            <span #kbqTitleText class="kbq-pipe__value">{{ select.triggerValue }}</span>
+            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
+                {{ select.triggerValue }}
+            </span>
         } @else if (select.triggerValues!.length > 1) {
             <kbq-badge [badgeColor]="'contrast'" [compact]="true">
                 {{ select.triggerValues!.length }}

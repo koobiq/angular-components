@@ -17,7 +17,14 @@
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
-        <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value">{{ select.triggerValue }}</span>
+        <span
+            #kbqTitleText
+            kbqPipeMinWidth
+            class="kbq-pipe__value"
+            [class.kbq-pipe__value_empty]="!select.triggerValue"
+        >
+            {{ select.triggerValue }}
+        </span>
     </button>
 
     @if (data.search) {

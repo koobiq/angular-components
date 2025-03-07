@@ -12,7 +12,9 @@
     [ngClass]="{ 'kbq-active': popover?.isOpen }"
 >
     <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
-    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value">{{ data.value }}</span>
+    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
+        {{ data.value }}
+    </span>
 </button>
 
 @if (showRemoveButton) {
