@@ -7,6 +7,10 @@
 
     max-height: 32px;
 
+    & .kbq-select .kbq-select__trigger {
+        height: unset;
+    }
+
     .kbq-button-wrapper {
         max-width: 320px;
     }
