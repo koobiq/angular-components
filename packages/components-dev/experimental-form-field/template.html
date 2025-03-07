@@ -1,3 +1,23 @@
+<button (click)="formFieldWithSelect.focus()">focus()</button>
+<button (click)="formFieldWithSelect.focusViaKeyboard()">focusViaKeyboard()</button>
+<span>focusOrigin: {{ formFieldWithSelect.focusOrigin }}</span>
+<kbq-form-field #formFieldWithSelect>
+    <kbq-select placeholder="Select">
+        <kbq-option value="1">Option</kbq-option>
+    </kbq-select>
+</kbq-form-field>
+
+<hr />
+
+<button (click)="formFieldWithInput.focus()">focus()</button>
+<button (click)="formFieldWithInput.focusViaKeyboard()">focusViaKeyboard()</button>
+<span>focusOrigin: {{ formFieldWithInput.focusOrigin }}</span>
+<kbq-form-field #formFieldWithInput>
+    <input kbqInput placeholder="input" />
+</kbq-form-field>
+
+<hr />
+
 <form-field-password-overview-example />
 
 <hr />
