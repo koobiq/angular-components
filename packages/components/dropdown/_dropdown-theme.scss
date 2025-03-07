@@ -1,5 +1,4 @@
-@use '../core/styles/theming/theming' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-dropdown-item-state($style-name) {
     background: var(--kbq-list-#{$style-name}-container-background);
@@ -7,10 +6,6 @@
 
     .kbq-icon:not(.kbq-icon-button, .kbq-icon-item) {
         color: var(--kbq-list-#{$style-name}-text-color);
-    }
-
-    .kbq-dropdown-item__caption {
-        color: var(--kbq-list-#{$style-name}-caption-color);
     }
 }
 
@@ -22,6 +17,10 @@
 
     .kbq-dropdown-item {
         @include kbq-dropdown-item-state(default);
+
+        .kbq-dropdown-item__caption {
+            color: var(--kbq-dropdown-item-caption-color);
+        }
 
         &.kbq-dropdown-item_highlighted,
         &:hover:not(.kbq-disabled) {
@@ -70,19 +69,19 @@
 @mixin kbq-dropdown-typography() {
     .kbq-dropdown-item,
     .kbq-dropdown__content {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-dropdown-item__caption {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 
     .kbq-dropdown__group-header {
-        @include kbq-typography-level-to-styles-css-variables(typography, big-strong);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, big-strong);
 
         // @deprecated, use <kbq-optgroup label="Label" /> instead. Will be removed in the next major release
         &.kbq-dropdown__group-header_small {
-            @include kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, caps-compact-strong);
         }
     }
 }
