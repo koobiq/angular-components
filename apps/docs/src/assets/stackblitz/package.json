@@ -21,7 +21,7 @@
         "@koobiq/cdk": "${version}",
         "@koobiq/components": "${version}",
         "@koobiq/components-experimental": "${version}",
-        "@koobiq/icons": "9.2.0",
+        "@koobiq/icons": "9.3.0",
         "@koobiq/angular-luxon-adapter": "${version}",
         "@koobiq/angular-moment-adapter": "${version}",
         "@koobiq/date-adapter": "^3.2.0",
