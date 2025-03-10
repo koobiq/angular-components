@@ -25,9 +25,7 @@ import { KbqFilters } from './filters';
 
             <ng-content select="kbq-pipe-add" />
 
-            @if (isChanged) {
-                <ng-content select="kbq-filter-reset" />
-            }
+            <ng-content select="kbq-filter-reset" />
         </div>
 
         <div class="kbq-filter-bar__right">

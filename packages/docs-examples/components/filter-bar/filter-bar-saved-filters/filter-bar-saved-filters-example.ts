@@ -31,7 +31,9 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset />
+            @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
+                <kbq-filter-reset />
+            }
 
             <kbq-filter-bar-search />
         </kbq-filter-bar>
@@ -229,6 +231,7 @@ export class FilterBarSavedFiltersExample {
         structuredClone(this.filters[2])
     ];
 
+    defaultFilter: KbqFilter | null = this.getDefaultFilter();
     activeFilter: KbqFilter | null = this.filters[0];
 
     pipeTemplates: KbqPipeTemplate[] = [
@@ -322,7 +325,7 @@ export class FilterBarSavedFiltersExample {
 
     onResetFilterChanges(filter: KbqFilter | null) {
         console.log('onResetFilterChanges: ');
-        const defaultFilter = structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
+        const defaultFilter = this.getSavedFilter(filter);
         this.filters.splice(
             this.filters.findIndex(({ name }) => name === filter?.name),
             1,
@@ -360,6 +363,10 @@ export class FilterBarSavedFiltersExample {
         this.activeFilter = filter;
 
         filterBar.filterSavedSuccessfully();
+    }
+
+    getSavedFilter(filter: KbqFilter | null): KbqFilter {
+        return structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
     }
 
     getDefaultFilter(): KbqFilter {

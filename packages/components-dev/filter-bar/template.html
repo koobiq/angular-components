@@ -1,6 +1,9 @@
-<!--<filter-bar-saved-filters-example />-->
-<!--<br />-->
-<!--<br />-->
+<filter-bar-overview-example />
+<br />
+<br />
+<filter-bar-saved-filters-example />
+<br />
+<br />
 <filter-bar-complete-functions-example />
 <br />
 <br />
@@ -13,6 +16,7 @@
         (onChangeFilter)="onChangeFilter($event)"
         (onDeleteFilter)="onDeleteFilter($event)"
         (onResetFilter)="onResetFilter($event)"
+        (onResetFilterChanges)="onResetFilterChanges($event)"
         (onSave)="onSaveFilter($event)"
         (onSaveAsNew)="onSaveAsNewFilter($event)"
         (onSelectFilter)="onSelectFilter($event)"
@@ -25,7 +29,9 @@
 
         <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-        <kbq-filter-reset />
+        @if (activeFilter !== defaultFilter) {
+            <kbq-filter-reset />
+        }
 
         <kbq-filter-bar-search (onSearch)="onSearch($event)" />
 

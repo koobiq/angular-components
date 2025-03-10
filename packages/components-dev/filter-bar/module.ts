@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, inject, NgModule, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    NgModule,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
@@ -17,7 +27,8 @@ import { DateTime } from 'luxon';
 import {
     FilterBarCompleteFunctionsExample,
     FilterBarOverviewExample,
-    FilterBarSavedFiltersExample
+    FilterBarSavedFiltersExample,
+    FilterBarSearchExample
 } from '../../docs-examples/components/filter-bar';
 
 @Component({
@@ -28,6 +39,7 @@ import {
 })
 export class DemoComponent implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     @ViewChild('filterBar') filterBar: KbqFilterBar;
     @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;
@@ -511,8 +523,28 @@ export class DemoComponent implements AfterViewInit {
             ]
         }
     ];
-    activeFilter: KbqFilter | null = this.filters[2];
     pipeTemplates: KbqPipeTemplate[];
+    defaultFilter: KbqFilter | null = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'required',
+                // required - не может быть пустым, всегда есть дефолтное значение
+                value: { name: 'Не определен', id: '1' },
+                type: KbqPipeTypes.Select,
+
+                required: true,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            }
+        ]
+    };
+    activeFilter: KbqFilter | null = this.defaultFilter;
 
     ngAfterViewInit(): void {
         this.pipeTemplates = [
@@ -652,7 +684,12 @@ export class DemoComponent implements AfterViewInit {
     }
 
     onResetFilter(filter: KbqFilter | null) {
-        console.log('filter to reset: ', filter);
+        this.activeFilter = this.defaultFilter;
+        console.log('onResetFilter: ', filter);
+    }
+
+    onResetFilterChanges(filter: KbqFilter | null) {
+        console.log('onResetFilterChanges: ', filter);
     }
 
     onDeleteFilter(filter: KbqFilter | null) {
@@ -676,6 +713,7 @@ export class DemoComponent implements AfterViewInit {
 @NgModule({
     declarations: [DemoComponent],
     imports: [
+        CommonModule,
         BrowserModule,
         BrowserAnimationsModule,
         KbqIconModule,
@@ -684,6 +722,7 @@ export class DemoComponent implements AfterViewInit {
         KbqButtonModule,
         KbqLuxonDateModule,
         FilterBarSavedFiltersExample,
+        FilterBarSearchExample,
         FilterBarOverviewExample,
         FilterBarCompleteFunctionsExample
     ],

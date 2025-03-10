@@ -20,6 +20,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
             (onSave)="onSaveFilter($event)"
             (onSaveAsNew)="onSaveAsNewFilter($event)"
             (onResetFilter)="onResetFilter()"
+            (onResetFilterChanges)="onResetFilterChanges($event)"
             (onDeleteFilter)="onDeleteFilter($event)"
         >
             <kbq-filters [filters]="filters" />
@@ -30,7 +31,9 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset />
+            @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
+                <kbq-filter-reset />
+            }
 
             <kbq-filter-bar-search />
         </kbq-filter-bar>
@@ -179,7 +182,9 @@ export class FilterBarOverviewExample {
             ]
         }
     ];
+    savedFilters: KbqFilter[] = structuredClone(this.filters);
 
+    defaultFilter: KbqFilter | null = this.getDefaultFilter();
     activeFilter: KbqFilter | null = this.getDefaultFilter();
 
     pipeTemplates: KbqPipeTemplate[] = [
@@ -272,6 +277,18 @@ export class FilterBarOverviewExample {
         this.activeFilter = this.getDefaultFilter();
     }
 
+    onResetFilterChanges(filter: KbqFilter | null) {
+        console.log('onResetFilterChanges: ');
+        const defaultFilter = this.getSavedFilter(filter);
+        this.filters.splice(
+            this.filters.findIndex(({ name }) => name === filter?.name),
+            1,
+            defaultFilter
+        );
+
+        this.activeFilter = defaultFilter;
+    }
+
     onDeleteFilter(filter: KbqFilter) {
         const currentFilterIndex = this.filters.findIndex(({ name }) => name === filter?.name);
 
@@ -300,6 +317,10 @@ export class FilterBarOverviewExample {
         this.activeFilter = filter;
 
         filterBar.filterSavedSuccessfully();
+    }
+
+    getSavedFilter(filter: KbqFilter | null): KbqFilter {
+        return structuredClone(this.savedFilters.find(({ name }) => name === filter?.name)!);
     }
 
     getDefaultFilter(): KbqFilter {
