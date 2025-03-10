@@ -53,7 +53,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     disabled: boolean;
-    protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[];
     // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
     // (undocumented)
@@ -71,7 +70,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
     size: KbqDefaultSizes;
-    protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[];
     wrapMode: KbqBreadcrumbsConfiguration['wrapMode'];
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
