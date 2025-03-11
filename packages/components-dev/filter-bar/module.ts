@@ -246,8 +246,8 @@ export class DemoComponent implements AfterViewInit {
                 {
                     name: 'required',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Date,
 
@@ -269,8 +269,8 @@ export class DemoComponent implements AfterViewInit {
                 {
                     name: 'cleanable',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Date,
 
@@ -311,8 +311,8 @@ export class DemoComponent implements AfterViewInit {
                 {
                     name: 'required',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Datetime,
 
@@ -334,8 +334,8 @@ export class DemoComponent implements AfterViewInit {
                 {
                     name: 'cleanable',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Datetime,
 

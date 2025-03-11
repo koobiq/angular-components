@@ -11,8 +11,8 @@ export enum KbqPipeTypes {
 
 export interface KbqDateTimeValue {
     name?: string;
-    start?;
-    end?;
+    start?: string;
+    end?: string;
 }
 
 export interface KbqSelectValue {
@@ -55,7 +55,6 @@ export interface KbqPipeData<V> extends KbqPipe {
 
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
     values?: unknown[];
-    value?: unknown | null;
     valueTemplate?: TemplateRef<any> | string;
 }
 

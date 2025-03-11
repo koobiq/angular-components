@@ -77,10 +77,8 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     protected showEndCalendar: boolean = false;
 
     get formattedValue(): string {
-        const { start, end } = this.data.value || ({} as KbqDateTimeValue);
-
-        if (start && end) {
-            return this.formatter.rangeShortDateTime(start, end);
+        if (this.start && this.end) {
+            return this.formatter.rangeShortDate(this.start, this.end);
         }
 
         return this.data.value?.name ?? '';
@@ -94,15 +92,20 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         );
     }
 
+    get start() {
+        return this.adapter.parse(this.data.value?.start, '');
+    }
+
+    get end() {
+        return this.adapter.parse(this.data.value?.end, '');
+    }
+
     override get isEmpty(): boolean {
         if (this.data.value === null) return true;
 
         if (this.data.value?.name) return false;
 
-        return (
-            !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
-            !this.adapter.isDateInstance(this.formGroup.controls.end.value)
-        );
+        return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
     }
 
     @ViewChild('popover') popover: KbqPopoverTrigger;
@@ -115,8 +118,8 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         super();
 
         this.formGroup = new FormGroup({
-            start: new FormControl(this.data.value?.start),
-            end: new FormControl(this.data.value?.end)
+            start: new FormControl(this.start),
+            end: new FormControl(this.end)
         });
     }
 
@@ -128,9 +131,10 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
 
     onApplyPeriod() {
         this.data.value = {
-            start: this.formGroup.controls.start.value,
-            end: this.formGroup.controls.end.value
+            start: this.formGroup.controls.start.value.toISO(),
+            end: this.formGroup.controls.end.value.toISO()
         };
+        this.stateChanges.next();
 
         this.filterBar?.onChangePipe.next(this.data);
 
