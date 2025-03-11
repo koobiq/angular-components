@@ -1,6 +1,5 @@
 import {
     AfterContentInit,
-    Attribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -30,6 +29,7 @@ export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(Kb
     inputs: ['color'],
     host: {
         class: 'kbq kbq-icon',
+        '[class]': 'iconName',
         '[class.kbq-error]': 'color === "error" || hasError'
     }
 })
@@ -39,19 +39,25 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
 
     hasError: boolean = false;
 
+    @Input({ alias: 'kbq-icon' })
+    set iconName(value: string) {
+        this._iconName = value;
+    }
+
+    get iconName() {
+        return this._iconName;
+    }
+
+    protected _iconName: string;
+
     protected name = 'KbqIcon';
 
     constructor(
         elementRef: ElementRef,
-        @Attribute('kbq-icon') protected iconName: string,
         @Optional() @Inject(KBQ_FORM_FIELD_REF) protected formField: KbqFormFieldRef,
         protected changeDetectorRef: ChangeDetectorRef
     ) {
         super(elementRef);
-
-        if (iconName) {
-            this.getHostElement().classList.add(iconName);
-        }
     }
 
     getHostElement() {

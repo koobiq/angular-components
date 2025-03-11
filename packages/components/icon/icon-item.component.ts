@@ -1,5 +1,4 @@
 import {
-    Attribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -31,15 +30,23 @@ import { KbqIcon } from './icon.component';
 export class KbqIconItem extends KbqIcon implements CanColor {
     override name = 'KbqIconItem';
 
+    @Input({ alias: 'kbq-icon-item' })
+    set iconName(value: string) {
+        this._iconName = value;
+    }
+
+    get iconName() {
+        return this._iconName;
+    }
+
     @Input() fade: boolean = false;
     @Input() big: boolean = false;
 
     constructor(
         elementRef: ElementRef,
-        @Attribute('kbq-icon-item') iconName: string,
         @Optional() @Inject(KBQ_FORM_FIELD_REF) formField: KbqFormFieldRef,
         protected changeDetectorRef: ChangeDetectorRef
     ) {
-        super(elementRef, iconName, formField, changeDetectorRef);
+        super(elementRef, formField, changeDetectorRef);
     }
 }

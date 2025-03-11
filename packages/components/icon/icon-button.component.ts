@@ -1,7 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
-    Attribute,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -37,6 +36,15 @@ import { KbqIcon } from './icon.component';
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, CanColor {
     @Input() small = false;
 
+    @Input({ alias: 'kbq-icon-button' })
+    set iconName(value: string) {
+        this._iconName = value;
+    }
+
+    get iconName() {
+        return this._iconName;
+    }
+
     @Input()
     get tabindex() {
         return this.disabled ? null : this._tabindex;
@@ -68,12 +76,11 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, 
 
     constructor(
         elementRef: ElementRef,
-        @Attribute('kbq-icon-button') iconName: string,
         @Optional() @Inject(KBQ_FORM_FIELD_REF) formField: KbqFormFieldRef,
         protected changeDetectorRef: ChangeDetectorRef,
         private focusMonitor: FocusMonitor
     ) {
-        super(elementRef, iconName, formField, changeDetectorRef);
+        super(elementRef, formField, changeDetectorRef);
     }
 
     ngAfterViewInit(): void {
