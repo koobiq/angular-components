@@ -384,7 +384,8 @@ export class KbqTreeSelection
             this.setSelectedOptionsByKey(
                 this.keyManager.activeItem,
                 hasModifierKey(event, 'shiftKey'),
-                hasModifierKey(event, 'ctrlKey')
+                // ctrlKey is for Windows, metaKey is for MacOS
+                hasModifierKey(event, 'ctrlKey', 'metaKey')
             );
         }
     }

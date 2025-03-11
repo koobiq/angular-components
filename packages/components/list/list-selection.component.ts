@@ -514,7 +514,7 @@ export class KbqListSelection
                 this.keyManager.activeItem as KbqListOption,
                 hasModifierKey(event, 'shiftKey'),
                 // ctrlKey is for Windows, metaKey is for MacOS
-                hasModifierKey(event, 'ctrlKey') || hasModifierKey(event, 'metaKey')
+                hasModifierKey(event, 'ctrlKey', 'metaKey')
             );
         }
     }
@@ -841,7 +841,7 @@ export class KbqListOption implements OnDestroy, OnInit, IFocusableOption, KbqTi
             this,
             hasModifierKey($event, 'shiftKey'),
             // ctrlKey is for Windows, metaKey is for MacOS
-            hasModifierKey($event, 'ctrlKey') || hasModifierKey($event, 'metaKey')
+            hasModifierKey($event, 'ctrlKey', 'metaKey')
         );
     }
 

@@ -364,7 +364,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
         this.userInteraction.emit();
 
         const shiftKey = $event ? hasModifierKey($event, 'shiftKey') : false;
-        const ctrlKey = $event ? hasModifierKey($event, 'ctrlKey') : false;
+        // ctrlKey is for Windows, metaKey is for MacOS
+        const ctrlKey = $event ? hasModifierKey($event, 'ctrlKey', 'metaKey') : false;
 
         this.tree.setSelectedOptionsByClick(this, shiftKey, ctrlKey);
     }
