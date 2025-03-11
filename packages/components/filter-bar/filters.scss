@@ -13,7 +13,7 @@
     }
 
     > .kbq-button .kbq-icon {
-        margin-right: 4px;
+        margin-right: var(--kbq-size-xxs);
     }
 
     & .kbq-filters__filter-name {
@@ -23,16 +23,16 @@
     & .kbq-filter-bar__separator {
         align-self: center;
 
-        height: 12px !important;
+        height: var(--kbq-size-m) !important;
 
-        margin-left: calc(8px + 6px) !important;
-        margin-right: 6px !important;
+        margin-left: calc(var(--kbq-size-s) + var(--kbq-size-xs)) !important;
+        margin-right: var(--kbq-size-xs) !important;
     }
 
     & .kbq-filter-bar__arrow {
         align-self: center;
 
-        margin-left: 8px;
+        margin-left: var(--kbq-size-s);
     }
 
     .kbq-button.kbq-button_changed-filter {
@@ -54,11 +54,11 @@
             right: -4px;
             top: -4px;
 
-            width: 8px;
-            height: 8px;
+            width: var(--kbq-size-s);
+            height: var(--kbq-size-s);
 
             border: 2px solid var(--kbq-background-bg);
-            border-radius: 6px;
+            border-radius: var(--kbq-size-xs);
 
             background: var(--kbq-icon-warning);
         }
@@ -71,7 +71,7 @@
         top: 10px;
 
         width: 1px;
-        height: 12px;
+        height: var(--kbq-size-m);
 
         background: var(--kbq-line-contrast-less);
     }
@@ -83,12 +83,12 @@
     }
 
     & .kbq-popover__content {
-        padding: 8px 24px;
+        padding: var(--kbq-size-s) var(--kbq-size-xxl);
     }
 }
 
 .kbq-filters__dropdown .kbq-dropdown-item {
-    padding-right: 7px;
+    padding-right: var(--kbq-size-s);
 }
 
 @include kbq-filter-bar-typography();

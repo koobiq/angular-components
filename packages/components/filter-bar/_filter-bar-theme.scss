@@ -46,9 +46,8 @@
             }
 
             &.cdk-keyboard-focused {
-                $focused-color: var(--kbq-states-line-focus-theme);
-                outline: 1px solid $focused-color;
-                border-color: $focused-color;
+                outline: 1px solid var(--kbq-states-line-focus-theme);
+                border-color: var(--kbq-states-line-focus-theme);
             }
 
             &.kbq-disabled {

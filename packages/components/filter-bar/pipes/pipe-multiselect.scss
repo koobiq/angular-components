@@ -1,12 +1,12 @@
 .kbq-pipe__multiselect {
     .kbq-pipe__value {
-        margin-left: 4px;
+        margin-left: var(--kbq-size-xxs);
     }
 
     .kbq-badge {
         align-self: center;
 
-        margin-left: 6px;
+        margin-left: var(--kbq-size-xs);
     }
 }
 

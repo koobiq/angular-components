@@ -13,7 +13,7 @@
     }
 
     & .kbq-date-list {
-        margin: 4px 0;
+        margin: var(--kbq-size-xxs) 0;
 
         & .kbq-list-option {
             & .kbq-list-text {
@@ -22,7 +22,7 @@
             }
 
             & .kbq-icon {
-                margin-left: 8px;
+                margin-left: var(--kbq-size-s);
                 align-self: center;
 
                 color: var(--kbq-icon-fade-contrast-color);
@@ -34,9 +34,9 @@
         width: 320px;
 
         & .kbq-date-period__header {
-            padding-top: 6px;
-            padding-left: 4px;
-            padding-right: 4px;
+            padding-top: var(--kbq-size-xs);
+            padding-left: var(--kbq-size-xxs);
+            padding-right: var(--kbq-size-xxs);
 
             & .kbq-button {
                 width: 100%;
@@ -45,7 +45,7 @@
         }
 
         & .kbq-divider {
-            margin: 4px 16px;
+            margin: var(--kbq-size-xxs) var(--kbq-size-l);
         }
 
         & .kbq-date-period__content {
@@ -54,19 +54,19 @@
 
             padding: 0;
 
-            gap: 8px;
+            gap: var(--kbq-size-s);
 
             & .kbq-date-period__content-header {
-                padding-top: 8px;
-                padding-left: 16px;
-                padding-right: 16px;
+                padding-top: var(--kbq-size-s);
+                padding-left: var(--kbq-size-l);
+                padding-right: var(--kbq-size-l);
 
                 color: var(--kbq-foreground-contrast-secondary);
             }
 
             & .kbq-form__row {
-                padding-left: 16px;
-                padding-right: 16px;
+                padding-left: var(--kbq-size-l);
+                padding-right: var(--kbq-size-l);
 
                 & .kbq-date-period__date,
                 & .kbq-date-period__time {
@@ -98,7 +98,7 @@
             & .kbq-calendar {
                 position: relative;
 
-                padding: 8px 8px 12px;
+                padding: var(--kbq-size-s) var(--kbq-size-s) var(--kbq-size-m);
 
                 background-color: var(--kbq-background-bg-tertiary);
 
@@ -108,13 +108,13 @@
             }
 
             & .kbq-hint {
-                padding-left: 12px;
-                padding-right: 12px;
+                padding-left: var(--kbq-size-m);
+                padding-right: var(--kbq-size-m);
             }
         }
 
         & .kbq-date-period__footer {
-            padding: 4px;
+            padding: var(--kbq-size-xxs);
 
             & .kbq-button {
                 width: 100%;
