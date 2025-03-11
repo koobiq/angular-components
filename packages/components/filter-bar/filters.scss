@@ -87,4 +87,8 @@
     }
 }
 
+.kbq-filters__dropdown .kbq-dropdown-item {
+    padding-right: 7px;
+}
+
 @include kbq-filter-bar-typography();
