@@ -365,6 +365,11 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private init(): void {
         this.dropdown.parent = this.isNested() ? this.parent : undefined;
         this.dropdown.direction = this.dir;
+        // reset submenu items since they can be initialized as children of root menu
+        if (this.parent) {
+            this.dropdown.items.reset(Array.from(this.parent.items));
+            this.dropdown.items.notifyOnChanges();
+        }
 
         const isVerticalTrigger = this.dropdown.overlapTriggerY && !this.dropdown.overlapTriggerX;
 

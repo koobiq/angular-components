@@ -1,5 +1,29 @@
-🚧 **Documentation in progress** 🚧
+<!-- example(dropdown-overview) -->
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+### Disabled Trigger
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+<!-- example(dropdown-disabled) -->
+
+### Open by Arrow Down ↓
+
+<!-- example(dropdown-open-by-arrow-down) -->
+
+### Lazy Load Data
+
+<!-- example(dropdown-lazyload-data) -->
+
+### Nested Elements
+
+<!-- example(dropdown-nested) -->
+
+### Navigation Wrap
+
+A "cyclic navigation" mode where reaching one end of the list loops back to the other end.
+
+<!-- example(dropdown-navigation-wrap) -->
+
+### Dynamic Rendering
+
+Recursive rendering of an array or object, allowing the creation of nested structures like multi-level lists or dropdown menus.
+
+<!-- example(dropdown-recursive-template) -->

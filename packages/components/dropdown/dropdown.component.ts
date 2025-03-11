@@ -351,7 +351,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
 
     /**
      * Sets up a stream that will keep track of any newly-added menu items and will update the list
-     * of direct descendants. We collect the descendants this way, because `_allItems` can include
+     * of direct descendants. We collect the descendants this way, because `items` can include
      * items that are part of child menus, and using a custom way of registering items is unreliable
      * when it comes to maintaining the item order.
      */

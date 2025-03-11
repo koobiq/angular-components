@@ -1,7 +1,8 @@
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { Direction } from '@angular/cdk/bidi';
-import { EventEmitter, InjectionToken, TemplateRef } from '@angular/core';
+import { EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { KbqDropdownContent } from './dropdown-content.directive';
+import { KbqDropdownItem } from './dropdown-item.component';
 
 export type DropdownPositionX = 'before' | 'after';
 
@@ -27,6 +28,7 @@ export interface KbqDropdownPanel {
     lazyContent?: KbqDropdownContent;
     backdropClass?: string;
     hasBackdrop?: boolean;
+    items: QueryList<KbqDropdownItem>;
     focusFirstItem(origin?: FocusOrigin): void;
     resetActiveItem(): void;
     setPositionClasses?(x: DropdownPositionX, y: DropdownPositionY): void;

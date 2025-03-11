@@ -5,6 +5,7 @@ import { DropdownNavigationWrapExample } from './dropdown-navigation-wrap/dropdo
 import { DropdownNestedExample } from './dropdown-nested/dropdown-nested-example';
 import { DropdownOpenByArrowDownExample } from './dropdown-open-by-arrowdown/dropdown-open-by-arrow-down-example';
 import { DropdownOverviewExample } from './dropdown-overview/dropdown-overview-example';
+import { DropdownRecursiveTemplateExample } from './dropdown-recursive-template/dropdown-recursive-template-example';
 
 export {
     DropdownDisabledExample,
@@ -12,7 +13,8 @@ export {
     DropdownNavigationWrapExample,
     DropdownNestedExample,
     DropdownOpenByArrowDownExample,
-    DropdownOverviewExample
+    DropdownOverviewExample,
+    DropdownRecursiveTemplateExample
 };
 
 const EXAMPLES = [
@@ -21,7 +23,8 @@ const EXAMPLES = [
     DropdownNavigationWrapExample,
     DropdownDisabledExample,
     DropdownLazyloadDataExample,
-    DropdownOpenByArrowDownExample
+    DropdownOpenByArrowDownExample,
+    DropdownRecursiveTemplateExample
 ];
 
 @NgModule({
