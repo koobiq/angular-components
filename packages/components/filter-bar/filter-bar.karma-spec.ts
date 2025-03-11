@@ -226,21 +226,270 @@ describe('KbqFilterBar', () => {
     });
 
     describe('KbqPipes', () => {
-        beforeEach(() => {
-            fixture = TestBed.createComponent(BaseFunctions);
-            fixture.detectChanges();
+        describe('KbqPipe states for type: Select', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(BaseFunctions);
+                filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+                fixture.componentInstance.activeFilter = fixture.componentInstance.filters[0];
+                fixture.detectChanges();
+            });
 
-            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+            it('Select pipes', () => {
+                const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
+
+                expect(pipes.length).toBe(5);
+                pipes.forEach((pipe) => {
+                    expect(pipe.nativeElement.classList).toContain('kbq-pipe__select');
+                });
+            });
+
+            it('Select: state required', () => {
+                const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
+
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
+            });
+
+            it('Select: state empty', () => {
+                const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
+
+                expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
+            });
+
+            it('Select: state cleanable', () => {
+                const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
+
+                expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
+                expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
+            });
+
+            it('Select: state removable', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
+                expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+            });
+
+            it('Select: state disabled', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_disabled');
+            });
         });
 
-        it('select pipe', () => {
-            fixture.componentInstance.activeFilter = fixture.componentInstance.filters[0];
-            fixture.detectChanges();
+        describe('KbqPipe states for type: MultiSelect', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(BaseFunctions);
+                filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+                fixture.componentInstance.activeFilter = fixture.componentInstance.filters[1];
+                fixture.detectChanges();
+            });
 
-            const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
+            it('MultiSelect pipes', () => {
+                const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
 
-            expect(pipes.length).toBe(5);
-            expect(filterBarDebugElement.nativeElement.classList).toContain('kbq-filter-bar');
+                expect(pipes.length).toBe(6);
+
+                pipes.forEach((pipe) => {
+                    expect(pipe.nativeElement.classList).toContain('kbq-pipe__multiselect');
+                });
+            });
+
+            it('MultiSelect: state required', () => {
+                const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
+
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
+            });
+
+            it('MultiSelect: state empty', () => {
+                const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
+
+                expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
+            });
+
+            it('MultiSelect: state cleanable', () => {
+                const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
+
+                expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
+                expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
+            });
+
+            it('MultiSelect: state removable', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
+                expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+            });
+
+            it('MultiSelect: state disabled', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[5];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_disabled');
+            });
+        });
+
+        describe('KbqPipe states for type: Text', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(BaseFunctions);
+                filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+                fixture.componentInstance.activeFilter = fixture.componentInstance.filters[2];
+                fixture.detectChanges();
+            });
+
+            it('Text pipes', () => {
+                const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
+
+                expect(pipes.length).toBe(5);
+                pipes.forEach((pipe) => {
+                    expect(pipe.nativeElement.classList).toContain('kbq-pipe__text');
+                });
+            });
+
+            it('Text: state required', () => {
+                const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
+
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
+            });
+
+            it('Text: state empty', () => {
+                const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
+
+                expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
+            });
+
+            it('Text: state cleanable', () => {
+                const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
+
+                expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
+                expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
+            });
+
+            it('Text: state removable', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
+                expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+            });
+
+            it('Text: state disabled', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_disabled');
+            });
+        });
+
+        describe('KbqPipe states for type: Date', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(BaseFunctions);
+                filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+                fixture.componentInstance.activeFilter = fixture.componentInstance.filters[3];
+                fixture.detectChanges();
+            });
+
+            it('Date pipes', () => {
+                const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
+
+                expect(pipes.length).toBe(5);
+                pipes.forEach((pipe) => {
+                    expect(pipe.nativeElement.classList).toContain('kbq-pipe__date');
+                });
+            });
+
+            it('Date: state required', () => {
+                const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
+
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
+            });
+
+            it('Date: state empty', () => {
+                const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
+
+                expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
+            });
+
+            it('Date: state cleanable', () => {
+                const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
+
+                expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
+                expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
+            });
+
+            it('Date: state removable', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
+                expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+            });
+
+            it('Date: state disabled', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_disabled');
+            });
+        });
+
+        describe('KbqPipe states for type: Datetime', () => {
+            beforeEach(() => {
+                fixture = TestBed.createComponent(BaseFunctions);
+                filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+                fixture.componentInstance.activeFilter = fixture.componentInstance.filters[4];
+                fixture.detectChanges();
+            });
+
+            it('Datetime pipes', () => {
+                const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
+
+                expect(pipes.length).toBe(5);
+                pipes.forEach((pipe) => {
+                    expect(pipe.nativeElement.classList).toContain('kbq-pipe__datetime');
+                });
+            });
+
+            it('Datetime: state required', () => {
+                const required = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[0];
+
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
+                expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
+            });
+
+            it('Datetime: state empty', () => {
+                const empty = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[1];
+
+                expect(empty.nativeElement.classList).toContain('kbq-pipe_empty');
+            });
+
+            it('Datetime: state cleanable', () => {
+                const cleanable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[2];
+
+                expect(cleanable.nativeElement.classList).toContain('kbq-pipe_cleanable');
+                expect(cleanable.nativeElement.classList).not.toContain('kbq-pipe_removable');
+            });
+
+            it('Datetime: state removable', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[3];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_removable');
+                expect(removable.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
+            });
+
+            it('Datetime: state disabled', () => {
+                const removable = filterBarDebugElement.queryAll(By.css('.kbq-pipe'))[4];
+
+                expect(removable.nativeElement.classList).toContain('kbq-pipe_disabled');
+            });
         });
     });
 });
@@ -436,7 +685,7 @@ class BaseFunctions {
                 {
                     name: 'empty',
                     type: KbqPipeTypes.Text,
-                    value: 'valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue',
+                    value: null,
 
                     required: false,
                     cleanable: true,
