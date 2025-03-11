@@ -22,7 +22,7 @@ import { KbqFilterBar } from './filter-bar';
     selector: 'kbq-filter-bar-search, [kbq-filter-bar-search]',
     template: `
         <button
-            [style.display]="isSearchActive ? 'none' : 'block'"
+            [class.kbq-filter_hidden]="isSearchActive"
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
             (click)="openSearch()"
@@ -32,7 +32,7 @@ import { KbqFilterBar } from './filter-bar';
             <i kbq-icon="kbq-magnifying-glass_16"></i>
         </button>
 
-        <kbq-form-field [style.display]="!isSearchActive ? 'none' : 'block'">
+        <kbq-form-field [class.kbq-filter_hidden]="!isSearchActive">
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
             <input

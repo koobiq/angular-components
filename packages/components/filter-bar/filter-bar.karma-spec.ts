@@ -22,7 +22,7 @@ describe('KbqFilterBar', () => {
     let filterBarDebugElement: DebugElement;
     let filtersDebugElement: DebugElement;
     let pipeAddDebugElement: DebugElement;
-    // let filterResetDebugElement: DebugElement;
+    let filterResetDebugElement: DebugElement;
     let filterBarSearchDebugElement: DebugElement;
 
     window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
@@ -42,7 +42,7 @@ describe('KbqFilterBar', () => {
             filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
             filtersDebugElement = fixture.debugElement.query(By.directive(KbqFilters));
             pipeAddDebugElement = fixture.debugElement.query(By.directive(KbqPipeAdd));
-            // filterResetDebugElement = fixture.debugElement.query(By.directive(KbqFilterReset));
+            filterResetDebugElement = fixture.debugElement.query(By.directive(KbqFilterReset));
             filterBarSearchDebugElement = fixture.debugElement.query(By.directive(KbqFilterBarSearch));
         });
 
@@ -51,6 +51,7 @@ describe('KbqFilterBar', () => {
             expect(filtersDebugElement.nativeElement.classList).toContain('kbq-filters');
             expect(pipeAddDebugElement.nativeElement.classList).toContain('kbq-pipe-add');
             expect(filterBarSearchDebugElement.nativeElement.classList).toContain('kbq-filter-bar-search');
+            expect(filterResetDebugElement.nativeElement.classList).toContain('kbq-filter-bar-reset');
         });
     });
 
@@ -168,24 +169,6 @@ describe('KbqFilterBar', () => {
             pipeAddDebugElement = fixture.debugElement.query(By.directive(KbqPipeAdd));
         });
 
-        it('should hide KbqResetButton on empty filter', () => {
-            expect(fixture.debugElement.query(By.directive(KbqFilterReset))).toBeNull();
-            expect(fixture.componentInstance.activeFilter).toEqual(null);
-
-            pipeAddDebugElement.query(By.css('.kbq-select')).nativeElement.click();
-            fixture.componentInstance.changeDetectorRef.detectChanges();
-
-            fixture.debugElement.query(By.css('.kbq-option')).nativeElement.click();
-            fixture.componentInstance.changeDetectorRef.detectChanges();
-
-            expect(fixture.componentInstance.activeFilter!.pipes.length).toBe(1);
-            expect(fixture.debugElement.query(By.directive(KbqFilterReset))).not.toBeNull();
-
-            fixture.componentInstance.activeFilter = null;
-            fixture.componentInstance.changeDetectorRef.detectChanges();
-            expect(fixture.debugElement.query(By.directive(KbqFilterReset))).toBeNull();
-        });
-
         it('should emit reset event', () => {
             fixture.componentInstance.activeFilter = fixture.componentInstance.filters[6];
             fixture.componentInstance.changeDetectorRef.detectChanges();
@@ -200,11 +183,66 @@ describe('KbqFilterBar', () => {
         });
     });
 
-    // describe('KbqFilterBarSearch', () => {});
+    describe('KbqFilterBarSearch', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(BaseFunctions);
+            fixture.detectChanges();
 
-    // describe('KbqPipes', () => {
-    //     describe('KbqFilterBarSearch', () => {});
-    // });
+            pipeAddDebugElement = fixture.debugElement.query(By.directive(KbqPipeAdd));
+        });
+
+        it('should open search field', fakeAsync(() => {
+            const searchButton = fixture.debugElement.query(By.directive(KbqFilterBarSearch));
+
+            expect(searchButton.query(By.css('.kbq-form-field')).nativeElement.classList).toContain(
+                'kbq-filter_hidden'
+            );
+            expect(searchButton.query(By.css('[kbq-button]')).nativeElement.classList).not.toContain(
+                'kbq-filter_hidden'
+            );
+
+            searchButton.query(By.css('button')).nativeElement.click();
+            flush();
+            fixture.detectChanges();
+
+            expect(searchButton.query(By.css('.kbq-form-field')).classes).not.toContain('kbq-filter_hidden');
+            expect(searchButton.query(By.css('[kbq-button]')).nativeElement.classList).toContain('kbq-filter_hidden');
+        }));
+
+        it('should emit search event', fakeAsync(() => {
+            const searchButton = fixture.debugElement.query(By.directive(KbqFilterBarSearch));
+            searchButton.query(By.css('button')).nativeElement.click();
+            flush();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.onSearchFilter).not.toHaveBeenCalled();
+
+            fixture.componentInstance.search.searchControl.setValue('value');
+            flush();
+            fixture.detectChanges();
+
+            expect(fixture.componentInstance.onSearchFilter).toHaveBeenCalled();
+        }));
+    });
+
+    describe('KbqPipes', () => {
+        beforeEach(() => {
+            fixture = TestBed.createComponent(BaseFunctions);
+            fixture.detectChanges();
+
+            filterBarDebugElement = fixture.debugElement.query(By.directive(KbqFilterBar));
+        });
+
+        it('select pipe', () => {
+            fixture.componentInstance.activeFilter = fixture.componentInstance.filters[0];
+            fixture.detectChanges();
+
+            const pipes = filterBarDebugElement.queryAll(By.css('.kbq-pipe'));
+
+            expect(pipes.length).toBe(5);
+            expect(filterBarDebugElement.nativeElement.classList).toContain('kbq-filter-bar');
+        });
+    });
 });
 
 @Component({
@@ -231,7 +269,7 @@ describe('KbqFilterBar', () => {
 
             <kbq-filter-reset />
 
-            <kbq-filter-bar-search (onSearch)="onSearch($event)" />
+            <kbq-filter-bar-search (onSearch)="onSearchFilter()" />
         </kbq-filter-bar>
     `
 })
@@ -240,9 +278,11 @@ class BaseFunctions {
     readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     readonly onResetFilter = jasmine.createSpy('onResetFilterCallback');
+    readonly onSearchFilter = jasmine.createSpy('onSearchCallback');
 
     @ViewChild(KbqFilters) filtersTrigger: KbqFilters;
     @ViewChild(KbqPipeAdd) pipeAdd: KbqPipeAdd;
+    @ViewChild(KbqFilterBarSearch) search: KbqFilterBarSearch;
 
     filters: KbqFilter[] = [
         {
@@ -858,9 +898,5 @@ class BaseFunctions {
         );
 
         this.activeFilter = null;
-    }
-
-    onSearch(value: string) {
-        console.log('onSearch: ', value);
     }
 }
