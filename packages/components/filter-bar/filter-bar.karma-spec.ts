@@ -501,14 +501,15 @@ describe('KbqFilterBar', () => {
             [(filter)]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             (filterChange)="onFilterChange($event)"
-            (onChangeFilter)="onChangeFilter($event)"
-            (onDeleteFilter)="onDeleteFilter($event)"
-            (onResetFilter)="onResetFilter($event)"
-            (onSave)="onSaveFilter($event)"
-            (onSaveAsNew)="onSaveAsNewFilter($event)"
-            (onSelectFilter)="onSelectFilter($event)"
         >
-            <kbq-filters [filters]="filters" />
+            <kbq-filters
+                [filters]="filters"
+                (onChangeFilter)="onChangeFilter($event)"
+                (onRemoveFilter)="onDeleteFilter($event)"
+                (onSave)="onSaveFilter($event)"
+                (onSaveAsNew)="onSaveAsNewFilter($event)"
+                (onSelectFilter)="onSelectFilter($event)"
+            />
 
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
@@ -516,7 +517,7 @@ describe('KbqFilterBar', () => {
 
             <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-            <kbq-filter-reset />
+            <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
 
             <kbq-filter-bar-search (onSearch)="onSearchFilter()" />
         </kbq-filter-bar>
@@ -734,8 +735,8 @@ class BaseFunctions {
                 {
                     name: 'required',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Date,
 
@@ -757,8 +758,8 @@ class BaseFunctions {
                 {
                     name: 'cleanable',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Date,
 
@@ -799,8 +800,8 @@ class BaseFunctions {
                 {
                     name: 'required',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Datetime,
 
@@ -822,8 +823,8 @@ class BaseFunctions {
                 {
                     name: 'cleanable',
                     value: {
-                        start: this.adapter.today(),
-                        end: this.adapter.today().minus({ days: 3 })
+                        start: this.adapter.today().toISO(),
+                        end: this.adapter.today().minus({ days: 3 }).toISO()
                     },
                     type: KbqPipeTypes.Datetime,
 
