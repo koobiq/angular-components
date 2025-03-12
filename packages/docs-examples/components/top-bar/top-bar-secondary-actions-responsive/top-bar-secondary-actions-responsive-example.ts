@@ -1,5 +1,4 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -23,7 +22,6 @@ type ExampleAction = {
     standalone: true,
     selector: 'top-bar-secondary-actions-responsive-example',
     imports: [
-        AsyncPipe,
         KbqTopBarModule,
         KbqOverflowItemsModule,
         KbqDropdownModule,
@@ -77,8 +75,8 @@ type ExampleAction = {
                     }
                 </button>
 
-                <kbq-overflow-items>
-                    <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                    <div kbqOverflowItemsResult>
                         <button
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
@@ -91,7 +89,7 @@ type ExampleAction = {
                         <kbq-dropdown #appDropdown="kbqDropdown">
                             <kbq-optgroup label="Actions" />
                             @for (action of secondaryActions; track action.id) {
-                                @if (hiddenItemIDs.has(action.id)) {
+                                @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
                                     <button kbq-dropdown-item>
                                         <i [class]="action.icon" kbq-icon=""></i>
                                         {{ action.id }}
@@ -99,11 +97,11 @@ type ExampleAction = {
                                 }
                             }
                         </kbq-dropdown>
-                    </ng-template>
+                    </div>
 
                     @for (action of secondaryActions; track action.id) {
                         <button
-                            *kbqOverflowItem="action.id"
+                            [kbqOverflowItem]="action.id"
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
                             [kbqTooltipDisabled]="isDesktop()"
@@ -118,7 +116,7 @@ type ExampleAction = {
                             }
                         </button>
                     }
-                </kbq-overflow-items>
+                </div>
             </div>
         </kbq-top-bar>
     `,

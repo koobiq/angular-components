@@ -1,11 +1,7 @@
 import { SharedResizeObserver } from '@angular/cdk/observers/private';
-import { NgTemplateOutlet } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    computed,
     contentChild,
     contentChildren,
     Directive,
@@ -13,183 +9,116 @@ import {
     inject,
     input,
     numberAttribute,
-    signal,
-    TemplateRef,
-    viewChild,
-    viewChildren
+    output,
+    Renderer2,
+    signal
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, merge, skip } from 'rxjs';
 
 /**
- * Template context for the `KbqOverflowItemsResult` directive.
+ * Manages the visibility of the element.
  *
- * @see `KbqOverflowItemsResult`
- */
-export type KbqOverflowItemsResultContext = {
-    /**
-     * Set of hidden item ID's.
-     *
-     * Example:
-     *
-     * ```html
-     * <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
-     *  {{ hiddenItemIDs.size }}
-     * </ng-template>
-     * ````
-     */
-    $implicit: ReadonlySet<unknown>;
-    /**
-     * Set of hidden item ID's.
-     *
-     * Example:
-     *
-     * ```html
-     * <ng-template kbqOverflowItemsResult let-hiddenItemIDs="hiddenItemIDs">
-     *  @if (hiddenItemIDs.has(SOME_ID)) {...}
-     * </ng-template>
-     * ````
-     */
-    hiddenItemIDs: ReadonlySet<unknown>;
-};
-
-/**
- * Directive for providing `KbqOverflowItemsResultContext` to the `KbqOverflowItems` component.
- *
- * @see `KbqOverflowItemsResultContext`
+ * @docs-private
  */
 @Directive({
-    standalone: true,
-    selector: 'ng-template[kbqOverflowItemsResult]'
+    host: {
+        '[attr.aria-hidden]': 'hidden()'
+    }
 })
-export class KbqOverflowItemsResult {
+export class ElementVisibilityManager {
+    private readonly renderer = inject(Renderer2);
+
     /**
-     * TemplateRef for the overflow result.
+     * Reference to the element.
      *
      * @docs-private
      */
-    readonly templateRef = inject<TemplateRef<KbqOverflowItemsResultContext>>(TemplateRef);
+    readonly elementRef = inject(ElementRef);
+
+    /**
+     * Whether the element is hidden.
+     *
+     * @docs-private
+     */
+    readonly hidden = signal(false);
+
+    /**
+     * Hides the element.
+     *
+     * @docs-private
+     */
+    hide(): void {
+        this.renderer.setStyle(this.elementRef.nativeElement, 'visibility', 'hidden');
+        this.renderer.setStyle(this.elementRef.nativeElement, 'position', 'absolute');
+        this.hidden.set(true);
+    }
+
+    /**
+     * Shows the element.
+     *
+     * @docs-private
+     */
+    show(): void {
+        this.renderer.removeStyle(this.elementRef.nativeElement, 'visibility');
+        this.renderer.removeStyle(this.elementRef.nativeElement, 'position');
+        this.hidden.set(false);
+    }
 }
 
 /**
- * Structure directive for providing items to the `KbqOverflowItems`.
+ * Directive for displaying the result of hidden items by the `KbqOverflowItems` directive.
  */
 @Directive({
     standalone: true,
-    selector: '[kbqOverflowItem]'
+    selector: '[kbqOverflowItemsResult]',
+    exportAs: 'kbqOverflowItemsResult',
+    host: { class: 'kbq-overflow-item-result' }
 })
-export class KbqOverflowItem {
+export class KbqOverflowItemsResult extends ElementVisibilityManager {}
+
+/**
+ * Directive for the item that can be hidden by the `KbqOverflowItems` directive.
+ */
+@Directive({
+    standalone: true,
+    selector: '[kbqOverflowItem]',
+    exportAs: 'kbqOverflowItem',
+    host: { class: 'kbq-overflow-item' }
+})
+export class KbqOverflowItem extends ElementVisibilityManager {
     /**
-     * Identifier for the item.
+     * Unique identifier for the item.
      */
     readonly id = input.required({ alias: 'kbqOverflowItem' });
-
-    /**
-     * Whether the item is hidden.
-     *
-     * @docs-private
-     */
-    hidden: boolean = false;
-
-    /**
-     * TemplateRef for the item.
-     *
-     * @docs-private
-     */
-    readonly templateRef = inject(TemplateRef);
 }
 
 /**
- * Component for automatically hiding elements with dynamic adaptation to the container width.
+ * Directive for managing the visibility of items that overflow the container.
  */
-@Component({
+@Directive({
     standalone: true,
-    selector: 'kbq-overflow-items',
-    imports: [NgTemplateOutlet],
-    template: `
-        @if (reverseOverflowOrder()) {
-            <ng-container [ngTemplateOutlet]="template" />
-        }
-
-        @for (item of items(); track item) {
-            <div
-                class="kbq-overflow-items__item"
-                #itemRef
-                [attr.aria-hidden]="item.hidden"
-                [class.kbq-overflow-items__item_hidden]="item.hidden"
-            >
-                <ng-container [ngTemplateOutlet]="item.templateRef" />
-            </div>
-        }
-
-        @if (!reverseOverflowOrder()) {
-            <ng-container [ngTemplateOutlet]="template" />
-        }
-
-        <ng-template #template>
-            <div
-                class="kbq-overflow-items__result"
-                #resultRef
-                [attr.aria-hidden]="resultHidden()"
-                [class.kbq-overflow-items__result_hidden]="resultHidden()"
-            >
-                <ng-container
-                    [ngTemplateOutlet]="result()?.templateRef || null"
-                    [ngTemplateOutletContext]="resultTemplateContext()"
-                />
-            </div>
-        </ng-template>
-    `,
-    styleUrl: './overflow-items.scss',
-    host: {
-        class: 'kbq-overflow-items'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: '[kbqOverflowItems]',
+    exportAs: 'kbqOverflowItems',
+    host: { class: 'kbq-overflow-items' }
 })
 export class KbqOverflowItems {
-    private readonly itemElementRefs = viewChildren<string, ElementRef<HTMLElement>>('itemRef', { read: ElementRef });
-
     /**
      * `KbqOverflowItem` directive references.
      *
      * @docs-private
      */
-    protected readonly items = contentChildren(KbqOverflowItem);
+    private readonly items = contentChildren(KbqOverflowItem);
 
     /**
      * `KbqOverflowItemsResult` directive reference.
      *
      * @docs-private
      */
-    protected readonly result = contentChild(KbqOverflowItemsResult);
-
-    private readonly resultElementRef = viewChild<string, ElementRef<HTMLElement>>('resultRef', { read: ElementRef });
-
-    /**
-     * Template context for the `KbqOverflowItemsResult` directive.
-     *
-     * @docs-private
-     */
-    protected readonly resultTemplateContext = computed<KbqOverflowItemsResultContext>(() => {
-        const hiddenItemIDs = this.hiddenItemIDs();
-        return {
-            $implicit: hiddenItemIDs,
-            hiddenItemIDs: hiddenItemIDs
-        };
-    });
-
-    private readonly hiddenItemIDs = signal<ReadonlySet<unknown>>(new Set([]));
-
-    /**
-     * Whether the overflow result is hidden.
-     *
-     * @docs-private
-     */
-    protected readonly resultHidden = computed(() => this.hiddenItemIDs().size === 0);
+    private readonly result = contentChild(KbqOverflowItemsResult);
 
     /**
      * Whether the overflow order should be reversed.
-     * Also changes the position of the `resultTemplateRef`.
      *
      * @default false
      */
@@ -202,11 +131,26 @@ export class KbqOverflowItems {
      */
     readonly debounceTime = input(100, { transform: numberAttribute });
 
+    /**
+     * Emits when the set of hidden items changes.
+     */
+    readonly changes = output<ReadonlySet<unknown>>();
+
+    /**
+     * Set of hidden item IDs.
+     */
+    readonly hiddenItemIDs = toSignal(outputToObservable(this.changes), {
+        initialValue: new Set<unknown>([]) as ReadonlySet<unknown>
+    });
+
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
 
     constructor() {
+        this.setStyles();
+
         merge(
             toObservable(this.items),
             toObservable(this.reverseOverflowOrder).pipe(skip(1)),
@@ -214,57 +158,93 @@ export class KbqOverflowItems {
         )
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
-                const items = this.items();
-                this.updateItemsVisibility(
-                    items,
-                    this.itemElementRefs(),
+                const hiddenItems = this.calculateItemsVisibility(
+                    this.items(),
                     this.reverseOverflowOrder(),
-                    this.resultElementRef(),
+                    this.result(),
                     this.elementRef.nativeElement
                 );
-                this.hiddenItemIDs.set(new Set(items.filter(this.isHiddenItem).map(({ id }) => id())));
-                this.changeDetectorRef.markForCheck();
+                const hiddenItemIDs = new Set(hiddenItems.map(({ id }) => id()));
+                this.changes.emit(hiddenItemIDs);
             });
     }
 
     /**
-     * Updates items visibility, based on the container width and the `reverseOverflowOrder` flag.
+     * Calculates the visibility of items, based on the container width and `reverseOverflowOrder` property.
      */
-    private updateItemsVisibility(
+    private calculateItemsVisibility(
         items: readonly KbqOverflowItem[],
-        itemElementRefs: readonly ElementRef<HTMLElement>[],
         reverseOverflowOrder: boolean,
-        resultElementRef: ElementRef<HTMLElement> | undefined,
+        result: KbqOverflowItemsResult | undefined,
         { offsetWidth: totalWidth }: HTMLElement
-    ): void {
+    ): KbqOverflowItem[] {
+        result?.hide();
         items.forEach((item) => {
-            item.hidden = false;
+            item.show();
         });
-        let itemsWidth = items.reduce((width, _, index) => width + itemElementRefs[index].nativeElement.offsetWidth, 0);
+        let itemsWidth = items.reduce(
+            (width, { elementRef }) => width + this.getElementWidthWithMargins(elementRef),
+            0
+        );
         const startIndex = reverseOverflowOrder ? 0 : items.length - 1;
         const endIndex = reverseOverflowOrder ? items.length : -1;
         const step = reverseOverflowOrder ? 1 : -1;
-        const resultWidth = resultElementRef?.nativeElement.offsetWidth || 0;
+        const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
         for (let index = startIndex; index !== endIndex; index += step) {
             const current = items[index];
-            const currentWidth = itemElementRefs[index].nativeElement.offsetWidth;
+            const currentWidth = this.getElementWidthWithMargins(current.elementRef);
             const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;
             if (itemsWidth + _resultWidth > totalWidth) {
-                current.hidden = true;
+                current.hide();
                 itemsWidth -= currentWidth;
             } else {
                 const isEdgeElement = reverseOverflowOrder ? index === 0 : index === items.length - 1;
                 const _resultWidth = isEdgeElement ? 0 : resultWidth;
                 if (itemsWidth + currentWidth + _resultWidth <= totalWidth) {
-                    current.hidden = false;
+                    current.show();
                     itemsWidth += currentWidth;
                 }
             }
         }
+        const hiddenItems = items.filter(this.isHiddenItem);
+        if (hiddenItems.length > 0) {
+            result?.show();
+        }
+        return hiddenItems;
+    }
+
+    /**
+     * Returns the width of the element including margins.
+     */
+    private getElementWidthWithMargins({ nativeElement }: ElementRef<HTMLElement>): number {
+        const { marginLeft, marginRight } = this.getWindow().getComputedStyle(nativeElement);
+        return Math.ceil(parseFloat(marginLeft) + nativeElement.offsetWidth + parseFloat(marginRight));
+    }
+
+    /**
+     * This method sets the necessary styles for the directive.
+     */
+    private setStyles(): void {
+        this.renderer.setStyle(this.elementRef.nativeElement, 'position', 'relative');
+        this.renderer.setStyle(this.elementRef.nativeElement, 'display', 'flex');
+        this.renderer.setStyle(this.elementRef.nativeElement, 'flex-wrap', 'nowrap');
+        this.renderer.setStyle(this.elementRef.nativeElement, 'flex-grow', '1');
+        this.renderer.setStyle(this.elementRef.nativeElement, 'overflow', 'hidden');
     }
 
     /**
      * Determines if the given item is hidden.
      */
-    private isHiddenItem = ({ hidden }: KbqOverflowItem) => hidden;
+    private isHiddenItem = ({ hidden }: KbqOverflowItem) => hidden();
+
+    /**
+     * Returns the window object.
+     */
+    private getWindow(): Window {
+        const { defaultView } = this.document;
+        if (!defaultView) {
+            throw new Error('Window is not available.');
+        }
+        return defaultView;
+    }
 }
