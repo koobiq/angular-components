@@ -366,7 +366,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         this.dropdown.parent = this.isNested() ? this.parent : undefined;
         this.dropdown.direction = this.dir;
         // reset submenu items since they can be initialized as children of root menu
-        if (this.parent) {
+        if (this.parent && !this.dropdown.items.length) {
             this.dropdown.items.reset(Array.from(this.parent.items));
             this.dropdown.items.notifyOnChanges();
         }
