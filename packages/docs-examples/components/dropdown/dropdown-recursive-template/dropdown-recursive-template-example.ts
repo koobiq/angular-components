@@ -83,29 +83,33 @@ export class ExampleDropdownPortal implements OnInit {
 })
 export class DropdownRecursiveTemplateExample {
     items: DropdownItem[] = [
-        { label: 'Search settings' },
+        { label: 'Level 1 - Security Settings' },
         {
-            label: 'Text',
+            label: 'Level 1 - Encryption',
             children: [
-                { label: 'Border and shading' },
+                { label: 'Level 2 - SSL/TLS' },
                 {
-                    label: 'Normal text',
+                    label: 'Level 2 - AES Encryption',
                     children: [
-                        { label: 'Apply', children: [
-                                { label: 'Border and shading' },
-                                { label: 'Normal text' },
-                                { label: 'Title' }] },
-                        { label: 'Update' }]
+                        {
+                            label: 'Level 3 - Key Management',
+                            children: [
+                                { label: 'Level 4 - Public Key Infrastructure (PKI)' },
+                                { label: 'Level 4 - Symmetric Key Management' },
+                                { label: 'Level 4 - Key Exchange Algorithms' }]
+                        },
+                        { label: 'Level 3 - Encryption Standards' }
+                    ]
                 },
-                { label: 'Title' }
+                { label: 'Level 2 - Digital Signatures' }
             ]
         },
         {
-            label: 'Paragraph styles',
+            label: 'Level 1 - Access Control',
             children: [
-                { label: 'Border and shading' },
-                { label: 'Normal text' },
-                { label: 'Title' }]
+                { label: 'Level 2 - Role-Based Access Control (RBAC)' },
+                { label: 'Level 2 - Multi-Factor Authentication (MFA)' },
+                { label: 'Level 2 - Least Privilege Principle' }]
         }
     ];
 }
