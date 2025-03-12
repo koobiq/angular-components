@@ -223,6 +223,8 @@ export interface KbqDropdownPanel {
     // (undocumented)
     hasBackdrop?: boolean;
     // (undocumented)
+    items: QueryList<KbqDropdownItem>;
+    // (undocumented)
     lazyContent?: KbqDropdownContent;
     // (undocumented)
     overlapTriggerX: boolean;

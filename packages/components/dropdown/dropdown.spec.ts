@@ -1682,6 +1682,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
     overlapTriggerX = true;
     overlapTriggerY = true;
     parent: KbqDropdownPanel;
+    items = new QueryList<KbqDropdownItem>();
 
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
     @Output() closed = new EventEmitter<void | 'click' | 'keydown' | 'tab'>();

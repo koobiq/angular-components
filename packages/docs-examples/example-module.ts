@@ -974,6 +974,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-overview-example.ts",
     "importPath": "components/dropdown"
   },
+  "dropdown-recursive-template": {
+    "packagePath": "components/dropdown/dropdown-recursive-template",
+    "title": "Dropdown Recursive Template",
+    "componentName": "DropdownRecursiveTemplateExample",
+    "files": [
+      "dropdown-recursive-template-example.ts"
+    ],
+    "selector": "dropdown-recursive-template-example",
+    "additionalComponents": [],
+    "primaryFile": "dropdown-recursive-template-example.ts",
+    "importPath": "components/dropdown"
+  },
   "empty-state-actions": {
     "packagePath": "components/empty-state/empty-state-actions",
     "title": "Empty-state actions",
@@ -3868,6 +3880,8 @@ return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-open-by-arrow-down':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-overview':
+return import('@koobiq/docs-examples/components/dropdown');
+  case 'dropdown-recursive-template':
 return import('@koobiq/docs-examples/components/dropdown');
   case 'empty-state-actions':
 return import('@koobiq/docs-examples/components/empty-state');
