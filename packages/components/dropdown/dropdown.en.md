@@ -24,6 +24,6 @@ A "cyclic navigation" mode where reaching one end of the list loops back to the 
 
 ### Dynamic Rendering
 
-Recursive rendering of an array or object, allowing the creation of nested structures like multi-level lists or dropdown menus.
+Recursive rendering of an array or object, allowing the creation of nested dropdown menus.
 
 <!-- example(dropdown-recursive-template) -->
