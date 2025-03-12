@@ -4,9 +4,11 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
+    EventEmitter,
     inject,
     Input,
     OnInit,
+    Output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -26,10 +28,11 @@ import { merge, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
-import { KbqFilter, KbqSaveFilterError } from './filter-bar.types';
+import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent } from './filter-bar.types';
 
 @Component({
     standalone: true,
+    exportAs: 'kbqFilters',
     selector: 'kbq-filters',
     templateUrl: 'filters.html',
     styleUrls: ['filters.scss', 'filter-bar-tokens.scss'],
@@ -82,20 +85,36 @@ export class KbqFilters implements OnInit {
     showFilterSavingError: boolean = false;
     filterSavingErrorText: string;
 
+    @Input() filters: KbqFilter[];
+
+    /** Event that is generated whenever the user selects a filter. */
+    @Output() readonly onSelectFilter = new EventEmitter<KbqFilter>();
+    /** Event that is generated whenever the user save a filter. */
+    @Output() readonly onSave = new EventEmitter<KbqSaveFilterEvent>();
+    /** Event that is generated whenever the user change a filter. */
+    @Output() readonly onChangeFilter = new EventEmitter<KbqSaveFilterEvent>();
+    /** Event that is generated whenever the user saves a filter as new. */
+    @Output() readonly onSaveAsNew = new EventEmitter<KbqSaveFilterEvent>();
+    /** Event that is generated whenever the user remove a filter. */
+    @Output() readonly onRemoveFilter = new EventEmitter<KbqFilter>();
+    /** Event that is generated whenever the user reset a filter changes. */
+    @Output() readonly onResetFilterChanges = new EventEmitter<KbqFilter | null>();
+
     get popoverHeader(): string {
         return this.saveNewFilter ? 'Новый фильтр' : 'Изменить фильтр';
     }
 
-    @Input() filters: KbqFilter[];
-
+    /** Component state. true if opened dropdown or popup */
     get opened(): boolean {
         return this.popover?.isOpen || this.dropdown?.opened;
     }
 
+    /** Selected filter */
     get filter(): KbqFilter | null {
         return this.filterBar.filter;
     }
 
+    /** Component state. True if 'filters' input contains no elements. */
     get isEmpty(): boolean {
         return this.filters.length === 0;
     }
@@ -115,7 +134,7 @@ export class KbqFilters implements OnInit {
         this.filterBar.internalFilterChanges.next(structuredClone(filter));
 
         this.filterBar.saveFilterState();
-        this.filterBar.onSelectFilter.next(filter);
+        this.onSelectFilter.next(filter);
     }
 
     saveChanges() {
@@ -128,7 +147,7 @@ export class KbqFilters implements OnInit {
 
         this.filterBar.internalFilterChanges.next(this.filterBar.filter);
 
-        this.filterBar.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
+        this.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
     }
 
     saveAsNew() {
@@ -144,13 +163,13 @@ export class KbqFilters implements OnInit {
             filter.saved = true;
             filter.changed = false;
 
-            this.filterBar.onSaveAsNew.emit({ filter, filterBar: this.filterBar });
+            this.onSaveAsNew.emit({ filter, filterBar: this.filterBar });
         } else {
             this.filterBar.filter!.name = name;
             this.filterBar.filter!.saved = true;
             this.filterBar.filter!.changed = false;
 
-            this.filterBar.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
+            this.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
         }
     }
 
@@ -202,12 +221,38 @@ export class KbqFilters implements OnInit {
         setTimeout(() => this.changeDetectorRef.detectChanges());
     };
 
-    stopEventPropagation(event: MouseEvent | KeyboardEvent) {
+    stopEventPropagation(event: Event) {
         event.stopPropagation();
+    }
+
+    searchKeydownHandler(event: KeyboardEvent) {
+        if (event.key === 'Escape') {
+            this.closePopover();
+        } else {
+            this.stopEventPropagation(event);
+        }
     }
 
     onDropdownOpen() {
         setTimeout(() => this.search.nativeElement.focus());
+    }
+
+    resetFilterChanges() {
+        this.filterBar.resetFilterChangedState();
+
+        this.onResetFilterChanges.emit(this.filter!);
+    }
+
+    /** Hide the popup and restore focus.
+     * Use this method in the onSave, onSaveAsNew, or onChangeFilter events after the data has been successfully saved. */
+    filterSavedSuccessfully() {
+        this.popover.hide();
+        this.restoreFocus();
+    }
+
+    /** Shows an error. Use this method in the onSave, onSaveAsNew, or onChangeFilter events if saving data failed. */
+    filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
+        this.showError(error);
     }
 
     private getFilteredOptions(value): KbqFilter[] {

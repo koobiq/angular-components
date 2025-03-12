@@ -22,13 +22,14 @@ import { DateTime } from 'luxon';
             [filter]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             (filterChange)="onFilterChange($event)"
-            (onResetFilter)="onResetFilter($event)"
-            (onDeleteFilter)="onDeleteFilter($event)"
-            (onSave)="onSaveFilter($event)"
-            (onSaveAsNew)="onSaveAsNewFilter($event)"
-            (onSelectFilter)="onSelectFilter($event)"
         >
-            <kbq-filters [filters]="filters" />
+            <kbq-filters
+                [filters]="filters"
+                (onRemoveFilter)="onDeleteFilter($event)"
+                (onSave)="onSaveFilter($event)"
+                (onSaveAsNew)="onSaveAsNewFilter($event)"
+                (onSelectFilter)="onSelectFilter($event)"
+            />
 
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
@@ -36,7 +37,7 @@ import { DateTime } from 'luxon';
 
             <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
 
-            <kbq-filter-reset />
+            <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
 
             <kbq-filter-bar-search (onSearch)="onSearch($event)" />
         </kbq-filter-bar>
@@ -654,7 +655,7 @@ export class FilterBarCompleteFunctionsExample implements AfterViewInit {
         console.log('filter to save: ', filter);
 
         this.activeFilter = filter;
-        filterBar.filterSavedSuccessfully();
+        filterBar.filters.filterSavedSuccessfully();
     }
 
     onChangeFilter(filter: KbqFilter | null) {

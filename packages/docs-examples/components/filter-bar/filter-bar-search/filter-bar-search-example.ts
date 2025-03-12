@@ -13,14 +13,14 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter" (onResetFilter)="onResetFilter()">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [filter]="activeFilter">
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset />
+            <kbq-filter-reset (onResetFilter)="onResetFilter()" />
 
             <kbq-filter-bar-search />
         </kbq-filter-bar>

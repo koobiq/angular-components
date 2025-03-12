@@ -80,7 +80,7 @@ export class KbqFilterBarSearch {
     constructor() {
         this.searchControl.valueChanges.subscribe(this.onSearch);
 
-        this.filterBar.onResetFilter.subscribe(this.onReset);
+        this.filterBar.filterReset?.onResetFilter.subscribe(this.onReset);
     }
 
     openSearch(): void {

@@ -1,12 +1,13 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFilterBar } from './filter-bar';
+import { KbqFilter } from './filter-bar.types';
 
 @Component({
     standalone: true,
     selector: 'kbq-filter-reset',
     template: `
-        <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="filterBar.resetFilter()" kbq-button>
+        <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="onResetFilter.emit(filterBar.filter!)" kbq-button>
             <ng-content>Сбросить</ng-content>
         </button>
     `,
@@ -19,4 +20,7 @@ import { KbqFilterBar } from './filter-bar';
 })
 export class KbqFilterReset {
     protected readonly filterBar = inject(KbqFilterBar);
+
+    /** Event that is generated whenever the user reset a filter. */
+    @Output() readonly onResetFilter = new EventEmitter<KbqFilter | null>();
 }

@@ -85,11 +85,11 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 // @public (undocumented)
 export interface KbqDateTimeValue {
     // (undocumented)
-    end?: any;
+    end?: string;
     // (undocumented)
     name?: string;
     // (undocumented)
-    start?: any;
+    start?: string;
 }
 
 // @public (undocumented)
@@ -115,17 +115,13 @@ export class KbqFilterBar {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     readonly changes: BehaviorSubject<void>;
-    // (undocumented)
     get filter(): KbqFilter | null;
     set filter(value: KbqFilter | null);
-    // (undocumented)
     readonly filterChange: EventEmitter<KbqFilter | null>;
     // (undocumented)
+    filterReset: KbqFilterReset;
+    // (undocumented)
     filters: KbqFilters;
-    // (undocumented)
-    filterSavedSuccessfully(): void;
-    // (undocumented)
-    filterSavedUnsuccessfully(error?: KbqSaveFilterError): void;
     // (undocumented)
     readonly internalFilterChanges: BehaviorSubject<KbqFilter | null>;
     // (undocumented)
@@ -140,43 +136,19 @@ export class KbqFilterBar {
     get isSaved(): boolean;
     // (undocumented)
     get isSavedAndChanged(): boolean;
-    // (undocumented)
-    readonly onChangeFilter: EventEmitter<KbqSaveFilterEvent>;
-    // (undocumented)
     readonly onChangePipe: EventEmitter<KbqPipe>;
-    // (undocumented)
-    readonly onDeleteFilter: EventEmitter<KbqFilter>;
-    // (undocumented)
-    readonly onDeletePipe: EventEmitter<KbqPipe>;
-    // (undocumented)
-    readonly onResetFilter: EventEmitter<KbqFilter | null>;
-    // (undocumented)
-    readonly onResetFilterChanges: EventEmitter<KbqFilter | null>;
-    // (undocumented)
-    readonly onSave: EventEmitter<KbqSaveFilterEvent>;
-    // (undocumented)
-    readonly onSaveAsNew: EventEmitter<KbqSaveFilterEvent>;
-    // (undocumented)
-    readonly onSelectFilter: EventEmitter<KbqFilter>;
+    readonly onRemovePipe: EventEmitter<KbqPipe>;
     // (undocumented)
     readonly openPipe: BehaviorSubject<string | number | null>;
     set pipeTemplates(value: KbqPipeTemplate[]);
     // (undocumented)
     get pipeTemplates(): KbqPipeTemplate[];
-    // (undocumented)
     removePipe(pipe: KbqPipe): void;
-    // (undocumented)
-    resetFilter(): void;
-    // (undocumented)
     resetFilterChangedState(): void;
-    // (undocumented)
-    resetFilterChanges(): void;
-    // (undocumented)
     restoreFilterState(filter?: KbqFilter): void;
-    // (undocumented)
     saveFilterState(filter?: KbqFilter): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onDeletePipe": "onDeletePipe"; "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onSaveAsNew": "onSaveAsNew"; "onDeleteFilter": "onDeleteFilter"; "onResetFilter": "onResetFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, ["filters"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-bar-search, [kbq-filter-bar-search]", "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-bar-search, [kbq-filter-bar-search]", "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -259,8 +231,9 @@ export class KbqFilterBarSearch {
 export class KbqFilterReset {
     // (undocumented)
     protected readonly filterBar: KbqFilterBar;
+    readonly onResetFilter: EventEmitter<KbqFilter | null>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterReset, "kbq-filter-reset", never, {}, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterReset, "kbq-filter-reset", never, {}, { "onResetFilter": "onResetFilter"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterReset, never>;
 }
@@ -278,7 +251,6 @@ export class KbqFilters implements OnInit {
     protected readonly colors: typeof KbqComponentColors;
     // (undocumented)
     dropdown: KbqDropdownTrigger;
-    // (undocumented)
     get filter(): KbqFilter | null;
     // (undocumented)
     protected readonly filterBar: KbqFilterBar;
@@ -288,19 +260,25 @@ export class KbqFilters implements OnInit {
     filterName: FormControl<string | null>;
     // (undocumented)
     filters: KbqFilter[];
+    filterSavedSuccessfully(): void;
+    filterSavedUnsuccessfully(error?: KbqSaveFilterError): void;
     // (undocumented)
     filterSavingErrorText: string;
-    // (undocumented)
     get isEmpty(): boolean;
     // (undocumented)
     newFilterName: ElementRef;
     // (undocumented)
     ngOnInit(): void;
+    readonly onChangeFilter: EventEmitter<KbqSaveFilterEvent>;
     // (undocumented)
     onDropdownOpen(): void;
+    readonly onRemoveFilter: EventEmitter<KbqFilter>;
+    readonly onResetFilterChanges: EventEmitter<KbqFilter | null>;
+    readonly onSave: EventEmitter<KbqSaveFilterEvent>;
+    readonly onSaveAsNew: EventEmitter<KbqSaveFilterEvent>;
+    readonly onSelectFilter: EventEmitter<KbqFilter>;
     // (undocumented)
     openChangeFilterNamePopover(): void;
-    // (undocumented)
     get opened(): boolean;
     // (undocumented)
     openSaveAsNewFilterPopover(): void;
@@ -315,6 +293,8 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     preparePopover(): void;
     // (undocumented)
+    resetFilterChanges(): void;
+    // (undocumented)
     restoreFocus(): void;
     // (undocumented)
     saveAsNew(): void;
@@ -327,17 +307,19 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     searchControl: UntypedFormControl;
     // (undocumented)
+    searchKeydownHandler(event: KeyboardEvent): void;
+    // (undocumented)
     selectFilter(filter: KbqFilter): void;
     // (undocumented)
     showError(error?: KbqSaveFilterError): void;
     // (undocumented)
     showFilterSavingError: boolean;
     // (undocumented)
-    stopEventPropagation(event: MouseEvent | KeyboardEvent): void;
+    stopEventPropagation(event: Event): void;
     // (undocumented)
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", never, { "filters": { "alias": "filters"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilters, "kbq-filters", ["kbqFilters"], { "filters": { "alias": "filters"; "required": false; }; }, { "onSelectFilter": "onSelectFilter"; "onSave": "onSave"; "onChangeFilter": "onChangeFilter"; "onSaveAsNew": "onSaveAsNew"; "onRemoveFilter": "onRemoveFilter"; "onResetFilterChanges": "onResetFilterChanges"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilters, never>;
 }
@@ -403,25 +385,13 @@ export class KbqPipeButton {
 }
 
 // @public (undocumented)
-export class KbqPipeData<T> {
-    // (undocumented)
-    cleanable: boolean;
-    // (undocumented)
-    disabled: boolean;
-    // (undocumented)
-    name: string;
+export interface KbqPipeData<V> extends KbqPipe {
     // (undocumented)
     openOnAdd?: boolean;
     // (undocumented)
-    removable: boolean;
-    // (undocumented)
-    required: boolean;
-    // (undocumented)
     search?: boolean;
     // (undocumented)
-    type: KbqPipeTypes;
-    // (undocumented)
-    value: T | null;
+    value: V | null;
 }
 
 // @public (undocumented)
@@ -433,6 +403,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     protected readonly colors: typeof KbqComponentColors;
     // (undocumented)
     get disabled(): boolean;
+    // (undocumented)
+    get end(): any;
     // (undocumented)
     get formattedValue(): string;
     // (undocumented)
@@ -481,6 +453,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     protected showEndCalendar: boolean;
     // (undocumented)
     protected showStartCalendar: boolean;
+    // (undocumented)
+    get start(): any;
     // (undocumented)
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
@@ -499,6 +473,8 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     // (undocumented)
     get disabled(): boolean;
     // (undocumented)
+    get end(): any;
+    // (undocumented)
     get formattedValue(): string;
     // (undocumented)
     protected readonly formatter: DateFormatter<any>;
@@ -547,6 +523,8 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     // (undocumented)
     protected showStartCalendar: boolean;
     // (undocumented)
+    get start(): any;
+    // (undocumented)
     protected readonly styles: typeof KbqButtonStyles;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeDatetimeComponent<any>, "kbq-pipe-datetime", never, {}, {}, never, never, true, never>;
@@ -561,8 +539,7 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    get pipe(): T;
-    set pipe(value: T);
+    pipe: T;
     // (undocumented)
     values: KbqPipeTemplate[];
     // (undocumented)
@@ -667,8 +644,6 @@ export class KbqPipeState<T> implements OnInit {
 
 // @public (undocumented)
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {
-    // (undocumented)
-    value?: unknown | null;
     // (undocumented)
     values?: unknown[];
     // (undocumented)

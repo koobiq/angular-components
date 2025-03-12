@@ -655,8 +655,8 @@ export class DemoComponent implements AfterViewInit {
     onSaveAsNewFilter({ filter, filterBar }) {
         this.filters.push(filter);
 
-        filterBar.filterSavedSuccessfully();
-        // filterBar.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
+        filterBar.filters.filterSavedSuccessfully();
+        // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
     }
 
     onSaveFilter({ filter, filterBar }) {
@@ -668,7 +668,7 @@ export class DemoComponent implements AfterViewInit {
             filter
         );
 
-        filterBar.filterSavedSuccessfully();
+        filterBar.filters.filterSavedSuccessfully();
     }
 
     onChangeFilter({ filter, filterBar }) {
@@ -680,7 +680,7 @@ export class DemoComponent implements AfterViewInit {
             filter
         );
 
-        filterBar.filterSavedSuccessfully();
+        filterBar.filters.filterSavedSuccessfully();
     }
 
     onResetFilter(filter: KbqFilter | null) {

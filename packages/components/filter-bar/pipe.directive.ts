@@ -17,23 +17,14 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
 
     values: KbqPipeTemplate[];
 
-    @Input({ alias: 'kbqPipe' })
-    get pipe(): T {
-        return this._pipe;
-    }
-
-    set pipe(value: T) {
-        this._pipe = value;
-    }
-
-    private _pipe!: T;
+    @Input({ alias: 'kbqPipe' }) pipe: T;
 
     ngAfterContentInit(): void {
         const options = {
             injector: this.getInjector(this.pipe)
         };
 
-        // this for extend and configure
+        // todo this for extend and configure
         if (this.pipe.type === KbqPipeTypes.Text) {
             this.viewContainerRef.createComponent(KbqPipeTextComponent, options);
         } else if (this.pipe.type === KbqPipeTypes.Select) {

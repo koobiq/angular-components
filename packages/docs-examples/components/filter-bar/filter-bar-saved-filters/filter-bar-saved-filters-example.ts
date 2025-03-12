@@ -17,13 +17,14 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
             [(filter)]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             (filterChange)="onFilterChange($event)"
-            (onSave)="onSaveFilter($event)"
-            (onSaveAsNew)="onSaveAsNewFilter($event)"
-            (onResetFilter)="onResetFilter()"
-            (onResetFilterChanges)="onResetFilterChanges($event)"
-            (onDeleteFilter)="onDeleteFilter($event)"
         >
-            <kbq-filters [filters]="filters" />
+            <kbq-filters
+                [filters]="filters"
+                (onSave)="onSaveFilter($event)"
+                (onSaveAsNew)="onSaveAsNewFilter($event)"
+                (onResetFilterChanges)="onResetFilterChanges($event)"
+                (onRemoveFilter)="onDeleteFilter($event)"
+            />
 
             @for (pipe of activeFilter?.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
@@ -32,7 +33,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
             <kbq-pipe-add />
 
             @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
-                <kbq-filter-reset />
+                <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
 
             <kbq-filter-bar-search />
@@ -352,7 +353,7 @@ export class FilterBarSavedFiltersExample {
             filter
         );
 
-        filterBar.filterSavedSuccessfully();
+        filterBar.filters.filterSavedSuccessfully();
     }
 
     onSaveAsNewFilter({ filter, filterBar }) {
@@ -362,7 +363,7 @@ export class FilterBarSavedFiltersExample {
 
         this.activeFilter = filter;
 
-        filterBar.filterSavedSuccessfully();
+        filterBar.filters.filterSavedSuccessfully();
     }
 
     getSavedFilter(filter: KbqFilter | null): KbqFilter {

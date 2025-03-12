@@ -72,7 +72,7 @@
                 placeholder="Поиск"
                 [formControl]="searchControl"
                 (click)="stopEventPropagation($event)"
-                (keydown)="stopEventPropagation($event)"
+                (keydown)="searchKeydownHandler($event)"
             />
             <kbq-cleaner />
         </kbq-form-field>
@@ -132,13 +132,13 @@
     }
 
     @if (filterBar.isSavedAndChanged) {
-        <button kbq-dropdown-item (click)="filterBar.resetFilterChanges()">
+        <button kbq-dropdown-item (click)="resetFilterChanges()">
             <i kbq-icon="kbq-xmark-circle_16"></i>
             Сбросить изменения
         </button>
     }
     @if (!filterBar.isReadOnly) {
-        <button kbq-dropdown-item (click)="this.filterBar.onDeleteFilter.next(this.filter!)">
+        <button kbq-dropdown-item (click)="this.onRemoveFilter.next(this.filter!)">
             <i kbq-icon="kbq-trash_16"></i>
             Удалить
         </button>

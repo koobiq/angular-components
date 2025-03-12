@@ -13,12 +13,12 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqLuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates" (onResetFilter)="onResetFilter()">
+        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates">
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
 
-            <kbq-filter-reset />
+            <kbq-filter-reset (onResetFilter)="onResetFilter()" />
         </kbq-filter-bar>
     `
 })

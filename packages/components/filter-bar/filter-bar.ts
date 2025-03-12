@@ -11,7 +11,8 @@ import {
 } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject, merge } from 'rxjs';
-import { KbqFilter, KbqPipe, KbqPipeTemplate, KbqSaveFilterError, KbqSaveFilterEvent } from './filter-bar.types';
+import { KbqFilterReset } from './filter-bar-reset';
+import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { KbqFilters } from './filters';
 
 @Component({
@@ -49,7 +50,9 @@ export class KbqFilterBar {
     private savedFilter: KbqFilter | null = null;
 
     @ContentChild(KbqFilters) filters: KbqFilters;
+    @ContentChild(KbqFilterReset) filterReset: KbqFilterReset;
 
+    /** Filter that is currently selected */
     @Input()
     get filter(): KbqFilter | null {
         return this._filter;
@@ -65,6 +68,7 @@ export class KbqFilterBar {
 
     private _filter: KbqFilter | null;
 
+    /** An array of templates that are used when adding a pipe. Also contains lists of options to select (values). */
     @Input()
     set pipeTemplates(value: KbqPipeTemplate[]) {
         this._templates = value;
@@ -77,18 +81,16 @@ export class KbqFilterBar {
     }
 
     private _templates: KbqPipeTemplate[] = [];
-
+    /**
+     * Event that emits whenever the raw value of the filter changes. This is here primarily
+     * to facilitate the two-way binding for the `filter` input.
+     * @docs-private
+     */
     @Output() readonly filterChange = new EventEmitter<KbqFilter | null>();
+    /** Event that emits whenever the value of the pipe changes. */
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
-    @Output() readonly onDeletePipe = new EventEmitter<KbqPipe>();
-
-    @Output() readonly onSelectFilter = new EventEmitter<KbqFilter>();
-    @Output() readonly onSave = new EventEmitter<KbqSaveFilterEvent>();
-    @Output() readonly onChangeFilter = new EventEmitter<KbqSaveFilterEvent>();
-    @Output() readonly onSaveAsNew = new EventEmitter<KbqSaveFilterEvent>();
-    @Output() readonly onDeleteFilter = new EventEmitter<KbqFilter>();
-    @Output() readonly onResetFilter = new EventEmitter<KbqFilter | null>();
-    @Output() readonly onResetFilterChanges = new EventEmitter<KbqFilter | null>();
+    /** Event that emits whenever the pipe deleted. */
+    @Output() readonly onRemovePipe = new EventEmitter<KbqPipe>();
 
     get isSavedAndChanged(): boolean {
         return this.isSaved && this.isChanged;
@@ -122,7 +124,7 @@ export class KbqFilterBar {
             this.filterChange.emit(this.filter);
         });
 
-        merge(this.onChangePipe, this.onDeletePipe).subscribe(() => {
+        merge(this.onChangePipe, this.onRemovePipe).subscribe(() => {
             if (this.filter) {
                 this.filter.changed = true;
             }
@@ -130,46 +132,31 @@ export class KbqFilterBar {
             this.filterChange.emit(this.filter);
         });
 
-        merge(this.filterChange, this.onChangePipe, this.onDeletePipe, this.internalFilterChanges).subscribe(() => {
+        merge(this.filterChange, this.onChangePipe, this.onRemovePipe, this.internalFilterChanges).subscribe(() => {
             this.changes.next();
             this.changeDetectorRef.markForCheck();
         });
     }
 
+    /** Remove pipe from current filter and emit event */
     removePipe(pipe: KbqPipe) {
         this.filter?.pipes.splice(this.filter?.pipes.indexOf(pipe), 1);
 
-        this.onDeletePipe.next(pipe);
+        this.onRemovePipe.next(pipe);
     }
 
+    /** Save current state of filter */
     saveFilterState(filter?: KbqFilter) {
         this.savedFilter = structuredClone(filter ?? this.filter);
     }
 
+    /** Restore previously saved filter state */
     restoreFilterState(filter?: KbqFilter) {
         this.filter = structuredClone(filter ?? this.savedFilter);
     }
 
+    /** Set the filter state "changed" to false */
     resetFilterChangedState() {
         this.filter!.changed = false;
-    }
-
-    filterSavedSuccessfully() {
-        this.filters.popover.hide();
-        this.filters.restoreFocus();
-    }
-
-    filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
-        this.filters.showError(error);
-    }
-
-    resetFilter() {
-        this.onResetFilter.emit(this.filter!);
-    }
-
-    resetFilterChanges() {
-        this.resetFilterChangedState();
-
-        this.onResetFilterChanges.emit(this.filter!);
     }
 }
