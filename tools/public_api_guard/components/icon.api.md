@@ -17,7 +17,7 @@ import { OnDestroy } from '@angular/core';
 
 // @public (undocumented)
 export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentInit {
-    constructor(elementRef: ElementRef, iconName: string, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef);
+    constructor(elementRef: ElementRef, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     autoColor: boolean;
     // (undocumented)
@@ -28,8 +28,11 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     getHostElement(): any;
     // (undocumented)
     hasError: boolean;
+    set iconName(value: string);
     // (undocumented)
-    protected iconName: string;
+    get iconName(): string;
+    // (undocumented)
+    protected _iconName: string;
     // (undocumented)
     protected name: string;
     // (undocumented)
@@ -39,9 +42,9 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     // (undocumented)
     updateMaxHeight(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "autoColor": { "alias": "autoColor"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIcon, "[kbq-icon]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "autoColor": { "alias": "autoColor"; "required": false; }; "iconName": { "alias": "kbq-icon"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIcon, [null, { attribute: "kbq-icon"; }, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIcon, [null, { optional: true; }, null]>;
 }
 
 // @public
@@ -53,11 +56,14 @@ export class KbqIconBase {
 
 // @public (undocumented)
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, CanColor {
-    constructor(elementRef: ElementRef, iconName: string, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+    constructor(elementRef: ElementRef, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
     get disabled(): boolean;
     set disabled(value: boolean);
+    set iconName(value: string);
+    // (undocumented)
+    get iconName(): string;
     // (undocumented)
     name: string;
     // (undocumented)
@@ -72,26 +78,29 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, 
     get tabindex(): any;
     set tabindex(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconButton, "[kbq-icon-button]", never, { "color": { "alias": "color"; "required": false; }; "small": { "alias": "small"; "required": false; }; "iconName": { "alias": "kbq-icon-button"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, [null, { attribute: "kbq-icon-button"; }, { optional: true; }, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconButton, [null, { optional: true; }, null, null]>;
 }
 
 // @public (undocumented)
 export class KbqIconItem extends KbqIcon implements CanColor {
-    constructor(elementRef: ElementRef, iconName: string, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef);
+    constructor(elementRef: ElementRef, formField: KbqFormFieldRef, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     big: boolean;
     // (undocumented)
     protected changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     fade: boolean;
+    set iconName(value: string);
+    // (undocumented)
+    get iconName(): string;
     // (undocumented)
     name: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "color": { "alias": "color"; "required": false; }; "fade": { "alias": "fade"; "required": false; }; "big": { "alias": "big"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqIconItem, "[kbq-icon-item]", never, { "color": { "alias": "color"; "required": false; }; "iconName": { "alias": "kbq-icon-item"; "required": false; }; "fade": { "alias": "fade"; "required": false; }; "big": { "alias": "big"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconItem, [null, { attribute: "kbq-icon-item"; }, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqIconItem, [null, { optional: true; }, null]>;
 }
 
 // @public
