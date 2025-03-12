@@ -25,7 +25,7 @@ DebugElement {
     style="visibility: visible;"
   >
     <i
-      class="kbq kbq-icon-button kbq-icon kbq-xmark-circle_16 kbq-contrast-fade"
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-xmark-circle_16"
       color="contrast-fade"
       kbq-icon-button="kbq-xmark-circle_16"
       tabindex="0"
