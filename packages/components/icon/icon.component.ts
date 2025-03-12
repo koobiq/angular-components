@@ -40,16 +40,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     hasError: boolean = false;
 
     /** Name of an icon within a @koobiq/icons. */
-    @Input({ alias: 'kbq-icon' })
-    set iconName(value: string) {
-        this._iconName = value;
-    }
-
-    get iconName() {
-        return this._iconName;
-    }
-
-    protected _iconName: string;
+    @Input({ alias: 'kbq-icon' }) iconName: string;
 
     protected name = 'KbqIcon';
 

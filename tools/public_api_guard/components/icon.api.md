@@ -28,11 +28,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     getHostElement(): any;
     // (undocumented)
     hasError: boolean;
-    set iconName(value: string);
-    // (undocumented)
-    get iconName(): string;
-    // (undocumented)
-    protected _iconName: string;
+    iconName: string;
     // (undocumented)
     protected name: string;
     // (undocumented)
@@ -61,9 +57,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, 
     protected changeDetectorRef: ChangeDetectorRef;
     get disabled(): boolean;
     set disabled(value: boolean);
-    set iconName(value: string);
-    // (undocumented)
-    get iconName(): string;
+    iconName: string;
     // (undocumented)
     name: string;
     // (undocumented)
@@ -92,9 +86,7 @@ export class KbqIconItem extends KbqIcon implements CanColor {
     protected changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     fade: boolean;
-    set iconName(value: string);
-    // (undocumented)
-    get iconName(): string;
+    iconName: string;
     // (undocumented)
     name: string;
     // (undocumented)

@@ -37,14 +37,7 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, 
     @Input() small = false;
 
     /** Name of an icon within a @koobiq/icons. */
-    @Input({ alias: 'kbq-icon-button' })
-    set iconName(value: string) {
-        this._iconName = value;
-    }
-
-    get iconName() {
-        return this._iconName;
-    }
+    @Input({ alias: 'kbq-icon-button' }) iconName: string;
 
     @Input()
     get tabindex() {
