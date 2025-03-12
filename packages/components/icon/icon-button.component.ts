@@ -36,6 +36,7 @@ import { KbqIcon } from './icon.component';
 export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, CanColor {
     @Input() small = false;
 
+    /** Name of an icon within a @koobiq/icons. */
     @Input({ alias: 'kbq-icon-button' })
     set iconName(value: string) {
         this._iconName = value;

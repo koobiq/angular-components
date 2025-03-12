@@ -30,6 +30,7 @@ import { KbqIcon } from './icon.component';
 export class KbqIconItem extends KbqIcon implements CanColor {
     override name = 'KbqIconItem';
 
+    /** Name of an icon within a @koobiq/icons. */
     @Input({ alias: 'kbq-icon-item' })
     set iconName(value: string) {
         this._iconName = value;
