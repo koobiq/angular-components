@@ -37,11 +37,11 @@ type ExampleAction = {
         <ng-template let-data>
             <div class="example-counter">Selected: {{ data.length }}</div>
             <kbq-divider class="example-divider-vertical" [vertical]="true" />
-            <kbq-overflow-items>
-                @for (action of actions; track action.id; let first = $first) {
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                @for (action of actions; track action.id) {
                     <button
-                        *kbqOverflowItem="action.id"
-                        [class.layout-margin-left-xxs]="!first"
+                        [kbqOverflowItem]="action.id"
+                        [class.layout-margin-left-xxs]="!$first"
                         (click)="onAction(action)"
                         color="contrast"
                         kbq-button
@@ -50,7 +50,7 @@ type ExampleAction = {
                         {{ action.id }}
                     </button>
                 }
-                <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+                <div kbqOverflowItemsResult>
                     <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
                         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                     </button>
@@ -59,8 +59,8 @@ type ExampleAction = {
                         <div class="example-counter-dropdown">Selected: {{ data.length }}</div>
                         <kbq-divider />
 
-                        @for (action of actions; track action.id; let index = $index) {
-                            @if (hiddenItemIDs.has(action.id)) {
+                        @for (action of actions; track action.id) {
+                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
                                 <button (click)="onAction(action)" kbq-dropdown-item>
                                     <i [class]="action.icon" kbq-icon></i>
                                     {{ action.id }}
@@ -68,8 +68,8 @@ type ExampleAction = {
                             }
                         }
                     </kbq-dropdown>
-                </ng-template>
-            </kbq-overflow-items>
+                </div>
+            </div>
         </ng-template>
     `,
     styles: `
