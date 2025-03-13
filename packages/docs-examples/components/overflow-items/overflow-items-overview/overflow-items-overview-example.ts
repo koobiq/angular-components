@@ -42,6 +42,11 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         </div>
     `,
     styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+        }
+
         .kbq-overflow-items {
             resize: horizontal;
             max-width: 100%;
