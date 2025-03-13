@@ -8,6 +8,10 @@ export interface KbqFormFieldRef {
      * @deprecated use `formField.control?.errorState` instead
      */
     shouldForward(str: string): boolean;
+    focus(): void;
+    /**
+     * @deprecated Use `focus` instead.
+     */
     focusViaKeyboard(): void;
 }
 
