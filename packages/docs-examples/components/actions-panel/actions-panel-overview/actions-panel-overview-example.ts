@@ -131,14 +131,14 @@ export class ExampleTable {
     template: `
         <div class="example-counter">Selected: {{ data().length }}</div>
         <kbq-divider class="example-divider-vertical" [vertical]="true" />
-        <kbq-overflow-items>
-            @for (action of actions; track action.id; let first = $first) {
-                <ng-container *kbqOverflowItem="action.id">
+        <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+            @for (action of actions; track action.id) {
+                <div class="example-action-container" [kbqOverflowItem]="action.id">
                     @if (action.divider) {
                         <kbq-divider class="example-divider-vertical" [vertical]="true" />
                     }
                     <button
-                        [class.layout-margin-left-xxs]="!first"
+                        [class.layout-margin-left-xxs]="!$first"
                         (click)="onAction(action)"
                         color="contrast"
                         kbq-button
@@ -146,9 +146,9 @@ export class ExampleTable {
                         <i [class]="action.icon" kbq-icon></i>
                         {{ action.id }}
                     </button>
-                </ng-container>
+                </div>
             }
-            <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+            <div kbqOverflowItemsResult>
                 <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
                     <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                 </button>
@@ -157,9 +157,11 @@ export class ExampleTable {
                     <div class="example-counter-dropdown">Selected: {{ data().length }}</div>
                     <kbq-divider />
 
-                    @for (action of actions; track action.id; let index = $index) {
+                    @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
+
+                    @for (action of actions; track action.id) {
                         @if (hiddenItemIDs.has(action.id)) {
-                            @if (action.divider && hiddenItemIDs.has(actions[index - 1]?.id)) {
+                            @if (action.divider && hiddenItemIDs.has(actions[$index - 1]?.id)) {
                                 <kbq-divider />
                             }
                             <button (click)="onAction(action)" kbq-dropdown-item>
@@ -169,8 +171,8 @@ export class ExampleTable {
                         }
                     }
                 </kbq-dropdown>
-            </ng-template>
-        </kbq-overflow-items>
+            </div>
+        </div>
     `,
     styles: `
         :host {
@@ -202,6 +204,11 @@ export class ExampleTable {
         .example-counter-dropdown {
             font-weight: var(--kbq-typography-text-normal-strong-font-weight);
             margin: var(--kbq-size-s) var(--kbq-size-m);
+        }
+
+        .example-action-container {
+            display: flex;
+            align-items: center;
         }
 
         .example-divider-vertical {

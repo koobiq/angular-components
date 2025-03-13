@@ -4,19 +4,31 @@
 
 ```ts
 
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
 import { Signal } from '@angular/core';
-import { TemplateRef } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public
-export class KbqOverflowItem {
-    hidden: boolean;
-    readonly id: InputSignal<unknown>;
-    readonly templateRef: TemplateRef<any>;
+export class ElementVisibilityManager {
+    readonly elementRef: ElementRef<any>;
+    readonly hidden: WritableSignal<boolean>;
+    hide(): void;
+    show(): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItem, "[kbqOverflowItem]", never, { "id": { "alias": "kbqOverflowItem"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<ElementVisibilityManager, never, never, {}, {}, never, never, false, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<ElementVisibilityManager, never>;
+}
+
+// @public
+export class KbqOverflowItem extends ElementVisibilityManager {
+    readonly id: InputSignal<unknown>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItem, "[kbqOverflowItem]", ["kbqOverflowItem"], { "id": { "alias": "kbqOverflowItem"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItem, never>;
 }
@@ -24,14 +36,12 @@ export class KbqOverflowItem {
 // @public
 export class KbqOverflowItems {
     constructor();
+    readonly changes: OutputEmitterRef<ReadonlySet<unknown>>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
-    protected readonly items: Signal<readonly KbqOverflowItem[]>;
-    protected readonly result: Signal<KbqOverflowItemsResult | undefined>;
-    protected readonly resultHidden: Signal<boolean>;
-    protected readonly resultTemplateContext: Signal<KbqOverflowItemsResultContext>;
+    readonly hiddenItemIDs: Signal<ReadonlySet<unknown>>;
     readonly reverseOverflowOrder: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOverflowItems, "kbq-overflow-items", never, { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, {}, ["items", "result"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItems, never>;
 }
@@ -49,19 +59,12 @@ export class KbqOverflowItemsModule {
 }
 
 // @public
-export class KbqOverflowItemsResult {
-    readonly templateRef: TemplateRef<KbqOverflowItemsResultContext>;
+export class KbqOverflowItemsResult extends ElementVisibilityManager {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItemsResult, "ng-template[kbqOverflowItemsResult]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItemsResult, "[kbqOverflowItemsResult]", ["kbqOverflowItemsResult"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItemsResult, never>;
 }
-
-// @public
-export type KbqOverflowItemsResultContext = {
-    $implicit: ReadonlySet<unknown>;
-    hiddenItemIDs: ReadonlySet<unknown>;
-};
 
 // (No @packageDocumentation comment for this package)
 

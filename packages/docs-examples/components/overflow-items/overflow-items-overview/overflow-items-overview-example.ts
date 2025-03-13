@@ -25,14 +25,38 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             Reverse overflow order
         </kbq-toggle>
 
-        <kbq-overflow-items [reverseOverflowOrder]="reverseOverflowOrder()">
-            <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
-                <div [class.layout-margin-right-xs]="reverseOverflowOrder()">and {{ hiddenItemIDs.size }} more</div>
-            </ng-template>
-            @for (item of items; track item; let last = $last) {
-                <kbq-badge *kbqOverflowItem="item" [class.layout-margin-right-xs]="!last">{{ item }}</kbq-badge>
+        <div #kbqOverflowItems="kbqOverflowItems" [reverseOverflowOrder]="reverseOverflowOrder()" kbqOverflowItems>
+            @if (reverseOverflowOrder()) {
+                <div class="layout-margin-right-xs" kbqOverflowItemsResult>
+                    and {{ kbqOverflowItems.hiddenItemIDs().size }} more
+                </div>
             }
-        </kbq-overflow-items>
+            @for (item of items; track item) {
+                <kbq-badge [kbqOverflowItem]="item" [class.layout-margin-right-xs]="!$last">
+                    {{ item }}
+                </kbq-badge>
+            }
+            @if (!reverseOverflowOrder()) {
+                <div kbqOverflowItemsResult>and {{ kbqOverflowItems.hiddenItemIDs().size }} more</div>
+            }
+        </div>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            padding-right: var(--kbq-size-3xs);
+        }
+
+        .kbq-overflow-items {
+            resize: horizontal;
+            max-width: 100%;
+            min-width: 150px;
+        }
+
+        .kbq-overflow-items-result {
+            text-wrap: nowrap;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -3,8 +3,19 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
 
 @Component({
     standalone: true,
+    imports: [OverflowItemsExamplesModule],
+    selector: 'dev-overflow-items-examples',
+    template: `
+        <overflow-items-overview-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevOverflowItemsExamples {}
+
+@Component({
+    standalone: true,
     imports: [
-        OverflowItemsExamplesModule
+        DevOverflowItemsExamples
     ],
     selector: 'app',
     templateUrl: './template.html',

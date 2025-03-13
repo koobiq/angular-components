@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
@@ -19,7 +18,6 @@ type ExampleAction = {
     standalone: true,
     selector: 'top-bar-secondary-actions-example',
     imports: [
-        AsyncPipe,
         KbqTopBarModule,
         KbqOverflowItemsModule,
         KbqDropdownModule,
@@ -39,8 +37,19 @@ type ExampleAction = {
 
             <div kbqTopBarSpacer></div>
 
-            <kbq-overflow-items kbqTopBarContainer placement="end">
-                <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
+                @for (action of actions; track action.id) {
+                    <button
+                        [kbqOverflowItem]="action.id"
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        kbq-button
+                    >
+                        <i [class]="action.icon" kbq-icon=""></i>
+                        {{ action.id }}
+                    </button>
+                }
+                <div kbqOverflowItemsResult>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
@@ -53,7 +62,7 @@ type ExampleAction = {
                     <kbq-dropdown #appDropdown="kbqDropdown">
                         <kbq-optgroup label="Actions" />
                         @for (action of actions; track action.id) {
-                            @if (hiddenItemIDs.has(action.id)) {
+                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
                                 <button kbq-dropdown-item>
                                     <i [class]="action.icon" kbq-icon=""></i>
                                     {{ action.id }}
@@ -61,20 +70,8 @@ type ExampleAction = {
                             }
                         }
                     </kbq-dropdown>
-                </ng-template>
-
-                @for (action of actions; track action.id) {
-                    <button
-                        *kbqOverflowItem="action.id"
-                        [kbqStyle]="KbqButtonStyles.Transparent"
-                        [color]="KbqComponentColors.Contrast"
-                        kbq-button
-                    >
-                        <i [class]="action.icon" kbq-icon=""></i>
-                        {{ action.id }}
-                    </button>
-                }
-            </kbq-overflow-items>
+                </div>
+            </div>
         </kbq-top-bar>
     `,
     styles: `
