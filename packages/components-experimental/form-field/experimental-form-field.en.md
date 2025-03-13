@@ -9,10 +9,10 @@ This component is experimental, it is backward compatible with the original comp
 
 Main changes:
 
--   removed support for `KbqTrim`;
--   removed support for `KbqValidateDirective` directive, instead it is recommended to use `ErrorStateMatcher`([see](#changing-error-message-display-behavior));
--   removed `KbqFormFieldWithoutBorders` directive, instead it is recommended to use `noBorders` attribute ([see](#disabling-borders));
--   removed input field styling using the `.ng-invalid` selector, instead it is recommended to use the `.kbq-form-field_invalid` selector, which depends on `ErrorStateMatcher`([see](#changing-error-message-display-behavior));
+-   removed support for `KbqTrim`
+-   removed support for `KbqValidateDirective` directive, instead it is recommended to use `ErrorStateMatcher`([see](#changing-error-message-display-behavior))
+-   removed `KbqFormFieldWithoutBorders` directive, instead it is recommended to use `noBorders` attribute ([see](#disabling-borders))
+-   removed input field styling using the `.ng-invalid` selector, instead it is recommended to use the `.kbq-form-field_invalid` selector, which depends on `ErrorStateMatcher`([see](#changing-error-message-display-behavior))
 
 ---
 
@@ -20,15 +20,15 @@ Main changes:
 
 The following components are intended to work inside the `<kbq-form-field>` component:
 
--   [Autocomplete](https://koobiq.io/en/components/autocomplete/overview);
--   [Input](https://koobiq.io/en/components/input/overview);
--   [Select](https://koobiq.io/en/components/select/overview);
--   [Tag autocomplete](https://koobiq.io/en/components/tag-autocomplete/overview);
--   [Tag input](https://koobiq.io/en/components/tag-input/overview);
--   [Textarea](https://koobiq.io/en/components/textarea/overview);
--   [Timepicker](https://koobiq.io/en/components/timepicker/overview);
--   [Timezone](https://koobiq.io/en/components/timezone/overview);
--   [Tree select](https://koobiq.io/en/components/tree-select/overview);
+-   [Autocomplete](/en/components/autocomplete)
+-   [Input](/en/components/input)
+-   [Select](/en/components/select)
+-   [Tag autocomplete](/en/components/tag-autocomplete)
+-   [Tag input](/en/components/tag-input)
+-   [Textarea](/en/components/textarea)
+-   [Timepicker](/en/components/timepicker)
+-   [Timezone](/en/components/timezone)
+-   [Tree select](/en/components/tree-select)
 
 ### Label
 
