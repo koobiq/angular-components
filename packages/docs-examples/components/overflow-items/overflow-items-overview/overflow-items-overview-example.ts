@@ -42,13 +42,14 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         </div>
     `,
     styles: `
-        :host {
-            display: block;
+        .kbq-overflow-items {
             resize: horizontal;
-            overflow: hidden;
             max-width: 100%;
-            min-width: 189px;
-            border-right: 1px solid var(--kbq-line-contrast-less);
+            min-width: 150px;
+        }
+
+        .kbq-overflow-items-result {
+            text-wrap: nowrap;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

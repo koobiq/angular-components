@@ -73,7 +73,7 @@ export class ElementVisibilityManager {
     standalone: true,
     selector: '[kbqOverflowItemsResult]',
     exportAs: 'kbqOverflowItemsResult',
-    host: { class: 'kbq-overflow-item-result' }
+    host: { class: 'kbq-overflow-items-result' }
 })
 export class KbqOverflowItemsResult extends ElementVisibilityManager {}
 
