@@ -38,6 +38,17 @@ type ExampleAction = {
             <div kbqTopBarSpacer></div>
 
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
+                @for (action of actions; track action.id) {
+                    <button
+                        [kbqOverflowItem]="action.id"
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        kbq-button
+                    >
+                        <i [class]="action.icon" kbq-icon=""></i>
+                        {{ action.id }}
+                    </button>
+                }
                 <div kbqOverflowItemsResult>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
@@ -60,18 +71,6 @@ type ExampleAction = {
                         }
                     </kbq-dropdown>
                 </div>
-
-                @for (action of actions; track action.id) {
-                    <button
-                        [kbqOverflowItem]="action.id"
-                        [kbqStyle]="KbqButtonStyles.Transparent"
-                        [color]="KbqComponentColors.Contrast"
-                        kbq-button
-                    >
-                        <i [class]="action.icon" kbq-icon=""></i>
-                        {{ action.id }}
-                    </button>
-                }
             </div>
         </kbq-top-bar>
     `,

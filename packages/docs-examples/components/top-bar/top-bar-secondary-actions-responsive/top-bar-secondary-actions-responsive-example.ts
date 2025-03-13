@@ -76,6 +76,23 @@ type ExampleAction = {
                 </button>
 
                 <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                    @for (action of secondaryActions; track action.id) {
+                        <button
+                            [kbqOverflowItem]="action.id"
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqTooltipDisabled]="isDesktop()"
+                            [kbqTooltipArrow]="false"
+                            [kbqPlacement]="PopUpPlacements.Bottom"
+                            [kbqTooltip]="action.id"
+                            kbq-button
+                        >
+                            <i [class]="action.icon" kbq-icon=""></i>
+                            @if (isDesktop()) {
+                                {{ action.id }}
+                            }
+                        </button>
+                    }
                     <div kbqOverflowItemsResult>
                         <button
                             [kbqStyle]="KbqButtonStyles.Transparent"
@@ -98,24 +115,6 @@ type ExampleAction = {
                             }
                         </kbq-dropdown>
                     </div>
-
-                    @for (action of secondaryActions; track action.id) {
-                        <button
-                            [kbqOverflowItem]="action.id"
-                            [kbqStyle]="KbqButtonStyles.Transparent"
-                            [color]="KbqComponentColors.Contrast"
-                            [kbqTooltipDisabled]="isDesktop()"
-                            [kbqTooltipArrow]="false"
-                            [kbqPlacement]="PopUpPlacements.Bottom"
-                            [kbqTooltip]="action.id"
-                            kbq-button
-                        >
-                            <i [class]="action.icon" kbq-icon=""></i>
-                            @if (isDesktop()) {
-                                {{ action.id }}
-                            }
-                        </button>
-                    }
                 </div>
             </div>
         </kbq-top-bar>
