@@ -4753,20 +4753,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/date-adapter@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "@koobiq/date-adapter@npm:3.2.1"
-  checksum: 10c0/f57b90be8989a945f8c13d49c26cae25a90672c7addd31a3e1b132a4dbe347951a88fb0d2607ad0f38a265037bd87c7dfbbeb6d1a8394e8867c13c232a3341b0
+"@koobiq/date-adapter@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "@koobiq/date-adapter@npm:3.2.2"
+  checksum: 10c0/d06eb6fab50e6c975a86020c3b65e045cd5aab381a4beb1f2921c2b96181b27f191d0ff45b50e4401f5fc5670c6140437f63c3d17c200e6739ef62840429241b
   languageName: node
   linkType: hard
 
-"@koobiq/date-formatter@npm:^3.2.1":
-  version: 3.2.1
-  resolution: "@koobiq/date-formatter@npm:3.2.1"
+"@koobiq/date-formatter@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "@koobiq/date-formatter@npm:3.2.2"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     "@messageformat/core": ^3.2.0
-  checksum: 10c0/47981663ecbce8a1b4f21d463577b580b63882ba50965a9809b7e36ed0b61a4a603dde9f025f549ef70f59410d4cdfe3f1a02c324119ff1ff7501865c771d405
+  checksum: 10c0/877fbab85f28373859c54a4374701ab2bc2266d2b2d6052a7e621a5a8db97a4a0b0526f41b73a3e8dbd5667714c3f5f3eafb6ddb01481d02c17940af1f0ec657
   languageName: node
   linkType: hard
 
@@ -14642,8 +14642,8 @@ __metadata:
     "@docsearch/js": "npm:^3.6.2"
     "@fontsource/inter": "npm:^5.1.0"
     "@fontsource/jetbrains-mono": "npm:^5.1.1"
-    "@koobiq/date-adapter": "npm:^3.2.1"
-    "@koobiq/date-formatter": "npm:^3.2.1"
+    "@koobiq/date-adapter": "npm:^3.2.2"
+    "@koobiq/date-formatter": "npm:^3.2.2"
     "@koobiq/design-tokens": "npm:^3.11.2"
     "@koobiq/icons": "npm:9.3.0"
     "@koobiq/luxon-date-adapter": "npm:^3.1.4"
