@@ -5,6 +5,7 @@
         "testing"
     ],
     "components": [
+        "actions-panel",
         "autocomplete",
         "button",
         "button-toggle",

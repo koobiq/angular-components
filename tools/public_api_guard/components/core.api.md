@@ -130,7 +130,7 @@ export class AbsoluteShortDateTimeFormatterPipe<D> extends BaseFormatterPipe<D> 
     static ɵpipe: i0.ɵɵPipeDeclaration<AbsoluteShortDateTimeFormatterPipe<any>, "absoluteShortDateTime", true>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export enum AnimationCurves {
     // (undocumented)
     AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
@@ -314,6 +314,9 @@ export const enUSLocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public
@@ -411,6 +414,9 @@ export const esLALocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public (undocumented)
@@ -501,6 +507,9 @@ export const faIRLocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+    };
+    actionsPanel: {
+        closeTooltip: string;
     };
 };
 
@@ -648,6 +657,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'zh-CN': {
         formatters: {
@@ -724,6 +736,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+        };
+        actionsPanel: {
+            closeTooltip: string;
         };
     };
     'es-LA': {
@@ -803,6 +818,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'pt-BR': {
         formatters: {
@@ -880,6 +898,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+        };
+        actionsPanel: {
+            closeTooltip: string;
         };
     };
     'ru-RU': {
@@ -961,6 +982,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1040,6 +1064,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         timezone: {
             searchPlaceholder: string;
         };
+        actionsPanel: {
+            closeTooltip: string;
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1118,6 +1145,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         timezone: {
             searchPlaceholder: string;
+        };
+        actionsPanel: {
+            closeTooltip: string;
         };
     };
 };
@@ -1215,6 +1245,33 @@ export abstract class KbqAbstractSelect {
     protected setOverlayPosition(): void;
     // (undocumented)
     protected triggerRect: DOMRect;
+}
+
+// @public
+export type KbqActionsPanelLocaleConfiguration = {
+    closeTooltip: string;
+};
+
+// @public
+export enum KbqAnimationCurves {
+    // (undocumented)
+    AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
+    // (undocumented)
+    DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
+    // (undocumented)
+    SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
+    // (undocumented)
+    StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
+}
+
+// @public
+export enum KbqAnimationDurations {
+    // (undocumented)
+    Complex = "250ms",
+    // (undocumented)
+    Entering = "150ms",
+    // (undocumented)
+    Exiting = "125ms"
 }
 
 // @public
@@ -2266,6 +2323,9 @@ export const ptBRLocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public (undocumented)
@@ -2523,6 +2583,9 @@ export const ruRULocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public
@@ -2706,6 +2769,9 @@ export const tkTMLocaleData: {
     timezone: {
         searchPlaceholder: string;
     };
+    actionsPanel: {
+        closeTooltip: string;
+    };
 };
 
 // @public @deprecated
@@ -2809,6 +2875,9 @@ export const zhCNLocaleData: {
     };
     timezone: {
         searchPlaceholder: string;
+    };
+    actionsPanel: {
+        closeTooltip: string;
     };
 };
 

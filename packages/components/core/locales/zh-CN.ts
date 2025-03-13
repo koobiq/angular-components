@@ -1,4 +1,4 @@
-import { KbqCodeBlockLocaleConfiguration } from './types';
+import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
 
 export const zhCNLocaleData = {
     select: { hiddenItemsText: '另外 {{ number }} 个' },
@@ -40,5 +40,8 @@ export const zhCNLocaleData = {
     } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: '城市或时区'
-    }
+    },
+    actionsPanel: {
+        closeTooltip: '取消选择'
+    } satisfies KbqActionsPanelLocaleConfiguration
 };

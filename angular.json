@@ -390,6 +390,35 @@
                 }
             }
         },
+        "dev-actions-panel": {
+            "projectType": "application",
+            "root": "packages/components-dev/actions-panel",
+            "sourceRoot": "packages/components-dev/actions-panel",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/actions-panel"
+                        },
+                        "tsConfig": "packages/components-dev/actions-panel/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/actions-panel/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-actions-panel:build"
+                    }
+                }
+            }
+        },
         "dev-alert": {
             "projectType": "application",
             "root": "packages/components-dev/alert",

@@ -1,4 +1,4 @@
-import { KbqCodeBlockLocaleConfiguration } from './types';
+import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
 
 export const ptBRLocaleData = {
     select: { hiddenItemsText: '{{ number }} mais' },
@@ -40,5 +40,8 @@ export const ptBRLocaleData = {
     } satisfies KbqCodeBlockLocaleConfiguration,
     timezone: {
         searchPlaceholder: 'Cidade ou fuso horário'
-    }
+    },
+    actionsPanel: {
+        closeTooltip: 'Desmarcar'
+    } satisfies KbqActionsPanelLocaleConfiguration
 };
