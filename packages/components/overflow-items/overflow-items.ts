@@ -241,10 +241,6 @@ export class KbqOverflowItems {
      * Returns the window object.
      */
     private getWindow(): Window {
-        const { defaultView } = this.document;
-        if (!defaultView) {
-            throw new Error('Window is not available.');
-        }
-        return defaultView;
+        return this.document.defaultView || window;
     }
 }
