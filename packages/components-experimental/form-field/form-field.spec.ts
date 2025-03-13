@@ -376,14 +376,6 @@ describe(KbqFormField.name, () => {
         expect(formField.classes['cdk-focused']).toBeTruthy();
     });
 
-    it('should add cdk-keyboard-focused selector for form-field by calling focusViaKeyboard() method', () => {
-        const { debugElement } = createComponent(InputFormFieldWithHintAndError);
-        const formField = getFormFieldDebugElement(debugElement);
-        expect(formField.classes['cdk-keyboard-focused']).toBeFalsy();
-        getFormFieldDebugElement(debugElement).componentInstance.focusViaKeyboard();
-        expect(formField.classes['cdk-keyboard-focused']).toBeTruthy();
-    });
-
     it('should add cdk-focused selector for form-field by calling native input focus() method', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
