@@ -1,6 +1,8 @@
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterContentInit,
     afterNextRender,
+    AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -12,6 +14,7 @@ import {
     inject,
     InjectionToken,
     Input,
+    OnDestroy,
     Provider,
     QueryList,
     ViewChild,
@@ -80,7 +83,6 @@ export const getKbqFormFieldMissingControlError = (): Error => {
     host: {
         class: 'kbq-form-field___EXPERIMENTAL',
         '[class.kbq-form-field_invalid]': 'invalid',
-        '[class.kbq-form-field_focused]': 'focused',
         '[class.kbq-form-field_disabled]': 'disabled',
         '[class.kbq-form-field_no-borders]': 'noBorders',
 
@@ -100,11 +102,12 @@ export const getKbqFormFieldMissingControlError = (): Error => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
-export class KbqFormField implements AfterContentInit {
+export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
     private readonly elementRef = inject(ElementRef);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
+    private readonly focusMonitor = inject(FocusMonitor);
 
     /** Disables form field borders and shadows. */
     @Input({ transform: booleanAttribute }) noBorders: boolean | undefined = this.defaultOptions?.noBorders;
@@ -151,6 +154,8 @@ export class KbqFormField implements AfterContentInit {
     get hovered(): boolean {
         return !!this._hovered;
     }
+
+    private _hovered: boolean = false;
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
@@ -243,7 +248,16 @@ export class KbqFormField implements AfterContentInit {
         return !!this.control?.disabled;
     }
 
-    private _hovered: boolean = false;
+    /**
+     * Current focus origin state.
+     *
+     * @docs-private
+     */
+    get focusOrigin(): FocusOrigin {
+        return this._focusOrigin;
+    }
+
+    private _focusOrigin: FocusOrigin = null;
 
     constructor() {
         afterNextRender(() => {
@@ -258,9 +272,44 @@ export class KbqFormField implements AfterContentInit {
         this.initializeHint();
     }
 
+    ngAfterViewInit(): void {
+        this.runFocusMonitor();
+    }
+
+    ngOnDestroy(): void {
+        this.stopFocusMonitor();
+    }
+
     /** Focuses the control. */
     focus(options?: FocusOptions): void {
         this.control.focus(options);
+    }
+
+    /**
+     * @deprecated Use `focus` instead.
+     */
+    focusViaKeyboard(options?: FocusOptions): void {
+        this.control.focus(options);
+    }
+
+    /**
+     * Runs the focus monitor for the form field.
+     *
+     * @docs-private
+     */
+    runFocusMonitor(): void {
+        this.focusMonitor.monitor(this.elementRef, true).subscribe((origin) => {
+            this._focusOrigin = origin;
+        });
+    }
+
+    /**
+     * Stops the focus monitor for the form field.
+     *
+     * @docs-private
+     */
+    stopFocusMonitor(): void {
+        this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
     /** Handles a click on the control's container. */

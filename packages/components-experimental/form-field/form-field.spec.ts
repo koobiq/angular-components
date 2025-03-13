@@ -95,8 +95,8 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
     template: `
         <kbq-form-field>
             <input [formControl]="control" kbqInput />
-            <kbq-hint>Hint</kbq-hint>
-            <kbq-error>Error</kbq-error>
+            <kbq-hint id="test-hint-id">Hint</kbq-hint>
+            <kbq-error id="test-error-id">Error</kbq-error>
         </kbq-form-field>
     `
 })
@@ -167,7 +167,7 @@ export class InputFormFieldWithoutFormFieldControl {
     ],
     template: `
         <kbq-form-field>
-            <kbq-label>Label</kbq-label>
+            <kbq-label id="test-label-id">Label</kbq-label>
             <input [id]="id" kbqInput />
         </kbq-form-field>
     `
@@ -194,7 +194,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
         <form [formGroup]="formGroup">
             <kbq-form-field>
                 <input [errorStateMatcher]="errorStateMatcher" formControlName="email" kbqInput />
-                <kbq-error>Error</kbq-error>
+                <kbq-error id="test-error-id">Error</kbq-error>
                 <input type="submit" />
             </kbq-form-field>
         </form>
@@ -237,7 +237,7 @@ export class InputFormFieldWithBorderCustomization {
         <kbq-form-field>
             <input [formControl]="formControl" kbqInputPassword />
             <kbq-password-toggle />
-            <kbq-password-hint [hasError]="formControl.hasError('minLength')">
+            <kbq-password-hint id="test-password-hint-id" [hasError]="formControl.hasError('minLength')">
                 Min length
                 @let minLength = formControl.getError('minLength');
                 @if (minLength) {
@@ -368,20 +368,20 @@ describe(KbqFormField.name, () => {
         expect(formField.classes['ng-pending']).toBeTruthy();
     });
 
-    it('should add kbq-form-field_focused selector for form-field by calling focus() method', () => {
+    it('should add cdk-focused selector for form-field by calling focus() method', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField.classes['kbq-form-field_focused']).toBeFalsy();
+        expect(formField.classes['cdk-focused']).toBeFalsy();
         getFormFieldDebugElement(debugElement).componentInstance.focus();
-        expect(formField.classes['kbq-form-field_focused']).toBeTruthy();
+        expect(formField.classes['cdk-focused']).toBeTruthy();
     });
 
-    it('should add kbq-form-field_focused selector for form-field by calling native input focus() method', () => {
+    it('should add cdk-focused selector for form-field by calling native input focus() method', () => {
         const { debugElement } = createComponent(InputFormFieldWithHintAndError);
         const formField = getFormFieldDebugElement(debugElement);
-        expect(formField.classes['kbq-form-field_focused']).toBeFalsy();
+        expect(formField.classes['cdk-focused']).toBeFalsy();
         getInputNativeElement(debugElement).focus();
-        expect(formField.classes['kbq-form-field_focused']).toBeTruthy();
+        expect(formField.classes['cdk-focused']).toBeTruthy();
     });
 
     it('should add kbq-form-field_disabled selector for kbq-form-field when form control is disabled', () => {

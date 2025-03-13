@@ -1361,6 +1361,8 @@ export interface KbqFormFieldRef {
     // (undocumented)
     control: any;
     // (undocumented)
+    focus(): void;
+    // @deprecated (undocumented)
     focusViaKeyboard(): void;
     // @deprecated
     shouldForward(str: string): boolean;

@@ -6,13 +6,16 @@
 
 import { AbstractControlDirective } from '@angular/forms';
 import { AfterContentInit } from '@angular/core';
+import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqInputPassword } from '@koobiq/components/input';
 import { KbqNumberInput } from '@koobiq/components/input';
+import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 
 // @public
@@ -46,13 +49,16 @@ export class KbqError extends KbqHint {
 }
 
 // @public
-export class KbqFormField implements AfterContentInit {
+export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy {
     constructor();
     canCleanerClearByEsc: boolean;
     get control(): KbqFormFieldControl<unknown>;
     get disabled(): boolean;
     focus(options?: FocusOptions): void;
     get focused(): boolean;
+    get focusOrigin(): FocusOrigin;
+    // @deprecated (undocumented)
+    focusViaKeyboard(options?: FocusOptions): void;
     getConnectedOverlayOrigin(): ElementRef;
     get hasCleaner(): boolean;
     get hasError(): boolean;
@@ -71,10 +77,16 @@ export class KbqFormField implements AfterContentInit {
     static ngAcceptInputType_noBorders: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngAfterViewInit(): void;
+    // (undocumented)
+    ngOnDestroy(): void;
     noBorders: boolean | undefined;
     protected onContainerClick(event: MouseEvent): void;
     protected onKeyDown(event: KeyboardEvent): void;
+    runFocusMonitor(): void;
     protected shouldBeForwarded(property: keyof AbstractControlDirective): boolean;
+    stopFocusMonitor(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; }; }, {}, ["_control", "stepper", "cleaner", "label", "passwordToggle", "hint", "passwordHint", "suffix", "prefix", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "[kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint"], true, never>;
     // (undocumented)

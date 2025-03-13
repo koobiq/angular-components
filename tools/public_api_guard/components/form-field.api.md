@@ -70,10 +70,11 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     get disabled(): boolean;
     // (undocumented)
     elementRef: ElementRef;
+    focus(options?: FocusOptions): void;
     // (undocumented)
     get focusOrigin(): FocusOrigin;
-    // (undocumented)
-    focusViaKeyboard(): void;
+    // @deprecated (undocumented)
+    focusViaKeyboard(options?: FocusOptions): void;
     getConnectedOverlayOrigin(): ElementRef;
     // (undocumented)
     get hasCleaner(): boolean;
