@@ -45,6 +45,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         :host {
             display: flex;
             flex-direction: column;
+            padding-right: var(--kbq-size-3xs);
         }
 
         .kbq-overflow-items {
