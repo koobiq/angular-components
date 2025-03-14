@@ -9,10 +9,10 @@
 
 Основные изменения:
 
--   удалена поддержка `KbqTrim`;
--   удалена поддержка `KbqValidateDirective` директивы, вместо этого предлагается использовать `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке));
--   удалена директива `KbqFormFieldWithoutBorders`, вместо нее предлагается использовать `noBorders` атрибут ([см.](#отключение-рамок));
--   удалена стилизация поля ввода при помощи селектора `.ng-invalid`, вместо этого предлагается использовать селектор `.kbq-form-field_invalid`, который зависит от `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке));
+-   удалена поддержка `KbqTrim`
+-   удалена поддержка `KbqValidateDirective` директивы, вместо этого предлагается использовать `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке))
+-   удалена директива `KbqFormFieldWithoutBorders`, вместо нее предлагается использовать `noBorders` атрибут ([см.](#отключение-рамок))
+-   удалена стилизация поля ввода при помощи селектора `.ng-invalid`, вместо этого предлагается использовать селектор `.kbq-form-field_invalid`, который зависит от `ErrorStateMatcher`([см.](#изменение-поведения-отображения-сообщения-об-ошибке))
 
 ---
 
@@ -21,15 +21,15 @@
 
 Следующие компоненты предназначены для работы внутри `<kbq-form-field>` компонента:
 
--   [Autocomplete](https://koobiq.io/ru/components/autocomplete/overview);
--   [Input](https://koobiq.io/ru/components/input/overview);
--   [Select](https://koobiq.io/ru/components/select/overview);
--   [Tag autocomplete](https://koobiq.io/ru/components/tag-autocomplete/overview);
--   [Tag input](https://koobiq.io/ru/components/tag-input/overview);
--   [Textarea](https://koobiq.io/ru/components/textarea/overview);
--   [Timepicker](https://koobiq.io/ru/components/timepicker/overview);
--   [Timezone](https://koobiq.io/ru/components/timezone/overview);
--   [Tree select](https://koobiq.io/ru/components/tree-select/overview);
+-   [Autocomplete](/ru/components/autocomplete)
+-   [Input](/ru/components/input)
+-   [Select](/ru/components/select)
+-   [Tag autocomplete](/ru/components/tag-autocomplete)
+-   [Tag input](/ru/components/tag-input)
+-   [Textarea](/ru/components/textarea)
+-   [Timepicker](/ru/components/timepicker)
+-   [Timezone](/ru/components/timezone)
+-   [Tree select](/ru/components/tree-select)
 
 ### Лейбл
 
