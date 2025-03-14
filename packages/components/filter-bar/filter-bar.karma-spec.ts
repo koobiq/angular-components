@@ -50,8 +50,8 @@ describe('KbqFilterBar', () => {
             expect(filterBarDebugElement.nativeElement.classList).toContain('kbq-filter-bar');
             expect(filtersDebugElement.nativeElement.classList).toContain('kbq-filters');
             expect(pipeAddDebugElement.nativeElement.classList).toContain('kbq-pipe-add');
-            expect(filterBarSearchDebugElement.nativeElement.classList).toContain('kbq-filter-bar-search');
-            expect(filterResetDebugElement.nativeElement.classList).toContain('kbq-filter-bar-reset');
+            expect(filterBarSearchDebugElement.nativeElement.classList).toContain('kbq-filter-search');
+            expect(filterResetDebugElement.nativeElement.classList).toContain('kbq-filter-reset');
         });
     });
 
@@ -519,7 +519,7 @@ describe('KbqFilterBar', () => {
 
             <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
 
-            <kbq-filter-bar-search (onSearch)="onSearchFilter()" />
+            <kbq-filter-search (onSearch)="onSearchFilter()" />
         </kbq-filter-bar>
     `
 })

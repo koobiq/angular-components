@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -46,6 +47,6 @@ export class KbqPipeButton {
     }
 
     constructor() {
-        this.filterBar?.changes.subscribe(() => this.changeDetectorRef.markForCheck());
+        this.filterBar?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
     }
 }

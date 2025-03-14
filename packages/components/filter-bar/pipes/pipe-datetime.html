@@ -9,6 +9,7 @@
     [kbqPopoverClass]="'kbq-pipe-date__popover'"
     [kbqPopoverContent]="content"
     [kbqPopoverPlacement]="placements.BottomLeft"
+    [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
     (kbqPopoverVisibleChange)="list = true"
 >
     <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>

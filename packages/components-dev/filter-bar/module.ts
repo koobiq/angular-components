@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -713,7 +712,6 @@ export class DemoComponent implements AfterViewInit {
 @NgModule({
     declarations: [DemoComponent],
     imports: [
-        CommonModule,
         BrowserModule,
         BrowserAnimationsModule,
         KbqIconModule,

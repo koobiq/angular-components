@@ -8,6 +8,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -19,7 +20,7 @@ import { KbqFilterBar } from './filter-bar';
 
 @Component({
     standalone: true,
-    selector: 'kbq-filter-bar-search, [kbq-filter-bar-search]',
+    selector: 'kbq-filter-search, [kbq-filter-search]',
     template: `
         <button
             [class.kbq-filter_hidden]="isSearchActive"
@@ -47,7 +48,7 @@ import { KbqFilterBar } from './filter-bar';
             <kbq-cleaner (click)="onClear()" />
         </kbq-form-field>
     `,
-    styleUrl: 'filter-bar-search.scss',
+    styleUrl: 'filter-search.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -60,7 +61,7 @@ import { KbqFilterBar } from './filter-bar';
         ReactiveFormsModule
     ],
     host: {
-        class: 'kbq-filter-bar-search'
+        class: 'kbq-filter-search'
     }
 })
 export class KbqFilterBarSearch {
@@ -80,7 +81,7 @@ export class KbqFilterBarSearch {
     constructor() {
         this.searchControl.valueChanges.subscribe(this.onSearch);
 
-        this.filterBar.filterReset?.onResetFilter.subscribe(this.onReset);
+        this.filterBar.filterReset?.onResetFilter.pipe(takeUntilDestroyed()).subscribe(this.onReset);
     }
 
     openSearch(): void {

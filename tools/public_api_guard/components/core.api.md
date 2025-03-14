@@ -317,6 +317,48 @@ export const enUSLocaleData: {
     actionsPanel: {
         closeTooltip: string;
     };
+    filterBar: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    };
 };
 
 // @public
@@ -417,6 +459,48 @@ export const esLALocaleData: {
     actionsPanel: {
         closeTooltip: string;
     };
+    filterBar: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    };
 };
 
 // @public (undocumented)
@@ -510,6 +594,48 @@ export const faIRLocaleData: {
     };
     actionsPanel: {
         closeTooltip: string;
+    };
+    filterBar: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
     };
 };
 
@@ -660,6 +786,48 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         actionsPanel: {
             closeTooltip: string;
         };
+        filterBar: {
+            reset: {
+                buttonName: string;
+            };
+            search: {
+                tooltip: string;
+                placeholder: string;
+            };
+            filters: {
+                defaultName: string;
+                saveNewFilterTooltip: string;
+                searchPlaceholder: string;
+                searchEmptyResult: string;
+                saveAsNewFilter: string;
+                saveChanges: string;
+                saveAsNew: string;
+                change: string;
+                resetChanges: string;
+                remove: string;
+                name: string;
+                error: string;
+                errorHint: string;
+                saveButton: string;
+                cancelButton: string;
+            };
+            add: {
+                tooltip: string;
+            };
+            pipe: {
+                clearButtonTooltip: string;
+                removeButtonTooltip: string;
+                applyButton: string;
+                emptySearchResult: string;
+            };
+            datePipe: {
+                customPeriod: string;
+                customPeriodFrom: string;
+                customPeriodTo: string;
+                customPeriodErrorHint: string;
+                backToPeriodSelection: string;
+            };
+        };
     };
     'zh-CN': {
         formatters: {
@@ -739,6 +907,48 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         actionsPanel: {
             closeTooltip: string;
+        };
+        filterBar: {
+            reset: {
+                buttonName: string;
+            };
+            search: {
+                tooltip: string;
+                placeholder: string;
+            };
+            filters: {
+                defaultName: string;
+                saveNewFilterTooltip: string;
+                searchPlaceholder: string;
+                searchEmptyResult: string;
+                saveAsNewFilter: string;
+                saveChanges: string;
+                saveAsNew: string;
+                change: string;
+                resetChanges: string;
+                remove: string;
+                name: string;
+                error: string;
+                errorHint: string;
+                saveButton: string;
+                cancelButton: string;
+            };
+            add: {
+                tooltip: string;
+            };
+            pipe: {
+                clearButtonTooltip: string;
+                removeButtonTooltip: string;
+                applyButton: string;
+                emptySearchResult: string;
+            };
+            datePipe: {
+                customPeriod: string;
+                customPeriodFrom: string;
+                customPeriodTo: string;
+                customPeriodErrorHint: string;
+                backToPeriodSelection: string;
+            };
         };
     };
     'es-LA': {
@@ -821,6 +1031,48 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         actionsPanel: {
             closeTooltip: string;
         };
+        filterBar: {
+            reset: {
+                buttonName: string;
+            };
+            search: {
+                tooltip: string;
+                placeholder: string;
+            };
+            filters: {
+                defaultName: string;
+                saveNewFilterTooltip: string;
+                searchPlaceholder: string;
+                searchEmptyResult: string;
+                saveAsNewFilter: string;
+                saveChanges: string;
+                saveAsNew: string;
+                change: string;
+                resetChanges: string;
+                remove: string;
+                name: string;
+                error: string;
+                errorHint: string;
+                saveButton: string;
+                cancelButton: string;
+            };
+            add: {
+                tooltip: string;
+            };
+            pipe: {
+                clearButtonTooltip: string;
+                removeButtonTooltip: string;
+                applyButton: string;
+                emptySearchResult: string;
+            };
+            datePipe: {
+                customPeriod: string;
+                customPeriodFrom: string;
+                customPeriodTo: string;
+                customPeriodErrorHint: string;
+                backToPeriodSelection: string;
+            };
+        };
     };
     'pt-BR': {
         formatters: {
@@ -901,6 +1153,48 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         actionsPanel: {
             closeTooltip: string;
+        };
+        filterBar: {
+            reset: {
+                buttonName: string;
+            };
+            search: {
+                tooltip: string;
+                placeholder: string;
+            };
+            filters: {
+                defaultName: string;
+                saveNewFilterTooltip: string;
+                searchPlaceholder: string;
+                searchEmptyResult: string;
+                saveAsNewFilter: string;
+                saveChanges: string;
+                saveAsNew: string;
+                change: string;
+                resetChanges: string;
+                remove: string;
+                name: string;
+                error: string;
+                errorHint: string;
+                saveButton: string;
+                cancelButton: string;
+            };
+            add: {
+                tooltip: string;
+            };
+            pipe: {
+                clearButtonTooltip: string;
+                removeButtonTooltip: string;
+                applyButton: string;
+                emptySearchResult: string;
+            };
+            datePipe: {
+                customPeriod: string;
+                customPeriodFrom: string;
+                customPeriodTo: string;
+                customPeriodErrorHint: string;
+                backToPeriodSelection: string;
+            };
         };
     };
     'ru-RU': {
@@ -985,6 +1279,48 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         actionsPanel: {
             closeTooltip: string;
         };
+        filterBar: {
+            reset: {
+                buttonName: string;
+            };
+            search: {
+                tooltip: string;
+                placeholder: string;
+            };
+            filters: {
+                defaultName: string;
+                saveNewFilterTooltip: string;
+                searchPlaceholder: string;
+                searchEmptyResult: string;
+                saveAsNewFilter: string;
+                saveChanges: string;
+                saveAsNew: string;
+                change: string;
+                resetChanges: string;
+                remove: string;
+                name: string;
+                error: string;
+                errorHint: string;
+                saveButton: string;
+                cancelButton: string;
+            };
+            add: {
+                tooltip: string;
+            };
+            pipe: {
+                clearButtonTooltip: string;
+                removeButtonTooltip: string;
+                applyButton: string;
+                emptySearchResult: string;
+            };
+            datePipe: {
+                customPeriod: string;
+                customPeriodFrom: string;
+                customPeriodTo: string;
+                customPeriodErrorHint: string;
+                backToPeriodSelection: string;
+            };
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1067,6 +1403,48 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         actionsPanel: {
             closeTooltip: string;
         };
+        filterBar: {
+            reset: {
+                buttonName: string;
+            };
+            search: {
+                tooltip: string;
+                placeholder: string;
+            };
+            filters: {
+                defaultName: string;
+                saveNewFilterTooltip: string;
+                searchPlaceholder: string;
+                searchEmptyResult: string;
+                saveAsNewFilter: string;
+                saveChanges: string;
+                saveAsNew: string;
+                change: string;
+                resetChanges: string;
+                remove: string;
+                name: string;
+                error: string;
+                errorHint: string;
+                saveButton: string;
+                cancelButton: string;
+            };
+            add: {
+                tooltip: string;
+            };
+            pipe: {
+                clearButtonTooltip: string;
+                removeButtonTooltip: string;
+                applyButton: string;
+                emptySearchResult: string;
+            };
+            datePipe: {
+                customPeriod: string;
+                customPeriodFrom: string;
+                customPeriodTo: string;
+                customPeriodErrorHint: string;
+                backToPeriodSelection: string;
+            };
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1148,6 +1526,48 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         };
         actionsPanel: {
             closeTooltip: string;
+        };
+        filterBar: {
+            reset: {
+                buttonName: string;
+            };
+            search: {
+                tooltip: string;
+                placeholder: string;
+            };
+            filters: {
+                defaultName: string;
+                saveNewFilterTooltip: string;
+                searchPlaceholder: string;
+                searchEmptyResult: string;
+                saveAsNewFilter: string;
+                saveChanges: string;
+                saveAsNew: string;
+                change: string;
+                resetChanges: string;
+                remove: string;
+                name: string;
+                error: string;
+                errorHint: string;
+                saveButton: string;
+                cancelButton: string;
+            };
+            add: {
+                tooltip: string;
+            };
+            pipe: {
+                clearButtonTooltip: string;
+                removeButtonTooltip: string;
+                applyButton: string;
+                emptySearchResult: string;
+            };
+            datePipe: {
+                customPeriod: string;
+                customPeriodFrom: string;
+                customPeriodTo: string;
+                customPeriodErrorHint: string;
+                backToPeriodSelection: string;
+            };
         };
     };
 };
@@ -2330,6 +2750,48 @@ export const ptBRLocaleData: {
     actionsPanel: {
         closeTooltip: string;
     };
+    filterBar: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    };
 };
 
 // @public (undocumented)
@@ -2590,6 +3052,48 @@ export const ruRULocaleData: {
     actionsPanel: {
         closeTooltip: string;
     };
+    filterBar: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    };
 };
 
 // @public
@@ -2776,6 +3280,48 @@ export const tkTMLocaleData: {
     actionsPanel: {
         closeTooltip: string;
     };
+    filterBar: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
+    };
 };
 
 // @public @deprecated
@@ -2882,6 +3428,47 @@ export const zhCNLocaleData: {
     };
     actionsPanel: {
         closeTooltip: string;
+    filterBar: {
+        reset: {
+            buttonName: string;
+        };
+        search: {
+            tooltip: string;
+            placeholder: string;
+        };
+        filters: {
+            defaultName: string;
+            saveNewFilterTooltip: string;
+            searchPlaceholder: string;
+            searchEmptyResult: string;
+            saveAsNewFilter: string;
+            saveChanges: string;
+            saveAsNew: string;
+            change: string;
+            resetChanges: string;
+            remove: string;
+            name: string;
+            error: string;
+            errorHint: string;
+            saveButton: string;
+            cancelButton: string;
+        };
+        add: {
+            tooltip: string;
+        };
+        pipe: {
+            clearButtonTooltip: string;
+            removeButtonTooltip: string;
+            applyButton: string;
+            emptySearchResult: string;
+        };
+        datePipe: {
+            customPeriod: string;
+            customPeriodFrom: string;
+            customPeriodTo: string;
+            customPeriodErrorHint: string;
+            backToPeriodSelection: string;
+        };
     };
 };
 

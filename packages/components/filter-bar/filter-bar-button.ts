@@ -1,4 +1,5 @@
 import { Directive, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFilterBar } from './filter-bar';
@@ -12,7 +13,7 @@ export class KbqFilterBarButton {
     private readonly filterBar = inject(KbqFilterBar);
 
     constructor() {
-        this.filterBar.changes.subscribe(() => {
+        this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             this.button.kbqStyle = KbqButtonStyles.Outline;
             this.button.color = KbqComponentColors.ContrastFade;
 

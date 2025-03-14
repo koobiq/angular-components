@@ -6,6 +6,7 @@
     [kbqPipeTitle]="pipeTooltip"
     [ngClass]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-multiselect__panel'"
+    [tabIndex]="-1"
     [value]="selected"
     (selectionChange)="onSelect($event.value)"
 >
@@ -17,13 +18,13 @@
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
-        @if (select.triggerValues!.length === 1) {
+        @if (select.triggerValues.length === 1) {
             <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
                 {{ select.triggerValue }}
             </span>
-        } @else if (select.triggerValues!.length > 1) {
+        } @else if (select.triggerValues.length > 1) {
             <kbq-badge [badgeColor]="'contrast'" [compact]="true">
-                {{ select.triggerValues!.length }}
+                {{ select.triggerValues.length }}
             </kbq-badge>
         }
     </button>

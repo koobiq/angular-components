@@ -165,14 +165,6 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         setTimeout(() => this.listSelection().focus());
     }
 
-    onDelete() {
-        if (this.data.cleanable) {
-            this.data.value = null;
-        } else {
-            this.filterBar?.removePipe(this.data);
-        }
-    }
-
     override open() {
         this.popover.show();
     }

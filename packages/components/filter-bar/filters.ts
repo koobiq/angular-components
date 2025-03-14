@@ -35,7 +35,7 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent } from './filter-bar.
     exportAs: 'kbqFilters',
     selector: 'kbq-filters',
     templateUrl: 'filters.html',
-    styleUrls: ['filters.scss', 'filter-bar-tokens.scss'],
+    styleUrls: ['filters.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     host: {

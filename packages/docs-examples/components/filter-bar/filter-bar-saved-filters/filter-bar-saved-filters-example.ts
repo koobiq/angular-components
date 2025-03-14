@@ -36,7 +36,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
 
-            <kbq-filter-bar-search />
+            <kbq-filter-search />
         </kbq-filter-bar>
     `
 })

@@ -4,7 +4,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
     standalone: true,
-    selector: 'kbq-filter-bar-refresher, [kbq-filter-bar-refresher]',
+    selector: 'kbq-filter-refresher, [kbq-filter-refresher]',
     template: `
         <button [color]="'contrast'" [kbqStyle]="'transparent'" kbq-button>
             <i kbq-icon="kbq-arrow-rotate-right_16"></i>
@@ -13,7 +13,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <i kbq-icon="kbq-chevron-down_16"></i>
         </button>
     `,
-    styleUrls: ['filter-bar-refresher.scss'],
+    styleUrls: ['filter-refresher.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [
@@ -21,7 +21,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     host: {
-        class: 'kbq-filter-bar-refresher'
+        class: 'kbq-filter-refresher'
     }
 })
 export class KbqFilterBarRefresher {}

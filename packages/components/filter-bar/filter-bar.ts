@@ -13,7 +13,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject, merge } from 'rxjs';
-import { KbqFilterReset } from './filter-bar-reset';
 import {
     KBQ_FILTER_BAR_CONFIGURATION,
     KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
@@ -21,6 +20,7 @@ import {
     KbqPipe,
     KbqPipeTemplate
 } from './filter-bar.types';
+import { KbqFilterReset } from './filter-reset';
 import { KbqFilters } from './filters';
 
 @Component({
@@ -38,12 +38,12 @@ import { KbqFilters } from './filters';
         </div>
 
         <div class="kbq-filter-bar__right">
-            <ng-content select="kbq-filter-bar-search, [kbq-filter-bar-search]" />
+            <ng-content select="kbq-filter-search, [kbq-filter-search]" />
 
-            <ng-content select="kbq-filter-bar-refresher, [kbq-filter-bar-refresher]" />
+            <ng-content select="kbq-filter-refresher, [kbq-filter-refresher]" />
         </div>
     `,
-    styleUrls: ['filter-bar.scss', 'filter-bar-tokens.scss'],
+    styleUrls: ['filter-bar.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [KbqDividerModule],
@@ -129,7 +129,7 @@ export class KbqFilterBar {
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
     constructor() {
-        this.internalFilterChanges.subscribe((filter) => {
+        this.internalFilterChanges.pipe(takeUntilDestroyed()).subscribe((filter) => {
             this._filter = filter;
 
             this.filterChange.emit(this.filter);
@@ -141,18 +141,22 @@ export class KbqFilterBar {
             this.initDefaultParams();
         }
 
-        merge(this.onChangePipe, this.onRemovePipe).subscribe(() => {
-            if (this.filter) {
-                this.filter.changed = true;
-            }
+        merge(this.onChangePipe, this.onRemovePipe)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                if (this.filter) {
+                    this.filter.changed = true;
+                }
 
-            this.filterChange.emit(this.filter);
-        });
+                this.filterChange.emit(this.filter);
+            });
 
-        merge(this.filterChange, this.onChangePipe, this.onRemovePipe, this.internalFilterChanges).subscribe(() => {
-            this.changes.next();
-            this.changeDetectorRef.markForCheck();
-        });
+        merge(this.filterChange, this.onChangePipe, this.onRemovePipe, this.internalFilterChanges)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                this.changes.next();
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
     /** Remove pipe from current filter and emit event */

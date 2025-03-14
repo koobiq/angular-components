@@ -39,7 +39,7 @@ import { DateTime } from 'luxon';
 
             <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
 
-            <kbq-filter-bar-search (onSearch)="onSearch($event)" />
+            <kbq-filter-search (onSearch)="onSearch($event)" />
         </kbq-filter-bar>
 
         <ng-template #optionTemplate let-option="option">

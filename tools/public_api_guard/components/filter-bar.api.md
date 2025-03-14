@@ -23,6 +23,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqInput } from '@koobiq/components/input';
 import { KbqListSelection } from '@koobiq/components/list';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqSelect } from '@koobiq/components/select';
@@ -37,6 +38,53 @@ import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ViewContainerRef } from '@angular/core';
+
+// @public (undocumented)
+export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<unknown>;
+
+// @public (undocumented)
+export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
+    reset: {
+        buttonName: string;
+    };
+    search: {
+        tooltip: string;
+        placeholder: string;
+    };
+    filters: {
+        defaultName: string;
+        saveNewFilterTooltip: string;
+        searchPlaceholder: string;
+        searchEmptyResult: string;
+        saveAsNewFilter: string;
+        saveChanges: string;
+        saveAsNew: string;
+        change: string;
+        resetChanges: string;
+        remove: string;
+        name: string;
+        error: string;
+        errorHint: string;
+        saveButton: string;
+        cancelButton: string;
+    };
+    add: {
+        tooltip: string;
+    };
+    pipe: {
+        clearButtonTooltip: string;
+        removeButtonTooltip: string;
+        applyButton: string;
+        emptySearchResult: string;
+    };
+    datePipe: {
+        customPeriod: string;
+        customPeriodFrom: string;
+        customPeriodTo: string;
+        customPeriodErrorHint: string;
+        backToPeriodSelection: string;
+    };
+};
 
 // @public (undocumented)
 export const KBQ_PIPE_DATA: InjectionToken<unknown>;
@@ -58,6 +106,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     isMac: boolean;
     // (undocumented)
     isTemplateRef(value: any): boolean;
+    // (undocumented)
+    get localeData(): any;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -115,6 +165,10 @@ export class KbqFilterBar {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     readonly changes: BehaviorSubject<void>;
+    // (undocumented)
+    configuration: any;
+    // (undocumented)
+    readonly externalConfiguration: unknown;
     get filter(): KbqFilter | null;
     set filter(value: KbqFilter | null);
     readonly filterChange: EventEmitter<KbqFilter | null>;
@@ -136,6 +190,8 @@ export class KbqFilterBar {
     get isSaved(): boolean;
     // (undocumented)
     get isSavedAndChanged(): boolean;
+    // (undocumented)
+    protected readonly localeService: KbqLocaleService | null;
     readonly onChangePipe: EventEmitter<KbqPipe>;
     readonly onRemovePipe: EventEmitter<KbqPipe>;
     // (undocumented)
@@ -148,7 +204,7 @@ export class KbqFilterBar {
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-bar-search, [kbq-filter-bar-search]", "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-search, [kbq-filter-search]", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -187,7 +243,7 @@ export class KbqFilterBarModule {
 // @public (undocumented)
 export class KbqFilterBarRefresher {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarRefresher, "kbq-filter-bar-refresher, [kbq-filter-bar-refresher]", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarRefresher, "kbq-filter-refresher, [kbq-filter-refresher]", never, {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarRefresher, never>;
 }
@@ -222,7 +278,7 @@ export class KbqFilterBarSearch {
     // (undocumented)
     tooltip: KbqTooltipTrigger;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-bar-search, [kbq-filter-bar-search]", never, {}, { "onSearch": "onSearch"; }, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBarSearch, "kbq-filter-search, [kbq-filter-search]", never, {}, { "onSearch": "onSearch"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBarSearch, never>;
 }
@@ -377,6 +433,8 @@ export class KbqPipeButton {
     // (undocumented)
     protected readonly filterBar: KbqFilterBar | null;
     // (undocumented)
+    get localeData(): any;
+    // (undocumented)
     protected readonly pipe: KbqBasePipe<any>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, {}, {}, never, never, true, never>;
@@ -422,15 +480,11 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     // (undocumented)
     onApplyPeriod(): void;
     // (undocumented)
-    onDelete(): void;
-    // (undocumented)
     onFocusEndInput(): void;
     // (undocumented)
     onFocusStartInput(): void;
     // (undocumented)
     onKeydown($event: KeyboardEvent): void;
-    // (undocumented)
-    protected readonly onkeydown: ((this: Window, ev: KeyboardEvent) => any) | null;
     // (undocumented)
     onSelect(item: KbqDateTimeValue): void;
     // (undocumented)
@@ -491,15 +545,11 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     // (undocumented)
     onApplyPeriod(): void;
     // (undocumented)
-    onDelete(): void;
-    // (undocumented)
     onFocusEndInput(): void;
     // (undocumented)
     onFocusStartInput(): void;
     // (undocumented)
     onKeydown($event: KeyboardEvent): void;
-    // (undocumented)
-    protected readonly onkeydown: ((this: Window, ev: KeyboardEvent) => any) | null;
     // (undocumented)
     onSelect(item: KbqDateTimeValue): void;
     // (undocumented)
@@ -634,8 +684,6 @@ export class KbqPipeState<T> implements OnInit {
     set state(pipe: T | null);
     // (undocumented)
     get state(): T | null;
-    // (undocumented)
-    updateState: () => void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbqPipeState]", never, { "state": { "alias": "kbqPipeState"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)

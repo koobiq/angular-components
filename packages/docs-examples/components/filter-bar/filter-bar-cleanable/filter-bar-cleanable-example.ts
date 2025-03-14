@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
@@ -12,6 +12,7 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
         KbqFilterBarModule,
         KbqLuxonDateModule
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-filter-bar [pipeTemplates]="pipeTemplates">
             @for (pipe of pipes; track pipe) {

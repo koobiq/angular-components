@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilter } from './filter-bar.types';
@@ -12,8 +12,9 @@ import { KbqFilter } from './filter-bar.types';
         </button>
     `,
     host: {
-        class: 'kbq-filter-bar-reset'
+        class: 'kbq-filter-reset'
     },
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [KbqButtonModule]
 })
 export class KbqFilterReset {

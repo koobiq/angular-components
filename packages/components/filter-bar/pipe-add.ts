@@ -9,6 +9,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOption, KbqOptionModule, KbqSelectMatcher } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -84,7 +85,7 @@ export class KbqPipeAdd {
     addedPipes: (string | number)[] = [];
 
     constructor() {
-        this.filterBar.changes.subscribe(() => {
+        this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             if (this.filterBar?.filter) {
                 this.addedPipes = this.filterBar.filter.pipes.map((pipe: KbqPipe) => pipe.id || pipe.name);
             }
