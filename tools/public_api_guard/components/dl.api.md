@@ -5,7 +5,6 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/cdk/platform';
@@ -22,9 +21,6 @@ export class KbqDdComponent {
 
 // @public (undocumented)
 export class KbqDlComponent implements AfterContentInit, OnDestroy {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    protected elementRef: ElementRef;
     // (undocumented)
     minWidth: number;
     // (undocumented)
@@ -33,8 +29,6 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     ngOnDestroy(): void;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
-    // (undocumented)
-    updateState: () => void;
     // (undocumented)
     vertical: boolean | null;
     // (undocumented)
