@@ -1,0 +1,15 @@
+.kbq-pipe__multiselect {
+    .kbq-pipe__value {
+        margin-left: var(--kbq-size-xxs);
+    }
+
+    .kbq-badge {
+        align-self: center;
+
+        margin-left: var(--kbq-size-xs);
+    }
+}
+
+.kbq-pipe-multiselect__panel .kbq-select__content {
+    max-height: 404px;
+}

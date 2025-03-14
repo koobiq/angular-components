@@ -1,0 +1,179 @@
+<button
+    kbq-button
+    kbq-title
+    kbqFilterBarButton
+    kbqPopover
+    [kbqDropdownTriggerFor]="savedFilters"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverClass]="'kbq-filters__save-as-new-filter-popover'"
+    [kbqPopoverContent]="saveAsNewPopoverContent"
+    [kbqPopoverFooter]="saveAsNewPopoverFooter"
+    [kbqPopoverHeader]="saveAsNewPopoverHeader"
+    [kbqPopoverPlacement]="placements.BottomLeft"
+    [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
+    [kbqPopoverSize]="popoverSize"
+    [kbqTrigger]="'manual'"
+    [ngClass]="{ 'kbq-active': opened }"
+    (dropdownClosed)="searchControl.setValue('')"
+    (dropdownOpened)="onDropdownOpen()"
+>
+    <span #kbqTitleText class="kbq-filters__filter-name">
+        @if (filter?.name) {
+            {{ filter!.name }}
+        } @else {
+            <ng-content>
+                <i kbq-icon="kbq-list_16"></i>
+                {{ filterBar.configuration.filters.defaultName }}
+            </ng-content>
+        }
+    </span>
+</button>
+
+@if (filterBar.isChanged && !filterBar.isSaved) {
+    <button
+        kbq-button
+        kbqFilterBarButton
+        kbqTooltip="{{ filterBar.configuration.filters.saveNewFilterTooltip }}"
+        class="kbq-button_action"
+        [color]="colors.Empty"
+        (click)="openSaveAsNewFilterPopover()"
+    >
+        <i kbq-icon="kbq-floppy-disk_16"></i>
+    </button>
+}
+
+@if (filterBar.isSaved) {
+    <button
+        kbq-button
+        kbqFilterBarButton
+        class="kbq-button_action"
+        [color]="colors.Empty"
+        [kbqDropdownTriggerFor]="filterActions"
+        [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+    >
+        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+    </button>
+
+    <i kbq-icon="kbq-chevron-right-s_16" class="kbq-filter-bar__arrow" [color]="'theme'"></i>
+} @else {
+    <kbq-divider class="kbq-filter-bar__separator" [vertical]="true" />
+}
+
+<kbq-dropdown #savedFilters="kbqDropdown" [class]="'kbq-filters__dropdown'">
+    <div [style.display]="isEmpty ? 'none' : 'initial'">
+        <kbq-form-field kbqFormFieldWithoutBorders>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+
+            <input
+                #search
+                autocomplete="off"
+                kbqInput
+                placeholder="{{ filterBar.configuration.filters.searchPlaceholder }}"
+                [formControl]="searchControl"
+                (click)="stopEventPropagation($event)"
+                (keydown)="searchKeydownHandler($event)"
+            />
+            <kbq-cleaner />
+        </kbq-form-field>
+
+        <kbq-divider />
+
+        @for (filter of filteredOptions | async; track filter) {
+            <button
+                kbq-dropdown-item
+                kbq-title
+                [class.kbq-selected]="filterBar.filter?.name === filter.name"
+                (click)="selectFilter(filter)"
+            >
+                {{ filter.name }}
+            </button>
+        } @empty {
+            <button kbq-dropdown-item [disabled]="true">
+                {{ filterBar.configuration.filters.searchEmptyResult }}
+            </button>
+        }
+
+        <kbq-divider />
+    </div>
+
+    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
+        <i kbq-icon="kbq-plus_16"></i>
+        {{ filterBar.configuration.filters.saveAsNewFilter }}
+    </button>
+</kbq-dropdown>
+
+<kbq-dropdown #filterActions="kbqDropdown" [class]="'kbq-filters__dropdown'">
+    @if (filterBar.isSavedAndChanged && !filterBar.isReadOnly) {
+        <button
+            kbq-dropdown-item
+            [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
+            (click)="saveChanges()"
+        >
+            <i kbq-icon="kbq-floppy-disk_16"></i>
+            {{ filterBar.configuration.filters.saveChanges }}
+            @if (filterBar.isSavedAndChanged) {
+                <i class="kbq kbq-icon kbq-icon-button kbq-circle-xs_16 kbq-warning layout-margin-left-xs"></i>
+            }
+        </button>
+    }
+    <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
+        <i kbq-icon="kbq-plus_16"></i>
+        {{ filterBar.configuration.filters.saveAsNew }}
+    </button>
+
+    @if (!filterBar.isReadOnly) {
+        <button kbq-dropdown-item (click)="openChangeFilterNamePopover()">
+            <i kbq-icon="kbq-pencil_16"></i>
+            {{ filterBar.configuration.filters.change }}
+        </button>
+    }
+
+    @if (filterBar.isSavedAndChanged || !filterBar.isReadOnly) {
+        <kbq-divider />
+    }
+
+    @if (filterBar.isSavedAndChanged) {
+        <button kbq-dropdown-item (click)="resetFilterChanges()">
+            <i kbq-icon="kbq-xmark-circle_16"></i>
+            {{ filterBar.configuration.filters.resetChanges }}
+        </button>
+    }
+    @if (!filterBar.isReadOnly) {
+        <button kbq-dropdown-item (click)="this.onRemoveFilter.next(this.filter!)">
+            <i kbq-icon="kbq-trash_16"></i>
+            {{ filterBar.configuration.filters.remove }}
+        </button>
+    }
+</kbq-dropdown>
+
+<ng-template #saveAsNewPopoverHeader>{{ popoverHeader }}</ng-template>
+
+<ng-template #saveAsNewPopoverContent>
+    @if (showFilterSavingError) {
+        <kbq-alert class="layout-margin-bottom-m" [alertColor]="'error'" [alertStyle]="'colored'" [compact]="true">
+            {{ filterSavingErrorText }}
+        </kbq-alert>
+    }
+    <div class="kbq-form-vertical">
+        <div class="kbq-form__row">
+            <label class="kbq-form__label">{{ filterBar.configuration.filters.name }}</label>
+
+            <kbq-form-field class="kbq-form__control">
+                <input #newFilterName kbqInput type="text" [formControl]="filterName" />
+
+                @if (filterName.hasError('filterNameAlreadyExist')) {
+                    <kbq-hint [color]="'error'">{{ filterBar.configuration.filters.error }}</kbq-hint>
+                }
+            </kbq-form-field>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #saveAsNewPopoverFooter>
+    <button kbq-button class="layout-margin-right-l" [color]="'contrast'" [kbqStyle]="'filled'" (click)="saveAsNew()">
+        {{ filterBar.configuration.filters.saveButton }}
+    </button>
+    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" (click)="closePopover()">
+        {{ filterBar.configuration.filters.cancel }}
+    </button>
+</ng-template>

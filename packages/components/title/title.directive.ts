@@ -10,7 +10,7 @@ import {
     OnDestroy,
     Optional
 } from '@angular/core';
-import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -27,16 +27,25 @@ import { debounceTime } from 'rxjs/operators';
 export class KbqTitleDirective extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     private contentObserver = inject(ContentObserver);
 
+    // todo need rename kbqTrigger in popover, tooltip and title. Here workaround for kbq-title and popover on one button
+    set trigger(value: string) {
+        super.trigger = value;
+    }
+
+    get trigger(): string {
+        return PopUpTriggers.Hover;
+    }
+
     get isOverflown(): boolean {
-        return this.parent.offsetWidth < this.child.scrollWidth || this.parent.offsetHeight < this.child.scrollHeight;
+        return this.parent?.offsetWidth < this.child.scrollWidth || this.parent?.offsetHeight < this.child.scrollHeight;
     }
 
     get viewValue(): string {
-        return (this.parent.textContent || '').trim();
+        return (this.parent?.textContent || '').trim();
     }
 
     get parent(): HTMLElement {
-        return this.parentContainer.nativeElement || this.parentContainer;
+        return this.parentContainer?.nativeElement || this.parentContainer;
     }
 
     get child(): HTMLElement {

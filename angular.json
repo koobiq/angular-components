@@ -1026,6 +1026,35 @@
                 }
             }
         },
+        "dev-filter-bar": {
+            "projectType": "application",
+            "root": "packages/components-dev/filter-bar",
+            "sourceRoot": "packages/components-dev/filter-bar",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/filter-bar"
+                        },
+                        "tsConfig": "packages/components-dev/filter-bar/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/filter-bar/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-filter-bar:build"
+                    }
+                }
+            }
+        },
         "dev-icon": {
             "projectType": "application",
             "root": "packages/components-dev/icon",

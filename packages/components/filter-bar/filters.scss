@@ -1,0 +1,92 @@
+@use '../core/styles/common';
+@use './filter-bar-theme' as *;
+
+.kbq-filters {
+    display: flex;
+
+    > .kbq-button {
+        max-width: 320px;
+
+        & .kbq-button-wrapper {
+            width: 100%;
+        }
+    }
+
+    > .kbq-button .kbq-icon {
+        margin-right: var(--kbq-size-xxs);
+    }
+
+    & .kbq-filters__filter-name {
+        @include common.kbq-truncate-line();
+    }
+
+    & .kbq-filter-bar__separator {
+        align-self: center;
+
+        height: var(--kbq-size-m) !important;
+
+        margin-left: calc(var(--kbq-size-s) + var(--kbq-size-xs)) !important;
+        margin-right: var(--kbq-size-xs) !important;
+    }
+
+    & .kbq-filter-bar__arrow {
+        align-self: center;
+
+        margin-left: var(--kbq-size-s);
+    }
+
+    .kbq-button.kbq-button_changed-filter {
+        border-bottom-right-radius: unset;
+        border-top-right-radius: unset;
+    }
+
+    .kbq-button-icon {
+        margin-left: -1px;
+
+        border-bottom-left-radius: unset;
+        border-top-left-radius: unset;
+    }
+
+    .kbq-button_changed-saved-filter {
+        &::before {
+            content: '';
+            position: absolute;
+            right: -4px;
+            top: -4px;
+
+            width: var(--kbq-size-s);
+            height: var(--kbq-size-s);
+
+            border: 2px solid var(--kbq-background-bg);
+            border-radius: var(--kbq-size-xs);
+
+            background: var(--kbq-icon-warning);
+        }
+    }
+
+    .kbq-button:not(:hover, .kbq-active) + .kbq-button_action:not(:hover, .kbq-active)::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 10px;
+
+        width: 1px;
+        height: var(--kbq-size-m);
+
+        background: var(--kbq-line-contrast-less);
+    }
+}
+
+.kbq-filters__save-as-new-filter-popover {
+    & .kbq-popover__container {
+        width: 400px;
+    }
+
+    & .kbq-popover__content {
+        padding: var(--kbq-size-s) var(--kbq-size-xxl);
+    }
+}
+
+.kbq-filters__dropdown .kbq-dropdown-item {
+    padding-right: var(--kbq-size-s);
+}

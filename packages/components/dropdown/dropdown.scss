@@ -53,6 +53,11 @@
             left: calc(100% + var(--kbq-size-3xs)); // outline size
         }
     }
+
+    .kbq-divider {
+        margin-left: calc(var(--kbq-size-xxs) * -1);
+        margin-right: calc(var(--kbq-size-xxs) * -1);
+    }
 }
 
 .kbq-dropdown__content {

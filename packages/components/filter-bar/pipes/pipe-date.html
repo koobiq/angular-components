@@ -1,0 +1,134 @@
+<button
+    #popover="kbqPopover"
+    kbq-button
+    kbqPopover
+    [disabled]="data.disabled"
+    [kbqPipeState]="data"
+    [kbqPipeTitle]="pipeTooltip"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverClass]="'kbq-pipe-date__popover'"
+    [kbqPopoverContent]="content"
+    [kbqPopoverPlacement]="placements.BottomLeft"
+    [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
+    (kbqPopoverVisibleChange)="list = true"
+>
+    <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
+    <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
+        {{ formattedValue }}
+    </span>
+</button>
+
+@if (showRemoveButton) {
+    <kbq-pipe-button />
+}
+
+<ng-template #content>
+    @if (list) {
+        <div class="kbq-date-list">
+            <kbq-list-selection [autoSelect]="false" [ngModel]="data.value?.name">
+                <kbq-list-option (click)="openPeriod()" (keydown.enter)="openPeriod()">
+                    {{ localeData.datePipe.customPeriod }}
+                    <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
+                </kbq-list-option>
+
+                @for (item of values; track item) {
+                    <kbq-list-option [value]="item.name" (click)="onSelect(item)" (keydown.enter)="onSelect(item)">
+                        {{ item.name }}
+                    </kbq-list-option>
+                }
+            </kbq-list-selection>
+        </div>
+    } @else {
+        <div class="kbq-date-period kbq-datepicker__content" (keydown)="onKeydown($event)">
+            <div class="kbq-date-period__header">
+                <button
+                    #returnButton
+                    kbq-button
+                    [color]="colors.Theme"
+                    [kbqStyle]="styles.Transparent"
+                    (click)="openList()"
+                >
+                    <i kbq-icon="kbq-chevron-left_16"></i>
+                    {{ localeData.datePipe.backToPeriodSelection }}
+                </button>
+            </div>
+
+            <kbq-divider />
+
+            <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
+                <div class="kbq-date-period__content-header">{{ localeData.datePipe.customPeriod }}</div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-10">{{ localeData.datePipe.customPeriodFrom }}</label>
+
+                    <kbq-form-field
+                        class="kbq-date-period__date kbq-form__control"
+                        [class.kbq-focused]="showStartCalendar"
+                    >
+                        <input
+                            formControlName="start"
+                            [kbqCalendar]="startDateCalendar"
+                            [max]="formGroup.controls.end.value"
+                            (focusin)="onFocusStartInput()"
+                            (keydown.tab)="hideCalendars()"
+                        />
+                        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                    </kbq-form-field>
+                </div>
+
+                <kbq-calendar
+                    #startDateCalendar
+                    [class.kbq-calendar_hidden]="!showStartCalendar"
+                    (selectedChange)="onSelectStartDate($event)"
+                />
+
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-10">{{ localeData.datePipe.customPeriodTo }}</label>
+
+                    <kbq-form-field
+                        class="kbq-date-period__date kbq-form__control"
+                        [class.kbq-focused]="showEndCalendar"
+                    >
+                        <input
+                            formControlName="end"
+                            [kbqCalendar]="endDateCalendar"
+                            (focusin)="onFocusEndInput()"
+                            (keydown.tab)="hideCalendars()"
+                        />
+                        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                    </kbq-form-field>
+                </div>
+
+                @if (formGroup.controls.start.invalid) {
+                    <kbq-hint class="kbq-date-period__hint" [color]="'error'">
+                        {{ localeData.datePipe.customPeriodErrorHint }}
+                    </kbq-hint>
+                }
+
+                <kbq-calendar
+                    #endDateCalendar
+                    [class.kbq-calendar_hidden]="!showEndCalendar"
+                    (selectedChange)="onSelectEndDate($event)"
+                />
+            </form>
+
+            <div class="kbq-date-period__footer">
+                <button
+                    kbq-button
+                    [color]="'theme'"
+                    [disabled]="disabled"
+                    [kbqStyle]="'transparent'"
+                    (click)="onApplyPeriod()"
+                >
+                    <span>{{ localeData.pipe.applyButton }}</span>
+                    &nbsp;
+                    <span class="kbq-button_hot-key">{{ isMac ? '⌘' : 'Ctrl+' }}Enter</span>
+                </button>
+            </div>
+        </div>
+    }
+</ng-template>
+
+<ng-template #pipeTooltip>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ formattedValue }}</div>
+</ng-template>

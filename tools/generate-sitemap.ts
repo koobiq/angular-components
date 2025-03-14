@@ -72,6 +72,9 @@ const paths = [
     'components/file-upload/overview',
     'components/file-upload/api',
 
+    'components/filter-bar/overview',
+    'components/filter-bar/api',
+
     'components/experimental-form-field/overview',
     'components/experimental-form-field/api',
 

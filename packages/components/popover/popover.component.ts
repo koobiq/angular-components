@@ -23,7 +23,9 @@ import {
     Type,
     ViewChild,
     ViewEncapsulation,
-    inject
+    booleanAttribute,
+    inject,
+    numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -33,7 +35,9 @@ import {
     POSITION_TO_CSS_MAP,
     PopUpPlacements,
     PopUpSizes,
-    PopUpTriggers
+    PopUpTriggers,
+    applyPopupMargins,
+    defaultOffsetY
 } from '@koobiq/components/core';
 import { NEVER, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -63,6 +67,7 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     hasCloseButton: boolean = false;
 
     @ViewChild('popoverContent') popoverContent: ElementRef<HTMLDivElement>;
+    @ViewChild('popover') elementRef: ElementRef;
     @ViewChild(CdkTrapFocus) cdkTrapFocus: CdkTrapFocus;
 
     private debounceTime = 15;
@@ -82,6 +87,16 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
             });
 
         this.cdkTrapFocus.focusTrap.focusFirstTabbableElement();
+        this.visibleChange.subscribe((state) => {
+            if (this.offset !== null && state) {
+                applyPopupMargins(
+                    this.renderer,
+                    this.elementRef.nativeElement,
+                    this.prefix,
+                    `${this.offset!.toString()}px`
+                );
+            }
+        });
     }
 
     onContentChange() {
@@ -313,7 +328,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     // @TODO add realization for arrow (#DS-2514)
-    arrow: boolean = true;
+    @Input({ alias: 'kbqPopoverArrow', transform: booleanAttribute }) arrow: boolean = true;
+
+    @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetY;
 
     @Output('kbqPopoverPlacementChange') placementChange = new EventEmitter();
 
@@ -351,6 +368,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
         this.instance.header = this.header;
         this.instance.content = this.content;
+        this.instance.arrow = this.arrow;
+        this.instance.offset = this.offset;
         this.instance.footer = this.footer;
         this.instance.hasCloseButton = this.hasCloseButton;
 
@@ -389,13 +408,17 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
 
     closingActionsForClick() {
         if (this.hasClickTrigger) {
-            return [
-                this.overlayRef!.backdropClick(),
-                this.hasBackdrop ? NEVER : this.overlayRef!.outsidePointerEvents()
-            ];
+            return this.defaultClosingActions();
         }
 
         return [];
+    }
+
+    defaultClosingActions() {
+        return [
+            this.overlayRef!.backdropClick(),
+            this.hasBackdrop ? NEVER : this.overlayRef!.outsidePointerEvents()
+        ];
     }
 
     closingActions() {
