@@ -1,26 +1,16 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 
 @Component({
+    standalone: true,
+    imports: [KbqDlModule],
     selector: 'app',
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrl: './styles.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
-    themePalette = ThemePalette;
+export class DlDev {
+    readonly themePalette = ThemePalette;
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqDlModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

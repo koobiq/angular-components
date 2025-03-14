@@ -1,23 +1,11 @@
 @use '../main';
 
-.kbq-column-container {
-    margin-left: 15px;
-    margin-right: 15px;
+app {
+    display: block;
+    max-width: 600px;
+    padding: var(--kbq-size-s);
 }
 
-.docs-border {
-    border: 1px solid red;
-}
-
-.container {
-    display: flex;
-    flex-direction: row;
-}
-
-.container__left {
-    margin: 0 16px;
-}
-
-.container__right {
-    margin: 0 16px;
+.kbq-dl {
+    border: 1px solid var(--kbq-palette-cyan-50);
 }
