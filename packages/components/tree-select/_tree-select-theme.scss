@@ -6,17 +6,25 @@
 
         &.ng-invalid {
             color: var(--kbq-error-default);
+
+            .kbq-select__placeholder {
+                color: var(--kbq-form-field-states-error-placeholder);
+            }
         }
 
         &.kbq-disabled {
             color: var(--kbq-states-foreground-disabled);
+
+            .kbq-select__placeholder {
+                color: var(--kbq-form-field-states-disabled-placeholder);
+            }
         }
     }
 
     .kbq-select__placeholder {
         text-overflow: ellipsis;
 
-        color: var(--kbq-states-foreground-disabled);
+        color: var(--kbq-form-field-default-placeholder);
     }
 
     .kbq-tree-select__panel {
