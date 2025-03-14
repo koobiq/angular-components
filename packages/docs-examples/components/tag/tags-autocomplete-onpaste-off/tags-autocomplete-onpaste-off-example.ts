@@ -14,7 +14,7 @@ import {
     KbqTagsDefaultOptions,
     KbqTagsModule
 } from '@koobiq/components/tags';
-import { merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const autocompleteValueCoercion = (value): string => (value?.new ? value.value : value) || '';
@@ -53,7 +53,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
     suggestions: string[] = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7', 'tag8', 'tag9', 'tag10'];
     selectedTags: string[] = ['tag1'];
 
-    filteredTags: any;
+    filteredTags: Observable<string[]>;
     hasDuplicates: boolean;
 
     get canCreate(): boolean {
