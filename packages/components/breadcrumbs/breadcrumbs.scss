@@ -102,6 +102,10 @@
         color: var(--kbq-foreground-contrast);
     }
 
+    &.kbq-breadcrumbs_wrap {
+        flex-wrap: wrap;
+    }
+
     // typography
     .kbq-breadcrumb__separator {
         @include vendor-prefixes.user-select(none);
