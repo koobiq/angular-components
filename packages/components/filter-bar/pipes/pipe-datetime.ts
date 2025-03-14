@@ -163,6 +163,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         this.list = true;
 
         setTimeout(() => this.listSelection().focus());
+        this.popover.updatePosition(true);
     }
 
     override open() {
@@ -180,6 +181,8 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     onFocusStartInput() {
         this.showStartCalendar = true;
         this.showEndCalendar = false;
+
+        this.popover.updatePosition(true);
     }
 
     onFocusEndInput() {
