@@ -1,5 +1,10 @@
-import { TemplateRef } from '@angular/core';
+import { InjectionToken, TemplateRef } from '@angular/core';
+import { ruRULocaleData } from '@koobiq/components/core';
 import { KbqFilterBar } from './filter-bar';
+
+export const KBQ_FILTER_BAR_CONFIGURATION = new InjectionToken('KbqFilterBarConfiguration');
+
+export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION = ruRULocaleData.filterBar;
 
 export enum KbqPipeTypes {
     Text = 'text',

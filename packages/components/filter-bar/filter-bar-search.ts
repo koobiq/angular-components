@@ -27,7 +27,7 @@ import { KbqFilterBar } from './filter-bar';
             [kbqStyle]="'transparent'"
             (click)="openSearch()"
             kbq-button
-            kbqTooltip="Поиск"
+            kbqTooltip="{{ filterBar.configuration.search.tooltip }}"
         >
             <i kbq-icon="kbq-magnifying-glass_16"></i>
         </button>
@@ -41,7 +41,7 @@ import { KbqFilterBar } from './filter-bar';
                 (keydown.escape)="onEscape()"
                 autocomplete="off"
                 kbqInput
-                placeholder="Поиск"
+                placeholder="{{ filterBar.configuration.search.placeholder }}"
             />
 
             <kbq-cleaner (click)="onClear()" />

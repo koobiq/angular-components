@@ -26,7 +26,7 @@
         <div class="kbq-date-list">
             <kbq-list-selection [ngModel]="data.value?.name">
                 <kbq-list-option (click)="openPeriod()" (keydown.enter)="openPeriod()">
-                    Произвольный период
+                    {{ localeData.datePipe?.customPeriod }}
                     <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
                 </kbq-list-option>
 
@@ -48,16 +48,16 @@
                     (click)="openList()"
                 >
                     <i kbq-icon="kbq-chevron-left_16"></i>
-                    Назад к выбору периода
+                    {{ localeData.datePipe.backToPeriodSelection }}
                 </button>
             </div>
 
             <kbq-divider />
 
             <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
-                <div class="kbq-date-period__content-header">Произвольный период</div>
+                <div class="kbq-date-period__content-header">{{ localeData.datePipe.customPeriod }}</div>
                 <div class="kbq-form__row kbq-form__row_with-time">
-                    <label class="kbq-form__label flex-10">c</label>
+                    <label class="kbq-form__label flex-10">{{ localeData.datePipe.customPeriodFrom }}</label>
 
                     <kbq-form-field
                         class="kbq-date-period__date kbq-form__control"
@@ -86,7 +86,7 @@
                 />
 
                 <div class="kbq-form__row kbq-form__row_with-time">
-                    <label class="kbq-form__label flex-10">по</label>
+                    <label class="kbq-form__label flex-10">{{ localeData.datePipe.customPeriodTo }}</label>
 
                     <kbq-form-field
                         class="kbq-date-period__date kbq-form__control"
@@ -109,7 +109,7 @@
 
                 @if (formGroup.controls.start.invalid) {
                     <kbq-hint class="kbq-date-period__hint" [color]="'error'">
-                        Начало периода не может быть позже окончания
+                        {{ localeData.datePipe.customPeriodErrorHint }}
                     </kbq-hint>
                 }
 
@@ -128,7 +128,7 @@
                     [kbqStyle]="'transparent'"
                     (click)="onApplyPeriod()"
                 >
-                    <span>Применить</span>
+                    <span>{{ localeData.pipe.applyButton }}</span>
                     &nbsp;
                     <span class="kbq-button_hot-key">{{ isMac ? '⌘' : 'Ctrl+' }}Enter</span>
                 </button>

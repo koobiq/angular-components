@@ -35,7 +35,7 @@
         </kbq-form-field>
     }
 
-    <div kbq-select-search-empty-result>Ничего не найдено</div>
+    <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
 
     @for (item of filteredOptions | async; track item) {
         <kbq-option [value]="item">

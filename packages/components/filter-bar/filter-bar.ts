@@ -9,10 +9,18 @@ import {
     Output,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { BehaviorSubject, merge } from 'rxjs';
 import { KbqFilterReset } from './filter-bar-reset';
-import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
+import {
+    KBQ_FILTER_BAR_CONFIGURATION,
+    KBQ_FILTER_BAR_DEFAULT_CONFIGURATION,
+    KbqFilter,
+    KbqPipe,
+    KbqPipeTemplate
+} from './filter-bar.types';
 import { KbqFilters } from './filters';
 
 @Component({
@@ -38,16 +46,17 @@ import { KbqFilters } from './filters';
     styleUrls: ['filter-bar.scss', 'filter-bar-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [
-        KbqDividerModule
-    ],
+    imports: [KbqDividerModule],
     host: {
         class: 'kbq-filter-bar'
     }
 })
 export class KbqFilterBar {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    private savedFilter: KbqFilter | null = null;
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    readonly externalConfiguration = inject(KBQ_FILTER_BAR_CONFIGURATION, { optional: true });
+
+    configuration;
 
     @ContentChild(KbqFilters) filters: KbqFilters;
     @ContentChild(KbqFilterReset) filterReset: KbqFilterReset;
@@ -112,6 +121,8 @@ export class KbqFilterBar {
         return !!this.filter?.disabled;
     }
 
+    private savedFilter: KbqFilter | null = null;
+
     readonly changes = new BehaviorSubject<void>(undefined);
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
     readonly internalTemplatesChanges = new BehaviorSubject<KbqPipeTemplate[] | null>(null);
@@ -123,6 +134,12 @@ export class KbqFilterBar {
 
             this.filterChange.emit(this.filter);
         });
+
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.initDefaultParams();
+        }
 
         merge(this.onChangePipe, this.onRemovePipe).subscribe(() => {
             if (this.filter) {
@@ -158,5 +175,15 @@ export class KbqFilterBar {
     /** Set the filter state "changed" to false */
     resetFilterChangedState() {
         this.filter!.changed = false;
+    }
+
+    private updateLocaleParams = () => {
+        this.configuration = this.externalConfiguration || this.localeService?.getParams('filterBar');
+
+        this.changeDetectorRef.markForCheck();
+    };
+
+    private initDefaultParams() {
+        this.configuration = KBQ_FILTER_BAR_DEFAULT_CONFIGURATION;
     }
 }

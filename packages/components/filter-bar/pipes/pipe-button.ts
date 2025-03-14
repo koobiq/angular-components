@@ -17,7 +17,7 @@ import { KbqPipeState } from './pipe-state';
             [kbqPipeState]="pipe.data"
             (click)="pipe.data.cleanable ? pipe.onClear() : pipe.onRemove()"
             kbq-button
-            kbqTooltip="{{ pipe.data.cleanable ? 'Очистить' : 'Удалить' }}"
+            kbqTooltip="{{ pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
         >
             <i kbq-icon="kbq-xmark-s_16"></i>
         </button>
@@ -40,6 +40,10 @@ export class KbqPipeButton {
     protected readonly pipe = inject(KbqBasePipe);
     protected readonly filterBar = inject(KbqFilterBar, { optional: true });
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    get localeData() {
+        return this.filterBar?.configuration.pipe;
+    }
 
     constructor() {
         this.filterBar?.changes.subscribe(() => this.changeDetectorRef.markForCheck());

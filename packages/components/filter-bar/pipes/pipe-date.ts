@@ -112,8 +112,6 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     listSelection = viewChild.required('listSelection', { read: KbqListSelection });
     returnButton = viewChild.required('returnButton', { read: KbqButton });
 
-    protected readonly onkeydown = onkeydown;
-
     constructor() {
         super();
 

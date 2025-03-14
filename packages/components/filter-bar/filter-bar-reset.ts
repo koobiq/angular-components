@@ -8,15 +8,13 @@ import { KbqFilter } from './filter-bar.types';
     selector: 'kbq-filter-reset',
     template: `
         <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="onResetFilter.emit(filterBar.filter!)" kbq-button>
-            <ng-content>Сбросить</ng-content>
+            <ng-content>{{ filterBar.configuration.reset.buttonName }}</ng-content>
         </button>
     `,
     host: {
         class: 'kbq-filter-bar-reset'
     },
-    imports: [
-        KbqButtonModule
-    ]
+    imports: [KbqButtonModule]
 })
 export class KbqFilterReset {
     protected readonly filterBar = inject(KbqFilterBar);

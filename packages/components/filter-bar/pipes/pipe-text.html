@@ -29,7 +29,7 @@
 
 <ng-template #footer>
     <button kbq-button [color]="'theme'" [disabled]="disabled" [kbqStyle]="'transparent'" (click)="onApply()">
-        <span>Применить</span>
+        <span>{{ localeData.pipe.applyButton }}</span>
         &nbsp;
         <span class="kbq-button_hot-key">{{ isMac ? '⌘' : 'Ctrl+' }}Enter</span>
     </button>

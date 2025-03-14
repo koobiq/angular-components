@@ -22,7 +22,7 @@
         } @else {
             <ng-content>
                 <i kbq-icon="kbq-list_16"></i>
-                Фильтры
+                {{ filterBar.configuration.filters.defaultName }}
             </ng-content>
         }
     </span>
@@ -32,7 +32,7 @@
     <button
         kbq-button
         kbqFilterBarButton
-        kbqTooltip="Сохранить новый фильтр"
+        kbqTooltip="{{ filterBar.configuration.filters.saveNewFilterTooltip }}"
         class="kbq-button_action"
         [color]="colors.Empty"
         (click)="openSaveAsNewFilterPopover()"
@@ -69,7 +69,7 @@
                 #search
                 autocomplete="off"
                 kbqInput
-                placeholder="Поиск"
+                placeholder="{{ filterBar.configuration.filters.searchPlaceholder }}"
                 [formControl]="searchControl"
                 (click)="stopEventPropagation($event)"
                 (keydown)="searchKeydownHandler($event)"
@@ -89,7 +89,9 @@
                 {{ filter.name }}
             </button>
         } @empty {
-            <button kbq-dropdown-item [disabled]="true">Ничего не найдено</button>
+            <button kbq-dropdown-item [disabled]="true">
+                {{ filterBar.configuration.filters.searchEmptyResult }}
+            </button>
         }
 
         <kbq-divider />
@@ -97,7 +99,7 @@
 
     <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
-        Сохранить как новый фильтр
+        {{ filterBar.configuration.filters.saveAsNewFilter }}
     </button>
 </kbq-dropdown>
 
@@ -109,7 +111,7 @@
             (click)="saveChanges()"
         >
             <i kbq-icon="kbq-floppy-disk_16"></i>
-            Сохранить изменения
+            {{ filterBar.configuration.filters.saveChanges }}
             @if (filterBar.isSavedAndChanged) {
                 <i class="kbq kbq-icon kbq-icon-button kbq-circle-xs_16 kbq-warning layout-margin-left-xs"></i>
             }
@@ -117,13 +119,13 @@
     }
     <button kbq-dropdown-item (click)="openSaveAsNewFilterPopover()">
         <i kbq-icon="kbq-plus_16"></i>
-        Сохранить как новый
+        {{ filterBar.configuration.filters.saveAsNew }}
     </button>
 
     @if (!filterBar.isReadOnly) {
         <button kbq-dropdown-item (click)="openChangeFilterNamePopover()">
             <i kbq-icon="kbq-pencil_16"></i>
-            Изменить
+            {{ filterBar.configuration.filters.change }}
         </button>
     }
 
@@ -134,13 +136,13 @@
     @if (filterBar.isSavedAndChanged) {
         <button kbq-dropdown-item (click)="resetFilterChanges()">
             <i kbq-icon="kbq-xmark-circle_16"></i>
-            Сбросить изменения
+            {{ filterBar.configuration.filters.resetChanges }}
         </button>
     }
     @if (!filterBar.isReadOnly) {
         <button kbq-dropdown-item (click)="this.onRemoveFilter.next(this.filter!)">
             <i kbq-icon="kbq-trash_16"></i>
-            Удалить
+            {{ filterBar.configuration.filters.remove }}
         </button>
     }
 </kbq-dropdown>
@@ -155,13 +157,13 @@
     }
     <div class="kbq-form-vertical">
         <div class="kbq-form__row">
-            <label class="kbq-form__label">Название</label>
+            <label class="kbq-form__label">{{ filterBar.configuration.filters.name }}</label>
 
             <kbq-form-field class="kbq-form__control">
                 <input #newFilterName kbqInput type="text" [formControl]="filterName" />
 
                 @if (filterName.hasError('filterNameAlreadyExist')) {
-                    <kbq-hint [color]="'error'">Поиск с таким названием уже сущетсвует</kbq-hint>
+                    <kbq-hint [color]="'error'">{{ filterBar.configuration.filters.error }}</kbq-hint>
                 }
             </kbq-form-field>
         </div>
@@ -170,7 +172,9 @@
 
 <ng-template #saveAsNewPopoverFooter>
     <button kbq-button class="layout-margin-right-l" [color]="'contrast'" [kbqStyle]="'filled'" (click)="saveAsNew()">
-        Сохранить
+        {{ filterBar.configuration.filters.saveButton }}
     </button>
-    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" (click)="closePopover()">Отмена</button>
+    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" (click)="closePopover()">
+        {{ filterBar.configuration.filters.cancel }}
+    </button>
 </ng-template>

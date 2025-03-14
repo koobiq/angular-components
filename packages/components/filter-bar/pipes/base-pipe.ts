@@ -52,8 +52,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         return !this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty));
     }
 
-    isTemplateRef(value): boolean {
-        return value instanceof TemplateRef;
+    get localeData() {
+        return this.filterBar?.configuration;
     }
 
     constructor() {
@@ -80,6 +80,10 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
                 this.open();
             }
         });
+    }
+
+    isTemplateRef(value): boolean {
+        return value instanceof TemplateRef;
     }
 
     updateTemplates = (templates: KbqPipeTemplate[] | null) => {

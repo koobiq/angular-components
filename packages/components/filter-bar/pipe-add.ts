@@ -28,7 +28,7 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
                 [kbqStyle]="'outline'"
                 [ngClass]="{ 'kbq-active': select.panelOpen }"
                 kbq-button
-                kbqTooltip="Добавить фильтр"
+                kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
                 kbq-select-matcher
             >
                 <i kbq-icon="kbq-plus_16"></i>

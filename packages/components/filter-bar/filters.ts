@@ -180,8 +180,7 @@ export class KbqFilters implements OnInit {
 
         this.showFilterSavingError = true;
 
-        this.filterSavingErrorText =
-            error?.text ?? 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.';
+        this.filterSavingErrorText = error?.text ?? this.filterBar.configuration.filters.errorHint;
     }
 
     restoreFocus() {
