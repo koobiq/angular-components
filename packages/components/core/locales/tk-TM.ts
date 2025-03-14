@@ -86,4 +86,5 @@ export const tkTMLocaleData = {
             customPeriodErrorHint: 'Начало периода не может быть позже окончания',
             backToPeriodSelection: 'Назад к выбору периода'
         }
+    }
 };

@@ -3428,6 +3428,7 @@ export const zhCNLocaleData: {
     };
     actionsPanel: {
         closeTooltip: string;
+    };
     filterBar: {
         reset: {
             buttonName: string;

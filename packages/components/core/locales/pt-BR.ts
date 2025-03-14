@@ -85,4 +85,5 @@ export const ptBRLocaleData = {
             customPeriodErrorHint: 'Начало периода не может быть позже окончания',
             backToPeriodSelection: 'Назад к выбору периода'
         }
+    }
 };
