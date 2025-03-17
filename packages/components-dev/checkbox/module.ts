@@ -1,38 +1,43 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { KbqPseudoCheckboxModule, ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqTableModule } from '@koobiq/components/table';
+import { CheckboxExamplesModule } from 'packages/docs-examples/components/checkbox';
 import { KbqCheckboxModule } from '../../components/checkbox';
 
 @Component({
-    selector: 'app',
-    styleUrls: ['../main.scss'],
-    encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    standalone: true,
+    selector: 'dev-checkbox-examples',
+    imports: [CheckboxExamplesModule],
+    template: `
+        <checkbox-indeterminate-example />
+        <hr />
+        <checkbox-overview-example />
+        <hr />
+        <pseudo-checkbox-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
-    themePalette = ThemePalette;
+export class DevCheckboxExamples {}
 
-    checked: boolean[] = [true, true, false];
-    indeterminate: boolean = true;
-    disabled: boolean = false;
-    labelPosition = 'after';
-
-    onCheckboxChange(val) {
-        console.log('onCheckboxChange', val);
-    }
-}
-
-@NgModule({
-    declarations: [DemoComponent],
+@Component({
+    standalone: true,
     imports: [
-        BrowserModule,
         FormsModule,
         KbqFormFieldModule,
         KbqCheckboxModule,
-        KbqPseudoCheckboxModule
+        KbqPseudoCheckboxModule,
+        DevCheckboxExamples,
+        KbqTableModule
     ],
-    bootstrap: [DemoComponent]
+    selector: 'app',
+    templateUrl: './template.html',
+    styleUrl: './styles.scss',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoModule {}
+export class CheckboxDev {
+    readonly themePalette = ThemePalette;
+    readonly checked: boolean[] = [true, true, false];
+}
