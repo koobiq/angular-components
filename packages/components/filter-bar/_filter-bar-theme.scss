@@ -1,0 +1,61 @@
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-filter-bar-typography() {
+    .kbq-hint.kbq-date-period__hint .kbq-hint__text {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+    }
+}
+
+@mixin _icon($left-icon, $right-icon) {
+    .kbq-icon {
+        color: $left-icon;
+
+        &.kbq-icon_left {
+            color: $left-icon;
+        }
+
+        &.kbq-icon_right {
+            color: $right-icon;
+        }
+    }
+}
+
+@mixin kbq-button-changed-filter() {
+    .kbq-button-overlay {
+        display: none;
+    }
+
+    .kbq-button,
+    .kbq-button-icon {
+        -webkit-font-smoothing: antialiased;
+
+        &.kbq-button_changed-filter {
+            color: var(--kbq-foreground-theme);
+            background: var(--kbq-states-background-theme-less-active);
+
+            @include _icon(var(--kbq-icon-theme), var(--kbq-icon-theme));
+
+            &:hover:not(.kbq-disabled),
+            &.kbq-hover:not(.kbq-disabled) {
+                background: var(--kbq-states-background-theme-less-hover);
+            }
+
+            &:active:not(.kbq-disabled),
+            &.kbq-active:not(.kbq-disabled) {
+                background: var(--kbq-states-background-theme-fade-active);
+            }
+
+            &.cdk-keyboard-focused {
+                outline: 1px solid var(--kbq-states-line-focus-theme);
+                border-color: var(--kbq-states-line-focus-theme);
+            }
+
+            &.kbq-disabled {
+                color: var(--kbq-states-foreground-disable);
+                background: var(--kbq-states-background-disable);
+
+                @include _icon(var(--kbq-states-icon-disabled), var(--kbq-states-icon-disabled));
+            }
+        }
+    }
+}

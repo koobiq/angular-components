@@ -43,5 +43,47 @@ export const ptBRLocaleData = {
     },
     actionsPanel: {
         closeTooltip: 'Desmarcar'
-    } satisfies KbqActionsPanelLocaleConfiguration
+    } satisfies KbqActionsPanelLocaleConfiguration,
+    filterBar: {
+        reset: {
+            buttonName: 'Сбросить'
+        },
+        search: {
+            tooltip: 'Поиск',
+            placeholder: 'Поиск'
+        },
+        filters: {
+            defaultName: 'Фильтры',
+            saveNewFilterTooltip: 'Сохранить новый фильтр',
+            searchPlaceholder: 'Поиск',
+            searchEmptyResult: 'Ничего не найдено',
+            saveAsNewFilter: 'Сохранить как новый фильтр',
+            saveChanges: 'Сохранить изменения',
+            saveAsNew: 'Сохранить как новый',
+            change: 'Изменить',
+            resetChanges: 'Сбросить изменения',
+            remove: 'Удалить',
+            name: 'Название',
+            error: 'Поиск с таким названием уже существует',
+            errorHint: 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.',
+            saveButton: 'Сохранить',
+            cancelButton: 'Отмена'
+        },
+        add: {
+            tooltip: 'Добавить фильтр'
+        },
+        pipe: {
+            clearButtonTooltip: 'Очистить',
+            removeButtonTooltip: 'Удалить',
+            applyButton: 'Применить',
+            emptySearchResult: 'Ничего не найдено'
+        },
+        datePipe: {
+            customPeriod: 'Произвольный период',
+            customPeriodFrom: 'с',
+            customPeriodTo: 'по',
+            customPeriodErrorHint: 'Начало периода не может быть позже окончания',
+            backToPeriodSelection: 'Назад к выбору периода'
+        }
+    }
 };

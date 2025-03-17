@@ -1,0 +1,53 @@
+<filter-bar-overview-example />
+<br />
+<br />
+<filter-bar-saved-filters-example />
+<br />
+<br />
+<filter-bar-complete-functions-example />
+<br />
+<br />
+<div style="min-height: 50px; border: 1px solid red">
+    <kbq-filter-bar
+        #filterBar
+        [pipeTemplates]="pipeTemplates"
+        [(filter)]="activeFilter"
+        (filterChange)="onFilterChange($event)"
+    >
+        <kbq-filters
+            [filters]="filters"
+            (onChangeFilter)="onChangeFilter($event)"
+            (onRemoveFilter)="onDeleteFilter($event)"
+            (onResetFilterChanges)="onResetFilterChanges($event)"
+            (onSave)="onSaveFilter($event)"
+            (onSaveAsNew)="onSaveAsNewFilter($event)"
+            (onSelectFilter)="onSelectFilter($event)"
+        />
+
+        @for (pipe of activeFilter?.pipes; track pipe) {
+            <ng-container *kbqPipe="pipe" />
+        }
+
+        <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
+
+        @if (activeFilter !== defaultFilter) {
+            <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
+        }
+
+        <kbq-filter-search (onSearch)="onSearch($event)" />
+
+        <!--        <kbq-filter-refresher />-->
+    </kbq-filter-bar>
+</div>
+
+<ng-template #optionTemplate let-option="option">
+    <i kbq-icon="kbq-square_16" [color]="option.type"></i>
+    {{ option.name }}
+</ng-template>
+
+<br />
+
+<!--<button kbq-button (click)="filterBar.saveFilterState()">Save filter state</button> &nbsp;-->
+<!--<button kbq-button (click)="filterBar.restoreFilterState()">Restore filter state</button>-->
+
+<pre> {{ activeFilter | json }}</pre>

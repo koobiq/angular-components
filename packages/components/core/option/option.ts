@@ -1,6 +1,7 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterViewChecked,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -154,6 +155,9 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
 
     /** The form value of the option. */
     @Input() value: any;
+
+    // todo this flag will need to be rethought in the future (added for filter panel)
+    @Input({ transform: booleanAttribute }) userSelect: boolean = false;
 
     @Input()
     get showCheckbox() {
@@ -329,6 +333,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * determine if the select's view -> model callback should be invoked.`
      */
     selectViaInteraction(): void {
+        if (this.userSelect) return;
+
         if (!this.disabled) {
             this._selected = this.multiple ? !this._selected : true;
 

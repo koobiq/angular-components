@@ -1,0 +1,60 @@
+@use './filter-bar-theme' as *;
+
+.kbq-filter-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 100%;
+
+    .kbq-filter-bar__left {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+
+        gap: var(--kbq-size-s);
+
+        .kbq-button > .kbq-icon {
+            margin-right: var(--kbq-size-xxs);
+        }
+
+        & > .kbq-icon {
+            align-self: center;
+        }
+    }
+
+    .kbq-filter-bar__right {
+        display: flex;
+        flex-direction: row;
+
+        margin-left: var(--kbq-size-3xl);
+    }
+}
+
+.kbq-pipe__popover {
+    .kbq-popover__container {
+        min-width: 320px;
+    }
+
+    .kbq-popover__content {
+        padding: var(--kbq-size-m) var(--kbq-size-m) 1px !important;
+    }
+
+    .kbq-popover__footer {
+        padding: var(--kbq-size-xxs);
+
+        & .kbq-button:not(.kbq-disabled) {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            justify-content: flex-start;
+
+            & .kbq-button_hot-key {
+                color: var(--kbq-foreground-contrast-secondary);
+            }
+        }
+    }
+}
+
+@include kbq-button-changed-filter();
+@include kbq-filter-bar-typography();

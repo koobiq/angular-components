@@ -1,4 +1,5 @@
 <div
+    #popover
     class="kbq-popover"
     [cdkTrapFocus]="isTrapFocus"
     [ngClass]="classMap"
@@ -68,5 +69,7 @@
         </div>
     </ng-template>
 
-    <div class="kbq-popover__arrow"></div>
+    @if (arrow) {
+        <div class="kbq-popover__arrow"></div>
+    }
 </div>

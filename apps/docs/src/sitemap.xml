@@ -265,6 +265,18 @@
 		<loc>https://koobiq.io/ru/components/file-upload/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/filter-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/filter-bar/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/filter-bar/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/experimental-form-field/overview</loc>
 	</url>
 	<url>

@@ -1,0 +1,41 @@
+<button
+    kbq-button
+    kbqPopover
+    [disabled]="data.disabled"
+    [kbqPipeState]="data"
+    [kbqPipeTitle]="pipeTooltip"
+    [kbqPopoverArrow]="false"
+    [kbqPopoverClass]="'kbq-pipe__popover'"
+    [kbqPopoverContent]="content"
+    [kbqPopoverFooter]="footer"
+    [kbqPopoverPlacement]="placements.BottomLeft"
+    [ngClass]="{ 'kbq-active': popover?.isOpen }"
+>
+    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
+    <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!data.value">
+        {{ data.value }}
+    </span>
+</button>
+
+@if (showRemoveButton) {
+    <kbq-pipe-button />
+}
+
+<ng-template #content>
+    <kbq-form-field (keydown)="onKeydown($event)">
+        <textarea kbqTextarea placeholder="Placeholder" rows="2" [canGrow]="false" [formControl]="control"></textarea>
+    </kbq-form-field>
+</ng-template>
+
+<ng-template #footer>
+    <button kbq-button [color]="'theme'" [disabled]="disabled" [kbqStyle]="'transparent'" (click)="onApply()">
+        <span>{{ localeData.pipe.applyButton }}</span>
+        &nbsp;
+        <span class="kbq-button_hot-key">{{ isMac ? '⌘' : 'Ctrl+' }}Enter</span>
+    </button>
+</ng-template>
+
+<ng-template #pipeTooltip>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ data.value }}</div>
+</ng-template>

@@ -1303,6 +1303,102 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-single-validation-reactive-forms-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "filter-bar-cleanable": {
+    "packagePath": "components/filter-bar/filter-bar-cleanable",
+    "title": "filter-bar-cleanable",
+    "componentName": "FilterBarCleanableExample",
+    "files": [
+      "filter-bar-cleanable-example.ts"
+    ],
+    "selector": "filter-bar-cleanable-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-cleanable-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-complete-functions": {
+    "packagePath": "components/filter-bar/filter-bar-complete-functions",
+    "title": "filter-bar-complete-functions",
+    "componentName": "FilterBarCompleteFunctionsExample",
+    "files": [
+      "filter-bar-complete-functions-example.ts"
+    ],
+    "selector": "filter-bar-complete-functions-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-complete-functions-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-overview": {
+    "packagePath": "components/filter-bar/filter-bar-overview",
+    "title": "filter bar",
+    "componentName": "FilterBarOverviewExample",
+    "files": [
+      "filter-bar-overview-example.ts"
+    ],
+    "selector": "filter-bar-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-overview-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-pipe-types": {
+    "packagePath": "components/filter-bar/filter-bar-pipe-types",
+    "title": "filter-bar-pipe-types",
+    "componentName": "FilterBarPipeTypesExample",
+    "files": [
+      "filter-bar-pipe-types-example.ts"
+    ],
+    "selector": "filter-bar-pipe-types-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-pipe-types-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-removable": {
+    "packagePath": "components/filter-bar/filter-bar-removable",
+    "title": "filter-bar-removable",
+    "componentName": "FilterBarRemovableExample",
+    "files": [
+      "filter-bar-removable-example.ts"
+    ],
+    "selector": "filter-bar-removable-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-removable-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-required": {
+    "packagePath": "components/filter-bar/filter-bar-required",
+    "title": "filter-bar-required",
+    "componentName": "FilterBarRequiredExample",
+    "files": [
+      "filter-bar-required-example.ts"
+    ],
+    "selector": "filter-bar-required-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-required-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-saved-filters": {
+    "packagePath": "components/filter-bar/filter-bar-saved-filters",
+    "title": "filter-bar-saved-filters",
+    "componentName": "FilterBarSavedFiltersExample",
+    "files": [
+      "filter-bar-saved-filters-example.ts"
+    ],
+    "selector": "filter-bar-saved-filters-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-saved-filters-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-search": {
+    "packagePath": "components/filter-bar/filter-bar-search",
+    "title": "filter-bar-search",
+    "componentName": "FilterBarSearchExample",
+    "files": [
+      "filter-bar-search-example.ts"
+    ],
+    "selector": "filter-bar-search-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-search-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "form-field-password-overview": {
     "packagePath": "components/form-field/form-field-password-overview",
     "title": "Form field password overview",
@@ -3988,6 +4084,22 @@ return import('@koobiq/docs-examples/components/file-upload');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-validation-reactive-forms-overview':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'filter-bar-cleanable':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-complete-functions':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-overview':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-pipe-types':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-removable':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-required':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-saved-filters':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-search':
+return import('@koobiq/docs-examples/components/filter-bar');
   case 'form-field-password-overview':
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-with-cleaner':
