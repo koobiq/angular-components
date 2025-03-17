@@ -14,7 +14,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 class="kbq-link_external"
                 [useVisited]="visited"
                 (click)="visited = true"
-                href="https://koobiq.io/components/link/overview"
+                href="https://koobiq.io/en/components/link"
                 target="_blank"
                 kbq-link
             >
