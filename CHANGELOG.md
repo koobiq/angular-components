@@ -1,3 +1,21 @@
+# 18.19.0 (2025-03-17)
+
+### Koobiq
+
+ * bug fix  **dl:** resize error when element is hidden ([#DS-3475](https://github.com/koobiq/angular-components/issues/issue/DS-3475)) ([#578](https://github.com/koobiq/angular-components/issues/578)) ([12ef89f](https://github.com/koobiq/angular-components/commit/12ef89f13b957159029d1c627f48b660d86c6d3b))
+ * bug fix  **docs:** links after adding localization ([#DS-3437](https://github.com/koobiq/angular-components/issues/issue/DS-3437)) ([#577](https://github.com/koobiq/angular-components/issues/577)) ([1e2873b](https://github.com/koobiq/angular-components/commit/1e2873b290115a0571075064e8a49c3ec1b6d7f6))
+ * bug fix  **dropdown:** dynamic submenu rendering ([#DS-3454](https://github.com/koobiq/angular-components/issues/issue/DS-3454)) ([#573](https://github.com/koobiq/angular-components/issues/573)) ([1384d23](https://github.com/koobiq/angular-components/commit/1384d238483dd57cb9785d4b8998f5797df93c7f))
+ * bug fix  **dropdown:** item caption color ([#DS-3342](https://github.com/koobiq/angular-components/issues/issue/DS-3342)) ([#570](https://github.com/koobiq/angular-components/issues/570)) ([f92149c](https://github.com/koobiq/angular-components/commit/f92149c5229568012bf95b0e812e877c22bc78d4))
+ * bug fix  **select,tree-select:** placeholder states ([#DS-3390](https://github.com/koobiq/angular-components/issues/issue/DS-3390)) ([#580](https://github.com/koobiq/angular-components/issues/580)) ([bd64016](https://github.com/koobiq/angular-components/commit/bd64016cbc09c3203ca61bd923cb30f19de8af0b))
+ * bug fix  **textarea:** save scroll position when out of viewport ([#DS-2897](https://github.com/koobiq/angular-components/issues/issue/DS-2897)) ([#564](https://github.com/koobiq/angular-components/issues/564)) ([e14c51f](https://github.com/koobiq/angular-components/commit/e14c51feffbe40397d2178dce9e0373b19b68c92))
+ * bug fix  **tree:** selection by metaKey ([#DS-3453](https://github.com/koobiq/angular-components/issues/issue/DS-3453)) ([#575](https://github.com/koobiq/angular-components/issues/575)) ([c903202](https://github.com/koobiq/angular-components/commit/c903202f2fc57e10ccac24c235911b06e80847eb))
+ * feature  **actions-panel:** added new KbqActionsPanelModule ([#DS-3113](https://github.com/koobiq/angular-components/issues/issue/DS-3113)) ([#519](https://github.com/koobiq/angular-components/issues/519)) ([da948f8](https://github.com/koobiq/angular-components/commit/da948f8643f52982a59cfec11f90e56fb9e06c30))
+ * feature  **docs,icon:** updated koobiq/icons version ([#DS-3411](https://github.com/koobiq/angular-components/issues/issue/DS-3411)) ([#572](https://github.com/koobiq/angular-components/issues/572)) ([609aa95](https://github.com/koobiq/angular-components/commit/609aa956dd67fac111b7183826dbe3a16836c8fb))
+ * feature  **experimental:** updated focus frame for form-field ([#DS-3425](https://github.com/koobiq/angular-components/issues/issue/DS-3425)) ([#568](https://github.com/koobiq/angular-components/issues/568)) ([1a2a29d](https://github.com/koobiq/angular-components/commit/1a2a29d76f8e469112ae886cc4a8fc3c35c83fa9))
+ * feature  **filter-bar:** added Filter Bar (Platform) ([#DS-3133](https://github.com/koobiq/angular-components/issues/issue/DS-3133)) ([#470](https://github.com/koobiq/angular-components/issues/470)) ([4233d9b](https://github.com/koobiq/angular-components/commit/4233d9b8625e6b812cc1f38413081590cc71dfd7))
+ * feature  **icon:** added input for icon name ([#DS-3420](https://github.com/koobiq/angular-components/issues/issue/DS-3420)) ([#574](https://github.com/koobiq/angular-components/issues/574)) ([323491b](https://github.com/koobiq/angular-components/commit/323491bfa162a9f09973a0ec2450c49ec55321ed))
+ * feature  **overflow-items:** refactored to directive ([#DS-3456](https://github.com/koobiq/angular-components/issues/issue/DS-3456)) ([#576](https://github.com/koobiq/angular-components/issues/576)) ([339fe89](https://github.com/koobiq/angular-components/commit/339fe8944cc2199ba76812d878c651cf668838d0))
+
 # 18.18.0 (2025-03-06)
 
 ### Koobiq
