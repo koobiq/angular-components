@@ -1,4 +1,5 @@
 @use '../list/list-tokens';
+@use '../core/option/option-tokens';
 
 .kbq-timezone-select__panel {
     --kbq-select-size-single-padding-left: var(--kbq-size-m);
@@ -20,5 +21,5 @@
     --kbq-timezone-option-caption: var(--kbq-foreground-contrast-secondary);
     --kbq-timezone-option-optgroup-label: var(--kbq-foreground-contrast-secondary);
     /* LIST THEME TOKENS */
-    @include list-tokens.list-theme-tokens;
+    @extend %kbq-option-geometry-tokens;
 }
