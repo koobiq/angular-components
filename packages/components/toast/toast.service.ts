@@ -26,10 +26,13 @@ export const defaultToastConfig: KbqToastConfig = {
     position: KbqToastPosition.TOP_RIGHT,
     duration: 5000,
     delay: 2000,
-    onTop: false
+    onTop: false,
+    indent: {
+        vertical: 0,
+        horizontal: 0
+    }
 };
 
-const INDENT_SIZE = 0;
 const CHECK_INTERVAL = 500;
 
 let templateId = 0;
@@ -232,27 +235,35 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
     }
 
     private getTopCenter(): GlobalPositionStrategy {
-        return this.getGlobalOverlayPosition().top(`${INDENT_SIZE}px`).centerHorizontally();
+        return this.getGlobalOverlayPosition().top(`${this.toastConfig.indent.vertical}px`).centerHorizontally();
     }
 
     private getTopLeft(): GlobalPositionStrategy {
-        return this.getGlobalOverlayPosition().top(`${INDENT_SIZE}px`).left(`${INDENT_SIZE}px`);
+        return this.getGlobalOverlayPosition()
+            .top(`${this.toastConfig.indent.vertical}px`)
+            .left(`${this.toastConfig.indent.horizontal}px`);
     }
 
     private getTopRight(): GlobalPositionStrategy {
-        return this.getGlobalOverlayPosition().top(`${INDENT_SIZE}px`).right(`${INDENT_SIZE}px`);
+        return this.getGlobalOverlayPosition()
+            .top(`${this.toastConfig.indent.vertical}px`)
+            .right(`${this.toastConfig.indent.horizontal}px`);
     }
 
     private getBottomCenter(): GlobalPositionStrategy {
-        return this.getGlobalOverlayPosition().bottom(`${INDENT_SIZE}px`).centerHorizontally();
+        return this.getGlobalOverlayPosition().bottom(`${this.toastConfig.indent.vertical}px`).centerHorizontally();
     }
 
     private getBottomLeft(): GlobalPositionStrategy {
-        return this.getGlobalOverlayPosition().bottom(`${INDENT_SIZE}px`).left(`${INDENT_SIZE}px`);
+        return this.getGlobalOverlayPosition()
+            .bottom(`${this.toastConfig.indent.vertical}px`)
+            .left(`${this.toastConfig.indent.horizontal}px`);
     }
 
     private getBottomRight(): GlobalPositionStrategy {
-        return this.getGlobalOverlayPosition().bottom(`${INDENT_SIZE}px`).right(`${INDENT_SIZE}px`);
+        return this.getGlobalOverlayPosition()
+            .bottom(`${this.toastConfig.indent.vertical}px`)
+            .right(`${this.toastConfig.indent.horizontal}px`);
     }
 
     private getCenter(): GlobalPositionStrategy {

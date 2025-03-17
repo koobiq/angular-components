@@ -19,6 +19,7 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
 import {
     KBQ_TOAST_CONFIG,
     KbqToastComponent,
+    KbqToastConfig,
     KbqToastData,
     KbqToastModule,
     KbqToastPosition,
@@ -69,8 +70,12 @@ export class MyToastComponent extends KbqToastComponent {
                 position: KbqToastPosition.TOP_RIGHT,
                 duration: 5000,
                 delay: 2000,
-                onTop: false
-            }
+                onTop: false,
+                indent: {
+                    vertical: 0,
+                    horizontal: 0
+                }
+            } satisfies KbqToastConfig
         }
         // {
         //     provide: KbqToastComponent,

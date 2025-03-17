@@ -36,6 +36,14 @@ export interface KbqToastConfig {
     duration: number;
     delay: number;
     onTop: boolean;
+    /** Custom indentation for positioning the toast stack when using `GlobalPositionStrategy` */
+    indent: {
+        /** Vertical spacing from the top or bottom of the screen. */
+        vertical: number;
+
+        /** Horizontal spacing from the left or right of the screen. */
+        horizontal: number;
+    };
 }
 
-export const KBQ_TOAST_CONFIG = new InjectionToken('kbq-toast-config');
+export const KBQ_TOAST_CONFIG = new InjectionToken<KbqToastConfig>('kbq-toast-config');
