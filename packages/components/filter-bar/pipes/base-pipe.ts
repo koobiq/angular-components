@@ -11,7 +11,6 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
-import { UAParser } from 'ua-parser-js';
 import { KbqFilterBar } from '../filter-bar';
 import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
 
@@ -38,9 +37,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected values;
     protected valueTemplate?: TemplateRef<any> | string;
 
-    private uaParser: UAParser.UAParserInstance = new UAParser();
-
-    isMac: boolean;
+    // todo DS-3511
+    isMac = /^mac/i.test(navigator.userAgent);
 
     $implicit: unknown;
 
@@ -64,8 +62,6 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         });
 
         this.filterBar?.internalTemplatesChanges.pipe(takeUntilDestroyed()).subscribe(this.updateTemplates);
-
-        this.isMac = (this.uaParser.getOS().name || '').includes('Mac');
     }
 
     ngAfterViewInit(): void {
