@@ -4,11 +4,10 @@
     padding: 16px;
 }
 
-.example-radio-group {
-    display: inline-flex;
-    flex-direction: column;
-}
-
 .example-selected-value {
     margin: 15px 0;
+}
+
+hr {
+    margin: var(--kbq-size-xxl) 0;
 }
