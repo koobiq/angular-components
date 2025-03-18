@@ -78,7 +78,7 @@ $tokens: meta.module-variables(tokens) !default;
         @if (meta.type-of($border) == number or meta.type-of($border) == calculation) {
             @return calc((var(--kbq-#{$outer}) - var(--kbq-#{$inner}) - $border * 2) / 2);
         } @else {
-            @return calc((var(--kbq-#{$outer}) - var(--kbq-#{$inner}) - var(--kbq-#{$border} * 2)) / 2);
+            @return calc((var(--kbq-#{$outer}) - var(--kbq-#{$inner}) - var(--kbq-#{$border}) * 2) / 2);
         }
     } @else {
         @return calc((var(--kbq-#{$outer}) - var(--kbq-#{$inner})) / 2);
