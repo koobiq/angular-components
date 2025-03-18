@@ -316,7 +316,13 @@ export class KbqTreeSelection
         }
 
         this.keyManager.setFocusOrigin('keyboard');
-        this.keyManager.setFirstItemActive();
+
+        if (this.selectionModel.selected.length) {
+            this.highlightSelectedOption();
+        } else {
+            this.keyManager.setFirstItemActive();
+        }
+
         this.keyManager.setFocusOrigin('program');
     }
 

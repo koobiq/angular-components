@@ -297,7 +297,11 @@ export class KbqListSelection
             return;
         }
 
-        this.keyManager.setFirstItemActive();
+        if (this.selectionModel.selected.length) {
+            this.keyManager.setActiveItem(this.selectionModel.selected[0]);
+        } else {
+            this.keyManager.setFirstItemActive();
+        }
     }
 
     blur() {
