@@ -15,6 +15,7 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
 import { KbqNavbar, KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { map, timer } from 'rxjs';
 
 @Component({
     selector: 'app',
@@ -44,6 +45,8 @@ export class NavbarDemoComponent {
     componentModal: KbqModalRef;
 
     private _collapsedNavbarWidth: number = 1280;
+
+    permission$ = timer(500).pipe(map(() => true));
 
     constructor(private modalService: KbqModalService) {}
 
