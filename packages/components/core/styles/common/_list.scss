@@ -1,5 +1,6 @@
 @use '../tokens';
 @use './tokens' as *;
+@use './vendor-prefixes';
 
 // This mixin will ensure that lines that overflow the container will hide the overflow and
 // truncate neatly with an ellipsis.
@@ -34,14 +35,6 @@
     &:empty {
         display: none;
     }
-}
-
-@mixin kbq-no-select() {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
 @mixin kbq-list-text() {
@@ -121,5 +114,5 @@
 }
 
 .kbq-no-select {
-    @include kbq-no-select;
+    @include vendor-prefixes.user-select(none);
 }

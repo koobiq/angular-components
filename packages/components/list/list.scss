@@ -1,6 +1,6 @@
 @use '../core/styles/common/list';
 @use '../core/styles/common/tokens' as *;
-
+@use '../core/styles/common/vendor-prefixes';
 @use './list-theme' as *;
 
 .kbq-list,
@@ -11,8 +11,7 @@
 
 .kbq-list-item,
 .kbq-list-option {
-    @include list.kbq-no-select;
-
+    @include vendor-prefixes.user-select(none);
     @include list.kbq-list-item-base();
 
     border-radius: var(--kbq-size-border-radius);

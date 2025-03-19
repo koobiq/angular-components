@@ -1,8 +1,9 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/vendor-prefixes';
 
 .kbq-tree-option {
-    @include common.kbq-no-select;
+    @include vendor-prefixes.user-select(none);
 
     box-sizing: border-box;
 
