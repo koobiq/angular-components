@@ -11,6 +11,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     standalone: true,
     selector: 'select-validation-example',
     imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
+    // disable legacy validation directive
     providers: [{ provide: KBQ_VALIDATION, useValue: { useValidation: false } }],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -29,6 +30,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <div class="kbq-form__label">Invalid</div>
             <kbq-form-field>
                 <kbq-select [formControl]="invalidControl" placeholder="Placeholder">
+                    <kbq-option [value]="null">None</kbq-option>
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
