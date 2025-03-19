@@ -1,6 +1,9 @@
 @use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/vendor-prefixes';
 
 .kbq-tag {
+    @include vendor-prefixes.user-select(none);
+
     position: relative;
 
     display: inline-block;
