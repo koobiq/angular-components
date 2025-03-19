@@ -20,7 +20,8 @@
   --kbq-background-theme-fade: hsla(216, 100%, 88%, 100%);
   --kbq-background-theme-less: hsla(216, 100%, 94%, 100%);
   --kbq-background-contrast: hsla(229, 15%, 25%, 100%);
-  --kbq-background-contrast-fade: hsla(229, 15%, 92%, 100%);
+  --kbq-background-contrast-fade: hsla(229, 15%, 90%, 100%);
+  --kbq-background-contrast-less: hsla(229, 15%, 96%, 100%);
   --kbq-background-error: hsla(7, 97%, 60%, 100%);
   --kbq-background-error-fade: hsla(7, 97%, 89%, 100%);
   --kbq-background-error-less: hsla(7, 97%, 94%, 100%);
@@ -87,6 +88,8 @@
   --kbq-states-background-contrast-active: hsla(229, 15%, 15%, 100%);
   --kbq-states-background-contrast-fade-hover: hsla(229, 15%, 88%, 100%);
   --kbq-states-background-contrast-fade-active: hsla(229, 15%, 85%, 100%);
+  --kbq-states-background-contrast-less-hover: hsla(229, 15%, 93%, 100%);
+  --kbq-states-background-contrast-less-active: hsla(229, 15%, 91%, 100%);
   --kbq-states-background-error-hover: hsla(7, 97%, 56%, 100%);
   --kbq-states-background-error-active: hsla(7, 69%, 51%, 100%);
   --kbq-states-background-error-fade-hover: hsla(7, 97%, 87%, 100%);
@@ -103,7 +106,7 @@
   --kbq-states-background-warning-fade-active: hsla(7, 97%, 73%, 100%);
   --kbq-states-background-warning-less-hover: hsla(38, 100%, 86%, 100%);
   --kbq-states-background-warning-less-active: hsla(38, 100%, 82%, 100%);
-  --kbq-states-background-disabled: hsla(229, 15%, 50%, 16%);
+  --kbq-states-background-disabled: rgba(0, 0, 0, 0.05);
   --kbq-states-background-transparent-hover: hsla(229, 15%, 50%, 8%);
   --kbq-states-background-transparent-active: hsla(229, 15%, 50%, 16%);
   --kbq-states-background-error-less: hsla(7, 97%, 99%, 100%);

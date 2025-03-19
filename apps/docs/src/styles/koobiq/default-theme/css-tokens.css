@@ -115,6 +115,7 @@
   --kbq-md-typography-md-table-header-text-transform: initial;
   --kbq-md-typography-md-table-header-font-feature-settings: "calt", "ss01", "ss04", "tnum";
   --kbq-palette-black-default: hsla(0, 0%, 0%, 100%);
+  --kbq-palette-black-a5: rgba(0, 0, 0, 0.05);
   --kbq-palette-black-default-a8: rgba(0, 0, 0, 0.08);
   --kbq-palette-black-default-a16: rgba(0, 0, 0, 0.16);
   --kbq-palette-black-default-a20: rgba(0, 0, 0, 0.20);
