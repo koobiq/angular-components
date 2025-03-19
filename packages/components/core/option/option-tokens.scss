@@ -1,10 +1,14 @@
 @use '../../list/list-tokens';
 
-.kbq-option {
+%kbq-option-geometry-tokens {
     --kbq-option-size-horizontal-padding: var(--kbq-size-m);
     --kbq-option-size-height: var(--kbq-size-3xl);
     --kbq-option-size-border-width: 2px;
     --kbq-option-border-radius: var(--kbq-size-xs);
+}
+
+.kbq-option {
+    @extend %kbq-option-geometry-tokens;
     /* LIST THEME TOKENS */
     @include list-tokens.list-theme-tokens;
 }

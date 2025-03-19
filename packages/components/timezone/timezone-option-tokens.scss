@@ -1,4 +1,5 @@
 @use '../list/list-tokens';
+@use '../core/option/option-tokens';
 
 .kbq-timezone-select__panel {
     --kbq-select-size-single-padding-left: var(--kbq-size-m);
@@ -8,7 +9,7 @@
     --kbq-select-size-multiple-padding-left: var(--kbq-size-xxs);
     --kbq-select-size-multiple-padding-right: var(--kbq-size-xxs);
     --kbq-select-size-multiple-content-gap: var(--kbq-size-xxs);
-    --kbq-timezone-option-size-padding: 6px 10px;
+    --kbq-timezone-option-size-padding: var(--kbq-size-xxs) 10px;
     --kbq-timezone-option-size-column-gap: 16px;
     --kbq-timezone-option-size-height: auto;
     --kbq-timezone-option-size-max-height: 5em;
@@ -20,5 +21,5 @@
     --kbq-timezone-option-caption: var(--kbq-foreground-contrast-secondary);
     --kbq-timezone-option-optgroup-label: var(--kbq-foreground-contrast-secondary);
     /* LIST THEME TOKENS */
-    @include list-tokens.list-theme-tokens;
+    @extend %kbq-option-geometry-tokens;
 }
