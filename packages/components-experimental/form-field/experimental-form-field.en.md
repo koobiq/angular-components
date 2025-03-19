@@ -88,6 +88,12 @@ For all fields, using the `ErrorStateMatcher` token:
 
 <!-- example(form-field-with-prefix-and-suffix) -->
 
+### Focus
+
+In text input fields, a blue border is always displayed when focused, regardless of the activation method (mouse, keyboard, or touch).
+For form elements with dropdown lists (such as: [select](/en/components/select), [timezone](/en/components/timezone), and [tree select](/en/components/tree-select)),
+the focus border is shown only during keyboard navigation (using the `Tab` key) and is hidden when the dropdown list is opened.
+
 ### Disabling borders
 
 For a specific field, using the `noBorders` attribute:

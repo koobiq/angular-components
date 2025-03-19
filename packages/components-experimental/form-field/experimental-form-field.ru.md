@@ -97,6 +97,12 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 <!-- example(form-field-with-prefix-and-suffix) -->
 
+### Фокус
+
+В полях ввода текста при фокусе всегда отображается синяя рамка, независимо от способа активации (мышь, клавиатура или касание).
+Для элементов формы с выпадающим списком (таких как: [select](/ru/components/select), [timezone](/ru/components/timezone) и [tree select](/ru/components/tree-select))
+рамка фокуса показывается только при навигации с клавиатуры (при помощи клавиши `Tab`) и скрывается при открытии выпадающего списка.
+
 ### Отключение рамок
 
 Для определенного поля, при помощи `noBorders` атрибута:
