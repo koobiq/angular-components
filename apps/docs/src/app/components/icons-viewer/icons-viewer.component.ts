@@ -115,6 +115,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
                         .filter(
                             (item) =>
                                 item.name.toLowerCase().includes(lowered) ||
+                                item.cssClass.toLowerCase().includes(lowered) ||
                                 (Array.isArray(item.tags) &&
                                     item.tags.some((tag) => tag.toLowerCase().includes(lowered)))
                         );
