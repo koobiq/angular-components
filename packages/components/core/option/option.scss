@@ -1,9 +1,11 @@
-@use '../styles/common';
-
+@use '../styles/common/list';
+@use '../styles/common/vendor-prefixes';
 @use './option-theme' as *;
 
 .kbq-option {
-    @include common.kbq-list-item-base();
+    @include list.kbq-list-item-base();
+    @include vendor-prefixes.user-select(none);
+
     border-radius: var(--kbq-option-border-radius);
 
     &:not(.kbq-disabled) {
@@ -12,7 +14,7 @@
 }
 
 .kbq-option-text {
-    @include common.kbq-list-text();
+    @include list.kbq-list-text();
 }
 
 @include kbq-option-theme();

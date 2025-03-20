@@ -37,6 +37,7 @@ const config = {
                 'overlay',
                 'typography',
                 'styles',
+                'option',
 
                 // others
                 'security',

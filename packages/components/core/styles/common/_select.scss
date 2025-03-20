@@ -11,6 +11,8 @@
     outline: none;
 
     .kbq-select__matcher {
+        @include vendor-prefixes.user-select(none);
+
         display: flex;
         align-items: center;
 
@@ -145,6 +147,8 @@
     }
 
     .kbq-select__no-options-message {
+        @include vendor-prefixes.user-select(none);
+
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -180,6 +184,8 @@
 }
 
 %kbq-select-footer {
+    @include vendor-prefixes.user-select(none);
+
     display: flex;
     align-items: center;
     box-sizing: border-box;
