@@ -4770,17 +4770,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:^3.12.1":
-  version: 3.12.1
-  resolution: "@koobiq/design-tokens@npm:3.12.1"
-  checksum: 10c0/848143b9ef4925766c52fd8764dffdb52cf1a3208e396a79af869507bca6d52f06cdf5a55ce5a23299f0618c2c361f78963d007b01f4fd5425c1ba20d7bbc91f
+"@koobiq/design-tokens@npm:^3.11.2":
+  version: 3.11.2
+  resolution: "@koobiq/design-tokens@npm:3.11.2"
+  checksum: 10c0/41e475a463cdfabe12b64e545b4cd2cdb1dea09984c0e18c50f23cd9f7eddfdf73aa641b3625f288ef2fbc2992380183178223c4e8967ff8ced522d626997329
   languageName: node
   linkType: hard
 
-"@koobiq/icons@npm:9.3.0":
-  version: 9.3.0
-  resolution: "@koobiq/icons@npm:9.3.0"
-  checksum: 10c0/2f7c5af9c51751a9423b4741fed850ae82653b06939c902294badf653d3f1948cb7d20e2db38f319e7ce782812034a0ac671892de3bd92d7d9f98940c2cf893d
+"@koobiq/icons@npm:9.3.1":
+  version: 9.3.1
+  resolution: "@koobiq/icons@npm:9.3.1"
+  checksum: 10c0/2bba5001a1262118d59752237d29fd2fc8bf1d04820026d696f807f8581e1668068b88826835e3dcbc5dabf63eb373b4c690528f253e84d52262c364a5a89d5d
   languageName: node
   linkType: hard
 
@@ -14644,8 +14644,8 @@ __metadata:
     "@fontsource/jetbrains-mono": "npm:^5.1.1"
     "@koobiq/date-adapter": "npm:^3.2.3"
     "@koobiq/date-formatter": "npm:^3.2.3"
-    "@koobiq/design-tokens": "npm:^3.12.1"
-    "@koobiq/icons": "npm:9.3.0"
+    "@koobiq/design-tokens": "npm:^3.11.2"
+    "@koobiq/icons": "npm:9.3.1"
     "@koobiq/luxon-date-adapter": "npm:^3.1.4"
     "@koobiq/moment-date-adapter": "npm:^3.1.4"
     "@koobiq/tokens-builder": "npm:^3.11.0"
