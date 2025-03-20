@@ -56,7 +56,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
                     <kbq-select-footer>
-                        <a class="kbq-link_external" kbq-link>
+                        <a
+                            class="kbq-link_external"
+                            href="https://koobiq.io/en/components/select"
+                            target="_blank"
+                            kbq-link
+                        >
                             <span class="kbq-link__text">Link</span>
                             <i kbq-icon="kbq-north-east_16"></i>
                         </a>
