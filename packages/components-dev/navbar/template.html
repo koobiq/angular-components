@@ -198,6 +198,14 @@
                     }
                 </button>
             </kbq-navbar-item>
+
+            <!-- Asynchronous navbar-item -->
+            @if (permission$ | async) {
+                <button #navbarItemAdmin kbq-navbar-item>
+                    <i kbq-icon="kbq-bsd_16"></i>
+                    <span kbq-navbar-title>Настройки</span>
+                </button>
+            }
         </kbq-navbar-container>
 
         <kbq-navbar-container>

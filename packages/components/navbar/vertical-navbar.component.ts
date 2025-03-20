@@ -14,7 +14,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { Subject } from 'rxjs';
+import { startWith, Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
 
@@ -83,11 +83,11 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     }
 
     ngAfterContentInit(): void {
-        this.setItemsState();
-        this.updateExpandedStateForItems();
         this.updateTooltipForItems();
 
-        this.rectangleElements.changes.subscribe(this.setItemsState);
+        this.rectangleElements.changes
+            .pipe(startWith(null))
+            .subscribe(this.setItemsVerticalStateAndUpdateExpandedState);
 
         super.ngAfterContentInit();
 
@@ -123,18 +123,24 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         }
     }
 
-    private updateExpandedStateForItems = () => {
-        this.rectangleElements?.forEach((item) => {
-            item.collapsed = !this.expanded;
-            setTimeout(() => item.button?.updateClassModifierForIcons());
-        });
+    private updateExpandedStateForItems = () => this.rectangleElements?.forEach(this.updateItemExpandedState);
+
+    private updateTooltipForItems = () => this.items.forEach((item) => item.updateTooltip());
+
+    private setItemsVerticalStateAndUpdateExpandedState = () =>
+        this.rectangleElements.forEach(this.setItemVerticalStateAndUpdateExpandedState);
+
+    private setItemVerticalStateAndUpdateExpandedState = (item: KbqNavbarRectangleElement): void => {
+        queueMicrotask(() => this.setItemVerticalState(item));
+        this.updateItemExpandedState(item);
     };
 
-    private updateTooltipForItems = () => {
-        this.items.forEach((item) => item.updateTooltip());
+    private setItemVerticalState = (item: KbqNavbarRectangleElement): void => {
+        item.vertical = true;
     };
 
-    private setItemsState = () => {
-        Promise.resolve().then(() => this.rectangleElements?.forEach((item) => (item.vertical = true)));
+    private updateItemExpandedState = (item: KbqNavbarRectangleElement): void => {
+        item.collapsed = !this.expanded;
+        setTimeout(() => item.button?.updateClassModifierForIcons());
     };
 }
