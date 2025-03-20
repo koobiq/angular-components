@@ -1,5 +1,5 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, ViewChild } from '@angular/core';
+import { Component, DebugElement, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -145,6 +145,57 @@ describe('KbqTreeSelection', () => {
                     expect(clipboardContent).toBe(treeOptions[2].componentInstance.value);
                     expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
                 });
+            }));
+        });
+
+        describe('focus states', () => {
+            let fixture: ComponentFixture<TreeSelectionFocusStates>;
+            let tree: DebugElement;
+            let options: DebugElement[];
+
+            beforeEach(() => {
+                TestBed.configureTestingModule({
+                    imports: [KbqTreeModule, FormsModule],
+                    declarations: [TreeSelectionFocusStates]
+                }).compileComponents();
+
+                fixture = TestBed.createComponent(TreeSelectionFocusStates);
+                tree = fixture.debugElement.query(By.directive(KbqTreeSelection));
+
+                fixture.detectChanges();
+            });
+
+            it('should add focus class on first element', fakeAsync(() => {
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+                const option = options[0].nativeElement;
+
+                expect(option.classList).not.toContain('kbq-focused');
+
+                dispatchFakeEvent(tree.nativeElement, 'focus');
+                flush();
+                fixture.detectChanges();
+
+                expect(option.classList).toContain('kbq-focused');
+            }));
+
+            it('should add focus class on first selected element', fakeAsync(() => {
+                options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
+                const selectedOption = options[1];
+                selectedOption.componentInstance.toggle();
+                tick();
+                fixture.detectChanges();
+
+                options.forEach(({ nativeElement }) => {
+                    expect(nativeElement.classList).not.toContain('kbq-focused');
+                });
+
+                expect(selectedOption.nativeElement.classList).toContain('kbq-selected');
+
+                dispatchFakeEvent(tree.nativeElement, 'focus');
+                flush();
+                fixture.detectChanges();
+
+                expect(selectedOption.nativeElement.className).toContain('kbq-focused');
             }));
         });
 
@@ -850,6 +901,19 @@ abstract class TreeParams {
 
 @Component({
     template: `
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node">{{ node.name }}</kbq-tree-option>
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+                <kbq-tree-node-toggle />
+                {{ node.name }}
+            </kbq-tree-option>
+        </kbq-tree-selection>
+    `
+})
+class TreeSelectionFocusStates extends TreeParams {}
+
+@Component({
+    template: `
         <kbq-tree-selection
             [(ngModel)]="modelValue"
             [dataSource]="dataSource"
@@ -871,10 +935,6 @@ abstract class TreeParams {
 class KbqTreeAppMultiple extends TreeParams {
     modelValue = [];
     @ViewChild(KbqTreeSelection, { static: false }) tree: KbqTreeSelection;
-
-    constructor() {
-        super();
-    }
 }
 
 @Component({

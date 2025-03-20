@@ -298,7 +298,7 @@ export class KbqListSelection
         }
 
         if (this.selectionModel.selected.length) {
-            this.keyManager.setActiveItem(this.selectionModel.selected[0]);
+            this.options.find((option) => option.selected)?.focus();
         } else {
             this.keyManager.setFirstItemActive();
         }
