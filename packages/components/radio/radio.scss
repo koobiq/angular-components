@@ -17,7 +17,7 @@
 
 // Top-level host container.
 .kbq-radio-button {
-    display: inline-block;
+    display: inline-flex;
 }
 
 .kbq-radio-label {
@@ -33,7 +33,7 @@
 }
 
 .kbq-radio-label-content {
-    display: inline-block;
+    display: inline-flex;
 
     position: relative;
 
