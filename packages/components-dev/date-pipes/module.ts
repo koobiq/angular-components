@@ -1,32 +1,20 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, inject, NgModule, ViewEncapsulation } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { KBQ_LUXON_DATE_ADAPTER_OPTIONS, LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
-import {
-    DateAdapter,
-    DateFormatter,
-    KBQ_DATE_LOCALE,
-    KBQ_LOCALE_SERVICE,
-    KbqFormattersModule,
-    KbqLocaleServiceModule
-} from '@koobiq/components/core';
+import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { DateAdapter, DateFormatter, KbqFormattersModule, KbqLocaleService } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 
 @Component({
     selector: 'app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    providers: [
-        { provide: KBQ_DATE_LOCALE, useValue: 'ru-RU' },
-        {
-            provide: DateAdapter,
-            useClass: LuxonDateAdapter,
-            deps: [KBQ_DATE_LOCALE, KBQ_LUXON_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE]
-        },
-        { provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }
-    ],
     encapsulation: ViewEncapsulation.None
 })
 export class DemoComponent {
+    protected readonly dateAdapter: DateAdapter<DateTime> = inject(DateAdapter<DateTime>);
+    protected readonly formatter: DateFormatter<DateTime> = inject(DateFormatter<DateTime>);
+    protected readonly localeService: KbqLocaleService = inject(KbqLocaleService);
+
     obj: any = {
         absolute: {
             long: {
@@ -117,7 +105,7 @@ export class DemoComponent {
     iso = JSON.parse(JSON.stringify(this.obj));
     publishedAt = '2022-02-02 10:04:08.049306';
 
-    constructor(public dateAdapter: DateAdapter<DateTime>) {
+    constructor() {
         this.populateAbsoluteLong();
         this.populateAbsoluteShort();
         this.populateRelativeLong();
@@ -127,7 +115,7 @@ export class DemoComponent {
         this.populateRangeShort();
     }
 
-    private populateRangeShort() {
+    populateRangeShort() {
         const now = this.dateAdapter.today();
 
         this.obj.range.short.date.currentMonth = [
@@ -202,7 +190,7 @@ export class DemoComponent {
         console.log('populateRangeShort: ');
     }
 
-    private populateRangeMiddle() {
+    populateRangeMiddle() {
         const now = this.dateAdapter.today();
 
         this.obj.range.middle.dateTime.currentYear = [
@@ -254,7 +242,7 @@ export class DemoComponent {
             this.dateAdapter.toIso8601(now.set({ month: 1, day: 1 }).plus({ years: 1 }).set({ hour: 11, minute: 28 }))];
     }
 
-    private populateRangeLong() {
+    populateRangeLong() {
         const now = this.dateAdapter.today();
 
         this.obj.range.long.date.currentMonth = [now.set({ day: 1 }), now.set({ day: 10 })];
@@ -326,7 +314,7 @@ export class DemoComponent {
             )];
     }
 
-    private populateRelativeShort() {
+    populateRelativeShort() {
         const now = this.dateAdapter.today();
 
         this.obj.relative.short.beforeYesterdayNotCurrentYear = now.minus({ years: 1, days: 2 });
@@ -350,7 +338,7 @@ export class DemoComponent {
         );
     }
 
-    private populateRelativeLong() {
+    populateRelativeLong() {
         const now = this.dateAdapter.today();
 
         this.obj.relative.long.beforeYesterdayNotCurrentYear = now.minus({ years: 1, days: 2 });
@@ -374,7 +362,7 @@ export class DemoComponent {
         );
     }
 
-    private populateAbsoluteShort() {
+    populateAbsoluteShort() {
         const now = this.dateAdapter.today();
 
         this.obj.absolute.short.date.currentYear = now;
@@ -388,7 +376,7 @@ export class DemoComponent {
         this.iso.absolute.short.dateTime.notCurrentYear = this.dateAdapter.toIso8601(now.minus({ years: 1 }));
     }
 
-    private populateAbsoluteLong() {
+    populateAbsoluteLong() {
         const now = this.dateAdapter.today();
 
         this.obj.absolute.long.date.currentYear = now;
@@ -407,10 +395,9 @@ export class DemoComponent {
     declarations: [DemoComponent],
     imports: [
         BrowserModule,
-        KbqLocaleServiceModule,
+        KbqLuxonDateModule,
         KbqFormattersModule
     ],
-    bootstrap: [DemoComponent],
-    providers: []
+    bootstrap: [DemoComponent]
 })
 export class DemoModule {}
