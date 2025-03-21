@@ -10,11 +10,11 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
 
 /**
- * @title TopBar
+ * @title TopBar With Title And Counter
  */
 @Component({
     standalone: true,
-    selector: 'top-bar-overview-example',
+    selector: 'top-bar-title-counter-example',
     imports: [
         KbqTopBarModule,
         KbqButtonModule,
@@ -45,7 +45,11 @@ import { map } from 'rxjs/operators';
                         </svg>
                     </i>
                 </div>
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
+                    <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
+
+                    <span class="example-kbq-top-bar__counter">13 294</span>
+                </div>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -99,9 +103,18 @@ import { map } from 'rxjs/operators';
             </div>
         </kbq-top-bar>
     `,
+    styles: `
+        .example-kbq-top-bar__counter {
+            color: var(--kbq-foreground-contrast-tertiary);
+        }
+
+        .example-kbq-top-bar__title {
+            display: inline-flex;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverviewExample {
+export class TopBarTitleCounterExample {
     isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
