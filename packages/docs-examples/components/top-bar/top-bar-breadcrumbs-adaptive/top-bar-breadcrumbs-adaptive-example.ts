@@ -7,26 +7,33 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
 
-/**
- * @title TopBar Breadcrumbs
- */
+type ExampleAction = {
+    id: string;
+    icon?: string;
+    text?: string;
+    action?: () => void;
+    style: KbqButtonStyles | string;
+    color: KbqComponentColors;
+};
+
 @Component({
     standalone: true,
-    selector: 'top-bar-breadcrumbs-example',
+    selector: 'example-top-bar-breadcrumbs',
     imports: [
-        RouterLink,
         KbqTopBarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
+        KbqDropdownModule,
+        KbqOverflowItemsModule,
         KbqBreadcrumbsModule,
-        KbqDropdownModule
+        RouterLink
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
@@ -47,9 +54,11 @@ import { map } from 'rxjs/operators';
                     </i>
                 </div>
                 <div class="kbq-top-bar__breadcrumbs">
-                    <nav [max]="3" kbq-breadcrumbs size="big">
-                        <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
-                        <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
+                    <nav [max]="isDesktop() ? null : 3" kbq-breadcrumbs size="big">
+                        <kbq-breadcrumb-item text="Main" routerLink="./main" />
+                        <kbq-breadcrumb-item text="Sections" routerLink="./main/sections" />
+                        <kbq-breadcrumb-item text="Page" routerLink="./main/sections/page" />
+                        <kbq-breadcrumb-item text="Details" routerLink="./main/sections/page/details" />
                     </nav>
                 </div>
             </div>
@@ -96,9 +105,35 @@ import { map } from 'rxjs/operators';
                 </kbq-dropdown>
             </div>
         </kbq-top-bar>
-    `
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 72px;
+            resize: horizontal;
+            max-width: 100%;
+            min-width: 110px;
+            overflow: hidden;
+            container-type: inline-size;
+
+            .kbq-top-bar {
+                width: 100%;
+            }
+        }
+
+        .example-kbq-top-bar__title {
+            display: inline-flex;
+        }
+
+        .kbq-overflow-items {
+            max-width: 210px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsExample {
+export class ExampleTopBarBreadcrumbs {
     isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -109,29 +144,58 @@ export class TopBarBreadcrumbsExample {
         { initialValue: true }
     );
 
-    readonly actions = [
-        {
-            title: 'Add widget',
-            style: KbqButtonStyles.Transparent,
-            color: KbqComponentColors.Contrast,
-            icon: 'kbq-plus_16'
-        },
-        {
-            title: 'Cancel',
-            style: KbqButtonStyles.Outline,
-            color: KbqComponentColors.ContrastFade,
-            icon: 'kbq-undo_16'
-        },
-        {
-            title: 'Save',
-            style: '',
-            color: KbqComponentColors.Contrast,
-            icon: 'kbq-floppy-disk_16',
-            disabled: true
-        }
+    readonly actions: ExampleAction[] = [
+        { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'button1', text: 'Apply', color: KbqComponentColors.Contrast, style: '' },
+        { id: 'button2', text: 'Button 2', color: KbqComponentColors.ContrastFade, style: '' }
     ];
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
 }
+
+/**
+ * @title Top Bar Breadcrumbs Adaptive
+ */
+@Component({
+    standalone: true,
+    imports: [ExampleTopBarBreadcrumbs],
+    selector: 'top-bar-breadcrumbs-adaptive-example',
+    template: `
+        <div>
+            За основу берется автоматическое сокращение хлебных крошек, когда средние пункты скрываются при отсутствии
+            свободного пространства.
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="680" />
+
+        <div>
+            Если пространство становится еще уже, то скрывается и левый крайний уровень у хлебных крошек, оставляя
+            видимым только крайний правый уровень.
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="500" />
+
+        <div>
+            Минимальная ширина левой стороны зависит от заголовка текущего пункта, который может быть обрезан до 3
+            символов с добавлением трех точек (…).
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="400" />
+
+        <div>
+            После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями.
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="300" />
+    `,
+    styles: `
+        ::ng-deep .docs-live-example__example_top-bar-title-counter-adaptive {
+            background: var(--kbq-background-bg-secondary);
+        }
+
+        div {
+            color: var(--kbq-foreground-contrast-secondary);
+            margin: var(--kbq-size-s) var(--kbq-size-s) 0;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TopBarBreadcrumbsAdaptiveExample {}

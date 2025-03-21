@@ -3685,16 +3685,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-style-example.ts",
     "importPath": "components/tooltip"
   },
-  "top-bar-active-breadcrumb": {
-    "packagePath": "components/top-bar/top-bar-active-breadcrumb",
-    "title": "TopBar Active Breadcrumb",
-    "componentName": "TopBarActiveBreadcrumbExample",
+  "top-bar-actions": {
+    "packagePath": "components/top-bar/top-bar-actions",
+    "title": "TopBar Actions",
+    "componentName": "TopBarActionsExample",
     "files": [
-      "top-bar-active-breadcrumb-example.ts"
+      "top-bar-actions-example.ts"
     ],
-    "selector": "top-bar-active-breadcrumb-example",
+    "selector": "top-bar-actions-example",
     "additionalComponents": [],
-    "primaryFile": "top-bar-active-breadcrumb-example.ts",
+    "primaryFile": "top-bar-actions-example.ts",
+    "importPath": "components/top-bar"
+  },
+  "top-bar-breadcrumbs-adaptive": {
+    "packagePath": "components/top-bar/top-bar-breadcrumbs-adaptive",
+    "title": "Top Bar Breadcrumbs Adaptive",
+    "componentName": "TopBarBreadcrumbsAdaptiveExample",
+    "files": [
+      "top-bar-breadcrumbs-adaptive-example.ts"
+    ],
+    "selector": "top-bar-breadcrumbs-adaptive-example",
+    "additionalComponents": [
+      "ExampleTopBarBreadcrumbs"
+    ],
+    "primaryFile": "top-bar-breadcrumbs-adaptive-example.ts",
     "importPath": "components/top-bar"
   },
   "top-bar-breadcrumbs": {
@@ -3733,28 +3747,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "top-bar-overview-example.ts",
     "importPath": "components/top-bar"
   },
-  "top-bar-secondary-actions-responsive": {
-    "packagePath": "components/top-bar/top-bar-secondary-actions-responsive",
-    "title": "TopBar Secondary Actions Responsive",
-    "componentName": "TopBarSecondaryActionsResponsiveExample",
+  "top-bar-title-counter-adaptive": {
+    "packagePath": "components/top-bar/top-bar-title-counter-adaptive",
+    "title": "Top Bar Title And Counter Adaptive",
+    "componentName": "TopBarTitleCounterAdaptiveExample",
     "files": [
-      "top-bar-secondary-actions-responsive-example.ts"
+      "top-bar-title-counter-adaptive-example.ts"
     ],
-    "selector": "top-bar-secondary-actions-responsive-example",
-    "additionalComponents": [],
-    "primaryFile": "top-bar-secondary-actions-responsive-example.ts",
+    "selector": "top-bar-title-counter-adaptive-example",
+    "additionalComponents": [
+      "ExampleTopBar"
+    ],
+    "primaryFile": "top-bar-title-counter-adaptive-example.ts",
     "importPath": "components/top-bar"
   },
-  "top-bar-secondary-actions": {
-    "packagePath": "components/top-bar/top-bar-secondary-actions",
-    "title": "TopBar Secondary Actions Simple",
-    "componentName": "TopBarSecondaryActionsExample",
+  "top-bar-title-counter": {
+    "packagePath": "components/top-bar/top-bar-title-counter",
+    "title": "TopBar With Title And Counter",
+    "componentName": "TopBarTitleCounterExample",
     "files": [
-      "top-bar-secondary-actions-example.ts"
+      "top-bar-title-counter-example.ts"
     ],
-    "selector": "top-bar-secondary-actions-example",
+    "selector": "top-bar-title-counter-example",
     "additionalComponents": [],
-    "primaryFile": "top-bar-secondary-actions-example.ts",
+    "primaryFile": "top-bar-title-counter-example.ts",
     "importPath": "components/top-bar"
   },
   "tree-select-child-selection-overview": {
@@ -4667,7 +4683,9 @@ return import('@koobiq/docs-examples/components/tooltip');
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-style':
 return import('@koobiq/docs-examples/components/tooltip');
-  case 'top-bar-active-breadcrumb':
+  case 'top-bar-actions':
+return import('@koobiq/docs-examples/components/top-bar');
+  case 'top-bar-breadcrumbs-adaptive':
 return import('@koobiq/docs-examples/components/top-bar');
   case 'top-bar-breadcrumbs':
 return import('@koobiq/docs-examples/components/top-bar');
@@ -4675,9 +4693,9 @@ return import('@koobiq/docs-examples/components/top-bar');
 return import('@koobiq/docs-examples/components/top-bar');
   case 'top-bar-overview':
 return import('@koobiq/docs-examples/components/top-bar');
-  case 'top-bar-secondary-actions-responsive':
+  case 'top-bar-title-counter-adaptive':
 return import('@koobiq/docs-examples/components/top-bar');
-  case 'top-bar-secondary-actions':
+  case 'top-bar-title-counter':
 return import('@koobiq/docs-examples/components/top-bar');
   case 'tree-select-child-selection-overview':
 return import('@koobiq/docs-examples/components/tree-select');
