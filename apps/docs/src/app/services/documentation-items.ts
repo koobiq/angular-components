@@ -720,7 +720,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'date',
                     hasApi: false,
                     apiId: 'date-formatter',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: 'forms',
