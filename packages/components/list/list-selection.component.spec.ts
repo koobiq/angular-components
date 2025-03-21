@@ -23,12 +23,7 @@ describe('KbqListSelection without forms', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqListModule],
-                declarations: [
-                    SelectionListWithListOptions,
-                    SelectionListWithCheckboxPositionAfter,
-                    SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption
-                ],
+                declarations: [SelectionListWithListOptions],
                 providers: [
                     {
                         provide: Clipboard,
@@ -51,22 +46,6 @@ describe('KbqListSelection without forms', () => {
 
             clipboardContent = '';
         });
-
-        it('should add and remove focus class on focus/blur', fakeAsync(() => {
-            // Use the second list item, because the first one is always disabled.
-            const listItem = listOptions[1].nativeElement;
-
-            expect(listItem.classList).not.toContain('kbq-focused');
-
-            dispatchFakeEvent(listItem, 'focusin');
-            flush();
-            fixture.detectChanges();
-            expect(listItem.className).toContain('kbq-focused');
-
-            dispatchFakeEvent(listItem, 'blur');
-            fixture.detectChanges();
-            expect(listItem.className).not.toContain('kbq-focused');
-        }));
 
         it('should copy selected option - default handler', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
@@ -463,39 +442,68 @@ describe('KbqListSelection without forms', () => {
         });
     });
 
-    describe('with single option', () => {
-        let fixture: ComponentFixture<SelectionListWithOnlyOneOption>;
-        let listOption: DebugElement;
-        let listItemEl: DebugElement;
+    describe('focus states', () => {
+        let fixture: ComponentFixture<SelectionListFocusStates>;
+        let list: DebugElement;
+        let options: DebugElement[];
 
         beforeEach(() => {
             TestBed.configureTestingModule({
-                imports: [KbqListModule],
-                declarations: [
-                    SelectionListWithListOptions,
-                    SelectionListWithCheckboxPositionAfter,
-                    SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption
-                ]
+                imports: [KbqListModule, FormsModule],
+                declarations: [SelectionListFocusStates]
             }).compileComponents();
 
-            fixture = TestBed.createComponent(SelectionListWithOnlyOneOption);
-            listOption = fixture.debugElement.query(By.directive(KbqListOption));
-            listItemEl = fixture.debugElement.query(By.css('.kbq-list-option'));
+            fixture = TestBed.createComponent(SelectionListFocusStates);
+            list = fixture.debugElement.query(By.directive(KbqListSelection));
+            options = fixture.debugElement.queryAll(By.directive(KbqListOption));
+
             fixture.detectChanges();
         });
 
+        it('should add and remove focus class on focus/blur', fakeAsync(() => {
+            const option = options[0].nativeElement;
+
+            expect(option.classList).not.toContain('kbq-focused');
+
+            dispatchFakeEvent(list.nativeElement, 'focus');
+            flush();
+            fixture.detectChanges();
+            expect(option.className).toContain('kbq-focused');
+
+            dispatchFakeEvent(option, 'blur');
+            fixture.detectChanges();
+            expect(option.className).not.toContain('kbq-focused');
+        }));
+
+        it('should add focus class on first selected element', fakeAsync(() => {
+            const selectedOption = options[1];
+
+            selectedOption.componentInstance.toggle();
+            fixture.detectChanges();
+
+            options.forEach(({ nativeElement }) => {
+                expect(nativeElement.classList).not.toContain('kbq-focused');
+            });
+
+            expect(selectedOption.nativeElement.classList).toContain('kbq-selected');
+
+            dispatchFakeEvent(list.nativeElement, 'focus');
+            flush();
+            fixture.detectChanges();
+            expect(selectedOption.nativeElement.className).toContain('kbq-focused');
+        }));
+
         it('should be focused when focus on nativeElements', fakeAsync(() => {
-            dispatchFakeEvent(listOption.nativeElement, 'focusin');
+            dispatchFakeEvent(options[0].nativeElement, 'focusin');
             flush();
             fixture.detectChanges();
 
-            expect(listItemEl.nativeElement.className).toContain('kbq-focused');
+            expect(options[0].nativeElement.className).toContain('kbq-focused');
 
-            dispatchFakeEvent(listOption.nativeElement, 'blur');
+            dispatchFakeEvent(options[0].nativeElement, 'blur');
             fixture.detectChanges();
 
-            expect(listItemEl.nativeElement.className).not.toContain('kbq-focused');
+            expect(options[0].nativeElement.className).not.toContain('kbq-focused');
         }));
     });
 
@@ -507,12 +515,7 @@ describe('KbqListSelection without forms', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqListModule],
-                declarations: [
-                    SelectionListWithListOptions,
-                    SelectionListWithCheckboxPositionAfter,
-                    SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption
-                ]
+                declarations: [SelectionListWithListDisabled]
             }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithListDisabled);
@@ -542,12 +545,7 @@ describe('KbqListSelection without forms', () => {
         beforeEach(() => {
             TestBed.configureTestingModule({
                 imports: [KbqListModule],
-                declarations: [
-                    SelectionListWithListOptions,
-                    SelectionListWithCheckboxPositionAfter,
-                    SelectionListWithListDisabled,
-                    SelectionListWithOnlyOneOption
-                ]
+                declarations: [SelectionListWithCheckboxPositionAfter]
             }).compileComponents();
 
             fixture = TestBed.createComponent(SelectionListWithCheckboxPositionAfter);
@@ -955,12 +953,18 @@ class SelectionListWithSelectedOption {}
 
 @Component({
     template: `
-        <kbq-list-selection id="selection-list-4">
-            <kbq-list-option id="123" checkboxPosition="after">Inbox</kbq-list-option>
+        <kbq-list-selection [(ngModel)]="selectedOptions">
+            <kbq-list-option [value]="'option_1'">Option 1</kbq-list-option>
+            <kbq-list-option [value]="'option_2'">Option 2</kbq-list-option>
+            <kbq-list-option [value]="'option_3'">Option 3</kbq-list-option>
+            <kbq-list-option [value]="'option_4'">Option 4</kbq-list-option>
+            <kbq-list-option [value]="'option_5'">Option 5</kbq-list-option>
         </kbq-list-selection>
     `
 })
-class SelectionListWithOnlyOneOption {}
+class SelectionListFocusStates {
+    selectedOptions: string[] = [];
+}
 
 @Component({
     template: `

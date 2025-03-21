@@ -112,9 +112,7 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
     selector: 'kbq-list-selection',
     exportAs: 'kbqListSelection',
     template: `
-        <div [attr.tabindex]="tabIndex" (focus)="focus()" (blur)="blur()">
-            <ng-content />
-        </div>
+        <ng-content />
     `,
     styleUrls: ['./list.scss', 'list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -123,10 +121,12 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
     host: {
         class: 'kbq-list-selection',
 
-        '[attr.tabindex]': '-1',
+        '[attr.tabindex]': 'tabIndex',
         '[attr.disabled]': 'disabled || null',
 
         '(keydown)': 'onKeyDown($event)',
+        '(focus)': 'focus()',
+        '(blur)': 'blur()',
         '(window:resize)': 'updateScrollSize()'
     },
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
@@ -297,7 +297,11 @@ export class KbqListSelection
             return;
         }
 
-        this.keyManager.setFirstItemActive();
+        if (this.selectionModel.selected.length) {
+            this.options.find((option) => option.selected)?.focus();
+        } else {
+            this.keyManager.setFirstItemActive();
+        }
     }
 
     blur() {
