@@ -1,8 +1,4 @@
-@use '../core/styles/common/visually-hidden';
-@use '../core/styles/common/layout';
-
 @use '../core/styles/common/tokens' as *;
-
 @use './checkbox-theme' as *;
 
 .kbq-checkbox-checkmark,
@@ -68,6 +64,8 @@
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
 
+    margin-bottom: var(--kbq-checkbox-size-normal-margin-bottom);
+
     &.kbq-checked {
         .kbq-checkbox-checkmark {
             display: block;
@@ -102,6 +100,8 @@
 }
 
 .kbq-checkbox.kbq-checkbox_big {
+    margin-bottom: var(--kbq-checkbox-size-big-margin-bottom);
+
     & .kbq-checkbox__layout {
         padding-left: kbq-sum-series-css-variables(
             [ checkbox-size-normal-width,
