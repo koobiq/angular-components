@@ -10,7 +10,7 @@
     position: var(--kbq-top-bar-position);
     background-color: var(--kbq-top-bar-background);
     padding: var(--kbq-top-bar-padding-vertical) var(--kbq-top-bar-padding-horizontal);
-    border: var(--kbq-top-bar-border-radius);
+    border-radius: var(--kbq-top-bar-border-radius);
 
     .kbq-top-bar-spacer {
         height: 100%;
