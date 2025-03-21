@@ -1,6 +1,6 @@
 .kbq-radio-group {
     --kbq-radio-size-big-vertical-gap: var(--kbq-size-m);
-    --kbq-radio-size-normal-vertical-gap: var(--kbq-size-m);
+    --kbq-radio-size-normal-vertical-gap: var(--kbq-size-s);
     --kbq-radio-size-big-top: var(--kbq-size-3xs);
     /* THEME TOKENS */
     --kbq-radio-theme-default-outer-circle-border: var(--kbq-line-contrast-fade);
@@ -60,12 +60,16 @@
 }
 
 .kbq-radio-button {
-    --kbq-radio-size-normal-outer-size: var(--kbq-size-l);
+    --kbq-radio-size-normal-outer-circle-border-width: var(--kbq-size-border-width);
+    --kbq-radio-size-normal-outer-size: calc(
+        var(--kbq-size-l) - var(--kbq-radio-size-normal-outer-circle-border-width) * 2
+    );
     --kbq-radio-size-normal-inner-size: var(--kbq-size-xs);
     --kbq-radio-size-normal-horizontal-content-padding: var(--kbq-size-s);
     --kbq-radio-size-normal-vertical-content-padding: var(--kbq-size-3xs);
     --kbq-radio-size-normal-top: 0;
-    --kbq-radio-size-big-outer-size: var(--kbq-size-l);
+    --kbq-radio-size-big-outer-circle-border-width: var(--kbq-size-border-width);
+    --kbq-radio-size-big-outer-size: calc(var(--kbq-size-l) - var(--kbq-radio-size-big-outer-circle-border-width) * 2);
     --kbq-radio-size-big-inner-size: var(--kbq-size-xs);
     --kbq-radio-size-big-horizontal-content-padding: var(--kbq-size-s);
     --kbq-radio-size-big-vertical-content-padding: var(--kbq-size-3xs);

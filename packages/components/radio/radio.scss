@@ -17,7 +17,7 @@
 
 // Top-level host container.
 .kbq-radio-button {
-    display: inline-block;
+    display: inline-flex;
 }
 
 .kbq-radio-label {
@@ -33,7 +33,7 @@
 }
 
 .kbq-radio-label-content {
-    display: inline-block;
+    display: inline-flex;
 
     position: relative;
 
@@ -42,7 +42,8 @@
 
     padding-left: kbq-sum-series-css-variables(
         [radio-size-normal-outer-size,
-        radio-size-normal-horizontal-content-padding]
+        radio-size-normal-horizontal-content-padding,
+        calc(var(--kbq-radio-size-normal-outer-circle-border-width) * 2)]
     );
     padding-right: 0;
 
@@ -61,13 +62,15 @@
     }
 
     .kbq-radio-button__outer-circle {
-        border: {
-            width: 1px;
-        }
+        border-width: var(--kbq-radio-size-normal-outer-circle-border-width);
 
         left: 0;
 
-        top: kbq-css-half-difference(typography-text-normal-line-height, radio-size-normal-outer-size, 1px);
+        top: kbq-css-half-difference(
+            typography-text-normal-line-height,
+            radio-size-normal-outer-size,
+            radio-size-normal-outer-circle-border-width
+        );
 
         width: var(--kbq-radio-size-normal-outer-size);
         height: var(--kbq-radio-size-normal-outer-size);
@@ -106,11 +109,18 @@
     .kbq-radio-label-content {
         padding-left: kbq-sum-series-css-variables(
             [radio-size-big-outer-size,
-            radio-size-big-horizontal-content-padding]
+            radio-size-big-horizontal-content-padding,
+            calc(var(--kbq-radio-size-big-outer-circle-border-width) * 2)]
         );
 
         .kbq-radio-button__outer-circle {
-            top: kbq-css-half-difference(typography-text-big-line-height, radio-size-big-outer-size, 1px);
+            border-width: var(--kbq-radio-size-big-outer-circle-border-width);
+
+            top: kbq-css-half-difference(
+                typography-text-big-line-height,
+                radio-size-big-outer-size,
+                radio-size-big-outer-circle-border-width
+            );
 
             width: var(--kbq-radio-size-big-outer-size);
             height: var(--kbq-radio-size-big-outer-size);
