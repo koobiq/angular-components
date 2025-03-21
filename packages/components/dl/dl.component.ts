@@ -1,6 +1,15 @@
-import { AfterContentInit, Component, ElementRef, inject, Input, OnDestroy, ViewEncapsulation } from '@angular/core';
+import {
+    AfterContentInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    inject,
+    Input,
+    OnDestroy,
+    ViewEncapsulation
+} from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { debounceTime, startWith } from 'rxjs/operators';
 
 @Component({
     selector: 'kbq-dl',
@@ -25,6 +34,7 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     private resizeSubscription = Subscription.EMPTY;
 
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     ngAfterContentInit(): void {
         if (this.vertical !== null) {
@@ -32,7 +42,7 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
         }
 
         this.resizeSubscription = this.resizeStream
-            .pipe(debounceTime(this.resizeDebounceInterval))
+            .pipe(startWith(null), debounceTime(this.resizeDebounceInterval))
             .subscribe(this.updateState);
     }
 
@@ -43,7 +53,10 @@ export class KbqDlComponent implements AfterContentInit, OnDestroy {
     private readonly updateState = (): void => {
         const domRect = this.elementRef.nativeElement.getClientRects()[0];
         const width = domRect?.width || 0;
+
         this.vertical = width <= this.minWidth;
+
+        this.changeDetectorRef.markForCheck();
     };
 }
 
