@@ -1,3 +1,18 @@
+# 18.20.0 (2025-03-21)
+
+### Koobiq
+
+ * bug fix  **dl:** does not switch to vertical on initial render ([#DS-3542](https://github.com/koobiq/angular-components/issues/issue/DS-3542)) ([#598](https://github.com/koobiq/angular-components/issues/598)) ([dd8ebb4](https://github.com/koobiq/angular-components/commit/dd8ebb4b1df359c27cabd28e5c51d434907e4883))
+ * bug fix  **docs:** search for icon ([#DS-3481](https://github.com/koobiq/angular-components/issues/issue/DS-3481)) ([#597](https://github.com/koobiq/angular-components/issues/597)) ([851ebd6](https://github.com/koobiq/angular-components/commit/851ebd60329b6f169c3dffac8fe68209e381d6fa))
+ * bug fix  **filter-bar:** cancelButton name ([f0ad786](https://github.com/koobiq/angular-components/commit/f0ad78686e6ef09e336facea273ea817c3aacace))
+ * bug fix  **list, tree:** set focus to selected option ([#DS-3422](https://github.com/koobiq/angular-components/issues/issue/DS-3422)) ([#588](https://github.com/koobiq/angular-components/issues/588)) ([3badce3](https://github.com/koobiq/angular-components/commit/3badce3470800ce0bc21a4d066961d2e90c1c316))
+ * bug fix  **navbar:** async item alignment in vertical navbar ([#DS-3519](https://github.com/koobiq/angular-components/issues/issue/DS-3519)) ([#589](https://github.com/koobiq/angular-components/issues/589)) ([dcdff7a](https://github.com/koobiq/angular-components/commit/dcdff7a276ff29f7e1ca86a3ebbc4f6ef9b66076))
+ * bug fix  **radio:** removed duplicated input styles ([#595](https://github.com/koobiq/angular-components/issues/595)) ([502f971](https://github.com/koobiq/angular-components/commit/502f9716df85448bb82b41eb5f5d6b7fd732dbfd))
+ * bug fix  **radio:** vertical gap and size ([#DS-3490](https://github.com/koobiq/angular-components/issues/issue/DS-3490)) ([#585](https://github.com/koobiq/angular-components/issues/585)) ([8d3954b](https://github.com/koobiq/angular-components/commit/8d3954bb9ede3e24aaf1df780a36527f4ff00b9a))
+ * bug fix  **timezone:** rounded timezone options ([#DS-3429](https://github.com/koobiq/angular-components/issues/issue/DS-3429)) ([#584](https://github.com/koobiq/angular-components/issues/584)) ([320c53a](https://github.com/koobiq/angular-components/commit/320c53a9302844f54d4d3a2e68997ed29e0b084a))
+ * feature  **styles:** removed duplicated mixin ([#592](https://github.com/koobiq/angular-components/issues/592)) ([7fc8403](https://github.com/koobiq/angular-components/commit/7fc840315939afe55af2782015ea4339971f156f))
+ * feature  **tags, option, select:** disabled user-select ([#DS-3141](https://github.com/koobiq/angular-components/issues/issue/DS-3141)) ([#590](https://github.com/koobiq/angular-components/issues/590)) ([abde492](https://github.com/koobiq/angular-components/commit/abde492923b60a87a45b6ad3ef44e71f9b03c36a))
+
 # 18.19.0 (2025-03-17)
 
 ### Koobiq
