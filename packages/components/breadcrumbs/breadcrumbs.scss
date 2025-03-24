@@ -6,6 +6,22 @@
     align-items: center;
     gap: var(--kbq-breadcrumbs-gap);
 
+    &.kbq-breadcrumbs_wrap {
+        flex-wrap: wrap;
+    }
+
+    .kbq-overflow-items {
+        padding: 1px;
+        margin-left: -1px;
+    }
+
+    // @todo
+    .breadcrumb-item__group {
+        display: inline-flex;
+        align-items: center;
+        white-space: nowrap;
+    }
+
     .kbq-breadcrumb-item {
         &.kbq-button,
         &.kbq-button-icon {
@@ -100,10 +116,6 @@
         }
 
         color: var(--kbq-foreground-contrast);
-    }
-
-    &.kbq-breadcrumbs_wrap {
-        flex-wrap: wrap;
     }
 
     // typography
