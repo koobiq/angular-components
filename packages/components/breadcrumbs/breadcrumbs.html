@@ -19,8 +19,8 @@
         <ng-container [ngTemplateOutlet]="separatorTemplate" />
     </div>
 
-    <kbq-overflow-items reverseOverflowOrder>
-        <ng-template kbqOverflowItemsResult let-hiddenItemIDs>
+    <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems reverseOverflowOrder class="layout-align-start-center">
+        <div kbqOverflowItemsResult class="kbq-breadcrumb-item__container">
             <button
                 kbq-button
                 kbqBreadcrumb
@@ -34,24 +34,24 @@
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
 
             <kbq-dropdown #hiddenBreadcrumbsDropdown="kbqDropdown">
-                @for (item of items; track item) {
-                    @if (hiddenItemIDs.has($index)) {
+                @for (item of items; track item; let index = $index) {
+                    @if (kbqOverflowItems.hiddenItemIDs().has(index)) {
                         <a class="kbq-breadcrumb-item__link-behavior" [routerLink]="item.routerLink?.urlTree">
                             <button kbq-dropdown-item [disabled]="item.disabled">{{ item.text }}</button>
                         </a>
                     }
                 }
             </kbq-dropdown>
-        </ng-template>
-        @for (item of items.toArray().slice(1); track item; let last = $last) {
-            <ng-container *kbqOverflowItem="$index + 1">
-                <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
+        </div>
+        @for (item of items.toArray().slice(1); track item; let index = $index; let last = $last) {
+            <div kbqOverflowItem class="kbq-breadcrumb-item__container" [kbqOverflowItem]="index + 1">
+                <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last }" />
                 @if (!last) {
                     <ng-container [ngTemplateOutlet]="separatorTemplate" />
                 }
-            </ng-container>
+            </div>
         }
-    </kbq-overflow-items>
+    </div>
 }
 
 <ng-template #breadcrumbTemplate let-item let-last="last">

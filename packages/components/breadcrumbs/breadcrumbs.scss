@@ -6,6 +6,11 @@
     align-items: center;
     gap: var(--kbq-breadcrumbs-gap);
 
+    .kbq-overflow-items {
+        padding: 1px;
+        margin-left: -1px;
+    }
+
     .kbq-breadcrumb-item__container {
         display: inline-flex;
         align-items: center;
