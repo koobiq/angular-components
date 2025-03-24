@@ -763,6 +763,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "absolute-date-formatter-example.ts",
     "importPath": "components/date-formatter"
   },
+  "date-formatter-special-use": {
+    "packagePath": "components/date-formatter/date-formatter-special-use",
+    "title": "date-formatter-special-use",
+    "componentName": "DateFormatterSpecialUseExample",
+    "files": [
+      "date-formatter-special-use-example.ts"
+    ],
+    "selector": "date-formatter-special-use-example",
+    "additionalComponents": [],
+    "primaryFile": "date-formatter-special-use-example.ts",
+    "importPath": "components/date-formatter"
+  },
+  "date-formatter-typical-use": {
+    "packagePath": "components/date-formatter/date-formatter-typical-use",
+    "title": "date-formatter-typical-use",
+    "componentName": "DateFormatterTypicalUseExample",
+    "files": [
+      "date-formatter-typical-use-example.ts"
+    ],
+    "selector": "date-formatter-typical-use-example",
+    "additionalComponents": [],
+    "primaryFile": "date-formatter-typical-use-example.ts",
+    "importPath": "components/date-formatter"
+  },
   "duration-date-formatter": {
     "packagePath": "components/date-formatter/duration-date-formatter",
     "title": "Duration date-formatter",
@@ -3995,6 +4019,10 @@ return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-tabs':
 return import('@koobiq/docs-examples/components/code-block');
   case 'absolute-date-formatter':
+return import('@koobiq/docs-examples/components/date-formatter');
+  case 'date-formatter-special-use':
+return import('@koobiq/docs-examples/components/date-formatter');
+  case 'date-formatter-typical-use':
 return import('@koobiq/docs-examples/components/date-formatter');
   case 'duration-date-formatter':
 return import('@koobiq/docs-examples/components/date-formatter');

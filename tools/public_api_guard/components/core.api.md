@@ -215,6 +215,8 @@ export class DateFormatter<D> extends DateFormatter_2<D> {
     // (undocumented)
     readonly adapter: DateAdapter_2<D>;
     // (undocumented)
+    readonly localeService: KbqLocaleService | null;
+    // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<DateFormatter<any>, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<DateFormatter<any>>;
