@@ -51,7 +51,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
 
     get disabled(): boolean {
-        return !this.control.value || this.control.pristine;
+        return !this.control.value;
     }
 
     control = new FormControl<typeof this.data.value>('');
