@@ -64,7 +64,7 @@
             &.ng-invalid {
                 @include kbq-form-field-state(states-error);
 
-                & .kbq-form-field__container {
+                &.cdk-focused .kbq-form-field__container {
                     box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
                 }
             }
