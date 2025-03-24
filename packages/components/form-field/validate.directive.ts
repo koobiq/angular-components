@@ -48,7 +48,10 @@ import { KbqFormFieldControl } from './form-field-control';
         kbq-tree-select,
         kbq-tag-list
     `,
-    exportAs: 'KbqValidate'
+    exportAs: 'KbqValidate',
+    host: {
+        class: 'kbq-validate-directive'
+    }
 })
 export class KbqValidateDirective implements AfterContentInit {
     get isNgModel(): boolean {

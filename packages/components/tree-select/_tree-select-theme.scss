@@ -4,7 +4,8 @@
     .kbq-tree-select {
         color: var(--kbq-foreground-contrast);
 
-        &.ng-invalid {
+        &.kbq-validate-directive.ng-invalid,
+        &.kbq-invalid {
             color: var(--kbq-error-default);
 
             .kbq-select__placeholder {

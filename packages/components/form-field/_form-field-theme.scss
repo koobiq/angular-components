@@ -41,7 +41,7 @@
         }
 
         &.kbq-form-field_invalid,
-        &.ng-invalid {
+        &.kbq-form-field_has-validate-directive.ng-invalid {
             @include kbq-form-field-state(states-error);
         }
 
@@ -61,7 +61,7 @@
             }
 
             &.kbq-form-field_invalid,
-            &.ng-invalid {
+            &.kbq-form-field_has-validate-directive.ng-invalid {
                 @include kbq-form-field-state(states-error);
 
                 &.cdk-focused .kbq-form-field__container {
