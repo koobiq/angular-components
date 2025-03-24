@@ -90,6 +90,7 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     get hasStepper(): boolean;
     // (undocumented)
     get hasSuffix(): boolean;
+    get hasValidateDirective(): boolean;
     // (undocumented)
     hint: QueryList<KbqHint>;
     // (undocumented)
@@ -127,7 +128,7 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     suffix: QueryList<KbqSuffix>;
     protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "color": { "alias": "color"; "required": false; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "hint", "passwordHints", "suffix", "prefix"], ["[kbqPrefix]", "*", "[kbqSuffix]", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "kbq-hint, kbq-password-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "color": { "alias": "color"; "required": false; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "validateDirective", "hint", "passwordHints", "suffix", "prefix"], ["[kbqPrefix]", "*", "[kbqSuffix]", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "kbq-hint, kbq-password-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
