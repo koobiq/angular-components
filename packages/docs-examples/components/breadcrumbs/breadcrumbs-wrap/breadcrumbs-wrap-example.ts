@@ -20,7 +20,7 @@ import { BreadcrumbsOverviewExample } from '../breadcrumbs-overview/breadcrumbs-
         </kbq-radio-group>
 
         <kbq-splitter>
-            <div class="layout-align-start" kbq-splitter-area>
+            <div class="layout-align-start" style="padding-top: 1px" kbq-splitter-area>
                 <nav [wrapMode]="wrapMode" kbq-breadcrumbs>
                     @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                         <kbq-breadcrumb-item
