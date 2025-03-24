@@ -78,7 +78,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
 
     get formattedValue(): string {
         if (this.start && this.end) {
-            return this.formatter.rangeShortDate(this.start, this.end);
+            return this.formatter.rangeShortDateTime(this.start, this.end);
         }
 
         return this.data.value?.name ?? '';
