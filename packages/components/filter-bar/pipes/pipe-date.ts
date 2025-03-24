@@ -96,8 +96,16 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         return this.adapter.parse(this.data.value?.start, '');
     }
 
+    get defaultStart() {
+        return this.adapter.today();
+    }
+
     get end() {
         return this.adapter.parse(this.data.value?.end, '');
+    }
+
+    get defaultEnd() {
+        return this.adapter.today().plus({ days: 1 });
     }
 
     override get isEmpty(): boolean {
@@ -116,8 +124,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         super();
 
         this.formGroup = new FormGroup({
-            start: new FormControl(this.start),
-            end: new FormControl(this.end)
+            start: new FormControl(this.start || this.defaultStart),
+            end: new FormControl(this.end || this.defaultEnd)
         });
     }
 
