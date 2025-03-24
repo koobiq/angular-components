@@ -63,26 +63,6 @@
 
     <br />
 
-    <!--    <label>Vertical Group</label>-->
-
-    <!--    <kbq-button-toggle-group #group3="kbqButtonToggleGroup" [vertical]="true">-->
-    <!--        <kbq-button-toggle [value]="1">-->
-    <!--            default 1-->
-    <!--        </kbq-button-toggle>-->
-    <!--        <kbq-button-toggle [value]="2" [disabled]="true">-->
-    <!--            default 2-->
-    <!--        </kbq-button-toggle>-->
-    <!--        <kbq-button-toggle [value]="3">-->
-    <!--            default 3-->
-    <!--        </kbq-button-toggle>-->
-    <!--        <kbq-button-toggle [value]="4">-->
-    <!--            <i kbq-icon="kbq-chevron-down-s_16"></i>-->
-    <!--        </kbq-button-toggle>-->
-    <!--    </kbq-button-toggle-group>-->
-    <!--    <div class="example-selected-value">Selected value: {{group3.value}}</div>-->
-
-    <!--    <br>-->
-
     <label>Group With Model</label>
 
     <kbq-button-toggle-group [(ngModel)]="modelResult">
@@ -101,4 +81,19 @@
         <kbq-button-toggle [disabled]="true" [value]="2">default 2</kbq-button-toggle>
         <kbq-button-toggle [value]="3">default 3 default 3 default 3 default 3</kbq-button-toggle>
     </kbq-button-toggle-group>
+</div>
+
+<div>
+    <div>Toggle group with popover</div>
+    <kbq-button-toggle-group [value]="'1'">
+        <kbq-button-toggle kbqPopover value="1" [kbqPopoverContent]="popoverContentTemplate">First</kbq-button-toggle>
+        <kbq-button-toggle value="2">Second - without popover</kbq-button-toggle>
+        <kbq-button-toggle kbqPopover value="3" [kbqPopoverContent]="popoverContentTemplate">Third</kbq-button-toggle>
+    </kbq-button-toggle-group>
+
+    <ng-template #popoverContentTemplate>
+        <kbq-form-field>
+            <textarea kbqTextarea></textarea>
+        </kbq-form-field>
+    </ng-template>
 </div>
