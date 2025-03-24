@@ -45,6 +45,38 @@ For cases where a name can be replaced with a shortened version using a well-kno
 
 <!-- example(breadcrumbs-truncate-by-abbrev-items) -->
 
+### Negative Margin
+
+By default, the breadcrumb panel is shifted to the left by `--kbq-breadcrumb-item-negative-margin` using a negative margin. This behavior can be changed using the `firstItemNegativeMargin` property.
+
+For specific breadcrumbs:
+
+```ts
+@Component({
+    template: `
+            <nav kbq-breadcrumbs [firstItemNegativeMargin]='false'>...</nav>
+    `
+})
+```
+
+For all breadcrumbs in the module, using **Dependency Injection** with the `provideKbqBreadcrumbsConfiguration` provider:
+
+```ts
+import { provideKbqBreadcrumbsConfiguration } from '@koobiq/components/breadcrumbs';
+
+@NgModule({
+    providers: [
+        provideKbqBreadcrumbsConfiguration({
+            max: null,
+            size: 'normal',
+            firstItemNegativeMargin: true
+        })
+    ]
+})
+```
+
+This version captures the same meaning but in English. Let me know if you need further adjustments!
+
 ## Keyboard Navigation
 
 | <div style="min-width: 180px;">Key</div>                                                         | Behavior                                                                                                                                                                                                                                                                                                                                                                                                      |

@@ -36,11 +36,16 @@ export type KbqBreadcrumbsConfiguration = {
      */
     max: number | null;
     size: KbqDefaultSizes;
+    /**
+     * (Optional) Determines if a negative margin should be applied to the first breadcrumb item.
+     */
+    firstItemNegativeMargin?: boolean;
 };
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
-    size: 'normal'
+    size: 'normal',
+    firstItemNegativeMargin: true
 };
 
 /** Breadcrumbs options global configuration provider. */
@@ -54,6 +59,24 @@ export const provideKbqBreadcrumbsConfiguration = (configuration: KbqBreadcrumbs
     provide: KBQ_BREADCRUMBS_CONFIGURATION,
     useValue: configuration
 });
+
+/**
+ * Directive that adds the `kbq-breadcrumb-item__container` CSS class to an element.
+ *
+ * This directive is used to group a breadcrumb item with its separator for proper layout.
+ * It also conditionally applies a negative margin to the first breadcrumb item, but only
+ * when a specific flag is enabled.
+ *
+ * @see KbqBreadcrumbsConfiguration
+ */
+@Directive({
+    standalone: true,
+    selector: '[kbqBreadcrumbItemContainer]',
+    host: {
+        class: 'kbq-breadcrumb-item__container'
+    }
+})
+export class KbqBreadcrumbItemContainer {}
 
 @Directive({
     selector: 'ng-template[kbqBreadcrumbsSeparator]',
@@ -153,6 +176,7 @@ export class KbqBreadcrumbItem {
         KbqDropdownModule,
         KbqBreadcrumbItem,
         KbqBreadcrumbButton,
+        KbqBreadcrumbItemContainer,
         RdxRovingFocusGroupDirective,
         RdxRovingFocusItemDirective,
         KbqTitleModule
@@ -162,6 +186,7 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
+        '[class.kbq-breadcrumbs_first-item-negative-margin]': '!!firstItemNegativeMargin',
         '[attr.aria-label]': "'breadcrumb'"
     },
     // @TODO add support for Home,End keys interaction  (#DS-3334)
@@ -169,6 +194,11 @@ export class KbqBreadcrumbItem {
 })
 export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
+    /**
+     * (Optional) Determines if a negative margin should be applied to the first breadcrumb item.
+     */
+    @Input({ transform: booleanAttribute }) firstItemNegativeMargin: boolean =
+        this.configuration.firstItemNegativeMargin || true;
     /**
      * Size of the breadcrumbs. Affects font size.
      * Default value is taken from the global configuration.

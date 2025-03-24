@@ -6,6 +6,19 @@
     align-items: center;
     gap: var(--kbq-breadcrumbs-gap);
 
+    &.kbq-breadcrumbs_first-item-negative-margin {
+        .kbq-breadcrumb-item__container:first-of-type {
+            &:first-of-type {
+                margin-left: var(--kbq-breadcrumb-item-negative-margin);
+            }
+        }
+    }
+
+    .kbq-breadcrumb-item__container {
+        display: inline-flex;
+        align-items: center;
+    }
+
     .kbq-breadcrumb-item {
         &.kbq-button,
         &.kbq-button-icon {

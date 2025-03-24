@@ -45,6 +45,36 @@
 
 <!-- example(breadcrumbs-truncate-by-abbrev-items) -->
 
+### Отрицательный отступ
+
+По умолчанию панель хлебных крошек смещена влево на `--kbq-breadcrumb-item-negative-margin`, используя негативный отступ. Это поведение можно изменить при помощи свойства `firstItemNegativeMargin`.
+
+Для определенных хлебных крошек:
+
+```ts
+@Component({
+    template: `
+            <nav kbq-breadcrumbs [firstItemNegativeMargin]='false'>...</nav>
+    `
+})
+```
+
+Для всех хлебных крошек в модуле, используя _Dependency Injection_ при помощи `provideKbqBreadcrumbsConfiguration` провайдера:
+
+```ts
+import { provideKbqBreadcrumbsConfiguration } from '@koobiq/components/breadcrumbs';
+
+@NgModule({
+    providers: [
+        provideKbqBreadcrumbsConfiguration({
+            max: null,
+            size: 'normal',
+            firstItemNegativeMargin: true
+        })
+    ]
+})
+```
+
 ## Управление с клавиатуры
 
 | <div style="min-width: 180px;">Клавиша</div>                                                     | Поведение                                                                                                                                                                                                                                                                                                                                                                                                                                               |

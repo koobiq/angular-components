@@ -48,11 +48,20 @@ export class KbqBreadcrumbItem {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
 }
 
+// @public
+export class KbqBreadcrumbItemContainer {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbItemContainer, "[kbqBreadcrumbItemContainer]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItemContainer, never>;
+}
+
 // @public (undocumented)
 export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     disabled: boolean;
+    firstItemNegativeMargin: boolean;
     protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[];
     // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
@@ -65,6 +74,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
+    static ngAcceptInputType_firstItemNegativeMargin: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
@@ -73,7 +84,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     size: KbqDefaultSizes;
     protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -82,6 +93,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
 export type KbqBreadcrumbsConfiguration = {
     max: number | null;
     size: KbqDefaultSizes;
+    firstItemNegativeMargin?: boolean;
 };
 
 // @public (undocumented)
@@ -93,7 +105,7 @@ export class KbqBreadcrumbsModule {
     // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBreadcrumbsModule, never, [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton], [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBreadcrumbsModule, never, [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton, typeof i1_2.KbqBreadcrumbItemContainer], [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton, typeof i1_2.KbqBreadcrumbItemContainer]>;
 }
 
 // @public (undocumented)
