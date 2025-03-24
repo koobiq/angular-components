@@ -16,6 +16,9 @@
         margin: var(--kbq-size-xxs) 0;
 
         & .kbq-list-option {
+            margin-left: var(--kbq-size-xxs);
+            margin-right: var(--kbq-size-xxs);
+
             & .kbq-list-text {
                 display: flex;
                 flex-direction: row;
