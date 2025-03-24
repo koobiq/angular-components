@@ -20,7 +20,9 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset (onResetFilter)="onResetFilter()" />
+            @if (activeFilter?.changed) {
+                <kbq-filter-reset (onResetFilter)="onResetFilter()" />
+            }
 
             <kbq-filter-search />
         </kbq-filter-bar>
