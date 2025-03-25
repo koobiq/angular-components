@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     inject,
@@ -23,12 +24,39 @@ import {
 } from '@koobiq/components/filter-bar';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
-import {
-    FilterBarCompleteFunctionsExample,
-    FilterBarOverviewExample,
-    FilterBarSavedFiltersExample,
-    FilterBarSearchExample
-} from '../../docs-examples/components/filter-bar';
+import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
+
+@Component({
+    standalone: true,
+    imports: [FilterBarExamplesModule],
+    selector: 'dev-docs-examples',
+    template: `
+        <filter-bar-overview-example />
+        <br />
+        <br />
+        <filter-bar-cleanable-example />
+        <br />
+        <br />
+        <filter-bar-removable-example />
+        <br />
+        <br />
+        <filter-bar-required-example />
+        <br />
+        <br />
+        <filter-bar-pipe-types-example />
+        <br />
+        <br />
+        <filter-bar-search-example />
+        <br />
+        <br />
+        <filter-bar-saved-filters-example />
+        <br />
+        <br />
+        <filter-bar-complete-functions-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDocsExamples {}
 
 @Component({
     selector: 'app',
@@ -719,10 +747,7 @@ export class DemoComponent implements AfterViewInit {
         KbqDividerModule,
         KbqButtonModule,
         KbqLuxonDateModule,
-        FilterBarSavedFiltersExample,
-        FilterBarSearchExample,
-        FilterBarOverviewExample,
-        FilterBarCompleteFunctionsExample
+        DevDocsExamples
     ],
     bootstrap: [DemoComponent]
 })

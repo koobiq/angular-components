@@ -20,30 +20,15 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
 
             <kbq-pipe-add />
 
-            <kbq-filter-reset (onResetFilter)="onReset()" />
+            @if (activeFilter?.name !== defaultFilter?.name || activeFilter?.changed) {
+                <kbq-filter-reset (onResetFilter)="onReset()" />
+            }
         </kbq-filter-bar>
     `
 })
 export class FilterBarRequiredExample {
-    activeFilter: KbqFilter | null = {
-        name: 'Select',
-        readonly: false,
-        disabled: false,
-        changed: false,
-        saved: false,
-        pipes: [
-            {
-                name: 'Datetime',
-                type: KbqPipeTypes.Datetime,
-                value: { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
-
-                required: true,
-                cleanable: false,
-                removable: false,
-                disabled: false
-            }
-        ]
-    };
+    activeFilter: KbqFilter | null = this.getDefaultFilter();
+    defaultFilter: KbqFilter | null = this.getDefaultFilter();
 
     pipeTemplates: KbqPipeTemplate[] = [
         {
@@ -132,7 +117,7 @@ export class FilterBarRequiredExample {
 
     getDefaultFilter(): KbqFilter {
         return {
-            name: '',
+            name: 'Select',
             readonly: false,
             disabled: false,
             changed: false,
