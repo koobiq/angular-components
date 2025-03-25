@@ -25,7 +25,7 @@
 <ng-template #content>
     @if (list) {
         <div class="kbq-date-list">
-            <kbq-list-selection [autoSelect]="false" [ngModel]="data.value?.name">
+            <kbq-list-selection #listSelection [autoSelect]="false" [ngModel]="data.value?.name">
                 <kbq-list-option (click)="openPeriod()" (keydown.enter)="openPeriod()">
                     {{ localeData.datePipe.customPeriod }}
                     <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
