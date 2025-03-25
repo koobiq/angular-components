@@ -281,7 +281,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         if (this.trigger.includes(PopUpTriggers.Keydown)) {
             this.listeners.set('keydown', (event) => {
                 if (event instanceof KeyboardEvent && [ENTER, SPACE].includes(event.keyCode)) {
-                    this.show();
+                    setTimeout(() => this.show());
                 }
             });
         }
