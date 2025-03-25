@@ -308,7 +308,7 @@ export class DemoComponent implements AfterViewInit {
                 },
                 {
                     name: 'removable',
-                    value: { name: 'Последний день', start: null, end: null },
+                    value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Date,
 
                     required: false,
@@ -318,7 +318,7 @@ export class DemoComponent implements AfterViewInit {
                 },
                 {
                     name: 'disabled',
-                    value: { name: 'Последний день', start: null, end: null },
+                    value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Date,
 
                     required: true,
@@ -373,7 +373,7 @@ export class DemoComponent implements AfterViewInit {
                 },
                 {
                     name: 'removable',
-                    value: { name: 'Последний день', start: null, end: null },
+                    value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Datetime,
 
                     required: false,
@@ -383,7 +383,7 @@ export class DemoComponent implements AfterViewInit {
                 },
                 {
                     name: 'disabled',
-                    value: { name: 'Последний день', start: null, end: null },
+                    value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Datetime,
 
                     required: true,
@@ -634,12 +634,12 @@ export class DemoComponent implements AfterViewInit {
                 name: 'Date',
                 type: KbqPipeTypes.Date,
                 values: [
-                    { name: 'Последний день', start: null, end: { days: -1 } },
-                    { name: 'Последние 3 дня', start: null, end: { days: -3 } },
-                    { name: 'Последние 7 дней', start: null, end: { days: -7 } },
-                    { name: 'Последние 30 дней', start: null, end: { days: -30 } },
-                    { name: 'Последние 90 дней', start: null, end: { days: -90 } },
-                    { name: 'Последний год', start: null, end: { years: -1 } }
+                    { name: 'Последний день', end: null, start: { days: -1 } },
+                    { name: 'Последние 3 дня', end: null, start: { days: -3 } },
+                    { name: 'Последние 7 дней', end: null, start: { days: -7 } },
+                    { name: 'Последние 30 дней', end: null, start: { days: -30 } },
+                    { name: 'Последние 90 дней', end: null, start: { days: -90 } },
+                    { name: 'Последний год', end: null, start: { years: -1 } }
                 ],
                 required: false,
                 cleanable: false,
@@ -650,12 +650,12 @@ export class DemoComponent implements AfterViewInit {
                 name: 'Datetime',
                 type: KbqPipeTypes.Datetime,
                 values: [
-                    { name: 'Последний день', start: null, end: { days: -1 } },
-                    { name: 'Последние 3 дня', start: null, end: { days: -3 } },
-                    { name: 'Последние 7 дней', start: null, end: { days: -7 } },
-                    { name: 'Последние 30 дней', start: null, end: { days: -30 } },
-                    { name: 'Последние 90 дней', start: null, end: { days: -90 } },
-                    { name: 'Последний год', start: null, end: { years: -1 } }
+                    { name: 'Последний день', end: null, start: { days: -1 } },
+                    { name: 'Последние 3 дня', end: null, start: { days: -3 } },
+                    { name: 'Последние 7 дней', end: null, start: { days: -7 } },
+                    { name: 'Последние 30 дней', end: null, start: { days: -30 } },
+                    { name: 'Последние 90 дней', end: null, start: { days: -90 } },
+                    { name: 'Последний год', end: null, start: { years: -1 } }
                 ],
                 required: false,
                 cleanable: true,

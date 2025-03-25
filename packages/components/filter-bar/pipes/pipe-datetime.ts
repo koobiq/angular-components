@@ -97,6 +97,10 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     }
 
     get defaultStart() {
+        if (this.data.value?.start) {
+            return this.adapter.today().plus(this.data.value?.start);
+        }
+
         return this.adapter.today().startOf('day');
     }
 
@@ -105,7 +109,11 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     }
 
     get defaultEnd() {
-        return this.adapter.today().plus({ days: 1 }).startOf('day');
+        if (this.data.value?.start) {
+            return this.adapter.today();
+        }
+
+        return this.adapter.today().endOf('day');
     }
 
     override get isEmpty(): boolean {
@@ -161,6 +169,8 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         this.showStartCalendar = false;
         this.showEndCalendar = false;
 
+        this.calculateDefaultValues();
+
         setTimeout(() => {
             this.popover.updatePosition(true);
             this.returnButton().focus();
@@ -201,5 +211,12 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     hideCalendars() {
         this.showStartCalendar = false;
         this.showEndCalendar = false;
+    }
+
+    private calculateDefaultValues() {
+        this.formGroup = new FormGroup({
+            start: new FormControl(this.start || this.defaultStart),
+            end: new FormControl(this.end || this.defaultEnd)
+        });
     }
 }
