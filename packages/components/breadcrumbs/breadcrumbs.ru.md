@@ -59,7 +59,7 @@
 })
 ```
 
-Для всех хлебных крошек в модуле, используя _Dependency Injection_ при помощи `provideKbqBreadcrumbsConfiguration` провайдера:
+Для всех хлебных крошек в модуле, используя _Dependency Injection_ при помощи `kbqBreadcrumbsConfigurationProvider` провайдера:
 
 ```ts
 import { kbqBreadcrumbsConfigurationProvider } from '@koobiq/components/breadcrumbs';

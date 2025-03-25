@@ -59,7 +59,7 @@ For specific breadcrumbs:
 })
 ```
 
-For all breadcrumbs in the module, using **Dependency Injection** with the `provideKbqBreadcrumbsConfiguration` provider:
+For all breadcrumbs in the module, using **Dependency Injection** with the `kbqBreadcrumbsConfigurationProvider` provider:
 
 ```ts
 import { kbqBreadcrumbsConfigurationProvider } from '@koobiq/components/breadcrumbs';
