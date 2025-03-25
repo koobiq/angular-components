@@ -90,7 +90,6 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     get hasStepper(): boolean;
     // (undocumented)
     get hasSuffix(): boolean;
-    get hasValidateDirective(): boolean;
     // (undocumented)
     hint: QueryList<KbqHint>;
     // (undocumented)
@@ -128,7 +127,7 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     suffix: QueryList<KbqSuffix>;
     protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "color": { "alias": "color"; "required": false; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "validateDirective", "hint", "passwordHints", "suffix", "prefix"], ["[kbqPrefix]", "*", "[kbqSuffix]", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "kbq-hint, kbq-password-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "color": { "alias": "color"; "required": false; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "hint", "passwordHints", "suffix", "prefix"], ["[kbqPrefix]", "*", "[kbqSuffix]", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "kbq-hint, kbq-password-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
@@ -323,7 +322,7 @@ export class KbqTrim {
 
 // @public @deprecated (undocumented)
 export class KbqValidateDirective implements AfterContentInit {
-    constructor(formFieldControl: KbqFormFieldControl<any>, rawValidators: Validator[], ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, mcValidation: KbqValidationOptions, cdr: ChangeDetectorRef);
+    constructor(formFieldControl: KbqFormFieldControl<any>, rawValidators: Validator[], ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, mcValidation: KbqValidationOptions, cdr: ChangeDetectorRef, parentFormField: KbqFormField | null);
     // (undocumented)
     get hasNotSubmittedParent(): boolean;
     // (undocumented)
@@ -350,7 +349,7 @@ export class KbqValidateDirective implements AfterContentInit {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqValidateDirective, "        input[kbqInput],        input[kbqNumberInput],        input[kbqInputPassword],        input[kbqTimepicker],        input[kbqDatepicker],        textarea[kbqTextarea],        kbq-select,        kbq-tree-select,        kbq-tag-list    ", ["KbqValidate"], {}, {}, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqValidateDirective, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, { optional: true; }, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqValidateDirective, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, { optional: true; }, null, { optional: true; host: true; }]>;
 }
 
 // @public (undocumented)

@@ -40,7 +40,9 @@
             }
         }
 
+        // Invalid by control `ErrorStateMatcher`
         &.kbq-form-field_invalid,
+        // Invalid by `KbqValidateDirective`
         &.kbq-form-field_has-validate-directive.ng-invalid {
             @include kbq-form-field-state(states-error);
         }
@@ -60,7 +62,9 @@
                 }
             }
 
+            // Invalid by control `ErrorStateMatcher`
             &.kbq-form-field_invalid,
+            // Invalid by `KbqValidateDirective`
             &.kbq-form-field_has-validate-directive.ng-invalid {
                 @include kbq-form-field-state(states-error);
 

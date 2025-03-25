@@ -39,7 +39,6 @@ import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
-import { KbqValidateDirective } from './validate.directive';
 
 let nextUniqueId = 0;
 
@@ -76,7 +75,6 @@ export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mix
         '[class.kbq-form-field_has-password-toggle]': 'hasPasswordToggle',
         '[class.kbq-form-field_has-cleaner]': 'canShowCleaner',
         '[class.kbq-form-field_has-stepper]': 'canShowStepper',
-        '[class.kbq-form-field_has-validate-directive]': 'hasValidateDirective',
 
         '[class.kbq-disabled]': 'control.disabled',
 
@@ -106,8 +104,6 @@ export class KbqFormField
     @ContentChild(KbqStepper, { static: false }) stepper: KbqStepper;
     @ContentChild(KbqCleaner, { static: false }) cleaner: KbqCleaner | null;
     @ContentChild(KbqPasswordToggle, { static: false }) passwordToggle: KbqPasswordToggle | null;
-    @ContentChild(KbqValidateDirective, { static: true })
-    private readonly validateDirective: KbqValidateDirective | null;
 
     @ContentChildren(KbqHint) hint: QueryList<KbqHint>;
     @ContentChildren(KbqPasswordHint) passwordHints: QueryList<KbqPasswordHint>;
@@ -124,15 +120,6 @@ export class KbqFormField
     canCleanerClearByEsc: boolean = true;
 
     private readonly destroyRef = inject(DestroyRef);
-
-    /**
-     * Whether the form field has the deprecated `KbqValidateDirective`.
-     *
-     * @docs-private
-     */
-    get hasValidateDirective(): boolean {
-        return !!this.validateDirective;
-    }
 
     get focusOrigin(): FocusOrigin {
         return this._focusOrigin;

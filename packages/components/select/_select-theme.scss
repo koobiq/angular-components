@@ -6,7 +6,9 @@
     .kbq-select {
         color: var(--kbq-foreground-contrast);
 
-        &.kbq-validate-directive.ng-invalid,
+        // Invalid by `KbqValidateDirective`
+        &.kbq-control_has-validate-directive.ng-invalid,
+        // Invalid by control `ErrorStateMatcher`
         &.kbq-invalid {
             color: var(--kbq-error-default);
 
