@@ -7,7 +7,7 @@
     gap: var(--kbq-breadcrumbs-gap);
 
     &.kbq-breadcrumbs_first-item-negative-margin {
-        .kbq-breadcrumb-item__container:first-of-type {
+        .kbq-breadcrumb-item__container {
             &:first-of-type {
                 margin-left: var(--kbq-breadcrumb-item-negative-margin);
             }

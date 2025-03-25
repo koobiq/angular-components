@@ -63,11 +63,7 @@ export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBr
 /**
  * Directive that adds the `kbq-breadcrumb-item__container` CSS class to an element.
  *
- * This directive is used to group a breadcrumb item with its separator for proper layout.
- * It also conditionally applies a negative margin to the first breadcrumb item, but only
- * when a specific flag is enabled.
- *
- * @see KbqBreadcrumbsConfiguration
+ * It is used to group a breadcrumb item with its separator for proper layout.
  * @docs-private
  */
 @Directive({
@@ -197,6 +193,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
     /**
      * Determines if a negative margin should be applied to the first breadcrumb item.
+     *
+     * @see KbqBreadcrumbsConfiguration
      */
     @Input({ transform: booleanAttribute }) firstItemNegativeMargin: boolean =
         this.configuration.firstItemNegativeMargin;
