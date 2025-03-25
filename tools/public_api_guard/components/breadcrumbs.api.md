@@ -93,8 +93,11 @@ export class KbqBreadcrumbs implements AfterContentInit {
 export type KbqBreadcrumbsConfiguration = {
     max: number | null;
     size: KbqDefaultSizes;
-    firstItemNegativeMargin?: boolean;
+    firstItemNegativeMargin: boolean;
 };
+
+// @public
+export const kbqBreadcrumbsConfigurationProvider: (configuration: Partial<KbqBreadcrumbsConfiguration>) => Provider;
 
 // @public (undocumented)
 export class KbqBreadcrumbsModule {
@@ -127,9 +130,6 @@ export class KbqBreadcrumbView {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbView, never>;
 }
-
-// @public
-export const provideKbqBreadcrumbsConfiguration: (configuration: KbqBreadcrumbsConfiguration) => Provider;
 
 // (No @packageDocumentation comment for this package)
 

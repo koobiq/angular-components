@@ -6,9 +6,9 @@ import { KbqDefaultSizes } from '@koobiq/components/core';
 import {
     KbqBreadcrumbItem,
     KbqBreadcrumbs,
+    kbqBreadcrumbsConfigurationProvider,
     KbqBreadcrumbsSeparator,
-    KbqBreadcrumbView,
-    provideKbqBreadcrumbsConfiguration
+    KbqBreadcrumbView
 } from './breadcrumbs';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
@@ -34,11 +34,7 @@ function findAllCustomSeparators(debugElement: DebugElement): DebugElement[] {
     return debugElement.queryAll(By.css('.custom-separator'));
 }
 
-const customBreadcrumbsProvider = provideKbqBreadcrumbsConfiguration({
-    max: null,
-    size: 'normal',
-    firstItemNegativeMargin: true
-});
+const customBreadcrumbsProvider = kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: true });
 
 describe(KbqBreadcrumbs.name, () => {
     describe('core', () => {

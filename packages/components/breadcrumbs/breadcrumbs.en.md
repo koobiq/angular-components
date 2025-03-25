@@ -54,7 +54,7 @@ For specific breadcrumbs:
 ```ts
 @Component({
     template: `
-            <nav kbq-breadcrumbs [firstItemNegativeMargin]='false'>...</nav>
+            <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">...</nav>
     `
 })
 ```
@@ -62,15 +62,11 @@ For specific breadcrumbs:
 For all breadcrumbs in the module, using **Dependency Injection** with the `provideKbqBreadcrumbsConfiguration` provider:
 
 ```ts
-import { provideKbqBreadcrumbsConfiguration } from '@koobiq/components/breadcrumbs';
+import { kbqBreadcrumbsConfigurationProvider } from '@koobiq/components/breadcrumbs';
 
 @NgModule({
     providers: [
-        provideKbqBreadcrumbsConfiguration({
-            max: null,
-            size: 'normal',
-            firstItemNegativeMargin: true
-        })
+        kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })
     ]
 })
 ```

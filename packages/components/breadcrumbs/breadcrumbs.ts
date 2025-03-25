@@ -37,9 +37,9 @@ export type KbqBreadcrumbsConfiguration = {
     max: number | null;
     size: KbqDefaultSizes;
     /**
-     * (Optional) Determines if a negative margin should be applied to the first breadcrumb item.
+     * Determines if a negative margin should be applied to the first breadcrumb item.
      */
-    firstItemNegativeMargin?: boolean;
+    firstItemNegativeMargin: boolean;
 };
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
@@ -55,9 +55,9 @@ export const KBQ_BREADCRUMBS_CONFIGURATION = new InjectionToken<KbqBreadcrumbsCo
 );
 
 /** Utility provider for `KBQ_BREADCRUMBS_CONFIGURATION`. */
-export const provideKbqBreadcrumbsConfiguration = (configuration: KbqBreadcrumbsConfiguration): Provider => ({
+export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBreadcrumbsConfiguration>): Provider => ({
     provide: KBQ_BREADCRUMBS_CONFIGURATION,
-    useValue: configuration
+    useValue: { configuration, ...KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION }
 });
 
 /**
@@ -68,6 +68,7 @@ export const provideKbqBreadcrumbsConfiguration = (configuration: KbqBreadcrumbs
  * when a specific flag is enabled.
  *
  * @see KbqBreadcrumbsConfiguration
+ * @docs-private
  */
 @Directive({
     standalone: true,
@@ -186,19 +187,19 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
-        '[class.kbq-breadcrumbs_first-item-negative-margin]': '!!firstItemNegativeMargin',
+        '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin',
         '[attr.aria-label]': "'breadcrumb'"
     },
-    // @TODO add support for Home,End keys interaction  (#DS-3334)
+    // @TODO add support for Home,End keys interaction (#DS-3334)
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
 export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
     /**
-     * (Optional) Determines if a negative margin should be applied to the first breadcrumb item.
+     * Determines if a negative margin should be applied to the first breadcrumb item.
      */
     @Input({ transform: booleanAttribute }) firstItemNegativeMargin: boolean =
-        this.configuration.firstItemNegativeMargin || true;
+        this.configuration.firstItemNegativeMargin;
     /**
      * Size of the breadcrumbs. Affects font size.
      * Default value is taken from the global configuration.
