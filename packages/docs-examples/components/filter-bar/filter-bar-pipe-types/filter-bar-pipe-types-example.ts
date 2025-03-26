@@ -32,12 +32,12 @@ export class FilterBarPipeTypesExample {
             name: 'Date',
             type: KbqPipeTypes.Date,
             values: [
-                { name: 'Последний день', start: null, end: { days: -1 } },
-                { name: 'Последние 3 дня', start: null, end: { days: -3 } },
-                { name: 'Последние 7 дней', start: null, end: { days: -7 } },
-                { name: 'Последние 30 дней', start: null, end: { days: -30 } },
-                { name: 'Последние 90 дней', start: null, end: { days: -90 } },
-                { name: 'Последний год', start: null, end: { years: -1 } }
+                { name: 'Последний день', start: { days: -1 }, end: null },
+                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
+                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
+                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
+                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
+                { name: 'Последний год', start: { years: -1 }, end: null }
             ],
             required: false,
             cleanable: false,
@@ -48,14 +48,14 @@ export class FilterBarPipeTypesExample {
             name: 'Datetime',
             type: KbqPipeTypes.Datetime,
             values: [
-                { name: 'Последний час', start: null, end: { hours: -1 } },
-                { name: 'Последние 3 часа', start: null, end: { hours: -3 } },
-                { name: 'Последние 24 часа', start: null, end: { hours: -24 } },
-                { name: 'Последние 3 дня', start: null, end: { days: -3 } },
-                { name: 'Последние 7 дней', start: null, end: { days: -7 } },
-                { name: 'Последние 30 дней', start: null, end: { days: -30 } },
-                { name: 'Последние 90 дней', start: null, end: { days: -90 } },
-                { name: 'Последний год', start: null, end: { years: -1 } }
+                { name: 'Последний час', start: { hours: -1 }, end: null },
+                { name: 'Последние 3 часа', start: { hours: -3 }, end: null },
+                { name: 'Последние 24 часа', start: { hours: -24 }, end: null },
+                { name: 'Последние 3 дня', start: { days: -3 }, end: null },
+                { name: 'Последние 7 дней', start: { days: -7 }, end: null },
+                { name: 'Последние 30 дней', start: { days: -30 }, end: null },
+                { name: 'Последние 90 дней', start: { days: -90 }, end: null },
+                { name: 'Последний год', start: { years: -1 }, end: null }
             ],
             required: false,
             cleanable: true,

@@ -4,6 +4,10 @@
 @use '../../datepicker/datepicker-tokens' as *;
 
 .kbq-pipe-date__popover {
+    &.kbq-popover.kbq-popover_medium {
+        margin-top: var(--kbq-size-xxs);
+    }
+
     & .kbq-popover__container {
         max-height: unset;
     }

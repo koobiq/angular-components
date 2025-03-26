@@ -454,11 +454,14 @@ export interface KbqPipeData<V> extends KbqPipe {
 
 // @public (undocumented)
 export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
-    constructor();
     // (undocumented)
     protected readonly adapter: DateAdapter<any>;
     // (undocumented)
     protected readonly colors: typeof KbqComponentColors;
+    // (undocumented)
+    get defaultEnd(): any;
+    // (undocumented)
+    get defaultStart(): any;
     // (undocumented)
     get disabled(): boolean;
     // (undocumented)
@@ -519,11 +522,14 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
 
 // @public (undocumented)
 export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
-    constructor();
     // (undocumented)
     protected readonly adapter: DateAdapter<any>;
     // (undocumented)
     protected readonly colors: typeof KbqComponentColors;
+    // (undocumented)
+    get defaultEnd(): any;
+    // (undocumented)
+    get defaultStart(): any;
     // (undocumented)
     get disabled(): boolean;
     // (undocumented)
