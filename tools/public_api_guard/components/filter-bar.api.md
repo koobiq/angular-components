@@ -522,7 +522,6 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
 
 // @public (undocumented)
 export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
-    constructor();
     // (undocumented)
     protected readonly adapter: DateAdapter<any>;
     // (undocumented)

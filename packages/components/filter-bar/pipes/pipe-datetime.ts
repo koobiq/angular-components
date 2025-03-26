@@ -128,15 +128,6 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     listSelection = viewChild.required('listSelection', { read: KbqListSelection });
     returnButton = viewChild.required('returnButton', { read: KbqButton });
 
-    constructor() {
-        super();
-
-        this.formGroup = new FormGroup({
-            start: new FormControl(this.start || this.defaultStart),
-            end: new FormControl(this.end || this.defaultEnd)
-        });
-    }
-
     onKeydown($event: KeyboardEvent) {
         if (($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApplyPeriod();
@@ -169,7 +160,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         this.showStartCalendar = false;
         this.showEndCalendar = false;
 
-        this.calculateDefaultValues();
+        this.initFormGroup();
 
         setTimeout(() => {
             this.popover.updatePosition(true);
@@ -213,7 +204,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         this.showEndCalendar = false;
     }
 
-    private calculateDefaultValues() {
+    private initFormGroup() {
         this.formGroup = new FormGroup({
             start: new FormControl(this.start || this.defaultStart),
             end: new FormControl(this.end || this.defaultEnd)

@@ -160,7 +160,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         this.showStartCalendar = false;
         this.showEndCalendar = false;
 
-        this.calculateDefaultValues();
+        this.initFormGroup();
 
         setTimeout(() => {
             this.popover.updatePosition(true);
@@ -204,7 +204,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         this.showEndCalendar = false;
     }
 
-    private calculateDefaultValues() {
+    private initFormGroup() {
         this.formGroup = new FormGroup({
             start: new FormControl(this.start || this.defaultStart),
             end: new FormControl(this.end || this.defaultEnd)
