@@ -41,7 +41,8 @@ const config = {
 
                 // others
                 'security',
-                'visual'
+                'visual',
+                'deps'
             ]
 
         ]
