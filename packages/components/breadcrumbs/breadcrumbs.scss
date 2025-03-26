@@ -1,16 +1,6 @@
 @use '../core/styles/common/tokens';
 @use '../core/styles/common/vendor-prefixes';
 
-.kbq-breadcrumbs {
-    @include _kbq-breadcrumbs-geometry();
-    @include _kbq-breadcrumbs-theme();
-    @include _kbq-breadcrumbs-typography();
-}
-
-.kbq-breadcrumb-item__link-behavior {
-    text-decoration: none;
-}
-
 @mixin _kbq-breadcrumbs-geometry {
     display: flex;
     align-items: center;
@@ -200,4 +190,14 @@
         @include vendor-prefixes.user-select(none);
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
+}
+
+.kbq-breadcrumbs {
+    @include _kbq-breadcrumbs-geometry();
+    @include _kbq-breadcrumbs-theme();
+    @include _kbq-breadcrumbs-typography();
+}
+
+.kbq-breadcrumb-item__link-behavior {
+    text-decoration: none;
 }
