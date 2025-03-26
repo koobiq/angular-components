@@ -1,6 +1,6 @@
 @if (items.length <= minVisibleItems || max === null || max <= minVisibleItems || max >= items.length) {
     @for (item of items; track item; let last = $last) {
-        <div kbqBreadcrumbItemContainer>
+        <div class="kbq-breadcrumb-item__container">
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
             @if (!last) {
                 <ng-container [ngTemplateOutlet]="separatorTemplate" />
@@ -8,7 +8,7 @@
         </div>
     }
 } @else {
-    <div kbqBreadcrumbItemContainer>
+    <div class="kbq-breadcrumb-item__container">
         <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
         <ng-container [ngTemplateOutlet]="separatorTemplate" />
     </div>
@@ -37,7 +37,7 @@
     }
 
     @for (item of visibleBreadcrumbItems; track item; let last = $last) {
-        <div kbqBreadcrumbItemContainer>
+        <div class="kbq-breadcrumb-item__container">
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
             @if (!last) {
                 <ng-container [ngTemplateOutlet]="separatorTemplate" />

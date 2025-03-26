@@ -60,21 +60,6 @@ export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBr
     useValue: { configuration, ...KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION }
 });
 
-/**
- * Directive that adds the `kbq-breadcrumb-item__container` CSS class to an element.
- *
- * It is used to group a breadcrumb item with its separator for proper layout.
- * @docs-private
- */
-@Directive({
-    standalone: true,
-    selector: '[kbqBreadcrumbItemContainer]',
-    host: {
-        class: 'kbq-breadcrumb-item__container'
-    }
-})
-export class KbqBreadcrumbItemContainer {}
-
 @Directive({
     selector: 'ng-template[kbqBreadcrumbsSeparator]',
     standalone: true,
@@ -173,7 +158,6 @@ export class KbqBreadcrumbItem {
         KbqDropdownModule,
         KbqBreadcrumbItem,
         KbqBreadcrumbButton,
-        KbqBreadcrumbItemContainer,
         RdxRovingFocusGroupDirective,
         RdxRovingFocusItemDirective,
         KbqTitleModule

@@ -48,14 +48,6 @@ export class KbqBreadcrumbItem {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItem, never>;
 }
 
-// @public
-export class KbqBreadcrumbItemContainer {
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqBreadcrumbItemContainer, "[kbqBreadcrumbItemContainer]", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbItemContainer, never>;
-}
-
 // @public (undocumented)
 export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
@@ -108,7 +100,7 @@ export class KbqBreadcrumbsModule {
     // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBreadcrumbsModule, never, [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton, typeof i1_2.KbqBreadcrumbItemContainer], [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton, typeof i1_2.KbqBreadcrumbItemContainer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqBreadcrumbsModule, never, [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton], [typeof i1_2.KbqBreadcrumbs, typeof i1_2.KbqBreadcrumbItem, typeof i1_2.KbqBreadcrumbView, typeof i1_2.KbqBreadcrumbsSeparator, typeof i1_2.KbqBreadcrumbButton]>;
 }
 
 // @public (undocumented)
