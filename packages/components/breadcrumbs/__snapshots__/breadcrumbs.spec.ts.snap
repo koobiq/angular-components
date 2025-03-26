@@ -4,5 +4,6 @@ exports[`KbqBreadcrumbs core should apply the default size class to the breadcru
 DOMTokenList {
   "0": "kbq-breadcrumbs",
   "1": "kbq-breadcrumbs_normal",
+  "2": "kbq-breadcrumbs_first-item-negative-margin",
 }
 `;

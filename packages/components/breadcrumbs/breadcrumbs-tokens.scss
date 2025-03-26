@@ -5,5 +5,6 @@
     --kbq-breadcrumb-expand-icon-color: var(--kbq-icon-contrast-fade);
     --kbq-breadcrumb-item-border-radius: var(--kbq-size-xs);
     --kbq-breadcrumb-item-icon-color: var(--kbq-icon-contrast-fade);
+    --kbq-breadcrumb-item-negative-margin: calc(-1 * var(--kbq-size-xs));
     --kbq-breadcrumbs-gap: 0;
 }

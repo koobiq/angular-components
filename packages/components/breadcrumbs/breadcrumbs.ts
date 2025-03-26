@@ -36,11 +36,16 @@ export type KbqBreadcrumbsConfiguration = {
      */
     max: number | null;
     size: KbqDefaultSizes;
+    /**
+     * Determines if a negative margin should be applied to the first breadcrumb item.
+     */
+    firstItemNegativeMargin: boolean;
 };
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
-    size: 'normal'
+    size: 'normal',
+    firstItemNegativeMargin: true
 };
 
 /** Breadcrumbs options global configuration provider. */
@@ -50,9 +55,9 @@ export const KBQ_BREADCRUMBS_CONFIGURATION = new InjectionToken<KbqBreadcrumbsCo
 );
 
 /** Utility provider for `KBQ_BREADCRUMBS_CONFIGURATION`. */
-export const provideKbqBreadcrumbsConfiguration = (configuration: KbqBreadcrumbsConfiguration): Provider => ({
+export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBreadcrumbsConfiguration>): Provider => ({
     provide: KBQ_BREADCRUMBS_CONFIGURATION,
-    useValue: configuration
+    useValue: { configuration, ...KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION }
 });
 
 @Directive({
@@ -162,13 +167,21 @@ export class KbqBreadcrumbItem {
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
+        '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin',
         '[attr.aria-label]': "'breadcrumb'"
     },
-    // @TODO add support for Home,End keys interaction  (#DS-3334)
+    // @TODO add support for Home,End keys interaction (#DS-3334)
     hostDirectives: [RdxRovingFocusGroupDirective]
 })
 export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly configuration = inject(KBQ_BREADCRUMBS_CONFIGURATION);
+    /**
+     * Determines if a negative margin should be applied to the first breadcrumb item.
+     *
+     * @see KbqBreadcrumbsConfiguration
+     */
+    @Input({ transform: booleanAttribute }) firstItemNegativeMargin: boolean =
+        this.configuration.firstItemNegativeMargin;
     /**
      * Size of the breadcrumbs. Affects font size.
      * Default value is taken from the global configuration.

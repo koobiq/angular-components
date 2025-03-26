@@ -4,10 +4,9 @@ import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { KbqDefaultSizes } from '@koobiq/components/core';
 import {
-    KBQ_BREADCRUMBS_CONFIGURATION,
     KbqBreadcrumbItem,
     KbqBreadcrumbs,
-    KbqBreadcrumbsConfiguration,
+    kbqBreadcrumbsConfigurationProvider,
     KbqBreadcrumbsSeparator,
     KbqBreadcrumbView
 } from './breadcrumbs';
@@ -35,15 +34,14 @@ function findAllCustomSeparators(debugElement: DebugElement): DebugElement[] {
     return debugElement.queryAll(By.css('.custom-separator'));
 }
 
+const customBreadcrumbsProvider = kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: true });
+
 describe(KbqBreadcrumbs.name, () => {
     describe('core', () => {
         it('should have the correct number of breadcrumb items', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
-                {
-                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
-                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
-                }
+                customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
             const breadcrumbItems = findAllBreadcrumbItems(debugElement);
@@ -53,10 +51,7 @@ describe(KbqBreadcrumbs.name, () => {
         it('should apply the default size class to the breadcrumbs container', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
-                {
-                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
-                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
-                }
+                customBreadcrumbsProvider
             ]);
             const { debugElement } = fixture;
             const { nativeElement } = getBreadcrumbsDebugElement(debugElement);
@@ -66,10 +61,7 @@ describe(KbqBreadcrumbs.name, () => {
         it('should update when items change', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
-                {
-                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
-                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
-                }
+                customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
             const updatedLength = componentInstance.items.push({ text: 'New Item', disabled: false });
@@ -81,10 +73,7 @@ describe(KbqBreadcrumbs.name, () => {
         it('should apply the disabled state correctly to specific breadcrumb items', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
-                {
-                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
-                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
-                }
+                customBreadcrumbsProvider
             ]);
             const { debugElement } = fixture;
             fixture.detectChanges();
@@ -95,10 +84,7 @@ describe(KbqBreadcrumbs.name, () => {
         it('should enforce the max limit of breadcrumb items displayed', () => {
             const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
-                {
-                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
-                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
-                }
+                customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
             componentInstance.max = 4;
@@ -115,10 +101,7 @@ describe(KbqBreadcrumbs.name, () => {
         it('should use the custom separator template', () => {
             const fixture = createComponent(BreadcrumbsCustomization, [
                 provideRouter([]),
-                {
-                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
-                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
-                }
+                customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
             const customSeparators = findAllCustomSeparators(debugElement);
@@ -128,10 +111,7 @@ describe(KbqBreadcrumbs.name, () => {
         it('should use the custom view template', () => {
             const fixture = createComponent(BreadcrumbsCustomization, [
                 provideRouter([]),
-                {
-                    provide: KBQ_BREADCRUMBS_CONFIGURATION,
-                    useValue: { max: null, size: 'normal' } satisfies KbqBreadcrumbsConfiguration
-                }
+                customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
             const customBreadcrumbs = findAllCustomBreadcrumbItems(debugElement);

@@ -1,13 +1,17 @@
 @if (items.length <= minVisibleItems || max === null || max <= minVisibleItems || max >= items.length) {
     @for (item of items; track item; let last = $last) {
-        <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
-        @if (!last) {
-            <ng-container [ngTemplateOutlet]="separatorTemplate" />
-        }
+        <div class="kbq-breadcrumb-item__container">
+            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
+            @if (!last) {
+                <ng-container [ngTemplateOutlet]="separatorTemplate" />
+            }
+        </div>
     }
 } @else {
-    <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
-    <ng-container [ngTemplateOutlet]="separatorTemplate" />
+    <div class="kbq-breadcrumb-item__container">
+        <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
+        <ng-container [ngTemplateOutlet]="separatorTemplate" />
+    </div>
 
     <!-- @TODO delay rendering for proper elements order (#DS-3334)--->
     @if (true) {
@@ -33,10 +37,12 @@
     }
 
     @for (item of visibleBreadcrumbItems; track item; let last = $last) {
-        <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
-        @if (!last) {
-            <ng-container [ngTemplateOutlet]="separatorTemplate" />
-        }
+        <div class="kbq-breadcrumb-item__container">
+            <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
+            @if (!last) {
+                <ng-container [ngTemplateOutlet]="separatorTemplate" />
+            }
+        </div>
     }
 }
 
