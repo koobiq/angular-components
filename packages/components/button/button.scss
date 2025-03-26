@@ -1,5 +1,6 @@
-@use 'button-base' as *;
+@use '../core/styles/common/animation';
 
+@use 'button-base' as *;
 @use '../core/styles/common/tokens' as *;
 
 @use './button-theme' as *;
