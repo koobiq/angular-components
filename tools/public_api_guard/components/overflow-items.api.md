@@ -26,9 +26,10 @@ export class ElementVisibilityManager {
 
 // @public
 export class KbqOverflowItem extends ElementVisibilityManager {
+    readonly disableHide: InputSignalWithTransform<boolean, unknown>;
     readonly id: InputSignal<unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItem, "[kbqOverflowItem]", ["kbqOverflowItem"], { "id": { "alias": "kbqOverflowItem"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItem, "[kbqOverflowItem]", ["kbqOverflowItem"], { "id": { "alias": "kbqOverflowItem"; "required": true; "isSignal": true; }; "disableHide": { "alias": "disableHide"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItem, never>;
 }
@@ -39,9 +40,10 @@ export class KbqOverflowItems {
     readonly changes: OutputEmitterRef<ReadonlySet<unknown>>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
     readonly hiddenItemIDs: Signal<ReadonlySet<unknown>>;
+    readonly offsetFromStart: InputSignal<number | null>;
     readonly reverseOverflowOrder: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItems, "[kbqOverflowItems]", ["kbqOverflowItems"], { "reverseOverflowOrder": { "alias": "reverseOverflowOrder"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; "offsetFromStart": { "alias": "offsetFromStart"; "required": false; "isSignal": true; }; }, { "changes": "changes"; }, ["items", "result"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItems, never>;
 }
