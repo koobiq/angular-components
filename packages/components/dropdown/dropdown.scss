@@ -1,12 +1,21 @@
 @use './dropdown-theme' as *;
 
-.kbq-dropdown-trigger.kbq-button-icon_right.kbq-button-icon_left {
+.kbq-dropdown-trigger.kbq-button-icon {
+    padding-left: calc(10px - var(--kbq-size-border-width));
+    padding-right: calc(10px - var(--kbq-size-border-width));
+
     & .kbq-icon_left {
-        margin-right: 2px;
+        margin-right: var(--kbq-size-xxs);
     }
 
     & .kbq-icon_right {
-        margin-left: 2px;
+        margin-left: 0;
+    }
+
+    &.kbq-button-icon_right.kbq-button-icon_left {
+        & .kbq-icon_left {
+            margin-right: 0;
+        }
     }
 }
 

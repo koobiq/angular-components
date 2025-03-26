@@ -10,20 +10,6 @@
     // base padding - border-width
     padding-left: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
     padding-right: kbq-difference-series-css-variables([button-size-horizontal-padding, button-size-border-width]);
-
-    &.kbq-button-icon_left {
-        padding-left: kbq-difference-series-css-variables(
-            [button-icon-size-horizontal-padding,
-            button-size-border-width]
-        );
-    }
-
-    &.kbq-button-icon_right {
-        padding-right: kbq-difference-series-css-variables(
-            [button-icon-size-horizontal-padding,
-            button-size-border-width]
-        );
-    }
 }
 
 .kbq-light-button {
