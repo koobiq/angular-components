@@ -1,0 +1,184 @@
+@use '../core/styles/common/tokens';
+@use '../core/styles/common/vendor-prefixes';
+
+@mixin kbq-breadcrumbs-geometry {
+    &.kbq-breadcrumbs_first-item-negative-margin {
+        .kbq-breadcrumb-item__container {
+            &:first-of-type {
+                margin-left: var(--kbq-breadcrumb-item-negative-margin);
+            }
+        }
+    }
+
+    &.kbq-breadcrumbs_compact {
+        .kbq-breadcrumb-item {
+            &.kbq-button,
+            &.kbq-button-icon {
+                --kbq-breadcrumb-item-height: var(--kbq-size-xxl);
+            }
+        }
+
+        .kbq-breadcrumb__expand {
+            &.kbq-button-icon {
+                --kbq-breadcrumb-item-expand-horizontal-padding: var(--kbq-size-xxs);
+            }
+        }
+    }
+
+    &.kbq-breadcrumbs_normal {
+        .kbq-breadcrumb-item {
+            &.kbq-button,
+            &.kbq-button-icon {
+                --kbq-button-size-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
+            }
+        }
+    }
+
+    &.kbq-breadcrumbs_big {
+        .kbq-button,
+        .kbq-button-icon {
+            --kbq-button-size-height: var(--kbq-breadcrumb-item-height);
+        }
+    }
+
+    .kbq-breadcrumb-item {
+        &.kbq-button,
+        &.kbq-button-icon {
+            --kbq-button-size-height: var(--kbq-breadcrumb-item-height);
+            --kbq-button-size-horizontal-padding: var(--kbq-breadcrumb-item-horizontal-padding);
+            --kbq-button-size-border-radius: var(--kbq-breadcrumb-item-border-radius);
+        }
+    }
+
+    .kbq-breadcrumb__expand {
+        &.kbq-button-icon {
+            --kbq-button-icon-size-horizontal-padding: var(--kbq-breadcrumb-item-expand-horizontal-padding);
+        }
+    }
+}
+
+@mixin kbq-breadcrumbs-theme {
+    .kbq-breadcrumb-item {
+        &.kbq-button,
+        &.kbq-button-icon {
+            --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast-secondary);
+            --kbq-button-transparent-contrast-fade-on-right-icon: var(--kbq-breadcrumb-item-icon-color);
+            --kbq-button-transparent-contrast-fade-on-left-icon: var(--kbq-breadcrumb-item-icon-color);
+
+            &[aria-current='page'] {
+                --kbq-button-transparent-contrast-fade-on-states-disabled-foreground: var(--kbq-foreground-contrast);
+
+                &.kbq-disabled {
+                    --kbq-button-transparent-contrast-fade-on-states-disabled-left-icon: var(
+                        --kbq-breadcrumb-item-icon-color
+                    );
+                    --kbq-button-transparent-contrast-fade-on-states-disabled-right-icon: var(
+                        --kbq-breadcrumb-item-icon-color
+                    );
+                }
+            }
+        }
+
+        &.kbq-dropdown-trigger {
+            &.kbq-button,
+            &.kbq-button-icon {
+                &:not(.kbq-disabled) {
+                    &:hover,
+                    &.kbq-hover,
+                    &.cdk-keyboard-focused {
+                        .kbq-icon {
+                            --kbq-button-transparent-contrast-fade-on-left-icon: var(
+                                --kbq-states-icon-contrast-fade-hover
+                            );
+                            --kbq-button-transparent-contrast-fade-on-right-icon: var(
+                                --kbq-states-icon-contrast-fade-hover
+                            );
+                        }
+                    }
+
+                    &:active,
+                    &.kbq-active {
+                        .kbq-icon {
+                            --kbq-button-transparent-contrast-fade-on-left-icon: var(
+                                --kbq-states-icon-contrast-fade-active
+                            );
+                            --kbq-button-transparent-contrast-fade-on-right-icon: var(
+                                --kbq-states-icon-contrast-fade-active
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .kbq-breadcrumb__expand {
+        &.kbq-button-icon {
+            --kbq-button-transparent-contrast-fade-on-left-icon: var(--kbq-breadcrumb-expand-icon-color);
+
+            .kbq-icon {
+                --kbq-breadcrumb-expand-icon-color: var(--kbq-icon-contrast-fade);
+            }
+
+            &:not(.kbq-disabled) {
+                &:hover,
+                &.kbq-hover,
+                &.cdk-keyboard-focused {
+                    .kbq-icon {
+                        --kbq-breadcrumb-expand-icon-color: var(--kbq-states-icon-contrast-fade-hover);
+                    }
+                }
+
+                &:active,
+                &.kbq-active {
+                    .kbq-icon {
+                        --kbq-breadcrumb-expand-icon-color: var(--kbq-states-icon-contrast-fade-active);
+                    }
+                }
+            }
+        }
+    }
+
+    .kbq-breadcrumb_current {
+        .kbq-button,
+        .kbq-button-icon {
+            &.kbq-button_transparent.kbq-contrast {
+                --kbq-button-transparent-contrast-fade-on-foreground: var(--kbq-foreground-contrast);
+            }
+        }
+
+        color: var(--kbq-foreground-contrast);
+    }
+}
+
+@mixin kbq-breadcrumbs-typography {
+    &.kbq-breadcrumbs_compact {
+        .kbq-breadcrumb-item {
+            &.kbq-button,
+            &.kbq-button-icon {
+                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            }
+        }
+    }
+
+    &.kbq-breadcrumbs_normal {
+        .kbq-breadcrumb-item {
+            &.kbq-button,
+            &.kbq-button-icon {
+                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+            }
+        }
+    }
+
+    &.kbq-breadcrumbs_big {
+        .kbq-button,
+        .kbq-button-icon {
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
+        }
+    }
+
+    .kbq-breadcrumb__separator {
+        @include vendor-prefixes.user-select(none);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
+    }
+}
