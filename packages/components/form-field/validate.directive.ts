@@ -1,4 +1,13 @@
-import { AfterContentInit, ChangeDetectorRef, Directive, forwardRef, Inject, Optional, Self } from '@angular/core';
+import {
+    AfterContentInit,
+    ChangeDetectorRef,
+    Directive,
+    forwardRef,
+    Host,
+    Inject,
+    Optional,
+    Self
+} from '@angular/core';
 import {
     AbstractControl,
     FormControlDirective,
@@ -14,6 +23,7 @@ import {
     ValidatorFn
 } from '@angular/forms';
 import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
+import { KbqFormField } from './form-field';
 import { KbqFormFieldControl } from './form-field-control';
 
 /**
@@ -48,7 +58,10 @@ import { KbqFormFieldControl } from './form-field-control';
         kbq-tree-select,
         kbq-tag-list
     `,
-    exportAs: 'KbqValidate'
+    exportAs: 'KbqValidate',
+    host: {
+        class: 'kbq-control_has-validate-directive'
+    }
 })
 export class KbqValidateDirective implements AfterContentInit {
     get isNgModel(): boolean {
@@ -82,8 +95,11 @@ export class KbqValidateDirective implements AfterContentInit {
         @Optional() private parentForm: NgForm,
         @Optional() private parentFormGroup: FormGroupDirective,
         @Optional() @Inject(KBQ_VALIDATION) private mcValidation: KbqValidationOptions,
-        private cdr: ChangeDetectorRef
-    ) {}
+        private cdr: ChangeDetectorRef,
+        @Optional() @Host() private readonly parentFormField: KbqFormField | null
+    ) {
+        this.parentFormField?.elementRef.nativeElement.classList.add('kbq-form-field_has-validate-directive');
+    }
 
     ngAfterContentInit() {
         if (this.mcValidation.useValidation) {
