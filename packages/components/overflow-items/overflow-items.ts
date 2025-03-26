@@ -91,6 +91,11 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * Unique identifier for the item.
      */
     readonly id = input.required({ alias: 'kbqOverflowItem' });
+    /**
+     * Visibility priority
+     * @default false
+     */
+    readonly disableHide = input(false, { transform: booleanAttribute });
 }
 
 /**
@@ -130,6 +135,16 @@ export class KbqOverflowItems {
      * @default 100
      */
     readonly debounceTime = input(100, { transform: numberAttribute });
+
+    /**
+     * Offset index from the start.
+     * Possible values:
+     * - `=> 0` - Elements after this index are hidden first, then elements before it if needed.
+     * - `null` - Offset ignored.
+     *
+     * @default null
+     */
+    readonly offsetFromStart = input<number | null>(null);
 
     /**
      * Emits when the set of hidden items changes.
@@ -182,36 +197,89 @@ export class KbqOverflowItems {
         items.forEach((item) => {
             item.show();
         });
+
         let itemsWidth = items.reduce(
             (width, { elementRef }) => width + this.getElementWidthWithMargins(elementRef),
             0
         );
-        const startIndex = reverseOverflowOrder ? 0 : items.length - 1;
-        const endIndex = reverseOverflowOrder ? items.length : -1;
-        const step = reverseOverflowOrder ? 1 : -1;
+
         const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
-        for (let index = startIndex; index !== endIndex; index += step) {
+        const { start, end, restStart, restEnd, step } = this.getIterationParams();
+
+        for (let index = start; index !== end; index += step) {
+            const diff = this.updateItemVisibility(itemsWidth, resultWidth, reverseOverflowOrder, index, items);
+            itemsWidth += diff;
+        }
+
+        let hiddenOrHideDisabled = true;
+        for (let index = start; index !== end; index += step) {
             const current = items[index];
-            const currentWidth = this.getElementWidthWithMargins(current.elementRef);
-            const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;
-            if (itemsWidth + _resultWidth > totalWidth) {
-                current.hide();
-                itemsWidth -= currentWidth;
-            } else {
-                const isEdgeElement = reverseOverflowOrder ? index === 0 : index === items.length - 1;
-                const _resultWidth = isEdgeElement ? 0 : resultWidth;
-                if (itemsWidth + currentWidth + _resultWidth <= totalWidth) {
-                    current.show();
-                    itemsWidth += currentWidth;
-                }
+            hiddenOrHideDisabled = current.hidden() || current.disableHide();
+            if (!hiddenOrHideDisabled) break;
+        }
+
+        if (this.offsetFromStart() !== null && hiddenOrHideDisabled && itemsWidth + resultWidth > totalWidth) {
+            for (let index = restStart; index !== restEnd; index += -step) {
+                const diff = this.updateItemVisibility(itemsWidth, resultWidth, reverseOverflowOrder, index, items);
+                itemsWidth += diff;
             }
         }
+
         const hiddenItems = items.filter(this.isHiddenItem);
         if (hiddenItems.length > 0) {
             result?.show();
         }
         return hiddenItems;
     }
+
+    private updateItemVisibility(
+        itemsWidth: number,
+        resultWidth: number,
+        reverseOverflowOrder: boolean,
+        index: number,
+        items: readonly KbqOverflowItem[]
+    ): number {
+        const totalWidth = this.elementRef.nativeElement.offsetWidth;
+        const current = items[index];
+        if (current.disableHide()) return 0;
+        let diff = 0;
+
+        const currentWidth = this.getElementWidthWithMargins(current.elementRef);
+
+        if (itemsWidth + resultWidth > totalWidth) {
+            current.hide();
+            diff -= currentWidth;
+        } else {
+            const isEdgeElement = reverseOverflowOrder ? index === 0 : index === items.length - 1;
+            const _resultWidth = isEdgeElement ? 0 : resultWidth;
+
+            if (itemsWidth + currentWidth + _resultWidth <= totalWidth) {
+                current.show();
+                diff += currentWidth;
+            }
+        }
+        return diff;
+    }
+
+    private getIterationParams = () => {
+        const offsetStart = this.offsetFromStart() ?? 0;
+        const items = this.items();
+        return this.reverseOverflowOrder()
+            ? {
+                  start: offsetStart,
+                  end: items.length,
+                  step: 1,
+                  restStart: offsetStart - 1,
+                  restEnd: -1
+              }
+            : {
+                  start: items.length - offsetStart - 1,
+                  end: -1,
+                  step: -1,
+                  restStart: offsetStart + 1,
+                  restEnd: items.length
+              };
+    };
 
     /**
      * Returns the width of the element including margins.
