@@ -1,10 +1,4 @@
-@if (
-    items.length <= minVisibleItems ||
-    max === null ||
-    max <= minVisibleItems ||
-    max >= items.length ||
-    wrapMode !== 'auto'
-) {
+@if (max === null || wrapMode !== 'auto') {
     @for (item of items; track item; let last = $last) {
         <div class="kbq-breadcrumb-item__container">
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: last }" />
