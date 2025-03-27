@@ -31,7 +31,7 @@
         "@fontsource/jetbrains-mono": "^5.1.1",
         "@koobiq/date-adapter": "^3.2.3",
         "@koobiq/date-formatter": "^3.2.3",
-        "@koobiq/icons": "9.3.1",
+        "@koobiq/icons": "9.4.0",
         "@radix-ng/primitives": "^0.20.2",
         "highlight.js": "^11.10.0",
         "marked": "^12.0.2",
