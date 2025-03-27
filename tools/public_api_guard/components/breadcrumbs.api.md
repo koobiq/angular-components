@@ -61,6 +61,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
     max: number | null;
+    protected readonly minVisibleItems = 2;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
