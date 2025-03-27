@@ -204,15 +204,15 @@ export class KbqOverflowItems {
         );
 
         const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
-        const { start, end, restStart, restEnd, step } = this.getIterationParams();
+        const { start: startIndex, end: endIndex, restStart, restEnd, step } = this.getIterationParams();
 
-        for (let index = start; index !== end; index += step) {
-            const diff = this.updateItemVisibility(itemsWidth, resultWidth, reverseOverflowOrder, index, items);
+        for (let index = startIndex; index !== endIndex; index += step) {
+            const diff = this.handleItemOverflowVisibility(itemsWidth, resultWidth, reverseOverflowOrder, index, items);
             itemsWidth += diff;
         }
 
         let hiddenOrHideDisabled = true;
-        for (let index = start; index !== end; index += step) {
+        for (let index = startIndex; index !== endIndex; index += step) {
             const current = items[index];
             hiddenOrHideDisabled = current.hidden() || current.disableHide();
             if (!hiddenOrHideDisabled) break;
@@ -220,7 +220,13 @@ export class KbqOverflowItems {
 
         if (this.offsetFromStart() !== null && hiddenOrHideDisabled && itemsWidth + resultWidth > totalWidth) {
             for (let index = restStart; index !== restEnd; index += -step) {
-                const diff = this.updateItemVisibility(itemsWidth, resultWidth, reverseOverflowOrder, index, items);
+                const diff = this.handleItemOverflowVisibility(
+                    itemsWidth,
+                    resultWidth,
+                    reverseOverflowOrder,
+                    index,
+                    items
+                );
                 itemsWidth += diff;
             }
         }
@@ -232,7 +238,7 @@ export class KbqOverflowItems {
         return hiddenItems;
     }
 
-    private updateItemVisibility(
+    private handleItemOverflowVisibility(
         itemsWidth: number,
         resultWidth: number,
         reverseOverflowOrder: boolean,
