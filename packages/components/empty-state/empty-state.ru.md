@@ -8,6 +8,12 @@
 
 <!-- example(empty-state-big) -->
 
+### Size - variations
+
+Существуют три вариации размеров: **compact, normal** и **big**:
+
+<!-- example(empty-state-size) -->
+
 ### Align
 
 Содержимое может быть выровнено по центру или по верхнему краю

@@ -8,6 +8,7 @@ import {
     Optional,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqDefaultSizes } from '@koobiq/components/core';
 import { KbqIconItem } from '@koobiq/components/icon';
 
 @Directive({
@@ -58,8 +59,9 @@ export class KbqEmptyStateActions {}
     styleUrls: ['./empty-state.scss', 'empty-state-tokens.scss'],
     host: {
         class: 'kbq-empty-state',
-        '[class.kbq-empty-state_big]': 'big',
-        '[class.kbq-empty-state_normal]': '!big',
+        '[class.kbq-empty-state_big]': 'size === "big"',
+        '[class.kbq-empty-state_normal]': 'size === "normal"',
+        '[class.kbq-empty-state_compact]': 'size === "compact"',
         '[class.kbq-empty-state_align-center]': '!alignTop',
         '[class.kbq-empty-state_align-top]': 'alignTop',
         '[class.kbq-empty-state_normal-color]': '!errorColor',
@@ -71,8 +73,8 @@ export class KbqEmptyStateActions {}
 })
 export class KbqEmptyState implements AfterContentInit {
     @Input() errorColor: boolean = false;
-    @Input() big: boolean = false;
     @Input() alignTop: boolean = false;
+    @Input() size: KbqDefaultSizes = 'normal';
 
     @ContentChild(KbqEmptyStateIcon) icon: KbqEmptyStateIcon | null;
 
