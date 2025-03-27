@@ -54,7 +54,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly configuration: KbqBreadcrumbsConfiguration;
     disabled: boolean;
     firstItemNegativeMargin: boolean;
-    protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[];
     // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
     // (undocumented)
@@ -62,7 +61,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
     max: number | null;
-    readonly minVisibleItems = 2;
+    protected readonly minVisibleItems = 2;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
@@ -74,9 +73,9 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
     size: KbqDefaultSizes;
-    protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[];
+    wrapMode: KbqBreadcrumbsConfiguration['wrapMode'];
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
@@ -86,6 +85,7 @@ export type KbqBreadcrumbsConfiguration = {
     max: number | null;
     size: KbqDefaultSizes;
     firstItemNegativeMargin: boolean;
+    wrapMode: 'auto' | 'wrap' | 'none';
 };
 
 // @public

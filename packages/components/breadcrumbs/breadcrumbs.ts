@@ -25,6 +25,7 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
@@ -40,12 +41,20 @@ export type KbqBreadcrumbsConfiguration = {
      * Determines if a negative margin should be applied to the first breadcrumb item.
      */
     firstItemNegativeMargin: boolean;
+    /**
+     * Manages breadcrumb items when space is limited:
+     * - `auto`: Adjusts based on space and item count.
+     * - `wrap`: Moves items to the next line if needed.
+     * - `none`: Prevents wrapping, allowing overflow.
+     */
+    wrapMode: 'auto' | 'wrap' | 'none';
 };
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
     size: 'normal',
-    firstItemNegativeMargin: true
+    firstItemNegativeMargin: true,
+    wrapMode: 'auto'
 };
 
 /** Breadcrumbs options global configuration provider. */
@@ -160,13 +169,15 @@ export class KbqBreadcrumbItem {
         KbqBreadcrumbButton,
         RdxRovingFocusGroupDirective,
         RdxRovingFocusItemDirective,
-        KbqTitleModule
+        KbqTitleModule,
+        KbqOverflowItemsModule
     ],
     host: {
         class: 'kbq-breadcrumbs',
         '[class.kbq-breadcrumbs_compact]': 'size === "compact"',
         '[class.kbq-breadcrumbs_normal]': 'size === "normal"',
         '[class.kbq-breadcrumbs_big]': 'size === "big"',
+        '[class.kbq-breadcrumbs_wrap]': 'wrapMode === "wrap"',
         '[class.kbq-breadcrumbs_first-item-negative-margin]': 'firstItemNegativeMargin',
         '[attr.aria-label]': "'breadcrumb'"
     },
@@ -198,39 +209,25 @@ export class KbqBreadcrumbs implements AfterContentInit {
      * When disabled, user interactions are blocked.
      */
     @Input({ transform: booleanAttribute }) disabled: boolean = false;
+    /**
+     * Wrapping behavior of the breadcrumb items.
+     */
+    @Input() wrapMode: KbqBreadcrumbsConfiguration['wrapMode'] = this.configuration.wrapMode;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     protected readonly separator?: TemplateRef<any>;
 
     @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
     protected readonly items: QueryList<KbqBreadcrumbItem>;
-
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
-     *
-     * This prevents the appearance of unnecessary expand button that would hide only a single breadcrumb.
      */
-    readonly minVisibleItems = 2;
-
+    protected readonly minVisibleItems = 2;
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
-
-    /** @docs-private */
-    protected get hiddenBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null || this.max <= this.minVisibleItems) return [];
-        const visibleItemsCount = this.max - this.minVisibleItems;
-        return this.items.toArray().slice(1, -visibleItemsCount);
-    }
-
-    /** @docs-private */
-    protected get visibleBreadcrumbItems(): KbqBreadcrumbItem[] {
-        if (this.max === null || this.max <= this.minVisibleItems) return [];
-        const visibleItemsCount = this.max - this.minVisibleItems;
-        return this.items.toArray().slice(-visibleItemsCount);
-    }
 
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
