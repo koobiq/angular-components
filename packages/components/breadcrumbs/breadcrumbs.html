@@ -19,7 +19,7 @@
         kbqOverflowItems
         reverseOverflowOrder
         class="layout-align-start-center"
-        [offsetFromStart]="1"
+        [overflowStartIndex]="1"
     >
         <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="0">
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />

@@ -144,7 +144,7 @@ export class KbqOverflowItems {
      *
      * @default null
      */
-    readonly offsetFromStart = input<number | null>(null);
+    readonly overflowStartIndex = input<number | null>(null);
 
     /**
      * Emits when the set of hidden items changes.
@@ -218,7 +218,7 @@ export class KbqOverflowItems {
             if (!hiddenOrHideDisabled) break;
         }
 
-        if (this.offsetFromStart() !== null && hiddenOrHideDisabled && itemsWidth + resultWidth > totalWidth) {
+        if (this.overflowStartIndex() !== null && hiddenOrHideDisabled && itemsWidth + resultWidth > totalWidth) {
             for (let index = restStart; index !== restEnd; index += -step) {
                 const diff = this.handleItemOverflowVisibility(
                     itemsWidth,
@@ -268,7 +268,7 @@ export class KbqOverflowItems {
     }
 
     private getIterationParams = () => {
-        const offsetStart = this.offsetFromStart() ?? 0;
+        const offsetStart = this.overflowStartIndex() ?? 0;
         const items = this.items();
         return this.reverseOverflowOrder()
             ? {
