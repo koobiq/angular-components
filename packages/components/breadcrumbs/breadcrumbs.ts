@@ -220,13 +220,6 @@ export class KbqBreadcrumbs implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
     protected readonly items: QueryList<KbqBreadcrumbItem>;
 
-    /**
-     * Ensures at least minimum number of breadcrumb items are shown.
-     *
-     * This prevents the appearance of unnecessary expand button that would hide only a single breadcrumb.
-     */
-    readonly minVisibleItems = 2;
-
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);
     protected readonly KbqComponentColors = KbqComponentColors;
