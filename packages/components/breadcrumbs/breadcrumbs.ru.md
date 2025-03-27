@@ -13,8 +13,6 @@ npm install @radix-ng/primitives@0.23.0
 </div>
 </div>
 
-Let me know if you need any refinements! 🚀
-
 <!-- example(breadcrumbs-overview) -->
 
 ## Размеры
