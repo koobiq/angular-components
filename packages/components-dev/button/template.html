@@ -110,37 +110,37 @@
     <br />
 
     <div>
-        <button disabled kbq-button>
+        <button disabled kbq-button class="kbq-dropdown-trigger">
             <i kbq-icon="kbq-play_16"></i>
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button>
+        <button kbq-button class="kbq-dropdown-trigger">
             <i kbq-icon="kbq-play_16"></i>
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover">
+        <button kbq-button class="kbq-dropdown-trigger kbq-hover">
             <i kbq-icon="kbq-play_16"></i>
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active">
+        <button kbq-button class="kbq-dropdown-trigger kbq-active">
             <i kbq-icon="kbq-play_16"></i>
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused">
+        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused">
             <i kbq-icon="kbq-play_16"></i>
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress">
+        <button kbq-button class="kbq-dropdown-trigger kbq-progress">
             <i kbq-icon="kbq-play_16"></i>
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -150,37 +150,37 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.Contrast">
+        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
             <i kbq-icon="kbq-play_16"></i>
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
             <i kbq-icon="kbq-play_16"></i>
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger kbq-hover" [color]="colors.Contrast">
             <i kbq-icon="kbq-play_16"></i>
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger kbq-active" [color]="colors.Contrast">
             <i kbq-icon="kbq-play_16"></i>
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused" [color]="colors.Contrast">
             <i kbq-icon="kbq-play_16"></i>
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger kbq-progress" [color]="colors.Contrast">
             <i kbq-icon="kbq-play_16"></i>
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -190,37 +190,57 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
             <i kbq-icon="kbq-play_16"></i>
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
             <i kbq-icon="kbq-play_16"></i>
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -230,37 +250,63 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+        <button
+            disabled
+            kbq-button
+            class="kbq-dropdown-trigger"
+            [color]="colors.ContrastFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
             <i kbq-icon="kbq-play_16"></i>
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.ContrastFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.ContrastFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.ContrastFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.ContrastFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.ContrastFade"
+            [kbqStyle]="styles.Outline"
+        >
             <i kbq-icon="kbq-play_16"></i>
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -270,37 +316,57 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
             <i kbq-icon="kbq-play_16"></i>
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
             <i kbq-icon="kbq-play_16"></i>
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -310,37 +376,63 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            disabled
+            kbq-button
+            class="kbq-dropdown-trigger"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
             <i kbq-icon="kbq-play_16"></i>
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             <i kbq-icon="kbq-play_16"></i>
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -562,32 +654,32 @@
     <br />
 
     <div>
-        <button disabled kbq-button>
+        <button disabled kbq-button class="kbq-dropdown-trigger">
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button>
+        <button kbq-button class="kbq-dropdown-trigger">
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover">
+        <button kbq-button class="kbq-dropdown-trigger kbq-hover">
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active">
+        <button kbq-button class="kbq-dropdown-trigger kbq-active">
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused">
+        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused">
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress">
+        <button kbq-button class="kbq-dropdown-trigger kbq-progress">
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -596,32 +688,32 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.Contrast">
+        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast">
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger kbq-hover" [color]="colors.Contrast">
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger kbq-active" [color]="colors.Contrast">
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused" [color]="colors.Contrast">
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.Contrast">
+        <button kbq-button class="kbq-dropdown-trigger kbq-progress" [color]="colors.Contrast">
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -630,32 +722,52 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.ThemeFade" [kbqStyle]="styles.Outline">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.ThemeFade"
+            [kbqStyle]="styles.Outline"
+        >
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -664,32 +776,32 @@
         <br />
         <br />
 
-        <button disabled kbq-button [kbqStyle]="styles.Outline">
+        <button disabled kbq-button class="kbq-dropdown-trigger" [kbqStyle]="styles.Outline">
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger" [kbqStyle]="styles.Outline">
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger kbq-hover" [kbqStyle]="styles.Outline">
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger kbq-active" [kbqStyle]="styles.Outline">
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger cdk-keyboard-focused" [kbqStyle]="styles.Outline">
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [kbqStyle]="styles.Outline">
+        <button kbq-button class="kbq-dropdown-trigger kbq-progress" [kbqStyle]="styles.Outline">
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -698,32 +810,52 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button disabled kbq-button class="kbq-dropdown-trigger" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.Theme"
+            [kbqStyle]="styles.Transparent"
+        >
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -732,32 +864,58 @@
         <br />
         <br />
 
-        <button disabled kbq-button [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            disabled
+            kbq-button
+            class="kbq-dropdown-trigger"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             disabled
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button kbq-button class="kbq-dropdown-trigger" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
             normal
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-hover" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-hover"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             hover
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-active" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-active"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             active
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="cdk-keyboard-focused" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger cdk-keyboard-focused"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             focus
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
         &nbsp;
-        <button kbq-button class="kbq-progress" [color]="colors.Contrast" [kbqStyle]="styles.Transparent">
+        <button
+            kbq-button
+            class="kbq-dropdown-trigger kbq-progress"
+            [color]="colors.Contrast"
+            [kbqStyle]="styles.Transparent"
+        >
             progress
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
