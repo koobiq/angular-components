@@ -174,6 +174,12 @@ export class KbqOverflowItems {
             });
     }
 
+    /**
+     * Returns a list of items sorted by their specified `order` value.
+     * If an item does not have an `order` defined, its index is used as a fallback.
+     * This ensures a stable order while allowing custom positioning.
+     * @docs-private
+     */
     private getSortedItemsByOrder(): KbqOverflowItem[] {
         const items = Array.from(this.items(), (item, index) => ({ item, order: item.order() ?? index }));
         return items.sort((a, b) => a.order - b.order).map(({ item }) => item);
