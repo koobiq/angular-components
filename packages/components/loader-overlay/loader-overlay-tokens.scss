@@ -1,4 +1,4 @@
-.kbq-loader-overlay {
+:where(.kbq-loader-overlay) {
     --kbq-loader-overlay-size-big-overlay-padding-horizontal: var(--kbq-size-3xl);
     --kbq-loader-overlay-size-big-loader-margin-bottom: var(--kbq-size-xxl);
     --kbq-loader-overlay-size-big-content-content-gap-vertical: var(--kbq-size-l);
