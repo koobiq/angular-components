@@ -9,6 +9,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/cdk/platform';
 import * as i4 from '@koobiq/components/progress-spinner';
+import { KbqDefaultSizes } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Renderer2 } from '@angular/core';
@@ -18,8 +19,6 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     constructor(elementRef: ElementRef, renderer: Renderer2);
     // (undocumented)
     caption: string;
-    // (undocumented)
-    compact: boolean;
     // (undocumented)
     externalCaption: KbqLoaderOverlayCaption | null;
     // (undocumented)
@@ -39,13 +38,15 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)
+    size: KbqDefaultSizes;
+    // (undocumented)
     get spinnerSize(): string;
     // (undocumented)
     text: string;
     // (undocumented)
     transparent: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqLoaderOverlay, "kbq-loader-overlay", never, { "text": { "alias": "text"; "required": false; }; "caption": { "alias": "caption"; "required": false; }; "size": { "alias": "size"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; }, {}, ["externalIndicator", "externalText", "externalCaption"], ["[kbq-loader-overlay-indicator]", "[kbq-loader-overlay-text]", "[kbq-loader-overlay-caption]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLoaderOverlay, never>;
 }

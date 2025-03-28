@@ -50,11 +50,7 @@ compact
     text text text text text text text text text text text text text text text text text text text text text text text
     text text text text text
     @if (loading) {
-        <kbq-loader-overlay
-            [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'"
-            [compact]="true"
-            [text]="'Создание отчета'"
-        />
+        <kbq-loader-overlay size="compact" [caption]="'18,7 МБ из 25 МБ — осталось 2 мин'" [text]="'Создание отчета'" />
     }
 </div>
 
@@ -77,4 +73,8 @@ custom
             <div kbq-loader-overlay-caption>18,7 МБ из 25 МБ — осталось 2 мин</div>
         </kbq-loader-overlay>
     }
+</div>
+
+<div class="kbq-title">
+    <loader-overlay-size-example />
 </div>
