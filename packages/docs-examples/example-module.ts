@@ -1988,6 +1988,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "loader-overlay-overview-example.ts",
     "importPath": "components/loader-overlay"
   },
+  "loader-overlay-size": {
+    "packagePath": "components/loader-overlay/loader-overlay-size",
+    "title": "Loader-overlay size",
+    "componentName": "LoaderOverlaySizeExample",
+    "files": [
+      "loader-overlay-size-example.ts"
+    ],
+    "selector": "loader-overlay-size-example",
+    "additionalComponents": [],
+    "primaryFile": "loader-overlay-size-example.ts",
+    "importPath": "components/loader-overlay"
+  },
   "markdown-article": {
     "packagePath": "components/markdown/markdown-article",
     "title": "Markdown article",
@@ -4231,6 +4243,8 @@ return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-large':
 return import('@koobiq/docs-examples/components/loader-overlay');
   case 'loader-overlay-overview':
+return import('@koobiq/docs-examples/components/loader-overlay');
+  case 'loader-overlay-size':
 return import('@koobiq/docs-examples/components/loader-overlay');
   case 'markdown-article':
 return import('@koobiq/docs-examples/components/markdown');
