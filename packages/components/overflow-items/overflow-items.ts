@@ -91,6 +91,16 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * Unique identifier for the item.
      */
     readonly id = input.required({ alias: 'kbqOverflowItem' });
+    /**
+     * Sets the item's position in the overflow container,
+     * overriding its index to allow custom ordering, such as moving it to the end of the `QueryList`.
+     */
+    readonly order = input(null, { transform: numberAttribute });
+    /**
+     * Visibility priority
+     * @default false
+     */
+    readonly disableHide = input(false, { transform: booleanAttribute });
 }
 
 /**
@@ -159,7 +169,7 @@ export class KbqOverflowItems {
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
                 const hiddenItems = this.calculateItemsVisibility(
-                    this.items(),
+                    this.getSortedItemsByOrder(),
                     this.reverseOverflowOrder(),
                     this.result(),
                     this.elementRef.nativeElement
@@ -167,6 +177,17 @@ export class KbqOverflowItems {
                 const hiddenItemIDs = new Set(hiddenItems.map(({ id }) => id()));
                 this.changes.emit(hiddenItemIDs);
             });
+    }
+
+    /**
+     * Returns a list of items sorted by their specified `order` value.
+     * If an item does not have an `order` defined, its index is used as a fallback.
+     * This ensures a stable order while allowing custom positioning.
+     * @docs-private
+     */
+    private getSortedItemsByOrder(): KbqOverflowItem[] {
+        const items = Array.from(this.items(), (item, index) => ({ item, order: item.order() ?? index }));
+        return items.sort((a, b) => a.order - b.order).map(({ item }) => item);
     }
 
     /**
@@ -186,14 +207,19 @@ export class KbqOverflowItems {
             (width, { elementRef }) => width + this.getElementWidthWithMargins(elementRef),
             0
         );
+
         const startIndex = reverseOverflowOrder ? 0 : items.length - 1;
         const endIndex = reverseOverflowOrder ? items.length : -1;
         const step = reverseOverflowOrder ? 1 : -1;
         const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
+
         for (let index = startIndex; index !== endIndex; index += step) {
             const current = items[index];
+            if (current.disableHide()) continue;
+
             const currentWidth = this.getElementWidthWithMargins(current.elementRef);
             const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;
+
             if (itemsWidth + _resultWidth > totalWidth) {
                 current.hide();
                 itemsWidth -= currentWidth;
