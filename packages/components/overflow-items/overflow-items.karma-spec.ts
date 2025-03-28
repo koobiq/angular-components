@@ -22,6 +22,10 @@ const getOverflowHiddenItems = (debugElement: DebugElement): DebugElement[] => {
     return getOverflowItemDebugElements(debugElement).filter(({ injector }) => injector.get(KbqOverflowItem).hidden());
 };
 
+const getOverflowVisibleItems = (debugElement: DebugElement): DebugElement[] => {
+    return getOverflowItemDebugElements(debugElement).filter(({ injector }) => !injector.get(KbqOverflowItem).hidden());
+};
+
 const getOverflowItemsResultDebugElement = (debugElement: DebugElement): DebugElement => {
     return debugElement.query(By.directive(KbqOverflowItemsResult));
 };
@@ -53,6 +57,38 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
 })
 export class OverflowItemsTest {
     readonly reverseOverflowOrder = signal(false);
+    readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
+
+    readonly containerWidth = signal(500);
+    readonly itemWidth = signal(50);
+    readonly resultWidth = signal(100);
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqOverflowItemsModule],
+    selector: 'overflow-items-test',
+    template: `
+        <div
+            #kbqOverflowItemsReverse="kbqOverflowItems"
+            [style.width.px]="containerWidth()"
+            reverseOverflowOrder
+            kbqOverflowItems
+        >
+            <div [kbqOverflowItem]="items[0]" [style.min-width.px]="itemWidth()" [order]="items.length + 1">
+                {{ items[0] }}
+            </div>
+            <div [style.width.px]="resultWidth()" kbqOverflowItemsResult>
+                and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
+            </div>
+            @for (item of items.slice(1); track item) {
+                <div [kbqOverflowItem]="item" [style.min-width.px]="itemWidth()">{{ item }}</div>
+            }
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class OverflowItemsWithOrderedItem {
     readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
 
     readonly containerWidth = signal(500);
@@ -98,5 +134,16 @@ describe(KbqOverflowItemsModule.name, () => {
         const { debugElement } = fixture;
         await fixture.whenStable();
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
+    });
+
+    it('should skip overflow-item with order attribute', async () => {
+        const fixture = createComponent(OverflowItemsWithOrderedItem);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.containerWidth.set(150);
+        await fixture.whenStable();
+        const visibleItems = getOverflowVisibleItems(debugElement);
+
+        expect(visibleItems.length).toEqual(1);
+        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual(componentInstance.items[0]);
     });
 });
