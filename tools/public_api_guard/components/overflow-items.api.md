@@ -27,8 +27,9 @@ export class ElementVisibilityManager {
 // @public
 export class KbqOverflowItem extends ElementVisibilityManager {
     readonly id: InputSignal<unknown>;
+    readonly order: InputSignalWithTransform<number | null, unknown>;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItem, "[kbqOverflowItem]", ["kbqOverflowItem"], { "id": { "alias": "kbqOverflowItem"; "required": true; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqOverflowItem, "[kbqOverflowItem]", ["kbqOverflowItem"], { "id": { "alias": "kbqOverflowItem"; "required": true; "isSignal": true; }; "order": { "alias": "order"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOverflowItem, never>;
 }
