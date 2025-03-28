@@ -1,4 +1,4 @@
-.kbq-scrollbar {
+:where(.kbq-scrollbar) {
     --kbq-scrollbar-size-track-dimension: var(--kbq-size-l);
     --kbq-scrollbar-size-track-padding-vertical: var(--kbq-size-3xs);
     --kbq-scrollbar-size-track-padding-horizontal: var(--kbq-size-3xs);
@@ -6,9 +6,9 @@
     --kbq-scrollbar-size-thumb-min-size: var(--kbq-size-xl);
     --kbq-scrollbar-size-thumb-border-radius: var(--kbq-size-s);
     /* THEME TOKENS */
-    --kbq-scrollbar-thumb-default-background: var(--kbq-icon-contrast-fade);
-    --kbq-scrollbar-thumb-hover-background: var(--kbq-states-icon-contrast-fade-hover);
-    --kbq-scrollbar-thumb-active-background: var(--kbq-states-icon-contrast-fade-active);
+    --kbq-scrollbar-thumb-default-background: var(--kbq-palette-grey-50-a32);
+    --kbq-scrollbar-thumb-hover-background: var(--kbq-palette-grey-50-a48);
+    --kbq-scrollbar-thumb-active-background: var(--kbq-palette-grey-20-a55);
     --kbq-scrollbar-thumb-disabled-background: var(--kbq-states-icon-disabled);
     --kbq-scrollbar-track-default-border: transparent;
     --kbq-scrollbar-track-default-background: transparent;
@@ -16,4 +16,10 @@
     --kbq-scrollbar-track-hover-background: transparent;
     --kbq-scrollbar-track-active-border: transparent;
     --kbq-scrollbar-track-active-background: transparent;
+}
+
+:where(.kbq-dark .kbq-scrollbar) {
+    --kbq-scrollbar-thumb-default-background: var(--kbq-palette-grey-50-a48);
+    --kbq-scrollbar-thumb-hover-background: var(--kbq-palette-grey-50-a60);
+    --kbq-scrollbar-thumb-active-background: var(--kbq-palette-grey-50-a80);
 }
