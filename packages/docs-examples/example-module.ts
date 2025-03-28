@@ -2313,6 +2313,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "number-formatter-overview-example.ts",
     "importPath": "components/number-formatter"
   },
+  "overflow-items-overflow-order": {
+    "packagePath": "components/overflow-items/overflow-items-overflow-order",
+    "title": "Overflow items result offset",
+    "componentName": "OverflowItemsOverflowOrderExample",
+    "files": [
+      "overflow-items-overflow-order-example.ts"
+    ],
+    "selector": "overflow-items-overflow-order-example",
+    "additionalComponents": [],
+    "primaryFile": "overflow-items-overflow-order-example.ts",
+    "importPath": "components/overflow-items"
+  },
   "overflow-items-overview": {
     "packagePath": "components/overflow-items/overflow-items-overview",
     "title": "Overflow items overview",
@@ -4282,6 +4294,8 @@ return import('@koobiq/docs-examples/components/navbar');
 return import('@koobiq/docs-examples/components/navbar');
   case 'number-formatter-overview':
 return import('@koobiq/docs-examples/components/number-formatter');
+  case 'overflow-items-overflow-order':
+return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-overview':
 return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-with-order':
