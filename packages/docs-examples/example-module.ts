@@ -2337,6 +2337,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "overflow-items-overview-example.ts",
     "importPath": "components/overflow-items"
   },
+  "overflow-items-with-order": {
+    "packagePath": "components/overflow-items/overflow-items-with-order",
+    "title": "Overflow items result offset",
+    "componentName": "OverflowItemsWithOrderExample",
+    "files": [
+      "overflow-items-with-order-example.ts"
+    ],
+    "selector": "overflow-items-with-order-example",
+    "additionalComponents": [],
+    "primaryFile": "overflow-items-with-order-example.ts",
+    "importPath": "components/overflow-items"
+  },
   "popover-close": {
     "packagePath": "components/popover/popover-close",
     "title": "Popover close",
@@ -4285,6 +4297,8 @@ return import('@koobiq/docs-examples/components/number-formatter');
   case 'overflow-items-overflow-order':
 return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-overview':
+return import('@koobiq/docs-examples/components/overflow-items');
+  case 'overflow-items-with-order':
 return import('@koobiq/docs-examples/components/overflow-items');
   case 'popover-close':
 return import('@koobiq/docs-examples/components/popover');

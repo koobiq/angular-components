@@ -1,7 +1,5 @@
 Component for automatically hiding elements with dynamic adaptation to the container width.
 
-### Simple Hiding
-
 Supports two modes of operation:
 
 -   hiding from the end (default)
@@ -11,9 +9,8 @@ Configurable via the `reverseOverflowOrder` attribute.
 
 <!-- example(overflow-items-overview) -->
 
-### Hiding in the Middle
+### Order of Hiding
 
-Similar to simple hiding, but the order of hidden elements is determined by the `order` attribute inside `KbqOverflowItem`.  
-If all elements are hidden, the remaining ones are checked.
+The order in which elements are hidden is determined using the `order` attribute for the `KbqOverflowItem` directive.
 
-<!-- example(overflow-items-overflow-order) -->
+<!-- example(overflow-items-with-order) -->

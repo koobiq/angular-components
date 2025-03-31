@@ -92,8 +92,8 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      */
     readonly id = input.required({ alias: 'kbqOverflowItem' });
     /**
-     * Sets the item's position in the overflow container,
-     * overriding its index to allow custom ordering, such as moving it to the end of the `QueryList`.
+     * Defines the order in which the item is processed in the overflow container,
+     * without changing its original position in the `QueryList`.
      */
     readonly order = input(null, { transform: numberAttribute });
 }
@@ -178,7 +178,6 @@ export class KbqOverflowItems {
      * Returns a list of items sorted by their specified `order` value.
      * If an item does not have an `order` defined, its index is used as a fallback.
      * This ensures a stable order while allowing custom positioning.
-     * @docs-private
      */
     private getSortedItemsByOrder(): KbqOverflowItem[] {
         const items = Array.from(this.items(), (item, index) => ({ item, order: item.order() ?? index }));

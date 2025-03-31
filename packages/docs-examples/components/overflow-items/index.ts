@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { OverflowItemsOverflowOrderExample } from './overflow-items-overflow-order/overflow-items-overflow-order-example';
 import { OverflowItemsOverviewExample } from './overflow-items-overview/overflow-items-overview-example';
+import { OverflowItemsWithOrderExample } from './overflow-items-with-order/overflow-items-with-order-example';
 
-export { OverflowItemsOverflowOrderExample, OverflowItemsOverviewExample };
+export { OverflowItemsOverviewExample, OverflowItemsWithOrderExample };
 
 const EXAMPLES = [
     OverflowItemsOverviewExample,
-    OverflowItemsOverflowOrderExample
+    OverflowItemsWithOrderExample
 ];
 
 @NgModule({

@@ -136,7 +136,7 @@ describe(KbqOverflowItemsModule.name, () => {
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
     });
 
-    it('should skip overflow-item with order attribute', async () => {
+    it('should prioritize other overflow items before hiding the ordered item', async () => {
         const fixture = createComponent(OverflowItemsWithOrderedItem);
         const { debugElement, componentInstance } = fixture;
         componentInstance.containerWidth.set(150);

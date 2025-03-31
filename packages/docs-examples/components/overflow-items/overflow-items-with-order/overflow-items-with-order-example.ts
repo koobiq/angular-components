@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
-import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Overflow items result offset
@@ -12,12 +11,10 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     imports: [
         KbqOverflowItemsModule,
         KbqBadgeModule,
-        KbqToggleModule,
         FormsModule
     ],
-    selector: 'overflow-items-overflow-order-example',
+    selector: 'overflow-items-with-order-example',
     template: `
-        <div class="layout-margin-bottom-l kbq-mono-normal">reverseOverflowOrder="true"</div>
         <div #kbqOverflowItemsReverse="kbqOverflowItems" [debounceTime]="0" reverseOverflowOrder kbqOverflowItems>
             <kbq-badge class="layout-margin-right-xs" [kbqOverflowItem]="items[0]" [order]="items.length">
                 {{ items[0] }}
@@ -30,21 +27,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
                     {{ item }}
                 </kbq-badge>
             }
-        </div>
-
-        <div class="layout-margin-bottom-l layout-margin-top-l kbq-mono-normal">reverseOverflowOrder="false"</div>
-        <div #kbqOverflowItems="kbqOverflowItems" [debounceTime]="0" [reverseOverflowOrder]="false" kbqOverflowItems>
-            @for (item of items.slice(0, -1); track item) {
-                <kbq-badge class="layout-margin-right-xs" [kbqOverflowItem]="item">
-                    {{ item }}
-                </kbq-badge>
-            }
-            <div class="layout-margin-right-xs" kbqOverflowItemsResult>
-                and {{ kbqOverflowItems.hiddenItemIDs().size }} more
-            </div>
-            <kbq-badge [kbqOverflowItem]="items[items.length - 1]" [order]="-1">
-                {{ items[items.length - 1] }}
-            </kbq-badge>
         </div>
     `,
     styles: `
@@ -68,8 +50,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsOverflowOrderExample {
+export class OverflowItemsWithOrderExample {
     readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
-
-    readonly reverseOverflowOrder = signal(false);
 }
