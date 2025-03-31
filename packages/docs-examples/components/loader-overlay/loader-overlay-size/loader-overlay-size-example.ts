@@ -12,7 +12,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     selector: 'loader-overlay-size-example',
     imports: [KbqLoaderOverlayModule, KbqButtonToggleModule, FormsModule],
     template: `
-        <div>
+        <div class="layout-margin-bottom-l">
             <kbq-button-toggle-group [(ngModel)]="size">
                 <kbq-button-toggle value="compact">Compact</kbq-button-toggle>
                 <kbq-button-toggle value="normal">Normal</kbq-button-toggle>
@@ -20,7 +20,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             </kbq-button-toggle-group>
         </div>
 
-        <div class="flex" style="width: 500px; height: 320px">
+        <div class="flex" style="height: 320px">
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
