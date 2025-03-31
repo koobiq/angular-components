@@ -21,6 +21,11 @@
             "description": "Updates prefixes and names of changed/removed icons",
             "factory": "./migrations/deprecated-icons/index",
             "schema": "./migrations/deprecated-icons/schema.json"
+        },
+        "empty-state-size-attr": {
+            "description": "Updates prefixes and names of changed/removed icons",
+            "factory": "./migrations/empty-state-size-attr/index",
+            "schema": "./migrations/empty-state-size-attr/schema.json"
         }
     }
 }
