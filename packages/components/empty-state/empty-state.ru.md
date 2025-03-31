@@ -10,7 +10,7 @@
 
 ### Size - variations
 
-Существуют три вариации размеров: **compact, normal** и **big**:
+Размер компонента устанавливается при помощи атрибута `size`.
 
 <!-- example(empty-state-size) -->
 
