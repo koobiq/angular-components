@@ -1,14 +1,58 @@
 # Components
-/packages/components/*                                      @lskramarov
+*                                                           @lskramarov
+
+/packages/components/accordion/*                            @lskramarov
+/packages/components/button/*                               @lskramarov
+/packages/components/button-toggle/*                        @lskramarov
+/packages/components/datepicker/*                           @lskramarov
+/packages/components/filter-bar/*                           @lskramarov
+/packages/components/form-field/*                           @lskramarov
+/packages/components/list/*                                 @lskramarov
+/packages/components/navbar/*                               @lskramarov
+/packages/components/popover/*                              @lskramarov
+/packages/components/select/*                               @lskramarov
+/packages/components/title/*                                @lskramarov
+/packages/components/toast/*                                @lskramarov
+/packages/components/tooltip/*                              @lskramarov
+/packages/components/tree/*                                 @lskramarov
+/packages/components/tree-select/*                          @lskramarov
+
+/packages/components/alert/*                                @NikGurev
+/packages/components/breadcrumbs/*                          @NikGurev
+/packages/components/divider/*                              @NikGurev
+/packages/components/empty-state/*                          @NikGurev
+/packages/components/file-upload/*                          @NikGurev
+/packages/components/icon/*                                 @NikGurev
+/packages/components/input/*                                @NikGurev
+/packages/components/markdown/*                             @NikGurev
+/packages/components/progress-bar/*                         @NikGurev
+/packages/components/radio/*                                @NikGurev
+/packages/components/sidepanel/*                            @NikGurev
+/packages/components/scrollbar/*                            @NikGurev
+/packages/components/table/*                                @NikGurev
+/packages/components/tags/*                                 @NikGurev
+/packages/components/timezone/*                             @NikGurev
+/packages/components/toggle/*                               @NikGurev
+/packages/components/top-bar/*                              @NikGurev
+
+/packages/components/actions-panel/*                        @artembelik
+/packages/components/autocomplete/*                         @artembelik
+/packages/components/badge/*                                @artembelik
+/packages/components/checkbox/*                             @artembelik
+/packages/components/code-block/*                           @artembelik
+/packages/components/dl/*                                   @artembelik
+/packages/components/dropdown/*                             @artembelik
+/packages/components/link/*                                 @artembelik
+/packages/components/loader-overlay/*                       @artembelik
+/packages/components/modal/*                                @artembelik
+/packages/components/overflow-items/*                       @artembelik
+/packages/components/progress-spinner/*                     @artembelik
+/packages/components/risk-level/*                           @artembelik
+/packages/components/timepicker/*                           @artembelik
+/packages/components/table/*                                @artembelik
+/packages/components/tabs/*                                 @artembelik
+/packages/components/textarea/*                             @artembelik
 
 # Tools
 /tools/api-extractor/*                                      @NikGurev
 /tools/api-gen/*                                            @NikGurev
-/tools/scss-compiler/*                                      @pimenovoleg
-/tools/validate-licenses/*                                  @pimenovoleg
-
-# Misc
-/.github/**                                                 @pimenovoleg
-/.husky/**                                                  @pimenovoleg
-/.github/CODEOWNERS                                         @pimenovoleg @lskramarov
-/.github/ISSUE_TEMPLATE/**                                  @pimenovoleg
