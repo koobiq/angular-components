@@ -1,0 +1,15 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "koobiq-components-empty-state-size-attr",
+    "title": "koobiq-components empty-state-size-attr schematic",
+    "type": "object",
+    "properties": {
+        "project": {
+            "type": "string",
+            "description": "Name of the project",
+            "$default": {
+                "$source": "projectName"
+            }
+        }
+    }
+}

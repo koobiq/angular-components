@@ -74,3 +74,7 @@ export async function setupOptions(
         return projectWorkspace;
     }
 }
+
+export function loadEsmModule<T>(modulePath: string): Promise<T> {
+    return new Function('modulePath', `return import(modulePath);`)(modulePath) as Promise<T>;
+}
