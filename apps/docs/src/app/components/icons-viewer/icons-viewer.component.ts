@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { KbqHighlightModule, ThemePalette } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -73,7 +73,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     availableSizes: number[];
 
     private iconItems: IconItems;
-    private queryParamMap: { [key: string]: string };
+    private queryParamMap: Params;
 
     constructor() {
         super();
@@ -91,7 +91,10 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
 
         this.location.subscribe(() => this.modalService.closeAll());
 
-        this.activeRoute.queryParamMap.subscribe(({ params }: any) => (this.queryParamMap = params));
+        this.activeRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe(({ params }: Params) => {
+            this.searchControl.setValue(params.s);
+            this.queryParamMap = params;
+        });
 
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
     }
