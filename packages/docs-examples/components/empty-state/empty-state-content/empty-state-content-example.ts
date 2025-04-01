@@ -17,7 +17,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ],
     template: `
         <div class="layout-row layout-wrap">
-            <kbq-empty-state class="flex" style="min-height: 216px">
+            <kbq-empty-state class="flex" size="big" style="min-height: 216px">
                 <div kbq-empty-state-icon>
                     <img alt="" height="192" src="assets/images/empty-state/4_Empty_F_1psW.png" width="192" />
                 </div>
