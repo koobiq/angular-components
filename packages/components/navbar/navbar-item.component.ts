@@ -398,13 +398,15 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
             this._collapsed = value;
 
             this.updateTooltip();
-            this.updateCollapsedState();
         }
     }
 
-    private _collapsed = false;
+    // todo in future need rename to 'collapsed'
+    get isCollapsed(): boolean {
+        return this._collapsed ?? this.rectangleElement.collapsed;
+    }
 
-    isCollapsed: boolean;
+    private _collapsed = false;
 
     get croppedText(): string {
         const croppedTitleText = this.title?.isOverflown ? this.titleText : '';
@@ -524,14 +526,6 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
             $event.stopPropagation();
             $event.preventDefault();
         }
-    }
-
-    private updateCollapsedState() {
-        Promise.resolve().then(() => {
-            this.isCollapsed = this._collapsed;
-
-            this.changeDetectorRef.markForCheck();
-        });
     }
 }
 
