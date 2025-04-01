@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@radix-ng/primitives/roving-focus';
 import { InjectionToken } from '@angular/core';
@@ -55,12 +56,16 @@ export class KbqBreadcrumbs implements AfterContentInit {
     disabled: boolean;
     firstItemNegativeMargin: boolean;
     // (undocumented)
+    getItemWidth(item?: ElementRef): any;
+    // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
     max: number | null;
+    // (undocumented)
+    get maxWidth(): any;
     protected readonly minVisibleItems = 2;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -69,7 +74,11 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    protected readonly overflowItems: QueryList<ElementRef>;
+    // (undocumented)
     protected readonly PopUpPlacements: typeof PopUpPlacements;
+    // (undocumented)
+    protected readonly result: ElementRef;
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
     size: KbqDefaultSizes;

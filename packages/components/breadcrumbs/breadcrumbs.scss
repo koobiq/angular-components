@@ -5,10 +5,13 @@
     display: flex;
     align-items: center;
     gap: var(--kbq-breadcrumbs-gap);
+    flex-grow: 1;
+    flex-wrap: wrap;
+    overflow: hidden;
 
     .kbq-overflow-items {
         padding: 1px;
-        margin-left: -1px;
+        margin: -1px;
     }
 
     .kbq-breadcrumb-item__container {

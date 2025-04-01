@@ -67,7 +67,11 @@ For specific breadcrumbs:
 ```ts
 @Component({
     template: `
-            <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">...</nav>
+        <nav
+            kbq-breadcrumbs
+            [firstItemNegativeMargin]="false"
+            >...
+        </nav>
     `
 })
 ```
@@ -79,12 +83,28 @@ import { kbqBreadcrumbsConfigurationProvider } from '@koobiq/components/breadcru
 
 @NgModule({
     providers: [
-        kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })
+        kbqBreadcrumbsConfigurationProvider({
+            firstItemNegativeMargin: false
+        })
     ]
 })
 ```
 
-This version captures the same meaning but in English. Let me know if you need further adjustments!
+### Line Breaks
+
+Sometimes, the parent container of breadcrumbs may be compressed in width. In such cases, it is recommended either to use truncation and hide items or to wrap items onto a new line.
+
+#### No Line Break Mode
+
+This mode allows breadcrumbs to adjust to the available space.
+
+<!-- example(breadcrumbs-with-auto-wrap-adaptive) -->
+
+#### When is a Line Break Needed?
+
+If it is necessary to display the breadcrumb values without truncation or hiding items, wrapping items onto a new line can be used.
+
+<!-- example(breadcrumbs-with-wrap) -->
 
 ## Keyboard Navigation
 

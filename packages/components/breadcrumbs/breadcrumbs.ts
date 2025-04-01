@@ -9,6 +9,7 @@ import {
     ContentChildren,
     DestroyRef,
     Directive,
+    ElementRef,
     forwardRef,
     inject,
     InjectionToken,
@@ -17,6 +18,8 @@ import {
     Provider,
     QueryList,
     TemplateRef,
+    ViewChild,
+    ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -25,7 +28,7 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
+import { KbqOverflowItem, KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
 
@@ -219,6 +222,13 @@ export class KbqBreadcrumbs implements AfterContentInit {
 
     @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
     protected readonly items: QueryList<KbqBreadcrumbItem>;
+
+    @ViewChild(KbqOverflowItem, { read: ElementRef })
+    protected readonly result: ElementRef;
+
+    @ViewChildren(KbqOverflowItem, { read: ElementRef })
+    protected readonly overflowItems: QueryList<ElementRef>;
+
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
      */
@@ -229,7 +239,24 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
 
+    get maxWidth() {
+        if (!this.overflowItems || !this.overflowItems.length || this.max === null || this.max >= this.items.length) {
+            return null;
+        }
+
+        let resultWidth = this.getItemWidth(this.overflowItems.get(0)) + this.getItemWidth(this.result);
+        for (let i = 0; i < this.max - this.minVisibleItems; i++) {
+            resultWidth += this.getItemWidth(this.overflowItems.get(this.overflowItems.length - i - 1));
+        }
+
+        return resultWidth;
+    }
+
     ngAfterContentInit() {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
+    }
+
+    getItemWidth(item?: ElementRef) {
+        return item ? item.nativeElement.offsetWidth : 0;
     }
 }
