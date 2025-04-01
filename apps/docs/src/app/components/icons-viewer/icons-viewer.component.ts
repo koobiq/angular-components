@@ -91,7 +91,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
 
         this.location.subscribe(() => this.modalService.closeAll());
 
-        this.activeRoute.queryParamMap.subscribe(({ params }: Params) => {
+        this.activeRoute.queryParamMap.pipe(takeUntilDestroyed()).subscribe(({ params }: Params) => {
             this.searchControl.setValue(params.s);
             this.queryParamMap = params;
         });
