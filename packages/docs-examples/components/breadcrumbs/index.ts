@@ -8,7 +8,8 @@ import { BreadcrumbsTruncateByAbbrevItemsExample } from './breadcrumbs-truncate-
 import { BreadcrumbsTruncateCenterItemsExample } from './breadcrumbs-truncate-center-items/breadcrumbs-truncate-center-items-example';
 import { BreadcrumbsTruncateHeadItemsExample } from './breadcrumbs-truncate-head-items/breadcrumbs-truncate-head-items-example';
 import { BreadcrumbsTruncateTailItemsExample } from './breadcrumbs-truncate-tail-items/breadcrumbs-truncate-tail-items-example';
-import { BreadcrumbsWrapExample } from './breadcrumbs-wrap/breadcrumbs-wrap-example';
+import { BreadcrumbsWithAutoWrapAdaptiveExample } from './breadcrumbs-with-auto-wrap-adaptive/breadcrumbs-with-auto-wrap-adaptive-example';
+import { BreadcrumbsWithWrapExample } from './breadcrumbs-with-wrap/breadcrumbs-with-wrap-example';
 
 export {
     BreadcrumbsCustomTemplateExample,
@@ -20,7 +21,8 @@ export {
     BreadcrumbsTruncateCenterItemsExample,
     BreadcrumbsTruncateHeadItemsExample,
     BreadcrumbsTruncateTailItemsExample,
-    BreadcrumbsWrapExample
+    BreadcrumbsWithAutoWrapAdaptiveExample,
+    BreadcrumbsWithWrapExample
 };
 
 const EXAMPLES = [
@@ -33,7 +35,8 @@ const EXAMPLES = [
     BreadcrumbsTruncateCenterItemsExample,
     BreadcrumbsTruncateHeadItemsExample,
     BreadcrumbsTruncateTailItemsExample,
-    BreadcrumbsWrapExample
+    BreadcrumbsWithWrapExample,
+    BreadcrumbsWithAutoWrapAdaptiveExample
 ];
 
 @NgModule({

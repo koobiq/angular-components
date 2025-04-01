@@ -447,16 +447,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "breadcrumbs-truncate-tail-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
-  "breadcrumbs-wrap": {
-    "packagePath": "components/breadcrumbs/breadcrumbs-wrap",
-    "title": "Breadcrumbs Wrap",
-    "componentName": "BreadcrumbsWrapExample",
+  "breadcrumbs-with-auto-wrap-adaptive": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-with-auto-wrap-adaptive",
+    "title": "Breadcrumbs Auto Wrap Adaptive",
+    "componentName": "BreadcrumbsWithAutoWrapAdaptiveExample",
     "files": [
-      "breadcrumbs-wrap-example.ts"
+      "breadcrumbs-with-auto-wrap-adaptive-example.ts"
     ],
-    "selector": "breadcrumbs-wrap-example",
+    "selector": "breadcrumbs-with-auto-wrap-adaptive-example",
+    "additionalComponents": [
+      "ExampleBreadcrumbs"
+    ],
+    "primaryFile": "breadcrumbs-with-auto-wrap-adaptive-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-with-wrap": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-with-wrap",
+    "title": "Breadcrumbs Wrap",
+    "componentName": "BreadcrumbsWithWrapExample",
+    "files": [
+      "breadcrumbs-with-wrap-example.ts"
+    ],
+    "selector": "breadcrumbs-with-wrap-example",
     "additionalComponents": [],
-    "primaryFile": "breadcrumbs-wrap-example.ts",
+    "primaryFile": "breadcrumbs-with-wrap-example.ts",
     "importPath": "components/breadcrumbs"
   },
   "button-toggle-alignment-overview": {
@@ -3994,7 +4008,9 @@ return import('@koobiq/docs-examples/components/breadcrumbs');
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-truncate-tail-items':
 return import('@koobiq/docs-examples/components/breadcrumbs');
-  case 'breadcrumbs-wrap':
+  case 'breadcrumbs-with-auto-wrap-adaptive':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-with-wrap':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'button-toggle-alignment-overview':
 return import('@koobiq/docs-examples/components/button-toggle');
