@@ -564,7 +564,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     },
                     svgPreview: 'tags',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: false
                 },
                 {
@@ -575,7 +575,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     },
                     svgPreview: 'tags autocomplete',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: true
                 },
                 {
@@ -586,7 +586,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     },
                     svgPreview: 'tags input',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: true
                 },
                 {
@@ -597,7 +597,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     },
                     svgPreview: 'tags list',
                     hasApi: true,
-                    apiId: 'tag',
+                    apiId: 'tags',
                     hasExamples: false
                 },
                 {
