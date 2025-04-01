@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, inject, TemplateRef, ViewChild } from '@angular/core';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -13,7 +13,7 @@ import { DateTime } from 'luxon';
     selector: 'filter-bar-complete-functions-example',
     imports: [
         KbqFilterBarModule,
-        KbqLuxonDateModule,
+        LuxonDateModule,
         KbqIcon
     ],
     template: `

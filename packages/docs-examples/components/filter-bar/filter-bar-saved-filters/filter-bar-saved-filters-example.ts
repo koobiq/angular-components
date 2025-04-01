@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
@@ -10,7 +10,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
     selector: 'filter-bar-saved-filters-example',
     imports: [
         KbqFilterBarModule,
-        KbqLuxonDateModule
+        LuxonDateModule
     ],
     template: `
         <kbq-filter-bar
