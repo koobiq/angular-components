@@ -46,44 +46,44 @@ export const ptBRLocaleData = {
     } satisfies KbqActionsPanelLocaleConfiguration,
     filterBar: {
         reset: {
-            buttonName: 'Сбросить'
+            buttonName: 'Redefinir'
         },
         search: {
-            tooltip: 'Поиск',
-            placeholder: 'Поиск'
+            tooltip: 'Pesquisar',
+            placeholder: 'Pesquisar'
         },
         filters: {
-            defaultName: 'Фильтры',
-            saveNewFilterTooltip: 'Сохранить новый фильтр',
-            searchPlaceholder: 'Поиск',
-            searchEmptyResult: 'Ничего не найдено',
-            saveAsNewFilter: 'Сохранить как новый фильтр',
-            saveChanges: 'Сохранить изменения',
-            saveAsNew: 'Сохранить как новый',
-            change: 'Изменить',
-            resetChanges: 'Сбросить изменения',
-            remove: 'Удалить',
-            name: 'Название',
-            error: 'Поиск с таким названием уже существует',
-            errorHint: 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.',
-            saveButton: 'Сохранить',
-            cancelButton: 'Отмена'
+            defaultName: 'Filtros',
+            saveNewFilterTooltip: 'Salvar o novo filtro',
+            searchPlaceholder: 'Pesquisar',
+            searchEmptyResult: 'Nada encontrado',
+            saveAsNewFilter: 'Salvar como novo filtro',
+            saveChanges: 'Salvar alterações',
+            saveAsNew: 'Salvar como novo',
+            change: 'Editar',
+            resetChanges: 'Redefinir',
+            remove: 'Excluir',
+            name: 'Nome',
+            error: 'Já existe uma pesquisa com este nome',
+            errorHint: 'Não foi possível salvar o filtro. Tente novamente ou entre em contato com o administrador.',
+            saveButton: 'Salvar',
+            cancelButton: 'Cancelar'
         },
         add: {
-            tooltip: 'Добавить фильтр'
+            tooltip: 'Adicionar filtro'
         },
         pipe: {
-            clearButtonTooltip: 'Очистить',
-            removeButtonTooltip: 'Удалить',
-            applyButton: 'Применить',
-            emptySearchResult: 'Ничего не найдено'
+            clearButtonTooltip: 'Apagar',
+            removeButtonTooltip: 'Excluir',
+            applyButton: 'Aplicar',
+            emptySearchResult: 'Nada encontrado'
         },
         datePipe: {
-            customPeriod: 'Произвольный период',
-            customPeriodFrom: 'с',
-            customPeriodTo: 'по',
-            customPeriodErrorHint: 'Начало периода не может быть позже окончания',
-            backToPeriodSelection: 'Назад к выбору периода'
+            customPeriod: 'Período personalizado',
+            customPeriodFrom: 'de',
+            customPeriodTo: 'até',
+            customPeriodErrorHint: 'O início do período não pode ser posterior ao término do período',
+            backToPeriodSelection: 'Retornar à seleção do período'
         }
     }
 };

@@ -46,44 +46,44 @@ export const faIRLocaleData = {
     } satisfies KbqActionsPanelLocaleConfiguration,
     filterBar: {
         reset: {
-            buttonName: 'Сбросить'
+            buttonName: 'بازنشانی'
         },
         search: {
-            tooltip: 'Поиск',
-            placeholder: 'Поиск'
+            tooltip: 'جستجو',
+            placeholder: 'جستجو'
         },
         filters: {
-            defaultName: 'Фильтры',
-            saveNewFilterTooltip: 'Сохранить новый фильтр',
-            searchPlaceholder: 'Поиск',
-            searchEmptyResult: 'Ничего не найдено',
-            saveAsNewFilter: 'Сохранить как новый фильтр',
-            saveChanges: 'Сохранить изменения',
-            saveAsNew: 'Сохранить как новый',
-            change: 'Изменить',
-            resetChanges: 'Сбросить изменения',
-            remove: 'Удалить',
-            name: 'Название',
-            error: 'Поиск с таким названием уже существует',
-            errorHint: 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.',
-            saveButton: 'Сохранить',
-            cancelButton: 'Отмена'
+            defaultName: 'فیلترها',
+            saveNewFilterTooltip: 'ذخیره فیلتر جدید',
+            searchPlaceholder: 'جستجو',
+            searchEmptyResult: 'چیزی پیدا نشد',
+            saveAsNewFilter: 'ذخیره به‌عنوان فیلتر جدید',
+            saveChanges: 'ذخیره تغییرات',
+            saveAsNew: 'ذخیره به‌عنوان مورد جدید',
+            change: 'ویرایش',
+            resetChanges: 'بازنشانی',
+            remove: 'حذف',
+            name: 'نام',
+            error: 'جستجویی با این نام از قبل وجود دارد',
+            errorHint: 'فیلتر ذخیره نشد. دوباره امتحان کنید یا با سرپرست تماس بگیرید.',
+            saveButton: 'ذخیره',
+            cancelButton: 'لغو'
         },
         add: {
-            tooltip: 'Добавить фильтр'
+            tooltip: 'افزودن فیلتر'
         },
         pipe: {
-            clearButtonTooltip: 'Очистить',
-            removeButtonTooltip: 'Удалить',
-            applyButton: 'Применить',
-            emptySearchResult: 'Ничего не найдено'
+            clearButtonTooltip: 'پاک کردن',
+            removeButtonTooltip: 'حذف',
+            applyButton: 'اعمال',
+            emptySearchResult: 'چیزی پیدا نشد'
         },
         datePipe: {
-            customPeriod: 'Произвольный период',
-            customPeriodFrom: 'с',
-            customPeriodTo: 'по',
-            customPeriodErrorHint: 'Начало периода не может быть позже окончания',
-            backToPeriodSelection: 'Назад к выбору периода'
+            customPeriod: 'دوره سفارشی',
+            customPeriodFrom: 'از',
+            customPeriodTo: 'تا',
+            customPeriodErrorHint: 'دوره نمی‌تواند بعد از پایان آن شروع شود',
+            backToPeriodSelection: 'بازگشت به انتخاب دوره'
         }
     }
 };

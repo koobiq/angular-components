@@ -47,44 +47,44 @@ export const tkTMLocaleData = {
     } satisfies KbqActionsPanelLocaleConfiguration,
     filterBar: {
         reset: {
-            buttonName: 'Сбросить'
+            buttonName: 'Täzeden sazlamak'
         },
         search: {
-            tooltip: 'Поиск',
-            placeholder: 'Поиск'
+            tooltip: 'Gözleg',
+            placeholder: 'Gözleg'
         },
         filters: {
-            defaultName: 'Фильтры',
-            saveNewFilterTooltip: 'Сохранить новый фильтр',
-            searchPlaceholder: 'Поиск',
-            searchEmptyResult: 'Ничего не найдено',
-            saveAsNewFilter: 'Сохранить как новый фильтр',
-            saveChanges: 'Сохранить изменения',
-            saveAsNew: 'Сохранить как новый',
-            change: 'Изменить',
-            resetChanges: 'Сбросить изменения',
-            remove: 'Удалить',
-            name: 'Название',
-            error: 'Поиск с таким названием уже существует',
-            errorHint: 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.',
-            saveButton: 'Сохранить',
-            cancelButton: 'Отмена'
+            defaultName: 'Filtrler',
+            saveNewFilterTooltip: 'Täze filtri ýatda saklamak',
+            searchPlaceholder: 'Gözleg',
+            searchEmptyResult: 'Hiç zat tapylmady',
+            saveAsNewFilter: 'Täze filtr hökmünde ýatda saklamak',
+            saveChanges: 'Üýtgetmeleri ýatda saklamak',
+            saveAsNew: 'Täze hökmünde ýatda saklamak',
+            change: 'Üýtgetmek',
+            resetChanges: 'Üýtgetmeleri täzeden sazlamak',
+            remove: 'Pozmak',
+            name: 'Ady',
+            error: 'Beýle atly gözleg eýýäm bar',
+            errorHint: 'Filtri ýatda sakladyp bolmady. Täzeden synanyşyň ýa-da administratora habar beriň.',
+            saveButton: 'Ýatda saklamak',
+            cancelButton: 'Ýatyrmak'
         },
         add: {
-            tooltip: 'Добавить фильтр'
+            tooltip: 'Filtr goşmak'
         },
         pipe: {
-            clearButtonTooltip: 'Очистить',
-            removeButtonTooltip: 'Удалить',
-            applyButton: 'Применить',
-            emptySearchResult: 'Ничего не найдено'
+            clearButtonTooltip: 'Arassalamak',
+            removeButtonTooltip: 'Pozmak',
+            applyButton: 'Ulanmak',
+            emptySearchResult: 'Hiç zat tapylmady'
         },
         datePipe: {
-            customPeriod: 'Произвольный период',
-            customPeriodFrom: 'с',
-            customPeriodTo: 'по',
-            customPeriodErrorHint: 'Начало периода не может быть позже окончания',
-            backToPeriodSelection: 'Назад к выбору периода'
+            customPeriod: 'Erkin döwür',
+            customPeriodFrom: 'şundan',
+            customPeriodTo: 'şuňa',
+            customPeriodErrorHint: 'Döwrüň başlangyjy gutarýan wagtyndan soň bolup bilmeýär',
+            backToPeriodSelection: 'Döwür saýlamaga dolanmak'
         }
     }
 };
