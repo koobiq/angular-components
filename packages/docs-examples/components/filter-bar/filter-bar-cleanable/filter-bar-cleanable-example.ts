@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
@@ -10,7 +10,7 @@ import { KbqFilterBarModule, KbqPipe, KbqPipeTemplate, KbqPipeTypes } from '@koo
     selector: 'filter-bar-cleanable-example',
     imports: [
         KbqFilterBarModule,
-        KbqLuxonDateModule
+        LuxonDateModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `

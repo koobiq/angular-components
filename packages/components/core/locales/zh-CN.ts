@@ -46,44 +46,44 @@ export const zhCNLocaleData = {
     } satisfies KbqActionsPanelLocaleConfiguration,
     filterBar: {
         reset: {
-            buttonName: 'Сбросить'
+            buttonName: '重置'
         },
         search: {
-            tooltip: 'Поиск',
-            placeholder: 'Поиск'
+            tooltip: '搜索',
+            placeholder: '搜索'
         },
         filters: {
-            defaultName: 'Фильтры',
-            saveNewFilterTooltip: 'Сохранить новый фильтр',
-            searchPlaceholder: 'Поиск',
-            searchEmptyResult: 'Ничего не найдено',
-            saveAsNewFilter: 'Сохранить как новый фильтр',
-            saveChanges: 'Сохранить изменения',
-            saveAsNew: 'Сохранить как новый',
-            change: 'Изменить',
-            resetChanges: 'Сбросить изменения',
-            remove: 'Удалить',
-            name: 'Название',
-            error: 'Поиск с таким названием уже существует',
-            errorHint: 'Не удалось сохранить фильтр. Попробуйте снова или сообщите администратору.',
-            saveButton: 'Сохранить',
-            cancelButton: 'Отмена'
+            defaultName: '筛选器',
+            saveNewFilterTooltip: '保存新筛选器',
+            searchPlaceholder: '搜索',
+            searchEmptyResult: '未找到任何内容',
+            saveAsNewFilter: '另存为新筛选器',
+            saveChanges: '保存更改',
+            saveAsNew: '另存为新的',
+            change: '编辑',
+            resetChanges: '重置',
+            remove: '删除',
+            name: '名称',
+            error: '已经使用此名称进行过搜索',
+            errorHint: '无法保存筛选器。请重试或联系管理员。',
+            saveButton: '保存',
+            cancelButton: '取消'
         },
         add: {
-            tooltip: 'Добавить фильтр'
+            tooltip: '添加筛选器'
         },
         pipe: {
-            clearButtonTooltip: 'Очистить',
-            removeButtonTooltip: 'Удалить',
-            applyButton: 'Применить',
-            emptySearchResult: 'Ничего не найдено'
+            clearButtonTooltip: '清除',
+            removeButtonTooltip: '删除',
+            applyButton: '应用',
+            emptySearchResult: '未找到任何内容'
         },
         datePipe: {
-            customPeriod: 'Произвольный период',
-            customPeriodFrom: 'с',
-            customPeriodTo: 'по',
-            customPeriodErrorHint: 'Начало периода не может быть позже окончания',
-            backToPeriodSelection: 'Назад к выбору периода'
+            customPeriod: '自定义时段',
+            customPeriodFrom: '从',
+            customPeriodTo: '到',
+            customPeriodErrorHint: '时段开始时间不能晚于结束时间',
+            backToPeriodSelection: '返回以选择一个时段'
         }
     }
 };
