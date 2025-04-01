@@ -8,3 +8,9 @@
 Настраивается при помощи атрибута `reverseOverflowOrder`.
 
 <!-- example(overflow-items-overview) -->
+
+### Очередность скрытия
+
+Порядок скрываемых элементов задается с помощью атрибута `order` для директивы `KbqOverflowItem`.
+
+<!-- example(overflow-items-with-order) -->

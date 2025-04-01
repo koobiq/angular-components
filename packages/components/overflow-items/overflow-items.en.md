@@ -8,3 +8,9 @@ Supports two modes of operation:
 Configurable via the `reverseOverflowOrder` attribute.
 
 <!-- example(overflow-items-overview) -->
+
+### Order of Hiding
+
+The order in which elements are hidden is determined using the `order` attribute for the `KbqOverflowItem` directive.
+
+<!-- example(overflow-items-with-order) -->

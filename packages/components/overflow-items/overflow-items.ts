@@ -91,6 +91,11 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * Unique identifier for the item.
      */
     readonly id = input.required({ alias: 'kbqOverflowItem' });
+    /**
+     * Defines the order in which the item is processed in the overflow container,
+     * without changing its original position in the `QueryList`.
+     */
+    readonly order = input(null, { transform: numberAttribute });
 }
 
 /**
@@ -159,7 +164,7 @@ export class KbqOverflowItems {
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
                 const hiddenItems = this.calculateItemsVisibility(
-                    this.items(),
+                    this.getSortedItemsByOrder(),
                     this.reverseOverflowOrder(),
                     this.result(),
                     this.elementRef.nativeElement
@@ -167,6 +172,16 @@ export class KbqOverflowItems {
                 const hiddenItemIDs = new Set(hiddenItems.map(({ id }) => id()));
                 this.changes.emit(hiddenItemIDs);
             });
+    }
+
+    /**
+     * Returns a list of items sorted by their specified `order` value.
+     * If an item does not have an `order` defined, its index is used as a fallback.
+     * This ensures a stable order while allowing custom positioning.
+     */
+    private getSortedItemsByOrder(): KbqOverflowItem[] {
+        const items = Array.from(this.items(), (item, index) => ({ item, order: item.order() ?? index }));
+        return items.sort((a, b) => a.order - b.order).map(({ item }) => item);
     }
 
     /**
