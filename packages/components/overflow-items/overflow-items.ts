@@ -96,6 +96,11 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * without changing its original position in the `QueryList`.
      */
     readonly order = input(null, { transform: numberAttribute });
+    /**
+     * Visibility priority
+     * @default false
+     */
+    readonly disableHide = input(false, { transform: booleanAttribute });
 }
 
 /**
@@ -207,6 +212,8 @@ export class KbqOverflowItems {
         const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
         for (let index = startIndex; index !== endIndex; index += step) {
             const current = items[index];
+            if (current.disableHide()) continue;
+
             const currentWidth = this.getElementWidthWithMargins(current.elementRef);
             const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;
             if (itemsWidth + _resultWidth > totalWidth) {
