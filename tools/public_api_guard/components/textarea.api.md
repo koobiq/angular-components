@@ -47,7 +47,6 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     focus(): void;
     focusChanged(isFocused: boolean): void;
     focused: boolean;
-    // (undocumented)
     freeRowsHeight: number;
     grow: () => void;
     get id(): string;
@@ -55,9 +54,7 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     protected isBadInput(): boolean;
     // (undocumented)
     protected readonly isBrowser: boolean;
-    // (undocumented)
     get maxRowLimitReached(): boolean;
-    // (undocumented)
     maxRows: number;
     // (undocumented)
     static ngAcceptInputType_canGrow: unknown;

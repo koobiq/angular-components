@@ -78,6 +78,8 @@ export class KbqTextarea
     extends KbqTextareaMixinBase
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
+    /** Parameter enables or disables the ability to automatically increase the height.
+     * If set to false, the textarea becomes vertically resizable. */
     @Input({ transform: booleanAttribute })
     set canGrow(value: boolean) {
         this._canGrow = value;
@@ -92,6 +94,7 @@ export class KbqTextarea
 
     private _canGrow: boolean = true;
 
+    /** Maximum number of lines to which the textarea will grow. Default unlimited */
     @Input() maxRows: number;
 
     /** An object used to control when error messages are shown. */
@@ -156,6 +159,7 @@ export class KbqTextarea
      */
     @Input() placeholder: string;
 
+    /** Distance from the last line to the bottom border */
     @Input({ transform: numberAttribute }) freeRowsHeight: number;
 
     /**
@@ -187,6 +191,8 @@ export class KbqTextarea
         }
     }
 
+    /** Flag that will be set to true when the maximum number of lines is reached.
+     * Maximum number of rows can be set using the maxRows input. */
     get maxRowLimitReached(): boolean {
         return this.rowsCount > this.maxRows;
     }
