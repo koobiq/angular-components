@@ -19,6 +19,7 @@
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
         </div>
+        <!-- @TODO delay rendering for proper elements order (#DS-3334)--->
         @if (true) {
             <div kbqOverflowItemsResult class="kbq-breadcrumb-item__container">
                 <button
