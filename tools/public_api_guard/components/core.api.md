@@ -197,7 +197,7 @@ export interface CanUpdateErrorState {
 export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 
 // @public
-export function checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null;
+export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null;
 
 // @public
 export function countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<KbqOption>, optionGroups: QueryList<KbqOptgroup>): number;
@@ -2568,6 +2568,12 @@ export function normalizeNumber(value: string | null | undefined, customConfig: 
 
 // @public (undocumented)
 export const NUMBER_FORMAT_REGEXP: RegExp;
+
+// @public (undocumented)
+export function numberByParts(value: string, fractionSeparator: string, groupSeparator: string): {
+    integer: string;
+    fraction: string;
+};
 
 // @public
 export class PasswordValidators {
