@@ -97,7 +97,7 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      */
     readonly order = input(null, { transform: numberAttribute });
     /**
-     * Visibility priority
+     * Element with this attribute will be ignored when hiding and will always remain visible.
      * @default false
      */
     readonly disableHide = input(false, { transform: booleanAttribute });
