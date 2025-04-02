@@ -19,7 +19,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
             <kbq-breadcrumb-item text="Report dated 28.08.2018">
                 <ng-container *kbqBreadcrumbView>
-                    <a routerLink="./report">
+                    <a routerLink="./report" tabindex="-1">
                         <button aria-current="page" disabled kbq-button kbqBreadcrumb>
                             <span
                                 [minVisibleLength]="15"

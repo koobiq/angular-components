@@ -10,8 +10,8 @@
     overflow: hidden;
 
     .kbq-overflow-items {
+        // add space not to cut focus outline
         padding: 1px;
-        margin: -1px;
     }
 
     .kbq-breadcrumb-item__container {
@@ -20,10 +20,8 @@
     }
 
     &.kbq-breadcrumbs_first-item-negative-margin {
-        .kbq-breadcrumb-item__container {
-            &:first-of-type {
-                margin-left: var(--kbq-breadcrumb-item-negative-margin);
-            }
+        .kbq-overflow-items {
+            margin-left: var(--kbq-breadcrumb-item-negative-margin);
         }
     }
 
