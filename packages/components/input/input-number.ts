@@ -378,7 +378,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     onPaste(event: ClipboardEvent) {
-        this.valueFromPaste = checkAndNormalizeLocalizedNumber(event.clipboardData?.getData('text'));
+        this.valueFromPaste = checkAndNormalizeLocalizedNumber(
+            event.clipboardData?.getData('text'),
+            this.localeService?.id
+        );
 
         if (this.valueFromPaste === null) {
             event.preventDefault();
