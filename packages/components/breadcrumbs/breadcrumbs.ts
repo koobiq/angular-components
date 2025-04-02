@@ -5,6 +5,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
     ContentChild,
     ContentChildren,
     DestroyRef,
@@ -28,30 +29,10 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import { KbqComponentColors, KbqDefaultSizes, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqOverflowItem, KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
+import { KbqOverflowItem, KbqOverflowItemsModule, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { RdxRovingFocusGroupDirective, RdxRovingFocusItemDirective } from '@radix-ng/primitives/roving-focus';
-
-export type KbqBreadcrumbsConfiguration = {
-    /**
-     * Specifies the maximum number of breadcrumb items to display.
-     * - If a number is provided, only that many items will be shown.
-     * - If `null`, no limit is applied, and all breadcrumb items are displayed.
-     */
-    max: number | null;
-    size: KbqDefaultSizes;
-    /**
-     * Determines if a negative margin should be applied to the first breadcrumb item.
-     */
-    firstItemNegativeMargin: boolean;
-    /**
-     * Manages breadcrumb items when space is limited:
-     * - `auto`: Adjusts based on space and item count.
-     * - `wrap`: Moves items to the next line if needed.
-     * - `none`: Prevents wrapping, allowing overflow.
-     */
-    wrapMode: 'auto' | 'wrap' | 'none';
-};
+import { KbqBreadcrumbsConfiguration, KbqBreadcrumbsWrapMode } from './breadcrumbs.types';
 
 const KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION: KbqBreadcrumbsConfiguration = {
     max: 4,
@@ -215,7 +196,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     /**
      * Wrapping behavior of the breadcrumb items.
      */
-    @Input() wrapMode: KbqBreadcrumbsConfiguration['wrapMode'] = this.configuration.wrapMode;
+    @Input() wrapMode: KbqBreadcrumbsWrapMode = this.configuration.wrapMode;
 
     @ContentChild(KbqBreadcrumbsSeparator, { read: TemplateRef })
     protected readonly separator?: TemplateRef<any>;
@@ -223,11 +204,14 @@ export class KbqBreadcrumbs implements AfterContentInit {
     @ContentChildren(forwardRef(() => KbqBreadcrumbItem))
     protected readonly items: QueryList<KbqBreadcrumbItem>;
 
-    @ViewChild(KbqOverflowItem, { read: ElementRef })
+    @ViewChild(KbqOverflowItemsResult, { read: ElementRef })
     protected readonly result: ElementRef;
 
     @ViewChildren(KbqOverflowItem, { read: ElementRef })
     protected readonly overflowItems: QueryList<ElementRef>;
+
+    /** @docs-private */
+    protected readonly itemsExcludingEdges = computed(() => this.items.toArray().slice(1, -1));
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
@@ -239,17 +223,34 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
 
-    get maxWidth() {
-        if (!this.overflowItems || !this.overflowItems.length || this.max === null || this.max >= this.items.length) {
+    /**
+     * Calculates the total width of visible items based on the `max` value and overflow items.
+     * @returns {number | null} The computed max width for overflow items or null if conditions are not met.
+     * @docs-private
+     */
+    protected get maxWidth(): number | null {
+        if (
+            !this.overflowItems ||
+            !this.overflowItems.length ||
+            this.max === null ||
+            this.max >= this.items.length ||
+            this.max < this.minVisibleItems
+        ) {
             return null;
         }
 
-        let resultWidth = this.getItemWidth(this.overflowItems.get(0)) + this.getItemWidth(this.result);
-        for (let i = 0; i < this.max - this.minVisibleItems; i++) {
-            resultWidth += this.getItemWidth(this.overflowItems.get(this.overflowItems.length - i - 1));
-        }
+        let visibleItemsWidth = this.getItemWidth(this.result);
+        // Reorders overflow items to prioritize the first and last elements
+        const sortedItems = [
+            ...this.overflowItems.toArray().slice(1, -1),
+            this.overflowItems.first,
+            this.overflowItems.last
+        ];
 
-        return resultWidth;
+        for (let i = 0; i < this.max - 1; i++) {
+            visibleItemsWidth += this.getItemWidth(sortedItems[sortedItems.length - i - 1]);
+        }
+        return visibleItemsWidth;
     }
 
     ngAfterContentInit() {

@@ -17,6 +17,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -59,13 +60,13 @@ export class KbqBreadcrumbs implements AfterContentInit {
     getItemWidth(item?: ElementRef): any;
     // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
+    protected readonly itemsExcludingEdges: Signal<KbqBreadcrumbItem[]>;
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
     protected readonly KbqComponentColors: typeof KbqComponentColors;
     max: number | null;
-    // (undocumented)
-    get maxWidth(): any;
+    protected get maxWidth(): number | null;
     protected readonly minVisibleItems = 2;
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
@@ -82,7 +83,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     // (undocumented)
     protected readonly separator?: TemplateRef<any>;
     size: KbqDefaultSizes;
-    wrapMode: KbqBreadcrumbsConfiguration['wrapMode'];
+    wrapMode: KbqBreadcrumbsWrapMode;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
@@ -94,7 +95,7 @@ export type KbqBreadcrumbsConfiguration = {
     max: number | null;
     size: KbqDefaultSizes;
     firstItemNegativeMargin: boolean;
-    wrapMode: 'auto' | 'wrap' | 'none';
+    wrapMode: KbqBreadcrumbsWrapMode;
 };
 
 // @public
@@ -121,6 +122,9 @@ export class KbqBreadcrumbsSeparator {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbsSeparator, never>;
 }
+
+// @public (undocumented)
+export type KbqBreadcrumbsWrapMode = 'auto' | 'wrap' | 'none';
 
 // @public
 export class KbqBreadcrumbView {

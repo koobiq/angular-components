@@ -24,12 +24,14 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
             justify-content: flex-start;
             resize: horizontal;
             max-width: 100%;
+            min-width: 137px;
             overflow: hidden;
             container-type: inline-size;
             background: var(--kbq-background-bg);
             padding: var(--kbq-size-l);
             border-radius: var(--kbq-size-l);
             box-shadow: var(--kbq-shadow-card);
+            box-sizing: border-box;
         }
     `,
     imports: [
@@ -58,23 +60,18 @@ export class ExampleBreadcrumbs {
         <example-breadcrumbs class="layout-margin-bottom-3xl" />
         <example-breadcrumbs class="layout-margin-bottom-l" [style.width.px]="480" />
         <div class="example-description layout-margin-bottom-3xl">
-            За основу берется автоматическое сокращение,
-            <br />
-            когда средние пункты скрываются при отсутствии свободного пространства.
+            Automatic truncation is used as a basis when middle items are hidden due to lack of free space.
         </div>
 
         <example-breadcrumbs class="layout-margin-bottom-l" [style.width.px]="320" />
         <div class="example-description layout-margin-bottom-3xl">
-            Если пространство становится еще уже, то скрывается и левый крайний уровень у хлебных крошек,
-            <br />
-            оставляя видимым только крайний правый уровень.
+            If space becomes even smaller, the leftmost breadcrumb level is also hidden, leaving only the rightmost
+            level visible.
         </div>
 
         <example-breadcrumbs class="layout-margin-bottom-l" [style.width.px]="137" />
         <div class="example-description layout-margin-bottom-3xl">
-            Далее хлебные крошки возможность уменьшить только размера,
-            <br />
-            когда наименование видимого пункта обрежется до 3 символов.
+            Next, breadcrumbs can only reduce in size when the visible item's name is trimmed to 3 characters.
         </div>
     `,
     styles: `
