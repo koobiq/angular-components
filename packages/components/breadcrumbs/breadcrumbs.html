@@ -51,7 +51,7 @@
                 <ng-container [ngTemplateOutlet]="separatorTemplate" />
             </div>
         }
-        <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="items.length - 1">
+        <div alwaysVisible class="kbq-breadcrumb-item__container" [kbqOverflowItem]="items.length - 1">
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.last, last: true }" />
         </div>
     </div>
