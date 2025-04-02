@@ -23,7 +23,7 @@
 
 <ng-template #content>
     <kbq-form-field (keydown)="onKeydown($event)">
-        <textarea kbqTextarea placeholder="Placeholder" rows="2" [canGrow]="false" [formControl]="control"></textarea>
+        <textarea kbqTextarea rows="1" [formControl]="control" [freeRowsHeight]="0" [maxRows]="5"></textarea>
     </kbq-form-field>
 </ng-template>
 

@@ -30,6 +30,10 @@
         resize: vertical;
         min-height: var(--kbq-textarea-size-min-height);
     }
+
+    &.kbq-textarea_max-row-limit-reached {
+        resize: unset;
+    }
 }
 
 /* remove default red border for HTML5 validation invalid fields in Firefox */
