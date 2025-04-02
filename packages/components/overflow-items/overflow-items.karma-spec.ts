@@ -96,6 +96,33 @@ export class OverflowItemsWithOrderedItem {
     readonly resultWidth = signal(100);
 }
 
+@Component({
+    standalone: true,
+    imports: [KbqOverflowItemsModule],
+    selector: 'overflow-items-test',
+    template: `
+        <div #kbqOverflowItemsReverse="kbqOverflowItems" [style.width.px]="containerWidth()" kbqOverflowItems>
+            @for (item of items.slice(0, -1); track item) {
+                <div [kbqOverflowItem]="item" [style.min-width.px]="itemWidth()">{{ item }}</div>
+            }
+            <div [kbqOverflowItem]="items[items.length - 1]" [style.min-width.px]="itemWidth()" alwaysVisible>
+                {{ items[items.length - 1] }}
+            </div>
+            <div [style.width.px]="resultWidth()" kbqOverflowItemsResult>
+                and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
+            </div>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class OverflowItemsWithDisabledHideItem {
+    readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
+
+    readonly containerWidth = signal(500);
+    readonly itemWidth = signal(50);
+    readonly resultWidth = signal(100);
+}
+
 describe(KbqOverflowItemsModule.name, () => {
     it('should render all items', () => {
         const { debugElement } = createComponent(OverflowItemsTest);
@@ -145,5 +172,18 @@ describe(KbqOverflowItemsModule.name, () => {
 
         expect(visibleItems.length).toEqual(1);
         expect(visibleItems[0].nativeElement.textContent.trim()).toEqual(componentInstance.items[0]);
+    });
+
+    it('should disable hiding overflow-item with disableHide attribute', async () => {
+        const fixture = createComponent(OverflowItemsWithDisabledHideItem);
+        const { debugElement, componentInstance } = fixture;
+        componentInstance.containerWidth.set(150);
+        await fixture.whenStable();
+        const visibleItems = getOverflowVisibleItems(debugElement);
+
+        expect(visibleItems.length).toEqual(1);
+        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual(
+            componentInstance.items[componentInstance.items.length - 1]
+        );
     });
 });
