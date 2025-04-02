@@ -432,7 +432,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
             return this._disabled;
         }
 
-        return (!this.isCollapsed && !this.hasCroppedText) || !this.title;
+        return !this.isCollapsed && !this.hasCroppedText;
     }
 
     set disabled(value) {
