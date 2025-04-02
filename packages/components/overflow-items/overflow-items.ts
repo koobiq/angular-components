@@ -100,7 +100,7 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * Element with this attribute will be ignored when hiding and will always remain visible.
      * @default false
      */
-    readonly disableHide = input(false, { transform: booleanAttribute });
+    readonly alwaysVisible = input(false, { transform: booleanAttribute });
 }
 
 /**
@@ -212,7 +212,7 @@ export class KbqOverflowItems {
         const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
         for (let index = startIndex; index !== endIndex; index += step) {
             const current = items[index];
-            if (current.disableHide()) continue;
+            if (current.alwaysVisible()) continue;
 
             const currentWidth = this.getElementWidthWithMargins(current.elementRef);
             const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;

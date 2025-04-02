@@ -105,7 +105,7 @@ export class OverflowItemsWithOrderedItem {
             @for (item of items.slice(0, -1); track item) {
                 <div [kbqOverflowItem]="item" [style.min-width.px]="itemWidth()">{{ item }}</div>
             }
-            <div [kbqOverflowItem]="items[items.length - 1]" [style.min-width.px]="itemWidth()" disableHide>
+            <div [kbqOverflowItem]="items[items.length - 1]" [style.min-width.px]="itemWidth()" alwaysVisible>
                 {{ items[items.length - 1] }}
             </div>
             <div [style.width.px]="resultWidth()" kbqOverflowItemsResult>
