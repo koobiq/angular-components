@@ -307,6 +307,9 @@ export class KbqTextarea
 
             if (!this.maxRowLimitReached) {
                 textarea.style.minHeight = `${height}px`;
+            } else if (!textarea.style.minHeight && this.lineHeight) {
+                // need for first initialization when value above maxRows
+                textarea.style.minHeight = `${this.maxRows * this.lineHeight}px`;
             }
         });
     };
