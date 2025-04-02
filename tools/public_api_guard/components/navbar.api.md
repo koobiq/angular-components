@@ -226,7 +226,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
     // (undocumented)
     icon: KbqIcon;
     // (undocumented)
-    isCollapsed: boolean;
+    get isCollapsed(): boolean;
     // (undocumented)
     navbarFocusableItem: KbqNavbarFocusableItem;
     // (undocumented)
