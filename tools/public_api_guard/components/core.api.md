@@ -211,13 +211,13 @@ export abstract class DateAdapter<D> extends DateAdapter_2<D> {
 
 // @public (undocumented)
 export class DateFormatter<D> extends DateFormatter_2<D> {
-    constructor(adapter: DateAdapter_2<D>, locale: string);
+    constructor(adapter: DateAdapter_2<D>, locale: string, localeService?: any);
     // (undocumented)
     readonly adapter: DateAdapter_2<D>;
     // (undocumented)
-    readonly localeService: KbqLocaleService | null;
+    protected localeService?: any;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<DateFormatter<any>, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<DateFormatter<any>, [null, null, { optional: true; }]>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<DateFormatter<any>>;
 }
