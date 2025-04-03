@@ -42,6 +42,7 @@ module.exports = [
             'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
             'utils/messages': path.join(__dirname, 'src/utils/messages.ts'),
             'utils/typescript': path.join(__dirname, 'src/utils/typescript.ts'),
+            'utils/ast': path.join(__dirname, 'src/utils/ast.ts'),
             ...getMigrationInputs()
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
