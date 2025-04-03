@@ -1,4 +1,4 @@
-import { ElementRef } from '@angular/core';
+import { Directive, ElementRef, inject, Input } from '@angular/core';
 import { AbstractConstructor, Constructor } from './constructor';
 
 export interface CanColor {
@@ -75,4 +75,32 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
             this.color = defaultColor;
         }
     };
+}
+
+@Directive({ standalone: true })
+export class KbqColorDirective {
+    private readonly elementRef = inject(ElementRef);
+
+    @Input()
+    get color(): KbqComponentColors | ThemePalette | string {
+        return this._color;
+    }
+
+    set color(value: KbqComponentColors | ThemePalette | string) {
+        const color = value || KbqComponentColors.Theme;
+
+        if (color !== this._color) {
+            if (this._color) {
+                this.elementRef.nativeElement.classList.remove(`kbq-${this._color}`);
+            }
+
+            if (color) {
+                this.elementRef.nativeElement.classList.add(`kbq-${color}`);
+            }
+
+            this._color = color;
+        }
+    }
+
+    private _color: KbqComponentColors | ThemePalette | string;
 }

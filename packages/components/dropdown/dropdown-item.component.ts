@@ -1,35 +1,24 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChild,
     ElementRef,
     HostListener,
     Inject,
+    Input,
     OnDestroy,
     Optional,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import {
-    CanDisable,
-    CanDisableCtor,
-    KBQ_TITLE_TEXT_REF,
-    KbqTitleTextRef,
-    mixinDisabled
-} from '@koobiq/components/core';
+import { CanDisable, KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
-
-// Boilerplate for applying mixins to KbqDropdownItem.
-/** @docs-private */
-class KbqDropdownItemBase {}
-
-/** @docs-private */
-const KbqDropdownItemMixinBase: CanDisableCtor & typeof KbqDropdownItemBase = mixinDisabled(KbqDropdownItemBase);
 
 /**
  * This directive is intended to be used inside an kbq-dropdown tag.
@@ -40,7 +29,6 @@ const KbqDropdownItemMixinBase: CanDisableCtor & typeof KbqDropdownItemBase = mi
     exportAs: 'kbqDropdownItem',
     templateUrl: 'dropdown-item.html',
     styleUrls: ['dropdown-item.scss'],
-    inputs: ['disabled'],
     host: {
         class: 'kbq-dropdown-item',
         '[class.kbq-dropdown-item_with-icon]': 'icon',
@@ -55,13 +43,23 @@ const KbqDropdownItemMixinBase: CanDisableCtor & typeof KbqDropdownItemBase = mi
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }]
 })
-export class KbqDropdownItem
-    extends KbqDropdownItemMixinBase
-    implements KbqTitleTextRef, IFocusableOption, CanDisable, AfterViewInit, OnDestroy
-{
+export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, CanDisable, AfterViewInit, OnDestroy {
     @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;
 
     @ContentChild(KbqIcon) icon: KbqIcon;
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
 
     /** Stream that emits when the dropdown item is hovered. */
     readonly hovered = new Subject<KbqDropdownItem>();
@@ -79,9 +77,7 @@ export class KbqDropdownItem
         private elementRef: ElementRef<HTMLElement>,
         private focusMonitor: FocusMonitor,
         @Inject(KBQ_DROPDOWN_PANEL) @Optional() public parentDropdownPanel?: KbqDropdownPanel
-    ) {
-        super();
-    }
+    ) {}
 
     ngAfterViewInit() {
         if (this.focusMonitor) {

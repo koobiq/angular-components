@@ -51,16 +51,12 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     CanDisable,
-    CanDisableCtor,
     HasTabIndex,
-    HasTabIndexCtor,
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqOptgroup,
     KbqOptionActionComponent,
     KbqTitleTextRef,
-    mixinDisabled,
-    mixinTabIndex,
     MultipleMode
 } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
@@ -98,16 +94,6 @@ export class KbqListCopyEvent<T> {
     ) {}
 }
 
-/** @docs-private */
-export class KbqListSelectionBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeof KbqListSelectionBase = mixinTabIndex(
-    mixinDisabled(KbqListSelectionBase)
-);
-
 @Component({
     selector: 'kbq-list-selection',
     exportAs: 'kbqListSelection',
@@ -117,7 +103,6 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
     styleUrls: ['./list.scss', 'list-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    inputs: ['disabled'],
     host: {
         class: 'kbq-list-selection',
 
@@ -133,7 +118,6 @@ export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeo
     preserveWhitespaces: false
 })
 export class KbqListSelection
-    extends KbqListSelectionMixinBase
     implements CanDisable, HasTabIndex, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor
 {
     protected readonly focusMonitor = inject(FocusMonitor);
@@ -188,6 +172,19 @@ export class KbqListSelection
 
     private _tabIndex = 0;
 
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
+
     /**
      * Function used for comparing an option against the selected value when determining which
      * options should appear as selected. The first argument is the value of an options. The second
@@ -224,13 +221,11 @@ export class KbqListSelection
     private optionBlurSubscription: Subscription | null;
 
     constructor(
-        elementRef: ElementRef,
+        private elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         @Attribute('multiple') multiple: MultipleMode,
         @Optional() private clipboard: Clipboard
     ) {
-        super(elementRef);
-
         if (multiple === MultipleMode.CHECKBOX || multiple === MultipleMode.KEYBOARD) {
             this.multipleMode = multiple;
         } else if (multiple !== null) {

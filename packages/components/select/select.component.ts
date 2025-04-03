@@ -61,13 +61,9 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
-    CanDisable,
-    CanDisableCtor,
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
     ErrorStateMatcher,
-    HasTabIndex,
-    HasTabIndexCtor,
     KBQ_LOCALE_SERVICE,
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
@@ -88,9 +84,7 @@ import {
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
     kbqSelectAnimations,
-    mixinDisabled,
-    mixinErrorState,
-    mixinTabIndex
+    mixinErrorState
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -152,15 +146,13 @@ export class KbqSelectBase extends KbqAbstractSelect {
 }
 
 /** @docs-private */
-const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorStateCtor & typeof KbqSelectBase =
-    mixinTabIndex(mixinDisabled(mixinErrorState(KbqSelectBase)));
+const KbqSelectMixinBase: CanUpdateErrorStateCtor & typeof KbqSelectBase = mixinErrorState(KbqSelectBase);
 
 @Component({
     selector: 'kbq-select',
     exportAs: 'kbqSelect',
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
-    inputs: ['disabled', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -198,8 +190,6 @@ export class KbqSelect
         OnInit,
         DoCheck,
         ControlValueAccessor,
-        CanDisable,
-        HasTabIndex,
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
@@ -472,15 +462,29 @@ export class KbqSelect
 
     private _id: string;
 
-    get disabled() {
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
         return this._disabled;
     }
 
-    set disabled(value: any) {
-        this._disabled = coerceBooleanProperty(value);
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
 
-        if (this.parentFormField) {
-            this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+            if (this.parentFormField) {
+                this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+            }
         }
     }
 
