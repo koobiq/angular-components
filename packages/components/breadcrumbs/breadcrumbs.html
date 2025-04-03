@@ -45,7 +45,7 @@
                 </kbq-dropdown>
             </div>
         }
-        @for (item of itemsExcludingEdges(); track item; let index = $index) {
+        @for (item of itemsExcludingEdges; track item; let index = $index) {
             <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="index + 1">
                 <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: item, last: false }" />
                 <ng-container [ngTemplateOutlet]="separatorTemplate" />
