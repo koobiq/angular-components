@@ -1,4 +1,4 @@
-import { inject, Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DateAdapter } from '@koobiq/date-adapter';
 import { DateFormatter as BaseDateFormatter } from '@koobiq/date-formatter';
@@ -7,11 +7,10 @@ import { KBQ_LOCALE_SERVICE } from '../../locales';
 
 @Injectable()
 export class DateFormatter<D> extends BaseDateFormatter<D> {
-    readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
     constructor(
         override readonly adapter: DateAdapter<D>,
-        @Inject(KBQ_DATE_LOCALE) locale: string
+        @Inject(KBQ_DATE_LOCALE) locale: string,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?
     ) {
         super(adapter, locale);
 
