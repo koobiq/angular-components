@@ -5,7 +5,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    computed,
     ContentChild,
     ContentChildren,
     DestroyRef,
@@ -50,7 +49,7 @@ export const KBQ_BREADCRUMBS_CONFIGURATION = new InjectionToken<KbqBreadcrumbsCo
 /** Utility provider for `KBQ_BREADCRUMBS_CONFIGURATION`. */
 export const kbqBreadcrumbsConfigurationProvider = (configuration: Partial<KbqBreadcrumbsConfiguration>): Provider => ({
     provide: KBQ_BREADCRUMBS_CONFIGURATION,
-    useValue: { configuration, ...KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION }
+    useValue: { ...KBQ_BREADCRUMBS_DEFAULT_CONFIGURATION, ...configuration }
 });
 
 @Directive({
@@ -211,7 +210,9 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly overflowItems: QueryList<ElementRef>;
 
     /** @docs-private */
-    protected readonly itemsExcludingEdges = computed(() => this.items.toArray().slice(1, -1));
+    protected get itemsExcludingEdges() {
+        return this.items.toArray().slice(1, -1);
+    }
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
