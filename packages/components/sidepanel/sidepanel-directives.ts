@@ -1,4 +1,14 @@
-import { Component, Directive, ElementRef, Input, OnChanges, OnInit, Optional, SimpleChanges } from '@angular/core';
+import {
+    booleanAttribute,
+    Component,
+    Directive,
+    ElementRef,
+    Input,
+    OnChanges,
+    OnInit,
+    Optional,
+    SimpleChanges
+} from '@angular/core';
 import { KbqSidepanelRef } from './sidepanel-ref';
 import { KbqSidepanelService } from './sidepanel.service';
 
@@ -63,11 +73,16 @@ export class KbqSidepanelClose implements OnInit, OnChanges {
         }
     `,
     host: {
-        class: 'kbq-sidepanel-header'
+        class: 'kbq-sidepanel-header',
+        '[class.kbq-sidepanel-header_truncate-text]': 'truncateText'
     }
 })
 export class KbqSidepanelHeader {
-    @Input() closeable: boolean;
+    /** Add button for close sidepanel. Default false */
+    @Input({ transform: booleanAttribute }) closeable: boolean = false;
+
+    /** Enables text truncation. Default true */
+    @Input({ transform: booleanAttribute }) truncateText: boolean = true;
 }
 
 /**

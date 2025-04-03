@@ -115,7 +115,7 @@
 
 .kbq-sidepanel-header {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
 
     flex-flow: row nowrap;
@@ -127,12 +127,18 @@
     .kbq-sidepanel-close {
         margin-left: var(--kbq-sidepanel-size-close-button-margin-left);
     }
+
+    &.kbq-sidepanel-header_truncate-text {
+        align-items: center;
+
+        .kbq-sidepanel-title {
+            @include common.kbq-truncate-line();
+        }
+    }
 }
 
 .kbq-sidepanel-title {
     flex: 1;
-
-    @include common.kbq-truncate-line();
 }
 
 .kbq-sidepanel-body {
