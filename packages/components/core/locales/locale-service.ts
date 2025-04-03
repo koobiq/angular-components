@@ -114,6 +114,30 @@ export class KbqLocaleService {
     }
 }
 
+// todo code below need refactor or delete in DS-3603
+export function numberByParts(
+    value: string,
+    fractionSeparator: string,
+    groupSeparator: string
+): { integer: string; fraction: string } {
+    const result = { integer: '', fraction: '' };
+
+    const numberByParts = value.split(fractionSeparator);
+
+    if (numberByParts.length > 1) {
+        result.fraction = numberByParts.pop() || '';
+        result.integer = numberByParts
+            .join()
+            .replace(groupSeparator, '')
+            .replace(fractionSeparator, '')
+            .replace(/\D/g, '');
+    } else {
+        result.integer = numberByParts.join().replace(groupSeparator[0], '').replace(/\D/g, '');
+    }
+
+    return result;
+}
+
 /**
  * Function that returns a string representation of a number without localized separators
  */
@@ -133,13 +157,35 @@ export function normalizeNumber(
 /**
  * Function that parse string and return a number. The string can be in any locale.
  */
-export function checkAndNormalizeLocalizedNumber(num: string | null | undefined): number | null {
+export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null {
     if (num === null || num === undefined) return null;
+
+    const locales = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
+
+    if (locale && locales[locale]) {
+        const config = locales[locale].input.number;
+        let normalized: number;
+
+        if (!/\d/g.test(num)) return +num;
+
+        const { groupSeparator, fractionSeparator } = config;
+        const { integer, fraction } = numberByParts(num, fractionSeparator, groupSeparator.join(''));
+
+        const fractionSeparatorRegexp = new RegExp(`\\${fractionSeparator}`, 'g');
+
+        if (fraction) {
+            normalized = +[integer, fraction].join('.');
+        } else {
+            normalized = +integer.replace(fractionSeparatorRegexp, '.');
+        }
+
+        if (!Number.isNaN(normalized)) {
+            return normalized;
+        }
+    }
 
     /* if some locale input config satisfies pasted number, try to normalise with selected locale config */
     let numberOutput: number | null = null;
-
-    const locales = KBQ_DEFAULT_LOCALE_DATA_FACTORY();
 
     for (const config of locales.items.map(({ id }) => locales[id].input.number)) {
         const normalized = +normalizeNumber(num, config);
@@ -152,3 +198,5 @@ export function checkAndNormalizeLocalizedNumber(num: string | null | undefined)
 
     return numberOutput;
 }
+
+// todo code above need refactor or delete in DS-3603

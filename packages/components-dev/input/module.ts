@@ -24,6 +24,7 @@ import {
 } from '../../components/form-field';
 import { KbqIconModule } from '../../components/icon';
 import { KbqInputModule } from '../../components/input/';
+import { InputNumberOverviewExample } from '../../docs-examples/components/input';
 
 @Component({
     selector: 'app',
@@ -80,7 +81,8 @@ export class InputDemoComponent implements AfterViewInit {
         KbqButtonModule,
         KbqInputModule,
         KbqToolTipModule,
-        KbqIconModule
+        KbqIconModule,
+        InputNumberOverviewExample
     ],
     bootstrap: [InputDemoComponent]
 })
