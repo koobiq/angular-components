@@ -1049,6 +1049,20 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('1 234 567,89');
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10,000,7'
+                }
+            });
+            fixture.detectChanges();
+
+            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toBe('10 000,7');
         }));
     });
 
@@ -1079,6 +1093,17 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('1 234 567');
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault: () => null,
+                clipboardData: {
+                    getData: () => '10,000,7'
+                }
+            });
+            fixture.detectChanges();
+            flush();
+
+            expect(inputElement.value).toBe('10 000');
         }));
     });
 });
