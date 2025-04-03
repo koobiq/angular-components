@@ -148,10 +148,14 @@ export class KbqSidepanelFooter {
 
 // @public
 export class KbqSidepanelHeader {
-    // (undocumented)
     closeable: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelHeader, "kbq-sidepanel-header", never, { "closeable": { "alias": "closeable"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ngAcceptInputType_closeable: unknown;
+    // (undocumented)
+    static ngAcceptInputType_truncateText: unknown;
+    truncateText: boolean;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidepanelHeader, "kbq-sidepanel-header", never, { "closeable": { "alias": "closeable"; "required": false; }; "truncateText": { "alias": "truncateText"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidepanelHeader, never>;
 }
