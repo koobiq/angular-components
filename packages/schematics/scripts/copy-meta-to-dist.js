@@ -62,6 +62,7 @@ const init = async () => {
     await copyFileWrapper(resolvePath('../dist/utils/package-config.js'), join(utilsPath, 'package-config.js'));
     await copyFileWrapper(resolvePath('../dist/utils/messages.js'), join(utilsPath, 'messages.js'));
     await copyFileWrapper(resolvePath('../dist/utils/typescript.js'), join(utilsPath, 'typescript.js'));
+    await copyFileWrapper(resolvePath('../dist/utils/ast.js'), join(utilsPath, 'ast.js'));
 };
 
 init().catch((error) => console.error(`Failed to initialize directories and copy files: ${error.message}`));
