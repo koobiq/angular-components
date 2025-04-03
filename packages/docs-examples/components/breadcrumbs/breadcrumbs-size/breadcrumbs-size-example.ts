@@ -30,6 +30,11 @@ import { KbqDlModule } from '@koobiq/components/dl';
             }
         </kbq-dl>
     `,
+    styles: `
+        :host .kbq-dl.kbq-dl_vertical .kbq-dd {
+            overflow: hidden;
+        }
+    `,
     imports: [
         RouterLink,
         KbqBreadcrumbsModule,
