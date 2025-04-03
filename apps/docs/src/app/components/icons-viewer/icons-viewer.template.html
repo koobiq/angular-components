@@ -40,7 +40,7 @@
 
     @if (searchControl.value && !filteredIcons.value) {
         <div class="docs-icons-viewer__table-empty-results">
-            <kbq-empty-state [big]="true">
+            <kbq-empty-state size="big">
                 <div kbq-empty-state-title>{{ isRuLocale() ? 'Ничего не найдено' : 'Nothing found' }}</div>
             </kbq-empty-state>
         </div>

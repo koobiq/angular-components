@@ -15,7 +15,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <kbq-empty-state [big]="true" style="min-height: 216px">
+        <kbq-empty-state size="big" style="min-height: 216px">
             <div kbq-empty-state-title>Нет групп</div>
             <div kbq-empty-state-text>{{ emptyStateText }}</div>
             <div kbq-empty-state-actions>

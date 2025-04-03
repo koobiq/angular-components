@@ -1,5 +1,19 @@
 <div class="dev-container">
     <div class="dev-box">
+        compact center
+        <kbq-empty-state size="compact">
+            <i kbq-empty-state-icon kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast'" [fade]="true"></i>
+            <div kbq-empty-state-title>kbq-empty-state-title</div>
+            <div kbq-empty-state-text>kbq-empty-state-text</div>
+            <div kbq-empty-state-actions>
+                <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">Action 1</button>
+                <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">Action 2</button>
+                <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">Action 3</button>
+            </div>
+        </kbq-empty-state>
+    </div>
+
+    <div class="dev-box">
         default center
         <kbq-empty-state>
             <i kbq-empty-state-icon kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast'" [fade]="true"></i>
@@ -29,7 +43,7 @@
 
     <div class="dev-box">
         big center
-        <kbq-empty-state [big]="true">
+        <kbq-empty-state size="big">
             <i kbq-empty-state-icon kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast'" [fade]="true"></i>
             <div kbq-empty-state-title>kbq-empty-state-title</div>
             <div kbq-empty-state-text>kbq-empty-state-text</div>
@@ -43,7 +57,7 @@
 
     <div class="dev-box">
         big top
-        <kbq-empty-state [alignTop]="true" [big]="true">
+        <kbq-empty-state size="big" [alignTop]="true">
             <i kbq-empty-state-icon kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast'" [fade]="true"></i>
             <div kbq-empty-state-title>kbq-empty-state-title</div>
             <div kbq-empty-state-text>kbq-empty-state-text</div>
@@ -57,7 +71,7 @@
 
     <div class="dev-box">
         big top error
-        <kbq-empty-state [alignTop]="true" [big]="true" [errorColor]="true">
+        <kbq-empty-state size="big" [alignTop]="true" [errorColor]="true">
             <i kbq-empty-state-icon kbq-icon-item="kbq-bell_16" [big]="true" [color]="'contrast'" [fade]="true"></i>
             <div kbq-empty-state-title>kbq-empty-state-title</div>
             <div kbq-empty-state-text>kbq-empty-state-text</div>
@@ -67,5 +81,9 @@
                 <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">Action 3</button>
             </div>
         </kbq-empty-state>
+    </div>
+
+    <div class="dev-box">
+        <empty-state-size-example />
     </div>
 </div>
