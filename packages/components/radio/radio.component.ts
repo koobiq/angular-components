@@ -293,10 +293,9 @@ export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
         '[class.kbq-radio-button_big]': 'radioGroup?.big',
         '[class.kbq-selected]': 'checked',
         '[class.kbq-disabled]': 'disabled'
-    },
-    hostDirectives: [{ directive: KbqColorDirective, inputs: ['color'] }]
+    }
 })
-export class KbqRadioButton implements OnInit, AfterViewInit, OnDestroy {
+export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
     /** Whether this radio button is checked. */
     @Input({ transform: booleanAttribute })
     get checked(): boolean {
@@ -434,11 +433,12 @@ export class KbqRadioButton implements OnInit, AfterViewInit, OnDestroy {
 
     constructor(
         @Optional() radioGroup: KbqRadioGroup,
-        private elementRef: ElementRef,
         private readonly changeDetector: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
         private readonly radioDispatcher: UniqueSelectionDispatcher
     ) {
+        super();
+
         this.id = this.uniqueId;
 
         this.radioGroup = radioGroup;

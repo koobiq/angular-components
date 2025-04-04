@@ -12,8 +12,9 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/a11y';
+import * as i3 from '@koobiq/components/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -23,8 +24,8 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class KbqRadioButton implements OnInit, AfterViewInit, OnDestroy {
-    constructor(radioGroup: KbqRadioGroup, elementRef: ElementRef, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, radioDispatcher: UniqueSelectionDispatcher);
+export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
+    constructor(radioGroup: KbqRadioGroup, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, radioDispatcher: UniqueSelectionDispatcher);
     readonly change: EventEmitter<KbqRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);
@@ -67,9 +68,9 @@ export class KbqRadioButton implements OnInit, AfterViewInit, OnDestroy {
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], false, [{ directive: typeof i1.KbqColorDirective; inputs: { "color": "color"; }; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, [{ optional: true; }, null, null, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, [{ optional: true; }, null, null, null]>;
 }
 
 // @public
@@ -129,10 +130,10 @@ export class KbqRadioModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqRadioModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, [typeof i1_2.KbqRadioGroup, typeof i1_2.KbqRadioButton], [typeof i2.A11yModule, typeof i1.KbqCommonModule], [typeof i1_2.KbqRadioGroup, typeof i1_2.KbqRadioButton]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqRadioModule, [typeof i1.KbqRadioGroup, typeof i1.KbqRadioButton], [typeof i2.A11yModule, typeof i3.KbqCommonModule], [typeof i1.KbqRadioGroup, typeof i1.KbqRadioButton]>;
 }
 
 // (No @packageDocumentation comment for this package)

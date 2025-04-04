@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation } from '@angular/core';
-import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 
 export type ProgressBarMode = 'determinate' | 'indeterminate';
 
@@ -35,15 +35,20 @@ export class KbqProgressBarCaption {}
         class: 'kbq-progress-bar',
         '[class.kbq-progress-bar_determinate]': 'mode === "determinate"',
         '[class.kbq-progress-bar_indeterminate]': 'mode === "indeterminate"'
-    },
-    hostDirectives: [{ directive: KbqColorDirective, inputs: ['color'] }]
+    }
 })
-export class KbqProgressBar {
+export class KbqProgressBar extends KbqColorDirective {
     @Input() id: string = `kbq-progress-bar-${idIterator++}`;
     @Input() value: number = 0;
     @Input() mode: ProgressBarMode = 'determinate';
 
     get percentage(): number {
         return Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value));
+    }
+
+    constructor() {
+        super();
+
+        this.color = KbqComponentColors.Theme;
     }
 }

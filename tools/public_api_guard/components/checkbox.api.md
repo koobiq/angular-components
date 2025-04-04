@@ -13,7 +13,6 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
-import * as i4 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
@@ -103,7 +102,7 @@ export class KbqCheckboxModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator], [typeof i3.CommonModule, typeof i4.KbqColorDirective], [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator], [typeof i3.CommonModule], [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator]>;
 }
 
 // @public
