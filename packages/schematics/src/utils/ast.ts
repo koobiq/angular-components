@@ -33,7 +33,7 @@ export interface Element {
     attrs: Attribute[];
     children: Element[];
     /**
-     * actual code:
+     * actual code from angular/compiler:
      * override visit(visitor: Visitor, context: any): any {
      *   return visitor.visitElement(this, context);
      * }

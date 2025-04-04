@@ -1,7 +1,8 @@
-import { SchematicsException, Tree } from '@angular-devkit/schematics';
+import { SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
 import fs from 'fs';
 import { loadEsmModule } from 'ng-packagr/lib/utils/load-esm';
-import { resolve } from 'path';
+import * as process from 'node:process';
+import path, { resolve } from 'path';
 import ts from 'typescript';
 import {
     Attribute,
@@ -15,7 +16,7 @@ import {
 } from '../../utils/ast';
 import * as messages from '../../utils/messages';
 import { setupOptions } from '../../utils/package-config';
-import { forEachClass } from '../../utils/typescript';
+import { canMigrateFile, getClassWithUpdatedDecorator, updateDecoratorProperty } from '../../utils/typescript';
 import { Schema } from './schema';
 
 export const cases = { elementName: 'kbq-empty-state', attrs: { from: 'big', to: 'size' } };
@@ -23,7 +24,7 @@ export const cases = { elementName: 'kbq-empty-state', attrs: { from: 'big', to:
 export const LEADING_TRIVIA_CHARS = [' ', '\n', '\r', '\t'];
 
 export default function migrate(options: Schema) {
-    return async (tree: Tree) => {
+    return async (tree: Tree, context: SchematicContext) => {
         const { project } = options;
         const { tsPaths, templatePaths, projectDefinition } = await getParsingInfo(project, tree);
 
@@ -43,17 +44,30 @@ export default function migrate(options: Schema) {
 
         // Update inline template & external html
         for (const templatePath of templatePaths) {
-            await migrateTemplate(templatePath);
+            const { fileContent, changed } = await migrateTemplate(templatePath);
+            if (changed) {
+                tree.overwrite(templatePath, fileContent);
+            }
         }
 
-        const sourceFiles = program.getSourceFiles().filter((sourceFile) => canMigrateFile(sourceFile, program));
-        for (const sourceFile of sourceFiles) {
-            await migrateTs(sourceFile);
+        for (const sourceFile of program.getSourceFiles()) {
+            const canMigrate = canMigrateFile(sourceFile, program);
+            if (canMigrate) {
+                const { fileContent, changed } = await migrateTs(sourceFile);
+                if (changed) {
+                    const fileRelativePath = path.relative(process.cwd(), sourceFile.fileName);
+                    if (tree.exists(fileRelativePath)) {
+                        tree.overwrite(fileRelativePath, fileContent);
+                    }
+                }
+            }
         }
+
+        context.logger.warn('Warning! Run linter in updated files since line breaks or indents maybe be broken.');
     };
 }
 
-const getParsingInfo = async (project: string | undefined, tree: Tree) => {
+export async function getParsingInfo(project: string | undefined, tree: Tree) {
     const tsPaths = new Set<string>();
     const templatePaths = new Set<string>();
     const projectDefinition = await setupOptions(project, tree);
@@ -72,40 +86,73 @@ const getParsingInfo = async (project: string | undefined, tree: Tree) => {
     });
 
     return { tsPaths, templatePaths, projectDefinition };
-};
-
-export function canMigrateFile(sourceFile: ts.SourceFile, program: ts.Program): boolean {
-    // We shouldn't migrate .d.ts files, files from an external library or type checking files.
-    return !(
-        sourceFile.fileName.endsWith('.ngtypecheck.ts') ||
-        sourceFile.isDeclarationFile ||
-        program.isSourceFileFromExternalLibrary(sourceFile)
-    );
 }
 
-const migrateTemplate = async (filePath: string) => {
+async function migrateTemplate(filePath: string) {
     const parsedFilePath = `.${filePath}`;
     const template = fs.readFileSync(parsedFilePath, 'utf8');
-    const parsed = await parseTemplate(template);
+    return transformTemplateAttributes(template, parsedFilePath);
+}
 
-    if (parsed.tree !== undefined) {
-        const visitor = new ElementCollector(cases, filePath);
-        visitAll(visitor, parsed.tree.rootNodes);
-        for (const el of visitor.elementsToMigrate) {
-            console.log(template[el.attrs[0].valueSpan.start.offset]);
-        }
-    }
-};
-
-const migrateTs = async (sourceFile: ts.SourceFile) => {
-    forEachClass(sourceFile, async (node) => {
+async function migrateTs(sourceFile: ts.SourceFile) {
+    const changedClasses: ts.ClassDeclaration[] = [];
+    // run and track changed components
+    const walk = async (node: ts.Node): Promise<void> => {
         if (ts.isClassDeclaration(node)) {
-            await analyzeDecorators(node, sourceFile.fileName);
+            const { fileContent, changed } = await analyzeDecorators(node, sourceFile);
+            if (changed) {
+                changedClasses.push(fileContent);
+            }
         }
-    });
-};
+        const promises = node.getChildren(sourceFile).map((child) => walk(child));
+        await Promise.all(promises);
+    };
+    await walk(sourceFile);
 
-async function analyzeDecorators(node: ts.ClassDeclaration, fileName: string) {
+    // update source file
+    if (changedClasses.length > 0) {
+        const transformer: ts.TransformerFactory<ts.SourceFile> = (context) => {
+            const visit: ts.Visitor = (node: ts.Node) => {
+                if (ts.isClassDeclaration(node)) {
+                    const updated = changedClasses.find((updatedNode) => updatedNode.name?.text === node.name?.text);
+                    if (updated) return updated;
+                }
+                if (ts.isStringLiteralLike(node)) {
+                    return ts.factory.createStringLiteral(node.text, true);
+                }
+                return ts.visitEachChild(node, visit, context);
+            };
+            return (node: ts.SourceFile) => ts.visitNode(node, visit)! as ts.SourceFile;
+        };
+
+        const res = ts.transform(sourceFile, [transformer]);
+        const transformed = res.transformed[0];
+
+        // Use the printer to generate the updated code
+        const printer = ts.createPrinter({
+            // force CRLF since it w
+            newLine: ts.NewLineKind.CarriageReturnLineFeed,
+            removeComments: false
+        });
+        const updatedCode = printer.printFile(transformed);
+        return {
+            fileContent: updatedCode,
+            changed: changedClasses.length > 0
+        };
+    }
+
+    return { fileContent: sourceFile.text, changed: changedClasses.length > 0 };
+}
+
+/**
+ * Analyzes the decorators of a given class declaration to find and update
+ * inline `template` definitions within `@Component` decorators.
+ */
+async function analyzeDecorators(
+    node: ts.ClassDeclaration,
+    sourceFile: ts.SourceFile
+): Promise<{ fileContent: ts.ClassDeclaration; changed: boolean }> {
+    let changed = false;
     const decorator = ts.getDecorators(node)?.find((dec) => {
         return (
             ts.isCallExpression(dec.expression) &&
@@ -121,8 +168,9 @@ async function analyzeDecorators(node: ts.ClassDeclaration, fileName: string) {
             ? decorator.expression.arguments[0]
             : null;
 
+    // Exit early if there's no metadata or it's not an object literal
     if (!metadata) {
-        return;
+        return { fileContent: node, changed };
     }
 
     for (const prop of metadata.properties) {
@@ -133,13 +181,69 @@ async function analyzeDecorators(node: ts.ClassDeclaration, fileName: string) {
         }
         // check decorator 'template' property, check for text content parse and replace
         if (prop.name.text === 'template' && ts.isStringLiteralLike(prop.initializer) && prop.initializer.text) {
-            const parsed = await parseTemplate(prop.initializer.text);
-            if (parsed.tree !== undefined) {
-                const visitor = new ElementCollector(cases, fileName);
-                visitAll(visitor, parsed.tree.rootNodes);
+            const { fileContent: updatedTemplate, changed: propertyChanged } = await transformTemplateAttributes(
+                prop.initializer.text,
+                sourceFile.fileName
+            );
+            changed = changed || !!propertyChanged;
+            if (propertyChanged) {
+                const updatedDecorator = updateDecoratorProperty(decorator!, 'template', updatedTemplate);
+
+                const updatedClass = getClassWithUpdatedDecorator(node, decorator!, updatedDecorator);
+                return { fileContent: updatedClass, changed };
             }
         }
     }
+    return { fileContent: node, changed };
+}
+
+/**
+ * Migrates attribute values in an Angular template based on predefined cases.
+ */
+async function transformTemplateAttributes(template: string, fileName: string) {
+    const parsed = await parseTemplate(template);
+    let updatedTemplate = template;
+    // extra text offset as result of text replacement;
+    let offset = 0;
+
+    if (parsed.tree !== undefined) {
+        const visitor = new ElementCollector(cases, fileName);
+        visitAll(visitor, parsed.tree.rootNodes);
+
+        for (const el of visitor.elementsToMigrate) {
+            const migrationAttr = el.attrs.find((attr) => getSimpleAttributeName(attr.name) === cases.attrs.from);
+            let updatedAttrValue: string | undefined;
+            if (migrationAttr) {
+                const cleanAttrValue = getSimpleAttributeValue(migrationAttr.value);
+
+                switch (cleanAttrValue) {
+                    case 'true':
+                        updatedAttrValue = 'big';
+                        break;
+                    case 'false':
+                        updatedAttrValue = 'compact';
+                        break;
+                    default:
+                        console.warn(
+                            `Element is using dynamic value. Check the code and change value on your own.${
+                                (fileName && ' File: ' + fileName) || ''
+                            }`
+                        );
+                        updatedAttrValue = 'normal';
+                }
+
+                updatedTemplate =
+                    updatedTemplate.slice(0, migrationAttr.keySpan.start.offset - offset) +
+                    `${cases.attrs.to}="${updatedAttrValue}"` +
+                    updatedTemplate.slice(migrationAttr.valueSpan.end.offset + 1 - offset, updatedTemplate.length);
+
+                offset += migrationAttr.name.length - cases.attrs.to.length;
+                offset += migrationAttr.value.length - updatedAttrValue.length;
+            }
+        }
+        return { fileContent: updatedTemplate, changed: visitor.elementsToMigrate.length > 0 };
+    }
+    return { fileContent: updatedTemplate, changed: undefined };
 }
 
 /**
@@ -176,6 +280,10 @@ export async function parseTemplate(template: string) {
     return { tree: parsed, errors: [] };
 }
 
+/**
+ * Class that collects specific elements for migration
+ * based on matching tag names and attribute values.
+ */
 export class ElementCollector implements Visitor {
     readonly elementsToMigrate: Element[] = [];
 
@@ -189,23 +297,6 @@ export class ElementCollector implements Visitor {
             for (const attr of el.attrs) {
                 const cleanAttrName = getSimpleAttributeName(attr.name);
                 if (cleanAttrName === this.migrationData.attrs.from) {
-                    const cleanAttrValue = getSimpleAttributeValue(attr.value);
-                    switch (cleanAttrValue) {
-                        case 'true':
-                            attr.value = 'big';
-                            break;
-                        case 'false':
-                            attr.value = 'compact';
-                            break;
-                        default:
-                            console.warn(
-                                `Element is using dynamic value. Check the code and change value on your own.${
-                                    (this.filePath && ' File: ' + this.filePath) || ''
-                                }`
-                            );
-                            attr.value = 'normal';
-                    }
-                    attr.name = this.migrationData.attrs.to;
                     this.elementsToMigrate.push(el);
                 }
             }
@@ -213,6 +304,9 @@ export class ElementCollector implements Visitor {
         this.visitChildren(el);
     }
 
+    /**
+     * Recursively visits all child nodes of a given element or block.
+     */
     visitChildren(el: Element | Block) {
         if (el.children?.length) {
             for (const child of el.children) {
@@ -222,7 +316,7 @@ export class ElementCollector implements Visitor {
     }
 
     /**
-     * Handle @if, @for
+     * Handle @if, @for blocks
      */
     visitBlock(block: Block, _1: any) {
         this.visitChildren(block);
