@@ -36,7 +36,7 @@ import {
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import {
     DOWN_ARROW,
     END,
@@ -55,7 +55,6 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     CanUpdateErrorState,
-    CanUpdateErrorStateCtor,
     ErrorStateMatcher,
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
@@ -69,8 +68,7 @@ import {
     defaultOffsetY,
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
-    kbqSelectAnimations,
-    mixinErrorState
+    kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -120,29 +118,6 @@ export class KbqTreeSelectChange {
     ) {}
 }
 
-/** @docs-private */
-class KbqTreeSelectBase extends KbqAbstractSelect {
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
-
-    constructor(
-        public elementRef: ElementRef,
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        public parentForm: NgForm,
-        public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
-    ) {
-        super();
-    }
-}
-
-/** @docs-private */
-const KbqTreeSelectMixinBase: CanUpdateErrorStateCtor & typeof KbqTreeSelectBase = mixinErrorState(KbqTreeSelectBase);
-
 @Component({
     selector: 'kbq-tree-select',
     exportAs: 'kbqTreeSelect',
@@ -175,7 +150,7 @@ const KbqTreeSelectMixinBase: CanUpdateErrorStateCtor & typeof KbqTreeSelectBase
     ]
 })
 export class KbqTreeSelect
-    extends KbqTreeSelectMixinBase
+    extends KbqAbstractSelect
     implements
         AfterContentInit,
         AfterViewInit,
@@ -189,6 +164,15 @@ export class KbqTreeSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     private readonly defaultOptions = inject(KBQ_TREE_SELECT_OPTIONS, { optional: true });
+
+    /** Whether the component is in an error state. */
+    errorState: boolean = false;
+    /**
+     * Emits whenever the component state changes and should cause the parent
+     * form-field to update. Implemented as part of `KbqFormFieldControl`.
+     * @docs-private
+     */
+    readonly stateChanges = new Subject<void>();
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -510,20 +494,20 @@ export class KbqTreeSelect
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
-        elementRef: ElementRef,
+        public elementRef: ElementRef,
         readonly changeDetectorRef: ChangeDetectorRef,
         private readonly ngZone: NgZone,
         private readonly renderer: Renderer2,
-        defaultErrorStateMatcher: ErrorStateMatcher,
+        public defaultErrorStateMatcher: ErrorStateMatcher,
         @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
         @Optional() private readonly dir: Directionality,
-        @Optional() parentForm: NgForm,
-        @Optional() parentFormGroup: FormGroupDirective,
+        @Optional() public parentForm: NgForm,
+        @Optional() public parentFormGroup: FormGroupDirective,
         @Host() @Optional() private readonly parentFormField: KbqFormField,
-        @Optional() @Self() ngControl: NgControl,
+        @Optional() @Self() public ngControl: NgControl,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
     ) {
-        super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
+        super();
 
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
 
@@ -650,6 +634,19 @@ export class KbqTreeSelect
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
+    }
+
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
     }
 
     @Input()
