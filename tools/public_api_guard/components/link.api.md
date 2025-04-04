@@ -5,13 +5,9 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@koobiq/components/core';
-import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -21,7 +17,7 @@ import { OnDestroy } from '@angular/core';
 export const baseURLRegex: RegExp;
 
 // @public (undocumented)
-export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestroy, HasTabIndex, CanDisable {
+export class KbqLink implements AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, changeDetector: ChangeDetectorRef);
     // (undocumented)
     big: boolean;
@@ -48,6 +44,8 @@ export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestro
     // (undocumented)
     static ngAcceptInputType_pseudo: unknown;
     // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
     static ngAcceptInputType_useVisited: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -64,19 +62,15 @@ export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestro
     // (undocumented)
     pseudo: boolean;
     // (undocumented)
+    get tabIndex(): number;
+    set tabIndex(value: number);
+    // (undocumented)
     useVisited: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLink, never>;
 }
-
-// @public
-export class KbqLinkBase {
-}
-
-// @public
-export const KbqLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqLinkBase;
 
 // @public (undocumented)
 export class KbqLinkModule {

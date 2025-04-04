@@ -4,16 +4,12 @@
 
 ```ts
 
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/common';
 
 // @public (undocumented)
-export class KbqProgressSpinner extends KbqProgressSpinnerMixinBase implements CanColor {
-    constructor(elementRef: ElementRef);
+export class KbqProgressSpinner {
     // (undocumented)
     get dashOffsetPercent(): string;
     // (undocumented)
@@ -30,16 +26,9 @@ export class KbqProgressSpinner extends KbqProgressSpinnerMixinBase implements C
     // (undocumented)
     value: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "color": { "alias": "color"; "required": false; }; "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressSpinner, "kbq-progress-spinner", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; "size": { "alias": "size"; "required": false; }; }, {}, never, ["[kbq-progress-spinner-text]", "[kbq-progress-spinner-caption]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinner, never>;
-}
-
-// @public
-export class KbqProgressSpinnerBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
 }
 
 // @public (undocumented)
@@ -49,9 +38,6 @@ export class KbqProgressSpinnerCaption {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressSpinnerCaption, never>;
 }
-
-// @public
-export const KbqProgressSpinnerMixinBase: CanColorCtor & typeof KbqProgressSpinnerBase;
 
 // @public (undocumented)
 export class KbqProgressSpinnerModule {

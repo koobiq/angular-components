@@ -9,8 +9,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { CdkPortal } from '@angular/cdk/portal';
 import { CdkPortalOutlet } from '@angular/cdk/portal';
 import { ChangeDetectorRef } from '@angular/core';
@@ -73,9 +71,12 @@ export class KbqStretchTabsCssStyler {
 }
 
 // @public (undocumented)
-export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
+export class KbqTab implements OnInit, OnChanges, OnDestroy {
     constructor(viewContainerRef: ViewContainerRef);
     get content(): TemplatePortal | null;
+    // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     empty: boolean;
     explicitContent: TemplateRef<any>;
@@ -83,6 +84,8 @@ export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnCha
     isActive: boolean;
     // (undocumented)
     get isOverflown(): boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_empty: unknown;
     // (undocumented)
@@ -110,13 +113,9 @@ export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnCha
     get tooltipTitle(): string;
     set tooltipTitle(value: string);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "disabled": { "alias": "disabled"; "required": false; }; "tooltipTitle": { "alias": "tooltipTitle"; "required": false; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "empty": { "alias": "empty"; "required": false; }; "tabId": { "alias": "tabId"; "required": false; }; }, {}, ["templateLabel", "explicitContent"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTab, "kbq-tab", ["kbqTab"], { "tooltipTitle": { "alias": "tooltipTitle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; }; "textLabel": { "alias": "label"; "required": false; }; "empty": { "alias": "empty"; "required": false; }; "tabId": { "alias": "tabId"; "required": false; }; }, {}, ["templateLabel", "explicitContent"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTab, never>;
-}
-
-// @public
-export class KbqTabBase {
 }
 
 // @public
@@ -181,17 +180,18 @@ export class KbqTabContent {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabContent, never>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqTabGroupMixinBase" needs to be exported by the entry point index.d.ts
-//
 // @public
-export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, defaultConfig?: KbqTabsConfig);
+export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
+    constructor(changeDetectorRef: ChangeDetectorRef, defaultConfig?: KbqTabsConfig);
     // (undocumented)
     get activeTab(): KbqTab | null;
     set activeTab(value: KbqTabSelectBy | null);
     readonly activeTabChange: EventEmitter<string | number | KbqTab>;
     readonly animationDone: EventEmitter<void>;
     animationDuration: string;
+    // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
     dynamicHeight: boolean;
     readonly focusChange: EventEmitter<KbqTabChangeEvent>;
     // (undocumented)
@@ -202,9 +202,13 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     handleClick(tab: KbqTab, tabHeader: KbqTabHeader, index: number): void;
     headerPosition: KbqTabHeaderPosition;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
     static ngAcceptInputType_dynamicHeight: unknown;
     // (undocumented)
     static ngAcceptInputType_onSurface: unknown;
+    // (undocumented)
+    static ngAcceptInputType_selectedIndex: unknown;
     // (undocumented)
     static ngAcceptInputType_transparent: unknown;
     // (undocumented)
@@ -225,8 +229,8 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     removeTabBodyWrapperHeight(): void;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
-    get selectedIndex(): number | null;
-    set selectedIndex(value: number | null);
+    get selectedIndex(): number;
+    set selectedIndex(value: number);
     readonly selectedIndexChange: EventEmitter<number>;
     readonly selectedTabChange: EventEmitter<KbqTabChangeEvent>;
     setTabBodyWrapperHeight(tabHeight: number): void;
@@ -243,9 +247,9 @@ export class KbqTabGroup extends KbqTabGroupMixinBase implements AfterContentIni
     // (undocumented)
     vertical: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "disabled": { "alias": "disabled"; "required": false; }; "transparent": { "alias": "transparent"; "required": false; }; "onSurface": { "alias": "onSurface"; "required": false; }; "underlined": { "alias": "underlined"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabGroup, "kbq-tab-group", ["kbqTabGroup"], { "transparent": { "alias": "transparent"; "required": false; }; "onSurface": { "alias": "onSurface"; "required": false; }; "underlined": { "alias": "underlined"; "required": false; }; "vertical": { "alias": "vertical"; "required": false; }; "dynamicHeight": { "alias": "dynamicHeight"; "required": false; }; "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "activeTab": { "alias": "activeTab"; "required": false; }; "headerPosition": { "alias": "headerPosition"; "required": false; }; "animationDuration": { "alias": "animationDuration"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectedIndexChange": "selectedIndexChange"; "activeTabChange": "activeTabChange"; "focusChange": "focusChange"; "animationDone": "animationDone"; "selectedTabChange": "selectedTabChange"; }, ["tabs"], never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabGroup, [null, { optional: true; }]>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "KbqPaginatedTabHeader" needs to be exported by the entry point index.d.ts
@@ -272,7 +276,7 @@ export class KbqTabHeader extends KbqPaginatedTabHeader {
     readonly tabListContainer: ElementRef;
     underlined: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "selectedIndex": { "alias": "selectedIndex"; "required": false; }; "underlined": { "alias": "underlined"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["items"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTabHeader, "kbq-tab-header", never, { "underlined": { "alias": "underlined"; "required": false; }; }, { "selectFocusedIndex": "selectFocusedIndex"; "indexFocused": "indexFocused"; }, ["items"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabHeader, never>;
 }
@@ -289,10 +293,13 @@ export class KbqTabLabel extends CdkPortal {
 }
 
 // @public
-export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements CanDisable, AfterViewInit {
+export class KbqTabLabelWrapper implements AfterViewInit {
     constructor(elementRef: ElementRef, renderer: Renderer2);
     // (undocumented)
     checkOverflow(): void;
+    // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     elementRef: ElementRef;
     focus(): void;
@@ -307,21 +314,16 @@ export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements C
     // (undocumented)
     labelContent: ElementRef;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     tab: KbqTab;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabelWrapper, "[kbqTabLabelWrapper]", never, { "disabled": { "alias": "disabled"; "required": false; }; "tab": { "alias": "tab"; "required": false; }; }, {}, ["labelContent"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTabLabelWrapper, "[kbqTabLabelWrapper]", never, { "tab": { "alias": "tab"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["labelContent"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLabelWrapper, never>;
 }
-
-// @public
-export class KbqTabLabelWrapperBase {
-}
-
-// @public
-export const KbqTabLabelWrapperMixinBase: CanDisableCtor & typeof KbqTabLabelWrapperBase;
 
 // @public
 export class KbqTabLink implements OnDestroy, AfterViewInit {
@@ -360,9 +362,6 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTabLink, never>;
 }
-
-// @public
-export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase;
 
 // @public
 export class KbqTabNavBar extends KbqPaginatedTabHeader implements AfterContentInit {

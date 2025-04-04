@@ -5,28 +5,16 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@koobiq/components/core';
-import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@koobiq/components/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
-
-// @public
-export class KbqToggleBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
-}
 
 // @public (undocumented)
 export class KbqToggleChange {
@@ -37,8 +25,8 @@ export class KbqToggleChange {
 }
 
 // @public (undocumented)
-export class KbqToggleComponent extends KbqToggleMixinBase implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy {
-    constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, changeDetectorRef: ChangeDetectorRef);
+export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
+    constructor(focusMonitor: FocusMonitor, changeDetectorRef: ChangeDetectorRef);
     // (undocumented)
     ariaLabel: string;
     // (undocumented)
@@ -53,8 +41,6 @@ export class KbqToggleComponent extends KbqToggleMixinBase implements AfterViewI
     // (undocumented)
     get disabled(): any;
     set disabled(value: any);
-    // (undocumented)
-    elementRef: ElementRef;
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -72,6 +58,8 @@ export class KbqToggleComponent extends KbqToggleMixinBase implements AfterViewI
     // (undocumented)
     name: string | null;
     // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -88,17 +76,17 @@ export class KbqToggleComponent extends KbqToggleMixinBase implements AfterViewI
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
+    get tabIndex(): number;
+    set tabIndex(value: number);
+    // (undocumented)
     value: string;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
 }
-
-// @public
-export const KbqToggleMixinBase: HasTabIndexCtor & CanDisableCtor & CanColorCtor & typeof KbqToggleBase;
 
 // @public (undocumented)
 export class KbqToggleModule {

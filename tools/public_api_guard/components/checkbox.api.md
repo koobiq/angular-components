@@ -5,21 +5,17 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@koobiq/components/core';
-import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
+import * as i4 from '@koobiq/components/core';
 import { InjectionToken } from '@angular/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
 
@@ -33,15 +29,15 @@ export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any;
 export const KBQ_CHECKBOX_REQUIRED_VALIDATOR: Provider;
 
 // @public
-export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAccessor, AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor, clickAction: KbqCheckboxClickAction);
+export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
+    constructor(changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor, clickAction: KbqCheckboxClickAction);
     // (undocumented)
     big: boolean;
     readonly change: EventEmitter<KbqCheckboxChange>;
     get checked(): boolean;
     set checked(value: boolean);
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    set disabled(value: boolean);
     focus(): void;
     // (undocumented)
     getAriaChecked(): 'true' | 'false' | 'mixed';
@@ -54,7 +50,11 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
     labelPosition: 'before' | 'after';
     name: string | null;
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
     static ngAcceptInputType_required: unknown;
+    // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -71,21 +71,17 @@ export class KbqCheckbox extends KbqCheckboxMixinBase implements ControlValueAcc
     required: boolean | undefined;
     // (undocumented)
     setDisabledState(isDisabled: boolean): void;
+    // (undocumented)
+    get tabIndex(): number;
+    set tabIndex(value: number);
     toggle(): void;
     value: string;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "big": { "alias": "big"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCheckbox, "kbq-checkbox", ["kbqCheckbox"], { "big": { "alias": "big"; "required": false; }; "id": { "alias": "id"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "required": { "alias": "required"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckbox, [null, null, null, { optional: true; }]>;
-}
-
-// @public
-export class KbqCheckboxBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqCheckbox, [null, null, { optional: true; }]>;
 }
 
 // @public
@@ -97,9 +93,6 @@ export class KbqCheckboxChange {
 // @public
 export type KbqCheckboxClickAction = 'noop' | 'check' | 'check-indeterminate' | undefined;
 
-// @public
-export const KbqCheckboxMixinBase: HasTabIndexCtor & CanColorCtor & CanDisableCtor & typeof KbqCheckboxBase;
-
 // @public (undocumented)
 export class KbqCheckboxModule {
     // (undocumented)
@@ -110,7 +103,7 @@ export class KbqCheckboxModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator], [typeof i3.CommonModule], [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqCheckboxModule, [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator], [typeof i3.CommonModule, typeof i4.KbqColorDirective], [typeof i1.KbqCheckbox, typeof i2.KbqCheckboxRequiredValidator]>;
 }
 
 // @public

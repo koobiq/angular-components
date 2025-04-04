@@ -15,7 +15,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { CanDisable, KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
@@ -43,7 +43,7 @@ import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqDropdownItem }]
 })
-export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, CanDisable, AfterViewInit, OnDestroy {
+export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
     @ViewChild('kbqTitleText', { static: true }) textElement: ElementRef;
 
     @ContentChild(KbqIcon) icon: KbqIcon;

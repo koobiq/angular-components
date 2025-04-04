@@ -50,8 +50,6 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
-    CanDisable,
-    HasTabIndex,
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
     KbqOptgroup,
@@ -117,9 +115,7 @@ export class KbqListCopyEvent<T> {
     providers: [KBQ_SELECTION_LIST_VALUE_ACCESSOR],
     preserveWhitespaces: false
 })
-export class KbqListSelection
-    implements CanDisable, HasTabIndex, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor
-{
+export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     protected readonly focusMonitor = inject(FocusMonitor);
 
     keyManager: FocusKeyManager<KbqListOption>;

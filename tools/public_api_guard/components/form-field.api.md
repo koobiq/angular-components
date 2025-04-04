@@ -8,8 +8,6 @@ import { AbstractControl } from '@angular/forms';
 import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -19,6 +17,7 @@ import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i10 from '@koobiq/components/icon';
 import * as i11 from '@angular/common';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldRef } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -50,8 +49,8 @@ export class KbqCleaner {
 }
 
 // @public (undocumented)
-export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentInit, AfterContentChecked, AfterViewInit, CanColor, OnDestroy {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
+export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy {
+    constructor(changeDetectorRef: ChangeDetectorRef, focusMonitor: FocusMonitor);
     // (undocumented)
     canCleanerClearByEsc: boolean;
     // (undocumented)
@@ -68,8 +67,6 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     control: KbqFormFieldControl<any>;
     // (undocumented)
     get disabled(): boolean;
-    // (undocumented)
-    elementRef: ElementRef;
     focus(options?: FocusOptions): void;
     // (undocumented)
     get focusOrigin(): FocusOrigin;
@@ -127,16 +124,9 @@ export class KbqFormField extends KbqFormFieldMixinBase implements AfterContentI
     suffix: QueryList<KbqSuffix>;
     protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "color": { "alias": "color"; "required": false; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "hint", "passwordHints", "suffix", "prefix"], ["[kbqPrefix]", "*", "[kbqSuffix]", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "kbq-hint, kbq-password-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], {}, {}, ["control", "stepper", "cleaner", "passwordToggle", "hint", "passwordHints", "suffix", "prefix"], ["[kbqPrefix]", "*", "[kbqSuffix]", "kbq-cleaner", "kbq-password-toggle", "kbq-stepper", "kbq-hint, kbq-password-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
-}
-
-// @public
-export class KbqFormFieldBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
 }
 
 // @public
@@ -155,9 +145,6 @@ export abstract class KbqFormFieldControl<T> {
     readonly stateChanges: Observable<void>;
     value: T | null;
 }
-
-// @public
-export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase;
 
 // @public (undocumented)
 export class KbqFormFieldModule {
@@ -188,8 +175,7 @@ export class KbqFormFieldWithoutBorders {
 }
 
 // @public (undocumented)
-export class KbqHint extends KbqHintMixinBase {
-    constructor(elementRef: ElementRef);
+export class KbqHint extends KbqColorDirective {
     // (undocumented)
     compact: boolean;
     // (undocumented)
@@ -201,24 +187,14 @@ export class KbqHint extends KbqHintMixinBase {
     // (undocumented)
     static ngAcceptInputType_fillTextOff: unknown;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqHint, "kbq-hint", ["kbqHint"], { "color": { "alias": "color"; "required": false; }; "id": { "alias": "id"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqHint, "kbq-hint", ["kbqHint"], { "id": { "alias": "id"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqHint, never>;
 }
 
-// @public
-export class KbqHintBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
-}
-
-// @public
-export const KbqHintMixinBase: CanColorCtor & typeof KbqHintBase;
-
 // @public (undocumented)
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, formField: any);
+    constructor(changeDetectorRef: ChangeDetectorRef, formField: any);
     // (undocumented)
     checked: boolean;
     // (undocumented)
@@ -246,7 +222,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordHint, "kbq-password-hint", never, { "id": { "alias": "id"; "required": false; }; "rule": { "alias": "rule"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "regex": { "alias": "regex"; "required": false; }; "customCheckRule": { "alias": "checkRule"; "required": false; }; "viewFormField": { "alias": "viewFormField"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordHint, [null, null, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordHint, [null, { optional: true; }]>;
 }
 
 // @public (undocumented)

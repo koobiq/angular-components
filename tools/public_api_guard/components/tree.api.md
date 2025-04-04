@@ -9,8 +9,6 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { CollectionViewer } from '@angular/cdk/collections';
@@ -23,7 +21,6 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i10 from '@koobiq/components/icon';
 import * as i9 from '@koobiq/components/core';
@@ -389,14 +386,15 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 }
 
 // @public
-export class KbqTreeNodeToggleBase {
-}
-
-// @public
-export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBase implements CanDisable {
+export class KbqTreeNodeToggleBaseDirective<T> {
     constructor(tree: KbqTreeBase<T>, treeNode: KbqTreeNode<T>);
     // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
+    // (undocumented)
     get iconState(): boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     node: T;
     // (undocumented)
@@ -405,7 +403,7 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
     // (undocumented)
     toggle(event: Event): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeToggleBaseDirective<any>, never, never, { "node": { "alias": "node"; "required": false; }; "recursive": { "alias": "kbqTreeNodeToggleRecursive"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTreeNodeToggleBaseDirective<any>, never, never, { "node": { "alias": "node"; "required": false; }; "recursive": { "alias": "kbqTreeNodeToggleRecursive"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleBaseDirective<any>, never>;
 }
@@ -413,7 +411,7 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
 // @public (undocumented)
 export class KbqTreeNodeToggleComponent<T> extends KbqTreeNodeToggleBaseDirective<T> {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeNodeToggleComponent<any>, "kbq-tree-node-toggle", ["kbqTreeNodeToggle"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTreeNodeToggleComponent<any>, "kbq-tree-node-toggle", ["kbqTreeNodeToggle"], {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleComponent<any>, never>;
 }
@@ -425,9 +423,6 @@ export class KbqTreeNodeToggleDirective<T> extends KbqTreeNodeToggleBaseDirectiv
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTreeNodeToggleDirective<any>, never>;
 }
-
-// @public
-export const KbqTreeNodeToggleMixinBase: CanDisableCtor & typeof KbqTreeNodeToggleBase;
 
 // @public (undocumented)
 export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterContentInit, KbqTitleTextRef {
@@ -553,7 +548,7 @@ export class KbqTreeSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy, CanDisable, HasTabIndex {
+export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;

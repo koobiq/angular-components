@@ -6,7 +6,6 @@
 
 import { AbstractControl } from '@angular/forms';
 import { CanUpdateErrorState } from '@koobiq/components/core';
-import { CanUpdateErrorStateCtor } from '@koobiq/components/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -66,15 +65,18 @@ export const KBQ_INPUT_VALUE_ACCESSOR: InjectionToken<{
 export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState, OnChanges {
+export class KbqInput implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
     constructor(elementRef: ElementRef, ngControl: NgControl, numberInput: KbqNumberInput, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
     controlType: string;
+    // (undocumented)
+    defaultErrorStateMatcher: ErrorStateMatcher;
     protected dirtyCheckNativeValue(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     protected elementRef: ElementRef;
     get empty(): boolean;
+    errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
     focus(): void;
     focusChanged(isFocused: boolean): void;
@@ -86,6 +88,8 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
     // (undocumented)
     protected neverEmptyInputTypes: string[];
     // (undocumented)
+    ngControl: NgControl;
+    // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
     ngOnChanges(): void;
@@ -96,6 +100,10 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
     // (undocumented)
     onBlur(): void;
     onContainerClick(): void;
+    // (undocumented)
+    parentForm: NgForm;
+    // (undocumented)
+    parentFormGroup: FormGroupDirective;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;
@@ -106,6 +114,8 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
     set type(value: string);
     // (undocumented)
     protected uid: string;
+    // (undocumented)
+    updateErrorState(): void;
     protected validateType(): void;
     get value(): string;
     set value(value: string);
@@ -114,23 +124,6 @@ export class KbqInput extends KbqInputMixinBase implements KbqFormFieldControl<a
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInput, [null, { optional: true; self: true; }, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
 }
-
-// @public
-export class KbqInputBase {
-    constructor(defaultErrorStateMatcher: ErrorStateMatcher, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
-    // (undocumented)
-    defaultErrorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
-    ngControl: NgControl;
-    // (undocumented)
-    parentForm: NgForm;
-    // (undocumented)
-    parentFormGroup: FormGroupDirective;
-    readonly stateChanges: Subject<void>;
-}
-
-// @public
-export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase;
 
 // @public (undocumented)
 export class KbqInputModule {
@@ -156,13 +149,15 @@ export class KbqInputMono {
 }
 
 // @public (undocumented)
-export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState, OnChanges {
+export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState {
     constructor(elementRef: ElementRef, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any);
     // (undocumented)
     readonly checkRule: Subject<void>;
     // (undocumented)
     checkRules(): void;
     controlType: string;
+    // (undocumented)
+    defaultErrorStateMatcher: ErrorStateMatcher;
     protected dirtyCheckNativeValue(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -171,6 +166,7 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
     // (undocumented)
     elementType: string;
     get empty(): boolean;
+    errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
     focus(): void;
     focusChanged(isFocused: boolean): void;
@@ -178,6 +174,8 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
     get id(): string;
     set id(value: string);
     protected isBadInput(): boolean;
+    // (undocumented)
+    ngControl: NgControl;
     // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
@@ -189,6 +187,10 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
     onContainerClick(): void;
     // (undocumented)
     onInput(): void;
+    // (undocumented)
+    parentForm: NgForm;
+    // (undocumented)
+    parentFormGroup: FormGroupDirective;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;
@@ -199,6 +201,8 @@ export class KbqInputPassword extends KbqInputMixinBase implements KbqFormFieldC
     toggleType(): void;
     // (undocumented)
     protected uid: string;
+    // (undocumented)
+    updateErrorState(): void;
     get value(): string;
     set value(value: string);
     // (undocumented)

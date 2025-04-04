@@ -4,15 +4,12 @@
 
 ```ts
 
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import * as i2 from '@angular/cdk/platform';
 
 // @public (undocumented)
-export class KbqProgressBar extends KbqProgressBarMixinBase implements CanColor {
-    constructor(elementRef: ElementRef);
+export class KbqProgressBar {
     // (undocumented)
     id: string;
     // (undocumented)
@@ -22,16 +19,9 @@ export class KbqProgressBar extends KbqProgressBarMixinBase implements CanColor 
     // (undocumented)
     value: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "color": { "alias": "color"; "required": false; }; "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], false, [{ directive: typeof i1.KbqColorDirective; inputs: { "color": "color"; }; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBar, never>;
-}
-
-// @public
-export class KbqProgressBarBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
 }
 
 // @public (undocumented)
@@ -42,19 +32,16 @@ export class KbqProgressBarCaption {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarCaption, never>;
 }
 
-// @public
-export const KbqProgressBarMixinBase: CanColorCtor & typeof KbqProgressBarBase;
-
 // @public (undocumented)
 export class KbqProgressBarModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqProgressBarModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption], [typeof i2.PlatformModule], [typeof i1.KbqProgressBar, typeof i1.KbqProgressBarText, typeof i1.KbqProgressBarCaption]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqProgressBarModule, [typeof i1_2.KbqProgressBar, typeof i1_2.KbqProgressBarText, typeof i1_2.KbqProgressBarCaption], [typeof i2.PlatformModule], [typeof i1_2.KbqProgressBar, typeof i1_2.KbqProgressBarText, typeof i1_2.KbqProgressBarCaption]>;
 }
 
 // @public (undocumented)

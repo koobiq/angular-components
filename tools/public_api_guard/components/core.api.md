@@ -1708,6 +1708,24 @@ export type KbqCodeBlockLocaleConfiguration = {
     openExternalSystemTooltip: string;
 };
 
+// @public (undocumented)
+export class KbqColorDirective {
+    constructor();
+    // (undocumented)
+    get color(): KbqComponentColors | ThemePalette | string;
+    set color(color: KbqComponentColors | ThemePalette | string);
+    // (undocumented)
+    protected _color: KbqComponentColors | ThemePalette | string;
+    // (undocumented)
+    get colorClassName(): KbqComponentColors | ThemePalette | string;
+    // (undocumented)
+    readonly elementRef: ElementRef<any>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective, never>;
+}
+
 // @public
 export class KbqCommonModule {
     constructor(_sanityChecksEnabled: boolean);
@@ -1956,22 +1974,20 @@ export class KbqMeasureScrollbarService {
 }
 
 // @public
-export class KbqOptgroup extends KbqOptgroupMixinBase implements CanDisable {
+export class KbqOptgroup {
+    // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     label: string;
     labelId: string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "disabled": { "alias": "disabled"; "required": false; }; "label": { "alias": "label"; "required": false; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], false, never>;
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptgroup, "kbq-optgroup", ["kbqOptgroup"], { "label": { "alias": "label"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["kbq-option, kbq-list-option, kbq-timezone-option, ng-container"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptgroup, never>;
 }
-
-// @public
-export class KbqOptgroupBase {
-}
-
-// @public (undocumented)
-export const KbqOptgroupMixinBase: CanDisableCtor & typeof KbqOptgroupBase;
 
 // @public
 export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDestroy, KbqTitleTextRef {
@@ -2027,21 +2043,22 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
-// @public
-export class KbqOptionActionBase {
-}
-
 // @public (undocumented)
-export class KbqOptionActionComponent extends KbqOptionActionMixinBase implements AfterViewInit, OnDestroy {
+export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, option: KbqOptionActionParent);
     // (undocumented)
     get active(): boolean;
     // (undocumented)
     customIcon: ElementRef;
     // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
+    // (undocumented)
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     // (undocumented)
     hasFocus: boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
@@ -2059,9 +2076,6 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
-
-// @public
-export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqOptionActionBase;
 
 // @public (undocumented)
 export interface KbqOptionActionParent {
@@ -2321,8 +2335,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 }
 
 // @public
-export class KbqPseudoCheckbox extends KbqPseudoCheckboxMixinBase implements CanColor, CanDisable {
-    constructor(elementRef: ElementRef);
+export class KbqPseudoCheckbox extends KbqColorDirective {
     // (undocumented)
     big: boolean;
     // (undocumented)
@@ -2330,20 +2343,10 @@ export class KbqPseudoCheckbox extends KbqPseudoCheckboxMixinBase implements Can
     // (undocumented)
     state: KbqPseudoCheckboxState;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPseudoCheckbox, "kbq-pseudo-checkbox", never, { "color": { "alias": "color"; "required": false; }; "big": { "alias": "big"; "required": false; }; "state": { "alias": "state"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPseudoCheckbox, "kbq-pseudo-checkbox", never, { "big": { "alias": "big"; "required": false; }; "state": { "alias": "state"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPseudoCheckbox, never>;
 }
-
-// @public
-export class KbqPseudoCheckboxBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
-}
-
-// @public
-export const KbqPseudoCheckboxMixinBase: CanColorCtor & CanDisableCtor & typeof KbqPseudoCheckboxBase;
 
 // @public (undocumented)
 export class KbqPseudoCheckboxModule {
