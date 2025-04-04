@@ -40,6 +40,8 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T): 
 
         constructor(...args: any[]) {
             super(...args);
+
+            console.warn('mixinErrorState deprecated and will be deleted in next major release');
         }
 
         updateErrorState() {

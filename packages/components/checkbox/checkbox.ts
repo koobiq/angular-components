@@ -1,34 +1,24 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
+    forwardRef,
     Inject,
     Input,
+    numberAttribute,
     OnDestroy,
     Optional,
     Output,
     ViewChild,
-    ViewEncapsulation,
-    booleanAttribute,
-    forwardRef
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-    CanColor,
-    CanColorCtor,
-    CanDisable,
-    CanDisableCtor,
-    HasTabIndex,
-    HasTabIndexCtor,
-    KbqComponentColors,
-    mixinColor,
-    mixinDisabled,
-    mixinTabIndex
-} from '@koobiq/components/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -68,16 +58,6 @@ export class KbqCheckboxChange {
     checked: boolean;
 }
 
-// Boilerplate for applying mixins to KbqCheckbox.
-/** @docs-private */
-export class KbqCheckboxBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqCheckboxMixinBase: HasTabIndexCtor & CanColorCtor & CanDisableCtor & typeof KbqCheckboxBase =
-    mixinTabIndex(mixinColor(mixinDisabled(KbqCheckboxBase), KbqComponentColors.Theme));
-
 /**
  * A Koobiq checkbox component. Supports all of the functionality of an HTML5 checkbox,
  * and exposes a similar API. A KbqCheckbox can be either checked, unchecked, indeterminate, or
@@ -102,14 +82,10 @@ export const KbqCheckboxMixinBase: HasTabIndexCtor & CanColorCtor & CanDisableCt
         '[class.kbq-checkbox_label-before]': 'labelPosition == "before"'
     },
     providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR],
-    inputs: ['color', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqCheckbox
-    extends KbqCheckboxMixinBase
-    implements ControlValueAccessor, AfterViewInit, OnDestroy, CanColor, CanDisable, HasTabIndex
-{
+export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     @Input() big: boolean = false;
 
     /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
@@ -158,16 +134,13 @@ export class KbqCheckbox
 
     private _checked: boolean = false;
 
-    /**
-     * Whether the checkbox is disabled. This fully overrides the implementation provided by
-     * mixinDisabled, but the mixin is still required because mixinTabIndex requires it.
-     */
-    @Input()
-    get disabled() {
+    /** Whether the checkbox is disabled. */
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
         return this._disabled;
     }
 
-    set disabled(value: any) {
+    set disabled(value: boolean) {
         if (value !== this.disabled) {
             this._disabled = value;
             this.changeDetectorRef.markForCheck();
@@ -175,6 +148,17 @@ export class KbqCheckbox
     }
 
     private _disabled: boolean = false;
+
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
 
     /**
      * Whether the checkbox is indeterminate. This is also known as "mixed" mode and can be used to
@@ -211,12 +195,11 @@ export class KbqCheckbox
     private currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
     constructor(
-        elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
         @Optional() @Inject(KBQ_CHECKBOX_CLICK_ACTION) private clickAction: KbqCheckboxClickAction
     ) {
-        super(elementRef);
+        super();
 
         this.id = this.uniqueId;
     }

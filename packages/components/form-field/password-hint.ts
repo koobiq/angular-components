@@ -3,7 +3,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    ElementRef,
     forwardRef,
     Inject,
     Input,
@@ -89,11 +88,10 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     private lastControlValue: string;
 
     constructor(
-        elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         @Optional() @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: any
     ) {
-        super(elementRef);
+        super();
     }
 
     ngAfterContentInit(): void {

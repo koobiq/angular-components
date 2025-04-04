@@ -5,7 +5,6 @@
 ```ts
 
 import { CanUpdateErrorState } from '@koobiq/components/core';
-import { CanUpdateErrorStateCtor } from '@koobiq/components/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { ErrorStateMatcher } from '@koobiq/components/core';
@@ -31,18 +30,21 @@ export const KBQ_TEXTAREA_VALUE_ACCESSOR: InjectionToken<{
 }>;
 
 // @public (undocumented)
-export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
+export class KbqTextarea implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState {
     constructor(elementRef: ElementRef, ngControl: NgControl, parentForm: NgForm, parentFormGroup: FormGroupDirective, defaultErrorStateMatcher: ErrorStateMatcher, inputValueAccessor: any, parent: any, ngZone: NgZone);
     set canGrow(value: boolean);
     // (undocumented)
     get canGrow(): boolean;
     controlType: string;
+    // (undocumented)
+    defaultErrorStateMatcher: ErrorStateMatcher;
     protected dirtyCheckNativeValue(): void;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     protected elementRef: ElementRef;
     get empty(): boolean;
+    errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
     focus(): void;
     focusChanged(isFocused: boolean): void;
@@ -61,6 +63,8 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     // (undocumented)
     static ngAcceptInputType_freeRowsHeight: unknown;
     // (undocumented)
+    ngControl: NgControl;
+    // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
     ngOnChanges(): void;
@@ -71,6 +75,10 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     // (undocumented)
     onBlur(): void;
     onContainerClick(): void;
+    // (undocumented)
+    parentForm: NgForm;
+    // (undocumented)
+    parentFormGroup: FormGroupDirective;
     placeholder: string;
     // (undocumented)
     protected previousNativeValue: any;
@@ -81,6 +89,8 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     readonly stateChanges: Subject<void>;
     // (undocumented)
     protected uid: string;
+    // (undocumented)
+    updateErrorState(): void;
     get value(): string;
     set value(value: string);
     // (undocumented)
@@ -88,23 +98,6 @@ export class KbqTextarea extends KbqTextareaMixinBase implements KbqFormFieldCon
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTextarea, [null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }, { optional: true; host: true; }, null]>;
 }
-
-// @public
-export class KbqTextareaBase {
-    constructor(defaultErrorStateMatcher: ErrorStateMatcher, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
-    // (undocumented)
-    defaultErrorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
-    ngControl: NgControl;
-    // (undocumented)
-    parentForm: NgForm;
-    // (undocumented)
-    parentFormGroup: FormGroupDirective;
-    readonly stateChanges: Subject<void>;
-}
-
-// @public
-export const KbqTextareaMixinBase: CanUpdateErrorStateCtor & typeof KbqTextareaBase;
 
 // @public (undocumented)
 export class KbqTextareaModule {

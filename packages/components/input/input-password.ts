@@ -11,11 +11,10 @@ import {
     Optional,
     Self
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
-import { KbqInputMixinBase } from './input';
 import { KBQ_INPUT_VALUE_ACCESSOR } from './input-value-accessor';
 
 let nextUniqueId = 0;
@@ -45,9 +44,11 @@ let nextUniqueId = 0;
     ]
 })
 export class KbqInputPassword
-    extends KbqInputMixinBase
-    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState, OnChanges
+    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
+    /** Whether the component is in an error state. */
+    errorState: boolean = false;
+
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
@@ -170,14 +171,12 @@ export class KbqInputPassword
 
     constructor(
         protected elementRef: ElementRef,
-        @Optional() @Self() ngControl: NgControl,
-        @Optional() parentForm: NgForm,
-        @Optional() parentFormGroup: FormGroupDirective,
-        defaultErrorStateMatcher: ErrorStateMatcher,
+        @Optional() @Self() public ngControl: NgControl,
+        @Optional() public parentForm: NgForm,
+        @Optional() public parentFormGroup: FormGroupDirective,
+        public defaultErrorStateMatcher: ErrorStateMatcher,
         @Optional() @Self() @Inject(KBQ_INPUT_VALUE_ACCESSOR) inputValueAccessor: any
     ) {
-        super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
-
         // If no input value accessor was explicitly specified, use the element as the input value
         // accessor.
         this._inputValueAccessor = inputValueAccessor || this.elementRef.nativeElement;
@@ -208,6 +207,19 @@ export class KbqInputPassword
         // we won't be notified when it changes (e.g. the consumer isn't using forms or they're
         // updating the value using `emitEvent: false`).
         this.dirtyCheckNativeValue();
+    }
+
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next(null);
+        }
     }
 
     checkRules() {

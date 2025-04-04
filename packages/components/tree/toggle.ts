@@ -1,18 +1,17 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation } from '@angular/core';
-import { CanDisable, CanDisableCtor, mixinDisabled } from '@koobiq/components/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    Component,
+    Directive,
+    Input,
+    ViewEncapsulation
+} from '@angular/core';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 
 /** @docs-private */
-export class KbqTreeNodeToggleBase {}
-
-/** @docs-private */
-export const KbqTreeNodeToggleMixinBase: CanDisableCtor & typeof KbqTreeNodeToggleBase =
-    mixinDisabled(KbqTreeNodeToggleBase);
-
-/** @docs-private */
 @Directive()
-export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBase implements CanDisable {
+export class KbqTreeNodeToggleBaseDirective<T> {
     @Input() node: T;
 
     @Input('kbqTreeNodeToggleRecursive')
@@ -26,6 +25,19 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
 
     private _recursive = false;
 
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
+
     get iconState(): boolean {
         return this.tree.treeControl.isExpanded(this.node);
     }
@@ -34,8 +46,6 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
         private tree: KbqTreeBase<T>,
         private treeNode: KbqTreeNode<T>
     ) {
-        super();
-
         this.tree.treeControl.filterValue.subscribe((value) => (this.disabled = !!value?.length));
     }
 
@@ -67,7 +77,6 @@ export class KbqTreeNodeToggleBaseDirective<T> extends KbqTreeNodeToggleMixinBas
 
         '(click)': 'toggle($event)'
     },
-    inputs: ['disabled'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

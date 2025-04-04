@@ -1,10 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
-import { CanDisable, CanDisableCtor, mixinDisabled } from '../common-behaviors';
-
-/** @docs-private */
-export class KbqOptgroupBase {}
-
-export const KbqOptgroupMixinBase: CanDisableCtor & typeof KbqOptgroupBase = mixinDisabled(KbqOptgroupBase);
+import { booleanAttribute, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 let uniqueOptgroupIdCounter = 0;
 
@@ -19,14 +13,26 @@ let uniqueOptgroupIdCounter = 0;
     styleUrls: ['./optgroup.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    inputs: ['disabled'],
     host: {
         class: 'kbq-optgroup',
         '[class.kbq-disabled]': 'disabled'
     }
 })
-export class KbqOptgroup extends KbqOptgroupMixinBase implements CanDisable {
+export class KbqOptgroup {
     @Input() label: string;
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
 
     /** Unique id for the underlying label. */
     labelId: string = `kbq-optgroup-label-${uniqueOptgroupIdCounter++}`;

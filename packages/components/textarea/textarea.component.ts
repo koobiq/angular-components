@@ -20,40 +20,14 @@ import {
     Renderer2,
     Self
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import {
-    CanUpdateErrorState,
-    CanUpdateErrorStateCtor,
-    ErrorStateMatcher,
-    KBQ_PARENT_ANIMATION_COMPONENT,
-    mixinErrorState
-} from '@koobiq/components/core';
+import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher, KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject, Subscription } from 'rxjs';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
 let nextUniqueId = 0;
-
-/** @docs-private */
-export class KbqTextareaBase {
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
-
-    constructor(
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        public parentForm: NgForm,
-        public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
-    ) {}
-}
-
-/** @docs-private */
-export const KbqTextareaMixinBase: CanUpdateErrorStateCtor & typeof KbqTextareaBase = mixinErrorState(KbqTextareaBase);
 
 @Directive({
     selector: 'textarea[kbqTextarea]',
@@ -75,9 +49,11 @@ export const KbqTextareaMixinBase: CanUpdateErrorStateCtor & typeof KbqTextareaB
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }]
 })
 export class KbqTextarea
-    extends KbqTextareaMixinBase
     implements KbqFormFieldControl<any>, OnInit, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState
 {
+    /** Whether the component is in an error state. */
+    errorState: boolean = false;
+
     /** Parameter enables or disables the ability to automatically increase the height.
      * If set to false, the textarea becomes vertically resizable. */
     @Input({ transform: booleanAttribute })
@@ -212,15 +188,14 @@ export class KbqTextarea
 
     constructor(
         protected elementRef: ElementRef,
-        @Optional() @Self() ngControl: NgControl,
-        @Optional() parentForm: NgForm,
-        @Optional() parentFormGroup: FormGroupDirective,
-        defaultErrorStateMatcher: ErrorStateMatcher,
+        @Optional() @Self() public ngControl: NgControl,
+        @Optional() public parentForm: NgForm,
+        @Optional() public parentFormGroup: FormGroupDirective,
+        public defaultErrorStateMatcher: ErrorStateMatcher,
         @Optional() @Self() @Inject(KBQ_TEXTAREA_VALUE_ACCESSOR) inputValueAccessor: any,
         @Optional() @Host() @Inject(KBQ_PARENT_ANIMATION_COMPONENT) private parent: any,
         private ngZone: NgZone
     ) {
-        super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
         // If no input value accessor was explicitly specified, use the element as the textarea value
         // accessor.
         this.valueAccessor = inputValueAccessor || this.elementRef.nativeElement;
@@ -272,6 +247,19 @@ export class KbqTextarea
         // we won't be notified when it changes (e.g. the consumer isn't using forms or they're
         // updating the value using `emitEvent: false`).
         this.dirtyCheckNativeValue();
+    }
+
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
     }
 
     onBlur(): void {

@@ -25,14 +25,14 @@ import {
 } from '@koobiq/components/tree-select';
 import { TreeSelectExamplesModule } from 'packages/docs-examples/components/tree-select';
 
-class FileNode {
+export class FileNode {
     children: FileNode[];
     name: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
-class FileFlatNode {
+export class FileFlatNode {
     name: string;
     type: any;
     level: number;

@@ -23,40 +23,15 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { BACKSPACE, END, HOME } from '@koobiq/cdk/keycodes';
-import {
-    CanUpdateErrorState,
-    CanUpdateErrorStateCtor,
-    ErrorStateMatcher,
-    mixinErrorState
-} from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
 import { KbqTag, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
-
-/** @docs-private */
-export class KbqTagListBase {
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
-
-    constructor(
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        public parentForm: NgForm,
-        public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
-    ) {}
-}
-
-/** @docs-private */
-export const KbqTagListMixinBase: CanUpdateErrorStateCtor & typeof KbqTagListBase = mixinErrorState(KbqTagListBase);
 
 // Increasing integer for generating unique ids for tag-list components.
 let nextUniqueId = 0;
@@ -91,7 +66,6 @@ export class KbqTagListChange {
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTagList }]
 })
 export class KbqTagList
-    extends KbqTagListMixinBase
     implements
         KbqFormFieldControl<any>,
         ControlValueAccessor,
@@ -102,6 +76,13 @@ export class KbqTagList
         CanUpdateErrorState
 {
     readonly controlType: string = 'tag-list';
+
+    /**
+     * Emits whenever the component state changes and should cause the parent
+     * form-field to update. Implemented as part of `KbqFormFieldControl`.
+     * @docs-private
+     */
+    readonly stateChanges = new Subject<void>();
 
     /** Combined stream of all of the child tags' selection change events. */
     get tagSelectionChanges(): Observable<KbqTagSelectionChange> {
@@ -314,6 +295,9 @@ export class KbqTagList
     })
     tags: QueryList<KbqTag>;
 
+    /** Whether the component is in an error state. */
+    errorState: boolean = false;
+
     private _value: any;
 
     private _required: boolean = false;
@@ -353,14 +337,12 @@ export class KbqTagList
     constructor(
         protected elementRef: ElementRef<HTMLElement>,
         private changeDetectorRef: ChangeDetectorRef,
-        defaultErrorStateMatcher: ErrorStateMatcher,
+        public defaultErrorStateMatcher: ErrorStateMatcher,
         @Optional() private dir: Directionality,
-        @Optional() parentForm: NgForm,
-        @Optional() parentFormGroup: FormGroupDirective,
-        @Optional() @Self() ngControl: NgControl
+        @Optional() public parentForm: NgForm,
+        @Optional() public parentFormGroup: FormGroupDirective,
+        @Optional() @Self() public ngControl: NgControl
     ) {
-        super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
-
         if (this.ngControl) {
             this.ngControl.valueAccessor = this;
         }
@@ -440,6 +422,19 @@ export class KbqTagList
         this.stateChanges.complete();
 
         this.dropSubscriptions();
+    }
+
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
     }
 
     onTouched = () => {};

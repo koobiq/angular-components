@@ -45,7 +45,7 @@ import {
     TAB,
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
-import { CanDisable, getKbqSelectNonArrayValueError, HasTabIndex, MultipleMode } from '@koobiq/components/core';
+import { getKbqSelectNonArrayValueError, MultipleMode } from '@koobiq/components/core';
 import { merge, Observable, Subscription } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { delay } from 'rxjs/operators';
@@ -119,7 +119,7 @@ interface SelectionModelOption {
 })
 export class KbqTreeSelection
     extends KbqTreeBase<any>
-    implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy, CanDisable, HasTabIndex
+    implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy
 {
     protected readonly focusMonitor = inject(FocusMonitor);
 

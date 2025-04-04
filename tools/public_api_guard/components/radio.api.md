@@ -6,20 +6,15 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@koobiq/components/core';
-import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@koobiq/components/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
@@ -29,8 +24,8 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any;
 
 // @public (undocumented)
-export class KbqRadioButton extends KbqRadioButtonMixinBase implements OnInit, AfterViewInit, OnDestroy, CanColor, HasTabIndex {
-    constructor(radioGroup: KbqRadioGroup, elementRef: ElementRef, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, radioDispatcher: UniqueSelectionDispatcher);
+export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterViewInit, OnDestroy {
+    constructor(radioGroup: KbqRadioGroup, changeDetector: ChangeDetectorRef, focusMonitor: FocusMonitor, radioDispatcher: UniqueSelectionDispatcher);
     readonly change: EventEmitter<KbqRadioChange>;
     get checked(): boolean;
     set checked(value: boolean);
@@ -53,6 +48,8 @@ export class KbqRadioButton extends KbqRadioButtonMixinBase implements OnInit, A
     // (undocumented)
     static ngAcceptInputType_required: unknown;
     // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -65,18 +62,16 @@ export class KbqRadioButton extends KbqRadioButtonMixinBase implements OnInit, A
     radioGroup: KbqRadioGroup;
     get required(): boolean;
     set required(value: boolean);
+    // (undocumented)
+    get tabIndex(): number;
+    set tabIndex(value: number);
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqRadioButton, "kbq-radio-button", ["kbqRadioButton"], { "checked": { "alias": "checked"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "required": { "alias": "required"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "name": { "alias": "name"; "required": false; }; "isFocused": { "alias": "isFocused"; "required": false; }; "id": { "alias": "id"; "required": false; }; }, { "change": "change"; }, never, ["*", "kbq-hint"], false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, [{ optional: true; }, null, null, null, null]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioButton, [{ optional: true; }, null, null, null]>;
 }
-
-// Warning: (ae-forgotten-export) The symbol "KbqRadioButtonBase" needs to be exported by the entry point index.d.ts
-//
-// @public
-export const KbqRadioButtonMixinBase: CanColorCtor & HasTabIndexCtor & typeof KbqRadioButtonBase;
 
 // @public
 export class KbqRadioChange {
@@ -88,8 +83,8 @@ export class KbqRadioChange {
 }
 
 // @public (undocumented)
-export class KbqRadioGroup extends KbqRadioGroupMixinBase implements AfterContentInit, ControlValueAccessor, CanDisable {
-    constructor(elementRef: ElementRef, changeDetector: ChangeDetectorRef);
+export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
+    constructor(changeDetector: ChangeDetectorRef);
     // (undocumented)
     big: boolean;
     readonly change: EventEmitter<KbqRadioChange>;
@@ -128,16 +123,6 @@ export class KbqRadioGroup extends KbqRadioGroupMixinBase implements AfterConten
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqRadioGroup, never>;
 }
-
-// @public
-export class KbqRadioGroupBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
-}
-
-// @public
-export const KbqRadioGroupMixinBase: CanDisableCtor & typeof KbqRadioGroupBase;
 
 // @public (undocumented)
 export class KbqRadioModule {

@@ -4,15 +4,13 @@
 
 ```ts
 
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/platform';
+import { KbqColorDirective } from '@koobiq/components/core';
 
 // @public (undocumented)
-export class KbqProgressBar extends KbqProgressBarMixinBase implements CanColor {
-    constructor(elementRef: ElementRef);
+export class KbqProgressBar extends KbqColorDirective {
+    constructor();
     // (undocumented)
     id: string;
     // (undocumented)
@@ -22,16 +20,9 @@ export class KbqProgressBar extends KbqProgressBarMixinBase implements CanColor 
     // (undocumented)
     value: number;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "color": { "alias": "color"; "required": false; }; "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqProgressBar, "kbq-progress-bar", never, { "id": { "alias": "id"; "required": false; }; "value": { "alias": "value"; "required": false; }; "mode": { "alias": "mode"; "required": false; }; }, {}, never, ["[kbq-progress-bar-text]", "[kbq-progress-bar-caption]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBar, never>;
-}
-
-// @public
-export class KbqProgressBarBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
 }
 
 // @public (undocumented)
@@ -41,9 +32,6 @@ export class KbqProgressBarCaption {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqProgressBarCaption, never>;
 }
-
-// @public
-export const KbqProgressBarMixinBase: CanColorCtor & typeof KbqProgressBarBase;
 
 // @public (undocumented)
 export class KbqProgressBarModule {

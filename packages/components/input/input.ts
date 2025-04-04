@@ -12,13 +12,8 @@ import {
     Optional,
     Self
 } from '@angular/core';
-import { FormGroupDirective, NgControl, NgForm } from '@angular/forms';
-import {
-    CanUpdateErrorState,
-    CanUpdateErrorStateCtor,
-    ErrorStateMatcher,
-    mixinErrorState
-} from '@koobiq/components/core';
+import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject } from 'rxjs';
 import { getKbqInputUnsupportedTypeError } from './input-errors';
@@ -38,26 +33,6 @@ const KBQ_INPUT_INVALID_TYPES = [
 ];
 
 let nextUniqueId = 0;
-
-/** @docs-private */
-export class KbqInputBase {
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
-
-    constructor(
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        public parentForm: NgForm,
-        public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
-    ) {}
-}
-
-/** @docs-private */
-export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase = mixinErrorState(KbqInputBase);
 
 @Directive({
     selector: `input[kbqInput],input[kbqNumberInput]`,
@@ -81,9 +56,11 @@ export const KbqInputMixinBase: CanUpdateErrorStateCtor & typeof KbqInputBase = 
     ]
 })
 export class KbqInput
-    extends KbqInputMixinBase
-    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, CanUpdateErrorState, OnChanges
+    implements KbqFormFieldControl<any>, OnChanges, OnDestroy, DoCheck, OnChanges, CanUpdateErrorState
 {
+    /** Whether the component is in an error state. */
+    errorState: boolean = false;
+
     /** An object used to control when error messages are shown. */
     @Input() errorStateMatcher: ErrorStateMatcher;
 
@@ -218,15 +195,13 @@ export class KbqInput
 
     constructor(
         protected elementRef: ElementRef,
-        @Optional() @Self() ngControl: NgControl,
+        @Optional() @Self() public ngControl: NgControl,
         @Optional() @Self() public numberInput: KbqNumberInput,
-        @Optional() parentForm: NgForm,
-        @Optional() parentFormGroup: FormGroupDirective,
-        defaultErrorStateMatcher: ErrorStateMatcher,
+        @Optional() public parentForm: NgForm,
+        @Optional() public parentFormGroup: FormGroupDirective,
+        public defaultErrorStateMatcher: ErrorStateMatcher,
         @Optional() @Self() @Inject(KBQ_INPUT_VALUE_ACCESSOR) inputValueAccessor: any
     ) {
-        super(defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
-
         // If no input value accessor was explicitly specified, use the element as the input value accessor.
         this.inputValueAccessor = inputValueAccessor || this.elementRef.nativeElement;
 
@@ -256,6 +231,19 @@ export class KbqInput
         // we won't be notified when it changes (e.g. the consumer isn't using forms or they're
         // updating the value using `emitEvent: false`).
         this.dirtyCheckNativeValue();
+    }
+
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
     }
 
     /** Focuses the input. */

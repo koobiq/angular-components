@@ -9,8 +9,6 @@ import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
 import { ApplicationRef } from '@angular/core';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFactoryResolver } from '@angular/core';
 import { Direction } from '@angular/cdk/bidi';
@@ -160,12 +158,13 @@ export interface KbqDropdownDefaultOptions {
     yPosition: DropdownPositionY;
 }
 
-// Warning: (ae-forgotten-export) The symbol "KbqDropdownItemMixinBase" needs to be exported by the entry point index.d.ts
-//
 // @public
-export class KbqDropdownItem extends KbqDropdownItemMixinBase implements KbqTitleTextRef, IFocusableOption, CanDisable, AfterViewInit, OnDestroy {
+export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor, parentDropdownPanel?: KbqDropdownPanel | undefined);
     checkDisabled(event: Event): void;
+    // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
     focus(origin?: FocusOrigin, options?: FocusOptions): void;
     readonly focused: Subject<KbqDropdownItem>;
     getHostElement(): HTMLElement;
@@ -179,6 +178,8 @@ export class KbqDropdownItem extends KbqDropdownItemMixinBase implements KbqTitl
     // (undocumented)
     icon: KbqIcon;
     isNested: boolean;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

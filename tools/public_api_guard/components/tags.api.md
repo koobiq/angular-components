@@ -5,12 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
-import { CanUpdateErrorStateCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { Directionality } from '@angular/cdk/bidi';
@@ -26,6 +21,7 @@ import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqAutocompleteTrigger } from '@koobiq/components/autocomplete';
 import { KbqCleaner } from '@koobiq/components/form-field';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
@@ -46,7 +42,7 @@ import { Subject } from 'rxjs';
 export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
 // @public (undocumented)
-export class KbqTag extends KbqTagMixinBase implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef, AfterContentInit {
+export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
     // (undocumented)
     addClassModificatorForIcons(): void;
@@ -107,7 +103,7 @@ export class KbqTag extends KbqTagMixinBase implements IFocusableOption, OnDestr
     get value(): any;
     set value(value: any);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTag, "kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]", ["kbqTag"], { "color": { "alias": "color"; "required": false; }; "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["avatar", "trailingIcon", "removeIcon", "contentChildren"], ["[kbq-icon]:not([kbqTagRemove])", "*", "[kbqTagRemove]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqTag, "kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]", ["kbqTag"], { "selected": { "alias": "selected"; "required": false; }; "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "removable": { "alias": "removable"; "required": false; }; "tabindex": { "alias": "tabindex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "selectionChange": "selectionChange"; "destroyed": "destroyed"; "removed": "removed"; }, ["avatar", "trailingIcon", "removeIcon", "contentChildren"], ["[kbq-icon]:not([kbqTagRemove])", "*", "[kbqTagRemove]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTag, never>;
 }
@@ -118,13 +114,6 @@ export class KbqTagAvatar {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagAvatar, "kbq-tag-avatar, [kbqTagAvatar]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagAvatar, never>;
-}
-
-// @public
-export class KbqTagBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
 }
 
 // @public (undocumented)
@@ -192,7 +181,7 @@ export interface KbqTagInputEvent {
 }
 
 // @public (undocumented)
-export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
+export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccessor, AfterContentInit, DoCheck, OnInit, OnDestroy, CanUpdateErrorState {
     constructor(elementRef: ElementRef<HTMLElement>, changeDetectorRef: ChangeDetectorRef, defaultErrorStateMatcher: ErrorStateMatcher, dir: Directionality, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
     blur(): void;
     // (undocumented)
@@ -204,11 +193,14 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
     set compareWith(fn: (o1: any, o2: any) => boolean);
     // (undocumented)
     readonly controlType: string;
+    // (undocumented)
+    defaultErrorStateMatcher: ErrorStateMatcher;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
     get empty(): boolean;
+    errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
     focus(): void;
     get focused(): boolean;
@@ -223,6 +215,8 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
+    ngControl: NgControl;
+    // (undocumented)
     ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -234,6 +228,10 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
     // (undocumented)
     onTouched: () => void;
     orientation: 'horizontal' | 'vertical';
+    // (undocumented)
+    parentForm: NgForm;
+    // (undocumented)
+    parentFormGroup: FormGroupDirective;
     get placeholder(): string;
     set placeholder(value: string);
     registerInput(inputElement: KbqTagTextControl): void;
@@ -253,6 +251,7 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
     // (undocumented)
     setSelectionByValue(value: any, isUserInput?: boolean): void;
     get shouldLabelFloat(): boolean;
+    readonly stateChanges: Subject<void>;
     // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
@@ -265,6 +264,8 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
     get tagSelectionChanges(): Observable<KbqTagSelectionChange>;
     // (undocumented)
     uid: string;
+    // (undocumented)
+    updateErrorState(): void;
     protected updateFocusForDestroyedTags(): void;
     protected updateTabIndex(): void;
     userTabIndex: number | null;
@@ -280,20 +281,6 @@ export class KbqTagList extends KbqTagListMixinBase implements KbqFormFieldContr
 }
 
 // @public
-export class KbqTagListBase {
-    constructor(defaultErrorStateMatcher: ErrorStateMatcher, parentForm: NgForm, parentFormGroup: FormGroupDirective, ngControl: NgControl);
-    // (undocumented)
-    defaultErrorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
-    ngControl: NgControl;
-    // (undocumented)
-    parentForm: NgForm;
-    // (undocumented)
-    parentFormGroup: FormGroupDirective;
-    readonly stateChanges: Subject<void>;
-}
-
-// @public
 export class KbqTagListChange {
     constructor(source: KbqTagList, value: any);
     // (undocumented)
@@ -301,12 +288,6 @@ export class KbqTagListChange {
     // (undocumented)
     value: any;
 }
-
-// @public
-export const KbqTagListMixinBase: CanUpdateErrorStateCtor & typeof KbqTagListBase;
-
-// @public
-export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase;
 
 // @public
 export class KbqTagRemove {

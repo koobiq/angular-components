@@ -30,7 +30,6 @@ export type ScrollDirection = 'after' | 'before';
     selector: 'kbq-tab-header',
     templateUrl: './tab-header.html',
     styleUrl: './tab-header.scss',
-    inputs: ['selectedIndex'],
     outputs: ['selectFocusedIndex', 'indexFocused'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.Default,
