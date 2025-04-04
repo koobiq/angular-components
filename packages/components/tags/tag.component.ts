@@ -21,17 +21,7 @@ import {
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
-import {
-    CanColor,
-    CanColorCtor,
-    CanDisable,
-    CanDisableCtor,
-    KBQ_TITLE_TEXT_REF,
-    KbqComponentColors,
-    KbqTitleTextRef,
-    mixinColor,
-    mixinDisabled
-} from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqColorDirective, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -71,23 +61,11 @@ export class KbqTagAvatar {}
 })
 export class KbqTagTrailingIcon {}
 
-/** @docs-private */
-export class KbqTagBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase = mixinColor(
-    mixinDisabled(KbqTagBase),
-    KbqComponentColors.ContrastFade
-);
-
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
     templateUrl: 'tag.partial.html',
     styleUrls: ['./tag.scss'],
-    inputs: ['color'],
     host: {
         class: 'kbq-tag',
 
@@ -111,8 +89,8 @@ export const KbqTagMixinBase: CanColorCtor & CanDisableCtor & typeof KbqTagBase 
     providers: [{ provide: KBQ_TITLE_TEXT_REF, useExisting: KbqTag }]
 })
 export class KbqTag
-    extends KbqTagMixinBase
-    implements IFocusableOption, OnDestroy, CanColor, CanDisable, KbqTitleTextRef, AfterContentInit
+    extends KbqColorDirective
+    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit
 {
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
@@ -239,7 +217,9 @@ export class KbqTag
         public changeDetectorRef: ChangeDetectorRef,
         private _ngZone: NgZone
     ) {
-        super(elementRef);
+        super();
+
+        this.color = KbqComponentColors.ContrastFade;
 
         this.addHostClassName();
 

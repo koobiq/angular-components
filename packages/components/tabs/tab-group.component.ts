@@ -14,6 +14,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    numberAttribute,
     OnDestroy,
     Optional,
     Output,
@@ -118,16 +119,16 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     @Input({ transform: booleanAttribute }) dynamicHeight: boolean = false;
 
     /** The index of the active tab. */
-    @Input()
-    get selectedIndex(): number | null {
+    @Input({ transform: numberAttribute })
+    get selectedIndex(): number {
         return this._selectedIndex;
     }
 
-    set selectedIndex(value: number | null) {
+    set selectedIndex(value: number) {
         this.activeTab = value;
     }
 
-    private _selectedIndex: number | null = null;
+    private _selectedIndex: number;
 
     @Input()
     get activeTab(): KbqTab | null {

@@ -13,6 +13,7 @@ import {
     EventEmitter,
     forwardRef,
     Input,
+    numberAttribute,
     OnDestroy,
     OnInit,
     Optional,
@@ -22,17 +23,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-    CanColor,
-    CanColorCtor,
-    CanDisable,
-    CanDisableCtor,
-    HasTabIndex,
-    HasTabIndexCtor,
-    mixinColor,
-    mixinDisabled,
-    mixinTabIndex
-} from '@koobiq/components/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 
 // Increasing integer for generating unique ids for radio components.
 let nextUniqueId = 0;
@@ -46,14 +37,6 @@ export class KbqRadioChange {
         public value: any
     ) {}
 }
-
-// Boilerplate for applying mixins to KbqRadioGroup.
-/** @docs-private */
-export class KbqRadioGroupBase {
-    constructor(public elementRef: ElementRef) {}
-}
-/** @docs-private */
-export const KbqRadioGroupMixinBase: CanDisableCtor & typeof KbqRadioGroupBase = mixinDisabled(KbqRadioGroupBase);
 
 /**
  * Provider Expression that allows kbq-radio-group to register as a ControlValueAccessor. This
@@ -77,10 +60,7 @@ export const KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR: any = {
     },
     providers: [KBQ_RADIO_GROUP_CONTROL_VALUE_ACCESSOR]
 })
-export class KbqRadioGroup
-    extends KbqRadioGroupMixinBase
-    implements AfterContentInit, ControlValueAccessor, CanDisable
-{
+export class KbqRadioGroup implements AfterContentInit, ControlValueAccessor {
     @Input() big: boolean = false;
 
     /** Name of the radio button group. All radio buttons inside this group will use this name. */
@@ -144,7 +124,6 @@ export class KbqRadioGroup
         this.markRadiosForCheck();
     }
 
-    /** Whether the radio group is disabled. */
     private _disabled: boolean = false;
 
     /** Whether the radio group is required */
@@ -192,12 +171,7 @@ export class KbqRadioGroup
     /** Whether the labels should appear after or before the radio-buttons. Defaults to 'after' */
     private _labelPosition: 'before' | 'after' = 'after';
 
-    constructor(
-        elementRef: ElementRef,
-        private readonly changeDetector: ChangeDetectorRef
-    ) {
-        super(elementRef);
-    }
+    constructor(private readonly changeDetector: ChangeDetectorRef) {}
 
     /** The method to be called in order to update ngModel */
     controlValueAccessorChangeFn: (value: any) => void = () => {};
@@ -306,27 +280,10 @@ export class KbqRadioGroup
     }
 }
 
-// Boilerplate for applying mixins to KbqRadioButton.
-/** @docs-private */
-abstract class KbqRadioButtonBase {
-    // Since the disabled property is manually defined for the KbqRadioButton and isn't set up in
-    // the mixin base class. To be able to use the tabindex mixin, a disabled property must be
-    // defined to properly work.
-    abstract disabled: boolean;
-
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqRadioButtonMixinBase: CanColorCtor & HasTabIndexCtor & typeof KbqRadioButtonBase = mixinColor(
-    mixinTabIndex(KbqRadioButtonBase)
-);
-
 @Component({
     selector: 'kbq-radio-button',
     templateUrl: 'radio.component.html',
     styleUrls: ['radio.scss', 'radio-tokens.scss'],
-    inputs: ['color', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     exportAs: 'kbqRadioButton',
@@ -336,12 +293,10 @@ export const KbqRadioButtonMixinBase: CanColorCtor & HasTabIndexCtor & typeof Kb
         '[class.kbq-radio-button_big]': 'radioGroup?.big',
         '[class.kbq-selected]': 'checked',
         '[class.kbq-disabled]': 'disabled'
-    }
+    },
+    hostDirectives: [{ directive: KbqColorDirective, inputs: ['color'] }]
 })
-export class KbqRadioButton
-    extends KbqRadioButtonMixinBase
-    implements OnInit, AfterViewInit, OnDestroy, CanColor, HasTabIndex
-{
+export class KbqRadioButton implements OnInit, AfterViewInit, OnDestroy {
     /** Whether this radio button is checked. */
     @Input({ transform: booleanAttribute })
     get checked(): boolean {
@@ -404,8 +359,18 @@ export class KbqRadioButton
         }
     }
 
-    /** Whether this radio is disabled. */
     private _disabled: boolean;
+
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
 
     /** Whether the radio button is required. */
     @Input({ transform: booleanAttribute })
@@ -469,13 +434,11 @@ export class KbqRadioButton
 
     constructor(
         @Optional() radioGroup: KbqRadioGroup,
-        elementRef: ElementRef,
+        private elementRef: ElementRef,
         private readonly changeDetector: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
         private readonly radioDispatcher: UniqueSelectionDispatcher
     ) {
-        super(elementRef);
-
         this.id = this.uniqueId;
 
         this.radioGroup = radioGroup;

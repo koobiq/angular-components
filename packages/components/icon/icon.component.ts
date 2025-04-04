@@ -4,20 +4,11 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    Inject,
+    inject,
     Input,
-    Optional,
     ViewEncapsulation
 } from '@angular/core';
-import { CanColor, CanColorCtor, KBQ_FORM_FIELD_REF, KbqFormFieldRef, mixinColor } from '@koobiq/components/core';
-
-/** @docs-private */
-export class KbqIconBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(KbqIconBase);
+import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 
 @Component({
     standalone: true,
@@ -26,14 +17,18 @@ export const KbqIconMixinBase: CanColorCtor & typeof KbqIconBase = mixinColor(Kb
     styleUrls: ['icon.scss', 'icon-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    inputs: ['color'],
     host: {
         class: 'kbq kbq-icon',
         '[class]': 'iconName',
         '[class.kbq-error]': 'color === "error" || hasError'
     }
 })
-export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentInit {
+export class KbqIcon extends KbqColorDirective implements AfterContentInit {
+    readonly elementRef = inject(ElementRef);
+
+    protected readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     @Input() small = false;
     @Input() autoColor = false;
 
@@ -43,14 +38,6 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     @Input({ alias: 'kbq-icon' }) iconName: string;
 
     protected name = 'KbqIcon';
-
-    constructor(
-        elementRef: ElementRef,
-        @Optional() @Inject(KBQ_FORM_FIELD_REF) protected formField: KbqFormFieldRef,
-        protected changeDetectorRef: ChangeDetectorRef
-    ) {
-        super(elementRef);
-    }
 
     getHostElement() {
         return this.elementRef.nativeElement;
@@ -70,7 +57,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
 
     ngAfterContentInit(): void {
         if (this.autoColor) {
-            this.formField.control?.stateChanges.subscribe(this.updateState);
+            this.formField?.control?.stateChanges.subscribe(this.updateState);
 
             this.updateState();
         }
@@ -79,7 +66,7 @@ export class KbqIcon extends KbqIconMixinBase implements CanColor, AfterContentI
     }
 
     private updateState = () => {
-        this.hasError = this.formField.control?.errorState;
+        this.hasError = this.formField?.control?.errorState;
 
         this.changeDetectorRef.markForCheck();
     };

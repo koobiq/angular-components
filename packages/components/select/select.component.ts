@@ -21,7 +21,6 @@ import {
     InjectionToken,
     Input,
     NgZone,
-    OnChanges,
     OnDestroy,
     OnInit,
     Optional,
@@ -30,7 +29,6 @@ import {
     QueryList,
     Renderer2,
     Self,
-    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewChildren,
@@ -185,7 +183,6 @@ export class KbqSelect
     implements
         AfterContentInit,
         AfterViewInit,
-        OnChanges,
         OnDestroy,
         OnInit,
         DoCheck,
@@ -485,6 +482,9 @@ export class KbqSelect
             if (this.parentFormField) {
                 this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
             }
+
+            // Let the parent form field know to run change detection when the disabled state changes.
+            this.stateChanges.next();
         }
     }
 
@@ -656,14 +656,6 @@ export class KbqSelect
 
         if (this.ngControl) {
             this.updateErrorState();
-        }
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        // Updating the disabled state is handled by `mixinDisabled`, but we need to additionally let
-        // the parent form field know to run change detection when the disabled state changes.
-        if (changes.disabled) {
-            this.stateChanges.next();
         }
     }
 

@@ -19,7 +19,6 @@ import {
     InjectionToken,
     Input,
     NgZone,
-    OnChanges,
     OnDestroy,
     OnInit,
     Optional,
@@ -28,12 +27,13 @@ import {
     QueryList,
     Renderer2,
     Self,
-    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
-    inject
+    booleanAttribute,
+    inject,
+    numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
@@ -54,13 +54,9 @@ import {
     isSelectAll
 } from '@koobiq/cdk/keycodes';
 import {
-    CanDisable,
-    CanDisableCtor,
     CanUpdateErrorState,
     CanUpdateErrorStateCtor,
     ErrorStateMatcher,
-    HasTabIndex,
-    HasTabIndexCtor,
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
@@ -74,9 +70,7 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     kbqSelectAnimations,
-    mixinDisabled,
-    mixinErrorState,
-    mixinTabIndex
+    mixinErrorState
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -93,9 +87,6 @@ export type KbqTreeSelectTriggerValue = {
     value: string;
     viewValue: string;
 };
-
-/** @deprecated Will be removed in the next major release, use `KbqTreeSelectTriggerValue` instead */
-export interface ITriggerValue extends KbqTreeSelectTriggerValue {}
 
 /** Tree select panel width type. */
 export type KbqTreeSelectPanelWidth = 'auto' | number | null;
@@ -150,15 +141,13 @@ class KbqTreeSelectBase extends KbqAbstractSelect {
 }
 
 /** @docs-private */
-const KbqTreeSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorStateCtor & typeof KbqTreeSelectBase =
-    mixinTabIndex(mixinDisabled(mixinErrorState(KbqTreeSelectBase)));
+const KbqTreeSelectMixinBase: CanUpdateErrorStateCtor & typeof KbqTreeSelectBase = mixinErrorState(KbqTreeSelectBase);
 
 @Component({
     selector: 'kbq-tree-select',
     exportAs: 'kbqTreeSelect',
     templateUrl: 'tree-select.html',
     styleUrls: ['./tree-select.scss', 'tree-select-tokens.scss'],
-    inputs: ['disabled', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -190,13 +179,10 @@ export class KbqTreeSelect
     implements
         AfterContentInit,
         AfterViewInit,
-        OnChanges,
         OnDestroy,
         OnInit,
         DoCheck,
         ControlValueAccessor,
-        CanDisable,
-        HasTabIndex,
         KbqFormFieldControl<KbqTreeOption>,
         CanUpdateErrorState
 {
@@ -437,15 +423,32 @@ export class KbqTreeSelect
 
     private _hasBackdrop: boolean = false;
 
-    get disabled() {
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
         return this._disabled;
     }
 
-    set disabled(value: any) {
-        this._disabled = coerceBooleanProperty(value);
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
 
-        if (this.parentFormField) {
-            this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+            if (this.parentFormField) {
+                this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+            }
+
+            // Let the parent form field know to run change detection when the disabled state changes.
+            this.stateChanges.next();
         }
     }
 
@@ -641,14 +644,6 @@ export class KbqTreeSelect
     ngDoCheck() {
         if (this.ngControl) {
             this.updateErrorState();
-        }
-    }
-
-    ngOnChanges(changes: SimpleChanges) {
-        // Updating the disabled state is handled by `mixinDisabled`, but we need to additionally let
-        // the parent form field know to run change detection when the disabled state changes.
-        if (changes.disabled) {
-            this.stateChanges.next();
         }
     }
 

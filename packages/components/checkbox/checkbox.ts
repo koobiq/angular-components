@@ -81,12 +81,11 @@ export class KbqCheckboxChange {
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-checkbox_label-before]': 'labelPosition == "before"'
     },
-    hostDirectives: [{ directive: KbqColorDirective, inputs: ['color'] }],
     providers: [KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqCheckbox implements ControlValueAccessor, AfterViewInit, OnDestroy {
+export class KbqCheckbox extends KbqColorDirective implements ControlValueAccessor, AfterViewInit, OnDestroy {
     @Input() big: boolean = false;
 
     /** A unique id for the checkbox input. If none is supplied, it will be auto-generated. */
@@ -196,11 +195,12 @@ export class KbqCheckbox implements ControlValueAccessor, AfterViewInit, OnDestr
     private currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
     constructor(
-        private elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         private focusMonitor: FocusMonitor,
         @Optional() @Inject(KBQ_CHECKBOX_CLICK_ACTION) private clickAction: KbqCheckboxClickAction
     ) {
+        super();
+
         this.id = this.uniqueId;
     }
 

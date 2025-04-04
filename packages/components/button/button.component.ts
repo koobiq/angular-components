@@ -126,11 +126,10 @@ export class KbqButtonCssStyler implements AfterContentInit {
         '(focus)': 'onFocus($event)',
         '(blur)': 'onBlur()'
     },
-    hostDirectives: [{ directive: KbqColorDirective, inputs: ['color'] }],
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
 })
-export class KbqButton implements OnDestroy, AfterViewInit, KbqTitleTextRef {
+export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     hasFocus: boolean = false;
 
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -171,10 +170,11 @@ export class KbqButton implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     private _tabIndex = 0;
 
     constructor(
-        private elementRef: ElementRef,
         private focusMonitor: FocusMonitor,
         private styler: KbqButtonCssStyler
-    ) {}
+    ) {
+        super();
+    }
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();

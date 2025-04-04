@@ -73,22 +73,26 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
             super(...args);
 
             this.color = defaultColor;
+
+            console.warn('mixinColor deprecated and will be deleted in next major release');
         }
     };
 }
 
 @Directive({ standalone: true })
 export class KbqColorDirective {
-    private readonly elementRef = inject(ElementRef);
+    readonly elementRef = inject(ElementRef);
+
+    get colorClassName(): KbqComponentColors | ThemePalette | string {
+        return `kbq-${this._color}`;
+    }
 
     @Input()
     get color(): KbqComponentColors | ThemePalette | string {
         return this._color;
     }
 
-    set color(value: KbqComponentColors | ThemePalette | string) {
-        const color = value || KbqComponentColors.Theme;
-
+    set color(color: KbqComponentColors | ThemePalette | string) {
         if (color !== this._color) {
             if (this._color) {
                 this.elementRef.nativeElement.classList.remove(`kbq-${this._color}`);
@@ -102,5 +106,9 @@ export class KbqColorDirective {
         }
     }
 
-    private _color: KbqComponentColors | ThemePalette | string;
+    protected _color: KbqComponentColors | ThemePalette | string;
+
+    constructor() {
+        this.color = KbqComponentColors.Empty;
+    }
 }

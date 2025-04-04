@@ -3,16 +3,12 @@ import {
     AfterViewInit,
     booleanAttribute,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    ElementRef,
-    Inject,
+    inject,
     Input,
     OnDestroy,
-    Optional,
     ViewEncapsulation
 } from '@angular/core';
-import { CanColor, KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '@koobiq/components/core';
 import { KbqIcon } from './icon.component';
 
 @Component({
@@ -22,7 +18,6 @@ import { KbqIcon } from './icon.component';
     styleUrls: ['icon-button.scss', 'icon-button-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    inputs: ['color'],
     host: {
         class: 'kbq kbq-icon-button',
 
@@ -33,7 +28,9 @@ import { KbqIcon } from './icon.component';
         '[class.kbq-icon-button_small]': 'small'
     }
 })
-export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, CanColor {
+export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy {
+    protected readonly focusMonitor = inject(FocusMonitor);
+
     @Input() small = false;
 
     /** Name of an icon within a @koobiq/icons. */
@@ -67,15 +64,6 @@ export class KbqIconButton extends KbqIcon implements AfterViewInit, OnDestroy, 
     private _disabled: boolean;
 
     override name = 'KbqIconButton';
-
-    constructor(
-        elementRef: ElementRef,
-        @Optional() @Inject(KBQ_FORM_FIELD_REF) formField: KbqFormFieldRef,
-        protected changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor
-    ) {
-        super(elementRef, formField, changeDetectorRef);
-    }
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();

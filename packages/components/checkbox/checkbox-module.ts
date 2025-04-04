@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { KbqColorDirective } from '../core/common-behaviors/color';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqCheckbox } from './checkbox';
 import { KbqCheckboxRequiredValidator } from './checkbox-required-validator';
 
