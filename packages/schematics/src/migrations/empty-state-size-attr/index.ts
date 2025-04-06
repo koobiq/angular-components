@@ -1,5 +1,5 @@
 import { SchematicContext, SchematicsException, Tree } from '@angular-devkit/schematics';
-import fs from 'fs';
+import fs from 'fs/promises';
 import { loadEsmModule } from 'ng-packagr/lib/utils/load-esm';
 import * as process from 'node:process';
 import path, { resolve } from 'path';
@@ -90,8 +90,12 @@ export async function getParsingInfo(project: string | undefined, tree: Tree) {
 
 async function migrateTemplate(filePath: string) {
     const parsedFilePath = `.${filePath}`;
-    const template = fs.readFileSync(parsedFilePath, 'utf8');
-    return transformTemplateAttributes(template, parsedFilePath);
+    try {
+        const template = await fs.readFile(parsedFilePath, 'utf8');
+        return transformTemplateAttributes(template, parsedFilePath);
+    } catch {
+        return { fileContent: '', changed: false };
+    }
 }
 
 async function migrateTs(sourceFile: ts.SourceFile) {
