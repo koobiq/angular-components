@@ -204,25 +204,25 @@ export class KbqBreadcrumbs implements AfterContentInit {
     protected readonly items: QueryList<KbqBreadcrumbItem>;
 
     @ViewChild(KbqOverflowItemsResult, { read: ElementRef })
-    protected readonly result: ElementRef;
+    private readonly result: ElementRef;
 
     @ViewChildren(KbqOverflowItem, { read: ElementRef })
-    protected readonly overflowItems: QueryList<ElementRef>;
-
-    /** @docs-private */
-    protected get itemsExcludingEdges() {
-        return this.items.toArray().slice(1, -1);
-    }
+    private readonly overflowItems: QueryList<ElementRef>;
 
     /**
      * Ensures at least minimum number of breadcrumb items are shown.
      */
     protected readonly minVisibleItems = 2;
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly cdr = inject(ChangeDetectorRef);
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly destroyRef = inject(DestroyRef);
+
+    /** @docs-private */
+    protected get itemsExcludingEdges() {
+        return this.items.toArray().slice(1, -1);
+    }
 
     /**
      * Calculates the total width of visible items based on the `max` value and overflow items.
