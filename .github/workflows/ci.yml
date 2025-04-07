@@ -22,6 +22,7 @@ jobs:
         uses: ./.github/workflows/actions/build-packages
 
       - name: Commitlint
+        if: ${{ github.event_name == 'pull_request' }}
         id: commitlint
         continue-on-error: true
         run: echo "${{ github.event.pull_request.title }}" | yarn commitlint
