@@ -68,7 +68,7 @@ describe(KbqBreadcrumbs.name, () => {
             ]);
             const { debugElement } = fixture;
             const { nativeElement } = getBreadcrumbsDebugElement(debugElement);
-            expect(nativeElement.classList).toBeTruthy();
+            expect(nativeElement.classList.contains('kbq-breadcrumbs_normal')).toBeTruthy();
         });
 
         it('should update when items change', () => {
