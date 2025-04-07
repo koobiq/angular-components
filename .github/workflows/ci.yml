@@ -21,6 +21,11 @@ jobs:
       - name: Build packages
         uses: ./.github/workflows/actions/build-packages
 
+      - name: Commitlint
+        id: commitlint
+        continue-on-error: true
+        run: echo "${{ github.event.pull_request.title }}" | yarn commitlint
+
       - name: API Golden Checks
         id: golden_checks
         continue-on-error: true
