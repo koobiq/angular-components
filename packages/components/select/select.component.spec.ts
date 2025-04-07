@@ -274,7 +274,7 @@ class BasicSelect {
     isRequired: boolean;
     heightAbove = 0;
     heightBelow = 0;
-    tabIndexOverride: number;
+    tabIndexOverride: number = 0;
     panelClass = ['custom-one', 'custom-two'];
 
     @ViewChild(KbqSelect, { static: true }) select: KbqSelect;

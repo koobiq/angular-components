@@ -234,13 +234,7 @@ const OPTIONS = [
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
-            <kbq-select
-                [formControl]="control"
-                [required]="isRequired"
-                [tabIndex]="tabIndexOverride"
-                [panelClass]="panelClass"
-                placeholder="Food"
-            >
+            <kbq-select [formControl]="control" [required]="isRequired" [panelClass]="panelClass" placeholder="Food">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value" [disabled]="food.disabled">
                         {{ food.viewValue }}
@@ -278,7 +272,6 @@ class BasicSelect {
     isRequired: boolean;
     heightAbove = 0;
     heightBelow = 0;
-    tabIndexOverride: number;
     panelClass = ['custom-one', 'custom-two'];
 
     @ViewChild(KbqSelect, { static: true }) select: KbqSelect;

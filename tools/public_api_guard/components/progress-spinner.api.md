@@ -7,9 +7,11 @@
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@angular/common';
+import { KbqColorDirective } from '@koobiq/components/core';
 
 // @public (undocumented)
-export class KbqProgressSpinner {
+export class KbqProgressSpinner extends KbqColorDirective {
+    constructor();
     // (undocumented)
     get dashOffsetPercent(): string;
     // (undocumented)

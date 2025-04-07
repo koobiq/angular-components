@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation } from '@angular/core';
+import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
@@ -41,7 +42,7 @@ const MAX_DASH_ARRAY = 295;
         '[attr.id]': 'id'
     }
 })
-export class KbqProgressSpinner {
+export class KbqProgressSpinner extends KbqColorDirective {
     @Input() id: string = `kbq-progress-spinner-${id++}`;
     @Input() value: number = 0;
     @Input() mode: ProgressSpinnerMode = 'determinate';
@@ -67,5 +68,11 @@ export class KbqProgressSpinner {
 
     get dashOffsetPercent(): string {
         return `${MAX_DASH_ARRAY - this.percentage * MAX_DASH_ARRAY}%`;
+    }
+
+    constructor() {
+        super();
+
+        this.color = KbqComponentColors.Theme;
     }
 }

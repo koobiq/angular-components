@@ -36,7 +36,7 @@ describe('KbqProgressSpinner', () => {
         });
     });
 
-    it('should has default primary color', () => {
+    it('should has default Theme color', () => {
         const fixture = TestBed.createComponent(TestApp);
         const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.default'));
 
