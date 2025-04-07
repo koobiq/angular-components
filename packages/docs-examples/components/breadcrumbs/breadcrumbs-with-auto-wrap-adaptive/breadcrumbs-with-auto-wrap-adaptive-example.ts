@@ -67,10 +67,6 @@ export class ExampleBreadcrumbs {
         </div>
     `,
     styles: `
-        ::ng-deep .docs-live-example__example_breadcrumbs-with-auto-wrap-adaptive {
-            background: var(--kbq-background-bg-secondary);
-        }
-
         .example-description {
             color: var(--kbq-foreground-contrast-secondary);
         }
