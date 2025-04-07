@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 
 @Component({
@@ -8,12 +7,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     template: `
         <nav [max]="null" wrapMode="auto" kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
-                <kbq-breadcrumb-item
-                    [routerLink]="breadcrumb.url"
-                    [queryParams]="{ queryParams: 'queryParam' }"
-                    [fragment]="'fragment'"
-                    [text]="breadcrumb.label"
-                />
+                <kbq-breadcrumb-item [text]="breadcrumb.label" />
             }
         </nav>
     `,
@@ -22,7 +16,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
             display: flex;
             align-items: center;
             justify-content: flex-start;
-            resize: horizontal;
             max-width: 100%;
             min-width: 137px;
             overflow: hidden;
@@ -35,7 +28,6 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
         }
     `,
     imports: [
-        RouterLink,
         KbqBreadcrumbsModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -83,19 +75,7 @@ export class ExampleBreadcrumbs {
             color: var(--kbq-foreground-contrast-secondary);
         }
     `,
-    imports: [
-        RouterLink,
-        KbqBreadcrumbsModule,
-        ExampleBreadcrumbs
-    ],
+    imports: [ExampleBreadcrumbs],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BreadcrumbsWithAutoWrapAdaptiveExample {
-    breadcrumbs = [
-        { label: 'Main', url: '/main' },
-        { label: 'Standards', url: '/main/standards' },
-        { label: 'Advanced Encryption Standard', url: '/main/standards/advanced-encryption-standard' },
-        { label: 'Edit', url: '/main/standards/advanced-encryption-standard/edit' },
-        { label: 'Test', url: '/main/standards/advanced-encryption-standard/edit/test' }
-    ];
-}
+export class BreadcrumbsWithAutoWrapAdaptiveExample {}

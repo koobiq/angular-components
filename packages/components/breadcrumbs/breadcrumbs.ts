@@ -258,7 +258,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
         this.items.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
     }
 
-    getItemWidth(item?: ElementRef) {
+    private getItemWidth(item?: ElementRef) {
         return item ? item.nativeElement.offsetWidth : 0;
     }
 }

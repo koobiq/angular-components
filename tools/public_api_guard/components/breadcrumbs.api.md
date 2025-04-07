@@ -17,7 +17,6 @@ import { PopUpPlacements } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
@@ -57,10 +56,8 @@ export class KbqBreadcrumbs implements AfterContentInit {
     disabled: boolean;
     firstItemNegativeMargin: boolean;
     // (undocumented)
-    getItemWidth(item?: ElementRef): any;
-    // (undocumented)
     protected readonly items: QueryList<KbqBreadcrumbItem>;
-    protected readonly itemsExcludingEdges: Signal<KbqBreadcrumbItem[]>;
+    protected get itemsExcludingEdges(): KbqBreadcrumbItem[];
     // (undocumented)
     protected readonly KbqButtonStyles: typeof KbqButtonStyles;
     // (undocumented)
