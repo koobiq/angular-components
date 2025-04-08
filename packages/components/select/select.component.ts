@@ -680,6 +680,8 @@ export class KbqSelect
         this.keyManager.setActiveItem(-1);
 
         this.propagateChanges();
+
+        this.focus();
     }
 
     /** `View -> model callback called when value changes` */
