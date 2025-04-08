@@ -2,8 +2,6 @@
  * this is copy of https://github.com/angular/angular/blob/main/packages/compiler/src/ml_parser/ast.ts
  * since @angular/compiler and @angular-devkit/schematics
  * are not compatible with each other */
-export type MigrationData = { elementName: string; attrs: { from: string; to: string } };
-
 export function visitAll(visitor, nodes): any[] {
     const result: any[] = [];
 
