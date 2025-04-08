@@ -287,6 +287,9 @@ export async function parseTemplate(template: string) {
 /**
  * Class that collects specific elements for migration
  * based on matching tag names and attribute values.
+ *
+ * Used as reference:
+ * @see https://github.com/angular/angular/blob/6fa8d441979fdbabb88dddd246f54587e17126e8/packages/core/schematics/migrations/control-flow-migration/types.ts#L432
  */
 export class ElementCollector implements Visitor {
     readonly elementsToMigrate: Element[] = [];
