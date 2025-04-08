@@ -14,6 +14,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    numberAttribute,
     OnDestroy,
     Optional,
     Output,
@@ -21,7 +22,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { CanDisableCtor, KBQ_PARENT_ANIMATION_COMPONENT, mixinDisabled } from '@koobiq/components/core';
+import { KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
 import { merge, Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { KbqTabHeader } from './tab-header.component';
@@ -76,13 +77,6 @@ export interface KbqTabsConfig {
 /** Injection token that can be used to provide the default options the tabs module. */
 export const KBQ_TABS_CONFIG = new InjectionToken<KbqTabsConfig>('KBQ_TABS_CONFIG');
 
-// Boilerplate for applying mixins to KbqTabGroup.
-class KbqTabGroupBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-const KbqTabGroupMixinBase: CanDisableCtor & typeof KbqTabGroupBase = mixinDisabled(KbqTabGroupBase);
-
 export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | null);
 
 /**
@@ -95,7 +89,6 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     styleUrls: ['./tab-group.scss', './tabs-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    inputs: ['disabled'],
     host: {
         class: 'kbq-tab-group',
         '[class.kbq-tab-group_filled]': '!transparent',
@@ -108,10 +101,7 @@ export type KbqTabSelectBy = string | number | ((tabs: KbqTab[]) => KbqTab | nul
     },
     providers: [{ provide: KBQ_PARENT_ANIMATION_COMPONENT, useExisting: forwardRef(() => this) }]
 })
-export class KbqTabGroup
-    extends KbqTabGroupMixinBase
-    implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy
-{
+export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterContentChecked, OnDestroy {
     readonly resizeStream = new Subject<Event>();
 
     @ContentChildren(KbqTab) tabs: QueryList<KbqTab>;
@@ -129,16 +119,16 @@ export class KbqTabGroup
     @Input({ transform: booleanAttribute }) dynamicHeight: boolean = false;
 
     /** The index of the active tab. */
-    @Input()
-    get selectedIndex(): number | null {
+    @Input({ transform: numberAttribute })
+    get selectedIndex(): number {
         return this._selectedIndex;
     }
 
-    set selectedIndex(value: number | null) {
+    set selectedIndex(value: number) {
         this.activeTab = value;
     }
 
-    private _selectedIndex: number | null = null;
+    private _selectedIndex: number;
 
     @Input()
     get activeTab(): KbqTab | null {
@@ -167,6 +157,19 @@ export class KbqTabGroup
 
     /** Duration for the tab animation. Must be a valid CSS value (e.g. 600ms). */
     @Input() animationDuration: string;
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
 
     /** Output to enable support for two-way binding on `[(selectedIndex)]` */
     @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
@@ -201,12 +204,9 @@ export class KbqTabGroup
     private readonly resizeDebounceInterval: number = 100;
 
     constructor(
-        elementRef: ElementRef,
         private readonly changeDetectorRef: ChangeDetectorRef,
         @Inject(KBQ_TABS_CONFIG) @Optional() defaultConfig?: KbqTabsConfig
     ) {
-        super(elementRef);
-
         this.groupId = nextId++;
         this.animationDuration = defaultConfig?.animationDuration || '0ms';
 

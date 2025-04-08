@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Directive, ElementRef, Input, ViewEncapsulation } from '@angular/core';
-import { CanColor, CanColorCtor, KbqComponentColors, mixinColor } from '@koobiq/components/core';
+import { ChangeDetectionStrategy, Component, Directive, Input, ViewEncapsulation } from '@angular/core';
+import { KbqColorDirective, KbqComponentColors } from '@koobiq/components/core';
 
 export type ProgressSpinnerMode = 'determinate' | 'indeterminate';
 
@@ -27,17 +27,6 @@ export class KbqProgressSpinnerText {}
 })
 export class KbqProgressSpinnerCaption {}
 
-/** @docs-private */
-export class KbqProgressSpinnerBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqProgressSpinnerMixinBase: CanColorCtor & typeof KbqProgressSpinnerBase = mixinColor(
-    KbqProgressSpinnerBase,
-    KbqComponentColors.Theme
-);
-
 const MAX_DASH_ARRAY = 295;
 
 @Component({
@@ -46,7 +35,6 @@ const MAX_DASH_ARRAY = 295;
     styleUrls: ['./progress-spinner.scss', './progress-spinner-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    inputs: ['color'],
     host: {
         class: 'kbq-progress-spinner',
         '[class.kbq-progress-spinner_big]': `size === 'big'`,
@@ -54,7 +42,7 @@ const MAX_DASH_ARRAY = 295;
         '[attr.id]': 'id'
     }
 })
-export class KbqProgressSpinner extends KbqProgressSpinnerMixinBase implements CanColor {
+export class KbqProgressSpinner extends KbqColorDirective {
     @Input() id: string = `kbq-progress-spinner-${id++}`;
     @Input() value: number = 0;
     @Input() mode: ProgressSpinnerMode = 'determinate';
@@ -74,15 +62,17 @@ export class KbqProgressSpinner extends KbqProgressSpinnerMixinBase implements C
 
     svgCircleRadius: string = '42.5%';
 
-    constructor(elementRef: ElementRef) {
-        super(elementRef);
-    }
-
     get percentage(): number {
         return Math.max(MIN_PERCENT, Math.min(MAX_PERCENT, this.value)) / MAX_PERCENT;
     }
 
     get dashOffsetPercent(): string {
         return `${MAX_DASH_ARRAY - this.percentage * MAX_DASH_ARRAY}%`;
+    }
+
+    constructor() {
+        super();
+
+        this.color = KbqComponentColors.Theme;
     }
 }

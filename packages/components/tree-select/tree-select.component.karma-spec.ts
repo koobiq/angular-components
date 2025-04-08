@@ -159,12 +159,7 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field style="width: 300px">
-            <kbq-tree-select
-                [formControl]="control"
-                [tabIndex]="tabIndexOverride"
-                [panelClass]="panelClass"
-                placeholder="Food"
-            >
+            <kbq-tree-select [formControl]="control" [panelClass]="panelClass" placeholder="Food">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -194,7 +189,6 @@ class BasicTreeSelect {
 
     heightAbove = 0;
     heightBelow = 0;
-    tabIndexOverride: number;
     panelClass = ['custom-one', 'custom-two'];
 
     @ViewChild(KbqTreeSelect, { static: true }) select: KbqTreeSelect;

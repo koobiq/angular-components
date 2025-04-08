@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
-import { CanDisable, ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
+import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject } from 'rxjs';
@@ -47,7 +47,7 @@ export const KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileLabel = r
 })
 export class KbqSingleFileUploadComponent
     extends KbqFileUploadBase
-    implements AfterViewInit, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck
+    implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck
 {
     /**
      * A value responsible for progress spinner type.

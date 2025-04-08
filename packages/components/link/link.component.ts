@@ -7,32 +7,16 @@ import {
     Directive,
     ElementRef,
     Input,
+    numberAttribute,
     OnDestroy
 } from '@angular/core';
-import {
-    CanDisable,
-    CanDisableCtor,
-    HasTabIndex,
-    HasTabIndexCtor,
-    mixinDisabled,
-    mixinTabIndex
-} from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
-
-/** @docs-private */
-export class KbqLinkBase {}
-
-/** @docs-private */
-export const KbqLinkMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqLinkBase = mixinTabIndex(
-    mixinDisabled(KbqLinkBase)
-);
 
 export const baseURLRegex = /^http(s)?:\/\//;
 
 @Directive({
     selector: '[kbq-link]',
     exportAs: 'kbqLink',
-    inputs: ['tabIndex'],
     host: {
         class: 'kbq-link',
         '[class.kbq-link_no-underline]': 'noUnderline',
@@ -43,13 +27,13 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[class.kbq-link_print]': 'printMode',
         '[class.kbq-text-only]': '!hasIcon',
         '[class.kbq-text-with-icon]': 'hasIcon',
-        '[class.kbq-disabled]': 'disabled || null',
+        '[class.kbq-disabled]': 'disabled',
         '[attr.disabled]': 'disabled || null',
         '[attr.tabindex]': 'tabIndex',
         '[attr.print]': 'printUrl'
     }
 })
-export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestroy, HasTabIndex, CanDisable {
+export class KbqLink implements AfterViewInit, OnDestroy {
     /** Whether the link is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -64,6 +48,17 @@ export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestro
     }
 
     private _disabled = false;
+
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
 
     @Input({ transform: booleanAttribute }) pseudo: boolean = false;
 
@@ -101,8 +96,6 @@ export class KbqLink extends KbqLinkMixinBase implements AfterViewInit, OnDestro
         private focusMonitor: FocusMonitor,
         private changeDetector: ChangeDetectorRef
     ) {
-        super();
-
         this.updatePrintUrl();
     }
 

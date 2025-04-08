@@ -252,7 +252,7 @@ class BasicTreeSelect {
 
     heightAbove = 0;
     heightBelow = 0;
-    tabIndexOverride: number;
+    tabIndexOverride: number = 0;
     panelClass = ['custom-one', 'custom-two'];
 
     @ViewChild(KbqTreeSelect, { static: true }) select: KbqTreeSelect;

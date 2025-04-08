@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChild,
@@ -10,12 +11,12 @@ import {
     inject,
     Inject,
     InjectionToken,
+    Input,
     OnDestroy,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
-import { CanDisableCtor, HasTabIndexCtor, mixinDisabled, mixinTabIndex } from '../common-behaviors';
 
 export interface KbqOptionActionParent {
     dropdownTrigger: {
@@ -33,14 +34,6 @@ export interface KbqOptionActionParent {
 }
 
 export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent>('KBQ_OPTION_ACTION_PARENT');
-
-/** @docs-private */
-export class KbqOptionActionBase {}
-
-/** @docs-private */
-export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof KbqOptionActionBase = mixinTabIndex(
-    mixinDisabled(KbqOptionActionBase)
-);
 
 @Component({
     selector: 'kbq-option-action',
@@ -66,12 +59,24 @@ export const KbqOptionActionMixinBase: HasTabIndexCtor & CanDisableCtor & typeof
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
     },
-    inputs: ['disabled'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqOptionActionComponent extends KbqOptionActionMixinBase implements AfterViewInit, OnDestroy {
+export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     @ContentChild('customIcon') customIcon: ElementRef;
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
 
     hasFocus: boolean = false;
 
@@ -85,9 +90,7 @@ export class KbqOptionActionComponent extends KbqOptionActionMixinBase implement
         private elementRef: ElementRef,
         private focusMonitor: FocusMonitor,
         @Inject(KBQ_OPTION_ACTION_PARENT) private option: KbqOptionActionParent
-    ) {
-        super();
-    }
+    ) {}
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef.nativeElement);

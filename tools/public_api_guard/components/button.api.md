@@ -6,17 +6,14 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { CanColor } from '@koobiq/components/core';
-import { CanColorCtor } from '@koobiq/components/core';
-import { CanDisable } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@angular/cdk/platform';
 import * as i4 from '@angular/cdk/observers';
+import { KbqColorDirective } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
@@ -34,11 +31,11 @@ export const buttonRightIconClassName = "kbq-button-icon_right";
 export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public (undocumented)
-export class KbqButton extends KbqButtonMixinBase implements OnDestroy, AfterViewInit, CanDisable, CanColor, KbqTitleTextRef {
-    constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
+export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
+    constructor(focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
     // (undocumented)
-    get disabled(): any;
-    set disabled(value: any);
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -53,6 +50,10 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, AfterVie
     get kbqStyle(): string;
     set kbqStyle(value: string | KbqButtonStyles);
     // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
+    static ngAcceptInputType_tabIndex: unknown;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -63,18 +64,14 @@ export class KbqButton extends KbqButtonMixinBase implements OnDestroy, AfterVie
     // (undocumented)
     projectContentChanged(): void;
     // (undocumented)
+    get tabIndex(): number;
+    set tabIndex(value: number);
+    // (undocumented)
     textElement: ElementRef;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "color": { "alias": "color"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqButton, "[kbq-button]", never, { "kbqStyle": { "alias": "kbqStyle"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; }, {}, never, ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButton, never>;
-}
-
-// @public
-export class KbqButtonBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
 }
 
 // @public (undocumented)
@@ -105,9 +102,6 @@ export class KbqButtonDropdownTrigger {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqButtonDropdownTrigger, never>;
 }
-
-// @public
-export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButtonBase;
 
 // @public (undocumented)
 export class KbqButtonModule {

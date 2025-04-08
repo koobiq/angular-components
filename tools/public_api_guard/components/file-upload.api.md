@@ -6,7 +6,6 @@
 
 import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CanDisable } from '@koobiq/components/core';
 import { CanUpdateErrorState } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
@@ -167,7 +166,7 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 }
 
 // @public (undocumented)
-export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck {
+export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
     constructor();
     // (undocumented)
     accept?: string[];
@@ -244,7 +243,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
 }
 
 // @public (undocumented)
-export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, CanDisable, ControlValueAccessor, DoCheck {
+export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
     constructor();
     // (undocumented)
     accept?: string[];

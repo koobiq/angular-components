@@ -12,35 +12,15 @@ import {
     Output,
     ViewChild,
     ViewEncapsulation,
-    forwardRef
+    forwardRef,
+    numberAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-    CanColor,
-    CanColorCtor,
-    CanDisable,
-    CanDisableCtor,
-    HasTabIndex,
-    HasTabIndexCtor,
-    KbqComponentColors,
-    mixinColor,
-    mixinDisabled,
-    mixinTabIndex
-} from '@koobiq/components/core';
+import { KbqColorDirective } from '@koobiq/components/core';
 
 let nextUniqueId = 0;
 
 type ToggleLabelPositionType = 'left' | 'right';
-
-/** @docs-private */
-export class KbqToggleBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqToggleMixinBase: HasTabIndexCtor & CanDisableCtor & CanColorCtor & typeof KbqToggleBase = mixinTabIndex(
-    mixinColor(mixinDisabled(KbqToggleBase), KbqComponentColors.Theme)
-);
 
 export class KbqToggleChange {
     source: KbqToggleComponent;
@@ -54,7 +34,6 @@ export class KbqToggleChange {
     styleUrls: ['./toggle.scss', './toggle-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    inputs: ['color', 'tabIndex'],
     host: {
         class: 'kbq-toggle',
         '[class.kbq-toggle_big]': 'big',
@@ -78,10 +57,7 @@ export class KbqToggleChange {
         }
     ]
 })
-export class KbqToggleComponent
-    extends KbqToggleMixinBase
-    implements AfterViewInit, ControlValueAccessor, CanColor, CanDisable, HasTabIndex, OnDestroy
-{
+export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     @Input() big: boolean = false;
 
     @ViewChild('input', { static: false }) inputElement: ElementRef;
@@ -115,6 +91,17 @@ export class KbqToggleComponent
 
     private _disabled: boolean = false;
 
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
+
     get checked() {
         return this._checked;
     }
@@ -134,11 +121,10 @@ export class KbqToggleComponent
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
     constructor(
-        public elementRef: ElementRef,
         private focusMonitor: FocusMonitor,
         private changeDetectorRef: ChangeDetectorRef
     ) {
-        super(elementRef);
+        super();
 
         this.id = this.uniqueId;
     }

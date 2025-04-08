@@ -6,8 +6,6 @@
 
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
-import { CanDisable } from '@koobiq/components/core';
-import { CanDisableCtor } from '@koobiq/components/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { ControlValueAccessor } from '@angular/forms';
@@ -15,8 +13,6 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { HasTabIndex } from '@koobiq/components/core';
-import { HasTabIndexCtor } from '@koobiq/components/core';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/cdk/a11y';
 import * as i4 from '@koobiq/components/core';
@@ -177,7 +173,7 @@ export class KbqListSelectAllEvent<T> {
 }
 
 // @public (undocumented)
-export class KbqListSelection extends KbqListSelectionMixinBase implements CanDisable, HasTabIndex, AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
+export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDestroy, ControlValueAccessor {
     constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)
     get autoSelect(): boolean;
@@ -189,6 +185,9 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     compareWith: (o1: any, o2: any) => boolean;
     // (undocumented)
     deselectAll(): void;
+    // (undocumented)
+    get disabled(): boolean;
+    set disabled(value: boolean);
     // (undocumented)
     emitChangeEvent(option: KbqListOption): void;
     // (undocumented)
@@ -207,6 +206,8 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     get multiple(): boolean;
     // (undocumented)
     multipleMode: MultipleMode | null;
+    // (undocumented)
+    static ngAcceptInputType_disabled: unknown;
     // (undocumented)
     static ngAcceptInputType_horizontal: unknown;
     // (undocumented)
@@ -271,16 +272,9 @@ export class KbqListSelection extends KbqListSelectionMixinBase implements CanDi
     // (undocumented)
     writeValue(values: string[]): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "disabled": { "alias": "disabled"; "required": false; }; "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqListSelection, "kbq-list-selection", ["kbqListSelection"], { "autoSelect": { "alias": "autoSelect"; "required": false; }; "noUnselectLast": { "alias": "noUnselectLast"; "required": false; }; "horizontal": { "alias": "horizontal"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "compareWith": { "alias": "compareWith"; "required": false; }; }, { "onSelectAll": "onSelectAll"; "onCopy": "onCopy"; "selectionChange": "selectionChange"; }, ["options"], ["*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqListSelection, [null, null, { attribute: "multiple"; }, { optional: true; }]>;
-}
-
-// @public
-export class KbqListSelectionBase {
-    constructor(elementRef: ElementRef);
-    // (undocumented)
-    elementRef: ElementRef;
 }
 
 // @public (undocumented)
@@ -291,9 +285,6 @@ export class KbqListSelectionChange {
     // (undocumented)
     source: KbqListSelection;
 }
-
-// @public
-export const KbqListSelectionMixinBase: CanDisableCtor & HasTabIndexCtor & typeof KbqListSelectionBase;
 
 // @public (undocumented)
 export interface KbqOptionEvent {

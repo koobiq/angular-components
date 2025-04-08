@@ -1,14 +1,5 @@
-import { AfterViewInit, ContentChild, Directive, ElementRef, Input, Renderer2 } from '@angular/core';
-import { CanDisable, CanDisableCtor, mixinDisabled } from '@koobiq/components/core';
+import { AfterViewInit, booleanAttribute, ContentChild, Directive, ElementRef, Input, Renderer2 } from '@angular/core';
 import { KbqTab } from './tab.component';
-
-// Boilerplate for applying mixins to KbqTabLabelWrapper.
-/** @docs-private */
-export class KbqTabLabelWrapperBase {}
-
-/** @docs-private */
-export const KbqTabLabelWrapperMixinBase: CanDisableCtor & typeof KbqTabLabelWrapperBase =
-    mixinDisabled(KbqTabLabelWrapperBase);
 
 /**
  * Used in the `kbq-tab-group` view to display tab labels.
@@ -16,23 +7,33 @@ export const KbqTabLabelWrapperMixinBase: CanDisableCtor & typeof KbqTabLabelWra
  */
 @Directive({
     selector: '[kbqTabLabelWrapper]',
-    inputs: ['disabled'],
     host: {
         '[class.kbq-disabled]': 'disabled',
         '[attr.disabled]': 'disabled || null'
     }
 })
-export class KbqTabLabelWrapper extends KbqTabLabelWrapperMixinBase implements CanDisable, AfterViewInit {
+export class KbqTabLabelWrapper implements AfterViewInit {
     @ContentChild('labelContent') labelContent: ElementRef;
 
     @Input() tab: KbqTab;
 
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
+
     constructor(
         public elementRef: ElementRef,
         private renderer: Renderer2
-    ) {
-        super();
-    }
+    ) {}
 
     ngAfterViewInit(): void {
         this.addClassModifierForIcons(Array.from(this.elementRef.nativeElement.querySelectorAll('.kbq-icon')));

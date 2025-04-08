@@ -13,18 +13,18 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
+    inject,
     OnDestroy,
     Optional,
     QueryList,
     Self,
     ViewChild,
-    ViewEncapsulation,
-    inject
+    ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
-import { CanColor, CanColorCtor, KBQ_FORM_FIELD_REF, mixinColor } from '@koobiq/components/core';
+import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
@@ -34,21 +34,13 @@ import {
     getKbqFormFieldYouCanNotUseCleanerInNumberInputError
 } from './form-field-errors';
 import { KbqHint } from './hint';
-import { KbqPasswordHint, hasPasswordStrengthError } from './password-hint';
+import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
 let nextUniqueId = 0;
-
-/** @docs-private */
-export class KbqFormFieldBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mixinColor(KbqFormFieldBase);
 
 @Component({
     selector: 'kbq-form-field',
@@ -90,15 +82,14 @@ export const KbqFormFieldMixinBase: CanColorCtor & typeof KbqFormFieldBase = mix
         '(mouseenter)': 'onHoverChanged(true)',
         '(mouseleave)': 'onHoverChanged(false)'
     },
-    inputs: ['color'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [
         { provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
 export class KbqFormField
-    extends KbqFormFieldMixinBase
-    implements AfterContentInit, AfterContentChecked, AfterViewInit, CanColor, OnDestroy
+    extends KbqColorDirective
+    implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
 {
     @ContentChild(KbqFormFieldControl, { static: false }) control: KbqFormFieldControl<any>;
     @ContentChild(KbqStepper, { static: false }) stepper: KbqStepper;
@@ -170,11 +161,10 @@ export class KbqFormField
     }
 
     constructor(
-        public elementRef: ElementRef,
         private changeDetectorRef: ChangeDetectorRef,
         private focusMonitor: FocusMonitor
     ) {
-        super(elementRef);
+        super();
     }
 
     ngAfterContentInit() {

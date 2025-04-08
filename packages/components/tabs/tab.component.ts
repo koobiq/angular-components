@@ -15,23 +15,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import {
-    CanDisable,
-    CanDisableCtor,
     KBQ_CUSTOM_SCROLL_STRATEGY_PROVIDER,
     KBQ_SELECT_SCROLL_STRATEGY,
-    mixinDisabled,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KBQ_DROPDOWN_SCROLL_STRATEGY } from '@koobiq/components/dropdown';
 import { Subject } from 'rxjs';
 import { KbqTabContent } from './tab-content.directive';
 import { KBQ_TAB_LABEL, KbqTabLabel } from './tab-label.directive';
-
-/** @docs-private */
-export class KbqTabBase {}
-
-/** @docs-private */
-export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase = mixinDisabled(KbqTabBase);
 
 @Component({
     selector: 'kbq-tab',
@@ -40,7 +31,6 @@ export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase = mixinDisabled
     // TemplateRef and use it in a Portal to render the tab content in the appropriate place in the
     // tab-group.
     template: '<ng-template><ng-content /></ng-template>',
-    inputs: ['disabled'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
@@ -49,7 +39,7 @@ export const KbqTabMixinBase: CanDisableCtor & typeof KbqTabBase = mixinDisabled
         )
     ]
 })
-export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnChanges, OnDestroy {
+export class KbqTab implements OnInit, OnChanges, OnDestroy {
     /** @docs-private */
     get content(): TemplatePortal | null {
         return this.contentPortal;
@@ -84,6 +74,19 @@ export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnCha
     }
 
     private _tooltipTitle = '';
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
+        return this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
+        }
+    }
+
+    private _disabled: boolean = false;
 
     @Input() tooltipPlacement: PopUpPlacements = PopUpPlacements.Right;
 
@@ -135,9 +138,7 @@ export class KbqTab extends KbqTabMixinBase implements OnInit, CanDisable, OnCha
     /** Portal that will be the hosted content of the tab */
     private contentPortal: TemplatePortal | null = null;
 
-    constructor(private readonly viewContainerRef: ViewContainerRef) {
-        super();
-    }
+    constructor(private readonly viewContainerRef: ViewContainerRef) {}
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.hasOwnProperty('textLabel') || changes.hasOwnProperty('disabled')) {

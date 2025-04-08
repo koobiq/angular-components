@@ -17,6 +17,7 @@ import {
     inject,
     Input,
     NgZone,
+    numberAttribute,
     OnDestroy,
     QueryList
 } from '@angular/core';
@@ -66,6 +67,7 @@ export type KbqPaginatedTabHeaderItem = FocusableOption & { elementRef: ElementR
 @Directive()
 export abstract class KbqPaginatedTabHeader implements AfterContentChecked, AfterContentInit, AfterViewInit, OnDestroy {
     /** The index of the active tab. */
+    @Input({ transform: numberAttribute })
     get selectedIndex(): number {
         return this._selectedIndex;
     }

@@ -1,8 +1,8 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -11,6 +11,7 @@ import {
     ElementRef,
     forwardRef,
     Input,
+    numberAttribute,
     OnDestroy,
     QueryList,
     Renderer2,
@@ -18,17 +19,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    CanColor,
-    CanColorCtor,
-    CanDisable,
-    HasTabIndexCtor,
-    KBQ_TITLE_TEXT_REF,
-    KbqComponentColors,
-    KbqTitleTextRef,
-    mixinColor,
-    mixinTabIndex
-} from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqColorDirective, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
 export enum KbqButtonStyles {
@@ -120,23 +111,12 @@ export class KbqButtonCssStyler implements AfterContentInit {
     }
 }
 
-/** @docs-private */
-export class KbqButtonBase {
-    constructor(public elementRef: ElementRef) {}
-}
-
-/** @docs-private */
-export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButtonBase = mixinTabIndex(
-    mixinColor(KbqButtonBase, KbqComponentColors.ContrastFade)
-);
-
 @Component({
     selector: '[kbq-button]',
     templateUrl: './button.component.html',
     styleUrls: ['./button.scss', './button-tokens.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    inputs: ['color', 'tabIndex'],
     host: {
         '[attr.disabled]': 'disabled || null',
         '[class.kbq-disabled]': 'disabled',
@@ -149,10 +129,7 @@ export const KbqButtonMixinBase: HasTabIndexCtor & CanColorCtor & typeof KbqButt
     providers: [
         { provide: KBQ_TITLE_TEXT_REF, useExisting: KbqButton }]
 })
-export class KbqButton
-    extends KbqButtonMixinBase
-    implements OnDestroy, AfterViewInit, CanDisable, CanColor, KbqTitleTextRef
-{
+export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     hasFocus: boolean = false;
 
     @ViewChild('kbqTitleText', { static: false }) textElement: ElementRef;
@@ -168,25 +145,35 @@ export class KbqButton
 
     private _kbqStyle: string | KbqButtonStyles = KbqButtonStyles.Filled;
 
-    @Input()
-    get disabled() {
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
         return this._disabled;
     }
 
-    set disabled(value: any) {
-        this._disabled = coerceBooleanProperty(value);
+    set disabled(value: boolean) {
+        this._disabled = value;
 
         this._disabled ? this.stopFocusMonitor() : this.runFocusMonitor();
     }
 
     private _disabled: boolean = false;
 
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
+
     constructor(
-        elementRef: ElementRef,
         private focusMonitor: FocusMonitor,
         private styler: KbqButtonCssStyler
     ) {
-        super(elementRef);
+        super();
     }
 
     ngAfterViewInit(): void {

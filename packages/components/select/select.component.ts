@@ -21,7 +21,6 @@ import {
     InjectionToken,
     Input,
     NgZone,
-    OnChanges,
     OnDestroy,
     OnInit,
     Optional,
@@ -30,7 +29,6 @@ import {
     QueryList,
     Renderer2,
     Self,
-    SimpleChanges,
     TemplateRef,
     ViewChild,
     ViewChildren,
@@ -41,7 +39,7 @@ import {
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm } from '@angular/forms';
+import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import {
     A,
@@ -61,13 +59,8 @@ import {
     UP_ARROW
 } from '@koobiq/cdk/keycodes';
 import {
-    CanDisable,
-    CanDisableCtor,
     CanUpdateErrorState,
-    CanUpdateErrorStateCtor,
     ErrorStateMatcher,
-    HasTabIndex,
-    HasTabIndexCtor,
     KBQ_LOCALE_SERVICE,
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
@@ -87,10 +80,7 @@ import {
     getKbqSelectDynamicMultipleError,
     getKbqSelectNonArrayValueError,
     getKbqSelectNonFunctionValueError,
-    kbqSelectAnimations,
-    mixinDisabled,
-    mixinErrorState,
-    mixinTabIndex
+    kbqSelectAnimations
 } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqTag } from '@koobiq/components/tags';
@@ -131,36 +121,11 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
     };
 };
 
-/** @docs-private */
-export class KbqSelectBase extends KbqAbstractSelect {
-    /**
-     * Emits whenever the component state changes and should cause the parent
-     * form-field to update. Implemented as part of `KbqFormFieldControl`.
-     * @docs-private
-     */
-    readonly stateChanges = new Subject<void>();
-
-    constructor(
-        public elementRef: ElementRef,
-        public defaultErrorStateMatcher: ErrorStateMatcher,
-        public parentForm: NgForm,
-        public parentFormGroup: FormGroupDirective,
-        public ngControl: NgControl
-    ) {
-        super();
-    }
-}
-
-/** @docs-private */
-const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorStateCtor & typeof KbqSelectBase =
-    mixinTabIndex(mixinDisabled(mixinErrorState(KbqSelectBase)));
-
 @Component({
     selector: 'kbq-select',
     exportAs: 'kbqSelect',
     templateUrl: 'select.html',
     styleUrls: ['./select.scss', './select-tokens.scss'],
-    inputs: ['disabled', 'tabIndex'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -189,23 +154,29 @@ const KbqSelectMixinBase: CanDisableCtor & HasTabIndexCtor & CanUpdateErrorState
     ]
 })
 export class KbqSelect
-    extends KbqSelectMixinBase
+    extends KbqAbstractSelect
     implements
         AfterContentInit,
         AfterViewInit,
-        OnChanges,
         OnDestroy,
         OnInit,
         DoCheck,
         ControlValueAccessor,
-        CanDisable,
-        HasTabIndex,
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
+
+    /** Whether the component is in an error state. */
+    errorState: boolean = false;
+    /**
+     * Emits whenever the component state changes and should cause the parent
+     * form-field to update. Implemented as part of `KbqFormFieldControl`.
+     * @docs-private
+     */
+    readonly stateChanges = new Subject<void>();
 
     /** A name for this control that can be used by `kbq-form-field`. */
     controlType = 'select';
@@ -472,15 +443,32 @@ export class KbqSelect
 
     private _id: string;
 
-    get disabled() {
+    @Input({ transform: numberAttribute })
+    get tabIndex(): number {
+        return this.disabled ? -1 : this._tabIndex;
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
+    }
+
+    private _tabIndex = 0;
+
+    @Input({ transform: booleanAttribute })
+    get disabled(): boolean {
         return this._disabled;
     }
 
-    set disabled(value: any) {
-        this._disabled = coerceBooleanProperty(value);
+    set disabled(value: boolean) {
+        if (value !== this.disabled) {
+            this._disabled = value;
 
-        if (this.parentFormField) {
-            this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+            if (this.parentFormField) {
+                this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+            }
+
+            // Let the parent form field know to run change detection when the disabled state changes.
+            this.stateChanges.next();
         }
     }
 
@@ -572,18 +560,18 @@ export class KbqSelect
         private readonly _changeDetectorRef: ChangeDetectorRef,
         private readonly _ngZone: NgZone,
         private readonly _renderer: Renderer2,
-        defaultErrorStateMatcher: ErrorStateMatcher,
-        elementRef: ElementRef,
+        public defaultErrorStateMatcher: ErrorStateMatcher,
+        public elementRef: ElementRef,
         private overlayContainer: OverlayContainer,
         @Optional() private readonly _dir: Directionality,
-        @Optional() parentForm: NgForm,
-        @Optional() parentFormGroup: FormGroupDirective,
+        @Optional() public parentForm: NgForm,
+        @Optional() public parentFormGroup: FormGroupDirective,
         @Host() @Optional() private readonly parentFormField: KbqFormField,
-        @Self() @Optional() ngControl: NgControl,
+        @Self() @Optional() public ngControl: NgControl,
         @Inject(KBQ_SELECT_SCROLL_STRATEGY) private readonly scrollStrategyFactory,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) protected localeService?: KbqLocaleService
     ) {
-        super(elementRef, defaultErrorStateMatcher, parentForm, parentFormGroup, ngControl);
+        super();
 
         this.localeService?.changes.subscribe(this.updateLocaleParams);
 
@@ -655,17 +643,22 @@ export class KbqSelect
         }
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-        // Updating the disabled state is handled by `mixinDisabled`, but we need to additionally let
-        // the parent form field know to run change detection when the disabled state changes.
-        if (changes.disabled) {
-            this.stateChanges.next();
-        }
-    }
-
     ngOnDestroy() {
         this.stateChanges.complete();
         this.closeSubscription.unsubscribe();
+    }
+
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultErrorStateMatcher;
+        const control = this.ngControl ? (this.ngControl.control as UntypedFormControl) : null;
+        const newState = matcher.isErrorState(control, parent);
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
     }
 
     @Input()

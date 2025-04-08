@@ -88,7 +88,6 @@ const groupedZones: KbqTimezoneGroup[] = [
             <kbq-timezone-select
                 [formControl]="control"
                 [required]="isRequired"
-                [tabIndex]="tabIndexOverride"
                 [panelClass]="panelClass"
                 placeholder="Timezones"
             >
@@ -114,7 +113,6 @@ class BasicTimezoneSelect {
     isRequired: boolean;
     heightAbove = 0;
     heightBelow = 0;
-    tabIndexOverride: number;
     panelClass = ['custom-one', 'custom-two'];
     disabledFor = 'Europe/city7';
 
