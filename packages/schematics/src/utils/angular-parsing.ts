@@ -1,5 +1,4 @@
 import { SchematicContext, Tree } from '@angular-devkit/schematics';
-import fs from 'fs';
 import { relative } from 'path';
 import ts from 'typescript';
 import { getSimpleAttributeName, getSimpleAttributeValue, visitAll } from './ast';
@@ -27,13 +26,19 @@ export async function migrateTemplate(
 ) {
     for (const templatePath of filePaths) {
         const parsedFilePath = `.${templatePath}`;
-        let res: Promise<TransformTemplateAttributesResult>;
+        let res: Promise<TransformTemplateAttributesResult> = Promise.resolve({
+            fileContent: '',
+            changed: false,
+            errors: []
+        });
 
         try {
-            const template = fs.readFileSync(parsedFilePath, 'utf8');
-            res = transformTemplateAttributes(template, parsedFilePath, migrationData);
-        } catch {
-            res = Promise.resolve({ fileContent: '', changed: false, errors: [] });
+            const template = tree.read(parsedFilePath)?.toString();
+            if (template) {
+                res = transformTemplateAttributes(template, parsedFilePath, migrationData);
+            }
+        } catch (e) {
+            context.logger.error(e as any);
         }
 
         const { fileContent, changed, errors } = await res;

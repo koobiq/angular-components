@@ -99,6 +99,7 @@ export async function getParsingInfo(project: string | undefined, tree: Tree) {
 /**
  * WARNING: do not change directly, since it's a copy of
  * https://github.com/angular/angular/blob/6fa8d441979fdbabb88dddd246f54587e17126e8/packages/core/schematics/utils/load_esm.ts
+ *
  * This uses a dynamic import to load a module which may be ESM.
  * CommonJS code can load ESM code via a dynamic import. Unfortunately, TypeScript
  * will currently, unconditionally downlevel dynamic import into a require call.

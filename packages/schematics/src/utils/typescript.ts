@@ -1,6 +1,5 @@
 import ts from 'typescript';
 import { Attribute, Block, Element, getSimpleAttributeName, Visitor } from './ast';
-import { loadEsmModule } from './package-config';
 
 export const LEADING_TRIVIA_CHARS = [' ', '\n', '\r', '\t'];
 
@@ -211,17 +210,16 @@ export class AnalyzedFile {
  * parses the template string into the Html AST
  */
 export async function parseTemplate(template: string): Promise<ParseTemplateResult> {
-    const { HtmlParser } = await loadEsmModule<typeof import('@angular/compiler')>('@angular/compiler');
-    const parser = new HtmlParser();
-
-    let parsed;
     try {
+        const { HtmlParser } = await import('@angular/compiler');
+        const parser = new HtmlParser();
+
         // Note: we use the HtmlParser here, instead of the `parseTemplate` function, because the
         // latter returns an Ivy AST, not an HTML AST. The HTML AST has the advantage of preserving
         // interpolated text as text nodes containing a mixture of interpolation tokens and text tokens,
         // rather than turning them into `BoundText` nodes like the Ivy AST does. This allows us to
         // easily get the text-only ranges without having to reconstruct the original text.
-        parsed = parser.parse(template, '', {
+        const parsed = parser.parse(template, '', {
             // Allows for ICUs to be parsed.
             tokenizeExpansionForms: true,
             // Explicitly disable blocks so that their characters are treated as plain text.
@@ -235,8 +233,8 @@ export async function parseTemplate(template: string): Promise<ParseTemplateResu
             const errors = parsed.errors.map((e) => ({ type: 'parse', error: e }));
             return { tree: undefined, errors };
         }
+        return { tree: parsed, errors: [] };
     } catch (e: any) {
         return { tree: undefined, errors: [{ type: 'parse', error: e }] };
     }
-    return { tree: parsed, errors: [] };
 }
