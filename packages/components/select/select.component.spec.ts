@@ -254,6 +254,8 @@ const OPTIONS = [
                         }
                     </kbq-tag>
                 </ng-template>
+
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
@@ -2540,6 +2542,33 @@ describe(KbqSelect.name, () => {
 
                 requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
                 expect(requiredMarker).not.toBeNull();
+            }));
+        });
+
+        describe('Clear value', () => {
+            let fixture: ComponentFixture<BasicSelect>;
+            let cleaner: HTMLElement;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(BasicSelect);
+                fixture.detectChanges();
+                flush();
+            }));
+
+            it('should reset selection on clear', fakeAsync(() => {
+                fixture.componentInstance.control = new UntypedFormControl('pizza-1');
+                fixture.detectChanges();
+                flush();
+
+                const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+                expect(value.nativeElement.textContent).toContain('Pizza');
+
+                cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+                cleaner.click();
+                fixture.detectChanges();
+                flush();
+
+                expect(value.nativeElement.textContent).toContain('Food');
             }));
         });
 
