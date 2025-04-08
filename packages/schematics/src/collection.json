@@ -21,6 +21,16 @@
             "description": "Updates prefixes and names of changed/removed icons",
             "factory": "./migrations/deprecated-icons/index",
             "schema": "./migrations/deprecated-icons/schema.json"
+        },
+        "empty-state-size-attr": {
+            "description": "Updates attr name and value in ts and html",
+            "factory": "./migrations/empty-state-size-attr/index",
+            "schema": "./migrations/empty-state-size-attr/schema.json"
+        },
+        "loader-overlay-size-attr": {
+            "description": "Updates attr name and value in ts and html",
+            "factory": "./migrations/loader-overlay-size-attr/index",
+            "schema": "./migrations/loader-overlay-size-attr/schema.json"
         }
     }
 }
