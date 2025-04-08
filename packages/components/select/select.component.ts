@@ -66,6 +66,7 @@ import {
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
+    KbqComponentColors,
     KbqLocaleService,
     KbqOptgroup,
     KbqOption,
@@ -533,6 +534,10 @@ export class KbqSelect
 
     get firstFiltered(): boolean {
         return !this.options.find((option: KbqOption) => option === this.firstSelected);
+    }
+
+    get colorForState(): KbqComponentColors {
+        return this.ngControl?.invalid || this.errorState ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
     }
 
     private closeSubscription = Subscription.EMPTY;

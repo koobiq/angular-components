@@ -27,7 +27,7 @@
                                     @if (!customTagTemplateRef) {
                                         @for (option of triggerValues; track option) {
                                             <kbq-tag
-                                                [class.kbq-error]="errorState"
+                                                [color]="colorForState"
                                                 [disabled]="option.disabled || disabled"
                                                 [selectable]="false"
                                             >
@@ -74,7 +74,7 @@
             }
 
             <div class="kbq-select__arrow-wrapper">
-                <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="'contrast-fade'"></i>
+                <i kbq-icon="kbq-chevron-down-s_16" class="kbq-select__arrow" [color]="colorForState"></i>
             </div>
         </div>
     }

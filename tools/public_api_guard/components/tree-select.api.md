@@ -29,6 +29,7 @@ import * as i8 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
@@ -76,6 +77,8 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     clearValue($event: any): void;
     close(): void;
     readonly closedStream: Observable<void>;
+    // (undocumented)
+    get colorForState(): KbqComponentColors;
     controlType: string;
     // (undocumented)
     customMatcher: KbqSelectMatcher;
