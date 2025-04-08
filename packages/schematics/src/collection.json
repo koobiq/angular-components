@@ -23,7 +23,7 @@
             "schema": "./migrations/deprecated-icons/schema.json"
         },
         "empty-state-size-attr": {
-            "description": "Updates prefixes and names of changed/removed icons",
+            "description": "Updates attr name and value in ts and html",
             "factory": "./migrations/empty-state-size-attr/index",
             "schema": "./migrations/empty-state-size-attr/schema.json"
         }

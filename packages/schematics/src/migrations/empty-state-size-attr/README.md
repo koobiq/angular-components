@@ -1,4 +1,4 @@
-### New Icons Pack schematics
+### Empty State Size Attr schematics
 
 This schematic provides migration for `KbqEmptyState` new `size` attribute. It includes:
 
