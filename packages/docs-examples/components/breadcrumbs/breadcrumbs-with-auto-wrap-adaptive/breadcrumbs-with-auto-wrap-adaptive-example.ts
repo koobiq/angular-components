@@ -27,19 +27,16 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
             box-sizing: border-box;
         }
     `,
-    imports: [
-        KbqBreadcrumbsModule
-    ],
+    imports: [KbqBreadcrumbsModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleBreadcrumbs {
     breadcrumbs = [
-        { label: 'Main', url: '/main' },
-        { label: 'Standards', url: '/main/standards' },
-        { label: 'Advanced Encryption Standard', url: '/main/standards/advanced-encryption-standard' },
-        { label: 'Edit', url: '/main/standards/advanced-encryption-standard/edit' },
-        { label: 'Test', url: '/main/standards/advanced-encryption-standard/edit/test' }
-    ];
+        { label: 'Main' },
+        { label: 'Standards' },
+        { label: 'Advanced Encryption Standard' },
+        { label: 'Edit' },
+        { label: 'Test' }];
 }
 
 /**
