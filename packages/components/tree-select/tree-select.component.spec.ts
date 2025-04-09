@@ -237,6 +237,8 @@ const getChildren = (node: FileNode): Observable<FileNode[]> => {
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
+
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-tree-select>
         </kbq-form-field>
         <div [style.height.px]="heightBelow"></div>
@@ -2668,6 +2670,36 @@ describe(KbqTreeSelect.name, () => {
                 fixture.componentInstance.control.setValue('pizza-1');
 
                 expect(fixture.componentInstance.control.dirty).toEqual(false);
+            }));
+        });
+
+        describe('Clear value', () => {
+            let fixture: ComponentFixture<BasicTreeSelect>;
+            let cleaner: HTMLElement;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(BasicTreeSelect);
+                fixture.detectChanges();
+                fixture.detectChanges();
+                tick(10);
+                flush();
+            }));
+
+            it('should reset selection on clear', fakeAsync(() => {
+                fixture.componentInstance.control.setValue('rootNode_1');
+                fixture.detectChanges();
+                flush();
+
+                const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+                expect(value.nativeElement.textContent).toContain('rootNode_1');
+
+                cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
+                cleaner.click();
+                fixture.detectChanges();
+                tick();
+                flush();
+
+                expect(value.nativeElement.textContent).toContain('Food');
             }));
         });
 

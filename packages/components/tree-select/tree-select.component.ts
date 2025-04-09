@@ -665,6 +665,8 @@ export class KbqTreeSelect
         this.onChange(this.selectedValues);
 
         this.selectionChange.emit(new KbqTreeSelectChange(this, this.selectedValues));
+
+        this.focus();
     }
 
     /** `View -> model callback called when value changes` */
@@ -1067,6 +1069,7 @@ export class KbqTreeSelect
                 this.originalOnKeyDown.call(this.tree, event);
             } else {
                 this.close();
+                this.focus();
             }
         } else if (this.multiple && isSelectAll(event)) {
             event.preventDefault();
