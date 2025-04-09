@@ -190,7 +190,7 @@ async function transformTemplateAttributes(
                             (fileName && ' File: ' + fileName) || ''
                         }`
                     );
-                    updatedAttrValue = migrationData.attrs.value.default;
+                    continue;
                 }
 
                 updatedTemplate =
