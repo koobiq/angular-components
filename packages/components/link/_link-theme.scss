@@ -21,9 +21,8 @@
         border-bottom-color: transparent;
     }
 
-    &.kbq-text-with-icon {
-        display: inline-flex;
-        align-items: center;
+    &.kbq-text-with-icon .kbq-icon {
+        vertical-align: baseline;
     }
 
     &.kbq-text-with-icon .kbq-link__text {
