@@ -32,7 +32,9 @@ import { KbqDlModule } from '@koobiq/components/dl';
     `,
     styles: `
         :host .kbq-dl.kbq-dl_vertical .kbq-dd {
-            overflow: hidden;
+            max-width: 100%;
+            container-type: inline-size;
+            box-sizing: border-box;
         }
     `,
     imports: [
