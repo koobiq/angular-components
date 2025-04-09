@@ -31,6 +31,7 @@ import * as i9 from '@angular/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { KbqAbstractSelect } from '@koobiq/components/core';
 import { KbqCleaner } from '@koobiq/components/form-field';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
@@ -104,6 +105,8 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     clearValue($event: any): void;
     close(): void;
     readonly closedStream: Observable<void>;
+    // (undocumented)
+    get colorForState(): KbqComponentColors;
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);
     controlType: string;

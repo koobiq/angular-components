@@ -60,6 +60,7 @@ import {
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
     KbqAbstractSelect,
+    KbqComponentColors,
     KbqLocaleService,
     KbqSelectMatcher,
     KbqSelectSearch,
@@ -470,6 +471,10 @@ export class KbqTreeSelect
 
     get canShowCleaner(): boolean {
         return !this.disabled && this.cleaner && this.selectionModel.hasValue();
+    }
+
+    get colorForState(): KbqComponentColors {
+        return this.ngControl?.invalid || this.errorState ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
     }
 
     isEmptySearchResult: boolean;
