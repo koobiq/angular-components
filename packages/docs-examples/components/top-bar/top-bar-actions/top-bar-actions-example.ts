@@ -97,7 +97,7 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TopBarActionsExample {
-    isDesktop = toSignal(
+    readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
             .pipe(

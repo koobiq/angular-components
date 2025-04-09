@@ -31,20 +31,7 @@ import { map } from 'rxjs/operators';
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
-                    <i class="layout-row flex" kbq-icon="">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M0 19.2C0 21.3033 0 22.4726 0.763692 23.2363C1.52738 24 2.69665 24 4.8 24H19.2C21.3033 24 22.4726 24 23.2363 23.2363C24 22.4726 24 21.3033 24 19.2V4.8C24 2.69665 24 1.52738 23.2363 0.763692C22.4726 0 21.3033 0 19.2 0H4.8C2.69665 0 1.52738 0 0.763692 0.763692C0 1.52738 0 2.69665 0 4.8V19.2Z"
-                                fill="#FF0000"
-                            />
-                            <path
-                                d="M11.233 12L8.39495 14.8381L5.55688 12L8.39495 9.20029L11.233 12ZM14.8381 15.6435L12.0384 18.4432L9.20035 15.6435L12.0384 12.8054L14.8381 15.6435ZM14.8381 8.39489L12.0384 11.1946L9.20035 8.39489L12.0384 5.55682L14.8381 8.39489ZM18.4432 12L15.6435 14.8381L12.8438 12L15.6435 9.20029L18.4432 12Z"
-                                fill="white"
-                            />
-                        </svg>
-                    </i>
+                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-top-bar__breadcrumbs">
                     <nav [max]="3" kbq-breadcrumbs size="big">
@@ -99,7 +86,7 @@ import { map } from 'rxjs/operators';
     `
 })
 export class TopBarBreadcrumbsExample {
-    isDesktop = toSignal(
+    readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
             .pipe(
@@ -108,28 +95,6 @@ export class TopBarBreadcrumbsExample {
             ),
         { initialValue: true }
     );
-
-    readonly actions = [
-        {
-            title: 'Add widget',
-            style: KbqButtonStyles.Transparent,
-            color: KbqComponentColors.Contrast,
-            icon: 'kbq-plus_16'
-        },
-        {
-            title: 'Cancel',
-            style: KbqButtonStyles.Outline,
-            color: KbqComponentColors.ContrastFade,
-            icon: 'kbq-undo_16'
-        },
-        {
-            title: 'Save',
-            style: '',
-            color: KbqComponentColors.Contrast,
-            icon: 'kbq-floppy-disk_16',
-            disabled: true
-        }
-    ];
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
