@@ -27,6 +27,14 @@
         gap: var(--kbq-top-bar-right-gap);
     }
 
+    &.kbq-top-bar-container__with-overflow-items {
+        gap: unset;
+
+        > .kbq-overflow-item:not(:last-of-type) {
+            margin-right: var(--kbq-top-bar-right-gap);
+        }
+    }
+
     &.kbq-top-bar_with-shadow {
         box-shadow: var(--kbq-top-bar-shadow-bottom);
         transition: box-shadow var(--kbq-top-bar-shadow-transition);

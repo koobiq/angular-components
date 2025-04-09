@@ -14,10 +14,21 @@ import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { auditTime, map } from 'rxjs/operators';
+
+type ExampleAction = {
+    id: string;
+    icon?: string;
+    text?: string;
+    action?: () => void;
+    style: KbqButtonStyles | string;
+    color: KbqComponentColors;
+};
 
 /**
  * @title TopBar Overflow
@@ -32,7 +43,9 @@ import { auditTime, map } from 'rxjs/operators';
         KbqToolTipModule,
         KbqIconModule,
         KbqDlModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqDropdownModule,
+        KbqOverflowItemsModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -45,24 +58,47 @@ import { auditTime, map } from 'rxjs/operators';
                 </div>
             </div>
             <div kbqTopBarSpacer></div>
-            <div kbqTopBarContainer placement="end">
-                @for (action of actions; track $index) {
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
+                @for (action of actions; track action.id) {
                     <button
+                        [kbqOverflowItem]="action.id"
                         [kbqStyle]="action.style"
                         [color]="action.color"
-                        [kbqTooltipDisabled]="isDesktop()"
                         [kbqPlacement]="PopUpPlacements.Bottom"
-                        [kbqTooltip]="action.title"
+                        [kbqTooltipArrow]="false"
+                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqTooltip]="action.text || action.id"
                         kbq-button
                     >
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if (isDesktop()) {
-                            {{ action.title }}
+                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                            {{ action.text }}
                         }
                     </button>
                 }
+
+                <div kbqOverflowItemsResult>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        [kbqDropdownTriggerFor]="appDropdown"
+                        kbq-button
+                    >
+                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                    </button>
+
+                    <kbq-dropdown #appDropdown="kbqDropdown">
+                        @for (action of actions; track action.id) {
+                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
+                                <button kbq-dropdown-item>
+                                    {{ action.text || action.id }}
+                                </button>
+                            }
+                        }
+                    </kbq-dropdown>
+                </div>
             </div>
         </kbq-top-bar>
         <div class="overflow-content-example kbq-scrollbar" cdkScrollable>
@@ -76,9 +112,6 @@ import { auditTime, map } from 'rxjs/operators';
 
                     <kbq-dt>Статус</kbq-dt>
                     <kbq-dd><kbq-badge>Значок</kbq-badge></kbq-dd>
-
-                    <kbq-dt>Статус</kbq-dt>
-                    <kbq-dd>Новый</kbq-dd>
 
                     <kbq-dt>Дополнительно</kbq-dt>
                     <kbq-dd>
@@ -107,11 +140,6 @@ import { auditTime, map } from 'rxjs/operators';
         </div>
     `,
     styles: `
-        ::ng-deep .docs-live-example__example_top-bar-overflow {
-            background: var(--kbq-background-bg-secondary);
-            padding: var(--kbq-size-3xl);
-        }
-
         :host {
             display: flex;
             flex-direction: column;
@@ -119,10 +147,14 @@ import { auditTime, map } from 'rxjs/operators';
             border-radius: var(--kbq-size-border-radius);
             border: 1px solid var(--kbq-line-contrast-less);
             background: var(--kbq-background-bg);
-        }
 
-        :host .kbq-top-bar {
-            border-radius: var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0 0;
+            .kbq-top-bar {
+                border-radius: var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0 0;
+            }
+
+            .kbq-overflow-items {
+                max-width: 291px;
+            }
         }
 
         .overflow-content-example {
@@ -144,7 +176,7 @@ import { auditTime, map } from 'rxjs/operators';
     `
 })
 export class TopBarOverflowExample implements AfterViewInit {
-    isDesktop = toSignal(
+    readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 768px)')
             .pipe(
@@ -158,19 +190,17 @@ export class TopBarOverflowExample implements AfterViewInit {
 
     readonly hasOverflow: WritableSignal<boolean | undefined> = signal(false);
 
-    readonly actions = [
+    readonly actions: ExampleAction[] = [
         {
-            title: 'Cancel',
-            style: KbqButtonStyles.Outline,
-            color: KbqComponentColors.ContrastFade,
-            icon: 'kbq-undo_16'
-        },
-        {
-            title: 'Save',
-            style: '',
+            id: 'search',
+            icon: 'kbq-magnifying-glass_16',
             color: KbqComponentColors.Contrast,
-            icon: 'kbq-floppy-disk_16'
-        }
+            style: KbqButtonStyles.Transparent
+        },
+        { id: 'list', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'button1', text: 'Add object', color: KbqComponentColors.Contrast, style: '' },
+        { id: 'button2', text: 'Button', color: KbqComponentColors.ContrastFade, style: '' }
     ];
 
     protected readonly PopUpPlacements = PopUpPlacements;
