@@ -1,4 +1,4 @@
-import { Component, DebugElement, QueryList, signal, Type, ViewChild, ViewChildren } from '@angular/core';
+import { Component, DebugElement, QueryList, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
@@ -162,7 +162,7 @@ describe(KbqBreadcrumbs.name, () => {
 
 @Component({
     template: `
-        <kbq-breadcrumbs [max]="max" [size]="size" [style.min-width.px]="containerWidth()">
+        <kbq-breadcrumbs [max]="max" [size]="size">
             @for (item of items; track item) {
                 <kbq-breadcrumb-item [text]="item.text" [disabled]="item.disabled" />
             }
@@ -174,13 +174,7 @@ describe(KbqBreadcrumbs.name, () => {
         KbqBreadcrumbItem,
         KbqBreadcrumbsSeparator,
         KbqBreadcrumbView
-    ],
-    styles: `
-        /* set min-width directly since overflow-items won't do it automatically */
-        ::ng-deep .kbq-overflow-items {
-            min-width: 284px;
-        }
-    `
+    ]
 })
 class SimpleBreadcrumbs {
     @ViewChild(KbqBreadcrumbs) breadcrumbs: KbqBreadcrumbs;
@@ -192,8 +186,6 @@ class SimpleBreadcrumbs {
         { text: 'Library', disabled: false },
         { text: 'Data', disabled: true }
     ];
-
-    readonly containerWidth = signal(284);
 }
 
 @Component({
