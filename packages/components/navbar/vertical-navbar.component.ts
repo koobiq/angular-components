@@ -6,7 +6,9 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    contentChildren,
     ContentChildren,
+    effect,
     ElementRef,
     forwardRef,
     Input,
@@ -14,7 +16,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { startWith, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
 import { KbqFocusableComponent } from './navbar.component';
 
@@ -48,8 +50,10 @@ import { KbqFocusableComponent } from './navbar.component';
     encapsulation: ViewEncapsulation.None
 })
 export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterContentInit {
-    @ContentChildren(forwardRef(() => KbqNavbarRectangleElement), { descendants: true })
-    rectangleElements: QueryList<KbqNavbarRectangleElement>;
+    rectangleElements = contentChildren(
+        forwardRef(() => KbqNavbarRectangleElement),
+        { descendants: true }
+    );
 
     @ContentChildren(forwardRef(() => KbqNavbarItem), { descendants: true }) items: QueryList<KbqNavbarItem>;
 
@@ -80,14 +84,12 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         super(changeDetectorRef, elementRef, focusMonitor);
 
         this.animationDone.subscribe(this.updateTooltipForItems);
+
+        effect(() => this.setItemsVerticalStateAndUpdateExpandedState(this.rectangleElements()));
     }
 
     ngAfterContentInit(): void {
         this.updateTooltipForItems();
-
-        this.rectangleElements.changes
-            .pipe(startWith(null))
-            .subscribe(this.setItemsVerticalStateAndUpdateExpandedState);
 
         super.ngAfterContentInit();
 
@@ -123,12 +125,12 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
         }
     }
 
-    private updateExpandedStateForItems = () => this.rectangleElements?.forEach(this.updateItemExpandedState);
+    private updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
 
     private updateTooltipForItems = () => this.items.forEach((item) => item.updateTooltip());
 
-    private setItemsVerticalStateAndUpdateExpandedState = () =>
-        this.rectangleElements.forEach(this.setItemVerticalStateAndUpdateExpandedState);
+    private setItemsVerticalStateAndUpdateExpandedState = (rectangleElements: Readonly<KbqNavbarRectangleElement[]>) =>
+        rectangleElements.forEach(this.setItemVerticalStateAndUpdateExpandedState);
 
     private setItemVerticalStateAndUpdateExpandedState = (item: KbqNavbarRectangleElement): void => {
         queueMicrotask(() => this.setItemVerticalState(item));
