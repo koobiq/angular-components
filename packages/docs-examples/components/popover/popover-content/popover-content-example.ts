@@ -27,7 +27,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     ]
 })
 export class PopoverContentExample {
-    members: object[] = [
+    members: Record<string, string>[] = [
         { name: 'Alex Unipraise', role: 'Editor' },
         { name: 'Serge Vox', role: 'Editor' },
         { name: 'Rick Brick', role: 'Viewer' },

@@ -1,25 +1,58 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { Component, NgModule, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, QueryList, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormsModule, PopUpPlacements, PopUpSizes, ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
-import { KbqIconModule } from '../../components/icon/';
+import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
 
 @Component({
+    standalone: true,
+    imports: [PopoverExamplesModule],
+    selector: 'docs-examples',
+    template: `
+        <popover-common-example />
+        <popover-hover-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class ExamplesComponent {}
+
+@Component({
+    standalone: true,
     selector: 'app',
     styleUrls: ['./styles.scss'],
+    templateUrl: './template.html',
+    imports: [
+        A11yModule,
+        FormsModule,
+        CdkScrollableModule,
+        KbqFormsModule,
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqPopoverModule,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqInputModule,
+        KbqSplitterModule,
+        KbqCheckboxModule,
+        KbqRadioModule,
+        KbqLinkModule,
+        ExamplesComponent,
+        NgClass
+    ],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DemoComponent {
     @ViewChildren(KbqPopoverTrigger) popovers: QueryList<KbqPopoverTrigger>;
@@ -134,26 +167,3 @@ export class DemoComponent {
         alert('confirmed');
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        A11yModule,
-        FormsModule,
-        CdkScrollableModule,
-        KbqFormsModule,
-        KbqFormFieldModule,
-        KbqSelectModule,
-        KbqPopoverModule,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqInputModule,
-        KbqSplitterModule,
-        KbqCheckboxModule,
-        KbqRadioModule,
-        KbqLinkModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

@@ -2152,6 +2152,8 @@ export interface KbqParentPopup {
 
 // @public (undocumented)
 export abstract class KbqPopUp implements OnDestroy {
+    // (undocumented)
+    protected addEventListenerForHide(): void;
     afterHidden(): Observable<void>;
     // (undocumented)
     animationDone({ toState }: AnimationEvent_2): void;
@@ -2174,10 +2176,13 @@ export abstract class KbqPopUp implements OnDestroy {
     // (undocumented)
     detectChanges(): void;
     // (undocumented)
+    protected readonly elementRef: ElementRef<any>;
+    // (undocumented)
     handleBodyInteraction(): void;
     // (undocumented)
     header: string | TemplateRef<any>;
     hide(delay: number): void;
+    readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
     isTemplateRef(value: any): boolean;
     // (undocumented)
@@ -2195,6 +2200,8 @@ export abstract class KbqPopUp implements OnDestroy {
     protected readonly renderer: Renderer2;
     // (undocumented)
     show(delay: number): void;
+    // (undocumented)
+    trigger: KbqPopUpTrigger<unknown>;
     // (undocumented)
     updateClassMap(placement: string, customClass: string, classMap?: any): void;
     // (undocumented)
@@ -2260,7 +2267,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     handleTouchend(): void;
     // (undocumented)
-    hide(delay?: number): void;
+    hide: (delay?: number) => void;
     // (undocumented)
     protected readonly hostView: ViewContainerRef;
     // (undocumented)
@@ -2312,7 +2319,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     // (undocumented)
     abstract trigger: string;
     // (undocumented)
-    protected triggerName: string;
+    triggerName: string;
     // (undocumented)
     abstract updateClassMap(newPlacement?: string): void;
     // (undocumented)

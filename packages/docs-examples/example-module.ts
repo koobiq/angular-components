@@ -2427,6 +2427,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "popover-height-example.ts",
     "importPath": "components/popover"
   },
+  "popover-hover": {
+    "packagePath": "components/popover/popover-hover",
+    "title": "Popover hover",
+    "componentName": "PopoverHoverExample",
+    "files": [
+      "popover-hover-example.ts"
+    ],
+    "selector": "popover-hover-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-hover-example.ts",
+    "importPath": "components/popover"
+  },
   "popover-placement-center": {
     "packagePath": "components/popover/popover-placement-center",
     "title": "Popover placement center",
@@ -4323,6 +4335,8 @@ return import('@koobiq/docs-examples/components/popover');
   case 'popover-header':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-height':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-hover':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-placement-center':
 return import('@koobiq/docs-examples/components/popover');

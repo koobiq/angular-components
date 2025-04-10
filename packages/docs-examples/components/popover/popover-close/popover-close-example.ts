@@ -18,7 +18,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqIconModule, KbqDropdownModule]
 })
 export class PopoverCloseExample {
-    members: object[] = [
+    members: Record<string, string>[] = [
         { name: 'Alex Unipraise', role: 'Editor' },
         { name: 'Serge Vox', role: 'Editor' },
         { name: 'Rick Brick', role: 'Viewer' },

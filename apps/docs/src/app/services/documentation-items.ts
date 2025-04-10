@@ -455,7 +455,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'popover',
                     hasApi: true,
                     apiId: 'popover',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: 'progress-bar',
