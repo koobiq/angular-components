@@ -1159,6 +1159,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "empty-state-icon-example.ts",
     "importPath": "components/empty-state"
   },
+  "empty-state-size": {
+    "packagePath": "components/empty-state/empty-state-size",
+    "title": "Empty-state size",
+    "componentName": "EmptyStateSizeExample",
+    "files": [
+      "empty-state-size-example.ts"
+    ],
+    "selector": "empty-state-size-example",
+    "additionalComponents": [],
+    "primaryFile": "empty-state-size-example.ts",
+    "importPath": "components/empty-state"
+  },
   "empty-state-text-only": {
     "packagePath": "components/empty-state/empty-state-text-only",
     "title": "Empty-state text only",
@@ -4107,6 +4119,8 @@ return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-error':
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-icon':
+return import('@koobiq/docs-examples/components/empty-state');
+  case 'empty-state-size':
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-text-only':
 return import('@koobiq/docs-examples/components/empty-state');

@@ -7,6 +7,7 @@ import { EmptyStateContentExample } from './empty-state-content/empty-state-cont
 import { EmptyStateDefaultExample } from './empty-state-default/empty-state-default-example';
 import { EmptyStateErrorExample } from './empty-state-error/empty-state-error-example';
 import { EmptyStateIconExample } from './empty-state-icon/empty-state-icon-example';
+import { EmptyStateSizeExample } from './empty-state-size/empty-state-size-example';
 import { EmptyStateTextOnlyExample } from './empty-state-text-only/empty-state-text-only-example';
 import { EmptyStateTitleExample } from './empty-state-title/empty-state-title-example';
 
@@ -19,6 +20,7 @@ export {
     EmptyStateDefaultExample,
     EmptyStateErrorExample,
     EmptyStateIconExample,
+    EmptyStateSizeExample,
     EmptyStateTextOnlyExample,
     EmptyStateTitleExample
 };
@@ -33,11 +35,12 @@ const EXAMPLES = [
     EmptyStateErrorExample,
     EmptyStateAlignExample,
     EmptyStateDefaultExample,
-    EmptyStateBigExample
+    EmptyStateBigExample,
+    EmptyStateSizeExample
 ];
 
 @NgModule({
     imports: EXAMPLES,
     exports: EXAMPLES
 })
-export class FileUploadExamplesModule {}
+export class EmptyStateExamplesModule {}

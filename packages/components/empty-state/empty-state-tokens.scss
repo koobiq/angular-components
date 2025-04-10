@@ -1,4 +1,4 @@
-.kbq-empty-state {
+:where(.kbq-empty-state) {
     --kbq-empty-state-size-big-max-width: 480px;
     --kbq-empty-state-size-big-padding-horizontal: var(--kbq-size-6xl);
     --kbq-empty-state-size-big-padding-top: var(--kbq-size-5xl);
@@ -15,7 +15,17 @@
     --kbq-empty-state-size-normal-image-margin-bottom: var(--kbq-size-xl);
     --kbq-empty-state-size-normal-image-addon-height: var(--kbq-size-xxl);
     --kbq-empty-state-size-normal-title-margin-bottom: var(--kbq-size-xxs);
+    --kbq-empty-state-size-compact-max-width: 320px;
+    --kbq-empty-state-size-compact-padding-horizontal: var(--kbq-size-3xl);
+    --kbq-empty-state-size-compact-padding-top: var(--kbq-size-3xl);
+    --kbq-empty-state-size-compact-padding-bottom: var(--kbq-size-3xl);
+    --kbq-empty-state-size-compact-actions-margin-top: var(--kbq-size-s);
+    --kbq-empty-state-size-compact-image-margin-bottom: var(--kbq-size-m);
+    --kbq-empty-state-size-compact-image-addon-height: 0;
+    --kbq-empty-state-size-compact-title-margin-bottom: var(--kbq-size-xxs);
     /* THEME TOKENS */
     --kbq-empty-state-title: var(--kbq-foreground-contrast);
-    --kbq-empty-state-color: var(--kbq-foreground-contrast);
+    --kbq-empty-state-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-empty-state-error-title: var(--kbq-foreground-error);
+    --kbq-empty-state-error-color: var(--kbq-foreground-error);
 }
