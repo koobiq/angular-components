@@ -5,9 +5,11 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    contentChildren,
     ContentChildren,
     DestroyRef,
     Directive,
+    effect,
     ElementRef,
     forwardRef,
     inject,
@@ -191,8 +193,10 @@ export class KbqNavbarContainer {}
     encapsulation: ViewEncapsulation.None
 })
 export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, AfterContentInit, OnDestroy {
-    @ContentChildren(forwardRef(() => KbqNavbarRectangleElement), { descendants: true })
-    rectangleElements: QueryList<KbqNavbarRectangleElement>;
+    rectangleElements = contentChildren(
+        forwardRef(() => KbqNavbarRectangleElement),
+        { descendants: true }
+    );
 
     @ContentChildren(forwardRef(() => KbqNavbarItem), { descendants: true }) navbarItems: QueryList<KbqNavbarItem>;
 
@@ -205,7 +209,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     }
 
     private get totalItemsWidth(): number {
-        return this.rectangleElements.reduce((acc, item) => acc + item.getOuterElementWidth(), 0);
+        return this.rectangleElements().reduce((acc, item) => acc + item.getOuterElementWidth(), 0);
     }
 
     private get collapsableItems(): KbqNavbarItem[] {
@@ -227,13 +231,11 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         this.resizeSubscription = this.resizeStream
             .pipe(debounceTime(this.resizeDebounceInterval))
             .subscribe(this.updateExpandedStateForItems);
+
+        effect(() => this.setItemsState(this.rectangleElements()));
     }
 
     ngAfterContentInit(): void {
-        this.setItemsState();
-
-        this.rectangleElements.changes.subscribe(this.setItemsState);
-
         super.ngAfterContentInit();
 
         this.keyManager.withVerticalOrientation(false).withHorizontalOrientation('ltr');
@@ -327,7 +329,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
             });
     }
 
-    private setItemsState = () => {
-        Promise.resolve().then(() => this.rectangleElements?.forEach((item) => (item.horizontal = true)));
+    private setItemsState = (rectangleElements: Readonly<KbqNavbarRectangleElement[]>) => {
+        Promise.resolve().then(() => rectangleElements.forEach((item) => (item.horizontal = true)));
     };
 }
