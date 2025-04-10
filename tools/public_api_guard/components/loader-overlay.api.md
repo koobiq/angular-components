@@ -33,6 +33,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     get isExternalIndicator(): boolean;
     // (undocumented)
     get isExternalText(): boolean;
+    protected get loaderSizeClass(): string;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)

@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqLoaderOverlay should be transparent by default 1`] = `
+{
+  "kbq-loader-overlay": true,
+  "kbq-loader-overlay_big": true,
+  "kbq-loader-overlay_transparent": true,
+}
+`;

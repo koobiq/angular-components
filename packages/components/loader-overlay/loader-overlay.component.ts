@@ -44,12 +44,10 @@ export class KbqLoaderOverlayCaption {}
     styleUrls: ['./loader-overlay.scss', 'loader-overlay-tokens.scss'],
     host: {
         class: 'kbq-loader-overlay',
+        '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
         '[class.kbq-loader-overlay_transparent]': 'transparent',
-        '[class.kbq-loader-overlay_filled]': '!transparent',
-        '[class.kbq-loader-overlay_big]': 'size === "big"',
-        '[class.kbq-loader-overlay_normal]': 'size === "normal"',
-        '[class.kbq-loader-overlay_compact]': 'size === "compact"'
+        '[class.kbq-loader-overlay_filled]': '!transparent'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -81,6 +79,13 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
 
     get spinnerSize(): string {
         return this.size === 'compact' ? 'compact' : 'big';
+    }
+
+    /**
+     * @docs-private
+     */
+    protected get loaderSizeClass(): string {
+        return `kbq-loader-overlay_${this.size}`;
     }
 
     @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;
