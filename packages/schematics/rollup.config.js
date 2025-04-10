@@ -2,7 +2,7 @@ const typescript = require('@rollup/plugin-typescript');
 const replace = require('@rollup/plugin-replace');
 
 const path = require('path');
-const { promises: fs } = require('fs');
+const { promises: fs, statSync } = require('fs');
 
 const pkg = require('../../package.json');
 const { getMigrations } = require('./src/utils/migrations');
@@ -17,6 +17,19 @@ const clean = () => ({
     }
 });
 
+const getMigrationInputs = () => {
+    return getMigrations().reduce((res, cur) => {
+        res[`migrations/${cur}/index`] = path.join(__dirname, `src/migrations/${cur}/index.ts`);
+
+        const optionalMigrationData = path.join(__dirname, `src/migrations/${cur}/data.ts`);
+        const fileExists = statSync(optionalMigrationData, { throwIfNoEntry: false });
+        if (fileExists) {
+            res[`migrations/${cur}/data`] = optionalMigrationData;
+        }
+        return res;
+    }, {});
+};
+
 module.exports = [
     {
         output: {
@@ -28,11 +41,10 @@ module.exports = [
             'ng-add/index': path.join(__dirname, 'src/ng-add/index.ts'),
             'utils/package-config': path.join(__dirname, 'src/utils/package-config.ts'),
             'utils/messages': path.join(__dirname, 'src/utils/messages.ts'),
-            ...getMigrations().reduce((res, cur) => {
-                res[`migrations/${cur}/index`] = path.join(__dirname, `src/migrations/${cur}/index.ts`);
-                res[`migrations/${cur}/data`] = path.join(__dirname, `src/migrations/${cur}/data.ts`);
-                return res;
-            }, {})
+            'utils/typescript': path.join(__dirname, 'src/utils/typescript.ts'),
+            'utils/ast': path.join(__dirname, 'src/utils/ast.ts'),
+            'utils/angular-parsing': path.join(__dirname, 'src/utils/angular-parsing.ts'),
+            ...getMigrationInputs()
             //'ng-add/setup-project': path.join(__dirname, 'ng-add/setup-project.ts'),
         },
         external: (dependency) =>

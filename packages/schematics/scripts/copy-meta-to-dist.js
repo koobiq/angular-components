@@ -1,6 +1,7 @@
 const { access, copyFile, mkdir } = require('fs/promises');
 const { resolve, join } = require('path');
 const { getMigrations } = require('../src/utils/migrations');
+const { statSync } = require('fs');
 
 const resolvePath = (...segments) => resolve(__dirname, ...segments);
 
@@ -46,12 +47,23 @@ const init = async () => {
             resolvePath(`../src/migrations/${migration}/schema.json`),
             join(migrationPath, 'schema.json')
         );
+        await copyFileWrapper(
+            resolvePath(`../src/migrations/${migration}/README.md`),
+            join(migrationPath, 'README.md')
+        );
         await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/index.js`), join(migrationPath, 'index.js'));
-        await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/data.js`), join(migrationPath, 'data.js'));
+        const optionalMigrationData = resolvePath(`../dist/migrations/${migration}/data.js`);
+        const fileExists = statSync(optionalMigrationData, { throwIfNoEntry: false });
+        if (fileExists) {
+            await copyFileWrapper(optionalMigrationData, join(migrationPath, 'data.js'));
+        }
     }
 
     await copyFileWrapper(resolvePath('../dist/utils/package-config.js'), join(utilsPath, 'package-config.js'));
     await copyFileWrapper(resolvePath('../dist/utils/messages.js'), join(utilsPath, 'messages.js'));
+    await copyFileWrapper(resolvePath('../dist/utils/typescript.js'), join(utilsPath, 'typescript.js'));
+    await copyFileWrapper(resolvePath('../dist/utils/ast.js'), join(utilsPath, 'ast.js'));
+    await copyFileWrapper(resolvePath('../dist/utils/angular-parsing.js'), join(utilsPath, 'angular-parsing.js'));
 };
 
 init().catch((error) => console.error(`Failed to initialize directories and copy files: ${error.message}`));
