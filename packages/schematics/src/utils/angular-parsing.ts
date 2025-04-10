@@ -32,14 +32,13 @@ export async function migrateTemplate(
             errors: []
         });
 
-        try {
-            const template = tree.read(parsedFilePath)?.toString();
-            if (template) {
-                res = transformTemplateAttributes(template, parsedFilePath, migrationData);
-            }
-        } catch (e) {
-            context.logger.error(e as any);
+        const template = tree.read(parsedFilePath)?.toString();
+        if (!template) {
+            context.logger.error(`Cannot read "${parsedFilePath}" because it does not exist.`);
+            continue;
         }
+
+        res = transformTemplateAttributes(template, parsedFilePath, migrationData);
 
         const { fileContent, changed, errors } = await res;
         if (changed) {
