@@ -20,7 +20,9 @@ export enum KbqAlertColors {
     Error = 'error',
     Warning = 'warning',
     Success = 'success',
-    Theme = 'theme'
+    /** @deprecated This color key doesn't correlate with design, use `Info` instead. */
+    Theme = 'theme',
+    Info = 'theme'
 }
 
 @Directive({
@@ -93,7 +95,7 @@ export class KbqAlert implements AfterContentInit {
         const icon = this.icon || this.iconItem;
 
         if (icon) {
-            icon.color = this._alertColor;
+            icon.color = this._alertColor === KbqAlertColors.Info ? KbqAlertColors.Contrast : this._alertColor;
         }
     }
 }
