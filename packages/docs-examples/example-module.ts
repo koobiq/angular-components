@@ -183,6 +183,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-overview-example.ts",
     "importPath": "components/actions-panel"
   },
+  "ag-grid-theme-overview": {
+    "packagePath": "components/ag-grid-theme/ag-grid-theme-overview",
+    "title": "KbqAgGridTheme overview",
+    "componentName": "AgGridThemeOverviewExample",
+    "files": [
+      "ag-grid-theme-overview-example.ts"
+    ],
+    "selector": "ag-grid-theme-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-theme-overview-example.ts",
+    "importPath": "components/ag-grid-theme"
+  },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
     "title": "Alert close",
@@ -3964,6 +3976,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-overview':
 return import('@koobiq/docs-examples/components/actions-panel');
+  case 'ag-grid-theme-overview':
+return import('@koobiq/docs-examples/components/ag-grid-theme');
   case 'alert-close':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-content':
