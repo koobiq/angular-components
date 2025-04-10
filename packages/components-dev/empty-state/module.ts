@@ -6,6 +6,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { EmptyStateExamplesModule } from '../../docs-examples/components/empty-state';
 
 @Component({
     selector: 'app',
@@ -27,7 +28,8 @@ export class DemoComponent {
         FormsModule,
         KbqEmptyStateModule,
         KbqButtonModule,
-        KbqIconModule
+        KbqIconModule,
+        EmptyStateExamplesModule
     ],
     bootstrap: [DemoComponent]
 })

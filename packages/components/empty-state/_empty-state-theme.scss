@@ -7,17 +7,17 @@
         }
 
         .kbq-empty-state-text {
-            color: var(--kbq-empty-state-title);
+            color: var(--kbq-empty-state-color);
         }
     }
 
     .kbq-empty-state_error-color {
         .kbq-empty-state-title {
-            color: var(--kbq-foreground-error);
+            color: var(--kbq-empty-state-error-title);
         }
 
         .kbq-empty-state-text {
-            color: var(--kbq-foreground-error);
+            color: var(--kbq-empty-state-error-color);
         }
     }
 }
@@ -28,9 +28,19 @@
         text-align: center;
     }
 
+    .kbq-empty-state_compact {
+        .kbq-empty-state-title {
+            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        }
+
+        .kbq-empty-state-text {
+            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        }
+    }
+
     .kbq-empty-state_normal {
         .kbq-empty-state-title {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-big-strong);
+            @include kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
 
         .kbq-empty-state-text {
@@ -44,7 +54,7 @@
         }
 
         .kbq-empty-state-text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include kbq-typography-level-to-styles-css-variables(typography, text-big);
         }
     }
 }

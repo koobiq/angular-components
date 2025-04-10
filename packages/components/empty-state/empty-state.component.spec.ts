@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { BrowserModule, By } from '@angular/platform-browser';
-import { KbqButtonStyles } from '@koobiq/components/button';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import {
     KbqEmptyState,
     KbqEmptyStateActions,
@@ -17,7 +18,9 @@ describe('KbqEmptyState', () => {
         TestBed.configureTestingModule({
             imports: [
                 BrowserModule,
-                KbqEmptyStateModule
+                KbqEmptyStateModule,
+                KbqIconModule,
+                KbqButtonModule
             ],
             declarations: [EmptyStateWithParams]
         }).compileComponents();
@@ -25,6 +28,7 @@ describe('KbqEmptyState', () => {
 
     it('should init and set classes', () => {
         const fixture = TestBed.createComponent(EmptyStateWithParams);
+        fixture.detectChanges();
 
         const emptyState = fixture.debugElement.query(By.directive(KbqEmptyState));
         const emptyStateIcon = fixture.debugElement.query(By.directive(KbqEmptyStateIcon));
@@ -33,6 +37,7 @@ describe('KbqEmptyState', () => {
         const emptyStateActions = fixture.debugElement.query(By.directive(KbqEmptyStateActions));
 
         expect(emptyState.nativeElement.classList).toContain('kbq-empty-state');
+        expect(emptyState.nativeElement.classList).toContain('kbq-empty-state_normal');
         expect(emptyStateIcon.nativeElement.classList).toContain('kbq-empty-state-icon');
         expect(emptyStateTitle.nativeElement.classList).toContain('kbq-empty-state-title');
         expect(emptyStateText.nativeElement.classList).toContain('kbq-empty-state-text');
