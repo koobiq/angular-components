@@ -3,8 +3,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
+import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
-import { KbqLoaderOverlayModule } from '../../components/loader-overlay';
+import { LoaderOverlayExamplesModule } from '../../docs-examples/components/loader-overlay';
 
 @Component({
     selector: 'app',
@@ -27,7 +28,8 @@ export class LoaderOverlayDemoComponent {
         BrowserAnimationsModule,
         KbqButtonModule,
         KbqProgressSpinnerModule,
-        KbqLoaderOverlayModule
+        KbqLoaderOverlayModule,
+        LoaderOverlayExamplesModule
     ],
     declarations: [LoaderOverlayDemoComponent],
     bootstrap: [LoaderOverlayDemoComponent]

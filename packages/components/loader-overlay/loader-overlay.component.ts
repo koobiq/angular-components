@@ -10,6 +10,7 @@ import {
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqDefaultSizes } from '@koobiq/components/core';
 
 const kbqLoaderOverlayParent = 'kbq-loader-overlay_parent';
 
@@ -43,11 +44,10 @@ export class KbqLoaderOverlayCaption {}
     styleUrls: ['./loader-overlay.scss', 'loader-overlay-tokens.scss'],
     host: {
         class: 'kbq-loader-overlay',
+        '[class]': 'loaderSizeClass',
         '[class.kbq-loader-overlay_empty]': 'isEmpty',
         '[class.kbq-loader-overlay_transparent]': 'transparent',
-        '[class.kbq-loader-overlay_filled]': '!transparent',
-        '[class.kbq-loader-overlay_big]': '!compact',
-        '[class.kbq-loader-overlay_compact]': 'compact'
+        '[class.kbq-loader-overlay_filled]': '!transparent'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -56,7 +56,7 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     @Input() text: string;
 
     @Input() caption: string;
-    @Input() compact: boolean = false;
+    @Input() size: KbqDefaultSizes = 'big';
     @Input() transparent: boolean = true;
 
     private parent: HTMLElement | null = null;
@@ -78,7 +78,14 @@ export class KbqLoaderOverlay implements OnInit, OnDestroy {
     }
 
     get spinnerSize(): string {
-        return this.compact ? 'compact' : 'big';
+        return this.size === 'compact' ? 'compact' : 'big';
+    }
+
+    /**
+     * @docs-private
+     */
+    protected get loaderSizeClass(): string {
+        return `kbq-loader-overlay_${this.size}`;
     }
 
     @ContentChild(KbqLoaderOverlayIndicator) externalIndicator: KbqLoaderOverlayIndicator | null;

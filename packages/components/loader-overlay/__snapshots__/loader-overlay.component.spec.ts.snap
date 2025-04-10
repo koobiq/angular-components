@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqLoaderOverlay should assign default css classes including size-related css-class 1`] = `
+{
+  "kbq-loader-overlay": true,
+  "kbq-loader-overlay_big": true,
+  "kbq-loader-overlay_transparent": true,
+}
+`;

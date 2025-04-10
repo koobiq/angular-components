@@ -74,6 +74,13 @@ describe('KbqLoaderOverlay', () => {
         expect(textElement.nativeElement.textContent.trim()).toBe('Создание отчета');
         expect(captionElement.nativeElement.textContent.trim()).toBe('18,7 МБ из 25 МБ — осталось 2 мин');
     });
+
+    it('should assign default css classes including size-related css-class', () => {
+        const fixture = TestBed.createComponent(OverlayWithParams);
+        fixture.detectChanges();
+
+        expect(fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes).toMatchSnapshot();
+    });
 });
 
 @Component({
