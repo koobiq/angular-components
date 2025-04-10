@@ -27,6 +27,7 @@ import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { TooltipModifier } from '@koobiq/components/tooltip';
@@ -91,7 +92,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
     // (undocumented)
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
-    rectangleElements: QueryList<KbqNavbarRectangleElement>;
+    rectangleElements: Signal<readonly any[]>;
     // (undocumented)
     readonly resizeStream: Subject<Event>;
     // (undocumented)
@@ -382,11 +383,11 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     // (undocumented)
     openOver: boolean;
     // (undocumented)
-    rectangleElements: QueryList<KbqNavbarRectangleElement>;
+    rectangleElements: Signal<readonly any[]>;
     // (undocumented)
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["bento", "rectangleElements", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqVerticalNavbar, "kbq-vertical-navbar", ["KbqVerticalNavbar"], { "openOver": { "alias": "openOver"; "required": false; }; "expanded": { "alias": "expanded"; "required": false; }; }, {}, ["rectangleElements", "bento", "items"], ["[kbq-navbar-container], kbq-navbar-container", "[kbq-navbar-toggle], kbq-navbar-toggle"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqVerticalNavbar, never>;
 }
