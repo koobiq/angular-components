@@ -7,11 +7,3 @@ exports[`KbqLoaderOverlay should assign default css classes including size-relat
   "kbq-loader-overlay_transparent": true,
 }
 `;
-
-exports[`KbqLoaderOverlay should be transparent by default 1`] = `
-{
-  "kbq-loader-overlay": true,
-  "kbq-loader-overlay_big": true,
-  "kbq-loader-overlay_transparent": true,
-}
-`;
