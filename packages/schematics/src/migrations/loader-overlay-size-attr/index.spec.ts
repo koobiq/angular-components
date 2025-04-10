@@ -23,25 +23,6 @@ describe(SCHEMATIC_NAME, () => {
     let appTree: Tree;
     let projects: ProjectDefinitionCollection;
 
-    beforeEach(async () => {
-        runner = new SchematicTestRunner('schematics', collectionPath);
-        appTree = await createTestApp(runner, { style: 'scss' });
-
-        const workspace = await getWorkspace(appTree);
-        projects = workspace.projects as unknown as ProjectDefinitionCollection;
-        projects.forEach((project) => {
-            const { templatePath } = getProjectContentPaths(project);
-
-            const template =
-                '<div>' +
-                '<kbq-loader-overlay [compact]="false"></kbq-loader-overlay>' +
-                '<kbq-loader-overlay [compact]="true"></kbq-loader-overlay>' +
-                '</div>';
-
-            appTree.overwrite(templatePath, template);
-        });
-    });
-
     it('should run migration for specified project', async () => {
         runner = new SchematicTestRunner('schematics', collectionPath);
         appTree = await createTestApp(runner, { style: 'scss' });
@@ -60,6 +41,14 @@ describe(SCHEMATIC_NAME, () => {
         const [firstProjectKey] = projects.keys();
         const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!);
 
+        const template =
+            '<div>' +
+            '<kbq-loader-overlay [compact]="false"></kbq-loader-overlay>' +
+            '<kbq-loader-overlay [compact]="true"></kbq-loader-overlay>' +
+            '</div>';
+
+        appTree.overwrite(templatePath, template);
+
         const updatedTree = await runner.runSchematic(
             SCHEMATIC_NAME,
             { project: firstProjectKey } satisfies Schema,
@@ -67,5 +56,31 @@ describe(SCHEMATIC_NAME, () => {
         );
 
         expect(updatedTree.read(templatePath)?.toString()).toMatchSnapshot(`project ${firstProjectKey}: after changes`);
+    });
+
+    it('should throw message if replaced attr value is not static', async () => {
+        const warnSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+        runner = new SchematicTestRunner('schematics', collectionPath);
+        appTree = await createTestApp(runner, { style: 'scss' });
+
+        const workspace = await getWorkspace(appTree);
+        projects = workspace.projects as unknown as ProjectDefinitionCollection;
+        const [firstProjectKey] = projects.keys();
+        const { templatePath } = getProjectContentPaths(projects.get(firstProjectKey)!);
+
+        // Set up the template with a non-static attribute value
+        const nonStaticTemplate = '<div><kbq-loader-overlay [compact]="VARIABLE"></kbq-loader-overlay></div>';
+        appTree.overwrite(templatePath, nonStaticTemplate);
+        const templateBeforeUpdate = appTree.read(templatePath)?.toString();
+
+        const updatedTree = await runner.runSchematic(
+            SCHEMATIC_NAME,
+            { project: firstProjectKey } satisfies Schema,
+            appTree
+        );
+
+        expect(templateBeforeUpdate).toBe(updatedTree.read(templatePath)?.toString());
+        expect(warnSpy.mock.calls.some(([msg]) => msg.includes(templatePath))).toBe(true);
     });
 });
