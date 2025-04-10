@@ -59,9 +59,7 @@ export class KbqEmptyStateActions {}
     styleUrls: ['./empty-state.scss', 'empty-state-tokens.scss'],
     host: {
         class: 'kbq-empty-state',
-        '[class.kbq-empty-state_big]': 'size === "big"',
-        '[class.kbq-empty-state_normal]': 'size === "normal"',
-        '[class.kbq-empty-state_compact]': 'size === "compact"',
+        '[class]': 'emptyStateSizeClass',
         '[class.kbq-empty-state_align-center]': '!alignTop',
         '[class.kbq-empty-state_align-top]': 'alignTop',
         '[class.kbq-empty-state_normal-color]': '!errorColor',
@@ -77,6 +75,13 @@ export class KbqEmptyState implements AfterContentInit {
     @Input() size: KbqDefaultSizes = 'normal';
 
     @ContentChild(KbqEmptyStateIcon) icon: KbqEmptyStateIcon | null;
+
+    /**
+     * @docs-private
+     */
+    protected get emptyStateSizeClass(): string {
+        return `kbq-empty-state_${this.size}`;
+    }
 
     ngAfterContentInit(): void {
         if (this.errorColor && this.icon) {

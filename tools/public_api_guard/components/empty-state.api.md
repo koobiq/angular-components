@@ -15,6 +15,7 @@ import { KbqIconItem } from '@koobiq/components/icon';
 export class KbqEmptyState implements AfterContentInit {
     // (undocumented)
     alignTop: boolean;
+    protected get emptyStateSizeClass(): string;
     // (undocumented)
     errorColor: boolean;
     // (undocumented)
