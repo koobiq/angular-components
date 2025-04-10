@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`empty-state-size-attr should run migration for external html: project app: after changes 1`] = `"<div><kbq-empty-state size="compact"></kbq-empty-state><kbq-empty-state size="big"></kbq-empty-state></div>"`;
