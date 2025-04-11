@@ -7,36 +7,45 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
 
-/**
- * @title TopBar Breadcrumbs
- */
+type ExampleAction = {
+    id: string;
+    icon?: string;
+    text?: string;
+    action?: () => void;
+    style: KbqButtonStyles | string;
+    color: KbqComponentColors;
+};
+
 @Component({
     standalone: true,
-    selector: 'top-bar-breadcrumbs-example',
+    selector: 'example-top-bar-breadcrumbs',
     imports: [
-        RouterLink,
         KbqTopBarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
+        KbqDropdownModule,
+        KbqOverflowItemsModule,
         KbqBreadcrumbsModule,
-        KbqDropdownModule
+        RouterLink
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
-            <div class="layout-align-start-center" kbqTopBarContainer placement="start">
+            <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="example-top-bar__breadcrumbs flex">
-                    <nav kbq-breadcrumbs size="big">
-                        <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
-                        <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
+                    <nav [max]="isDesktop() ? null : 3" kbq-breadcrumbs size="big">
+                        <kbq-breadcrumb-item text="Main" routerLink="./main" />
+                        <kbq-breadcrumb-item text="Sections" routerLink="./main/sections" />
+                        <kbq-breadcrumb-item text="Page" routerLink="./main/sections/page" />
+                        <kbq-breadcrumb-item text="Details" routerLink="./main/sections/page/details" />
                     </nav>
                 </div>
             </div>
@@ -83,9 +92,35 @@ import { map } from 'rxjs/operators';
                 </kbq-dropdown>
             </div>
         </kbq-top-bar>
-    `
+    `,
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 72px;
+            resize: horizontal;
+            max-width: 100%;
+            min-width: 110px;
+            overflow: hidden;
+            container-type: inline-size;
+
+            .kbq-top-bar {
+                width: 100%;
+            }
+        }
+
+        .example-kbq-top-bar__title {
+            display: inline-flex;
+        }
+
+        .kbq-overflow-items {
+            max-width: 210px;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsExample {
+export class ExampleTopBarBreadcrumbs {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -96,7 +131,54 @@ export class TopBarBreadcrumbsExample {
         { initialValue: true }
     );
 
+    readonly actions: ExampleAction[] = [
+        { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'button1', text: 'Apply', color: KbqComponentColors.Contrast, style: '' },
+        { id: 'button2', text: 'Button 2', color: KbqComponentColors.ContrastFade, style: '' }
+    ];
+
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
 }
+
+/**
+ * @title Top Bar Breadcrumbs Adaptive
+ */
+@Component({
+    standalone: true,
+    imports: [ExampleTopBarBreadcrumbs],
+    selector: 'top-bar-breadcrumbs-adaptive-example',
+    template: `
+        <div>
+            The automatic breadcrumb shortening is used as the basis, where middle items are hidden when there is not
+            enough free space.
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="680" />
+
+        <div>
+            If the space becomes even narrower, the leftmost breadcrumb level is also hidden, leaving only the rightmost
+            level visible.
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="500" />
+
+        <div>
+            The minimum width of the left side depends on the title of the current item, which can be truncated to 3
+            characters with an ellipsis (…).
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="400" />
+
+        <div>
+            After reaching the minimum width on the left side, the compression of the right side with actions can begin.
+        </div>
+        <example-top-bar-breadcrumbs [style.width.px]="300" />
+    `,
+    styles: `
+        div {
+            color: var(--kbq-foreground-contrast-secondary);
+            margin: var(--kbq-size-s) var(--kbq-size-s) 0;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TopBarBreadcrumbsAdaptiveExample {}

@@ -1,8 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { RouterLink } from '@angular/router';
-import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -12,36 +10,48 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
 
 /**
- * @title TopBar Breadcrumbs
+ * @title TopBar With Title And Counter
  */
 @Component({
     standalone: true,
-    selector: 'top-bar-breadcrumbs-example',
+    selector: 'top-bar-title-counter-example',
     imports: [
-        RouterLink,
         KbqTopBarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
-        KbqBreadcrumbsModule,
         KbqDropdownModule
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
-            <div class="layout-align-start-center" kbqTopBarContainer placement="start">
-                <div class="layout-row layout-margin-right-m flex-none">
+            <div
+                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
+                kbqTopBarContainer
+                placement="start"
+            >
+                <div class="layout-row layout-margin-right-l flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="example-top-bar__breadcrumbs flex">
-                    <nav kbq-breadcrumbs size="big">
-                        <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
-                        <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
-                    </nav>
+                <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
+                    <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
+
+                    <span class="example-kbq-top-bar__counter">13 294</span>
                 </div>
             </div>
+
             <div kbqTopBarSpacer></div>
+
             <div kbqTopBarContainer placement="end">
+                <button
+                    [kbqStyle]="KbqButtonStyles.Transparent"
+                    [color]="KbqComponentColors.Contrast"
+                    [kbqPlacement]="PopUpPlacements.Bottom"
+                    [kbqTooltipArrow]="false"
+                    kbqTooltip="List"
+                    kbq-button
+                >
+                    <i kbq-icon="kbq-list_16"></i>
+                </button>
                 <button
                     [kbqStyle]="KbqButtonStyles.Transparent"
                     [color]="KbqComponentColors.Contrast"
@@ -52,23 +62,19 @@ import { map } from 'rxjs/operators';
                 >
                     <i kbq-icon="kbq-filter_16"></i>
                 </button>
-
                 <button
-                    [kbqStyle]="KbqButtonStyles.Filled"
-                    [color]="KbqComponentColors.ContrastFade"
+                    [color]="KbqComponentColors.Contrast"
                     [kbqTooltipDisabled]="isDesktop()"
                     [kbqPlacement]="PopUpPlacements.Bottom"
                     [kbqTooltipArrow]="false"
-                    kbqTooltip="Share"
+                    kbqTooltip="Create dashboard"
                     kbq-button
                 >
+                    <i kbq-icon="kbq-plus_16"></i>
                     @if (isDesktop()) {
-                        Share
-                    } @else {
-                        <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
+                        Create dashboard
                     }
                 </button>
-
                 <button
                     [kbqStyle]="KbqButtonStyles.Transparent"
                     [color]="KbqComponentColors.Contrast"
@@ -83,9 +89,19 @@ import { map } from 'rxjs/operators';
                 </kbq-dropdown>
             </div>
         </kbq-top-bar>
-    `
+    `,
+    styles: `
+        .example-kbq-top-bar__counter {
+            color: var(--kbq-foreground-contrast-tertiary);
+        }
+
+        .example-kbq-top-bar__title {
+            display: inline-flex;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsExample {
+export class TopBarTitleCounterExample {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
