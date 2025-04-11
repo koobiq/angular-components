@@ -24,7 +24,7 @@ import { PopUpPlacements } from '@koobiq/components/core';
     styles: `
         .kbq-breadcrumbs_truncate-last-by-length-reverse {
             .kbq-breadcrumb-item:last-of-type {
-                max-width: 100px;
+                max-width: 96px;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;

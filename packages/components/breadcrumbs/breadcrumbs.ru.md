@@ -67,7 +67,11 @@ npm install @radix-ng/primitives@0.23.0
 ```ts
 @Component({
     template: `
-            <nav kbq-breadcrumbs [firstItemNegativeMargin]="false">...</nav>
+        <nav
+            kbq-breadcrumbs
+            [firstItemNegativeMargin]="false"
+            >...
+        </nav>
     `
 })
 ```
@@ -79,10 +83,28 @@ import { kbqBreadcrumbsConfigurationProvider } from '@koobiq/components/breadcru
 
 @NgModule({
     providers: [
-        kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })
+        kbqBreadcrumbsConfigurationProvider({
+            firstItemNegativeMargin: false
+        })
     ]
 })
 ```
+
+## Перенос строк
+
+Иногда родительский контейнер хлебных крошек может быть ужат по ширине, тогда рекомендуется либо использовать сокращение и скрытие пунктов, либо переносить пункты на новую строку.
+
+#### Режим без переноса строки
+
+Данный режим позволяет хлебным крошкам подстраиваться под доступное пространство.
+
+<!-- example(breadcrumbs-with-auto-wrap-adaptive) -->
+
+#### Когда нужен перенос?
+
+Если необходимо отобразить значение хлебных крошек без сокращений и скрытия пунктов, то можно воспользоваться переносом пунктов на новую строку.
+
+<!-- example(breadcrumbs-with-wrap) -->
 
 ## Управление с клавиатуры
 

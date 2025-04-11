@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { KbqDefaultSizes } from '@koobiq/components/core';
+import { KbqOverflowItem } from '@koobiq/components/overflow-items';
 import {
     KbqBreadcrumbItem,
     KbqBreadcrumbs,
@@ -23,7 +24,17 @@ function getBreadcrumbsDebugElement(debugElement: DebugElement): DebugElement {
 }
 
 function findAllBreadcrumbItems(debugElement: DebugElement): DebugElement[] {
-    return debugElement.queryAll(By.css('.kbq-breadcrumb-item'));
+    return debugElement.queryAll(By.css('.kbq-breadcrumb-item__container:not(.kbq-overflow-items-result)'));
+}
+
+function getBreadcrumbsElementRef(debugElement: DebugElement): DebugElement {
+    return debugElement.query(By.directive(KbqBreadcrumbs));
+}
+
+function findVisibleOverflowItems(debugElement: DebugElement): DebugElement[] {
+    return debugElement
+        .queryAll(By.directive(KbqOverflowItem))
+        .filter(({ injector }) => !injector.get(KbqOverflowItem).hidden());
 }
 
 function findAllCustomBreadcrumbItems(debugElement: DebugElement): DebugElement[] {
@@ -31,10 +42,12 @@ function findAllCustomBreadcrumbItems(debugElement: DebugElement): DebugElement[
 }
 
 function findAllCustomSeparators(debugElement: DebugElement): DebugElement[] {
-    return debugElement.queryAll(By.css('.custom-separator'));
+    return findAllBreadcrumbItems(debugElement)
+        .map((breadcrumbDebugElement) => breadcrumbDebugElement.query(By.css('.custom-separator')))
+        .filter(Boolean);
 }
 
-const customBreadcrumbsProvider = kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: true });
+const customBreadcrumbsProvider = kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: true, max: null });
 
 describe(KbqBreadcrumbs.name, () => {
     describe('core', () => {
@@ -55,7 +68,7 @@ describe(KbqBreadcrumbs.name, () => {
             ]);
             const { debugElement } = fixture;
             const { nativeElement } = getBreadcrumbsDebugElement(debugElement);
-            expect(nativeElement.classList).toMatchSnapshot();
+            expect(nativeElement.classList.contains('kbq-breadcrumbs_normal')).toBeTruthy();
         });
 
         it('should update when items change', () => {
@@ -81,19 +94,46 @@ describe(KbqBreadcrumbs.name, () => {
             expect(disabledItem).toBeTruthy();
         });
 
-        it('should enforce the max limit of breadcrumb items displayed', () => {
+        it('should enforce the max limit of breadcrumb items displayed async ', async () => {
+            // ARRANGE
             const fixture = createComponent(SimpleBreadcrumbs, [
                 provideRouter([]),
                 customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
             componentInstance.max = 4;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            // ACT
             componentInstance.items.push({ text: 'New Item1', disabled: false });
+            fixture.detectChanges();
+            await fixture.whenStable();
+
             componentInstance.items.push({ text: 'New Item2', disabled: false });
             fixture.detectChanges();
-            const displayedBreadcrumbItems = findAllBreadcrumbItems(debugElement);
+            await fixture.whenStable();
+
+            // ASSERT
             expect(componentInstance.items.length).toBeGreaterThan(componentInstance.max);
-            expect(displayedBreadcrumbItems.length).toBe(componentInstance.max);
+            expect(findVisibleOverflowItems(debugElement).length).toBe(componentInstance.max - 1);
+        });
+
+        it('should not set max-width when max more than actual items async', async () => {
+            const fixture = createComponent(SimpleBreadcrumbs, [
+                provideRouter([]),
+                customBreadcrumbsProvider
+            ]);
+            const { debugElement, componentInstance } = fixture;
+            fixture.detectChanges();
+            await fixture.whenStable();
+            componentInstance.max = 4;
+            fixture.detectChanges();
+            await fixture.whenStable();
+
+            const breadcrumbsElementRef = getBreadcrumbsElementRef(debugElement);
+            expect(componentInstance.items.length).toBeLessThan(componentInstance.max);
+            expect(breadcrumbsElementRef.nativeElement.style.maxWidth).toBeFalsy();
         });
     });
 

@@ -447,6 +447,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "breadcrumbs-truncate-tail-items-example.ts",
     "importPath": "components/breadcrumbs"
   },
+  "breadcrumbs-with-auto-wrap-adaptive": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-with-auto-wrap-adaptive",
+    "title": "Breadcrumbs Auto Wrap Adaptive",
+    "componentName": "BreadcrumbsWithAutoWrapAdaptiveExample",
+    "files": [
+      "breadcrumbs-with-auto-wrap-adaptive-example.ts"
+    ],
+    "selector": "breadcrumbs-with-auto-wrap-adaptive-example",
+    "additionalComponents": [
+      "ExampleBreadcrumbs"
+    ],
+    "primaryFile": "breadcrumbs-with-auto-wrap-adaptive-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
+  "breadcrumbs-with-wrap": {
+    "packagePath": "components/breadcrumbs/breadcrumbs-with-wrap",
+    "title": "Breadcrumbs Wrap",
+    "componentName": "BreadcrumbsWithWrapExample",
+    "files": [
+      "breadcrumbs-with-wrap-example.ts"
+    ],
+    "selector": "breadcrumbs-with-wrap-example",
+    "additionalComponents": [],
+    "primaryFile": "breadcrumbs-with-wrap-example.ts",
+    "importPath": "components/breadcrumbs"
+  },
   "button-toggle-alignment-overview": {
     "packagePath": "components/button-toggle/button-toggle-alignment-overview",
     "title": "Button toggle alignment",
@@ -4005,6 +4031,10 @@ return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-truncate-head-items':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'breadcrumbs-truncate-tail-items':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-with-auto-wrap-adaptive':
+return import('@koobiq/docs-examples/components/breadcrumbs');
+  case 'breadcrumbs-with-wrap':
 return import('@koobiq/docs-examples/components/breadcrumbs');
   case 'button-toggle-alignment-overview':
 return import('@koobiq/docs-examples/components/button-toggle');

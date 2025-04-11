@@ -5,6 +5,13 @@
     display: flex;
     align-items: center;
     gap: var(--kbq-breadcrumbs-gap);
+    flex-grow: 1;
+    flex-wrap: wrap;
+
+    .kbq-overflow-items {
+        // add space not to cut focus outline
+        padding: 1px;
+    }
 
     .kbq-breadcrumb-item__container {
         display: inline-flex;
@@ -12,11 +19,13 @@
     }
 
     &.kbq-breadcrumbs_first-item-negative-margin {
-        .kbq-breadcrumb-item__container {
-            &:first-of-type {
-                margin-left: var(--kbq-breadcrumb-item-negative-margin);
-            }
+        .kbq-overflow-items {
+            margin-left: var(--kbq-breadcrumb-item-negative-margin);
         }
+    }
+
+    &.kbq-breadcrumbs_wrap {
+        flex-wrap: wrap;
     }
 
     &.kbq-breadcrumbs_compact {
