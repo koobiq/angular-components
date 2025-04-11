@@ -1,10 +1,10 @@
-[AG Grid](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/) is designed for working with large tables, the component supports sorting, virtual scrolling, resizing, reordering columns, and more.
+AG Grid is designed for working with large tables. The component supports sorting, virtual scrolling, resizing, and reordering of columns. It is based on the library [ag-grid-angular](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/).
 
 <!-- example(ag-grid-overview) -->
 
-### Styling
+### Table Styling
 
-The [`@koobiq/ag-grid-angular-theme`](https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md) theme is used for styling AG Grid. It provides ready-to-use styles that simplify the customization of the table's appearance.
+To maintain a consistent table style across projects, a theme [`@koobiq/ag-grid-angular-theme`](https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md) has been created. It includes ready-to-use styles that align with the design system. The theme supports the core features of AG Grid and simplifies table appearance customization.
 
 #### Installation
 
@@ -12,24 +12,26 @@ The [`@koobiq/ag-grid-angular-theme`](https://github.com/koobiq/data-grid/blob/m
 <div class="kbq-callout__header">Note</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-This theme is designed to work with AG Grid [version 30](https://github.com/ag-grid/ag-grid/tree/v30.2.1).
+The theme is compatible with AG Grid [version 30](https://github.com/ag-grid/ag-grid/tree/v30.2.1).
+
+</div>
+</div>
+
+Install the following packages:
 
 ```bash
 npm install @koobiq/ag-grid-angular-theme@^30 ag-grid-community@^30 ag-grid-angular@^30
 ```
 
-</div>
-</div>
+#### Applying the Theme
 
-#### Integration
-
-Import the theme into your main `styles.scss` file:
+Import the theme into the main styles file `styles.scss`:
 
 ```scss
 @use '@koobiq/ag-grid-angular-theme';
 ```
 
-Apply the theme to `<ag-grid-angular>` in your template:
+Apply the theme to `<ag-grid-angular>` in the template:
 
 ```ts
 import { KbqAgGridTheme } from '@koobiq/ag-grid-angular-theme';
@@ -41,9 +43,9 @@ import { AgGridModule } from 'ag-grid-angular';
 })
 ```
 
-For more detailed information, please refer to the [documentation](https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md).
+The full documentation for using the theme is available [in the GitHub repository](https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md).
 
 ### Recommendations
 
--   Use the [`Table`](/en/components/table) component for simple tables with small amounts of data where resizing and reordering columns are not needed.
--   If the list contains only one column, use [`List`](/en/components/list) or [`Tree`](/en/components/tree) instead.
+-   Use the [Table](/en/components/table) component for simple tables with a small amount of data that do not require resizing or reordering of columns.
+-   If the list contains only one column, use [List](/en/components/list) or [Tree](/en/components/tree).
