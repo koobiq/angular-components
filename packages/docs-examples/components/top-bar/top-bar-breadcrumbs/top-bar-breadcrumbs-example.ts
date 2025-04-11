@@ -29,12 +29,12 @@ import { map } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
-            <div class="layout-align-center-center" kbqTopBarContainer placement="start">
+            <div class="layout-align-start-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="kbq-top-bar__breadcrumbs">
-                    <nav [max]="3" kbq-breadcrumbs size="big">
+                <div class="example-top-bar__breadcrumbs flex">
+                    <nav kbq-breadcrumbs size="big">
                         <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
                         <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
                     </nav>
