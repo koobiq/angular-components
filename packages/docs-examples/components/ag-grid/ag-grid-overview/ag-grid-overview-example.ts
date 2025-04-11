@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAgGridTheme } from '@koobiq/ag-grid-angular-theme';
-import { AgGridModule } from 'ag-grid-angular';
-import { ColDef, FirstDataRenderedEvent } from 'ag-grid-community';
+import { KbqLinkModule } from '@koobiq/components/link';
+import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
+import { ColDef, FirstDataRenderedEvent, ICellRendererParams } from 'ag-grid-community';
 
 type ExampleRowData = {
     column0: string;
@@ -15,6 +16,32 @@ type ExampleRowData = {
     column8: string;
     column9: string;
 };
+
+@Component({
+    standalone: true,
+    imports: [KbqLinkModule],
+    selector: 'example-link-cell-renderer',
+    template: `
+        <a kbq-link href="https://koobiq.io/en/components/ag-grid" target="_blank">{{ cellValue }}</a>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
+    cellValue: string;
+
+    agInit(params: ICellRendererParams): void {
+        this.cellValue = this.getValueToDisplay(params);
+    }
+
+    refresh(params: ICellRendererParams): boolean {
+        this.cellValue = this.getValueToDisplay(params);
+        return true;
+    }
+
+    private getValueToDisplay(params: ICellRendererParams) {
+        return params.valueFormatted ? params.valueFormatted : params.value;
+    }
+}
 
 /**
  * @title AG Grid overview
@@ -37,7 +64,7 @@ type ExampleRowData = {
     styles: `
         :host {
             display: block;
-            height: 340px;
+            height: 300px;
         }
 
         ag-grid-angular {
@@ -49,7 +76,8 @@ type ExampleRowData = {
 export class AgGridOverviewExample {
     readonly defaultColDef: ColDef = {
         sortable: true,
-        resizable: true
+        resizable: true,
+        width: 140
     };
 
     readonly columnDefs: ColDef[] = [
@@ -64,7 +92,8 @@ export class AgGridOverviewExample {
         },
         {
             field: 'column0',
-            headerName: 'Link'
+            headerName: 'Link',
+            cellRenderer: ExampleLinkCellRenderer
         },
         {
             field: 'column1',
