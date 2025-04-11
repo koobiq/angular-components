@@ -15,15 +15,15 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         KbqButtonModule
     ],
     styles: `
-        >>> .kbq-popover.popover-width-example p:first-child {
+        ::ng-deep .kbq-popover.popover-width-example p:first-child {
             margin-top: 0;
         }
 
-        >>> .kbq-popover.popover-width-example p:last-child {
+        ::ng-deep .kbq-popover.popover-width-example p:last-child {
             margin-bottom: 0;
         }
 
-        >>> .kbq-popover.kbq-popover_medium.popover-width-custom-example {
+        ::ng-deep .kbq-popover.kbq-popover_medium.popover-width-custom-example {
             max-width: 320px;
         }
     `

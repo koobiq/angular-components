@@ -1,18 +1,19 @@
->>> .kbq-popover.popover-content-custom-example .kbq-title {
+::ng-deep .kbq-popover.popover-content-custom-example .kbq-title {
     margin: 0 0;
 }
 
->>> .kbq-popover.popover-content-custom-example .kbq-popover__content {
+::ng-deep .kbq-popover.popover-content-custom-example .kbq-popover__content {
     padding: 0 0;
 }
 
->>> .kbq-popover.popover-content-custom-example .kbq-popover__content p {
+::ng-deep .kbq-popover.popover-content-custom-example .kbq-popover__content p {
     margin-top: 8px;
     margin-bottom: 16px;
     text-align: center;
 }
 
->>> .kbq-popover.popover-content-custom-example
+::ng-deep
+    .kbq-popover.popover-content-custom-example
     .kbq-popover__content
     .kbq-popover__close-container
     .kbq-popover__close {
@@ -33,19 +34,22 @@
     align-items: center;
 }
 
->>> .kbq-popover.popover-content-share-example .kbq-form__label {
+::ng-deep .kbq-popover.popover-content-share-example .kbq-form__label {
     display: block;
 }
 
->>> .kbq-popover.popover-content-share-example .kbq-form__fieldset {
+::ng-deep .kbq-popover.popover-content-share-example .kbq-form__fieldset {
     justify-content: space-between;
 }
 
->>> .kbq-popover.popover-content-share-example .kbq-form__row:first-child {
+::ng-deep .kbq-popover.popover-content-share-example .kbq-form__row:first-child {
     width: 100%;
 }
 
->>> .kbq-popover.popover-content-share-example .kbq-form__fieldset.kbq-horizontal .kbq-form__row:not(:first-child) {
+::ng-deep
+    .kbq-popover.popover-content-share-example
+    .kbq-form__fieldset.kbq-horizontal
+    .kbq-form__row:not(:first-child) {
     padding-left: 8px;
 }
 

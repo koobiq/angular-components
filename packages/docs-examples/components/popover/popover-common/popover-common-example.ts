@@ -12,7 +12,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
     selector: 'popover-common-example',
     imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],
     styles: `
-        >>> .kbq-popover.kbq-popover_medium.popover-common-example {
+        ::ng-deep .kbq-popover.kbq-popover_medium.popover-common-example {
             width: 400px;
         }
     `,

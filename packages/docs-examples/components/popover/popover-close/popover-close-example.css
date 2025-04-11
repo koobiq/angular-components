@@ -1,16 +1,16 @@
->>> .kbq-popover.popover-close-example .kbq-form__label {
+::ng-deep .kbq-popover.popover-close-example .kbq-form__label {
     display: block;
 }
 
->>> .kbq-popover.popover-close-example .kbq-form__fieldset {
+::ng-deep .kbq-popover.popover-close-example .kbq-form__fieldset {
     justify-content: space-between;
 }
 
->>> .kbq-popover.popover-close-example .kbq-form__row:first-child {
+::ng-deep .kbq-popover.popover-close-example .kbq-form__row:first-child {
     width: 100%;
 }
 
->>> .kbq-popover.popover-close-example .kbq-form__fieldset.kbq-horizontal .kbq-form__row:not(:first-child) {
+::ng-deep .kbq-popover.popover-close-example .kbq-form__fieldset.kbq-horizontal .kbq-form__row:not(:first-child) {
     padding-left: 8px;
 }
 

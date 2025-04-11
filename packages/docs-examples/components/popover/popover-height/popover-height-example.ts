@@ -14,11 +14,11 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
     templateUrl: 'popover-height-example.html',
     imports: [KbqFormFieldModule, KbqInputModule, KbqButtonModule, KbqPopoverModule, KbqFormsModule],
     styles: `
-        >>> .kbq-popover.popover-height-custom-example .kbq-popover__container {
+        ::ng-deep .kbq-popover.popover-height-custom-example .kbq-popover__container {
             max-height: 240px;
         }
 
-        >>> .kbq-popover.popover-height-custom-example .kbq-popover__header {
+        ::ng-deep .kbq-popover.popover-height-custom-example .kbq-popover__header {
             flex-shrink: 0;
         }
     `
