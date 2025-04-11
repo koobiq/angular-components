@@ -1,6 +1,6 @@
 [AG Grid](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/) is designed for working with large tables, the component supports sorting, virtual scrolling, resizing, reordering columns, and more.
 
-<!-- example(ag-grid-theme-overview) -->
+<!-- example(ag-grid-overview) -->
 
 ### Styling
 

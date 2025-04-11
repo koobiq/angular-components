@@ -183,17 +183,17 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "actions-panel-overview-example.ts",
     "importPath": "components/actions-panel"
   },
-  "ag-grid-theme-overview": {
-    "packagePath": "components/ag-grid-theme/ag-grid-theme-overview",
-    "title": "KbqAgGridTheme overview",
-    "componentName": "AgGridThemeOverviewExample",
+  "ag-grid-overview": {
+    "packagePath": "components/ag-grid/ag-grid-overview",
+    "title": "AG Grid overview",
+    "componentName": "AgGridOverviewExample",
     "files": [
-      "ag-grid-theme-overview-example.ts"
+      "ag-grid-overview-example.ts"
     ],
-    "selector": "ag-grid-theme-overview-example",
+    "selector": "ag-grid-overview-example",
     "additionalComponents": [],
-    "primaryFile": "ag-grid-theme-overview-example.ts",
-    "importPath": "components/ag-grid-theme"
+    "primaryFile": "ag-grid-overview-example.ts",
+    "importPath": "components/ag-grid"
   },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
@@ -3976,8 +3976,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-overview':
 return import('@koobiq/docs-examples/components/actions-panel');
-  case 'ag-grid-theme-overview':
-return import('@koobiq/docs-examples/components/ag-grid-theme');
+  case 'ag-grid-overview':
+return import('@koobiq/docs-examples/components/ag-grid');
   case 'alert-close':
 return import('@koobiq/docs-examples/components/alert');
   case 'alert-content':

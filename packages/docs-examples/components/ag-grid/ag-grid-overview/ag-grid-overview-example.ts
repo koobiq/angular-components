@@ -17,12 +17,12 @@ type ExampleRowData = {
 };
 
 /**
- * @title KbqAgGridTheme overview
+ * @title AG Grid overview
  */
 @Component({
     standalone: true,
     imports: [AgGridModule, KbqAgGridTheme],
-    selector: 'ag-grid-theme-overview-example',
+    selector: 'ag-grid-overview-example',
     template: `
         <ag-grid-angular
             [columnDefs]="columnDefs"
@@ -46,7 +46,7 @@ type ExampleRowData = {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridThemeOverviewExample {
+export class AgGridOverviewExample {
     readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true
@@ -104,17 +104,17 @@ export class AgGridThemeOverviewExample {
         }
     ];
 
-    readonly rowData: ExampleRowData[] = Array.from({ length: 1000 }, () => ({
-        column0: 'Link',
-        column1: 'Text',
-        column2: 'Text',
-        column3: 'Text',
-        column4: 'Text',
-        column5: 'Text',
-        column6: 'Text',
-        column7: 'Text',
-        column8: 'Text',
-        column9: 'Text'
+    readonly rowData: ExampleRowData[] = Array.from({ length: 1000 }, (_, index) => ({
+        column0: 'Link ' + index,
+        column1: 'Text ' + index,
+        column2: 'Text ' + index,
+        column3: 'Text ' + index,
+        column4: 'Text ' + index,
+        column5: 'Text ' + index,
+        column6: 'Text ' + index,
+        column7: 'Text ' + index,
+        column8: 'Text ' + index,
+        column9: 'Text ' + index
     }));
 
     onFirstDataRendered({ api }: FirstDataRenderedEvent): void {

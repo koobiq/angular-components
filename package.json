@@ -196,7 +196,7 @@
         "dev:all": "ng serve dev-all --port 3003",
         "dev:accordion": "ng serve dev-accordion --port 3003",
         "dev:actions-panel": "ng serve dev-actions-panel --port 3003",
-        "dev:ag-grid-theme": "ng serve dev-ag-grid-theme --port 3003",
+        "dev:ag-grid": "ng serve dev-ag-grid --port 3003",
         "dev:alert": "ng serve dev-alert --port 3003",
         "dev:autocomplete": "ng serve dev-autocomplete --port 3003",
         "dev:badge": "ng serve dev-badge --port 3003",

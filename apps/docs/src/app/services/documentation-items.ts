@@ -151,7 +151,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false
                 },
                 {
-                    id: 'ag-grid-theme',
+                    id: 'ag-grid',
                     name: {
                         ru: 'AG grid',
                         en: 'AG grid'

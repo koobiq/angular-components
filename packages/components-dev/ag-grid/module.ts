@@ -1,21 +1,21 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { AgGridThemeExamplesModule } from 'packages/docs-examples/components/ag-grid-theme';
+import { AgGridExamplesModule } from 'packages/docs-examples/components/ag-grid';
 
 @Component({
     standalone: true,
-    imports: [AgGridThemeExamplesModule],
-    selector: 'dev-ag-grid-theme-examples',
+    imports: [AgGridExamplesModule],
+    selector: 'dev-ag-grid-examples',
     template: `
-        <ag-grid-theme-overview-example />
+        <ag-grid-overview-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevAgGridThemeExamples {}
+export class DevAgGridExamples {}
 
 @Component({
     selector: 'app',
     standalone: true,
-    imports: [DevAgGridThemeExamples],
+    imports: [DevAgGridExamples],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

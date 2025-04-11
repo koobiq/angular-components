@@ -1,6 +1,6 @@
 [AG Grid](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/) предназначен для работы с большими таблицами, компонент поддерживает сортировку, виртуальную прокрутку, изменение ширины и порядка колонок и тд.
 
-<!-- example(ag-grid-theme-overview) -->
+<!-- example(ag-grid-overview) -->
 
 ### Стилизация
 

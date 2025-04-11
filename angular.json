@@ -419,31 +419,31 @@
                 }
             }
         },
-        "dev-ag-grid-theme": {
+        "dev-ag-grid": {
             "projectType": "application",
-            "root": "packages/components-dev/ag-grid-theme",
-            "sourceRoot": "packages/components-dev/ag-grid-theme",
+            "root": "packages/components-dev/ag-grid",
+            "sourceRoot": "packages/components-dev/ag-grid",
             "architect": {
                 "build": {
                     "builder": "@angular-devkit/build-angular:application",
                     "options": {
                         "outputPath": {
-                            "base": "dist/components-dev/ag-grid-theme"
+                            "base": "dist/components-dev/ag-grid"
                         },
-                        "tsConfig": "packages/components-dev/ag-grid-theme/tsconfig.app.json",
+                        "tsConfig": "packages/components-dev/ag-grid/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "polyfills": ["zone.js"],
                         "extractLicenses": false,
                         "sourceMap": true,
                         "optimization": false,
                         "namedChunks": true,
-                        "browser": "packages/components-dev/ag-grid-theme/main.ts"
+                        "browser": "packages/components-dev/ag-grid/main.ts"
                     }
                 },
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "buildTarget": "dev-ag-grid-theme:build"
+                        "buildTarget": "dev-ag-grid:build"
                     }
                 }
             }
