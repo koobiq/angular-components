@@ -50,12 +50,39 @@
             radius: 8px;
         }
 
+        transition: background 100ms ease-in-out;
         height: var(--kbq-toggle-size-normal-height);
         width: var(--kbq-toggle-size-normal-width);
+
+        .kbq-toggle__thumb {
+            position: absolute;
+            left: 8px;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 10px;
+            height: 2px;
+            border-radius: var(--kbq-size-border-width);
+            transition: left 50ms ease-in-out;
+        }
+
+        &:hover {
+            .kbq-toggle__thumb {
+                left: 10px;
+            }
+        }
     }
 
     .kbq-hint {
         margin-top: var(--kbq-toggle-size-normal-vertical-content-padding);
+    }
+
+    &.kbq-indeterminate {
+        .kbq-toggle-bar {
+            .kbq-toggle__thumb {
+                display: block;
+            }
+        }
     }
 }
 

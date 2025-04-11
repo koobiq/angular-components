@@ -7,6 +7,7 @@
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
+import { CheckedState } from '@koobiq/components/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -39,7 +40,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     set disabled(value: boolean);
     focus(): void;
     // (undocumented)
-    getAriaChecked(): 'true' | 'false' | 'mixed';
+    getAriaChecked(): CheckedState;
     id: string;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
@@ -115,10 +116,10 @@ export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {
 
 // @public
 export enum TransitionCheckState {
-    Checked = 1,
-    Indeterminate = 3,
-    Init = 0,
-    Unchecked = 2
+    Checked = "checked",
+    Indeterminate = "indeterminate",
+    Init = "init",
+    Unchecked = "unchecked"
 }
 
 // (No @packageDocumentation comment for this package)

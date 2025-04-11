@@ -12,13 +12,15 @@
         [checked]="checked"
         [disabled]="disabled"
         [id]="inputId"
+        [indeterminate]="indeterminate"
         [tabIndex]="tabIndex"
         (change)="onChangeEvent($event)"
         (click)="onInputClick($event)"
     />
     <div class="kbq-toggle-bar-container">
         <div class="kbq-toggle-bar">
-            <div class="kbq-toggle__circle" [@switch]="checked"></div>
+            <div class="kbq-toggle__circle" [@switch]="currentCheckState"></div>
+            <div class="kbq-toggle__thumb"></div>
         </div>
     </div>
 

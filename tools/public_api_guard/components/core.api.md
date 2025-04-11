@@ -200,6 +200,9 @@ export type CanUpdateErrorStateCtor = Constructor<CanUpdateErrorState>;
 export function checkAndNormalizeLocalizedNumber(num: string | null | undefined, locale?: string): number | null;
 
 // @public
+export type CheckedState = 'true' | 'false' | 'mixed';
+
+// @public
 export function countGroupLabelsBeforeOption(optionIndex: number, options: QueryList<KbqOption>, optionGroups: QueryList<KbqOptgroup>): number;
 
 // @public (undocumented)
@@ -1686,6 +1689,8 @@ export enum KbqAnimationCurves {
     AccelerationCurve = "cubic-bezier(0.4,0.0,1,1)",
     // (undocumented)
     DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
+    // (undocumented)
+    EaseInOut = "ease-in-out",
     // (undocumented)
     SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
     // (undocumented)
