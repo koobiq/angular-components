@@ -156,6 +156,7 @@ const DOCS: { [key: string]: DocCategory[] } = {
                         ru: 'AG grid',
                         en: 'AG grid'
                     },
+                    svgPreview: 'ag-grid',
                     hasApi: false,
                     hasExamples: false
                 },
