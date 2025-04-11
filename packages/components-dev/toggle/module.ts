@@ -6,6 +6,7 @@ import { ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqButtonModule } from '../../components/button/';
 import { KbqToggleModule } from '../../components/toggle/';
+import { ToggleExamplesModule } from '../../docs-examples/components/toggle';
 
 @Component({
     selector: 'app',
@@ -42,7 +43,8 @@ export class DemoComponent {
         KbqToggleModule,
         KbqButtonModule,
         KbqFormFieldModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        ToggleExamplesModule
     ],
     bootstrap: [
         DemoComponent

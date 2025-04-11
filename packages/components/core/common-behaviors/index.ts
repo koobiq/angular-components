@@ -1,5 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
+export * from './checkbox';
 export { CanColor, CanColorCtor, KbqColorDirective, KbqComponentColors, mixinColor, ThemePalette } from './color';
 export { KBQ_SANITY_CHECKS, KbqCommonModule } from './common-module';
 export { CanDisable, CanDisableCtor, mixinDisabled } from './disabled';
