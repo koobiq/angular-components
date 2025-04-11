@@ -201,7 +201,7 @@
 
             <!-- Asynchronous navbar-item -->
             @if (permission$ | async) {
-                <button #navbarItemAdmin kbq-navbar-item>
+                <button kbq-navbar-item>
                     <i kbq-icon="kbq-bsd_16"></i>
                     <span kbq-navbar-title>Настройки</span>
                 </button>
@@ -209,6 +209,14 @@
         </kbq-navbar-container>
 
         <kbq-navbar-container>
+            <!-- Second asynchronous navbar-item -->
+            @if (permission$ | async) {
+                <button kbq-navbar-item>
+                    <i kbq-icon="kbq-bsd_16"></i>
+                    <span kbq-navbar-title>Настройки</span>
+                </button>
+            }
+
             <kbq-navbar-item
                 #verticalPopover="kbqPopover"
                 kbqPopover
