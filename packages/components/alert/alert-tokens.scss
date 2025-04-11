@@ -1,4 +1,4 @@
-.kbq-alert {
+:where(.kbq-alert) {
     --kbq-alert-size-normal-container-border-radius: var(--kbq-size-m);
     --kbq-alert-size-normal-container-padding-top: 0;
     --kbq-alert-size-normal-container-padding-right: var(--kbq-size-s);
