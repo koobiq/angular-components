@@ -1,8 +1,10 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { Component, computed, model, NgModule, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqButtonModule, KbqButtonStyles } from '../../components/button';
 import { KbqIconModule } from '../../components/icon';
 import { KbqLinkModule } from '../../components/link';
@@ -18,6 +20,9 @@ export class DemoComponent {
     alertColors = KbqAlertColors;
     alertStyles = KbqAlertStyles;
     style = KbqButtonStyles;
+
+    isColored = model(false);
+    alertStyle = computed(() => (this.isColored() ? this.alertStyles.Colored : this.alertStyles.Default));
 }
 
 @NgModule({
@@ -28,7 +33,9 @@ export class DemoComponent {
         KbqAlertModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqLinkModule
+        KbqLinkModule,
+        FormsModule,
+        KbqToggleModule
     ],
     bootstrap: [DemoComponent]
 })

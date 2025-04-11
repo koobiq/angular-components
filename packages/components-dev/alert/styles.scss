@@ -1,6 +1,6 @@
 @use '../main';
 
-.kbq-column-container {
+.example-column-container {
     display: flex;
     flex-direction: column;
 
@@ -8,4 +8,8 @@
     margin-right: 15px;
 
     gap: 16px;
+
+    border-radius: var(--kbq-size-border-radius);
+    border: 1px solid var(--kbq-line-contrast-less);
+    padding: var(--kbq-size-l);
 }
