@@ -18,6 +18,7 @@
     }
 
     .kbq-alert.kbq-alert_default {
+        // Will be replaced with `kbq-alert_info` in next major release (#DS-3651)
         &.kbq-alert_contrast {
             @include kbq-alert-style(default, contrast);
         }
@@ -34,12 +35,14 @@
             @include kbq-alert-style(default, success);
         }
 
+        // Will be removed and replaced with `kbq-alert_info` in next major release (#DS-3651)
         &.kbq-alert_theme {
             @include kbq-alert-style(default, theme);
         }
     }
 
     .kbq-alert.kbq-alert_colored {
+        // Will be removed in next major release (#DS-3651)
         &.kbq-alert_contrast {
             @include kbq-alert-style(colored, contrast);
         }
@@ -56,6 +59,7 @@
             @include kbq-alert-style(colored, success);
         }
 
+        // Will be replaced with `kbq-alert_info` in next major release (#DS-3651)
         &.kbq-alert_theme {
             @include kbq-alert-style(colored, theme);
         }

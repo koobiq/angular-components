@@ -16,13 +16,17 @@ export enum KbqAlertStyles {
 }
 
 export enum KbqAlertColors {
-    Contrast = 'contrast',
     Error = 'error',
     Warning = 'warning',
     Success = 'success',
-    /** @deprecated This color key doesn't correlate with design, use `Info` instead. */
+    /** Used the same value as `Theme` to not introduce breaking changes */
+    Info = 'theme',
+    /** @deprecated This color key doesn't correlate with design, use `Info` instead.
+     * Will be removed in next major release (#DS-3602) */
     Theme = 'theme',
-    Info = 'theme'
+    /** @deprecated This color key doesn't correlate with design.
+     * Will be removed and replaced with `Info` in next major release (#DS-3602) */
+    Contrast = 'contrast'
 }
 
 @Directive({
