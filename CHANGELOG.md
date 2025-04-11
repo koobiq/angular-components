@@ -1,3 +1,22 @@
+# 18.22.0 (2025-04-11)
+
+### Koobiq
+
+* bug fix  **alert:** align info variant with design ([#DS-3602](https://github.com/koobiq/angular-components/issues/issue/DS-3602)) ([#648](https://github.com/koobiq/angular-components/issues/648)) ([e47a699](https://github.com/koobiq/angular-components/commit/e47a6996df229e988c24225dbe9a0ea7a4db645f))
+* bug fix  **link:** multiline link with icon ([#DS-3616](https://github.com/koobiq/angular-components/issues/issue/DS-3616)) ([#644](https://github.com/koobiq/angular-components/issues/644)) ([0b8804d](https://github.com/koobiq/angular-components/commit/0b8804d7f2e5fa84e052109526819d395c0f8e01))
+* bug fix  **navbar:** async item alignment in vertical navbar for second navbar-container with OnPush ([#DS-3645](https://github.com/koobiq/angular-components/issues/issue/DS-3645)) ([#646](https://github.com/koobiq/angular-components/issues/646)) ([b8eab20](https://github.com/koobiq/angular-components/commit/b8eab20f13fd82fd12b53915693b9e7d8fd6abf3))
+* bug fix  **select, tree-select:** icon color in invalid state ([#DS-3192](https://github.com/koobiq/angular-components/issues/issue/DS-3192)) ([#642](https://github.com/koobiq/angular-components/issues/642)) ([1fba38c](https://github.com/koobiq/angular-components/commit/1fba38c41e348a34dce335676f2332ba201c07ab))
+* bug fix  **select, tree-select:** return focus after clearing ([#DS-3144](https://github.com/koobiq/angular-components/issues/issue/DS-3144)) ([#641](https://github.com/koobiq/angular-components/issues/641)) ([7e9839a](https://github.com/koobiq/angular-components/commit/7e9839a8737d9ab8d8c9b621671bdf14ce85b485))
+* feature  **empty-state:** update empty-state sizes (#DS-3507) (#623) ([4f6c86a](https://github.com/koobiq/angular-components/commit/4f6c86ae0b0de86e90e549e1d17ed4782def0e6d))
+* feature  **loader-overlay:** update loader-overlay sizes (#DS-3507) (#624) ([9078268](https://github.com/koobiq/angular-components/commit/9078268278bc93d128213cc8466f43232efe77bc))
+* feature  **breadcrumbs:** support wrap mode ([#DS-3352](https://github.com/koobiq/angular-components/issues/issue/DS-3352)) ([#566](https://github.com/koobiq/angular-components/issues/566)) ([60486ce](https://github.com/koobiq/angular-components/commit/60486ce4f56afa5b1b09f64fcba15574e57e13ac))
+* feature  **popover:** trigger popover on hover ([#DS-3531](https://github.com/koobiq/angular-components/issues/issue/DS-3531)) ([#647](https://github.com/koobiq/angular-components/issues/647)) ([7fb6dbc](https://github.com/koobiq/angular-components/commit/7fb6dbc5f1eaae514ae2f59fcf0e39ed82f3af69))
+* feature  **schematics:** added base schematic script for parsing template ([#DS-3594](https://github.com/koobiq/angular-components/issues/issue/DS-3594)) ([#645](https://github.com/koobiq/angular-components/issues/645)) ([96713b7](https://github.com/koobiq/angular-components/commit/96713b7d0fa36f1c2c84681e633a0e0306fd247a))
+
+#### BREAKING CHANGES
+*   The `big` input property has been replaced by `size`. Use the `empty-state-size-attr` schematic to migrate your code automatically.
+*   The `compact` input property has been replaced by `size`. Use the `loader-overlay-size-attr` schematic to migrate your code automatically.
+
 # 18.21.0 (2025-04-03)
 
 ### Koobiq

@@ -148,7 +148,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
 
                     const packageName = commit.package || config.changelogScope;
 
-                    const type = getTypeOfCommitGroupDescription(group.title);
+                    const type = getTypeOfCommitGroupDescription(group.title || '');
 
                     if (!packageGroups[packageName]) {
                         packageGroups[packageName] = { commits: [], breakingChanges: [], deprecations: [] };
