@@ -110,7 +110,7 @@ type ExampleAction = {
         }
 
         :host .kbq-overflow-items {
-            max-width: 190px;
+            max-width: 142px;
             min-width: 32px;
         }
 

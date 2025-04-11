@@ -14,12 +14,14 @@
 
     .kbq-top-bar-spacer {
         height: 100%;
-        flex: 1 0 var(--kbq-top-bar-spacer-min-width);
+        flex: 0 0 var(--kbq-top-bar-spacer-min-width);
     }
 
     .kbq-top-bar-container__start {
         display: flex;
         gap: var(--kbq-top-bar-left-gap);
+        flex: 1;
+        justify-content: flex-start;
     }
 
     .kbq-top-bar-container__end {
@@ -27,7 +29,7 @@
         gap: var(--kbq-top-bar-right-gap);
     }
 
-    &.kbq-top-bar-container__with-overflow-items {
+    .kbq-top-bar-container__with-overflow-items {
         gap: unset;
 
         > .kbq-overflow-item:not(:last-of-type) {

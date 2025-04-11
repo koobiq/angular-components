@@ -91,7 +91,7 @@ type ExampleAction = {
     `,
     styles: `
         .kbq-overflow-items {
-            max-width: 400px;
+            max-width: 368px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

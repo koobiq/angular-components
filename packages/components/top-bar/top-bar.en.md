@@ -16,7 +16,7 @@ If you need to display the number of objects on the current page, you can do so 
 
 ### Breadcrumbs
 
-For internal pages of a specific module, using breadcrumbs is an excellent option. This helps users navigate the application more easily.
+For internal pages of a specific module, using [breadcrumbs](/en/components/breadcrumbs) is an excellent option. This helps users navigate the application more easily.
 
 <!-- example(top-bar-breadcrumbs) -->
 
@@ -37,7 +37,7 @@ We recommend using the following set of actions (from left to right):
 
 Internal elements can adjust to the toolbar size.
 
-The acceptable distance between the left side and the right side with actions is **80px.**
+The minimum allowed spacing between the left side and the right side with actions is **80px** and is defined using the CSS variable `--kbq-top-bar-spacer-min-width`.
 
 #### Breadcrumbs Variant
 
