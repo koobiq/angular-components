@@ -22,7 +22,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { getNodesWithoutComments, KbqButton } from '@koobiq/components/button';
+import { KbqButton } from '@koobiq/components/button';
+import { getNodesWithoutComments } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
 /** Acceptable types for a button toggle. */

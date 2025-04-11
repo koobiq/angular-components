@@ -1,15 +1,24 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
+    AfterContentInit,
     AfterViewInit,
     booleanAttribute,
     ChangeDetectorRef,
     ContentChild,
+    ContentChildren,
+    DestroyRef,
     Directive,
     ElementRef,
+    forwardRef,
+    inject,
     Input,
     numberAttribute,
-    OnDestroy
+    OnDestroy,
+    QueryList,
+    Renderer2
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { getNodesWithoutComments, leftIconClassName, rightIconClassName } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
 export const baseURLRegex = /^http(s)?:\/\//;
@@ -33,7 +42,13 @@ export const baseURLRegex = /^http(s)?:\/\//;
         '[attr.print]': 'printUrl'
     }
 })
-export class KbqLink implements AfterViewInit, OnDestroy {
+export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
+    protected readonly renderer = inject(Renderer2);
+    protected readonly destroyRef = inject(DestroyRef);
+    protected readonly nativeElement = inject(ElementRef).nativeElement;
+
+    @ContentChildren(forwardRef(() => KbqIcon), { read: ElementRef }) icons: QueryList<ElementRef>;
+
     /** Whether the link is disabled. */
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -114,6 +129,35 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     getHostElement() {
         return this.elementRef.nativeElement;
     }
+
+    ngAfterContentInit() {
+        this.updateClassModifierForIcons();
+
+        this.icons.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateClassModifierForIcons);
+    }
+
+    private updateClassModifierForIcons = () => {
+        this.icons.forEach(({ nativeElement }) => {
+            this.renderer.removeClass(nativeElement, leftIconClassName);
+            this.renderer.removeClass(nativeElement, rightIconClassName);
+        });
+
+        const filteredNodesWithoutComments = getNodesWithoutComments(this.nativeElement.childNodes as NodeList);
+
+        if (this.icons.length && filteredNodesWithoutComments.length > 1) {
+            this.icons.forEach(({ nativeElement }) => {
+                const iconIndex = filteredNodesWithoutComments.findIndex((node) => node === nativeElement);
+
+                if (iconIndex === 0) {
+                    this.renderer.addClass(nativeElement, leftIconClassName);
+                }
+
+                if (iconIndex === filteredNodesWithoutComments.length - 1) {
+                    this.renderer.addClass(nativeElement, rightIconClassName);
+                }
+            });
+        }
+    };
 
     private updatePrintUrl() {
         Promise.resolve().then(() => {

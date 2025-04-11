@@ -19,7 +19,14 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_TITLE_TEXT_REF, KbqColorDirective, KbqTitleTextRef } from '@koobiq/components/core';
+import {
+    getNodesWithoutComments,
+    KBQ_TITLE_TEXT_REF,
+    KbqColorDirective,
+    KbqTitleTextRef,
+    leftIconClassName,
+    rightIconClassName
+} from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 
 export enum KbqButtonStyles {
@@ -28,17 +35,8 @@ export enum KbqButtonStyles {
     Transparent = 'transparent'
 }
 
-export const leftIconClassName = 'kbq-icon_left';
-export const rightIconClassName = 'kbq-icon_right';
-
 export const buttonLeftIconClassName = 'kbq-button-icon_left';
 export const buttonRightIconClassName = 'kbq-button-icon_right';
-
-export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
-    const COMMENT_NODE = 8;
-
-    return Array.from(nodes).filter((node) => node.nodeType !== COMMENT_NODE);
-};
 
 @Directive({
     selector: '[kbq-button]',

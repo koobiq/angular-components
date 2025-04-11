@@ -28,9 +28,6 @@ export const buttonLeftIconClassName = "kbq-button-icon_left";
 export const buttonRightIconClassName = "kbq-button-icon_right";
 
 // @public (undocumented)
-export const getNodesWithoutComments: (nodes: NodeList) => Node[];
-
-// @public (undocumented)
 export class KbqButton extends KbqColorDirective implements OnDestroy, AfterViewInit, KbqTitleTextRef {
     constructor(focusMonitor: FocusMonitor, styler: KbqButtonCssStyler);
     // (undocumented)
@@ -125,12 +122,6 @@ export enum KbqButtonStyles {
     // (undocumented)
     Transparent = "transparent"
 }
-
-// @public (undocumented)
-export const leftIconClassName = "kbq-icon_left";
-
-// @public (undocumented)
-export const rightIconClassName = "kbq-icon_right";
 
 // (No @packageDocumentation comment for this package)
 
