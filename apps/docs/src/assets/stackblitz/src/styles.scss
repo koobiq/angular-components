@@ -1,20 +1,29 @@
-@import '@koobiq/components/prebuilt-themes/light-theme.css';
-@import '@koobiq/icons/fonts/kbq-icons';
-@import '@koobiq/design-tokens/web/css-tokens.css';
-@import '@koobiq/design-tokens/web/css-tokens-dark.css';
-@import '@koobiq/design-tokens/web/css-tokens-light.css';
+@use '@koobiq/components/prebuilt-themes/light-theme.css';
+@use '@koobiq/icons/fonts/kbq-icons';
+@use '@koobiq/design-tokens/web/css-tokens.css';
+@use '@koobiq/design-tokens/web/css-tokens-dark.css';
+@use '@koobiq/design-tokens/web/css-tokens-light.css';
+@use '@koobiq/ag-grid-angular-theme';
 
 body {
-    font-family: Inter, Arial, sans-serif;
     margin: 0;
+    font-size: var(--kbq-typography-text-normal-font-size);
+    font-weight: var(--kbq-typography-text-normal-font-weight);
+    line-height: var(--kbq-typography-text-normal-line-height);
+    font-family: var(--kbq-typography-text-normal-font-family);
+    text-transform: var(--kbq-typography-text-normal-text-transform);
+    font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
+    letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast);
 }
 
 .basic-container {
-    padding: 30px;
+    padding: var(--kbq-size-3xl);
 }
 
 .version-info {
-    font-size: 8pt;
-    padding-right: 8px;
+    font-size: var(--kbq-typography-text-compact-font-size);
+    padding-right: var(--kbq-size-s);
     float: right;
 }

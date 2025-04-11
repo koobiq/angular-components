@@ -10,7 +10,8 @@ const docsContent = async () => {
             source: [
                 'packages/components/**/!(README|examples*).md',
                 'packages/components-experimental/**/!(README|examples*).md',
-                'docs/guides/**/*.md'
+                'docs/guides/**/*.md',
+                'docs/data-grid/**/*.md'
             ],
             dest: 'dist/docs-content/overviews'
         }),
