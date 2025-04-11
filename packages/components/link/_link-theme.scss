@@ -21,9 +21,8 @@
         border-bottom-color: transparent;
     }
 
-    &.kbq-text-with-icon {
-        display: inline-flex;
-        align-items: center;
+    &.kbq-text-with-icon .kbq-icon {
+        vertical-align: baseline;
     }
 
     &.kbq-text-with-icon .kbq-link__text {
@@ -37,13 +36,23 @@
     }
 
     &.kbq-link_compact {
-        &.kbq-text-with-icon .kbq-link__text {
-            &:not(:first-child) {
-                margin-left: var(--kbq-link-size-compact-content-padding);
+        &.kbq-text-with-icon {
+            .kbq-icon.kbq-icon_left {
+                vertical-align: text-top;
             }
 
-            &:not(:last-child) {
-                margin-right: var(--kbq-link-size-compact-content-padding);
+            .kbq-icon.kbq-icon_right {
+                vertical-align: middle;
+            }
+
+            .kbq-link__text {
+                &:not(:first-child) {
+                    margin-left: var(--kbq-link-size-compact-content-padding);
+                }
+
+                &:not(:last-child) {
+                    margin-right: var(--kbq-link-size-compact-content-padding);
+                }
             }
         }
     }

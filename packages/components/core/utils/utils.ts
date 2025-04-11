@@ -10,3 +10,12 @@ export function isBoolean(value: unknown): value is boolean {
 export function toBoolean(value: unknown): boolean {
     return value != null && `${value}` !== 'false';
 }
+
+export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
+    const COMMENT_NODE = 8;
+
+    return Array.from(nodes).filter((node) => node.nodeType !== COMMENT_NODE);
+};
+
+export const leftIconClassName = 'kbq-icon_left';
+export const rightIconClassName = 'kbq-icon_right';

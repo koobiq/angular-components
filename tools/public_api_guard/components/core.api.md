@@ -667,6 +667,9 @@ export function getKbqSelectNonArrayValueError(): Error;
 // @public
 export function getKbqSelectNonFunctionValueError(): Error;
 
+// @public (undocumented)
+export const getNodesWithoutComments: (nodes: NodeList) => Node[];
+
 // @public
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
@@ -2539,6 +2542,9 @@ export const LEFT_POSITION_PRIORITY: ConnectionPositionPair[];
 export const LEFT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
+export const leftIconClassName = "kbq-icon_left";
+
+// @public (undocumented)
 export enum MeasurementSystem {
     // (undocumented)
     IEC = "IEC",
@@ -2982,6 +2988,9 @@ export const RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
 
 // @public (undocumented)
 export const RIGHT_TOP_POSITION_PRIORITY: ConnectionPositionPair[];
+
+// @public (undocumented)
+export const rightIconClassName = "kbq-icon_right";
 
 // @public (undocumented)
 export const ruRUFormattersData: {

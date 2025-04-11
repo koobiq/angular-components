@@ -3,17 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
-import { ThemePalette } from '@koobiq/components/core';
+import { leftIconClassName, rightIconClassName, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import {
-    KbqButtonCssStyler,
-    KbqButtonModule,
-    buttonLeftIconClassName,
-    buttonRightIconClassName,
-    leftIconClassName,
-    rightIconClassName
-} from './index';
+import { buttonLeftIconClassName, buttonRightIconClassName, KbqButtonCssStyler, KbqButtonModule } from './index';
 
 describe('KbqButton', () => {
     beforeEach(() => {

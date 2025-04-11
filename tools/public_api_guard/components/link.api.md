@@ -4,25 +4,31 @@
 
 ```ts
 
+import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
+import { QueryList } from '@angular/core';
+import { Renderer2 } from '@angular/core';
 
 // @public (undocumented)
 export const baseURLRegex: RegExp;
 
 // @public (undocumented)
-export class KbqLink implements AfterViewInit, OnDestroy {
+export class KbqLink implements AfterContentInit, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, focusMonitor: FocusMonitor, changeDetector: ChangeDetectorRef);
     // (undocumented)
     big: boolean;
     // (undocumented)
     compact: boolean;
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -33,6 +39,10 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     get hasIcon(): boolean;
     // (undocumented)
     icon: KbqIcon;
+    // (undocumented)
+    icons: QueryList<ElementRef>;
+    // (undocumented)
+    protected readonly nativeElement: any;
     // (undocumented)
     static ngAcceptInputType_big: unknown;
     // (undocumented)
@@ -48,6 +58,8 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     // (undocumented)
     static ngAcceptInputType_useVisited: unknown;
     // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
@@ -62,12 +74,14 @@ export class KbqLink implements AfterViewInit, OnDestroy {
     // (undocumented)
     pseudo: boolean;
     // (undocumented)
+    protected readonly renderer: Renderer2;
+    // (undocumented)
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
     useVisited: boolean;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon"], never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLink, "[kbq-link]", ["kbqLink"], { "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "pseudo": { "alias": "pseudo"; "required": false; }; "noUnderline": { "alias": "noUnderline"; "required": false; }; "big": { "alias": "big"; "required": false; }; "compact": { "alias": "compact"; "required": false; }; "useVisited": { "alias": "useVisited"; "required": false; }; "print": { "alias": "print"; "required": false; }; }, {}, ["icon", "icons"], never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLink, never>;
 }
