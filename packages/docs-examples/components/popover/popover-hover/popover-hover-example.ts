@@ -5,11 +5,11 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 
 /**
- * @title Popover common
+ * @title Popover hover
  */
 @Component({
     standalone: true,
-    selector: 'popover-common-example',
+    selector: 'popover-hover-example',
     imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],
     styles: `
         ::ng-deep .kbq-popover.kbq-popover_medium.popover-common-example {
@@ -36,6 +36,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
             [kbqPopoverClass]="'popover-common-example'"
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
+            [kbqTrigger]="'hover'"
             kbq-button
             kbqPopover
         >
@@ -43,4 +44,4 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
         </button>
     `
 })
-export class PopoverCommonExample {}
+export class PopoverHoverExample {}

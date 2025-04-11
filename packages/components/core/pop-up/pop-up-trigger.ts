@@ -35,6 +35,7 @@ import {
     POSITION_TO_CSS_MAP
 } from '../overlay/overlay-position-map';
 import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT, PopUpPlacements, PopUpTriggers } from './constants';
+import { KbqPopUp } from './pop-up';
 
 type KbqPopupTriggerOffset = Pick<ConnectionPositionPair, 'offsetX' | 'offsetY'>;
 
@@ -93,6 +94,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     enterDelay: number = 0;
     leaveDelay: number = 0;
 
+    triggerName: string;
+
     abstract disabled: boolean;
     abstract arrow: boolean;
     abstract trigger: string;
@@ -123,7 +126,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected readonly availablePositions: { [key: string]: ConnectionPositionPair } = POSITION_MAP;
 
-    protected triggerName: string;
     protected mouseEvent?: MouseEvent;
     protected strategy: FlexibleConnectedPositionStrategy;
 
@@ -206,7 +208,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.portal = this.portal || new ComponentPortal(this.getOverlayHandleComponentType(), this.hostView);
 
-        this.instance = this.overlayRef.attach(this.portal).instance;
+        this.instance = this.overlayRef.attach(this.portal).instance as KbqPopUp;
 
         this.instance.trigger = this;
 
@@ -229,11 +231,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.instance.show(delay);
     }
 
-    hide(delay: number = this.leaveDelay): void {
-        if (this.instance) {
+    hide = (delay: number = this.leaveDelay) => {
+        if (this.instance && this.triggerName !== 'mouseenter' && !this.instance.hovered.getValue()) {
             this.ngZone.run(() => this.instance.hide(delay));
         }
-    }
+    };
 
     detach = (): void => {
         if (this.overlayRef?.hasAttached()) {
@@ -320,7 +322,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         if (this.trigger.includes(PopUpTriggers.Hover)) {
             this.listeners
                 .set(...this.createListener('mouseenter', this.show))
-                .set(...this.createListener('mouseleave', this.hide));
+                .set(...this.createListener('mouseleave', () => setTimeout(this.hide)));
         }
 
         if (this.trigger.includes(PopUpTriggers.Focus)) {

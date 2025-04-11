@@ -1,13 +1,33 @@
 import { AnimationEvent } from '@angular/animations';
-import { ChangeDetectorRef, Directive, EventEmitter, inject, OnDestroy, Renderer2, TemplateRef } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import {
+    ChangeDetectorRef,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    inject,
+    OnDestroy,
+    Renderer2,
+    TemplateRef
+} from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { PopUpVisibility } from './constants';
+import { KbqPopUpTrigger } from './pop-up-trigger';
 
-@Directive()
+@Directive({
+    host: {
+        '(mouseenter)': 'hovered.next(true)',
+        '(mouseleave)': 'hovered.next(false)'
+    }
+})
 export abstract class KbqPopUp implements OnDestroy {
     protected readonly renderer: Renderer2 = inject(Renderer2);
+    protected readonly elementRef = inject(ElementRef);
     protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
 
+    /** Stream that emits when the popup item is hovered. */
+    readonly hovered = new BehaviorSubject<boolean>(false);
+
+    trigger: KbqPopUpTrigger<unknown>;
     header: string | TemplateRef<any>;
     content: string | TemplateRef<any>;
     context: { $implicit: any } | null;
@@ -37,6 +57,7 @@ export abstract class KbqPopUp implements OnDestroy {
         clearTimeout(this.hideTimeoutId);
 
         this.onHideSubject.complete();
+        this.hovered.complete();
     }
 
     isTemplateRef(value: any): boolean {
@@ -58,6 +79,10 @@ export abstract class KbqPopUp implements OnDestroy {
             // Mark for check so if any parent component has set the
             // ChangeDetectionStrategy to OnPush it will be checked anyways
             this.markForCheck();
+
+            if (this.trigger.triggerName === 'mouseenter') {
+                this.addEventListenerForHide();
+            }
         }, delay);
     }
 
@@ -129,5 +154,9 @@ export abstract class KbqPopUp implements OnDestroy {
         if (this.closeOnInteraction) {
             this.hide(0);
         }
+    }
+
+    protected addEventListenerForHide() {
+        this.elementRef.nativeElement.addEventListener('mouseleave', () => this.hide(0));
     }
 }

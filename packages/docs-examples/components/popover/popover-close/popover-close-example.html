@@ -81,7 +81,13 @@
 </ng-template>
 
 <div style="gap: 16px" class="layout-row layout-wrap">
-    <button kbq-button kbqPopover [hasCloseButton]="true" [kbqPopoverContent]="customContent">
+    <button
+        #kbqSharePopover="kbqPopover"
+        kbq-button
+        kbqPopover
+        [hasCloseButton]="true"
+        [kbqPopoverContent]="customContent"
+    >
         Крестик в углу с большим заголовком
     </button>
     <button

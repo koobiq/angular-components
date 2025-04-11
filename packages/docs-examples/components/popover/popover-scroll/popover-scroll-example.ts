@@ -17,7 +17,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
         KbqInputModule
     ],
     styles: `
-        >>> .kbq-popover.kbq-popover_medium.popover-scroll-example {
+        ::ng-deep .kbq-popover.kbq-popover_medium.popover-scroll-example {
             width: 400px;
         }
     `,
