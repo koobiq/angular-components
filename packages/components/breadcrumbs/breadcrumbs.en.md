@@ -90,11 +90,11 @@ import { kbqBreadcrumbsConfigurationProvider } from '@koobiq/components/breadcru
 })
 ```
 
-### Line Breaks
+## Line Breaks
 
 Sometimes, the parent container of breadcrumbs may be compressed in width. In such cases, it is recommended either to use truncation and hide items or to wrap items onto a new line.
 
-#### No Line Break Mode
+### No Line Break Mode
 
 This mode allows breadcrumbs to adjust to the available space.
 
