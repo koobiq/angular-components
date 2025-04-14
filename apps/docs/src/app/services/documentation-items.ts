@@ -238,7 +238,17 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     apiId: 'code-block',
                     hasExamples: true
                 },
-
+                {
+                    id: 'core',
+                    name: {
+                        ru: 'Core',
+                        en: 'Core'
+                    },
+                    svgPreview: '',
+                    hasApi: true,
+                    apiId: 'core',
+                    hasExamples: false
+                },
                 {
                     id: 'datepicker',
                     name: {
