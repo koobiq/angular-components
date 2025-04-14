@@ -75,17 +75,6 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false
                 },
                 {
-                    id: 'component-health',
-                    name: {
-                        ru: 'Статус компонентов',
-                        en: 'Component statuses'
-                    },
-                    svgPreview: 'component statuses',
-                    isGuide: true,
-                    hasApi: false,
-                    hasExamples: false
-                },
-                {
                     id: 'theming',
                     name: {
                         ru: 'Темизация',
