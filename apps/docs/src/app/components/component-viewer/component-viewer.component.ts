@@ -13,6 +13,8 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet, UrlSegment } from '@angular/router';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
@@ -170,7 +172,9 @@ export const COMPONENT_VIEWER_ANIMATIONS = [
     standalone: true,
     imports: [
         DocsAnchorsComponent,
-        DocsLiveExampleComponent
+        DocsLiveExampleComponent,
+        KbqDividerModule,
+        KbqLinkModule
     ],
     selector: 'docs-cdk-overview',
     templateUrl: './component-overview.template.html',
@@ -197,7 +201,9 @@ export class DocsCdkOverviewComponent extends BaseOverviewComponent {
     standalone: true,
     imports: [
         DocsAnchorsComponent,
-        DocsLiveExampleComponent
+        DocsLiveExampleComponent,
+        KbqDividerModule,
+        KbqLinkModule
     ],
     selector: 'docs-component-overview',
     templateUrl: './component-overview.template.html',
@@ -224,7 +230,9 @@ export class DocsComponentOverviewComponent extends BaseOverviewComponent {
     standalone: true,
     imports: [
         DocsAnchorsComponent,
-        DocsLiveExampleComponent
+        DocsLiveExampleComponent,
+        KbqDividerModule,
+        KbqLinkModule
     ],
     selector: 'docs-component-api',
     templateUrl: './component-overview.template.html',
@@ -251,7 +259,9 @@ export class DocsComponentApiComponent extends BaseOverviewComponent {
     standalone: true,
     imports: [
         DocsAnchorsComponent,
-        DocsLiveExampleComponent
+        DocsLiveExampleComponent,
+        KbqDividerModule,
+        KbqLinkModule
     ],
     selector: 'docs-cdk-api',
     templateUrl: './component-overview.template.html',

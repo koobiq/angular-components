@@ -143,10 +143,17 @@
     scroll-behavior: smooth;
 }
 
-.docs-live-example {
+.docs-component-viewer__article {
+    margin-bottom: 128px;
     min-width: 0;
 
-    margin-bottom: $size-7xl;
+    .docs-article__divider {
+        --kbq-divider-size-horizontal-margin-vertical: var(--kbq-size-3xl);
+    }
+
+    .docs-live-example {
+        min-width: 0;
+    }
 }
 
 .docs-component-header {
@@ -207,7 +214,7 @@
     .component-overview {
         padding-left: $size-7xl;
 
-        & .docs-live-example {
+        .docs-component-viewer__article {
             width: 650px;
             margin-right: $size-7xl;
         }
@@ -222,7 +229,7 @@
     .component-overview {
         padding-left: 160px;
 
-        & .docs-live-example {
+        .docs-component-viewer__article {
             width: 900px;
             margin-right: $size-7xl;
         }
