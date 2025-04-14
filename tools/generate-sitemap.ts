@@ -45,6 +45,9 @@ const paths = [
     'components/code-block/overview',
     'components/code-block/api',
 
+    'components/core/overview',
+    'components/core/api',
+
     'components/datepicker/overview',
     'components/datepicker/api',
 
