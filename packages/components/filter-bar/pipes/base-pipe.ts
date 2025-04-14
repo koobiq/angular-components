@@ -9,6 +9,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { isMac } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
 import { KbqFilterBar } from '../filter-bar';
@@ -37,8 +38,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected values;
     protected valueTemplate?: TemplateRef<any> | string;
 
-    // todo DS-3511
-    isMac = /^mac/i.test(navigator.userAgent);
+    isMac = isMac();
 
     $implicit: unknown;
 
