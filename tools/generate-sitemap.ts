@@ -10,7 +10,6 @@ const paths = [
     'main/installation/overview',
     'main/versioning/overview',
     'main/directory-structure/overview',
-    'main/component-health/overview',
     'main/theming/overview',
     'main/typography/overview',
 
