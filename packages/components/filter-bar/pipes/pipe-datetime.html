@@ -8,6 +8,7 @@
     [kbqPopoverArrow]="false"
     [kbqPopoverClass]="'kbq-pipe-date__popover'"
     [kbqPopoverContent]="content"
+    [kbqPopoverOffset]="4"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
     (kbqPopoverVisibleChange)="list = true"
@@ -25,7 +26,7 @@
 <ng-template #content>
     @if (list) {
         <div class="kbq-date-list">
-            <kbq-list-selection #listSelection [ngModel]="data.value?.name">
+            <kbq-list-selection #listSelection [autoSelect]="false" [ngModel]="data.value?.name">
                 <kbq-list-option (click)="openPeriod()" (keydown.enter)="openPeriod()">
                     {{ localeData.datePipe?.customPeriod }}
                     <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
@@ -57,13 +58,10 @@
 
             <form class="kbq-date-period__content kbq-form-horizontal" [formGroup]="formGroup">
                 <div class="kbq-date-period__content-header">{{ localeData.datePipe.customPeriod }}</div>
-                <div class="kbq-form__row kbq-form__row_with-time">
-                    <label class="kbq-form__label flex-10">{{ localeData.datePipe.customPeriodFrom }}</label>
+                <label class="kbq-form__label">{{ localeData.datePipe.customPeriodFrom }}</label>
 
-                    <kbq-form-field
-                        class="kbq-date-period__date kbq-form__control"
-                        [class.kbq-focused]="showStartCalendar"
-                    >
+                <div class="kbq-form__row_with-time kbq-form__control">
+                    <kbq-form-field class="kbq-date-period__date" [class.kbq-focused]="showStartCalendar">
                         <input
                             formControlName="start"
                             [kbqCalendar]="startDateCalendar"
@@ -74,7 +72,7 @@
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                     </kbq-form-field>
 
-                    <kbq-form-field class="kbq-date-period__time kbq-form__control">
+                    <kbq-form-field class="kbq-date-period__time">
                         <i kbq-icon="kbq-clock_16" kbqPrefix></i>
                         <input formControlName="start" kbqTimepicker (focusin)="hideCalendars()" />
                     </kbq-form-field>
@@ -86,13 +84,10 @@
                     (selectedChange)="onSelectStartDate($event)"
                 />
 
-                <div class="kbq-form__row kbq-form__row_with-time">
-                    <label class="kbq-form__label flex-10">{{ localeData.datePipe.customPeriodTo }}</label>
+                <label class="kbq-form__label">{{ localeData.datePipe.customPeriodTo }}</label>
 
-                    <kbq-form-field
-                        class="kbq-date-period__date kbq-form__control"
-                        [class.kbq-focused]="showEndCalendar"
-                    >
+                <div class="kbq-form__row_with-time kbq-form__control">
+                    <kbq-form-field class="kbq-date-period__date" [class.kbq-focused]="showEndCalendar">
                         <input
                             formControlName="end"
                             [kbqCalendar]="endDateCalendar"
@@ -102,7 +97,7 @@
                         <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
                     </kbq-form-field>
 
-                    <kbq-form-field class="kbq-date-period__time kbq-form__control">
+                    <kbq-form-field class="kbq-date-period__time">
                         <i kbq-icon="kbq-clock_16" kbqPrefix></i>
                         <input formControlName="end" kbqTimepicker (focusin)="hideCalendars()" />
                     </kbq-form-field>
