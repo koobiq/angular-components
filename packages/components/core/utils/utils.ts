@@ -19,3 +19,8 @@ export const getNodesWithoutComments = (nodes: NodeList): Node[] => {
 
 export const leftIconClassName = 'kbq-icon_left';
 export const rightIconClassName = 'kbq-icon_right';
+
+/** Whether the current platform is a Mac. */
+export function isMac(): boolean {
+    return /^mac/i.test(navigator?.platform);
+}

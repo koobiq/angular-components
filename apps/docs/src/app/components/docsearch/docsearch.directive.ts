@@ -1,7 +1,7 @@
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
-import { UAParser } from 'ua-parser-js';
+import { isMac } from '@koobiq/components/core';
 import { DocsLocaleState, isRuLocale } from '../../services/locale';
 
 type _DocSearchProps = Parameters<typeof docsearch>[0];
@@ -80,15 +80,10 @@ export class DocsearchDirective extends DocsLocaleState {
     };
 
     private readonly translations = (isRuLocale: boolean): _DocSearchProps['translations'] => {
-        const uaParser = new UAParser();
-        const osName = uaParser.getOS().name || '';
         let buttonText = isRuLocale ? 'Поиск' : 'Search';
-        if (osName.includes('Win')) {
-            buttonText += ' Ctrl+K';
-        }
-        if (osName.includes('Mac')) {
-            buttonText += ' ⌘K';
-        }
+
+        buttonText += isMac() ? ' ⌘K' : ' Ctrl+K';
+
         return isRuLocale
             ? {
                   button: {
