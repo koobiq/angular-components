@@ -65,12 +65,6 @@
             border-radius: var(--kbq-size-border-width);
             transition: left 50ms ease-in-out;
         }
-
-        &:hover {
-            .kbq-toggle__thumb {
-                left: 10px;
-            }
-        }
     }
 
     .kbq-hint {
@@ -78,9 +72,23 @@
     }
 
     &.kbq-indeterminate {
+        &.cdk-keyboard-focused {
+            .kbq-toggle-bar {
+                .kbq-toggle__thumb {
+                    left: 10px;
+                }
+            }
+        }
+
         .kbq-toggle-bar {
             .kbq-toggle__thumb {
                 display: block;
+            }
+
+            &:hover {
+                .kbq-toggle__thumb {
+                    left: 10px;
+                }
             }
         }
     }

@@ -31,5 +31,7 @@ export enum KbqAnimationCurves {
 export enum KbqAnimationDurations {
     Complex = '250ms',
     Entering = '150ms',
-    Exiting = '125ms'
+    Exiting = '125ms',
+    Rapid = '100ms',
+    Instant = '50ms'
 }

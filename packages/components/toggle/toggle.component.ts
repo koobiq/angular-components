@@ -50,7 +50,7 @@ export class KbqToggleChange {
         trigger('switch', [
             state(TransitionCheckState.Init, style({ left: '3px' })),
             state(TransitionCheckState.Unchecked, style({ left: '3px' })),
-            state(TransitionCheckState.Indeterminate, style({ left: '27%', visibility: 'hidden' })),
+            state(TransitionCheckState.Indeterminate, style({ left: '10px', visibility: 'hidden' })),
             state(TransitionCheckState.Checked, style({ left: 'calc(100% - 11px)' })),
             transition(
                 `${TransitionCheckState.Init} => ${TransitionCheckState.Checked}`,
@@ -58,9 +58,12 @@ export class KbqToggleChange {
             ),
             transition(
                 `${TransitionCheckState.Checked} <=> ${TransitionCheckState.Unchecked}`,
-                animate(KbqAnimationDurations.Entering)
+                animate(KbqAnimationDurations.Rapid)
             ),
-            transition(`${TransitionCheckState.Indeterminate} => *`, animate(`50ms ${KbqAnimationCurves.EaseInOut}`))])
+            transition(
+                `${TransitionCheckState.Indeterminate} => *`,
+                animate(`${KbqAnimationDurations.Instant} ${KbqAnimationCurves.EaseInOut}`)
+            )])
 
     ],
     providers: [

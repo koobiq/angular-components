@@ -39,7 +39,8 @@
         }
     }
 
-    &.kbq-active.cdk-keyboard-focused {
+    &.kbq-active.cdk-keyboard-focused,
+    &.kbq-indeterminate.cdk-keyboard-focused {
         @include kbq-toggle-state($type, states-checked-focused);
 
         & .kbq-toggle-bar {

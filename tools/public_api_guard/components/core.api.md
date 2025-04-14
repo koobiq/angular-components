@@ -1704,7 +1704,11 @@ export enum KbqAnimationDurations {
     // (undocumented)
     Entering = "150ms",
     // (undocumented)
-    Exiting = "125ms"
+    Exiting = "125ms",
+    // (undocumented)
+    Instant = "50ms",
+    // (undocumented)
+    Rapid = "100ms"
 }
 
 // @public

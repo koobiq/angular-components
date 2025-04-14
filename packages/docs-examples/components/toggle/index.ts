@@ -3,7 +3,7 @@ import { ToggleIndeterminateExample } from './toggle-indeterminate/toggle-indete
 import { ToggleMultilineExample } from './toggle-multiline/toggle-multiline-example';
 import { ToggleOverviewExample } from './toggle-overview/toggle-overview-example';
 
-export { ToggleMultilineExample, ToggleOverviewExample };
+export { ToggleIndeterminateExample, ToggleMultilineExample, ToggleOverviewExample };
 
 const EXAMPLES = [
     ToggleOverviewExample,
