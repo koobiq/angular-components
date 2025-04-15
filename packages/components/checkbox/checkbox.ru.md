@@ -36,4 +36,4 @@ providers: [
 
 ### Многострочный
 
-<!-- example(pseudo-multiline) -->
+<!-- example(checkbox-multiline) -->
