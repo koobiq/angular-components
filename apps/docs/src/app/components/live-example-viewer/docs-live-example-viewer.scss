@@ -1,7 +1,5 @@
-@use '../../../styles/koobiq/default-theme/variables' as *;
-
 .docs-live-example__example {
-    padding: $size-xl;
+    padding: var(--kbq-size-xl);
 
     overflow: auto;
 
@@ -11,15 +9,15 @@
 }
 
 .docs-live-example-viewer {
-    margin: $size-xl 0;
+    margin: var(--kbq-size-xl) 0;
 
     & > .kbq-code-block {
-        margin-top: $size-l;
+        margin-top: var(--kbq-size-l);
     }
 }
 
 .docs-live-example__container {
-    border-radius: $size-m;
+    border-radius: var(--kbq-size-m);
 }
 
 .docs-live-example__footer {
@@ -27,10 +25,10 @@
     flex-direction: row;
     justify-content: space-between;
 
-    padding: $size-m $size-xl;
+    padding: var(--kbq-size-m) var(--kbq-size-xl);
 }
 
 .docs-example-vertical-margin {
-    margin-top: $size-l;
-    margin-bottom: $size-l;
+    margin-top: var(--kbq-size-l);
+    margin-bottom: var(--kbq-size-l);
 }

@@ -1,5 +1,3 @@
-@use '../../../styles/koobiq/default-theme/variables' as *;
-
 .kbq-docs-pre {
     position: relative;
 }
@@ -10,38 +8,37 @@
         align-items: center;
 
         & .kbq-link {
-            padding: $size-s $size-m;
+            padding: var(--kbq-size-s) var(--kbq-size-m);
         }
     }
 }
 
 .docs-api_method-name {
-    margin-bottom: $size-xxs;
+    margin-bottom: var(--kbq-size-xxs);
 }
 
 .docs-api__section {
     border-width: 1px;
     border-style: solid;
-    border-radius: $size-m;
-
-    padding: $size-xxs $size-xl $size-xl;
-    margin-bottom: $size-l;
+    border-radius: var(--kbq-size-m);
+    padding: var(--kbq-size-xxs) var(--kbq-size-xl) var(--kbq-size-xl);
+    margin-bottom: var(--kbq-size-l);
 
     & .docs-api__property-header,
     & .docs-api__method-header {
-        margin: $size-m 0;
+        margin: var(--kbq-size-m) 0;
     }
 
     & .kbq-docs-table {
-        padding-bottom: $size-m;
+        padding-bottom: var(--kbq-size-m);
 
         & .kbq-docs-table__name,
         & .kbq-docs-table__description {
-            padding: $size-s 0;
+            padding: var(--kbq-size-s) 0;
         }
 
         & > tbody > tr td {
-            padding: $size-s 0;
+            padding: var(--kbq-size-s) 0;
         }
 
         & > tbody > tr:last-child td {
@@ -50,31 +47,31 @@
     }
 
     & .kbq-docs-table + .docs-api_method-name {
-        margin-top: $size-xl;
+        margin-top: var(--kbq-size-xl);
     }
 
     & .docs-api_method-name + .docs-api_method-name {
-        margin-top: $size-xxl;
+        margin-top: var(--kbq-size-xxl);
     }
 
     & .kbq-markdown__pre {
-        margin-bottom: $size-m;
+        margin-bottom: var(--kbq-size-m);
     }
 
     &.docs-api__section_method > .docs-api_method-name {
-        padding-top: $size-m;
+        padding-top: var(--kbq-size-m);
     }
 }
 
 .docs-api__class-selector-name,
 .docs-api__class-export-name {
-    padding: $size-xxs $size-s;
-    border-radius: $size-s;
+    padding: var(--kbq-size-xxs) var(--kbq-size-s);
+    border-radius: var(--kbq-size-s);
 }
 
 .docs-api__class-name {
-    margin-top: $size-m;
-    margin-bottom: $size-m;
+    margin-top: var(--kbq-size-m);
+    margin-bottom: var(--kbq-size-m);
 }
 
 .component-overview {
@@ -89,31 +86,31 @@
 
     // first level
     .docs-header-link.kbq-markdown__h3 {
-        margin-top: $size-m;
-        margin-bottom: $size-m;
+        margin-top: var(--kbq-size-m);
+        margin-bottom: var(--kbq-size-m);
     }
 
     // second level
     .docs-header-link.kbq-markdown__h4 {
-        margin-top: $size-m;
-        margin-bottom: $size-m;
+        margin-top: var(--kbq-size-m);
+        margin-bottom: var(--kbq-size-m);
     }
 
     // third level
     .docs-header-link.kbq-markdown__h5 {
-        margin-top: $size-m;
-        margin-bottom: $size-m;
+        margin-top: var(--kbq-size-m);
+        margin-bottom: var(--kbq-size-m);
     }
 
     & div[koobiq-docs-example] + .docs-header-link {
-        margin-top: $size-3xl;
+        margin-top: var(--kbq-size-3xl);
     }
 
     & .docs-api__section + .docs-header-link,
     & .kbq-markdown__table + .docs-header-link,
     & .kbq-markdown__ul + .docs-header-link,
     & .kbq-markdown__p + .docs-header-link {
-        margin-top: $size-xxl;
+        margin-top: var(--kbq-size-xxl);
     }
 
     & .docs-header-link:first-child:not(div[class*='docs-api__']) {
@@ -126,8 +123,8 @@
 
     & .docs-api__section_method .docs-api_method-name {
         padding: 0;
-        margin-top: $size-m;
-        margin-bottom: $size-m;
+        margin-top: var(--kbq-size-m);
+        margin-bottom: var(--kbq-size-m);
     }
 }
 
@@ -143,30 +140,37 @@
     scroll-behavior: smooth;
 }
 
-.docs-live-example {
+.docs-component-viewer__article {
+    margin-bottom: 128px;
     min-width: 0;
 
-    margin-bottom: $size-7xl;
+    .docs-article__divider {
+        --kbq-divider-size-horizontal-margin-vertical: var(--kbq-size-3xl);
+    }
+
+    .docs-live-example {
+        min-width: 0;
+    }
 }
 
 .docs-component-header {
     // header
     .docs-component-name {
-        margin-bottom: $size-m;
+        margin-bottom: var(--kbq-size-m);
     }
 
     & .docs-component-navbar {
-        margin-bottom: $size-3xl;
+        margin-bottom: var(--kbq-size-3xl);
     }
 }
 
 @media (width <= 768px) {
     .docs-component-header {
-        padding-top: $size-l;
+        padding-top: var(--kbq-size-l);
     }
 
     .docs-component-viewer {
-        padding: 0 $size-l $size-3xl;
+        padding: 0 var(--kbq-size-l) var(--kbq-size-3xl);
     }
 
     .component-overview {
@@ -180,36 +184,36 @@
 
 @media (769px <= width <= 1200px) {
     .docs-component-header {
-        padding-left: $size-xxl;
-        padding-right: $size-xxl;
+        padding-left: var(--kbq-size-xxl);
+        padding-right: var(--kbq-size-xxl);
     }
 
     .component-overview {
         flex-direction: column-reverse !important;
 
-        padding-left: $size-xxl;
-        padding-right: $size-xxl;
+        padding-left: var(--kbq-size-xxl);
+        padding-right: var(--kbq-size-xxl);
 
         & .sticky-wrapper {
-            margin-bottom: $size-xxl;
+            margin-bottom: var(--kbq-size-xxl);
         }
     }
 }
 
 @media (1201px <= width <= 1920px) {
     .docs-component-header {
-        padding-left: $size-7xl;
+        padding-left: var(--kbq-size-7xl);
 
         width: 650px;
-        margin-right: $size-7xl;
+        margin-right: var(--kbq-size-7xl);
     }
 
     .component-overview {
-        padding-left: $size-7xl;
+        padding-left: var(--kbq-size-7xl);
 
-        & .docs-live-example {
+        .docs-component-viewer__article {
             width: 650px;
-            margin-right: $size-7xl;
+            margin-right: var(--kbq-size-7xl);
         }
     }
 }
@@ -222,9 +226,9 @@
     .component-overview {
         padding-left: 160px;
 
-        & .docs-live-example {
+        .docs-component-viewer__article {
             width: 900px;
-            margin-right: $size-7xl;
+            margin-right: var(--kbq-size-7xl);
         }
     }
 }

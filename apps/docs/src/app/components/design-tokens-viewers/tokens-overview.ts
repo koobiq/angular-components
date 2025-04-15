@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { BaseOverviewComponent, COMPONENT_VIEWER_ANIMATIONS } from '../component-viewer/component-viewer.component';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
@@ -8,7 +10,9 @@ import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
     standalone: true,
     imports: [
         DocsLiveExampleComponent,
-        DocsAnchorsComponent
+        DocsAnchorsComponent,
+        KbqDividerModule,
+        KbqLinkModule
     ],
     selector: 'docs-design-tokens-overview',
     templateUrl: '../component-viewer/component-overview.template.html',
