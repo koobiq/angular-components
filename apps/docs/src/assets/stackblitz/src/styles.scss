@@ -4,18 +4,14 @@
 @use '@koobiq/design-tokens/web/css-tokens-dark.css';
 @use '@koobiq/design-tokens/web/css-tokens-light.css';
 @use '@koobiq/ag-grid-angular-theme';
+@use '@koobiq/components/core/styles/common/tokens';
 
 body {
-    margin: 0;
-    font-size: var(--kbq-typography-text-normal-font-size);
-    font-weight: var(--kbq-typography-text-normal-font-weight);
-    line-height: var(--kbq-typography-text-normal-line-height);
-    font-family: var(--kbq-typography-text-normal-font-family);
-    text-transform: var(--kbq-typography-text-normal-text-transform);
-    font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
     background: var(--kbq-background-bg);
     color: var(--kbq-foreground-contrast);
+    margin: 0;
 }
 
 .basic-container {

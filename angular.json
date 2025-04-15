@@ -8,7 +8,14 @@
             "schematics": {
                 "@schematics/angular:component": {
                     "style": "scss",
-                    "changeDetection": "OnPush"
+                    "changeDetection": "OnPush",
+                    "standalone": true,
+                    "inlineTemplate": true,
+                    "inlineStyle": true,
+                    "skipTests": true
+                },
+                "@schematics/angular:application": {
+                    "strict": true
                 }
             },
             "root": "apps/docs",

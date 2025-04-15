@@ -10,18 +10,14 @@
 
 @use '../../apps/docs/src/styles/fonts';
 
+@use '../components/core/styles/common/tokens';
+
 @include layout.layouts-for-breakpoint();
 
 body {
-    margin: 0;
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
-    font-size: var(--kbq-typography-text-normal-font-size);
-    font-weight: var(--kbq-typography-text-normal-font-weight);
-    line-height: var(--kbq-typography-text-normal-line-height);
-    font-family: var(--kbq-typography-text-normal-font-family);
-    text-transform: var(--kbq-typography-text-normal-text-transform);
-    font-feature-settings: var(--kbq-typography-text-normal-font-feature-settings);
-    letter-spacing: var(--kbq-typography-text-normal-letter-spacing);
     background: var(--kbq-background-bg);
     color: var(--kbq-foreground-contrast);
+    margin: 0;
 }

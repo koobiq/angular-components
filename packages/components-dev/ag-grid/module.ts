@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { AgGridExamplesModule } from 'packages/docs-examples/components/ag-grid';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -15,7 +16,7 @@ export class DevAgGridExamples {}
 @Component({
     selector: 'app',
     standalone: true,
-    imports: [DevAgGridExamples],
+    imports: [DevAgGridExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

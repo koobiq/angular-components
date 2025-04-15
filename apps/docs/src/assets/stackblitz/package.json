@@ -1,7 +1,9 @@
 {
-    "name": "koobiq-docs",
+    "name": "koobiq-example",
     "version": "0.0.0",
+    "homepage": "https://github.com/koobiq/angular-components",
     "private": true,
+    "license": "MIT",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
