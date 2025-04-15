@@ -4,10 +4,6 @@
 @use '../../datepicker/datepicker-tokens' as *;
 
 .kbq-pipe-date__popover {
-    &.kbq-popover.kbq-popover_medium {
-        margin-top: var(--kbq-size-xxs);
-    }
-
     & .kbq-popover__container {
         max-height: unset;
     }
@@ -56,14 +52,17 @@
         }
 
         & .kbq-date-period__content {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-auto-columns: minmax(min-content, 1fr);
+            grid-template-columns: min-content;
 
             padding: 0;
 
             gap: var(--kbq-size-s);
 
             & .kbq-date-period__content-header {
+                grid-column: 2 span;
+
                 padding-top: var(--kbq-size-s);
                 padding-left: var(--kbq-size-l);
                 padding-right: var(--kbq-size-l);
@@ -71,42 +70,43 @@
                 color: var(--kbq-foreground-contrast-secondary);
             }
 
-            & .kbq-form__row {
+            & .kbq-form__label {
                 padding-left: var(--kbq-size-l);
-                padding-right: var(--kbq-size-l);
+            }
 
-                & .kbq-date-period__date,
-                & .kbq-date-period__time {
-                    flex: 1;
+            & .kbq-form__control {
+                padding-right: var(--kbq-size-l);
+            }
+
+            & .kbq-date-period__date,
+            & .kbq-date-period__time {
+                flex: 1;
+            }
+
+            & .kbq-form__row_with-time {
+                display: flex;
+
+                & .kbq-date-period__date {
+                    & .kbq-form-field__container {
+                        border-top-right-radius: unset;
+                        border-bottom-right-radius: unset;
+                    }
                 }
 
-                &.kbq-form__row_with-time {
-                    & .kbq-date-period__date {
-                        max-width: 45%;
+                & .kbq-date-period__time {
+                    margin-left: -1px;
 
-                        & .kbq-form-field__container {
-                            border-top-right-radius: unset;
-                            border-bottom-right-radius: unset;
-                        }
-                    }
-
-                    & .kbq-date-period__time {
-                        margin-left: -1px;
-                        max-width: 45%;
-
-                        & .kbq-form-field__container {
-                            border-top-left-radius: unset;
-                            border-bottom-left-radius: unset;
-                        }
+                    & .kbq-form-field__container {
+                        border-top-left-radius: unset;
+                        border-bottom-left-radius: unset;
                     }
                 }
             }
 
             & .kbq-calendar {
                 position: relative;
-
+                grid-column: 2 span;
                 padding: var(--kbq-size-s) var(--kbq-size-s) var(--kbq-size-m);
-
                 background-color: var(--kbq-background-bg-tertiary);
 
                 &.kbq-calendar_hidden {
@@ -115,6 +115,8 @@
             }
 
             & .kbq-hint {
+                grid-column: 2 span;
+
                 padding-left: var(--kbq-size-m);
                 padding-right: var(--kbq-size-m);
             }

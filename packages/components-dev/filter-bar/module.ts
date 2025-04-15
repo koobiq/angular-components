@@ -25,6 +25,7 @@ import {
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
+import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
     standalone: true,
@@ -747,7 +748,8 @@ export class DemoComponent implements AfterViewInit {
         KbqDividerModule,
         KbqButtonModule,
         KbqLuxonDateModule,
-        DevDocsExamples
+        DevDocsExamples,
+        DevLocaleSelector
     ],
     bootstrap: [DemoComponent]
 })

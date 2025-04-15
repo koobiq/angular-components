@@ -232,8 +232,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     hide = (delay: number = this.leaveDelay) => {
-        if (this.instance && this.triggerName !== 'mouseenter' && !this.instance.hovered.getValue()) {
-            this.ngZone.run(() => this.instance.hide(delay));
+        if (
+            (this.instance && this.triggerName !== 'mouseleave') ||
+            (this.triggerName === 'mouseleave' && !this.instance?.hovered.getValue())
+        ) {
+            this.ngZone.run(() => this.instance?.hide(delay));
         }
     };
 
