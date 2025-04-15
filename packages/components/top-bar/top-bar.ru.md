@@ -1,4 +1,4 @@
-`Top Bar` — это панель инструментов, которая всегда остается видимой на странице и обеспечивает быстрый доступ к
+Topbar — это панель инструментов, которая всегда остается видимой на странице и обеспечивает быстрый доступ к
 навигации и управлению.
 
 <!-- example(top-bar-overview) -->
@@ -59,14 +59,3 @@
 Панель может фиксироваться при прокрутке страницы.
 
 <!-- example(top-bar-overflow) -->
-
-<hr />
-
-<div class="kbq-callout kbq-callout_contrast">
-<div class="kbq-callout__header">Вопросы и предложения по документации</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-Если у вас есть вопросы или вы хотите внести свой вклад в написание документации, пожалуйста, [создайте issue](https://github.com/koobiq/angular-components/issues/new/choose) в нашем репозитории на GitHub.
-
-</div>
-</div>

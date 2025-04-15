@@ -1,10 +1,10 @@
-The `Top Bar` is a toolbar that always remains visible on the page and provides quick access to navigation and controls.
+Topbar is a toolbar that always remains visible on the page and provides quick access to navigation and controls.
 
 <!-- example(top-bar-overview) -->
 
 Depending on the interface requirements, it may include a logo, a title, breadcrumbs, action buttons, and other elements.
 
-### Page Title
+### Page title
 
 This content option is suitable for initial screens when there is no need to display the navigation path.
 
@@ -20,7 +20,7 @@ For internal pages of a specific module, using [breadcrumbs](/en/components/brea
 
 <!-- example(top-bar-breadcrumbs) -->
 
-### Action Buttons
+### Action buttons
 
 On the right side of the toolbar, there is a dedicated area for placing any actions that need to be displayed on the current page.
 
@@ -33,13 +33,13 @@ We recommend using the following set of actions (from left to right):
 
 <!-- example(top-bar-actions) -->
 
-### Responsive Mode
+### Responsive mode
 
 Internal elements can adjust to the toolbar size.
 
 The minimum allowed spacing between the left side and the right side with actions is **80px** and is defined using the CSS variable `--kbq-top-bar-spacer-min-width`.
 
-#### Breadcrumbs Variant
+#### Breadcrumbs variant
 
 When the panel is compressed, the breadcrumbs will adjust as follows:
 
@@ -47,25 +47,14 @@ When the panel is compressed, the breadcrumbs will adjust as follows:
 
 A more detailed explanation of breadcrumb compression is provided on the [breadcrumbs](https://koobiq.io/en/components/breadcrumbs/overview) page.
 
-#### Page Title Variant
+#### Page title variant
 
 The variant using only the page title will adjust as follows:
 
 <!-- example(top-bar-title-counter-adaptive) -->
 
-#### Scroll Behavior
+#### Scroll behavior
 
 The toolbar can remain fixed while scrolling the page.
 
 <!-- example(top-bar-overflow) -->
-
-<hr />
-
-<div class="kbq-callout kbq-callout_contrast">
-<div class="kbq-callout__header">Documentation Questions & Feedback</div>
-<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
-
-If you have questions or want to contribute, please [create an issue](https://github.com/koobiq/angular-components/issues/new/choose) on our GitHub.
-
-</div>
-</div>

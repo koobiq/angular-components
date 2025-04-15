@@ -35,13 +35,13 @@ type ExampleAction = {
         RouterLink
     ],
     template: `
-        <kbq-top-bar>
+        <kbq-top-bar withShadow>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="example-top-bar__breadcrumbs flex">
-                    <nav [max]="isDesktop() ? null : 3" kbq-breadcrumbs size="big">
+                    <nav kbq-breadcrumbs size="big">
                         <kbq-breadcrumb-item text="Main" routerLink="./main" />
                         <kbq-breadcrumb-item text="Sections" routerLink="./main/sections" />
                         <kbq-breadcrumb-item text="Page" routerLink="./main/sections/page" />
@@ -50,12 +50,20 @@ type ExampleAction = {
                 </div>
             </div>
             <div kbqTopBarSpacer></div>
-            <div kbqTopBarContainer placement="end">
+            <div
+                #kbqOverflowItems="kbqOverflowItems"
+                [debounceTime]="0"
+                [style.max-width.px]="166"
+                kbqOverflowItems
+                kbqTopBarContainer
+                placement="end"
+            >
                 <button
                     [kbqStyle]="KbqButtonStyles.Transparent"
                     [color]="KbqComponentColors.Contrast"
                     [kbqPlacement]="PopUpPlacements.Bottom"
                     [kbqTooltipArrow]="false"
+                    kbqOverflowItem="filter"
                     kbqTooltip="Filter"
                     kbq-button
                 >
@@ -68,6 +76,7 @@ type ExampleAction = {
                     [kbqTooltipDisabled]="isDesktop()"
                     [kbqPlacement]="PopUpPlacements.Bottom"
                     [kbqTooltipArrow]="false"
+                    kbqOverflowItem="share"
                     kbqTooltip="Share"
                     kbq-button
                 >
@@ -79,17 +88,44 @@ type ExampleAction = {
                 </button>
 
                 <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
+                    [kbqStyle]="KbqButtonStyles.Filled"
                     [color]="KbqComponentColors.Contrast"
-                    [kbqDropdownTriggerFor]="appDropdown"
+                    [kbqTooltipDisabled]="isDesktop()"
+                    [kbqPlacement]="PopUpPlacements.Bottom"
+                    [kbqTooltipArrow]="false"
+                    kbqOverflowItem="save"
+                    kbqTooltip="Save"
                     kbq-button
                 >
-                    <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                    @if (isDesktop()) {
+                        Save
+                    } @else {
+                        <i kbq-icon="kbq-floppy-disk_16"></i>
+                    }
                 </button>
 
-                <kbq-dropdown #appDropdown="kbqDropdown">
-                    <button kbq-dropdown-item>Secondary Action</button>
-                </kbq-dropdown>
+                <div kbqOverflowItemsResult>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        [kbqDropdownTriggerFor]="appDropdown"
+                        kbq-button
+                    >
+                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                    </button>
+
+                    <kbq-dropdown #appDropdown="kbqDropdown">
+                        @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
+                            <button kbq-dropdown-item>Filter</button>
+                        }
+                        @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
+                            <button kbq-dropdown-item>Share</button>
+                        }
+                        @if (kbqOverflowItems.hiddenItemIDs().has('save')) {
+                            <button kbq-dropdown-item>Save</button>
+                        }
+                    </kbq-dropdown>
+                </div>
             </div>
         </kbq-top-bar>
     `,
@@ -99,14 +135,16 @@ type ExampleAction = {
             align-items: center;
             justify-content: center;
             height: 72px;
-            resize: horizontal;
             max-width: 100%;
             min-width: 110px;
-            overflow: hidden;
             container-type: inline-size;
 
             .kbq-top-bar {
                 width: 100%;
+            }
+
+            .kbq-top-bar-container__start {
+                flex-basis: 115px;
             }
         }
 
@@ -150,25 +188,25 @@ export class ExampleTopBarBreadcrumbs {
     imports: [ExampleTopBarBreadcrumbs],
     selector: 'top-bar-breadcrumbs-adaptive-example',
     template: `
-        <div>
+        <div class="layout-margin-bottom-l">
             The automatic breadcrumb shortening is used as the basis, where middle items are hidden when there is not
             enough free space.
         </div>
-        <example-top-bar-breadcrumbs [style.width.px]="680" />
+        <example-top-bar-breadcrumbs [style.width.px]="600" />
 
-        <div>
+        <div class="layout-margin-top-3xl layout-margin-bottom-l">
             If the space becomes even narrower, the leftmost breadcrumb level is also hidden, leaving only the rightmost
             level visible.
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="500" />
 
-        <div>
+        <div class="layout-margin-top-3xl layout-margin-bottom-l">
             The minimum width of the left side depends on the title of the current item, which can be truncated to 3
             characters with an ellipsis (…).
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="400" />
 
-        <div>
+        <div class="layout-margin-top-3xl layout-margin-bottom-l">
             After reaching the minimum width on the left side, the compression of the right side with actions can begin.
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="300" />
