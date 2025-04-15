@@ -93,6 +93,12 @@ type ExampleAction = {
         .kbq-overflow-items {
             max-width: 368px;
         }
+
+        :host {
+            .kbq-top-bar-container__start {
+                flex-basis: 55px;
+            }
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

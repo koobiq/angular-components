@@ -7,6 +7,7 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
@@ -24,7 +25,8 @@ import { map } from 'rxjs/operators';
         KbqToolTipModule,
         KbqIconModule,
         KbqBreadcrumbsModule,
-        KbqDropdownModule
+        KbqDropdownModule,
+        KbqOverflowItemsModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -41,12 +43,13 @@ import { map } from 'rxjs/operators';
                 </div>
             </div>
             <div kbqTopBarSpacer></div>
-            <div kbqTopBarContainer placement="end">
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
                 <button
                     [kbqStyle]="KbqButtonStyles.Transparent"
                     [color]="KbqComponentColors.Contrast"
                     [kbqPlacement]="PopUpPlacements.Bottom"
                     [kbqTooltipArrow]="false"
+                    kbqOverflowItem="0"
                     kbqTooltip="Filter"
                     kbq-button
                 >
@@ -59,6 +62,7 @@ import { map } from 'rxjs/operators';
                     [kbqTooltipDisabled]="isDesktop()"
                     [kbqPlacement]="PopUpPlacements.Bottom"
                     [kbqTooltipArrow]="false"
+                    kbqOverflowItem="1"
                     kbqTooltip="Share"
                     kbq-button
                 >
@@ -69,20 +73,34 @@ import { map } from 'rxjs/operators';
                     }
                 </button>
 
-                <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqDropdownTriggerFor]="appDropdown"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                </button>
+                <div kbqOverflowItemsResult>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        [kbqDropdownTriggerFor]="appDropdown"
+                        kbq-button
+                    >
+                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                    </button>
 
-                <kbq-dropdown #appDropdown="kbqDropdown">
-                    <button kbq-dropdown-item>Secondary Action</button>
-                </kbq-dropdown>
+                    <kbq-dropdown #appDropdown="kbqDropdown">
+                        @if (kbqOverflowItems.hiddenItemIDs().has('0')) {
+                            <button kbq-dropdown-item>Filter</button>
+                        }
+                        @if (kbqOverflowItems.hiddenItemIDs().has('1')) {
+                            <button kbq-dropdown-item>Share</button>
+                        }
+                    </kbq-dropdown>
+                </div>
             </div>
         </kbq-top-bar>
+    `,
+    styles: `
+        :host {
+            .kbq-top-bar-container__end {
+                max-width: 110px;
+            }
+        }
     `
 })
 export class TopBarBreadcrumbsExample {

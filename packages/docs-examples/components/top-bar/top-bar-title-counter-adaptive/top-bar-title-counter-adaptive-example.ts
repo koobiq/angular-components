@@ -105,13 +105,16 @@ type ExampleAction = {
 
             .kbq-top-bar {
                 width: 100%;
-                overflow: hidden;
             }
-        }
 
-        :host .kbq-overflow-items {
-            max-width: 142px;
-            min-width: 32px;
+            .kbq-top-bar-container__start {
+                flex-basis: 115px;
+            }
+
+            .kbq-overflow-items {
+                max-width: 142px;
+                min-width: 32px;
+            }
         }
 
         .example-kbq-top-bar__counter {

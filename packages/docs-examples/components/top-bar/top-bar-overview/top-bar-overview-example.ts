@@ -5,9 +5,19 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
+
+type ExampleAction = {
+    id: string;
+    icon?: string;
+    text?: string;
+    action?: () => void;
+    style: KbqButtonStyles | string;
+    color: KbqComponentColors;
+};
 
 /**
  * @title TopBar
@@ -20,7 +30,8 @@ import { map } from 'rxjs/operators';
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
-        KbqDropdownModule
+        KbqDropdownModule,
+        KbqOverflowItemsModule
     ],
     template: `
         <kbq-top-bar>
@@ -37,54 +48,60 @@ import { map } from 'rxjs/operators';
 
             <div kbqTopBarSpacer></div>
 
-            <div kbqTopBarContainer placement="end">
-                <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqTooltip="List"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-list_16"></i>
-                </button>
-                <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqTooltip="Filter"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-filter_16"></i>
-                </button>
-                <button
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqTooltipDisabled]="isDesktop()"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqTooltip="Create dashboard"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-plus_16"></i>
-                    @if (isDesktop()) {
-                        Create dashboard
-                    }
-                </button>
-                <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqDropdownTriggerFor]="appDropdown"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                </button>
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
+                @for (action of actions; track action.id) {
+                    <button
+                        [kbqOverflowItem]="action.id"
+                        [kbqStyle]="action.style"
+                        [color]="action.color"
+                        [kbqPlacement]="PopUpPlacements.Bottom"
+                        [kbqTooltipArrow]="false"
+                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqTooltip]="action.text || action.id"
+                        kbq-button
+                    >
+                        @if (action.icon) {
+                            <i [class]="action.icon" kbq-icon=""></i>
+                        }
+                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                            {{ action.text }}
+                        }
+                    </button>
+                }
 
-                <kbq-dropdown #appDropdown="kbqDropdown">
-                    <button kbq-dropdown-item>Secondary Action</button>
-                </kbq-dropdown>
+                <div kbqOverflowItemsResult>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        [kbqDropdownTriggerFor]="appDropdown"
+                        kbq-button
+                    >
+                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                    </button>
+
+                    <kbq-dropdown #appDropdown="kbqDropdown">
+                        @for (action of actions; track action.id) {
+                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
+                                <button kbq-dropdown-item>
+                                    {{ action.text || action.id }}
+                                </button>
+                            }
+                        }
+                    </kbq-dropdown>
+                </div>
             </div>
         </kbq-top-bar>
+    `,
+    styles: `
+        :host {
+            .kbq-top-bar-container__start {
+                flex-basis: 115px;
+            }
+
+            .kbq-top-bar-container__end {
+                max-width: 330px;
+            }
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -98,6 +115,30 @@ export class TopBarOverviewExample {
             ),
         { initialValue: true }
     );
+
+    protected readonly actions: ExampleAction[] = [
+        {
+            id: '1',
+            color: KbqComponentColors.Contrast,
+            style: KbqButtonStyles.Transparent,
+            icon: 'kbq-list_16',
+            text: 'List'
+        },
+        {
+            id: '2',
+            color: KbqComponentColors.Contrast,
+            style: KbqButtonStyles.Transparent,
+            icon: 'kbq-filter_16',
+            text: 'Filter'
+        },
+        {
+            id: '3',
+            color: KbqComponentColors.Contrast,
+            style: '',
+            icon: 'kbq-plus_16',
+            text: 'Create dashboard'
+        }
+    ];
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
