@@ -10,7 +10,13 @@
             "projectType": "application",
             "schematics": {
                 "@schematics/angular:component": {
-                    "style": "scss"
+                    "style": "scss",
+                    "changeDetection": "OnPush",
+                    "skipTest": true,
+                    "standalone": true,
+                    "inlineTemplate": true,
+                    "inlineStyle": true,
+                    "skipTests": true
                 },
                 "@schematics/angular:application": {
                     "strict": true
@@ -32,6 +38,9 @@
                         "styles": [
                             "src/styles.scss"
                         ],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["node_modules/"]
+                        },
                         "scripts": []
                     },
                     "configurations": {

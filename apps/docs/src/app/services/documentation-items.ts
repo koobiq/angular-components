@@ -140,6 +140,16 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: false
                 },
                 {
+                    id: 'ag-grid',
+                    name: {
+                        ru: 'AG grid',
+                        en: 'AG grid'
+                    },
+                    svgPreview: 'ag-grid',
+                    hasApi: false,
+                    hasExamples: false
+                },
+                {
                     id: 'alert',
                     name: {
                         ru: 'Alert',

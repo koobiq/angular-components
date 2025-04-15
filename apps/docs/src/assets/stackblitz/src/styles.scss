@@ -1,20 +1,25 @@
-@import '@koobiq/components/prebuilt-themes/light-theme.css';
-@import '@koobiq/icons/fonts/kbq-icons';
-@import '@koobiq/design-tokens/web/css-tokens.css';
-@import '@koobiq/design-tokens/web/css-tokens-dark.css';
-@import '@koobiq/design-tokens/web/css-tokens-light.css';
+@use '@koobiq/components/prebuilt-themes/light-theme.css';
+@use '@koobiq/icons/fonts/kbq-icons';
+@use '@koobiq/design-tokens/web/css-tokens.css';
+@use '@koobiq/design-tokens/web/css-tokens-dark.css';
+@use '@koobiq/design-tokens/web/css-tokens-light.css';
+@use '@koobiq/ag-grid-angular-theme';
+@use '@koobiq/components/core/styles/common/tokens';
 
 body {
-    font-family: Inter, Arial, sans-serif;
+    @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+
+    background: var(--kbq-background-bg);
+    color: var(--kbq-foreground-contrast);
     margin: 0;
 }
 
 .basic-container {
-    padding: 30px;
+    padding: var(--kbq-size-3xl);
 }
 
 .version-info {
-    font-size: 8pt;
-    padding-right: 8px;
+    font-size: var(--kbq-typography-text-compact-font-size);
+    padding-right: var(--kbq-size-s);
     float: right;
 }

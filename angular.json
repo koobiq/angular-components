@@ -8,7 +8,14 @@
             "schematics": {
                 "@schematics/angular:component": {
                     "style": "scss",
-                    "changeDetection": "OnPush"
+                    "changeDetection": "OnPush",
+                    "standalone": true,
+                    "inlineTemplate": true,
+                    "inlineStyle": true,
+                    "skipTests": true
+                },
+                "@schematics/angular:application": {
+                    "strict": true
                 }
             },
             "root": "apps/docs",
@@ -414,6 +421,35 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
                         "buildTarget": "dev-actions-panel:build"
+                    }
+                }
+            }
+        },
+        "dev-ag-grid": {
+            "projectType": "application",
+            "root": "packages/components-dev/ag-grid",
+            "sourceRoot": "packages/components-dev/ag-grid",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/ag-grid"
+                        },
+                        "tsConfig": "packages/components-dev/ag-grid/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/ag-grid/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-ag-grid:build"
                     }
                 }
             }

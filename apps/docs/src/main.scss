@@ -11,6 +11,10 @@
 @use './styles/koobiq/default-theme/css-tokens-dark.css';
 @use './styles/koobiq/default-theme/css-tokens-light.css';
 
+// Import theme
+// https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md
+@use '@koobiq/ag-grid-angular-theme';
+
 .docs {
     @include theme-kbq.docs-typography();
     @include theme-kbq.kbq-docs-theme();

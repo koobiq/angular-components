@@ -4753,6 +4753,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@koobiq/ag-grid-angular-theme@npm:^30.0.3":
+  version: 30.0.3
+  resolution: "@koobiq/ag-grid-angular-theme@npm:30.0.3"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/core": ">=16.0.0"
+    "@koobiq/design-tokens": ^3.0.0
+    "@koobiq/icons": ^9.0.0
+    ag-grid-community: ^30.0.0
+  checksum: 10c0/9bfe64818737b81808b69bade2bfbedd6ba62d765bdd29511e61b5bd17953febcc0f1a4f3edbb237a7a067907b26ed0660eb0525e02a6ca1da5c85b81be91ed7
+  languageName: node
+  linkType: hard
+
 "@koobiq/date-adapter@npm:^3.2.3":
   version: 3.2.3
   resolution: "@koobiq/date-adapter@npm:3.2.3"
@@ -7329,6 +7343,26 @@ __metadata:
     loader-utils: "npm:^2.0.0"
     regex-parser: "npm:^2.2.11"
   checksum: 10c0/6a6e5bb8b670e4e1238c708f6163e92aa2ad0308fe5913de73c89e4cbf41738ee0bcc5552b94d0b7bf8be435ee49b78c6de8a6db7badd80762051e843c8aa14f
+  languageName: node
+  linkType: hard
+
+"ag-grid-angular@npm:^30.2.1":
+  version: 30.2.1
+  resolution: "ag-grid-angular@npm:30.2.1"
+  dependencies:
+    tslib: "npm:^2.3.0"
+  peerDependencies:
+    "@angular/common": ">= 12.0.0"
+    "@angular/core": ">= 12.0.0"
+    ag-grid-community: ~30.2.1
+  checksum: 10c0/075ff308773d6dfbee5d682b871a462eca2d4c6be3d3991e29e3993b341178c0b08d9a41ea84102d9d868e287a08311f06c589c2048c3bda0920890663f991fa
+  languageName: node
+  linkType: hard
+
+"ag-grid-community@npm:^30.2.1":
+  version: 30.2.1
+  resolution: "ag-grid-community@npm:30.2.1"
+  checksum: 10c0/0eb89416e7dd1e253a1580ad2deb0a94612b21def187bf25ed615bf17c0d0b2e883ff844134937b944609541beba6beea96f70b06f3dfa26dd6b407fea538c8e
   languageName: node
   linkType: hard
 
@@ -14635,6 +14669,7 @@ __metadata:
     "@docsearch/js": "npm:^3.6.2"
     "@fontsource/inter": "npm:^5.1.0"
     "@fontsource/jetbrains-mono": "npm:^5.1.1"
+    "@koobiq/ag-grid-angular-theme": "npm:^30.0.3"
     "@koobiq/date-adapter": "npm:^3.2.3"
     "@koobiq/date-formatter": "npm:^3.2.3"
     "@koobiq/design-tokens": "npm:^3.12.1"
@@ -14672,6 +14707,8 @@ __metadata:
     "@types/ws": "npm:<8.5.5"
     "@typescript-eslint/eslint-plugin": "npm:^7.16.1"
     "@typescript-eslint/parser": "npm:^7.16.1"
+    ag-grid-angular: "npm:^30.2.1"
+    ag-grid-community: "npm:^30.2.1"
     autoprefixer: "npm:^10.4.19"
     chalk: "npm:^4.1.2"
     commander: "npm:^11.1.0"

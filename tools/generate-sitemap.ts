@@ -20,6 +20,8 @@ const paths = [
     'components/actions-panel/overview',
     'components/actions-panel/api',
 
+    'components/ag-grid/overview',
+
     'components/accordion/overview',
     'components/accordion/api',
 
