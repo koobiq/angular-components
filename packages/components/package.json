@@ -31,7 +31,7 @@
         "@koobiq/icons": "^9.4.0",
         "@koobiq/tokens-builder": "3.11.0",
         "@koobiq/design-tokens": "3.12.1",
-        "@radix-ng/primitives": "^0.14.0"
+        "@radix-ng/primitives": "^0.23.0"
     },
     "dependencies": {
         "tslib": "^2.6.2"
