@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
 
 /**
@@ -23,6 +23,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 
             <kbq-radio-button [disabled]="true" [value]="'option_5'">Item 5 (Disabled)</kbq-radio-button>
         </kbq-radio-group>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RadioGroupExample {}
