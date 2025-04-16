@@ -33,3 +33,7 @@ providers: [
 ### Pseudo checkbox
 
 <!-- example(pseudo-checkbox) -->
+
+### Многострочный
+
+<!-- example(checkbox-multiline) -->

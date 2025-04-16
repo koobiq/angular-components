@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
 interface ICheckbox {
@@ -28,7 +28,8 @@ interface ICheckbox {
                 </p>
             }
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxIndeterminateExample {
     parentIndeterminate = true;

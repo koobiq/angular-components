@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 
@@ -12,6 +12,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
     imports: [
         KbqCheckboxModule,
         KbqFormFieldModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxOverviewExample {}

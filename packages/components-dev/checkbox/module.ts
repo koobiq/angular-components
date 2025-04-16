@@ -5,6 +5,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTableModule } from '@koobiq/components/table';
 import { CheckboxExamplesModule } from 'packages/docs-examples/components/checkbox';
 import { KbqCheckboxModule } from '../../components/checkbox';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -16,6 +17,8 @@ import { KbqCheckboxModule } from '../../components/checkbox';
         <checkbox-overview-example />
         <hr />
         <pseudo-checkbox-example />
+        <hr />
+        <checkbox-multiline-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -29,7 +32,8 @@ export class DevCheckboxExamples {}
         KbqCheckboxModule,
         KbqPseudoCheckboxModule,
         DevCheckboxExamples,
-        KbqTableModule
+        KbqTableModule,
+        DevThemeToggle
     ],
     selector: 'app',
     templateUrl: './template.html',
