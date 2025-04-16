@@ -3499,6 +3499,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toast-user-data-example.ts",
     "importPath": "components/toast"
   },
+  "toggle-multiline": {
+    "packagePath": "components/toggle/toggle-multiline",
+    "title": "Toggle multiline example",
+    "componentName": "ToggleMultilineExample",
+    "files": [
+      "toggle-multiline-example.ts"
+    ],
+    "selector": "toggle-multiline-example",
+    "additionalComponents": [],
+    "primaryFile": "toggle-multiline-example.ts",
+    "importPath": "components/toggle"
+  },
   "toggle-overview": {
     "packagePath": "components/toggle/toggle-overview",
     "title": "Toggle",
@@ -4574,6 +4586,8 @@ return import('@koobiq/docs-examples/components/toast');
 return import('@koobiq/docs-examples/components/toast');
   case 'toast-user-data':
 return import('@koobiq/docs-examples/components/toast');
+  case 'toggle-multiline':
+return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-overview':
 return import('@koobiq/docs-examples/components/toggle');
   case 'tooltip-arrow-and-offset':

@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
+import { ToggleMultilineExample } from './toggle-multiline/toggle-multiline-example';
 import { ToggleOverviewExample } from './toggle-overview/toggle-overview-example';
 
-export { ToggleOverviewExample };
+export { ToggleMultilineExample, ToggleOverviewExample };
 
 const EXAMPLES = [
-    ToggleOverviewExample
+    ToggleOverviewExample,
+    ToggleMultilineExample
 ];
 
 @NgModule({
