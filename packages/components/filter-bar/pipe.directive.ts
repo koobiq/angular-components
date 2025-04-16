@@ -23,10 +23,10 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
         const component = this.pipes.get(this.pipe.type);
 
         if (!component) {
-            throw new Error(`Can' t find component for this type: ${this.pipe.type}`);
+            throw new Error(`Can't find component for this type: ${this.pipe.type}`);
         }
 
-        this.viewContainerRef.createComponent(this.pipes.get(this.pipe.type), options);
+        this.viewContainerRef.createComponent(component, options);
     }
 
     getInjector(pipe: T): Injector {

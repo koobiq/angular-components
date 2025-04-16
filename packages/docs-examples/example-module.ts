@@ -1420,7 +1420,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "filter-bar-custom-pipe",
     "componentName": "FilterBarCustomPipeExample",
     "files": [
-      "filter-bar-custom-pipe-example.ts"
+      "filter-bar-custom-pipe-example.ts",
+      "../../../../components/filter-bar/pipes/base-pipe.scss"
     ],
     "selector": "filter-bar-custom-pipe-example",
     "additionalComponents": [

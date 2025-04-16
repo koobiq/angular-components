@@ -66,6 +66,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ data.value }}</div>
         </ng-template>
     `,
+    styleUrls: ['../../../../components/filter-bar/pipes/base-pipe.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
