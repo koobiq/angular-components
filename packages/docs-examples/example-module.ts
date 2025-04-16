@@ -191,7 +191,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-overview-example.ts"
     ],
     "selector": "ag-grid-overview-example",
-    "additionalComponents": [],
+    "additionalComponents": [
+      "ExampleLinkCellRenderer"
+    ],
     "primaryFile": "ag-grid-overview-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -652,6 +654,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "checkbox-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "checkbox-indeterminate-example.ts",
+    "importPath": "components/checkbox"
+  },
+  "checkbox-multiline": {
+    "packagePath": "components/checkbox/checkbox-multiline",
+    "title": "Checkbox multiline example",
+    "componentName": "CheckboxMultilineExample",
+    "files": [
+      "checkbox-multiline-example.ts"
+    ],
+    "selector": "checkbox-multiline-example",
+    "additionalComponents": [],
+    "primaryFile": "checkbox-multiline-example.ts",
     "importPath": "components/checkbox"
   },
   "checkbox-overview": {
@@ -1399,6 +1413,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "filter-bar-complete-functions-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-complete-functions-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-custom-pipe": {
+    "packagePath": "components/filter-bar/filter-bar-custom-pipe",
+    "title": "filter-bar-custom-pipe",
+    "componentName": "FilterBarCustomPipeExample",
+    "files": [
+      "filter-bar-custom-pipe-example.ts"
+    ],
+    "selector": "filter-bar-custom-pipe-example",
+    "additionalComponents": [
+      "ColorPipeComponent"
+    ],
+    "primaryFile": "filter-bar-custom-pipe-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-overview": {
@@ -4088,6 +4116,8 @@ return import('@koobiq/docs-examples/components/button');
 return import('@koobiq/docs-examples/components/button');
   case 'checkbox-indeterminate':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'checkbox-multiline':
+return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-overview':
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
@@ -4209,6 +4239,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'filter-bar-cleanable':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-complete-functions':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-custom-pipe':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');

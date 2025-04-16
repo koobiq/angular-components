@@ -1,11 +1,6 @@
 import { AfterContentInit, Directive, inject, Injector, Input, ViewContainerRef } from '@angular/core';
-import { KbqPipe, KbqPipeTemplate, KbqPipeTypes } from './filter-bar.types';
+import { KBQ_FILTER_BAR_PIPES, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
 import { KBQ_PIPE_DATA } from './pipes/base-pipe';
-import { KbqPipeDateComponent } from './pipes/pipe-date';
-import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
-import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
-import { KbqPipeSelectComponent } from './pipes/pipe-select';
-import { KbqPipeTextComponent } from './pipes/pipe-text';
 
 @Directive({
     standalone: true,
@@ -13,6 +8,7 @@ import { KbqPipeTextComponent } from './pipes/pipe-text';
 })
 export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
     private injector = inject(Injector);
+    private pipes = inject(KBQ_FILTER_BAR_PIPES);
     protected readonly viewContainerRef = inject(ViewContainerRef);
 
     values: KbqPipeTemplate[];
@@ -24,18 +20,13 @@ export class KbqPipeDirective<T extends KbqPipe> implements AfterContentInit {
             injector: this.getInjector(this.pipe)
         };
 
-        // todo this for extend and configure
-        if (this.pipe.type === KbqPipeTypes.Text) {
-            this.viewContainerRef.createComponent(KbqPipeTextComponent, options);
-        } else if (this.pipe.type === KbqPipeTypes.Select) {
-            this.viewContainerRef.createComponent(KbqPipeSelectComponent, options);
-        } else if (this.pipe.type === KbqPipeTypes.MultiSelect) {
-            this.viewContainerRef.createComponent(KbqPipeMultiSelectComponent, options);
-        } else if (this.pipe.type === KbqPipeTypes.Date) {
-            this.viewContainerRef.createComponent(KbqPipeDateComponent, options);
-        } else if (this.pipe.type === KbqPipeTypes.Datetime) {
-            this.viewContainerRef.createComponent(KbqPipeDatetimeComponent, options);
+        const component = this.pipes.get(this.pipe.type);
+
+        if (!component) {
+            throw new Error(`Can' t find component for this type: ${this.pipe.type}`);
         }
+
+        this.viewContainerRef.createComponent(this.pipes.get(this.pipe.type), options);
     }
 
     getInjector(pipe: T): Injector {

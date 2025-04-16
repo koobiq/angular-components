@@ -1,21 +1,20 @@
+import { JsonPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     inject,
-    NgModule,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
+    KBQ_FILTER_BAR_PIPES,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -32,6 +31,9 @@ import { DevLocaleSelector } from '../locale-selector';
     imports: [FilterBarExamplesModule],
     selector: 'dev-docs-examples',
     template: `
+        <filter-bar-custom-pipe-example />
+        <br />
+        <br />
         <filter-bar-overview-example />
         <br />
         <br />
@@ -60,13 +62,25 @@ import { DevLocaleSelector } from '../locale-selector';
 export class DevDocsExamples {}
 
 @Component({
+    standalone: true,
     selector: 'app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [
+        KbqIconModule,
+        KbqFilterBarModule,
+        KbqDividerModule,
+        KbqButtonModule,
+        KbqLuxonDateModule,
+        DevDocsExamples,
+        DevLocaleSelector,
+        JsonPipe
+    ]
 })
 export class DemoComponent implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
+    protected readonly pipes = inject(KBQ_FILTER_BAR_PIPES);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     @ViewChild('filterBar') filterBar: KbqFilterBar;
@@ -737,20 +751,3 @@ export class DemoComponent implements AfterViewInit {
         console.log('onSearch: ', value);
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqIconModule,
-        KbqFilterBarModule,
-        KbqDividerModule,
-        KbqButtonModule,
-        KbqLuxonDateModule,
-        DevDocsExamples,
-        DevLocaleSelector
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

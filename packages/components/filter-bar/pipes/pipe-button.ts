@@ -4,6 +4,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { merge } from 'rxjs';
 import { KbqFilterBar } from '../filter-bar';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeState } from './pipe-state';
@@ -39,7 +40,7 @@ import { KbqPipeState } from './pipe-state';
 })
 export class KbqPipeButton {
     protected readonly pipe = inject(KbqBasePipe);
-    protected readonly filterBar = inject(KbqFilterBar, { optional: true });
+    protected readonly filterBar = inject(KbqFilterBar);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     get localeData() {
@@ -47,6 +48,8 @@ export class KbqPipeButton {
     }
 
     constructor() {
-        this.filterBar?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
+        merge(this.pipe.stateChanges, this.filterBar.changes)
+            .pipe(takeUntilDestroyed())
+            .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 }

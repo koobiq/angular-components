@@ -164,6 +164,7 @@ export class KbqFilterBar {
         this.filter?.pipes.splice(this.filter?.pipes.indexOf(pipe), 1);
 
         this.onRemovePipe.next(pipe);
+        this.changes.next();
     }
 
     /** Save current state of filter */

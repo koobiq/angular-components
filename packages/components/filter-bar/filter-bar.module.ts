@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
+import { kbqFilterBarPipesProvider } from './filter-bar.types';
 import { KbqFilterBarRefresher } from './filter-refresher';
 import { KbqFilterReset } from './filter-reset';
 import { KbqFilterBarSearch } from './filter-search';
@@ -27,6 +28,7 @@ const COMPONENTS = [
 
 @NgModule({
     exports: COMPONENTS,
-    imports: COMPONENTS
+    imports: COMPONENTS,
+    providers: [kbqFilterBarPipesProvider()]
 })
 export class KbqFilterBarModule {}
