@@ -18,7 +18,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CheckedState, KbqColorDirective } from '@koobiq/components/core';
+import { KbqCheckedState, KbqColorDirective } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -248,7 +248,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         this.disabled = isDisabled;
     }
 
-    getAriaChecked(): CheckedState {
+    getAriaChecked(): KbqCheckedState {
         return this.checked ? 'true' : this.indeterminate ? 'mixed' : 'false';
     }
 

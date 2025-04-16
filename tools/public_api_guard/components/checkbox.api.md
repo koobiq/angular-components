@@ -7,7 +7,6 @@
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { CheckboxRequiredValidator } from '@angular/forms';
-import { CheckedState } from '@koobiq/components/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
@@ -15,6 +14,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -40,7 +40,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     set disabled(value: boolean);
     focus(): void;
     // (undocumented)
-    getAriaChecked(): CheckedState;
+    getAriaChecked(): KbqCheckedState;
     id: string;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);

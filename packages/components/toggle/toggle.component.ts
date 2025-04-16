@@ -19,7 +19,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KBQ_CHECKBOX_CLICK_ACTION, TransitionCheckState } from '@koobiq/components/checkbox';
-import { KbqAnimationCurves, KbqAnimationDurations, KbqColorDirective } from '@koobiq/components/core';
+import { KbqAnimationCurves, KbqAnimationDurations, KbqCheckedState, KbqColorDirective } from '@koobiq/components/core';
 
 let nextUniqueId = 0;
 
@@ -190,8 +190,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.focusMonitor.focusVia(this.inputElement.nativeElement, 'keyboard');
     }
 
-    getAriaChecked(): string {
-        return this.indeterminate ? 'mixed' : this.checked.toString();
+    getAriaChecked(): KbqCheckedState {
+        return this.checked ? 'true' : this.indeterminate ? 'mixed' : 'false';
     }
 
     onChangeEvent(event: Event) {

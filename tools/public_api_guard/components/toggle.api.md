@@ -14,6 +14,7 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
 import * as i3 from '@koobiq/components/core';
 import { KbqCheckboxClickAction } from '@koobiq/components/checkbox';
+import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { TransitionCheckState } from '@koobiq/components/checkbox';
@@ -49,7 +50,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     focus(): void;
     // (undocumented)
-    getAriaChecked(): string;
+    getAriaChecked(): KbqCheckedState;
     // (undocumented)
     id: string;
     get indeterminate(): boolean;
