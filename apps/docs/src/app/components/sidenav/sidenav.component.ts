@@ -24,16 +24,6 @@ enum TreeNodeType {
     Item = 'Item'
 }
 
-const TTL_DAYS = 14;
-
-export const isNew = (createdAt?: string) => {
-    if (!createdAt) return false;
-    const createdDate = new Date(createdAt);
-    const now = new Date();
-    const diffDays = (now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24);
-    return diffDays <= TTL_DAYS;
-};
-
 class TreeNode {
     constructor(
         public id: string,
@@ -62,7 +52,7 @@ function buildTree(categories: DocCategory[]): TreeNode[] {
         data.push(
             new TreeNode(
                 id,
-                items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item, isNew(item.createdAt))),
+                items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item, item.isNew)),
                 name,
                 TreeNodeType.Category
             )

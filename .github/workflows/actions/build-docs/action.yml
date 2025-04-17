@@ -3,20 +3,6 @@ description: Common setup steps used by our workflows
 runs:
   using: composite
   steps:
-    - name: Check Documentation Items TTL
-      id: check_doc_items
-      shell: bash
-      run: yarn run docs:check-outdated-doc-items
-      continue-on-error: true
-
-    - name: Check for errors
-      shell: bash
-      run: |
-        if [[ "${{ steps.check_doc_items.outcome }}" == "failure" ]]; then
-          echo "::warning file=check-outdated.ts,title=Found outdated documentation item::Please review apps/docs/src/app/services/docs-metadata.ts and remove."
-          exit 0
-        fi
-
     - name: Build Documentation
       shell: bash
       run: |
