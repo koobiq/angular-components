@@ -123,7 +123,7 @@ export const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'ag-grid',
                     hasApi: false,
                     hasExamples: false,
-                    createdAt: '2025-04-01'
+                    createdAt: '2025-04-17'
                 },
                 {
                     id: 'alert',
