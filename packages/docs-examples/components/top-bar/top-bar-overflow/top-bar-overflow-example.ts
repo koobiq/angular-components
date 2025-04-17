@@ -104,36 +104,35 @@ type ExampleAction = {
         <div class="overflow-content-example kbq-scrollbar" cdkScrollable>
             <div style="height: 600px">
                 <kbq-dl>
-                    <kbq-dt>Описание</kbq-dt>
+                    <kbq-dt>Description</kbq-dt>
                     <kbq-dd>
-                        В НАСА описывают случай, когда человек случайно оказался в пространстве, близком к вакууму
-                        (давление ниже 1 Па) из-за утечки воздуха из скафандра.
+                        NASA describes a case where a person accidentally ended up in an area close to a vacuum
+                        (pressure below 1 Pa) due to an air leak from a spacesuit.
                     </kbq-dd>
 
-                    <kbq-dt>Статус</kbq-dt>
-                    <kbq-dd><kbq-badge>Значок</kbq-badge></kbq-dd>
+                    <kbq-dt>Status</kbq-dt>
+                    <kbq-dd><kbq-badge>Badge</kbq-badge></kbq-dd>
 
-                    <kbq-dt>Дополнительно</kbq-dt>
+                    <kbq-dt>Additional Information</kbq-dt>
                     <kbq-dd>
-                        Космос — это бескрайнее пространство, полное загадок и чудес. Он начинается за пределами нашей
-                        атмосферы и простирается до самых дальних уголков Вселенной. В космосе находятся миллиарды
-                        звезд, планет и галактик, каждая из которых имеет свою уникальную историю и характеристики.
-                        Исследование космоса помогает нам лучше понять не только саму Вселенную, но и наше место в ней.
+                        Space is an endless expanse full of mysteries and wonders. It begins beyond our atmosphere and
+                        stretches to the farthest corners of the Universe. In space, there are billions of stars,
+                        planets, and galaxies, each with its own unique story and characteristics. Exploring space helps
+                        us better understand not only the Universe itself but also our place within it.
                         <br />
                         <br />
-                        Одним из самых захватывающих аспектов космоса является его бесконечность. Ученые до сих пор не
-                        могут точно определить, где заканчивается Вселенная. Существуют теории о том, что она может быть
-                        бесконечной или же иметь определенные границы. Это открывает множество вопросов о том, что
-                        находится за пределами видимого космоса и какие формы жизни могут существовать на других
-                        планетах. Космические исследования также играют важную роль в развитии технологий на Земле.
-                        Многие изобретения, которые мы используем в повседневной жизни, были разработаны благодаря
-                        космическим программам. Например, спутниковая навигация, системы связи и даже некоторые
-                        медицинские технологии имеют свои корни в космических исследованиях. Это показывает, как
-                        изучение космоса может приносить пользу человечеству в целом. Наконец, космос вдохновляет людей
-                        на творчество и мечты. С детства мы смотрим на звезды и задаемся вопросами о том, что может быть
-                        за пределами нашей планеты. Фильмы, книги и искусство часто черпают вдохновение из космоса,
-                        создавая образы, которые захватывают воображение. Это стремление к исследованию и открытию
-                        нового делает космос не только научной, но и культурной частью нашей жизни.
+                        One of the most fascinating aspects of space is its infinity. Scientists still cannot determine
+                        exactly where the Universe ends. There are theories that it may be infinite or have certain
+                        boundaries. This opens up many questions about what lies beyond the visible universe and what
+                        forms of life might exist on other planets. Space research also plays a crucial role in the
+                        development of technologies on Earth. Many inventions we use in everyday life were developed
+                        thanks to space programs. For example, satellite navigation, communication systems, and even
+                        some medical technologies have their roots in space exploration. This shows how studying space
+                        can benefit humanity as a whole. Finally, space inspires creativity and dreams. Since childhood,
+                        we have looked at the stars and wondered what might exist beyond our planet. Movies, books, and
+                        art often draw inspiration from space, creating images that capture the imagination. This drive
+                        for exploration and discovery makes space not only a scientific but also a cultural part of our
+                        lives.
                     </kbq-dd>
                 </kbq-dl>
             </div>

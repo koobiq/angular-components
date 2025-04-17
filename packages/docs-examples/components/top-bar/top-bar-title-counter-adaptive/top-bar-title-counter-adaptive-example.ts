@@ -108,7 +108,7 @@ type ExampleAction = {
             }
 
             .kbq-top-bar-container__start {
-                flex-basis: 115px;
+                --kbq-top-bar-container-start-basis: 115px;
             }
 
             .kbq-overflow-items {

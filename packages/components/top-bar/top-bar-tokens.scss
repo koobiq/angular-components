@@ -1,12 +1,13 @@
-.kbq-top-bar {
+:where(.kbq-top-bar) {
     --kbq-top-bar-position: sticky;
     --kbq-top-bar-background: var(--kbq-background-bg);
     --kbq-top-bar-spacer-min-width: 80px;
     --kbq-top-bar-padding-vertical: var(--kbq-size-xl);
     --kbq-top-bar-padding-horizontal: var(--kbq-size-xxl);
     --kbq-top-bar-border-radius: 0;
-    --kbq-top-bar-left-gap: 0;
-    --kbq-top-bar-right-gap: var(--kbq-size-s);
+    --kbq-top-bar-container-start-gap: 0;
+    --kbq-top-bar-container-start-basis: 0;
+    --kbq-top-bar-container-end-gap: var(--kbq-size-s);
     --kbq-top-bar-shadow-bottom: var(--kbq-shadow-overflow-normal-bottom);
     --kbq-top-bar-shadow-transition: ease-out 300ms;
 }
