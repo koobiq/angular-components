@@ -96,7 +96,7 @@ type ExampleAction = {
 
         :host {
             .kbq-top-bar-container__start {
-                flex-basis: 55px;
+                --kbq-top-bar-container-start-basis: 55px;
             }
         }
     `,

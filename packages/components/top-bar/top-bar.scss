@@ -19,21 +19,21 @@
 
     .kbq-top-bar-container__start {
         display: flex;
-        gap: var(--kbq-top-bar-left-gap);
-        flex: 1;
+        gap: var(--kbq-top-bar-container-start-gap);
+        flex: 1 1 var(--kbq-top-bar-container-start-basis);
         justify-content: flex-start;
     }
 
     .kbq-top-bar-container__end {
         display: flex;
-        gap: var(--kbq-top-bar-right-gap);
+        gap: var(--kbq-top-bar-container-end-gap);
     }
 
     .kbq-top-bar-container__with-overflow-items {
         gap: unset;
 
         > .kbq-overflow-item:not(:last-of-type) {
-            margin-right: var(--kbq-top-bar-right-gap);
+            margin-right: var(--kbq-top-bar-container-end-gap);
         }
     }
 

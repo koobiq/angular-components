@@ -16,7 +16,7 @@ If you need to display the number of objects on the current page, you can do so 
 
 ### Breadcrumbs
 
-For internal pages of a specific module, using [breadcrumbs](/en/components/breadcrumbs) is an excellent option. This helps users navigate the application more easily.
+For internal pages of a specific module, using [Breadcrumbs](/en/components/breadcrumbs) is an excellent option. This helps users navigate the application more easily.
 
 <!-- example(top-bar-breadcrumbs) -->
 
@@ -45,7 +45,7 @@ When the panel is compressed, the breadcrumbs will adjust as follows:
 
 <!-- example(top-bar-breadcrumbs-adaptive) -->
 
-A more detailed explanation of breadcrumb compression is provided on the [breadcrumbs](https://koobiq.io/en/components/breadcrumbs/overview) page.
+A more detailed explanation of breadcrumb compression is provided on the [Breadcrumbs](/en/components/breadcrumbs) page.
 
 #### Page title variant
 
