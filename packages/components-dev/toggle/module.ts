@@ -14,6 +14,8 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-toggle-examples',
     template: `
         <toggle-multiline-example />
+        <hr />
+        <toggle-indeterminate-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
