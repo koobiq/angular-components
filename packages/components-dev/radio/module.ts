@@ -4,6 +4,7 @@ import { ThemePalette } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { RadioExamplesModule } from 'packages/docs-examples/components/radio';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -17,6 +18,8 @@ import { RadioExamplesModule } from 'packages/docs-examples/components/radio';
         <radio-content-example />
         <hr />
         <radio-group-example />
+        <hr />
+        <radio-multiline-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -28,7 +31,8 @@ export class DevRadioExamples {}
         FormsModule,
         KbqFormFieldModule,
         KbqRadioModule,
-        DevRadioExamples
+        DevRadioExamples,
+        DevThemeToggle
     ],
     selector: 'app',
     templateUrl: './template.html',

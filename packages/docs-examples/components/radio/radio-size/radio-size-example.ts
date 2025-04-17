@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
 
 /**
@@ -43,6 +43,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
                 </div>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RadioSizeExample {}

@@ -191,7 +191,9 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
       "ag-grid-overview-example.ts"
     ],
     "selector": "ag-grid-overview-example",
-    "additionalComponents": [],
+    "additionalComponents": [
+      "ExampleLinkCellRenderer"
+    ],
     "primaryFile": "ag-grid-overview-example.ts",
     "importPath": "components/ag-grid"
   },
@@ -652,6 +654,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "checkbox-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "checkbox-indeterminate-example.ts",
+    "importPath": "components/checkbox"
+  },
+  "checkbox-multiline": {
+    "packagePath": "components/checkbox/checkbox-multiline",
+    "title": "Checkbox multiline example",
+    "componentName": "CheckboxMultilineExample",
+    "files": [
+      "checkbox-multiline-example.ts"
+    ],
+    "selector": "checkbox-multiline-example",
+    "additionalComponents": [],
+    "primaryFile": "checkbox-multiline-example.ts",
     "importPath": "components/checkbox"
   },
   "checkbox-overview": {
@@ -2601,6 +2615,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "radio-group-example.ts",
     "importPath": "components/radio"
   },
+  "radio-multiline": {
+    "packagePath": "components/radio/radio-multiline",
+    "title": "Radio multiline example",
+    "componentName": "RadioMultilineExample",
+    "files": [
+      "radio-multiline-example.ts"
+    ],
+    "selector": "radio-multiline-example",
+    "additionalComponents": [],
+    "primaryFile": "radio-multiline-example.ts",
+    "importPath": "components/radio"
+  },
   "radio-size": {
     "packagePath": "components/radio/radio-size",
     "title": "Radio size",
@@ -3473,6 +3499,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toast-user-data-example.ts",
     "importPath": "components/toast"
   },
+  "toggle-multiline": {
+    "packagePath": "components/toggle/toggle-multiline",
+    "title": "Toggle multiline example",
+    "componentName": "ToggleMultilineExample",
+    "files": [
+      "toggle-multiline-example.ts"
+    ],
+    "selector": "toggle-multiline-example",
+    "additionalComponents": [],
+    "primaryFile": "toggle-multiline-example.ts",
+    "importPath": "components/toggle"
+  },
   "toggle-overview": {
     "packagePath": "components/toggle/toggle-overview",
     "title": "Toggle",
@@ -4088,6 +4126,8 @@ return import('@koobiq/docs-examples/components/button');
 return import('@koobiq/docs-examples/components/button');
   case 'checkbox-indeterminate':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'checkbox-multiline':
+return import('@koobiq/docs-examples/components/checkbox');
   case 'checkbox-overview':
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
@@ -4402,6 +4442,8 @@ return import('@koobiq/docs-examples/components/progress-spinner');
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-group':
 return import('@koobiq/docs-examples/components/radio');
+  case 'radio-multiline':
+return import('@koobiq/docs-examples/components/radio');
   case 'radio-size':
 return import('@koobiq/docs-examples/components/radio');
   case 'radio-style':
@@ -4544,6 +4586,8 @@ return import('@koobiq/docs-examples/components/toast');
 return import('@koobiq/docs-examples/components/toast');
   case 'toast-user-data':
 return import('@koobiq/docs-examples/components/toast');
+  case 'toggle-multiline':
+return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-overview':
 return import('@koobiq/docs-examples/components/toggle');
   case 'tooltip-arrow-and-offset':

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqRadioModule } from '@koobiq/components/radio';
 
@@ -54,7 +54,8 @@ import { KbqRadioModule } from '@koobiq/components/radio';
                 </div>
             </div>
         </div>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RadioStyleExample {
     protected readonly themePalette = ThemePalette;
