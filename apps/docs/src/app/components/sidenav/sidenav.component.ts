@@ -2,6 +2,7 @@ import { Location, ViewportScroller } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
@@ -23,12 +24,23 @@ enum TreeNodeType {
     Item = 'Item'
 }
 
+const TTL_DAYS = 14;
+
+export const isNew = (createdAt?: string) => {
+    if (!createdAt) return false;
+    const createdDate = new Date(createdAt);
+    const now = new Date();
+    const diffDays = (now.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24);
+    return diffDays <= TTL_DAYS;
+};
+
 class TreeNode {
     constructor(
         public id: string,
         public children: TreeNode[] | null,
         public name: Record<DocsLocale, string>,
-        public type: TreeNodeType
+        public type: TreeNodeType,
+        public isNew: boolean = false
     ) {}
 }
 
@@ -40,6 +52,7 @@ class TreeFlatNode {
     expandable: boolean;
     parent: any;
     type: TreeNodeType;
+    isNew: boolean;
 }
 
 function buildTree(categories: DocCategory[]): TreeNode[] {
@@ -49,7 +62,7 @@ function buildTree(categories: DocCategory[]): TreeNode[] {
         data.push(
             new TreeNode(
                 id,
-                items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item)),
+                items.map((item) => new TreeNode(item.id, null, item.name, TreeNodeType.Item, isNew(item.createdAt))),
                 name,
                 TreeNodeType.Category
             )
@@ -68,7 +81,8 @@ function buildTree(categories: DocCategory[]): TreeNode[] {
         KbqDividerModule,
         DocsFooterComponent,
         KbqScrollbarModule,
-        RouterLink
+        RouterLink,
+        KbqBadgeModule
     ],
     selector: 'docs-sidenav',
     templateUrl: './sidenav.component.html',
@@ -166,6 +180,7 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
         flatNode.type = node.type;
         flatNode.level = level;
         flatNode.expandable = !!node.children;
+        flatNode.isNew = node.isNew;
 
         return flatNode;
     };

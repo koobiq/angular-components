@@ -10,6 +10,12 @@ export type DocItem = {
     apiId?: string;
     svgPreview?: string;
     packageName?: string;
+    /**
+     * Creation date of new items.
+     * Used for sidenav badge marking documentation item as "new"
+     * TTL = 2w
+     */
+    createdAt?: string;
 };
 
 export type DocCategory = {
@@ -147,7 +153,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     },
                     svgPreview: 'ag-grid',
                     hasApi: false,
-                    hasExamples: false
+                    hasExamples: false,
+                    createdAt: '2025-04-17'
                 },
                 {
                     id: 'alert',
@@ -246,7 +253,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: '',
                     hasApi: true,
                     apiId: 'core',
-                    hasExamples: false
+                    hasExamples: false,
+                    createdAt: '2025-04-17'
                 },
                 {
                     id: 'datepicker',
