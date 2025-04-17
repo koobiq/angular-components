@@ -179,6 +179,7 @@
         "docs:start:dev": "ng serve --configuration=development koobiq-docs",
         "docs:start:prod": "ng serve --configuration=production koobiq-docs",
         "docs:generate-sitemap": "ts-node tools/generate-sitemap.ts",
+        "docs:check-outdated-doc-items": "ts-node tools/docs/check-outdated.ts",
         "docs:build": "ng build koobiq-docs --configuration production",
         "docs:update-versions": "ts-node --project tools/update-doc-versions/tsconfig.json tools/update-doc-versions/update-doc-versions.ts",
         "docs:api-gen": "rimraf dist/api-gen && rollup -c tools/api-gen/rollup.config.js && node dist/api-gen/generate-api-docs.mjs",
