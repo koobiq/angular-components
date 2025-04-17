@@ -52,6 +52,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     selector: 'ag-grid-overview-example',
     template: `
         <ag-grid-angular
+            [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
@@ -60,16 +61,6 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
             rowSelection="multiple"
             kbqAgGridTheme
         />
-    `,
-    styles: `
-        :host {
-            display: block;
-            height: 300px;
-        }
-
-        ag-grid-angular {
-            height: 100%;
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
