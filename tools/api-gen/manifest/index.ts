@@ -24,14 +24,15 @@ export function generateManifest(apiCollections: EntryCollection[]): EntryCollec
 
     return apiCollections.map(({ moduleName, packagesApiInfo }: EntryCollection) => ({
         moduleName: moduleName,
-        packagesApiInfo: packagesApiInfo.map(({ packageName, entries }) => ({
-            packageName,
-            entries: entries
-                .map((entry) => ({
+        packagesApiInfo: packagesApiInfo.map(({ packageName, entries }) => {
+            return {
+                packageName,
+                entries: entries.filter(isPublic).map((entry) => ({
                     ...entry,
+                    members: entry.members?.filter(isPublic),
                     publicUrl: computeApiDocumentUrl(moduleName, packageName, entry)
                 }))
-                .filter(isPublic)
-        }))
+            };
+        })
     }));
 }
