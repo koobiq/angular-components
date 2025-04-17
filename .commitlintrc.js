@@ -30,6 +30,9 @@ const config = {
                 'schematics',
                 'dev',
 
+                // data-grid
+                'ag-grid',
+
                 // core
                 'common',
                 'formatter',
