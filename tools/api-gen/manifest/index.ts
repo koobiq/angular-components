@@ -27,11 +27,13 @@ export function generateManifest(apiCollections: EntryCollection[]): EntryCollec
         packagesApiInfo: packagesApiInfo.map(({ packageName, entries }) => {
             return {
                 packageName,
-                entries: entries.filter(isPublic).map((entry) => ({
-                    ...entry,
-                    members: entry.members?.filter(isPublic),
-                    publicUrl: computeApiDocumentUrl(moduleName, packageName, entry)
-                }))
+                entries: entries.filter(isPublic).map((entry) => {
+                    return {
+                        ...entry,
+                        members: entry.members?.filter(isPublic) || [],
+                        publicUrl: computeApiDocumentUrl(moduleName, packageName, entry)
+                    };
+                })
             };
         })
     }));
