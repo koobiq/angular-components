@@ -89,7 +89,7 @@ $toggle-thumb-offset: 8px;
 
             &:hover {
                 .kbq-toggle__thumb {
-                    left: 10px;
+                    left: $toggle-thumb-offset + 2px;
                 }
             }
         }
