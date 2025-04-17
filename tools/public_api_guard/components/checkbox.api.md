@@ -14,6 +14,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i3 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { Provider } from '@angular/core';
@@ -39,7 +40,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
     set disabled(value: boolean);
     focus(): void;
     // (undocumented)
-    getAriaChecked(): 'true' | 'false' | 'mixed';
+    getAriaChecked(): KbqCheckedState;
     id: string;
     get indeterminate(): boolean;
     set indeterminate(value: boolean);
@@ -115,10 +116,10 @@ export class KbqCheckboxRequiredValidator extends CheckboxRequiredValidator {
 
 // @public
 export enum TransitionCheckState {
-    Checked = 1,
-    Indeterminate = 3,
-    Init = 0,
-    Unchecked = 2
+    Checked = "checked",
+    Indeterminate = "indeterminate",
+    Init = "init",
+    Unchecked = "unchecked"
 }
 
 // (No @packageDocumentation comment for this package)

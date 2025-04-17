@@ -18,7 +18,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqCheckedState, KbqColorDirective } from '@koobiq/components/core';
 import { KBQ_CHECKBOX_CLICK_ACTION, KbqCheckboxClickAction } from './checkbox-config';
 
 // Increasing integer for generating unique ids for checkbox components.
@@ -41,13 +41,13 @@ export const KBQ_CHECKBOX_CONTROL_VALUE_ACCESSOR: any = {
  */
 export enum TransitionCheckState {
     /** The initial state of the component before any user interaction. */
-    Init,
+    Init = 'init',
     /** The state representing the component when it's becoming checked. */
-    Checked,
+    Checked = 'checked',
     /** The state representing the component when it's becoming unchecked. */
-    Unchecked,
+    Unchecked = 'unchecked',
     /** The state representing the component when it's becoming indeterminate. */
-    Indeterminate
+    Indeterminate = 'indeterminate'
 }
 
 /** Change event object emitted by KbqCheckbox. */
@@ -248,7 +248,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
         this.disabled = isDisabled;
     }
 
-    getAriaChecked(): 'true' | 'false' | 'mixed' {
+    getAriaChecked(): KbqCheckedState {
         return this.checked ? 'true' : this.indeterminate ? 'mixed' : 'false';
     }
 

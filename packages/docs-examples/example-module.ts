@@ -3526,6 +3526,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toggle-multiline-example.ts",
     "importPath": "components/toggle"
   },
+  "toggle-indeterminate": {
+    "packagePath": "components/toggle/toggle-indeterminate",
+    "title": "Toggle Indeterminate",
+    "componentName": "ToggleIndeterminateExample",
+    "files": [
+      "toggle-indeterminate-example.ts"
+    ],
+    "selector": "toggle-indeterminate-example",
+    "additionalComponents": [],
+    "primaryFile": "toggle-indeterminate-example.ts",
+    "importPath": "components/toggle"
+  },
   "toggle-overview": {
     "packagePath": "components/toggle/toggle-overview",
     "title": "Toggle",
@@ -4604,6 +4616,8 @@ return import('@koobiq/docs-examples/components/toast');
   case 'toast-user-data':
 return import('@koobiq/docs-examples/components/toast');
   case 'toggle-multiline':
+return import('@koobiq/docs-examples/components/toggle');
+  case 'toggle-indeterminate':
 return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-overview':
 return import('@koobiq/docs-examples/components/toggle');

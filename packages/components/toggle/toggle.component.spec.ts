@@ -1,37 +1,21 @@
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { Component, DebugElement, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqToggleComponent, KbqToggleModule } from './index';
 
+const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers }).compileComponents();
+    const fixture = TestBed.createComponent<T>(component);
+    fixture.autoDetectChanges();
+    return fixture;
+};
+
 describe('KbqToggle', () => {
-    let fixture: ComponentFixture<any>;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                NoopAnimationsModule,
-                KbqToggleModule,
-                FormsModule,
-                ReactiveFormsModule
-            ],
-            declarations: [
-                SingleToggle,
-                ToggleWithFormDirectives,
-                MultipleToggles,
-                ToggleWithTabIndex,
-                ToggleWithAriaLabel,
-                ToggleWithAriaLabelledby,
-                ToggleWithNameAttribute,
-                ToggleWithFormControl,
-                ToggleWithoutLabel,
-                ToggleUsingViewChild
-            ]
-        }).compileComponents();
-    });
-
     describe('basic behaviors', () => {
+        let fixture: ComponentFixture<SingleToggle>;
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let toggleInstance: KbqToggleComponent;
@@ -40,7 +24,7 @@ describe('KbqToggle', () => {
         let labelElement: HTMLLabelElement;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(SingleToggle);
+            fixture = createComponent(SingleToggle);
             fixture.detectChanges();
 
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
@@ -241,9 +225,10 @@ describe('KbqToggle', () => {
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let inputElement: HTMLInputElement;
+        let fixture: ComponentFixture<ToggleWithAriaLabel>;
 
         it('should use the provided aria-label', () => {
-            fixture = TestBed.createComponent(ToggleWithAriaLabel);
+            fixture = createComponent(ToggleWithAriaLabel);
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
             inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
@@ -253,7 +238,7 @@ describe('KbqToggle', () => {
         });
 
         it('should not set the aria-label attribute if no value is provided', () => {
-            fixture = TestBed.createComponent(SingleToggle);
+            fixture = createComponent(SingleToggle);
             fixture.detectChanges();
 
             expect(fixture.nativeElement.querySelector('input').hasAttribute('aria-label')).toBe(false);
@@ -264,9 +249,10 @@ describe('KbqToggle', () => {
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let inputElement: HTMLInputElement;
+        let fixture: ComponentFixture<ToggleWithAriaLabelledby | SingleToggle>;
 
         it('should use the provided aria-labelledby', () => {
-            fixture = TestBed.createComponent(ToggleWithAriaLabelledby);
+            fixture = createComponent(ToggleWithAriaLabelledby);
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
             inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
@@ -276,7 +262,7 @@ describe('KbqToggle', () => {
         });
 
         it('should not assign aria-labelledby if none is provided', () => {
-            fixture = TestBed.createComponent(SingleToggle);
+            fixture = createComponent(SingleToggle);
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
             toggleNativeElement = toggleDebugElement.nativeElement;
             inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
@@ -291,9 +277,10 @@ describe('KbqToggle', () => {
         let toggleNativeElement: HTMLElement;
         let testComponent: ToggleWithTabIndex;
         let inputElement: HTMLInputElement;
+        let fixture: ComponentFixture<ToggleWithTabIndex>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(ToggleWithTabIndex);
+            fixture = createComponent(ToggleWithTabIndex);
             fixture.detectChanges();
 
             testComponent = fixture.debugElement.componentInstance;
@@ -324,9 +311,10 @@ describe('KbqToggle', () => {
         let toggleDebugElement: DebugElement;
         let toggleNativeElement: HTMLElement;
         let testComponent: ToggleUsingViewChild;
+        let fixture: ComponentFixture<ToggleUsingViewChild>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(ToggleUsingViewChild);
+            fixture = createComponent(ToggleUsingViewChild);
             fixture.detectChanges();
 
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
@@ -360,8 +348,10 @@ describe('KbqToggle', () => {
     });
 
     describe('with multiple toggles', () => {
+        let fixture: ComponentFixture<MultipleToggles>;
+
         beforeEach(() => {
-            fixture = TestBed.createComponent(MultipleToggles);
+            fixture = createComponent(MultipleToggles);
             fixture.detectChanges();
         });
 
@@ -381,9 +371,10 @@ describe('KbqToggle', () => {
         let toggleNativeElement: HTMLElement;
         let toggleInstance: KbqToggleComponent;
         let inputElement: HTMLInputElement;
+        let fixture: ComponentFixture<ToggleWithFormDirectives>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(ToggleWithFormDirectives);
+            fixture = createComponent(ToggleWithFormDirectives);
             fixture.detectChanges();
 
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
@@ -401,9 +392,6 @@ describe('KbqToggle', () => {
             expect(ngModel.valid).toBe(true);
             expect(ngModel.pristine).toBe(true);
             expect(ngModel.touched).toBe(false);
-
-            // TODO(jelbourn): test that `touched` and `pristine` state are modified appropriately.
-            // This is currently blocked on issues with async() and fakeAsync().
         }));
 
         it('should toggle checked state on click', () => {
@@ -422,8 +410,10 @@ describe('KbqToggle', () => {
     });
 
     describe('with name attribute', () => {
+        let fixture: ComponentFixture<ToggleWithNameAttribute>;
+
         beforeEach(() => {
-            fixture = TestBed.createComponent(ToggleWithNameAttribute);
+            fixture = createComponent(ToggleWithNameAttribute);
             fixture.detectChanges();
         });
 
@@ -440,9 +430,10 @@ describe('KbqToggle', () => {
         let toggleInstance: KbqToggleComponent;
         let testComponent: ToggleWithFormControl;
         let inputElement: HTMLInputElement;
+        let fixture: ComponentFixture<ToggleWithFormControl>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(ToggleWithFormControl);
+            fixture = createComponent(ToggleWithFormControl);
             fixture.detectChanges();
 
             toggleDebugElement = fixture.debugElement.query(By.directive(KbqToggleComponent));
@@ -470,9 +461,10 @@ describe('KbqToggle', () => {
 
     describe('without label', () => {
         let toggleInnerContainer: HTMLElement;
+        let fixture: ComponentFixture<ToggleWithoutLabel>;
 
         beforeEach(() => {
-            fixture = TestBed.createComponent(ToggleWithoutLabel);
+            fixture = createComponent(ToggleWithoutLabel);
 
             const toggleDebugEl = fixture.debugElement.query(By.directive(KbqToggleComponent));
 
@@ -489,9 +481,53 @@ describe('KbqToggle', () => {
             expect(toggleInnerContainer.querySelector('input')!.hasAttribute('value')).toBe(false);
         });
     });
+
+    describe('with indeterminate state', () => {
+        it('should not have kbq-indeterminate class initially', () => {
+            const { debugElement } = createComponent(SingleToggle);
+            expect(debugElement.query(By.directive(KbqToggleComponent)).classes['kbq-indeterminate']).toBeUndefined();
+        });
+
+        it('should add kbq-indeterminate class when indeterminate is true', () => {
+            const fixture = createComponent(SingleToggle);
+            fixture.componentInstance.indeterminate = true;
+            fixture.detectChanges();
+
+            expect(
+                fixture.debugElement.query(By.directive(KbqToggleComponent)).classes['kbq-indeterminate']
+            ).toBeDefined();
+        });
+
+        it('should change aria-checked attr on inner input when indeterminate is true', () => {
+            const fixture = createComponent(SingleToggle);
+            const innerInput = fixture.debugElement.query(By.css('.kbq-toggle-input'));
+            expect(innerInput.attributes['aria-checked']).toBe('false' satisfies KbqCheckedState);
+            fixture.componentInstance.indeterminate = true;
+            fixture.detectChanges();
+
+            expect(innerInput.attributes['aria-checked']).toBe('mixed' satisfies KbqCheckedState);
+        });
+
+        it('should change from indeterminate to checked on input click', async () => {
+            const fixture = createComponent(SingleToggle);
+            const innerInput: DebugElement = fixture.debugElement.query(By.css('.kbq-toggle-input'));
+            fixture.componentInstance.indeterminate = true;
+            fixture.detectChanges();
+            expect(innerInput.attributes['aria-checked']).toBe('mixed' satisfies KbqCheckedState);
+
+            innerInput.nativeElement.click();
+            fixture.detectChanges();
+            await fixture.whenStable();
+            expect(innerInput.attributes['aria-checked']).toBe('true' satisfies KbqCheckedState);
+        });
+    });
 });
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqToggleModule
+    ],
     template: `
         <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
             <kbq-toggle
@@ -500,6 +536,7 @@ describe('KbqToggle', () => {
                 [checked]="value"
                 [disabled]="isDisabled"
                 [color]="toggleColor"
+                [indeterminate]="indeterminate"
                 (click)="onToggleClick($event)"
                 (change)="onToggleChange($event)"
             >
@@ -516,12 +553,18 @@ class SingleToggle {
     parentElementKeyedUp: boolean = false;
     toggleId: string | null = 'simple-check';
     toggleColor: string = 'primary';
+    indeterminate = false;
 
     onToggleClick: (event?: Event) => void = () => {};
     onToggleChange: (event?: any) => void = () => {};
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqToggleModule,
+        FormsModule
+    ],
     template: `
         <form>
             <kbq-toggle [(ngModel)]="isGood" name="cb">Be good</kbq-toggle>
@@ -533,6 +576,8 @@ class ToggleWithFormDirectives {
 }
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule],
     template: `
         <kbq-toggle>Option 1</kbq-toggle>
         <kbq-toggle>Option 2</kbq-toggle>
@@ -541,6 +586,8 @@ class ToggleWithFormDirectives {
 class MultipleToggles {}
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule],
     template: `
         <kbq-toggle [tabIndex]="customTabIndex" [disabled]="isDisabled" />
     `
@@ -551,6 +598,8 @@ class ToggleWithTabIndex {
 }
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule],
     template: `
         <kbq-toggle />
     `
@@ -564,6 +613,8 @@ class ToggleUsingViewChild {
 }
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule],
     template: `
         <kbq-toggle aria-label="Super effective" />
     `
@@ -571,6 +622,8 @@ class ToggleUsingViewChild {
 class ToggleWithAriaLabel {}
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule],
     template: `
         <kbq-toggle aria-labelledby="some-id" />
     `
@@ -578,6 +631,8 @@ class ToggleWithAriaLabel {}
 class ToggleWithAriaLabelledby {}
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule],
     template: `
         <kbq-toggle name="test-name" />
     `
@@ -585,6 +640,8 @@ class ToggleWithAriaLabelledby {}
 class ToggleWithNameAttribute {}
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule, ReactiveFormsModule],
     template: `
         <kbq-toggle [formControl]="formControl" />
     `
@@ -594,6 +651,8 @@ class ToggleWithFormControl {
 }
 
 @Component({
+    standalone: true,
+    imports: [KbqToggleModule],
     template: `
         <kbq-toggle>{{ label }}</kbq-toggle>
     `

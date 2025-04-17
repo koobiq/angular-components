@@ -1687,6 +1687,8 @@ export enum KbqAnimationCurves {
     // (undocumented)
     DecelerationCurve = "cubic-bezier(0.0,0.0,0.2,1)",
     // (undocumented)
+    EaseInOut = "ease-in-out",
+    // (undocumented)
     SharpCurve = "cubic-bezier(0.4,0.0,0.6,1)",
     // (undocumented)
     StandardCurve = "cubic-bezier(0.4,0.0,0.2,1)"
@@ -1699,8 +1701,15 @@ export enum KbqAnimationDurations {
     // (undocumented)
     Entering = "150ms",
     // (undocumented)
-    Exiting = "125ms"
+    Exiting = "125ms",
+    // (undocumented)
+    Instant = "50ms",
+    // (undocumented)
+    Rapid = "100ms"
 }
+
+// @public
+export type KbqCheckedState = 'true' | 'false' | 'mixed';
 
 // @public
 export type KbqCodeBlockLocaleConfiguration = {

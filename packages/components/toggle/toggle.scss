@@ -2,6 +2,8 @@
 
 @use './toggle-theme' as *;
 
+$toggle-thumb-offset: 8px;
+
 .kbq-toggle {
     display: inline-block;
 
@@ -50,12 +52,47 @@
             radius: 8px;
         }
 
+        transition: background 100ms ease-in-out;
         height: var(--kbq-toggle-size-normal-height);
         width: var(--kbq-toggle-size-normal-width);
+
+        .kbq-toggle__thumb {
+            position: absolute;
+            left: $toggle-thumb-offset;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            width: 10px;
+            height: 2px;
+            border-radius: var(--kbq-size-border-width);
+            transition: left 50ms ease-in-out;
+        }
     }
 
     .kbq-hint {
         margin-top: var(--kbq-toggle-size-normal-vertical-content-padding);
+    }
+
+    &.kbq-indeterminate {
+        &.cdk-keyboard-focused {
+            .kbq-toggle-bar {
+                .kbq-toggle__thumb {
+                    left: $toggle-thumb-offset + 2px;
+                }
+            }
+        }
+
+        .kbq-toggle-bar {
+            .kbq-toggle__thumb {
+                display: block;
+            }
+
+            &:hover {
+                .kbq-toggle__thumb {
+                    left: $toggle-thumb-offset + 2px;
+                }
+            }
+        }
     }
 }
 

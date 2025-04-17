@@ -12,11 +12,14 @@ import {
     Output,
     ViewChild,
     ViewEncapsulation,
+    booleanAttribute,
     forwardRef,
+    inject,
     numberAttribute
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { KbqColorDirective } from '@koobiq/components/core';
+import { KBQ_CHECKBOX_CLICK_ACTION, TransitionCheckState } from '@koobiq/components/checkbox';
+import { KbqAnimationCurves, KbqAnimationDurations, KbqCheckedState, KbqColorDirective } from '@koobiq/components/core';
 
 let nextUniqueId = 0;
 
@@ -40,13 +43,27 @@ export class KbqToggleChange {
         '[id]': 'id',
         '[attr.id]': 'id',
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-active]': 'checked'
+        '[class.kbq-active]': 'checked',
+        '[class.kbq-indeterminate]': 'indeterminate'
     },
     animations: [
         trigger('switch', [
-            state('true', style({ left: 'calc(100% - 11px)' })),
-            state('false', style({ left: '3px' })),
-            transition('true <=> false', animate('150ms'))])
+            state(TransitionCheckState.Init, style({ left: '3px' })),
+            state(TransitionCheckState.Unchecked, style({ left: '3px' })),
+            state(TransitionCheckState.Indeterminate, style({ left: '10px', visibility: 'hidden' })),
+            state(TransitionCheckState.Checked, style({ left: 'calc(100% - 11px)' })),
+            transition(
+                `${TransitionCheckState.Init} => ${TransitionCheckState.Checked}`,
+                animate(KbqAnimationDurations.Entering)
+            ),
+            transition(
+                `${TransitionCheckState.Checked} <=> ${TransitionCheckState.Unchecked}`,
+                animate(KbqAnimationDurations.Rapid)
+            ),
+            transition(
+                `${TransitionCheckState.Indeterminate} => *`,
+                animate(`${KbqAnimationDurations.Instant} ${KbqAnimationCurves.EaseInOut}`)
+            )])
 
     ],
     providers: [
@@ -60,7 +77,7 @@ export class KbqToggleChange {
 export class KbqToggleComponent extends KbqColorDirective implements AfterViewInit, ControlValueAccessor, OnDestroy {
     @Input() big: boolean = false;
 
-    @ViewChild('input', { static: false }) inputElement: ElementRef;
+    @ViewChild('input', { static: false }) inputElement: ElementRef<HTMLInputElement>;
 
     @Input() labelPosition: ToggleLabelPositionType = 'right';
 
@@ -110,13 +127,45 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     set checked(value: boolean) {
         if (value !== this._checked) {
             this._checked = value;
+            this.setTransitionCheckState();
             this.changeDetectorRef.markForCheck();
         }
     }
 
     private _checked: boolean = false;
 
+    /**
+     * Whether the toggle is indeterminate. This is also known as "mixed" mode and can be used to
+     * represent a checkbox with three states, e.g. a checkbox that represents a nested list of
+     * checkable items. Note that whenever checkbox is manually clicked, indeterminate is immediately
+     * set to false.
+     */
+    @Input({ transform: booleanAttribute })
+    get indeterminate(): boolean {
+        return this._indeterminate;
+    }
+
+    set indeterminate(value: boolean) {
+        const changed = value !== this._indeterminate;
+        this._indeterminate = value;
+
+        if (changed) {
+            this.setTransitionCheckState();
+            this.indeterminateChange.emit(this._indeterminate);
+        }
+    }
+
+    private _indeterminate: boolean = false;
+
     @Output() readonly change: EventEmitter<KbqToggleChange> = new EventEmitter<KbqToggleChange>();
+
+    /** Event emitted when the toggle's `indeterminate` value changes. */
+    @Output() readonly indeterminateChange: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /** @docs-private */
+    protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
+
+    protected clickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true });
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
@@ -141,15 +190,12 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.focusMonitor.focusVia(this.inputElement.nativeElement, 'keyboard');
     }
 
-    getAriaChecked(): boolean {
-        return this.checked;
+    getAriaChecked(): KbqCheckedState {
+        return this.checked ? 'true' : this.indeterminate ? 'mixed' : 'false';
     }
 
     onChangeEvent(event: Event) {
         event.stopPropagation();
-
-        this.updateModelValue();
-        this.emitChangeEvent();
     }
 
     onLabelTextChange() {
@@ -157,7 +203,37 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     onInputClick(event: MouseEvent) {
+        // We have to stop propagation for click events on the visual hidden input element.
+        // By default, when a user clicks on a label element, a generated click event will be
+        // dispatched on the associated input element. Since we are using a label element as our
+        // root container, the click event on the `toggle` will be executed twice.
+        // The real click event will bubble up, and the generated click event also tries to bubble up.
+        // This will lead to multiple click events.
+        // Preventing bubbling for the second event will solve that issue.
         event.stopPropagation();
+
+        if (!this.disabled && this.clickAction !== 'noop') {
+            // When user manually click on the toggle, `indeterminate` is set to false.
+            if (this.indeterminate && this.clickAction !== 'check') {
+                Promise.resolve().then(() => {
+                    this._indeterminate = false;
+                    this.indeterminateChange.emit(this._indeterminate);
+                });
+            }
+
+            this.updateModelValue();
+            this.transitionCheckState(this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+
+            // Emit our custom change event if the native input emitted one.
+            // It is important to only emit it, if the native input triggered one, because
+            // we don't want to trigger a change event, when the `checked` variable changes for example.
+            this.emitChangeEvent();
+        } else if (!this.disabled && this.clickAction === 'noop') {
+            // Reset native input when clicked with noop. The native checkbox becomes checked after
+            // click, reset it to be align with `checked` value of `kbq-toggle`.
+            this.inputElement.nativeElement.checked = this.checked;
+            this.inputElement.nativeElement.indeterminate = this.indeterminate;
+        }
     }
 
     writeValue(value: any) {
@@ -176,6 +252,14 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.disabled = isDisabled;
     }
 
+    private setTransitionCheckState() {
+        if (this._indeterminate) {
+            this.transitionCheckState(TransitionCheckState.Indeterminate);
+        } else {
+            this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+        }
+    }
+
     private onTouchedCallback = () => {};
 
     private onChangeCallback = (_: any) => {};
@@ -183,6 +267,14 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     private updateModelValue() {
         this._checked = !this.checked;
         this.onTouchedCallback();
+    }
+
+    private transitionCheckState(newState: TransitionCheckState) {
+        const oldState = this.currentCheckState;
+
+        if (oldState === newState) return;
+
+        this.currentCheckState = newState;
     }
 
     private emitChangeEvent() {

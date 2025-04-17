@@ -20,11 +20,13 @@
         @include kbq-toggle-state($type, states-hover);
     }
 
-    &.kbq-active {
+    &.kbq-active,
+    &.kbq-indeterminate {
         @include kbq-toggle-state($type, states-checked);
     }
 
-    &.kbq-active:hover {
+    &.kbq-active:hover,
+    &.kbq-indeterminate:hover {
         @include kbq-toggle-state($type, states-checked-hover);
     }
 
@@ -37,7 +39,8 @@
         }
     }
 
-    &.kbq-active.cdk-keyboard-focused {
+    &.kbq-active.cdk-keyboard-focused,
+    &.kbq-indeterminate.cdk-keyboard-focused {
         @include kbq-toggle-state($type, states-checked-focused);
 
         & .kbq-toggle-bar {
@@ -62,6 +65,12 @@
 
         &.kbq-disabled {
             color: var(--kbq-states-foreground-disabled);
+        }
+
+        .kbq-toggle-bar {
+            .kbq-toggle__thumb {
+                background: var(--kbq-icon-white);
+            }
         }
     }
 }
