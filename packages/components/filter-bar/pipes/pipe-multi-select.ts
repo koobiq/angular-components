@@ -50,15 +50,20 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ]
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit {
+    /** control for search options */
     searchControl: UntypedFormControl = new UntypedFormControl();
+    /** filtered by search options */
     filteredOptions: Observable<any[]>;
 
+    /** @docs-private */
     @ViewChild(KbqSelect) select: KbqSelect;
 
+    /** selected value */
     get selected() {
         return this.data.value;
     }
 
+    /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
         return !this.data.value?.length;
     }
@@ -83,8 +88,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.stateChanges.next();
     }
 
+    /** Comparator of selected options */
     compareByValue = (o1: any, o2: any): boolean => o1?.id === o2?.id;
 
+    /** opens select */
     override open() {
         this.select.open();
     }

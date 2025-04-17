@@ -61,27 +61,39 @@ import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent } from './filter-bar.
     ]
 })
 export class KbqFilters implements OnInit {
+    /** @docs-private */
     protected readonly placements = PopUpPlacements;
-
-    protected readonly filterBar = inject(KbqFilterBar);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-
-    @ViewChild(KbqButton) button: KbqButton;
-    @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
-    @ViewChild(KbqDropdownTrigger) dropdown: KbqDropdownTrigger;
-    @ViewChild('search') search: ElementRef;
-    @ViewChild('newFilterName') newFilterName: ElementRef;
-
+    /** @docs-private */
     protected readonly styles = KbqButtonStyles;
+    /** @docs-private */
     protected readonly colors = KbqComponentColors;
 
+    /** KbqFilterBar instance */
+    protected readonly filterBar = inject(KbqFilterBar);
+
+    /** @docs-private */
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    @ViewChild(KbqButton) private button: KbqButton;
+    @ViewChild(KbqPopoverTrigger) private popover: KbqPopoverTrigger;
+    @ViewChild(KbqDropdownTrigger) private dropdown: KbqDropdownTrigger;
+    @ViewChild('search') private search: ElementRef;
+    @ViewChild('newFilterName') private newFilterName: ElementRef;
+
+    /** control for search filter */
     searchControl: UntypedFormControl = new UntypedFormControl();
+    /** filtered by search filters */
     filteredOptions: Observable<KbqFilter[]>;
 
+    /** @docs-private */
     popoverSize = PopUpSizes.Medium;
 
+    /** new filter name for saving */
     filterName: FormControl<string | null>;
+
+    /** true if saving a new filter, false if saving changes in filter */
     saveNewFilter: boolean;
+
     showFilterSavingError: boolean = false;
     filterSavingErrorText: string;
 
@@ -100,6 +112,7 @@ export class KbqFilters implements OnInit {
     /** Event that is generated whenever the user reset a filter changes. */
     @Output() readonly onResetFilterChanges = new EventEmitter<KbqFilter | null>();
 
+    /** header of popover. Depends on the mode */
     get popoverHeader(): string {
         return this.saveNewFilter ? 'Новый фильтр' : 'Изменить фильтр';
     }
@@ -220,10 +233,12 @@ export class KbqFilters implements OnInit {
         setTimeout(() => this.changeDetectorRef.detectChanges());
     };
 
+    /** @docs-private */
     stopEventPropagation(event: Event) {
         event.stopPropagation();
     }
 
+    /** @docs-private */
     searchKeydownHandler(event: KeyboardEvent) {
         if (event.key === 'Escape') {
             this.closePopover();
@@ -232,6 +247,7 @@ export class KbqFilters implements OnInit {
         }
     }
 
+    /** @docs-private */
     onDropdownOpen() {
         setTimeout(() => this.search.nativeElement.focus());
     }

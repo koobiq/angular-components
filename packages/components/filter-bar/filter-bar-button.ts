@@ -10,6 +10,7 @@ import { KbqFilterBar } from './filter-bar';
 })
 export class KbqFilterBarButton {
     private readonly button = inject(KbqButton);
+    /** KbqFilterBar instance */
     private readonly filterBar = inject(KbqFilterBar);
 
     constructor() {

@@ -62,20 +62,28 @@ import { KbqPipeTitleDirective } from './pipe-title';
     ]
 })
 export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
-    protected readonly adapter = inject(DateAdapter);
-    protected readonly formatter = inject(DateFormatter);
+    private readonly adapter = inject(DateAdapter);
+    private readonly formatter = inject(DateFormatter);
 
+    /** @docs-private */
     protected readonly placements = PopUpPlacements;
+    /** @docs-private */
     protected readonly styles = KbqButtonStyles;
+    /** @docs-private */
     protected readonly colors = KbqComponentColors;
 
-    protected list = true;
+    /** Whether the current state is list of periods. When false will displayed control for set custom period */
+    protected isListMode = true;
 
+    /** @docs-private */
     protected formGroup: FormGroup;
 
+    /** @docs-private */
     protected showStartCalendar: boolean = false;
+    /** @docs-private */
     protected showEndCalendar: boolean = false;
 
+    /** formatted value for period */
     get formattedValue(): string {
         if (this.start && this.end) {
             return this.formatter.rangeShortDate(this.start, this.end);
@@ -84,6 +92,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         return this.data.value?.name ?? '';
     }
 
+    /** Whether the current pipe is disabled. */
     get disabled(): boolean {
         return (
             !this.adapter.isDateInstance(this.formGroup.controls.start.value) ||
@@ -92,11 +101,13 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         );
     }
 
-    get start() {
+    /** parsed start */
+    get start(): D {
         return this.adapter.parse(this.data.value?.start, '');
     }
 
-    get defaultStart() {
+    /** default object for start */
+    get defaultStart(): D {
         if (this.data.value?.start) {
             return this.adapter.today().plus(this.data.value?.start);
         }
@@ -104,11 +115,13 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         return this.adapter.today();
     }
 
-    get end() {
+    /** parsed end */
+    get end(): D {
         return this.adapter.parse(this.data.value?.end, '');
     }
 
-    get defaultEnd() {
+    /** default object for end */
+    get defaultEnd(): D {
         if (this.data.value?.start) {
             return this.adapter.today();
         }
@@ -116,6 +129,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         return this.adapter.today().plus({ days: 1 });
     }
 
+    /** Whether the current pipe is empty. */
     override get isEmpty(): boolean {
         if (this.data.value === null) return true;
 
@@ -124,10 +138,15 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         return !this.adapter.isDateInstance(this.start) || !this.adapter.isDateInstance(this.end);
     }
 
+    /** @docs-private */
     @ViewChild('popover') popover: KbqPopoverTrigger;
+    /** @docs-private */
     listSelection = viewChild.required('listSelection', { read: KbqListSelection });
+    /** @docs-private */
     returnButton = viewChild.required('returnButton', { read: KbqButton });
 
+    /** keydown handler
+     * @docs-private */
     onKeydown($event: KeyboardEvent) {
         if (($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApplyPeriod();
@@ -155,8 +174,8 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         this.popover.hide();
     }
 
-    openPeriod() {
-        this.list = false;
+    showPeriod() {
+        this.isListMode = false;
         this.showStartCalendar = false;
         this.showEndCalendar = false;
 
@@ -168,13 +187,14 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
         });
     }
 
-    openList() {
-        this.list = true;
+    showList() {
+        this.isListMode = true;
 
         setTimeout(() => this.listSelection().focus());
         this.popover.updatePosition(true);
     }
 
+    /** opens popover */
     override open() {
         this.popover.show();
     }

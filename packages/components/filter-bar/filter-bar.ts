@@ -52,13 +52,18 @@ import { KbqFilters } from './filters';
     }
 })
 export class KbqFilterBar {
+    /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
     readonly externalConfiguration = inject(KBQ_FILTER_BAR_CONFIGURATION, { optional: true });
 
     configuration;
 
+    /** @docs-private */
     @ContentChild(KbqFilters) filters: KbqFilters;
+    /** @docs-private */
     @ContentChild(KbqFilterReset) filterReset: KbqFilterReset;
 
     /** Filter that is currently selected */
@@ -101,31 +106,41 @@ export class KbqFilterBar {
     /** Event that emits whenever the pipe deleted. */
     @Output() readonly onRemovePipe = new EventEmitter<KbqPipe>();
 
+    /** Whether the current filter is saved and changed */
     get isSavedAndChanged(): boolean {
         return this.isSaved && this.isChanged;
     }
 
+    /** Whether the current filter is saved */
     get isSaved(): boolean {
         return !!this.filter?.saved;
     }
 
+    /** Whether the current filter is changed */
     get isChanged(): boolean {
         return !!this.filter?.changed;
     }
 
+    /** Whether the current filter is readonly */
     get isReadOnly(): boolean {
         return !!this.filter?.readonly;
     }
 
+    /** Whether the current filter is disabled */
     get isDisabled(): boolean {
         return !!this.filter?.disabled;
     }
 
     private savedFilter: KbqFilter | null = null;
 
+    /** all changes */
     readonly changes = new BehaviorSubject<void>(undefined);
+    /** internal filter changes */
     readonly internalFilterChanges = new BehaviorSubject<KbqFilter | null>(null);
+    /** internal changes in templates */
     readonly internalTemplatesChanges = new BehaviorSubject<KbqPipeTemplate[] | null>(null);
+    /** this subject need for opens pipe after adding
+     * @docs-private */
     readonly openPipe = new BehaviorSubject<string | number | null>(null);
 
     constructor() {

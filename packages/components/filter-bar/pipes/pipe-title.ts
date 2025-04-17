@@ -15,6 +15,7 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable, Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
+// todo DS-3672
 @Directive({
     standalone: true,
     selector: '[kbqPipeTitle]',

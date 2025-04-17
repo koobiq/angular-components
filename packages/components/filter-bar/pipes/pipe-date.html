@@ -11,7 +11,7 @@
     [kbqPopoverOffset]="4"
     [kbqPopoverPlacement]="placements.BottomLeft"
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
-    (kbqPopoverVisibleChange)="list = true"
+    (kbqPopoverVisibleChange)="isListMode = true"
 >
     <span #kbqTitleText class="kbq-pipe__name">{{ data.name }}</span>
     <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!formattedValue">
@@ -24,10 +24,10 @@
 }
 
 <ng-template #content>
-    @if (list) {
+    @if (isListMode) {
         <div class="kbq-date-list">
             <kbq-list-selection #listSelection [autoSelect]="false" [ngModel]="data.value?.name">
-                <kbq-list-option (click)="openPeriod()" (keydown.enter)="openPeriod()">
+                <kbq-list-option (click)="showPeriod()" (keydown.enter)="showPeriod()">
                     {{ localeData.datePipe?.customPeriod }}
                     <i class="kbq kbq-icon kbq-chevron-right_16 kbq-contrast-fade"></i>
                 </kbq-list-option>
@@ -47,7 +47,7 @@
                     kbq-button
                     [color]="colors.Theme"
                     [kbqStyle]="styles.Transparent"
-                    (click)="openList()"
+                    (click)="showList()"
                 >
                     <i kbq-icon="kbq-chevron-left_16"></i>
                     {{ localeData.datePipe.backToPeriodSelection }}
