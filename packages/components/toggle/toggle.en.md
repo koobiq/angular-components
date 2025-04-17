@@ -14,5 +14,5 @@ The `indeterminate` state is applied using the boolean attribute `[indeterminate
 
 ## Recommendations
 
--   Use a toggle for instant switching of settings that don’t require confirmation. For example, changes apply immediately without needing a "Save" button. If form submission is required to save, use a [checkbox](/en/components/checkbox/overview) instead.
+-   Use a toggle for instant switching of settings that don’t require confirmation. For example, changes apply immediately without needing a "Save" button. If form submission is required to save, use a [Checkbox](/en/components/checkbox) instead.
 -   Avoid using a toggle if the selection options don’t fit binary logic (e.g., on/off, yes/no).
