@@ -1,1 +1,3 @@
-<!-- example(filter-bar-complete-functions) -->
+#### Пример добавления пользовательского пайпа
+
+<!-- example(filter-bar-custom-pipe) -->

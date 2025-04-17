@@ -211,6 +211,7 @@
     .component-overview {
         padding-left: var(--kbq-size-7xl);
 
+        .docs-live-example,
         .docs-component-viewer__article {
             width: 650px;
             margin-right: var(--kbq-size-7xl);

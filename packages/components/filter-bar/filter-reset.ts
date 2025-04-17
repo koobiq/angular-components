@@ -7,7 +7,7 @@ import { KbqFilter } from './filter-bar.types';
     standalone: true,
     selector: 'kbq-filter-reset',
     template: `
-        <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="onResetFilter.emit(filterBar.filter!)" kbq-button>
+        <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()" kbq-button>
             <ng-content>{{ filterBar.configuration.reset.buttonName }}</ng-content>
         </button>
     `,
@@ -22,4 +22,10 @@ export class KbqFilterReset {
 
     /** Event that is generated whenever the user reset a filter. */
     @Output() readonly onResetFilter = new EventEmitter<KbqFilter | null>();
+
+    protected resetFilter() {
+        this.onResetFilter.emit(this.filterBar.filter!);
+
+        this.filterBar.changes.next();
+    }
 }

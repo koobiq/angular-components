@@ -1415,6 +1415,21 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-complete-functions-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-custom-pipe": {
+    "packagePath": "components/filter-bar/filter-bar-custom-pipe",
+    "title": "filter-bar-custom-pipe",
+    "componentName": "FilterBarCustomPipeExample",
+    "files": [
+      "filter-bar-custom-pipe-example.ts",
+      "../../../../components/filter-bar/pipes/base-pipe.scss"
+    ],
+    "selector": "filter-bar-custom-pipe-example",
+    "additionalComponents": [
+      "ColorPipeComponent"
+    ],
+    "primaryFile": "filter-bar-custom-pipe-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-overview": {
     "packagePath": "components/filter-bar/filter-bar-overview",
     "title": "filter bar",
@@ -4249,6 +4264,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'filter-bar-cleanable':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-complete-functions':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-custom-pipe':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');

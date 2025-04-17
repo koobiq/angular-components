@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FilterBarCleanableExample } from './filter-bar-cleanable/filter-bar-cleanable-example';
 import { FilterBarCompleteFunctionsExample } from './filter-bar-complete-functions/filter-bar-complete-functions-example';
+import { FilterBarCustomPipeExample } from './filter-bar-custom-pipe/filter-bar-custom-pipe-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
 import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
 import { FilterBarRemovableExample } from './filter-bar-removable/filter-bar-removable-example';
@@ -11,6 +12,7 @@ import { FilterBarSearchExample } from './filter-bar-search/filter-bar-search-ex
 export {
     FilterBarCleanableExample,
     FilterBarCompleteFunctionsExample,
+    FilterBarCustomPipeExample,
     FilterBarOverviewExample,
     FilterBarPipeTypesExample,
     FilterBarRemovableExample,
@@ -27,7 +29,8 @@ const EXAMPLES = [
     FilterBarRequiredExample,
     FilterBarSearchExample,
     FilterBarCompleteFunctionsExample,
-    FilterBarSavedFiltersExample
+    FilterBarSavedFiltersExample,
+    FilterBarCustomPipeExample
 ];
 
 @NgModule({

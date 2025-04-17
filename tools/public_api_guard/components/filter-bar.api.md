@@ -33,16 +33,20 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
+import { Provider } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ViewContainerRef } from '@angular/core';
 
-// @public (undocumented)
+// @public
+export const defaultFilterBarPipes: [string, unknown][];
+
+// @public
 export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<unknown>;
 
-// @public (undocumented)
+// @public
 export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
     reset: {
         buttonName: string;
@@ -85,6 +89,9 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         backToPeriodSelection: string;
     };
 };
+
+// @public
+export const KBQ_FILTER_BAR_PIPES: InjectionToken<any>;
 
 // @public (undocumented)
 export const KBQ_PIPE_DATA: InjectionToken<unknown>;
@@ -240,6 +247,9 @@ export class KbqFilterBarModule {
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFilterBarModule, never, [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqFilterBarSearch, typeof i10.KbqPipeTitleDirective, typeof i11.KbqPipeState], [typeof i1.KbqFilterBar, typeof i2.KbqFilters, typeof i3.KbqFilterBarRefresher, typeof i4.KbqFilterBarButton, typeof i5.KbqFilterReset, typeof i6.KbqPipeAdd, typeof i7.KbqPipeDirective, typeof i8.KbqPipeButton, typeof i9.KbqFilterBarSearch, typeof i10.KbqPipeTitleDirective, typeof i11.KbqPipeState]>;
 }
 
+// @public
+export const kbqFilterBarPipesProvider: () => Provider;
+
 // @public (undocumented)
 export class KbqFilterBarRefresher {
     // (undocumented)
@@ -288,6 +298,8 @@ export class KbqFilterReset {
     // (undocumented)
     protected readonly filterBar: KbqFilterBar;
     readonly onResetFilter: EventEmitter<KbqFilter | null>;
+    // (undocumented)
+    protected resetFilter(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterReset, "kbq-filter-reset", never, {}, { "onResetFilter": "onResetFilter"; }, never, ["*"], true, never>;
     // (undocumented)
@@ -397,7 +409,7 @@ export interface KbqPipe {
     // (undocumented)
     search?: boolean;
     // (undocumented)
-    type: KbqPipeTypes;
+    type: KbqPipeType;
     // (undocumented)
     value: unknown | null;
 }
@@ -431,7 +443,7 @@ export class KbqPipeButton {
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
-    protected readonly filterBar: KbqFilterBar | null;
+    protected readonly filterBar: KbqFilterBar;
     // (undocumented)
     get localeData(): any;
     // (undocumented)
@@ -756,7 +768,10 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTitleDirective, never>;
 }
 
-// @public (undocumented)
+// @public
+export type KbqPipeType = `${KbqPipeTypes}` | string;
+
+// @public
 export enum KbqPipeTypes {
     // (undocumented)
     Date = "date",
