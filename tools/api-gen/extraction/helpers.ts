@@ -2,26 +2,9 @@ import fs from 'fs';
 import { relative } from 'path';
 import ts from 'typescript';
 import { isPublic } from '../manifest/helpers';
-import { ClassEntry, DocEntry, MemberEntry, MemberTags } from '../rendering/entities';
+import { ClassEntry, DocEntry } from '../rendering/entities';
 import { isClassEntry } from '../rendering/entities/categorization';
 import { ClassEntryMetadata, PackageMetadata } from '../types';
-
-// eslint-disable-next-line @typescript-eslint/ban-types
-type FunctionProps = keyof Function | string;
-const fProps: FunctionProps[] = [
-    'call',
-    'caller',
-    'apply',
-    '[Symbol.hasInstance]',
-    'toString',
-    'arguments',
-    'bind',
-    '[Symbol.metadata]',
-    'name',
-    'length'
-];
-const metadataMembers = ({ name, memberTags }: MemberEntry) =>
-    !fProps.includes(name) && !memberTags.includes(MemberTags.Inherited);
 
 /**
  * Updates the entries in the documentation with additional information based on class metadata.
@@ -43,7 +26,7 @@ export function updateEntries(entries: DocEntry[], classMetadata: Record<string,
 
         res.push({
             ...entry,
-            members: (entry as ClassEntry).members?.filter(metadataMembers),
+            members: (entry as ClassEntry).members,
             isService: classMetadata[entry.name]?.decorators?.includes('Injectable'),
             extendedDoc: !!baseClassEntry &&
                 isPublic(baseClassEntry) && {
