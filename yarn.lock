@@ -5455,7 +5455,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@radix-ng/primitives@npm:0.23.0":
+"@radix-ng/primitives@npm:^0.23.0":
   version: 0.23.0
   resolution: "@radix-ng/primitives@npm:0.23.0"
   dependencies:
@@ -14681,7 +14681,7 @@ __metadata:
     "@microsoft/api-extractor": "npm:7.40.2"
     "@octokit/rest": "npm:^18.9.1"
     "@prettier/plugin-xml": "npm:^3.4.1"
-    "@radix-ng/primitives": "npm:0.23.0"
+    "@radix-ng/primitives": "npm:^0.23.0"
     "@rollup/plugin-commonjs": "npm:^24.0.0"
     "@rollup/plugin-json": "npm:^6.0.0"
     "@rollup/plugin-node-resolve": "npm:^15.0.2"
