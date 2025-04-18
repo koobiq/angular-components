@@ -1,3 +1,21 @@
+# 18.23.0 (2025-04-18)
+
+### Koobiq
+
+ * bug fix  **ag-grid:** koobiq CSS component design tokens ([#DS-3662](https://github.com/koobiq/angular-components/issues/issue/DS-3662)) ([#660](https://github.com/koobiq/angular-components/issues/660)) ([1743478](https://github.com/koobiq/angular-components/commit/17434782cf453733d806eee89be22cc6378c989f))
+ * bug fix  **breadcrumbs:** fixed error on component import ([#DS-3523](https://github.com/koobiq/angular-components/issues/issue/DS-3523)) ([#658](https://github.com/koobiq/angular-components/issues/658)) ([7949cd4](https://github.com/koobiq/angular-components/commit/7949cd471a0802d18eb533427f45f2d504fece2f))
+ * bug fix  **docs:** removed [@docs-private](https://github.com/docs-private) from public API ([#DS-3424](https://github.com/koobiq/angular-components/issues/issue/DS-3424)) ([#665](https://github.com/koobiq/angular-components/issues/665)) ([ea8576c](https://github.com/koobiq/angular-components/commit/ea8576ca360c8b2c7993dc284c425e01292b25bf))
+ * bug fix  **filter-bar:** platform detection ([#DS-3511](https://github.com/koobiq/angular-components/issues/issue/DS-3511)) ([#653](https://github.com/koobiq/angular-components/issues/653)) ([c1dba41](https://github.com/koobiq/angular-components/commit/c1dba41f2809409e038e6dd160e027c27d438ead))
+ * bug fix  **filter-bar:** size of label in date pipe ([#DS-3643](https://github.com/koobiq/angular-components/issues/issue/DS-3643)) ([#655](https://github.com/koobiq/angular-components/issues/655)) ([c1c58da](https://github.com/koobiq/angular-components/commit/c1c58da317c6a6ac29feed0b287afea07c771c91))
+ * bug fix  **link:** underline in pseudo link ([#DS-3671](https://github.com/koobiq/angular-components/issues/issue/DS-3671)) ([#664](https://github.com/koobiq/angular-components/issues/664)) ([1c170cd](https://github.com/koobiq/angular-components/commit/1c170cd2f4ada81ad10b7d6470424fe873302439))
+ * bug fix  **radio, toggle:** multiline support ([#DS-3538](https://github.com/koobiq/angular-components/issues/issue/DS-3538)) ([#657](https://github.com/koobiq/angular-components/issues/657)) ([227083a](https://github.com/koobiq/angular-components/commit/227083a76e1cd9bef1cf94dba53e4a16bd9ad97c))
+ * bug fix  **tooltip:** tooltip is not hidden ([#DS-3673](https://github.com/koobiq/angular-components/issues/issue/DS-3673)) ([#667](https://github.com/koobiq/angular-components/issues/667)) ([c2af83b](https://github.com/koobiq/angular-components/commit/c2af83bdc28e2e7293b87c5f5f93cc443f86ad04))
+ * feature  **docs:** added "new" section badge in sidenav ([#DS-3386](https://github.com/koobiq/angular-components/issues/issue/DS-3386)) ([#662](https://github.com/koobiq/angular-components/issues/662)) ([4fa9063](https://github.com/koobiq/angular-components/commit/4fa9063e158f65eeb3644f76fe43b97326f913cf))
+ * feature  **docs:** added сore section ([#DS-3340](https://github.com/koobiq/angular-components/issues/issue/DS-3340)) ([#654](https://github.com/koobiq/angular-components/issues/654)) ([199fefb](https://github.com/koobiq/angular-components/commit/199fefb3b788a042d767c9cec4c4e48a694e7b9b))
+ * feature  **docs:** removed components health page ([#DS-3566](https://github.com/koobiq/angular-components/issues/issue/DS-3566)) ([#651](https://github.com/koobiq/angular-components/issues/651)) ([603f48e](https://github.com/koobiq/angular-components/commit/603f48e6cfcc1a81d8ad4383fb570047bbaa777b))
+ * feature  **filter-bar:** custom pipe ([#DS-3530](https://github.com/koobiq/angular-components/issues/issue/DS-3530)) ([#659](https://github.com/koobiq/angular-components/issues/659)) ([cba129c](https://github.com/koobiq/angular-components/commit/cba129c56e4fd6d41ddd217839ff925d4e7bb9c3))
+ * feature  **toggle:** indeterminate state ([#DS-3483](https://github.com/koobiq/angular-components/issues/issue/DS-3483)) ([#650](https://github.com/koobiq/angular-components/issues/650)) ([72ec2eb](https://github.com/koobiq/angular-components/commit/72ec2eb0c28303e37a5d28eb032cb46cd39aa2df))
+
 # 18.22.0 (2025-04-11)
 
 ### Koobiq
