@@ -155,7 +155,7 @@ describe('KbqAutocomplete', () => {
                 fixture.componentInstance.trigger.openPanel();
 
                 Promise.resolve().then(() => {
-                    expect(fixture.componentInstance.panel.showPanel).toBeTruthy();
+                    expect(fixture.componentInstance.panel.newPanel).toBeTruthy();
                 });
             });
         }));

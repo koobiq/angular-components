@@ -33,7 +33,7 @@ jobs:
 
       - name: Linters
         id: linters
-        if: steps.golden_checks.conclusion != 'cancelled'
+        if: ${{ !cancelled() }}
         run: |
           yarn run cspell --no-progress
           yarn run prettier
@@ -42,7 +42,7 @@ jobs:
 
       - name: Unit
         id: units
-        if: steps.linters.conclusion != 'cancelled'
+        if: ${{ !cancelled() }}
         run: |
           yarn run unit:cdk
           yarn run unit:components
@@ -55,4 +55,4 @@ jobs:
 
       - name: License validation
         run: yarn run validate:license
-        if: steps.units.conclusion != 'cancelled'
+        if: ${{ !cancelled() }}

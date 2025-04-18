@@ -143,7 +143,7 @@ export class KbqAutocomplete implements AfterContentInit {
     private _autoActiveFirstOption: boolean;
 
     get isOpen(): boolean {
-        return this._isOpen && this.showPanel;
+        return this._isOpen && this.newPanel;
     }
 
     set isOpen(value: boolean) {
@@ -188,9 +188,9 @@ export class KbqAutocomplete implements AfterContentInit {
     }
 
     setVisibility() {
-        this.showPanel = !!this.options.length;
-        this._classList['kbq-autocomplete_visible'] = this.showPanel;
-        this._classList['kbq-autocomplete_hidden'] = !this.showPanel;
+        this.newPanel = !!this.options.length;
+        this._classList['kbq-autocomplete_visible'] = this.newPanel;
+        this._classList['kbq-autocomplete_hidden'] = !this.newPanel;
 
         this.updateFocusClass();
 
