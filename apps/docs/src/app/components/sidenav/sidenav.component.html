@@ -27,7 +27,15 @@
         </kbq-tree-option>
 
         <kbq-tree-option *kbqTreeNodeDef="let node" class="docs-sidenav__item">
-            {{ node.name[locale()] }}
+            <div class="layout-row layout-align-start-center">
+                <div class="layout-margin-right-s">
+                    {{ node.name[locale()] }}
+                </div>
+
+                @if (node.isNew) {
+                    <kbq-badge badgeColor="fade-theme" [compact]="true" [outline]="true">New</kbq-badge>
+                }
+            </div>
         </kbq-tree-option>
     </kbq-tree-selection>
 </div>

@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
+import { DateTime } from 'luxon';
 import { DocsLocale } from '../constants/locale';
+
+const expiresAt = (expiresAt: string) => {
+    const createdDate = DateTime.fromISO(expiresAt);
+    if (!createdDate.isValid) {
+        throw new Error(createdDate.invalidReason);
+    }
+    return createdDate.diffNow('days').days > 0;
+};
 
 export type DocItem = {
     id: string;
@@ -10,6 +19,11 @@ export type DocItem = {
     apiId?: string;
     svgPreview?: string;
     packageName?: string;
+    /**
+     * Indicates whether documentation item as "new".
+     * Determined by comparing the current date with expiration date.
+     */
+    isNew?: boolean;
 };
 
 export type DocCategory = {
@@ -147,7 +161,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     },
                     svgPreview: 'ag-grid',
                     hasApi: false,
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2025-05-04')
                 },
                 {
                     id: 'alert',
@@ -246,7 +261,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: '',
                     hasApi: true,
                     apiId: 'core',
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2025-05-04')
                 },
                 {
                     id: 'datepicker',
