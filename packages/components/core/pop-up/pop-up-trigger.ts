@@ -27,6 +27,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { distinctUntilChanged, filter, delay as rxDelay } from 'rxjs/operators';
 import {
     EXTENDED_OVERLAY_POSITIONS,
@@ -93,6 +94,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     /** Stream that emits when the popupTrigger is hovered. */
     readonly hovered = new BehaviorSubject<boolean>(false);
 
+    protected readonly scheduler = inject(AsyncScheduler, { optional: true }) || undefined;
     protected readonly overlay: Overlay = inject(Overlay);
     protected readonly elementRef: ElementRef = inject(ElementRef);
     protected readonly ngZone: NgZone = inject(NgZone);
@@ -164,7 +166,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.listeners.clear();
 
-        this.hidingIntervalSubscription.unsubscribe();
+        this.hidingIntervalSubscription?.unsubscribe();
     }
 
     updatePlacement(value: PopUpPlacements) {
@@ -249,7 +251,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.instance.show(delay);
 
         if (this.trigger.includes(PopUpTriggers.Hover)) {
-            this.hidingIntervalSubscription = interval(hidingIntervalForHover)
+            this.hidingIntervalSubscription = interval(hidingIntervalForHover, this.scheduler)
                 .pipe(
                     takeUntilDestroyed(this.destroyRef),
                     filter(() => this.trigger.includes(PopUpTriggers.Hover)),

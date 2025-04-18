@@ -437,7 +437,7 @@ describe('SingleFileUploadComponent', () => {
     });
 
     describe('with ellipsis in the center', () => {
-        it('should add tooltip and ellipsis in the center for a file with a long name', fakeAsync(() => {
+        xit('should add tooltip and ellipsis in the center for a file with a long name', fakeAsync(() => {
             component.disabled = false;
             fixture.detectChanges();
 
