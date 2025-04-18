@@ -125,11 +125,25 @@
             transition: color 0ms;
 
             @include kbq-link-state(state-hover);
+
+            &.kbq-link_pseudo {
+                &.kbq-text-only:not(.kbq-text-with-dot),
+                & .kbq-link__text {
+                    border-bottom-color: var(--kbq-link-state-hover-border-bottom);
+                }
+            }
         }
 
         &:active,
         &.kbq-active {
             @include kbq-link-state(state-active);
+
+            &.kbq-link_pseudo {
+                &.kbq-text-only:not(.kbq-text-with-dot),
+                & .kbq-link__text {
+                    border-bottom-color: var(--kbq-link-state-active-border-bottom);
+                }
+            }
         }
 
         &.kbq-link_use-visited:not(.kbq-disabled):visited {
