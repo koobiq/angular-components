@@ -83,7 +83,7 @@ export class KbqAutocomplete implements AfterContentInit {
 
     @ViewChild(TemplateRef, { static: true }) template: TemplateRef<any>;
 
-    @ViewChild('panel', { static: false }) newPanel: ElementRef;
+    @ViewChild('panel', { static: false }) panel: ElementRef;
 
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
@@ -143,7 +143,7 @@ export class KbqAutocomplete implements AfterContentInit {
     private _autoActiveFirstOption: boolean;
 
     get isOpen(): boolean {
-        return this._isOpen && this.newPanel;
+        return this._isOpen && this.showPanel;
     }
 
     set isOpen(value: boolean) {
@@ -188,9 +188,9 @@ export class KbqAutocomplete implements AfterContentInit {
     }
 
     setVisibility() {
-        this.newPanel = !!this.options.length;
-        this._classList['kbq-autocomplete_visible'] = this.newPanel;
-        this._classList['kbq-autocomplete_hidden'] = !this.newPanel;
+        this.showPanel = !!this.options.length;
+        this._classList['kbq-autocomplete_visible'] = this.showPanel;
+        this._classList['kbq-autocomplete_hidden'] = !this.showPanel;
 
         this.updateFocusClass();
 

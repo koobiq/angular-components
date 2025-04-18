@@ -129,7 +129,7 @@ export class KbqAutocompleteTrigger
     }
 
     get panelOpen(): boolean {
-        return this.overlayAttached && this.autocomplete.newPanel;
+        return this.overlayAttached && this.autocomplete.showPanel;
     }
 
     /** The autocomplete panel to be attached to this trigger. */
