@@ -16,18 +16,18 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    inject,
     NgZone,
     OnDestroy,
     OnInit,
     TemplateRef,
     Type,
-    ViewContainerRef,
-    inject
+    ViewContainerRef
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
-import { Observable, Subscription } from 'rxjs';
-import { distinctUntilChanged, delay as rxDelay } from 'rxjs/operators';
+import { BehaviorSubject, interval, Observable, Subscription } from 'rxjs';
+import { distinctUntilChanged, filter, delay as rxDelay } from 'rxjs/operators';
 import {
     EXTENDED_OVERLAY_POSITIONS,
     POSITION_MAP,
@@ -80,8 +80,19 @@ const getOffset = (
     return offset;
 };
 
-@Directive()
+/** parameter is used in interval to hide the popup */
+export const hidingIntervalForHover = 500;
+
+@Directive({
+    host: {
+        '(mouseenter)': 'hovered.next(true)',
+        '(mouseleave)': 'hovered.next(false)'
+    }
+})
 export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
+    /** Stream that emits when the popupTrigger is hovered. */
+    readonly hovered = new BehaviorSubject<boolean>(false);
+
     protected readonly overlay: Overlay = inject(Overlay);
     protected readonly elementRef: ElementRef = inject(ElementRef);
     protected readonly ngZone: NgZone = inject(NgZone);
@@ -131,6 +142,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected mouseEvent?: MouseEvent;
     protected strategy: FlexibleConnectedPositionStrategy;
+    /** @docs-private */
+    protected hidingIntervalSubscription: Subscription;
 
     abstract updateClassMap(newPlacement?: string): void;
 
@@ -150,6 +163,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.listeners.forEach(this.removeEventListener);
 
         this.listeners.clear();
+
+        this.hidingIntervalSubscription.unsubscribe();
     }
 
     updatePlacement(value: PopUpPlacements) {
@@ -232,15 +247,20 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.updatePosition();
 
         this.instance.show(delay);
+
+        if (this.trigger.includes(PopUpTriggers.Hover)) {
+            this.hidingIntervalSubscription = interval(hidingIntervalForHover)
+                .pipe(
+                    takeUntilDestroyed(this.destroyRef),
+                    filter(() => this.trigger.includes(PopUpTriggers.Hover)),
+                    filter(() => !this.hovered.getValue() && !this.instance?.hovered.getValue())
+                )
+                .subscribe(this.hide);
+        }
     }
 
     hide = (delay: number = this.leaveDelay) => {
-        if (
-            (this.instance && this.triggerName !== 'mouseleave') ||
-            (this.triggerName === 'mouseleave' && !this.instance?.hovered.getValue())
-        ) {
-            this.ngZone.run(() => this.instance?.hide(delay));
-        }
+        this.ngZone.run(() => this.instance?.hide(delay));
     };
 
     detach = (): void => {
@@ -326,9 +346,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         }
 
         if (this.trigger.includes(PopUpTriggers.Hover)) {
-            this.listeners
-                .set(...this.createListener('mouseenter', this.show))
-                .set(...this.createListener('mouseleave', () => setTimeout(this.hide)));
+            this.listeners.set(...this.createListener('mouseenter', this.show));
         }
 
         if (this.trigger.includes(PopUpTriggers.Focus)) {

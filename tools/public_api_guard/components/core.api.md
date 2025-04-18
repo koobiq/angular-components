@@ -682,6 +682,9 @@ export interface HasTabIndex {
 // @public (undocumented)
 export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
+// @public
+export const hidingIntervalForHover = 500;
+
 // @public (undocumented)
 export function isBoolean(value: unknown): value is boolean;
 
@@ -2283,8 +2286,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     handleTouchend(): void;
     // (undocumented)
     hide: (delay?: number) => void;
+    protected hidingIntervalSubscription: Subscription;
     // (undocumented)
     protected readonly hostView: ViewContainerRef;
+    readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
     initListeners(): void;
     // (undocumented)

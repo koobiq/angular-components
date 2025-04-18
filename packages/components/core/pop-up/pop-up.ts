@@ -79,10 +79,6 @@ export abstract class KbqPopUp implements OnDestroy {
             // Mark for check so if any parent component has set the
             // ChangeDetectionStrategy to OnPush it will be checked anyways
             this.markForCheck();
-
-            if (this.trigger.triggerName === 'mouseenter') {
-                this.addEventListenerForHide();
-            }
         }, delay);
     }
 
