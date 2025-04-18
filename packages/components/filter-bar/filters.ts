@@ -114,7 +114,7 @@ export class KbqFilters implements OnInit {
 
     /** header of popover. Depends on the mode */
     get popoverHeader(): string {
-        return this.saveNewFilter ? 'Новый фильтр' : 'Изменить фильтр';
+        return this.saveNewFilter ? this.localeData.saveAsNew : this.localeData.saveChanges;
     }
 
     /** Component state. true if opened dropdown or popup */
@@ -130,6 +130,12 @@ export class KbqFilters implements OnInit {
     /** Component state. True if 'filters' input contains no elements. */
     get isEmpty(): boolean {
         return this.filters.length === 0;
+    }
+
+    /** localized data
+     * @docs-private */
+    get localeData() {
+        return this.filterBar.configuration.filters;
     }
 
     constructor() {
