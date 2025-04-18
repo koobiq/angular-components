@@ -35,7 +35,7 @@ import { Signal } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 
 // @public
-export const KBQ_ACTIONS_PANEL_DATA_TEST: InjectionToken<unknown>;
+export const KBQ_ACTIONS_PANEL_DATA: InjectionToken<unknown>;
 
 // @public
 export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG: InjectionToken<KbqActionsPanelConfig<unknown>>;

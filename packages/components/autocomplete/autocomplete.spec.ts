@@ -98,7 +98,7 @@ describe('KbqAutocomplete', () => {
             dispatchFakeEvent(input, 'focusin');
             fixture.detectChanges();
 
-            expect(fixture.componentInstance.trigger.panelOpen).toBeFalsy();
+            expect(fixture.componentInstance.trigger.panelOpen).toBeTruthy();
 
             expect(overlayContainerElement.textContent).toContain('Alabama');
 
