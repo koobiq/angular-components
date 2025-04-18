@@ -10,6 +10,7 @@ import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
@@ -681,6 +682,9 @@ export interface HasTabIndex {
 
 // @public (undocumented)
 export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
+
+// @public
+export const hidingIntervalForHover = 500;
 
 // @public (undocumented)
 export function isBoolean(value: unknown): value is boolean;
@@ -2283,8 +2287,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     handleTouchend(): void;
     // (undocumented)
     hide: (delay?: number) => void;
+    protected hidingIntervalSubscription: Subscription;
     // (undocumented)
     protected readonly hostView: ViewContainerRef;
+    readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
     initListeners(): void;
     // (undocumented)
@@ -2323,6 +2329,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected portal: ComponentPortal<T>;
     // (undocumented)
     resetOrigin(): void;
+    // (undocumented)
+    protected readonly scheduler: AsyncScheduler | undefined;
     // (undocumented)
     protected readonly scrollDispatcher: ScrollDispatcher;
     // (undocumented)
