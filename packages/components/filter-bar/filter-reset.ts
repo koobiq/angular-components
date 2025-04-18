@@ -8,7 +8,7 @@ import { KbqFilter } from './filter-bar.types';
     selector: 'kbq-filter-reset',
     template: `
         <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()" kbq-button>
-            <ng-content>{{ filterBar.configuration.reset.buttonName }}</ng-content>
+            <ng-content>{{ localeData }}</ng-content>
         </button>
     `,
     host: {
@@ -18,10 +18,17 @@ import { KbqFilter } from './filter-bar.types';
     imports: [KbqButtonModule]
 })
 export class KbqFilterReset {
-    protected readonly filterBar = inject(KbqFilterBar);
+    /** KbqFilterBar instance */
+    private readonly filterBar = inject(KbqFilterBar);
 
     /** Event that is generated whenever the user reset a filter. */
     @Output() readonly onResetFilter = new EventEmitter<KbqFilter | null>();
+
+    /** localized data
+     * @docs-private */
+    get localeData() {
+        return this.filterBar.configuration.reset.buttonName;
+    }
 
     protected resetFilter() {
         this.onResetFilter.emit(this.filterBar.filter!);

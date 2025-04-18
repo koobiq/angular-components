@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { merge } from 'rxjs';
@@ -32,17 +31,21 @@ import { KbqPipeState } from './pipe-state';
     },
     imports: [
         KbqIcon,
-        KbqDividerModule,
         KbqButtonModule,
         KbqPipeState,
         KbqTooltipTrigger
     ]
 })
 export class KbqPipeButton {
+    /** KbqPipe instance */
     protected readonly pipe = inject(KbqBasePipe);
+    /** KbqFilterBar instance */
     protected readonly filterBar = inject(KbqFilterBar);
+    /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
+    /** localized data
+     * @docs-private */
     get localeData() {
         return this.filterBar?.configuration.pipe;
     }

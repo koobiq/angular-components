@@ -4,9 +4,11 @@ import { DocsLocale } from '../constants/locale';
 
 const expiresAt = (expiresAt: string) => {
     const createdDate = DateTime.fromISO(expiresAt);
+
     if (!createdDate.isValid) {
         throw new Error(createdDate.invalidReason);
     }
+
     return createdDate.diffNow('days').days > 0;
 };
 

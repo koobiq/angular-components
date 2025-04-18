@@ -48,12 +48,15 @@ import { KbqPipeTitleDirective } from './pipe-title';
 export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements AfterViewInit, OnInit {
     readonly placements = PopUpPlacements;
 
+    /** @docs-private */
     @ViewChild(KbqPopoverTrigger) popover: KbqPopoverTrigger;
 
+    /** Whether the current pipe is disabled. */
     get disabled(): boolean {
         return !this.control.value;
     }
 
+    /** textarea control */
     control = new FormControl<typeof this.data.value>('');
 
     ngOnInit(): void {
@@ -76,12 +79,14 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
         this.filterBar?.onChangePipe.next(this.data);
     }
 
+    /** @docs-private */
     onKeydown($event: KeyboardEvent) {
         if (!this.disabled && ($event.ctrlKey || $event.metaKey) && $event.keyCode === ENTER) {
             this.onApply();
         }
     }
 
+    /** opens popover */
     override open() {
         this.popover.show();
     }

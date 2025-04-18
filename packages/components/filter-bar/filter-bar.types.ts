@@ -32,7 +32,7 @@ export enum KbqPipeTypes {
     Date = 'date',
     Datetime = 'datetime'
 }
-/** type of pipe */
+
 export type KbqPipeType = `${KbqPipeTypes}` | string;
 
 /** list of pipes available out of the box. */

@@ -28,7 +28,7 @@ import { KbqFilterBar } from './filter-bar';
             [kbqStyle]="'transparent'"
             (click)="openSearch()"
             kbq-button
-            kbqTooltip="{{ filterBar.configuration.search.tooltip }}"
+            kbqTooltip="{{ localeData.tooltip }}"
         >
             <i kbq-icon="kbq-magnifying-glass_16"></i>
         </button>
@@ -42,7 +42,7 @@ import { KbqFilterBar } from './filter-bar';
                 (keydown.escape)="onEscape()"
                 autocomplete="off"
                 kbqInput
-                placeholder="{{ filterBar.configuration.search.placeholder }}"
+                placeholder="{{ localeData.placeholder }}"
             />
 
             <kbq-cleaner (click)="onClear()" />
@@ -65,17 +65,27 @@ import { KbqFilterBar } from './filter-bar';
     }
 })
 export class KbqFilterBarSearch {
-    protected readonly filterBar = inject(KbqFilterBar);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    /** KbqFilterBar instance */
+    private readonly filterBar = inject(KbqFilterBar);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    @ViewChild(KbqInput) input: KbqInput;
-    @ViewChild(KbqButton) button: KbqButton;
-    @ViewChild(KbqTooltipTrigger) tooltip: KbqTooltipTrigger;
+    @ViewChild(KbqInput) private input: KbqInput;
+    @ViewChild(KbqButton) private button: KbqButton;
+    @ViewChild(KbqTooltipTrigger) private tooltip: KbqTooltipTrigger;
 
+    /** control for search */
     searchControl: UntypedFormControl = new UntypedFormControl();
 
+    /** Whether the search active */
     isSearchActive: boolean = false;
 
+    /** localized data
+     * @docs-private */
+    get localeData() {
+        return this.filterBar.configuration.search;
+    }
+
+    /** event that is generated whenever a user performs a search. */
     @Output() readonly onSearch = new EventEmitter<string>();
 
     constructor() {
@@ -90,12 +100,14 @@ export class KbqFilterBarSearch {
         setTimeout(() => this.input.focus());
     }
 
+    /** @docs-private */
     onBlur(): void {
         if (this.searchControl.value) return;
 
         this.onEscape();
     }
 
+    /** @docs-private */
     onEscape(): void {
         this.isSearchActive = false;
 
@@ -104,6 +116,7 @@ export class KbqFilterBarSearch {
         this.tooltip.hide();
     }
 
+    /** @docs-private */
     onClear() {
         this.isSearchActive = false;
 
@@ -114,6 +127,7 @@ export class KbqFilterBarSearch {
         });
     }
 
+    /** @docs-private */
     onReset = () => {
         this.changeDetectorRef.markForCheck();
     };

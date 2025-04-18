@@ -66,12 +66,16 @@ import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
     encapsulation: ViewEncapsulation.None
 })
 export class KbqPipeAdd {
+    /** KbqFilterBar instance */
     protected readonly filterBar = inject(KbqFilterBar);
 
+    /** @docs-private */
     @ViewChild(KbqSelect) select: KbqSelect;
 
+    /** Event that is generated after add pipe. */
     @Output() readonly onAddPipe = new EventEmitter<KbqPipeTemplate>();
 
+    /** template of filter */
     @Input() filterTemplate: KbqFilter = {
         name: '',
         pipes: [],
@@ -82,6 +86,7 @@ export class KbqPipeAdd {
         saved: false
     };
 
+    /** already added pipes. Used to open an already added pipe. */
     addedPipes: (string | number)[] = [];
 
     constructor() {
@@ -114,6 +119,11 @@ export class KbqPipeAdd {
         this.select.close();
     }
 
+    /**
+     * Function to compare the option values with the selected values. The first argument
+     * is a value from an option. The second is a value from the selection. A boolean
+     * should be returned.
+     */
     compareWith(o1: KbqPipe, o2: string): boolean {
         return (o1.id || o1.name) === o2;
     }

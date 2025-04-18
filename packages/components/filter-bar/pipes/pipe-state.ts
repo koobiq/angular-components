@@ -13,6 +13,7 @@ export class KbqPipeState<T> implements OnInit {
     private readonly button = inject(KbqButton);
     private readonly pipe = inject(KbqBasePipe);
 
+    /** calculates and updates styles of button from pipe state */
     @Input({ alias: 'kbqPipeState' })
     set state(pipe: T | null) {
         this._state = pipe;

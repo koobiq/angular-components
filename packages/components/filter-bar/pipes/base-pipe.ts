@@ -15,6 +15,7 @@ import { delay, filter } from 'rxjs/operators';
 import { KbqFilterBar } from '../filter-bar';
 import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
 
+/** Injection Token for providing configuration of filter-bar */
 export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
 
 @Directive({
@@ -29,27 +30,41 @@ export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
     }
 })
 export abstract class KbqBasePipe<V> implements AfterViewInit {
+    /** changes of state */
     readonly stateChanges = new Subject<void>();
+    /** pipe data. Provided from subclass */
     readonly data = inject<KbqPipeData<V>>(KBQ_PIPE_DATA);
 
+    /** KbqFilterBar instance
+     * @docs-private */
     protected readonly filterBar = inject(KbqFilterBar, { optional: true });
+    /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
+    /** values to select from the pipe template */
     protected values;
+    /** TemplateRef for selecting an option */
     protected valueTemplate?: TemplateRef<any> | string;
 
+    /** Whether the current platform is a Mac. */
     isMac = isMac();
 
+    /** Data for the pipe.
+     *  @docs-private */
     $implicit: unknown;
 
+    /** Whether the current pipe is empty. Used for apply style modifier */
     get isEmpty(): boolean {
         return this.data.value === null || this.data.value === undefined;
     }
 
+    /** Whether the current pipe is removable or cleanable. Used for apply style modifier */
     get showRemoveButton(): boolean {
         return !this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty));
     }
 
+    /** localized data
+     * @docs-private */
     get localeData() {
         return this.filterBar?.configuration;
     }
@@ -78,10 +93,12 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         });
     }
 
-    isTemplateRef(value): boolean {
+    /** templateRef checker utility */
+    isTemplateRef(value: unknown): boolean {
         return value instanceof TemplateRef;
     }
 
+    /** updates values for selection and value template */
     updateTemplates = (templates: KbqPipeTemplate[] | null) => {
         const template = templates?.find((template) => template.type === this.data?.type);
 
@@ -91,18 +108,21 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         }
     };
 
+    /** removes pipe from filter-bar and triggers changes */
     onRemove() {
         this.filterBar?.removePipe(this.data);
 
         this.stateChanges.next();
     }
 
+    /** clears the pipe and triggers changes */
     onClear() {
         this.data.value = null;
 
         this.stateChanges.next();
     }
 
+    /** @docs-private */
     abstract open(): void;
 }
 
@@ -114,14 +134,20 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     }
 })
 export class KbqPipeMinWidth {
+    /** KbqFilterBar instance */
     protected readonly filterBar = inject(KbqFilterBar, { optional: true });
 
+    /** @docs-private */
     protected readonly elementRef = inject(ElementRef);
+    /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    minWidth: string;
+    /** @docs-private */
+    protected minWidth: string;
+    /** maximal symbols for apply fit-content to min-width */
     maxSymbolsForFitContent: number = 20;
 
+    /** current length of text */
     get textLength(): number {
         return this.elementRef.nativeElement.innerText.length || 0;
     }
