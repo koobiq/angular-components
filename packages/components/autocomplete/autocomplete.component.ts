@@ -83,7 +83,7 @@ export class KbqAutocomplete implements AfterContentInit {
 
     @ViewChild(TemplateRef, { static: true }) template: TemplateRef<any>;
 
-    @ViewChild('panel', { static: false }) panel: ElementRef;
+    @ViewChild('panel', { static: false }) newPanel: ElementRef;
 
     @ContentChildren(KbqOption, { descendants: true }) options: QueryList<KbqOption>;
 
