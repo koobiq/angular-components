@@ -44,6 +44,7 @@ describe(KbqTabNavBar.name, () => {
         it('should change active index on click', () => {
             // select the second link
             let tabLink = fixture.debugElement.queryAll(By.css('a'))[1];
+
             tabLink.nativeElement.click();
             expect(component.activeIndex).toBe(1);
 
@@ -101,6 +102,7 @@ describe(KbqTabNavBar.name, () => {
     it('should support binding to the tabIndex', () => {
         const fixture = TestBed.createComponent(TabLinkWithTabIndexBinding);
         const component = fixture.componentInstance;
+
         fixture.detectChanges();
 
         const tabLink = fixture.debugElement.query(By.directive(KbqTabLink)).injector.get<KbqTabLink>(KbqTabLink);

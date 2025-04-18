@@ -90,6 +90,7 @@ export class ValidationCompositeExample {
 
         if (!regex.test(event.target.value)) {
             const newValue = event.target.value.replace(/[^\d\.]+/g, '');
+
             this.compositeFormGroup.controls[controlName].setValue(newValue);
 
             if (!tooltip.isOpen) {

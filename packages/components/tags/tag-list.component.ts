@@ -607,6 +607,7 @@ export class KbqTagList
         if (this.lastDestroyedTagIndex != null) {
             if (this.tags.length) {
                 const newTagIndex = Math.min(this.lastDestroyedTagIndex, this.tags.length - 1);
+
                 this.keyManager.setActiveItem(newTagIndex);
             } else {
                 this.focusInput();
@@ -712,6 +713,7 @@ export class KbqTagList
         } else {
             valueToEmit = this.selected ? this.selected.value : fallbackValue;
         }
+
         this._value = valueToEmit;
         this.change.emit(new KbqTagListChange(this, valueToEmit));
         this.valueChange.emit(valueToEmit);

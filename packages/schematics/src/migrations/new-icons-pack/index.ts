@@ -11,10 +11,13 @@ const data = newIconsPackData;
 
 export default function newIconsPack(options: Schema): Rule {
     let targetDir: Tree | DirEntry;
+
     return async (tree: Tree, context: SchematicContext) => {
         const { project, fix, stylesExt } = options;
+
         try {
             const projectDefinition = await setupOptions(project, tree);
+
             targetDir = projectDefinition ? tree.getDir(projectDefinition.root) : tree;
         } catch (e) {
             targetDir = tree;
@@ -28,14 +31,17 @@ export default function newIconsPack(options: Schema): Rule {
                 });
             } else {
                 const foundIcons = data.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
+
                 if (foundIcons.length) {
                     const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
+
                     logMessage(logger, [
                         `Please pay attention! Found deprecated icons in file: `,
                         parsedFilePath,
                         foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')]);
                 }
             }
+
             return newContent;
         };
 

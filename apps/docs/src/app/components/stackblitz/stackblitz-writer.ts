@@ -88,6 +88,7 @@ export class StackblitzWriter {
             fileContent = fileContent.replace(/\${startCommand}/, 'npm start');
         } else if (fileName === 'src/main.ts') {
             const mainComponentName = data.componentNames[0];
+
             // Replace the component name in `main.ts`.
             // Replace `import {KoobiqDocsExample} from 'koobiq-docs-example'`
             // will be replaced as `import {ButtonDemo} from './button-demo'`

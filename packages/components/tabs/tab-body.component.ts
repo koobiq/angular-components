@@ -131,6 +131,7 @@ export class KbqTabBody implements OnInit, OnDestroy {
 
     onTranslateTabStarted(e: AnimationEvent): void {
         const isCentering = this.isCenterPosition(e.toState);
+
         this.beforeCentering.emit(isCentering);
 
         if (isCentering) {

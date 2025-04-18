@@ -159,6 +159,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
             const examplePortal: ComponentPortal<any> = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
+
             // todo проверить, что достается из атрибута ?
             (exampleViewer.instance as DocsLiveExampleViewerComponent).example = element.getAttribute(componentName);
 
@@ -171,6 +172,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
         this.nativeElement.querySelectorAll(`.${markDownClass}`).forEach((element: Element) => {
             const { outerHTML, textContent } = element;
+
             element.innerHTML = '';
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
@@ -185,11 +187,14 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
     private initCodeSnippets() {
         const selector = 'kbq-code-snippet';
+
         this.nativeElement.querySelectorAll(`[${selector}]`).forEach((element: Element) => {
             const { innerHTML, textContent } = element;
+
             element.innerHTML = '';
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
+
             this.codeSnippetTemplate.attach(portalHost, { $implicit: innerHTML, textContent });
             this.portalHosts.push(portalHost);
         });

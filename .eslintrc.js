@@ -30,6 +30,9 @@ const config = {
                 'eslint:recommended',
                 'plugin:promise/recommended'
             ],
+            plugins: [
+                '@stylistic'
+            ],
             rules: {
                 // plugin:eslint
                 'no-useless-escape': 0,
@@ -38,7 +41,30 @@ const config = {
 
                 // plugin:promise
                 'promise/catch-or-return': 0,
-                'promise/always-return': 0
+                'promise/always-return': 0,
+
+                // @stylistic
+                '@stylistic/padding-line-between-statements': [
+                    1,
+                    { blankLine: 'always', next: 'block', prev: '*' },
+                    { blankLine: 'always', next: '*', prev: 'block' },
+                    { blankLine: 'always', next: 'block-like', prev: '*' },
+                    { blankLine: 'always', next: '*', prev: 'block-like' },
+                    { blankLine: 'always', next: 'return', prev: '*' },
+                    { blankLine: 'always', next: '*', prev: 'directive' },
+                    { blankLine: 'always', next: ['interface', 'type'], prev: '*' },
+                    { blankLine: 'always', next: '*', prev: ['const', 'let', 'var'] },
+                    { blankLine: 'always', next: 'class', prev: '*' },
+                    { blankLine: 'always', next: '*', prev: 'class' },
+                    {
+                        blankLine: 'any',
+                        next: ['const', 'let', 'var', 'export'],
+                        prev: ['const', 'let', 'var', 'export']
+                    },
+                    { blankLine: 'any', next: ['case', 'default'], prev: '*' },
+                    { blankLine: 'any', next: '*', prev: ['case', 'default'] },
+                    { blankLine: 'any', next: 'directive', prev: 'directive' }
+                ]
             }
         },
         {

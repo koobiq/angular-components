@@ -102,6 +102,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
     private createMutationObserver(): Observable<MutationRecord[]> {
         return new Observable((observer) => {
             const mutationObserver = new MutationObserver((mutations) => observer.next(mutations));
+
             mutationObserver.observe(this.parent, {
                 characterData: true,
                 attributes: false,

@@ -18,6 +18,7 @@ describe(`ng add '@koobiq/components'`, () => {
     it(`should add missing dependencies to 'package.json'`, async () => {
         expect(getPackageJsonDependencies(appTree)).toMatchSnapshot('before running schematics');
         const tree = await runner.runSchematic('ng-add', {}, appTree);
+
         expect(getPackageJsonDependencies(tree)).toMatchSnapshot('after running schematics');
     });
 

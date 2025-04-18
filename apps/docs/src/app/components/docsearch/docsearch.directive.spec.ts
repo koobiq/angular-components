@@ -12,7 +12,9 @@ class TestApp {}
 const render = (): ComponentFixture<TestApp> => {
     TestBed.configureTestingModule({ imports: [TestApp] }).compileComponents();
     const fixture = TestBed.createComponent(TestApp);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 

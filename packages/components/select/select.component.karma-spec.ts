@@ -42,7 +42,9 @@ const createComponent = <T>(
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
     const fixture = TestBed.createComponent<T>(component);
     const overlayContainer = TestBed.inject(OverlayContainer);
+
     fixture.autoDetectChanges();
+
     return { fixture, overlayContainer };
 };
 
@@ -584,6 +586,7 @@ describe(KbqSelect.name, () => {
 
             it('should set the width of the overlay based on the trigger', fakeAsync(() => {
                 const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
+
                 trigger.style.width = '200px';
                 triggerParent.style.width = trigger.style.width;
                 fixture.detectChanges();
@@ -593,6 +596,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
                 expect(pane.style.minWidth).toBe('200px');
             }));
         });
@@ -600,6 +604,7 @@ describe(KbqSelect.name, () => {
         describe('disabled behavior', () => {
             it('should disable itself when control is disabled programmatically', fakeAsync(() => {
                 const fixture = TestBed.createComponent(BasicSelect);
+
                 fixture.detectChanges();
 
                 fixture.componentInstance.control.disable();
@@ -712,6 +717,7 @@ describe(KbqSelect.name, () => {
                 for (let i = 0; i < 5; i++) {
                     dispatchKeyboardEvent(host, 'keydown', DOWN_ARROW);
                 }
+
                 flush();
 
                 // Note that we press down 5 times, but it will skip
@@ -756,6 +762,7 @@ describe(KbqSelect.name, () => {
                     fixture.detectChanges();
                     tick(LETTER_KEY_DEBOUNCE_INTERVAL);
                 }
+
                 flush();
 
                 expect(panel.scrollTop).withContext('Expected scroll to be at the 16th option.').toBe(336);
@@ -768,6 +775,7 @@ describe(KbqSelect.name, () => {
 
         it('should disable itself when control is disabled using the property', fakeAsync(() => {
             const fixture = TestBed.createComponent(NgModelSelect);
+
             fixture.detectChanges();
 
             fixture.componentInstance.isDisabled = true;
@@ -776,6 +784,7 @@ describe(KbqSelect.name, () => {
 
             fixture.detectChanges();
             const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
+
             expect(getComputedStyle(trigger).getPropertyValue('cursor'))
                 .withContext(`Expected cursor to be default arrow on disabled control.`)
                 .toEqual('default');
@@ -819,6 +828,7 @@ describe(KbqSelect.name, () => {
 
         it('should handle nesting in an ngIf', fakeAsync(() => {
             const fixture = TestBed.createComponent(NgIfSelect);
+
             fixture.detectChanges();
 
             fixture.componentInstance.isShowing = true;
@@ -826,6 +836,7 @@ describe(KbqSelect.name, () => {
 
             const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
             const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
+
             trigger.style.width = '300px';
             triggerParent.style.width = trigger.style.width;
             fixture.detectChanges();
@@ -835,11 +846,13 @@ describe(KbqSelect.name, () => {
             flush();
 
             const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
             expect(value.nativeElement.textContent)
                 .withContext(`Expected trigger to be populated by the control's initial value.`)
                 .toContain('Pizza');
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
             expect(pane.style.minWidth).toEqual('300px');
 
             expect(fixture.componentInstance.select.panelOpen).toBe(true);
@@ -854,6 +867,7 @@ describe(KbqSelect.name, () => {
 
         it('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
+
             fixture.detectChanges();
             const trigger = getSelectTriggerDebugElement(fixture).nativeElement;
             const triggerParent = getFormFieldDebugElement(fixture).nativeElement;
@@ -868,6 +882,7 @@ describe(KbqSelect.name, () => {
             flush();
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
             expect(pane.style.minWidth).toBe('200px');
         }));
     });
@@ -886,6 +901,7 @@ describe(KbqSelect.name, () => {
             flush();
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
             expect(parseInt(pane.style.minWidth as string)).toBeGreaterThan(0);
         }));
     });
@@ -941,6 +957,7 @@ describe(KbqSelect.name, () => {
             fixture.autoDetectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             dispatchMouseEvent(options[1], 'mouseenter');
             fixture.autoDetectChanges();
 
@@ -951,6 +968,7 @@ describe(KbqSelect.name, () => {
             discardPeriodicTasks();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
+
             expect(tooltips.length).toEqual(1);
             expect(tooltips[0].textContent).toEqual(options[1].textContent!.trim());
             flush();
@@ -1004,6 +1022,7 @@ describe(KbqSelect.name, () => {
                     tick();
                 }
             }
+
             fixture.autoDetectChanges();
             flush();
 
@@ -1020,6 +1039,7 @@ describe(KbqSelect.name, () => {
     it('should set panel width same as trigger by panelWidth attribute', () => {
         const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.panelWidth = 'auto';
         fixture.detectChanges();
         getSelectDebugElement(debugElement).nativeElement.click();
@@ -1031,6 +1051,7 @@ describe(KbqSelect.name, () => {
     it('should set custom panel width by panelWidth attribute', () => {
         const { fixture, overlayContainer } = createComponent(SelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.panelWidth = 344;
         fixture.detectChanges();
         getSelectDebugElement(debugElement).nativeElement.click();
@@ -1042,6 +1063,7 @@ describe(KbqSelect.name, () => {
         const { fixture, overlayContainer } = createComponent(BaseSelect, [
             kbqSelectOptionsProvider({ panelWidth: 537 })
         ]);
+
         fixture.detectChanges();
         getSelectDebugElement(fixture.debugElement).nativeElement.click();
         fixture.detectChanges();
@@ -1053,6 +1075,7 @@ describe(KbqSelect.name, () => {
             kbqSelectOptionsProvider({ panelWidth: 222 })
         ]);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.panelWidth = 537;
         fixture.detectChanges();
         getSelectDebugElement(debugElement).nativeElement.click();

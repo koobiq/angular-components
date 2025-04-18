@@ -29,6 +29,7 @@ async function sendNotification(url: string, body: object): Promise<void> {
     console.info(cyan('POST notification:', { url, headers, body: JSON.stringify(body) }));
 
     const response = await fetch(url, requestOptions);
+
     if (!response.ok) {
         throw new Error(`Failed to post notification: ${response.status} ${response.statusText}`);
     }
@@ -39,6 +40,7 @@ function logNotificationResult(success: boolean, error?: Error): void {
         console.info(green(`  ✓   Notification is posted in Mattermost.`));
     } else {
         console.error(red(`  ✘   Could not post notification in Mattermost.`));
+
         if (error) {
             console.error(error.message);
         }
@@ -54,8 +56,10 @@ export async function notify(releaseData: any): Promise<void> {
     console.log(green('Start MM notification'));
 
     const config = getMattermostConfig();
+
     if (!config) {
         console.error(red(`  ✘   MATTERMOST_ENDPOINT_URL or MATTERMOST_CHANNEL not found.`));
+
         return;
     }
 

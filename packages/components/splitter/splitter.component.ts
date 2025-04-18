@@ -298,6 +298,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     set gutterSize(gutterSize: number) {
         const size = coerceNumberProperty(gutterSize);
+
         this._gutterSize = size > 0 ? size : this.gutterSize;
     }
 
@@ -362,6 +363,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
         if (this.useGhost) {
             const gutterOrder = leftAreaIndex * 2 + 1;
+
             currentGutter = this.gutters.find((gutter: KbqGutterDirective) => gutter.order === gutterOrder);
 
             if (currentGutter) {
@@ -428,6 +430,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 
     private mapAndOrderArea = (area: KbqSplitterAreaDirective, index: number): IArea => {
         const order = index * this.areaPositionDivider;
+
         area.setOrder(order);
 
         return {
@@ -521,10 +524,12 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
                 this.ghost.direction === Direction.Vertical
                     ? gutterPosition.y - this.ghost.y
                     : gutterPosition.x - this.ghost.x;
+
             this.resizeAreas(leftArea, rightArea, offset);
             this.ghost.visible = false;
             this.setStyle(StyleProperty.Cursor, 'unset');
         }
+
         this._isDragging = false;
 
         this.updateGutter();

@@ -30,7 +30,9 @@ export class KbqLineSetter {
     private setLineClass(count: number): void {
         const minLineClassNumber = 2;
         const maxLineClassNumber = 3;
+
         this.resetClasses();
+
         if (count === minLineClassNumber || count === maxLineClassNumber) {
             this.setClass(`kbq-${count}-line`, true);
         } else if (count > maxLineClassNumber) {

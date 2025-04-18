@@ -83,6 +83,7 @@ describe('Tags', () => {
 
             it('emits focus only once for multiple clicks', () => {
                 let counter = 0;
+
                 tagInstance.onFocus.subscribe(() => {
                     counter++;
                 });
@@ -116,6 +117,7 @@ describe('Tags', () => {
 
             it('allows selection', () => {
                 const tagSelectionChangeSpyFn = jest.spyOn(testComponent, 'tagSelectionChange');
+
                 expect(tagNativeElement.classList).not.toContain('kbq-selected');
 
                 testComponent.selected = true;
@@ -140,6 +142,7 @@ describe('Tags', () => {
 
             it('should not prevent the default click action', () => {
                 const event = dispatchFakeEvent(tagNativeElement, 'click');
+
                 fixture.detectChanges();
 
                 expect(event.defaultPrevented).toBe(false);
@@ -150,6 +153,7 @@ describe('Tags', () => {
                 fixture.detectChanges();
 
                 const event = dispatchFakeEvent(tagNativeElement, 'mousedown');
+
                 fixture.detectChanges();
 
                 expect(event.defaultPrevented).toBe(true);

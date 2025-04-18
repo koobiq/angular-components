@@ -269,6 +269,7 @@ describe('KbqCheckbox', () => {
 
         it('should project the checkbox content into the label element', () => {
             const label = <HTMLLabelElement>checkboxNativeElement.querySelector('.kbq-checkbox-label');
+
             expect(label.textContent!.trim()).toBe('Simple checkbox');
         });
 
@@ -608,6 +609,7 @@ describe('KbqCheckbox', () => {
         it('should toggle checkbox disabledness correctly', () => {
             const checkboxInstance = checkboxDebugElement.componentInstance;
             const inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');
+
             expect(checkboxInstance.disabled).toBe(false);
             expect(checkboxNativeElement.classList).not.toContain('kbq-disabled');
             expect(inputElement.tabIndex).toBe(0);
@@ -703,6 +705,7 @@ describe('KbqCheckbox', () => {
 
             const checkboxDebugElement = fixture.debugElement.query(By.directive(KbqCheckbox));
             const checkboxNativeElement = checkboxDebugElement.nativeElement;
+
             testComponent = fixture.debugElement.componentInstance;
             checkboxInstance = checkboxDebugElement.componentInstance;
             inputElement = <HTMLInputElement>checkboxNativeElement.querySelector('input');

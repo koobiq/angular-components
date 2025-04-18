@@ -90,17 +90,21 @@ xdescribe('Forms', () => {
     describe('Horizontal', () => {
         it('kbq-form__row should contain classes', () => {
             const fixture = TestBed.createComponent(HorizontalForm);
+
             fixture.detectChanges();
 
             const elements = fixture.debugElement.queryAll(By.directive(KbqFormElement));
 
             const firstRow = elements[0].nativeElement;
+
             expect(firstRow.classList).toContain(classWithMargin);
 
             const secondRow = elements[1].nativeElement;
+
             expect(secondRow.classList).toContain(classWithMargin);
 
             const lastRow = elements[2].nativeElement;
+
             expect(lastRow.classList).not.toContain(classWithMargin);
         });
     });
@@ -108,17 +112,21 @@ xdescribe('Forms', () => {
     describe('Vertical', () => {
         it('kbq-form__row should contain classes', () => {
             const fixture = TestBed.createComponent(VerticalForm);
+
             fixture.detectChanges();
 
             const elements = fixture.debugElement.queryAll(By.directive(KbqFormElement));
 
             const firstRow = elements[0].nativeElement;
+
             expect(firstRow.classList).toContain(classWithMargin);
 
             const secondRow = elements[1].nativeElement;
+
             expect(secondRow.classList).toContain(classWithMargin);
 
             const lastRow = elements[2].nativeElement;
+
             expect(lastRow.classList).not.toContain(classWithMargin);
         });
     });

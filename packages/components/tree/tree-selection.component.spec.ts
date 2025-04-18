@@ -50,6 +50,7 @@ describe('KbqTreeSelection', () => {
                             useFactory: () => ({
                                 copy: (value) => {
                                     const originalClipboard = new Clipboard(document);
+
                                     originalClipboard.copy(value);
                                     clipboardContent = value;
                                 }
@@ -104,16 +105,19 @@ describe('KbqTreeSelection', () => {
             it('should copy selected option - default handler', fakeAsync(() => {
                 const nodes = getNodes(treeElement);
                 const event = createMouseEvent('click');
+
                 dispatchEvent(nodes[2], event);
                 fixture.detectChanges();
 
                 const treeOptions = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
 
                 const manager = component.tree.keyManager;
+
                 manager.setActiveItem(2);
                 expect(manager.activeItemIndex).toBe(2);
 
                 const copyKeyEvent = createKeyboardEvent('keydown', C);
+
                 Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
 
                 component.tree.onKeyDown(copyKeyEvent);
@@ -138,6 +142,7 @@ describe('KbqTreeSelection', () => {
                     expect(treeOptions[2].componentInstance.hasFocus).toBeTruthy();
 
                     const copyKeyEvent = createKeyboardEvent('keydown', C);
+
                     Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
                     component.tree.onKeyDown(copyKeyEvent);
                     fixture.detectChanges();
@@ -181,6 +186,7 @@ describe('KbqTreeSelection', () => {
             it('should add focus class on first selected element', fakeAsync(() => {
                 options = fixture.debugElement.queryAll(By.directive(KbqTreeOption));
                 const selectedOption = options[1];
+
                 selectedOption.componentInstance.toggle();
                 tick();
                 fixture.detectChanges();
@@ -289,6 +295,7 @@ describe('KbqTreeSelection', () => {
             it('should restore expanded items after filter', fakeAsync(() => {
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
+
                 expect(nodes.length).toBe(initialNodesCount);
 
                 (nodes[1].querySelectorAll('kbq-tree-node-toggle')[0] as HTMLElement).click();
@@ -297,6 +304,7 @@ describe('KbqTreeSelection', () => {
                 nodes = getNodes(treeElement);
 
                 const expandedNodesCountBeforeFilter = 8;
+
                 expect(nodes.length).toBe(expandedNodesCountBeforeFilter);
 
                 component.treeControl.filterNodes('app');
@@ -338,6 +346,7 @@ describe('KbqTreeSelection', () => {
                     const nodes = getNodes(treeElement);
 
                     const event = createMouseEvent('click');
+
                     Object.defineProperty(event, 'ctrlKey', { get: () => true });
 
                     dispatchEvent(nodes[0], event);
@@ -359,6 +368,7 @@ describe('KbqTreeSelection', () => {
                     const nodes = getNodes(treeElement);
 
                     const event = createMouseEvent('click');
+
                     Object.defineProperty(event, 'ctrlKey', { get: () => true });
 
                     dispatchEvent(nodes[0], event);
@@ -381,6 +391,7 @@ describe('KbqTreeSelection', () => {
                         const nodes = getNodes(treeElement);
 
                         const ctrlKeyEvent = createMouseEvent('click');
+
                         Object.defineProperty(ctrlKeyEvent, 'ctrlKey', { get: () => true });
 
                         dispatchEvent(nodes[0], ctrlKeyEvent);
@@ -392,6 +403,7 @@ describe('KbqTreeSelection', () => {
                         expect(component.modelValue.length).toBe(2);
 
                         const event = createMouseEvent('click');
+
                         Object.defineProperty(event, 'ctrlKey', { get: () => false });
 
                         dispatchEvent(nodes[2], event);
@@ -403,6 +415,7 @@ describe('KbqTreeSelection', () => {
                         const nodes = getNodes(treeElement);
 
                         const ctrlKeyEvent = createMouseEvent('click');
+
                         Object.defineProperty(ctrlKeyEvent, 'ctrlKey', { get: () => true });
 
                         dispatchEvent(nodes[0], ctrlKeyEvent);
@@ -414,6 +427,7 @@ describe('KbqTreeSelection', () => {
                         expect(component.modelValue.length).toBe(2);
 
                         const event = createMouseEvent('click');
+
                         Object.defineProperty(event, 'ctrlKey', { get: () => false });
 
                         dispatchEvent(nodes[3], event);
@@ -479,6 +493,7 @@ describe('KbqTreeSelection', () => {
                         const targetNode: HTMLElement = nodes[0] as HTMLElement;
 
                         const event = createMouseEvent('click');
+
                         Object.defineProperty(event, 'shiftKey', { get: () => true });
 
                         component.tree.keyManager.setActiveItem(0);
@@ -536,6 +551,7 @@ describe('KbqTreeSelection', () => {
 
             it('should filter nodes by condition', fakeAsync(() => {
                 let nodes = getNodes(treeElement);
+
                 expect(nodes.length).toBe(5);
 
                 component.treeControl.filterNodes('app');
@@ -557,6 +573,7 @@ describe('KbqTreeSelection', () => {
 
             it('should filter nodes and but not their parents', fakeAsync(() => {
                 let nodes = getNodes(treeElement);
+
                 expect(nodes.length).toBe(5);
 
                 component.treeControl.filterNodes('Sun');
@@ -564,9 +581,11 @@ describe('KbqTreeSelection', () => {
                 nodes = getNodes(treeElement);
 
                 const parentOfFoundedNode = nodes[0].textContent!.trim();
+
                 expect(parentOfFoundedNode).toBe('Pictures');
 
                 const foundedNode = nodes[1].textContent!.trim();
+
                 expect(foundedNode).toBe('Sun');
 
                 expect(nodes.length).toBe(2);
@@ -575,6 +594,7 @@ describe('KbqTreeSelection', () => {
             it('should delete filtration with empty condition', fakeAsync(() => {
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
+
                 expect(nodes.length).toBe(initialNodesCount);
 
                 component.treeControl.filterNodes('app');
@@ -607,12 +627,14 @@ describe('KbqTreeSelection', () => {
             it('should filter selected nodes by 1 level by click', fakeAsync(() => {
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
+
                 expect(nodes.length).toBe(initialNodesCount);
                 component.modelValue = [];
                 fixture.detectChanges();
                 tick();
 
                 const selectedNodes = nodes.slice(0, 2);
+
                 selectedNodes.forEach((node) => dispatchFakeEvent(node, 'click'));
                 fixture.detectChanges();
                 flush();
@@ -627,6 +649,7 @@ describe('KbqTreeSelection', () => {
             it('should filter NOT selected nodes by 1 level by click', fakeAsync(() => {
                 const initialNodesCount = 5;
                 let nodes = getNodes(treeElement);
+
                 expect(nodes.length).toBe(initialNodesCount);
 
                 component.modelValue = [];
@@ -634,6 +657,7 @@ describe('KbqTreeSelection', () => {
                 tick();
 
                 const selectedNodes = nodes.slice(0, 2);
+
                 selectedNodes.forEach((node) => dispatchFakeEvent(node, 'click'));
                 fixture.detectChanges();
                 flush();
@@ -641,6 +665,7 @@ describe('KbqTreeSelection', () => {
                 const values = component.treeControl.dataNodes
                     .filter((node) => !component.modelValue.includes(component.treeControl.getValue(node)))
                     .map((node) => component.treeControl.getValue(node));
+
                 component.filterByValues.setValues(values);
 
                 component.treeControl.filterNodes(null);

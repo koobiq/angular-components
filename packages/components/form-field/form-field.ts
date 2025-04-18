@@ -240,6 +240,7 @@ export class KbqFormField
         if (this.control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
             (this.control as unknown as { toggleType(): void }).toggleType();
         }
+
         if (this.canCleanerClearByEsc && event.keyCode === ESCAPE && this.control.focused && this.hasCleaner) {
             this.control?.ngControl?.reset();
 

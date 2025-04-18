@@ -1012,6 +1012,7 @@ export class DemoComponent {
         const start = now.set({ day: 10, hour: 10, minute: 0, second: 0, millisecond: 0 });
 
         let end = now.set({ day: 10, hour: 10, minute: 0, second: 25 });
+
         durationNumbers.withSeconds.seconds = this.formatter.durationShortest(start, end);
         durationNumbers.onlyMinutes.seconds = this.formatter.durationShortest(start, end, false);
 

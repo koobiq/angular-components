@@ -29,6 +29,7 @@ describe('KbqLoaderOverlay', () => {
 
     it('should be transparent by default', () => {
         const fixture = TestBed.createComponent(OverlayWithParams);
+
         fixture.detectChanges();
 
         expect(fixture.componentInstance.overlay.transparent).toBeTruthy();
@@ -36,6 +37,7 @@ describe('KbqLoaderOverlay', () => {
 
     it('should render params', () => {
         const fixture = TestBed.createComponent(OverlayWithParams);
+
         fixture.detectChanges();
 
         const indicatorElement = fixture.debugElement.query(By.css('kbq-progress-spinner'));
@@ -49,6 +51,7 @@ describe('KbqLoaderOverlay', () => {
 
     it('should render only spinner with modifier', () => {
         const fixture = TestBed.createComponent(OverlayNoParams);
+
         fixture.detectChanges();
 
         const indicatorElement = fixture.debugElement.query(By.css('kbq-progress-spinner'));
@@ -64,6 +67,7 @@ describe('KbqLoaderOverlay', () => {
 
     it('should render external params', () => {
         const fixture = TestBed.createComponent(OverlayWithExternalParams);
+
         fixture.detectChanges();
 
         const indicatorElement = fixture.debugElement.query(By.directive(KbqLoaderOverlayIndicator));
@@ -77,6 +81,7 @@ describe('KbqLoaderOverlay', () => {
 
     it('should assign default css classes including size-related css-class', () => {
         const fixture = TestBed.createComponent(OverlayWithParams);
+
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.directive(KbqLoaderOverlay)).classes).toMatchSnapshot();

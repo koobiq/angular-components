@@ -9,7 +9,9 @@ import { KbqToggleComponent, KbqToggleModule } from './index';
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -121,6 +123,7 @@ describe('KbqToggle', () => {
 
         it('should project the toggle content into the label element', () => {
             const label = <HTMLLabelElement>toggleNativeElement.querySelector('.kbq-toggle-label');
+
             expect(label.textContent!.trim()).toBe('Simple toggle');
         });
 
@@ -325,6 +328,7 @@ describe('KbqToggle', () => {
         it('should toggle disabledness correctly', () => {
             const toggleInstance = toggleDebugElement.componentInstance;
             const inputElement = <HTMLInputElement>toggleNativeElement.querySelector('input');
+
             expect(toggleInstance.disabled).toBe(false);
             expect(toggleNativeElement.classList).not.toContain('kbq-disabled');
             expect(inputElement.tabIndex).toBe(0);
@@ -485,11 +489,13 @@ describe('KbqToggle', () => {
     describe('with indeterminate state', () => {
         it('should not have kbq-indeterminate class initially', () => {
             const { debugElement } = createComponent(SingleToggle);
+
             expect(debugElement.query(By.directive(KbqToggleComponent)).classes['kbq-indeterminate']).toBeUndefined();
         });
 
         it('should add kbq-indeterminate class when indeterminate is true', () => {
             const fixture = createComponent(SingleToggle);
+
             fixture.componentInstance.indeterminate = true;
             fixture.detectChanges();
 
@@ -501,6 +507,7 @@ describe('KbqToggle', () => {
         it('should change aria-checked attr on inner input when indeterminate is true', () => {
             const fixture = createComponent(SingleToggle);
             const innerInput = fixture.debugElement.query(By.css('.kbq-toggle-input'));
+
             expect(innerInput.attributes['aria-checked']).toBe('false' satisfies KbqCheckedState);
             fixture.componentInstance.indeterminate = true;
             fixture.detectChanges();
@@ -511,6 +518,7 @@ describe('KbqToggle', () => {
         it('should change from indeterminate to checked on input click', async () => {
             const fixture = createComponent(SingleToggle);
             const innerInput: DebugElement = fixture.debugElement.query(By.css('.kbq-toggle-input'));
+
             fixture.componentInstance.indeterminate = true;
             fixture.detectChanges();
             expect(innerInput.attributes['aria-checked']).toBe('mixed' satisfies KbqCheckedState);

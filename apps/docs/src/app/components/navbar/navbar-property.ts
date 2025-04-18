@@ -39,6 +39,7 @@ export class NavbarProperty {
         const index =
             parseInt(localStorage.getItem(this.parameters.property) || '') ||
             this.data.findIndex((item) => item.selected);
+
         this.setValue(index >= 0 ? index : 0);
     }
 

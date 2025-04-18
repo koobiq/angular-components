@@ -242,6 +242,7 @@ export class KbqModalComponent<T = any, R = any>
 
         // Place the modal dom to elsewhere
         this.container = typeof this.kbqGetContainer === 'function' ? this.kbqGetContainer() : this.kbqGetContainer;
+
         if (this.container instanceof HTMLElement) {
             this.container.appendChild(this.elementRef.nativeElement);
         } else if (this.container instanceof OverlayRef) {
@@ -270,6 +271,7 @@ export class KbqModalComponent<T = any, R = any>
         if (this.contentComponentRef) {
             this.bodyContainer.insert(this.contentComponentRef.hostView);
         }
+
         this.getElement().getElementsByTagName('button')[0]?.focus();
 
         (this.getElement().querySelector('button[autofocus]') as HTMLButtonElement)?.focus();
@@ -379,6 +381,7 @@ export class KbqModalComponent<T = any, R = any>
             this.close();
             event.preventDefault();
         }
+
         if (event.ctrlKey && event.keyCode === ENTER) {
             if (this.kbqModalType === 'confirm') {
                 this.triggerOk();
@@ -417,10 +420,12 @@ export class KbqModalComponent<T = any, R = any>
 
             if (isPromise(result)) {
                 this[loadingKey] = true;
+
                 const handleThen = (doClose) => {
                     this[loadingKey] = false;
                     caseClose(doClose);
                 };
+
                 (result as Promise<void>).then(handleThen).catch(handleThen);
             } else {
                 caseClose(result);
@@ -458,6 +463,7 @@ export class KbqModalComponent<T = any, R = any>
     getButtonCallableProp(options: IModalButtonOptions<T>, prop: string): {} {
         const value = options[prop];
         const args: any[] = [];
+
         if (this.contentComponentRef) {
             args.push(this.contentComponentRef.instance);
         }
@@ -470,6 +476,7 @@ export class KbqModalComponent<T = any, R = any>
     onButtonClick(button: IModalButtonOptions<T>) {
         // Call onClick directly
         const result = this.getButtonCallableProp(button, 'onClick');
+
         if (isPromise(result)) {
             button.loading = true;
             // eslint-disable-next-line @typescript-eslint/ban-types
@@ -514,6 +521,7 @@ export class KbqModalComponent<T = any, R = any>
 
     private changeAnimationState(state: AnimationState) {
         this.animationState = state;
+
         if (state) {
             this.maskAnimationClassMap = {
                 [`fade-${state}`]: true,

@@ -170,6 +170,7 @@ function createChangelogWriterOptions(changelogPath: string, presetWriterOptions
                     if (typeof commit.subject === 'string') {
                         if (context.packageData.bugs.url) {
                             const urlIssue = `${context.packageData.bugs.url}/issue/`;
+
                             commit.subject = commit.subject.replace(/#([a-zA-Z]+-[0-9]+)/g, (_: any, issue: any) => {
                                 return `[#${issue}](${urlIssue}${issue})`;
                             });

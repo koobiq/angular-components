@@ -201,6 +201,7 @@ export class StageReleaseCommitTask extends BaseReleaseTask {
     /** Updates the version of the project package.json and writes the changes to disk. */
     private updatePackageJsonVersion(newVersionName: string) {
         const newPackageJson = { ...this.packageJson, version: newVersionName };
+
         writeFileSync(this.packageJsonPath, `${JSON.stringify(newPackageJson, null, this.tabSpaces)}\n`);
     }
 

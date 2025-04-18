@@ -249,6 +249,7 @@ export class KbqActionsPanelContainer extends CdkDialogContainer implements OnDe
 
     private applyContainerClass(): void {
         const { containerClass } = this.config;
+
         if (containerClass) {
             if (Array.isArray(containerClass)) {
                 containerClass.forEach((cssClass) => this.renderer.addClass(this._elementRef.nativeElement, cssClass));

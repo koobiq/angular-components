@@ -183,6 +183,7 @@ export class TreeSelectDev implements OnInit {
         if (!$event.value?.length) return;
 
         const option: KbqTreeOption = $event.value;
+
         console.log(`onSelectionChange: ${$event.value}`);
 
         if (option.isExpandable) {

@@ -77,6 +77,7 @@ export class DocsFooterComponent extends DocsLocaleState {
         const index = this.docsLanguageSwitch.data.findIndex(
             (item) => item.id === this.docsLocaleService.getLocaleFromURL(this.location.path())
         );
+
         if (index >= 0) {
             this.docsLanguageSwitch.setValue(index);
         }

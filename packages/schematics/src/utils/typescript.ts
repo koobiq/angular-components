@@ -45,6 +45,7 @@ export function forEachClass(sourceFile: ts.SourceFile, callback: (node: ts.Clas
         if (ts.isClassDeclaration(node)) {
             callback(node);
         }
+
         node.forEachChild(walk);
     });
 }
@@ -71,6 +72,7 @@ export function updateDecoratorProperty(decorator: ts.Decorator, propertyName: s
                         ts.factory.createNoSubstitutionTemplateLiteral(newValue, newValue)
                     );
                 }
+
                 return prop;
             });
 
@@ -85,6 +87,7 @@ export function updateDecoratorProperty(decorator: ts.Decorator, propertyName: s
             return ts.factory.updateDecorator(decorator, newCall);
         }
     }
+
     return decorator;
 }
 
@@ -123,11 +126,13 @@ export class ElementCollector implements Visitor {
         if (el.name === this.migrationData.elementName && el.attrs.length > 0) {
             for (const attr of el.attrs) {
                 const cleanAttrName = getSimpleAttributeName(attr.name);
+
                 if (cleanAttrName === this.migrationData.attrs.key.from) {
                     this.elementsToMigrate.push(el);
                 }
             }
         }
+
         this.visitChildren(el);
     }
 
@@ -175,6 +180,7 @@ export class AnalyzedFile {
             .slice()
             .filter((x) => x.type === 'template' || x.type === 'templateUrl')
             .sort((aStart, bStart) => bStart.start - aStart.start);
+
         return this.templateRanges;
     }
 
@@ -231,8 +237,10 @@ export async function parseTemplate(template: string): Promise<ParseTemplateResu
         // Don't migrate invalid templates.
         if (parsed.errors && parsed.errors.length > 0) {
             const errors = parsed.errors.map((e) => ({ type: 'parse', error: e }));
+
             return { tree: undefined, errors };
         }
+
         return { tree: parsed, errors: [] };
     } catch (e: any) {
         return { tree: undefined, errors: [{ type: 'parse', error: e }] };

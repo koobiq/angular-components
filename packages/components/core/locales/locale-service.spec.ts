@@ -13,6 +13,7 @@ describe('KbqLocaleService', () => {
 
     it('should change the lang attribute of the html element', () => {
         const locale = 'ru-RU';
+
         service.setLocale(locale);
         expect(document.documentElement.lang).toBe(locale);
     });

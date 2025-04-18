@@ -287,6 +287,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
             const changeSpy = jest.fn();
+
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
             buttonToggleLabelElements[0].click();
@@ -306,6 +307,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(groupInstance.value).toBeFalsy();
 
             const changeSpy = jest.fn();
+
             groupInstance.change.subscribe(changeSpy);
 
             buttonToggleLabelElements[0].click();
@@ -491,6 +493,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstances[0].checked).toBe(false);
 
             const changeSpy = jest.fn();
+
             buttonToggleInstances[0].change.subscribe(changeSpy);
 
             buttonToggleButtonElements[0].click();
@@ -551,6 +554,7 @@ describe('KbqButtonToggle without forms', () => {
             expect(buttonToggleInstance.checked).toBe(false);
 
             const changeSpy = jest.fn();
+
             buttonToggleInstance.change.subscribe(changeSpy);
 
             buttonToggleButtonElement.click();
@@ -578,6 +582,7 @@ describe('KbqButtonToggle without forms', () => {
 
     it('should maintain the selected state when the value and toggles are swapped out at the same time', () => {
         const fixture = TestBed.createComponent(RepeatedButtonTogglesWithPreselectedValue);
+
         fixture.detectChanges();
 
         expect(fixture.componentInstance.toggleGroup.value).toBe('Two');
@@ -593,6 +598,7 @@ describe('KbqButtonToggle without forms', () => {
 
     it('should select falsy button toggle value in multiple selection', () => {
         const fixture = TestBed.createComponent(FalsyButtonTogglesInsideButtonToggleGroupMultiple);
+
         fixture.detectChanges();
 
         expect(fixture.componentInstance.toggles.toArray()[0].checked).toBe(true);

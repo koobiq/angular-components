@@ -45,6 +45,7 @@ describe('KbqNavbar', () => {
 
     xit('collapsed elements should have specific title if defined', fakeAsync(() => {
         const fixture = TestBed.createComponent(TestApp);
+
         fixture.detectChanges();
         tick(FONT_RENDER_TIMEOUT_MS);
         fixture.detectChanges();
@@ -75,6 +76,7 @@ describe('KbqNavbar', () => {
     it('items should not allow click if disable', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
+
         fixture.detectChanges();
 
         const disabledItem = fixture.debugElement.query(By.css('.kbq-navbar-item[disabled]'));

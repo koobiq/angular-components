@@ -132,6 +132,7 @@ describe('KbqTagList', () => {
                 const array = tags.toArray();
                 const lastIndex = array.length - 1;
                 const lastItem = array[lastIndex];
+
                 lastItem.focus();
                 fixture.detectChanges();
 
@@ -173,6 +174,7 @@ describe('KbqTagList', () => {
             it('should focus next tag if first tag is not selectable', () => {
                 const arr = tags.toArray();
                 const firstElementIndex = 0;
+
                 arr[firstElementIndex].selectable = false;
 
                 tagListInstance.focus();
@@ -524,6 +526,7 @@ describe('KbqTagList', () => {
         // TODO Expected pixels
         xit('height should be 32px', () => {
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+
             expect(formFieldElement.getBoundingClientRect().height).toBe(32);
         });
 
@@ -595,6 +598,7 @@ describe('KbqTagList', () => {
             const instanceTags = fixture.componentInstance.tags;
             const tagList = fixture.componentInstance.tagList;
             const firstTag = nativeTags[0];
+
             dispatchKeyboardEvent(firstTag, 'keydown', SPACE);
             fixture.detectChanges();
 
@@ -614,6 +618,7 @@ describe('KbqTagList', () => {
 
             nativeTags = fixture.debugElement.queryAll(By.css('kbq-tag')).map((tag) => tag.nativeElement);
             const lastChip = nativeTags[8];
+
             dispatchKeyboardEvent(lastChip, 'keydown', SPACE);
             fixture.detectChanges();
 
@@ -625,6 +630,7 @@ describe('KbqTagList', () => {
         xit('should not select disabled tags', () => {
             const array = tags.toArray();
             const disabledTag = nativeTags[2];
+
             dispatchKeyboardEvent(disabledTag, 'keydown', SPACE);
             fixture.detectChanges();
 
@@ -714,6 +720,7 @@ describe('KbqTagList', () => {
                 expect(fixture.componentInstance.control.touched).toBe(false);
 
                 const nativeTagList = fixture.debugElement.query(By.css('.kbq-tag-list')).nativeElement;
+
                 dispatchFakeEvent(nativeTagList, 'blur');
 
                 expect(fixture.componentInstance.control.touched).toBe(true);
@@ -724,6 +731,7 @@ describe('KbqTagList', () => {
 
                 fixture.componentInstance.control.disable();
                 const nativeTagList = fixture.debugElement.query(By.css('.kbq-tag-list')).nativeElement;
+
                 dispatchFakeEvent(nativeTagList, 'blur');
 
                 expect(fixture.componentInstance.control.touched).toBe(false);
@@ -750,6 +758,7 @@ describe('KbqTagList', () => {
 
             xit('should set an asterisk after the placeholder if the control is required', () => {
                 let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
+
                 expect(requiredMarker).toBeNull();
 
                 fixture.componentInstance.isRequired = true;
@@ -764,6 +773,7 @@ describe('KbqTagList', () => {
                 TestBed.resetTestingModule();
 
                 const falsyFixture = createComponent(FalsyValueTagList);
+
                 falsyFixture.detectChanges();
 
                 falsyFixture.componentInstance.control.setValue([0]);
@@ -786,6 +796,7 @@ describe('KbqTagList', () => {
 
             it('should blur the form field when the active tag is blurred', () => {
                 const formField: HTMLElement = fixture.nativeElement.querySelector('.kbq-form-field');
+
                 fixture.componentInstance.formField.runFocusMonitor();
 
                 nativeTags[0].focus();
@@ -962,6 +973,7 @@ describe('KbqTagList', () => {
 
             fixture.componentInstance.control.disable();
             const nativeTagList = fixture.debugElement.query(By.css('.kbq-tag-list')).nativeElement;
+
             dispatchFakeEvent(nativeTagList, 'blur');
 
             expect(fixture.componentInstance.control.touched).toBe(false);
@@ -987,6 +999,7 @@ describe('KbqTagList', () => {
 
         xit('should set an asterisk after the placeholder if the control is required', () => {
             let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
+
             expect(requiredMarker).toBeNull();
 
             fixture.componentInstance.isRequired = true;
@@ -1160,6 +1173,7 @@ describe('KbqTagList', () => {
                 .queryAll(By.css('.kbq-error'))
                 .map((el) => el.nativeElement.getAttribute('id'))
                 .join(' ');
+
             describedBy = tagListEl.getAttribute('aria-describedby');
 
             expect(errorIds).toBeTruthy();

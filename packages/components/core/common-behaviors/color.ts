@@ -59,6 +59,7 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
                 if (this._color) {
                     this.elementRef.nativeElement.classList.remove(`kbq-${this._color}`);
                 }
+
                 if (colorPalette) {
                     this.elementRef.nativeElement.classList.add(`kbq-${colorPalette}`);
                 }

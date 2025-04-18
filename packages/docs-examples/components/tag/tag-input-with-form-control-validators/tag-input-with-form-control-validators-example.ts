@@ -18,6 +18,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
         if (!value) {
             return null;
         }
+
         return value.length <= max ? null : { customMaxLengthValidator: true };
     };
 };
@@ -84,6 +85,7 @@ export class TagInputWithFormControlValidatorsExample {
     removeTag(tag: string): void {
         const tags = this.formControl.value || [];
         const index = tags.indexOf(tag);
+
         if (index >= 0) {
             tags.splice(index, 1);
             this.formControl.setValue(tags);
@@ -93,9 +95,11 @@ export class TagInputWithFormControlValidatorsExample {
     createTag({ value, input }: KbqTagInputEvent): void {
         if (value) {
             const tags = this.formControl.value || [];
+
             tags.push(value);
             this.formControl.setValue(tags);
         }
+
         input.value = '';
     }
 }

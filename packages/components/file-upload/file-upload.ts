@@ -47,6 +47,7 @@ export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
 
     for (const acceptedExtensionOrMimeType of accept) {
         const typeAsRegExp = new RegExp(acceptedExtensionOrMimeType);
+
         if (typeAsRegExp.test(fileExt) || typeAsRegExp.test(type)) {
             return true;
         }

@@ -123,6 +123,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
         if (defaultNodeDefs.length > 1) {
             throw getTreeMultipleDefaultNodeDefsError();
         }
+
         this.defaultNodeDef = defaultNodeDefs[0];
 
         if (this.dataSource && this.nodeDefs && !this.dataSubscription) {
@@ -152,6 +153,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
                     this.levels.delete(item.item);
                 } else {
                     const view = viewContainer.get(adjustedPreviousIndex!);
+
                     viewContainer.move(view!, currentIndex);
                 }
             }
@@ -204,6 +206,7 @@ export class KbqTreeBase<T> implements AfterContentChecked, CollectionViewer, On
 
         // Use default tree nodeOutlet, or nested node's nodeOutlet
         const container = viewContainer ? viewContainer : this.nodeOutlet.viewContainer;
+
         container.createEmbeddedView(node.template, context, index);
 
         // Set the data to just created `KbqTreeNode`.

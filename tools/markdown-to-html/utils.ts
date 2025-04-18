@@ -16,10 +16,13 @@ const marked = configureMarkedGlobally(markdownRenderer);
 
 export const src = (path: string | string[]): string[] => {
     let res: string[] = [];
+
     if (Array.isArray(path)) {
         res = path.reduce((result, curPath) => {
             const files = new GlobSync(curPath).found;
+
             result.push(...files);
+
             return result;
         }, [] as string[]);
     } else if (typeof path === 'string') {
@@ -48,8 +51,10 @@ export const docTask = (taskId: string, { source, dest }: { source: string | str
         });
 
         const res = await Promise.all(promises);
+
         console.log(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
         console.log(chalk.green('------------------------------------------------------------------------------'));
+
         return res;
     };
 };

@@ -50,6 +50,7 @@ describe('KbqTabGroup', () => {
 
         it('should change selected index on click', fakeAsync(() => {
             const component = fixture.debugElement.componentInstance;
+
             component.selectedIndex = 0;
             fixture.detectChanges();
             tick();
@@ -70,11 +71,13 @@ describe('KbqTabGroup', () => {
 
         it('should support two-way binding for selectedIndex', fakeAsync(() => {
             const component = fixture.componentInstance;
+
             component.selectedIndex = 0;
 
             fixture.detectChanges();
 
             const tabLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1];
+
             tabLabel.nativeElement.click();
             fixture.detectChanges();
             tick();
@@ -85,6 +88,7 @@ describe('KbqTabGroup', () => {
         // Note: needs to be `async` in order to fail when we expect it to.
         it('should set to correct tab on fast change', waitForAsync(() => {
             const component = fixture.componentInstance;
+
             component.selectedIndex = 0;
             fixture.detectChanges();
 
@@ -189,6 +193,7 @@ describe('KbqTabGroup', () => {
 
             const animationDoneSpyFn = jest.spyOn(fixture.componentInstance, 'animationDone');
             const tabLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1];
+
             tabLabel.nativeElement.click();
             fixture.detectChanges();
             tick();
@@ -198,6 +203,7 @@ describe('KbqTabGroup', () => {
 
         it('should emit focusChange event on click', () => {
             const handleFocusSpyFn = jest.spyOn(fixture.componentInstance, 'handleFocus');
+
             fixture.detectChanges();
 
             const tabLabels = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
@@ -213,6 +219,7 @@ describe('KbqTabGroup', () => {
 
         it('should emit focusChange on arrow key navigation', () => {
             const handleFocusSpyFn = jest.spyOn(fixture.componentInstance, 'handleFocus');
+
             fixture.detectChanges();
 
             const tabLabels = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
@@ -238,6 +245,7 @@ describe('KbqTabGroup', () => {
     describe('disable tabs', () => {
         let fixture: ComponentFixture<DisabledTabsTestApp>;
         let headerList: DebugElement;
+
         beforeEach(() => {
             fixture = TestBed.createComponent(DisabledTabsTestApp);
             headerList = fixture.debugElement.query(By.css('.kbq-tab-list__content'));
@@ -246,6 +254,7 @@ describe('KbqTabGroup', () => {
         it('should have one disabled tab', () => {
             fixture.detectChanges();
             const labels = headerList.queryAll(By.css('[disabled]'));
+
             expect(labels.length).toBe(1);
         });
 
@@ -254,6 +263,7 @@ describe('KbqTabGroup', () => {
 
             const tabs = fixture.componentInstance.tabs.toArray();
             let labels = headerList.queryAll(By.css('[disabled]'));
+
             expect(tabs[2].disabled).toBe(false);
             expect(labels.length).toBe(1);
 
@@ -280,6 +290,7 @@ describe('KbqTabGroup', () => {
             const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             let tabs: KbqTab[] = component.tabs.toArray();
+
             expect(tabs[0].origin).toBe(null);
             expect(tabs[1].origin).toBe(0);
             expect(tabs[2].origin).toBe(null);
@@ -310,6 +321,7 @@ describe('KbqTabGroup', () => {
             const component: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
 
             const numberOfTabs = component.tabs.length;
+
             fixture.componentInstance.selectedIndex = numberOfTabs - 1;
             fixture.detectChanges();
             tick();
@@ -375,6 +387,7 @@ describe('KbqTabGroup', () => {
 
             // Add a new tab at the beginning.
             const handleSelectionSpyFn = jest.spyOn(fixture.componentInstance, 'handleSelection');
+
             fixture.componentInstance.tabs.unshift({ label: 'New tab', content: 'at the start' });
             fixture.detectChanges();
             tick();
@@ -463,16 +476,19 @@ describe('KbqTabGroup', () => {
     describe('lazy loaded tabs', () => {
         it('should lazy load the second tab', fakeAsync(() => {
             const fixture = TestBed.createComponent(TemplateTabs);
+
             fixture.detectChanges();
             tick();
 
             const secondLabel = fixture.debugElement.queryAll(By.css('.kbq-tab-label'))[1];
+
             secondLabel.nativeElement.click();
             fixture.detectChanges();
             tick();
             fixture.detectChanges();
 
             const child = fixture.debugElement.query(By.css('.child'));
+
             expect(child.nativeElement).toBeDefined();
         }));
     });
@@ -503,6 +519,7 @@ describe('KbqTabGroup', () => {
 
         it('should select by number and assign number to binded property', () => {
             const indexToSelect: number = instance.tabs.length - 1;
+
             expect(instance.selectBy).toEqual(1);
             checkSelectedIndex(instance.selectBy as number, fixture);
 
@@ -514,6 +531,7 @@ describe('KbqTabGroup', () => {
 
         it('should select by string and assign string type to binded property', fakeAsync(() => {
             const indexToSelect = 0;
+
             instance.selectBy = instance.tabs.get(indexToSelect)!.tabId;
             expect(instance.selectBy).toEqual('first');
             fixture.detectChanges();
@@ -521,6 +539,7 @@ describe('KbqTabGroup', () => {
 
             // check selection by click
             const tabLabels: DebugElement[] = fixture.debugElement.queryAll(By.css('.kbq-tab-label'));
+
             dispatchMouseEvent(tabLabels[tabLabels.length - 1].nativeElement, 'click');
             fixture.detectChanges();
             tick();
@@ -540,16 +559,19 @@ describe('KbqTabGroup', () => {
         fixture.detectChanges();
 
         const tabComponent: KbqTabGroup = fixture.debugElement.query(By.css('kbq-tab-group')).componentInstance;
+
         expect(tabComponent.selectedIndex).toBe(expectedIndex);
 
         const tabLabelElement = fixture.debugElement.query(
             By.css(`.kbq-tab-label:nth-of-type(${expectedIndex + 1})`)
         ).nativeElement;
+
         expect(tabLabelElement.classList.contains('kbq-selected')).toBe(true);
 
         const tabContentElement = fixture.debugElement.query(
             By.css(`kbq-tab-body:nth-of-type(${expectedIndex + 1})`)
         ).nativeElement;
+
         expect(tabContentElement.classList.contains('kbq-tab-body__active')).toBe(true);
     }
 
@@ -573,6 +595,7 @@ describe('nested KbqTabGroup with enabled animations', () => {
     it('should not throw when creating a component with nested tab groups', fakeAsync(() => {
         expect(() => {
             const fixture = TestBed.createComponent(NestedTabs);
+
             fixture.detectChanges();
             tick();
         }).not.toThrow();

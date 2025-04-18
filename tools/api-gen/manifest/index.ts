@@ -7,16 +7,20 @@ export function generateManifest(apiCollections: EntryCollection[]): EntryCollec
     // all symbols keyed to their lookup key. We need this lookup later for determining whether
     // to mark an entry as deprecated.
     const entryLookup = new Map<string, DocEntry[]>();
+
     for (const collection of apiCollections) {
         collection.packagesApiInfo.forEach((packageApi: PackageApiInfo) => {
             packageApi.entries = packageApi.entries.filter((entry: DocEntry) => {
                 const lookupKey = getApiLookupKey(collection.moduleName, entry.name);
+
                 if (entryLookup.has(lookupKey)) {
                     entryLookup.get(lookupKey)!.push(entry);
+
                     return false;
                 }
 
                 entryLookup.set(lookupKey, [entry]);
+
                 return true;
             });
         });

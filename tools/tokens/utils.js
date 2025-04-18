@@ -58,7 +58,9 @@ const applyCustomTransformations = (dictionary) => {
         if (typeof token.value === 'object' && token.type === 'font') {
             return unwrapObjectTransformer(token);
         }
+
         token.name = token.name.replace(/(light|dark)-/, '');
+
         return token;
     });
 
@@ -99,19 +101,23 @@ const resolveComponentName = (componentName) => componentNameMapping[componentNa
 const additionalFilter = (token, componentName) => {
     const filters = filter[componentName];
     const themeAgnosticTokenName = token.name.replace(/(light|dark)-/, '');
+
     if (Array.isArray(filters)) {
         return filters.some((filter) => themeAgnosticTokenName.includes(filter));
     }
+
     return themeAgnosticTokenName.includes(filter[componentName]);
 };
 
 const dictionaryMapper = (dictionary, outputReferences) => {
     const formatProperty = formatHelpers.createPropertyFormatter({ outputReferences, dictionary, format: 'css' });
+
     return '  ' + dictionary.allTokens.map(formatProperty).join('\n  ');
 };
 
 const filterTokens = (dictionary, predicate) => {
     const filteredTokens = dictionary.allTokens.filter(predicate);
+
     return { ...dictionary, allTokens: filteredTokens, allProperties: filteredTokens };
 };
 

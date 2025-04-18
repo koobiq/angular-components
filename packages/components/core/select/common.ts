@@ -162,6 +162,7 @@ export abstract class KbqAbstractSelect {
 
         if (!isRightDirection) {
             const leftOffset = triggerRight - overlayMaxWidth;
+
             offsetX -= leftIndent - leftOffset;
         }
 

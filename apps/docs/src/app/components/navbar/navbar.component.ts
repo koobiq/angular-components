@@ -108,6 +108,7 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
 
     ngOnDestroy() {
         this.themeService.ngOnDestroy();
+
         try {
             this.colorAutomaticTheme.removeEventListener('change', this.setAutoTheme);
         } catch (err) {

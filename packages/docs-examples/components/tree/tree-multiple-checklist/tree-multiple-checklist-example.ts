@@ -31,6 +31,7 @@ export function buildFileTree(value: any, level: number): FileNode[] {
         const node = new FileNode();
 
         node.name = `${k}`;
+
         if (v === null || v === undefined) {
             // no action
         } else if (typeof v === 'object') {
@@ -206,6 +207,7 @@ export class TreeMultipleChecklistExample {
     fileSelectionToggle(node: FileFlatNode): void {
         this.checklistSelection.toggle(node);
         const descendants = this.treeControl.getDescendants(node);
+
         this.checklistSelection.isSelected(node)
             ? this.checklistSelection.select(...descendants)
             : this.checklistSelection.deselect(...descendants);
@@ -218,6 +220,7 @@ export class TreeMultipleChecklistExample {
     /* Checks all the parents when a leaf node is selected/unselected */
     checkAllParentsSelection(node: FileFlatNode): void {
         let parent: FileFlatNode | null = this.getParentNode(node);
+
         while (parent) {
             this.checkRootNodeSelection(parent);
             parent = this.getParentNode(parent);
@@ -229,6 +232,7 @@ export class TreeMultipleChecklistExample {
         const nodeSelected = this.checklistSelection.isSelected(node);
         const descendants = this.treeControl.getDescendants(node);
         const descAllSelected = descendants.every((child) => this.checklistSelection.isSelected(child));
+
         if (nodeSelected && !descAllSelected) {
             this.checklistSelection.deselect(node);
         } else if (!nodeSelected && descAllSelected) {

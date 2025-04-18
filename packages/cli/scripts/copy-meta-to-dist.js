@@ -34,6 +34,7 @@ copyFileSync(getSrcPckgPath('dist/cli.js.map'), getDistPath(`${distCLIPath}/dist
 // Update package version
 const currentVersion = JSON.parse(readFileSync('package.json', 'utf8')).version;
 const packageContent = JSON.parse(readFileSync(`${distCLIPath}/package.json`, 'utf8'));
+
 packageContent.version = currentVersion;
 
 writeFileSync(`${distCLIPath}/package.json`, JSON.stringify(packageContent, undefined, 4));

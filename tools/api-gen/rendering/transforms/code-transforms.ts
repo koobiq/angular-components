@@ -36,6 +36,7 @@ export function splitLines(text: string): string[] {
     if (text.length === 0) {
         return [];
     }
+
     return text.split(/\r\n|\r|\n/g);
 }
 
@@ -47,6 +48,7 @@ export function splitLines(text: string): string[] {
  */
 export function addRenderableCodeToc<T extends DocEntry & HasModuleName>(entry: T): T & HasRenderableToc {
     const metadata = mapDocEntryToCode(entry);
+
     appendPrefixAndSuffix(entry, metadata);
 
     const codeWithSyntaxHighlighting = highlightJs.highlight(metadata.contents, {
@@ -72,6 +74,7 @@ function groupCodeLines(lines: string[], metadata: CodeTableOfContentsData) {
 
         if (tocItem.id !== undefined && groups.has(tocItem.id)) {
             const group = groups.get(tocItem.id);
+
             group?.push(tocItem);
         } else {
             groups.set(tocItem.id ?? index.toString(), [tocItem]);
@@ -84,11 +87,13 @@ function groupCodeLines(lines: string[], metadata: CodeTableOfContentsData) {
 export function mapDocEntryToCode(entry: DocEntry): CodeTableOfContentsData {
     if (isClassEntry(entry)) {
         const members = filterLifecycleMethods(mergeGettersAndSetters(entry.members));
+
         return getCodeTocData(members, true);
     }
 
     if (isConstantEntry(entry)) {
         const isDeprecated = isDeprecatedEntry(entry);
+
         return {
             contents: `const ${entry.name}: ${entry.type};`,
             codeLineNumbersWithIdentifiers: new Map(),
@@ -155,11 +160,14 @@ function getCodeTocData(members: MemberEntry[], hasPrefixLine: boolean): CodeTab
 
     return members.reduce((acc: CodeTableOfContentsData, curr: MemberEntry, index: number) => {
         const lineNumber = index + skip;
+
         acc.codeLineNumbersWithIdentifiers.set(lineNumber, curr.name);
         acc.contents += `  ${getCodeLine(curr).trim()}\n`;
+
         if (isDeprecatedEntry(curr)) {
             acc.deprecatedLineNumbers.push(lineNumber);
         }
+
         return acc;
     }, initialMetadata);
 }
@@ -172,6 +180,7 @@ function getCodeLine(member: MemberEntry) {
     } else if (isSetterEntry(member)) {
         return getSetterCodeLine(member);
     }
+
     return getPropertyCodeLine(member as PropertyEntry);
 }
 
@@ -235,6 +244,7 @@ function appendPrefixAndSuffix(entry: DocEntry, codeTocData: CodeTableOfContents
 
     if (isClassEntry(entry)) {
         const abstractPrefix = entry.isAbstract ? 'abstract ' : '';
+
         appendFirstAndLastLines(codeTocData, `${abstractPrefix}class ${entry.name} {`, `}`);
     }
 

@@ -169,6 +169,7 @@ describe('MсRadio', () => {
             expect(groupInstance.value).toBeFalsy();
 
             const changeSpy = jest.fn();
+
             groupInstance.change.subscribe(changeSpy);
 
             radioLabelElements[0].click();
@@ -214,6 +215,7 @@ describe('MсRadio', () => {
 
         it(`should update the group's selected radio to null when unchecking that radio programmatically`, () => {
             const changeSpy = jest.fn();
+
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
 
@@ -234,6 +236,7 @@ describe('MсRadio', () => {
 
         it('should not fire a change event from the group when a radio checked state changes', () => {
             const changeSpy = jest.fn();
+
             groupInstance.change.subscribe(changeSpy);
             radioInstances[0].checked = true;
 
@@ -253,6 +256,7 @@ describe('MсRadio', () => {
 
         it(`should update checked status if changed value to radio group's value`, () => {
             const changeSpy = jest.fn();
+
             groupInstance.change.subscribe(changeSpy);
             groupInstance.value = 'apple';
 
@@ -287,6 +291,7 @@ describe('MсRadio', () => {
             testComponent = fixture.debugElement.componentInstance;
 
             const radioDebugElement = fixture.debugElement.query(By.directive(KbqRadioButton));
+
             radioInstance = radioDebugElement.injector.get<KbqRadioButton>(KbqRadioButton);
             radioNativeElement = radioDebugElement.nativeElement.querySelector('input');
         });

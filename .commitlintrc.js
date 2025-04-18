@@ -6,6 +6,7 @@ const { resolve } = require('path');
 const makeScopeTypesByPath = (path) => {
     const files = readdirSync(resolve(__dirname, path), { withFileTypes: true });
     const directories = files.filter((file) => file.isDirectory());
+
     return directories.map((dir) => dir.name);
 };
 

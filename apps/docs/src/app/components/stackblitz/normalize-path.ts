@@ -8,8 +8,10 @@ import normalize from 'path-normalize';
  */
 export function normalizePath(input: string): string {
     input = normalize(input.replace(/\\/g, '/'));
+
     if (input.startsWith('./')) {
         input = input.substring(2);
     }
+
     return input;
 }

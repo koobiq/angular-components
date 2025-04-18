@@ -108,6 +108,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
         // links would redirect to "/#my-section".
         rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
             const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
+
             return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
         });
 
@@ -143,9 +144,11 @@ export class DocsExampleViewerComponent implements OnDestroy {
             const examplePortal = new ComponentPortal(componentClass, this.viewContainerRef);
             const exampleViewer = portalHost.attach(examplePortal);
             const exampleViewerComponent = exampleViewer.instance as DocsLiveExampleViewerComponent;
+
             if (example !== null) {
                 DocsExampleViewerComponent.initExampleViewer(exampleViewerComponent, example);
             }
+
             this.portalHosts.push(portalHost);
         });
     }

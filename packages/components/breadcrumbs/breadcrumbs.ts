@@ -251,6 +251,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
         for (let i = 0; i < this.max - 1; i++) {
             visibleItemsWidth += this.getItemWidth(sortedItems[sortedItems.length - i - 1]);
         }
+
         return visibleItemsWidth;
     }
 

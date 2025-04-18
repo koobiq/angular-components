@@ -41,6 +41,7 @@ export class ToastActionsOverviewExample {
             },
             0
         );
+
         this.dropdown.closed.pipe(take(1)).subscribe(() => ref.instance.close());
     }
 }

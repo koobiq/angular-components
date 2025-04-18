@@ -67,6 +67,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         if (value !== 'before' && value !== 'after') {
             throwKbqDropdownInvalidPositionX();
         }
+
         this._xPosition = value;
         this.setPositionClasses();
     }
@@ -81,6 +82,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
         if (value !== 'above' && value !== 'below') {
             throwKbqDropdownInvalidPositionY();
         }
+
         this._yPosition = value;
         this.setPositionClasses();
     }
@@ -253,11 +255,13 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
                 if (this.parent && this.direction === 'ltr') {
                     this.closed.emit('keydown');
                 }
+
                 break;
             case RIGHT_ARROW:
                 if (this.parent && this.direction === 'rtl') {
                     this.closed.emit('keydown');
                 }
+
                 break;
             default:
                 if (keyCode === UP_ARROW || keyCode === DOWN_ARROW) {
@@ -307,6 +311,7 @@ export class KbqDropdown implements AfterContentInit, KbqDropdownPanel, OnInit, 
      */
     setPositionClasses(posX: DropdownPositionX = this.xPosition, posY: DropdownPositionY = this.yPosition) {
         const classes = this.classList;
+
         classes['kbq-dropdown-before'] = posX === 'before';
         classes['kbq-dropdown-after'] = posX === 'after';
         classes['kbq-dropdown-above'] = posY === 'above';

@@ -195,6 +195,7 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
         const selected = this.selected;
         const source = Array.isArray(selected) ? selected[selected.length - 1] : selected;
         const event = new KbqButtonToggleChange(source, this.value);
+
         this.controlValueAccessorChangeFn(event.value);
         this.change.emit(event);
     }
@@ -385,6 +386,7 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
             const nodesWithoutComments = getNodesWithoutComments(
                 this.element.nativeElement.querySelector('.kbq-button-toggle-wrapper')!.childNodes as NodeList
             ).length;
+
             this.iconType = nodesWithoutComments === this.icons.length ? '-icon' : '-icon-text';
         }
     }
@@ -420,11 +422,13 @@ export class KbqButtonToggle implements OnInit, AfterContentInit, AfterViewInit,
 
         if (newChecked !== this._checked) {
             this._checked = newChecked;
+
             if (this.buttonToggleGroup) {
                 this.buttonToggleGroup.syncButtonToggle(this, this._checked, true);
                 this.buttonToggleGroup.onTouched();
             }
         }
+
         // Emit a change event when it's the single selector
         this.change.emit(new KbqButtonToggleChange(this, this.value));
     }

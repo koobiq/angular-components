@@ -47,6 +47,7 @@ export class DocsearchDirective extends DocsLocaleState {
     private initDocsearch(): void {
         this.docsLocaleService.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((locale) => {
             const _isRuLocale = isRuLocale(locale);
+
             docsearch({
                 ...CONFIG,
                 searchParameters: {
@@ -65,16 +66,20 @@ export class DocsearchDirective extends DocsLocaleState {
             items = items.map((item) => {
                 item.url = item.url.replace(HOST, location.host);
                 item.url = item.url.replace(PROTOCOL, location.protocol);
+
                 return item;
             });
         }
+
         return items.filter((item) => {
             /** should hide hit, whose 'lvl2' header doesn't match with search query */
             if (item.type === 'lvl2') {
                 const { matchLevel } =
                     item._highlightResult?.hierarchy.lvl2 || item._snippetResult?.hierarchy.lvl2 || {};
+
                 return !(item.content === null && matchLevel === 'none');
             }
+
             return item;
         });
     };

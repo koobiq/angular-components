@@ -49,6 +49,7 @@ export class BreadcrumbsRoutingExample {
 
         children.forEach((child) => {
             const routeURL: string = child.snapshot.url.map((segment) => segment.path).join('/');
+
             if (routeURL) {
                 url += `/${routeURL}`;
             }
@@ -57,11 +58,14 @@ export class BreadcrumbsRoutingExample {
                 child.snapshot.data['breadcrumb'] ||
                 (child.snapshot.url.length && child.snapshot.url[0].path) ||
                 'test';
+
             if (label) {
                 breadcrumbs.push({ label, url });
             }
+
             return this.buildBreadcrumbs(child, url, breadcrumbs);
         });
+
         return breadcrumbs;
     }
 }

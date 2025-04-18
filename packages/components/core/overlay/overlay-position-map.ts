@@ -266,9 +266,11 @@ function arrayMap<T, S>(array: T[], iteratee: (item: T, index: number, arr: T[])
 
     return result;
 }
+
 function baseValues<T>(object: T[], props: string[]): T[] {
     return arrayMap(props, (key) => object[key]);
 }
+
 function objectValues<T>(object: T[]): T[] {
     return object === null ? [] : baseValues(object, Object.keys(object));
 }

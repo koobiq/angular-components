@@ -19,7 +19,9 @@ function openAndAssertTooltip<T>(componentFixture: ComponentFixture<T>, triggerE
     componentFixture.detectChanges();
 
     const tooltip = componentFixture.debugElement.query(By.css('.kbq-tooltip'));
+
     expect(tooltip).toBeTruthy();
+
     return tooltip;
 }
 
@@ -81,6 +83,7 @@ describe('KbqTooltip', () => {
             const featureKey = 'MOST-SIMPLE';
             const triggerElement = component.mostSimpleTrigger.nativeElement;
             const tooltipDirective = component.mostSimpleDirective;
+
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
@@ -92,6 +95,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // NOTE: the overlayElement is only available after tooltip shown up
             const overlayElement = component.mostSimpleDirective['overlayRef']!.overlayElement;
+
             tooltipDirective.updatePosition(); // This line is temporarily for coverage
             // Move out from the trigger element, then move into the tooltip element
             dispatchMouseEvent(triggerElement, 'mouseleave');
@@ -110,6 +114,7 @@ describe('KbqTooltip', () => {
         it('should show/hide normal tooltip', fakeAsync(() => {
             const featureKey = 'NORMAL';
             const triggerElement = component.normalTrigger.nativeElement;
+
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             fixture.detectChanges();
             // Move inside to trigger tooltip shown up
@@ -131,6 +136,7 @@ describe('KbqTooltip', () => {
         it('should show/hide tooltip by focus', fakeAsync(() => {
             const featureKey = 'FOCUS';
             const triggerElement = component.focusTrigger.nativeElement;
+
             dispatchKeyboardEvent(document, 'keydown', TAB);
             dispatchMouseEvent(triggerElement, 'focus');
             fixture.detectChanges();
@@ -147,6 +153,7 @@ describe('KbqTooltip', () => {
             const featureKey = 'NORMAL';
             const triggerElement = component.normalTrigger.nativeElement;
             const tooltipDirective = component.normalDirective;
+
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             // Move inside to trigger tooltip shown up
             dispatchMouseEvent(triggerElement, 'mouseenter');
@@ -158,6 +165,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).toContain(featureKey);
             // NOTE: the overlayElement is only available after tooltip shown up
             const overlayElement = component.normalDirective['overlayRef']!.overlayElement;
+
             tooltipDirective.updatePosition(); // This line is temporarily for coverage
             // Move out from the trigger element, then move into the tooltip element
             dispatchMouseEvent(triggerElement, 'mouseleave');
@@ -206,6 +214,7 @@ describe('KbqTooltip', () => {
         it('should not show tooltip', fakeAsync(() => {
             const featureKey = 'DISABLED';
             const tooltipDirective = component.disabledDirective;
+
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
             tooltipDirective.show();
             fixture.detectChanges();
@@ -260,6 +269,7 @@ describe('KbqTooltip', () => {
 
         it('should add offset for position config if element is less than arrow margin', fakeAsync(() => {
             const rect = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT * 2 - 1;
+
             componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
                 width: rect,
                 height: rect
@@ -271,6 +281,7 @@ describe('KbqTooltip', () => {
             const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeTruthy();
         }));
 
@@ -286,6 +297,7 @@ describe('KbqTooltip', () => {
             const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
         }));
 
@@ -298,6 +310,7 @@ describe('KbqTooltip', () => {
             const strategy: FlexibleConnectedPositionStrategy = componentInstance.tooltipTrigger
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
         }));
     });

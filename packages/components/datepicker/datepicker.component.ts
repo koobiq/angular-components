@@ -299,6 +299,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     /** Selects the given date */
     select(date: D): void {
         const oldValue = this.selected;
+
         this.selected = date;
 
         if (!this.dateAdapter.sameDate(oldValue, this.selected)) {

@@ -25,6 +25,7 @@ const VERSIONS = {
 export default function ngAdd(options: Schema): Rule {
     return async (tree: Tree) => {
         const { project } = options;
+
         if (project) {
             const workspace = await readWorkspace(tree);
             const projectWorkspace = workspace.projects.get(project);

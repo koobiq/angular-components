@@ -182,6 +182,7 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
         this.selectedMonth = this.monthNames[this.adapter.getMonth(this.activeDate)].value;
 
         const year = this.adapter.getYear(this.activeDate);
+
         this.selectedYear = this.years.find((item) => item === year) || this.years[0];
     }
 

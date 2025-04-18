@@ -107,6 +107,7 @@ describe('KbqAutocomplete', () => {
 
         it('should not open the panel on focus if the input is readonly', fakeAsync(() => {
             const trigger = fixture.componentInstance.trigger;
+
             input.readOnly = true;
             fixture.detectChanges();
 
@@ -122,6 +123,7 @@ describe('KbqAutocomplete', () => {
 
         it('should not open using the arrow keys when the input is readonly', fakeAsync(() => {
             const trigger = fixture.componentInstance.trigger;
+
             input.readOnly = true;
             fixture.detectChanges();
 
@@ -187,6 +189,7 @@ describe('KbqAutocomplete', () => {
             zone.simulateZoneExit();
 
             const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
             option.click();
             fixture.detectChanges();
             flush();
@@ -206,6 +209,7 @@ describe('KbqAutocomplete', () => {
             tick();
 
             let options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[0].click();
 
             // Changing value from 'Alabama' to 'al' to re-populate the option list,
@@ -428,6 +432,7 @@ describe('KbqAutocomplete', () => {
         rtlFixture.detectChanges();
 
         const boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+
         expect(boundingBox.getAttribute('dir')).toEqual('rtl');
     });
 
@@ -441,6 +446,7 @@ describe('KbqAutocomplete', () => {
         rtlFixture.detectChanges();
 
         let boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+
         expect(boundingBox.getAttribute('dir')).toEqual('rtl');
 
         rtlFixture.componentInstance.trigger.closePanel();
@@ -465,6 +471,7 @@ describe('KbqAutocomplete', () => {
 
     it('should not throw when typing in an element with a null and disabled autocomplete', () => {
         const fixture = createComponent(InputWithoutAutocompleteAndDisabled);
+
         fixture.detectChanges();
 
         expect(() => {
@@ -518,6 +525,7 @@ describe('KbqAutocomplete', () => {
             zone.simulateZoneExit();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[1].click();
             fixture.detectChanges();
 
@@ -530,6 +538,7 @@ describe('KbqAutocomplete', () => {
             zone.simulateZoneExit();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[1].click();
             fixture.detectChanges();
 
@@ -546,6 +555,7 @@ describe('KbqAutocomplete', () => {
             zone.simulateZoneExit();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[1].click();
             fixture.detectChanges();
 
@@ -562,6 +572,7 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[1].click();
 
             fixture.detectChanges();
@@ -621,6 +632,7 @@ describe('KbqAutocomplete', () => {
             zone.simulateZoneExit();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[1].click();
             fixture.detectChanges();
 
@@ -653,6 +665,7 @@ describe('KbqAutocomplete', () => {
             TestBed.resetTestingModule();
 
             const plainFixture = createComponent(PlainAutocompleteInputWithFormControl);
+
             plainFixture.detectChanges();
             input = plainFixture.nativeElement.querySelector('input');
 
@@ -797,6 +810,7 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
 
             const SPACE_EVENT = createKeyboardEvent('keydown', SPACE);
+
             fixture.componentInstance.trigger.handleKeydown(DOWN_ARROW_EVENT);
             fixture.detectChanges();
 
@@ -892,6 +906,7 @@ describe('KbqAutocomplete', () => {
 
         it('should prevent the default action when pressing escape', fakeAsync(() => {
             const escapeEvent = dispatchKeyboardEvent(input, 'keydown', ESCAPE);
+
             fixture.detectChanges();
             flush();
 
@@ -901,6 +916,7 @@ describe('KbqAutocomplete', () => {
         it('should close the panel when pressing ALT + UP_ARROW', fakeAsync(() => {
             const trigger = fixture.componentInstance.trigger;
             const upArrowEvent = createKeyboardEvent('keydown', UP_ARROW);
+
             Object.defineProperty(upArrowEvent, 'altKey', { get: () => true });
 
             input.focus();
@@ -1187,6 +1203,7 @@ describe('KbqAutocomplete', () => {
     xdescribe('Fallback positions', () => {
         it('should use below positioning by default', () => {
             const fixture = createComponent(SimpleAutocomplete);
+
             fixture.detectChanges();
             const inputReference = fixture.debugElement.query(By.css('.kbq-form-field-flex')).nativeElement;
 
@@ -1217,6 +1234,7 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
 
             const inputReference = fixture.debugElement.query(By.css('.kbq-form-field-flex')).nativeElement;
+
             spacer.style.height = '1000px';
             document.body.appendChild(spacer);
 
@@ -1239,6 +1257,7 @@ describe('KbqAutocomplete', () => {
 
         it('should fall back to above position if panel cannot fit below', () => {
             const fixture = createComponent(SimpleAutocomplete);
+
             fixture.detectChanges();
             const inputReference = fixture.debugElement.query(By.css('.kbq-form-field-flex')).nativeElement;
 
@@ -1262,6 +1281,7 @@ describe('KbqAutocomplete', () => {
 
         it('should allow the panel to expand when the number of results increases', fakeAsync(() => {
             const fixture = createComponent(SimpleAutocomplete);
+
             fixture.detectChanges();
 
             const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -1302,6 +1322,7 @@ describe('KbqAutocomplete', () => {
 
         it('should align panel properly when filtering in "above" position', fakeAsync(() => {
             const fixture = createComponent(SimpleAutocomplete);
+
             fixture.detectChanges();
 
             const input = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -1330,6 +1351,7 @@ describe('KbqAutocomplete', () => {
             'should fall back to above position when requested if options are added while ' + 'the panel is open',
             fakeAsync(() => {
                 const fixture = createComponent(SimpleAutocomplete);
+
                 fixture.componentInstance.states = fixture.componentInstance.states.slice(0, 1);
                 fixture.componentInstance.filteredStates = fixture.componentInstance.states.slice();
                 fixture.detectChanges();
@@ -1370,6 +1392,7 @@ describe('KbqAutocomplete', () => {
 
         it('should not throw if a panel reposition is requested while the panel is closed', () => {
             const fixture = createComponent(SimpleAutocomplete);
+
             fixture.detectChanges();
 
             expect(() => fixture.componentInstance.trigger.updatePosition()).not.toThrow();
@@ -1389,12 +1412,14 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
 
             let options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[0].click();
             fixture.detectChanges();
             zone.simulateZoneExit();
             fixture.detectChanges();
 
             const componentOptions = fixture.componentInstance.options.toArray();
+
             expect(componentOptions[0].selected).toBe(true);
 
             options = overlayContainerElement.querySelectorAll('kbq-option');
@@ -1411,12 +1436,14 @@ describe('KbqAutocomplete', () => {
             fixture.detectChanges();
 
             let options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             options[0].click();
             fixture.detectChanges();
             zone.simulateZoneExit();
             fixture.detectChanges();
 
             const componentOptions = fixture.componentInstance.options.toArray();
+
             componentOptions.forEach((option) => jest.spyOn(option, 'deselect'));
 
             expect(componentOptions[0].selected).toBe(true);
@@ -1545,6 +1572,7 @@ describe('KbqAutocomplete', () => {
 
         it('should emit panel close event when tabbing out', () => {
             const tabEvent = createKeyboardEvent('keydown', TAB);
+
             input.focus();
 
             expect(closingActionFn).not.toHaveBeenCalled();
@@ -1605,19 +1633,23 @@ describe('KbqAutocomplete', () => {
         it('should allow basic use without any forms directives', () => {
             expect(() => {
                 const fixture = createComponent(AutocompleteWithoutForms);
+
                 fixture.detectChanges();
 
                 const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
                 typeInElement('d', input);
                 fixture.detectChanges();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
                 expect(options.length).toBe(1);
             }).not.toThrowError();
         });
 
         it('should display an empty input when the value is undefined with ngModel', () => {
             const fixture = createComponent(AutocompleteWithNgModel);
+
             fixture.detectChanges();
 
             expect(fixture.debugElement.query(By.css('input')).nativeElement.value).toBe('');
@@ -1635,6 +1667,7 @@ describe('KbqAutocomplete', () => {
 
         it('should work when input is wrapped in ngIf', () => {
             const fixture = createComponent(NgIfAutocomplete);
+
             fixture.detectChanges();
 
             dispatchFakeEvent(fixture.debugElement.query(By.css('input')).nativeElement, 'focusin');
@@ -1649,16 +1682,19 @@ describe('KbqAutocomplete', () => {
 
         it('should filter properly with ngIf after setting the active item', () => {
             const fixture = createComponent(NgIfAutocomplete);
+
             fixture.detectChanges();
 
             fixture.componentInstance.trigger.openPanel();
             fixture.detectChanges();
 
             const DOWN_ARROW_EVENT = createKeyboardEvent('keydown', DOWN_ARROW);
+
             fixture.componentInstance.trigger.handleKeydown(DOWN_ARROW_EVENT);
             fixture.detectChanges();
 
             const input = fixture.debugElement.query(By.css('input')).nativeElement;
+
             typeInElement('o', input);
             fixture.detectChanges();
 
@@ -1667,6 +1703,7 @@ describe('KbqAutocomplete', () => {
 
         it('should throw if the user attempts to open the panel too early', () => {
             const fixture = createComponent(AutocompleteWithoutPanel);
+
             fixture.detectChanges();
 
             expect(() => {
@@ -1677,6 +1714,7 @@ describe('KbqAutocomplete', () => {
         it('should not throw on init, even if the panel is not defined', fakeAsync(() => {
             expect(() => {
                 const fixture = createComponent(AutocompleteWithoutPanel);
+
                 fixture.componentInstance.control.setValue('Something');
                 fixture.detectChanges();
                 tick();
@@ -1702,6 +1740,7 @@ describe('KbqAutocomplete', () => {
 
         it('should transfer the kbq-autocomplete classes to the panel element', fakeAsync(() => {
             const fixture = createComponent(SimpleAutocomplete);
+
             fixture.detectChanges();
 
             fixture.componentInstance.trigger.openPanel();
@@ -1750,6 +1789,7 @@ describe('KbqAutocomplete', () => {
         /* TODO: Not working with new realization of number input, should be checked for relevance */
         xit('should handle autocomplete being attached to number inputs', fakeAsync(() => {
             const fixture = createComponent(AutocompleteWithNumberInputAndNgModel);
+
             fixture.detectChanges();
             flush();
             const input = fixture.debugElement.query(By.css('input')).nativeElement;
@@ -1764,6 +1804,7 @@ describe('KbqAutocomplete', () => {
 
     it('should not reopen a closed autocomplete when returning to a blurred tab', () => {
         const fixture = createComponent(SimpleAutocomplete);
+
         fixture.detectChanges();
 
         const trigger = fixture.componentInstance.trigger;
@@ -1938,6 +1979,7 @@ describe('KbqAutocomplete', () => {
 
     it('should be able to re-type the same value when it is reset while open', fakeAsync(() => {
         const fixture = createComponent(SimpleAutocomplete);
+
         fixture.detectChanges();
         const input = fixture.debugElement.query(By.css('input')).nativeElement;
         const formControl = fixture.componentInstance.stateCtrl;
@@ -1964,6 +2006,7 @@ describe('KbqAutocomplete', () => {
 
     it('should not close when clicking inside alternate origin', () => {
         const fixture = createComponent(AutocompleteWithDifferentOrigin);
+
         fixture.detectChanges();
         fixture.componentInstance.connectedTo = fixture.componentInstance.alternateOrigin;
         fixture.detectChanges();
@@ -1974,6 +2017,7 @@ describe('KbqAutocomplete', () => {
         expect(fixture.componentInstance.trigger.panelOpen).toBe(true);
 
         const origin = fixture.nativeElement.querySelector('.origin');
+
         origin.click();
         fixture.detectChanges();
 

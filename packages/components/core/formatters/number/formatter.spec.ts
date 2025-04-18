@@ -11,6 +11,7 @@ import {
 describe('KbqRoundDecimalPipe', () => {
     let pipe: KbqRoundDecimalPipe;
     let localeService: KbqLocaleService;
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [KbqFormattersModule],
@@ -92,6 +93,7 @@ describe('KbqRoundDecimalPipe', () => {
             const isNumberWithFraction =
                 !units.includes(pipe.transform(betweenThousandAndTenThousandRounded)[1]) &&
                 Number.isNaN(+pipe.transform(betweenThousandAndTenThousandRounded)[1]);
+
             expect(isNumberWithFraction).toBeTruthy();
 
             expect(units.includes(pipe.transform(betweenTenThousandAndMillion)[3])).toBeTruthy();

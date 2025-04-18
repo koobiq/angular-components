@@ -116,6 +116,7 @@ describe('KbqFilterBar', () => {
             fixture.componentInstance.changeDetectorRef.detectChanges();
 
             const templates = fixture.debugElement.queryAll(By.css('.kbq-option'));
+
             expect(templates.length).toBe(5);
 
             for (let index = 0; index < templates.length; index++) {
@@ -211,6 +212,7 @@ describe('KbqFilterBar', () => {
 
         it('should emit search event', fakeAsync(() => {
             const searchButton = fixture.debugElement.query(By.directive(KbqFilterBarSearch));
+
             searchButton.query(By.css('button')).nativeElement.click();
             flush();
             fixture.detectChanges();

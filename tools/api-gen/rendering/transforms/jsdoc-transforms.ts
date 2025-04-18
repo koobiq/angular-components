@@ -34,6 +34,7 @@ export function addHtmlDescription<T extends HasDescription>(entry: T): T & HasH
     const shortTextMatch = description.match(firstParagraphRule);
     const htmlDescription = getHtmlForJsDocText(description).trim();
     const shortHtmlDescription = getHtmlForJsDocText(shortTextMatch ? shortTextMatch[0] : '').trim();
+
     return {
         ...entry,
         htmlDescription,

@@ -17,7 +17,9 @@ function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, triggerE
     componentFixture.detectChanges();
 
     const popover = componentFixture.debugElement.query(By.css('.kbq-popover'));
+
     expect(popover).toBeTruthy();
+
     return popover;
 }
 
@@ -27,7 +29,9 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
         providers
     });
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -102,6 +106,7 @@ describe('KbqPopover', () => {
         it('kbqTrigger = focus', fakeAsync(() => {
             const featureKey = '_TEST3';
             const triggerElement = componentInstance.test3.nativeElement;
+
             dispatchFakeEvent(triggerElement, 'focus');
             fixture.detectChanges();
             expect(overlayContainerElement.textContent).toContain(featureKey);
@@ -124,6 +129,7 @@ describe('KbqPopover', () => {
             fixture.detectChanges();
 
             const header = debugElement.query(By.css('.kbq-popover__header'));
+
             expect(header.nativeElement.textContent).toEqual(expectedValue);
         }));
 
@@ -136,6 +142,7 @@ describe('KbqPopover', () => {
             fixture.detectChanges();
 
             const content = debugElement.query(By.css('.kbq-popover__content'));
+
             expect(content.nativeElement.textContent).toEqual(expectedValue);
         }));
 
@@ -148,6 +155,7 @@ describe('KbqPopover', () => {
             fixture.detectChanges();
 
             const footer = debugElement.query(By.css('.kbq-popover__footer'));
+
             expect(footer.nativeElement.textContent).toEqual(expectedValue);
         }));
 
@@ -160,6 +168,7 @@ describe('KbqPopover', () => {
             fixture.detectChanges();
 
             const popover = debugElement.query(By.css('.kbq-popover'));
+
             expect(popover.nativeElement.classList.contains(expectedValue)).toBeTruthy();
             expect(triggerElement.classList).toContain('kbq-active');
         }));
@@ -173,6 +182,7 @@ describe('KbqPopover', () => {
                 fixture.detectChanges();
 
                 let popover = debugElement.query(By.css('.kbq-popover'));
+
                 expect(popover).toBeTruthy();
                 expect(triggerElement.classList).toContain('kbq-active');
 
@@ -194,6 +204,7 @@ describe('KbqPopover', () => {
                 fixture.detectChanges();
 
                 let popover = debugElement.query(By.css('.kbq-popover'));
+
                 expect(popover).toBeTruthy();
                 expect(triggerElement.classList).toContain('kbq-active');
 
@@ -212,14 +223,17 @@ describe('KbqPopover', () => {
             const fixture = createComponent(KbqPopoverConfirmTestComponent);
             const { componentInstance, debugElement } = fixture;
             const triggerElement = componentInstance.test8.nativeElement;
+
             dispatchMouseEvent(triggerElement, 'click');
             tick();
             fixture.detectChanges();
 
             const button = debugElement.query(By.css('.kbq-popover-confirm button'));
+
             expect(button.nativeElement.textContent.trim()).toEqual('Да');
 
             const confirmText = debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
+
             expect(confirmText.nativeElement.textContent).toEqual('Вы уверены, что хотите продолжить?');
         }));
 
@@ -229,11 +243,13 @@ describe('KbqPopover', () => {
             const expectedValue = 'new confirm text';
 
             const triggerElement = componentInstance.test9.nativeElement;
+
             dispatchMouseEvent(triggerElement, 'click');
             tick();
             fixture.detectChanges();
 
             const confirmText = debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
+
             expect(confirmText.nativeElement.textContent).toEqual(expectedValue);
         }));
 
@@ -243,11 +259,13 @@ describe('KbqPopover', () => {
             const expectedValue = 'new button text';
 
             const triggerElement = componentInstance.test10.nativeElement;
+
             dispatchMouseEvent(triggerElement, 'click');
             tick();
             fixture.detectChanges();
 
             const button = debugElement.query(By.css('.kbq-popover-confirm button'));
+
             expect(button.nativeElement.textContent.trim()).toEqual(expectedValue);
         }));
 
@@ -257,10 +275,12 @@ describe('KbqPopover', () => {
             const onConfirmSpyFn = jest.spyOn(componentInstance, 'onConfirm');
 
             const triggerElement = componentInstance.test11.nativeElement;
+
             dispatchMouseEvent(triggerElement, 'click');
             tick();
 
             const confirmButton = debugElement.query(By.css('.kbq-popover-confirm button'));
+
             dispatchMouseEvent(confirmButton.nativeElement, 'click');
             tick();
             fixture.detectChanges();
@@ -274,14 +294,17 @@ describe('KbqPopover', () => {
             const fixture = createComponent(KbqPopoverConfirmWithProvidersTestComponent);
             const { componentInstance, debugElement } = fixture;
             const triggerElement = componentInstance.test12.nativeElement;
+
             dispatchMouseEvent(triggerElement, 'click');
             tick();
             fixture.detectChanges();
 
             const button = debugElement.query(By.css('.kbq-popover-confirm button'));
+
             expect(button.nativeElement.textContent.trim()).toEqual('provided button text');
 
             const confirmText = debugElement.query(By.css('.kbq-popover-confirm .kbq-popover__content div'));
+
             expect(confirmText.nativeElement.textContent).toEqual('provided confirm text');
         }));
     });
@@ -292,6 +315,7 @@ describe('KbqPopover', () => {
             const { componentInstance } = fixture;
 
             const rect = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT * 2 - 1;
+
             componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
                 width: rect,
                 height: rect
@@ -303,12 +327,14 @@ describe('KbqPopover', () => {
             const strategy: FlexibleConnectedPositionStrategy = componentInstance.popoverTrigger
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeTruthy();
         }));
 
         it('should not add offset if element is large', fakeAsync(() => {
             const fixture = createComponent(PopoverSimple);
             const { componentInstance } = fixture;
+
             componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
                 width: 100,
                 height: 100
@@ -320,6 +346,7 @@ describe('KbqPopover', () => {
             const strategy: FlexibleConnectedPositionStrategy = componentInstance.popoverTrigger
                 .createOverlay()
                 .getConfig().positionStrategy! as FlexibleConnectedPositionStrategy;
+
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
         }));
     });

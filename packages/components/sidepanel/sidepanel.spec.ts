@@ -51,6 +51,7 @@ describe('KbqSidepanelService', () => {
 
     it('should open a sidepanel with a template', () => {
         const templateRefFixture = TestBed.createComponent(ComponentWithTemplateForSidepanel);
+
         templateRefFixture.componentInstance.localValue = 'Hello';
 
         const data = { value: 'World!' };
@@ -273,6 +274,7 @@ describe('KbqSidepanelService', () => {
         const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
         const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
         const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
+
         fixtureComponent.detectChanges();
         flush();
 

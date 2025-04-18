@@ -123,6 +123,7 @@ describe('KbqButton', () => {
 
     it('should set .kbq-active class when button with associated dropdown clicked', () => {
         const fixture: ComponentFixture<ButtonDropdownTrigger> = TestBed.createComponent(ButtonDropdownTrigger);
+
         fixture.detectChanges();
         const buttonDebugElement = fixture.componentInstance;
 
@@ -163,6 +164,7 @@ describe('Button with icon', () => {
 
     it('should not add left and right css classes when next/previous siblings are html comments or text nodes', () => {
         let fixture: ComponentFixture<KbqButtonCommentCaseTestApp | KbqButtonTextIconCaseTestApp>;
+
         [KbqButtonCommentCaseTestApp, KbqButtonTextIconCaseTestApp].forEach((comp) => {
             fixture = TestBed.createComponent(comp);
             fixture.detectChanges();
@@ -261,6 +263,7 @@ describe('Button with icon', () => {
     it('should toggle additional classes on icon removal/reveal', (done) => {
         const fixture = TestBed.createComponent(KbqButtonTextIconLeftNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
+
         fixture.detectChanges();
 
         expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();
@@ -277,6 +280,7 @@ describe('Button with icon', () => {
     it('should toggle additional classes on icon removal/reveal', (done) => {
         const fixture = TestBed.createComponent(KbqButtonTextIconRightNgIfCaseTestApp);
         const debugElement = fixture.debugElement.query(By.directive(KbqButtonCssStyler));
+
         fixture.detectChanges();
 
         expect(debugElement.nativeElement.classList.contains('kbq-button')).toBeTruthy();

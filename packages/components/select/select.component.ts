@@ -1015,11 +1015,13 @@ export class KbqSelect
 
     private getTotalItemsWidthInMatcher(): number {
         const triggerClone = this.buildTriggerClone();
+
         triggerClone.querySelector('.kbq-select__match-hidden-text')?.remove();
         this._renderer.appendChild(this.trigger.nativeElement, triggerClone);
 
         let totalItemsWidth: number = 0;
         const selectedItemsViewValueContainers = triggerClone.querySelectorAll<HTMLElement>('kbq-tag');
+
         selectedItemsViewValueContainers.forEach((item) => (totalItemsWidth += this.getItemWidth(item)));
 
         triggerClone.remove();
@@ -1084,6 +1086,7 @@ export class KbqSelect
         } else if (this.multiple && keyCode === A && event.ctrlKey) {
             event.preventDefault();
             const hasDeselectedOptions = this.options.some((option) => !option.selected);
+
             this.options.forEach((option) => {
                 if (hasDeselectedOptions && !option.disabled) {
                     option.select();
@@ -1340,8 +1343,10 @@ export class KbqSelect
     private getOverlayWidth(origin?: ElementRef | CdkOverlayOrigin): string | number {
         if (this.panelWidth === 'auto') {
             const elementRef = origin instanceof CdkOverlayOrigin ? origin.elementRef : origin || this.elementRef;
+
             return elementRef.nativeElement.getBoundingClientRect().width;
         }
+
         return this.panelWidth ?? '';
     }
 
@@ -1350,11 +1355,13 @@ export class KbqSelect
 
     private getTotalVisibleItems(): [number, number] {
         const triggerClone = this.buildTriggerClone();
+
         this._renderer.setStyle(triggerClone.querySelector('.kbq-select__match-hidden-text'), 'display', 'block');
         this._renderer.appendChild(this.trigger.nativeElement, triggerClone);
 
         let visibleItemsCount: number = 0;
         let totalVisibleItemsWidth: number = 0;
+
         (triggerClone.querySelectorAll('kbq-tag') as NodeListOf<HTMLElement>).forEach((item) => {
             if (item.offsetTop < item.offsetHeight) {
                 totalVisibleItemsWidth += this.getItemWidth(item);

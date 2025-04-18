@@ -31,7 +31,9 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
         providers: [{ provide: Location, useClass: SpyLocation }, ...providers]
     });
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -113,18 +115,21 @@ export class ActionsPanelController {
 describe(KbqActionsPanelModule.name, () => {
     it('should apply containerClass', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ containerClass: 'customContainerClass' });
         expect(getActionsPanelContainerElement().classList.contains('customContainerClass')).toBeTruthy();
     });
 
     it('should apply overlayPanelClass', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ overlayPanelClass: 'customOverlayPanelClass' });
         expect(getOverlayPaneElement().classList.contains('customOverlayPanelClass')).toBeTruthy();
     });
 
     it('should contain KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate();
         expect(getOverlayPaneElement().classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR)).toBeTruthy();
     });
@@ -132,6 +137,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should open/close from template', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         componentInstance.close();
@@ -142,6 +148,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should open/close from component', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromComponent();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         componentInstance.close();
@@ -151,24 +158,28 @@ describe(KbqActionsPanelModule.name, () => {
 
     it('should apply width', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ width: '500px' });
         expect(getOverlayPaneElement().style.width).toBe('500px');
     });
 
     it('should apply maxWidth', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ maxWidth: 500 });
         expect(getOverlayPaneElement().style.maxWidth).toBe('500px');
     });
 
     it('should apply maxHeight', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ minWidth: '50%' });
         expect(getOverlayPaneElement().style.minWidth).toBe('50%');
     });
 
     it('should close on ESCAPE', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
@@ -177,6 +188,7 @@ describe(KbqActionsPanelModule.name, () => {
 
     it('should not close on ESCAPE', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ disableClose: true });
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelContainerElement().dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
@@ -186,6 +198,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should close on close button click', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelCloseButton().click();
@@ -195,12 +208,14 @@ describe(KbqActionsPanelModule.name, () => {
 
     it('should not display close button', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ disableClose: true });
         expect(getActionsPanelCloseButton()).toBeNull();
     });
 
     it('should not display backdrop', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate();
         expect(getOverlayContainerElement().querySelector('.cdk-overlay-backdrop')).toBeNull();
     });
@@ -208,6 +223,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should close on navigation', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getLocation().simulateUrlPop('');
@@ -218,6 +234,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should not close on navigation', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromTemplate({ closeOnNavigation: false });
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getLocation().simulateUrlPop('');
@@ -228,6 +245,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should close on destroy', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         fixture.destroy();
@@ -238,6 +256,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should return ActionsPanelRef on open', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
         const actionsPanelRef = componentInstance.openFromTemplate();
+
         expect(actionsPanelRef).toBeInstanceOf(KbqActionsPanelRef);
     });
 
@@ -245,6 +264,7 @@ describe(KbqActionsPanelModule.name, () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
+
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         actionsPanelRef.close();
         await fixture.whenStable();
@@ -255,8 +275,10 @@ describe(KbqActionsPanelModule.name, () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
+
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         const afterClosed = lastValueFrom(actionsPanelRef.afterClosed);
+
         componentInstance.close('customResult');
         expect(await afterClosed).toBe('customResult');
     });
@@ -265,8 +287,10 @@ describe(KbqActionsPanelModule.name, () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
+
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         const afterClosed = lastValueFrom(actionsPanelRef.afterClosed);
+
         actionsPanelRef.close('customResult');
         expect(await afterClosed).toBe('customResult');
     });
@@ -276,6 +300,7 @@ describe(KbqActionsPanelModule.name, () => {
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
         const spy = jest.fn();
+
         actionsPanelRef.afterClosed.subscribe(spy);
         componentInstance.close();
         await fixture.whenStable();
@@ -287,6 +312,7 @@ describe(KbqActionsPanelModule.name, () => {
         const { componentInstance } = fixture;
         const actionsPanelRef = componentInstance.openFromTemplate();
         const spy = jest.fn();
+
         actionsPanelRef.afterOpened.subscribe(spy);
         await fixture.whenStable();
         expect(spy).toHaveBeenCalledTimes(1);
@@ -295,6 +321,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should not autoFocus on open', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         expect(document.activeElement!.tagName).toBe('BODY');
         componentInstance.openFromTemplate();
         await fixture.whenStable();
@@ -304,6 +331,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should apply RTL direction', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromTemplate({ direction: 'rtl' });
         await fixture.whenStable();
         expect(getActionsPanelContainerElement().classList.contains('kbq-actions-panel-container_rtl')).toBeTruthy();
@@ -311,12 +339,14 @@ describe(KbqActionsPanelModule.name, () => {
 
     it('should inject data to component', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromComponent({ data: 'customData' });
         expect(getActionsPanelDataElement().textContent).toBe('customData');
     });
 
     it('should provide data from template context', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         componentInstance.openFromTemplate({ data: 'customData' });
         expect(getActionsPanelDataElement().textContent).toBe('customData');
     });
@@ -324,6 +354,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should inject ActionsPanelRef to component', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromComponent();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelAction2Element().click();
@@ -334,6 +365,7 @@ describe(KbqActionsPanelModule.name, () => {
     it('should provide ActionsPanelRef from template context', async () => {
         const fixture = createComponent(ActionsPanelController);
         const { componentInstance } = fixture;
+
         componentInstance.openFromTemplate();
         expect(getActionsPanelContainerElement()).toBeInstanceOf(HTMLElement);
         getActionsPanelAction2Element().click();
@@ -348,12 +380,14 @@ describe(KbqActionsPanelModule.name, () => {
             enable: jest.fn(),
             disable: () => {}
         };
+
         componentInstance.openFromTemplate({ scrollStrategy: () => scrollStrategy });
         expect(scrollStrategy.enable).toHaveBeenCalledTimes(1);
     });
 
     it('should apply custom overlay container', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+
         expect(
             componentInstance.elementRef.nativeElement.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)
         ).toBeFalsy();

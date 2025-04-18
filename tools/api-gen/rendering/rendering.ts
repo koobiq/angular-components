@@ -12,6 +12,7 @@ const env = nunjucks.configure(TEMPLATE_DIR, {
         variableEnd: '$}'
     }
 });
+
 env.addExtension('HighlightJsExtension', new HighlightNunjucksExtension());
 
 export function renderEntry(entryPointContext: any) {
@@ -19,6 +20,7 @@ export function renderEntry(entryPointContext: any) {
         return env.getTemplate('entry-point.template.html').render({ doc: entryPointContext });
     } catch (e) {
         console.warn(e);
+
         return '';
     }
 }

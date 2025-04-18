@@ -78,6 +78,7 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
     /** Expands a subtree rooted at given data node recursively. */
     expandDescendants(dataNode: T): void {
         const toBeProcessed = [dataNode];
+
         toBeProcessed.push(...this.getDescendants(dataNode));
         this.expansionModel.select(...toBeProcessed);
     }
@@ -85,6 +86,7 @@ export abstract class BaseTreeControl<T> implements TreeControl<T> {
     /** Collapses a subtree rooted at given data node recursively. */
     collapseDescendants(dataNode: T): void {
         const toBeProcessed = [dataNode];
+
         toBeProcessed.push(...this.getDescendants(dataNode));
         this.expansionModel.deselect(...toBeProcessed);
     }

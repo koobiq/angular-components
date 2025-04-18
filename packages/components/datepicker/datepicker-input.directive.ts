@@ -327,6 +327,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         newValue = this.getValidDateOrNull(newValue);
 
         const oldDate = this.value;
+
         this._value = newValue;
         this.formatValue(newValue);
 
@@ -629,6 +630,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         const formattedValue = this.replaceSymbols(this.viewValue);
 
         const newTimeObj = this.getDateFromString(formattedValue);
+
         this.lastValueValid = !!newTimeObj;
 
         if (!newTimeObj) {
@@ -734,6 +736,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         if (rawValue.match(/^\d\D/)) {
             rawValue = `0${rawValue}`;
         }
+
         rawValue.replace(/[^A-Za-z0-9]+/g, this.separator);
 
         if (/[a-z]/gi.test(rawValue)) {
@@ -843,6 +846,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
         if (this.selectionStart === this.selectionEnd) {
             const value = this.getNewValue(event.key, this.selectionStart as number);
+
             this.setViewValue(value);
 
             setTimeout(this.onInput);
@@ -915,6 +919,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
             const digitViewValue: { date?: number; month?: number; year?: number } = {};
             const dateDigits = [this.firstDigit, this.secondDigit, this.thirdDigit];
+
             for (const [index, dateDigit] of dateDigits.entries()) {
                 digitViewValue[dateDigit!.fullName] = parseInt(viewDigits[index]);
             }

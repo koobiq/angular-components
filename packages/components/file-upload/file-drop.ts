@@ -62,6 +62,7 @@ const unwrapDirectory = async (item: FileSystemEntry): Promise<KbqFile[]> => {
 
     while (queue.length > 0) {
         const next = queue.pop();
+
         if (next instanceof Promise) {
             queue.push(...(await next));
         } else if (entryIsDirectory(next)) {
@@ -72,6 +73,7 @@ const unwrapDirectory = async (item: FileSystemEntry): Promise<KbqFile[]> => {
             );
         } else if (entryIsFile(next)) {
             const fileEntry = next;
+
             result.push(
                 new Promise((resolve, reject) => {
                     fileEntry.file((file) => {

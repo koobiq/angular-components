@@ -114,6 +114,7 @@ class KbqPasswordInputCustomPasswordRule {
 describe('KbqPasswordInput', () => {
     it('should have toggle', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputDefault);
+
         fixture.detectChanges();
 
         const kbqPasswordToggle = fixture.debugElement.query(By.css('.kbq-password-toggle'));
@@ -147,6 +148,7 @@ describe('KbqPasswordInput', () => {
 
     it('toggle should change input type', () => {
         const fixture = createComponent(KbqPasswordInputDefault);
+
         fixture.detectChanges();
 
         const passwordToggle = fixture.debugElement.query(By.directive(KbqPasswordToggle)).nativeElement;
@@ -167,6 +169,7 @@ describe('KbqPasswordInput', () => {
 
     it('should have password hints', () => {
         const fixture = createComponent(KbqPasswordInputDefault);
+
         fixture.detectChanges();
 
         const kbqPasswordHints = fixture.debugElement.queryAll(By.css('.kbq-password-hint'));
@@ -176,6 +179,7 @@ describe('KbqPasswordInput', () => {
 
     it('should throw Error if custom password rule selected and verification method not provided', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputCustomPasswordRulesUndefined);
+
         expect(() => {
             try {
                 fixture.detectChanges();
@@ -189,6 +193,7 @@ describe('KbqPasswordInput', () => {
     it('should provide custom password rule via callback', fakeAsync(() => {
         const valueToTest = 'TestValue';
         const fixture = createComponent(KbqPasswordInputCustomPasswordRule);
+
         fixture.detectChanges();
         flush();
         const passwordInput: any = fixture.debugElement.query(By.directive(KbqInputPassword));

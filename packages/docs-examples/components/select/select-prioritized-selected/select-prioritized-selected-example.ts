@@ -45,6 +45,7 @@ export class SelectPrioritizedSelectedExample {
 
     private groupSelectedOptions(): void {
         const unselected = this.options.filter((option) => !this.selected.includes(option));
+
         this.options = this.selected.concat(unselected);
     }
 }

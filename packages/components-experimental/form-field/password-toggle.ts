@@ -40,9 +40,11 @@ export class KbqPasswordToggle {
     /** Form field password control. */
     protected get control(): KbqInputPassword {
         const control = this.formField?.control;
+
         if (!(control instanceof KbqInputPassword)) {
             throw getKbqPasswordToggleMissingControlError();
         }
+
         return control;
     }
 

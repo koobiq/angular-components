@@ -40,6 +40,7 @@ const generateCategoryBlock = (category, typographyStyle) => {
     const categoryOutput = Object.entries(typographyStyle)
         .map(([key, tokens]) => generateTokenBlock(key, tokens, selector))
         .join(LINE_SEP);
+
     return selector ? `${selector} {${LINE_SEP}` + categoryOutput + `\t}${LINE_SEP}` : categoryOutput;
 };
 
@@ -49,6 +50,7 @@ StyleDictionary.registerFormat({
         const baseTypography = Object.entries(dictionary.tokens)
             .map(([category, typographyStyle]) => generateCategoryBlock(category, typographyStyle))
             .join(LINE_SEP);
+
         return `@mixin kbq-base-typography() {${LINE_SEP}` + baseTypography + `}${LINE_SEP}`;
     }
 });

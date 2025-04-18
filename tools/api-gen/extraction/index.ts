@@ -59,6 +59,7 @@ export function extractApiToJson(packages: ModuleInfo[]) {
 
     // Get API documentation entries for modules
     const output: EntryCollection[] = [];
+
     for (const [moduleName, packageMetadataList] of Object.entries(modules)) {
         output.push({
             moduleName,

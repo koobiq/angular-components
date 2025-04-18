@@ -32,17 +32,20 @@ describe('KbqMonthView', () => {
             fixture.detectChanges();
 
             const monthViewDebugElement = fixture.debugElement.query(By.directive(KbqMonthView));
+
             monthViewNativeElement = monthViewDebugElement.nativeElement;
             testComponent = fixture.componentInstance;
         });
 
         it('has 31 days', () => {
             const cellEls = monthViewNativeElement.querySelectorAll('.kbq-calendar__body-cell');
+
             expect(cellEls.length).toBe(31);
         });
 
         it('shows selected date if in same month', () => {
             const selectedEl = monthViewNativeElement.querySelector('.kbq-selected')!;
+
             expect(selectedEl.innerHTML.trim()).toBe('10');
         });
 
@@ -51,20 +54,24 @@ describe('KbqMonthView', () => {
             fixture.detectChanges();
 
             const selectedEl = monthViewNativeElement.querySelector('.kbq-selected');
+
             expect(selectedEl).toBeNull();
         });
 
         it('fires selected change event on cell clicked', () => {
             const cellEls = monthViewNativeElement.querySelectorAll('.kbq-calendar__body-cell');
+
             (cellEls[cellEls.length - 1] as HTMLElement).click();
             fixture.detectChanges();
 
             const selectedEl = monthViewNativeElement.querySelector('.kbq-selected')!;
+
             expect(selectedEl.innerHTML.trim()).toBe('31');
         });
 
         it('should mark active date', () => {
             const cellEls = monthViewNativeElement.querySelectorAll<HTMLElement>('.kbq-calendar__body-cell');
+
             expect(cellEls[4].textContent!.trim()).toBe('5');
             expect(cellEls[4].classList).toContain('kbq-calendar__body_active');
         });
@@ -79,11 +86,13 @@ describe('KbqMonthView', () => {
             fixture.detectChanges();
 
             const monthViewDebugElement = fixture.debugElement.query(By.directive(KbqMonthView));
+
             monthViewNativeElement = monthViewDebugElement.nativeElement;
         });
 
         it('should disable filtered dates', () => {
             const cells = monthViewNativeElement.querySelectorAll('.kbq-calendar__body-cell-content');
+
             expect(cells[0].classList).toContain('kbq-disabled');
             expect(cells[1].classList).not.toContain('kbq-disabled');
         });
@@ -98,11 +107,13 @@ describe('KbqMonthView', () => {
             fixture.detectChanges();
 
             const monthViewDebugElement = fixture.debugElement.query(By.directive(KbqMonthView));
+
             monthViewNativeElement = monthViewDebugElement.nativeElement;
         });
 
         it('should be able to add a custom class to some dates', () => {
             const cells = monthViewNativeElement.querySelectorAll('.kbq-calendar__body-cell');
+
             expect(cells[0].classList).not.toContain('even');
             expect(cells[1].classList).toContain('even');
         });

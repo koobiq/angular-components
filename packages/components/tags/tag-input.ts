@@ -201,6 +201,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     /** Checks to see if the blur should emit the (tagEnd) event. */
     blur(event: FocusEvent) {
         this.focused = false;
+
         // Blur the tag list if it is not focused
         if (!this._tagList.focused) {
             this.triggerValidation();
@@ -271,6 +272,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
         }
 
         const tagValues: string[] = this._tagList.tags.map(({ value }) => value);
+
         items
             .filter((item) => !tagValues.includes(item))
             .forEach((item) => this.tagEnd.emit({ input: this.inputElement, value: item }));

@@ -219,6 +219,7 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     private get canCodeContentBeFocused(): boolean {
         const element = this.scrollableCodeContent?.getElementRef().nativeElement;
+
         return element && this.hasScroll(element) && !this.calculatedMaxHeight;
     }
 
@@ -355,12 +356,14 @@ export class KbqCodeBlock implements AfterViewInit {
         // Should always show actionbar on Mobile devices
         if (this.platform.IOS || this.platform.ANDROID) {
             this.renderer.addClass(this.elementRef.nativeElement, className);
+
             return;
         }
 
         // Should always show actionbar when tabs are visible
         if (!this.hideTabs) {
             this.renderer.addClass(this.elementRef.nativeElement, className);
+
             return;
         }
 
@@ -383,6 +386,7 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Handles the enter keydown event on `viewAll` button. */
     protected onViewAllEnterKeydown(): void {
         this.toggleViewAll();
+
         if (this.canCodeContentBeFocused) {
             this.focusMonitor.focusVia(this.scrollableCodeContent.getElementRef().nativeElement, 'keyboard');
         }
@@ -402,6 +406,7 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     protected copyCode(): void {
         const file = this.files[this.activeFileIndex];
+
         if (this.clipboard.copy(file.content) && this.copyButtonTooltip) {
             this.copyButtonTooltip.content = this.localeConfiguration.copiedTooltip;
         }
@@ -414,6 +419,7 @@ export class KbqCodeBlock implements AfterViewInit {
         const window = this.getWindow();
         const file = this.files[this.activeFileIndex];
         const safeURL = this.domSanitizer.sanitize(SecurityContext.URL, file.link!);
+
         if (safeURL) {
             window?.open(safeURL.toString(), '_blank');
         }
@@ -430,6 +436,7 @@ export class KbqCodeBlock implements AfterViewInit {
         const blob = new Blob([file.content], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const link = this.document.createElement('a');
+
         link.setAttribute('href', url);
         link.setAttribute('download', file.filename || this.fallbackFileName);
         link.click();

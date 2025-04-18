@@ -8,9 +8,11 @@ export function visitAll(visitor, nodes): any[] {
     const visit = visitor.visit
         ? (ast: Element) => visitor.visit!(ast) || ast.visit(visitor)
         : (ast: Element) => ast.visit(visitor);
+
     nodes.forEach((ast) => {
         visit(ast);
     });
+
     return result;
 }
 

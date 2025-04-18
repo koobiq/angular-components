@@ -19,6 +19,7 @@ export class PasswordValidators {
             if (typeof value !== 'string') {
                 return null;
             }
+
             return value.length >= min ? null : { minLength: { min, actual: value.length } };
         };
     }
@@ -39,6 +40,7 @@ export class PasswordValidators {
             if (typeof value !== 'string') {
                 return null;
             }
+
             return value.length <= max ? null : { maxLength: { max, actual: value.length } };
         };
     }
@@ -60,7 +62,9 @@ export class PasswordValidators {
             if (typeof value !== 'string') {
                 return null;
             }
+
             const matches = (value.match(/[A-Z]/g) || []).length;
+
             return matches >= min ? null : { minUppercase: { min, actual: matches } };
         };
     }
@@ -82,7 +86,9 @@ export class PasswordValidators {
             if (typeof value !== 'string') {
                 return null;
             }
+
             const matches = (value.match(/[a-z]/g) || []).length;
+
             return matches >= min ? null : { minLowercase: { min, actual: matches } };
         };
     }
@@ -104,7 +110,9 @@ export class PasswordValidators {
             if (typeof value !== 'string') {
                 return null;
             }
+
             const matches = (value.match(/[\d]/g) || []).length;
+
             return matches >= min ? null : { minNumber: { min, actual: matches } };
         };
     }
@@ -131,7 +139,9 @@ export class PasswordValidators {
             if (typeof value !== 'string') {
                 return null;
             }
+
             const matches = (value.match(/[!@#$%^&*]/g) || []).length;
+
             return matches >= min ? null : { minSpecial: { min, actual: matches } };
         };
     }

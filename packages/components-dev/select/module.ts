@@ -118,6 +118,7 @@ export class SelectDev implements OnInit {
 
     openedChange(opened) {
         console.log('openedChange: ', opened);
+
         if (!opened) {
             this.cdkVirtualScrollViewport.setRenderedContentOffset(0);
             this.cdkVirtualScrollViewport.setRenderedRange(this.initialRange);

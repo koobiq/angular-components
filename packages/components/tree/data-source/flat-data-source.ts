@@ -48,6 +48,7 @@ export class KbqTreeFlattener<T, F> {
 
     flattenNode(node: T, level: number, resultNodes: F[], parent: F | null): F[] {
         const flatNode = this.transformFunction(node, level, parent);
+
         resultNodes.push(flatNode);
 
         if (this.isExpandable(flatNode)) {
@@ -80,6 +81,7 @@ export class KbqTreeFlattener<T, F> {
      */
     flattenNodes(structuredData: T[]): F[] {
         const resultNodes: F[] = [];
+
         structuredData.forEach((node) => this.flattenNode(node, 0, resultNodes, null));
 
         return resultNodes;
@@ -92,10 +94,12 @@ export class KbqTreeFlattener<T, F> {
     expandFlattenedNodes(nodes: F[], treeControl: TreeControl<F>): F[] {
         const results: F[] = [];
         const currentExpand: boolean[] = [];
+
         currentExpand[0] = true;
 
         nodes.forEach((node) => {
             let expand = true;
+
             for (let i = 0; i <= this.getLevel(node); i++) {
                 expand = expand && currentExpand[i];
             }
@@ -186,6 +190,7 @@ export class KbqTreeFlatDataSource<T, F> extends DataSource<F> {
 
     expansionHandler(_change: SelectionChange<F>): F[] {
         const expandedNodes = this.treeFlattener.expandFlattenedNodes(this.flattenedData.value, this.treeControl);
+
         this.expandedData.next(expandedNodes);
 
         return this.expandedData.value;

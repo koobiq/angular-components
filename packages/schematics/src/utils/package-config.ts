@@ -79,6 +79,7 @@ export async function getParsingInfo(project: string | undefined, tree: Tree) {
     const tsPaths = new Set<string>();
     const templatePaths = new Set<string>();
     const projectDefinition = await setupOptions(project, tree);
+
     if (!projectDefinition) {
         throw new SchematicsException(messages.noProject('no project'));
     }

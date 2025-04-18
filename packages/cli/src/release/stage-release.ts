@@ -136,6 +136,7 @@ export class StageReleaseTask extends BaseReleaseTask {
     /** Updates the version of the project package.json and writes the changes to disk. */
     private updatePackageJsonVersion(newVersionName: string) {
         const newPackageJson = { ...this.packageJson, version: newVersionName };
+
         writeFileSync(this.packageJsonPath, `${JSON.stringify(newPackageJson, null, this.tabSpaces)}\n`);
     }
 
@@ -168,6 +169,7 @@ export class StageReleaseTask extends BaseReleaseTask {
 
                 return;
             }
+
             process.exit(1);
         } else if (state === 'pending') {
             console.error(
@@ -183,6 +185,7 @@ export class StageReleaseTask extends BaseReleaseTask {
 
                 return;
             }
+
             process.exit(0);
         }
 

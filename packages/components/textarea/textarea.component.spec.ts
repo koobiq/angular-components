@@ -92,6 +92,7 @@ describe('KbqTextarea', () => {
     describe('basic behaviors', () => {
         it('should change state "disable"', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
+
             fixture.detectChanges();
 
             tick();
@@ -113,6 +114,7 @@ describe('KbqTextarea', () => {
 
         it('should has placeholder', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
+
             fixture.detectChanges();
 
             tick();
@@ -138,6 +140,7 @@ describe('KbqTextarea', () => {
     describe('appearance', () => {
         it('should change font to monospace', () => {
             const fixture = createComponent(KbqTextareaWithMonospace);
+
             fixture.detectChanges();
 
             const kbqTextareaDebug = fixture.debugElement.query(By.directive(KbqTextarea));
@@ -148,23 +151,28 @@ describe('KbqTextarea', () => {
 
         it('should run validation (required)', () => {
             const fixture = createComponent(KbqTextareaInvalid);
+
             fixture.detectChanges();
 
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+
             expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
         });
 
         describe('in form', () => {
             it('should not run validation (required)', () => {
                 const fixture = createComponent(KbqFormFieldWithNgModelInForm);
+
                 fixture.detectChanges();
 
                 const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+
                 expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
             });
 
             it('should run validation after submit (required)', fakeAsync(() => {
                 const fixture = createComponent(KbqFormFieldWithNgModelInForm);
+
                 fixture.detectChanges();
 
                 const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
@@ -173,6 +181,7 @@ describe('KbqTextarea', () => {
                 expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
 
                 const event = createMouseEvent('click');
+
                 dispatchEvent(submitButton, event);
                 flush();
                 expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
@@ -183,6 +192,7 @@ describe('KbqTextarea', () => {
             const fixture = createComponent(KbqFormFieldWithoutBorders, [
                 KbqIconModule
             ]);
+
             fixture.detectChanges();
 
             const kbqFormFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
