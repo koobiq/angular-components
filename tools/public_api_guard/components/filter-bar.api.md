@@ -271,6 +271,7 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     filterSavingErrorText: string;
     get isEmpty(): boolean;
+    get localeData(): any;
     // (undocumented)
     ngOnInit(): void;
     readonly onChangeFilter: EventEmitter<KbqSaveFilterEvent>;
