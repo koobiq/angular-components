@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DateTime } from 'luxon';
 import { DocsLocale } from '../constants/locale';
 
-export const expiresAt = (expiresAt: string) => {
+const expiresAt = (expiresAt: string) => {
     const createdDate = DateTime.fromISO(expiresAt);
     if (!createdDate.isValid) {
         throw new Error(createdDate.invalidReason);
