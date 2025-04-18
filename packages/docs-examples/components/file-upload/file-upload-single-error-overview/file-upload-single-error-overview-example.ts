@@ -37,12 +37,14 @@ export class FileUploadSingleErrorOverviewExample {
 
     onChange(fileItem: KbqFileItem | null): void {
         this.file = fileItem;
+
         const someValidationLogic = (): string | null => {
             return 'The file could not be uploaded for unknown reasons';
         };
 
         if (this.file) {
             this.errors = [someValidationLogic() || ''].filter(Boolean);
+
             if (this.errors.length) {
                 this.file = { ...this.file, hasError: true };
             }

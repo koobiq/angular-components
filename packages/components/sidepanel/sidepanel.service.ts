@@ -60,6 +60,7 @@ export class KbqSidepanelService implements OnDestroy {
         }
 
         const overlayRef = this.createOverlay(fullConfig);
+
         overlayRef.hostElement.classList.add('kbq-sidepanel-overlay');
         const container = this.attachContainer(overlayRef, fullConfig);
         const ref = new KbqSidepanelRef(container, overlayRef, fullConfig);

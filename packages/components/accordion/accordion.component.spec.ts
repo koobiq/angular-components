@@ -98,6 +98,7 @@ describe('KbqAccordion', () => {
             it('should be opened on init', () => {
                 fixture = TestBed.createComponent(AccordionDefaultValue);
                 const component = fixture.debugElement.componentInstance;
+
                 component.defaultValue = 'item-1';
                 fixture.detectChanges();
 
@@ -123,6 +124,7 @@ describe('KbqAccordion', () => {
                 expect(itemsContent[1].nativeElement.getAttribute('data-state')).toBe('closed');
 
                 const component = fixture.debugElement.componentInstance;
+
                 component.value = 'item-1';
                 fixture.detectChanges();
                 expect(items[0].nativeElement.getAttribute('data-state')).toBe('open');
@@ -149,6 +151,7 @@ describe('KbqAccordion', () => {
                 expect(itemsContent[1].nativeElement.getAttribute('data-disabled')).toBe('false');
 
                 const component = fixture.debugElement.componentInstance;
+
                 component.disabled = true;
                 fixture.detectChanges();
 
@@ -171,6 +174,7 @@ describe('KbqAccordion', () => {
                 expect(itemsContent[1].nativeElement.getAttribute('data-disabled')).toBe('false');
 
                 const component = fixture.debugElement.componentInstance;
+
                 component.disabledItem = true;
                 fixture.detectChanges();
 

@@ -235,6 +235,7 @@ export class KbqTag
 
         if (icons.length === 1) {
             const iconElement = icons[0];
+
             if (iconElement.classList.contains('kbq-tag-remove')) {
                 iconElement.classList.add('kbq-icon_right');
                 this.nativeElement.classList.add('kbq-right-icon');
@@ -263,6 +264,7 @@ export class KbqTag
                 return;
             }
         }
+
         (this.elementRef.nativeElement as HTMLElement).classList.add('kbq-standard-tag');
     }
 

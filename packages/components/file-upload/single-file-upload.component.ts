@@ -145,6 +145,7 @@ export class KbqSingleFileUploadComponent
                 if (this._file) {
                     this._file.hasError = status === 'INVALID';
                 }
+
                 this.errors = Object.values(this.ngControl?.errors || {});
                 this.cdr.markForCheck();
             });
@@ -199,9 +200,11 @@ export class KbqSingleFileUploadComponent
         }
 
         const files: FileList | null = (target as HTMLInputElement).files;
+
         if (files?.length) {
             this.file = this.mapToFileItem(files[0]);
         }
+
         this.onTouched();
         /* even if the user selects the same file,
          the onchange event will be triggered every time user clicks on the control.*/
@@ -227,6 +230,7 @@ export class KbqSingleFileUploadComponent
             this.file = this.mapToFileItem(files[0]);
             this.fileQueueChange.emit(this.file);
         }
+
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
     }

@@ -14,8 +14,10 @@ export default function deprecatedIcons(options: Schema): Rule {
 
     return async (tree: Tree, context: SchematicContext) => {
         const { project, fix, stylesExt } = options;
+
         try {
             const projectDefinition = await setupOptions(project, tree);
+
             targetDir = projectDefinition ? tree.getDir(projectDefinition.root) : tree;
         } catch (e) {
             targetDir = tree;
@@ -29,20 +31,24 @@ export default function deprecatedIcons(options: Schema): Rule {
                 });
             } else {
                 const foundIcons = iconsMapping.filter(({ replace }) => newContent!.indexOf(replace) !== -1);
+
                 if (foundIcons.length) {
                     const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
+
                     logMessage(logger, [
                         `Please pay attention! Found deprecated icons in file: `,
                         parsedFilePath,
                         foundIcons.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceWith}`).join('\n')]);
                 }
             }
+
             return newContent;
         };
 
         // Update styles, templates & components
         targetDir.visit((filePath: Path, entry) => {
             let initialContent: string | undefined;
+
             // if project property not provided, skip files in node_modules & dist
             if (filePath.includes('node_modules') || filePath.includes('dist')) {
                 return;
@@ -70,6 +76,7 @@ export default function deprecatedIcons(options: Schema): Rule {
         targetDir.visit((filePath: Path, entry) => {
             if (filePath.endsWith(stylesExt) && !entry?.content.toString()?.includes(iconsFontImportRule)) {
                 const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
+
                 logMessage(logger, [
                     parsedFilePath,
                     `Provide \`${iconsFontImportRule}\` to support icon styles from new scope`

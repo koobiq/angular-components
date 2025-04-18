@@ -428,6 +428,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         const formattedValue = this.formatUserInput(this.viewValue);
 
         const newTimeObj = this.getDateFromTimeString(formattedValue);
+
         this.lastValueValid = !!newTimeObj;
 
         if (!newTimeObj) {

@@ -281,6 +281,7 @@ export class FilterBarOverviewExample {
     onResetFilterChanges(filter: KbqFilter | null) {
         console.log('onResetFilterChanges: ');
         const defaultFilter = this.getSavedFilter(filter);
+
         this.filters.splice(
             this.filters.findIndex(({ name }) => name === filter?.name),
             1,

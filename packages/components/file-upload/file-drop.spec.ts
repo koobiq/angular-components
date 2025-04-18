@@ -61,8 +61,10 @@ describe('FileDropDirective', () => {
 
     it('FileDropDirective: drop with files', (done) => {
         const event = new CustomEvent('CustomEvent');
+
         event.initCustomEvent('drop');
         const fakeFiles = [createFile('test.file')];
+
         (event as any).dataTransfer = { items: fakeFiles };
 
         dispatchFakeEvent(dndZone, 'dragover');
@@ -91,6 +93,7 @@ describe('FileDropDirective', () => {
 
     it('FileDropDirective: drop folder', (done) => {
         const event = new CustomEvent('CustomEvent');
+
         event.initCustomEvent('drop');
         const fakeFiles = [
             createFSFile('test1'),
@@ -106,6 +109,7 @@ describe('FileDropDirective', () => {
                 })
             })
         };
+
         (event as any).dataTransfer = { items: [fakeDirectoryItem] };
 
         dispatchFakeEvent(dndZone, 'dragover');

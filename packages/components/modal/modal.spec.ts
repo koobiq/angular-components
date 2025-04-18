@@ -16,7 +16,9 @@ import { KbqModalService } from './modal.service';
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -273,10 +275,12 @@ describe('KbqModal', () => {
                     }
                 ]
             });
+
             fixture.detectChanges();
             tick(600);
 
             const event = document.createEvent('KeyboardEvent') as any;
+
             event.initKeyboardEvent('keydown', true, true, window, 0, 0, 0, '', false);
 
             Object.defineProperties(event, {
@@ -299,9 +303,11 @@ describe('KbqModal', () => {
                 kbqCancelText: 'Отмена',
                 kbqOnOk: spyOk
             });
+
             fixture.detectChanges();
 
             const event = document.createEvent('KeyboardEvent') as any;
+
             event.initKeyboardEvent('keydown', true, true, window, 0, 0, 0, '', false);
 
             Object.defineProperties(event, {
@@ -486,6 +492,7 @@ describe('KbqModal', () => {
     describe('with dynamic injectors', () => {
         it('should throw error if custom parent injector not provided for feature service', () => {
             const fixture = createComponent(CustomComponent);
+
             try {
                 fixture.componentInstance.modalService.open({
                     kbqComponent: CustomModalComponent
@@ -505,6 +512,7 @@ describe('KbqModal', () => {
                 kbqComponent: CustomModalComponent,
                 injector: updatedInjector
             });
+
             fixture.autoDetectChanges();
             expect(
                 modalRef.getInstance().getContentComponentRef().injector.get(customInjectionTokenProvider.provide)

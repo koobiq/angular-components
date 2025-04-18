@@ -37,11 +37,13 @@ function writeScss({ src, dist }: { src: string; dist: string }) {
 async function postProcessCss({ css, from }: { css: string; from: string }) {
     // const autoprefixerFn = autoprefixer({ overrideBrowserslist: ['> 1%', 'last 2 versions', 'ie >= 11'] });
     const postCssPlugins = [autoprefixer(), require('postcss-discard-comments')];
+
     return postcss(postCssPlugins).process(css, { from });
 }
 
 (async function () {
     const start = performance.now();
+
     console.log(`Compiling...`);
 
     const src = 'packages/components';
@@ -50,6 +52,7 @@ async function postProcessCss({ css, from }: { css: string; from: string }) {
     const componentsPath = path.resolve(process.cwd(), `${src}/**/*.scss`);
 
     const filesToCopy = glob.sync(componentsPath);
+
     filesToCopy.forEach(copyFiles(src, dist));
 
     const scssFiles = glob.sync(componentsPath);
@@ -64,11 +67,13 @@ async function postProcessCss({ css, from }: { css: string; from: string }) {
     copyPrebuiltThemes(distPrebuiltThemes, 'dist/components/prebuilt-themes', 'theme.css');
 
     const end = performance.now();
+
     console.log(`End time: ${(end - start) / 1000} seconds.`);
 })();
 
 function copyPrebuiltThemes(src: string, dist: string, file: string) {
     const content = fs.readFileSync(`${src}/${file}`);
+
     isDirectoryExist(`${dist}/${file}`);
     fs.writeFileSync(`${dist}/${file}`, content);
 }

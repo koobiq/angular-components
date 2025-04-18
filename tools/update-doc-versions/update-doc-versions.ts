@@ -33,8 +33,10 @@ function getNPMVersions(): Versions {
         const majorVersion = version.split('.')[0];
 
         const releaseDate = new Date(date);
+
         if (isNaN(releaseDate.getTime())) {
             console.warn(`Invalid date for version ${version}: ${date}`);
+
             return;
         }
 

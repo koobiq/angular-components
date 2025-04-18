@@ -48,6 +48,7 @@ class TestApp {
             appTree = await createTestApp(runner, { style: 'scss' });
 
             const workspace = await getWorkspace(appTree);
+
             projects = workspace.projects as unknown as ProjectDefinitionCollection;
             projects.forEach((project) => {
                 const templatePath = `/${project.root}/src/app/app.component.html`;
@@ -72,6 +73,7 @@ class TestApp {
         it('should inform about deprecated icons for fix = false (default, without params)', async () => {
             const [firstProjectKey] = projects.keys();
             const messages: string[] = [];
+
             runner.logger.subscribe(
                 ({ message }) => {
                     messages.push(message);
@@ -93,15 +95,18 @@ class TestApp {
         const { replace } = iconsMapping[0];
         let currentProject: ProjectDefinition;
         let currentProjectKey: string;
+
         beforeEach(async () => {
             runner = new SchematicTestRunner('schematics', collectionPath);
             appTree = await createTestApp(runner, { style: 'scss' });
 
             const workspace = await getWorkspace(appTree);
+
             projects = workspace.projects as unknown as ProjectDefinitionCollection;
             currentProjectKey = projects.keys().next().value;
             currentProject = projects.get(currentProjectKey)!;
         });
+
         const overwriteProjectData = ({
             html,
             ts,
@@ -152,6 +157,7 @@ class TestApp {
 
         it('should replace "class="pt-icons " with "class=""', async () => {
             const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="${DEPRECATED_SCOPE} layout-column"></i>`;
+
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
                 project: currentProject,
@@ -170,6 +176,7 @@ class TestApp {
 
         it('should replace " pt-icons"" with "', async () => {
             const elementWithDeprecatedSelector = `<i kbq-icon="${DEPRECATED_SCOPE}-${replace}" class="layout-column ${DEPRECATED_SCOPE}"></i>`;
+
             overwriteProjectData({
                 html: elementWithDeprecatedSelector,
                 project: currentProject,
@@ -197,6 +204,7 @@ class TestApp {
                    return '${DEPRECATED_SCOPE} ${replace}';
                 }
             }`;
+
             overwriteProjectData({
                 ts: componentClass,
                 project: currentProject,
@@ -217,6 +225,7 @@ class TestApp {
             const styles = `
                 @mixin test-icon { @extend .pt-icons; }
             `;
+
             overwriteProjectData({
                 styles,
                 project: currentProject,

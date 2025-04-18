@@ -162,6 +162,7 @@ function buildFileTree(value: any, level: number): FileNode[] {
 
     return data;
 }
+
 function buildFileTreeWithValues(value: any, level: number): FileNode[] {
     const data: any[] = [];
 
@@ -1313,6 +1314,7 @@ class ChildSelection {
 
     private toggleChildren($event: KbqTreeSelectChange) {
         const valuesToChange: any = this.treeControl.getDescendants($event.value.data);
+
         if ($event.value.selected) {
             this.select.selectionModel.deselect(...valuesToChange);
         } else {
@@ -1502,6 +1504,7 @@ describe(KbqTreeSelect.name, () => {
                     flush();
 
                     const optionToClick = overlayContainerElement.querySelectorAll('kbq-tree-option')[2] as HTMLElement;
+
                     optionToClick.click();
                     fixture.detectChanges();
                     flush();
@@ -1550,6 +1553,7 @@ describe(KbqTreeSelect.name, () => {
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1568,6 +1572,7 @@ describe(KbqTreeSelect.name, () => {
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1586,6 +1591,7 @@ describe(KbqTreeSelect.name, () => {
                     expect(selectInstance.panelOpen).toBe(true);
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1604,6 +1610,7 @@ describe(KbqTreeSelect.name, () => {
                     expect(selectInstance.panelOpen).toBe(true);
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1651,6 +1658,7 @@ describe(KbqTreeSelect.name, () => {
                     expect(instance.select.panelOpen).toBe(false);
 
                     const event = dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+
                     tick(10);
 
                     expect(instance.select.panelOpen).toBe(true);
@@ -1675,6 +1683,7 @@ describe(KbqTreeSelect.name, () => {
                     expect(instance.select.panelOpen).toBe(false);
 
                     const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+
                     tick(10);
 
                     expect(instance.select.panelOpen).toBe(true);
@@ -1736,6 +1745,7 @@ describe(KbqTreeSelect.name, () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
+
                     multiFixture.detectChanges();
 
                     multiFixture.componentInstance.control.setValue(['Applications']);
@@ -1746,6 +1756,7 @@ describe(KbqTreeSelect.name, () => {
 
                     const options: NodeListOf<HTMLElement> =
                         overlayContainerElement.querySelectorAll('kbq-tree-option');
+
                     expect(document.activeElement).toBe(options[4]);
                 }));
 
@@ -1753,6 +1764,7 @@ describe(KbqTreeSelect.name, () => {
                     fixture.destroy();
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
+
                     multiFixture.detectChanges();
                     multiFixture.detectChanges();
 
@@ -1822,6 +1834,7 @@ describe(KbqTreeSelect.name, () => {
                     const multiFixture = TestBed.createComponent(MultiSelect);
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'shiftKey', { get: () => true });
 
                     // multiFixture.detectChanges();
@@ -1845,6 +1858,7 @@ describe(KbqTreeSelect.name, () => {
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
                     const event = createKeyboardEvent('keydown', UP_ARROW);
+
                     Object.defineProperty(event, 'shiftKey', { get: () => true });
 
                     multiFixture.detectChanges();
@@ -1871,6 +1885,7 @@ describe(KbqTreeSelect.name, () => {
 
                 it('should prevent the default action when pressing space', fakeAsync(() => {
                     const event = dispatchKeyboardEvent(select, 'keydown', SPACE);
+
                     flush();
 
                     expect(event.defaultPrevented).toBe(true);
@@ -1918,6 +1933,7 @@ describe(KbqTreeSelect.name, () => {
                     expect(document.activeElement).not.toBe(select);
 
                     const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                     option.click();
                     tick(10);
 
@@ -1989,6 +2005,7 @@ describe(KbqTreeSelect.name, () => {
                 expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 tick(1);
@@ -2064,6 +2081,7 @@ describe(KbqTreeSelect.name, () => {
                 expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
                 const panel = overlayContainerElement.querySelector('.kbq-tree-select__panel')!;
+
                 dispatchKeyboardEvent(panel, 'keydown', TAB);
                 fixture.detectChanges();
                 flush();
@@ -2080,6 +2098,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const event = dispatchKeyboardEvent(trigger, 'keydown', HOME);
+
                 fixture.detectChanges();
                 flush();
 
@@ -2097,6 +2116,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const event = dispatchKeyboardEvent(trigger, 'keydown', END);
+
                 fixture.detectChanges();
                 flush();
 
@@ -2121,8 +2141,10 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.focus();
                 const event = dispatchKeyboardEvent(option, 'keydown', SPACE);
+
                 tick(10);
 
                 expect(event.defaultPrevented).toBe(true);
@@ -2136,8 +2158,10 @@ describe(KbqTreeSelect.name, () => {
                 expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.focus();
                 const event = dispatchKeyboardEvent(option, 'keydown', ENTER);
+
                 tick(10);
 
                 expect(event.defaultPrevented).toBe(true);
@@ -2190,6 +2214,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 let option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2246,6 +2271,7 @@ describe(KbqTreeSelect.name, () => {
                 expect(options[2].classList).not.toContain('kbq-selected');
 
                 const optionInstances = fixture.componentInstance.options.toArray();
+
                 expect(optionInstances[1].selected).toBe(false);
                 expect(optionInstances[2].selected).toBe(false);
             }));
@@ -2314,6 +2340,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 tick(1);
@@ -2346,6 +2373,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+
                 options[8].click();
                 fixture.detectChanges();
                 flush();
@@ -2372,6 +2400,7 @@ describe(KbqTreeSelect.name, () => {
                 fixture.detectChanges();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+
                 options[3].click();
                 fixture.detectChanges();
                 flush();
@@ -2393,6 +2422,7 @@ describe(KbqTreeSelect.name, () => {
                 const spy = jest.fn();
                 const subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2422,6 +2452,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2439,12 +2470,14 @@ describe(KbqTreeSelect.name, () => {
 
                         return accum;
                     }, {});
+
                 fixture.componentInstance.dataSource.data = buildFileTree(dataMock, 0);
 
                 trigger.click();
                 fixture.detectChanges();
 
                 const options = overlayContainerElement.querySelectorAll<HTMLElement>('kbq-tree-option');
+
                 options[options.length - 1].click();
                 fixture.detectChanges();
 
@@ -2464,6 +2497,7 @@ describe(KbqTreeSelect.name, () => {
                     elementTop <= containerTop
                         ? containerTop - elementTop <= elementHeight
                         : elementBottom - containerBottom <= elementHeight;
+
                 expect(isInView).toBeTruthy();
             }));
 
@@ -2479,6 +2513,7 @@ describe(KbqTreeSelect.name, () => {
 
                     const option = overlayContainerElement.querySelectorAll('kbq-tree-option')[0];
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
+
                     Object.defineProperties(keyBoardEvent, {
                         altKey: { get: () => true }
                     });
@@ -2511,6 +2546,7 @@ describe(KbqTreeSelect.name, () => {
                 fixture.detectChanges();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent).toContain('rootNode_1');
 
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
@@ -2527,6 +2563,7 @@ describe(KbqTreeSelect.name, () => {
 
             it('should set the view value from the form', fakeAsync(() => {
                 let value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent.trim()).toBe('Food');
 
                 fixture.componentInstance.control.setValue('rootNode_1');
@@ -2555,6 +2592,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 tick(1);
@@ -2572,6 +2610,7 @@ describe(KbqTreeSelect.name, () => {
                 fixture.detectChanges();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent.trim()).toBe('Food');
 
                 expect(trigger.textContent).not.toContain('Pizza');
@@ -2581,6 +2620,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-tree-option');
+
                 expect(options[1].classList).not.toContain('kbq-selected');
             }));
 
@@ -2592,6 +2632,7 @@ describe(KbqTreeSelect.name, () => {
                 fixture.detectChanges();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent.trim()).toBe('Food');
 
                 expect(trigger.textContent).not.toContain('Pizza');
@@ -2601,6 +2642,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-tree-option');
+
                 expect(options[1].classList).not.toContain('kbq-selected');
             }));
 
@@ -2656,6 +2698,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-tree-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 tick(1);
@@ -2691,6 +2734,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent).toContain('rootNode_1');
 
                 cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
@@ -2782,6 +2826,7 @@ describe(KbqTreeSelect.name, () => {
                     fixture.detectChanges();
                     tick(LETTER_KEY_DEBOUNCE_INTERVAL);
                 }
+
                 flush();
 
                 // <option index * height> - <panel height> = 16 * 32 - 224 = 288
@@ -2865,6 +2910,7 @@ describe(KbqTreeSelect.name, () => {
             const fixture = TestBed.createComponent(SelectInitWithoutOptions);
             const instance = fixture.componentInstance;
             const originalData = instance.dataSource.data;
+
             instance.dataSource.data = [];
 
             fixture.detectChanges();
@@ -2936,6 +2982,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should only emit one event when pressing arrow keys on closed select', fakeAsync(() => {
             const select = fixture.debugElement.query(By.css('kbq-tree-select')).nativeElement;
+
             dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
 
             flush();
@@ -2990,6 +3037,7 @@ describe(KbqTreeSelect.name, () => {
             flush();
 
             const options = fixture.debugElement.queryAll(By.css('kbq-tree-option'));
+
             expect(options.length).toEqual(0);
             expect(fixture.debugElement.query(By.css('.kbq-select__no-options-message'))).toBeDefined();
         }));
@@ -3116,6 +3164,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should complete the stateChanges stream on destroy', () => {
             const fixture = TestBed.createComponent(EmptySelect);
+
             fixture.detectChanges();
 
             const debugElement = fixture.debugElement.query(By.directive(KbqTreeSelect));
@@ -3144,10 +3193,12 @@ describe(KbqTreeSelect.name, () => {
             fixture.componentInstance.theme = ThemePalette.Error;
             fixture.detectChanges();
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
             trigger.click();
             fixture.detectChanges();
 
             const panel = overlayContainerElement.querySelector('.kbq-tree-select__panel')!;
+
             expect(panel.classList).toContain('kbq-error');
         });
     });
@@ -3181,6 +3232,7 @@ describe(KbqTreeSelect.name, () => {
         describe('comparing by name', () => {
             it('should have a selection', fakeAsync(() => {
                 const instance = fixture.componentInstance;
+
                 expect(instance.select.selected).toBeUndefined();
 
                 instance.selectedModel = { name: 'rootNode_1', type: 'app' };
@@ -3188,6 +3240,7 @@ describe(KbqTreeSelect.name, () => {
                 tick(0);
 
                 const selectedOption = instance.select.selected as FileFlatNode;
+
                 expect(selectedOption.name).toEqual('rootNode_1');
             }));
         });
@@ -3342,9 +3395,11 @@ describe(KbqTreeSelect.name, () => {
 
         it('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
             const fixture = TestBed.createComponent(SingleSelectWithPreselectedArrayValues);
+
             fixture.detectChanges();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
             fixture.detectChanges();
             tick(600);
 
@@ -3363,6 +3418,7 @@ describe(KbqTreeSelect.name, () => {
         it('should support use inside a custom value accessor', fakeAsync(() => {
             const fixture = TestBed.createComponent(CompWithCustomSelect);
             const writeValueSpyFn = jest.spyOn(fixture.componentInstance.customAccessor, 'writeValue');
+
             fixture.detectChanges();
 
             expect(fixture.componentInstance.customAccessor.select.ngControl).toBeFalsy();
@@ -3399,6 +3455,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should set the trigger text based on the value when initialized', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectOnPushPreselected);
+
             fixture.detectChanges();
             flush();
 
@@ -3412,6 +3469,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should update the trigger based on the value', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectOnPush);
+
             fixture.detectChanges();
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
@@ -3437,6 +3495,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should allow the user to customize the label', fakeAsync(() => {
             const fixture = TestBed.createComponent(SelectWithCustomTrigger);
+
             fixture.detectChanges();
 
             fixture.componentInstance.control.setValue('Downloads');
@@ -3635,6 +3694,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
             fixture.detectChanges();
             tick(600);
 
@@ -3653,6 +3713,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should be able to select multiple values', fakeAsync(() => {
             const localFixture = TestBed.createComponent(BasicSelectWithoutFormsMultiple);
+
             localFixture.detectChanges();
             localFixture.detectChanges();
 
@@ -4226,6 +4287,7 @@ describe(KbqTreeSelect.name, () => {
             const expandableNode = fixture.componentInstance.treeControl.dataNodes.find(
                 (node) => node.name === 'Downloads'
             );
+
             fixture.componentInstance.treeControl.expand(expandableNode!);
 
             fixture.detectChanges();
@@ -4381,6 +4443,7 @@ describe(KbqTreeSelect.name, () => {
             for (let i = 0; i < 3; i++) {
                 options[i].click();
             }
+
             fixture.detectChanges();
 
             // Expect the items to be in reverse order.
@@ -4483,6 +4546,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4514,6 +4578,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4541,6 +4606,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4581,6 +4647,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4609,6 +4676,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should select children with parent', fakeAsync(() => {
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+
             options[4].click();
             tick(100);
             fixture.detectChanges();
@@ -4621,6 +4689,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.componentInstance.treeControl.expandAll();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-tree-option');
+
             options.forEach((o) => {
                 if (['Calendar', 'Chrome', 'Webstorm'].includes(o.textContent!.trim())) {
                     o.click();
@@ -4650,6 +4719,7 @@ describe(KbqTreeSelect.name, () => {
             flush();
 
             const options = overlayContainerElement.querySelectorAll<HTMLElement>('kbq-tree-option');
+
             options.forEach((option) => {
                 option.click();
                 fixture.detectChanges();

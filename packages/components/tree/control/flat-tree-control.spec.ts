@@ -15,6 +15,7 @@ describe('FlatTreeControl', () => {
             const nodes = generateData(10, 4);
             const secondNode = nodes[1];
             const sixthNode = nodes[5];
+
             treeControl.dataNodes = nodes;
 
             treeControl.expand(secondNode);
@@ -41,6 +42,7 @@ describe('FlatTreeControl', () => {
 
         it('should return correct expandable values', () => {
             const nodes = generateData(10, 4);
+
             treeControl.dataNodes = nodes;
 
             for (let i = 0; i < 10; i++) {
@@ -57,6 +59,7 @@ describe('FlatTreeControl', () => {
             const numChildren = 4;
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
+
             treeControl.dataNodes = nodes;
 
             for (let i = 0; i < numNodes; i++) {
@@ -79,12 +82,14 @@ describe('FlatTreeControl', () => {
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
 
             const data = [];
+
             flatten(nodes, data);
             treeControl.dataNodes = data;
 
             treeControl.expandDescendants(nodes[1]);
 
             const expandedNodesNum = numChildren + 1 + numChildren * numGrandChildren;
+
             expect(treeControl.expansionModel.selected.length).toBe(expandedNodesNum);
 
             expect(treeControl.isExpanded(nodes[1])).toBeTruthy();
@@ -104,6 +109,7 @@ describe('FlatTreeControl', () => {
             const numGrandChildren = 2;
             const nodes = generateData(numNodes, numChildren, numGrandChildren);
             const data = [];
+
             flatten(nodes, data);
             treeControl.dataNodes = data;
 
@@ -116,6 +122,7 @@ describe('FlatTreeControl', () => {
             treeControl.expandAll();
 
             const totalNumber = numNodes + numNodes * numChildren + numNodes * numChildren * numGrandChildren;
+
             expect(treeControl.expansionModel.selected.length).toBe(totalNumber);
         });
     });
@@ -144,13 +151,17 @@ function generateData(dataLength: number, childLength: number, grandChildLength:
 
     for (let i = 0; i < dataLength; i++) {
         const children = <any>[];
+
         for (let j = 0; j < childLength; j++) {
             const grandChildren = <any>[];
+
             for (let k = 0; k < grandChildLength; k++) {
                 grandChildren.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex++}`, 3));
             }
+
             children.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex++}`, 2, grandChildren));
         }
+
         data.push(new TestData(`a_${nextIndex}`, `b_${nextIndex}`, `c_${nextIndex++}`, 1, children));
     }
 

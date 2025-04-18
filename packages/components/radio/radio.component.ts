@@ -318,6 +318,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
                 // Notify all radio buttons with the same name to un-check.
                 this.radioDispatcher.notify(this.id, this.name);
             }
+
             this.changeDetector.markForCheck();
         }
     }
@@ -507,6 +508,7 @@ export class KbqRadioButton extends KbqColorDirective implements OnInit, AfterVi
         event.stopPropagation();
 
         const groupValueChanged = this.radioGroup && this.value !== this.radioGroup.value;
+
         this.checked = true;
         this.emitChangeEvent();
 

@@ -104,14 +104,17 @@ export class KbqModalService {
         if (!('kbqCloseByESC' in options)) {
             options.kbqCloseByESC = true;
         }
+
         // Remove the Cancel button if the user not specify a Cancel button
         if (!('kbqCancelText' in options)) {
             options.kbqCancelText = undefined;
         }
+
         // Remove the Ok button if the user not specify a Ok button
         if (!('kbqOkText' in options)) {
             options.kbqOkText = undefined;
         }
+
         // Remove the footer if the user not specify a footer
         if (!('kbqFooter' in options)) {
             options.kbqFooter = undefined;

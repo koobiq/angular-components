@@ -428,6 +428,7 @@ export class ListKeyManager<T extends ListKeyManagerOption> {
         }
 
         let curIndex = index;
+
         while (this.skipPredicateFn(items[curIndex])) {
             curIndex += fallbackDelta;
 

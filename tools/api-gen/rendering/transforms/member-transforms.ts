@@ -61,6 +61,7 @@ export function mergeGettersAndSetters(members: MemberEntry[]): MemberEntry[] {
 
 export const fromMemberGroups = (memberGroups: Map<string, MemberEntryRenderable[]>, types: MemberType[]) => {
     const members: MemberEntryRenderable[] = [];
+
     for (const group of memberGroups.values()) {
         const member = group.find((memberFromGroup) => types.includes(memberFromGroup.memberType));
 
@@ -68,6 +69,7 @@ export const fromMemberGroups = (memberGroups: Map<string, MemberEntryRenderable
             members.push(member);
         }
     }
+
     return members;
 };
 
@@ -78,12 +80,15 @@ export function addRenderableGroupMembers<T extends HasMembers>(entry: T): T & H
     // overloads grouped in map
     const membersGroups = members.reduce((groups, item) => {
         const member = setEntryFlags(addMethodParamsDescription(addHtmlDescription(addHtmlJsDocTagComments(item))));
+
         if (groups.has(member.name)) {
             const group = groups.get(member.name);
+
             group?.push(member);
         } else {
             groups.set(member.name, [member]);
         }
+
         return groups;
     }, new Map<string, MemberEntryRenderable[]>());
 
@@ -116,5 +121,6 @@ function addMethodParamsDescription<T extends MemberEntry>(entry: T): T {
             params: entry.params?.map((param) => addHtmlDescription(param))
         };
     }
+
     return entry;
 }

@@ -19,6 +19,7 @@ describe('KbqLink', () => {
 
     it('should has .kbq-text-only', () => {
         const fixture = TestBed.createComponent(KbqLinkBaseTestApp);
+
         fixture.detectChanges();
 
         const link = fixture.nativeElement.querySelector('[kbq-link]');
@@ -30,6 +31,7 @@ describe('KbqLink', () => {
 
     it('should has .kbq-text-with-icon', () => {
         const fixture = TestBed.createComponent(KbqLinkIconTestApp);
+
         fixture.detectChanges();
 
         const link = fixture.nativeElement.querySelector('[kbq-link]');
@@ -40,6 +42,7 @@ describe('KbqLink', () => {
 
     it('should has .kbq-link_print', fakeAsync(() => {
         const fixture = TestBed.createComponent(KbqLinkPrintTestApp);
+
         tick();
         fixture.detectChanges();
 
@@ -59,6 +62,7 @@ describe('KbqLink', () => {
 
     it('should has .kbq-link_pseudo', () => {
         const fixture = TestBed.createComponent(KbqLinkPseudoTestApp);
+
         fixture.detectChanges();
 
         const link = fixture.nativeElement.querySelector('[kbq-link]');
@@ -68,6 +72,7 @@ describe('KbqLink', () => {
 
     it('should has .kbq-link_no-underline', () => {
         const fixture = TestBed.createComponent(KbqLinkNoUnderlineTestApp);
+
         fixture.detectChanges();
 
         const link = fixture.nativeElement.querySelector('[kbq-link]');

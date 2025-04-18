@@ -166,6 +166,7 @@ describe('KbqSplitter', () => {
     describe('events', () => {
         it('should emit events after releasing gutter', fakeAsync(() => {
             const fixture = createTestComponent(KbqSplitterEvents);
+
             fixture.detectChanges();
 
             tick();
@@ -214,6 +215,7 @@ describe('KbqSplitter', () => {
             const mouseOffset = 10;
 
             const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
+
             gutters[0].nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
 
             fixture.detectChanges();
@@ -267,6 +269,7 @@ describe('KbqSplitter', () => {
 
             const fixture = createTestComponent(DynamicData);
             const componentInstance = fixture.componentInstance;
+
             update();
 
             expect(componentInstance.areaA).toBeTruthy();

@@ -53,6 +53,7 @@ describe(SCHEMATIC_NAME, () => {
         appTree = await createTestApp(runner, { style: 'scss' });
 
         const workspace = await getWorkspace(appTree);
+
         projects = workspace.projects as unknown as ProjectDefinitionCollection;
         projects.forEach((project) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;
@@ -99,6 +100,7 @@ describe(SCHEMATIC_NAME, () => {
     it('should inform about deprecated selectors for fix = false (default, without params)', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
+
         runner.logger.subscribe(
             ({ message }) => {
                 messages.push(message);
@@ -118,6 +120,7 @@ describe(SCHEMATIC_NAME, () => {
     it('should inform about deprecated colors in the file', async () => {
         const [firstProjectKey] = projects.keys();
         const messages: string[] = [];
+
         runner.logger.subscribe(
             ({ message }) => {
                 messages.push(message);

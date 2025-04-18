@@ -73,6 +73,7 @@ export class LazyLoadDataService {
                 })
                 .map((nodeResponse: INodeResponse) => {
                     const result = new LazyLoadNode(nodeResponse.id, nodeResponse.name, nodeResponse.hasChildren);
+
                     this.nodeMap.set(nodeResponse.id, result);
 
                     return result;
@@ -86,6 +87,7 @@ export class LazyLoadDataService {
         if (parent.loading || (parent.hasChildren && parent.children.length)) {
             return;
         }
+
         parent.loading = true;
         this.nodeMap.set(parent.id, parent);
         this.dataChange.next(this.dataChange.value);
@@ -128,6 +130,7 @@ export class LazyLoadDataService {
                     })
                     .map((nodeResponse: INodeResponse) => {
                         const result = new LazyLoadNode(nodeResponse.id, nodeResponse.name, nodeResponse.hasChildren);
+
                         this.nodeMap.set(nodeResponse.id, result);
 
                         return result;
@@ -237,6 +240,7 @@ export class TreeSelectLazyloadExample {
         const existingNode = this.nodeMap.get(node.id);
 
         const flatNode = new FlatNode();
+
         flatNode.id = node.id;
         flatNode.name = node.name;
         flatNode.parent = parent;

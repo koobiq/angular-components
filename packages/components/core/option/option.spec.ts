@@ -22,6 +22,7 @@ describe('KbqOption component', () => {
 
     it('should complete the `stateChanges` stream on destroy', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
+
         fixture.detectChanges();
 
         const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
@@ -35,6 +36,7 @@ describe('KbqOption component', () => {
 
     it('should not emit to `onSelectionChange` if selecting an already-selected option', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
+
         fixture.detectChanges();
 
         const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;
@@ -56,6 +58,7 @@ describe('KbqOption component', () => {
 
     it('should not emit to `onSelectionChange` if deselecting an unselected option', () => {
         const fixture = TestBed.createComponent(OptionWithDisable);
+
         fixture.detectChanges();
 
         const optionInstance: KbqOption = fixture.debugElement.query(By.directive(KbqOption)).componentInstance;

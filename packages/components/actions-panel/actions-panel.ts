@@ -175,6 +175,7 @@ export class KbqActionsPanelDialog extends Dialog {
      */
     setOverlayContainerElement(containerElement?: HTMLElement): this {
         this.overlay.setOverlayContainerElement(containerElement);
+
         return this;
     }
 }
@@ -261,6 +262,7 @@ export class KbqActionsPanel implements OnDestroy {
     ): KbqActionsPanelRef<T, R> {
         let actionsPanelRef!: KbqActionsPanelRef<T, R>;
         const overlayContainerElement = config.overlayContainer?.nativeElement;
+
         overlayContainerElement?.classList.add(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR);
         const dialogRef = this.dialog
             .setOverlayContainerElement(overlayContainerElement)
@@ -291,6 +293,7 @@ export class KbqActionsPanel implements OnDestroy {
                 }),
                 providers: (dialogRef, _dialogConfig, container) => {
                     actionsPanelRef = new KbqActionsPanelRef<T, R>(dialogRef, container as KbqActionsPanelContainer);
+
                     return [
                         { provide: KbqActionsPanelRef, useValue: actionsPanelRef },
                         { provide: KBQ_ACTIONS_PANEL_DATA, useValue: config.data }

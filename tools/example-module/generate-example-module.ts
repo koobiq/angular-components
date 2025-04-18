@@ -113,6 +113,7 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             // For consistency, we expect the example component selector to match
             // the id of the example.
             const expectedSelector = `${exampleId}-example`;
+
             if (primaryComponent.selector !== expectedSelector) {
                 throw Error(
                     `Example ${exampleId} uses selector: ${primaryComponent.selector}, ` +
@@ -125,9 +126,11 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             }
 
             example.files.push(path.basename(relativePath));
+
             if (primaryComponent.templateUrl) {
                 example.files.push(primaryComponent.templateUrl);
             }
+
             if (primaryComponent.styleUrls) {
                 example.files.push(...primaryComponent.styleUrls);
             }
@@ -135,9 +138,11 @@ function analyzeExamples(sourceFiles: string[], baseDir: string): AnalyzedExampl
             if (secondaryComponents.length) {
                 for (const meta of secondaryComponents) {
                     example.additionalComponents.push(meta.componentName);
+
                     if (meta.templateUrl) {
                         example.files.push(meta.templateUrl);
                     }
+
                     if (meta.styleUrls) {
                         example.files.push(...meta.styleUrls);
                     }

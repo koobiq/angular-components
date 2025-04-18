@@ -21,6 +21,7 @@ describe('KbqDivider', () => {
         fixture.detectChanges();
 
         const divider = fixture.debugElement.query(By.css('kbq-divider'));
+
         expect(divider.nativeElement.className).toContain('kbq-divider');
         expect(divider.nativeElement.className).toContain('kbq-divider_vertical');
     });
@@ -30,6 +31,7 @@ describe('KbqDivider', () => {
         fixture.detectChanges();
 
         const divider = fixture.debugElement.query(By.css('kbq-divider'));
+
         expect(divider.nativeElement.className).toContain('kbq-divider');
         expect(divider.nativeElement.className).toContain('kbq-divider_inset');
     });
@@ -40,6 +42,7 @@ describe('KbqDivider', () => {
         fixture.detectChanges();
 
         const divider = fixture.debugElement.query(By.css('kbq-divider'));
+
         expect(divider.nativeElement.className).toContain('kbq-divider');
         expect(divider.nativeElement.className).toContain('kbq-divider_inset');
         expect(divider.nativeElement.className).toContain('kbq-divider_vertical');

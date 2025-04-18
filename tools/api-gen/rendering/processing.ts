@@ -27,18 +27,23 @@ export function getRenderable(entry: DocEntry, moduleName: string): DocEntryRend
     if (isClassEntry(entry)) {
         return getClassRenderable(entry, moduleName);
     }
+
     if (isConstantEntry(entry)) {
         return getConstantRenderable(entry, moduleName);
     }
+
     if (isEnumEntry(entry)) {
         return getEnumRenderable(entry, moduleName);
     }
+
     if (isInterfaceEntry(entry)) {
         return getInterfaceRenderable(entry, moduleName);
     }
+
     if (isFunctionEntry(entry)) {
         return getFunctionRenderable(entry, moduleName);
     }
+
     if (isTypeAliasEntry(entry)) {
         return getTypeAliasRenderable(entry, moduleName);
     }

@@ -41,6 +41,7 @@ const init = async () => {
 
     for (const migration of getMigrations()) {
         const migrationPath = join(schematicsPath, 'migrations', migration);
+
         await ensureDirectoryExistence(migrationPath);
 
         await copyFileWrapper(
@@ -54,6 +55,7 @@ const init = async () => {
         await copyFileWrapper(resolvePath(`../dist/migrations/${migration}/index.js`), join(migrationPath, 'index.js'));
         const optionalMigrationData = resolvePath(`../dist/migrations/${migration}/data.js`);
         const fileExists = statSync(optionalMigrationData, { throwIfNoEntry: false });
+
         if (fileExists) {
             await copyFileWrapper(optionalMigrationData, join(migrationPath, 'data.js'));
         }

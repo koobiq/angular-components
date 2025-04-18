@@ -481,6 +481,7 @@ describe('KbqTimepicker', () => {
             expect(inputElementDebug.nativeElement.value).toBe('23:00:00');
 
             const spaceEvent: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
+
             dispatchEvent(inputElementDebug.nativeElement, spaceEvent);
             tick(1);
 
@@ -539,10 +540,12 @@ describe('KbqTimepicker', () => {
 
         it('Manual keyboard input digit-by-digit', () => {
             const inputNativeElement = inputElementDebug.nativeElement;
+
             inputNativeElement.selectionStart = 0;
             inputNativeElement.selectionEnd = 2;
 
             const key1PressEvent: KeyboardEvent = createKeyboardEvent('keydown', ONE);
+
             dispatchEvent(inputNativeElement, key1PressEvent);
             inputNativeElement.value = `1${inputNativeElement.value.substring(2)}`;
             inputNativeElement.selectionStart = 1;
@@ -553,9 +556,11 @@ describe('KbqTimepicker', () => {
             expect(inputNativeElement.value).toBe('1:00:00');
 
             const key2PressEvent: KeyboardEvent = createKeyboardEvent('keydown', TWO);
+
             dispatchEvent(inputNativeElement, key2PressEvent);
             const inputStringBeforeInsertion = inputNativeElement.value.substring(0, 1);
             const inputStringAfterInsertion = inputNativeElement.value.substring(1);
+
             inputNativeElement.value = `${inputStringBeforeInsertion}2${inputStringAfterInsertion}`;
             inputNativeElement.selectionStart = 2;
             inputNativeElement.selectionEnd = 2;
@@ -600,6 +605,7 @@ describe('KbqTimepicker with null formControl value', () => {
         }).compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
+
         jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
             mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
         );
@@ -676,6 +682,7 @@ describe('KbqTimepicker with null model value', () => {
         }).compileComponents();
 
         const mockedAdapter: DateAdapter<any> = TestBed.inject(DateAdapter);
+
         jest.spyOn(mockedAdapter, 'today').mockImplementation(() =>
             mockedAdapter.createDateTime(2020, 0, 1, 2, 3, 4, 5)
         );
@@ -780,6 +787,7 @@ describe('with Locale change', () => {
 
     it('should apply localized format on format change', () => {
         const selectedFormat = TimeFormats.HHmmss;
+
         testComponent.timeFormat = selectedFormat;
         fixture.detectChanges();
 

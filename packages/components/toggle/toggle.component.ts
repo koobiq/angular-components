@@ -147,6 +147,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     set indeterminate(value: boolean) {
         const changed = value !== this._indeterminate;
+
         this._indeterminate = value;
 
         if (changed) {
@@ -279,6 +280,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     private emitChangeEvent() {
         const event = new KbqToggleChange();
+
         event.source = this;
         event.checked = this.checked;
 

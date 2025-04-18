@@ -165,4 +165,5 @@ const main = async () => {
 
     StyleDictionary.extend(styleDictionaryConfig).buildPlatform('css');
 };
+
 main();

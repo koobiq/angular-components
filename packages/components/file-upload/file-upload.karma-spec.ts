@@ -38,6 +38,7 @@ describe('MultipleFileUploadComponent', () => {
             const event = createFakeEvent('change');
 
             const fakeFile = new File(['test'], 'test.file');
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
 
             dispatchEvent(component.fileUpload.input.nativeElement, event);
@@ -60,6 +61,7 @@ describe('MultipleFileUploadComponent', () => {
 describe('SingleFileUploadComponent', () => {
     let component: any;
     let fixture: ComponentFixture<any>;
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [NoopAnimationsModule, KbqFileUploadModule, FormsModule, ReactiveFormsModule],
@@ -77,6 +79,7 @@ describe('SingleFileUploadComponent', () => {
             fixture.detectChanges();
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], 'test.file');
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();

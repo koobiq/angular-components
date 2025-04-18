@@ -87,6 +87,7 @@ describe('KbqDropdown', () => {
 
     it('should open the dropdown as an idempotent operation', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         expect(overlayContainerElement.textContent).toBe('');
         expect(() => {
@@ -101,10 +102,12 @@ describe('KbqDropdown', () => {
 
     it('should close the dropdown when a click occurs outside the dropdown', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         fixture.componentInstance.trigger.open();
 
         const backdrop = <HTMLElement>overlayContainerElement.querySelector('.cdk-overlay-backdrop');
+
         backdrop.click();
         fixture.detectChanges();
         tick(500);
@@ -114,6 +117,7 @@ describe('KbqDropdown', () => {
 
     it('should be able to remove the backdrop', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
 
         fixture.componentInstance.dropdown.hasBackdrop = false;
@@ -126,6 +130,7 @@ describe('KbqDropdown', () => {
 
     it('should be able to remove the backdrop on repeat openings', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
 
         fixture.componentInstance.trigger.open();
@@ -153,6 +158,7 @@ describe('KbqDropdown', () => {
 
     it('should restore focus to the trigger when the dropdown was opened by keyboard', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -186,9 +192,11 @@ describe('KbqDropdown', () => {
 
     it('should restore focus to the root trigger when the dropdown was opened by mouse', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
 
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
         dispatchFakeEvent(triggerEl, 'mousedown');
         triggerEl.click();
         fixture.detectChanges();
@@ -204,9 +212,11 @@ describe('KbqDropdown', () => {
 
     it('should restore focus to the root trigger when the dropdown was opened by touch', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
 
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
         dispatchFakeEvent(triggerEl, 'touchstart');
         triggerEl.click();
         fixture.detectChanges();
@@ -222,6 +232,7 @@ describe('KbqDropdown', () => {
 
     it('should scroll the panel to the top on open, when it is scrollable', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
 
         // Add 50 items to make the dropdown scrollable
@@ -229,6 +240,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
 
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
+
         dispatchFakeEvent(triggerEl, 'mousedown');
         triggerEl.click();
         fixture.detectChanges();
@@ -241,6 +253,7 @@ describe('KbqDropdown', () => {
 
     it('should set the proper focus origin when restoring focus after opening by keyboard', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -260,6 +273,7 @@ describe('KbqDropdown', () => {
 
     it('should set the proper focus origin when restoring focus after opening by mouse', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -280,6 +294,7 @@ describe('KbqDropdown', () => {
 
     it('should set proper focus origin when right clicking on trigger, before opening by keyboard', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -305,6 +320,7 @@ describe('KbqDropdown', () => {
 
     it('should set the proper focus origin when restoring focus after opening by touch', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         const triggerEl = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -326,6 +342,7 @@ describe('KbqDropdown', () => {
 
     it('should close the dropdown when pressing ESCAPE', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         fixture.componentInstance.trigger.open();
 
@@ -341,6 +358,7 @@ describe('KbqDropdown', () => {
 
     it('should open a custom dropdown', () => {
         const fixture = createComponent(CustomDropdown, [], [CustomDropdownPanel]);
+
         fixture.detectChanges();
         expect(overlayContainerElement.textContent).toBe('');
         expect(() => {
@@ -364,6 +382,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
 
         const boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+
         expect(boundingBox.getAttribute('dir')).toEqual('rtl');
     });
 
@@ -380,6 +399,7 @@ describe('KbqDropdown', () => {
         fixture.detectChanges();
 
         let boundingBox = overlayContainerElement.querySelector('.cdk-overlay-connected-position-bounding-box')!;
+
         expect(boundingBox.getAttribute('dir')).toEqual('rtl');
 
         fixture.componentInstance.trigger.close();
@@ -418,23 +438,27 @@ describe('KbqDropdown', () => {
 
     it('should not throw an error on destroy', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         expect(fixture.destroy.bind(fixture)).not.toThrow();
     });
 
     it('should be able to extract the dropdown item text', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         expect(fixture.componentInstance.items.first.getLabel()).toBe('Item');
     });
 
     it('should filter out non-text nodes when figuring out the label', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         expect(fixture.componentInstance.items.last.getLabel()).toBe('Item with an icon');
     });
 
     it('should set the proper focus origin when opening by mouse', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         const focusSpyFn = jest.spyOn(fixture.componentInstance.items.first, 'focus');
 
@@ -450,6 +474,7 @@ describe('KbqDropdown', () => {
 
     it('should set the proper focus origin when opening by touch', fakeAsync(() => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
         const focusSpyFn = jest.spyOn(fixture.componentInstance.items.first, 'focus');
 
@@ -523,6 +548,7 @@ describe('KbqDropdown', () => {
 
     it('should throw the correct error if the dropdown is not defined after init', () => {
         const fixture = createComponent(SimpleDropdown, [], []);
+
         fixture.detectChanges();
 
         fixture.componentInstance.trigger.dropdown = null!;
@@ -536,6 +562,7 @@ describe('KbqDropdown', () => {
 
     it('should be able to swap out a dropdown after the first time it is opened', fakeAsync(() => {
         const fixture = createComponent(DynamicPanelDropdown);
+
         fixture.detectChanges();
         expect(overlayContainerElement.textContent).toBe('');
 
@@ -569,6 +596,7 @@ describe('KbqDropdown', () => {
 
     it('should apply open state changes when parent uses onPush strategy', fakeAsync(() => {
         const fixture = createComponent(OnPushContainer, [], []);
+
         fixture.detectChanges();
 
         fixture.componentInstance.trigger.open();
@@ -619,6 +647,7 @@ describe('KbqDropdown', () => {
 
         it('should wait for the close animation to finish before considering the panel as closed', fakeAsync(() => {
             const fixture = createComponent(SimpleLazyDropdown);
+
             fixture.detectChanges();
             const trigger = fixture.componentInstance.trigger;
 
@@ -760,6 +789,7 @@ describe('KbqDropdown', () => {
     describe('fallback positions', () => {
         it('should fall back to "before" mode if "after" mode would not fit on screen', () => {
             const fixture = createComponent(SimpleDropdown, [], []);
+
             fixture.detectChanges();
             const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -778,6 +808,7 @@ describe('KbqDropdown', () => {
             // In "before" position, the right sides of the overlay and the origin are aligned.
             // To find the overlay left, subtract the dropdown width from the origin's right side.
             const expectedLeft = triggerRect.right - overlayRect.width;
+
             expect(Math.floor(overlayRect.left)).toBe(Math.floor(expectedLeft));
 
             // The y-position of the overlay should be unaffected, as it can already fit vertically
@@ -786,6 +817,7 @@ describe('KbqDropdown', () => {
 
         it('should fall back to "above" mode if "below" mode would not fit on screen', () => {
             const fixture = createComponent(SimpleDropdown, [], []);
+
             fixture.detectChanges();
             const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -808,6 +840,7 @@ describe('KbqDropdown', () => {
 
         it('should re-position dropdown on both axes if both defaults would not fit', () => {
             const fixture = createComponent(SimpleDropdown, [], []);
+
             fixture.detectChanges();
             const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -832,6 +865,7 @@ describe('KbqDropdown', () => {
 
         it('should re-position a dropdown with custom position set', () => {
             const fixture = createComponent(PositionedDropdown);
+
             fixture.detectChanges();
             const trigger = fixture.componentInstance.triggerEl.nativeElement;
 
@@ -900,6 +934,7 @@ describe('KbqDropdown', () => {
         }
 
         let subject: OverlapSubject<OverlapDropdown>;
+
         describe('explicitly overlapping', () => {
             beforeEach(() => {
                 subject = new OverlapSubject(OverlapDropdown, { overlapTriggerY: true });
@@ -1124,6 +1159,7 @@ describe('KbqDropdown', () => {
             tick();
 
             const levelTwoTrigger = overlay.querySelector('#level-two-trigger')! as HTMLElement;
+
             dispatchMouseEvent(levelTwoTrigger, 'mouseenter');
             fixture.detectChanges();
             tick();
@@ -1406,6 +1442,7 @@ describe('KbqDropdown', () => {
 
         it('should handle the items being rendered in a repeater', fakeAsync(() => {
             const repeaterFixture = createComponent(NestedDropdownRepeater);
+
             overlay = overlayContainerElement;
 
             expect(() => repeaterFixture.detectChanges()).not.toThrow();
@@ -1423,6 +1460,7 @@ describe('KbqDropdown', () => {
 
         it('should be able to trigger the same nested dropdown from different triggers', fakeAsync(() => {
             const repeaterFixture = createComponent(NestedDropdownRepeater);
+
             overlay = overlayContainerElement;
 
             repeaterFixture.detectChanges();
@@ -1447,6 +1485,7 @@ describe('KbqDropdown', () => {
 
         it('should close the initial dropdown if the user moves away while animating', fakeAsync(() => {
             const repeaterFixture = createComponent(NestedDropdownRepeater);
+
             overlay = overlayContainerElement;
 
             repeaterFixture.detectChanges();
@@ -1588,6 +1627,7 @@ describe('KbqDropdown default overrides', () => {
 
     it('should allow for the default dropdown options to be overridden', () => {
         const fixture = TestBed.createComponent(SimpleDropdown);
+
         fixture.detectChanges();
         const dropdown = fixture.componentInstance.dropdown;
 

@@ -94,6 +94,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
         const observables = this.exampleData.files.map((fileName) => {
             const language = this.determineLanguage(fileName);
             const importPath = `${docsContentPath}/${fileName}`;
+
             return this.fetchCode(importPath).pipe(
                 map((content) => ({
                     filename: language,
@@ -125,6 +126,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
      */
     private determineLanguage(fileName: string): string {
         const extension = fileName.split('.').pop();
+
         switch (extension) {
             case 'ts':
                 return 'TS';
@@ -151,6 +153,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
             const { componentName } = EXAMPLE_COMPONENTS[this._example];
             // Lazily loads the example package that contains the requested example.
             const moduleExports = await loadExample(this._example);
+
             this.exampleComponentType = moduleExports[componentName];
 
             // Since the data is loaded asynchronously, we can't count on the native behavior
@@ -164,10 +167,12 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     private prepareCodeFiles(codeFiles: ExampleFileData[]) {
         const filteredFiles = codeFiles.filter((file) => file.content);
+
         if (filteredFiles.length === 1) {
             /* If there is only one non-empty document in the example, then show the block without tabs */
             filteredFiles[0].filename = '';
         }
+
         return filteredFiles;
     }
 }

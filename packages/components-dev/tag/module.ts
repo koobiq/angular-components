@@ -154,6 +154,7 @@ export class DemoComponent implements AfterViewInit {
 
         if (cleanedValue) {
             const isOptionSelected = this.autocomplete.options.some((option) => option.selected);
+
             if (!isOptionSelected && this.canCreate) {
                 this.autocompleteSelectedTags.push(cleanedValue);
 
@@ -189,11 +190,13 @@ export class DemoComponent implements AfterViewInit {
 
     autocompleteOnSelect({ option }: KbqAutocompleteSelectedEvent): void {
         option.deselect();
+
         if (option.value.new) {
             this.autocompleteSelectedTags.push(option.value.value);
         } else {
             this.autocompleteSelectedTags.push(option.value);
         }
+
         this.autocompleteTagInput.nativeElement.value = '';
         this.tagCtrl.setValue(null);
     }
@@ -256,6 +259,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
         if (!value) {
             return null;
         }
+
         return value.length <= max ? null : { customMaxLengthValidator: true };
     };
 };
@@ -321,6 +325,7 @@ export class TagInputValidation {
     removeTag(tag: string): void {
         const tags = this.formControl.value || [];
         const index = tags.indexOf(tag);
+
         if (index >= 0) {
             tags.splice(index, 1);
             this.formControl.setValue(tags);
@@ -330,9 +335,11 @@ export class TagInputValidation {
     createTag({ value, input }: KbqTagInputEvent): void {
         if (value) {
             const tags = this.formControl.value || [];
+
             tags.push(value);
             this.formControl.setValue(tags);
         }
+
         input.value = '';
     }
 }

@@ -10,7 +10,9 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
         providers
     });
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -126,24 +128,28 @@ export class OverflowItemsWithDisabledHideItem {
 describe(KbqOverflowItemsModule.name, () => {
     it('should render all items', () => {
         const { debugElement } = createComponent(OverflowItemsTest);
+
         expect(getOverflowItemDebugElements(debugElement).length).toBe(20);
     });
 
     it('should hide overflown items', async () => {
         const fixture = createComponent(OverflowItemsTest);
         const { debugElement } = fixture;
+
         await fixture.whenStable();
         expect(getOverflowHiddenItems(debugElement).length).toBe(12);
     });
 
     it('should render result', () => {
         const { debugElement } = createComponent(OverflowItemsTest);
+
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement).toBeInstanceOf(HTMLDivElement);
     });
 
     it('should display result', async () => {
         const fixture = createComponent(OverflowItemsTest);
         const { debugElement } = fixture;
+
         await fixture.whenStable();
         expect(isOverflowItemsResultVisible(debugElement)).toBeTrue();
     });
@@ -151,6 +157,7 @@ describe(KbqOverflowItemsModule.name, () => {
     it('should hide result', async () => {
         const fixture = createComponent(OverflowItemsTest);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.containerWidth.set(1500);
         await fixture.whenStable();
         expect(isOverflowItemsResultVisible(debugElement)).toBeFalse();
@@ -159,6 +166,7 @@ describe(KbqOverflowItemsModule.name, () => {
     it('should display result score', async () => {
         const fixture = createComponent(OverflowItemsTest);
         const { debugElement } = fixture;
+
         await fixture.whenStable();
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
     });
@@ -166,6 +174,7 @@ describe(KbqOverflowItemsModule.name, () => {
     it('should prioritize other overflow items before hiding the ordered item', async () => {
         const fixture = createComponent(OverflowItemsWithOrderedItem);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.containerWidth.set(150);
         await fixture.whenStable();
         const visibleItems = getOverflowVisibleItems(debugElement);
@@ -177,6 +186,7 @@ describe(KbqOverflowItemsModule.name, () => {
     it('should disable hiding overflow-item with disableHide attribute', async () => {
         const fixture = createComponent(OverflowItemsWithDisabledHideItem);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.containerWidth.set(150);
         await fixture.whenStable();
         const visibleItems = getOverflowVisibleItems(debugElement);

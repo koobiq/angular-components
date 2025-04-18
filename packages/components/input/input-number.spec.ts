@@ -173,6 +173,7 @@ class KbqNumberInputWithInteger {
 describe('KbqNumberInput', () => {
     it('should have stepper on focus', fakeAsync(() => {
         const fixture = createComponent(KbqNumberInputTestComponent);
+
         fixture.detectChanges();
         flush();
 
@@ -204,6 +205,7 @@ describe('KbqNumberInput', () => {
 
     it('should throw an exception with kbq-cleaner', fakeAsync(() => {
         const fixture = createComponent(KbqNumberInputTestComponent);
+
         fixture.detectChanges();
         flush();
 
@@ -215,6 +217,7 @@ describe('KbqNumberInput', () => {
     describe('formControl', () => {
         it('should step up', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputWithFormControl);
+
             fixture.detectChanges();
             flush();
 
@@ -241,6 +244,7 @@ describe('KbqNumberInput', () => {
 
         it('should step down', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputWithFormControl);
+
             fixture.detectChanges();
 
             expect(fixture.componentInstance.formControl.value).toBe(10);
@@ -267,6 +271,7 @@ describe('KbqNumberInput', () => {
     describe('formControlName', () => {
         it('should step up', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputWithFormControlName);
+
             fixture.detectChanges();
 
             expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toBe(10);
@@ -291,6 +296,7 @@ describe('KbqNumberInput', () => {
 
         it('should step down', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputWithFormControlName);
+
             fixture.detectChanges();
 
             expect(fixture.componentInstance.reactiveForm.value['reactiveInputValue']).toBe(10);
@@ -317,6 +323,7 @@ describe('KbqNumberInput', () => {
     describe('empty value', () => {
         it('should step up when no max', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputTestComponent);
+
             fixture.detectChanges();
             flush();
 
@@ -340,6 +347,7 @@ describe('KbqNumberInput', () => {
 
         it('should step down when no min', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputTestComponent);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -362,6 +370,7 @@ describe('KbqNumberInput', () => {
 
         it('should step up when max is set', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStep);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -388,6 +397,7 @@ describe('KbqNumberInput', () => {
 
         it('should step down when min is set', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStep);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -417,6 +427,7 @@ describe('KbqNumberInput', () => {
             const min = 1;
 
             const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+
             fixture.detectChanges();
 
             fixture.componentInstance.min = min;
@@ -445,6 +456,7 @@ describe('KbqNumberInput', () => {
             const max = 3.5;
 
             const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+
             fixture.componentInstance.max = max;
 
             fixture.detectChanges();
@@ -479,6 +491,7 @@ describe('KbqNumberInput', () => {
 
         it('should be able to set step', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+
             fixture.detectChanges();
 
             fixture.componentInstance.step = 2;
@@ -509,6 +522,7 @@ describe('KbqNumberInput', () => {
 
         it('should be able to set big-step', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStepInput);
+
             fixture.detectChanges();
 
             fixture.componentInstance.bigStep = 3;
@@ -525,6 +539,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             const event = createKeyboardEvent('keydown', UP_ARROW);
+
             Object.defineProperty(event, 'shiftKey', { get: () => true });
             dispatchEvent(inputElementDebug.nativeElement, event);
 
@@ -538,6 +553,7 @@ describe('KbqNumberInput', () => {
     describe('not empty value', () => {
         it('should step up when no min', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputTestComponent);
+
             fixture.detectChanges();
             flush();
 
@@ -565,6 +581,7 @@ describe('KbqNumberInput', () => {
 
         it('should step down when no max', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputTestComponent);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -593,6 +610,7 @@ describe('KbqNumberInput', () => {
     describe('keys', () => {
         it('should step up on up arrow key', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputTestComponent);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -613,6 +631,7 @@ describe('KbqNumberInput', () => {
 
         it('should step down on down arrow key', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputTestComponent);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -633,6 +652,7 @@ describe('KbqNumberInput', () => {
 
         it('should step up with bug step on shift and up arrow key', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStep);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -644,6 +664,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             const event = createKeyboardEvent('keydown', UP_ARROW);
+
             Object.defineProperty(event, 'shiftKey', { get: () => true });
             dispatchEvent(inputElementDebug.nativeElement, event);
 
@@ -655,6 +676,7 @@ describe('KbqNumberInput', () => {
 
         it('should step down with bug step on shift and down arrow key', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStep);
+
             fixture.detectChanges();
 
             const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -666,6 +688,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
             Object.defineProperty(event, 'shiftKey', { get: () => true });
             dispatchEvent(inputElementDebug.nativeElement, event);
 
@@ -677,6 +700,7 @@ describe('KbqNumberInput', () => {
 
         it('should ignore wrong chars', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStep);
+
             fixture.detectChanges();
             flush();
 
@@ -757,6 +781,7 @@ describe('KbqNumberInput', () => {
                 const minuses = [NUMPAD_MINUS, DASH, FF_MINUS];
                 const mockEvent: any = { preventDefault: () => true };
                 const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
+
                 fixture.detectChanges();
 
                 minuses.forEach((minus) => {
@@ -798,6 +823,7 @@ describe('KbqNumberInput', () => {
     describe('truncate to bounds', () => {
         it('should set max when value > max on step up', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStep);
+
             fixture.detectChanges();
             flush();
 
@@ -825,6 +851,7 @@ describe('KbqNumberInput', () => {
 
         it('should set min when value < min on step down', fakeAsync(() => {
             const fixture = createComponent(KbqNumberInputMaxMinStep);
+
             fixture.detectChanges();
             flush();
 

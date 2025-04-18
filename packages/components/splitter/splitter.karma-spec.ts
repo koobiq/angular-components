@@ -81,6 +81,7 @@ describe('KbqSplitter', () => {
             const mouseOffset = -10;
 
             const gutters = fixture.debugElement.queryAll(By.directive(KbqGutterDirective));
+
             gutters[0].nativeElement.dispatchEvent(new MouseEvent('mousedown', { screenX: 0, screenY: 0 }));
 
             fixture.detectChanges();

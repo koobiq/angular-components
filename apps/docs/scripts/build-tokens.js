@@ -42,11 +42,13 @@ function buildTokens(themeConfig) {
         // Very important: the registration of custom transforms
         // needs to be done _before_ applying the configuration
         const extendedPlatform = getPlatformConfig(platform);
+
         delete extendedPlatform.platforms.figma;
 
         extendedPlatform.platforms.css.files[0].options.selector = `.${platform.skin}`;
 
         const StyleDictionaryExtended = StyleDictionary.extend(extendedPlatform);
+
         delete StyleDictionaryExtended.platforms.figma;
 
         // FINALLY, BUILD ALL THE PLATFORMS

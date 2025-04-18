@@ -161,6 +161,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
 
         for (let i = 0; i < this.anchors.length; i++) {
             const { top } = headers[i].getBoundingClientRect();
+
             this.anchors[i].top = top;
         }
 

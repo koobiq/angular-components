@@ -23,9 +23,11 @@ const getMigrationInputs = () => {
 
         const optionalMigrationData = path.join(__dirname, `src/migrations/${cur}/data.ts`);
         const fileExists = statSync(optionalMigrationData, { throwIfNoEntry: false });
+
         if (fileExists) {
             res[`migrations/${cur}/data`] = optionalMigrationData;
         }
+
         return res;
     }, {});
 };

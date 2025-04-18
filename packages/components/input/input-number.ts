@@ -160,6 +160,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     set value(value: number | null) {
         const oldValue = this.value;
+
         this._value = value;
 
         if (oldValue !== value) {
@@ -328,6 +329,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             // let it happen, don't do anything
             return;
         }
+
         // Ensure that it is not a number and stop the keypress
         if (event.shiftKey || (!isNumberKey(event) && !isNumpadKey(event))) {
             event.preventDefault();
@@ -351,6 +353,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         setTimeout(() => {
             const fromPaste = event.inputType === 'insertFromPaste';
             let formattedValue: string | null;
+
             if (fromPaste) {
                 formattedValue = this.formatNumber(this.valueFromPaste);
             } else {
@@ -372,6 +375,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                     }
                 });
             }
+
             this.setViewValue(formattedValue, !fromPaste);
             this.viewToModelUpdate(formattedValue);
         });

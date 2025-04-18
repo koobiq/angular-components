@@ -86,6 +86,7 @@ export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
         if (!this.instance) {
             return;
         }
+
         super.updateData();
         this.setupButtonEvents();
         this.instance.confirmButtonText = this.confirmButtonText;

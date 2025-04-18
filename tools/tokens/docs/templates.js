@@ -16,11 +16,13 @@ const shadowsTemplate = (designToken) => `<div class="kbq-design-token-example__
 
 const sizesTemplate = (designToken) => {
     const varTemplate = `var(--${designToken.name})`;
+
     return `<div class="kbq-design-token-example__sizes" style="width: ${varTemplate};"></div>`;
 };
 
 const simpleExampleTypographyTemplate = (typographyType) => {
     const typographyTypeOutput = capitalize(typographyType, { separator: '-' });
+
     return `<div class="kbq-${typographyType}">${typographyTypeOutput}</div>`;
 };
 
@@ -45,11 +47,15 @@ const mapColors = ([type, tokens]) => {
     const output = {
         type: capitalize(type)
     };
+
     if (Array.isArray(tokens)) {
         output.tokens = tokens.map(mapColor);
+
         return output;
     }
+
     output.sections = Object.entries(tokens).map(mapColors);
+
     return output;
 };
 
@@ -57,10 +63,13 @@ const outputPage = (headerLevel, pageInfo) =>
     pageInfo.map(({ type, tokens, sections }) => {
         // Create a markdown header level string (e.g., '##' for headerLevel 2).
         const markdownLevel = Array.from({ length: headerLevel }, () => '#').join('');
+
         if (tokens && tokens.length) {
             const header = type.toLowerCase() === NO_HEADER ? '' : `${markdownLevel} ${type}${LINE_SEP}`;
+
             return `${header}${outputTable(tokens)}${LINE_SEP}`;
         }
+
         if (sections && sections.length) {
             return `${markdownLevel} ${type}${LINE_SEP}` + outputPage(headerLevel + 1, sections).join(LINE_SEP);
         }

@@ -163,6 +163,7 @@ describe('KbqTagInput', () => {
             );
 
             const addSpyFn = jest.spyOn(testTagInput, 'add');
+
             tagInputDirective.separatorKeyCodes = separators.map((separator) => separator.keyCode);
 
             fixture.detectChanges();
@@ -199,6 +200,7 @@ describe('KbqTagInput', () => {
             inputNativeElement = inputDebugElement.nativeElement;
 
             const addSpyFn = jest.spyOn(testTagInput, 'add');
+
             fixture.detectChanges();
 
             tagInputDirective.onKeydown(createKeyboardEvent('keydown', COMMA, inputNativeElement, ','));
@@ -207,6 +209,7 @@ describe('KbqTagInput', () => {
 
         it('should not emit the tagEnd event if a separator is pressed with a modifier key', () => {
             const ENTER_EVENT = createKeyboardEvent('keydown', ENTER, inputNativeElement, 'Enter');
+
             Object.defineProperty(ENTER_EVENT, 'shiftKey', { get: () => true });
             const addSpyFn = jest.spyOn(testTagInput, 'add');
 

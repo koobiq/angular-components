@@ -76,6 +76,7 @@ describe('Sidebar', () => {
 
         xit('should fire change event', () => {
             const changeSpy = jest.fn();
+
             sidebarComponent.stateChanged.subscribe(changeSpy);
 
             expect(sidebarComponent.opened).toBeTruthy();

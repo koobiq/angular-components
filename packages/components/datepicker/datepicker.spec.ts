@@ -78,6 +78,7 @@ describe('KbqDatepicker', () => {
 
             it('should focus input after close', fakeAsync(() => {
                 const input = testComponent.datepicker.datepickerInput.elementRef.nativeElement;
+
                 input.focus();
 
                 testComponent.datepicker.open();
@@ -145,6 +146,7 @@ describe('KbqDatepicker', () => {
                 flush();
 
                 const popup = document.querySelector('.cdk-overlay-pane')!;
+
                 expect(popup).not.toBeNull();
                 expect(parseInt(getComputedStyle(popup).height as string)).not.toBe(0);
 
@@ -173,6 +175,7 @@ describe('KbqDatepicker', () => {
 
                 for (let changeCount = 1; changeCount < 3; changeCount++) {
                     const currentDay = changeCount;
+
                     testComponent.datepicker.open();
                     fixture.detectChanges();
 
@@ -191,6 +194,7 @@ describe('KbqDatepicker', () => {
                     }
 
                     const cells = document.querySelectorAll('.kbq-calendar__body-cell');
+
                     dispatchMouseEvent(cells[1], 'click');
                     fixture.detectChanges();
                     flush();
@@ -208,6 +212,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 const calendarBodyEl = document.querySelector('.kbq-calendar__body') as HTMLElement;
+
                 expect(calendarBodyEl).not.toBeNull();
                 expect(testComponent.datepickerInput.value?.toISO()).toEqual(DateTime.local(2020, 1, 1).toISO());
 
@@ -289,6 +294,7 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepicker.opened).toBe(true);
 
                 const event = createKeyboardEvent('keydown', UP_ARROW);
+
                 Object.defineProperty(event, 'altKey', { get: () => true });
 
                 dispatchEvent(inputEl, event);
@@ -305,6 +311,7 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepicker.opened).toBe(false);
 
                 const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                 Object.defineProperty(event, 'altKey', { get: () => true });
 
                 dispatchEvent(inputEl, event);
@@ -323,6 +330,7 @@ describe('KbqDatepicker', () => {
                 input.setAttribute('readonly', 'true');
 
                 const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                 Object.defineProperty(event, 'altKey', { get: () => true });
 
                 dispatchEvent(input, event);
@@ -337,6 +345,7 @@ describe('KbqDatepicker', () => {
         describe('datepicker with too many inputs', () => {
             it('should throw when multiple inputs registered', fakeAsync(() => {
                 const fixture = createComponent(MultiInputDatepicker, [KbqLuxonDateModule]);
+
                 expect(() => fixture.detectChanges()).toThrow();
             }));
         });
@@ -344,10 +353,12 @@ describe('KbqDatepicker', () => {
         describe('datepicker that is assigned to input at a later point', () => {
             it('should not throw on ALT + DOWN_ARROW for input without datepicker', fakeAsync(() => {
                 const fixture = createComponent(DelayedDatepicker, [KbqLuxonDateModule]);
+
                 fixture.detectChanges();
 
                 expect(() => {
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
                     dispatchEvent(fixture.nativeElement.querySelector('input'), event);
                     fixture.detectChanges();
@@ -449,6 +460,7 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepicker.selected).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
+
                 testComponent.selected = selected;
                 fixture.detectChanges();
                 flush();
@@ -463,6 +475,7 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepickerInput.value).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
+
                 testComponent.datepicker.select(selected);
                 fixture.detectChanges();
                 flush();
@@ -615,6 +628,7 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepicker.selected).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
+
                 testComponent.formControl.setValue(selected);
                 fixture.detectChanges();
 
@@ -627,6 +641,7 @@ describe('KbqDatepicker', () => {
                 expect(testComponent.datepickerInput.value).toBeNull();
 
                 const selected = DateTime.local(2017, 1, 1);
+
                 testComponent.datepicker.select(selected);
                 fixture.detectChanges();
 
@@ -705,6 +720,7 @@ describe('KbqDatepicker', () => {
 
             it('should set the `button` type on the trigger to prevent form submissions', () => {
                 const toggle = fixture.debugElement.query(By.css('button')).nativeElement;
+
                 expect(toggle.getAttribute('type')).toBe('button');
             });
 
@@ -765,6 +781,7 @@ describe('KbqDatepicker', () => {
         describe('datepicker with custom kbq-datepicker-toggle icon', () => {
             it('should be able to override the kbq-datepicker-toggle icon', fakeAsync(() => {
                 const fixture = createComponent(DatepickerWithCustomIcon, [KbqLuxonDateModule]);
+
                 fixture.detectChanges();
 
                 expect(fixture.nativeElement.querySelector('.kbq-datepicker-toggle .custom-icon')).toBeTruthy();
@@ -776,6 +793,7 @@ describe('KbqDatepicker', () => {
         describe('datepicker with tabindex on kbq-datepicker-toggle', () => {
             it('should forward tabindex from host to button', () => {
                 const fixture = createComponent(DatepickerWithTabindexOnToggle, [KbqLuxonDateModule]);
+
                 fixture.detectChanges();
 
                 const button = fixture.nativeElement.querySelector('.kbq-datepicker-toggle__button');
@@ -853,6 +871,7 @@ describe('KbqDatepicker', () => {
                 const yearSelectValuePath = '.kbq-calendar-header__select-group kbq-select .kbq-button_transparent';
                 const invalidYearLessThanMin = 2014;
                 const inputEl = fixture.debugElement.query(By.css('input')).nativeElement;
+
                 inputEl.value = `01.01.${invalidYearLessThanMin}`;
                 dispatchKeyboardEvent(inputEl, 'keydown', ONE);
                 tick();
@@ -909,6 +928,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 const cells = document.querySelectorAll('.kbq-calendar__body-cell-content');
+
                 expect(cells[0].classList).toContain('kbq-disabled');
                 expect(cells[1].classList).not.toContain('kbq-disabled');
             });
@@ -974,6 +994,7 @@ describe('KbqDatepicker', () => {
                 fixture.detectChanges();
 
                 const cells = document.querySelectorAll('.kbq-calendar__body-cell');
+
                 dispatchMouseEvent(cells[0], 'click');
                 fixture.detectChanges();
                 flush();
@@ -1202,6 +1223,7 @@ describe('KbqDatepicker', () => {
 
         it('should have the correct input value even when inverted date format', fakeAsync(() => {
             const selected = DateTime.local(2017, 8, 1);
+
             testComponent.date = selected;
             fixture.detectChanges();
             flush();

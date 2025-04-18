@@ -55,6 +55,7 @@ const getOffset = (
             if (originX === 'start') {
                 offset.offsetX = -PADDING;
             }
+
             if (originX === 'end') {
                 offset.offsetX = PADDING;
             }
@@ -64,10 +65,12 @@ const getOffset = (
     // alignment should be applied only if the element is small
     if (ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT > elementHeightHalf) {
         const PADDING = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT - elementHeightHalf;
+
         if (originY === overlayY) {
             if (originY === 'top') {
                 offset.offsetY = -PADDING;
             }
+
             if (originY === 'bottom') {
                 offset.offsetY = PADDING;
             }
@@ -370,6 +373,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
      */
     protected getAdjustedPositions(): ConnectionPositionPair[] {
         const res: ConnectionPositionPair[] = [];
+
         for (const pos of this.getPrioritizedPositions()) {
             const offset: KbqPopupTriggerOffset = this.arrow
                 ? getOffset(pos, this.elementRef.nativeElement.getBoundingClientRect())
@@ -380,6 +384,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
                 ...offset
             });
         }
+
         return res;
     }
 

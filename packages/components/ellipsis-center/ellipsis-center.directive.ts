@@ -52,14 +52,18 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     private refresh() {
         let start = '';
         let end = '';
+
         this.content = this._kbqEllipsisCenter;
 
         const [dataTextStart, dataTextEnd] = ['data-text-start', 'data-text-end'].map((querySelector) => {
             const element = this.elementRef.nativeElement.querySelector(`.${querySelector}`);
+
             if (element) {
                 this.renderer.removeChild(this.elementRef.nativeElement, element);
             }
+
             const newElement = this.renderer.createElement('span');
+
             this.renderer.addClass(newElement, querySelector);
 
             return newElement;
@@ -69,6 +73,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         this.renderer.appendChild(dataTextEnd, this.renderer.createText(end));
         setTimeout(() => {
             this.disabled = this.elementRef.nativeElement.clientWidth > dataTextStart.scrollWidth;
+
             if (this.disabled) {
                 start = '';
                 end = this._kbqEllipsisCenter;
@@ -76,9 +81,11 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
                 const averageCharWidth = this.charWidth;
                 const lastCharsLength = Math.round(this.elementRef.nativeElement.clientWidth / 2 / averageCharWidth);
                 const sliceIndex: number = Math.round(this._kbqEllipsisCenter.length - lastCharsLength);
+
                 start = this._kbqEllipsisCenter.slice(0, sliceIndex);
                 end = this._kbqEllipsisCenter.slice(sliceIndex);
             }
+
             dataTextStart.innerText = start;
             dataTextEnd.innerText = end;
         });

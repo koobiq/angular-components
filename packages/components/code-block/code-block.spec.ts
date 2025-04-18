@@ -12,7 +12,9 @@ import { KbqCodeBlockFile } from './types';
 const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -101,6 +103,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         componentInstance.lineNumbers = false;
         fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_hide-line-numbers']).toBeTruthy();
@@ -110,6 +113,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_hide-line-numbers']).toBeTruthy();
         componentInstance.lineNumbers = true;
         fixture.detectChanges();
@@ -119,6 +123,7 @@ describe(KbqCodeBlock.name, () => {
     it('should apply lineNumbers plugin', () => {
         const { debugElement } = createComponent(BaseCodeBlock);
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.nativeElement.querySelector('.hljs-ln')).toBeInstanceOf(HTMLTableElement);
     });
 
@@ -126,6 +131,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_filled']).toBeFalsy();
         componentInstance.filled = true;
         fixture.detectChanges();
@@ -136,6 +142,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         componentInstance.filled = false;
         fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_outline']).toBeTruthy();
@@ -145,6 +152,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_no-border']).toBeFalsy();
         componentInstance.noBorder = true;
         fixture.detectChanges();
@@ -155,6 +163,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_no-border']).toBeFalsy();
         componentInstance.filled = true;
         fixture.detectChanges();
@@ -165,6 +174,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
         expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
         componentInstance.hideTabs = true;
@@ -177,6 +187,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_hide-tabs']).toBeFalsy();
         expect(getTabNavBarDebugElement(debugElement)).toBeTruthy();
         componentInstance.files = [{ content: 'koobiq' }];
@@ -189,6 +200,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const tabLinks = getTabLinkElements(debugElement);
+
         expect(tabLinks[1].classList.contains('kbq-selected')).toBeFalsy();
         componentInstance.activeFileIndex = 1;
         fixture.detectChanges();
@@ -198,9 +210,11 @@ describe(KbqCodeBlock.name, () => {
     it('should set fallback file name if not provided', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.files = [{ content: 'koobiq' }, { filename: 'koobiq', content: 'koobiq' }];
         fixture.detectChanges();
         const tabLinks = getTabLinkElements(debugElement);
+
         expect(tabLinks[0].textContent?.trim()).toBe(TestBed.inject(KBQ_CODE_BLOCK_FALLBACK_FILE_NAME));
         expect(tabLinks[1].textContent?.trim()).toBe('koobiq');
     });
@@ -209,6 +223,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_soft-wrap']).toBeFalsy();
         componentInstance.softWrap = true;
         fixture.detectChanges();
@@ -218,6 +233,7 @@ describe(KbqCodeBlock.name, () => {
     it('should set fallback file content language if not provided', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.files = [{ content: 'koobiq' }];
         fixture.detectChanges();
         expect(geCodeBlockHighlightDebugElement(debugElement).attributes['data-language']).toBe(
@@ -228,6 +244,7 @@ describe(KbqCodeBlock.name, () => {
     it('should set fallback file content language if is invalid', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.files = [{ content: 'koobiq', language: 'invalid_file_language' }];
         fixture.detectChanges();
         expect(geCodeBlockHighlightDebugElement(debugElement).attributes['data-language']).toBe(
@@ -249,6 +266,7 @@ describe(KbqCodeBlock.name, () => {
             })
 
         ]);
+
         expect(geCodeBlockDebugElement(debugElement).componentInstance.localeConfiguration).toMatchSnapshot();
     });
 
@@ -256,6 +274,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const code = geCodeBlockHighlightDebugElement(debugElement);
+
         componentInstance.activeFileIndex = 0;
         fixture.detectChanges();
         expect(code.classes['hljs']).toBe(true);
@@ -273,6 +292,7 @@ describe(KbqCodeBlock.name, () => {
     it('should display toggle soft wrap button', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
         expect(getToggleSoftWrapButtonElement(debugElement)).toBeFalsy();
         componentInstance.canToggleSoftWrap = true;
         fixture.detectChanges();
@@ -283,6 +303,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const toggleSoftWrapSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleSoftWrap');
+
         componentInstance.canToggleSoftWrap = true;
         fixture.detectChanges();
         getToggleSoftWrapButtonElement(debugElement).click();
@@ -293,6 +314,7 @@ describe(KbqCodeBlock.name, () => {
     it('should display copy button', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
         expect(getCopyButtonElement(debugElement)).toBeFalsy();
         componentInstance.canCopy = true;
         fixture.detectChanges();
@@ -303,6 +325,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const copyCodeSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'copyCode');
+
         componentInstance.canCopy = true;
         fixture.detectChanges();
         getCopyButtonElement(debugElement).click();
@@ -312,6 +335,7 @@ describe(KbqCodeBlock.name, () => {
     it('should display download button', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
         expect(getDownloadButtonElement(debugElement)).toBeFalsy();
         componentInstance.canDownload = true;
         fixture.detectChanges();
@@ -322,6 +346,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const downloadCodeSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'downloadCode');
+
         componentInstance.canDownload = true;
         fixture.detectChanges();
         getDownloadButtonElement(debugElement).click();
@@ -331,6 +356,7 @@ describe(KbqCodeBlock.name, () => {
     it('should display link button', () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
+
         expect(getLinkButtonElement(debugElement)).toBeFalsy();
         componentInstance.files = [{ content: 'koobiq', link: 'https://koobiq.io' }];
         fixture.detectChanges();
@@ -341,6 +367,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const openLinkSpy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'openLink');
+
         componentInstance.files = [{ content: 'koobiq', link: 'https://koobiq.io' }];
         fixture.detectChanges();
         getLinkButtonElement(debugElement).click();
@@ -358,6 +385,7 @@ describe(KbqCodeBlock.name, () => {
             }
         ]);
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
     });
 
@@ -365,6 +393,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         componentInstance.hideTabs = false;
         fixture.detectChanges();
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeTruthy();
@@ -374,6 +403,7 @@ describe(KbqCodeBlock.name, () => {
         const fixture = createComponent(BaseCodeBlock);
         const { debugElement, componentInstance } = fixture;
         const codeBlock = geCodeBlockDebugElement(debugElement);
+
         componentInstance.hideTabs = true;
         fixture.detectChanges();
         codeBlock.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));

@@ -129,6 +129,7 @@ export class KbqValidateDirective implements AfterContentInit {
 
         if (this.parent?.onSubmit) {
             const originalSubmit = this.parent.onSubmit;
+
             this.parent.onSubmit = ($event: Event) => {
                 this.validationControl!.updateValueAndValidity({ emitEvent: false });
 

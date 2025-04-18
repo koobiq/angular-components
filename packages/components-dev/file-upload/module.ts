@@ -188,6 +188,7 @@ export class DemoComponent {
 
     addFile(file: KbqFileItem | null) {
         this.file = file;
+
         if (!this.file) {
             this.errorMessagesForSingle = [];
         }
@@ -203,6 +204,7 @@ export class DemoComponent {
 
         if (this.file) {
             this.errorMessagesForSingle = this.validation.map((fn) => fn(this.file!.file) || '').filter(Boolean);
+
             if (this.errorMessagesForSingle.length) {
                 this.file = { ...this.file, hasError: true };
             }
@@ -252,6 +254,7 @@ export class DemoComponent {
 
     initLoading() {
         const file = this.singleFileControl.value;
+
         file?.loading?.next(true);
 
         timer(5000).subscribe(() => file?.loading?.next(false));
@@ -286,6 +289,7 @@ export class DemoComponent {
         for (const fileItem of $event.slice()) {
             this.fileListOnAddLoad.push(new FormControl(fileItem, FileValidators.maxFileSize(MAX_FILE_SIZE)));
         }
+
         this.initLoadingForMultiple();
     }
 
@@ -299,8 +303,10 @@ export class DemoComponent {
         this.filesForDefaultValidation = $event.slice();
 
         this.errorMessages = [];
+
         for (const fileItem of this.filesForDefaultValidation) {
             const validationResult = maxFileExceededFiveMbs(fileItem.file);
+
             if (validationResult) {
                 fileItem.hasError = true;
                 this.errorMessages.push(`${fileItem.file.name} - maxFileSize`);

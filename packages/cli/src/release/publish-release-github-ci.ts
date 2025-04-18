@@ -48,6 +48,7 @@ export class PublishReleaseCIGithubTask extends BaseReleaseTask {
         } else {
             console.log(cyan('  koobiq CI release script'));
         }
+
         console.log(cyan('-----------------------------------------'));
         console.log();
 

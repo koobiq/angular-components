@@ -48,10 +48,12 @@ export class ToastHideOverviewExample {
             },
             0
         );
+
         timer(2000)
             .pipe(
                 switchMap(() => {
                     this.progress = false;
+
                     return timer(550);
                 })
             )

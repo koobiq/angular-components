@@ -121,6 +121,7 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
             this.isExpandable,
             this.getChildren
         );
+
         this.treeControl = new FlatTreeControl<TreeFlatNode>(
             this.getLevel,
             this.isExpandable,
@@ -160,6 +161,7 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
 
     private transformer = (node: TreeNode, level: number, parent: any) => {
         const flatNode = new TreeFlatNode();
+
         flatNode.id = parent ? `${parent.id}/${node.id}` : `${node.id}`;
         flatNode.name = node.name;
         flatNode.parent = parent;

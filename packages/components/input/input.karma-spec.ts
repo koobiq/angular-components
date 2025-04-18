@@ -36,6 +36,7 @@ describe('KbqInput', () => {
     describe('basic behaviors', () => {
         it('should has cleaner', () => {
             const fixture = createComponent(KbqFormFieldWithCleaner, [KbqIconModule]);
+
             fixture.detectChanges();
 
             const testComponent = fixture.debugElement.componentInstance;
@@ -55,6 +56,7 @@ describe('KbqInput', () => {
 
             const kbqCleaner = fixture.debugElement.query(By.css('.kbq-form-field__cleaner'));
             const kbqCleanerElement = kbqCleaner.nativeElement;
+
             kbqCleanerElement.click();
 
             fixture.detectChanges();
@@ -94,6 +96,7 @@ describe('KbqInput', () => {
     describe('validation', () => {
         it('should has cleaner', () => {
             const fixture = createComponent(KbqFormFieldWithCleaner, [KbqIconModule]);
+
             fixture.detectChanges();
 
             const testComponent = fixture.debugElement.componentInstance;
@@ -113,6 +116,7 @@ describe('KbqInput', () => {
 
             const kbqCleaner = fixture.debugElement.query(By.css('.kbq-form-field__cleaner'));
             const kbqCleanerElement = kbqCleaner.nativeElement;
+
             kbqCleanerElement.click();
 
             fixture.detectChanges();

@@ -31,15 +31,19 @@ const allDescendantsSelected = <T>(descendants: T[], selectionList: any) => {
 const recursiveDeselect = (node: any, control: FlatTreeControl<any>) => {
     const descendants: any[] = control.getDescendants(node);
     const descendantsForDeselection: any[] = [];
+
     for (const descendant of descendants) {
         if (descendant.disabled && descendant.level === node.level + 1) {
             descendantsForDeselection.push(descendant);
+
             if (descendant.expandable) {
                 descendantsForDeselection.push(...recursiveDeselect(descendant, control));
             }
+
             descendantsForDeselection.push(descendant);
         }
     }
+
     return descendantsForDeselection;
 };
 
@@ -234,6 +238,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
             // Process only when a single item is selected
             if (items.length === 1) {
                 const singleOrParent: any = items[0];
+
                 cb(singleOrParent);
             }
         };
@@ -242,9 +247,11 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
             handleSingleOption(added, (singleItemOrParent: any) => {
                 if (singleItemOrParent.expandable) {
                     const descendants = this.treeControl.getDescendants(singleItemOrParent);
+
                     if (!allDescendantsSelected(descendants, this.tree.selectionModel.selected)) {
                         descendants.forEach((descendant) => {
                             const previouslySelected = (descendant as any)?.singleSelected;
+
                             if (!previouslySelected) {
                                 (descendant as any).disabled = true;
                             }
@@ -265,6 +272,7 @@ export class TreeAccessRightsExample extends TreeParams implements AfterViewInit
                 const parents = this.treeControl.getParents(singleItemOrParent, []);
 
                 const descendantsForDeselection: any[] = recursiveDeselect(singleItemOrParent, this.treeControl);
+
                 if (descendantsForDeselection.length) {
                     this.tree.selectionModel.deselect(...descendantsForDeselection);
                     descendantsForDeselection.forEach((descendant) => (descendant.disabled = undefined));

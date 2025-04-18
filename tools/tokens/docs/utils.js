@@ -1,6 +1,7 @@
 const { NO_HEADER } = require('./config');
 const capitalize = (wordOrWordParts, opts = {}) => {
     let wordParts;
+
     if (Array.isArray(wordOrWordParts)) {
         wordParts = wordOrWordParts.map((word) => word[0].toUpperCase() + word.substring(1));
     }
@@ -15,9 +16,12 @@ const capitalize = (wordOrWordParts, opts = {}) => {
 const updateObject = (res, key, value) => {
     if (!res[key]) {
         res[key] = [value];
+
         return res;
     }
+
     res[key].push(value);
+
     return res;
 };
 

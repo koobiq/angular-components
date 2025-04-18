@@ -518,6 +518,7 @@ export class KbqListSelection implements AfterContentInit, AfterViewInit, OnDest
     reportValueChange() {
         if (this.options) {
             const value = this.getSelectedOptionValues();
+
             this.onChange(value);
             this._value = value;
         }

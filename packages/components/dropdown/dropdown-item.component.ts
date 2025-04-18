@@ -152,6 +152,7 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
         // Strip away icons so they don't show up in the text.
         for (let i = 0; i < icons.length; i++) {
             const icon = icons[i];
+
             icon.parentNode?.removeChild(icon);
         }
 

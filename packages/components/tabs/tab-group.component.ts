@@ -373,6 +373,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
     onSelectFocusedIndex($event: number): void {
         if (typeof this.attributeToSelectBy === 'string') {
             this.activeTab = this.tabs.get($event)?.tabId || null;
+
             return;
         }
 
@@ -385,6 +386,7 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     private createChangeEvent(index: number): KbqTabChangeEvent {
         const event = new KbqTabChangeEvent();
+
         event.index = index;
 
         if (this.tabs && this.tabs.length) {
@@ -434,9 +436,11 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
 
     private getTabIndexToSelect(): number {
         const currentSelectedTab = this.activeTab;
+
         if (currentSelectedTab === null) {
             return 0;
         }
+
         return this.tabs?.toArray().indexOf(currentSelectedTab);
     }
 }

@@ -96,6 +96,7 @@ describe('Key managers', () => {
         describe('Key events', () => {
             it('should emit tabOut when the tab key is pressed', () => {
                 const fn = jest.fn();
+
                 keyManager.tabOut.pipe(take(1)).subscribe(fn);
                 keyManager.onKeydown(fakeKeyEvents.tab);
 
@@ -104,6 +105,7 @@ describe('Key managers', () => {
 
             it('should emit tabOut when the tab key is pressed with a modifier', () => {
                 const fn = jest.fn();
+
                 keyManager.tabOut.pipe(take(1)).subscribe(fn);
 
                 Object.defineProperty(fakeKeyEvents.tab, 'shiftKey', { get: () => true });
@@ -262,6 +264,7 @@ describe('Key managers', () => {
 
                 it('should skip disabled items', () => {
                     const items = itemList.toArray();
+
                     items[1].disabled = true;
                     itemList.reset(items);
 
@@ -281,6 +284,7 @@ describe('Key managers', () => {
 
                 it('should work normally when disabled property does not exist', () => {
                     const items = itemList.toArray();
+
                     items[0].disabled = undefined;
                     items[1].disabled = undefined;
                     items[2].disabled = undefined;
@@ -318,6 +322,7 @@ describe('Key managers', () => {
 
                 it('should not move active item to end when the last item is disabled', () => {
                     const items = itemList.toArray();
+
                     items[2].disabled = true;
                     itemList.reset(items);
 
@@ -470,6 +475,7 @@ describe('Key managers', () => {
 
             it('should set the active item to the second item if the first one is disabled', () => {
                 const items = itemList.toArray();
+
                 items[0].disabled = true;
                 itemList.reset(items);
 
@@ -486,6 +492,7 @@ describe('Key managers', () => {
 
             it('should set the active item to the second to last item if the last is disabled', () => {
                 const items = itemList.toArray();
+
                 items[2].disabled = true;
                 itemList.reset(items);
 
@@ -502,6 +509,7 @@ describe('Key managers', () => {
 
             it('should set the active item to the next enabled item if next is disabled', () => {
                 const items = itemList.toArray();
+
                 items[1].disabled = true;
                 itemList.reset(items);
 
@@ -521,6 +529,7 @@ describe('Key managers', () => {
 
             it('should skip disabled items when setPreviousItemActive() is called', () => {
                 const items = itemList.toArray();
+
                 items[1].disabled = true;
                 itemList.reset(items);
 
@@ -586,6 +595,7 @@ describe('Key managers', () => {
                 keyManager.withWrap();
                 keyManager.setActiveItem(0);
                 const items = itemList.toArray();
+
                 items.forEach((item) => (item.disabled = true));
                 itemList.reset(items);
 
@@ -610,6 +620,7 @@ describe('Key managers', () => {
         describe('skip predicate', () => {
             it('should skip disabled items by default', () => {
                 const items = itemList.toArray();
+
                 items[1].disabled = true;
                 itemList.reset(items);
 
@@ -624,6 +635,7 @@ describe('Key managers', () => {
                 keyManager.skipPredicate((item) => item.skipItem);
 
                 const items = itemList.toArray();
+
                 items[1].skipItem = true;
                 itemList.reset(items);
 

@@ -9,6 +9,7 @@ export class KbqMeasureScrollbarService {
         if (this._scrollBarWidth) {
             return this._scrollBarWidth;
         }
+
         this.initScrollBarWidth();
 
         return this._scrollBarWidth;

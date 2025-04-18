@@ -134,6 +134,7 @@ export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy 
         if (!this._control) {
             throw getKbqFormFieldMissingControlError();
         }
+
         return this._control;
     }
 
@@ -329,6 +330,7 @@ export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy 
         if (this.control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
             (this.control as unknown as { toggleType(): void }).toggleType();
         }
+
         // @TODO should move into KbqCleaner (#DS-2910)
         if (this.canCleanerClearByEsc && event.keyCode === ESCAPE && this.focused && this.hasCleaner) {
             this.control?.ngControl?.reset();

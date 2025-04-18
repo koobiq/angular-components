@@ -175,6 +175,7 @@ export class KbqOverflowItems {
                     this.elementRef.nativeElement
                 );
                 const hiddenItemIDs = new Set(hiddenItems.map(({ id }) => id()));
+
                 this.changes.emit(hiddenItemIDs);
             });
     }
@@ -186,6 +187,7 @@ export class KbqOverflowItems {
      */
     private getSortedItemsByOrder(): KbqOverflowItem[] {
         const items = Array.from(this.items(), (item, index) => ({ item, order: item.order() ?? index }));
+
         return items.sort((a, b) => a.order - b.order).map(({ item }) => item);
     }
 
@@ -210,28 +212,35 @@ export class KbqOverflowItems {
         const endIndex = reverseOverflowOrder ? items.length : -1;
         const step = reverseOverflowOrder ? 1 : -1;
         const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
+
         for (let index = startIndex; index !== endIndex; index += step) {
             const current = items[index];
+
             if (current.alwaysVisible()) continue;
 
             const currentWidth = this.getElementWidthWithMargins(current.elementRef);
             const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;
+
             if (itemsWidth + _resultWidth > totalWidth) {
                 current.hide();
                 itemsWidth -= currentWidth;
             } else {
                 const isEdgeElement = reverseOverflowOrder ? index === 0 : index === items.length - 1;
                 const _resultWidth = isEdgeElement ? 0 : resultWidth;
+
                 if (itemsWidth + currentWidth + _resultWidth <= totalWidth) {
                     current.show();
                     itemsWidth += currentWidth;
                 }
             }
         }
+
         const hiddenItems = items.filter(this.isHiddenItem);
+
         if (hiddenItems.length > 0) {
             result?.show();
         }
+
         return hiddenItems;
     }
 
@@ -240,6 +249,7 @@ export class KbqOverflowItems {
      */
     private getElementWidthWithMargins({ nativeElement }: ElementRef<HTMLElement>): number {
         const { marginLeft, marginRight } = this.getWindow().getComputedStyle(nativeElement);
+
         return Math.ceil(parseFloat(marginLeft) + nativeElement.offsetWidth + parseFloat(marginRight));
     }
 

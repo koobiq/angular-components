@@ -161,6 +161,7 @@ describe('KbqInput', () => {
     describe('basic behaviors', () => {
         it('should change state "disable"', fakeAsync(() => {
             const fixture = createComponent(KbqInputForBehaviors);
+
             fixture.detectChanges();
 
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
@@ -180,6 +181,7 @@ describe('KbqInput', () => {
 
         it('should has placeholder', fakeAsync(() => {
             const fixture = createComponent(KbqInputForBehaviors);
+
             fixture.detectChanges();
 
             const testComponent = fixture.debugElement.componentInstance;
@@ -205,9 +207,11 @@ describe('KbqInput', () => {
             describe('standalone', () => {
                 it('should run validation (required)', fakeAsync(() => {
                     const fixture = createComponent(KbqFormFieldWithStandaloneNgModel);
+
                     fixture.detectChanges();
 
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+
                     expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
                 }));
             });
@@ -215,14 +219,17 @@ describe('KbqInput', () => {
             describe('in form', () => {
                 it('should not run validation (required)', fakeAsync(() => {
                     const fixture = createComponent(KbqFormFieldWithNgModelInForm);
+
                     fixture.detectChanges();
 
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
+
                     expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
                 }));
 
                 it('should run validation after submit (required)', fakeAsync(() => {
                     const fixture = createComponent(KbqFormFieldWithNgModelInForm);
+
                     fixture.detectChanges();
 
                     const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
@@ -231,6 +238,7 @@ describe('KbqInput', () => {
                     expect(formFieldElement.classList.contains('ng-valid')).toBe(true);
 
                     const event = createMouseEvent('click');
+
                     dispatchEvent(submitButton, event);
                     flush();
                     expect(formFieldElement.classList.contains('ng-invalid')).toBe(true);
@@ -240,6 +248,7 @@ describe('KbqInput', () => {
 
         it('should has placeholder', fakeAsync(() => {
             const fixture = createComponent(KbqInputForBehaviors);
+
             fixture.detectChanges();
 
             const testComponent = fixture.debugElement.componentInstance;
@@ -261,6 +270,7 @@ describe('KbqInput', () => {
 
         it('should set proper form group validation state on ngSubmit handler, without setTimeout', fakeAsync(() => {
             const fixture = createComponent(KbqFormWithRequiredValidation, [ReactiveFormsModule, KbqButtonModule]);
+
             fixture.detectChanges();
             flush();
 
@@ -276,6 +286,7 @@ describe('KbqInput', () => {
     describe('appearance', () => {
         it('should change font to monospace', () => {
             const fixture = createComponent(KbqInputWithKbqInputMonospace);
+
             fixture.detectChanges();
 
             const kbqInputDebug = fixture.debugElement.query(By.directive(KbqInput));
@@ -286,6 +297,7 @@ describe('KbqInput', () => {
 
         it('should has invalid state', fakeAsync(() => {
             const fixture = createComponent(KbqInputInvalid);
+
             fixture.detectChanges();
 
             const formFieldElement = fixture.debugElement.query(By.directive(KbqFormField)).nativeElement;
@@ -311,6 +323,7 @@ describe('KbqInput', () => {
 
         it('should has hint', fakeAsync(() => {
             const fixture = createComponent(KbqFormFieldWithHint);
+
             fixture.detectChanges();
 
             const kbqFormFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
@@ -322,6 +335,7 @@ describe('KbqInput', () => {
 
         it('should has prefix', () => {
             const fixture = createComponent(KbqFormFieldWithPrefix, [KbqIconModule]);
+
             fixture.detectChanges();
 
             const kbqFormFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
@@ -333,6 +347,7 @@ describe('KbqInput', () => {
 
         it('should has suffix', () => {
             const fixture = createComponent(KbqFormFieldWithSuffix, [KbqIconModule]);
+
             fixture.detectChanges();
 
             const kbqFormFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));
@@ -344,6 +359,7 @@ describe('KbqInput', () => {
 
         it('should be without borders', () => {
             const fixture = createComponent(KbqFormFieldWithoutBorders, [KbqIconModule]);
+
             fixture.detectChanges();
 
             const kbqFormFieldDebug = fixture.debugElement.query(By.directive(KbqFormField));

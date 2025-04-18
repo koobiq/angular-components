@@ -67,6 +67,7 @@ describe('ToastService', () => {
 
         it('should create one sticky warning toast with default icon', () => {
             const toast = toastService.show({ style: 'warning', title: 'Warning', icon: true }, 0);
+
             fixture.detectChanges();
 
             const toastIcon: HTMLElement = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
@@ -76,6 +77,7 @@ describe('ToastService', () => {
 
         it('should create one sticky warning toast with custom icon', () => {
             const toast = toastService.show({ style: 'error', title: 'Error', icon: true, iconClass: 'kbq-custom' }, 0);
+
             fixture.detectChanges();
 
             const toastIcon: HTMLElement = toast.ref.location.nativeElement.querySelector('.kbq-toast__icon');
@@ -92,6 +94,7 @@ describe('ToastService', () => {
         it('should delete toast', () => {
             toastService.show(MOCK_TOAST_DATA, 0);
             const openToast = toastService.toasts[0].instance;
+
             expect(toastService.toasts.length).toBe(1);
             fixture.detectChanges();
 
@@ -111,6 +114,7 @@ describe('ToastService', () => {
             const button = toast.ref.location.nativeElement.querySelector(
                 '[kbq-toast-close-button]'
             ) as HTMLButtonElement;
+
             button.click();
 
             fixture.detectChanges();
@@ -122,6 +126,7 @@ describe('ToastService', () => {
 
         it('should create one toast directly through service', fakeAsync(() => {
             const showSpyFn = jest.spyOn(toastService, 'show');
+
             toastService.show(MOCK_TOAST_DATA, 600);
 
             fixture.detectChanges();
@@ -160,6 +165,7 @@ describe('Standalone ToastService', () => {
 
     it('should disappear after 3 seconds', fakeAsync(() => {
         const destroy$ = new Subject<void>();
+
         service = TestBed.inject(KbqToastService);
         service.timer = service.timer.pipe(
             tap(() => console.log(NgZone.isInAngularZone())),
@@ -179,6 +185,7 @@ describe('Standalone ToastService', () => {
 
     it('should call timer outsideAngular', fakeAsync(() => {
         const destroy$ = new Subject<void>();
+
         service = TestBed.inject(KbqToastService);
         service.timer.subscribe(() => expect(NgZone.isInAngularZone()).toBeFalsy());
         service.timer = service.timer.pipe(takeUntil(destroy$));

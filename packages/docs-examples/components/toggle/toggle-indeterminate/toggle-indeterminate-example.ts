@@ -36,11 +36,13 @@ export class ToggleIndeterminateExample {
     protected readonly parentIndeterminate = computed(() => {
         const totalItems = this.params();
         const checked = totalItems.filter(({ checked }) => checked()).length;
+
         return checked > 0 && checked < totalItems.length;
     });
 
     toggleChecked() {
         const newValue = this.parentIndeterminate() ? true : !this.parentChecked();
+
         for (const param of this.params()) {
             param.checked.set(newValue);
         }

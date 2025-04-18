@@ -22,6 +22,7 @@ const FILE_NAME = 'test.file';
 function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME, type?: string) {
     const fakeDropEvent = createFakeEvent('drop');
     const fakeItem = createFile(fileName, type);
+
     fakeDropEvent['dataTransfer'] = { items: [fakeItem] };
 
     dispatchEvent(fixture.debugElement.query(By.css('.kbq-file-upload')).nativeElement, fakeDropEvent);
@@ -89,6 +90,7 @@ describe('MultipleFileUploadComponent', () => {
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
             const fileInput: HTMLInputElement = component.fileUpload.input.nativeElement;
+
             component.disabled = true;
             fixture.detectChanges();
 
@@ -113,6 +115,7 @@ describe('MultipleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], FILE_NAME);
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
 
@@ -130,6 +133,7 @@ describe('MultipleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], 'test.file');
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
 
@@ -174,6 +178,7 @@ describe('MultipleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], FILE_NAME);
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
@@ -197,6 +202,7 @@ describe('MultipleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
@@ -239,6 +245,7 @@ describe('MultipleFileUploadComponent', () => {
 
             const fakeFile: Partial<File> = new File(['test'], 'test');
             const dt = new DataTransfer();
+
             dt.items.add(fakeFile as File);
 
             component.control.setValue(dt.files);
@@ -265,6 +272,7 @@ describe('MultipleFileUploadComponent', () => {
             const event = createFakeEvent('change');
 
             const fakeFile = new File(['test'], FILE_NAME);
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
@@ -321,6 +329,7 @@ describe('SingleFileUploadComponent', () => {
 
         it('should NOT toggle label focus state on input focus if disabled', fakeAsync(() => {
             const fileInput: HTMLInputElement = component.fileUpload.input.nativeElement;
+
             component.disabled = true;
             fixture.detectChanges();
 
@@ -343,6 +352,7 @@ describe('SingleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], FILE_NAME);
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
 
             dispatchEvent(component.fileUpload.input.nativeElement, event);
@@ -362,6 +372,7 @@ describe('SingleFileUploadComponent', () => {
             fixture.detectChanges();
 
             const event = createFakeEvent('change');
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [{ name: 'test' }] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
 
@@ -410,6 +421,7 @@ describe('SingleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], FILE_NAME);
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
@@ -431,6 +443,7 @@ describe('SingleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
@@ -444,6 +457,7 @@ describe('SingleFileUploadComponent', () => {
             flush();
 
             const tooltipInstance = document.querySelector('.kbq-tooltip');
+
             expect(tooltipInstance).toBeTruthy();
         }));
     });
@@ -457,6 +471,7 @@ describe('SingleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
@@ -497,6 +512,7 @@ describe('SingleFileUploadComponent', () => {
             expect(component.fileUpload.file).toBeFalsy();
 
             const fakeFile = new File(['test'], FILE_NAME);
+
             component.control.setValue(fakeFile);
 
             expect(component.fileUpload.file).toBeTruthy();
@@ -520,6 +536,7 @@ describe('SingleFileUploadComponent', () => {
 
             const event = createFakeEvent('change');
             const fakeFile = new File(['test'], FILE_NAME);
+
             Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();

@@ -13,6 +13,7 @@ export class FilterByViewValue<T> implements FlatTreeControlFilter<T> {
 
     handle(value: string | null): T[] {
         const viewValue = value || null;
+
         this.result = this.control.dataNodes.filter((node) =>
             this.control.compareViewValues(this.control.getViewValue(node), viewValue)
         );

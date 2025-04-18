@@ -12,6 +12,7 @@ const createDefer = (): Defer => {
     if (typeof window === 'undefined') {
         // mock ssr calls with "noop"
         const noop = () => {};
+
         return [noop, noop];
     }
 
@@ -101,6 +102,7 @@ export class KbqScrollbarDirective implements OnDestroy {
         @Inject(KBQ_SCROLLBAR_CONFIG) private scrollbarConfig?: KbqScrollbarOptions
     ) {
         const [requestDefer, cancelDefer] = createDefer();
+
         this.requestDefer = requestDefer;
         this.cancelDefer = cancelDefer;
     }

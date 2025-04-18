@@ -33,6 +33,7 @@ export async function migrateTemplate(
         });
 
         const template = tree.read(parsedFilePath)?.toString();
+
         if (!template) {
             context.logger.error(`Cannot read "${parsedFilePath}" because it does not exist.`);
             continue;
@@ -41,6 +42,7 @@ export async function migrateTemplate(
         res = transformTemplateAttributes(template, parsedFilePath, migrationData);
 
         const { fileContent, changed, errors } = await res;
+
         if (changed) {
             tree.overwrite(templatePath, fileContent);
         }
@@ -68,6 +70,7 @@ export async function migrateTs(
 ) {
     // run and track changed components
     const analysis = new Map<string, AnalyzedFile>();
+
     for (const sourceFile of sourceFiles) {
         forEachClass(sourceFile, (node) => {
             analyzeDecorators(node, sourceFile, analysis);
@@ -141,6 +144,7 @@ export function analyzeDecorators(
         if (!ts.isPropertyAssignment(prop) || (!ts.isIdentifier(prop.name) && !ts.isStringLiteralLike(prop.name))) {
             continue;
         }
+
         // check decorator 'template' property, check for text content parse
         if (prop.name.text === 'template' && ts.isStringLiteralLike(prop.initializer) && prop.initializer.text) {
             // +1/-1 to exclude the opening/closing characters from the range.
@@ -170,6 +174,7 @@ async function transformTemplateAttributes(
 
     if (parsed.tree !== undefined) {
         const visitor = new ElementCollector(migrationData, fileName);
+
         visitAll(visitor, parsed.tree.rootNodes);
 
         for (const el of visitor.elementsToMigrate) {
@@ -177,6 +182,7 @@ async function transformTemplateAttributes(
                 (attr) => getSimpleAttributeName(attr.name) === migrationData.attrs.key.from
             );
             let updatedAttrValue: string | undefined;
+
             if (migrationAttr) {
                 const cleanAttrValue = getSimpleAttributeValue(migrationAttr.value);
                 const replacement = migrationData.attrs.value.replacements.find(({ from }) => from === cleanAttrValue);
@@ -201,7 +207,9 @@ async function transformTemplateAttributes(
                 offset += migrationAttr.value.length - updatedAttrValue.length;
             }
         }
+
         return { fileContent: updatedTemplate, changed: visitor.elementsToMigrate.length > 0, errors: parsed.errors };
     }
+
     return { fileContent: updatedTemplate, changed: undefined, errors: parsed.errors };
 }

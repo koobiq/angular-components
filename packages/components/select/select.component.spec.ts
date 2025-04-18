@@ -1485,6 +1485,7 @@ describe(KbqSelect.name, () => {
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1503,6 +1504,7 @@ describe(KbqSelect.name, () => {
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1521,6 +1523,7 @@ describe(KbqSelect.name, () => {
                     expect(selectInstance.panelOpen).toBe(true);
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1539,6 +1542,7 @@ describe(KbqSelect.name, () => {
                     expect(selectInstance.panelOpen).toBe(true);
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -1584,6 +1588,7 @@ describe(KbqSelect.name, () => {
                     expect(instance.select.panelOpen).toBe(false);
 
                     const event = dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
+
                     flush();
 
                     expect(instance.select.panelOpen).toBe(true);
@@ -1607,6 +1612,7 @@ describe(KbqSelect.name, () => {
                     expect(instance.select.panelOpen).toBe(false);
 
                     const event = dispatchKeyboardEvent(select, 'keydown', RIGHT_ARROW);
+
                     flush();
 
                     expect(instance.select.panelOpen).toBe(true);
@@ -1734,6 +1740,7 @@ describe(KbqSelect.name, () => {
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'shiftKey', { get: () => true });
 
                     multiFixture.detectChanges();
@@ -1761,6 +1768,7 @@ describe(KbqSelect.name, () => {
 
                     const multiFixture = TestBed.createComponent(MultiSelect);
                     const event = createKeyboardEvent('keydown', UP_ARROW);
+
                     Object.defineProperty(event, 'shiftKey', { get: () => true });
 
                     multiFixture.detectChanges();
@@ -1787,6 +1795,7 @@ describe(KbqSelect.name, () => {
 
                 it('should prevent the default action when pressing space', fakeAsync(() => {
                     const event = dispatchKeyboardEvent(select, 'keydown', SPACE);
+
                     flush();
 
                     expect(event.defaultPrevented).toBe(true);
@@ -1827,6 +1836,7 @@ describe(KbqSelect.name, () => {
                     expect(document.activeElement).not.toBe(select);
 
                     const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                     option.click();
                     expect(document.activeElement).toBe(select);
                 }));
@@ -1892,6 +1902,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -1967,6 +1978,7 @@ describe(KbqSelect.name, () => {
                 expect(fixture.componentInstance.select.panelOpen).toBe(true);
 
                 const panel = overlayContainerElement.querySelector('.kbq-select__panel')!;
+
                 dispatchKeyboardEvent(panel, 'keydown', TAB);
                 fixture.detectChanges();
                 flush();
@@ -1983,6 +1995,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const event = dispatchKeyboardEvent(trigger, 'keydown', HOME);
+
                 fixture.detectChanges();
                 flush();
 
@@ -1999,6 +2012,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const event = dispatchKeyboardEvent(trigger, 'keydown', END);
+
                 fixture.detectChanges();
                 flush();
 
@@ -2024,6 +2038,7 @@ describe(KbqSelect.name, () => {
 
                 const option = overlayContainerElement.querySelector('kbq-option') as Node;
                 const event = dispatchKeyboardEvent(option, 'keydown', SPACE);
+
                 flush();
 
                 expect(event.defaultPrevented).toBe(true);
@@ -2036,6 +2051,7 @@ describe(KbqSelect.name, () => {
 
                 const option = overlayContainerElement.querySelector('kbq-option') as Node;
                 const event = dispatchKeyboardEvent(option, 'keydown', ENTER);
+
                 flush();
 
                 expect(event.defaultPrevented).toBe(true);
@@ -2045,6 +2061,7 @@ describe(KbqSelect.name, () => {
                 fixture.destroy();
 
                 const groupFixture = TestBed.createComponent(SelectWithGroupsAndNgContainer);
+
                 groupFixture.detectChanges();
                 trigger = groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
                 trigger.click();
@@ -2101,6 +2118,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 let option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2153,6 +2171,7 @@ describe(KbqSelect.name, () => {
                 expect(options[2].classList).not.toContain('kbq-selected');
 
                 const optionInstances = fixture.componentInstance.options.toArray();
+
                 expect(optionInstances[1].selected).toBe(false);
                 expect(optionInstances[2].selected).toBe(false);
             }));
@@ -2197,6 +2216,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2229,6 +2249,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
                 options[8].click();
                 fixture.detectChanges();
                 tick();
@@ -2258,6 +2279,7 @@ describe(KbqSelect.name, () => {
                 expect(fixture.componentInstance.select.selected).toBeUndefined();
 
                 const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
                 options[2].click();
                 fixture.detectChanges();
                 flush();
@@ -2271,6 +2293,7 @@ describe(KbqSelect.name, () => {
                 fixture.destroy();
 
                 const groupFixture = TestBed.createComponent(SelectWithGroups);
+
                 groupFixture.detectChanges();
                 groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement.click();
                 groupFixture.detectChanges();
@@ -2299,6 +2322,7 @@ describe(KbqSelect.name, () => {
                 const spy = jest.fn();
                 const subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2328,6 +2352,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 tick();
@@ -2349,6 +2374,7 @@ describe(KbqSelect.name, () => {
 
                     const option: HTMLElement = overlayContainerElement.querySelector('.kbq-option.kbq-active')!;
                     const keyBoardEvent: KeyboardEvent = createKeyboardEvent('keydown', keyCode, option);
+
                     Object.defineProperties(keyBoardEvent, {
                         altKey: { get: () => true }
                     });
@@ -2380,6 +2406,7 @@ describe(KbqSelect.name, () => {
                 fixture.detectChanges();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent).toContain('Pizza');
 
                 trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
@@ -2388,11 +2415,13 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
+
                 expect(options[1].classList).toContain('kbq-selected');
             }));
 
             it('should set the view value from the form', fakeAsync(() => {
                 let value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent.trim()).toBe('Food');
 
                 fixture.componentInstance.control.setValue('pizza-1');
@@ -2406,6 +2435,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
+
                 expect(options[1].classList).toContain('kbq-selected');
             }));
 
@@ -2417,6 +2447,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2432,6 +2463,7 @@ describe(KbqSelect.name, () => {
                 fixture.detectChanges();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent.trim()).toBe('Food');
 
                 expect(trigger.textContent).not.toContain('Pizza');
@@ -2441,6 +2473,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
+
                 expect(options[1].classList).not.toContain('kbq-selected');
             }));
 
@@ -2452,6 +2485,7 @@ describe(KbqSelect.name, () => {
                 fixture.detectChanges();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent.trim()).toBe('Food');
 
                 expect(trigger.textContent).not.toContain('Pizza');
@@ -2461,6 +2495,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const options = overlayContainerElement.querySelectorAll('kbq-option');
+
                 expect(options[1].classList).not.toContain('kbq-selected');
             }));
 
@@ -2517,6 +2552,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const option = overlayContainerElement.querySelector('kbq-option') as HTMLElement;
+
                 option.click();
                 fixture.detectChanges();
                 flush();
@@ -2535,6 +2571,7 @@ describe(KbqSelect.name, () => {
 
             xit('should set an asterisk after the label if control is required', fakeAsync(() => {
                 let requiredMarker = fixture.debugElement.query(By.css('.kbq-form-field-required-marker'));
+
                 expect(requiredMarker).toBeNull();
 
                 fixture.componentInstance.isRequired = true;
@@ -2561,6 +2598,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                 expect(value.nativeElement.textContent).toContain('Pizza');
 
                 cleaner = fixture.debugElement.query(By.css('.kbq-select__cleaner')).nativeElement;
@@ -2804,6 +2842,7 @@ describe(KbqSelect.name, () => {
 
         it('should only emit one event when pressing arrow keys on closed select', fakeAsync(() => {
             const select = fixture.debugElement.query(By.css('kbq-select')).nativeElement;
+
             dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
             flush();
 
@@ -2883,6 +2922,7 @@ describe(KbqSelect.name, () => {
 
         it('should complete the stateChanges stream on destroy', () => {
             const fixture = TestBed.createComponent(SelectWithPlainTabindex);
+
             fixture.detectChanges();
 
             const debugElement = fixture.debugElement.query(By.directive(KbqSelect));
@@ -2915,6 +2955,7 @@ describe(KbqSelect.name, () => {
             flush();
 
             const panel = overlayContainerElement.querySelector('.kbq-select__panel') as HTMLElement;
+
             expect(panel.classList).toContain('kbq-error');
         }));
     });
@@ -2952,6 +2993,7 @@ describe(KbqSelect.name, () => {
         describe('comparing by value', () => {
             it('should have a selection', fakeAsync(() => {
                 const selectedOption = instance.select.selected as KbqOption;
+
                 expect(selectedOption.value.value).toEqual('pizza-1');
             }));
 
@@ -2961,6 +3003,7 @@ describe(KbqSelect.name, () => {
                 flush();
 
                 const selectedOption = instance.select.selected as KbqOption;
+
                 expect(instance.selectedFood.value).toEqual('tacos-2');
                 expect(selectedOption.value.value).toEqual('tacos-2');
             }));
@@ -2968,6 +3011,7 @@ describe(KbqSelect.name, () => {
 
         describe('comparing by reference', () => {
             let compareByReferenceSpyFn: jest.SpyInstance;
+
             beforeEach(fakeAsync(() => {
                 compareByReferenceSpyFn = jest.spyOn(instance, 'compareByReference');
 
@@ -3148,6 +3192,7 @@ describe(KbqSelect.name, () => {
 
         xit('should be able to preselect an array value in single-selection mode', fakeAsync(() => {
             const fixture = TestBed.createComponent(SingleSelectWithPreselectedArrayValues);
+
             fixture.detectChanges();
             flush();
 
@@ -3169,6 +3214,7 @@ describe(KbqSelect.name, () => {
         it('should support use inside a custom value accessor', fakeAsync(() => {
             const fixture = TestBed.createComponent(CompWithCustomSelect);
             const writeValueSpyFn = jest.spyOn(fixture.componentInstance.customAccessor, 'writeValue');
+
             fixture.detectChanges();
 
             expect(fixture.componentInstance.customAccessor.select.ngControl).toBeFalsy();
@@ -3221,6 +3267,7 @@ describe(KbqSelect.name, () => {
 
         xit('should update the trigger based on the value', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectOnPush);
+
             fixture.detectChanges();
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
 
@@ -3243,6 +3290,7 @@ describe(KbqSelect.name, () => {
 
         xit('should allow the user to customize the label', fakeAsync(() => {
             const fixture = TestBed.createComponent(SelectWithCustomTrigger);
+
             fixture.detectChanges();
 
             fixture.componentInstance.control.setValue('pizza-1');
@@ -3396,6 +3444,7 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
             expect(trigger.textContent).toContain('Sandwich');
 
             trigger.click();
@@ -3441,6 +3490,7 @@ describe(KbqSelect.name, () => {
             flush();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
             fixture.detectChanges();
             expect(trigger.textContent).toContain('Pizza');
 
@@ -3729,6 +3779,7 @@ describe(KbqSelect.name, () => {
                 fixture.destroy();
 
                 const groupFixture = TestBed.createComponent(SelectWithGroups);
+
                 groupFixture.detectChanges();
                 trigger = groupFixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
                 formField = groupFixture.debugElement.query(By.css('kbq-form-field')).nativeElement;
@@ -4191,6 +4242,7 @@ describe(KbqSelect.name, () => {
                 // not exact.
                 if (platform.TRIDENT) {
                     const difference = Math.abs(optionTop + (menuItemHeight - triggerHeight) / 2 - triggerTop);
+
                     expect(difference).toBeLessThan(0.1);
                 } else {
                     expect(Math.floor(optionTop + (menuItemHeight - triggerHeight) / 2)).toBe(Math.floor(triggerTop));
@@ -4370,6 +4422,7 @@ describe(KbqSelect.name, () => {
             fixture.componentInstance.sortComparator = (a, b, optionsArray) => {
                 return optionsArray.indexOf(b) - optionsArray.indexOf(a);
             };
+
             fixture.detectChanges();
 
             trigger.click();
@@ -4381,6 +4434,7 @@ describe(KbqSelect.name, () => {
             for (let i = 0; i < 3; i++) {
                 options[i].click();
             }
+
             fixture.detectChanges();
 
             // Expect the items to be in reverse order.
@@ -4489,6 +4543,7 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4520,6 +4575,7 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4547,6 +4603,7 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4587,6 +4644,7 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             const event = createKeyboardEvent('keydown', A, selectElement);
+
             Object.defineProperty(event, 'ctrlKey', { get: () => true });
             dispatchEvent(selectElement, event);
             fixture.detectChanges();
@@ -4598,6 +4656,7 @@ describe(KbqSelect.name, () => {
         it('should allow providing custom tag content', fakeAsync(() => {
             const fixtureCustomizedContent = TestBed.createComponent(MultiSelectWithCustomizedTagContent);
             const componentInstance = fixtureCustomizedContent.componentInstance;
+
             fixtureCustomizedContent.detectChanges();
 
             trigger = fixtureCustomizedContent.debugElement.query(
@@ -4633,6 +4692,7 @@ describe(KbqSelect.name, () => {
                     options.item(step).click();
                 }
             }
+
             fixtureTest.detectChanges();
             tick();
             flush();
@@ -4658,6 +4718,7 @@ describe(KbqSelect.name, () => {
                     options.item(step).click();
                 }
             }
+
             fixtureTest.detectChanges();
             tick();
             flush();
@@ -4700,6 +4761,7 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             const tooltips = document.querySelectorAll('.kbq-tooltip__content');
+
             expect(tooltips.length).toEqual(0);
             flush();
         }));
@@ -4714,11 +4776,13 @@ describe(KbqSelect.name, () => {
             fixture.detectChanges();
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             dispatchMouseEvent(options[2], 'mouseenter');
             tick();
             fixture.detectChanges();
 
             let tooltips = document.querySelectorAll('.kbq-tooltip__content');
+
             expect(tooltips.length).toEqual(1);
             expect(tooltips[0].textContent).toEqual(options[2].textContent);
 
@@ -4777,6 +4841,7 @@ describe(KbqSelect.name, () => {
             finishInit(fixture);
 
             const options: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('kbq-option');
+
             fixture.autoDetectChanges();
             flush();
 
@@ -4814,6 +4879,7 @@ describe(KbqSelect.name, () => {
 
         it('should render tags for non-rendered KbqOptions/values', fakeAsync(() => {
             const selectMatcher = fixture.debugElement.query(By.css('.kbq-select__matcher')).nativeElement;
+
             testInstance.values = [OPTIONS[0], OPTIONS[OPTIONS.length - 1]];
             fixture.detectChanges();
             flush();
@@ -4822,6 +4888,7 @@ describe(KbqSelect.name, () => {
             finishInit(fixture);
 
             const tags: NodeListOf<HTMLElement> = selectMatcher.querySelectorAll('kbq-tag');
+
             fixture.detectChanges();
 
             expect(tags.length).toEqual(2);

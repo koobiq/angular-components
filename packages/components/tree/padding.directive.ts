@@ -100,6 +100,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 
         if (typeof indent === 'string') {
             const parts = indent.split(cssUnitPattern);
+
             value = parts[0];
             units = parts[1] || units;
         }

@@ -20,6 +20,7 @@ export class IconItems {
             const { codepoint, tags, description } = ICONS[id];
 
             const size = parseInt(id.split('_')[1]);
+
             this.sizes.add(size);
 
             const cssClass = 'kbq-'.concat(id);

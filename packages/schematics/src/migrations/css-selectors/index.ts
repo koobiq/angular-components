@@ -11,8 +11,10 @@ export default function cssSelectors(options: Schema): Rule {
 
     return async (tree: Tree, context: SchematicContext) => {
         const { project, fix, stylesExt } = options;
+
         try {
             const projectDefinition = await setupOptions(project, tree);
+
             targetDir = projectDefinition ? tree.getDir(projectDefinition.root) : tree;
         } catch (e) {
             targetDir = tree;
@@ -31,6 +33,7 @@ export default function cssSelectors(options: Schema): Rule {
                 });
             } else {
                 const foundSelectors = getDeprecatedFrom(newContent!, typographyCssSelectorsReplacement);
+
                 if (foundSelectors.length) {
                     logger.warn(getTypographyReplacements(path, foundSelectors));
                 }
@@ -39,6 +42,7 @@ export default function cssSelectors(options: Schema): Rule {
             // Just suggest about colors replacements without changing file,
             // since it's potentially a complex task to handle
             const foundColors = getDeprecatedFrom(newContent!, colorsVarsReplacement);
+
             if (foundColors.length) {
                 logger.warn(getBaseReplacements(path, foundColors));
             }
@@ -69,6 +73,7 @@ export default function cssSelectors(options: Schema): Rule {
 
 function getBaseReplacements(filePath: Path, foundSelectors: ReplaceData[]) {
     const parsedFilePath = path.relative(__dirname, `.${filePath}`).replace(/\\/g, '/');
+
     return `
 -------------------------
 Please pay attention! Found deprecated сss-selectors in file:
@@ -81,6 +86,7 @@ ${foundSelectors.map(({ replace, replaceWith }) => `\t${replace} -> \t${replaceW
 
 function getTypographyReplacements(filePath: Path, foundSelectors: ReplaceData[]) {
     const baseMessage = getBaseReplacements(filePath, foundSelectors);
+
     return `${baseMessage}\n
 Or use --fix=true to replace automatically
 Pay attention: overwriting is possible. Check the code after automatic replacement was done.

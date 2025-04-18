@@ -74,6 +74,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
     set selectedIndex(value: number) {
         const coercedValue = coerceNumberProperty(value);
+
         this.selectedIndexChanged = this._selectedIndex !== coercedValue;
         this._selectedIndex = coercedValue;
 
@@ -590,6 +591,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
         }
 
         const maxScrollDistance = this.getMaxScrollDistance();
+
         this.scrollDistance = Math.max(0, Math.min(maxScrollDistance, position));
 
         // Mark that the scroll distance has changed so that after the view is checked, the CSS

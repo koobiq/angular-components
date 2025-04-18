@@ -84,6 +84,7 @@ describe('KbqAutocomplete', () => {
 
             // These down arrows will set the 6th option active, below the fold.
             const keydownEvents = [1, 2, 3, 4, 5];
+
             keydownEvents.forEach(() => trigger.handleKeydown(DOWN_ARROW_EVENT));
 
             // Expect option bottom minus the panel height (50 * 6 - 256 = 44)
@@ -176,6 +177,7 @@ describe('KbqAutocomplete', () => {
 
     it('should have correct width when opened', () => {
         const widthFixture = createComponent(SimpleAutocomplete);
+
         widthFixture.componentInstance.width = 300;
         widthFixture.detectChanges();
 
@@ -183,6 +185,7 @@ describe('KbqAutocomplete', () => {
         widthFixture.detectChanges();
 
         const overlayPane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
         // Firefox, edge return a decimal value for width, so we need to parse and round it to verify
         expect(Math.ceil(parseFloat(overlayPane.style.width as string))).toBe(300);
 

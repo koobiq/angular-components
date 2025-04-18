@@ -40,7 +40,9 @@ const createComponent = <T>(
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers });
     const fixture = TestBed.createComponent<T>(component);
     const overlayContainer = TestBed.inject(OverlayContainer);
+
     fixture.autoDetectChanges();
+
     return { fixture, overlayContainer };
 };
 
@@ -642,6 +644,7 @@ describe(KbqTreeSelect.name, () => {
                 flush();
 
                 const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
                 expect(pane.style.minWidth).toBe('200px');
             }));
         });
@@ -649,11 +652,13 @@ describe(KbqTreeSelect.name, () => {
         describe('disabled behavior', () => {
             it('should disable itself when control is disabled programmatically', fakeAsync(() => {
                 const fixture = TestBed.createComponent(BasicTreeSelect);
+
                 fixture.detectChanges();
 
                 fixture.componentInstance.control.disable();
                 fixture.detectChanges();
                 const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
                 expect(getComputedStyle(trigger).getPropertyValue('cursor'))
                     .withContext(`Expected cursor to be default arrow on disabled control.`)
                     .toEqual('default');
@@ -696,6 +701,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should disable itself when control is disabled using the property', fakeAsync(() => {
             const fixture = TestBed.createComponent(NgModelSelect);
+
             fixture.detectChanges();
 
             fixture.componentInstance.isDisabled = true;
@@ -760,6 +766,7 @@ describe(KbqTreeSelect.name, () => {
             fixture.detectChanges();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
             trigger.style.width = '300px';
 
             trigger.click();
@@ -767,11 +774,13 @@ describe(KbqTreeSelect.name, () => {
             flush();
 
             const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
             expect(value.nativeElement.textContent)
                 .withContext(`Expected trigger to be populated by the control's initial value.`)
                 .toContain('rootNode_1');
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
             expect(pane.style.minWidth).toEqual('300px');
 
             expect(fixture.componentInstance.select.panelOpen).toBe(true);
@@ -786,6 +795,7 @@ describe(KbqTreeSelect.name, () => {
 
         it('should set the width of the overlay if the element was hidden initially', fakeAsync(() => {
             const fixture = TestBed.createComponent(BasicSelectInitiallyHidden);
+
             fixture.detectChanges();
 
             const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
@@ -799,6 +809,7 @@ describe(KbqTreeSelect.name, () => {
             flush();
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
             expect(pane.style.minWidth).toBe('200px');
         }));
     });
@@ -822,6 +833,7 @@ describe(KbqTreeSelect.name, () => {
             flush();
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
+
             expect(parseInt(pane.style.minWidth as string)).toBeGreaterThan(0);
         }));
     });
@@ -872,6 +884,7 @@ describe(KbqTreeSelect.name, () => {
     it('should set panel width same as trigger by panelWidth attribute', () => {
         const { fixture, overlayContainer } = createComponent(TreeSelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.panelWidth = 'auto';
         fixture.detectChanges();
         getTreeSelectDebugElement(debugElement).nativeElement.click();
@@ -883,6 +896,7 @@ describe(KbqTreeSelect.name, () => {
     it('should set custom panel width by panelWidth attribute', () => {
         const { fixture, overlayContainer } = createComponent(TreeSelectWithPanelWidth);
         const { debugElement, componentInstance } = fixture;
+
         componentInstance.panelWidth = 344;
         fixture.detectChanges();
         getTreeSelectDebugElement(debugElement).nativeElement.click();

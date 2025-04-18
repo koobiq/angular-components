@@ -38,6 +38,7 @@ export class KbqMonthView<D> implements AfterContentInit {
 
     set activeDate(value: D) {
         const oldValue = this._activeDate;
+
         this._activeDate = value;
 
         if (!this.hasSameMonthAndYear(oldValue, value)) {

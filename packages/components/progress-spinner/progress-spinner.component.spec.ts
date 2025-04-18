@@ -69,6 +69,7 @@ describe('KbqProgressSpinner', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
         const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
+
         testComponent.mode = 'determinate';
         fixture.detectChanges();
 
@@ -79,6 +80,7 @@ describe('KbqProgressSpinner', () => {
     it('should show indeterminate circle', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
+
         testComponent.mode = 'indeterminate';
         fixture.detectChanges();
 
@@ -90,6 +92,7 @@ describe('KbqProgressSpinner', () => {
     it('should show determinate circle by default', () => {
         const fixture = TestBed.createComponent(TestApp);
         const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
+
         fixture.detectChanges();
 
         expect(progressSpinnerDebugElement.query(By.css('.kbq-progress-spinner_indeterminate'))).toBeNull();
@@ -100,6 +103,7 @@ describe('KbqProgressSpinner', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
         const progressSpinnerDebugElement = fixture.debugElement.query(By.css('.first'));
+
         testComponent.id = 'foo';
         fixture.detectChanges();
 

@@ -258,6 +258,7 @@ export class TreeCheckedFilteringExample extends TreeParams {
             const values = this.treeControl.dataNodes
                 .filter((node) => !this.modelValue.includes(this.treeControl.getValue(node)))
                 .map((node) => this.treeControl.getValue(node));
+
             this.filterByValues.setValues(values);
         }
 

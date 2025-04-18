@@ -38,6 +38,7 @@ export class ValidationOnTypeExample {
 
         if (!regex.test(event.target.value)) {
             const newValue = event.target.value.replace(/[^\d\w]+/g, '');
+
             this.checkOnFlyForm.controls.folderName.setValue(newValue);
 
             if (!this.tooltip.isTooltipOpen) {

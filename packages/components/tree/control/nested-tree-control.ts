@@ -21,12 +21,14 @@ export class NestedTreeControl<T> extends BaseTreeControl<T> {
             (accumulator: T[], dataNode) => [...accumulator, ...this.getDescendants(dataNode), dataNode],
             []
         );
+
         this.expansionModel.select(...allNodes);
     }
 
     /** Gets a list of descendant dataNodes of a subtree rooted at given data node recursively. */
     getDescendants(dataNode: T): T[] {
         const descendants = [];
+
         this._getDescendants(descendants, dataNode);
 
         return descendants.splice(1);

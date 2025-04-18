@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import spdxSatisfies from 'spdx-satisfies';
 
 type License = string;
+
 type PackageID = string;
 
 // List of licenses considered valid and acceptable for use.
@@ -63,18 +64,22 @@ const ignoredPackages: PackageID[] = [
 function normalizeLicense(license: string | undefined): License[] {
     if (typeof license === 'string') {
         const normalized = licenseReplacements[license] || license.replace(/\*$/, '');
+
         return [normalized];
     }
+
     return [];
 }
 
 // Checks if the license string satisfies one of the accepted licenses using the SPDX specification.
 function isLicenseValid(licenses: License[]): boolean {
     const licenseExpression = licenses.join(' AND ');
+
     try {
         return spdxSatisfies(licenseExpression, licensesWhitelist.join(' OR '));
     } catch (error) {
         console.error(`Error validating licenses '${licenseExpression}': ${error}`);
+
         return false;
     }
 }
@@ -95,6 +100,7 @@ async function validateLicense(): Promise<ReturnCode> {
         });
 
         const packages = Object.keys(json);
+
         console.log(`Testing ${packages.length} packages.\n`);
 
         // Filters out packages with invalid or unaccepted licenses.
@@ -115,13 +121,16 @@ async function validateLicense(): Promise<ReturnCode> {
             });
 
             console.error(`\n${badLicensePackages.length} total packages with invalid licenses.`);
+
             return ReturnCode.InvalidLicense;
         }
 
         console.log('All package licenses are valid.');
+
         return ReturnCode.Success;
     } catch (error) {
         console.error(`Something happened:\n${error.message}`);
+
         return ReturnCode.Error;
     }
 }

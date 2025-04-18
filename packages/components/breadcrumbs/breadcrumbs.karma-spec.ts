@@ -15,7 +15,9 @@ import {
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -58,6 +60,7 @@ describe(KbqBreadcrumbs.name, () => {
             ]);
             const { debugElement, componentInstance } = fixture;
             const breadcrumbItems = findAllBreadcrumbItems(debugElement);
+
             expect(breadcrumbItems.length).toBe(componentInstance.items.length);
         });
 
@@ -68,6 +71,7 @@ describe(KbqBreadcrumbs.name, () => {
             ]);
             const { debugElement } = fixture;
             const { nativeElement } = getBreadcrumbsDebugElement(debugElement);
+
             expect(nativeElement.classList.contains('kbq-breadcrumbs_normal')).toBeTruthy();
         });
 
@@ -78,8 +82,10 @@ describe(KbqBreadcrumbs.name, () => {
             ]);
             const { debugElement, componentInstance } = fixture;
             const updatedLength = componentInstance.items.push({ text: 'New Item', disabled: false });
+
             fixture.autoDetectChanges();
             const breadcrumbItems = findAllBreadcrumbItems(debugElement);
+
             expect(breadcrumbItems.length).toBe(updatedLength);
         });
 
@@ -89,8 +95,10 @@ describe(KbqBreadcrumbs.name, () => {
                 customBreadcrumbsProvider
             ]);
             const { debugElement } = fixture;
+
             fixture.detectChanges();
             const disabledItem = findAllBreadcrumbItems(debugElement)[2];
+
             expect(disabledItem).toBeTruthy();
         });
 
@@ -101,6 +109,7 @@ describe(KbqBreadcrumbs.name, () => {
                 customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
+
             componentInstance.max = 4;
             fixture.detectChanges();
             await fixture.whenStable();
@@ -125,6 +134,7 @@ describe(KbqBreadcrumbs.name, () => {
                 customBreadcrumbsProvider
             ]);
             const { debugElement, componentInstance } = fixture;
+
             fixture.detectChanges();
             await fixture.whenStable();
             componentInstance.max = 4;
@@ -132,6 +142,7 @@ describe(KbqBreadcrumbs.name, () => {
             await fixture.whenStable();
 
             const breadcrumbsElementRef = getBreadcrumbsElementRef(debugElement);
+
             expect(componentInstance.items.length).toBeLessThan(componentInstance.max);
             expect(breadcrumbsElementRef.nativeElement.style.maxWidth).toBeFalsy();
         });
@@ -145,6 +156,7 @@ describe(KbqBreadcrumbs.name, () => {
             ]);
             const { debugElement, componentInstance } = fixture;
             const customSeparators = findAllCustomSeparators(debugElement);
+
             expect(customSeparators.length).toBe(componentInstance.items.length - 1);
         });
 
@@ -155,6 +167,7 @@ describe(KbqBreadcrumbs.name, () => {
             ]);
             const { debugElement, componentInstance } = fixture;
             const customBreadcrumbs = findAllCustomBreadcrumbItems(debugElement);
+
             expect(customBreadcrumbs.length).toBe(componentInstance.items.length);
         });
     });

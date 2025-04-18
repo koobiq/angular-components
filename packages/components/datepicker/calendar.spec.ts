@@ -47,6 +47,7 @@ describe('KbqCalendar', () => {
             fixture.detectChanges();
 
             const calendarDebugElement = fixture.debugElement.query(By.directive(KbqCalendar));
+
             calendarElement = calendarDebugElement.nativeElement;
 
             calendarInstance = calendarDebugElement.componentInstance;
@@ -55,6 +56,7 @@ describe('KbqCalendar', () => {
 
         it(`should update today's date`, () => {
             let fakeToday = adapter.createDate(2018, 0, 1);
+
             jest.spyOn(adapter, 'today').mockImplementation(() => fakeToday);
 
             calendarInstance.activeDate = fakeToday;
@@ -62,6 +64,7 @@ describe('KbqCalendar', () => {
             fixture.detectChanges();
 
             let todayCell = calendarElement.querySelector('.kbq-calendar__body-today')!;
+
             expect(todayCell).not.toBeNull();
             expect(todayCell.innerHTML.trim()).toBe('1');
 
@@ -82,6 +85,7 @@ describe('KbqCalendar', () => {
 
         it('should select date in month view', () => {
             const monthCells = calendarElement.querySelectorAll('.kbq-calendar__body-cell');
+
             (monthCells[monthCells.length - 1] as HTMLElement).click();
             fixture.detectChanges();
 
@@ -148,6 +152,7 @@ describe('KbqCalendar', () => {
             fixture = TestBed.createComponent(CalendarWithMinMax);
 
             const calendarDebugElement = fixture.debugElement.query(By.directive(KbqCalendar));
+
             calendarElement = calendarDebugElement.nativeElement;
             calendarInstance = calendarDebugElement.componentInstance;
             testComponent = fixture.componentInstance;
@@ -243,10 +248,12 @@ describe('KbqCalendar', () => {
             fixture.destroy();
 
             const dynamicFixture = TestBed.createComponent(CalendarWithSelectableMinDate);
+
             dynamicFixture.detectChanges();
 
             const calendarDebugElement = dynamicFixture.debugElement.query(By.directive(KbqCalendar));
             const disabledClass = 'kbq-disabled';
+
             calendarElement = calendarDebugElement.nativeElement;
             calendarInstance = calendarDebugElement.componentInstance;
 
@@ -277,6 +284,7 @@ describe('KbqCalendar', () => {
             fixture.detectChanges();
 
             const calendarDebugElement = fixture.debugElement.query(By.directive(KbqCalendar));
+
             calendarElement = calendarDebugElement.nativeElement;
             calendarInstance = calendarDebugElement.componentInstance;
             testComponent = fixture.componentInstance;
@@ -284,6 +292,7 @@ describe('KbqCalendar', () => {
 
         it('should disable and prevent selection of filtered dates', () => {
             const cells = calendarElement.querySelectorAll('.kbq-calendar__body-cell');
+
             (cells[0] as HTMLElement).click();
             fixture.detectChanges();
 

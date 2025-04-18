@@ -33,6 +33,7 @@ describe(SCHEMATIC_NAME, () => {
 
     it('should run migration for specified project', async () => {
         const [firstProjectKey] = projects.keys();
+
         await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey } satisfies Schema, appTree);
     });
 
@@ -45,6 +46,7 @@ describe(SCHEMATIC_NAME, () => {
             '<kbq-empty-state [big]="false"></kbq-empty-state>' +
             '<kbq-empty-state [big]="true"></kbq-empty-state>' +
             '</div>';
+
         appTree.overwrite(templatePath, template);
 
         const updatedTree = await runner.runSchematic(
@@ -63,6 +65,7 @@ describe(SCHEMATIC_NAME, () => {
 
         // Set up the template with a non-static attribute value
         const nonStaticTemplate = '<div><kbq-empty-state [big]="VARIABLE"></kbq-empty-state></div>';
+
         appTree.overwrite(templatePath, nonStaticTemplate);
         const templateBeforeUpdate = appTree.read(templatePath)?.toString();
 

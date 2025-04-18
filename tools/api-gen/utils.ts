@@ -5,10 +5,13 @@ import { MemberEntryRenderable, PropertyEntryRenderable } from './rendering/enti
 
 export const src = (path: string | string[]): string[] => {
     let res: string[];
+
     if (Array.isArray(path)) {
         res = path.reduce((result: string[], curPath) => {
             const files: string[] = new glob.GlobSync(curPath).found;
+
             result.push(...files);
+
             return result;
         }, []);
     } else {

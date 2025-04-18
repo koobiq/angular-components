@@ -56,9 +56,11 @@ export class KbqStepper {
     /** Form field number control. */
     protected get control(): KbqNumberInput {
         const control = this.formField?.control;
+
         if (!(control instanceof KbqInput && control.numberInput)) {
             throw getKbqStepperToggleMissingControlError();
         }
+
         return control.numberInput;
     }
 

@@ -21,9 +21,11 @@ const modules: ModuleInfo[] = [
 
 export const generateApiDocs = () => {
     const taskId = 'api-docs-koobiq';
+
     console.log(`Starting ${chalk.blue(taskId)}...`);
     const data = extractApiToJson(modules);
     const filteredData = generateManifest(data);
+
     generateApiToHtml(filteredData);
     console.log(chalk.green(`Finished ${chalk.bold.green(taskId)}!`));
 };

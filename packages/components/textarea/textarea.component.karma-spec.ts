@@ -58,6 +58,7 @@ describe('KbqTextarea', () => {
     describe('grow', () => {
         it('should grow initially', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
+
             fixture.detectChanges();
             tick();
 
@@ -68,6 +69,7 @@ describe('KbqTextarea', () => {
 
         it('should grow on input', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
+
             fixture.componentInstance.value = 'test\ntest';
             fixture.detectChanges();
 
@@ -93,6 +95,7 @@ describe('KbqTextarea', () => {
 
         it('should shrink on input', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
+
             fixture.componentInstance.value = 'test\ntest\ntest\ntest\ntest\ntest';
             fixture.detectChanges();
 
@@ -118,6 +121,7 @@ describe('KbqTextarea', () => {
 
         it('should have the class when grow is off', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaGrowOff);
+
             fixture.detectChanges();
             tick();
 
@@ -128,6 +132,7 @@ describe('KbqTextarea', () => {
 
         it('should not have the class when grow is on', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
+
             fixture.detectChanges();
 
             tick();
@@ -139,6 +144,7 @@ describe('KbqTextarea', () => {
 
         it('should not scroll on focus when textarea is out of viewport', fakeAsync(() => {
             const fixture = createComponent(KbqTextareaForBehaviors);
+
             fixture.detectChanges();
             tick();
 
@@ -150,9 +156,11 @@ describe('KbqTextarea', () => {
             const textareaElement: HTMLTextAreaElement = fixture.debugElement.query(
                 By.directive(KbqTextarea)
             ).nativeElement;
+
             expect(textareaElement.scrollHeight).toBeGreaterThan(window.innerHeight);
 
             const previousScrollTop = textareaElement.scrollTop;
+
             dispatchFakeEvent(textareaElement, 'click');
             fixture.detectChanges();
             tick();

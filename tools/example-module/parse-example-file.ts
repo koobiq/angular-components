@@ -32,6 +32,7 @@ export function parseExampleFile(fileName: string, content: string): ParsedMetad
                         for (const tag of doc.tags) {
                             const tagValue = tag.comment;
                             const tagName = tag.tagName.text;
+
                             if (tagName === 'title') {
                                 meta.title = tagValue;
                                 meta.isPrimary = true;

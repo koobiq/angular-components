@@ -28,6 +28,7 @@ describe('KbqEmptyState', () => {
 
     it('should init and set classes', () => {
         const fixture = TestBed.createComponent(EmptyStateWithParams);
+
         fixture.detectChanges();
 
         const emptyState = fixture.debugElement.query(By.directive(KbqEmptyState));

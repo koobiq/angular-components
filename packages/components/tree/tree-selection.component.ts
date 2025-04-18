@@ -432,6 +432,7 @@ export class KbqTreeSelection
             if (!this.canDeselectLast(option)) {
                 return;
             }
+
             this.selectionModel.toggle(option.data);
             this.keyManager.setActiveItem(option);
         } else if (this.autoSelect) {

@@ -145,20 +145,25 @@ export class KbqCodeBlockHighlight {
 
         function isHljsLnCodeDescendant(domElt) {
             let curElt = domElt;
+
             while (curElt) {
                 if (curElt.className && curElt.className.indexOf('hljs-ln-code') !== -1) {
                     return true;
                 }
+
                 curElt = curElt.parentNode;
             }
+
             return false;
         }
 
         function getHljsLnTable(hljsLnDomElt) {
             let curElt = hljsLnDomElt;
+
             while (curElt.nodeName !== 'TABLE') {
                 curElt = curElt.parentNode;
             }
+
             return curElt;
         }
 
@@ -173,12 +178,14 @@ export class KbqCodeBlockHighlight {
 
             // get the <td> element wrapping the first line of selected code
             let tdAnchor = selection.anchorNode;
+
             while (tdAnchor.nodeName !== 'TD') {
                 tdAnchor = tdAnchor.parentNode;
             }
 
             // get the <td> element wrapping the last line of selected code
             let tdFocus = selection.focusNode;
+
             while (tdFocus.nodeName !== 'TD') {
                 tdFocus = tdFocus.parentNode;
             }
@@ -195,6 +202,7 @@ export class KbqCodeBlockHighlight {
                 // if the selection was made backward, swap values
                 if (firstLineNumber > lastLineNumber) {
                     let tmp = firstLineNumber;
+
                     firstLineNumber = lastLineNumber;
                     lastLineNumber = tmp;
                     tmp = firstLineText;
@@ -215,12 +223,16 @@ export class KbqCodeBlockHighlight {
                 // reconstruct and return the real copied text
                 let selectedText = firstLineText;
                 const hljsLnTable = getHljsLnTable(tdAnchor);
+
                 for (let i = firstLineNumber + 1; i < lastLineNumber; ++i) {
                     const codeLineSel = format('.{0}[{1}="{2}"]', [CODE_BLOCK_NAME, DATA_ATTR_NAME, i]);
                     const codeLineElt = hljsLnTable.querySelector(codeLineSel);
+
                     selectedText += '\n' + codeLineElt.textContent;
                 }
+
                 selectedText += '\n' + lastLineText;
+
                 return selectedText;
                 // single copied line case
             } else {
@@ -233,9 +245,11 @@ export class KbqCodeBlockHighlight {
         d.addEventListener('copy', function (e) {
             // get current selection
             const selection = w.getSelection()!;
+
             // override behavior when one wants to copy line of codes
             if (isHljsLnCodeDescendant(selection.anchorNode)) {
                 let selectionText;
+
                 // workaround an issue with Microsoft Edge as copied line breaks
                 // are removed otherwise from the selection string
                 if (w.navigator.userAgent.indexOf('Edge') !== -1) {
@@ -244,6 +258,7 @@ export class KbqCodeBlockHighlight {
                     // other browsers can directly use the selection string
                     selectionText = selection.toString();
                 }
+
                 e.clipboardData!.setData('text/plain', selectionText);
                 e.preventDefault();
             }
@@ -251,6 +266,7 @@ export class KbqCodeBlockHighlight {
 
         function addStyles() {
             const css = d.createElement('style');
+
             css.type = 'text/css';
             css.innerHTML = format(
                 '.{0}{border-collapse:collapse}' + '.{0} td{padding:0}' + '.{1}:before{content:attr({2})}',
@@ -311,6 +327,7 @@ export class KbqCodeBlockHighlight {
             if (typeof value !== 'string') return;
 
             const element = d.createElement('code');
+
             element.innerHTML = value;
 
             return lineNumbersInternal(element, options);
@@ -370,6 +387,7 @@ export class KbqCodeBlockHighlight {
          */
         function mapOptions(element, options) {
             options = options || {};
+
             return {
                 singleLine: getSingleLineOption(options),
                 startFrom: getStartFromOption(element, options)
@@ -378,9 +396,11 @@ export class KbqCodeBlockHighlight {
 
         function getSingleLineOption(options) {
             const defaultValue = false;
+
             if (options.singleLine) {
                 return options.singleLine;
             }
+
             return defaultValue;
         }
 
@@ -394,6 +414,7 @@ export class KbqCodeBlockHighlight {
 
             // can be overridden because local option is priority
             const value = getAttribute(element, 'data-ln-start-from');
+
             if (value !== null) {
                 startFrom = toNumber(value, defaultValue);
             }
@@ -408,9 +429,11 @@ export class KbqCodeBlockHighlight {
          */
         function duplicateMultilineNodes(element) {
             const nodes = element.childNodes;
+
             for (const node in nodes) {
                 if (nodes.hasOwnProperty(node)) {
                     const child = nodes[node];
+
                     if (getLinesCount(child.textContent) > 0) {
                         if (child.childNodes.length > 0) {
                             duplicateMultilineNodes(child);
@@ -437,6 +460,7 @@ export class KbqCodeBlockHighlight {
 
             for (let i = 0; i < lines.length; i++) {
                 const lineText = lines[i].length > 0 ? lines[i] : ' ';
+
                 result += format('<span class="{0}">{1}</span>\n', [className, lineText]);
             }
 
@@ -445,6 +469,7 @@ export class KbqCodeBlockHighlight {
 
         function getLines(text) {
             if (text.length === 0) return [];
+
             return text.split(BREAK_LINE_REGEXP);
         }
 
@@ -488,6 +513,7 @@ export class KbqCodeBlockHighlight {
         function toNumber(str, fallback) {
             if (!str) return fallback;
             const number = Number(str);
+
             return isFinite(number) ? number : fallback;
         }
     }

@@ -35,9 +35,11 @@ function setImageCaption(content: string): string {
     while (html.includes('<img', pos)) {
         const imgIndex = html.indexOf('<img', pos);
         const captionIndex = html.indexOf('>', imgIndex) + 1;
+
         html = [html.slice(0, captionIndex), '<em>', html.slice(captionIndex)].join('');
 
         const captionEndIndex = html.indexOf('</', captionIndex);
+
         html = [html.slice(0, captionEndIndex), '</em>', html.slice(captionEndIndex)].join('');
 
         pos = imgIndex + 1;
@@ -126,6 +128,7 @@ export class DocsMarkdownRenderer extends Renderer {
                     file: string;
                     region: string;
                 };
+
                 return `<div koobiq-docs-example="${example}"
                              ${file ? `file="${file}"` : ''}
                              ${region ? `region="${region}"` : ''}></div>`;

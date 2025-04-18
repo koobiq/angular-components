@@ -281,6 +281,7 @@ export class KbqTextarea
             const textarea = this.elementRef.nativeElement;
 
             const clone = textarea.cloneNode(false);
+
             this.renderer.appendChild(this.renderer.parentNode(textarea), clone);
 
             const outerHeight = parseInt(getComputedStyle(textarea).height!, 10);
@@ -289,6 +290,7 @@ export class KbqTextarea
             clone.style.minHeight = 0; // this line is important to height recalculation
 
             const height = Math.max(this.minHeight, +clone.scrollHeight + diff + this.freeRowsHeight);
+
             clone.remove();
 
             this.rowsCount = Math.floor(height / this.lineHeight);

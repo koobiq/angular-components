@@ -42,6 +42,7 @@ describe('KbqProgressBar', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
         const progressBarDebugElement = fixture.debugElement.query(By.css('.first'));
+
         testComponent.mode = 'determinate';
         fixture.detectChanges();
 
@@ -52,6 +53,7 @@ describe('KbqProgressBar', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
         const progressBarDebugElement = fixture.debugElement.query(By.css('.first'));
+
         testComponent.mode = 'indeterminate';
         fixture.detectChanges();
 
@@ -69,6 +71,7 @@ describe('KbqProgressBar', () => {
         const fixture = TestBed.createComponent(TestApp);
         const testComponent = fixture.debugElement.componentInstance;
         const progressBarDebugElement = fixture.debugElement.query(By.css('.first'));
+
         testComponent.id = 'foo';
         fixture.detectChanges();
 

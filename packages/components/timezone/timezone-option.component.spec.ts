@@ -30,6 +30,7 @@ describe('KbqTimezoneOption component', () => {
 
     it('TimezoneOptionComponent: viewValue', () => {
         const fixture = TestBed.createComponent(TimezoneOptionComponent);
+
         fixture.detectChanges();
 
         const optionInstance: KbqTimezoneOption = fixture.debugElement.query(

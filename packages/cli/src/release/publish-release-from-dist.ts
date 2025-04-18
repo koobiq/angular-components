@@ -42,6 +42,7 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
         } else {
             console.log(cyan('  Koobiq CI release script'));
         }
+
         console.log(cyan('-----------------------------------------'));
         console.log();
 
@@ -49,6 +50,7 @@ export class PublishReleaseFromDistTask extends BaseReleaseTask {
         this.checkReleaseOutput();
 
         const npmDistTag = 'latest';
+
         for (const packageName of this.packageJson.release.packages) {
             this.publishPackageToNpm(packageName, npmDistTag);
         }

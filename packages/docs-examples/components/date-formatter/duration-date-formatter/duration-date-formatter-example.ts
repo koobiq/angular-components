@@ -123,6 +123,7 @@ export class DurationDateFormatterExample {
         const start = now.set({ day: 10, hour: 10, minute: 0, second: 0, millisecond: 0 });
 
         let end = now.set({ day: 10, hour: 10, minute: 0, second: 25 });
+
         shortest.withSeconds.seconds = this.formatter.durationShortest(start, end);
         shortest.onlyMinutes.seconds = this.formatter.durationShortest(start, end, false);
 

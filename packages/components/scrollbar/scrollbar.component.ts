@@ -24,10 +24,12 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
         <N extends keyof KbqScrollbarEvents>(obj: KbqScrollbarEvents, name: N) => {
             const emitListener = emits[name];
             const eventListener = events[name];
+
             // merge & check listeners
             obj[name] = [
                 emitListener,
                 ...(Array.isArray(eventListener) ? eventListener : [eventListener]).filter(Boolean)];
+
             return obj;
         },
         {}

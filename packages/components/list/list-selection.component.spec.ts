@@ -30,6 +30,7 @@ describe('KbqListSelection without forms', () => {
                         useFactory: () => ({
                             copy: (value) => {
                                 const originalClipboard = new Clipboard(document);
+
                                 originalClipboard.copy(value);
                                 clipboardContent = value;
                             }
@@ -50,6 +51,7 @@ describe('KbqListSelection without forms', () => {
         it('should copy selected option - default handler', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
             const copyKeyEvent = createKeyboardEvent('keydown', C);
+
             Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
 
             manager.setActiveItem(2);
@@ -63,6 +65,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should not blur on focused option when copying', fakeAsync(() => {
             const copyKeyEvent = createKeyboardEvent('keydown', C);
+
             Object.defineProperty(copyKeyEvent, 'ctrlKey', { get: () => true });
 
             expect(listOptions[2].componentInstance.hasFocus).toBeFalsy();
@@ -173,6 +176,7 @@ describe('KbqListSelection without forms', () => {
             const manager = selectionList.componentInstance.keyManager;
             const SPACE_EVENT: KeyboardEvent = createKeyboardEvent('keydown', SPACE);
             const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
+
             expect(selectList.selected.length).toBe(0);
 
             manager.updateActiveItem(1);
@@ -189,6 +193,7 @@ describe('KbqListSelection without forms', () => {
             const testListItem: HTMLElement = listOptions[1].nativeElement;
             const ENTER_EVENT: KeyboardEvent = createKeyboardEvent('keydown', ENTER, testListItem);
             const selectList = selectionList.injector.get<KbqListSelection>(KbqListSelection).selectionModel;
+
             expect(selectList.selected.length).toBe(0);
 
             manager.updateActiveItem(1);
@@ -232,6 +237,7 @@ describe('KbqListSelection without forms', () => {
         it('should focus and toggle the next item when pressing SHIFT + UP_ARROW', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
             const upKeyEvent = createKeyboardEvent('keydown', UP_ARROW);
+
             Object.defineProperty(upKeyEvent, 'shiftKey', { get: () => true });
 
             listOptions[3].componentInstance.selected = true;
@@ -271,6 +277,7 @@ describe('KbqListSelection without forms', () => {
         it('should focus and toggle the next item when pressing SHIFT + DOWN_ARROW', fakeAsync(() => {
             const manager = selectionList.componentInstance.keyManager;
             const downKeyEvent = createKeyboardEvent('keydown', DOWN_ARROW);
+
             Object.defineProperty(downKeyEvent, 'shiftKey', { get: () => true });
 
             listOptions[1].componentInstance.selected = true;
@@ -297,9 +304,11 @@ describe('KbqListSelection without forms', () => {
 
         it('should be able to focus the first item when pressing HOME', () => {
             const manager = selectionList.componentInstance.keyManager;
+
             expect(manager.activeItemIndex).toBe(-1);
 
             const event = dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', HOME);
+
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(1);
@@ -308,9 +317,11 @@ describe('KbqListSelection without forms', () => {
 
         it('should focus the last item when pressing END', () => {
             const manager = selectionList.componentInstance.keyManager;
+
             expect(manager.activeItemIndex).toBe(-1);
 
             const event = dispatchKeyboardEvent(selectionList.nativeElement, 'keydown', END);
+
             fixture.detectChanges();
 
             expect(manager.activeItemIndex).toBe(3);
@@ -406,6 +417,7 @@ describe('KbqListSelection without forms', () => {
         it('should set its initial selected state in the selectionModel', () => {
             const optionEl = listItemEl.injector.get<KbqListOption>(KbqListOption);
             const selectedOptions = selectionList.componentInstance.selectionModel;
+
             expect(selectedOptions.isSelected(optionEl)).toBeTruthy();
         });
     });
@@ -423,6 +435,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should properly handle native tabindex attribute', () => {
             const fixture = TestBed.createComponent(SelectionListWithTabindexAttr);
+
             fixture.detectChanges();
             const selectionList = fixture.debugElement.query(By.directive(KbqListSelection));
 
@@ -554,6 +567,7 @@ describe('KbqListSelection without forms', () => {
 
         it('should be able to customize checkbox position', () => {
             const listItemContent = fixture.debugElement.query(By.css('.kbq-list-item-content'));
+
             expect(listItemContent.nativeElement.classList).toContain('kbq-list-item-content-reverse');
         });
     });
@@ -773,6 +787,7 @@ xdescribe('KbqListSelection with forms', () => {
 
         it('should show the item as selected when preselected inside OnPush parent', fakeAsync(() => {
             const fixture = TestBed.createComponent(SelectionListWithPreselectedFormControlOnPush);
+
             fixture.detectChanges();
 
             const option = fixture.debugElement.queryAll(By.directive(KbqListOption))[1];
@@ -789,6 +804,7 @@ xdescribe('KbqListSelection with forms', () => {
         it('should use a custom comparator to determine which options are selected', fakeAsync(() => {
             const fixture = TestBed.createComponent(SelectionListWithCustomComparator);
             const testComponent = fixture.componentInstance;
+
             testComponent.selectedOptions = [{ id: 2, label: 'Two' }];
             fixture.detectChanges();
             tick();

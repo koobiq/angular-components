@@ -153,11 +153,13 @@ describe('KbqTimezoneSelect', () => {
             describe('disabled behavior', () => {
                 it('should disable itself when control is disabled programmatically', fakeAsync(() => {
                     const fixture = TestBed.createComponent(BasicTimezoneSelect);
+
                     fixture.detectChanges();
 
                     fixture.componentInstance.control.disable();
                     fixture.detectChanges();
                     const trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
+
                     expect(getComputedStyle(trigger).getPropertyValue('cursor')).toEqual('default');
 
                     trigger.click();

@@ -6,7 +6,9 @@ import { KbqMarkdown, KbqMarkdownModule } from '@koobiq/components/markdown';
 const createComponent = async <T>(component: Type<T>, providers: any[] = []): Promise<ComponentFixture<T>> => {
     await TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
     const fixture = TestBed.createComponent<T>(component);
+
     fixture.autoDetectChanges();
+
     return fixture;
 };
 
@@ -150,11 +152,13 @@ class GenerateHTMLFromMarkdownInlineTemplate {}
 describe(KbqMarkdown.name, () => {
     it('should generate html from markdown string', async () => {
         const { debugElement } = await createComponent(GenerateHTMLFromMarkdownString);
+
         expect(getMarkdownDebugElement(debugElement)).toMatchSnapshot();
     });
 
     it('should generate html from markdown inline template', async () => {
         const { debugElement } = await createComponent(GenerateHTMLFromMarkdownInlineTemplate);
+
         expect(getMarkdownDebugElement(debugElement)).toMatchSnapshot();
     });
 });

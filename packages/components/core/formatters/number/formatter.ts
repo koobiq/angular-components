@@ -279,11 +279,13 @@ export class KbqRoundDecimalPipe implements PipeTransform {
         }
 
         const currentLocale: string = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
+
         this.roundingOptions = this.localeService.locales[currentLocale].formatters.number.rounding;
 
         try {
             const num = strToNumber(value);
             const unit = this.calculateUnit(num);
+
             if (!unit) {
                 return Intl.NumberFormat.call(this, currentLocale, { useGrouping: false }).format(num);
             }
@@ -293,6 +295,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
             if (intervalsConfig.supportedLanguages.includes(currentLocale)) {
                 intervalsConfig.intervals.find(({ startRange, endRange, precision }) => {
                     const within = isWithin(startRange, endRange, num);
+
                     if (within) {
                         if (precision) {
                             parts =
@@ -358,6 +361,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
             if (!localizedOptions.includes(key)) {
                 return true;
             }
+
             if (num / ROUNDING_UNITS[key] >= 1) {
                 currentUnit = key;
 

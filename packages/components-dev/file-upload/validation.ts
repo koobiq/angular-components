@@ -5,6 +5,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 export const maxFileExceededFiveMbs = (file: File) => {
     if (!file) return null;
+
     if (file.size > MAX_FILE_SIZE) {
         return 'Размер файла превышает максимально допустимый (5 МБ)';
     }
@@ -29,5 +30,6 @@ export const maxFileSize = (control: AbstractControl): ValidationErrors | null =
             result = true;
         }
     }
+
     return { maxFileSize: result };
 };

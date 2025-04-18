@@ -121,6 +121,7 @@ describe('KbqTabHeader', () => {
             // Select the focused index 2
             expect(appComponent.selectedIndex).toBe(0);
             const enterEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', ENTER);
+
             fixture.detectChanges();
             expect(appComponent.selectedIndex).toBe(2);
             expect(enterEvent.defaultPrevented).toBe(true);
@@ -133,6 +134,7 @@ describe('KbqTabHeader', () => {
             // Select the focused 0 using space.
             expect(appComponent.selectedIndex).toBe(2);
             const spaceEvent = dispatchKeyboardEvent(tabListContainer, 'keydown', SPACE);
+
             fixture.detectChanges();
             expect(appComponent.selectedIndex).toBe(0);
             expect(spaceEvent.defaultPrevented).toBe(true);
@@ -144,6 +146,7 @@ describe('KbqTabHeader', () => {
             expect(appComponent.tabHeader.focusIndex).toBe(3);
 
             const event = dispatchKeyboardEvent(tabListContainer, 'keydown', HOME);
+
             fixture.detectChanges();
 
             expect(appComponent.tabHeader.focusIndex).toBe(0);
@@ -169,6 +172,7 @@ describe('KbqTabHeader', () => {
             expect(appComponent.tabHeader.focusIndex).toBe(0);
 
             const event = dispatchKeyboardEvent(tabListContainer, 'keydown', END);
+
             fixture.detectChanges();
 
             expect(appComponent.tabHeader.focusIndex).toBe(3);
@@ -231,6 +235,7 @@ describe('KbqTabHeader', () => {
                 tick(1000);
 
                 const updatedMaxScrollDistance = appComponent.tabHeader.getMaxScrollDistance();
+
                 expect(appComponent.tabHeader.scrollDistance).toBe(updatedMaxScrollDistance);
                 expect(previousMaxScrollDistance > updatedMaxScrollDistance);
 

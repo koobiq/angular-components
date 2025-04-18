@@ -48,12 +48,14 @@ export function entryHandler(entrySrc: string) {
     const fileContent = fs.readFileSync(entrySrc, 'utf8');
     const sourceFile = ts.createSourceFile(entrySrc, fileContent, ts.ScriptTarget.Latest, false, ts.ScriptKind.TS);
     const nodeInfo: Record<string, ClassEntryMetadata> = {};
+
     sourceFile.forEachChild((node) => {
         if (!node || !ts.isClassDeclaration(node)) {
             return;
         }
 
         let baseClass: string | null = null;
+
         if (node.heritageClauses) {
             for (const clause of node.heritageClauses) {
                 if (clause.token === ts.SyntaxKind.ExtendsKeyword) {

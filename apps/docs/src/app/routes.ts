@@ -18,8 +18,10 @@ import { DocsLocaleService } from './services/locale';
 
 const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[]): boolean => {
     const { path } = segments[0];
+
     if (path === '404') return false;
     const docsLocaleService = inject(DocsLocaleService);
+
     return docsLocaleService.isSupportedLocale(path);
 };
 

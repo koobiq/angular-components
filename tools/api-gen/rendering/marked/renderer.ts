@@ -9,6 +9,7 @@ import { splitLines } from '../transforms/code-transforms';
 export const renderer: Partial<MarkedRenderer> = {
     code(code: string, language: string): string {
         let highlightResult;
+
         // Use try catch because there are existing content issues when there is provided nonexistent
         // language, like `typescript=` etc. In that case when there will be an error thrown `Could not
         // find the language 'typescript=', did you forget to load/include a language module?`
@@ -52,6 +53,7 @@ export const renderer: Partial<MarkedRenderer> = {
       </ol>
       `;
         }
+
         return `
     <ul class="docs-list">
       ${body}

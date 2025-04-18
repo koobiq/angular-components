@@ -36,19 +36,24 @@ function regionParserImpl(
             if (startRegion) {
                 // open up the specified region
                 const regionNames = getRegionNames(startRegion[1]);
+
                 if (regionNames.length === 0) {
                     regionNames.push('');
                 }
+
                 regionNames.forEach((regionName) => {
                     const region = regionMap[regionName];
+
                     if (region) {
                         if (region.open) {
                             throw new Error(`Tried to open a region, named "${regionName}", that is already open`);
                         }
+
                         region.open = true;
                     } else {
                         regionMap[regionName] = { lines: [], open: true };
                     }
+
                     openRegions.push(regionName);
                 });
 
@@ -57,17 +62,21 @@ function regionParserImpl(
                 if (openRegions.length === 0) {
                     throw new Error('Tried to close a region when none are open');
                 }
+
                 // close down the specified region (or most recent if no name is given)
                 const regionNames = getRegionNames(endRegion[1]);
+
                 if (regionNames.length === 0) {
                     regionNames.push(openRegions[openRegions.length - 1]);
                 }
 
                 regionNames.forEach((regionName) => {
                     const region = regionMap[regionName];
+
                     if (!region || !region.open) {
                         throw new Error(`Tried to close a region, named "${regionName}", that is not open`);
                     }
+
                     region.open = false;
                     removeLast(openRegions, regionName);
                 });
@@ -81,6 +90,7 @@ function regionParserImpl(
             // this line contained an annotation so let's filter it out
             return false;
         });
+
         if (!regionMap['']) {
             regionMap[''] = { lines, open: false };
         }
@@ -96,6 +106,7 @@ function regionParserImpl(
 
 function mapObject(obj: RegionMap, mapper: (regionName: string, region: Region) => string) {
     const mappedObj: { [regionName: string]: string } = {};
+
     Object.keys(obj).forEach((key: string) => {
         mappedObj[key] = mapper(key, obj[key]);
     });
@@ -109,11 +120,13 @@ function getRegionNames(input: string): string[] {
 
 function removeLast(array: string[], item: string) {
     const index = array.lastIndexOf(item);
+
     array.splice(index, 1);
 }
 
 function leftAlign(lines: string[]): string[] {
     let indent = Number.MAX_VALUE;
+
     lines.forEach((line) => {
         const lineIndent = line.search(/\S/);
 

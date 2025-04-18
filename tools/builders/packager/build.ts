@@ -10,6 +10,7 @@ const packageVersionFilePath = './packages/components/core/version.ts';
 
 export async function packager(options: IPackagerOptions, context: BuilderContext): Promise<BuilderOutput> {
     const project = context.target !== undefined ? context.target.project : '';
+
     context.logger.info(`📦 Packaging ${project}...`);
 
     const target: Target = {

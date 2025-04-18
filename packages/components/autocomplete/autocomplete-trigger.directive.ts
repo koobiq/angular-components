@@ -466,6 +466,7 @@ export class KbqAutocompleteTrigger
                     // that were created, and flatten it so our stream only emits closing events...
                     switchMap(() => {
                         const wasOpen = this.panelOpen;
+
                         this.resetActiveItem();
                         this.autocomplete.setVisibility();
 

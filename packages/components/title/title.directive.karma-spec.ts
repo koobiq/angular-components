@@ -38,6 +38,7 @@ describe('KbqTitleDirective', () => {
             flush();
 
             const tooltipInstance = document.querySelector('.kbq-tooltip');
+
             expect(tooltipInstance).not.toBeNull();
         }));
 
@@ -48,6 +49,7 @@ describe('KbqTitleDirective', () => {
             flush();
 
             const tooltipInstance = document.querySelector('.kbq-tooltip');
+
             expect(tooltipInstance).not.toBeNull();
         }));
 
@@ -58,6 +60,7 @@ describe('KbqTitleDirective', () => {
             flush();
 
             const tooltipInstance = document.querySelector('.kbq-tooltip');
+
             expect(tooltipInstance).toBeNull();
         }));
     });
@@ -76,6 +79,7 @@ describe('KbqTitleDirective', () => {
             flush();
 
             const tooltipInstance = document.querySelector('.kbq-tooltip');
+
             expect(tooltipInstance).not.toBeNull();
         }));
 
@@ -86,6 +90,7 @@ describe('KbqTitleDirective', () => {
             flush();
 
             const tooltipInstance = document.querySelector('.kbq-tooltip');
+
             expect(tooltipInstance).toBeNull();
         }));
     });

@@ -173,6 +173,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     set indeterminate(value: boolean) {
         const changed = value !== this._indeterminate;
+
         this._indeterminate = value;
 
         if (changed) {
@@ -333,6 +334,7 @@ export class KbqCheckbox extends KbqColorDirective implements ControlValueAccess
 
     private emitChangeEvent() {
         const event = new KbqCheckboxChange();
+
         event.source = this;
         event.checked = this.checked;
 

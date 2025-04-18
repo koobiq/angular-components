@@ -40,6 +40,7 @@ describe('KbqCalendarHeader', () => {
             fixture.detectChanges();
 
             const calendarDebugElement = fixture.debugElement.query(By.directive(KbqCalendar));
+
             calendarElement = calendarDebugElement.nativeElement;
             prevButton = calendarElement.querySelector<HTMLElement>('.kbq-calendar-header__previous-button')!;
             nextButton = calendarElement.querySelector<HTMLElement>('.kbq-calendar-header__next-button')!;

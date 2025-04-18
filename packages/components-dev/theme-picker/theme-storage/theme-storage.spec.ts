@@ -17,6 +17,7 @@ const clearTestData = () => {
 
 describe('ThemeStorage Service', () => {
     let service;
+
     beforeAll(() => {
         service = new ThemeStorage();
     });
@@ -38,6 +39,7 @@ describe('ThemeStorage Service', () => {
 
     it('should get the current theme', () => {
         const theme = service.getStoredTheme();
+
         expect(theme).toEqual(testTheme);
     });
 
@@ -49,6 +51,7 @@ describe('ThemeStorage Service', () => {
 
     it('should emit an event when setTheme is called', () => {
         const spy = jest.spyOn(service.onThemeUpdate, 'emit');
+
         service.storeTheme(secondTestTheme);
         expect(spy).toHaveBeenCalled();
         expect(spy).toHaveBeenCalledWith(secondTestTheme);

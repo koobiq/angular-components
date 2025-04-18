@@ -35,6 +35,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
 
     refresh(params: ICellRendererParams): boolean {
         this.cellValue = this.getValueToDisplay(params);
+
         return true;
     }
 

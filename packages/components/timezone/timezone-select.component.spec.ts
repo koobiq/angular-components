@@ -336,6 +336,7 @@ describe('KbqTimezoneSelect', () => {
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', DOWN_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -352,6 +353,7 @@ describe('KbqTimezoneSelect', () => {
                     expect(formControl.value).toBeFalsy();
 
                     const event = createKeyboardEvent('keydown', UP_ARROW);
+
                     Object.defineProperty(event, 'altKey', { get: () => true });
 
                     dispatchEvent(select, event);
@@ -390,6 +392,7 @@ describe('KbqTimezoneSelect', () => {
                     flush();
 
                     const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
                     option.click();
                     fixture.detectChanges();
                     flush();
@@ -452,6 +455,7 @@ describe('KbqTimezoneSelect', () => {
                     flush();
 
                     let option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
                     option.click();
                     fixture.detectChanges();
                     flush();
@@ -491,6 +495,7 @@ describe('KbqTimezoneSelect', () => {
                     flush();
 
                     const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
                     option.click();
                     fixture.detectChanges();
                     flush();
@@ -508,6 +513,7 @@ describe('KbqTimezoneSelect', () => {
                     const spy = jest.fn();
                     const subscription = fixture.componentInstance.select.optionSelectionChanges.subscribe(spy);
                     const option = overlayContainerElement.querySelector('kbq-timezone-option') as HTMLElement;
+
                     option.click();
                     fixture.detectChanges();
                     flush();
@@ -534,6 +540,7 @@ describe('KbqTimezoneSelect', () => {
                     fixture.detectChanges();
 
                     const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                     expect(value.nativeElement.textContent).toContain('city17');
 
                     trigger = fixture.debugElement.query(By.css('.kbq-select__trigger')).nativeElement;
@@ -542,6 +549,7 @@ describe('KbqTimezoneSelect', () => {
                     flush();
 
                     const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
+
                     expect(options[2].classList).toContain('kbq-selected');
                 }));
 
@@ -553,6 +561,7 @@ describe('KbqTimezoneSelect', () => {
                     fixture.detectChanges();
 
                     const value = fixture.debugElement.query(By.css('.kbq-select__matcher'));
+
                     expect(value.nativeElement.textContent.trim()).toBe('Timezones');
                     expect(trigger.textContent).not.toContain('city17');
 
@@ -561,6 +570,7 @@ describe('KbqTimezoneSelect', () => {
                     flush();
 
                     const options = overlayContainerElement.querySelectorAll('kbq-timezone-option');
+
                     expect(options[1].classList).not.toContain('kbq-selected');
                 }));
             });

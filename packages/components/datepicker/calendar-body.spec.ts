@@ -33,6 +33,7 @@ describe('KbqCalendarBody', () => {
             fixture.detectChanges();
 
             const calendarBodyDebugElement = fixture.debugElement.query(By.directive(KbqCalendarBody));
+
             calendarBodyNativeElement = calendarBodyDebugElement.nativeElement;
             testComponent = fixture.componentInstance;
 
@@ -47,12 +48,14 @@ describe('KbqCalendarBody', () => {
 
         it('highlights today', () => {
             const todayCell = calendarBodyNativeElement.querySelector('.kbq-calendar__body-today')!;
+
             expect(todayCell).not.toBeNull();
             expect(todayCell.innerHTML.trim()).toBe('3');
         });
 
         it('highlights selected', () => {
             const selectedCell = calendarBodyNativeElement.querySelector('.kbq-selected')!;
+
             expect(selectedCell).not.toBeNull();
             expect(selectedCell.innerHTML.trim()).toBe('4');
         });
@@ -72,6 +75,7 @@ describe('KbqCalendarBody', () => {
 
         it('cell should be selected on click', () => {
             const todayElement = calendarBodyNativeElement.querySelector<HTMLElement>('.kbq-calendar__body-today')!;
+
             todayElement.click();
             fixture.detectChanges();
 

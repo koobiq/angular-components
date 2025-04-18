@@ -154,6 +154,7 @@ export class DemoComponent {
         if (forElement === 'config') {
             return this.selectedOrder ? { order: 2 } : { order: 1 };
         }
+
         if (forElement === 'result') {
             return this.selectedOrder ? { order: 1 } : { order: 2 };
         }

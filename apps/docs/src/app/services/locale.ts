@@ -51,6 +51,7 @@ export class DocsLocaleService {
         // but not /404 -> /en
         if (this.getLocaleFromURL(this.router.url)) {
             const path = this.router.url.split('/');
+
             // replace language in path
             path[1] = locale;
             this.router.navigate(path);
@@ -65,6 +66,7 @@ export class DocsLocaleService {
     /** Extracts the locale from the given URL if it is present and supported */
     getLocaleFromURL(url: string): DocsLocale | null {
         const locale = url.split('/')[1];
+
         return locale && this.isSupportedLocale(locale) ? locale : null;
     }
 }

@@ -75,6 +75,7 @@ describe('Date formatter', () => {
             describe('Relative short (relativeShortDate method)', () => {
                 it('before yesterday (other year)', () => {
                     const date = adapter.createDate(2015).minus({ days: 3 });
+
                     expect(formatter.relativeShortDate(date)).toBe(
                         adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`)
                     );
@@ -160,6 +161,7 @@ describe('Date formatter', () => {
 
                 it('after tomorrow (other year)', () => {
                     const date = currentDate.plus({ years: 1 });
+
                     expect(formatter.relativeShortDate(date)).toBe(
                         adapter.format(date, `${DAY}${NBSP}${SHORT_MONTH} ${YEAR}`)
                     );
@@ -185,6 +187,7 @@ describe('Date formatter', () => {
             describe('Relative long (relativeLongDate method)', () => {
                 it('before yesterday (other year)', () => {
                     const date = currentDate.minus({ years: 1 });
+
                     expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH} ${YEAR}`));
                 });
 
@@ -260,6 +263,7 @@ describe('Date formatter', () => {
 
                 it('after tomorrow (other year)', () => {
                     const date = currentDate.plus({ years: 1 });
+
                     expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH} ${YEAR}`));
                 });
 
@@ -823,6 +827,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDate(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 
@@ -863,6 +868,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDateTime(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 
@@ -921,6 +927,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDate(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 
@@ -961,6 +968,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDateTime(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 
@@ -1016,6 +1024,7 @@ describe('Date formatter', () => {
             describe('Relative short (relativeShortDate method)', () => {
                 it('before yesterday (other year)', () => {
                     const date = adapter.createDate(2015).minus({ days: 3 });
+
                     expect(formatter.relativeShortDate(date)).toBe(
                         adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`)
                     );
@@ -1077,6 +1086,7 @@ describe('Date formatter', () => {
 
                 it('after tomorrow (other year)', () => {
                     const date = adapter.createDate(2015).plus({ days: 3 });
+
                     expect(formatter.relativeShortDate(date)).toBe(
                         adapter.format(date, `${SHORT_MONTH}${NBSP}${DAY}, ${YEAR}`)
                     );
@@ -1102,6 +1112,7 @@ describe('Date formatter', () => {
             describe('Relative long (relativeLongDate method)', () => {
                 it('before yesterday (other year)', () => {
                     const date = adapter.createDate(2015).minus({ days: 3 });
+
                     expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${YEAR}`));
                 });
 
@@ -1153,6 +1164,7 @@ describe('Date formatter', () => {
 
                 it('after tomorrow (other year)', () => {
                     const date = adapter.createDate(2015).plus({ days: 3 });
+
                     expect(formatter.relativeLongDate(date)).toBe(adapter.format(date, `${DAY_MONTH}, ${YEAR}`));
                 });
 
@@ -1709,6 +1721,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDate(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 
@@ -1749,6 +1762,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeShortDateTime(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 
@@ -1807,6 +1821,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDate(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 
@@ -1847,6 +1862,7 @@ describe('Date formatter', () => {
 
                     it('throw Error', () => {
                         const wrapper = () => formatter.rangeLongDateTime(null);
+
                         expect(wrapper).toThrowError('Invalid date');
                     });
 

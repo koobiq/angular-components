@@ -28,6 +28,7 @@ describe(SCHEMATIC_NAME, () => {
         appTree = await createTestApp(runner, { style: 'scss' });
 
         const workspace = await getWorkspace(appTree);
+
         projects = workspace.projects as unknown as ProjectDefinitionCollection;
         projects.forEach((project) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;
@@ -45,6 +46,7 @@ describe(SCHEMATIC_NAME, () => {
         const [firstProjectKey, secondProjectKey] = projects.keys();
         const readProjectContent = (projectKey: string) => {
             const project = projects.get(projectKey)!;
+
             return [
                 tree.read(`/${project.root}/src/app/app.component.html`)?.toString() || '',
                 tree.read(`/${project.root}/src/styles.scss`)?.toString() || ''
@@ -54,12 +56,14 @@ describe(SCHEMATIC_NAME, () => {
         const tree = await runner.runSchematic(SCHEMATIC_NAME, { fix: false, project: firstProjectKey }, appTree);
 
         const [firstProjectTemplateContent, firstProjectStylesContent] = readProjectContent(firstProjectKey);
+
         expect(
             elementsWithDeprecatedIconPrefixes.filter((item) => firstProjectTemplateContent.indexOf(item) !== -1).length
         ).toBeFalsy();
         expect(firstProjectStylesContent).toContain(updatedPkgName);
 
         const [secondProjectTemplateContent] = readProjectContent(secondProjectKey);
+
         expect(
             elementsWithDeprecatedIconPrefixes.filter((item) => secondProjectTemplateContent.indexOf(item) !== -1)
                 .length
@@ -112,6 +116,7 @@ describe(SCHEMATIC_NAME, () => {
 
         projects.forEach((project) => {
             const templatePath = `/${project.root}/src/app/app.component.html`;
+
             appTree.overwrite(
                 templatePath,
                 `${appTree.read(templatePath)!.toString()}\n${iconsToBeReplaced.join('\n')}`

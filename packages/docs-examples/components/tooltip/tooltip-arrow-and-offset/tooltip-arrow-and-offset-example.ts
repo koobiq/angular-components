@@ -72,6 +72,7 @@ export class TooltipArrowAndOffsetExample implements AfterViewInit {
                 this.toggleGroup.buttonToggles.get(2)!.checked = true;
             }
         }
+
         this.arrow = arrow;
     }
 

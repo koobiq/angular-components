@@ -47,6 +47,7 @@ export class FileUploadMultipleErrorOverviewExample {
         this.errors = [];
         this.files.forEach((file) => {
             const errorsPerFile: string[] = [maxFileExceeded(file.file) || ''].filter(Boolean);
+
             file.hasError = errorsPerFile.length > 0;
 
             this.errors = [

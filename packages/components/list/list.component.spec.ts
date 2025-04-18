@@ -23,6 +23,7 @@ describe('KbqList', () => {
 
     it('should add and remove focus class on focus/blur', () => {
         const fixture = TestBed.createComponent(ListWithOneAnchorItem);
+
         fixture.detectChanges();
         const listItem = fixture.debugElement.query(By.directive(KbqListItem));
         const listItemEl = fixture.debugElement.query(By.css('.kbq-list-item'));
@@ -41,24 +42,29 @@ describe('KbqList', () => {
     it('should not apply any additional class to a list without lines', () => {
         const fixture = TestBed.createComponent(ListWithOneItem);
         const listItem = fixture.debugElement.query(By.css('kbq-list-item'));
+
         fixture.detectChanges();
         expect(listItem.nativeElement.className).toBe('kbq-list-item');
     });
 
     it('should not clear custom classes provided by user', () => {
         const fixture = TestBed.createComponent(ListWithItemWithCssClass);
+
         fixture.detectChanges();
 
         const listItems = fixture.debugElement.children[0].queryAll(By.css('kbq-list-item'));
+
         expect(listItems[0].nativeElement.classList.contains('test-class')).toBe(true);
     });
 
     it('should add aria roles properly', () => {
         const fixture = TestBed.createComponent(ListWithMultipleItems);
+
         fixture.detectChanges();
 
         const list = fixture.debugElement.children[0];
         const listItem = fixture.debugElement.children[0].query(By.css('kbq-list-item'));
+
         expect(list.nativeElement.getAttribute('role')).toBeNull();
 
         expect(listItem.nativeElement.getAttribute('role')).toBeNull();

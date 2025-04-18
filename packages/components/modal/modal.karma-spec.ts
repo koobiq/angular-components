@@ -33,6 +33,7 @@ describe('KbqModal', () => {
         it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
             const fixtureComponent = TestBed.createComponent(ModalByServiceFromDropdownComponent);
             const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
+
             fixtureComponent.detectChanges();
 
             expect(document.activeElement).not.toBe(buttonElement);

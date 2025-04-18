@@ -33,6 +33,7 @@ describe(SCHEMATIC_NAME, () => {
 
     it('should run migration for specified project', async () => {
         const [firstProjectKey] = projects.keys();
+
         await runner.runSchematic(SCHEMATIC_NAME, { project: firstProjectKey } satisfies Schema, appTree);
     });
 
@@ -64,6 +65,7 @@ describe(SCHEMATIC_NAME, () => {
 
         // Set up the template with a non-static attribute value
         const nonStaticTemplate = '<div><kbq-loader-overlay [compact]="VARIABLE"></kbq-loader-overlay></div>';
+
         appTree.overwrite(templatePath, nonStaticTemplate);
         const templateBeforeUpdate = appTree.read(templatePath)?.toString();
 
