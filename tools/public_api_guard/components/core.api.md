@@ -10,6 +10,7 @@ import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
@@ -2328,6 +2329,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected portal: ComponentPortal<T>;
     // (undocumented)
     resetOrigin(): void;
+    // (undocumented)
+    protected readonly scheduler: AsyncScheduler | undefined;
     // (undocumented)
     protected readonly scrollDispatcher: ScrollDispatcher;
     // (undocumented)
