@@ -20,11 +20,11 @@ type ExampleAction = {
 };
 
 /**
- * @title TopBar
+ * @title TopBar Actions
  */
 @Component({
     standalone: true,
-    selector: 'top-bar-overview-example',
+    selector: 'top-bar-actions-example',
     imports: [
         KbqTopBarModule,
         KbqButtonModule,
@@ -36,14 +36,11 @@ type ExampleAction = {
     template: `
         <kbq-top-bar>
             <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
+                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
                 kbqTopBarContainer
                 placement="start"
             >
-                <div class="layout-row layout-margin-right-l flex-none">
-                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
-                </div>
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <span class="kbq-truncate-line">Actions</span>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -93,19 +90,19 @@ type ExampleAction = {
         </kbq-top-bar>
     `,
     styles: `
+        .kbq-overflow-items {
+            max-width: 368px;
+        }
+
         :host {
             .kbq-top-bar-container__start {
-                --kbq-top-bar-container-start-basis: 115px;
-            }
-
-            .kbq-top-bar-container__end {
-                max-width: 330px;
+                --kbq-top-bar-container-start-basis: 55px;
             }
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverviewExample {
+export class TopBarActionsExample {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -115,29 +112,24 @@ export class TopBarOverviewExample {
             ),
         { initialValue: true }
     );
-
-    protected readonly actions: ExampleAction[] = [
+    readonly actions: ExampleAction[] = [
         {
-            id: '1',
+            id: 'refresh',
+            icon: 'kbq-arrows-rotate_16',
+            text: 'Refresh',
             color: KbqComponentColors.Contrast,
-            style: KbqButtonStyles.Transparent,
-            icon: 'kbq-list_16',
-            text: 'List'
+            style: KbqButtonStyles.Transparent
         },
         {
-            id: '2',
+            id: 'search',
+            icon: 'kbq-magnifying-glass_16',
             color: KbqComponentColors.Contrast,
-            style: KbqButtonStyles.Transparent,
-            icon: 'kbq-filter_16',
-            text: 'Filter'
+            style: KbqButtonStyles.Transparent
         },
-        {
-            id: '3',
-            color: KbqComponentColors.Contrast,
-            style: '',
-            icon: 'kbq-plus_16',
-            text: 'Create dashboard'
-        }
+        { id: 'list', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'button1', text: 'Button', color: KbqComponentColors.ContrastFade, style: '' },
+        { id: 'button2', text: 'Button', color: KbqComponentColors.Contrast, style: '' }
     ];
 
     protected readonly KbqComponentColors = KbqComponentColors;

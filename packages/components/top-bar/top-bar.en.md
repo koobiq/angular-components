@@ -1,46 +1,60 @@
-The `Top Bar` is a toolbar that remains visible on the page at all times, providing quick access to navigation and
-controls. Depending on the interface requirements, it can include breadcrumbs, a title, action buttons, and other
-elements. Below are various ways to use the toolbar and recommendations for adapting it to different scenarios.
-
-### Breadcrumbs
-
-Use breadcrumbs to display the navigation path. This panel is always visible and helps users navigate the application.
-
-<!-- example(top-bar-breadcrumbs) -->
-
-### Replacing Breadcrumbs with a Title
-
-For a more compact layout, replace breadcrumbs with a title that reflects the current section.
+Topbar is a toolbar that always remains visible on the page and provides quick access to navigation and controls.
 
 <!-- example(top-bar-overview) -->
 
-### Active Breadcrumb Display
+Depending on the interface requirements, it may include a logo, a title, breadcrumbs, action buttons, and other elements.
 
-The last breadcrumb in the navigation is always active and can be used for various actions.
+### Page title
 
-<!-- example(top-bar-active-breadcrumb) -->
+This content option is suitable for initial screens when there is no need to display the navigation path.
 
-### Additional Actions
+<!-- example(top-bar-overview) -->
 
-Additional (secondary) actions are placed in a dropdown menu for better UI convenience.
+If you need to display the number of objects on the current page, you can do so by showing a special counter next to the page title:
 
-<!-- example(top-bar-secondary-actions) -->
+<!-- example(top-bar-title-counter) -->
 
-### Responsive Behavior
+### Breadcrumbs
 
-Additional actions can be moved into the dropdown menu as the screen width decreases, ensuring a seamless user experience across different devices.
+For internal pages of a specific module, using [Breadcrumbs](/en/components/breadcrumbs) is an excellent option. This helps users navigate the application more easily.
 
-<!-- example(top-bar-secondary-actions-responsive) -->
+<!-- example(top-bar-breadcrumbs) -->
 
-### Minimum Spacing Between Elements
+### Action buttons
 
-<!-- cspell:ignore Dashbo -->
+On the right side of the toolbar, there is a dedicated area for placing any actions that need to be displayed on the current page.
 
-To ensure usability:
+We recommend using the following set of actions (from left to right):
 
--   Hide button text when the screen width decreases.
--   Show a tooltip with the button text on hover.
--   Maintain a minimum spacing of **80px**, set via `--kbq-top-bar-spacer-min-width`. It applies to Top Bar elements, including the header.
--   If a long title does not fit, truncate it with an ellipsis (**"Dashbo..."**).
+-   Indicators (e.g., data refresh indicator)
+-   A group of icon buttons (e.g., filters)
+-   Frequently used actions as buttons (e.g., "Add...", "Share")
+-   Additional actions in a dropdown menu, where all secondary actions related to the current page can be placed.
+
+<!-- example(top-bar-actions) -->
+
+### Responsive mode
+
+Internal elements can adjust to the toolbar size.
+
+The minimum allowed spacing between the left side and the right side with actions is **80px** and is defined using the CSS variable `--kbq-top-bar-spacer-min-width`.
+
+#### Breadcrumbs variant
+
+When the panel is compressed, the breadcrumbs will adjust as follows:
+
+<!-- example(top-bar-breadcrumbs-adaptive) -->
+
+A more detailed explanation of breadcrumb compression is provided on the [Breadcrumbs](/en/components/breadcrumbs) page.
+
+#### Page title variant
+
+The variant using only the page title will adjust as follows:
+
+<!-- example(top-bar-title-counter-adaptive) -->
+
+#### Scroll behavior
+
+The toolbar can remain fixed while scrolling the page.
 
 <!-- example(top-bar-overflow) -->

@@ -696,8 +696,8 @@ const DOCS: { [key: string]: DocCategory[] } = {
                 {
                     id: 'top-bar',
                     name: {
-                        ru: 'Top Bar',
-                        en: 'Top Bar'
+                        ru: 'Topbar',
+                        en: 'Topbar'
                     },
                     svgPreview: 'top-bar',
                     hasApi: true,

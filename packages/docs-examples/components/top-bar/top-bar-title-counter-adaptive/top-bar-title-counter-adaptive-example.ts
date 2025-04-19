@@ -19,12 +19,9 @@ type ExampleAction = {
     color: KbqComponentColors;
 };
 
-/**
- * @title TopBar
- */
 @Component({
     standalone: true,
-    selector: 'top-bar-overview-example',
+    selector: 'example-top-bar',
     imports: [
         KbqTopBarModule,
         KbqButtonModule,
@@ -34,7 +31,7 @@ type ExampleAction = {
         KbqOverflowItemsModule
     ],
     template: `
-        <kbq-top-bar>
+        <kbq-top-bar withShadow>
             <div
                 class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
                 kbqTopBarContainer
@@ -43,7 +40,11 @@ type ExampleAction = {
                 <div class="layout-row layout-margin-right-l flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
+                    <span class="kbq-truncate-line layout-margin-right-xs">Page Header</span>
+
+                    <span class="example-kbq-top-bar__counter">10</span>
+                </div>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -94,18 +95,39 @@ type ExampleAction = {
     `,
     styles: `
         :host {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 72px;
+            max-width: 100%;
+            min-width: 110px;
+            container-type: inline-size;
+
+            .kbq-top-bar {
+                width: 100%;
+            }
+
             .kbq-top-bar-container__start {
                 --kbq-top-bar-container-start-basis: 115px;
             }
 
-            .kbq-top-bar-container__end {
-                max-width: 330px;
+            .kbq-overflow-items {
+                max-width: 142px;
+                min-width: 32px;
             }
+        }
+
+        .example-kbq-top-bar__counter {
+            color: var(--kbq-foreground-contrast-tertiary);
+        }
+
+        .example-kbq-top-bar__title {
+            display: inline-flex;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverviewExample {
+export class ExampleTopBar {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -116,31 +138,47 @@ export class TopBarOverviewExample {
         { initialValue: true }
     );
 
-    protected readonly actions: ExampleAction[] = [
-        {
-            id: '1',
-            color: KbqComponentColors.Contrast,
-            style: KbqButtonStyles.Transparent,
-            icon: 'kbq-list_16',
-            text: 'List'
-        },
-        {
-            id: '2',
-            color: KbqComponentColors.Contrast,
-            style: KbqButtonStyles.Transparent,
-            icon: 'kbq-filter_16',
-            text: 'Filter'
-        },
-        {
-            id: '3',
-            color: KbqComponentColors.Contrast,
-            style: '',
-            icon: 'kbq-plus_16',
-            text: 'Create dashboard'
-        }
+    readonly actions: ExampleAction[] = [
+        { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'button1', text: 'Apply', color: KbqComponentColors.Contrast, style: '' },
+        { id: 'button2', text: 'Button 2', color: KbqComponentColors.ContrastFade, style: '' }
     ];
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
 }
+
+/**
+ * @title Top Bar Title And Counter Adaptive
+ */
+@Component({
+    standalone: true,
+    imports: [ExampleTopBar],
+    selector: 'top-bar-title-counter-adaptive-example',
+    template: `
+        <div class="example-text layout-margin-bottom-l">
+            When there is free space, the title and actions are fully displayed.
+        </div>
+        <example-top-bar [style.width.px]="680" />
+
+        <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
+            The minimum width of the left side depends on the page title, which can be truncated to 3 characters with
+            the addition of three dots (…).
+        </div>
+        <example-top-bar [style.width.px]="437" />
+
+        <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
+            After reaching the minimum width of the left side, you can start compressing the right side with the
+            actions.
+        </div>
+        <example-top-bar [style.width.px]="314" />
+    `,
+    styles: `
+        :host .example-text {
+            color: var(--kbq-foreground-contrast-secondary);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TopBarTitleCounterAdaptiveExample {}
