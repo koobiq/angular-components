@@ -567,6 +567,7 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     ngOnInit(): void;
     // (undocumented)
     onApply(): void;
+    onClear(): void;
     onKeydown($event: KeyboardEvent): void;
     open(): void;
     // (undocumented)
