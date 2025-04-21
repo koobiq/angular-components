@@ -1,6 +1,6 @@
 import { NgComponentOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, inject, Input, Type, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, Input, Type, ViewEncapsulation } from '@angular/core';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
@@ -74,6 +74,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
 
     private readonly elementRef = inject(ElementRef);
     private readonly httpClient = inject(HttpClient);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;
@@ -162,6 +163,8 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
             if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
                 setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
             }
+
+            this.cdr.markForCheck();
         }
     }
 
