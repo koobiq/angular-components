@@ -120,6 +120,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         this.data.value = null;
 
         this.stateChanges.next();
+
+        this.filterBar?.onChangePipe.next(this.data);
     }
 
     /** @docs-private */

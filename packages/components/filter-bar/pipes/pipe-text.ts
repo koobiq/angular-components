@@ -86,6 +86,13 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
         }
     }
 
+    /** clears the pipe and triggers changes */
+    override onClear() {
+        super.onClear();
+
+        this.control.reset();
+    }
+
     /** opens popover */
     override open() {
         this.popover.show();
