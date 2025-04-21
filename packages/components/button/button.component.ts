@@ -23,6 +23,7 @@ import {
     getNodesWithoutComments,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
+    KbqComponentColors,
     KbqTitleTextRef,
     leftIconClassName,
     rightIconClassName
@@ -172,6 +173,8 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
         private styler: KbqButtonCssStyler
     ) {
         super();
+
+        this.color = KbqComponentColors.ContrastFade;
     }
 
     ngAfterViewInit(): void {
