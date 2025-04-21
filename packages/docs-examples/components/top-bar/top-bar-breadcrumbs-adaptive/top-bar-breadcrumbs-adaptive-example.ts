@@ -2,7 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
+import { kbqBreadcrumbsConfigurationProvider, KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -24,6 +24,7 @@ type ExampleAction = {
 @Component({
     standalone: true,
     selector: 'example-top-bar-breadcrumbs',
+    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     imports: [
         KbqTopBarModule,
         KbqButtonModule,
