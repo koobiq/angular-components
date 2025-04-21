@@ -1,4 +1,3 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
 import { CdkScrollable } from '@angular/cdk/overlay';
 import {
     ChangeDetectionStrategy,
@@ -18,7 +17,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqTabsModule } from '@koobiq/components/tabs';
-import { filter, Subject } from 'rxjs';
+import { filter } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocStates } from '../../services/doc-states';
@@ -97,10 +96,6 @@ export class BaseOverviewComponent extends DocsLocaleState {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly titleService = inject(Title);
 
-    readonly animationDone = new Subject<boolean>();
-
-    animationState: 'fadeIn' | 'fadeOut' = 'fadeOut';
-
     componentDocItem: DocItem | null = null;
 
     @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
@@ -117,8 +112,6 @@ export class BaseOverviewComponent extends DocsLocaleState {
                 takeUntilDestroyed()
             )
             .subscribe((d) => (this.componentDocItem = d));
-
-        this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.resetAnimation);
 
         // Should update the view after url change
         this.activatedRoute.url.pipe(takeUntilDestroyed()).subscribe(() => this.changeDetectorRef.markForCheck());
@@ -146,27 +139,9 @@ export class BaseOverviewComponent extends DocsLocaleState {
 
         this.titleService.setTitle(title);
 
-        this.startAnimation();
         this.changeDetectorRef.detectChanges();
     }
-
-    private startAnimation() {
-        this.animationState = 'fadeOut';
-    }
-
-    private resetAnimation = () => {
-        this.animationState = 'fadeIn';
-    };
 }
-
-export const COMPONENT_VIEWER_ANIMATIONS = [
-    trigger('fadeInOut', [
-        state('fadeIn', style({ opacity: 1 })),
-        state('fadeOut', style({ opacity: 0 })),
-        transition('fadeOut => fadeIn', [animate('300ms')])
-    ])
-
-];
 
 @Component({
     standalone: true,
@@ -179,11 +154,8 @@ export const COMPONENT_VIEWER_ANIMATIONS = [
     selector: 'docs-cdk-overview',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview',
-        '[@fadeInOut]': 'animationState',
-        '(@fadeInOut.done)': 'animationDone.next(true)'
+        class: 'component-overview'
     },
-    animations: COMPONENT_VIEWER_ANIMATIONS,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -208,11 +180,8 @@ export class DocsCdkOverviewComponent extends BaseOverviewComponent {
     selector: 'docs-component-overview',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview',
-        '[@fadeInOut]': 'animationState',
-        '(@fadeInOut.done)': 'animationDone.next(true)'
+        class: 'component-overview'
     },
-    animations: COMPONENT_VIEWER_ANIMATIONS,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -237,11 +206,8 @@ export class DocsComponentOverviewComponent extends BaseOverviewComponent {
     selector: 'docs-component-api',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview',
-        '[@fadeInOut]': 'animationState',
-        '(@fadeInOut.done)': 'animationDone.next(true)'
+        class: 'component-overview'
     },
-    animations: COMPONENT_VIEWER_ANIMATIONS,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -266,11 +232,8 @@ export class DocsComponentApiComponent extends BaseOverviewComponent {
     selector: 'docs-cdk-api',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview',
-        '[@fadeInOut]': 'animationState',
-        '(@fadeInOut.done)': 'animationDone.next(true)'
+        class: 'component-overview'
     },
-    animations: COMPONENT_VIEWER_ANIMATIONS,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -303,11 +266,8 @@ export class DocsCdkApiComponent extends BaseOverviewComponent {
         </div>
     `,
     host: {
-        class: 'component-overview',
-        '[@fadeInOut]': 'animationState',
-        '(@fadeInOut.done)': 'animationDone.next(true)'
+        class: 'component-overview'
     },
-    animations: COMPONENT_VIEWER_ANIMATIONS,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

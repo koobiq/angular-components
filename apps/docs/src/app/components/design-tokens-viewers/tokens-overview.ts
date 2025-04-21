@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import { BaseOverviewComponent, COMPONENT_VIEWER_ANIMATIONS } from '../component-viewer/component-viewer.component';
+import { BaseOverviewComponent } from '../component-viewer/component-viewer.component';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 
 @Component({
@@ -17,11 +17,8 @@ import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
     selector: 'docs-design-tokens-overview',
     templateUrl: '../component-viewer/component-overview.template.html',
     host: {
-        class: 'component-overview',
-        '[@fadeInOut]': 'animationState',
-        '(@fadeInOut.done)': 'animationDone.next(true)'
+        class: 'component-overview'
     },
-    animations: COMPONENT_VIEWER_ANIMATIONS,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TokensOverview extends BaseOverviewComponent {
