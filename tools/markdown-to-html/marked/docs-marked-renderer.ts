@@ -61,6 +61,14 @@ export class DocsMarkdownRenderer extends Renderer {
         super();
     }
 
+    // Transforms a Markdown code block into the corresponding HTML output. In our case, we
+    // want to add a data-docs-code-language attribute to the code element.
+    code(code: string, infostring: string | undefined, escaped: boolean): string {
+        const result = super.code(code, infostring, escaped);
+
+        return result.replace('<pre>', `<pre data-docs-code-language="${infostring}">`);
+    }
+
     /**
      * Transforms a Markdown heading into the corresponding HTML output. In our case, we
      * want to create a header-link for each H2, H3, and H4 heading. This allows users to jump to
