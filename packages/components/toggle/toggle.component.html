@@ -16,6 +16,7 @@
         [tabIndex]="tabIndex"
         (change)="onChangeEvent($event)"
         (click)="onInputClick($event)"
+        (keydown.enter)="input.click()"
     />
     <div class="kbq-toggle-bar-container">
         <div class="kbq-toggle-bar">
