@@ -1,7 +1,8 @@
 import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     selector: 'app',
@@ -16,9 +17,10 @@ export class DemoComponent {
 @NgModule({
     declarations: [DemoComponent],
     imports: [
-        BrowserModule,
+        BrowserAnimationsModule,
         KbqIconModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        DevThemeToggle
     ],
     bootstrap: [DemoComponent]
 })
