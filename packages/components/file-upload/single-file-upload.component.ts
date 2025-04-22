@@ -81,7 +81,8 @@ export class KbqSingleFileUploadComponent
         this.cdr.markForCheck();
     }
 
-    /** Emits an event containing updated file. */
+    /** Emits an event containing updated file.
+     * @TODO public output will be renamed to fileChange in next major release (#DS-3700) */
     @Output('fileQueueChange') fileChange: EventEmitter<KbqFileItem | null> = new EventEmitter<KbqFileItem | null>();
 
     /** @docs-private */

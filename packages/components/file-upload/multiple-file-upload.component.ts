@@ -98,7 +98,8 @@ export class KbqMultipleFileUploadComponent
         this.cdr.markForCheck();
     }
 
-    /** Emits an event containing updated file list. */
+    /** Emits an event containing updated file list.
+     * @TODO public output will be renamed to filesChange in next major release (#DS-3700) */
     @Output('fileQueueChanged') filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.
