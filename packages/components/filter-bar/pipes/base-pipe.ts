@@ -18,6 +18,11 @@ import { KbqPipeData, KbqPipeTemplate, KbqPipeType } from '../filter-bar.types';
 /** Injection Token for providing configuration of filter-bar */
 export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
 
+/** function to get unique identifier of an element */
+export function getId(item: KbqPipeTemplate): KbqPipeType | string | number {
+    return item?.id ?? item?.name;
+}
+
 @Directive({
     standalone: true,
     host: {
@@ -87,7 +92,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         }
 
         this.filterBar?.openPipe.pipe(filter(Boolean)).subscribe((id) => {
-            if (this.getId(this.data) === id) {
+            if (getId(this.data) === id) {
                 this.open();
             }
         });
@@ -100,7 +105,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** updates values for selection and value template */
     updateTemplates = (templates: KbqPipeTemplate[] | null) => {
-        const template = templates?.find((template) => this.getId(template) === this.getId(this.data));
+        const template = templates?.find((template) => getId(template) === getId(this.data));
 
         if (template?.values) {
             this.values = template.values;
@@ -122,10 +127,6 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
         this.stateChanges.next();
 
         this.filterBar?.onChangePipe.next(this.data);
-    }
-
-    private getId(item: KbqPipeTemplate): KbqPipeType | string | number {
-        return item?.id ?? item?.name;
     }
 
     /** @docs-private */

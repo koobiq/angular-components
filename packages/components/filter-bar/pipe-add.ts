@@ -18,6 +18,7 @@ import { KbqSelect, KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilter, KbqPipe, KbqPipeTemplate } from './filter-bar.types';
+import { getId } from './pipes/base-pipe';
 
 @Component({
     standalone: true,
@@ -92,14 +93,14 @@ export class KbqPipeAdd {
     constructor() {
         this.filterBar.changes.pipe(takeUntilDestroyed()).subscribe(() => {
             if (this.filterBar?.filter) {
-                this.addedPipes = this.filterBar.filter.pipes.map((pipe: KbqPipe) => pipe.id ?? pipe.name);
+                this.addedPipes = this.filterBar.filter.pipes.map((pipe: KbqPipe) => getId(pipe));
             }
         });
     }
 
     addPipeFromTemplate(option: KbqOption) {
         if (option.selected) {
-            this.filterBar.openPipe.next(option.value.id ?? option.value.name);
+            this.filterBar.openPipe.next(getId(option.value));
         } else {
             option.select();
 
@@ -125,6 +126,6 @@ export class KbqPipeAdd {
      * should be returned.
      */
     compareWith(o1: KbqPipe, o2: string): boolean {
-        return (o1.id ?? o1.name) === o2;
+        return getId(o1) === o2;
     }
 }
