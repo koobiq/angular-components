@@ -15,7 +15,7 @@ const fileItemRowCssClass = 'multiple__uploaded-item';
 
 const fileItemCssClass = 'file-item';
 
-describe('MultipleFileUploadComponent', () => {
+describe(KbqMultipleFileUploadComponent.name, () => {
     let component: any;
     let fixture: ComponentFixture<any>;
 
@@ -58,7 +58,7 @@ describe('MultipleFileUploadComponent', () => {
     });
 });
 
-describe('SingleFileUploadComponent', () => {
+describe(KbqSingleFileUploadComponent.name, () => {
     let component: any;
     let fixture: ComponentFixture<any>;
 

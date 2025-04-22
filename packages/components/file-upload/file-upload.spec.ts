@@ -43,7 +43,7 @@ const maxFileExceeded = (file: File): string | null => {
     return (file?.size ?? 0 > maxSize) ? `Exceeded with (${maxSize / mega} Mb)` : null;
 };
 
-describe('MultipleFileUploadComponent', () => {
+describe(KbqMultipleFileUploadComponent.name, () => {
     let component: BasicMultipleFileUpload;
     let fixture: ComponentFixture<BasicMultipleFileUpload>;
 
@@ -282,7 +282,7 @@ describe('MultipleFileUploadComponent', () => {
     });
 });
 
-describe('SingleFileUploadComponent', () => {
+describe(KbqSingleFileUploadComponent.name, () => {
     let component: BasicSingleFileUpload;
     let fixture: ComponentFixture<BasicSingleFileUpload>;
 
@@ -392,7 +392,7 @@ describe('SingleFileUploadComponent', () => {
             dispatchDropEvent(fixture);
 
             setTimeout(() => {
-                expect(component.onChange).toHaveBeenCalledTimes(2);
+                expect(component.onChange).toHaveBeenCalledTimes(1);
                 expect(component.file?.file.name).toBe(FILE_NAME);
                 done();
             });
