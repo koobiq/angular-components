@@ -16,8 +16,13 @@
     font-weight: var(--kbq-typography-text-normal-medium-font-weight);
     font-family: var(--kbq-typography-text-normal-medium-font-family);
 
+    &:focus-visible {
+        outline: 1px solid var(--kbq-states-line-focus-theme);
+        border-color: var(--kbq-states-line-focus-theme);
+    }
+
     @media (width <= 768px) {
-        border: none;
+        border-color: transparent;
     }
 }
 
