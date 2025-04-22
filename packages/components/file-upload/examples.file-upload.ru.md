@@ -12,6 +12,8 @@
 
 <!-- example(file-upload-single-with-signal) -->
 
+## Простое использование Control Value Accessor для загрузчика файлов
+
 В этом разделе представлен пример реализации загрузчика файлов, поддерживающего загрузку одного файла, с использованием `Control Value Accessor`.
 
 <!-- example(file-upload-cva-overview) -->

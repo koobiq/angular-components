@@ -12,6 +12,8 @@ An example of a file uploader using [`signal`](https://angular.dev/guide/signals
 
 <!-- example(file-upload-single-with-signal) -->
 
+## Simple Usage of Control Value Accessor for File Upload
+
 This section provides an example implementation of a file uploader that supports uploading a single file using `Control Value Accessor`.
 
 <!-- example(file-upload-cva-overview) -->
