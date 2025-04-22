@@ -41,7 +41,7 @@ export class FilterBarRemovableExample {
                 disabled: false
             },
             {
-                name: 'SelectMultiple',
+                name: 'MultiSelect',
                 type: KbqPipeTypes.MultiSelect,
                 value: [],
 

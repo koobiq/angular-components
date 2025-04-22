@@ -31,6 +31,9 @@ import { DevLocaleSelector } from '../locale-selector';
     imports: [FilterBarExamplesModule],
     selector: 'dev-docs-examples',
     template: `
+        <filter-bar-uniq-pipes-example />
+        <br />
+        <br />
         <filter-bar-custom-pipe-example />
         <br />
         <br />
@@ -614,6 +617,25 @@ export class DemoComponent implements AfterViewInit {
                 disabled: false
             },
             {
+                name: 'mySelect',
+                type: KbqPipeTypes.Select,
+                id: 'mySelect',
+                values: [
+                    { name: 'Option 1', id: '1', type: 'error' },
+                    { name: 'Option 2', id: '2', type: 'warning' },
+                    { name: 'Option 3', id: '3', type: 'success' },
+                    { name: 'Option 4', id: '4', type: 'error' },
+                    { name: 'Option 5', id: '5', type: 'warning' }
+                ],
+                valueTemplate: this.optionTemplate,
+                search: true,
+
+                required: false,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
                 name: 'MultiSelect',
                 type: KbqPipeTypes.MultiSelect,
                 values: [
@@ -637,8 +659,37 @@ export class DemoComponent implements AfterViewInit {
                 disabled: false
             },
             {
+                name: 'myMultiSelect',
+                type: KbqPipeTypes.MultiSelect,
+                id: 'myMultiSelect',
+                values: [
+                    { name: 'Option 1', id: '1', type: 'error' },
+                    { name: 'Option 2', id: '2', type: 'warning' },
+                    { name: 'Option 3', id: '3', type: 'success' },
+                    { name: 'Option 4', id: '4', type: 'error' },
+                    { name: 'Option 5', id: '5', type: 'warning' }
+                ],
+                valueTemplate: this.optionTemplate,
+                search: true,
+
+                required: false,
+                cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
                 name: 'Text',
                 type: KbqPipeTypes.Text,
+
+                required: false,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'myText',
+                type: KbqPipeTypes.Text,
+                id: 'myText',
 
                 required: false,
                 cleanable: false,
@@ -662,8 +713,42 @@ export class DemoComponent implements AfterViewInit {
                 disabled: false
             },
             {
+                name: 'myDate',
+                type: KbqPipeTypes.Date,
+                id: 'myDate',
+                values: [
+                    { name: 'Последний день', end: null, start: { days: -1 } },
+                    { name: 'Последние 3 дня', end: null, start: { days: -3 } },
+                    { name: 'Последние 7 дней', end: null, start: { days: -7 } },
+                    { name: 'Последние 30 дней', end: null, start: { days: -30 } },
+                    { name: 'Последние 90 дней', end: null, start: { days: -90 } },
+                    { name: 'Последний год', end: null, start: { years: -1 } }
+                ],
+                required: false,
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
                 name: 'Datetime',
                 type: KbqPipeTypes.Datetime,
+                values: [
+                    { name: 'Последний день', end: null, start: { days: -1 } },
+                    { name: 'Последние 3 дня', end: null, start: { days: -3 } },
+                    { name: 'Последние 7 дней', end: null, start: { days: -7 } },
+                    { name: 'Последние 30 дней', end: null, start: { days: -30 } },
+                    { name: 'Последние 90 дней', end: null, start: { days: -90 } },
+                    { name: 'Последний год', end: null, start: { years: -1 } }
+                ],
+                required: false,
+                cleanable: true,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'myDatetime',
+                type: KbqPipeTypes.Datetime,
+                id: 'myDatetime',
                 values: [
                     { name: 'Последний день', end: null, start: { days: -1 } },
                     { name: 'Последние 3 дня', end: null, start: { days: -3 } },

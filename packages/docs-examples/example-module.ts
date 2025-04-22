@@ -1502,6 +1502,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-search-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-uniq-pipes": {
+    "packagePath": "components/filter-bar/filter-bar-uniq-pipes",
+    "title": "filter bar",
+    "componentName": "FilterBarUniqPipesExample",
+    "files": [
+      "filter-bar-uniq-pipes-example.ts"
+    ],
+    "selector": "filter-bar-uniq-pipes-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-uniq-pipes-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "form-field-password-overview": {
     "packagePath": "components/form-field/form-field-password-overview",
     "title": "Form field password overview",
@@ -4290,6 +4302,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-saved-filters':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-uniq-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'form-field-password-overview':
 return import('@koobiq/docs-examples/components/form-field');
