@@ -70,15 +70,14 @@ export class KbqSingleFileUploadComponent
 
     private _file: KbqFileItem | null = null;
 
+    @Input()
     get file(): KbqFileItem | null {
         return this._file;
     }
 
-    @Input()
     set file(currentFile: KbqFileItem | null) {
         this._file = currentFile;
         this.cvaOnChange(this._file);
-        this.fileQueueChange.emit(this._file);
         this.cdr.markForCheck();
     }
 
@@ -165,11 +164,8 @@ export class KbqSingleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(file: File | KbqFileItem | null): void {
-        if (file instanceof File) {
-            this.file = this.mapToFileItem(file);
-        } else {
-            this.file = file;
-        }
+        this.file = file instanceof File ? this.mapToFileItem(file) : file;
+        this.fileQueueChange.emit(this.file);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -203,6 +199,7 @@ export class KbqSingleFileUploadComponent
 
         if (files?.length) {
             this.file = this.mapToFileItem(files[0]);
+            this.fileQueueChange.emit(this.file);
         }
 
         this.onTouched();
@@ -216,6 +213,7 @@ export class KbqSingleFileUploadComponent
 
         event?.stopPropagation();
         this.file = null;
+        this.fileQueueChange.emit(this.file);
         this.errors = [];
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();

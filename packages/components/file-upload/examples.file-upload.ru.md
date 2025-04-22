@@ -6,7 +6,11 @@
 
 <!-- example(file-upload-indeterminate-loading-overview) -->
 
-## Простое использование Control Value Accessor для загрузчика файлов
+### Сигналы
+
+Пример загрузчика файлов с использованием [`signal`](https://angular.dev/guide/signals).
+
+<!-- example(file-upload-single-with-signal) -->
 
 В этом разделе представлен пример реализации загрузчика файлов, поддерживающего загрузку одного файла, с использованием `Control Value Accessor`.
 

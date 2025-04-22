@@ -6,7 +6,11 @@ An example of file upload with indeterminate progress:
 
 <!-- example(file-upload-indeterminate-loading-overview) -->
 
-## Simple Usage of Control Value Accessor for File Upload
+### Signals
+
+An example of a file uploader using [`signal`](https://angular.dev/guide/signals).
+
+<!-- example(file-upload-single-with-signal) -->
 
 This section provides an example implementation of a file uploader that supports uploading a single file using `Control Value Accessor`.
 

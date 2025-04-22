@@ -11,6 +11,7 @@ import { FileUploadSingleErrorOverviewExample } from './file-upload-single-error
 import { FileUploadSingleOverviewExample } from './file-upload-single-overview/file-upload-single-overview-example';
 import { FileUploadSingleRequiredReactiveValidationExample } from './file-upload-single-required-reactive-validation/file-upload-single-required-reactive-validation-example';
 import { FileUploadSingleValidationReactiveFormsOverviewExample } from './file-upload-single-validation-reactive-forms-overview/file-upload-single-validation-reactive-forms-overview-example';
+import { FileUploadSingleWithSignalExample } from './file-upload-single-with-signal/file-upload-single-with-signal-example';
 
 export {
     FileUploadCvaOverviewExample,
@@ -24,7 +25,8 @@ export {
     FileUploadSingleErrorOverviewExample,
     FileUploadSingleOverviewExample,
     FileUploadSingleRequiredReactiveValidationExample,
-    FileUploadSingleValidationReactiveFormsOverviewExample
+    FileUploadSingleValidationReactiveFormsOverviewExample,
+    FileUploadSingleWithSignalExample
 };
 
 const EXAMPLES = [
@@ -39,7 +41,8 @@ const EXAMPLES = [
     FileUploadIndeterminateLoadingOverviewExample,
     FileUploadMultipleCompactOverviewExample,
     FileUploadSingleRequiredReactiveValidationExample,
-    FileUploadMultipleRequiredReactiveValidationExample
+    FileUploadMultipleRequiredReactiveValidationExample,
+    FileUploadSingleWithSignalExample
 ];
 
 @NgModule({
