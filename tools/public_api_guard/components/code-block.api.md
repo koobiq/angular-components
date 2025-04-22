@@ -47,13 +47,11 @@ export class KbqCodeBlock implements AfterViewInit {
     protected downloadCode(): void;
     // (undocumented)
     protected readonly fallbackFileName: string;
-    set files(files: KbqCodeBlockFile[]);
-    // (undocumented)
     get files(): KbqCodeBlockFile[];
+    set files(files: KbqCodeBlockFile[]);
     filled: boolean;
-    set hideTabs(value: boolean);
-    // (undocumented)
     get hideTabs(): boolean;
+    set hideTabs(value: boolean);
     lineNumbers: boolean;
     protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration;
     maxHeight: number;
@@ -118,7 +116,7 @@ export type KbqCodeBlockFile = {
 // @public
 export class KbqCodeBlockHighlight {
     constructor();
-    set file({ language, content }: KbqCodeBlockFile);
+    set file(file: KbqCodeBlockFile);
     // (undocumented)
     static ngAcceptInputType_singleLine: unknown;
     // (undocumented)
