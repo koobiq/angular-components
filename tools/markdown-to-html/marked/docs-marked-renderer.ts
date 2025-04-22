@@ -63,8 +63,10 @@ export class DocsMarkdownRenderer extends Renderer {
 
     // Transforms a Markdown code block into the corresponding HTML output. In our case, we
     // want to add a data-docs-code-language attribute to the code element.
-    code(code: string, infostring: string | undefined, _escaped: boolean): string {
-        return `<pre data-docs-code-language="${infostring}"><code>${code}</code></pre>`;
+    code(code: string, infostring: string | undefined, escaped: boolean): string {
+        const result = super.code(code, infostring, escaped);
+
+        return result.replace('<pre>', `<pre data-docs-code-language="${infostring}">`);
     }
 
     /**
