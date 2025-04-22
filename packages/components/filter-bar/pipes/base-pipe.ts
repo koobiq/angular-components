@@ -13,10 +13,15 @@ import { isMac } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { delay, filter } from 'rxjs/operators';
 import { KbqFilterBar } from '../filter-bar';
-import { KbqPipeData, KbqPipeTemplate } from '../filter-bar.types';
+import { KbqPipeData, KbqPipeTemplate, KbqPipeType } from '../filter-bar.types';
 
 /** Injection Token for providing configuration of filter-bar */
 export const KBQ_PIPE_DATA = new InjectionToken('KBQ_PIPE_DATA');
+
+/** function to get unique identifier of an element */
+export function getId(item: KbqPipeTemplate): KbqPipeType | string | number {
+    return item?.id ?? item?.name;
+}
 
 @Directive({
     standalone: true,
@@ -86,8 +91,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             this.open();
         }
 
-        this.filterBar?.openPipe.pipe(filter(Boolean)).subscribe((name) => {
-            if (this.data.name === name) {
+        this.filterBar?.openPipe.pipe(filter(Boolean)).subscribe((id) => {
+            if (getId(this.data) === id) {
                 this.open();
             }
         });
@@ -100,7 +105,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** updates values for selection and value template */
     updateTemplates = (templates: KbqPipeTemplate[] | null) => {
-        const template = templates?.find((template) => template.type === this.data?.type);
+        const template = templates?.find((template) => getId(template) === getId(this.data));
 
         if (template?.values) {
             this.values = template.values;

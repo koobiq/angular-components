@@ -38,6 +38,9 @@ import { UntypedFormControl } from '@angular/forms';
 export const defaultFilterBarPipes: [string, unknown][];
 
 // @public
+export function getId(item: KbqPipeTemplate): KbqPipeType | string | number;
+
+// @public
 export const KBQ_FILTER_BAR_CONFIGURATION: InjectionToken<unknown>;
 
 // @public
