@@ -58,7 +58,7 @@ export class KbqCodeBlockHighlight {
 
         if (!language || !hljs.getLanguage(language)) {
             console.warn(
-                `[KbqCodeBlock] Unknown file language: "${language}". Setting to "${this.fallbackFileLanguage}".`,
+                `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
                 file
             );
             language = this.fallbackFileLanguage;
