@@ -1,3 +1,18 @@
+# 18.24.0 (2025-04-22)
+
+### Koobiq
+
+ * bug fix  **badge:** icon color with contrast-fade ([#DS-3632](https://github.com/koobiq/angular-components/issues/issue/DS-3632)) ([#678](https://github.com/koobiq/angular-components/issues/678)) ([f4ee53a](https://github.com/koobiq/angular-components/commit/f4ee53ad77b8435d8d9be0e5c3c3cdc4adb562a9))
+ * bug fix  **button:** default color ([#DS-3686](https://github.com/koobiq/angular-components/issues/issue/DS-3686)) ([#670](https://github.com/koobiq/angular-components/issues/670)) ([709a7e4](https://github.com/koobiq/angular-components/commit/709a7e4d509e68605275252822ae3b1a9b7158d8))
+ * bug fix  **docs:** code block language ([#DS-3174](https://github.com/koobiq/angular-components/issues/issue/DS-3174)) ([#677](https://github.com/koobiq/angular-components/issues/677)) ([2784479](https://github.com/koobiq/angular-components/commit/27844792fd673ef3a83e7c861524f551e0a9dcfd))
+ * bug fix  **docs:** docsearch button keyboard focus ([#DS-3010](https://github.com/koobiq/angular-components/issues/issue/DS-3010)) ([#674](https://github.com/koobiq/angular-components/issues/674)) ([4d4945c](https://github.com/koobiq/angular-components/commit/4d4945ce2ca54331f3ec643718a70d21a15ddf1a))
+ * bug fix  **filter-bar:** clear pipe with button ([#DS-3682](https://github.com/koobiq/angular-components/issues/issue/DS-3682)) ([#671](https://github.com/koobiq/angular-components/issues/671)) ([bf96188](https://github.com/koobiq/angular-components/commit/bf961881dccf69377654f5fca2d1801836c89275))
+ * bug fix  **filter-bar:** different pipes with the same type ([#DS-3692](https://github.com/koobiq/angular-components/issues/issue/DS-3692)) ([#680](https://github.com/koobiq/angular-components/issues/680)) ([6eb0b60](https://github.com/koobiq/angular-components/commit/6eb0b60840311a9e6df1887ee956b3b2cc487a9c))
+ * bug fix  **filter-bar:** formatting date ranges ([#DS-3689](https://github.com/koobiq/angular-components/issues/issue/DS-3689)) ([#676](https://github.com/koobiq/angular-components/issues/676)) ([a865252](https://github.com/koobiq/angular-components/commit/a865252affee0d1953063b0272f7e86d38232bf5))
+ * bug fix  **filter-bar:** placeholder without localization ([#DS-3698](https://github.com/koobiq/angular-components/issues/issue/DS-3698)) ([#681](https://github.com/koobiq/angular-components/issues/681)) ([2295fa5](https://github.com/koobiq/angular-components/commit/2295fa5bd37a3914eb922eb7a264584a196a3646))
+ * bug fix  **markdown:** multiline border in link ([#DS-3598](https://github.com/koobiq/angular-components/issues/issue/DS-3598)) ([#672](https://github.com/koobiq/angular-components/issues/672)) ([dd1e3e3](https://github.com/koobiq/angular-components/commit/dd1e3e359ab902e58b2bf9372da4b61bd7106caf))
+ * feature  **toggle:** added click on enter ([#DS-3656](https://github.com/koobiq/angular-components/issues/issue/DS-3656)) ([#675](https://github.com/koobiq/angular-components/issues/675)) ([02c7c19](https://github.com/koobiq/angular-components/commit/02c7c19f5dba1521e0303cb820570b710e9c83fb))
+
 # 18.23.0 (2025-04-18)
 
 ### Koobiq
