@@ -32,19 +32,17 @@ import { map } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
-            <div class="layout-align-start-center" kbqTopBarContainer placement="start">
+            <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="example-top-bar__breadcrumbs flex">
-                    <nav kbq-breadcrumbs size="big">
-                        <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
-                        <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
-                    </nav>
-                </div>
+                <nav class="flex" kbq-breadcrumbs size="big">
+                    <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
+                    <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
+                </nav>
             </div>
             <div kbqTopBarSpacer></div>
-            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
+            <div #kbqOverflowItems="kbqOverflowItems" kbqTopBarContainer kbqOverflowItems placement="end">
                 <button
                     [kbqStyle]="KbqButtonStyles.Transparent"
                     [color]="KbqComponentColors.Contrast"
@@ -98,8 +96,8 @@ import { map } from 'rxjs/operators';
     `,
     styles: `
         :host {
-            .kbq-top-bar-container__end {
-                max-width: 110px;
+            .kbq-top-bar-container[placement='start'] {
+                min-width: 238px;
             }
         }
     `

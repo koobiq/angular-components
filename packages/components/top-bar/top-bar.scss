@@ -20,13 +20,15 @@
     .kbq-top-bar-container__start {
         display: flex;
         gap: var(--kbq-top-bar-container-start-gap);
-        flex: 1 1 var(--kbq-top-bar-container-start-basis);
+        flex: 1 0 var(--kbq-top-bar-container-start-basis);
         justify-content: flex-start;
+        min-width: 0;
     }
 
     .kbq-top-bar-container__end {
         display: flex;
         gap: var(--kbq-top-bar-container-end-gap);
+        justify-content: end;
     }
 
     .kbq-top-bar-container__with-overflow-items {

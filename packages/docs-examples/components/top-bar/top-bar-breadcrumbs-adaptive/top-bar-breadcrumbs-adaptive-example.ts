@@ -41,20 +41,29 @@ type ExampleAction = {
                 <div class="layout-row layout-margin-right-m flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="example-top-bar__breadcrumbs flex">
-                    <nav kbq-breadcrumbs size="big">
-                        <kbq-breadcrumb-item text="Main" routerLink="./main" />
-                        <kbq-breadcrumb-item text="Sections" routerLink="./main/sections" />
-                        <kbq-breadcrumb-item text="Page" routerLink="./main/sections/page" />
-                        <kbq-breadcrumb-item text="Details" routerLink="./main/sections/page/details" />
-                    </nav>
-                </div>
+                <nav kbq-breadcrumbs size="big">
+                    <kbq-breadcrumb-item text="Main" routerLink="./main" />
+                    <kbq-breadcrumb-item text="Sections" routerLink="./main/sections" />
+                    <kbq-breadcrumb-item text="Page" routerLink="./main/sections/page" />
+                    <kbq-breadcrumb-item routerLink="./main/sections/page/details" text="Details">
+                        <a
+                            class="kbq-truncate-line"
+                            *kbqBreadcrumbView
+                            routerLink="./main/sections/page/details"
+                            tabindex="-1"
+                        >
+                            <button disabled aria-current="page" kbq-button kbqBreadcrumb>
+                                <span>Details</span>
+                                <i kbq-icon="kbq-file-code-o_16"></i>
+                            </button>
+                        </a>
+                    </kbq-breadcrumb-item>
+                </nav>
             </div>
             <div kbqTopBarSpacer></div>
             <div
                 #kbqOverflowItems="kbqOverflowItems"
                 [debounceTime]="0"
-                [style.max-width.px]="166"
                 kbqOverflowItems
                 kbqTopBarContainer
                 placement="end"
@@ -145,16 +154,13 @@ type ExampleAction = {
             }
 
             .kbq-top-bar-container__start {
-                --kbq-top-bar-container-start-basis: 115px;
+                min-width: 125px;
+                --kbq-top-bar-container-start-basis: 125px;
             }
         }
 
         .example-kbq-top-bar__title {
             display: inline-flex;
-        }
-
-        .kbq-overflow-items {
-            max-width: 210px;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
