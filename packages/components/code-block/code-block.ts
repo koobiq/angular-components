@@ -155,6 +155,10 @@ export class KbqCodeBlock implements AfterViewInit {
      * Files to display.
      */
     @Input()
+    get files(): KbqCodeBlockFile[] {
+        return this._files;
+    }
+
     set files(files: KbqCodeBlockFile[]) {
         this._files = files;
 
@@ -165,10 +169,6 @@ export class KbqCodeBlock implements AfterViewInit {
         if (this._files.length === 1 && !this._files[0].filename) {
             this.hideTabs = true;
         }
-    }
-
-    get files(): KbqCodeBlockFile[] {
-        return this._files;
     }
 
     private _files: KbqCodeBlockFile[] = [];
@@ -187,14 +187,14 @@ export class KbqCodeBlock implements AfterViewInit {
      * Makes actionbar floating if tabs are hidden.
      */
     @Input({ transform: booleanAttribute })
+    get hideTabs(): boolean {
+        return this._hideTabs;
+    }
+
     set hideTabs(value: boolean) {
         this._hideTabs = value;
 
         this.setupActionbarDisplay();
-    }
-
-    get hideTabs(): boolean {
-        return this._hideTabs;
     }
 
     private _hideTabs: boolean = false;

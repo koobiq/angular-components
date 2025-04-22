@@ -49,13 +49,18 @@ export class KbqCodeBlockHighlight {
 
     /** The code file. */
     @Input({ required: true })
-    set file({ language, content }: KbqCodeBlockFile) {
+    set file(file: KbqCodeBlockFile) {
         const window = this.getWindow();
 
         if (!window) return;
 
+        let { language } = file;
+
         if (!language || !hljs.getLanguage(language)) {
-            console.warn(`[KbqCodeBlock] Unknown language: "${language}". Setting to "${this.fallbackFileLanguage}".`);
+            console.warn(
+                `[KbqCodeBlock] Unknown file language: "${language}". Fall back to "${this.fallbackFileLanguage}".`,
+                file
+            );
             language = this.fallbackFileLanguage;
         }
 
@@ -64,16 +69,16 @@ export class KbqCodeBlockHighlight {
             language: highlightedLanguage,
             illegal,
             relevance
-        } = hljs.highlight(content, {
+        } = hljs.highlight(file.content, {
             language: language!
         });
 
         if (illegal) {
-            console.warn('[KbqCodeBlock] Content contains illegal characters.');
+            console.warn('[KbqCodeBlock] File content contains illegal characters.', file);
         }
 
         if (relevance === 0) {
-            console.warn('[KbqCodeBlock] Content does not match the specified programming language.');
+            console.warn('[KbqCodeBlock] File content does not match the specified programming language.', file);
         }
 
         const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML);
