@@ -40,8 +40,8 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
     selector: 'docs-live-example',
     template: `
         {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
-        <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent">
-            <kbq-code-block [files]="[{ content: contentToCopy }]" filled lineNumbers />
+        <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent" let-language="language">
+            <kbq-code-block [files]="[{ content: contentToCopy, language }]" filled lineNumbers />
         </ng-template>
         <ng-template #codeSnippet cdkPortal let-htmlContent>
             <span
@@ -177,7 +177,11 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
 
             const portalHost = new DomPortalOutlet(element, this.componentFactoryResolver, this.appRef, this.injector);
 
-            this.codeTemplate.attach(portalHost, { $implicit: outerHTML, textContent });
+            this.codeTemplate.attach(portalHost, {
+                $implicit: outerHTML,
+                textContent,
+                language: element.getAttribute('data-docs-code-language')
+            });
 
             this.portalHosts.push(portalHost);
 
