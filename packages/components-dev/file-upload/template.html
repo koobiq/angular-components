@@ -5,26 +5,11 @@
     Indeterminate Loading imitation for single and multiple
 </button>
 
-<button kbq-button (click)="checkValidation()">Call validation from outside</button>
+<button kbq-button class="layout-margin-bottom-l" (click)="checkValidation()">Call validation from outside</button>
 
-<br />
-<br />
+<dev-locale-selector class="layout-margin-bottom-l" />
 
-<kbq-radio-group class="example-radio-group" (change)="setFormat($event)">
-    @for (language of languageList; track language) {
-        <kbq-radio-button
-            class="example-radio-button"
-            [checked]="language.id === selectedLanguage.id"
-            [value]="language"
-        >
-            {{ language.id }}
-        </kbq-radio-button>
-    }
-    <br />
-</kbq-radio-group>
-
-<br />
-<br />
+<file-upload-examples class="layout-margin-bottom-l" />
 
 <div class="layout-row layout-align-space-between">
     <div>
@@ -82,14 +67,11 @@
         <div class="dev-container">
             <div class="kbq-subheading">Single file upload</div>
             <br />
-            <div class="kbq-text-big-strong">with pdf/png files accepted, validation outside</div>
+            <div class="kbq-text-big-strong">with pdf/png files accepted</div>
             <br />
-            <kbq-file-upload [accept]="accept" [disabled]="disabled" [file]="file" (fileQueueChange)="addFile($event)">
+            <kbq-file-upload [accept]="accept" [disabled]="disabled">
                 <i kbq-icon="kbq-info-circle_16"></i>
                 <kbq-hint>{{ hintMessage }}</kbq-hint>
-                @for (error of errorMessagesForSingle; track error) {
-                    <kbq-hint color="error">{{ error }}</kbq-hint>
-                }
             </kbq-file-upload>
         </div>
     </div>

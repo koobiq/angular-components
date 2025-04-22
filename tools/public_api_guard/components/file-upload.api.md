@@ -170,45 +170,34 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     constructor();
     // (undocumented)
     accept?: string[];
-    // (undocumented)
     get acceptedFiles(): string;
-    // (undocumented)
     columnDefs: {
         header: string;
         cssClass: string;
     }[];
-    // (undocumented)
     config: KbqInputFileMultipleLabel;
-    // (undocumented)
     readonly configuration: KbqInputFileMultipleLabel | null;
-    // (undocumented)
     customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
     cvaOnChange: (_: KbqFileItem[]) => void;
-    // (undocumented)
     deleteFile(index: number, event?: MouseEvent): void;
     // (undocumented)
     disabled: boolean;
     // @deprecated (undocumented)
     errors: string[];
     errorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
-    fileQueueChanged: EventEmitter<KbqFileItem[]>;
     fileRemoved: EventEmitter<[KbqFileItem, number]>;
     // (undocumented)
     get files(): KbqFileItem[];
     set files(currentFileList: KbqFileItem[]);
     filesAdded: EventEmitter<KbqFileItem[]>;
+    filesChange: EventEmitter<KbqFileItem[]>;
     // @deprecated (undocumented)
     get hasErrors(): boolean;
-    // (undocumented)
     hasFocus: boolean;
-    // (undocumented)
     get hasHint(): boolean;
-    // (undocumented)
     protected readonly hint: QueryList<TemplateRef<any>>;
-    // (undocumented)
     input: ElementRef<HTMLInputElement>;
     inputId: string;
     get invalid(): boolean;
@@ -216,28 +205,21 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     ngAfterViewInit(): void;
     // (undocumented)
     ngDoCheck(): void;
-    // (undocumented)
     onFileDropped(files: FileList | KbqFile[]): void;
-    // (undocumented)
-    onFileListChange(): void;
-    // (undocumented)
     onFileSelectedViaClick({ target }: Event): void;
     onTouched: () => void;
     progressMode: ProgressSpinnerMode;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    // (undocumented)
     separatedCaptionText: string[];
-    // (undocumented)
     separatedCaptionTextForCompactSize: string[];
-    // (undocumented)
     separatedCaptionTextWhenSelected: string[];
     setDisabledState(isDisabled: boolean): void;
     // (undocumented)
     size: 'compact' | 'default';
     writeValue(files: FileList | KbqFileItem[] | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; }, { "fileQueueChanged": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqMultipleFileUploadComponent, "kbq-multiple-file-upload,kbq-file-upload[multiple]", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "size": { "alias": "size"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "files": { "alias": "files"; "required": false; }; }, { "filesChange": "fileQueueChanged"; "filesAdded": "filesAdded"; "fileRemoved": "fileRemoved"; }, ["customFileIcon", "hint"], ["kbq-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMultipleFileUploadComponent, never>;
 }
@@ -247,16 +229,12 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     constructor();
     // (undocumented)
     accept?: string[];
-    // (undocumented)
     get acceptedFiles(): string;
-    // (undocumented)
     config: KbqInputFileLabel;
-    // (undocumented)
     readonly configuration: KbqInputFileLabel | null;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
     cvaOnChange: (_: KbqFileItem | null) => void;
-    // (undocumented)
     deleteItem(event?: MouseEvent): void;
     // (undocumented)
     disabled: boolean;
@@ -266,11 +244,8 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     // (undocumented)
     get file(): KbqFileItem | null;
     set file(currentFile: KbqFileItem | null);
-    // (undocumented)
-    fileQueueChange: EventEmitter<KbqFileItem | null>;
-    // (undocumented)
+    fileChange: EventEmitter<KbqFileItem | null>;
     get hasHint(): boolean;
-    // (undocumented)
     input: ElementRef<HTMLInputElement>;
     // (undocumented)
     inputId: string;
@@ -279,20 +254,17 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     ngAfterViewInit(): void;
     // (undocumented)
     ngDoCheck(): void;
-    // (undocumented)
     onFileDropped(files: FileList | KbqFile[]): void;
-    // (undocumented)
     onFileSelectedViaClick({ target }: Event): void;
     onTouched: () => void;
     progressMode: ProgressSpinnerMode;
     registerOnChange(fn: any): void;
     registerOnTouched(fn: any): void;
-    // (undocumented)
     separatedCaptionText: string[];
     setDisabledState(isDisabled: boolean): void;
     writeValue(file: File | KbqFileItem | null): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; }, { "fileQueueChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSingleFileUploadComponent, "kbq-single-file-upload,kbq-file-upload:not([multiple])", never, { "progressMode": { "alias": "progressMode"; "required": false; }; "accept": { "alias": "accept"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "errors": { "alias": "errors"; "required": false; }; "inputId": { "alias": "inputId"; "required": false; }; "customValidation": { "alias": "customValidation"; "required": false; }; "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "file": { "alias": "file"; "required": false; }; }, { "fileChange": "fileQueueChange"; }, ["hint"], ["[kbq-icon]", "kbq-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSingleFileUploadComponent, never>;
 }

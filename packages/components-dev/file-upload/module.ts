@@ -4,23 +4,18 @@ import {
     Component,
     Directive,
     EventEmitter,
-    Inject,
+    inject,
     Input,
-    NgModule,
     Output,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import {
     FileValidators,
-    KBQ_LOCALE_SERVICE,
     KbqDataSizePipe,
-    KbqLocaleService,
     KbqLocaleServiceModule,
     ShowOnFormSubmitErrorStateMatcher
 } from '@koobiq/components/core';
@@ -34,16 +29,55 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
+import { KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
+import { DevLocaleSelector } from '../locale-selector';
 import { maxFileExceededFiveMbs, maxFileSize } from './validation';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 const hintMessage = 'file upload hint';
 
+@Directive({
+    standalone: true,
+    selector: '[custom-text]',
+    providers: [
+        {
+            provide: KBQ_FILE_UPLOAD_CONFIGURATION,
+            useValue: {
+                captionText: 'Перетащите сюда или ',
+                captionTextWhenSelected: 'Перетащите еще или ',
+                captionTextForCompactSize: 'Перетащите файлы или ',
+                browseLink: 'выберите',
+                title: 'Загрузите фотографии',
+                gridHeaders: {
+                    file: 'Файл',
+                    size: 'Размер'
+                }
+            }
+        }
+    ]
+})
+export class CustomTextDirective {}
+
 @Component({
+    standalone: true,
+    imports: [FileUploadExamplesModule],
+    selector: 'file-upload-examples',
+    template: `
+        <file-upload-single-with-signal-example />
+    `,
+    host: {
+        class: 'layout-row'
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class FileUploadExamplesComponent {}
+
+@Component({
+    standalone: true,
+    imports: [KbqFileUploadModule, KbqIconModule, KbqFormFieldModule],
     selector: 'file-upload-compact',
     template: `
         <kbq-multiple-file-upload
@@ -71,7 +105,6 @@ const hintMessage = 'file upload hint';
 })
 export class MultipleFileUploadCompactComponent {
     @Input() disabled: boolean;
-    @Input() errorMessagesForMultiple: string[] = [];
     @Input() files: KbqFileItem[] = [];
     @Output() addedFile: EventEmitter<any> = new EventEmitter<any>();
 
@@ -83,13 +116,33 @@ export class MultipleFileUploadCompactComponent {
 }
 
 @Component({
+    standalone: true,
+    imports: [
+        FileUploadExamplesComponent,
+        FileUploadExamplesModule,
+        DevLocaleSelector,
+        FileUploadExamplesComponent,
+        FormsModule,
+        ReactiveFormsModule,
+        KbqLocaleServiceModule,
+        KbqFileUploadModule,
+        KbqButtonModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqIconModule,
+        KbqCheckboxModule,
+        KbqRadioModule,
+        KbqDataSizePipe,
+        MultipleFileUploadCompactComponent,
+        CustomTextDirective
+    ],
     selector: 'app',
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class FileUploadDev {
     disabled = false;
     validation: KbqFileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;
@@ -127,21 +180,13 @@ export class DemoComponent {
     secondControl = new FormControl<File | KbqFileItem | null>(null);
     multipleFileUploadControl = new FormControl<FileList | KbqFileItem[]>([], maxFileSize);
 
-    languageList: { id: string; name: string }[];
-    selectedLanguage: { id: string; name: string };
-
     get fileListValidationOnSubmit(): FormArray {
         return this.formMultiple.get('file-list') as FormArray;
     }
 
-    constructor(
-        private cdr: ChangeDetectorRef,
-        @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
-    ) {
-        this.languageList = this.localeService.locales.items;
-        this.selectedLanguage =
-            this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
+    private readonly cdr = inject(ChangeDetectorRef);
 
+    constructor() {
         this.control.valueChanges.pipe(takeUntilDestroyed()).subscribe((value: KbqFileItem | null) => {
             // can be used mapped file item
             // this.secondControl.setValue(value);
@@ -180,23 +225,8 @@ export class DemoComponent {
         });
     }
 
-    setFormat($event: KbqRadioChange): void {
-        this.selectedLanguage = this.languageList.find(({ id }) => id === $event.value.id) || this.languageList[0];
-
-        this.localeService.setLocale($event.value.id);
-    }
-
-    addFile(file: KbqFileItem | null) {
-        this.file = file;
-
-        if (!this.file) {
-            this.errorMessagesForSingle = [];
-        }
-    }
-
     addFileMultiple(files: KbqFileItem[]) {
         this.files = files;
-        // this.checkValidation();
     }
 
     checkValidation() {
@@ -283,6 +313,7 @@ export class DemoComponent {
     ]) {
         this.fileListValidationOnSubmit.removeAt(index);
         this.fileList.removeAt(index);
+        this.fileListOnAddLoad.removeAt(index);
     }
 
     onFilesAddedForListWithLoadOnAdd($event: KbqFileItem[]) {
@@ -316,50 +347,3 @@ export class DemoComponent {
 
     protected readonly showOnFormSubmitErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
 }
-
-@Directive({
-    selector: '[custom-text]',
-    providers: [
-        {
-            provide: KBQ_FILE_UPLOAD_CONFIGURATION,
-            useValue: {
-                captionText: 'Перетащите сюда или ',
-                captionTextWhenSelected: 'Перетащите еще или ',
-                captionTextForCompactSize: 'Перетащите файлы или ',
-                browseLink: 'выберите',
-                title: 'Загрузите фотографии',
-                gridHeaders: {
-                    file: 'Файл',
-                    size: 'Размер'
-                }
-            }
-        }
-    ]
-})
-export class CustomTextDirective {}
-
-@NgModule({
-    declarations: [
-        DemoComponent,
-        CustomTextDirective,
-        MultipleFileUploadCompactComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        KbqLocaleServiceModule,
-        KbqFileUploadModule,
-        KbqButtonModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqIconModule,
-        KbqCheckboxModule,
-        KbqRadioModule,
-        KbqDataSizePipe,
-        FileUploadExamplesModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

@@ -98,30 +98,40 @@ export class KbqMultipleFileUploadComponent
         this.cdr.markForCheck();
     }
 
-    @Output() fileQueueChanged: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
-
+    /** Emits an event containing updated file list. */
+    @Output('fileQueueChanged') filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.
+     * Useful when handling added files, skipping filtering file list.
      */
     @Output() filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
-     * Emits an event containing a file and file's index when removed from the file list.
+     * Emits an event containing a tuple of file and file's index when removed from the file list.
+     * Useful when handle removed files, skipping filtering file list.
      */
     @Output() fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
 
+    /** File Icon Template */
     @ContentChild('kbqFileIcon', { static: false, read: TemplateRef }) customFileIcon: TemplateRef<HTMLElement>;
 
+    /** @docs-private */
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
+    /** @docs-private */
     @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
 
+    /** @docs-private */
     hasFocus = false;
+    /** @docs-private */
     columnDefs: { header: string; cssClass: string }[];
-
+    /** @docs-private */
     config: KbqInputFileMultipleLabel;
 
+    /** @docs-private */
     separatedCaptionText: string[];
+    /** @docs-private */
     separatedCaptionTextWhenSelected: string[];
+    /** @docs-private */
     separatedCaptionTextForCompactSize: string[];
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
@@ -133,6 +143,7 @@ export class KbqMultipleFileUploadComponent
      * @docs-private */
     onTouched = () => {};
 
+    /** @docs-private */
     get acceptedFiles(): string {
         return this.accept?.join(',') || '*/*';
     }
@@ -144,6 +155,7 @@ export class KbqMultipleFileUploadComponent
         return this.errors && !!this.errors.length;
     }
 
+    /** @docs-private */
     get hasHint(): boolean {
         return this.hint.length > 0;
     }
@@ -151,11 +163,13 @@ export class KbqMultipleFileUploadComponent
     /**
      * Indicates an invalid state based on `errorState`,
      * applying a CSS class in HTML for visual feedback.
+     * @docs-private
      */
     get invalid(): boolean {
         return this.errorState;
     }
 
+    /** @docs-private */
     readonly configuration = inject<KbqInputFileMultipleLabel>(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
@@ -198,7 +212,7 @@ export class KbqMultipleFileUploadComponent
      * @docs-private */
     writeValue(files: FileList | KbqFileItem[] | null): void {
         this.files = files instanceof FileList || !files ? this.mapToFileItem(files) : files;
-        this.fileQueueChanged.emit(this.files);
+        this.filesChange.emit(this.files);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -212,7 +226,6 @@ export class KbqMultipleFileUploadComponent
     registerOnTouched(fn: any): void {
         this.onTouched = fn;
     }
-
     /**
      * Sets the disabled state of the control. Implemented as a part of ControlValueAccessor.
      * @param isDisabled Whether the control should be disabled.
@@ -223,6 +236,7 @@ export class KbqMultipleFileUploadComponent
         this.cdr.markForCheck();
     }
 
+    /** @docs-private */
     onFileSelectedViaClick({ target }: Event) {
         if (this.disabled) {
             return;
@@ -235,13 +249,14 @@ export class KbqMultipleFileUploadComponent
             ...filesToAdd
         ];
         this.filesAdded.emit(filesToAdd);
-        this.fileQueueChanged.emit(this.files);
+        this.filesChange.emit(this.files);
         this.onTouched();
         /* even if the user selects the same file,
                  the onchange event will be triggered every time user clicks on the control.*/
         this.renderer.setProperty(this.input.nativeElement, 'value', null);
     }
 
+    /** @docs-private */
     onFileDropped(files: FileList | KbqFile[]) {
         if (this.disabled) {
             return;
@@ -254,10 +269,11 @@ export class KbqMultipleFileUploadComponent
             ...filesToAdd
         ];
         this.filesAdded.emit(filesToAdd);
-        this.fileQueueChanged.emit(this.files);
+        this.filesChange.emit(this.files);
         this.onTouched();
     }
 
+    /** @docs-private */
     deleteFile(index: number, event?: MouseEvent) {
         if (this.disabled) {
             return;
@@ -267,12 +283,8 @@ export class KbqMultipleFileUploadComponent
         this.fileRemoved.emit([this.files[index], index]);
         this.files.splice(index, 1);
         this.files = [...this.files];
-        this.fileQueueChanged.emit(this.files);
+        this.filesChange.emit(this.files);
         this.onTouched();
-    }
-
-    onFileListChange(): void {
-        this.fileQueueChanged.emit(this.files);
     }
 
     private updateLocaleParams = () => {
