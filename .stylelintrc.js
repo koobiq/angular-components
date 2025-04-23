@@ -19,8 +19,6 @@ const config = {
                 ignore: ['after-comment']
             }
         ],
-        // todo set to null, because errors appear when use css-variable (var(--kbq-size-s))
-        'no-unknown-custom-properties': null,
         'no-descending-specificity': null,
         'selector-type-no-unknown': [
             true,
@@ -40,9 +38,12 @@ const config = {
                 ]
             }
         ],
+
+        // SCSS rules
         'scss/operator-no-newline-after': null,
         'scss/selector-no-union-class-name': true,
-        'scss/at-mixin-pattern': [KEBAB_CASE_PATTERN, { message: 'Expected @mixin name to be kebab-case.' }]
+        'scss/at-mixin-pattern': [KEBAB_CASE_PATTERN, { message: 'Expected @mixin name to be kebab-case.' }],
+        'scss/no-unused-private-members': true
     }
 };
 
