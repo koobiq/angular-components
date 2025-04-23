@@ -212,7 +212,6 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
 // @public (undocumented)
 export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
     constructor();
-    // (undocumented)
     accept?: string[];
     get acceptedFiles(): string;
     config: KbqInputFileLabel;
