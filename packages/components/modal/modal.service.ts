@@ -97,8 +97,13 @@ export class KbqModalService {
 
     create<C, R = unknown>(options: IModalOptionsForService<C> = {}): KbqModalRef<C, R> {
         if (typeof options.kbqOnCancel !== 'function') {
-            // Leave a empty function to close this modal by default
+            // Leave an empty function to close this modal by default
             options.kbqOnCancel = () => {};
+        }
+
+        if (typeof options.kbqOnOk !== 'function') {
+            // Leave an empty function to close this modal by default
+            options.kbqOnOk = () => {};
         }
 
         if (!('kbqCloseByESC' in options)) {
@@ -110,7 +115,7 @@ export class KbqModalService {
             options.kbqCancelText = undefined;
         }
 
-        // Remove the Ok button if the user not specify a Ok button
+        // Remove the Ok button if the user not specify an Ok button
         if (!('kbqOkText' in options)) {
             options.kbqOkText = undefined;
         }
@@ -138,7 +143,7 @@ export class KbqModalService {
 
         // NOTE: only support function currently by calling confirm()
         if (typeof options.kbqOnOk !== 'function') {
-            // Leave a empty function to close this modal by default
+            // Leave an empty function to close this modal by default
             options.kbqOnOk = () => {};
         }
 
