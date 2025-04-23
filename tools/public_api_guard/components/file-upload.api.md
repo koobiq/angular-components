@@ -57,15 +57,10 @@ export interface KbqFile extends File {
 
 // @public (undocumented)
 export class KbqFileDropDirective {
-    // (undocumented)
     dragover: boolean;
-    // (undocumented)
     filesDropped: EventEmitter<FileList | KbqFile[]>;
-    // (undocumented)
     onDragLeave(event: DragEvent): void;
-    // (undocumented)
     onDragOver(event: DragEvent): void;
-    // (undocumented)
     onDrop(event: DragEvent): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFileDropDirective, "[kbqFileDrop]", ["kbqFileDrop"], {}, { "filesDropped": "filesDropped"; }, never, never, false, never>;
@@ -87,25 +82,16 @@ export interface KbqFileItem {
 
 // @public
 export abstract class KbqFileUploadBase implements CanUpdateErrorState {
-    // (undocumented)
     protected readonly cdr: ChangeDetectorRef;
-    // (undocumented)
     protected readonly defaultErrorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
     protected readonly destroyRef: DestroyRef;
-    // (undocumented)
     protected readonly elementRef: ElementRef<any>;
     errorState: boolean;
     abstract errorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
     protected readonly localeService: KbqLocaleService | null;
-    // (undocumented)
     protected readonly ngControl: NgControl | null;
-    // (undocumented)
     protected readonly parentForm: NgForm | null;
-    // (undocumented)
     protected readonly parentFormGroup: FormGroupDirective | null;
-    // (undocumented)
     protected readonly renderer: Renderer2;
     readonly stateChanges: Subject<void>;
     updateErrorState(): void;
@@ -168,7 +154,6 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 // @public (undocumented)
 export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements AfterViewInit, KbqInputFile, ControlValueAccessor, DoCheck {
     constructor();
-    // (undocumented)
     accept?: string[];
     get acceptedFiles(): string;
     columnDefs: {
