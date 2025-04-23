@@ -2,7 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
@@ -28,7 +28,8 @@ type ExampleAction = {
         KbqToolTipModule,
         KbqIconModule,
         KbqDropdownModule,
-        KbqOverflowItemsModule
+        KbqOverflowItemsModule,
+        KbqFormattersModule
     ],
     template: `
         <kbq-top-bar withShadow>
@@ -43,7 +44,7 @@ type ExampleAction = {
                 <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
                     <span class="kbq-truncate-line layout-margin-right-xs">Page Header</span>
 
-                    <span class="example-kbq-top-bar__counter">10</span>
+                    <span class="example-kbq-top-bar__counter">{{ 10 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
             </div>
 
@@ -140,7 +141,7 @@ export class ExampleTopBar {
 
     readonly actions: ExampleAction[] = [
         { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
-        { id: 'button1', text: 'Apply', color: KbqComponentColors.Contrast, style: '' },
+        { id: 'button1', text: 'Add object', color: KbqComponentColors.Contrast, style: '' },
         { id: 'button2', text: 'Button 2', color: KbqComponentColors.ContrastFade, style: '' }
     ];
 

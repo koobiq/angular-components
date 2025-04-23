@@ -2,7 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
@@ -31,7 +31,8 @@ type ExampleAction = {
         KbqToolTipModule,
         KbqIconModule,
         KbqDropdownModule,
-        KbqOverflowItemsModule
+        KbqOverflowItemsModule,
+        KbqFormattersModule
     ],
     template: `
         <kbq-top-bar>
@@ -46,7 +47,7 @@ type ExampleAction = {
                 <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
                     <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
 
-                    <span class="example-kbq-top-bar__counter">13 294</span>
+                    <span class="example-kbq-top-bar__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
             </div>
 

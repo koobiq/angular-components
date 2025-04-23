@@ -112,11 +112,12 @@ export class TopBarActionsExample {
             ),
         { initialValue: true }
     );
+
     readonly actions: ExampleAction[] = [
         {
             id: 'refresh',
-            icon: 'kbq-arrows-rotate_16',
-            text: 'Refresh',
+            icon: 'kbq-arrow-rotate-right_16',
+            text: 'Reload',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Transparent
         },
@@ -128,8 +129,15 @@ export class TopBarActionsExample {
         },
         { id: 'list', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
         { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
-        { id: 'button1', text: 'Button', color: KbqComponentColors.ContrastFade, style: '' },
-        { id: 'button2', text: 'Button', color: KbqComponentColors.Contrast, style: '' }
+        { id: 'action', text: 'Action', color: KbqComponentColors.ContrastFade, style: '' },
+        { id: 'primary-action', text: 'Primary action', color: KbqComponentColors.Contrast, style: '' },
+        ...Array.from({ length: 3 }, (_, i) => ({
+            id: `action${i + 7}`,
+            text: `Action ${i + 7}`,
+            color: KbqComponentColors.ContrastFade,
+            style: ''
+        }))
+
     ];
 
     protected readonly KbqComponentColors = KbqComponentColors;

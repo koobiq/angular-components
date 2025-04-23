@@ -12,7 +12,7 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -45,7 +45,8 @@ type ExampleAction = {
         KbqDlModule,
         KbqBadgeModule,
         KbqDropdownModule,
-        KbqOverflowItemsModule
+        KbqOverflowItemsModule,
+        KbqFormattersModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
@@ -54,7 +55,7 @@ type ExampleAction = {
                 <div class="kbq-title example-kbq-top-bar__title">
                     <span class="kbq-truncate-line layout-margin-right-xs">Page</span>
 
-                    <span class="example-kbq-top-bar__counter">13 294</span>
+                    <span class="example-kbq-top-bar__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
                 </div>
             </div>
             <div kbqTopBarSpacer></div>

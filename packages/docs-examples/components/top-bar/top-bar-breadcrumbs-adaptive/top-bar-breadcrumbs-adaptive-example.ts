@@ -12,15 +12,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
 
-type ExampleAction = {
-    id: string;
-    icon?: string;
-    text?: string;
-    action?: () => void;
-    style: KbqButtonStyles | string;
-    color: KbqComponentColors;
-};
-
 @Component({
     standalone: true,
     selector: 'example-top-bar-breadcrumbs',
@@ -43,9 +34,8 @@ type ExampleAction = {
                 </div>
                 <nav kbq-breadcrumbs size="big">
                     <kbq-breadcrumb-item text="Main" routerLink="./main" />
-                    <kbq-breadcrumb-item text="Sections" routerLink="./main/sections" />
-                    <kbq-breadcrumb-item text="Page" routerLink="./main/sections/page" />
-                    <kbq-breadcrumb-item routerLink="./main/sections/page/details" text="Details">
+                    <kbq-breadcrumb-item text="Section" routerLink="./main/sections" />
+                    <kbq-breadcrumb-item routerLink="./main/sections/details" text="Details">
                         <a
                             class="kbq-truncate-line"
                             *kbqBreadcrumbView
@@ -54,7 +44,7 @@ type ExampleAction = {
                         >
                             <button disabled aria-current="page" kbq-button kbqBreadcrumb>
                                 <span>Details</span>
-                                <i kbq-icon="kbq-file-code-o_16"></i>
+                                <i kbq-icon="kbq-info-circle_16"></i>
                             </button>
                         </a>
                     </kbq-breadcrumb-item>
@@ -97,23 +87,6 @@ type ExampleAction = {
                     }
                 </button>
 
-                <button
-                    [kbqStyle]="KbqButtonStyles.Filled"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqTooltipDisabled]="isDesktop()"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqOverflowItem="save"
-                    kbqTooltip="Save"
-                    kbq-button
-                >
-                    @if (isDesktop()) {
-                        Save
-                    } @else {
-                        <i kbq-icon="kbq-floppy-disk_16"></i>
-                    }
-                </button>
-
                 <div kbqOverflowItemsResult>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
@@ -130,9 +103,6 @@ type ExampleAction = {
                         }
                         @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
                             <button kbq-dropdown-item>Share</button>
-                        }
-                        @if (kbqOverflowItems.hiddenItemIDs().has('save')) {
-                            <button kbq-dropdown-item>Save</button>
                         }
                     </kbq-dropdown>
                 </div>
@@ -176,12 +146,6 @@ export class ExampleTopBarBreadcrumbs {
         { initialValue: true }
     );
 
-    readonly actions: ExampleAction[] = [
-        { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
-        { id: 'button1', text: 'Apply', color: KbqComponentColors.Contrast, style: '' },
-        { id: 'button2', text: 'Button 2', color: KbqComponentColors.ContrastFade, style: '' }
-    ];
-
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly PopUpPlacements = PopUpPlacements;
@@ -199,7 +163,7 @@ export class ExampleTopBarBreadcrumbs {
             The automatic breadcrumb shortening is used as the basis, where middle items are hidden when there is not
             enough free space.
         </div>
-        <example-top-bar-breadcrumbs [style.width.px]="600" />
+        <example-top-bar-breadcrumbs />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
             If the space becomes even narrower, the leftmost breadcrumb level is also hidden, leaving only the rightmost
