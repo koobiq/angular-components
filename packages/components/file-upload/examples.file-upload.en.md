@@ -9,6 +9,7 @@ An example of file upload with indeterminate progress:
 ### Signals
 
 An example of a file uploader using [`signal`](https://angular.dev/guide/signals).
+After uploading, the file is highlighted as having an issue — this is a simulation of file processing.
 
 <!-- example(file-upload-single-with-signal) -->
 
