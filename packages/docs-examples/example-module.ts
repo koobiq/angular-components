@@ -1391,6 +1391,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-single-validation-reactive-forms-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-single-with-signal": {
+    "packagePath": "components/file-upload/file-upload-single-with-signal",
+    "title": "File-upload single",
+    "componentName": "FileUploadSingleWithSignalExample",
+    "files": [
+      "file-upload-single-with-signal-example.ts"
+    ],
+    "selector": "file-upload-single-with-signal-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-with-signal-example.ts",
+    "importPath": "components/file-upload"
+  },
   "filter-bar-cleanable": {
     "packagePath": "components/filter-bar/filter-bar-cleanable",
     "title": "filter-bar-cleanable",
@@ -4284,6 +4296,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-required-reactive-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-validation-reactive-forms-overview':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-with-signal':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'filter-bar-cleanable':
 return import('@koobiq/docs-examples/components/filter-bar');

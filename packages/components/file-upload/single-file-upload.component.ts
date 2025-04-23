@@ -53,6 +53,7 @@ export class KbqSingleFileUploadComponent
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    /** Array of file type specifiers */
     @Input() accept?: string[];
     @Input() disabled: boolean = false;
     /**
@@ -82,7 +83,7 @@ export class KbqSingleFileUploadComponent
     }
 
     /** Emits an event containing updated file.
-     * @TODO public output will be renamed to fileChange in next major release (#DS-3700) */
+     * public output will be renamed to fileChange in next major release (#DS-3700) */
     @Output('fileQueueChange') fileChange: EventEmitter<KbqFileItem | null> = new EventEmitter<KbqFileItem | null>();
 
     /** @docs-private */

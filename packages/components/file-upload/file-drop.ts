@@ -16,22 +16,27 @@ const entryIsFile = (entry?: FileSystemEntry): entry is FileSystemFileEntry => !
     }
 })
 export class KbqFileDropDirective {
+    /** Flag that controls css-class modifications on drag events. */
     dragover: boolean;
 
+    /** Emits an event when file items were dropped. */
     @Output() filesDropped: EventEmitter<FileList | KbqFile[]> = new EventEmitter<FileList | KbqFile[]>();
 
+    /** @docs-private */
     onDragOver(event: DragEvent) {
         event.preventDefault();
         event.stopPropagation();
         this.dragover = true;
     }
 
+    /** @docs-private */
     onDragLeave(event: DragEvent) {
         event.preventDefault();
         event.stopPropagation();
         this.dragover = false;
     }
 
+    /** @docs-private */
     onDrop(event: DragEvent) {
         if (!isFolderCanBeDragged()) {
             console.warn('Drag-and-drop functionality for folders is not supported by this browser.');
@@ -47,7 +52,7 @@ export class KbqFileDropDirective {
             // @ts-ignore
             const fileEntries: FileSystemEntry[] = [...event.dataTransfer.items]
                 .filter((item: DataTransferItem) => item.kind === 'file')
-                .map((item) => item.webkitGetAsEntry() as FileSystemEntry);
+                .map((item) => item.webkitGetAsEntry() satisfies FileSystemEntry);
 
             Promise.all(fileEntries.map(unwrapDirectory))
                 .then((fileList) => fileList.reduce((res, next) => res.concat(next), []))

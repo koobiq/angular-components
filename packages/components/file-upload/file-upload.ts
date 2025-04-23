@@ -72,17 +72,27 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
      */
     readonly stateChanges = new Subject<void>();
 
+    /** @docs-private */
     protected readonly cdr = inject(ChangeDetectorRef);
+    /** @docs-private */
     protected readonly renderer = inject(Renderer2);
+    /** @docs-private */
     protected readonly destroyRef = inject(DestroyRef);
+    /** @docs-private */
     protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    /** @docs-private */
     protected readonly ngControl = inject(NgControl, { optional: true, self: true });
+    /** @docs-private */
     protected readonly parentForm = inject(NgForm, { optional: true });
+    /** @docs-private */
     protected readonly parentFormGroup = inject(FormGroupDirective, { optional: true });
+    /** @docs-private */
     protected readonly defaultErrorStateMatcher = inject(ErrorStateMatcher);
+    /** @docs-private */
     protected readonly elementRef = inject(ElementRef);
 
-    /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate */
+    /** implemented as part of base class. Decided not use mixinErrorState, not to overcomplicate
+     * @docs-private */
     updateErrorState() {
         const oldState = this.errorState;
         const parent = this.parentFormGroup || this.parentForm;

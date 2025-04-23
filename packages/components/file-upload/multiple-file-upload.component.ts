@@ -66,6 +66,7 @@ export class KbqMultipleFileUploadComponent
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    /** Array of file type specifiers */
     @Input() accept?: string[];
     @Input() disabled: boolean;
     /**
@@ -99,7 +100,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     /** Emits an event containing updated file list.
-     * @TODO public output will be renamed to filesChange in next major release (#DS-3700) */
+     * public output will be renamed to filesChange in next major release (#DS-3700) */
     @Output('fileQueueChanged') filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.
