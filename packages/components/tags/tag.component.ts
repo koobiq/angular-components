@@ -220,6 +220,7 @@ export class KbqTag
         super();
 
         this.color = KbqComponentColors.ContrastFade;
+        this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         this.addHostClassName();
 

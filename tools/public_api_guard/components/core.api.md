@@ -1732,13 +1732,14 @@ export class KbqColorDirective {
     constructor();
     // (undocumented)
     get color(): KbqComponentColors | ThemePalette | string;
-    set color(color: KbqComponentColors | ThemePalette | string);
+    set color(value: KbqComponentColors | ThemePalette | string);
     // (undocumented)
     protected _color: KbqComponentColors | ThemePalette | string;
     // (undocumented)
     get colorClassName(): KbqComponentColors | ThemePalette | string;
     // (undocumented)
     readonly elementRef: ElementRef<any>;
+    setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqColorDirective, never, never, { "color": { "alias": "color"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
