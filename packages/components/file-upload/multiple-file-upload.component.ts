@@ -95,7 +95,6 @@ export class KbqMultipleFileUploadComponent
     set files(currentFileList: KbqFileItem[]) {
         this._files = currentFileList;
         this.cvaOnChange(this._files);
-        this.fileQueueChanged.emit(this._files);
         this.cdr.markForCheck();
     }
 
@@ -198,11 +197,8 @@ export class KbqMultipleFileUploadComponent
     /** Implemented as part of ControlValueAccessor.
      * @docs-private */
     writeValue(files: FileList | KbqFileItem[] | null): void {
-        if (files instanceof FileList || !files) {
-            this.files = this.mapToFileItem(files);
-        } else {
-            this.files = files;
-        }
+        this.files = files instanceof FileList || !files ? this.mapToFileItem(files) : files;
+        this.fileQueueChanged.emit(this.files);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -239,6 +235,7 @@ export class KbqMultipleFileUploadComponent
             ...filesToAdd
         ];
         this.filesAdded.emit(filesToAdd);
+        this.fileQueueChanged.emit(this.files);
         this.onTouched();
         /* even if the user selects the same file,
                  the onchange event will be triggered every time user clicks on the control.*/
@@ -257,6 +254,7 @@ export class KbqMultipleFileUploadComponent
             ...filesToAdd
         ];
         this.filesAdded.emit(filesToAdd);
+        this.fileQueueChanged.emit(this.files);
         this.onTouched();
     }
 
@@ -269,6 +267,7 @@ export class KbqMultipleFileUploadComponent
         this.fileRemoved.emit([this.files[index], index]);
         this.files.splice(index, 1);
         this.files = [...this.files];
+        this.fileQueueChanged.emit(this.files);
         this.onTouched();
     }
 
