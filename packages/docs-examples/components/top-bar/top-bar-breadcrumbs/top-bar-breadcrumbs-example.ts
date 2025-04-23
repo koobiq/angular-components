@@ -99,6 +99,10 @@ import { map } from 'rxjs/operators';
             .kbq-top-bar-container[placement='start'] {
                 min-width: 238px;
             }
+
+            .kbq-top-bar-container[placement='end'] {
+                flex-grow: 0.3 !important;
+            }
         }
     `
 })

@@ -123,9 +123,13 @@ import { map } from 'rxjs/operators';
                 width: 100%;
             }
 
-            .kbq-top-bar-container__start {
-                min-width: 125px;
-                --kbq-top-bar-container-start-basis: 125px;
+            .kbq-top-bar-container[placement='start'] {
+                min-width: 135px;
+                --kbq-top-bar-container-start-basis: 135px;
+            }
+
+            .kbq-top-bar-container[placement='end'] {
+                flex-grow: 0.3 !important;
             }
         }
 
