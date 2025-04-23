@@ -72,6 +72,10 @@
                 background: var(--kbq-icon-white);
             }
         }
+
+        .kbq-hint .kbq-hint__text {
+            color: var(--kbq-foreground-contrast-secondary);
+        }
     }
 }
 
@@ -79,7 +83,7 @@
     .kbq-toggle:not(.kbq-toggle_big) {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
-        & .kbq-hint {
+        & .kbq-hint .kbq-hint__text {
             @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
 
@@ -91,7 +95,7 @@
     .kbq-toggle.kbq-toggle_big {
         @include kbq-typography-level-to-styles-css-variables(typography, text-big);
 
-        & .kbq-hint {
+        & .kbq-hint .kbq-hint__text {
             @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
