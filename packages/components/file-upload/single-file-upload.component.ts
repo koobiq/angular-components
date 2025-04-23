@@ -53,6 +53,7 @@ export class KbqSingleFileUploadComponent
      * A value responsible for progress spinner type.
      * Loading logic depends on selected mode */
     @Input() progressMode: ProgressSpinnerMode = 'determinate';
+    /** Array of file type specifiers */
     @Input() accept?: string[];
     @Input() disabled: boolean = false;
     /**
@@ -81,14 +82,19 @@ export class KbqSingleFileUploadComponent
         this.cdr.markForCheck();
     }
 
-    @Output() fileQueueChange: EventEmitter<KbqFileItem | null> = new EventEmitter<KbqFileItem | null>();
+    /** Emits an event containing updated file.
+     * public output will be renamed to fileChange in next major release (#DS-3700) */
+    @Output('fileQueueChange') fileChange: EventEmitter<KbqFileItem | null> = new EventEmitter<KbqFileItem | null>();
 
+    /** @docs-private */
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
+    /** @docs-private */
     @ContentChildren(KbqHint) private readonly hint: QueryList<KbqHint>;
 
+    /** @docs-private */
     config: KbqInputFileLabel;
-
+    /** @docs-private */
     separatedCaptionText: string[];
 
     /** cvaOnChange function registered via registerOnChange (ControlValueAccessor).
@@ -101,10 +107,12 @@ export class KbqSingleFileUploadComponent
      */
     onTouched = () => {};
 
+    /** @docs-private */
     get acceptedFiles(): string {
         return this.accept?.join(',') || '*/*';
     }
 
+    /** @docs-private */
     get hasHint(): boolean {
         return this.hint.length > 0;
     }
@@ -112,11 +120,13 @@ export class KbqSingleFileUploadComponent
     /**
      * Indicates an invalid state based on file errors or `errorState`,
      * applying a CSS class in HTML for visual feedback.
+     * @docs-private
      */
     get invalid(): boolean {
         return !!this.file?.hasError || this.errorState;
     }
 
+    /** @docs-private */
     readonly configuration: KbqInputFileLabel | null = inject(KBQ_FILE_UPLOAD_CONFIGURATION, {
         optional: true
     });
@@ -165,7 +175,7 @@ export class KbqSingleFileUploadComponent
      * @docs-private */
     writeValue(file: File | KbqFileItem | null): void {
         this.file = file instanceof File ? this.mapToFileItem(file) : file;
-        this.fileQueueChange.emit(this.file);
+        this.fileChange.emit(this.file);
     }
 
     /** Implemented as part of ControlValueAccessor.
@@ -190,6 +200,7 @@ export class KbqSingleFileUploadComponent
         this.cdr.markForCheck();
     }
 
+    /** @docs-private */
     onFileSelectedViaClick({ target }: Event): void {
         if (this.disabled) {
             return;
@@ -199,7 +210,7 @@ export class KbqSingleFileUploadComponent
 
         if (files?.length) {
             this.file = this.mapToFileItem(files[0]);
-            this.fileQueueChange.emit(this.file);
+            this.fileChange.emit(this.file);
         }
 
         this.onTouched();
@@ -208,17 +219,19 @@ export class KbqSingleFileUploadComponent
         this.renderer.setProperty(this.input.nativeElement, 'value', null);
     }
 
+    /** @docs-private */
     deleteItem(event?: MouseEvent): void {
         if (this.disabled) return;
 
         event?.stopPropagation();
         this.file = null;
-        this.fileQueueChange.emit(this.file);
+        this.fileChange.emit(this.file);
         this.errors = [];
         // mark as touched after file drop even if file wasn't correct
         this.onTouched();
     }
 
+    /** @docs-private */
     onFileDropped(files: FileList | KbqFile[]): void {
         if (this.disabled) {
             return;
@@ -226,7 +239,7 @@ export class KbqSingleFileUploadComponent
 
         if (files?.length && isCorrectExtension(files[0], this.accept)) {
             this.file = this.mapToFileItem(files[0]);
-            this.fileQueueChange.emit(this.file);
+            this.fileChange.emit(this.file);
         }
 
         // mark as touched after file drop even if file wasn't correct

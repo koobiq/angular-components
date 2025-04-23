@@ -16,8 +16,8 @@ const fileItemRowCssClass = 'multiple__uploaded-item';
 const fileItemCssClass = 'file-item';
 
 describe(KbqMultipleFileUploadComponent.name, () => {
-    let component: any;
-    let fixture: ComponentFixture<any>;
+    let component: BasicMultipleFileUpload;
+    let fixture: ComponentFixture<BasicMultipleFileUpload>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -44,7 +44,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChanged.subscribe((value) => {
+            const subscription = component.fileUpload.filesChange.subscribe((value) => {
                 expect(value.length).toBeFalsy();
             });
 
@@ -59,8 +59,8 @@ describe(KbqMultipleFileUploadComponent.name, () => {
 });
 
 describe(KbqSingleFileUploadComponent.name, () => {
-    let component: any;
-    let fixture: ComponentFixture<any>;
+    let component: BasicSingleFileUpload;
+    let fixture: ComponentFixture<BasicSingleFileUpload>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -84,7 +84,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload.input.nativeElement, event);
             fixture.detectChanges();
 
-            const subscription = component.fileUpload.fileQueueChange.subscribe((value) => {
+            const subscription = component.fileUpload.fileChange.subscribe((value) => {
                 expect(value).toBeFalsy();
             });
 

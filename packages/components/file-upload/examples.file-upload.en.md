@@ -13,11 +13,9 @@ After uploading, the file is highlighted as having an issue — this is a simula
 
 <!-- example(file-upload-single-with-signal) -->
 
-## Simple Usage of Control Value Accessor for File Upload
+## Reactive Forms
 
-This section provides an example implementation of a file uploader that supports uploading a single file using `Control Value Accessor`.
-
-<!-- example(file-upload-cva-overview) -->
+An example of a file uploader using [`FormControl`](https://angular.dev/api/forms/FormControl).
 
 ### Validation: Additional Examples
 
