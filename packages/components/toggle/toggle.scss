@@ -1,6 +1,5 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './toggle-theme' as *;
+@use '../core/styles/common/tokens';
+@use './toggle-theme' as theme;
 
 $toggle-thumb-offset: 8px;
 
@@ -30,7 +29,7 @@ $toggle-thumb-offset: 8px;
         }
 
         .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
-            padding-top: kbq-css-half-difference(typography-text-normal-line-height, toggle-size-normal-height);
+            padding-top: tokens.kbq-css-half-difference(typography-text-normal-line-height, toggle-size-normal-height);
         }
     }
 
@@ -123,7 +122,7 @@ $toggle-thumb-offset: 8px;
 
     .kbq-toggle-layout {
         .kbq-toggle-bar-container:has(+ .kbq-toggle__content) {
-            padding-top: kbq-css-half-difference(toggle-font-big-label-line-height, toggle-size-big-height);
+            padding-top: tokens.kbq-css-half-difference(toggle-font-big-label-line-height, toggle-size-big-height);
         }
     }
 }
@@ -132,5 +131,5 @@ $toggle-thumb-offset: 8px;
     cursor: pointer;
 }
 
-@include kbq-toggle-theme();
-@include kbq-toggle-typography();
+@include theme.kbq-toggle-theme();
+@include theme.kbq-toggle-typography();
