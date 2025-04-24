@@ -1,6 +1,6 @@
 @use '../core/styles/common/tokens';
 
-@mixin kbq-dropdown-item-state($style-name) {
+@mixin _kbq-dropdown-item-state($style-name) {
     background: var(--kbq-list-#{$style-name}-container-background);
     color: var(--kbq-list-#{$style-name}-text-color);
 
@@ -16,7 +16,7 @@
     }
 
     .kbq-dropdown-item {
-        @include kbq-dropdown-item-state(default);
+        @include _kbq-dropdown-item-state(default);
 
         .kbq-dropdown-item__caption {
             color: var(--kbq-dropdown-item-caption-color);
@@ -24,7 +24,7 @@
 
         &.kbq-dropdown-item_highlighted,
         &:hover:not(.kbq-disabled) {
-            @include kbq-dropdown-item-state(states-hover);
+            @include _kbq-dropdown-item-state(states-hover);
         }
 
         &.cdk-keyboard-focused {
@@ -32,15 +32,15 @@
         }
 
         &.kbq-selected {
-            @include kbq-dropdown-item-state(states-selected);
+            @include _kbq-dropdown-item-state(states-selected);
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-dropdown-item-state(states-selected-hover);
+                @include _kbq-dropdown-item-state(states-selected-hover);
             }
         }
 
         &.kbq-disabled {
-            @include kbq-dropdown-item-state(states-disabled);
+            @include _kbq-dropdown-item-state(states-disabled);
         }
 
         &:is(.kbq-selected, .cdk-keyboard-focused):has(+ :is(.kbq-selected, .cdk-keyboard-focused)) {

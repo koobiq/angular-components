@@ -1,4 +1,4 @@
-@use './dropdown-theme' as *;
+@use './dropdown-theme' as theme;
 
 .kbq-dropdown-trigger {
     &.kbq-button {
@@ -81,5 +81,5 @@
     flex-direction: column;
 }
 
-@include kbq-dropdown-theme();
-@include kbq-dropdown-typography();
+@include theme.kbq-dropdown-theme();
+@include theme.kbq-dropdown-typography();
