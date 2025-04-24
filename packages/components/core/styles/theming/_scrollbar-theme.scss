@@ -1,11 +1,9 @@
 /* stylelint-disable selector-pseudo-class-no-unknown */
 
-@use '../common/tokens' as *;
-@use '../functions/string' as *;
-
+@use '../common/tokens';
 @use './scrollbar-tokens';
 
-@mixin kbq-scrollbar() {
+@mixin _kbq-scrollbar() {
     // For Firefox compatibility
     @supports not selector(::-webkit-scrollbar) {
         scrollbar-width: auto;
@@ -29,7 +27,7 @@
     ::-webkit-scrollbar-thumb {
         width: var(--kbq-scrollbar-size-thumb-width);
         border-style: solid;
-        border-width: kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
+        border-width: tokens.kbq-css-half-difference(scrollbar-size-track-dimension, scrollbar-size-thumb-width);
 
         border-radius: var(--kbq-scrollbar-size-thumb-border-radius);
 
@@ -51,7 +49,7 @@
 
 @mixin kbq-scrollbar-theme() {
     .kbq-scrollbar {
-        @include kbq-scrollbar();
+        @include _kbq-scrollbar();
 
         // For Firefox compatibility
         @supports not selector(::-webkit-scrollbar) {
