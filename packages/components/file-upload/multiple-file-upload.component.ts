@@ -246,6 +246,10 @@ export class KbqMultipleFileUploadComponent
 
         const filesToAdd = this.mapToFileItem((target as HTMLInputElement).files);
 
+        /* even if the user selects the same file,
+                 the onchange event will be triggered every time user clicks on the control.*/
+        this.renderer.setProperty(this.input.nativeElement, 'value', null);
+
         this.files = [
             ...this.files,
             ...filesToAdd
@@ -253,9 +257,6 @@ export class KbqMultipleFileUploadComponent
         this.filesAdded.emit(filesToAdd);
         this.filesChange.emit(this.files);
         this.onTouched();
-        /* even if the user selects the same file,
-                 the onchange event will be triggered every time user clicks on the control.*/
-        this.renderer.setProperty(this.input.nativeElement, 'value', null);
     }
 
     /** @docs-private */
@@ -282,9 +283,10 @@ export class KbqMultipleFileUploadComponent
         }
 
         event?.stopPropagation();
-        this.fileRemoved.emit([this.files[index], index]);
-        this.files.splice(index, 1);
+        const removedFile = this.files.splice(index, 1)[0];
+
         this.files = [...this.files];
+        this.fileRemoved.emit([removedFile, index]);
         this.filesChange.emit(this.files);
         this.onTouched();
     }

@@ -206,6 +206,10 @@ export class KbqSingleFileUploadComponent
             return;
         }
 
+        /* even if the user selects the same file,
+         the onchange event will be triggered every time user clicks on the control.*/
+        this.renderer.setProperty(this.input.nativeElement, 'value', null);
+
         const files: FileList | null = (target as HTMLInputElement).files;
 
         if (files?.length) {
@@ -214,9 +218,6 @@ export class KbqSingleFileUploadComponent
         }
 
         this.onTouched();
-        /* even if the user selects the same file,
-         the onchange event will be triggered every time user clicks on the control.*/
-        this.renderer.setProperty(this.input.nativeElement, 'value', null);
     }
 
     /** @docs-private */
