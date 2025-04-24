@@ -6,9 +6,9 @@
 @use './scrollbar-tokens';
 
 @mixin kbq-scrollbar() {
-    //firefox
+    // For Firefox compatibility
     @supports not selector(::-webkit-scrollbar) {
-        scrollbar-width: thin;
+        scrollbar-width: auto;
     }
 
     // webkit
@@ -53,7 +53,7 @@
     .kbq-scrollbar {
         @include kbq-scrollbar();
 
-        // firefox
+        // For Firefox compatibility
         @supports not selector(::-webkit-scrollbar) {
             scrollbar-color: var(--kbq-scrollbar-thumb-default-background) transparent;
         }
@@ -68,7 +68,7 @@
         &::-webkit-scrollbar-thumb,
         ::-webkit-scrollbar-thumb {
             border-color: transparent;
-
+            // https://stackoverflow.com/a/16829330/6386666
             background-clip: content-box;
             background-color: var(--kbq-scrollbar-thumb-default-background);
 
