@@ -62,6 +62,10 @@
         &.kbq-badge_error {
             @include kbq-badge-style(filled, fade-off, error);
         }
+
+        &.kbq-badge_disabled {
+            @include kbq-badge-style(filled, fade-off, disabled);
+        }
     }
 
     .kbq-badge-outline {
@@ -83,6 +87,10 @@
 
         &.kbq-badge_fade-error {
             @include kbq-badge-style(outline, fade-on, error);
+        }
+
+        &.kbq-badge_disabled {
+            @include kbq-badge-style(outline, fade-on, disabled);
         }
     }
 }

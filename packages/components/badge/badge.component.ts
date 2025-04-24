@@ -28,7 +28,8 @@ export enum KbqBadgeColors {
     Theme = 'theme',
     Success = 'success',
     Warning = 'warning',
-    Error = 'error'
+    Error = 'error',
+    Disabled = 'disabled'
 }
 
 @Directive({

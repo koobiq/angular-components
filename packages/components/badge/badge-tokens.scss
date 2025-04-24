@@ -43,6 +43,10 @@
     --kbq-badge-filled-fade-off-error-color: var(--kbq-foreground-white);
     --kbq-badge-filled-fade-off-error-caption: var(--kbq-foreground-white);
     --kbq-badge-filled-fade-off-error-icon: var(--kbq-icon-white);
+    --kbq-badge-filled-fade-off-disabled-background: var(--kbq-states-background-disabled);
+    --kbq-badge-filled-fade-off-disabled-color: var(--kbq-states-foreground-disabled);
+    --kbq-badge-filled-fade-off-disabled-caption: var(--kbq-states-foreground-disabled);
+    --kbq-badge-filled-fade-off-disabled-icon: var(--kbq-states-icon-disabled);
     --kbq-badge-filled-fade-on-theme-background: var(--kbq-background-theme-fade);
     --kbq-badge-filled-fade-on-theme-color: var(--kbq-foreground-theme);
     --kbq-badge-filled-fade-on-theme-caption: var(--kbq-foreground-theme);
@@ -63,6 +67,10 @@
     --kbq-badge-filled-fade-on-error-color: var(--kbq-foreground-error);
     --kbq-badge-filled-fade-on-error-caption: var(--kbq-foreground-error);
     --kbq-badge-filled-fade-on-error-icon: var(--kbq-icon-error);
+    --kbq-badge-filled-fade-on-disabled-background: var(--kbq-states-background-disabled);
+    --kbq-badge-filled-fade-on-disabled-color: var(--kbq-states-foreground-disabled);
+    --kbq-badge-filled-fade-on-disabled-caption: var(--kbq-states-foreground-disabled);
+    --kbq-badge-filled-fade-on-disabled-icon: var(--kbq-states-icon-disabled);
     --kbq-badge-outline-fade-on-theme-background: transparent;
     --kbq-badge-outline-fade-on-theme-color: var(--kbq-foreground-theme);
     --kbq-badge-outline-fade-on-theme-border: var(--kbq-line-theme-fade);
@@ -88,4 +96,9 @@
     --kbq-badge-outline-fade-on-error-border: var(--kbq-line-error-fade);
     --kbq-badge-outline-fade-on-error-caption: var(--kbq-foreground-error);
     --kbq-badge-outline-fade-on-error-icon: var(--kbq-icon-error);
+    --kbq-badge-outline-fade-on-disabled-background: transparent;
+    --kbq-badge-outline-fade-on-disabled-color: var(--kbq-states-foreground-disabled);
+    --kbq-badge-outline-fade-on-disabled-border: var(--kbq-states-line-disabled);
+    --kbq-badge-outline-fade-on-disabled-caption: var(--kbq-states-foreground-disabled);
+    --kbq-badge-outline-fade-on-disabled-icon: var(--kbq-states-icon-disabled);
 }
