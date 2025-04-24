@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, KbqOptionModule } from '@koobiq/components/core';
@@ -7,7 +7,19 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { DropdownExamplesModule } from 'packages/docs-examples/components/dropdown';
 import { DevThemeToggle } from '../theme-toggle';
+
+@Component({
+    standalone: true,
+    imports: [DropdownExamplesModule],
+    selector: 'dev-dropdown-examples',
+    template: `
+        <dropdown-nested-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevDropdownExamples {}
 
 @Component({
     standalone: true,
@@ -20,7 +32,8 @@ import { DevThemeToggle } from '../theme-toggle';
         KbqTitleModule,
         KbqDividerModule,
         KbqOptionModule,
-        DevThemeToggle
+        DevThemeToggle,
+        DevDropdownExamples
     ],
     selector: 'app',
     templateUrl: './template.html',
