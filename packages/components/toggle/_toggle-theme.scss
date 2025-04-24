@@ -1,6 +1,6 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
-@mixin kbq-toggle-state($type, $state-name) {
+@mixin _kbq-toggle-state($type, $state-name) {
     $base: toggle-#{$type}-#{$state-name};
 
     .kbq-toggle-bar {
@@ -13,25 +13,25 @@
     }
 }
 
-@mixin kbq-toggle-color($type) {
-    @include kbq-toggle-state($type, default);
+@mixin _kbq-toggle-color($type) {
+    @include _kbq-toggle-state($type, default);
 
     &:hover {
-        @include kbq-toggle-state($type, states-hover);
+        @include _kbq-toggle-state($type, states-hover);
     }
 
     &.kbq-active,
     &.kbq-indeterminate {
-        @include kbq-toggle-state($type, states-checked);
+        @include _kbq-toggle-state($type, states-checked);
     }
 
     &.kbq-active:hover,
     &.kbq-indeterminate:hover {
-        @include kbq-toggle-state($type, states-checked-hover);
+        @include _kbq-toggle-state($type, states-checked-hover);
     }
 
     &.cdk-keyboard-focused {
-        @include kbq-toggle-state($type, states-focused);
+        @include _kbq-toggle-state($type, states-focused);
 
         & .kbq-toggle-bar {
             border-color: var(--kbq-toggle-#{$type}-states-focused-focus-outline);
@@ -41,7 +41,7 @@
 
     &.kbq-active.cdk-keyboard-focused,
     &.kbq-indeterminate.cdk-keyboard-focused {
-        @include kbq-toggle-state($type, states-checked-focused);
+        @include _kbq-toggle-state($type, states-checked-focused);
 
         & .kbq-toggle-bar {
             border-color: var(--kbq-toggle-#{$type}-states-checked-focused-focus-outline);
@@ -51,16 +51,16 @@
 
     &.kbq-disabled,
     &.kbq-active.kbq-disabled {
-        @include kbq-toggle-state($type, states-disabled);
+        @include _kbq-toggle-state($type, states-disabled);
     }
 }
 
 @mixin kbq-toggle-theme() {
     .kbq-toggle {
-        @include kbq-toggle-color(theme);
+        @include _kbq-toggle-color(theme);
 
         &.kbq-error {
-            @include kbq-toggle-color(error);
+            @include _kbq-toggle-color(error);
         }
 
         &.kbq-disabled {
@@ -81,26 +81,26 @@
 
 @mixin kbq-toggle-typography() {
     .kbq-toggle:not(.kbq-toggle_big) {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
 
         & .kbq-toggle-bar-container {
-            @include kbq-css-font-variable(typography, text-compact, line-height, '');
+            @include tokens.kbq-css-font-variable(typography, text-compact, line-height, '');
         }
     }
 
     .kbq-toggle.kbq-toggle_big {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-big);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
 
         & .kbq-hint .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         & .kbq-toggle-bar-container {
-            @include kbq-css-font-variable(typography, text-big, line-height, '');
+            @include tokens.kbq-css-font-variable(typography, text-big, line-height, '');
         }
     }
 }
