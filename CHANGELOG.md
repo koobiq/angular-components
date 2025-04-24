@@ -1,3 +1,20 @@
+# 18.25.0 (2025-04-24)
+
+### Koobiq
+
+ * bug fix  **docs,toast:** close button alignment ([#DS-3693](https://github.com/koobiq/angular-components/issues/issue/DS-3693)) ([#698](https://github.com/koobiq/angular-components/issues/698)) ([8be71aa](https://github.com/koobiq/angular-components/commit/8be71aa1cc9a03638c35d69a50adc26adb940462))
+ * bug fix  **dropdown:** nested item icon position ([#DS-3642](https://github.com/koobiq/angular-components/issues/issue/DS-3642)) ([#696](https://github.com/koobiq/angular-components/issues/696)) ([dbb2702](https://github.com/koobiq/angular-components/commit/dbb2702157066d142af4362c1c5a97abbd8ed440))
+ * bug fix  **file-upload:** removed infinite change detection ([#DS-3493](https://github.com/koobiq/angular-components/issues/issue/DS-3493)) ([#682](https://github.com/koobiq/angular-components/issues/682)) ([b4bfa7a](https://github.com/koobiq/angular-components/commit/b4bfa7a7b22309b79309a8d803163b7b022ec29b))
+ * bug fix  **file-upload:** resolved types ([#692](https://github.com/koobiq/angular-components/issues/692)) ([21ea414](https://github.com/koobiq/angular-components/commit/21ea414fe841f9e420b55643485cf55b88b0523e))
+ * bug fix  **file-upload:** sync events order on files changes ([#DS-3451](https://github.com/koobiq/angular-components/issues/issue/DS-3451)) ([#687](https://github.com/koobiq/angular-components/issues/687)) ([d841a57](https://github.com/koobiq/angular-components/commit/d841a5725f05aef8a54898711125dc4421926e8c))
+ * bug fix  **icon:** prevent events in disabled state for icon-button ([#DS-3639](https://github.com/koobiq/angular-components/issues/issue/DS-3639)) ([#695](https://github.com/koobiq/angular-components/issues/695)) ([7afc7ae](https://github.com/koobiq/angular-components/commit/7afc7ae6a974efbcdcef510a87244d3bb7388f89))
+ * bug fix  **modal:** default function for close ([#DS-3589](https://github.com/koobiq/angular-components/issues/issue/DS-3589)) ([#688](https://github.com/koobiq/angular-components/issues/688)) ([c6ead9f](https://github.com/koobiq/angular-components/commit/c6ead9f1f42e3a91aaa2f201b4a384fe5710e16a))
+ * bug fix  **scrollbar:** firefox scrollbar width ([#DS-3582](https://github.com/koobiq/angular-components/issues/issue/DS-3582)) ([#685](https://github.com/koobiq/angular-components/issues/685)) ([b01ba88](https://github.com/koobiq/angular-components/commit/b01ba886e8bd4fba63bb1801b39b81c4a8519442))
+ * bug fix  **tags:** default color ([#DS-3705](https://github.com/koobiq/angular-components/issues/issue/DS-3705)) ([#690](https://github.com/koobiq/angular-components/issues/690)) ([45d08a1](https://github.com/koobiq/angular-components/commit/45d08a1deb3877a8cabeb244b36cd6be207ef203))
+ * bug fix  **tags:** sync placeholder padding with design ([#DS-3484](https://github.com/koobiq/angular-components/issues/issue/DS-3484)) ([#691](https://github.com/koobiq/angular-components/issues/691)) ([44b2b9b](https://github.com/koobiq/angular-components/commit/44b2b9bc07a11d2692d0ba018ec5fadd0ce33fd0))
+ * bug fix  **toggle:** hint color, typography and spacing ([#DS-3666](https://github.com/koobiq/angular-components/issues/issue/DS-3666)) ([#689](https://github.com/koobiq/angular-components/issues/689)) ([f24205c](https://github.com/koobiq/angular-components/commit/f24205c12bf5235ad7183b4dd242785c4cf4fb38))
+ * feature  **badge:** added disabled color ([#DS-3571](https://github.com/koobiq/angular-components/issues/issue/DS-3571)) ([#694](https://github.com/koobiq/angular-components/issues/694)) ([19e2056](https://github.com/koobiq/angular-components/commit/19e2056bcce3e52822940a4613976554944cd190))
+
 # 18.24.0 (2025-04-22)
 
 ### Koobiq
