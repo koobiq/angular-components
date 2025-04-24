@@ -52,7 +52,7 @@ export class KbqFileDropDirective {
             // @ts-ignore
             const fileEntries: FileSystemEntry[] = [...event.dataTransfer.items]
                 .filter((item: DataTransferItem) => item.kind === 'file')
-                .map((item) => item.webkitGetAsEntry() satisfies FileSystemEntry);
+                .map((item: DataTransferItem) => item.webkitGetAsEntry()!);
 
             Promise.all(fileEntries.map(unwrapDirectory))
                 .then((fileList) => fileList.reduce((res, next) => res.concat(next), []))
