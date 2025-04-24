@@ -5,6 +5,9 @@
 @use '@koobiq/design-tokens/web/css-tokens-light.css';
 @use '@koobiq/ag-grid-angular-theme';
 @use '@koobiq/components/core/styles/common/tokens';
+@use '@koobiq/components/core/styles/visual';
+
+@include visual.layouts-for-breakpoint();
 
 body {
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
