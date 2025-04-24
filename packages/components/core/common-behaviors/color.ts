@@ -83,6 +83,7 @@ export function mixinColor<T extends Constructor<HasElementRef>>(
 @Directive({ standalone: true })
 export class KbqColorDirective {
     readonly elementRef = inject(ElementRef);
+    private defaultColor: KbqComponentColors | ThemePalette | string;
 
     get colorClassName(): KbqComponentColors | ThemePalette | string {
         return `kbq-${this._color}`;
@@ -93,7 +94,9 @@ export class KbqColorDirective {
         return this._color;
     }
 
-    set color(color: KbqComponentColors | ThemePalette | string) {
+    set color(value: KbqComponentColors | ThemePalette | string) {
+        const color = value || this.defaultColor;
+
         if (color !== this._color) {
             if (this._color) {
                 this.elementRef.nativeElement.classList.remove(`kbq-${this._color}`);
@@ -111,5 +114,10 @@ export class KbqColorDirective {
 
     constructor() {
         this.color = KbqComponentColors.Empty;
+    }
+
+    /** this color will be used as a default value. For example [color]="'' | false | undefined | null". */
+    setDefaultColor(color: KbqComponentColors | ThemePalette | string) {
+        this.defaultColor = color;
     }
 }
