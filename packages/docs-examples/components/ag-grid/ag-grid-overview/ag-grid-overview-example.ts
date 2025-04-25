@@ -76,11 +76,12 @@ export class AgGridOverviewExample {
         {
             headerCheckboxSelection: true,
             checkboxSelection: true,
-            width: 41,
+            width: 34,
             headerName: '',
             sortable: false,
             resizable: false,
-            suppressMovable: true
+            suppressMovable: true,
+            lockPosition: true
         },
         {
             field: 'column0',
