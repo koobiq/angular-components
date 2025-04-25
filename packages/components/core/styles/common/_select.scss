@@ -140,8 +140,7 @@
 
     border-radius: var(--kbq-select-panel-size-border-radius, var(--kbq-size-border-radius));
 
-    // Override optgroup and option to scale based on font-size of the trigger.
-    .kbq-optgroup-label,
+    // Override option to scale based on font-size of the trigger.
     .kbq-option {
         font-size: inherit;
     }
