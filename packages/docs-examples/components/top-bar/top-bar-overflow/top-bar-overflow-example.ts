@@ -174,6 +174,7 @@ type ExampleAction = {
         .example-kbq-top-bar__title {
             display: inline-flex;
             white-space: nowrap;
+            min-width: 100px;
         }
     `
 })
