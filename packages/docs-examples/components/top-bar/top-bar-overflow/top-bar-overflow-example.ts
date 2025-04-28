@@ -68,7 +68,7 @@ type ExampleAction = {
                         [color]="action.color"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqTooltipDisabled]="isDesktop() && !!action?.icon"
                         [kbqTooltip]="action.text || action.id"
                         [alwaysVisible]="action?.alwaysVisible"
                         kbq-button

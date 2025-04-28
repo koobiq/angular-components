@@ -55,7 +55,7 @@ type ExampleAction = {
                         [color]="action.color"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqTooltipDisabled]="isDesktop() && !!action?.icon"
                         [kbqTooltip]="action.text || action.id"
                         kbq-button
                     >
@@ -124,14 +124,14 @@ export class TopBarActionsExample {
             style: KbqButtonStyles.Transparent
         },
         {
-            id: 'search',
+            id: 'Search',
             icon: 'kbq-magnifying-glass_16',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Transparent
         },
-        { id: 'list', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
-        { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
-        { id: 'action', text: 'Action', color: KbqComponentColors.ContrastFade, style: '' },
+        { id: 'List', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'Filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'Action', text: 'Action', color: KbqComponentColors.ContrastFade, style: '' },
         {
             id: 'primary-action',
             text: 'Primary action',
