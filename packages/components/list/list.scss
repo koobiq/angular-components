@@ -1,7 +1,6 @@
 @use '../core/styles/common/list';
-@use '../core/styles/common/tokens' as *;
 @use '../core/styles/common/vendor-prefixes';
-@use './list-theme' as *;
+@use './list-theme' as theme;
 
 .kbq-list,
 .kbq-list-selection {
@@ -35,5 +34,5 @@
     }
 }
 
-@include kbq-list-theme();
-@include kbq-list-typography();
+@include theme.kbq-list-theme();
+@include theme.kbq-list-typography();
