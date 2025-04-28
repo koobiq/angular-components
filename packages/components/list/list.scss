@@ -13,7 +13,7 @@
     @include vendor-prefixes.user-select(none);
     @include list.kbq-list-item-base();
 
-    // @TODO should be moved into _list-theme.scss
+    // @TODO should be moved into _list-theme.scss (#DS-3736)
     border-radius: var(--kbq-size-border-radius);
 
     &:not(.kbq-disabled) {

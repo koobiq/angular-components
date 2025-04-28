@@ -21,14 +21,14 @@
 }
 
 @mixin _kbq-list-option-border-radius() {
-    $_selectors: '.kbq-selected';
+    $selectors: '.kbq-selected';
 
-    &:is(#{$_selectors}):has(+ :is(#{$_selectors})) {
+    &:is(#{$selectors}):has(+ :is(#{$selectors})) {
         border-bottom-left-radius: unset;
         border-bottom-right-radius: unset;
     }
 
-    &:is(#{$_selectors}) + :is(#{$_selectors}) {
+    &:is(#{$selectors}) + :is(#{$selectors}) {
         border-top-left-radius: unset;
         border-top-right-radius: unset;
     }
