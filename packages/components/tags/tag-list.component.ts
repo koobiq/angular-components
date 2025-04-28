@@ -372,38 +372,40 @@ export class KbqTagList
         });
 
         // When the list changes, re-subscribe
-        this.tags.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe((currentTags) => {
-            if (this.disabled) {
-                // Since this happens after the content has been
-                // checked, we need to defer it to the next tick.
-                Promise.resolve().then(() => {
-                    this.syncTagsDisabledState();
-                });
-            }
-
-            this.resetTags();
-
-            // Reset tags selected/deselected status
-            this.initializeSelection();
-
-            // Check to see if we need to update our tab index
-            this.updateTabIndex();
-
-            // Check to see if we have a destroyed tag and need to refocus
-            this.updateFocusForDestroyedTags();
-
-            // Defer setting the value in order to avoid the "Expression
-            // has changed after it was checked" errors from Angular.
-            Promise.resolve().then(() => {
-                this.tagChanges.emit(this.tags.toArray());
-                this.stateChanges.next();
-
-                // do not call on initial
-                if (currentTags) {
-                    this.propagateTagsChanges();
+        this.tags.changes
+            .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
+            .subscribe((currentTags: QueryList<KbqTag> | null) => {
+                if (this.disabled) {
+                    // Since this happens after the content has been
+                    // checked, we need to defer it to the next tick.
+                    Promise.resolve().then(() => {
+                        this.syncTagsDisabledState();
+                    });
                 }
+
+                this.resetTags();
+
+                // Reset tags selected/deselected status
+                this.initializeSelection();
+
+                // Check to see if we need to update our tab index
+                this.updateTabIndex();
+
+                // Check to see if we have a destroyed tag and need to refocus
+                this.updateFocusForDestroyedTags();
+
+                // Defer setting the value in order to avoid the "Expression
+                // has changed after it was checked" errors from Angular.
+                Promise.resolve().then(() => {
+                    this.tagChanges.emit(this.tags.toArray());
+                    this.stateChanges.next();
+
+                    // do not call on initial
+                    if (currentTags) {
+                        this.propagateTagsChanges();
+                    }
+                });
             });
-        });
 
         this.propagateSelectableToChildren();
     }
