@@ -1,4 +1,4 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
 @mixin kbq-file-upload-theme() {
     .kbq-file-upload {
@@ -135,39 +135,39 @@
     .kbq-single-file-upload {
         & .file-item__text-wrapper,
         & .dropzone__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
     }
 
     .kbq-multiple-file-upload {
         .multiple__header {
-            @include kbq-typography-level-to-styles-css-variables(typography, subheading);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, subheading);
         }
 
         .multiple__caption {
             &,
             .kbq-link {
-                @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
             }
         }
 
         .kbq-file-multiple-uploaded__header {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         .multiple__uploaded-item {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
         }
 
         .kbq-file-upload {
             .kbq-list-item,
             .kbq-list-option {
-                @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
             }
         }
     }
 
     .kbq-file-upload__hint .kbq-hint .kbq-hint__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

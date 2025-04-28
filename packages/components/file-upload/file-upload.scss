@@ -1,4 +1,4 @@
-@use './file-upload-theme' as *;
+@use './file-upload-theme' as theme;
 
 .kbq-file-upload {
     box-sizing: border-box;
@@ -37,5 +37,5 @@
     }
 }
 
-@include kbq-file-upload-theme();
-@include kbq-file-upload-typography();
+@include theme.kbq-file-upload-theme();
+@include theme.kbq-file-upload-typography();
