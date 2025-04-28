@@ -18,6 +18,7 @@ import {
     EventEmitter,
     InjectionToken,
     Input,
+    OnInit,
     Output,
     TemplateRef,
     Type,
@@ -160,7 +161,7 @@ export function getKbqPopoverInvalidPositionError(position: string) {
         '(touchend)': 'handleTouchend()'
     }
 })
-export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
+export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
     @Input('kbqPopoverVisible')
@@ -347,6 +348,15 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         };
     }
 
+    ngOnInit(): void {
+        super.ngOnInit();
+
+        this.scrollable
+            ?.elementScrolled()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(this.hideIfNotInViewPort);
+    }
+
     ngAfterContentInit(): void {
         if (this.closeOnScroll === null) {
             this.scrollDispatcher.scrolled().subscribe((scrollable: CdkScrollable | void) => {
@@ -425,4 +435,22 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     closingActions() {
         return merge(...this.closingActionsForClick(), this.closeOnScroll ? this.scrollDispatcher.scrolled() : NEVER);
     }
+
+    private hideIfNotInViewPort = () => {
+        if (!this.scrollable) return;
+
+        const rect = this.elementRef.nativeElement.getBoundingClientRect();
+        const containerRect = this.scrollable.getElementRef().nativeElement.getBoundingClientRect();
+
+        if (
+            !(
+                rect.bottom >= containerRect.top &&
+                rect.right >= containerRect.left &&
+                rect.top <= containerRect.bottom &&
+                rect.left <= containerRect.right
+            )
+        ) {
+            this.hide();
+        }
+    };
 }
