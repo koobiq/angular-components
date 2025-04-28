@@ -1,6 +1,6 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
-@mixin kbq-list-item($state-name) {
+@mixin _kbq-list-item($state-name) {
     background: var(--kbq-list-#{$state-name}-container-background);
 
     .kbq-list-text {
@@ -22,22 +22,22 @@
 
 @mixin kbq-list-theme() {
     .kbq-list-option {
-        @include kbq-list-item(default);
+        @include _kbq-list-item(default);
 
         &:hover:not(.kbq-disabled) {
-            @include kbq-list-item(states-hover);
+            @include _kbq-list-item(states-hover);
         }
 
         &.kbq-selected {
-            @include kbq-list-item(states-selected);
+            @include _kbq-list-item(states-selected);
 
             &:hover:not(.kbq-disabled) {
-                @include kbq-list-item(states-selected-hover);
+                @include _kbq-list-item(states-selected-hover);
             }
         }
 
         &.kbq-disabled {
-            @include kbq-list-item(states-disabled);
+            @include _kbq-list-item(states-disabled);
         }
 
         &:is(.kbq-selected, .kbq-focused):has(+ :is(.kbq-selected, .kbq-focused)) {
@@ -61,11 +61,11 @@
 @mixin kbq-list-typography() {
     .kbq-list-item,
     .kbq-list-option {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-list-text {
             .kbq-list-option-caption {
-                @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+                @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
             }
         }
     }
