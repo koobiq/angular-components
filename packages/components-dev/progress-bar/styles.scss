@@ -1,22 +1,22 @@
 @use '../main';
 
-.container {
+.dev-container {
     display: flex;
     align-items: center;
 
-    .percent {
+    .dev-percent {
         margin-right: 8px;
         width: 60px;
         text-align: center;
         flex-shrink: 0;
     }
 
-    .lines {
+    .dev-lines {
         flex-grow: 1;
         margin-top: 8px;
     }
 
-    .line-container:not(:first-child) {
+    .dev-line-container:not(:first-child) {
         margin-top: 16px;
     }
 }

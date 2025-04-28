@@ -14,7 +14,7 @@ hr {
     max-width: 30%;
 }
 
-.custom-underlined-tabs {
+.dev-custom-underlined-tabs {
     .kbq-icon {
         margin-bottom: 4px;
     }
@@ -26,25 +26,25 @@ hr {
     }
 }
 
-.custom-underlined-tabs__subtitle {
+.dev-custom-underlined-tabs__subtitle {
     font-size: 12px;
     line-height: 16px;
     font-weight: 400;
     color: rgba(108, 115, 147, 1);
 }
 
-.custom-underlined-tabs_with-icons .kbq-tab-label__content.kbq-tab-label__template {
+.dev-custom-underlined-tabs_with-icons .kbq-tab-label__content.kbq-tab-label__template {
     align-items: center;
 }
 
-.tabs-actionbar-example {
+.example-tabs-actionbar {
     display: flex;
 
-    .tabs-actionbar-example_nav {
+    .example-tabs-actionbar_nav {
         overflow: hidden;
     }
 
-    .tabs-actionbar-example_controls {
+    .example-tabs-actionbar_controls {
         display: flex;
         flex-grow: 1;
         align-items: center;

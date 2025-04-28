@@ -15,6 +15,7 @@
 // https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md
 @use '@koobiq/ag-grid-angular-theme';
 
+/* stylelint-disable-next-line selector-class-pattern */
 .docs {
     @include theme-kbq.docs-typography();
     @include theme-kbq.kbq-docs-theme();

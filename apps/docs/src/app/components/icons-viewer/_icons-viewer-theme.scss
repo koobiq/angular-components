@@ -31,23 +31,23 @@
         }
     }
 
-    .icon-preview-modal__preview-area {
+    .docs-icon-preview-modal__preview-area {
         background: var(--kbq-background-bg-secondary);
     }
 }
 
 @mixin kbq-docs-icons-viewer-typography() {
-    .icon-preview-modal .kbq-modal-header.kbq-modal-title {
+    .docs-icon-preview-modal .kbq-modal-header.kbq-modal-title {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
     .docs-icons-viewer__header .kbq-input,
     .docs-icons-viewer__table-cell-name,
-    .icon-preview-modal__content .kbq-select,
-    .icon-preview-modal__buttons .kbq-button,
-    .kbq-select-overlay .icon-preview-modal__select-option,
-    .icon-preview-modal__description .kbq-dd,
-    .icon-preview-modal__description .kbq-badge {
+    .docs-icon-preview-modal__content .kbq-select,
+    .docs-icon-preview-modal__buttons .kbq-button,
+    .kbq-select-overlay .docs-icon-preview-modal__select-option,
+    .docs-icon-preview-modal__description .kbq-dd,
+    .docs-icon-preview-modal__description .kbq-badge {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-big);
     }
 

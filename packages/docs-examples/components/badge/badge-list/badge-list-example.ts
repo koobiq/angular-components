@@ -13,14 +13,14 @@ import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
     ],
     template: `
         <div class="badge-list-example">
-            <div class="badge-list-example__label kbq-text-compact">Horizontal</div>
-            <div class="badge-list-example__list">
+            <div class="example-badge-list__label kbq-text-compact">Horizontal</div>
+            <div class="example-badge-list__list">
                 @for (badge of badges; track badge) {
                     <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>
                 }
             </div>
-            <div class="badge-list-example__label layout-margin-top-l kbq-text-compact">Vertical</div>
-            <div class="badge-list-example__list badge-list-example__list_vertical">
+            <div class="example-badge-list__label layout-margin-top-l kbq-text-compact">Vertical</div>
+            <div class="example-badge-list__list example-badge-list__list_vertical">
                 @for (badge of badges; track badge) {
                     <kbq-badge [badgeColor]="badge.color">{{ badge.name }}</kbq-badge>
                 }

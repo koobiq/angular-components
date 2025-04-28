@@ -1,31 +1,31 @@
 @use '../main';
 
-.container {
+.dev-container {
     margin-top: 32px;
     margin-left: 16px;
 }
 
-.toggle-demo-container {
+.dev-toggle-container {
     margin-bottom: 8px;
 }
 
-.toggle-demo-fixed {
+.dev-toggle-fixed {
     width: 200px;
 
     margin-bottom: 8px;
 }
 
-.control-buttons-container {
+.dev-buttons-container {
     display: inline-block;
     margin-right: 16px;
     margin-bottom: 16px;
 }
 
-.toggles-container {
+.dev-toggles-container {
     max-width: 50%;
 }
 
-.toggle-bordered-demo-container {
+.dev-toggle-bordered-demo-container {
     border: 1px solid red;
 
     overflow: hidden;

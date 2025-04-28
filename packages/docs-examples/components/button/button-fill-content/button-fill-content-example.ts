@@ -13,7 +13,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
         KbqButtonModule
     ],
     template: `
-        <button class="fill-content__example-button" [color]="colors.Contrast" kbq-button>
+        <button class="example-fill-content__button" [color]="colors.Contrast" kbq-button>
             Очень длинный текст кнопки, который не умеет обрезаться по ширине
         </button>
     `

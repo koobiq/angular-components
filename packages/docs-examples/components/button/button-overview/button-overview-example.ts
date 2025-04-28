@@ -18,7 +18,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
     ],
     template: `
         <button
-            class="overview__example-button"
+            class="example-overview__button"
             [class.kbq-progress]="hasProgress"
             [color]="colors.Contrast"
             [disabled]="isDisabled"

@@ -15,7 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <div class="badge-tooltip-example">
+        <div class="example-badge-tooltip">
             <kbq-badge
                 [badgeColor]="colors.FadeContrast"
                 [kbqPlacement]="PopUpPlacements.Top"

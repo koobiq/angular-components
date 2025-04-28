@@ -23,46 +23,20 @@
     margin-bottom: 15px;
 }
 
-.line {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
-}
-
-.simple-content {
-    padding: 8px;
-}
-
-.buttons-container {
-    margin-left: auto;
-    justify-self: flex-end;
-}
-
-.footer-button {
-    margin-left: 16px !important;
-}
-
-.lines {
+.dev-lines {
     flex-grow: 1;
     margin-top: 8px;
 }
 
-.line-container:not(:first-child) {
+.dev-line-container:not(:first-child) {
     margin-top: 16px;
 }
 
-.container {
+.dev-container {
     display: flex;
     align-items: center;
 
-    .percent {
-        margin-right: 8px;
-        width: 60px;
-        text-align: center;
-        flex-shrink: 0;
-    }
-
-    .spinners {
+    .dev-spinners {
         display: flex;
         flex-grow: 1;
         margin-top: 8px;
@@ -70,11 +44,11 @@
         padding: 0;
     }
 
-    .spinner-container {
+    .dev-spinner-container {
         margin-left: 16px;
     }
 
-    .line-container:not(:first-child) {
+    .dev-line-container:not(:first-child) {
         margin-top: 16px;
     }
 }
@@ -96,21 +70,15 @@
     margin-right: 4px;
 }
 
-.container .kbq-form-field {
+.dev-container .kbq-form-field {
     width: 200px;
 }
 
-.toggle-demo-container {
+.dev-toggle-demo-container {
     margin-bottom: 8px;
 }
 
-.control-buttons-container {
-    display: inline-block;
-    margin-right: 16px;
-    margin-bottom: 16px;
-}
-
-.toggles-container {
+.dev-toggles-container {
     max-width: 500px;
 }
 

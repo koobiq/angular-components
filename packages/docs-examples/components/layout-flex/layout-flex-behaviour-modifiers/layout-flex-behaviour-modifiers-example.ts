@@ -24,10 +24,10 @@ import { KbqRadioModule } from '@koobiq/components/radio';
                 <kbq-radio-button [value]="'flex-noshrink'">flex-noshrink</kbq-radio-button>
             </kbq-radio-group>
         </div>
-        <div class="layout-row block  layout-margin-top-4xl">
-            <div class="block {{ flexClass }}">flex</div>
-            <div class="flex block">flex</div>
-            <div class="flex-none block">flex-none</div>
+        <div class="layout-row example-block  layout-margin-top-4xl">
+            <div class="example-block {{ flexClass }}">flex</div>
+            <div class="flex example-block">flex</div>
+            <div class="flex-none example-block">flex-none</div>
         </div>
     `
 })

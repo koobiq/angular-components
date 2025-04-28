@@ -71,6 +71,7 @@
             }
         }
 
+        /* stylelint-disable-next-line selector-class-pattern */
         .hljs {
             display: block;
         }
@@ -84,6 +85,7 @@
         .hljs-ln {
             border-collapse: unset;
 
+            /* stylelint-disable-next-line selector-class-pattern */
             .hljs {
                 padding: 0;
             }

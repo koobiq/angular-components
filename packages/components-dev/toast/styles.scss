@@ -9,7 +9,7 @@ p {
     margin: 0;
 }
 
-.body-container {
+.dev-container {
     position: absolute;
     top: 0;
     left: 0;
@@ -19,12 +19,12 @@ p {
     box-sizing: border-box;
 }
 
-.scroll-container {
+.dev-scroll-container {
     height: 100%;
     width: 100%;
 }
 
-.demo-block {
+.dev-block {
     display: flex;
     flex-wrap: wrap;
 

@@ -11,10 +11,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     styleUrls: ['tooltip-placement-edges-example.css'],
     imports: [KbqToolTipModule],
     template: `
-        <div class="tooltip-example__visual-box">
+        <div class="example-tooltip__visual-box">
             @for (placement of placements; track placement) {
                 <div
-                    class="tooltip-example__trigger tooltip-example__trigger_{{ placement }}"
+                    class="example-tooltip__trigger example-tooltip__trigger_{{ placement }}"
                     [kbqPlacement]="placement"
                     [kbqTooltip]="'Tooltip\\nkbqPlacement: ' + placement"
                 ></div>

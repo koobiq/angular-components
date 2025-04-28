@@ -1,7 +1,7 @@
-.tabs-vertical-icons-example .kbq-tab-group_vertical {
+.example-tabs-vertical-icons .kbq-tab-group_vertical {
     height: 220px;
 }
 
-.tabs-vertical-icons-example .kbq-tab-body__wrapper {
+.example-tabs-vertical-icons .kbq-tab-body__wrapper {
     padding-left: var(--kbq-size-xl);
 }

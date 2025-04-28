@@ -8,14 +8,14 @@ body {
     height: 700px;
 }
 
-.vertical-navbar-container {
+.dev-vertical-navbar-container {
     display: flex;
     flex-direction: row;
 
     height: 700px;
 }
 
-.vertical-navbar-content {
+.dev-vertical-navbar-content {
     flex: 1;
     border: 1px solid red;
 }

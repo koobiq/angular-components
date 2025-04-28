@@ -1,11 +1,11 @@
-.tabs-vertical-example .kbq-tab-group_vertical {
+.example-tabs-vertical .kbq-tab-group_vertical {
     height: 220px;
 }
 
-.tabs-vertical-example .kbq-tab-header {
+.example-tabs-vertical .kbq-tab-header {
     max-width: 160px;
 }
 
-.tabs-vertical-example .kbq-tab-body__wrapper {
+.example-tabs-vertical .kbq-tab-body__wrapper {
     padding-left: var(--kbq-size-xl);
 }

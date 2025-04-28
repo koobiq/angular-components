@@ -14,7 +14,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         KbqIconModule
     ],
     template: `
-        <div class="tabs-vertical-example">
+        <div class="example-tabs-vertical">
             <kbq-tab-group vertical>
                 <kbq-tab>
                     <ng-template kbq-tab-label>

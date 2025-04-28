@@ -97,7 +97,7 @@
             <i kbq-icon="kbq-info-circle_16"></i>
             <span
                 #kbqTitleText
-                class="highlight-content"
+                class="dev-highlight-content"
                 [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
             ></span>
         </kbq-tree-option>
@@ -112,7 +112,7 @@
             <kbq-tree-node-toggle [node]="node" />
 
             <span
-                class="highlight-content"
+                class="dev-highlight-content"
                 [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
             ></span>
 

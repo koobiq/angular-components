@@ -6,8 +6,8 @@
     <span>{{ ctx.header }}</span>
 </ng-template>
 
-<div class="container flex-100 layout-column layout-align-start-start">
-    <div class="kbq-form-vertical layout-row layou-align-start-start config" [style]="getOrder('config')">
+<div class="dev-container flex-100 layout-column layout-align-start-start">
+    <div class="kbq-form-vertical layout-row layou-align-start-start dev-config" [style]="getOrder('config')">
         <div class="flex-20 kbq-form__fieldset">
             <div class="kbq-form__row">
                 <label for="order" class="kbq-form__label">Inverse layout order</label>
@@ -83,101 +83,101 @@
                 </kbq-form-field>
             </div>
         </div>
-        <div class="flex left-padding layout-align-center-center">
+        <div class="flex dev-left-padding layout-align-center-center">
             <label for="trigger" class="flex kbq-form__label">Choose kbqPlacement</label>
-            <div class="visual-box">
+            <div class="dev-visual-box">
                 <div
-                    class="visual-box_clickable visual-box_placement-top-left"
+                    class="dev-visual-box_clickable dev-visual-box_placement-top-left"
                     [ngClass]="{
-                        active: activated('topLeft'),
+                        'dev-active': activated('topLeft'),
                         actual: isActual('topLeft')
                     }"
                     (click)="setPlacement(popUpPlacements.TopLeft)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-top"
+                    class="dev-visual-box_clickable dev-visual-box_placement-top"
                     [ngClass]="{
-                        active: activated('top'),
+                        'dev-active': activated('top'),
                         actual: isActual('top')
                     }"
                     (click)="setPlacement(popUpPlacements.Top)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-top-right"
+                    class="dev-visual-box_clickable dev-visual-box_placement-top-right"
                     [ngClass]="{
-                        active: activated('topRight'),
+                        'dev-active': activated('topRight'),
                         actual: isActual('topRight')
                     }"
                     (click)="setPlacement(popUpPlacements.TopRight)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-right-top"
+                    class="dev-visual-box_clickable dev-visual-box_placement-right-top"
                     [ngClass]="{
-                        active: activated('rightTop'),
+                        'dev-active': activated('rightTop'),
                         actual: isActual('rightTop')
                     }"
                     (click)="setPlacement(popUpPlacements.RightTop)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-right"
+                    class="dev-visual-box_clickable dev-visual-box_placement-right"
                     [ngClass]="{
-                        active: activated('right'),
+                        'dev-active': activated('right'),
                         actual: isActual('right')
                     }"
                     (click)="setPlacement(popUpPlacements.Right)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-right-bottom"
+                    class="dev-visual-box_clickable dev-visual-box_placement-right-bottom"
                     [ngClass]="{
-                        active: activated('rightBottom'),
+                        'dev-active': activated('rightBottom'),
                         actual: isActual('rightBottom')
                     }"
                     (click)="setPlacement(popUpPlacements.RightBottom)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-bottom-right"
+                    class="dev-visual-box_clickable dev-visual-box_placement-bottom-right"
                     [ngClass]="{
-                        active: activated('bottomRight'),
+                        'dev-active': activated('bottomRight'),
                         actual: isActual('bottomRight')
                     }"
                     (click)="setPlacement(popUpPlacements.BottomRight)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-bottom"
+                    class="dev-visual-box_clickable dev-visual-box_placement-bottom"
                     [ngClass]="{
-                        active: activated('bottom'),
+                        'dev-active': activated('bottom'),
                         actual: isActual('bottom')
                     }"
                     (click)="setPlacement(popUpPlacements.Bottom)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-bottom-left"
+                    class="dev-visual-box_clickable dev-visual-box_placement-bottom-left"
                     [ngClass]="{
-                        active: activated('bottomLeft'),
+                        'dev-active': activated('bottomLeft'),
                         actual: isActual('bottomLeft')
                     }"
                     (click)="setPlacement(popUpPlacements.BottomLeft)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-left-bottom"
+                    class="dev-visual-box_clickable dev-visual-box_placement-left-bottom"
                     [ngClass]="{
-                        active: activated('leftBottom'),
+                        'dev-active': activated('leftBottom'),
                         actual: isActual('leftBottom')
                     }"
                     (click)="setPlacement(popUpPlacements.LeftBottom)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-left"
+                    class="dev-visual-box_clickable dev-visual-box_placement-left"
                     [ngClass]="{
-                        active: activated('left'),
+                        'dev-active': activated('left'),
                         actual: isActual('left')
                     }"
                     (click)="setPlacement(popUpPlacements.Left)"
                 ></div>
                 <div
-                    class="visual-box_clickable visual-box_placement-left-top"
+                    class="dev-visual-box_clickable dev-visual-box_placement-left-top"
                     [ngClass]="{
-                        active: activated('leftTop'),
+                        'dev-active': activated('leftTop'),
                         actual: isActual('leftTop')
                     }"
                     (click)="setPlacement(popUpPlacements.LeftTop)"
@@ -205,14 +205,14 @@
                 </kbq-form-field>
             </div>
         </div>
-        <div class="flex left-padding">
+        <div class="flex dev-left-padding">
             <h3>Configuration:</h3>
             <ul>
                 <li>Tooltip trigger: {{ selectedTrigger }}</li>
                 <li>Tooltip anchor placement: {{ selectedPlacement }}</li>
                 <li>Tooltip anchored element: {{ selectedElement }}</li>
                 @if (this.isFallbackActivated) {
-                    <li class="actual red">Tooltip activated fallback position: {{ activatedPosition }}</li>
+                    <li class="dev-li-actual dev-red">Tooltip activated fallback position: {{ activatedPosition }}</li>
                 }
                 <li>Layout positioning: {{ layoutClass }}</li>
                 @if (multipleSelected) {
@@ -222,7 +222,7 @@
         </div>
     </div>
 
-    <div class="{{ layoutClass }} result" [style]="getOrder('result')">
+    <div class="{{ layoutClass }} dev-result" [style]="getOrder('result')">
         <div>
             @switch (showElement()) {
                 @case (ELEMENTS.BUTTON) {
@@ -248,7 +248,7 @@
                         [kbqPlacement]="selectedPlacement"
                         [kbqPlacementPriority]="multipleSelected"
                         [kbqTooltipArrow]="hasArrow"
-                        [kbqTooltipClass]="'tooltip-485'"
+                        [kbqTooltipClass]="'dev-tooltip-485'"
                         [kbqTooltipColor]="selectedColor"
                         [kbqTooltipContext]="toolTipContext"
                         [kbqTooltipHeader]="tooltipHeader"

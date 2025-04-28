@@ -1,6 +1,6 @@
 @use '../main';
 
-.theme-picker {
+.dev-theme-picker {
     height: 40px;
     width: 100px;
 
@@ -12,11 +12,11 @@
     -webkit-flex-flow: row wrap;
     justify-content: space-around;
 
-    .theme-picker--item {
+    .dev-theme-picker__item {
         width: 25px;
         height: 25px;
 
-        .theme-picker-element {
+        .dev-theme-picker-element {
             box-sizing: border-box;
             position: absolute;
             border: {
@@ -28,7 +28,7 @@
             height: 24px;
         }
 
-        .is-active {
+        .dev-active {
             position: absolute;
             color: white;
             margin-left: 8px;

@@ -154,7 +154,7 @@ export class BaseOverviewComponent extends DocsLocaleState {
     selector: 'docs-cdk-overview',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview'
+        class: 'docs-component-overview'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -180,7 +180,7 @@ export class DocsCdkOverviewComponent extends BaseOverviewComponent {
     selector: 'docs-component-overview',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview'
+        class: 'docs-component-overview'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -206,7 +206,7 @@ export class DocsComponentOverviewComponent extends BaseOverviewComponent {
     selector: 'docs-component-api',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview'
+        class: 'docs-component-overview'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -232,7 +232,7 @@ export class DocsComponentApiComponent extends BaseOverviewComponent {
     selector: 'docs-cdk-api',
     templateUrl: './component-overview.template.html',
     host: {
-        class: 'component-overview'
+        class: 'docs-component-overview'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -261,12 +261,12 @@ export class DocsCdkApiComponent extends BaseOverviewComponent {
             (contentRenderFailed)="showDocumentLostAlert()"
         />
 
-        <div class="sticky-wrapper">
+        <div class="docs-component-viewer__sticky-wrapper">
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
         </div>
     `,
     host: {
-        class: 'component-overview'
+        class: 'docs-component-overview'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush

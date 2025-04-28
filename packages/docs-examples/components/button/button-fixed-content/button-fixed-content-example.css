@@ -1,16 +1,16 @@
-.fixed-content__example-button-group {
+.example-fixed-content__button-group {
     width: 150px;
     display: flex;
     flex-direction: column;
 }
 
-.fixed-content__example-button {
+.example-fixed-content__button {
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
 }
 
-.fixed-content__example-button ::ng-deep .kbq-button-wrapper {
+.example-fixed-content__button ::ng-deep .kbq-button-wrapper {
     display: inline-block;
     flex-grow: 1;
     overflow: hidden;

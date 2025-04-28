@@ -6,39 +6,39 @@
         <option [ngValue]="'indeterminate'">Indeterminate</option>
     </select>
 </div>
-<div class="container">
-    <div class="percent">{{ mode === 'indeterminate' ? '--' : percent }}%</div>
+<div class="dev-container">
+    <div class="dev-percent">{{ mode === 'indeterminate' ? '--' : percent }}%</div>
     <div>
-        <ul class="spinners">
-            <li class="spinner-container">
+        <ul class="dev-spinners">
+            <li class="dev-spinner-container">
                 <kbq-progress-spinner [mode]="mode" [value]="percent" />
             </li>
 
-            <li class="spinner-container">
+            <li class="dev-spinner-container">
                 <kbq-progress-spinner [mode]="mode" [value]="percent">
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                 </kbq-progress-spinner>
             </li>
 
-            <li class="spinner-container">
+            <li class="dev-spinner-container">
                 <kbq-progress-spinner [mode]="mode" [value]="percent">
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                     <div kbq-progress-spinner-caption>kbq-progress-spinner-caption</div>
                 </kbq-progress-spinner>
             </li>
         </ul>
-        <ul class="spinners">
-            <li class="spinner-container">
+        <ul class="dev-spinners">
+            <li class="dev-spinner-container">
                 <kbq-progress-spinner [mode]="mode" [size]="'big'" [value]="percent" />
             </li>
 
-            <li class="spinner-container">
+            <li class="dev-spinner-container">
                 <kbq-progress-spinner [mode]="mode" [size]="'big'" [value]="percent">
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                 </kbq-progress-spinner>
             </li>
 
-            <li class="spinner-container">
+            <li class="dev-spinner-container">
                 <kbq-progress-spinner [mode]="mode" [size]="'big'" [value]="percent">
                     <div kbq-progress-spinner-text>kbq-progress-spinner-text</div>
                     <div kbq-progress-spinner-caption>kbq-progress-spinner-caption</div>

@@ -1,6 +1,6 @@
 @use '../main';
 
-.colorNested > div div {
+.dev-colorNested > div div {
     box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
     opacity: 0.9;
     color: white;
@@ -8,30 +8,30 @@
     height: 80px;
 }
 
-.colorNested > div div:nth-child(1) {
+.dev-colorNested > div div:nth-child(1) {
     background-color: #009688;
 }
 
-.colorNested > div div:nth-child(2) {
+.dev-colorNested > div div:nth-child(2) {
     background-color: #3949ab;
 }
 
-.colorNested > div div:nth-child(3) {
+.dev-colorNested > div div:nth-child(3) {
     background-color: #9c27b0;
 }
 
-.colorNested > div div:nth-child(4) {
+.dev-colorNested > div div:nth-child(4) {
     background-color: #8bc34a;
 }
 
-.colorNested > div div:nth-child(5) {
+.dev-colorNested > div div:nth-child(5) {
     background-color: #deb867;
 }
 
-.colorNested > div div:nth-child(6) {
+.dev-colorNested > div div:nth-child(6) {
     background-color: #ff5722;
 }
 
-.colorNested > div div:nth-child(7) {
+.dev-colorNested > div div:nth-child(7) {
     background-color: #03a9f4;
 }

@@ -1,4 +1,4 @@
-<div class="common-container kbq-text-big p-fixed">
+<div class="dev-container kbq-text-big dev-p-fixed">
     <kbq-radio-group class="example-radio-group" (change)="setLocale($event)">
         @for (language of languageList; track language) {
             <kbq-radio-button
@@ -17,111 +17,111 @@
     </div>
 </div>
 
-<div class="common-container kbq-text-big">
+<div class="dev-container kbq-text-big">
     <br />
     <br />
     <header class="kbq-display-compact">Absolute date</header>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Long format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDate (current year)</div>
                 <div class="flex">{{ lang.absolute.long.date.currentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDate (current year forced shown)</div>
                 <div class="flex">{{ lang.absolute.long.date.currentYearForced }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDate (not current year)</div>
                 <div class="flex">{{ lang.absolute.long.date.notCurrentYear }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDateTime (current year)</div>
                 <div class="flex">{{ lang.absolute.long.dateTime.currentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDateTime (current year) (with seconds)</div>
                 <div class="flex">{{ lang.absolute.long.dateTime.currentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDateTime (current year forced shown) (with seconds)</div>
                 <div class="flex">{{ lang.absolute.long.dateTime.currentYearSecondsForced }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDateTime (current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.absolute.long.dateTime.currentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDateTime (not current year)</div>
                 <div class="flex">{{ lang.absolute.long.dateTime.notCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDateTime (not current year) (with seconds)</div>
                 <div class="flex">{{ lang.absolute.long.dateTime.notCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDateTime (not current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.absolute.long.dateTime.notCurrentYearMilliseconds }}</div>
             </div>
         </div>
     </div>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Short format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDate (current year)</div>
                 <div class="flex">{{ lang.absolute.short.date.currentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDate (current year forced shown)</div>
                 <div class="flex">{{ lang.absolute.short.date.currentYearForced }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDate (not current year)</div>
                 <div class="flex">{{ lang.absolute.short.date.notCurrentYear }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDateTime (current year)</div>
                 <div class="flex">{{ lang.absolute.short.dateTime.currentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDateTime (current year) (with seconds)</div>
                 <div class="flex">{{ lang.absolute.short.dateTime.currentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDateTime (current year forced shown) (with seconds)</div>
                 <div class="flex">{{ lang.absolute.short.dateTime.currentYearSecondsForced }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDateTime (current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.absolute.short.dateTime.currentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDateTime (not current year)</div>
                 <div class="flex">{{ lang.absolute.short.dateTime.notCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDateTime (not current year) (with seconds)</div>
                 <div class="flex">{{ lang.absolute.short.dateTime.notCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDateTime (not current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.absolute.short.dateTime.notCurrentYearMilliseconds }}</div>
             </div>
@@ -130,201 +130,201 @@
 
     <br />
     <header class="kbq-display-compact">Relative date</header>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Long format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (not current year)</div>
                 <div class="flex">{{ lang.relative.long.beforeYesterdayNotCurrentYear }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (current year)</div>
                 <div class="flex">{{ lang.relative.long.beforeYesterdayCurrentYear }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (current year) (with seconds)</div>
                 <div class="flex">{{ lang.relative.long.beforeYesterdayCurrentYearSeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.long.beforeYesterdayCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Yesterday</div>
                 <div class="flex">{{ lang.relative.long.yesterday }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Yesterday (with seconds)</div>
                 <div class="flex">{{ lang.relative.long.yesterdaySeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Yesterday (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.long.yesterdayMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Today</div>
                 <div class="flex">{{ lang.relative.long.today }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Today (with seconds)</div>
                 <div class="flex">{{ lang.relative.long.todaySeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Today (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.long.todayMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Tomorrow</div>
                 <div class="flex">{{ lang.relative.long.tomorrow }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Tomorrow (with seconds)</div>
                 <div class="flex">{{ lang.relative.long.tomorrowSeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Tomorrow (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.long.tomorrowMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (current year)</div>
                 <div class="flex">{{ lang.relative.long.afterTomorrowCurrentYear }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (current year) (with seconds)</div>
                 <div class="flex">{{ lang.relative.long.afterTomorrowCurrentYearSeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.long.afterTomorrowCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (not current year)</div>
                 <div class="flex">{{ lang.relative.long.afterTomorrowNotCurrentYear }}</div>
             </div>
         </div>
     </div>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Short format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (not current year)</div>
                 <div class="flex">{{ lang.relative.short.beforeYesterdayNotCurrentYear }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (current year)</div>
                 <div class="flex">{{ lang.relative.short.beforeYesterdayCurrentYear }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (current year) (with seconds)</div>
                 <div class="flex">{{ lang.relative.short.beforeYesterdayCurrentYearSeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Before yesterday (current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.short.beforeYesterdayCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Yesterday</div>
                 <div class="flex">{{ lang.relative.short.yesterday }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Yesterday (with seconds)</div>
                 <div class="flex">{{ lang.relative.short.yesterdaySeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Yesterday (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.short.yesterdayMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Today</div>
                 <div class="flex">{{ lang.relative.short.today }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Today (with seconds)</div>
                 <div class="flex">{{ lang.relative.short.todaySeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Today (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.short.todayMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Tomorrow</div>
                 <div class="flex">{{ lang.relative.short.tomorrow }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Tomorrow (with seconds)</div>
                 <div class="flex">{{ lang.relative.short.tomorrowSeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Tomorrow (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.short.tomorrowMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (current year)</div>
                 <div class="flex">{{ lang.relative.short.afterTomorrowCurrentYear }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (current year) (with seconds)</div>
                 <div class="flex">{{ lang.relative.short.afterTomorrowCurrentYearSeconds }}</div>
             </div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.relative.short.afterTomorrowCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">After tomorrow (not current year)</div>
                 <div class="flex">{{ lang.relative.short.afterTomorrowNotCurrentYear }}</div>
             </div>
@@ -334,285 +334,285 @@
     <br />
     <header class="kbq-display-compact">Date range</header>
     <h2>Closed range</h2>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Long format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDate (current month)</div>
                 <div class="flex">{{ lang.closedRange.long.date.currentMonth }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDate (current month, start date & end date not in current year)</div>
                 <div class="flex">{{ lang.closedRange.long.date.currentMonthNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDate (not current month)</div>
                 <div class="flex">{{ lang.closedRange.long.date.notCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDate (start date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.long.date.startsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDate (end date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.long.date.endsNotCurrentYear }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (the same day, current year)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.sameDateCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (the same day, current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.sameDateCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (the same day, current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.sameDateCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (the same day, not current year)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.sameDateNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (the same day, not current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.sameDateNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (the same day, not current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.sameDateNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (not current month)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.notCurrentMonth }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (not current month) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.notCurrentMonthSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (not current month) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.notCurrentMonthMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (start date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.startsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (start date is not in current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.startsNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (start date is not in current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.startsNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (end date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.endsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (end date is not in current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.endsNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDateTime (end date is not in current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.long.dateTime.endsNotCurrentYearMilliseconds }}</div>
             </div>
         </div>
     </div>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Middle format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.currentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.currentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.currentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
-            <div class="layout-row row-border">
+            <div class="dev-row-border"></div>
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (the same day)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.sameDateCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (the same day) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.sameDateCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (the same day) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.sameDateCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
-            <div class="layout-row row-border">
+            <div class="dev-row-border"></div>
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (the same day, not current year)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.sameDateNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (the same day, not current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.sameDateNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (the same day, not current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.sameDateNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
-            <div class="layout-row row-border">
+            <div class="dev-row-border"></div>
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (not current month)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.notCurrentMonth }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (not current month) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.notCurrentMonthSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (not current month) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.notCurrentMonthMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
-            <div class="layout-row row-border">
+            <div class="dev-row-border"></div>
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (start date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.startsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (start date is not in current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.startsNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (start date is not in current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.startsNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
-            <div class="layout-row row-border">
+            <div class="dev-row-border"></div>
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (end date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.endsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (end date is not in current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.endsNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime (end date is not in current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.middle.dateTime.endsNotCurrentYearMilliseconds }}</div>
             </div>
         </div>
     </div>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Short format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDate (current month)</div>
                 <div class="flex">{{ lang.closedRange.short.date.currentMonth }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDate (current month, start date & end date not in current year)</div>
                 <div class="flex">{{ lang.closedRange.short.date.currentMonthNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDate (not current month)</div>
                 <div class="flex">{{ lang.closedRange.short.date.notCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDate (start date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.short.date.startsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDate (end date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.short.date.endsNotCurrentYear }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (the same day, current year)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.sameDateCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (the same day, current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.sameDateCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (the same day, current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.sameDateCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (the same day, not current year)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.sameDateNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (the same day, not current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.sameDateNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (the same day, not current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.sameDateNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (not current month)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.notCurrentMonth }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (not current month) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.notCurrentMonthSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (not current month) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.notCurrentMonthMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (start date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.startsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (start date is not in current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.startsNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (start date is not in current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.startsNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (end date is not in current year)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.endsNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (end date is not in current year) (with seconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.endsNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDateTime (end date is not in current year) (with milliseconds)</div>
                 <div class="flex">{{ lang.closedRange.short.dateTime.endsNotCurrentYearMilliseconds }}</div>
             </div>
@@ -620,213 +620,213 @@
     </div>
 
     <h2>Opened range</h2>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>Short format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDate (only start)</div>
                 <div class="flex">{{ lang.openedRange.short.date.onlyStart }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDate (only end)</div>
                 <div class="flex">{{ lang.openedRange.short.date.onlyEnd }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDate (only start, start date is not in current year)</div>
                 <div class="flex">{{ lang.openedRange.short.date.onlyStartNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDate (only end, end date is not in current year)</div>
                 <div class="flex">{{ lang.openedRange.short.date.onlyEndNotCurrentYear }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only start)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStart }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only start) (with seconds)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only start) (with milliseconds)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only start, start date is not in current year)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">
                     openedRangeShortDateTime (only start, start date is not in current year) (with seconds)
                 </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">
                     openedRangeShortDateTime (only start, start date is not in current year) (with milliseconds)
                 </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyStartNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only end)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEnd }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only end) (with seconds)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only end) (with milliseconds)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
 
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDateTime (only end, end date is not in current year)</div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndNotCurrentYear }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">
                     openedRangeShortDateTime (only end, end date is not in current year) (with seconds)
                 </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndNotCurrentYearSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">
                     openedRangeShortDateTime (only end, end date is not in current year) (with milliseconds)
                 </div>
                 <div class="flex">{{ lang.openedRange.short.dateTime.onlyEndNotCurrentYearMilliseconds }}</div>
             </div>
-            <div class="row-border"></div>
+            <div class="dev-row-border"></div>
         </div>
 
         <h3>Long format</h3>
-        <div class="common-container">
+        <div class="dev-container">
             <div>
-                <div class="layout-row row-border">
-                    <div class="flex light-text-secondary">Name</div>
-                    <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="layout-row dev-row-border">
+                    <div class="flex dev-light-text-secondary">Name</div>
+                    <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDate (only start)</div>
                     <div class="flex">{{ lang.openedRange.long.date.onlyStart }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDate (only end)</div>
                     <div class="flex">{{ lang.openedRange.long.date.onlyEnd }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDate (only start, start date is not in current year)</div>
                     <div class="flex">{{ lang.openedRange.long.date.onlyStartNotCurrentYear }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDate (only end, end date is not in current year)</div>
                     <div class="flex">{{ lang.openedRange.long.date.onlyEndNotCurrentYear }}</div>
                 </div>
-                <div class="row-border"></div>
+                <div class="dev-row-border"></div>
 
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only start)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStart }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only start) (with seconds)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartSeconds }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only start) (with milliseconds)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartMilliseconds }}</div>
                 </div>
-                <div class="row-border"></div>
+                <div class="dev-row-border"></div>
 
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only start, start date is not in current year)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartNotCurrentYear }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">
                         openedRangeLongDateTime (only start, start date is not in current year) (with seconds)
                     </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartNotCurrentYearSeconds }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">
                         openedRangeLongDateTime (only start, start date is not in current year) (with milliseconds)
                     </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyStartNotCurrentYearMilliseconds }}</div>
                 </div>
-                <div class="row-border"></div>
+                <div class="dev-row-border"></div>
 
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only end)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEnd }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only end) (with seconds)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndSeconds }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only end) (with milliseconds)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndMilliseconds }}</div>
                 </div>
-                <div class="row-border"></div>
+                <div class="dev-row-border"></div>
 
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDateTime (only end, end date is not in current year)</div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndNotCurrentYear }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">
                         openedRangeLongDateTime (only end, end date is not in current year) (with seconds)
                     </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndNotCurrentYearSeconds }}</div>
                 </div>
-                <div class="layout-row row-border">
+                <div class="layout-row dev-row-border">
                     <div class="flex">
                         openedRangeLongDateTime (only end, end date is not in current year) (with milliseconds)
                     </div>
                     <div class="flex">{{ lang.openedRange.long.dateTime.onlyEndNotCurrentYearMilliseconds }}</div>
                 </div>
-                <div class="row-border"></div>
+                <div class="dev-row-border"></div>
             </div>
         </div>
     </div>
     <br />
     <header class="kbq-display-compact">Time duration</header>
-    <div class="common-container">
+    <div class="dev-container">
         <h3>The shortest format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">Seconds</div>
-                <div class="flex light-text-secondary">Only minutes</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">Seconds</div>
+                <div class="flex dev-light-text-secondary">Only minutes</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Seconds</div>
                 <div class="flex">{{ lang.duration.shortest.withSeconds.seconds }}</div>
                 <div class="flex">{{ lang.duration.shortest.onlyMinutes.seconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Seconds and milliseconds</div>
                 <div class="flex">{{ lang.duration.shortest.withSeconds.withMilliseconds }}</div>
                 <div class="flex">{{ lang.duration.shortest.onlyMinutes.withMilliseconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Minutes and seconds</div>
                 <div class="flex">{{ lang.duration.shortest.withSeconds.minutesSeconds }}</div>
                 <div class="flex">{{ lang.duration.shortest.onlyMinutes.minutesSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Hours, minutes and seconds</div>
                 <div class="flex">{{ lang.duration.shortest.withSeconds.hoursMinutesSeconds }}</div>
                 <div class="flex">{{ lang.duration.shortest.onlyMinutes.hoursMinutesSeconds }}</div>
@@ -835,79 +835,79 @@
 
         <h3>Long format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Seconds</div>
                 <div class="flex">{{ lang.duration.long.seconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Minutes and seconds</div>
                 <div class="flex">{{ lang.duration.long.minutesSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Minutes</div>
                 <div class="flex">{{ lang.duration.long.minutes }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Minutes (more than hour)</div>
                 <div class="flex">{{ lang.duration.long.minutesMoreThanHour }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Hours and minutes</div>
                 <div class="flex">{{ lang.duration.long.hoursMinutes }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Hours and minutes (more than day)</div>
                 <div class="flex">{{ lang.duration.long.hoursMinutesMoreThanDay }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Hours</div>
                 <div class="flex">{{ lang.duration.long.hours }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Days and hours</div>
                 <div class="flex">{{ lang.duration.long.daysHours }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Days</div>
                 <div class="flex">{{ lang.duration.long.days }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Days (more then week)</div>
                 <div class="flex">{{ lang.duration.long.daysMoreThanWeek }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Weeks and days</div>
                 <div class="flex">{{ lang.duration.long.weeksDays }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Weeks</div>
                 <div class="flex">{{ lang.duration.long.weeks }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Months and weeks</div>
                 <div class="flex">{{ lang.duration.long.monthsWeeks }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Months</div>
                 <div class="flex">{{ lang.duration.long.months }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Months with fraction</div>
                 <div class="flex">{{ lang.duration.long.monthsWithFract }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Years and months</div>
                 <div class="flex">{{ lang.duration.long.yearsMonth }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Years</div>
                 <div class="flex">{{ lang.duration.long.years }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Years with fraction</div>
                 <div class="flex">{{ lang.duration.long.yearsWithFract }}</div>
             </div>
@@ -915,83 +915,83 @@
 
         <h3>Short format</h3>
         <div>
-            <div class="layout-row row-border">
-                <div class="flex light-text-secondary">Name</div>
-                <div class="flex light-text-secondary">{{ selectedLanguage.name }}</div>
+            <div class="layout-row dev-row-border">
+                <div class="flex dev-light-text-secondary">Name</div>
+                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Seconds and milliseconds</div>
                 <div class="flex">{{ lang.duration.short.secondsMilliseconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Seconds</div>
                 <div class="flex">{{ lang.duration.short.seconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Minutes and seconds</div>
                 <div class="flex">{{ lang.duration.short.minutesSeconds }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Minutes</div>
                 <div class="flex">{{ lang.duration.short.minutes }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Minutes (more than hour)</div>
                 <div class="flex">{{ lang.duration.short.minutesMoreThanHour }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Hours and minutes</div>
                 <div class="flex">{{ lang.duration.short.hoursMinutes }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Hours and minutes (more than day)</div>
                 <div class="flex">{{ lang.duration.short.hoursMinutesMoreThanDay }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Hours</div>
                 <div class="flex">{{ lang.duration.short.hours }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Days and hours</div>
                 <div class="flex">{{ lang.duration.short.daysHours }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Days</div>
                 <div class="flex">{{ lang.duration.short.days }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Days (more then week)</div>
                 <div class="flex">{{ lang.duration.short.daysMoreThanWeek }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Weeks and days</div>
                 <div class="flex">{{ lang.duration.short.weeksDays }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Weeks</div>
                 <div class="flex">{{ lang.duration.short.weeks }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Months and weeks</div>
                 <div class="flex">{{ lang.duration.short.monthsWeeks }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Months</div>
                 <div class="flex">{{ lang.duration.short.months }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Months with fraction</div>
                 <div class="flex">{{ lang.duration.short.monthsWithFract }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Years and months</div>
                 <div class="flex">{{ lang.duration.short.yearsMonth }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Years</div>
                 <div class="flex">{{ lang.duration.short.years }}</div>
             </div>
-            <div class="layout-row row-border">
+            <div class="layout-row dev-row-border">
                 <div class="flex">Years with fraction</div>
                 <div class="flex">{{ lang.duration.short.yearsWithFract }}</div>
             </div>

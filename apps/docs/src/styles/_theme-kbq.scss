@@ -49,7 +49,7 @@
     @include navbar-theme.kbq-docs-navbar-theme();
     @include icons-viewer-theme.kbq-docs-icons-viewer-theme();
     @include live-example-viewer-theme.kbq-docs-live-example-viewer-theme();
-    @include hot-keys.hot-key-button-theme();
+    @include hot-keys.docs-hot-key-button-theme();
     @include page-not-found-theme.kbq-docs-page-not-found-theme();
     @include welcome-theme.kbq-docs-welcome-theme();
 }

@@ -9,7 +9,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     selector: 'tabs-with-scroll-vertical-example',
     imports: [KbqTabsModule],
     template: `
-        <div class="tabs-with-scroll-vertical-example">
+        <div class="example-tabs-with-scroll-vertical">
             <kbq-tab-group vertical>
                 @for (tab of tabs; track tab) {
                     <kbq-tab [label]="tab">{{ tab }} tab content</kbq-tab>

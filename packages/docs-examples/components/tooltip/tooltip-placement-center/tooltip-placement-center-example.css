@@ -1,4 +1,4 @@
-.tooltip-example__visual-box {
+.example-tooltip__visual-box {
     margin: 50px auto;
     height: 90px;
     width: 90px;
@@ -8,7 +8,7 @@
     border-radius: 8px;
 }
 
-.tooltip-example__trigger {
+.example-tooltip__trigger {
     position: absolute;
 
     height: 16px;
@@ -19,26 +19,26 @@
     cursor: pointer;
 }
 
-.tooltip-example__trigger.kbq-tooltip_open {
+.example-tooltip__trigger.kbq-tooltip_open {
     background: #cb3c33;
 }
 
-.tooltip-example__trigger_top {
+.example-tooltip__trigger_top {
     top: -8px;
     left: calc(50% - 8px);
 }
 
-.tooltip-example__trigger_left {
+.example-tooltip__trigger_left {
     top: calc(50% - 8px);
     left: -8px;
 }
 
-.tooltip-example__trigger_bottom {
+.example-tooltip__trigger_bottom {
     bottom: -8px;
     right: calc(50% - 8px);
 }
 
-.tooltip-example__trigger_right {
+.example-tooltip__trigger_right {
     right: -8px;
     bottom: calc(50% - 8px);
 }

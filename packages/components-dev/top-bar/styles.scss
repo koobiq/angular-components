@@ -11,7 +11,7 @@ body {
     height: 100%;
 }
 
-.app-shell-dev {
+.dev-shell {
     display: flex;
     flex-direction: row;
     height: 100vh;
@@ -19,7 +19,7 @@ body {
     overflow-y: auto;
     scroll-behavior: smooth;
 
-    .app-sidebar-dev {
+    .dev-sidebar {
         position: sticky;
         top: 0;
         max-height: 100%;
@@ -31,7 +31,7 @@ body {
         background-color: var(--kbq-background-bg-secondary);
     }
 
-    .app-container-dev {
+    .dev-container {
         padding-bottom: 160px;
     }
 }
