@@ -17,6 +17,7 @@ type ExampleAction = {
     action?: () => void;
     style: KbqButtonStyles | string;
     color: KbqComponentColors;
+    alwaysVisible?: boolean;
 };
 
 /**
@@ -49,6 +50,7 @@ type ExampleAction = {
                 @for (action of actions; track action.id) {
                     <button
                         [kbqOverflowItem]="action.id"
+                        [alwaysVisible]="action?.alwaysVisible"
                         [kbqStyle]="action.style"
                         [color]="action.color"
                         [kbqPlacement]="PopUpPlacements.Bottom"
@@ -130,7 +132,13 @@ export class TopBarActionsExample {
         { id: 'list', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
         { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
         { id: 'action', text: 'Action', color: KbqComponentColors.ContrastFade, style: '' },
-        { id: 'primary-action', text: 'Primary action', color: KbqComponentColors.Contrast, style: '' },
+        {
+            id: 'primary-action',
+            text: 'Primary action',
+            color: KbqComponentColors.Contrast,
+            style: '',
+            alwaysVisible: true
+        },
         ...Array.from({ length: 3 }, (_, i) => ({
             id: `action${i + 7}`,
             text: `Action ${i + 7}`,

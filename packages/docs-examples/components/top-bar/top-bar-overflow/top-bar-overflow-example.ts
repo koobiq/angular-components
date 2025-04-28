@@ -28,6 +28,7 @@ type ExampleAction = {
     action?: () => void;
     style: KbqButtonStyles | string;
     color: KbqComponentColors;
+    alwaysVisible?: boolean;
 };
 
 /**
@@ -69,6 +70,7 @@ type ExampleAction = {
                         [kbqTooltipArrow]="false"
                         [kbqTooltipDisabled]="isDesktop()"
                         [kbqTooltip]="action.text || action.id"
+                        [alwaysVisible]="action?.alwaysVisible"
                         kbq-button
                     >
                         @if (action.icon) {
@@ -199,7 +201,7 @@ export class TopBarOverflowExample implements AfterViewInit {
         },
         { id: 'list', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
         { id: 'filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
-        { id: 'button1', text: 'Add object', color: KbqComponentColors.Contrast, style: '' },
+        { id: 'button1', text: 'Add object', color: KbqComponentColors.Contrast, style: '', alwaysVisible: true },
         { id: 'button2', text: 'Button', color: KbqComponentColors.ContrastFade, style: '' }
     ];
 

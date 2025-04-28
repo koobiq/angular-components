@@ -17,6 +17,7 @@ type ExampleAction = {
     action?: () => void;
     style: KbqButtonStyles | string;
     color: KbqComponentColors;
+    alwaysVisible?: boolean;
 };
 
 /**
@@ -63,6 +64,7 @@ type ExampleAction = {
                         [kbqTooltipArrow]="false"
                         [kbqTooltipDisabled]="isDesktop()"
                         [kbqTooltip]="action.text || action.id.toString()"
+                        [alwaysVisible]="action?.alwaysVisible"
                         kbq-button
                     >
                         @if (action.icon) {
@@ -140,16 +142,17 @@ export class TopBarTitleCounterExample {
         {
             id: '2',
             color: KbqComponentColors.Contrast,
-            style: '',
-            icon: 'kbq-plus_16',
-            text: 'Create dashboard'
+            style: KbqButtonStyles.Transparent,
+            icon: 'kbq-filter_16',
+            text: 'Filter'
         },
         {
             id: '3',
             color: KbqComponentColors.Contrast,
-            style: KbqButtonStyles.Transparent,
-            icon: 'kbq-filter_16',
-            text: 'Filter'
+            style: '',
+            icon: 'kbq-plus_16',
+            text: 'Create dashboard',
+            alwaysVisible: true
         }
     ];
 
