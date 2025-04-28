@@ -372,7 +372,7 @@ export class KbqTagList
         });
 
         // When the list changes, re-subscribe
-        this.tags.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.tags.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe((currentTags) => {
             if (this.disabled) {
                 // Since this happens after the content has been
                 // checked, we need to defer it to the next tick.
@@ -397,7 +397,11 @@ export class KbqTagList
             Promise.resolve().then(() => {
                 this.tagChanges.emit(this.tags.toArray());
                 this.stateChanges.next();
-                this.propagateTagsChanges();
+
+                // do not call on initial
+                if (currentTags) {
+                    this.propagateTagsChanges();
+                }
             });
         });
 
@@ -542,6 +546,7 @@ export class KbqTagList
 
     setSelectionByValue(value: any, isUserInput: boolean = true) {
         this.clearSelection();
+        // @TODO seems like redundant action, need to double check
         this.tags.forEach((tag) => tag.deselect());
 
         if (Array.isArray(value)) {
@@ -722,7 +727,7 @@ export class KbqTagList
     }
 
     private propagateTagsChanges(): void {
-        const valueToEmit: any = this.tags.map((tag) => tag.value);
+        const valueToEmit: any[] = this.tags.map((tag) => tag.value);
 
         this._value = valueToEmit;
         this.change.emit(new KbqTagListChange(this, valueToEmit));

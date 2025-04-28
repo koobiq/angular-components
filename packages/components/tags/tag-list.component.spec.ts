@@ -22,7 +22,7 @@ import { KbqTagList, KbqTagsModule } from './index';
 import { KbqTagInputEvent } from './tag-input';
 import { KbqTag, KbqTagEvent, KbqTagRemove } from './tag.component';
 
-describe('KbqTagList', () => {
+describe(KbqTagList.name, () => {
     let fixture: ComponentFixture<any>;
     let tagListDebugElement: DebugElement;
     let tagListNativeElement: HTMLElement;
@@ -724,6 +724,13 @@ describe('KbqTagList', () => {
                 dispatchFakeEvent(nativeTagList, 'blur');
 
                 expect(fixture.componentInstance.control.touched).toBe(true);
+            });
+
+            it('should mark as pristine on init', () => {
+                fixture.componentInstance.control = new UntypedFormControl('pizza-1');
+                fixture.detectChanges();
+
+                expect(fixture.componentInstance.control.dirty).toBeFalsy();
             });
 
             it('should not set touched when a disabled tag list is touched', () => {
