@@ -17,14 +17,15 @@ type ExampleAction = {
     action?: () => void;
     style: KbqButtonStyles | string;
     color: KbqComponentColors;
+    alwaysVisible?: boolean;
 };
 
 /**
- * @title TopBar
+ * @title TopBar Actions
  */
 @Component({
     standalone: true,
-    selector: 'top-bar-overview-example',
+    selector: 'top-bar-actions-example',
     imports: [
         KbqTopBarModule,
         KbqButtonModule,
@@ -36,14 +37,11 @@ type ExampleAction = {
     template: `
         <kbq-top-bar>
             <div
-                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
+                class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs kbq-title kbq-truncate-line"
                 kbqTopBarContainer
                 placement="start"
             >
-                <div class="layout-row layout-margin-right-l flex-none">
-                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
-                </div>
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <span class="kbq-truncate-line">Actions</span>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -52,18 +50,19 @@ type ExampleAction = {
                 @for (action of actions; track action.id) {
                     <button
                         [kbqOverflowItem]="action.id"
+                        [alwaysVisible]="action?.alwaysVisible"
                         [kbqStyle]="action.style"
                         [color]="action.color"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqTooltipDisabled]="canTooltipBeAppied(action)"
                         [kbqTooltip]="action.text || action.id"
                         kbq-button
                     >
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                        @if (canTooltipBeAppied(action)) {
                             {{ action.text }}
                         }
                     </button>
@@ -93,19 +92,19 @@ type ExampleAction = {
         </kbq-top-bar>
     `,
     styles: `
+        .kbq-overflow-items {
+            max-width: 400px;
+        }
+
         :host {
             .kbq-top-bar-container__start {
-                --kbq-top-bar-container-start-basis: 115px;
-            }
-
-            .kbq-top-bar-container__end {
-                max-width: 330px;
+                --kbq-top-bar-container-start-basis: 55px;
             }
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverviewExample {
+export class TopBarActionsExample {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -116,29 +115,43 @@ export class TopBarOverviewExample {
         { initialValue: true }
     );
 
-    protected readonly actions: ExampleAction[] = [
+    readonly actions: ExampleAction[] = [
         {
-            id: '1',
+            id: 'refresh',
+            icon: 'kbq-arrow-rotate-right_16',
+            text: 'Reload',
             color: KbqComponentColors.Contrast,
-            style: KbqButtonStyles.Transparent,
-            icon: 'kbq-list_16',
-            text: 'List'
+            style: KbqButtonStyles.Transparent
         },
         {
-            id: '2',
+            id: 'Search',
+            icon: 'kbq-magnifying-glass_16',
             color: KbqComponentColors.Contrast,
-            style: KbqButtonStyles.Transparent,
-            icon: 'kbq-filter_16',
-            text: 'Filter'
+            style: KbqButtonStyles.Transparent
         },
+        { id: 'List', icon: 'kbq-list_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'Filter', icon: 'kbq-filter_16', color: KbqComponentColors.Contrast, style: KbqButtonStyles.Transparent },
+        { id: 'Action', text: 'Action', color: KbqComponentColors.ContrastFade, style: '' },
         {
-            id: '3',
+            id: 'primary-action',
+            text: 'Primary action',
             color: KbqComponentColors.Contrast,
             style: '',
-            icon: 'kbq-plus_16',
-            text: 'Create dashboard'
-        }
+            alwaysVisible: true
+        },
+        ...Array.from({ length: 3 }, (_, i) => ({
+            id: `action${i + 7}`,
+            text: `Action ${i + 7}`,
+            color: KbqComponentColors.ContrastFade,
+            style: ''
+        }))
+
     ];
+
+    // only show tooltip on button icon
+    canTooltipBeAppied(action: ExampleAction): boolean {
+        return (!!action.text && this.isDesktop()) || (!action.icon && !!action.text);
+    }
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;

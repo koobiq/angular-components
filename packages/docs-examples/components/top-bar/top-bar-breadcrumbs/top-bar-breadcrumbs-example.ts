@@ -1,12 +1,13 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
+import { kbqBreadcrumbsConfigurationProvider, KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
@@ -17,60 +18,96 @@ import { map } from 'rxjs/operators';
 @Component({
     standalone: true,
     selector: 'top-bar-breadcrumbs-example',
+    providers: [kbqBreadcrumbsConfigurationProvider({ firstItemNegativeMargin: false })],
     imports: [
-        AsyncPipe,
         RouterLink,
         KbqTopBarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
-        KbqBreadcrumbsModule
+        KbqBreadcrumbsModule,
+        KbqDropdownModule,
+        KbqOverflowItemsModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
-                <div class="layout-row layout-padding-m flex-none">
-                    <i class="layout-row flex" kbq-icon="kbq-dashboard_16"></i>
+                <div class="layout-row layout-margin-right-m flex-none">
+                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="kbq-top-bar__breadcrumbs">
-                    <nav [max]="3" kbq-breadcrumbs>
-                        <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
-                        <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
-                        <kbq-breadcrumb-item text="Widgets" routerLink="./dashboards/dashboard123/widgets" />
-                        <kbq-breadcrumb-item
-                            text="widget123"
-                            routerLink="./dashboards/dashboard123/widgets/widget123"
-                        />
-                    </nav>
-                </div>
+                <nav class="flex" kbq-breadcrumbs size="big">
+                    <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />
+                    <kbq-breadcrumb-item text="MEIS Dashboard" routerLink="./dashboards/dashboard123" />
+                </nav>
             </div>
             <div kbqTopBarSpacer></div>
-            <div kbqTopBarContainer placement="end">
-                @for (action of actions; track $index) {
+            <div #kbqOverflowItems="kbqOverflowItems" kbqTopBarContainer kbqOverflowItems placement="end">
+                <button
+                    [kbqStyle]="KbqButtonStyles.Transparent"
+                    [color]="KbqComponentColors.Contrast"
+                    [kbqPlacement]="PopUpPlacements.Bottom"
+                    [kbqTooltipArrow]="false"
+                    kbqOverflowItem="0"
+                    kbqTooltip="Filter"
+                    kbq-button
+                >
+                    <i kbq-icon="kbq-filter_16"></i>
+                </button>
+
+                <button
+                    [kbqStyle]="KbqButtonStyles.Filled"
+                    [color]="KbqComponentColors.ContrastFade"
+                    [kbqTooltipDisabled]="isDesktop()"
+                    [kbqPlacement]="PopUpPlacements.Bottom"
+                    [kbqTooltipArrow]="false"
+                    kbqOverflowItem="1"
+                    kbqTooltip="Share"
+                    kbq-button
+                >
+                    @if (isDesktop()) {
+                        Share
+                    } @else {
+                        <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
+                    }
+                </button>
+
+                <div kbqOverflowItemsResult>
                     <button
-                        [kbqStyle]="action.style"
-                        [color]="action.color"
-                        [kbqTooltipDisabled]="isDesktop()"
-                        [kbqPlacement]="PopUpPlacements.Bottom"
-                        [kbqTooltip]="action.title"
-                        [disabled]="action.disabled"
+                        [kbqStyle]="KbqButtonStyles.Transparent"
+                        [color]="KbqComponentColors.Contrast"
+                        [kbqDropdownTriggerFor]="appDropdown"
                         kbq-button
                     >
-                        @if (!isDesktop() && action.icon) {
-                            <i [class]="action.icon" kbq-icon=""></i>
-                        }
-                        @if (isDesktop()) {
-                            {{ action.title }}
-                        }
+                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
                     </button>
-                }
+
+                    <kbq-dropdown #appDropdown="kbqDropdown">
+                        @if (kbqOverflowItems.hiddenItemIDs().has('0')) {
+                            <button kbq-dropdown-item>Filter</button>
+                        }
+                        @if (kbqOverflowItems.hiddenItemIDs().has('1')) {
+                            <button kbq-dropdown-item>Share</button>
+                        }
+                    </kbq-dropdown>
+                </div>
             </div>
         </kbq-top-bar>
+    `,
+    styles: `
+        :host {
+            .kbq-top-bar-container[placement='start'] {
+                min-width: 238px;
+            }
+
+            .kbq-top-bar-container[placement='end'] {
+                flex-grow: 0.3 !important;
+            }
+        }
     `
 })
 export class TopBarBreadcrumbsExample {
-    isDesktop = toSignal(
+    readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
             .pipe(
@@ -79,28 +116,6 @@ export class TopBarBreadcrumbsExample {
             ),
         { initialValue: true }
     );
-
-    readonly actions = [
-        {
-            title: 'Add widget',
-            style: KbqButtonStyles.Transparent,
-            color: KbqComponentColors.Contrast,
-            icon: 'kbq-plus_16'
-        },
-        {
-            title: 'Cancel',
-            style: KbqButtonStyles.Outline,
-            color: KbqComponentColors.ContrastFade,
-            icon: 'kbq-undo_16'
-        },
-        {
-            title: 'Save',
-            style: '',
-            color: KbqComponentColors.Contrast,
-            icon: 'kbq-floppy-disk_16',
-            disabled: true
-        }
-    ];
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;

@@ -14,17 +14,41 @@
 
     .kbq-top-bar-spacer {
         height: 100%;
-        flex: 1 0 var(--kbq-top-bar-spacer-min-width);
+        flex: 0 0 var(--kbq-top-bar-spacer-min-width);
     }
 
     .kbq-top-bar-container__start {
         display: flex;
-        gap: var(--kbq-top-bar-left-gap);
+        gap: var(--kbq-top-bar-container-start-gap);
+        flex: 1 0 var(--kbq-top-bar-container-start-basis);
+        justify-content: flex-start;
+        min-width: 0;
     }
 
     .kbq-top-bar-container__end {
         display: flex;
-        gap: var(--kbq-top-bar-right-gap);
+        gap: var(--kbq-top-bar-container-end-gap);
+        justify-content: end;
+    }
+
+    .kbq-top-bar-container__with-overflow-items {
+        gap: unset;
+        padding: 1px;
+
+        > .kbq-overflow-item {
+            &:not(:last-of-type) {
+                margin-right: var(--kbq-top-bar-container-end-gap);
+            }
+
+            // apply margin if the last item needs to be alwaysVisible
+            &:last-of-type:is([aria-hidden='false']) + .kbq-overflow-items-result {
+                margin-left: var(--kbq-top-bar-container-end-gap);
+            }
+        }
+
+        .kbq-overflow-items-result:first-child {
+            margin-right: var(--kbq-top-bar-container-end-gap);
+        }
     }
 
     &.kbq-top-bar_with-shadow {

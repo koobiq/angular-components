@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import { TopBarExamplesModule } from '../../docs-examples/components/top-bar';
+import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
     standalone: true,
@@ -8,7 +10,9 @@ import { TopBarExamplesModule } from '../../docs-examples/components/top-bar';
     encapsulation: ViewEncapsulation.None,
     templateUrl: './template.html',
     imports: [
-        TopBarExamplesModule
+        TopBarExamplesModule,
+        DevLocaleSelector,
+        KbqLocaleServiceModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

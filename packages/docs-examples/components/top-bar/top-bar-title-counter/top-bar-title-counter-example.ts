@@ -2,7 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
@@ -17,21 +17,23 @@ type ExampleAction = {
     action?: () => void;
     style: KbqButtonStyles | string;
     color: KbqComponentColors;
+    alwaysVisible?: boolean;
 };
 
 /**
- * @title TopBar
+ * @title TopBar With Title And Counter
  */
 @Component({
     standalone: true,
-    selector: 'top-bar-overview-example',
+    selector: 'top-bar-title-counter-example',
     imports: [
         KbqTopBarModule,
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule,
         KbqDropdownModule,
-        KbqOverflowItemsModule
+        KbqOverflowItemsModule,
+        KbqFormattersModule
     ],
     template: `
         <kbq-top-bar>
@@ -43,7 +45,11 @@ type ExampleAction = {
                 <div class="layout-row layout-margin-right-l flex-none">
                     <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
                 </div>
-                <div class="kbq-title kbq-truncate-line">Dashboards</div>
+                <div class="kbq-title kbq-truncate-line example-kbq-top-bar__title">
+                    <span class="kbq-truncate-line layout-margin-right-xs">Dashboards</span>
+
+                    <span class="example-kbq-top-bar__counter">{{ 13294 | kbqNumber: '' : 'en-US' }}</span>
+                </div>
             </div>
 
             <div kbqTopBarSpacer></div>
@@ -57,7 +63,8 @@ type ExampleAction = {
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
                         [kbqTooltipDisabled]="isDesktop()"
-                        [kbqTooltip]="action.text || action.id"
+                        [kbqTooltip]="action.text || action.id.toString()"
+                        [alwaysVisible]="action?.alwaysVisible"
                         kbq-button
                     >
                         @if (action.icon) {
@@ -95,17 +102,21 @@ type ExampleAction = {
     styles: `
         :host {
             .kbq-top-bar-container__start {
-                --kbq-top-bar-container-start-basis: 115px;
+                --kbq-top-bar-container-start-basis: 160px;
             }
+        }
 
-            .kbq-top-bar-container__end {
-                max-width: 330px;
-            }
+        .example-kbq-top-bar__counter {
+            color: var(--kbq-foreground-contrast-tertiary);
+        }
+
+        .example-kbq-top-bar__title {
+            display: inline-flex;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarOverviewExample {
+export class TopBarTitleCounterExample {
     readonly isDesktop = toSignal(
         inject(BreakpointObserver)
             .observe('(min-width: 900px)')
@@ -136,7 +147,8 @@ export class TopBarOverviewExample {
             color: KbqComponentColors.Contrast,
             style: '',
             icon: 'kbq-plus_16',
-            text: 'Create dashboard'
+            text: 'Create dashboard',
+            alwaysVisible: true
         }
     ];
 

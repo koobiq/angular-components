@@ -1,3 +1,12 @@
-.docs-live-example__example_breadcrumbs-with-auto-wrap-adaptive {
-    background: var(--kbq-background-bg-secondary);
+.docs-live-example__example {
+    &.docs-live-example__example_top-bar-overflow,
+    &.docs-live-example__example_top-bar-breadcrumbs-adaptive,
+    &.docs-live-example__example_top-bar-title-counter-adaptive,
+    &.docs-live-example__example_breadcrumbs-with-auto-wrap-adaptive {
+        --docs-live-example-example-background: var(--kbq-background-bg-secondary);
+    }
+
+    &.docs-live-example__example_top-bar-overflow {
+        padding: var(--kbq-size-3xl);
+    }
 }

@@ -30,6 +30,7 @@
         "stylelintrc",
         "timepicker",
         "unclickable",
-        "overlayscrollbars"
+        "overlayscrollbars",
+        "Topbar"
     ]
 }
