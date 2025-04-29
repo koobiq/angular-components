@@ -95,6 +95,9 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
     overflow: hidden;
+
+    padding-top: var(--kbq-size-3xs);
+    padding-bottom: var(--kbq-size-3xs);
 }
 
 .kbq-modal-body {
