@@ -206,11 +206,7 @@ export class KbqSingleFileUploadComponent
             return;
         }
 
-        /* even if the user selects the same file,
-         the onchange event will be triggered every time user clicks on the control.*/
         const fileToAdd = (target as HTMLInputElement).files?.item(0);
-
-        this.renderer.setProperty(this.input.nativeElement, 'value', null);
 
         if (fileToAdd) {
             this.file = this.mapToFileItem(fileToAdd);
@@ -218,6 +214,8 @@ export class KbqSingleFileUploadComponent
         }
 
         this.onTouched();
+        // allows the same file selection every time user clicks on the control.
+        this.renderer.setProperty(target, 'value', null);
     }
 
     /** @docs-private */
