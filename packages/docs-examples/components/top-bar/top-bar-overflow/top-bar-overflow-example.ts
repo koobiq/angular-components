@@ -68,7 +68,7 @@ type ExampleAction = {
                         [color]="action.color"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="isDesktop() && !!action?.icon"
+                        [kbqTooltipDisabled]="canTooltipBeAppied(action)"
                         [kbqTooltip]="action.text || action.id"
                         [alwaysVisible]="action?.alwaysVisible"
                         kbq-button
@@ -76,7 +76,7 @@ type ExampleAction = {
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                        @if (canTooltipBeAppied(action)) {
                             {{ action.text }}
                         }
                     </button>
@@ -215,5 +215,10 @@ export class TopBarOverflowExample implements AfterViewInit {
             .elementScrolled()
             .pipe(auditTime(300))
             .subscribe(() => this.hasOverflow.set(this.scrollable.measureScrollOffset('top') > 0));
+    }
+
+    // only show tooltip on button icon
+    canTooltipBeAppied(action: ExampleAction): boolean {
+        return (!!action.text && this.isDesktop()) || (!action.icon && !!action.text);
     }
 }

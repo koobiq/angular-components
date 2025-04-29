@@ -55,14 +55,14 @@ type ExampleAction = {
                         [color]="action.color"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="isDesktop() && !!action?.icon"
+                        [kbqTooltipDisabled]="canTooltipBeAppied(action)"
                         [kbqTooltip]="action.text || action.id"
                         kbq-button
                     >
                         @if (action.icon) {
                             <i [class]="action.icon" kbq-icon=""></i>
                         }
-                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                        @if (canTooltipBeAppied(action)) {
                             {{ action.text }}
                         }
                     </button>
@@ -93,7 +93,7 @@ type ExampleAction = {
     `,
     styles: `
         .kbq-overflow-items {
-            max-width: 368px;
+            max-width: 400px;
         }
 
         :host {
@@ -147,6 +147,11 @@ export class TopBarActionsExample {
         }))
 
     ];
+
+    // only show tooltip on button icon
+    canTooltipBeAppied(action: ExampleAction): boolean {
+        return (!!action.text && this.isDesktop()) || (!action.icon && !!action.text);
+    }
 
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;

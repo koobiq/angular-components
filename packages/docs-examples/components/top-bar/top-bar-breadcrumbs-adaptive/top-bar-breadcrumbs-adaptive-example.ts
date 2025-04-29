@@ -44,7 +44,11 @@ import { map } from 'rxjs/operators';
                         >
                             <button disabled aria-current="page" kbq-button kbqBreadcrumb>
                                 <span>Details</span>
-                                <i kbq-icon="kbq-info-circle_16"></i>
+                                <i
+                                    [kbqPlacement]="PopUpPlacements.Bottom"
+                                    kbq-icon="kbq-info-circle_16"
+                                    kbqTooltip="Info"
+                                ></i>
                             </button>
                         </a>
                     </kbq-breadcrumb-item>

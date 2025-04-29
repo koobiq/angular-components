@@ -159,19 +159,17 @@ export class ExampleTopBar {
     selector: 'top-bar-title-counter-adaptive-example',
     template: `
         <div class="example-text layout-margin-bottom-l">
-            When there is free space, the title and actions are fully displayed.
+            {{ text.fullDisplay }}
         </div>
         <example-top-bar [style.width.px]="680" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            The minimum width of the left side depends on the page title, which can be truncated to 3 characters with
-            the addition of three dots (…).
+            {{ text.truncatedTitle }}
         </div>
         <example-top-bar [style.width.px]="437" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            After reaching the minimum width of the left side, you can start compressing the right side with the
-            actions.
+            {{ text.compressRight }}
         </div>
         <example-top-bar [style.width.px]="314" />
     `,
@@ -182,4 +180,12 @@ export class ExampleTopBar {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarTitleCounterAdaptiveExample {}
+export class TopBarTitleCounterAdaptiveExample {
+    text = {
+        fullDisplay: 'When there is free space, the title and actions are fully displayed.',
+        truncatedTitle:
+            'The minimum width of the left side depends on the page title, which can be truncated to 3 characters with the addition of three dots (…).',
+        compressRight:
+            'After reaching the minimum width of the left side, you can start compressing the right side with the actions.'
+    };
+}

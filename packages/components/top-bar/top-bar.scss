@@ -35,7 +35,18 @@
         gap: unset;
         padding: 1px;
 
-        > .kbq-overflow-item:not(:last-of-type) {
+        > .kbq-overflow-item {
+            &:not(:last-of-type) {
+                margin-right: var(--kbq-top-bar-container-end-gap);
+            }
+
+            // apply margin if the last item needs to be alwaysVisible
+            &:last-of-type:is([aria-hidden='false']) + .kbq-overflow-items-result {
+                margin-left: var(--kbq-top-bar-container-end-gap);
+            }
+        }
+
+        .kbq-overflow-items-result:first-child {
             margin-right: var(--kbq-top-bar-container-end-gap);
         }
     }

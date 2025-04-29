@@ -104,10 +104,6 @@ type ExampleAction = {
             .kbq-top-bar-container__start {
                 --kbq-top-bar-container-start-basis: 160px;
             }
-
-            .kbq-top-bar-container__end {
-                max-width: 300px;
-            }
         }
 
         .example-kbq-top-bar__counter {
