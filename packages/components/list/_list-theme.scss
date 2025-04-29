@@ -39,16 +39,6 @@
         &.kbq-disabled {
             @include _kbq-list-item(states-disabled);
         }
-
-        &:is(.kbq-selected, .kbq-focused):has(+ :is(.kbq-selected, .kbq-focused)) {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        &:is(.kbq-selected, .kbq-focused) + :is(.kbq-selected, .kbq-focused) {
-            border-top-left-radius: 0;
-            border-top-right-radius: 0;
-        }
     }
 
     .kbq-list-selection.cdk-keyboard-focused {
