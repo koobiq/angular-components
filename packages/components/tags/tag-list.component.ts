@@ -729,7 +729,7 @@ export class KbqTagList
     }
 
     private propagateTagsChanges(): void {
-        const valueToEmit: any[] = this.tags.map((tag) => tag.value);
+        const valueToEmit: any = this.tags.map((tag) => tag.value);
 
         this._value = valueToEmit;
         this.change.emit(new KbqTagListChange(this, valueToEmit));
