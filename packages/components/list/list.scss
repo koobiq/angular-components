@@ -2,6 +2,22 @@
 @use '../core/styles/common/vendor-prefixes';
 @use './list-theme' as theme;
 
+@mixin _kbq-list-item-border-radius() {
+    $selectors: '.kbq-selected';
+
+    border-radius: var(--kbq-size-border-radius);
+
+    &:is(#{$selectors}):has(+ :is(#{$selectors})) {
+        border-bottom-left-radius: unset;
+        border-bottom-right-radius: unset;
+    }
+
+    &:is(#{$selectors}) + :is(#{$selectors}) {
+        border-top-left-radius: unset;
+        border-top-right-radius: unset;
+    }
+}
+
 .kbq-list,
 .kbq-list-selection {
     display: block;
@@ -12,9 +28,7 @@
 .kbq-list-option {
     @include vendor-prefixes.user-select(none);
     @include list.kbq-list-item-base();
-
-    // @TODO should be moved into _list-theme.scss (#DS-3736)
-    border-radius: var(--kbq-size-border-radius);
+    @include _kbq-list-item-border-radius();
 
     &:not(.kbq-disabled) {
         cursor: pointer;

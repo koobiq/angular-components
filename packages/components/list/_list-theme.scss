@@ -20,24 +20,9 @@
     }
 }
 
-@mixin _kbq-list-option-border-radius() {
-    $selectors: '.kbq-selected';
-
-    &:is(#{$selectors}):has(+ :is(#{$selectors})) {
-        border-bottom-left-radius: unset;
-        border-bottom-right-radius: unset;
-    }
-
-    &:is(#{$selectors}) + :is(#{$selectors}) {
-        border-top-left-radius: unset;
-        border-top-right-radius: unset;
-    }
-}
-
 @mixin kbq-list-theme() {
     .kbq-list-option {
-        @include kbq-list-item(default);
-        @include _kbq-list-option-border-radius();
+        @include _kbq-list-item(default);
 
         &:hover:not(.kbq-disabled) {
             @include _kbq-list-item(states-hover);
