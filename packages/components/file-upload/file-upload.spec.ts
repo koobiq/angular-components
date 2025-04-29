@@ -19,6 +19,35 @@ import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
 const FILE_NAME = 'test.file';
 
+const createMockFile = (fileName: string = FILE_NAME) => new File(['test'] satisfies BlobPart[], fileName);
+
+const getMockedChangeEventForMultiple = (fileNameOrFakeFile: string | Partial<File>) => {
+    const event = createFakeEvent('change');
+
+    Object.defineProperty(event, 'target', {
+        get: () => ({
+            files: [typeof fileNameOrFakeFile === 'string' ? createMockFile(fileNameOrFakeFile) : fileNameOrFakeFile]
+        })
+    });
+
+    return event;
+};
+
+const getMockedChangeEventForSingle = (fileNameOrFakeFile: string | Partial<File>) => {
+    const event = createFakeEvent('change');
+
+    Object.defineProperty(event, 'target', {
+        get: () => ({
+            files: {
+                item: (_: number) =>
+                    typeof fileNameOrFakeFile === 'string' ? createMockFile(fileNameOrFakeFile) : fileNameOrFakeFile
+            }
+        })
+    });
+
+    return event;
+};
+
 function dispatchDropEvent<T>(fixture: ComponentFixture<T>, fileName = FILE_NAME, type?: string) {
     const fakeDropEvent = createFakeEvent('drop');
     const fakeItem = createFile(fileName, type);
@@ -113,11 +142,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
-            const fakeFile = new File(['test'], FILE_NAME);
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
 
             setTimeout(() => {
                 expect(component.onChange).toHaveBeenCalledTimes(1);
@@ -131,11 +156,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = true;
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
-            const fakeFile = new File(['test'], 'test.file');
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
 
             setTimeout(() => {
                 expect(component.onChange).toHaveBeenCalledTimes(0);
@@ -176,11 +197,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
-            const fakeFile = new File(['test'], FILE_NAME);
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
@@ -200,11 +217,9 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             component.validation = [maxFileExceeded];
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
             const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
 
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(fakeFile));
             fixture.detectChanges();
 
             setTimeout(() => {
@@ -243,7 +258,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         it('should update file value with setValue', () => {
             expect(component.fileUpload.files.length).toBeFalsy();
 
-            const fakeFile: Partial<File> = new File(['test'], 'test');
+            const fakeFile: Partial<File> = createMockFile(FILE_NAME);
             const dt = new DataTransfer();
 
             dt.items.add(fakeFile as File);
@@ -269,12 +284,7 @@ describe(KbqMultipleFileUploadComponent.name, () => {
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
-            const event = createFakeEvent('change');
-
-            const fakeFile = new File(['test'], FILE_NAME);
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();
@@ -350,12 +360,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
-            const fakeFile = new File(['test'], FILE_NAME);
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             setTimeout(() => {
@@ -371,10 +376,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = true;
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [{ name: 'test' }] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
 
             setTimeout(() => {
                 expect(component.onChange).toHaveBeenCalledTimes(0);
@@ -419,11 +421,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
-            const fakeFile = new File(['test'], FILE_NAME);
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             component.elementRef.nativeElement.querySelector(`.${fileItemCssClass} .kbq-icon-button`).click();
@@ -441,11 +439,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.disabled = false;
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
             const fakeFile = new File(['test'], 'very very very very very very very very very long file name.txt');
 
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(fakeFile));
             fixture.detectChanges();
             flush();
 
@@ -469,11 +465,9 @@ describe(KbqSingleFileUploadComponent.name, () => {
             component.validation = [maxFileExceeded];
             fixture.detectChanges();
 
-            const event = createFakeEvent('change');
             const fakeFile: Partial<File> = { name: FILE_NAME, type: 'test', size: 6e6 };
 
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(fakeFile));
             fixture.detectChanges();
 
             setTimeout(() => {
@@ -511,7 +505,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         it('should update file value with setValue', () => {
             expect(component.fileUpload.file).toBeFalsy();
 
-            const fakeFile = new File(['test'], FILE_NAME);
+            const fakeFile = createMockFile(FILE_NAME);
 
             component.control.setValue(fakeFile);
 
@@ -534,11 +528,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
         it('should update form control touched on file added via click', () => {
             expect(component.control.touched).toBeFalsy();
 
-            const event = createFakeEvent('change');
-            const fakeFile = new File(['test'], FILE_NAME);
-
-            Object.defineProperty(event, 'target', { get: () => ({ files: [fakeFile] }) });
-            dispatchEvent(component.fileUpload.input.nativeElement, event);
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForSingle(FILE_NAME));
             fixture.detectChanges();
 
             expect(component.control.touched).toBeTruthy();
