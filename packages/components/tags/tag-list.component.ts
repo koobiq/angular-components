@@ -372,34 +372,40 @@ export class KbqTagList
         });
 
         // When the list changes, re-subscribe
-        this.tags.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            if (this.disabled) {
-                // Since this happens after the content has been
-                // checked, we need to defer it to the next tick.
+        this.tags.changes
+            .pipe(startWith(null), takeUntilDestroyed(this.destroyRef))
+            .subscribe((currentTags: QueryList<KbqTag> | null) => {
+                if (this.disabled) {
+                    // Since this happens after the content has been
+                    // checked, we need to defer it to the next tick.
+                    Promise.resolve().then(() => {
+                        this.syncTagsDisabledState();
+                    });
+                }
+
+                this.resetTags();
+
+                // Reset tags selected/deselected status
+                this.initializeSelection();
+
+                // Check to see if we need to update our tab index
+                this.updateTabIndex();
+
+                // Check to see if we have a destroyed tag and need to refocus
+                this.updateFocusForDestroyedTags();
+
+                // Defer setting the value in order to avoid the "Expression
+                // has changed after it was checked" errors from Angular.
                 Promise.resolve().then(() => {
-                    this.syncTagsDisabledState();
+                    this.tagChanges.emit(this.tags.toArray());
+                    this.stateChanges.next();
+
+                    // do not call on initial
+                    if (currentTags) {
+                        this.propagateTagsChanges();
+                    }
                 });
-            }
-
-            this.resetTags();
-
-            // Reset tags selected/deselected status
-            this.initializeSelection();
-
-            // Check to see if we need to update our tab index
-            this.updateTabIndex();
-
-            // Check to see if we have a destroyed tag and need to refocus
-            this.updateFocusForDestroyedTags();
-
-            // Defer setting the value in order to avoid the "Expression
-            // has changed after it was checked" errors from Angular.
-            Promise.resolve().then(() => {
-                this.tagChanges.emit(this.tags.toArray());
-                this.stateChanges.next();
-                this.propagateTagsChanges();
             });
-        });
 
         this.propagateSelectableToChildren();
     }
@@ -445,7 +451,7 @@ export class KbqTagList
     registerInput(inputElement: KbqTagTextControl): void {
         this.tagInput = inputElement;
 
-        // todo need rethink about it
+        // todo need rethink about it (#DS-3740)
         if (this.ngControl && inputElement.ngControl?.statusChanges) {
             inputElement.ngControl.statusChanges.subscribe(() =>
                 this.ngControl.control!.setErrors(inputElement.ngControl!.errors)
@@ -495,7 +501,7 @@ export class KbqTagList
             return;
         }
 
-        // TODO: ARIA says this should focus the first `selected` tag if any are selected.
+        // TODO: ARIA says this should focus the first `selected` tag if any are selected. (#DS-3740)
         // Focus on first element if there's no tagInput inside tag-list
         if (this.tagInput && this.tagInput.focused) {
             // do nothing
@@ -542,6 +548,7 @@ export class KbqTagList
 
     setSelectionByValue(value: any, isUserInput: boolean = true) {
         this.clearSelection();
+        // @TODO seems like redundant action, need to double check (#DS-3740)
         this.tags.forEach((tag) => tag.deselect());
 
         if (Array.isArray(value)) {
@@ -704,7 +711,7 @@ export class KbqTagList
     }
 
     /** Emits change event to set the model value. */
-    // todo need rethink this method and selection logic
+    // todo need rethink this method and selection logic (#DS-3740)
     private propagateChanges(fallbackValue?: any): void {
         let valueToEmit: any;
 
