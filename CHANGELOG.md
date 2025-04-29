@@ -1,3 +1,18 @@
+# 18.26.0 (2025-04-29)
+
+### Koobiq
+
+ * bug fix  **checkbox:** max-width overflow ([#DS-3644](https://github.com/koobiq/angular-components/issues/issue/DS-3644)) ([#713](https://github.com/koobiq/angular-components/issues/713)) ([00201f2](https://github.com/koobiq/angular-components/commit/00201f28d0660d190283ac3065a8244a025dfef2))
+ * bug fix  **checkbox:** removed bottom margin ([#DS-3723](https://github.com/koobiq/angular-components/issues/issue/DS-3723)) ([#707](https://github.com/koobiq/angular-components/issues/707)) ([7350541](https://github.com/koobiq/angular-components/commit/7350541e318728134b3b14b51a0598d13fc4ccb4))
+ * bug fix  **core:** select optgroup label font-size ([#DS-3670](https://github.com/koobiq/angular-components/issues/issue/DS-3670)) ([#700](https://github.com/koobiq/angular-components/issues/700)) ([3fb548e](https://github.com/koobiq/angular-components/commit/3fb548e2d30afa5b7c57c000a75b8d85b071b5b2))
+ * bug fix  **file-upload:** corrected file add emit on click ([#DS-3451](https://github.com/koobiq/angular-components/issues/issue/DS-3451)) ([#706](https://github.com/koobiq/angular-components/issues/706)) ([1658514](https://github.com/koobiq/angular-components/commit/1658514336b206a1cb51f5a2f8226a87dc40b0f2))
+ * bug fix  **list:** focused option border radius ([#DS-3707](https://github.com/koobiq/angular-components/issues/issue/DS-3707)) ([#703](https://github.com/koobiq/angular-components/issues/703)) ([04b11c6](https://github.com/koobiq/angular-components/commit/04b11c61e654cf7039ac581f8acf43e061d9d7fd))
+ * bug fix  **modal, sidepanel:** header paddings ([#DS-3385](https://github.com/koobiq/angular-components/issues/issue/DS-3385)) ([#712](https://github.com/koobiq/angular-components/issues/712)) ([2b94e4d](https://github.com/koobiq/angular-components/commit/2b94e4dd85dabfbe44972ccd7b073c65197e8b7b))
+ * bug fix  **popover:** closing popover in tab ([#DS-3525](https://github.com/koobiq/angular-components/issues/issue/DS-3525)) ([#708](https://github.com/koobiq/angular-components/issues/708)) ([acd4c60](https://github.com/koobiq/angular-components/commit/acd4c60e6e56952437e605d383672c48fa1be84a))
+ * bug fix  **tags:** mark tag-list pristine on init ([#DS-3669](https://github.com/koobiq/angular-components/issues/issue/DS-3669)) ([#710](https://github.com/koobiq/angular-components/issues/710)) ([be19c50](https://github.com/koobiq/angular-components/commit/be19c50174dd1632f4b2ebed74015c1d5f1eaa40))
+ * bug fix  **textarea:** aligned paddings with design ([#DS-3720](https://github.com/koobiq/angular-components/issues/issue/DS-3720)) ([#702](https://github.com/koobiq/angular-components/issues/702)) ([5fa40df](https://github.com/koobiq/angular-components/commit/5fa40df87961566a94c4184d2b4356c91487e089))
+ * feature  **top-bar:** updated docs examples ([#DS-3487](https://github.com/koobiq/angular-components/issues/issue/DS-3487)) ([#600](https://github.com/koobiq/angular-components/issues/600)) ([835c70c](https://github.com/koobiq/angular-components/commit/835c70cff51d4fbc729556e6d8a99a8ab4495cc0))
+
 # 18.25.0 (2025-04-24)
 
 ### Koobiq
