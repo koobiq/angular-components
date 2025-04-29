@@ -13,6 +13,7 @@ import { AnimationTriggerMetadata } from '@angular/animations';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
+import { CdkScrollable } from '@angular/cdk/overlay';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ConnectedOverlayPositionChange } from '@angular/cdk/overlay';
@@ -2332,6 +2333,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     resetOrigin(): void;
     // (undocumented)
     protected readonly scheduler: AsyncScheduler | undefined;
+    // (undocumented)
+    protected readonly scrollable: CdkScrollable | null;
     // (undocumented)
     protected readonly scrollDispatcher: ScrollDispatcher;
     // (undocumented)

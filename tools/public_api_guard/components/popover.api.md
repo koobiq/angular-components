@@ -23,6 +23,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqPopUp } from '@koobiq/components/core';
 import { KbqPopUpTrigger } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
+import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayConfig } from '@angular/cdk/overlay';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -154,7 +155,7 @@ export class KbqPopoverModule {
 export function kbqPopoverScrollStrategyFactory(overlay: Overlay): () => ScrollStrategy;
 
 // @public (undocumented)
-export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit {
+export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
     // (undocumented)
     arrow: boolean;
     // (undocumented)
@@ -162,7 +163,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     get closeOnScroll(): boolean | null;
     set closeOnScroll(value: boolean);
     // (undocumented)
-    closingActions(): Observable<void | MouseEvent | CdkScrollable>;
+    closingActions(): Observable<void | CdkScrollable | MouseEvent>;
     // (undocumented)
     closingActionsForClick(): Observable<MouseEvent>[];
     // (undocumented)
@@ -198,6 +199,8 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     static ngAcceptInputType_offset: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnInit(): void;
     // (undocumented)
     offset: number | null;
     // (undocumented)

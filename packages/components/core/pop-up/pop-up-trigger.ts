@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    CdkScrollable,
     ConnectedOverlayPositionChange,
     ConnectionPositionPair,
     FlexibleConnectedPositionStrategy,
@@ -102,6 +103,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected readonly hostView: ViewContainerRef = inject(ViewContainerRef);
     protected readonly direction = inject(Directionality, { optional: true });
     protected readonly destroyRef = inject(DestroyRef);
+    protected readonly scrollable = inject(CdkScrollable, { optional: true });
 
     protected abstract scrollStrategy: () => ScrollStrategy;
 
