@@ -1,16 +1,51 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, InjectionToken, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { kbqBreadcrumbsConfigurationProvider, KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
+
+interface ExampleLocalizedText {
+    breadcrumbShortening: string;
+    leftmostHidden: string;
+    currentItemTruncation: string;
+    rightSideCompression: string;
+}
+
+const ExampleLocalizedData = new InjectionToken<Record<string | 'default', ExampleLocalizedText>>(
+    'ExampleLocalizedData',
+    {
+        factory: () => ({
+            'ru-RU': {
+                breadcrumbShortening:
+                    'За основу берется автоматическое сокращение хлебных крошек, когда средние пункты скрываются при отсутсвии свободного пространства.',
+                leftmostHidden:
+                    'Если пространство становится еще уже, то скрывается и левый крайний уровень  у хлебных крошек, оставляя видимым только крайний правый уровень.',
+                currentItemTruncation:
+                    'Минимальная ширина левой стороны зависит от заголовка текущего пункта,  который может быть обрезан до 3 символов с добавлением трех точек (…).',
+                rightSideCompression:
+                    'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
+            } satisfies ExampleLocalizedText,
+            default: {
+                breadcrumbShortening:
+                    'The automatic breadcrumb shortening is used as the basis, where middle items are hidden when there is not enough free space.',
+                leftmostHidden:
+                    'If the space becomes even narrower, the leftmost breadcrumb level is also hidden, leaving only the rightmost level visible.',
+                currentItemTruncation:
+                    'The minimum width of the left side depends on the title of the current item, which can be truncated to 3 characters with an ellipsis (…).',
+                rightSideCompression:
+                    'After reaching the minimum width on the left side, the compression of the right side with actions can begin.'
+            } satisfies ExampleLocalizedText
+        })
+    }
+);
 
 @Component({
     standalone: true,
@@ -46,6 +81,7 @@ import { map } from 'rxjs/operators';
                                 <span>Details</span>
                                 <i
                                     [kbqPlacement]="PopUpPlacements.Bottom"
+                                    [kbqTooltipArrow]="false"
                                     kbq-icon="kbq-info-circle_16"
                                     kbqTooltip="Info"
                                 ></i>
@@ -168,25 +204,22 @@ export class ExampleTopBarBreadcrumbs {
     selector: 'top-bar-breadcrumbs-adaptive-example',
     template: `
         <div class="layout-margin-bottom-l">
-            The automatic breadcrumb shortening is used as the basis, where middle items are hidden when there is not
-            enough free space.
+            {{ text().breadcrumbShortening }}
         </div>
         <example-top-bar-breadcrumbs />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            If the space becomes even narrower, the leftmost breadcrumb level is also hidden, leaving only the rightmost
-            level visible.
+            {{ text().leftmostHidden }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="500" />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            The minimum width of the left side depends on the title of the current item, which can be truncated to 3
-            characters with an ellipsis (…).
+            {{ text().currentItemTruncation }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="400" />
 
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
-            After reaching the minimum width on the left side, the compression of the right side with actions can begin.
+            {{ text().rightSideCompression }}
         </div>
         <example-top-bar-breadcrumbs [style.width.px]="300" />
     `,
@@ -198,4 +231,15 @@ export class ExampleTopBarBreadcrumbs {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsAdaptiveExample {}
+export class TopBarBreadcrumbsAdaptiveExample implements OnInit {
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    protected readonly data = inject(ExampleLocalizedData);
+
+    protected readonly text = signal(this.data.default);
+
+    ngOnInit() {
+        if (this.localeService) {
+            this.localeService.changes.subscribe((id: string) => this.text.set(this.data[id] || this.data.default));
+        }
+    }
+}

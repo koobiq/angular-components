@@ -1,14 +1,42 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, InjectionToken, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { map } from 'rxjs/operators';
+
+interface ExampleLocalizedText {
+    fullDisplay: string;
+    truncatedTitle: string;
+    compressRight: string;
+}
+
+const ExampleLocalizedData = new InjectionToken<Record<string | 'default', ExampleLocalizedText>>(
+    'ExampleLocalizedData',
+    {
+        factory: () => ({
+            'ru-RU': {
+                fullDisplay: 'Когда есть свободное пространство заголовок и действия отображаются полностью',
+                truncatedTitle:
+                    'Минимальная ширина левой стороны зависит от заголовка страницы, который может быть обрезан до 3 символов с добавлением трех точек (…).',
+                compressRight:
+                    'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
+            } satisfies ExampleLocalizedText,
+            default: {
+                fullDisplay: 'When there is free space, the title and actions are fully displayed.',
+                truncatedTitle:
+                    'The minimum width of the left side depends on the page title, which can be truncated to 3 characters with the addition of three dots (…).',
+                compressRight:
+                    'After reaching the minimum width of the left side, you can start compressing the right side with the actions.'
+            } satisfies ExampleLocalizedText
+        })
+    }
+);
 
 type ExampleAction = {
     id: string;
@@ -159,17 +187,17 @@ export class ExampleTopBar {
     selector: 'top-bar-title-counter-adaptive-example',
     template: `
         <div class="example-text layout-margin-bottom-l">
-            {{ text.fullDisplay }}
+            {{ text().fullDisplay }}
         </div>
         <example-top-bar [style.width.px]="680" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            {{ text.truncatedTitle }}
+            {{ text().truncatedTitle }}
         </div>
         <example-top-bar [style.width.px]="437" />
 
         <div class="example-text layout-margin-bottom-l layout-margin-top-3xl">
-            {{ text.compressRight }}
+            {{ text().compressRight }}
         </div>
         <example-top-bar [style.width.px]="314" />
     `,
@@ -180,12 +208,15 @@ export class ExampleTopBar {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarTitleCounterAdaptiveExample {
-    text = {
-        fullDisplay: 'When there is free space, the title and actions are fully displayed.',
-        truncatedTitle:
-            'The minimum width of the left side depends on the page title, which can be truncated to 3 characters with the addition of three dots (…).',
-        compressRight:
-            'After reaching the minimum width of the left side, you can start compressing the right side with the actions.'
-    };
+export class TopBarTitleCounterAdaptiveExample implements OnInit {
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    protected readonly data = inject(ExampleLocalizedData);
+
+    protected readonly text = signal(this.data.default);
+
+    ngOnInit() {
+        if (this.localeService) {
+            this.localeService.changes.subscribe((id: string) => this.text.set(this.data[id] || this.data.default));
+        }
+    }
 }
