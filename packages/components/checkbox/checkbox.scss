@@ -27,9 +27,17 @@
 }
 
 .kbq-checkbox__layout {
+    $padding-left: kbq-sum-series-css-variables(
+        [checkbox-size-normal-width,
+        checkbox-size-normal-horizontal-content-padding]
+    );
+
+    // required for `.cdk-visually-hidden` input to be positioned correctly
     position: relative;
 
     display: inline-flex;
+
+    max-width: calc(100% - $padding-left);
 
     // `cursor: inherit` ensures that the wrapper element gets the same cursor as the kbq-checkbox
     // (e.g. pointer by default, regular when disabled), instead of the browser default.
@@ -39,10 +47,7 @@
 
     padding-bottom: var(--kbq-checkbox-size-normal-padding-bottom);
 
-    padding-left: kbq-sum-series-css-variables(
-        [checkbox-size-normal-width,
-        checkbox-size-normal-horizontal-content-padding]
-    );
+    padding-left: $padding-left;
 
     vertical-align: top;
 }
@@ -53,9 +58,6 @@
     position: absolute;
     top: var(--kbq-checkbox-size-normal-top);
     left: 0;
-
-    height: var(--kbq-checkbox-size-normal-width);
-    width: var(--kbq-checkbox-size-normal-width);
 }
 
 .kbq-checkbox {
@@ -63,6 +65,8 @@
 
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+
+    max-width: 100%;
 
     &.kbq-checked {
         .kbq-checkbox-checkmark {
@@ -99,10 +103,14 @@
 
 .kbq-checkbox.kbq-checkbox_big {
     & .kbq-checkbox__layout {
-        padding-left: kbq-sum-series-css-variables(
+        $padding-left: kbq-sum-series-css-variables(
             [ checkbox-size-normal-width,
             checkbox-size-normal-horizontal-content-padding]
         );
+
+        max-width: calc(100% - $padding-left);
+
+        padding-left: $padding-left;
     }
 
     & .kbq-checkbox__inner-container {
@@ -128,6 +136,8 @@
 .kbq-checkbox__text-container {
     display: flex;
     flex-direction: column;
+
+    max-width: 100%;
 }
 
 .kbq-checkbox__inner-container_no-side-margin {
