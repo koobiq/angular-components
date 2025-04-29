@@ -730,7 +730,7 @@ describe(KbqTagList.name, () => {
                 fixture.componentInstance.control = new UntypedFormControl('pizza-1');
                 fixture.detectChanges();
 
-                expect(fixture.componentInstance.control.dirty).toBeFalsy();
+                expect(fixture.componentInstance.control.pristine).toBeTruthy();
             });
 
             it('should not set touched when a disabled tag list is touched', () => {

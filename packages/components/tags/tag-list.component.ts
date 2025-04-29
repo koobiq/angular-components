@@ -451,7 +451,7 @@ export class KbqTagList
     registerInput(inputElement: KbqTagTextControl): void {
         this.tagInput = inputElement;
 
-        // todo need rethink about it
+        // todo need rethink about it (#DS-3740)
         if (this.ngControl && inputElement.ngControl?.statusChanges) {
             inputElement.ngControl.statusChanges.subscribe(() =>
                 this.ngControl.control!.setErrors(inputElement.ngControl!.errors)
@@ -501,7 +501,7 @@ export class KbqTagList
             return;
         }
 
-        // TODO: ARIA says this should focus the first `selected` tag if any are selected.
+        // TODO: ARIA says this should focus the first `selected` tag if any are selected. (#DS-3740)
         // Focus on first element if there's no tagInput inside tag-list
         if (this.tagInput && this.tagInput.focused) {
             // do nothing
@@ -548,7 +548,7 @@ export class KbqTagList
 
     setSelectionByValue(value: any, isUserInput: boolean = true) {
         this.clearSelection();
-        // @TODO seems like redundant action, need to double check
+        // @TODO seems like redundant action, need to double check (#DS-3740)
         this.tags.forEach((tag) => tag.deselect());
 
         if (Array.isArray(value)) {
@@ -711,7 +711,7 @@ export class KbqTagList
     }
 
     /** Emits change event to set the model value. */
-    // todo need rethink this method and selection logic
+    // todo need rethink this method and selection logic (#DS-3740)
     private propagateChanges(fallbackValue?: any): void {
         let valueToEmit: any;
 
