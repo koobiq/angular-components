@@ -9,7 +9,7 @@
 
     position: relative;
 
-    top: 48px;
+    top: var(--kbq-size-5xl);
 
     border-radius: var(--kbq-modal-size-border-radius);
 
@@ -50,8 +50,8 @@
     & .kbq-modal-close {
         position: absolute;
 
-        top: 16px;
-        right: 8px;
+        top: var(--kbq-size-l);
+        right: var(--kbq-size-l);
     }
 }
 
