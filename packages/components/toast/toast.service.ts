@@ -22,17 +22,6 @@ export const KBQ_TOAST_FACTORY = new InjectionToken('KBQ_TOAST_FACTORY', {
     factory: () => KbqToastComponent
 });
 
-export const defaultToastConfig: KbqToastConfig = {
-    position: KbqToastPosition.TOP_RIGHT,
-    duration: 5000,
-    delay: 2000,
-    onTop: false,
-    indent: {
-        vertical: 0,
-        horizontal: 0
-    }
-};
-
 const CHECK_INTERVAL = 500;
 
 let templateId = 0;
@@ -73,8 +62,6 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
         @Inject(KBQ_TOAST_FACTORY) private toastFactory: any,
         @Optional() @Inject(KBQ_TOAST_CONFIG) private toastConfig: KbqToastConfig
     ) {
-        this.toastConfig = toastConfig || defaultToastConfig;
-
         this.ngZone.runOutsideAngular(() => {
             this.timerSubscription = this.timer.subscribe(this.processToasts);
         });

@@ -17,12 +17,9 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import {
-    KBQ_TOAST_CONFIG,
     KbqToastComponent,
-    KbqToastConfig,
     KbqToastData,
     KbqToastModule,
-    KbqToastPosition,
     KbqToastService,
     KbqToastStyle
 } from '@koobiq/components/toast';
@@ -62,25 +59,6 @@ export class MyToastComponent extends KbqToastComponent {
         KbqModalModule,
         KbqSidepanelModule,
         KbqScrollbarModule
-    ],
-    providers: [
-        {
-            provide: KBQ_TOAST_CONFIG,
-            useValue: {
-                position: KbqToastPosition.TOP_RIGHT,
-                duration: 5000,
-                delay: 2000,
-                onTop: false,
-                indent: {
-                    vertical: 0,
-                    horizontal: 0
-                }
-            } satisfies KbqToastConfig
-        }
-        // {
-        //     provide: KbqToastComponent,
-        //     useFactory: () => MyToastComponent
-        // }
     ],
     selector: 'app',
     templateUrl: './template.html',
