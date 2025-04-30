@@ -77,7 +77,7 @@
         &.kbq-disabled {
             @include kbq-form-field-state(states-disabled);
 
-            .kbq-icon {
+            .kbq-icon.kbq-empty {
                 color: var(--kbq-form-field-states-disabled-text);
                 -webkit-text-fill-color: var(--kbq-form-field-states-disabled-text);
             }
@@ -86,7 +86,7 @@
 
     .kbq-form-field__prefix,
     .kbq-form-field__suffix {
-        .kbq-icon {
+        .kbq-icon.kbq-empty {
             color: var(--kbq-icon-contrast-fade);
         }
     }

@@ -8,6 +8,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon, KbqIconItem } from '@koobiq/components/icon';
 
 export enum KbqAlertStyles {
@@ -98,7 +99,7 @@ export class KbqAlert implements AfterContentInit {
     ngAfterContentInit(): void {
         const icon = this.icon || this.iconItem;
 
-        if (icon) {
+        if (icon?.color === KbqComponentColors.Empty) {
             icon.color = this._alertColor === KbqAlertColors.Info ? KbqAlertColors.Contrast : this._alertColor;
         }
     }

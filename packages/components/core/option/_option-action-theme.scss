@@ -8,19 +8,19 @@
 
         &:active,
         &.kbq-pressed {
-            & .kbq-icon {
+            & .kbq-icon.kbq-empty {
                 color: var(--kbq-states-icon-contrast-fade-active);
             }
 
             background-color: var(--kbq-background-transparent);
         }
 
-        &:hover .kbq-icon {
+        &:hover .kbq-icon.kbq-empty {
             color: var(--kbq-states-icon-contrast-fade-hover);
         }
 
         &.kbq-disabled {
-            & .kbq-icon {
+            & .kbq-icon.kbq-empty {
                 color: var(--kbq-states-icon-disabled);
             }
 

@@ -4,7 +4,7 @@
 @mixin kbq-hint-color($type, $style-name) {
     color: var(--kbq-hint-#{$type}-#{$style-name}-text);
 
-    & .kbq-icon {
+    & .kbq-icon.kbq-empty {
         color: var(--kbq-hint-#{$type}-#{$style-name}-icon) !important;
     }
 }

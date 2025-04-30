@@ -108,7 +108,7 @@
         }
     }
 
-    & .kbq-icon {
+    & .kbq-icon.kbq-empty {
         color: var(--kbq-#{$base-path}-text) !important;
     }
 }
