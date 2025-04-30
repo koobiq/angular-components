@@ -176,6 +176,9 @@ export class KbqToastService<T extends KbqToastComponent = KbqToastComponent> im
 
         if (!this.overlayRef.hasAttached()) {
             this.containerInstance = this.overlayRef.attach(this.portal).instance;
+            this.containerInstance
+                .getElementRef()
+                .nativeElement.classList.add(`kbq-toast-container-${this.toastConfig.position}`);
         }
 
         this.toTop();
