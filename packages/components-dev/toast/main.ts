@@ -9,5 +9,6 @@ bootstrapApplication(ToastDev, {
         kbqToastConfigurationProvider({
             position: KbqToastPosition.BOTTOM_RIGHT
         })
+
     ]
 }).catch((error) => console.error(error));
