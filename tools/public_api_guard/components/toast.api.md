@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { Provider } from '@angular/core';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
@@ -30,7 +31,7 @@ import { ViewRef } from '@angular/core';
 export const defaultToastConfig: KbqToastConfig;
 
 // @public (undocumented)
-export const KBQ_TOAST_CONFIG: InjectionToken<unknown>;
+export const KBQ_TOAST_CONFIG: InjectionToken<KbqToastConfig>;
 
 // @public (undocumented)
 export const KBQ_TOAST_FACTORY: InjectionToken<typeof KbqToastComponent>;
@@ -94,11 +95,18 @@ export interface KbqToastConfig {
     delay: number;
     // (undocumented)
     duration: number;
+    indent: {
+        vertical: number;
+        horizontal: number;
+    };
     // (undocumented)
     onTop: boolean;
     // (undocumented)
     position: KbqToastPosition;
 }
+
+// @public
+export const kbqToastConfigurationProvider: (configuration: Partial<KbqToastConfig>) => Provider;
 
 // @public (undocumented)
 export class KbqToastContainerComponent extends CdkScrollable {

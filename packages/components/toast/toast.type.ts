@@ -1,4 +1,4 @@
-import { InjectionToken, TemplateRef } from '@angular/core';
+import { InjectionToken, Provider, TemplateRef } from '@angular/core';
 
 export enum KbqToastStyle {
     Contrast = 'contrast',
@@ -36,6 +36,33 @@ export interface KbqToastConfig {
     duration: number;
     delay: number;
     onTop: boolean;
+    /** Custom indentation for positioning the toast stack overlay when using `GlobalPositionStrategy` */
+    indent: {
+        /** Vertical spacing from the top or bottom of the screen. */
+        vertical: number;
+
+        /** Horizontal spacing from the left or right of the screen. */
+        horizontal: number;
+    };
 }
 
-export const KBQ_TOAST_CONFIG = new InjectionToken('kbq-toast-config');
+export const defaultToastConfig: KbqToastConfig = {
+    position: KbqToastPosition.TOP_RIGHT,
+    duration: 5000,
+    delay: 2000,
+    onTop: false,
+    indent: {
+        vertical: 0,
+        horizontal: 0
+    }
+};
+
+export const KBQ_TOAST_CONFIG = new InjectionToken<KbqToastConfig>('kbq-toast-config', {
+    factory: () => defaultToastConfig
+});
+
+/** Utility provider for `KBQ_TOAST_CONFIG`. */
+export const kbqToastConfigurationProvider = (configuration: Partial<KbqToastConfig>): Provider => ({
+    provide: KBQ_TOAST_CONFIG,
+    useValue: { ...defaultToastConfig, ...configuration }
+});

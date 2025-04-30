@@ -99,6 +99,18 @@
 
 Тост появляется в правом верхнем углу экрана. Несколько сообщений образуют в стопку на экране, новые тосты добавляются снизу стопки.
 
+Положение можно изменить, используя `kbqToastConfigurationProvider`:
+
+```ts
+import { kbqToastConfigurationProvider, KbqToastPosition } from '@koobiq/components/toast';
+
+@NgModule({
+    providers: [
+        kbqToastConfigurationProvider({ position: KbqToastPosition.BOTTOM_RIGHT })
+    ]
+})
+```
+
 #### Размеры
 
 Ширина тоста фиксированная, а высота зависит от содержания.
