@@ -5,8 +5,34 @@
     flex-direction: column;
     align-items: flex-end;
 
-    margin-top: var(--kbq-toast-stack-size-margin-top);
-    margin-right: var(--kbq-toast-stack-size-margin-right);
-
     gap: var(--kbq-toast-stack-size-gap);
+
+    // @see KbqToastPosition
+    &.kbq-toast-container-top-right {
+        margin-top: var(--kbq-toast-stack-size-margin-vertical);
+        margin-right: var(--kbq-toast-stack-size-margin-horizontal);
+    }
+
+    &.kbq-toast-container-top-left {
+        margin-top: var(--kbq-toast-stack-size-margin-vertical);
+        margin-left: var(--kbq-toast-stack-size-margin-horizontal);
+    }
+
+    &.kbq-toast-container-top-center {
+        margin-top: var(--kbq-toast-stack-size-margin-vertical);
+    }
+
+    &.kbq-toast-container-bottom-right {
+        margin-bottom: var(--kbq-toast-stack-size-margin-vertical);
+        margin-right: var(--kbq-toast-stack-size-margin-horizontal);
+    }
+
+    &.kbq-toast-container-bottom-left {
+        margin-bottom: var(--kbq-toast-stack-size-margin-vertical);
+        margin-left: var(--kbq-toast-stack-size-margin-horizontal);
+    }
+
+    &.kbq-toast-container-bottom-center {
+        margin-bottom: var(--kbq-toast-stack-size-margin-vertical);
+    }
 }
