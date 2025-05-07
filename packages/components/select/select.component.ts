@@ -536,8 +536,15 @@ export class KbqSelect
         return !this.options.find((option: KbqOption) => option === this.firstSelected);
     }
 
+    /** @docs-private */
     get colorForState(): KbqComponentColors {
-        return this.ngControl?.invalid || this.errorState ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
+        const hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
+            'kbq-control_has-validate-directive'
+        );
+
+        return (hasLegacyValidateDirective && this.ngControl?.invalid) || this.errorState
+            ? KbqComponentColors.Error
+            : KbqComponentColors.ContrastFade;
     }
 
     private closeSubscription = Subscription.EMPTY;
