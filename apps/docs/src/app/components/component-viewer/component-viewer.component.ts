@@ -256,7 +256,7 @@ export class DocsCdkApiComponent extends BaseOverviewComponent {
     selector: 'docs-component-examples',
     template: `
         <docs-example-viewer
-            [documentUrl]="docItemUrl"
+            [documentUrl]="docItemUrl!"
             (contentRendered)="scrollToSelectedContentSection()"
             (contentRenderFailed)="showDocumentLostAlert()"
         />

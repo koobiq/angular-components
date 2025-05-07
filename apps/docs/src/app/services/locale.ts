@@ -74,6 +74,6 @@ export class DocsLocaleService {
 @Directive()
 export class DocsLocaleState {
     readonly docsLocaleService = inject(DocsLocaleService);
-    readonly isRuLocale = toSignal(this.docsLocaleService.isRuLocale);
-    readonly locale = toSignal(this.docsLocaleService.changes);
+    readonly isRuLocale = toSignal(this.docsLocaleService.isRuLocale, { initialValue: true });
+    readonly locale = toSignal(this.docsLocaleService.changes, { initialValue: this.docsLocaleService.locale });
 }

@@ -11,6 +11,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
@@ -34,7 +35,8 @@ import { DocsLocaleState } from 'src/app/services/locale';
         KbqButtonModule,
         KbqModalModule,
         KbqDlModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        KbqBadgeModule
     ],
     selector: 'docs-icon-preview-modal-component',
     templateUrl: './icon-preview-modal.template.html',

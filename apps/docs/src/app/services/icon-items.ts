@@ -15,7 +15,8 @@ export class IconItems {
     allIcons: IconItem[] = [];
     sizes: Set<number> = new Set();
 
-    constructor(ICONS) {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    constructor(ICONS: Object) {
         this.allIcons = Object.keys(ICONS).map((id) => {
             const { codepoint, tags, description } = ICONS[id];
 

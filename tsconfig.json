@@ -99,5 +99,10 @@
             "types": ["node"],
             "module": "CommonJS"
         }
+    },
+    "angularCompilerOptions": {
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
     }
 }
