@@ -26,8 +26,8 @@
         "esModuleInterop": true
     },
     "angularCompilerOptions": {
-        "fullTemplateTypeCheck": true,
-        "strictTemplates": true,
-        "strictInjectionParameters": true
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
     }
 }

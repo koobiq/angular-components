@@ -12,13 +12,7 @@
     "include": ["./**/*.ts"],
     "angularCompilerOptions": {
         "annotateForClosureCompiler": true,
-        "allowSyntheticDefaultImports": true,
-        "skipTemplateCodegen": true,
-        "strictMetadataEmit": true,
-        "strictTemplates": true,
         "flatModuleId": "@koobiq/angular-moment-adapter",
-        "strictInjectionParameters": true,
-        "enableResourceInlining": true,
         "compilationMode": "partial"
     }
 }

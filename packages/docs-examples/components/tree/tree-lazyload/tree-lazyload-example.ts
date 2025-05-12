@@ -1,6 +1,7 @@
 import { SelectionChange } from '@angular/cdk/collections';
 import { Component, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { BehaviorSubject, Observable, timer } from 'rxjs';
 
@@ -184,7 +185,8 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
     `,
     imports: [
         KbqTreeModule,
-        FormsModule
+        FormsModule,
+        KbqProgressSpinnerModule
     ],
     providers: [LazyLoadDataService]
 })

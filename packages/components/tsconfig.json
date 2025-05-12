@@ -8,11 +8,7 @@
     },
     "angularCompilerOptions": {
         "annotateForClosureCompiler": true,
-        "strictMetadataEmit": true,
-        "strictTemplates": true,
         "flatModuleId": "@koobiq/components",
-        "skipTemplateCodegen": true,
-        "fullTemplateTypeCheck": true,
         "compilationMode": "partial"
     },
     "include": [
