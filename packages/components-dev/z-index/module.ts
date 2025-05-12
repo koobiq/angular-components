@@ -1,17 +1,16 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
+import { NgTemplateOutlet } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    NgModule,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule, PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -26,18 +25,18 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { KbqToastComponent, KbqToastData, KbqToastModule, KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqButtonModule } from '../../components/button';
 
 @Component({
-    selector: 'kbq-new-toast',
-    template: '<div>MyToastComponent</div>',
+    standalone: true,
+    selector: 'dev-toast-component',
+    template: '<div>DevToastComponent</div>',
     host: {
-        class: 'my-toast'
+        class: 'dev-toast-component'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MyToastComponent extends KbqToastComponent {
+export class DevToastComponent extends KbqToastComponent {
     constructor(
         readonly data: KbqToastData,
         readonly service: KbqToastService,
@@ -45,18 +44,37 @@ export class MyToastComponent extends KbqToastComponent {
         focusMonitor: FocusMonitor
     ) {
         super(data, service, elementRef, focusMonitor);
-
-        console.log('MyToastComponent: ');
     }
 }
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        CdkScrollableModule,
+        KbqButtonModule,
+        KbqIconModule,
+        KbqLinkModule,
+        KbqToastModule,
+        KbqProgressBarModule,
+        KbqDropdownModule,
+        KbqModalModule,
+        KbqSidepanelModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqNavbarModule,
+        KbqPopoverModule,
+        KbqToolTipModule,
+        KbqOptionModule,
+        KbqSelectModule,
+        NgTemplateOutlet
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastDemoComponent {
+export class DevApp {
     themePalette = ThemePalette;
 
     selectValue = '';
@@ -103,32 +121,3 @@ export class ToastDemoComponent {
 
     protected readonly popUpPlacements = PopUpPlacements;
 }
-
-@NgModule({
-    declarations: [
-        ToastDemoComponent,
-        MyToastComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        CdkScrollableModule,
-        KbqButtonModule,
-        KbqIconModule,
-        KbqLinkModule,
-        KbqToastModule,
-        KbqProgressBarModule,
-        KbqDropdownModule,
-        KbqModalModule,
-        KbqSidepanelModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqNavbarModule,
-        KbqPopoverModule,
-        KbqToolTipModule,
-        KbqOptionModule,
-        KbqSelectModule
-    ],
-    bootstrap: [ToastDemoComponent]
-})
-export class DemoModule {}

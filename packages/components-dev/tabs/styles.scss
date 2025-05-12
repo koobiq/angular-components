@@ -1,16 +1,10 @@
-@use '../main';
-
-app {
+dev-app {
     display: block;
     width: 500px;
     border: 1px solid cyan;
 }
 
-hr {
-    margin: 30px 0;
-}
-
-.docs-vertical-tabs .kbq-tab-header {
+.dev-vertical-tabs .kbq-tab-header {
     max-width: 30%;
 }
 
@@ -37,14 +31,14 @@ hr {
     align-items: center;
 }
 
-.example-tabs-actionbar {
+.dev-tabs-actionbar {
     display: flex;
 
-    .example-tabs-actionbar_nav {
+    .dev-tabs-actionbar_nav {
         overflow: hidden;
     }
 
-    .example-tabs-actionbar_controls {
+    .dev-tabs-actionbar_controls {
         display: flex;
         flex-grow: 1;
         align-items: center;

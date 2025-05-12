@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
@@ -23,16 +23,15 @@ import {
     KbqTreeSelectModule,
     kbqTreeSelectOptionsProvider
 } from '@koobiq/components/tree-select';
-import { TreeSelectExamplesModule } from 'packages/docs-examples/components/tree-select';
 
-export class FileNode {
-    children: FileNode[];
+export class DevFileNode {
+    children: DevFileNode[];
     name: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
-export class FileFlatNode {
+export class DevFileFlatNode {
     name: string;
     type: any;
     level: number;
@@ -44,12 +43,12 @@ export class FileFlatNode {
  * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
  * The return value is the list of `FileNode`.
  */
-function buildFileTree(value: any, level: number): FileNode[] {
+function buildFileTree(value: any, level: number): DevFileNode[] {
     const data: any[] = [];
 
     for (const k of Object.keys(value)) {
         const v = value[k];
-        const node = new FileNode();
+        const node = new DevFileNode();
 
         node.name = `${k}`;
 
@@ -107,7 +106,7 @@ const DATA_OBJECT = {
 };
 
 @Component({
-    selector: 'app',
+    selector: 'dev-app',
     standalone: true,
     imports: [
         FormsModule,
@@ -121,8 +120,7 @@ const DATA_OBJECT = {
         KbqIconModule,
         ReactiveFormsModule,
         KbqPseudoCheckboxModule,
-        KbqTitleModule,
-        TreeSelectExamplesModule
+        KbqTitleModule
     ],
     providers: [
         kbqTreeSelectOptionsProvider({
@@ -132,9 +130,10 @@ const DATA_OBJECT = {
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectDev implements OnInit {
+export class DevApp implements OnInit {
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
     @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 
@@ -145,10 +144,10 @@ export class TreeSelectDev implements OnInit {
     // modelValue = 'Chrome';
     modelValue: any[] | null = ['Applications', 'Documents', 'Calendar', 'Chrome'];
 
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+    treeControl: FlatTreeControl<DevFileFlatNode>;
+    treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
 
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
 
     multiSelectSelectFormControl = new UntypedFormControl([], Validators.pattern(/^w/));
 
@@ -157,7 +156,7 @@ export class TreeSelectDev implements OnInit {
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
-        this.treeControl = new FlatTreeControl<FileFlatNode>(
+        this.treeControl = new FlatTreeControl<DevFileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
@@ -175,7 +174,7 @@ export class TreeSelectDev implements OnInit {
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) {
+    hasChild(_: number, nodeData: DevFileFlatNode) {
         return nodeData.expandable;
     }
 
@@ -226,8 +225,8 @@ export class TreeSelectDev implements OnInit {
         }
     }
 
-    private transformer = (node: FileNode, level: number, parent: any) => {
-        const flatNode = new FileFlatNode();
+    private transformer = (node: DevFileNode, level: number, parent: any) => {
+        const flatNode = new DevFileFlatNode();
 
         flatNode.name = node.name;
         flatNode.parent = parent;
@@ -238,27 +237,27 @@ export class TreeSelectDev implements OnInit {
         return flatNode;
     };
 
-    private getLevel = (node: FileFlatNode) => {
+    private getLevel = (node: DevFileFlatNode) => {
         return node.level;
     };
 
-    private isExpandable = (node: FileFlatNode) => {
+    private isExpandable = (node: DevFileFlatNode) => {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] => {
         return node.children;
     };
 
-    private getValue = (node: FileFlatNode): string => {
+    private getValue = (node: DevFileFlatNode): string => {
         return node.name;
     };
 
-    private getViewValue = (node: FileFlatNode): string => {
+    private getViewValue = (node: DevFileFlatNode): string => {
         return `${node.name} view`;
     };
 
-    private isDisabled = (node: FileFlatNode): boolean => {
+    private isDisabled = (node: DevFileFlatNode): boolean => {
         return node.name === 'November';
     };
 }

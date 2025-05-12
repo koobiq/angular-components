@@ -1,7 +1,6 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { JsonPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
@@ -22,16 +21,16 @@ import {
     KbqTreeModule
 } from '@koobiq/components/tree';
 import { Subject, debounceTime } from 'rxjs';
-import { TREE_DATA } from './data';
+import { DEV_TREE_DATA } from './mock';
 
-export class FileNode {
-    children: FileNode[];
+export class DevFileNode {
+    children: DevFileNode[];
     name: string;
     type: any;
 }
 
 /** Flat node with expandable and level information */
-export class FileFlatNode {
+export class DevFileFlatNode {
     name: string;
     type: any;
     level: number;
@@ -43,19 +42,19 @@ export class FileFlatNode {
  * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
  * The return value is the list of `FileNode`.
  */
-export function buildFileTree(value: any, level: number): FileNode[] {
+export function devBuildFileTree(value: any, level: number): DevFileNode[] {
     const data: any[] = [];
 
     for (const k of Object.keys(value)) {
         const v = value[k];
-        const node = new FileNode();
+        const node = new DevFileNode();
 
         node.name = `${k}`;
 
         if (v === null || v === undefined) {
             // no action
         } else if (typeof v === 'object') {
-            node.children = buildFileTree(v, level + 1);
+            node.children = devBuildFileTree(v, level + 1);
         } else {
             node.type = v;
         }
@@ -66,7 +65,7 @@ export function buildFileTree(value: any, level: number): FileNode[] {
     return data;
 }
 
-export const DATA_OBJECT = {
+export const DEV_DATA_OBJECT = {
     rootNode_1_long_text_long_text: 'app',
     Pictures: {
         Sun: 'png',
@@ -105,20 +104,38 @@ export const DATA_OBJECT = {
 };
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqFormFieldModule,
+        KbqCheckboxModule,
+        KbqDropdownModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqTreeModule,
+        KbqIconModule,
+        KbqToolTipModule,
+        KbqHighlightModule,
+        KbqOptionModule,
+        KbqTitleModule,
+        KbqButtonToggleModule,
+        JsonPipe
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
-    PopUpPlacements = PopUpPlacements;
+export class DevApp {
+    popUpPlacements = PopUpPlacements;
 
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeControl2: FlatTreeControl<FileFlatNode>;
-    filterByValues: FilterByValues<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+    treeControl: FlatTreeControl<DevFileFlatNode>;
+    treeControl2: FlatTreeControl<DevFileFlatNode>;
+    filterByValues: FilterByValues<DevFileFlatNode>;
+    treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
 
-    dataSource: KbqTreeFlatDataSource<any, FileFlatNode>;
+    dataSource: KbqTreeFlatDataSource<any, DevFileFlatNode>;
 
     filterValue: string = '';
     filterValueChanged = new Subject<string>();
@@ -130,11 +147,11 @@ export class DemoComponent {
     disableState: boolean = false;
 
     dataSources = {
-        small: buildFileTree(DATA_OBJECT, 0),
-        big: TREE_DATA
+        small: devBuildFileTree(DEV_DATA_OBJECT, 0),
+        big: DEV_TREE_DATA
     };
 
-    readonly TreeStates = {
+    readonly treeStates = {
         ALL: 0,
         SELECTED: 1,
         UNSELECTED: 2
@@ -143,27 +160,27 @@ export class DemoComponent {
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
-        this.treeControl = new FlatTreeControl<FileFlatNode>(
+        this.treeControl = new FlatTreeControl<DevFileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
             this.getViewValue
         );
 
-        this.treeControl2 = new FlatTreeControl<FileFlatNode>(
+        this.treeControl2 = new FlatTreeControl<DevFileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
             this.getViewValue
         );
 
-        this.filterByValues = new FilterByValues<FileFlatNode>(this.treeControl);
+        this.filterByValues = new FilterByValues<DevFileFlatNode>(this.treeControl);
         this.filterByValues.setValues(this.modelValue);
 
         this.treeControl.setFilters(
-            new FilterByViewValue<FileFlatNode>(this.treeControl),
+            new FilterByViewValue<DevFileFlatNode>(this.treeControl),
             this.filterByValues,
-            new FilterParentsForNodes<FileFlatNode>(this.treeControl)
+            new FilterParentsForNodes<DevFileFlatNode>(this.treeControl)
         );
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
@@ -181,7 +198,7 @@ export class DemoComponent {
         this.filterValueChanged.next(value);
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) {
+    hasChild(_: number, nodeData: DevFileFlatNode) {
         return nodeData.expandable;
     }
 
@@ -202,11 +219,11 @@ export class DemoComponent {
     }
 
     onToggleClick({ value }: KbqButtonToggleChange) {
-        if (value === this.TreeStates.ALL) {
+        if (value === this.treeStates.ALL) {
             this.filterByValues.setValues([]);
-        } else if (value === this.TreeStates.SELECTED) {
+        } else if (value === this.treeStates.SELECTED) {
             this.filterByValues.setValues(this.modelValue);
-        } else if (value === this.TreeStates.UNSELECTED) {
+        } else if (value === this.treeStates.UNSELECTED) {
             const values = this.treeControl.dataNodes
                 .filter((node) => !this.modelValue.includes(this.treeControl.getValue(node)))
                 .map((node) => this.treeControl.getValue(node));
@@ -217,8 +234,8 @@ export class DemoComponent {
         this.treeControl.filterNodes(this.filterValue);
     }
 
-    private transformer = (node: FileNode, level: number, parent: any) => {
-        const flatNode = new FileFlatNode();
+    private transformer = (node: DevFileNode, level: number, parent: any) => {
+        const flatNode = new DevFileFlatNode();
 
         flatNode.name = node.name;
         flatNode.parent = parent;
@@ -229,48 +246,25 @@ export class DemoComponent {
         return flatNode;
     };
 
-    private getLevel = (node: FileFlatNode) => {
+    private getLevel = (node: DevFileFlatNode) => {
         return node.level;
     };
 
-    private isExpandable = (node: FileFlatNode) => {
+    private isExpandable = (node: DevFileFlatNode) => {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] => {
         return node.children;
     };
 
-    private getValue = (node: FileFlatNode): string => {
+    private getValue = (node: DevFileFlatNode): string => {
         return node.name;
     };
 
-    private getViewValue = (node: FileFlatNode): string => {
+    private getViewValue = (node: DevFileFlatNode): string => {
         const nodeType = node.type ? `.${node.type}` : '';
 
         return `${node.name}${nodeType}`;
     };
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        KbqFormFieldModule,
-        KbqCheckboxModule,
-        KbqDropdownModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqTreeModule,
-        KbqIconModule,
-        KbqToolTipModule,
-        KbqHighlightModule,
-        KbqOptionModule,
-        KbqTitleModule,
-        KbqButtonToggleModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

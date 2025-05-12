@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, Routes } from '@angular/router';
-import { AboutComponent, BreadcrumbsDev, ProductComponent, ProductDetailsComponent } from './module';
+import { DevAboutPage, DevApp, DevProductDetailsPage, DevProductsPage } from './module';
 
 const routes: Routes = [
     {
@@ -11,25 +11,25 @@ const routes: Routes = [
             {
                 path: 'products',
                 data: { breadcrumb: 'Products' },
-                component: ProductComponent,
+                component: DevProductsPage,
                 children: [
                     {
                         path: ':id',
                         data: { breadcrumb: 'Product Details' },
-                        component: ProductDetailsComponent
+                        component: DevProductDetailsPage
                     }
                 ]
             },
             {
                 path: 'about',
                 data: { breadcrumb: 'About' },
-                component: AboutComponent
+                component: DevAboutPage
             }
         ]
     }
 ];
 
-bootstrapApplication(BreadcrumbsDev, {
+bootstrapApplication(DevApp, {
     providers: [
         provideAnimations(),
         provideRouter(routes)]

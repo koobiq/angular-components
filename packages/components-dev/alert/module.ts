@@ -1,35 +1,22 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqAlertColors, KbqAlertModule, KbqAlertStyles } from '@koobiq/components/alert';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
-import { KbqButtonModule, KbqButtonStyles } from '../../components/button';
-import { KbqIconModule } from '../../components/icon';
-import { KbqLinkModule } from '../../components/link';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqLinkModule } from '@koobiq/components/link';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqAlertModule, KbqIconModule, KbqButtonModule, KbqLinkModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     colors = KbqComponentColors;
     alertColors = KbqAlertColors;
     alertStyles = KbqAlertStyles;
     style = KbqButtonStyles;
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqAlertModule,
-        KbqIconModule,
-        KbqButtonModule,
-        KbqLinkModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

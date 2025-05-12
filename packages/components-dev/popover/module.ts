@@ -19,18 +19,18 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
 @Component({
     standalone: true,
     imports: [PopoverExamplesModule],
-    selector: 'docs-examples',
+    selector: 'dev-examples',
     template: `
         <popover-common-example />
         <popover-hover-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class ExamplesComponent {}
+class DevExamples {}
 
 @Component({
     standalone: true,
-    selector: 'app',
+    selector: 'dev-app',
     styleUrls: ['./styles.scss'],
     templateUrl: './template.html',
     imports: [
@@ -48,13 +48,13 @@ class ExamplesComponent {}
         KbqCheckboxModule,
         KbqRadioModule,
         KbqLinkModule,
-        ExamplesComponent,
+        DevExamples,
         NgClass
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     @ViewChildren(KbqPopoverTrigger) popovers: QueryList<KbqPopoverTrigger>;
 
     themePalette = ThemePalette;

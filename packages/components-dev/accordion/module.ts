@@ -1,25 +1,14 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqAccordionModule } from '../../components/accordion';
-import { KbqIconModule } from '../../components/icon';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqAccordionModule } from '@koobiq/components/accordion';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqAccordionModule, KbqIconModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {}
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqIconModule,
-        KbqAccordionModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}
+export class DevApp {}

@@ -1,12 +1,132 @@
-import { Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, TemplateRef, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ModalExamplesModule } from 'packages/docs-examples/components/modal';
-import { KBQ_MODAL_DATA } from '../../components/modal/modal.service';
+
+@Component({
+    standalone: true,
+    imports: [ModalExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <modal-overview-example />
+        <hr />
+        <modal-component-example />
+        <hr />
+        <modal-component-with-injector-example />
+        <hr />
+        <modal-template-example />
+        <hr />
+        <modal-scroll-example />
+        <hr />
+        <modal-sizes-example />
+        <hr />
+        <modal-multiple-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
+
+@Component({
+    standalone: true,
+    imports: [],
+    selector: 'dev-modal-custom-long-component',
+    template: `
+        @for (item of longText; track item) {
+            <p>{{ item }}</p>
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevModalLongCustomComponent {
+    longText: any = [];
+
+    constructor() {
+        for (let i = 0; i < 50; i++) {
+            this.longText.push(`text lint - ${i}`);
+        }
+    }
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqButtonModule],
+    selector: 'dev-modal-custom-component',
+    template: `
+        <div>
+            <h2>{{ title }}</h2>
+            <h4>{{ subtitle }}</h4>
+            <p>
+                <span>Get Modal instance in component</span>
+                <button [color]="componentColors.Contrast" (click)="destroyModal()" kbq-button>
+                    destroy modal in the component
+                </button>
+            </p>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevModalCustomComponent {
+    componentColors = KbqComponentColors;
+
+    data = inject(KBQ_MODAL_DATA);
+
+    @Input() title: string;
+    @Input() subtitle: string;
+
+    constructor(private modal: KbqModalRef) {
+        console.log('data: ', this.data);
+    }
+
+    destroyModal() {
+        this.modal.destroy({ data: 'this the result data' });
+    }
+}
+
+@Component({
+    standalone: true,
+    imports: [KbqModalModule, KbqButtonModule],
+    selector: 'dev-modal-full-custom-component',
+    template: `
+        <kbq-modal-title>
+            Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal
+            Title,Modal Title,Modal Title,Modal Title,
+        </kbq-modal-title>
+
+        <kbq-modal-body>
+            <h2>{{ title }}</h2>
+            <h4>{{ subtitle }}</h4>
+            <p>
+                <span>Get Modal instance in component</span>
+                <button [color]="componentColors.Contrast" (click)="destroyModal()" kbq-button>
+                    destroy modal in the component
+                </button>
+            </p>
+        </kbq-modal-body>
+
+        <div kbq-modal-footer>
+            <button [color]="componentColors.Contrast" kbq-button>Save</button>
+            <button (click)="destroyModal()" kbq-button autofocus>Close</button>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevModalFullCustomComponent {
+    componentColors = KbqComponentColors;
+
+    @Input() title: string;
+    @Input() subtitle: string;
+
+    constructor(private modal: KbqModalRef) {}
+
+    destroyModal() {
+        this.modal.destroy({ data: 'this the result data' });
+    }
+}
 
 @Component({
     standalone: true,
@@ -16,14 +136,15 @@ import { KBQ_MODAL_DATA } from '../../components/modal/modal.service';
         KbqButtonModule,
         KbqDropdownModule,
         KbqToolTipModule,
-        ModalExamplesModule
+        DevExamples
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModalDev {
+export class DevApp {
     componentColors = KbqComponentColors;
 
     isVisible = false;
@@ -77,14 +198,14 @@ export class ModalDev {
 
     createModalComponent() {
         this.modalService.open({
-            kbqComponent: KbqModalFullCustomComponent
+            kbqComponent: DevModalFullCustomComponent
         });
     }
 
     createLongModal() {
         this.modalService.create({
             kbqTitle: 'Modal Title',
-            kbqContent: KbqModalLongCustomComponent,
+            kbqContent: DevModalLongCustomComponent,
             kbqOkText: 'Yes',
             kbqCancelText: 'No',
             kbqSize: ModalSize.Small
@@ -94,7 +215,7 @@ export class ModalDev {
     createModalWithLongTitle() {
         const ref = this.modalService.create({
             kbqTitle: 'Modal Title Modal Title Modal Title Modal Title Modal Title Modal Title',
-            kbqContent: KbqModalLongCustomComponent,
+            kbqContent: DevModalLongCustomComponent,
             kbqOkText: 'Yes',
             kbqOnOk: () => ref.close(),
             kbqCancelText: 'No',
@@ -105,7 +226,7 @@ export class ModalDev {
     createModalWithLongTitleTemplate(longHeader: TemplateRef<any>) {
         this.modalService.create({
             kbqTitle: longHeader,
-            kbqContent: KbqModalLongCustomComponent,
+            kbqContent: DevModalLongCustomComponent,
             kbqOkText: 'Yes',
             kbqCancelText: 'No',
             kbqSize: ModalSize.Small
@@ -118,7 +239,7 @@ export class ModalDev {
 
         const modal = this.modalService.create({
             kbqTitle: 'Modal Title',
-            kbqContent: KbqModalCustomComponent,
+            kbqContent: DevModalCustomComponent,
             kbqComponentParams: {
                 title: 'title in component',
                 subtitle: 'component sub title，will be changed after 2 sec'
@@ -193,99 +314,5 @@ export class ModalDev {
 
     destroyTplModal() {
         this.tplModal.destroy();
-    }
-}
-
-@Component({
-    standalone: true,
-    imports: [],
-    selector: 'kbq-modal-custom-long-component',
-    template: `
-        @for (item of longText; track item) {
-            <p>{{ item }}</p>
-        }
-    `
-})
-export class KbqModalLongCustomComponent {
-    longText: any = [];
-
-    constructor() {
-        for (let i = 0; i < 50; i++) {
-            this.longText.push(`text lint - ${i}`);
-        }
-    }
-}
-
-@Component({
-    standalone: true,
-    imports: [KbqButtonModule],
-    selector: 'kbq-modal-custom-component',
-    template: `
-        <div>
-            <h2>{{ title }}</h2>
-            <h4>{{ subtitle }}</h4>
-            <p>
-                <span>Get Modal instance in component</span>
-                <button [color]="componentColors.Contrast" (click)="destroyModal()" kbq-button>
-                    destroy modal in the component
-                </button>
-            </p>
-        </div>
-    `
-})
-export class KbqModalCustomComponent {
-    componentColors = KbqComponentColors;
-
-    data = inject(KBQ_MODAL_DATA);
-
-    @Input() title: string;
-    @Input() subtitle: string;
-
-    constructor(private modal: KbqModalRef) {
-        console.log('data: ', this.data);
-    }
-
-    destroyModal() {
-        this.modal.destroy({ data: 'this the result data' });
-    }
-}
-
-@Component({
-    standalone: true,
-    imports: [KbqModalModule, KbqButtonModule],
-    selector: 'kbq-modal-full-custom-component',
-    template: `
-        <kbq-modal-title>
-            Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal Title,Modal
-            Title,Modal Title,Modal Title,Modal Title,
-        </kbq-modal-title>
-
-        <kbq-modal-body>
-            <h2>{{ title }}</h2>
-            <h4>{{ subtitle }}</h4>
-            <p>
-                <span>Get Modal instance in component</span>
-                <button [color]="componentColors.Contrast" (click)="destroyModal()" kbq-button>
-                    destroy modal in the component
-                </button>
-            </p>
-        </kbq-modal-body>
-
-        <div kbq-modal-footer>
-            <button [color]="componentColors.Contrast" kbq-button>Save</button>
-            <button (click)="destroyModal()" kbq-button autofocus>Close</button>
-        </div>
-    `
-})
-export class KbqModalFullCustomComponent {
-    componentColors = KbqComponentColors;
-
-    @Input() title: string;
-    @Input() subtitle: string;
-
-    constructor(private modal: KbqModalRef) {}
-
-    destroyModal() {
-        this.modal.destroy({ data: 'this the result data' });
     }
 }

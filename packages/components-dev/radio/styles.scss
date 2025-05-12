@@ -1,13 +1,7 @@
-@use '../main';
-
 .dev-container {
     padding: 16px;
 }
 
-.example-selected-value {
+.dev-selected-value {
     margin: 15px 0;
-}
-
-hr {
-    margin: var(--kbq-size-xxl) 0;
 }

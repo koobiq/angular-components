@@ -4,7 +4,7 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
 @Component({
     standalone: true,
     imports: [OverflowItemsExamplesModule],
-    selector: 'dev-overflow-items-examples',
+    selector: 'dev-examples',
     template: `
         <overflow-items-overview-example />
 
@@ -12,17 +12,17 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevOverflowItemsExamples {}
+export class DevExamples {}
 
 @Component({
     standalone: true,
     imports: [
-        DevOverflowItemsExamples
+        DevExamples
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsDev {}
+export class DevApp {}

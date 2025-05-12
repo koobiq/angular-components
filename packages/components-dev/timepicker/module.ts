@@ -1,36 +1,44 @@
-import { Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
+import { JsonPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {
-    AbstractControl,
     FormsModule,
     ReactiveFormsModule,
     UntypedFormBuilder,
     UntypedFormControl,
-    UntypedFormGroup,
-    ValidatorFn
+    UntypedFormGroup
 } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
+import { DateAdapter } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
+import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule, TimeFormats } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
-
-export function customValidator(): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } | null => ({ customValidator: { value: control.value } });
-}
+import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqTimepickerModule,
+        KbqDatepickerModule,
+        KbqToolTipModule,
+        KbqFormFieldModule,
+        KbqLuxonDateModule,
+        ReactiveFormsModule,
+        KbqRadioModule,
+        JsonPipe,
+        DevLocaleSelector
+    ],
+    selector: 'dev-app',
     styleUrls: ['styles.scss'],
     templateUrl: 'template.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TimepickerDemoComponent {
-    TimeFormats = TimeFormats;
+export class DevApp {
+    timeFormats = TimeFormats;
     placeholder: string = 'placeholder';
     minDate: DateTime;
     maxDate: DateTime;
@@ -44,18 +52,12 @@ export class TimepickerDemoComponent {
 
     timeFormat = TimeFormats.HHmm;
     testForm: UntypedFormGroup;
-    languageList: { id: string; name: string }[];
     selectedLanguage!: { id: string; name: string };
 
     constructor(
         private fb: UntypedFormBuilder,
-        private adapter: DateAdapter<DateTime>,
-        @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService
+        private adapter: DateAdapter<DateTime>
     ) {
-        this.languageList = this.localeService.locales.items;
-        this.selectedLanguage =
-            this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
-
         this.minDate = this.adapter.createDateTime(2020, 0, 6, 12, 0, 10, 0);
         this.maxDate = this.adapter.createDateTime(2020, 0, 6, 13, 0, 10, 0);
 
@@ -80,31 +82,7 @@ export class TimepickerDemoComponent {
         console.log('ngModelChange: ', value);
     }
 
-    setLocale($event: KbqRadioChange) {
-        this.selectedLanguage = $event.value;
-        this.localeService.setLocale($event.value.id);
-    }
-
     onTimepickerChange() {
         console.log('onTimepickerChange: ');
     }
 }
-
-@NgModule({
-    declarations: [TimepickerDemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        KbqTimepickerModule,
-        KbqDatepickerModule,
-        KbqToolTipModule,
-        KbqFormFieldModule,
-        KbqLuxonDateModule,
-        ReactiveFormsModule,
-        KbqRadioModule,
-        KbqLocaleServiceModule
-    ],
-    bootstrap: [TimepickerDemoComponent]
-})
-export class DemoModule {}

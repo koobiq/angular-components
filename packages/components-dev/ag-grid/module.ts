@@ -5,18 +5,18 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     standalone: true,
     imports: [AgGridExamplesModule],
-    selector: 'dev-ag-grid-examples',
+    selector: 'dev-examples',
     template: `
         <ag-grid-overview-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevAgGridExamples {}
+export class DevExamples {}
 
 @Component({
-    selector: 'app',
+    selector: 'dev-app',
     standalone: true,
-    imports: [DevAgGridExamples, DevThemeToggle],
+    imports: [DevExamples, DevThemeToggle],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,

@@ -1,5 +1,4 @@
-// prettier-ignore
-export const TREE_DATA = [
+export const DEV_TREE_DATA = [
     {
         id: '00000000-0000-0000-0000-0.8762841995093424',
         name: 'TEST #0.20810116068768192',

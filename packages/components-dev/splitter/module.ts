@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { Direction, KbqSplitterModule } from '../../components/splitter';
+import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqButtonModule, KbqSplitterModule, KbqIconModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     guttersVisibility = true;
 
     DIRECTION = Direction;
@@ -20,15 +21,3 @@ export class DemoComponent {
         this.guttersVisibility = !this.guttersVisibility;
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqButtonModule,
-        KbqSplitterModule,
-        KbqIconModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

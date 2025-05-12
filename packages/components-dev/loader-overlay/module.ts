@@ -1,6 +1,4 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
@@ -8,12 +6,15 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 import { LoaderOverlayExamplesModule } from '../../docs-examples/components/loader-overlay';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqButtonModule, KbqProgressSpinnerModule, KbqLoaderOverlayModule, LoaderOverlayExamplesModule],
+    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoaderOverlayDemoComponent {
+export class DevApp {
     themePalette = ThemePalette;
 
     text = 'text text text text text text text text text text text text text text ';
@@ -21,17 +22,3 @@ export class LoaderOverlayDemoComponent {
 
     loading = true;
 }
-
-@NgModule({
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqButtonModule,
-        KbqProgressSpinnerModule,
-        KbqLoaderOverlayModule,
-        LoaderOverlayExamplesModule
-    ],
-    declarations: [LoaderOverlayDemoComponent],
-    bootstrap: [LoaderOverlayDemoComponent]
-})
-export class DemoModule {}

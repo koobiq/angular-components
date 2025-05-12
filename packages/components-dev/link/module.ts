@@ -1,25 +1,16 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqLinkModule, KbqIconModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     url = 'http://localhost:3003/';
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqLinkModule,
-        KbqIconModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

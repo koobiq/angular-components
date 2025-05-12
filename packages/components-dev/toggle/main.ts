@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { ToggleDev } from './module';
+import { DevApp } from './module';
 
-bootstrapApplication(ToggleDev, {
+bootstrapApplication(DevApp, {
     providers: [
         provideAnimations()
     ]

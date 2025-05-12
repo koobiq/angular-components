@@ -153,7 +153,7 @@
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </kbq-button-toggle>
         </kbq-button-toggle-group>
-        <div class="example-selected-value">Selected value: {{ group1.value }}</div>
+        <div class="dev-selected-value">Selected value: {{ group1.value }}</div>
 
         <br />
 
@@ -174,7 +174,7 @@
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </kbq-button-toggle>
         </kbq-button-toggle-group>
-        <div class="example-selected-value">Selected value: {{ disabledGroup.value }}</div>
+        <div class="dev-selected-value">Selected value: {{ disabledGroup.value }}</div>
 
         <br />
 
@@ -187,7 +187,7 @@
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </kbq-button-toggle>
         </kbq-button-toggle-group>
-        <div class="example-selected-value">Selected value: {{ multipleGroup.value }}</div>
+        <div class="dev-selected-value">Selected value: {{ multipleGroup.value }}</div>
 
         <br />
 
@@ -207,7 +207,7 @@
         <!--                <i kbq-icon="kbq-chevron-down-s_16"></i>-->
         <!--            </kbq-button-toggle>-->
         <!--        </kbq-button-toggle-group>-->
-        <!--        <div class="example-selected-value">Selected value: {{group3.value}}</div>-->
+        <!--        <div class="dev-selected-value">Selected value: {{group3.value}}</div>-->
 
         <!--        <br>-->
 
@@ -221,7 +221,7 @@
                 <i kbq-icon="kbq-chevron-down-s_16"></i>
             </kbq-button-toggle>
         </kbq-button-toggle-group>
-        <div class="example-selected-value">Model result: {{ buttonToggleModelResult }}</div>
+        <div class="dev-selected-value">Model result: {{ buttonToggleModelResult }}</div>
     </div>
 
     <div class="dev-box">
@@ -499,7 +499,7 @@
 
         <kbq-form-field>
             <input
-                kbqInput
+                kbqNumberInput
                 placeholder="Number MaxMin Step"
                 type="number"
                 [bigStep]="1.5"
@@ -761,9 +761,9 @@
     <div class="dev-box">
         <h1>Radio</h1>
 
-        <kbq-radio-group class="example-radio-group" [(ngModel)]="favoriteFruit">
+        <kbq-radio-group class="dev-radio-group" [(ngModel)]="favoriteFruit">
             @for (season of fruits; track season) {
-                <kbq-radio-button class="example-radio-button" [value]="season">
+                <kbq-radio-button class="dev-radio-button" [value]="season">
                     {{ season }}
                 </kbq-radio-button>
             }
@@ -771,11 +771,11 @@
 
         <p class="kbq-headline">Disabled buttons</p>
 
-        <kbq-radio-group class="example-radio-group">
+        <kbq-radio-group class="dev-radio-group">
             @for (data of selectionList; track data) {
                 <kbq-radio-button
                     name="data.value"
-                    class="example-radio-button"
+                    class="dev-radio-button"
                     [checked]="data.selected"
                     [disabled]="true"
                     [value]="data.value"

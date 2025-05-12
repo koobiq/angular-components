@@ -1,24 +1,16 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqBadgeColors } from '@koobiq/components/badge';
-import { KbqRiskLevelModule } from '../../components/risk-level';
+import { KbqRiskLevelModule } from '@koobiq/components/risk-level';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqRiskLevelModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     colors = KbqBadgeColors;
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqRiskLevelModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

@@ -1,25 +1,13 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqTableModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
-    styleUrls: ['../main.scss'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['./styles.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {}
-
-@NgModule({
-    declarations: [
-        DemoComponent
-    ],
-    imports: [
-        BrowserModule,
-        KbqTableModule
-    ],
-    bootstrap: [
-        DemoComponent
-    ]
-})
-export class DemoModule {}
+export class DevApp {}

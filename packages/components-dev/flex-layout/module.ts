@@ -1,23 +1,11 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {}
-
-@NgModule({
-    declarations: [
-        DemoComponent
-    ],
-    imports: [
-        BrowserModule
-    ],
-    bootstrap: [
-        DemoComponent
-    ]
-})
-export class DemoModule {}
+export class DevApp {}

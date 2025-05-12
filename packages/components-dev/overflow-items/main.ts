@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { OverflowItemsDev } from './module';
+import { DevApp } from './module';
 
-bootstrapApplication(OverflowItemsDev, {
+bootstrapApplication(DevApp, {
     providers: [
         provideAnimations()
     ]

@@ -9,7 +9,7 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     standalone: true,
     imports: [RadioExamplesModule],
-    selector: 'dev-radio-examples',
+    selector: 'dev-examples',
     template: `
         <radio-size-example />
         <hr />
@@ -23,7 +23,7 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevRadioExamples {}
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -31,16 +31,16 @@ export class DevRadioExamples {}
         FormsModule,
         KbqFormFieldModule,
         KbqRadioModule,
-        DevRadioExamples,
+        DevExamples,
         DevThemeToggle
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RadioDev {
+export class DevApp {
     readonly themePalette = ThemePalette;
 
     favoriteFruit: string;

@@ -5,7 +5,7 @@ import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
     standalone: true,
-    selector: 'app',
+    selector: 'dev-app',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     templateUrl: './template.html',
@@ -16,6 +16,6 @@ import { DevLocaleSelector } from '../locale-selector';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarDev {
+export class DevApp {
     navbarUnpinned = false;
 }

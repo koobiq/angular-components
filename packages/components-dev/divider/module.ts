@@ -1,21 +1,13 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqDividerModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {}
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqDividerModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}
+export class DevApp {}

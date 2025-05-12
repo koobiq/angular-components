@@ -4,7 +4,7 @@ import { KbqMarkdownModule, KbqMarkdownService } from 'packages/components/markd
 @Component({
     standalone: true,
     imports: [KbqMarkdownModule],
-    selector: 'inline-template-markdown',
+    selector: 'dev-inline-template-markdown',
     // prettier-ignore
     template: `
 <kbq-markdown ngPreserveWhitespaces>
@@ -57,18 +57,18 @@ npm install jquery
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineTemplateMarkdown {}
+export class DevInlineTemplateMarkdown {}
 
 @Component({
     standalone: true,
-    imports: [KbqMarkdownModule, InlineTemplateMarkdown],
-    selector: 'app',
+    imports: [KbqMarkdownModule, DevInlineTemplateMarkdown],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class Markdown {
+export class DevApp {
     markdownText: string = `
 # Foobar
 

@@ -14,13 +14,13 @@ import { KbqTabChangeEvent, KbqTabsModule } from '@koobiq/components/tabs';
         KbqButtonModule,
         NgClass
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Tabs {
+export class DevApp {
     readonly tabs = new Array(50).fill(0).map((_, index) => `Tab ${index}`);
     readonly links = new Array(10).fill(0).map((_, index) => `Link ${index}`);
     activeLink = this.links[2];

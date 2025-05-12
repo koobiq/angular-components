@@ -1,26 +1,17 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqTableModule, KbqButtonModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     protected readonly colors = KbqComponentColors;
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqTableModule,
-        KbqButtonModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

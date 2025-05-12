@@ -1,7 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
@@ -14,12 +14,29 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        A11yModule,
+        FormsModule,
+        KbqFormsModule,
+        KbqAlertModule,
+        KbqToolTipModule,
+        KbqButtonModule,
+        KbqInputModule,
+        KbqFormFieldModule,
+        KbqCheckboxModule,
+        KbqSelectModule,
+        KbqIconModule,
+        KbqToggleModule,
+        NgClass
+    ],
+    selector: 'dev-app',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
-    templateUrl: './template.html'
+    templateUrl: './template.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     placement = PopUpPlacements.Top;
     componentColors = KbqComponentColors;
     popUpPlacements = PopUpPlacements;
@@ -117,24 +134,3 @@ export class DemoComponent {
         return this.selectedPlacement !== this.activatedPosition && this.activatedPosition !== '';
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        A11yModule,
-        FormsModule,
-        KbqFormsModule,
-        KbqAlertModule,
-        KbqToolTipModule,
-        KbqButtonModule,
-        KbqInputModule,
-        KbqFormFieldModule,
-        KbqCheckboxModule,
-        KbqSelectModule,
-        KbqIconModule,
-        KbqToggleModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

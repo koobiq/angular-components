@@ -1,12 +1,6 @@
-@use '../main';
-
-app {
+dev-app {
     display: block;
     width: 400px;
-}
-
-hr {
-    margin: var(--kbq-size-xl) 0;
 }
 
 .dev-container {

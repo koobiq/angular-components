@@ -11,7 +11,7 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     standalone: true,
     imports: [ToggleExamplesModule],
-    selector: 'dev-toggle-examples',
+    selector: 'dev-examples',
     template: `
         <toggle-multiline-example />
         <hr />
@@ -19,11 +19,11 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevToggleExamples {}
+export class DevExamples {}
 
 @Component({
     standalone: true,
-    selector: 'app',
+    selector: 'dev-app',
     imports: [
         FormsModule,
         KbqToggleModule,
@@ -31,7 +31,7 @@ export class DevToggleExamples {}
         KbqFormFieldModule,
         ReactiveFormsModule,
         JsonPipe,
-        DevToggleExamples,
+        DevExamples,
         DevThemeToggle
     ],
     templateUrl: './template.html',
@@ -39,7 +39,7 @@ export class DevToggleExamples {}
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToggleDev {
+export class DevApp {
     themePalette = ThemePalette;
 
     valueSmallOff: boolean = false;

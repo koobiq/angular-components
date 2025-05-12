@@ -1,31 +1,17 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqFormFieldModule } from '../../components/form-field';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqTextareaModule, KbqFormFieldModule, FormsModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./styles.scss']
+    styleUrls: ['./styles.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     value: string;
 }
-
-@NgModule({
-    declarations: [
-        DemoComponent
-    ],
-    imports: [
-        BrowserModule,
-        KbqTextareaModule,
-        KbqFormFieldModule,
-        FormsModule
-    ],
-    bootstrap: [
-        DemoComponent
-    ]
-})
-export class DemoModule {}

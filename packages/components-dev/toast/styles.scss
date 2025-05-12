@@ -1,5 +1,3 @@
-@use '../main';
-
 body {
     overflow: hidden;
     margin: 0;
@@ -30,7 +28,7 @@ p {
 
     width: 0;
 
-    & .example-button {
+    & .dev-button {
         margin-bottom: var(--kbq-size-m);
     }
 }

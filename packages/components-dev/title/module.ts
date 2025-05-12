@@ -1,7 +1,6 @@
-import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqOptionModule } from '@koobiq/components/core';
@@ -50,12 +49,28 @@ const options = [
 ];
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        KbqTitleModule,
+        KbqButtonModule,
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule,
+        KbqDropdownModule,
+        KbqIconModule,
+        KbqAutocompleteModule,
+        KbqInputModule,
+        ReactiveFormsModule,
+        KbqDividerModule,
+        AsyncPipe
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent implements OnInit {
+export class DevApp implements OnInit {
     defaultValue = 'Just a text';
     longValue = `${this.defaultValue} and a long text and a long text and a long text and a long text and a long text and a long text`;
     field = this.defaultValue;
@@ -85,24 +100,3 @@ export class DemoComponent implements OnInit {
         return options.filter((option) => option.toLowerCase().includes(filterValue));
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqTitleModule,
-        KbqButtonModule,
-        KbqFormFieldModule,
-        KbqOptionModule,
-        KbqSelectModule,
-        KbqDropdownModule,
-        KbqIconModule,
-        KbqAutocompleteModule,
-        KbqInputModule,
-        ReactiveFormsModule,
-        KbqDividerModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

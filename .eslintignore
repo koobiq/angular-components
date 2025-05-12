@@ -12,3 +12,6 @@ node_modules
 
 # ignore index.html
 **/index.html
+
+# ignore mocks
+**/mock.ts

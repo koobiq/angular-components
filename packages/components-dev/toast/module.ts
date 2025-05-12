@@ -26,15 +26,15 @@ import {
 
 @Component({
     standalone: true,
-    selector: 'kbq-new-toast',
-    template: '<div>MyToastComponent</div>',
+    selector: 'dev-toast-component',
+    template: '<div>DevToastComponent</div>',
     host: {
-        class: 'my-toast'
+        class: 'dev-toast-component'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class MyToastComponent extends KbqToastComponent {
+export class DevToastComponent extends KbqToastComponent {
     constructor(
         readonly data: KbqToastData,
         readonly service: KbqToastService,
@@ -60,13 +60,13 @@ export class MyToastComponent extends KbqToastComponent {
         KbqSidepanelModule,
         KbqScrollbarModule
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ToastDev {
+export class DevApp {
     themePalette = ThemePalette;
 
     position: KbqSidepanelPosition = KbqSidepanelPosition.Right;
@@ -78,7 +78,7 @@ export class ToastDev {
 
     constructor(
         private toastService: KbqToastService,
-        private newToastService: KbqToastService<MyToastComponent>,
+        private newToastService: KbqToastService<DevToastComponent>,
         private modalService: KbqModalService,
         private sidepanelService: KbqSidepanelService
     ) {}

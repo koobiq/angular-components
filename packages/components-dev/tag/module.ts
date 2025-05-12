@@ -1,9 +1,9 @@
+import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
-    NgModule,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -17,8 +17,6 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KBQ_VALIDATION, KbqComponentColors, KbqValidationOptions } from '@koobiq/components/core';
@@ -38,13 +36,122 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+const customMaxLengthValidator = (max: number): ValidatorFn => {
+    return ({ value }: AbstractControl): ValidationErrors | null => {
+        if (!value) {
+            return null;
+        }
+
+        return value.length <= max ? null : { customMaxLengthValidator: true };
+    };
+};
+
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTagsModule,
+        ReactiveFormsModule,
+        KbqIconModule
+    ],
+    providers: [
+        // Disables KbqValidateDirective
+        {
+            provide: KBQ_VALIDATION,
+            useValue: {
+                useValidation: false
+            } satisfies KbqValidationOptions
+        }
+    ],
+    selector: 'dev-tag-input-validation',
+    template: `
+        <kbq-form-field>
+            <kbq-tag-list #inputTagList [formControl]="formControl">
+                @for (tag of formControl.value; track tag) {
+                    <kbq-tag [value]="tag" (removed)="removeTag(tag)">
+                        {{ tag }}
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                    </kbq-tag>
+                }
+
+                <input
+                    [kbqTagInputFor]="inputTagList"
+                    (kbqTagInputTokenEnd)="createTag($event)"
+                    kbqInput
+                    placeholder="New keyword..."
+                />
+            </kbq-tag-list>
+
+            @if (formControl.invalid) {
+                <kbq-hint color="error">
+                    @if (formControl.hasError('required')) {
+                        Field is required
+                    }
+
+                    @if (formControl.hasError('customMaxLengthValidator')) {
+                        Max keywords count is 3
+                    }
+                </kbq-hint>
+            }
+        </kbq-form-field>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevTagInputValidation {
+    readonly formControl = new FormControl(
+        ['Koobiq', 'Angular', 'Design'],
+        [Validators.required, customMaxLengthValidator(3)]
+    );
+
+    removeTag(tag: string): void {
+        const tags = this.formControl.value || [];
+        const index = tags.indexOf(tag);
+
+        if (index >= 0) {
+            tags.splice(index, 1);
+            this.formControl.setValue(tags);
+        }
+    }
+
+    createTag({ value, input }: KbqTagInputEvent): void {
+        if (value) {
+            const tags = this.formControl.value || [];
+
+            tags.push(value);
+            this.formControl.setValue(tags);
+        }
+
+        input.value = '';
+    }
+}
+
+@Component({
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqFormFieldModule,
+        ReactiveFormsModule,
+        KbqAutocompleteModule,
+        KbqTagsModule,
+        KbqIconModule,
+        KbqTitleModule,
+        DevTagInputValidation,
+        AsyncPipe
+    ],
+    providers: [
+        {
+            provide: KBQ_TAGS_DEFAULT_OPTIONS,
+            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } satisfies KbqTagsDefaultOptions
+        }
+    ],
+    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent implements AfterViewInit {
+export class DevApp implements AfterViewInit {
     colors = KbqComponentColors;
 
     addOnBlur = false;
@@ -241,123 +348,3 @@ export class DemoComponent implements AfterViewInit {
         );
     }
 }
-
-@Component({
-    selector: 'tag-input-default-options-override',
-    templateUrl: './tag-input-default-options-override.template.html',
-    providers: [
-        {
-            provide: KBQ_TAGS_DEFAULT_OPTIONS,
-            useValue: { separatorKeyCodes: [ENTER], addOnPaste: false } as KbqTagsDefaultOptions
-        }
-    ]
-})
-export class TagInputDefaultOptionsOverrideComponent extends DemoComponent {}
-
-const customMaxLengthValidator = (max: number): ValidatorFn => {
-    return ({ value }: AbstractControl): ValidationErrors | null => {
-        if (!value) {
-            return null;
-        }
-
-        return value.length <= max ? null : { customMaxLengthValidator: true };
-    };
-};
-
-@Component({
-    standalone: true,
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqTagsModule,
-        ReactiveFormsModule,
-        KbqIconModule
-    ],
-    providers: [
-        // Disables KbqValidateDirective
-        {
-            provide: KBQ_VALIDATION,
-            useValue: {
-                useValidation: false
-            } satisfies KbqValidationOptions
-        }
-    ],
-    selector: 'tag-input-validation',
-    template: `
-        <kbq-form-field>
-            <kbq-tag-list #inputTagList [formControl]="formControl">
-                @for (tag of formControl.value; track tag) {
-                    <kbq-tag [value]="tag" (removed)="removeTag(tag)">
-                        {{ tag }}
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
-                    </kbq-tag>
-                }
-
-                <input
-                    [kbqTagInputFor]="inputTagList"
-                    (kbqTagInputTokenEnd)="createTag($event)"
-                    kbqInput
-                    placeholder="New keyword..."
-                />
-            </kbq-tag-list>
-
-            @if (formControl.invalid) {
-                <kbq-hint color="error">
-                    @if (formControl.hasError('required')) {
-                        Field is required
-                    }
-
-                    @if (formControl.hasError('customMaxLengthValidator')) {
-                        Max keywords count is 3
-                    }
-                </kbq-hint>
-            }
-        </kbq-form-field>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class TagInputValidation {
-    readonly formControl = new FormControl(
-        ['Koobiq', 'Angular', 'Design'],
-        [Validators.required, customMaxLengthValidator(3)]
-    );
-
-    removeTag(tag: string): void {
-        const tags = this.formControl.value || [];
-        const index = tags.indexOf(tag);
-
-        if (index >= 0) {
-            tags.splice(index, 1);
-            this.formControl.setValue(tags);
-        }
-    }
-
-    createTag({ value, input }: KbqTagInputEvent): void {
-        if (value) {
-            const tags = this.formControl.value || [];
-
-            tags.push(value);
-            this.formControl.setValue(tags);
-        }
-
-        input.value = '';
-    }
-}
-
-@NgModule({
-    declarations: [DemoComponent, TagInputDefaultOptionsOverrideComponent],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        FormsModule,
-        KbqFormFieldModule,
-        ReactiveFormsModule,
-        KbqAutocompleteModule,
-        KbqTagsModule,
-        KbqIconModule,
-        KbqTitleModule,
-        TagInputValidation
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

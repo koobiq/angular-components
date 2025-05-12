@@ -13,13 +13,13 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     standalone: true,
     imports: [DropdownExamplesModule],
-    selector: 'dev-dropdown-examples',
+    selector: 'dev-examples',
     template: `
         <dropdown-nested-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevDropdownExamples {}
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -33,14 +33,15 @@ export class DevDropdownExamples {}
         KbqDividerModule,
         KbqOptionModule,
         DevThemeToggle,
-        DevDropdownExamples
+        DevExamples
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DropdownDev {
+export class DevApp {
     colors = KbqComponentColors;
     styles = KbqButtonStyles;
 
