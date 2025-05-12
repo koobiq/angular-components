@@ -7,11 +7,11 @@
         color: var(--kbq-list-#{$state-name}-text-color);
     }
 
-    .kbq-icon {
+    .kbq-icon.kbq-empty {
         color: var(--kbq-list-#{$state-name}-icon-color);
     }
 
-    .kbq-option-action .kbq-icon {
+    .kbq-option-action .kbq-icon.kbq-empty {
         color: var(--kbq-list-#{$state-name}-icon-button-color);
     }
 

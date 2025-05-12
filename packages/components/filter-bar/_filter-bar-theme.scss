@@ -7,7 +7,7 @@
 }
 
 @mixin _icon($left-icon, $right-icon) {
-    .kbq-icon {
+    .kbq-icon.kbq-empty {
         color: $left-icon;
 
         &.kbq-icon_left {

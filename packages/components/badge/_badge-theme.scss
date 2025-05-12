@@ -10,7 +10,7 @@
         color: var(--kbq-#{$base-path}-caption);
     }
 
-    & .kbq-icon {
+    & .kbq-icon.kbq-empty {
         color: var(--kbq-#{$base-path}-icon);
     }
 

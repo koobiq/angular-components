@@ -7,7 +7,7 @@
 
     background: var(--kbq-#{$base}-background);
 
-    & .kbq-icon {
+    & .kbq-icon.kbq-empty {
         color: var(--kbq-#{$base}-icon);
     }
 

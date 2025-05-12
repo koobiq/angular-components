@@ -4,7 +4,7 @@
     background: var(--kbq-list-#{$style-name}-container-background);
     color: var(--kbq-list-#{$style-name}-text-color);
 
-    .kbq-icon:not(.kbq-icon-button, .kbq-icon-item) {
+    .kbq-icon.kbq-empty:not(.kbq-icon-button, .kbq-icon-item) {
         color: var(--kbq-list-#{$style-name}-text-color);
     }
 }

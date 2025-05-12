@@ -9,12 +9,12 @@
         color: var(--kbq-tree-#{$state-name}-text-color);
     }
 
-    .kbq-tree-node-toggle .kbq-icon,
-    .kbq-icon.kbq-tree-node-toggle {
+    .kbq-tree-node-toggle .kbq-icon.kbq-empty,
+    .kbq-icon.kbq-empty.kbq-tree-node-toggle {
         color: var(--kbq-tree-#{$state-name}-tree-toggle-color);
     }
 
-    .kbq-option-action .kbq-icon {
+    .kbq-option-action .kbq-icon.kbq-empty {
         color: var(--kbq-tree-#{$state-name}-action-button-color);
     }
 
@@ -48,7 +48,7 @@
         &.kbq-disabled {
             @include kbq-tree-option(states-disabled);
 
-            & .kbq-icon {
+            & .kbq-icon.kbq-empty {
                 color: var(--kbq-states-icon-disabled);
             }
         }
