@@ -1,0 +1,6 @@
+@use '../dist/components/core/styles/common/vendor-prefixes';
+
+.docs-code-snippet {
+    cursor: pointer;
+    @include vendor-prefixes.user-select(none);
+}

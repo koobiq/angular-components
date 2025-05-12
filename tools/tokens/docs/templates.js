@@ -5,12 +5,12 @@ const descriptionTemplate = (token) =>
     `<div class="kbq-design-token-example__value kbq-mono-normal">${token.value}</div>`;
 
 const defaultVarTemplate = (token) =>
-    `<div class="kbq-design-token-example__var"><code kbq-code-snippet style="cursor: pointer">--${token.name}</code>${descriptionTemplate(token)}</div>`;
+    `<div class="kbq-design-token-example__var"><code docsCodeSnippet>--${token.name}</code>${descriptionTemplate(token)}</div>`;
 
 const exampleTemplate = (designToken) =>
     `<div class="kbq-design-token-example__dimensions" style="${designToken}"></div>`;
 
-const varTypographyTemplate = (token) => `<code kbq-code-snippet>kbq-${token.attributes.type}</code>`;
+const varTypographyTemplate = (token) => `<code docsCodeSnippet>kbq-${token.attributes.type}</code>`;
 
 const shadowsTemplate = (designToken) => `<div class="kbq-design-token-example__shadows" style="${designToken}"></div>`;
 
