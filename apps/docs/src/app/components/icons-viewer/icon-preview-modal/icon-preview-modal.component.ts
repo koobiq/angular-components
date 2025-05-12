@@ -61,7 +61,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
         KbqComponentColors.Warning
     ];
 
-    selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Theme;
+    selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Contrast;
 
     readonly componentColors = KbqComponentColors;
 
