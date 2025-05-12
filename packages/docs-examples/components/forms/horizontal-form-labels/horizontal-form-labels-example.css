@@ -1,22 +1,22 @@
-.fixed-200 {
+.example-form__label_fixed-200 {
     width: 200px;
     max-width: 200px;
     flex: 1 1 100%;
 }
 
-.fixed-240 {
+.example-form__label_fixed-240 {
     width: 240px;
     max-width: 240px;
     flex: 1 1 100%;
 }
 
-.fixed-280 {
+.example-form__label_fixed-280 {
     width: 280px;
     max-width: 280px;
     flex: 1 1 100%;
 }
 
-.fixed-320 {
+.example-form__label_fixed-320 {
     width: 320px;
     max-width: 320px;
     flex: 1 1 100%;

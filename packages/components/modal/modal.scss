@@ -1,3 +1,5 @@
+// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
+/* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens' as *;
 
 @use './modal-confirm';

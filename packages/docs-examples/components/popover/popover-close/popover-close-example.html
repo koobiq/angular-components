@@ -30,7 +30,7 @@
 
 <ng-template #shareContent>
     <div class="kbq-subheading">Share project</div>
-    <div class="popover-close-example__text">
+    <div class="example-popover-close__text">
         Give your teammates access to the project and start collaborating in real time
     </div>
     <form novalidate class="kbq-form-vertical">
@@ -50,17 +50,17 @@
             </div>
         </div>
     </form>
-    <div class="popover-close-example__list">
-        <div class="popover-close-example__list-title">Members</div>
+    <div class="example-popover-close__list">
+        <div class="example-popover-close__list-title">Members</div>
         @for (member of members; track member; let i = $index) {
-            <div class="popover-close-example__list-item">
-                <div class="popover-close-example__list-item-left">
+            <div class="example-popover-close__list-item">
+                <div class="example-popover-close__list-item-left">
                     <img
                         alt="{{ member.name }}"
                         src="assets/images/popover/list-member-{{ i + 1 }}.png"
-                        class="popover-close-example__list-item-image"
+                        class="example-popover-close__list-item-image"
                     />
-                    <div class="popover-close-example__list-item-name">{{ member.name }}</div>
+                    <div class="example-popover-close__list-item-name">{{ member.name }}</div>
                 </div>
                 <button
                     kbq-button
@@ -94,7 +94,7 @@
         kbq-button
         kbqPopover
         [hasCloseButton]="true"
-        [kbqPopoverClass]="'popover-close-example'"
+        [kbqPopoverClass]="'example-popover-close'"
         [kbqPopoverContent]="shareContent"
     >
         Крестик в углу в окне «Поделиться»

@@ -20,17 +20,17 @@
             </div>
         </div>
     </form>
-    <div class="popover-content-share-example__list">
-        <div class="popover-content-share-example__list-title">Members</div>
+    <div class="example-popover-content-share__list">
+        <div class="example-popover-content-share__list-title">Members</div>
         @for (member of members; track member; let i = $index) {
-            <div class="popover-content-share-example__list-item">
-                <div class="popover-content-share-example__list-item-left">
+            <div class="example-popover-content-share__list-item">
+                <div class="example-popover-content-share__list-item-left">
                     <img
                         alt="{{ member.name }}"
                         src="assets/images/popover/list-member-{{ i + 1 }}.png"
-                        class="popover-content-share-example__list-item-image"
+                        class="example-popover-content-share__list-item-image"
                     />
-                    <div class="popover-content-share-example__list-item-name">{{ member.name }}</div>
+                    <div class="example-popover-content-share__list-item-name">{{ member.name }}</div>
                 </div>
                 <button
                     kbq-button
@@ -52,10 +52,10 @@
 
 <ng-template #customContent>
     <div
-        class="popover-content-custom-example__image"
+        class="example-popover-content-custom__image"
         [ngStyle]="{ 'background-image': 'url(\'/assets/images/popover/hero-header.jpg\')' }"
     ></div>
-    <div class="popover-content-custom-example__container">
+    <div class="example-popover-content-custom__container">
         <h4 class="kbq-title">Абракадабра!</h4>
         <p>Таинственное слово, которому приписывалась чудодейственная сила</p>
         <button kbq-button [color]="'contrast'" (click)="kbqCustomPopover.hide(0)">Сделать магию</button>
@@ -68,7 +68,7 @@
         kbq-button
         kbqPopover
         [hasCloseButton]="true"
-        [kbqPopoverClass]="'popover-content-share-example'"
+        [kbqPopoverClass]="'example-popover-content-share'"
         [kbqPopoverContent]="shareContent"
     >
         Без панели хедера
@@ -78,7 +78,7 @@
         kbq-button
         kbqPopover
         [hasCloseButton]="true"
-        [kbqPopoverClass]="'popover-content-custom-example'"
+        [kbqPopoverClass]="'example-popover-content-custom'"
         [kbqPopoverContent]="customContent"
     >
         Нестандартные стили и отступы

@@ -1,4 +1,4 @@
-.tooltip-example__visual-box {
+.example-tooltip__visual-box {
     position: relative;
 
     margin: 130px auto;
@@ -9,12 +9,12 @@
     border-radius: 8px;
 }
 
-.tooltip-example__trigger {
+.example-tooltip__trigger {
     position: absolute;
     cursor: pointer;
 }
 
-.tooltip-example__trigger:after {
+.example-tooltip__trigger:after {
     display: block;
 
     position: relative;
@@ -26,78 +26,78 @@
     background: #338fcb;
 }
 
-.tooltip-example__trigger.kbq-tooltip_open:after {
+.example-tooltip__trigger.kbq-tooltip_open:after {
     background: #cb3c33;
 }
 
-.tooltip-example__trigger_topLeft {
+.example-tooltip__trigger_topLeft {
     top: -8px;
     left: 2px;
 }
 
-.tooltip-example__trigger_topLeft:after {
+.example-tooltip__trigger_topLeft:after {
     left: 12px;
 }
 
-.tooltip-example__trigger_topRight {
+.example-tooltip__trigger_topRight {
     top: -8px;
     right: 2px;
 }
 
-.tooltip-example__trigger_topRight:after {
+.example-tooltip__trigger_topRight:after {
     right: 12px;
 }
 
-.tooltip-example__trigger_leftTop {
+.example-tooltip__trigger_leftTop {
     left: -8px;
     top: 2px;
 }
 
-.tooltip-example__trigger_leftTop:after {
+.example-tooltip__trigger_leftTop:after {
     top: 12px;
 }
 
-.tooltip-example__trigger_leftBottom {
+.example-tooltip__trigger_leftBottom {
     bottom: 2px;
     left: -8px;
 }
 
-.tooltip-example__trigger_leftBottom:after {
+.example-tooltip__trigger_leftBottom:after {
     bottom: 12px;
 }
 
-.tooltip-example__trigger_bottomRight {
+.example-tooltip__trigger_bottomRight {
     bottom: -8px;
     right: 2px;
 }
 
-.tooltip-example__trigger_bottomRight:after {
+.example-tooltip__trigger_bottomRight:after {
     right: 12px;
 }
 
-.tooltip-example__trigger_bottomLeft {
+.example-tooltip__trigger_bottomLeft {
     bottom: -8px;
     left: 2px;
 }
 
-.tooltip-example__trigger_bottomLeft:after {
+.example-tooltip__trigger_bottomLeft:after {
     left: 12px;
 }
 
-.tooltip-example__trigger_rightBottom {
+.example-tooltip__trigger_rightBottom {
     right: -8px;
     bottom: 2px;
 }
 
-.tooltip-example__trigger_rightBottom:after {
+.example-tooltip__trigger_rightBottom:after {
     bottom: 12px;
 }
 
-.tooltip-example__trigger_rightTop {
+.example-tooltip__trigger_rightTop {
     right: -8px;
     top: 2px;
 }
 
-.tooltip-example__trigger_rightTop:after {
+.example-tooltip__trigger_rightTop:after {
     top: 12px;
 }

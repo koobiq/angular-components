@@ -706,14 +706,14 @@
     <div class="dev-box">
         <h1>Progress bar</h1>
 
-        <div class="lines">
-            <div class="line-container">
+        <div class="dev-lines">
+            <div class="dev-line-container">
                 <kbq-progress-bar [color]="'contrast'" [mode]="mode" [value]="percent" />
             </div>
-            <div class="line-container">
+            <div class="dev-line-container">
                 <kbq-progress-bar [mode]="mode" [value]="percent" />
             </div>
-            <div class="line-container">
+            <div class="dev-line-container">
                 <kbq-progress-bar [color]="'error'" [mode]="mode" [value]="percent" />
             </div>
         </div>
@@ -723,19 +723,19 @@
         <h1>Progress spinner</h1>
 
         <div>
-            <ul class="spinners">
-                <li class="spinner-container">
+            <ul class="dev-spinners">
+                <li class="dev-spinner-container">
                     <kbq-progress-spinner [color]="'contrast'" [mode]="mode" [value]="percent" />
                 </li>
-                <li class="spinner-container">
+                <li class="dev-spinner-container">
                     <kbq-progress-spinner [mode]="mode" [value]="percent" />
                 </li>
-                <li class="spinner-container">
+                <li class="dev-spinner-container">
                     <kbq-progress-spinner [color]="'error'" [mode]="mode" [value]="percent" />
                 </li>
             </ul>
-            <ul class="spinners">
-                <li class="spinner-container">
+            <ul class="dev-spinners">
+                <li class="dev-spinner-container">
                     <kbq-progress-spinner
                         class="kbq-progress-spinner_big"
                         [color]="'contrast'"
@@ -743,10 +743,10 @@
                         [value]="percent"
                     />
                 </li>
-                <li class="spinner-container">
+                <li class="dev-spinner-container">
                     <kbq-progress-spinner class="kbq-progress-spinner_big" [mode]="mode" [value]="percent" />
                 </li>
-                <li class="spinner-container">
+                <li class="dev-spinner-container">
                     <kbq-progress-spinner
                         class="kbq-progress-spinner_big"
                         [color]="'error'"
@@ -1148,10 +1148,10 @@
     <div class="dev-box">
         <h1>Toggles</h1>
 
-        <div class="layout-row flex-100 toggles-container">
+        <div class="layout-row flex-100 dev-toggles-container">
             <div class="flex-50">
                 <h3>Small Toggles</h3>
-                <div class="layout-row flex-100 toggle-demo-container">
+                <div class="layout-row flex-100 dev-toggle-demo-container">
                     <div class="flex-33">
                         <kbq-toggle class="kbq-toggle_small" [(ngModel)]="valueSmallOn" />
                     </div>
@@ -1162,10 +1162,10 @@
                         <kbq-toggle class="kbq-toggle_small" [color]="'error'" [(ngModel)]="valueSmallOn" />
                     </div>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle class="kbq-toggle_small" [(ngModel)]="valueSmallOn">Quack like a duck</kbq-toggle>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle
                         labelPosition="left"
                         class="kbq-toggle_small cdk-keyboard-focused"
@@ -1177,7 +1177,7 @@
             </div>
             <div class="flex-50">
                 <h3>Big Toggles</h3>
-                <div class="layout-row flex-100 toggle-demo-container">
+                <div class="layout-row flex-100 dev-toggle-demo-container">
                     <div class="flex-33">
                         <kbq-toggle [(ngModel)]="valueBigOn" />
                     </div>
@@ -1188,19 +1188,19 @@
                         <kbq-toggle [color]="'error'" [(ngModel)]="valueBigOn" />
                     </div>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle [(ngModel)]="valueBigOn">Quack like a duck</kbq-toggle>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle labelPosition="left" [(ngModel)]="valueBigOn">Quack like a duck</kbq-toggle>
                 </div>
             </div>
         </div>
 
-        <div class="layout-row flex-100 toggles-container">
+        <div class="layout-row flex-100 dev-toggles-container">
             <div class="flex-50">
                 <h3>Small Toggles</h3>
-                <div class="layout-row flex-100 toggle-demo-container">
+                <div class="layout-row flex-100 dev-toggle-demo-container">
                     <div class="flex-33">
                         <kbq-toggle class="kbq-toggle_small" [disabled]="true" [(ngModel)]="valueSmallOn" />
                     </div>
@@ -1216,12 +1216,12 @@
                         />
                     </div>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle class="kbq-toggle_small" [disabled]="true" [(ngModel)]="valueSmallOn">
                         Quack like a duck
                     </kbq-toggle>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle
                         labelPosition="left"
                         class="kbq-toggle_small cdk-keyboard-focused"
@@ -1234,7 +1234,7 @@
             </div>
             <div class="flex-50">
                 <h3>Big Toggles</h3>
-                <div class="layout-row flex-100 toggle-demo-container">
+                <div class="layout-row flex-100 dev-toggle-demo-container">
                     <div class="flex-33">
                         <kbq-toggle [disabled]="true" [(ngModel)]="valueBigOn" />
                     </div>
@@ -1245,10 +1245,10 @@
                         <kbq-toggle [color]="'error'" [disabled]="true" [(ngModel)]="valueBigOn" />
                     </div>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle [disabled]="true" [(ngModel)]="valueBigOn">Quack like a duck</kbq-toggle>
                 </div>
-                <div class="toggle-demo-container">
+                <div class="dev-toggle-demo-container">
                     <kbq-toggle labelPosition="left" [disabled]="true" [(ngModel)]="valueBigOn">
                         Quack like a duck
                     </kbq-toggle>

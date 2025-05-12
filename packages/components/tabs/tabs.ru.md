@@ -64,13 +64,13 @@
 
 ### Работа с клавиатурой
 
-| <span style="min-width: 140px;">Клавиша</span>                                        | Действие                                 |
-| ------------------------------------------------------------------------------------- | ---------------------------------------- |
-| <span class="hot-key-button">←</span>                                                 | Переместить фокус на предыдущую вкладку  |
-| <span class="hot-key-button">→</span>                                                 | Переместить фокус на следующую вкладку   |
-| <span class="hot-key-button">Home</span>                                              | Переместить фокус на первую вкладку      |
-| <span class="hot-key-button">End</span>                                               | Переместить фокус на последнюю вкладку   |
-| <span class="hot-key-button">Space</span> / <span class="hot-key-button">Enter</span> | Переключиться на сфокусированную вкладку |
+| <span style="min-width: 140px;">Клавиша</span>                                                  | Действие                                 |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| <span class="docs-hot-key-button">←</span>                                                      | Переместить фокус на предыдущую вкладку  |
+| <span class="docs-hot-key-button">→</span>                                                      | Переместить фокус на следующую вкладку   |
+| <span class="docs-hot-key-button">Home</span>                                                   | Переместить фокус на первую вкладку      |
+| <span class="docs-hot-key-button">End</span>                                                    | Переместить фокус на последнюю вкладку   |
+| <span class="docs-hot-key-button">Space</span> / <span class="docs-hot-key-button">Enter</span> | Переключиться на сфокусированную вкладку |
 
 ### Рекомендации
 

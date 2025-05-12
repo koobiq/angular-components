@@ -2,6 +2,12 @@
 
 const isCI = !!process.env.CI;
 
+/** @type {import('eslint').Linter.ConfigOverride} */
+const PRETTIER = {
+    files: ['*.js', '*.ts', '*.html'],
+    extends: ['plugin:prettier/recommended']
+};
+
 /** @type {import('eslint').Linter.Config} */
 const config = {
     root: true,
@@ -167,13 +173,8 @@ const config = {
                 '@angular-eslint/template/prefer-control-flow': 1
             }
         },
-        {
-            files: ['*.js', '*.ts', '*.html'],
-            extends: [
-                // should be last
-                'plugin:prettier/recommended'
-            ]
-        }
+        // should be last
+        PRETTIER
     ]
 };
 

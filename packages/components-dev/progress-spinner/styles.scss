@@ -1,17 +1,17 @@
 @use '../main';
 
-.container {
+.dev-container {
     display: flex;
     align-items: center;
 
-    .percent {
+    .dev-percent {
         margin-right: 8px;
         width: 60px;
         text-align: center;
         flex-shrink: 0;
     }
 
-    .spinners {
+    .dev-spinners {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
@@ -20,11 +20,7 @@
         padding: 0;
     }
 
-    .spinner-container {
-        margin-top: 16px;
-    }
-
-    .line-container:not(:first-child) {
+    .dev-spinner-container {
         margin-top: 16px;
     }
 }

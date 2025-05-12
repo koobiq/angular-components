@@ -3,7 +3,7 @@
     flex-direction: row;
 }
 
-.block {
+.example-block {
     border: 1px solid black;
     padding: 8px;
 }

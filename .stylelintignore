@@ -1,2 +1,5 @@
 dist
 node_modules
+
+# ignore auto-generated theme
+apps/docs/src/styles/koobiq/default-theme

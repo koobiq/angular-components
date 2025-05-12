@@ -1,18 +1,18 @@
-.tabs-custom-label-example {
+.example-tabs-custom-label {
     padding-bottom: var(--kbq-size-xxl);
 }
 
-.tabs-custom-label-example .tabs-custom-label-example__icon {
+.example-tabs-custom-label .example-tabs-custom-label__icon {
     margin-bottom: var(--kbq-size-xxs);
 }
 
-.tabs-custom-label-example .kbq-tab-label .kbq-tab-label__content {
+.example-tabs-custom-label .kbq-tab-label .kbq-tab-label__content {
     flex-direction: column;
     align-items: center;
     gap: 0;
 }
 
-.tabs-custom-label-example .tabs-custom-label-example__subtitle {
+.example-tabs-custom-label .example-tabs-custom-label__subtitle {
     font-size: var(--kbq-typography-text-compact-font-size);
     line-height: var(--kbq-typography-text-compact-line-height);
     font-weight: var(--kbq-typography-text-compact-font-weight);

@@ -64,13 +64,13 @@ Unlike `KbqTabGroup`, `KbqTabNavBar` is used for navigation between application 
 
 ### Hot keys
 
-| <span style="min-width: 140px;">Key</span>                                            | Action                             |
-| ------------------------------------------------------------------------------------- | ---------------------------------- |
-| <span class="hot-key-button">←</span>                                                 | Move the focus to the previous tab |
-| <span class="hot-key-button">→</span>                                                 | Move the focus to the next tab     |
-| <span class="hot-key-button">Home</span>                                              | Move the focus to the first tab    |
-| <span class="hot-key-button">End</span>                                               | Move the focus to the last tab     |
-| <span class="hot-key-button">Space</span> / <span class="hot-key-button">Enter</span> | Select the tab in focus            |
+| <span style="min-width: 140px;">Key</span>                                                      | Action                             |
+| ----------------------------------------------------------------------------------------------- | ---------------------------------- |
+| <span class="docs-hot-key-button">←</span>                                                      | Move the focus to the previous tab |
+| <span class="docs-hot-key-button">→</span>                                                      | Move the focus to the next tab     |
+| <span class="docs-hot-key-button">Home</span>                                                   | Move the focus to the first tab    |
+| <span class="docs-hot-key-button">End</span>                                                    | Move the focus to the last tab     |
+| <span class="docs-hot-key-button">Space</span> / <span class="docs-hot-key-button">Enter</span> | Select the tab in focus            |
 
 ### Recommendations
 

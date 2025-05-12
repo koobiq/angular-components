@@ -169,7 +169,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
             .open({
                 kbqComponent: DocsIconPreviewModalComponent,
                 kbqComponentParams: { iconItem },
-                kbqClassName: 'icon-preview-modal',
+                kbqClassName: 'docs-icon-preview-modal',
                 kbqMaskClosable: true,
                 kbqWidth: 400
             })

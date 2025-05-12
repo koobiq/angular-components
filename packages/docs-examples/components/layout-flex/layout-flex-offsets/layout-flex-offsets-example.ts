@@ -33,10 +33,16 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     </kbq-select>
                 </kbq-form-field>
             </div>
-            <div class="layout-row block  layout-margin-top-4xl">
-                <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
-                <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
-                <div class="{{ selectedSize }} {{ selectedOffset }} block">{{ selectedSize }} {{ selectedOffset }}</div>
+            <div class="layout-row example-block  layout-margin-top-4xl">
+                <div class="{{ selectedSize }} {{ selectedOffset }} example-block">
+                    {{ selectedSize }} {{ selectedOffset }}
+                </div>
+                <div class="{{ selectedSize }} {{ selectedOffset }} example-block">
+                    {{ selectedSize }} {{ selectedOffset }}
+                </div>
+                <div class="{{ selectedSize }} {{ selectedOffset }} example-block">
+                    {{ selectedSize }} {{ selectedOffset }}
+                </div>
             </div>
         </div>
     `

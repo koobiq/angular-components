@@ -1,12 +1,12 @@
-@mixin hot-key-button-theme() {
-    .hot-key-button {
+@mixin docs-hot-key-button-theme() {
+    .docs-hot-key-button {
         color: var(--kbq-foreground-contrast);
         border-color: var(--kbq-line-contrast-fade);
         box-shadow: var(--kbq-shadow-card);
     }
 }
 
-.hot-key-button {
+.docs-hot-key-button {
     display: inline-block;
     min-width: 32px;
     max-height: 32px;

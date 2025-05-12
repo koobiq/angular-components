@@ -15,7 +15,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         KbqIconModule
     ],
     template: `
-        <div class="tabs-vertical-icons-example">
+        <div class="example-tabs-vertical-icons">
             <kbq-tab-group vertical>
                 <kbq-tab [tooltipPlacement]="PopUpPlacements.Left" tooltipTitle="BruteForce" empty>
                     <ng-template kbq-tab-label>

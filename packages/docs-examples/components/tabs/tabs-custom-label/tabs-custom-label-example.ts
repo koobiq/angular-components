@@ -14,34 +14,34 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
         KbqIconModule
     ],
     template: `
-        <div class="tabs-custom-label-example">
+        <div class="example-tabs-custom-label">
             <kbq-tab-group underlined>
                 <kbq-tab>
                     <ng-template kbq-tab-label>
-                        <i class="tabs-custom-label-example__icon" kbq-icon="kbq-apple_24"></i>
+                        <i class="example-tabs-custom-label__icon" kbq-icon="kbq-apple_24"></i>
                         <div>macOS</div>
-                        <div class="tabs-custom-label-example__subtitle">14.5+</div>
+                        <div class="example-tabs-custom-label__subtitle">14.5+</div>
                     </ng-template>
                 </kbq-tab>
                 <kbq-tab>
                     <ng-template kbq-tab-label>
-                        <i class="tabs-custom-label-example__icon" kbq-icon="kbq-windows_24"></i>
+                        <i class="example-tabs-custom-label__icon" kbq-icon="kbq-windows_24"></i>
                         <div>Windows</div>
-                        <div class="tabs-custom-label-example__subtitle">XP+</div>
+                        <div class="example-tabs-custom-label__subtitle">XP+</div>
                     </ng-template>
                 </kbq-tab>
                 <kbq-tab>
                     <ng-template kbq-tab-label>
-                        <i class="tabs-custom-label-example__icon" kbq-icon="kbq-linux_24"></i>
+                        <i class="example-tabs-custom-label__icon" kbq-icon="kbq-linux_24"></i>
                         <div>Linux</div>
-                        <div class="tabs-custom-label-example__subtitle">Ubuntu 10+</div>
+                        <div class="example-tabs-custom-label__subtitle">Ubuntu 10+</div>
                     </ng-template>
                 </kbq-tab>
                 <kbq-tab>
                     <ng-template kbq-tab-label>
-                        <i class="tabs-custom-label-example__icon" kbq-icon="kbq-bsd_24"></i>
+                        <i class="example-tabs-custom-label__icon" kbq-icon="kbq-bsd_24"></i>
                         <div>FreeBSD</div>
-                        <div class="tabs-custom-label-example__subtitle">14.1+</div>
+                        <div class="example-tabs-custom-label__subtitle">14.1+</div>
                     </ng-template>
                 </kbq-tab>
             </kbq-tab-group>

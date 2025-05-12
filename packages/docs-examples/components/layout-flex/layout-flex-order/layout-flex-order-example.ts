@@ -52,10 +52,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     </kbq-form-field>
                 </div>
             </div>
-            <div class="layout-row block layout-margin-top-4xl">
-                <div class="flex block {{ selectedFirstBlockOrder }}">Block 1</div>
-                <div class="flex block {{ selectedSecondBlockOrder }}">Block 2</div>
-                <div class="flex block {{ selectedThirdBlockOrder }}">Block 3</div>
+            <div class="layout-row example-block layout-margin-top-4xl">
+                <div class="flex example-block {{ selectedFirstBlockOrder }}">Block 1</div>
+                <div class="flex example-block {{ selectedSecondBlockOrder }}">Block 2</div>
+                <div class="flex example-block {{ selectedThirdBlockOrder }}">Block 3</div>
             </div>
         </div>
     `

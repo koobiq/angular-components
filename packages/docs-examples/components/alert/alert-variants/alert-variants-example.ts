@@ -25,15 +25,15 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <div class="layout-row layout-gap-l flex-100">
-            <div class="layout-column">
+        <div class="layout-row example-row layout-gap-l flex-100">
+            <div class="layout-column example-column">
                 <kbq-alert [alertColor]="alertColors.Error">
                     <i [color]="colors.Error" kbq-icon-item="kbq-exclamation-triangle_16"></i>
                     <div kbq-alert-title>Default</div>
                     {{ text }}
                 </kbq-alert>
             </div>
-            <div class="layout-column">
+            <div class="layout-column example-column">
                 <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored" [compact]="true">
                     <i [color]="colors.Error" kbq-icon="kbq-exclamation-triangle_16"></i>
                     <div kbq-alert-title>Colored</div>

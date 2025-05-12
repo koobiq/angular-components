@@ -66,12 +66,12 @@
 <hr />
 
 <h4>Tabs underlined with custom label</h4>
-<kbq-tab-group underlined class="custom-underlined-tabs">
+<kbq-tab-group underlined class="dev-custom-underlined-tabs">
     @for (tab of tabs; track tab; let index = $index) {
         <kbq-tab>
             <ng-template kbq-tab-label>
                 <div>Заголовок {{ index }}</div>
-                <div class="custom-underlined-tabs__subtitle">Подзаголовок {{ index }}</div>
+                <div class="dev-custom-underlined-tabs__subtitle">Подзаголовок {{ index }}</div>
             </ng-template>
 
             {{ tab }} content
@@ -82,33 +82,33 @@
 <hr />
 
 <h4>Tabs underlined with custom label + icons</h4>
-<kbq-tab-group underlined class="custom-underlined-tabs custom-underlined-tabs_with-icons">
+<kbq-tab-group underlined class="dev-custom-underlined-tabs dev-custom-underlined-tabs_with-icons">
     <kbq-tab>
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-apple_24"></i>
             <div>macOS</div>
-            <div class="custom-underlined-tabs__subtitle">14.5+</div>
+            <div class="dev-custom-underlined-tabs__subtitle">14.5+</div>
         </ng-template>
     </kbq-tab>
     <kbq-tab>
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-windows_24"></i>
             <div>Windows</div>
-            <div class="custom-underlined-tabs__subtitle">XP+</div>
+            <div class="dev-custom-underlined-tabs__subtitle">XP+</div>
         </ng-template>
     </kbq-tab>
     <kbq-tab>
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-linux_24"></i>
             <div>Linux</div>
-            <div class="custom-underlined-tabs__subtitle">Ubuntu 10+</div>
+            <div class="dev-custom-underlined-tabs__subtitle">Ubuntu 10+</div>
         </ng-template>
     </kbq-tab>
     <kbq-tab>
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-bsd_24"></i>
             <div>FreeBSD</div>
-            <div class="custom-underlined-tabs__subtitle">14.1+</div>
+            <div class="dev-custom-underlined-tabs__subtitle">14.1+</div>
         </ng-template>
     </kbq-tab>
 </kbq-tab-group>
@@ -236,8 +236,8 @@
 <hr />
 
 <h3>Tabs with actionbar</h3>
-<div class="tabs-actionbar-example">
-    <div class="tabs-actionbar-example_nav">
+<div class="example-tabs-actionbar">
+    <div class="example-tabs-actionbar_nav">
         <nav kbqTabNavBar underlined [tabNavPanel]="kbqTabNavPanel77">
             @for (dashboard of dashboards; track dashboard) {
                 <a kbqTabLink [active]="activeDashboard === dashboard" (click)="activeDashboard = dashboard">
@@ -247,7 +247,7 @@
         </nav>
     </div>
 
-    <div class="tabs-actionbar-example_controls">
+    <div class="example-tabs-actionbar_controls">
         <button color="contrast" kbq-button class="kbq-button_transparent">
             <i kbq-icon="kbq-list_16"></i>
         </button>

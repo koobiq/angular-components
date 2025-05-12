@@ -15,13 +15,10 @@ body {
     background: var(--kbq-background-bg);
     color: var(--kbq-foreground-contrast);
     margin: 0;
-}
-
-.basic-container {
     padding: var(--kbq-size-3xl);
 }
 
-.version-info {
+body > span {
     font-size: var(--kbq-typography-text-compact-font-size);
     padding-right: var(--kbq-size-s);
     float: right;

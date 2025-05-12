@@ -1,4 +1,4 @@
-<kbq-form-field class="number-input">
+<kbq-form-field class="dev-number-input">
     <input kbqInput placeholder="Number" type="number" [(ngModel)]="value" />
 </kbq-form-field>
 &nbsp;
@@ -17,65 +17,65 @@
 <div class="kbq-subheading">
     <label>KbqDecimalPipe</label>
 </div>
-<div class="common-container kbq-text-big">
+<div class="dev-container kbq-text-big">
     <div>
-        <div class="layout-row row-border">
-            <div class="flex light-text-secondary">Params</div>
-            <div class="flex light-text-secondary">kbqNumber</div>
-            <div class="flex light-text-secondary">kbqTableNumber</div>
+        <div class="layout-row dev-row-border">
+            <div class="flex dev-light-text-secondary">Params</div>
+            <div class="flex dev-light-text-secondary">kbqNumber</div>
+            <div class="flex dev-light-text-secondary">kbqTableNumber</div>
         </div>
 
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ value | kbqNumber }}</div>
             <div class="flex">{{ value | kbqTableNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">digitsInfo: '5.5-5-false'</div>
             <div class="flex">{{ value | kbqNumber: '5.5-5' }}</div>
             <div class="flex">{{ value | kbqTableNumber: '5.5-5' }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">digitsInfo: '4.5-5'</div>
             <div class="flex">{{ value | kbqNumber: '4.5-5' }}</div>
             <div class="flex">{{ value | kbqTableNumber: '4.5-5' }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">digitsInfo: '4.0-2'</div>
             <div class="flex">{{ value | kbqNumber: '4.0-2' }}</div>
             <div class="flex">{{ value | kbqTableNumber: '4.0-2' }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">digitsInfo: '4.0-1'</div>
             <div class="flex">{{ value | kbqNumber: '4.0-1' }}</div>
             <div class="flex">{{ value | kbqTableNumber: '4.0-1' }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">digitsInfo: '4.0-0'</div>
             <div class="flex">{{ value | kbqNumber: '4.0-0' }}</div>
             <div class="flex">{{ value | kbqTableNumber: '4.0-0' }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 10000 | kbqNumber }}</div>
             <div class="flex">{{ 10000 | kbqTableNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 1000000 | kbqNumber }}</div>
             <div class="flex">{{ 1000000 | kbqTableNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 10000000 | kbqNumber }}</div>
             <div class="flex">{{ 10000000 | kbqTableNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 100000000 | kbqNumber }}</div>
             <div class="flex">{{ 100000000 | kbqTableNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">locale ru</div>
             <div class="flex">{{ 1000 | kbqNumber: '' : 'ru' }}</div>
             <div class="flex">{{ 1000 | kbqTableNumber: '' : 'ru' }}</div>
@@ -86,34 +86,34 @@
 <div class="kbq-subheading">
     <label>KbqRoundDecimalPipe</label>
 </div>
-<div class="common-container kbq-text-big">
+<div class="dev-container kbq-text-big">
     <div>
-        <div class="layout-row row-border">
-            <div class="flex light-text-secondary">Params</div>
-            <div class="flex light-text-secondary">Formatted value</div>
+        <div class="layout-row dev-row-border">
+            <div class="flex dev-light-text-secondary">Params</div>
+            <div class="flex dev-light-text-secondary">Formatted value</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ value | kbqRoundNumber }}</div>
         </div>
 
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 10000 | kbqRoundNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 1000000 | kbqRoundNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 10000000 | kbqRoundNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">-</div>
             <div class="flex">{{ 100000000 | kbqRoundNumber }}</div>
         </div>
-        <div class="layout-row row-border">
+        <div class="layout-row dev-row-border">
             <div class="flex">locale ru</div>
             <div class="flex">{{ 1000 | kbqRoundNumber: 'ru-RU' }}</div>
         </div>

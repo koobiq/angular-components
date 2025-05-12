@@ -119,11 +119,11 @@ cvedetails.com/cve/CVE-2019-1020010/
 
 #### Фокус и работа с клавиатурой
 
-| <div style="min-width: 110px;">Клавиша</div>                                        | Действие                              |
-| ----------------------------------------------------------------------------------- | ------------------------------------- |
-| <span class="hot-key-button">Space</span> \ <span class="hot-key-button">⏎</span>   | Переход по ссылке                     |
-| <span class="hot-key-button">Shift</span> + <span class="hot-key-button">F10</span> | Открыть контекстное меню (для ссылок) |
-|                                                                                     | (Применимо только для Windows.)       |
+| <div style="min-width: 110px;">Клавиша</div>                                                  | Действие                              |
+| --------------------------------------------------------------------------------------------- | ------------------------------------- |
+| <span class="docs-hot-key-button">Space</span> \ <span class="docs-hot-key-button">⏎</span>   | Переход по ссылке                     |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">F10</span> | Открыть контекстное меню (для ссылок) |
+|                                                                                               | (Применимо только для Windows.)       |
 
 #### Дизайн и анимация
 

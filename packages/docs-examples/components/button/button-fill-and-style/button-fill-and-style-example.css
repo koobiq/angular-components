@@ -1,4 +1,4 @@
-.fill-and-style__example-button-group {
+.example-fill-and-style__button-group {
     display: inline-flex;
     flex-direction: row;
     gap: 32px;
@@ -10,6 +10,6 @@
     margin-bottom: 12px;
 }
 
-.fill-and-style__example-button-group .example-button {
+.example-fill-and-style__button-group .example-button {
     width: 128px;
 }

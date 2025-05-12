@@ -1,12 +1,12 @@
-.tabs-actionbar-example {
+.example-tabs-actionbar {
     display: flex;
 }
 
-.tabs-actionbar-example .tabs-actionbar-example_nav {
+.example-tabs-actionbar .example-tabs-actionbar_nav {
     overflow: hidden;
 }
 
-.tabs-actionbar-example .tabs-actionbar-example_controls {
+.example-tabs-actionbar .example-tabs-actionbar_controls {
     display: flex;
     flex-grow: 1;
     align-items: center;
@@ -14,6 +14,6 @@
     border-bottom: 1px solid var(--kbq-line-contrast-less);
 }
 
-.tabs-actionbar-example .tabs-actionbar-example_controls button + button {
+.example-tabs-actionbar .example-tabs-actionbar_controls button + button {
     margin-left: var(--kbq-size-s);
 }

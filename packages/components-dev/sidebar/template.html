@@ -15,13 +15,13 @@
 <br />
 <br />
 
-<div class="container layout-row layout-align-space-between">
+<div class="dev-container layout-row layout-align-space-between">
     <kbq-sidebar #leftSidebar="kbqSidebar" [position]="sidebarPositions.Left" (stateChanged)="onStateChanged($event)">
         <div kbq-sidebar-opened class="kbq-sidebar-opened">kbq-sidebar-opened</div>
         <div kbq-sidebar-closed class="kbq-sidebar-closed">kbq-sidebar-closed</div>
     </kbq-sidebar>
 
-    <div class="container__body">main area</div>
+    <div class="dev-container__body">main area</div>
 
     <kbq-sidebar #rightSidebar="kbqSidebar" [position]="sidebarPositions.Right" (stateChanged)="onStateChanged($event)">
         <div kbq-sidebar-opened class="kbq-sidebar-opened">kbq-sidebar-opened</div>
@@ -51,7 +51,7 @@
 <br />
 
 <kbq-splitter
-    class="container layout-row layout-align-space-between"
+    class="dev-container layout-row layout-align-space-between"
     [direction]="direction.Horizontal"
     [disabled]="leftSplitterState"
 >
@@ -68,7 +68,7 @@
         <div kbq-sidebar-closed class="kbq-sidebar-closed" [width]="'32px'">kbq-sidebar-closed</div>
     </kbq-sidebar>
 
-    <div kbq-splitter-area class="flex container__body">main body</div>
+    <div kbq-splitter-area class="flex dev-container__body">main body</div>
 
     <kbq-sidebar
         kbq-splitter-area

@@ -76,10 +76,10 @@
 
 ### Фокус и работа с клавиатурой
 
-| <div style="min-width: 130px;">Клавиша</div>                                          | Действие                                                |
-| ------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| <span class="hot-key-button">Tab</span> <span class="hot-key-button">Shift+Tab</span> | Переход к следующему или предыдущему focusable-элементу |
-| <span class="hot-key-button">Esc</span>                                               | Закрыть тост                                            |
+| <div style="min-width: 130px;">Клавиша</div>                                                    | Действие                                                |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| <span class="docs-hot-key-button">Tab</span> <span class="docs-hot-key-button">Shift+Tab</span> | Переход к следующему или предыдущему focusable-элементу |
+| <span class="docs-hot-key-button">Esc</span>                                                    | Закрыть тост                                            |
 
 #### Tab-sequence
 

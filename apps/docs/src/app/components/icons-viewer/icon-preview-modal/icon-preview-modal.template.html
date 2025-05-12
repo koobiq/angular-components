@@ -6,26 +6,26 @@
 </kbq-modal-title>
 
 <kbq-modal-body>
-    <div class="icon-preview-modal__preview-area">
+    <div class="docs-icon-preview-modal__preview-area">
         <i #iconPreview kbq-icon [color]="selectedColorTheme" [ngClass]="iconItem.cssClass"></i>
     </div>
-    <div class="icon-preview-modal__content">
+    <div class="docs-icon-preview-modal__content">
         <kbq-form-field>
             <kbq-select [placeholder]="isRuLocale() ? 'Цвет' : 'Color'" [(value)]="selectedColorTheme">
                 <kbq-select-trigger>
                     <i
                         kbq-icon="kbq-circle-xs_16"
-                        class="icon-preview-modal__palette-icon"
+                        class="docs-icon-preview-modal__palette-icon"
                         [color]="selectedColorTheme"
                     ></i>
                     {{ selectedColorTheme | titlecase }}
                 </kbq-select-trigger>
 
                 @for (paletteName of themePalettes; track paletteName) {
-                    <kbq-option class="icon-preview-modal__select-option" [value]="paletteName">
+                    <kbq-option class="docs-icon-preview-modal__select-option" [value]="paletteName">
                         <i
                             kbq-icon="kbq-circle-xs_16"
-                            class="icon-preview-modal__palette-icon"
+                            class="docs-icon-preview-modal__palette-icon"
                             [color]="paletteName"
                         ></i>
                         {{ paletteName | titlecase }}
@@ -34,7 +34,7 @@
             </kbq-select>
         </kbq-form-field>
 
-        <div class="icon-preview-modal__buttons">
+        <div class="docs-icon-preview-modal__buttons">
             <a download href="{{ SVGLink }}" kbq-button>
                 <i kbq-icon="kbq-arrow-down-to-line_16"></i>
                 {{ isRuLocale() ? 'Скачать SVG' : 'Download SVG' }}
@@ -46,7 +46,7 @@
             </button>
         </div>
 
-        <kbq-dl class="icon-preview-modal__description" [vertical]="true">
+        <kbq-dl class="docs-icon-preview-modal__description" [vertical]="true">
             <kbq-dt>{{ isRuLocale() ? 'Размер' : 'Size' }}</kbq-dt>
             <kbq-dd>{{ iconItem.size }}px</kbq-dd>
 
@@ -59,7 +59,7 @@
             <kbq-dd>
                 <span #wordExample [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'" (click)="copyWordExample()">
                     [#{{ getHexColor() }}]
-                    <span class="icon-unicode" [innerHtml]="getUnicode()"></span>
+                    <span class="docs-icon-unicode" [innerHtml]="getUnicode()"></span>
                 </span>
             </kbq-dd>
 
@@ -67,7 +67,7 @@
             <kbq-dd>{{ iconItem.description }}</kbq-dd>
 
             <kbq-dt>{{ isRuLocale() ? 'Ключевые слова' : 'Key words' }}</kbq-dt>
-            <kbq-dd class="icon-preview-modal__key-words">
+            <kbq-dd class="docs-icon-preview-modal__key-words">
                 @for (tag of iconItem.tags; track tag) {
                     <kbq-badge
                         [badgeColor]="'fade-theme'"

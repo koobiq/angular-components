@@ -1,7 +1,6 @@
-@use '../../components/core/styles/theming/theming';
 @use '../main';
 
-.left-padding {
+.dev-left-padding {
     padding-left: 32px;
 }
 
@@ -9,7 +8,7 @@ app {
     height: 100%;
     width: 100%;
 
-    .actual {
+    .dev-li-actual {
         animation: blink-animation 1s steps(5, start) infinite;
         -webkit-animation: blink-animation 1s steps(5, start) infinite;
     }
@@ -24,28 +23,28 @@ app {
         }
     }
 
-    .red {
+    .dev-red {
         color: var(--kbq-error-default);
     }
 
-    .container {
+    .dev-container {
         width: 100%;
         height: 100%;
         padding: 1%;
     }
 
-    .config {
+    .dev-config {
         height: 50%;
         width: 100%;
     }
 
-    .result {
+    .dev-result {
         border: solid 2px red;
         height: 50%;
         width: 100%;
     }
 
-    .visual-box {
+    .dev-visual-box {
         height: 100px;
         width: 100px;
         border: 1px solid #575757;
@@ -53,7 +52,7 @@ app {
         margin-top: 32px;
         margin-bottom: 32px;
 
-        .visual-box_clickable {
+        .dev-visual-box_clickable {
             height: 12px;
             width: 12px;
             position: absolute;
@@ -61,73 +60,73 @@ app {
             cursor: pointer;
         }
 
-        .active {
+        .dev-active {
             background: red;
         }
     }
 
-    .visual-box_placement-top-left {
+    .dev-visual-box_placement-top-left {
         top: -6px;
         left: 10px;
     }
 
-    .visual-box_placement-top {
+    .dev-visual-box_placement-top {
         top: -6px;
         left: calc(50% - 6px);
     }
 
-    .visual-box_placement-top-right {
+    .dev-visual-box_placement-top-right {
         top: -6px;
         right: 10px;
     }
 
-    .visual-box_placement-left-top {
+    .dev-visual-box_placement-left-top {
         top: 10px;
         left: -6px;
     }
 
-    .visual-box_placement-left {
+    .dev-visual-box_placement-left {
         top: calc(50% - 6px);
         left: -6px;
     }
 
-    .visual-box_placement-left-bottom {
+    .dev-visual-box_placement-left-bottom {
         bottom: 10px;
         left: -6px;
     }
 
-    .visual-box_placement-bottom-right {
+    .dev-visual-box_placement-bottom-right {
         bottom: -6px;
         right: 10px;
     }
 
-    .visual-box_placement-bottom {
+    .dev-visual-box_placement-bottom {
         bottom: -6px;
         right: calc(50% - 6px);
     }
 
-    .visual-box_placement-bottom-left {
+    .dev-visual-box_placement-bottom-left {
         bottom: -6px;
         left: 10px;
     }
 
-    .visual-box_placement-right-bottom {
+    .dev-visual-box_placement-right-bottom {
         right: -6px;
         bottom: 10px;
     }
 
-    .visual-box_placement-right {
+    .dev-visual-box_placement-right {
         right: -6px;
         bottom: calc(50% - 6px);
     }
 
-    .visual-box_placement-right-top {
+    .dev-visual-box_placement-right-top {
         right: -6px;
         top: 10px;
     }
 }
 
-.popover-485 {
+.dev-popover-485 {
     .kbq-popover {
         max-width: 485px !important;
     }

@@ -11,10 +11,10 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     styleUrls: ['tabs-empty-label-example.css'],
     imports: [KbqTabsModule],
     template: `
-        <div class="tabs-empty-label-example">
+        <div class="example-tabs-empty-label">
             <kbq-tab-group>
                 <kbq-tab label="BruteForce">
-                    <div class="tabs-empty-label-example_tab-content">1005 incidents have been registered</div>
+                    <div class="example-tabs-empty-label_tab-content">1005 incidents have been registered</div>
                 </kbq-tab>
                 <kbq-tab label="Complex Attack">
                     <p>
@@ -33,7 +33,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                     </p>
                 </kbq-tab>
                 <kbq-tab [tooltipPlacement]="PopUpPlacements.Top" label="DDoS" tooltipTitle="No incidents" empty>
-                    <div class="tabs-empty-label-example_tab-content">No DDoS attacks have been registered</div>
+                    <div class="example-tabs-empty-label_tab-content">No DDoS attacks have been registered</div>
                 </kbq-tab>
                 <kbq-tab label="DoS">
                     <p>

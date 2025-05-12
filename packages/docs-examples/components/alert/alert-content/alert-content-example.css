@@ -12,7 +12,7 @@ p + p {
     gap: 16px;
 }
 
-.layout-column {
+.example-column {
     width: 50%;
 }
 
@@ -23,21 +23,21 @@ p + p {
 }
 
 @media (1200px < width <= 1440px) {
-    .layout-row {
+    .example-row {
         flex-wrap: wrap;
     }
 
-    .layout-column {
+    .example-column {
         width: 100%;
     }
 }
 
 @media (width <= 1024px) {
-    .layout-row {
+    .example-row {
         flex-wrap: wrap;
     }
 
-    .layout-column {
+    .example-column {
         width: 100%;
     }
 }

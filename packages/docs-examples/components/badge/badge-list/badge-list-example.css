@@ -1,15 +1,15 @@
-.badge-list-example__list {
+.example-badge-list__list {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
     margin-top: 10px;
 }
 
-.badge-list-example__list_vertical {
+.example-badge-list__list_vertical {
     flex-direction: column;
     align-items: flex-start;
 }
 
-.badge-list-example__label {
+.example-badge-list__label {
     color: var(--kbq-foreground-contrast-secondary);
 }

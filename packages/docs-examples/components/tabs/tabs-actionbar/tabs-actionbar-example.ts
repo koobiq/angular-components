@@ -15,8 +15,8 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     ],
     selector: 'tabs-actionbar-example',
     template: `
-        <div class="tabs-actionbar-example">
-            <div class="tabs-actionbar-example_nav">
+        <div class="example-tabs-actionbar">
+            <div class="example-tabs-actionbar_nav">
                 <nav kbqTabNavBar underlined>
                     @for (dashboard of dashboards; track dashboard) {
                         <a [active]="activeDashboard === dashboard" (click)="activeDashboard = dashboard" kbqTabLink>
@@ -26,7 +26,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                 </nav>
             </div>
 
-            <div class="tabs-actionbar-example_controls">
+            <div class="example-tabs-actionbar_controls">
                 <button class="kbq-button_transparent" color="contrast" kbq-button>
                     <i kbq-icon="kbq-list_16"></i>
                 </button>

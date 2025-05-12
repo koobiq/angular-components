@@ -1,3 +1,6 @@
+// @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
+/* stylelint-disable selector-class-pattern */
+
 @use './file-upload-theme' as theme;
 
 .kbq-file-upload {

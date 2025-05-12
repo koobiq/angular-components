@@ -1,15 +1,15 @@
-.badge-fill-and-style-example {
+.example-badge-fill-and-style {
     display: flex;
     flex-direction: column;
     gap: 20px;
     min-width: calc(100px * 5 + 16px * 4);
 }
 
-.badge-fill-and-style-example__badge-label {
+.example-badge-fill-and-style__badge-label {
     color: var(--kbq-foreground-contrast-secondary);
     margin-bottom: 8px;
 }
 
-.badge-fill-and-style-example__badge {
+.example-badge-fill-and-style__badge {
     width: 100px;
 }

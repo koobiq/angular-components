@@ -1,10 +1,10 @@
-.content__example-button-group {
+.example-content__button-group {
     display: inline-flex;
     flex-wrap: wrap;
     gap: 32px;
 }
 
-.content__example-button-group .example-button {
+.example-content__button-group .example-button {
     width: 128px;
 }
 

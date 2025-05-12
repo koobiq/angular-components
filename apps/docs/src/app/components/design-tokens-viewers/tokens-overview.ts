@@ -17,7 +17,7 @@ import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
     selector: 'docs-design-tokens-overview',
     templateUrl: '../component-viewer/component-overview.template.html',
     host: {
-        class: 'component-overview'
+        class: 'docs-component-overview'
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })

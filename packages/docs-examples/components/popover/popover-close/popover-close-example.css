@@ -1,42 +1,42 @@
-::ng-deep .kbq-popover.popover-close-example .kbq-form__label {
+::ng-deep .kbq-popover.example-popover-close .kbq-form__label {
     display: block;
 }
 
-::ng-deep .kbq-popover.popover-close-example .kbq-form__fieldset {
+::ng-deep .kbq-popover.example-popover-close .kbq-form__fieldset {
     justify-content: space-between;
 }
 
-::ng-deep .kbq-popover.popover-close-example .kbq-form__row:first-child {
+::ng-deep .kbq-popover.example-popover-close .kbq-form__row:first-child {
     width: 100%;
 }
 
-::ng-deep .kbq-popover.popover-close-example .kbq-form__fieldset.kbq-horizontal .kbq-form__row:not(:first-child) {
+::ng-deep .kbq-popover.example-popover-close .kbq-form__fieldset.kbq-horizontal .kbq-form__row:not(:first-child) {
     padding-left: 8px;
 }
 
-.popover-close-example__text {
+.example-popover-close__text {
     color: #6c7393;
     margin-top: 4px;
     margin-bottom: 12px;
 }
 
-.popover-close-example__list {
+.example-popover-close__list {
     margin-top: 16px;
 }
 
-.popover-close-example__list-item {
+.example-popover-close__list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 12px;
 }
 
-.popover-close-example__list-item-left {
+.example-popover-close__list-item-left {
     display: flex;
     align-items: center;
 }
 
-.popover-close-example__list-item-image {
+.example-popover-close__list-item-image {
     width: 32px;
     height: 32px;
     border-radius: 100%;

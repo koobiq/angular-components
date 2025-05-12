@@ -1,6 +1,6 @@
 @use '../../../../styles/koobiq/default-theme/variables' as *;
 
-.icon-preview-modal .kbq-modal-body {
+.docs-icon-preview-modal .kbq-modal-body {
     display: flex;
     flex-direction: column;
 
@@ -9,18 +9,18 @@
     padding: 0;
 }
 
-.icon-preview-modal__preview-area {
+.docs-icon-preview-modal__preview-area {
     padding-top: 40px;
     padding-bottom: 40px;
 
     text-align: center;
 }
 
-.icon-preview-modal__content {
+.docs-icon-preview-modal__content {
     padding: 24px;
 }
 
-.icon-preview-modal__buttons {
+.docs-icon-preview-modal__buttons {
     display: flex;
     flex-direction: row;
 
@@ -34,8 +34,8 @@
     }
 }
 
-.icon-preview-modal__description {
-    .icon-unicode {
+.docs-icon-preview-modal__description {
+    .docs-icon-unicode {
         font-family: 'Koobiq Icons';
     }
 
@@ -50,11 +50,11 @@
     }
 }
 
-.icon-preview-modal__select-option {
+.docs-icon-preview-modal__select-option {
     margin-right: 6px;
 }
 
-.icon-preview-modal__key-words {
+.docs-icon-preview-modal__key-words {
     display: flex;
     flex-wrap: wrap;
 

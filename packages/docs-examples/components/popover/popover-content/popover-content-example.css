@@ -1,19 +1,19 @@
-::ng-deep .kbq-popover.popover-content-custom-example .kbq-title {
+::ng-deep .kbq-popover.example-popover-content-custom .kbq-title {
     margin: 0 0;
 }
 
-::ng-deep .kbq-popover.popover-content-custom-example .kbq-popover__content {
+::ng-deep .kbq-popover.example-popover-content-custom .kbq-popover__content {
     padding: 0 0;
 }
 
-::ng-deep .kbq-popover.popover-content-custom-example .kbq-popover__content p {
+::ng-deep .kbq-popover.example-popover-content-custom .kbq-popover__content p {
     margin-top: 8px;
     margin-bottom: 16px;
     text-align: center;
 }
 
 ::ng-deep
-    .kbq-popover.popover-content-custom-example
+    .kbq-popover.example-popover-content-custom
     .kbq-popover__content
     .kbq-popover__close-container
     .kbq-popover__close {
@@ -22,60 +22,60 @@
     right: 8px;
 }
 
-.popover-content-custom-example__image {
+.example-popover-content-custom__image {
     padding-top: calc(172 / 400 * 100%);
     background-size: cover;
 }
 
-.popover-content-custom-example__container {
+.example-popover-content-custom__container {
     padding: 24px 32px 40px 32px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-::ng-deep .kbq-popover.popover-content-share-example .kbq-form__label {
+::ng-deep .kbq-popover.example-popover-content-share .kbq-form__label {
     display: block;
 }
 
-::ng-deep .kbq-popover.popover-content-share-example .kbq-form__fieldset {
+::ng-deep .kbq-popover.example-popover-content-share .kbq-form__fieldset {
     justify-content: space-between;
 }
 
-::ng-deep .kbq-popover.popover-content-share-example .kbq-form__row:first-child {
+::ng-deep .kbq-popover.example-popover-content-share .kbq-form__row:first-child {
     width: 100%;
 }
 
 ::ng-deep
-    .kbq-popover.popover-content-share-example
+    .kbq-popover.example-popover-content-share
     .kbq-form__fieldset.kbq-horizontal
     .kbq-form__row:not(:first-child) {
     padding-left: 8px;
 }
 
-.popover-content-share-example__text {
+.example-popover-content-share__text {
     color: #6c7393;
     margin-top: 4px;
     margin-bottom: 12px;
 }
 
-.popover-content-share-example__list {
+.example-popover-content-share__list {
     margin-top: 16px;
 }
 
-.popover-content-share-example__list-item {
+.example-popover-content-share__list-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-top: 12px;
 }
 
-.popover-content-share-example__list-item-left {
+.example-popover-content-share__list-item-left {
     display: flex;
     align-items: center;
 }
 
-.popover-content-share-example__list-item-image {
+.example-popover-content-share__list-item-image {
     width: 32px;
     height: 32px;
     border-radius: 100%;

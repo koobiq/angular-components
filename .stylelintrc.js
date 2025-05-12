@@ -1,6 +1,27 @@
 // @ts-check
 
-const KEBAB_CASE_PATTERN = '^_?[a-z0-9]+(-[a-z0-9]+)*$';
+const KEBAB_CASE_PATTERN = '^(_?[a-z][a-z0-9]*)(-[a-z0-9]+)*$';
+
+const ALLOWED_PREFIXES = [
+    // Default
+    'kbq-',
+    // packages/docs-examples
+    'example-',
+    // packages/components-dev
+    'dev-',
+    // apps/docs
+    'docs-',
+    // Angular specific
+    'cdk-',
+    // Angular specific
+    'ng-',
+    // @docsearch/css
+    'DocSearch-',
+    // highlight.js
+    'hljs-',
+    // overlayscrollbars
+    'os-'
+];
 
 /** @type {import('stylelint').Config} */
 const config = {
@@ -36,6 +57,12 @@ const config = {
                     'Koobiq Icons',
                     'JetBrains Mono'
                 ]
+            }
+        ],
+        'selector-class-pattern': [
+            `^_?(${ALLOWED_PREFIXES.join('|')})`,
+            {
+                resolveNestedSelectors: true
             }
         ],
 

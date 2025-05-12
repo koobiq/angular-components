@@ -38,11 +38,13 @@ import { KbqRadioModule } from '@koobiq/components/radio';
             class: layout-align{{ layoutHorizontalAlignment }}{{ layoutVerticalAlignment }}
         </header>
         <div
-            class="container block layout-row layout-align{{ layoutHorizontalAlignment }}{{ layoutVerticalAlignment }}"
+            class="example-container example-block layout-row layout-align{{ layoutHorizontalAlignment }}{{
+                layoutVerticalAlignment
+            }}"
         >
-            <div class="block">block 1</div>
-            <div class="block">block 2</div>
-            <div class="block">block 3</div>
+            <div class="example-block">block 1</div>
+            <div class="example-block">block 2</div>
+            <div class="example-block">block 3</div>
         </div>
     `
 })
