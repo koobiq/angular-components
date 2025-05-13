@@ -529,7 +529,7 @@ export class DemoComponent implements AfterViewInit {
             ]
         },
         {
-            name: 'READONLY',
+            name: 'READONLY FILTER',
             readonly: true,
             disabled: false,
             changed: false,
@@ -566,29 +566,37 @@ export class DemoComponent implements AfterViewInit {
                     disabled: false
                 }
             ]
+        },
+        {
+            name: 'READONLY PIPES',
+            readonly: true,
+            disabled: false,
+            changed: false,
+            saved: true,
+            pipes: [
+                {
+                    name: 'required',
+                    value: null,
+                    type: KbqPipeTypes.ReadOnly,
+
+                    required: true,
+                    cleanable: true,
+                    removable: false
+                },
+                {
+                    name: 'removable',
+                    value: '1111111111111111111111111111111111111111111111111111111111111111111111111',
+                    type: KbqPipeTypes.ReadOnly,
+
+                    required: false,
+                    cleanable: false,
+                    removable: true
+                }
+            ]
         }
     ];
     pipeTemplates: KbqPipeTemplate[];
-    defaultFilter: KbqFilter | null = {
-        name: '',
-        readonly: false,
-        disabled: false,
-        changed: false,
-        saved: false,
-        pipes: [
-            {
-                name: 'required',
-                // required - не может быть пустым, всегда есть дефолтное значение
-                value: { name: 'Не определен', id: '1' },
-                type: KbqPipeTypes.Select,
-
-                required: true,
-                cleanable: false,
-                removable: false,
-                disabled: false
-            }
-        ]
-    };
+    defaultFilter: KbqFilter | null = this.filters[9];
     activeFilter: KbqFilter | null = this.defaultFilter;
 
     ngAfterViewInit(): void {
