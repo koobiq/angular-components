@@ -69,7 +69,7 @@
                             }
                         ],
                         "stylePreprocessorOptions": {
-                            "includePaths": ["packages"]
+                            "includePaths": ["dist", "apps/docs/src"]
                         },
                         "styles": [
                             "apps/docs/src/main.scss"

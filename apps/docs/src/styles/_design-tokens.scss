@@ -38,7 +38,7 @@
         border-bottom: 1px solid var(--kbq-line-contrast-less);
 
         .kbq-markdown__td {
-            > .kbq-markdown__code[kbq-code-snippet] {
+            > .kbq-markdown__code.docs-code-snippet {
                 cursor: pointer;
             }
 

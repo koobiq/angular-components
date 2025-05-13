@@ -7,7 +7,7 @@
 
 <kbq-modal-body>
     <div class="docs-icon-preview-modal__preview-area">
-        <i #iconPreview kbq-icon [color]="selectedColorTheme" [ngClass]="iconItem.cssClass"></i>
+        <i #iconPreview kbq-icon [color]="selectedColorTheme()" [ngClass]="iconItem.cssClass"></i>
     </div>
     <div class="docs-icon-preview-modal__content">
         <kbq-form-field>
@@ -16,9 +16,9 @@
                     <i
                         kbq-icon="kbq-circle-xs_16"
                         class="docs-icon-preview-modal__palette-icon"
-                        [color]="selectedColorTheme"
+                        [color]="selectedColorTheme()"
                     ></i>
-                    {{ selectedColorTheme | titlecase }}
+                    {{ selectedColorTheme() | titlecase }}
                 </kbq-select-trigger>
 
                 @for (paletteName of themePalettes; track paletteName) {
@@ -51,13 +51,17 @@
             <kbq-dd>{{ iconItem.size }}px</kbq-dd>
 
             <kbq-dt>HTML</kbq-dt>
-            <kbq-dd kbqTooltip="Скопировать" (click)="copyCodeExample()">
-                <code [innerText]="getCodeExampleText()"></code>
+            <kbq-dd>
+                <code
+                    docsCodeSnippet
+                    [innerText]="codeExampleText()"
+                    [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'"
+                ></code>
             </kbq-dd>
 
             <kbq-dt>{{ isRuLocale() ? 'Для MS Word' : 'For MS Word' }}</kbq-dt>
             <kbq-dd>
-                <span #wordExample [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'" (click)="copyWordExample()">
+                <span #wordExample docsCodeSnippet [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'">
                     [#{{ getHexColor() }}]
                     <span class="docs-icon-unicode" [innerHtml]="getUnicode()"></span>
                 </span>

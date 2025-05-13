@@ -5,9 +5,11 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    computed,
     ElementRef,
     inject,
     Input,
+    model,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
@@ -23,6 +25,7 @@ import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { IconItem } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
 
 @Component({
     standalone: true,
@@ -36,7 +39,8 @@ import { DocsLocaleState } from 'src/app/services/locale';
         KbqModalModule,
         KbqDlModule,
         KbqToolTipModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        DocsCodeSnippetDirective
     ],
     selector: 'docs-icon-preview-modal-component',
     templateUrl: './icon-preview-modal.template.html',
@@ -61,8 +65,6 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
         KbqComponentColors.Warning
     ];
 
-    selectedColorTheme: KbqComponentColors | string = KbqComponentColors.Contrast;
-
     readonly componentColors = KbqComponentColors;
 
     private readonly clipboard = inject(Clipboard);
@@ -70,22 +72,20 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
     private readonly httpClient = inject(HttpClient);
     readonly modal = inject(KbqModalRef);
 
+    readonly selectedColorTheme = model<KbqComponentColors | string>(KbqComponentColors.Contrast);
+    readonly codeExampleText = computed(() => {
+        const selectedColorTheme = this.selectedColorTheme();
+        const color = selectedColorTheme === KbqComponentColors.Contrast ? '' : ` [color]="'${selectedColorTheme}'"`;
+
+        return `<i kbq-icon="${this.iconItem.cssClass}"${color}></i>`;
+    });
+
     ngAfterViewInit(): void {
         this.SVGLink = `assets/SVGIcons/${this.iconItem.id}.svg`;
     }
 
     onTagSelect(tag: string): void {
         this.modal.close(tag);
-    }
-
-    copyCodeExample(): void {
-        this.clipboard.copy(this.getCodeExampleText());
-        this.showSuccessfullyCopiedToast();
-    }
-
-    copyWordExample(): void {
-        this.clipboard.copy(this.wordExample.nativeElement.innerText);
-        this.showSuccessfullyCopiedToast();
     }
 
     copySVG(): void {
@@ -105,13 +105,6 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
             .getPropertyValue('color');
 
         return color ? this.parseColor(color)?.toUpperCase() : '';
-    }
-
-    getCodeExampleText(): string {
-        const color =
-            this.selectedColorTheme === KbqComponentColors.Contrast ? '' : ` [color]="'${this.selectedColorTheme}'"`;
-
-        return `<i kbq-icon="${this.iconItem.cssClass}"${color}></i>`;
     }
 
     getUnicode(): string {

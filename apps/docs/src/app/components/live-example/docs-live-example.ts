@@ -24,14 +24,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocsCodeSnippetComponent } from '../code-snippet/code-snippet';
+import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
 @Component({
     standalone: true,
     imports: [
         KbqCodeBlockModule,
-        DocsCodeSnippetComponent,
+        DocsCodeSnippetDirective,
         KbqToolTipModule,
         CdkPortal,
         KbqDividerModule,
@@ -48,7 +48,7 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
                 class="kbq-mono-normal"
                 [innerHTML]="htmlContent"
                 [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'"
-                kbq-code-snippet
+                docsCodeSnippet
             ></span>
         </ng-template>
     `,
@@ -190,7 +190,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     }
 
     private initCodeSnippets() {
-        const selector = 'kbq-code-snippet';
+        const selector = 'docsCodeSnippet';
 
         this.nativeElement.querySelectorAll(`[${selector}]`).forEach((element: Element) => {
             const { innerHTML, textContent } = element;

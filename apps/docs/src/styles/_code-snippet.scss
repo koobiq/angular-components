@@ -1,0 +1,6 @@
+@use 'components/core/styles/common';
+
+.docs-code-snippet {
+    cursor: pointer;
+    @include common.user-select(none);
+}
