@@ -25,7 +25,7 @@ import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { IconItem } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocsCodeSnippetComponent } from '../../code-snippet/code-snippet';
+import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
 
 @Component({
     standalone: true,
@@ -40,7 +40,7 @@ import { DocsCodeSnippetComponent } from '../../code-snippet/code-snippet';
         KbqDlModule,
         KbqToolTipModule,
         KbqBadgeModule,
-        DocsCodeSnippetComponent
+        DocsCodeSnippetDirective
     ],
     selector: 'docs-icon-preview-modal-component',
     templateUrl: './icon-preview-modal.template.html',

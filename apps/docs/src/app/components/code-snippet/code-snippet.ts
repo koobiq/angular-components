@@ -11,7 +11,7 @@ import { DocsLocaleState } from 'src/app/services/locale';
         '(click)': 'copy()'
     }
 })
-export class DocsCodeSnippetComponent extends DocsLocaleState {
+export class DocsCodeSnippetDirective extends DocsLocaleState {
     private readonly clipboard = inject(Clipboard);
     private readonly toastService = inject(KbqToastService);
     private readonly elementRef = inject(ElementRef);

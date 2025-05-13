@@ -24,14 +24,14 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocsCodeSnippetComponent } from '../code-snippet/code-snippet';
+import { DocsCodeSnippetDirective } from '../code-snippet/code-snippet';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
 @Component({
     standalone: true,
     imports: [
         KbqCodeBlockModule,
-        DocsCodeSnippetComponent,
+        DocsCodeSnippetDirective,
         KbqToolTipModule,
         CdkPortal,
         KbqDividerModule,
