@@ -44,7 +44,8 @@ export class KbqToggleChange {
         '[attr.id]': 'id',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-active]': 'checked',
-        '[class.kbq-indeterminate]': 'indeterminate'
+        '[class.kbq-indeterminate]': 'indeterminate',
+        '[class.kbq-toggle_progress]': 'inProgress'
     },
     animations: [
         trigger('switch', [
@@ -158,6 +159,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     private _indeterminate: boolean = false;
 
+    @Input() toggleAsyncHandler: (newState: boolean) => Promise<boolean>;
+
     @Output() readonly change: EventEmitter<KbqToggleChange> = new EventEmitter<KbqToggleChange>();
 
     /** Event emitted when the toggle's `indeterminate` value changes. */
@@ -167,6 +170,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
     protected clickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true });
+
+    protected inProgress: boolean = false;
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
@@ -203,7 +208,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.changeDetectorRef.markForCheck();
     }
 
-    onInputClick(event: MouseEvent) {
+    async onInputClick(event: MouseEvent) {
         // We have to stop propagation for click events on the visual hidden input element.
         // By default, when a user clicks on a label element, a generated click event will be
         // dispatched on the associated input element. Since we are using a label element as our
@@ -222,8 +227,30 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
                 });
             }
 
-            this.updateModelValue();
-            this.transitionCheckState(this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
+            if (this.toggleAsyncHandler !== undefined) {
+                this.inProgress = true;
+                const oldState = this.checked;
+
+                try {
+                    this._checked = !oldState;
+                    this.transitionCheckState(
+                        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
+                    );
+                    await this.toggleAsyncHandler(this._checked);
+                } catch {
+                    this._checked = oldState;
+                    this.transitionCheckState(
+                        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
+                    );
+                } finally {
+                    this.inProgress = false;
+                }
+            } else {
+                this.updateModelValue();
+                this.transitionCheckState(
+                    this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
+                );
+            }
 
             // Emit our custom change event if the native input emitted one.
             // It is important to only emit it, if the native input triggered one, because

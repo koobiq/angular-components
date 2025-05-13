@@ -50,7 +50,9 @@
     }
 
     &.kbq-disabled,
-    &.kbq-active.kbq-disabled {
+    &.kbq-active.kbq-disabled,
+    &.kbq-toggle_progress,
+    &.kbq-toggle_progress.kbq-active {
         @include _kbq-toggle-state($type, states-disabled);
     }
 }

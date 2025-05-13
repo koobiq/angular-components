@@ -57,6 +57,8 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     set indeterminate(value: boolean);
     readonly indeterminateChange: EventEmitter<boolean>;
     // (undocumented)
+    protected inProgress: boolean;
+    // (undocumented)
     inputElement: ElementRef<HTMLInputElement>;
     // (undocumented)
     get inputId(): string;
@@ -77,7 +79,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     onChangeEvent(event: Event): void;
     // (undocumented)
-    onInputClick(event: MouseEvent): void;
+    onInputClick(event: MouseEvent): Promise<void>;
     // (undocumented)
     onLabelTextChange(): void;
     // (undocumented)
@@ -90,11 +92,13 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     get tabIndex(): number;
     set tabIndex(value: number);
     // (undocumented)
+    toggleAsyncHandler: (newState: boolean) => Promise<boolean>;
+    // (undocumented)
     value: string;
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "toggleAsyncHandler": { "alias": "toggleAsyncHandler"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
 }

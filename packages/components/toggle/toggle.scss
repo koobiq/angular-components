@@ -1,6 +1,7 @@
 // @TODO should remove "selector-class-pattern" rule ignore (#DS-3753)
 /* stylelint-disable selector-class-pattern */
 @use '../core/styles/common/tokens';
+@use '../core/styles/common/animation';
 @use './toggle-theme' as theme;
 
 $toggle-thumb-offset: 8px;
