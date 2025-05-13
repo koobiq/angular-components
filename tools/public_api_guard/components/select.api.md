@@ -105,7 +105,6 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     clearValue($event: any): void;
     close(): void;
     readonly closedStream: Observable<void>;
-    // (undocumented)
     get colorForState(): KbqComponentColors;
     get compareWith(): (o1: any, o2: any) => boolean;
     set compareWith(fn: (o1: any, o2: any) => boolean);

@@ -77,7 +77,6 @@ export class KbqTreeSelect extends KbqAbstractSelect implements AfterContentInit
     clearValue($event: any): void;
     close(): void;
     readonly closedStream: Observable<void>;
-    // (undocumented)
     get colorForState(): KbqComponentColors;
     controlType: string;
     // (undocumented)

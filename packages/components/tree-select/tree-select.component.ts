@@ -473,8 +473,15 @@ export class KbqTreeSelect
         return !this.disabled && this.cleaner && this.selectionModel.hasValue();
     }
 
+    /** @docs-private */
     get colorForState(): KbqComponentColors {
-        return this.ngControl?.invalid || this.errorState ? KbqComponentColors.Error : KbqComponentColors.ContrastFade;
+        const hasLegacyValidateDirective = this.elementRef.nativeElement.classList.contains(
+            'kbq-control_has-validate-directive'
+        );
+
+        return (hasLegacyValidateDirective && this.ngControl?.invalid) || this.errorState
+            ? KbqComponentColors.Error
+            : KbqComponentColors.ContrastFade;
     }
 
     isEmptySearchResult: boolean;
