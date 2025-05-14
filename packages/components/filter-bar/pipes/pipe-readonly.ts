@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqBasePipe, KbqPipeMinWidth } from './base-pipe';
+import { KbqPipeButton } from './pipe-button';
 import { KbqPipeState } from './pipe-state';
 import { KbqPipeTitleDirective } from './pipe-title';
 
@@ -12,7 +10,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
     standalone: true,
     selector: 'kbq-pipe-readonly',
     template: `
-        <button class="kbq-disabled" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip" kbq-button>
+        <button [class.kbq-disabled]="data.removable" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip" kbq-button>
             <span class="kbq-pipe__name" #kbqTitleText kbqPipeMinWidth>{{ data.name }}</span>
             <span class="kbq-pipe__value" #kbqTitleText [class.kbq-pipe__value_empty]="!data.value" kbqPipeMinWidth>
                 {{ data.value }}
@@ -20,15 +18,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         </button>
 
         @if (!data.required || (data.required && !isEmpty)) {
-            <button
-                class="kbq-pipe__remove-button kbq-disabled"
-                [kbqPipeState]="data"
-                (click)="data.required ? onClear() : onRemove()"
-                kbq-button
-                kbqTooltip="{{ data.required ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
-            >
-                <i [color]="'contrast'" kbq-icon="kbq-xmark-s_16"></i>
-            </button>
+            <kbq-pipe-button [readonly]="!!data.removable" />
         }
 
         <ng-template #pipeTooltip>
@@ -37,6 +27,10 @@ import { KbqPipeTitleDirective } from './pipe-title';
         </ng-template>
     `,
     styleUrls: ['base-pipe.scss'],
+    host: {
+        // by design. we need to use disabled styles for removable pipes
+        '[class.kbq-pipe_disabled]': 'data.removable'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
@@ -51,16 +45,9 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPipeState,
         KbqPipeTitleDirective,
         KbqPipeMinWidth,
-        KbqIcon,
-        KbqTooltipTrigger
+        KbqPipeButton
     ]
 })
 export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
-    readonly placements = PopUpPlacements;
-
-    get localeData() {
-        return this.filterBar?.configuration.pipe;
-    }
-
     open(): void {}
 }

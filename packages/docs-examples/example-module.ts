@@ -1466,6 +1466,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-pipe-types-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-readonly-pipe": {
+    "packagePath": "components/filter-bar/filter-bar-readonly-pipe",
+    "title": "filter-bar-readonly-pipe",
+    "componentName": "FilterBarReadonlyPipeExample",
+    "files": [
+      "filter-bar-readonly-pipe-example.ts"
+    ],
+    "selector": "filter-bar-readonly-pipe-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-readonly-pipe-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-readonly-pipes": {
+    "packagePath": "components/filter-bar/filter-bar-readonly-pipes",
+    "title": "filter-bar-readonly-pipes",
+    "componentName": "FilterBarReadonlyPipesExample",
+    "files": [
+      "filter-bar-readonly-pipes-example.ts"
+    ],
+    "selector": "filter-bar-readonly-pipes-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-readonly-pipes-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-removable": {
     "packagePath": "components/filter-bar/filter-bar-removable",
     "title": "filter-bar-removable",
@@ -4324,6 +4348,10 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-pipe-types':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-readonly-pipe':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-readonly-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-removable':
 return import('@koobiq/docs-examples/components/filter-bar');

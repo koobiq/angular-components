@@ -31,6 +31,12 @@ import { DevLocaleSelector } from '../locale-selector';
     imports: [FilterBarExamplesModule],
     selector: 'dev-docs-examples',
     template: `
+        <filter-bar-readonly-pipe-example />
+        <br />
+        <br />
+        <filter-bar-readonly-pipes-example />
+        <br />
+        <br />
         <filter-bar-uniq-pipes-example />
         <br />
         <br />
@@ -577,6 +583,15 @@ export class DemoComponent implements AfterViewInit {
                 {
                     name: 'required',
                     value: null,
+                    type: KbqPipeTypes.ReadOnly,
+
+                    required: true,
+                    cleanable: true,
+                    removable: false
+                },
+                {
+                    name: 'required',
+                    value: 'value',
                     type: KbqPipeTypes.ReadOnly,
 
                     required: true,
