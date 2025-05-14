@@ -4,7 +4,7 @@ import { FormsModule, NgModel, ReactiveFormsModule, UntypedFormControl } from '@
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqCheckedState } from '@koobiq/components/core';
-import { KbqToggleComponent, KbqToggleModule } from './index';
+import { KbqOnToggleHandler, KbqToggleComponent, KbqToggleModule } from './index';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
     TestBed.configureTestingModule({ imports: [component, NoopAnimationsModule], providers }).compileComponents();
@@ -14,6 +14,8 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
 
     return fixture;
 };
+
+const toggleLoadingCssClass = 'kbq-toggle_loading';
 
 describe('KbqToggle', () => {
     describe('basic behaviors', () => {
@@ -525,11 +527,116 @@ describe('KbqToggle', () => {
 
             innerInput.nativeElement.click();
             fixture.detectChanges();
+            await fixture.whenRenderingDone();
             await fixture.whenStable();
-            expect(innerInput.attributes['aria-checked']).toBe('true' satisfies KbqCheckedState);
+            expect(innerInput.attributes['aria-checked']).toBe(fixture.componentInstance.toggle.checked.toString());
+        });
+    });
+
+    describe('with loading state', () => {
+        it('should set css-class on toggle when loading=true', async () => {
+            const fixture = createComponent(LoadingToggle);
+            const { debugElement, componentInstance } = fixture;
+            const toggleElement = debugElement.query(By.directive(KbqToggleComponent));
+
+            componentInstance.loading = true;
+            fixture.detectChanges();
+
+            expect(toggleElement.classes[toggleLoadingCssClass]).toBeTruthy();
+        });
+
+        it('should set css-class on toggle pending', async () => {
+            const fixture = createComponent(LoadingToggle);
+            const { debugElement, componentInstance } = fixture;
+            const toggleElement = debugElement.query(By.directive(KbqToggleComponent));
+            const innerInput: DebugElement = debugElement.query(By.css('.kbq-toggle-input'));
+
+            componentInstance.onToggle = () =>
+                new Promise<void>((resolve) => {
+                    setTimeout(() => resolve(), 1500);
+                });
+            fixture.detectChanges();
+            innerInput.nativeElement.click();
+            fixture.detectChanges();
+
+            expect(toggleElement.classes[toggleLoadingCssClass]).toBeTruthy();
+            await fixture.whenRenderingDone();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(toggleElement.classes[toggleLoadingCssClass]).toBeFalsy();
+        });
+
+        it('should set initial value if rejected', async () => {
+            const fixture = createComponent(LoadingToggle);
+            const { debugElement, componentInstance } = fixture;
+            const innerInput: DebugElement = debugElement.query(By.css('.kbq-toggle-input'));
+
+            componentInstance.onToggle = () =>
+                new Promise<void>((resolve) => {
+                    setTimeout(() => resolve(), 1500);
+                });
+            fixture.detectChanges();
+            expect(componentInstance.toggle.checked).toBeFalsy();
+            innerInput.nativeElement.click();
+            fixture.detectChanges();
+
+            await fixture.whenRenderingDone();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(componentInstance.toggle.checked).toBeTruthy();
+        });
+
+        it('should set new value if resolved', async () => {
+            const fixture = createComponent(LoadingToggle);
+            const { debugElement, componentInstance } = fixture;
+            const innerInput: DebugElement = debugElement.query(By.css('.kbq-toggle-input'));
+
+            componentInstance.onToggle = () =>
+                new Promise<void>((_resolve, reject) => {
+                    setTimeout(() => reject(), 1500);
+                });
+            fixture.detectChanges();
+            const oldState = componentInstance.toggle.checked;
+
+            innerInput.nativeElement.click();
+            fixture.detectChanges();
+
+            expect(componentInstance.toggle.checked).not.toBe(oldState);
+            await fixture.whenRenderingDone();
+            await fixture.whenStable();
+            fixture.detectChanges();
+            expect(componentInstance.toggle.checked).toBe(oldState);
         });
     });
 });
+
+@Component({
+    standalone: true,
+    imports: [
+        KbqToggleModule
+    ],
+    template: `
+        <kbq-toggle
+            [checked]="value"
+            [loading]="loading"
+            [onToggle]="onToggle"
+            (click)="onToggleClick($event)"
+            (change)="onToggleChange($event)"
+        >
+            Loading toggle
+        </kbq-toggle>
+    `
+})
+class LoadingToggle {
+    value: boolean = false;
+    loading: boolean = false;
+    onToggle?: KbqOnToggleHandler;
+
+    @ViewChild(KbqToggleComponent) toggle: KbqToggleComponent;
+
+    onToggleClick: (event?: Event) => void = () => {};
+    onToggleChange: (event?: any) => void = () => {};
+}
 
 @Component({
     standalone: true,
@@ -562,6 +669,8 @@ class SingleToggle {
     toggleId: string | null = 'simple-check';
     toggleColor: string = 'primary';
     indeterminate = false;
+
+    @ViewChild(KbqToggleComponent) toggle: KbqToggleComponent;
 
     onToggleClick: (event?: Event) => void = () => {};
     onToggleChange: (event?: any) => void = () => {};

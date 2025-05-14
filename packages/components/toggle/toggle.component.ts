@@ -2,20 +2,20 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
+    forwardRef,
+    inject,
     Input,
+    numberAttribute,
     OnDestroy,
     Output,
     ViewChild,
-    ViewEncapsulation,
-    booleanAttribute,
-    forwardRef,
-    inject,
-    numberAttribute
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KBQ_CHECKBOX_CLICK_ACTION, TransitionCheckState } from '@koobiq/components/checkbox';
@@ -24,6 +24,9 @@ import { KbqAnimationCurves, KbqAnimationDurations, KbqCheckedState, KbqColorDir
 let nextUniqueId = 0;
 
 type ToggleLabelPositionType = 'left' | 'right';
+
+/** Handler type for toggle state changes. */
+export type KbqOnToggleHandler = (newState: boolean) => Promise<void>;
 
 export class KbqToggleChange {
     source: KbqToggleComponent;
@@ -45,7 +48,7 @@ export class KbqToggleChange {
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-active]': 'checked',
         '[class.kbq-indeterminate]': 'indeterminate',
-        '[class.kbq-toggle_progress]': 'inProgress'
+        '[class.kbq-toggle_loading]': 'loading'
     },
     animations: [
         trigger('switch', [
@@ -159,7 +162,19 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
 
     private _indeterminate: boolean = false;
 
-    @Input() toggleAsyncHandler: (newState: boolean) => Promise<boolean>;
+    /**
+     * Property for handling toggle state changes asynchronously.
+     * When provided, toggle will:
+     * 1. Immediately update its visual state (optimistic UI)
+     * 2. Call this handler with the new state
+     * 3. Revert if the handler rejects
+     * @note If not provided, the toggle will behave synchronously.
+     */
+    @Input() onToggle?: KbqOnToggleHandler;
+    /**
+     * Property for manually set loading state.
+     */
+    @Input({ transform: booleanAttribute }) loading: boolean = false;
 
     @Output() readonly change: EventEmitter<KbqToggleChange> = new EventEmitter<KbqToggleChange>();
 
@@ -170,8 +185,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     protected currentCheckState: TransitionCheckState = TransitionCheckState.Init;
 
     protected clickAction = inject(KBQ_CHECKBOX_CLICK_ACTION, { optional: true });
-
-    protected inProgress: boolean = false;
 
     private uniqueId: string = `kbq-toggle-${++nextUniqueId}`;
 
@@ -209,6 +222,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     async onInputClick(event: MouseEvent) {
+        if (this.loading) return;
         // We have to stop propagation for click events on the visual hidden input element.
         // By default, when a user clicks on a label element, a generated click event will be
         // dispatched on the associated input element. Since we are using a label element as our
@@ -221,35 +235,29 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         if (!this.disabled && this.clickAction !== 'noop') {
             // When user manually click on the toggle, `indeterminate` is set to false.
             if (this.indeterminate && this.clickAction !== 'check') {
-                Promise.resolve().then(() => {
+                await Promise.resolve().then(() => {
                     this._indeterminate = false;
                     this.indeterminateChange.emit(this._indeterminate);
                 });
             }
 
-            if (this.toggleAsyncHandler !== undefined) {
-                this.inProgress = true;
+            if (this.onToggle) {
+                this.loading = true;
                 const oldState = this.checked;
 
                 try {
-                    this._checked = !oldState;
-                    this.transitionCheckState(
-                        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
-                    );
-                    await this.toggleAsyncHandler(this._checked);
+                    // optimistically update UI
+                    this.checked = !oldState;
+                    await this.onToggle(this._checked);
                 } catch {
-                    this._checked = oldState;
-                    this.transitionCheckState(
-                        this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
-                    );
+                    this.checked = oldState;
                 } finally {
-                    this.inProgress = false;
+                    this.loading = false;
+                    this.onTouchedCallback();
                 }
             } else {
-                this.updateModelValue();
-                this.transitionCheckState(
-                    this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked
-                );
+                this.checked = !this.checked;
+                this.onTouchedCallback();
             }
 
             // Emit our custom change event if the native input emitted one.
@@ -281,7 +289,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     private setTransitionCheckState() {
-        if (this._indeterminate) {
+        if (this.indeterminate) {
             this.transitionCheckState(TransitionCheckState.Indeterminate);
         } else {
             this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
@@ -291,11 +299,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     private onTouchedCallback = () => {};
 
     private onChangeCallback = (_: any) => {};
-
-    private updateModelValue() {
-        this._checked = !this.checked;
-        this.onTouchedCallback();
-    }
 
     private transitionCheckState(newState: TransitionCheckState) {
         const oldState = this.currentCheckState;

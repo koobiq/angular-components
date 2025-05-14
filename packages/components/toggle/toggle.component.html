@@ -19,7 +19,7 @@
         (keydown.enter)="input.click()"
     />
     <div class="kbq-toggle-bar-container">
-        <div class="kbq-toggle-bar" [class.kbq-progress]="inProgress">
+        <div class="kbq-toggle-bar" [class.kbq-progress]="loading">
             <div class="kbq-toggle__circle" [@switch]="currentCheckState"></div>
             <div class="kbq-toggle__thumb"></div>
         </div>
