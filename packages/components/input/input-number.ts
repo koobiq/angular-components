@@ -387,7 +387,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             this.localeService?.id
         );
 
-        if (this.valueFromPaste === null) {
+        if (this.valueFromPaste === null || isNaN(this.valueFromPaste)) {
             event.preventDefault();
         } else if (this.integer && isFloat(this.valueFromPaste.toString())) {
             event.preventDefault();

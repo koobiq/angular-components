@@ -1012,7 +1012,7 @@ describe('KbqNumberInput', () => {
             expect(typeof fixture.componentInstance.value).toBe('number');
         }));
 
-        it('shoud NOT allow duplicated fractional part sign', fakeAsync(() => {
+        it('should NOT allow duplicated fractional part sign', fakeAsync(() => {
             const mockEvent: any = { preventDefault: () => true, keyCode: COMMA, key: ',' };
             const preventDefaultSpyFn = jest.spyOn(mockEvent, 'preventDefault');
             const previousValue = '0,12345';
@@ -1090,6 +1090,43 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(inputElement.value).toBe('10 000,7');
+        }));
+
+        it('nothing should happen when inserting a text value', fakeAsync(() => {
+            const mockEvent: any = { preventDefault: () => true };
+            const preventDefault = jest.spyOn(mockEvent, 'preventDefault');
+
+            expect(inputElement.value).toBe('');
+
+            fixture.componentInstance.localeService.setLocale('ru-RU');
+            fixture.detectChanges();
+            flush();
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault,
+                clipboardData: {
+                    getData: () => '1.234.567,89'
+                }
+            });
+            fixture.detectChanges();
+
+            fixture.componentInstance.inputNumberDirective.onInput({ inputType: 'insertFromPaste' } as any);
+            fixture.detectChanges();
+            flush();
+
+            expect(preventDefault).not.toHaveBeenCalled();
+            expect(inputElement.value).toBe('1 234 567,89');
+
+            inputElementDebug.triggerEventHandler('paste', {
+                preventDefault,
+                clipboardData: {
+                    getData: () => 'text_value'
+                }
+            });
+            fixture.detectChanges();
+            flush();
+
+            expect(preventDefault).toHaveBeenCalled();
+            expect(inputElement.value).toBe('1 234 567,89');
         }));
     });
 
