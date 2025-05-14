@@ -1,12 +1,15 @@
+import { A11yModule } from '@angular/cdk/a11y';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, Inject, NgModule, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Inject, NgModule, TemplateRef, ViewChild, inject as injectFn } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush, inject, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ESCAPE } from '@koobiq/cdk/keycodes';
 import { dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqButton, KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownItem, KbqDropdownModule, KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import {
     KBQ_SIDEPANEL_DATA,
     KbqSidepanelModule,
@@ -14,6 +17,13 @@ import {
     KbqSidepanelRef,
     KbqSidepanelService
 } from './index';
+
+/** Gets the currently-focused element while accounting for the shadow DOM. */
+function getActiveElement() {
+    const activeElement = document.activeElement as HTMLElement | null;
+
+    return (activeElement?.shadowRoot?.activeElement as HTMLElement) || activeElement;
+}
 
 describe('KbqSidepanelService', () => {
     let sidepanelService: KbqSidepanelService;
@@ -270,35 +280,95 @@ describe('KbqSidepanelService', () => {
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
     });
 
-    it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
-        const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
-        const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
-        const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
+    describe('focus', () => {
+        it('should set focus inside modal when opened by dropdown', fakeAsync(() => {
+            const activeElement: HTMLElement | null = document.activeElement as HTMLElement;
+            const fixtureComponent = TestBed.createComponent(SidepanelFromDropdownComponent);
+            const buttonElement = fixtureComponent.debugElement.nativeElement.querySelector('button');
 
-        fixtureComponent.detectChanges();
-        flush();
+            fixtureComponent.detectChanges();
+            flush();
 
-        expect(document.activeElement).not.toBe(buttonElement);
+            expect(document.activeElement).not.toBe(buttonElement);
 
-        fixtureComponent.componentInstance.trigger.open();
-        fixtureComponent.detectChanges();
-        flush();
+            fixtureComponent.componentInstance.trigger.open();
+            fixtureComponent.detectChanges();
+            flush();
 
-        const dropdownItems = fixtureComponent.debugElement
-            .queryAll(By.directive(KbqDropdownItem))
-            .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
+            const dropdownItems = fixtureComponent.debugElement
+                .queryAll(By.directive(KbqDropdownItem))
+                .map((debugElement) => debugElement.nativeElement as HTMLButtonElement);
 
-        dropdownItems[0].click();
-        fixtureComponent.detectChanges();
-        tick(1000);
+            dropdownItems[0].click();
+            fixtureComponent.detectChanges();
+            tick(1000);
 
-        expect(activeElement).not.toBe(buttonElement);
-        expect(activeElement).not.toBe(dropdownItems[0]);
-        expect(activeElement).toBeTruthy();
+            expect(activeElement).not.toBe(buttonElement);
+            expect(activeElement).not.toBe(dropdownItems[0]);
+            expect(activeElement).toBeTruthy();
 
-        flush();
-    }));
+            flush();
+        }));
+
+        it('should allow focus and change input outside sidepanel when hasBackdrop=false', fakeAsync(() => {
+            const fixture = TestBed.createComponent(SidepanelBackdropFocusComponent);
+            const { debugElement } = fixture;
+            const buttonEl = debugElement.query(By.directive(KbqButton)).nativeElement;
+            const inputElement = debugElement.query(By.css('input')).nativeElement;
+
+            fixture.detectChanges();
+
+            buttonEl.click();
+            fixture.detectChanges();
+            tick();
+            expect([buttonEl, inputElement]).not.toContain(getActiveElement());
+            expect(getActiveElement()).toBeTruthy();
+
+            inputElement.focus();
+            fixture.detectChanges();
+            tick();
+            expect(getActiveElement()).toBe(inputElement);
+        }));
+
+        it('should not focus and change input outside sidepanel when hasBackdrop=true', () => {
+            const fixture = TestBed.createComponent(SidepanelBackdropFocusComponent);
+            const { componentInstance, debugElement } = fixture;
+            const inputElement = debugElement.query(By.css('input')).nativeElement;
+
+            fixture.detectChanges();
+
+            componentInstance.openSidepanel(true);
+            fixture.detectChanges();
+
+            inputElement.focus();
+            fixture.detectChanges();
+            setTimeout(() => {
+                expect(getActiveElement()).not.toBe(inputElement);
+            });
+        });
+    });
 });
+
+@Component({
+    selector: 'kbq-sidepanel-backdrop-focus',
+    template: `
+        <button (click)="openSidepanel(false)" kbq-button>Open sidepanel without backdrop</button>
+        <kbq-form-field>
+            <input kbqInput placeholder="Placeholder" />
+        </kbq-form-field>
+        <ng-template #templateRef><button>FOCUSABLE ELEMENT</button></ng-template>
+    `,
+    providers: [KbqSidepanelService]
+})
+class SidepanelBackdropFocusComponent {
+    @ViewChild('templateRef') templateRef!: TemplateRef<any>;
+
+    sidepanelService = injectFn(KbqSidepanelService);
+
+    openSidepanel(hasBackdrop: boolean) {
+        this.sidepanelService.open(this.templateRef, { hasBackdrop });
+    }
+}
 
 @Component({
     template: `
@@ -386,7 +456,8 @@ const TEST_COMPONENTS = [
     SimpleSidepanelExample,
     ComponentWithTemplateForSidepanel,
     RootComponent,
-    SidepanelFromDropdownComponent
+    SidepanelFromDropdownComponent,
+    SidepanelBackdropFocusComponent
 ];
 
 @NgModule({
@@ -394,7 +465,10 @@ const TEST_COMPONENTS = [
         KbqSidepanelModule,
         NoopAnimationsModule,
         KbqDropdownModule,
-        KbqButtonModule
+        KbqButtonModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        A11yModule
     ],
     exports: TEST_COMPONENTS,
     declarations: TEST_COMPONENTS
