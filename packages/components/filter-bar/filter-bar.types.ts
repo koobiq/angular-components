@@ -78,6 +78,7 @@ export interface KbqPipe {
     value: unknown | null;
 
     search?: boolean;
+    selectAll?: boolean;
 
     required: boolean;
     cleanable?: boolean;

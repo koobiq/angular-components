@@ -77,7 +77,8 @@ export const ruRULocaleData = {
             clearButtonTooltip: 'Очистить',
             removeButtonTooltip: 'Удалить',
             applyButton: 'Применить',
-            emptySearchResult: 'Ничего не найдено'
+            emptySearchResult: 'Ничего не найдено',
+            selectAll: 'Выбрать все'
         },
         datePipe: {
             customPeriod: 'Произвольный период',

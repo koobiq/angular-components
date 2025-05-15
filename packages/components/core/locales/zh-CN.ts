@@ -76,7 +76,8 @@ export const zhCNLocaleData = {
             clearButtonTooltip: '清除',
             removeButtonTooltip: '删除',
             applyButton: '应用',
-            emptySearchResult: '未找到任何内容'
+            emptySearchResult: '未找到任何内容',
+            selectAll: '选择全部'
         },
         datePipe: {
             customPeriod: '自定义时段',

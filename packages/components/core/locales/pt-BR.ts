@@ -76,7 +76,8 @@ export const ptBRLocaleData = {
             clearButtonTooltip: 'Apagar',
             removeButtonTooltip: 'Excluir',
             applyButton: 'Aplicar',
-            emptySearchResult: 'Nada encontrado'
+            emptySearchResult: 'Nada encontrado',
+            selectAll: 'Selecionar tudo'
         },
         datePipe: {
             customPeriod: 'Período personalizado',

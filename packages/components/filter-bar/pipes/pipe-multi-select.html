@@ -36,12 +36,20 @@
                 placeholder="{{ localeData.search.placeholder }}"
                 type="text"
                 [formControl]="searchControl"
+                (keydown.enter)="toggleSelectionAllByEnterKey()"
             />
             <kbq-cleaner />
         </kbq-form-field>
     }
 
     <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
+
+    @if (!select.isEmptySearchResult) {
+        <kbq-option [selectable]="false" (click)="toggleSelectionAll()" (keydown.enter)="toggleSelectionAll()">
+            <kbq-pseudo-checkbox [state]="checkboxState" />
+            {{ localeData.pipe.selectAll }}
+        </kbq-option>
+    }
 
     @for (item of filteredOptions | async; track item) {
         <kbq-option [value]="item">
