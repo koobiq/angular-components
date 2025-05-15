@@ -51,22 +51,7 @@ export class FilterBarMasterCheckboxExample {
         {
             name: 'MultiSelect',
             type: KbqPipeTypes.MultiSelect,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' },
-                { name: 'Option 21', id: '21' },
-                { name: 'Option 22', id: '22' },
-                { name: 'Option 23', id: '23' },
-                { name: 'Option 24', id: '24' },
-                { name: 'Option 25', id: '25' },
-                { name: 'Option 26', id: '26' },
-                { name: 'Option 27', id: '27' }
-            ],
+            values: Array.from({ length: 20 }, (_, i) => ({ name: `Option #${i}`, id: i.toString() })),
             required: false,
             cleanable: false,
             removable: true,
