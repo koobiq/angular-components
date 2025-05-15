@@ -25,9 +25,6 @@ let nextUniqueId = 0;
 
 type ToggleLabelPositionType = 'left' | 'right';
 
-/** Handler type for toggle state changes. */
-export type KbqOnToggleHandler = (newState: boolean) => Promise<void>;
-
 export class KbqToggleChange {
     source: KbqToggleComponent;
     checked: boolean;
@@ -160,16 +157,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     private _indeterminate: boolean = false;
-
-    /**
-     * Property for handling toggle state changes asynchronously.
-     * When provided, toggle will:
-     * 1. Immediately update its visual state (optimistic UI)
-     * 2. Call this handler with the new state
-     * 3. Revert if the handler rejects
-     * @note If not provided, the toggle will behave synchronously.
-     */
-    @Input() onToggle?: KbqOnToggleHandler;
     /**
      * Property for manually set loading state.
      */
@@ -220,7 +207,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         this.changeDetectorRef.markForCheck();
     }
 
-    async onInputClick(event: MouseEvent) {
+    onInputClick(event: MouseEvent) {
         if (this.loading) return;
         // We have to stop propagation for click events on the visual hidden input element.
         // By default, when a user clicks on a label element, a generated click event will be
@@ -234,31 +221,15 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
         if (!this.disabled && this.clickAction !== 'noop') {
             // When user manually click on the toggle, `indeterminate` is set to false.
             if (this.indeterminate && this.clickAction !== 'check') {
-                await Promise.resolve().then(() => {
+                Promise.resolve().then(() => {
                     this._indeterminate = false;
                     this.indeterminateChange.emit(this._indeterminate);
                 });
             }
 
-            if (this.onToggle) {
-                this.loading = true;
-                const oldState = this.checked;
-
-                try {
-                    // optimistically update UI
-                    this.checked = !oldState;
-                    await this.onToggle(this._checked);
-                } catch {
-                    this.checked = oldState;
-                } finally {
-                    this.loading = false;
-                    this.onTouchedCallback();
-                }
-            } else {
-                this.checked = !this.checked;
-                this.onTouchedCallback();
-            }
-
+            this._checked = !this.checked;
+            this.onTouchedCallback();
+            this.transitionCheckState(this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
             // Emit our custom change event if the native input emitted one.
             // It is important to only emit it, if the native input triggered one, because
             // we don't want to trigger a change event, when the `checked` variable changes for example.

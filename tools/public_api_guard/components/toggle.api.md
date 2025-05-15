@@ -83,7 +83,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     onChangeEvent(event: Event): void;
     // (undocumented)
-    onInputClick(event: MouseEvent): Promise<void>;
+    onInputClick(event: MouseEvent): void;
     // (undocumented)
     onLabelTextChange(): void;
     onToggle?: KbqOnToggleHandler;

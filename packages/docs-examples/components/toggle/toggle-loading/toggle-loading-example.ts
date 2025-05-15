@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { KbqOnToggleHandler, KbqToggleModule } from '@koobiq/components/toggle';
+import { KbqToggleChange, KbqToggleModule } from '@koobiq/components/toggle';
+import { timer } from 'rxjs';
 
 /**
  * @title Toggle Loading
@@ -9,7 +10,7 @@ import { KbqOnToggleHandler, KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'toggle-loading-example',
     imports: [KbqToggleModule],
     template: `
-        <kbq-toggle [checked]="checked()" [onToggle]="onToggle" (change)="checked.set($event.checked)" />
+        <kbq-toggle [checked]="checked()" [loading]="loading" (change)="handleToggle($event)" />
     `,
     host: {
         class: 'layout-row layout-align-center-center'
@@ -18,8 +19,13 @@ import { KbqOnToggleHandler, KbqToggleModule } from '@koobiq/components/toggle';
 })
 export class ToggleLoadingExample {
     protected readonly checked = signal(false);
-    protected onToggle: KbqOnToggleHandler = () =>
-        new Promise((resolve) => {
-            setTimeout(() => resolve(), 3000);
+    protected loading = false;
+
+    handleToggle({ checked }: KbqToggleChange) {
+        this.loading = true;
+        timer(3000).subscribe(() => {
+            this.loading = false;
+            this.checked.set(checked);
         });
+    }
 }
