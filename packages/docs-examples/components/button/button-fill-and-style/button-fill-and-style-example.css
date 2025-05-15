@@ -1,3 +1,7 @@
+:host {
+    display: flex;
+}
+
 .example-fill-and-style__button-group {
     display: inline-flex;
     flex-direction: row;
