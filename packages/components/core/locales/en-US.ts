@@ -77,7 +77,8 @@ export const enUSLocaleData = {
             clearButtonTooltip: 'Clear',
             removeButtonTooltip: 'Delete',
             applyButton: 'Apply',
-            emptySearchResult: 'Nothing found'
+            emptySearchResult: 'Nothing found',
+            selectAll: 'Select all'
         },
         datePipe: {
             customPeriod: 'Custom period',

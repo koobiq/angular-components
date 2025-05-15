@@ -76,7 +76,8 @@ export const faIRLocaleData = {
             clearButtonTooltip: 'پاک کردن',
             removeButtonTooltip: 'حذف',
             applyButton: 'اعمال',
-            emptySearchResult: 'چیزی پیدا نشد'
+            emptySearchResult: 'چیزی پیدا نشد',
+            selectAll: 'همه را انتخاب کنید'
         },
         datePipe: {
             customPeriod: 'دوره سفارشی',

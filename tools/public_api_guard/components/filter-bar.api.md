@@ -21,6 +21,7 @@ import { KbqListSelection } from '@koobiq/components/list';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqOption } from '@koobiq/components/core';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
+import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Observable } from 'rxjs';
@@ -29,6 +30,7 @@ import { OnInit } from '@angular/core';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { PopUpSizes } from '@koobiq/components/core';
 import { Provider } from '@angular/core';
+import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -77,6 +79,7 @@ export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION: {
         removeButtonTooltip: string;
         applyButton: string;
         emptySearchResult: string;
+        selectAll: string;
     };
     datePipe: {
         customPeriod: string;
@@ -336,6 +339,8 @@ export interface KbqPipe {
     // (undocumented)
     search?: boolean;
     // (undocumented)
+    selectAll?: boolean;
+    // (undocumented)
     type: KbqPipeType;
     // (undocumented)
     value: unknown | null;
@@ -504,19 +509,20 @@ export class KbqPipeMinWidth {
 
 // @public (undocumented)
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit {
+    get checkboxState(): KbqPseudoCheckboxState;
     compareByValue: (o1: any, o2: any) => boolean;
     filteredOptions: Observable<any[]>;
     get isEmpty(): boolean;
-    // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
     onClear(): void;
-    // (undocumented)
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
+    options: QueryList<KbqOption>;
     searchControl: UntypedFormControl;
     select: KbqSelect;
     get selected(): KbqSelectValue[] | null;
+    toggleSelectionAll(): void;
+    toggleSelectionAllByEnterKey(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeMultiSelectComponent, "kbq-pipe-multi-select", never, {}, {}, never, never, true, never>;
     // (undocumented)

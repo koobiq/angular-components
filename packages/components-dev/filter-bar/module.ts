@@ -31,6 +31,9 @@ import { DevLocaleSelector } from '../locale-selector';
     imports: [FilterBarExamplesModule],
     selector: 'dev-examples',
     template: `
+        <filter-bar-master-checkbox-example />
+        <br />
+        <br />
         <filter-bar-readonly-pipe-example />
         <br />
         <br />

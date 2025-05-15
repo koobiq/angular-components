@@ -1,8 +1,17 @@
 import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnInit,
+    QueryList,
+    ViewChild,
+    ViewChildren,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqOption, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -46,7 +55,8 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqIcon,
         KbqInputModule,
         ReactiveFormsModule,
-        AsyncPipe
+        AsyncPipe,
+        KbqPseudoCheckboxModule
     ]
 })
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit {
@@ -58,6 +68,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     /** @docs-private */
     @ViewChild(KbqSelect) select: KbqSelect;
 
+    /** @docs-private */
+    @ViewChildren(KbqOption) options: QueryList<KbqOption>;
+
     /** selected value */
     get selected() {
         return this.data.value;
@@ -68,6 +81,28 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         return !this.data.value?.length;
     }
 
+    /** state for checkbox 'select all'. */
+    get checkboxState(): KbqPseudoCheckboxState {
+        if (!this.options) return 'unchecked';
+
+        if (this.select.selectionModel.selected.length === this.values.length) {
+            return 'checked';
+        } else if (!this.select.selectionModel.selected.length) {
+            return 'unchecked';
+        }
+
+        return 'indeterminate';
+    }
+
+    private get visibleOptions(): KbqOption[] {
+        return this.options.filter((option) => option.selectable);
+    }
+
+    private get allOptionsSelected(): boolean {
+        return this.visibleOptions.every((option) => option.selected);
+    }
+
+    /** @docs-private */
     ngOnInit(): void {
         this.filteredOptions = merge(
             of(this.values),
@@ -75,17 +110,35 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         );
     }
 
+    /** @docs-private */
     onSelect(item: KbqSelectValue[]) {
         this.data.value = item;
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
     }
 
+    /** @docs-private */
     onClear() {
         this.data.value = [];
 
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
+    }
+
+    /** @docs-private */
+    toggleSelectionAllByEnterKey() {
+        if (this.select.keyManager.activeItemIndex === 0) {
+            this.toggleSelectionAll();
+        }
+    }
+
+    /** @docs-private */
+    toggleSelectionAll() {
+        if (this.allOptionsSelected) {
+            this.visibleOptions.forEach((option) => option.deselect());
+        } else {
+            this.visibleOptions.forEach((option) => option.select());
+        }
     }
 
     /** Comparator of selected options */

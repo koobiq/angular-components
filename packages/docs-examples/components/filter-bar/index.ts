@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { FilterBarCleanableExample } from './filter-bar-cleanable/filter-bar-cleanable-example';
 import { FilterBarCompleteFunctionsExample } from './filter-bar-complete-functions/filter-bar-complete-functions-example';
 import { FilterBarCustomPipeExample } from './filter-bar-custom-pipe/filter-bar-custom-pipe-example';
+import { FilterBarMasterCheckboxExample } from './filter-bar-master-checkbox/filter-bar-master-checkbox-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
 import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
 import { FilterBarReadonlyPipeExample } from './filter-bar-readonly-pipe/filter-bar-readonly-pipe-example';
@@ -16,6 +17,7 @@ export {
     FilterBarCleanableExample,
     FilterBarCompleteFunctionsExample,
     FilterBarCustomPipeExample,
+    FilterBarMasterCheckboxExample,
     FilterBarOverviewExample,
     FilterBarPipeTypesExample,
     FilterBarReadonlyPipeExample,
@@ -39,7 +41,8 @@ const EXAMPLES = [
     FilterBarCustomPipeExample,
     FilterBarUniqPipesExample,
     FilterBarReadonlyPipeExample,
-    FilterBarReadonlyPipesExample
+    FilterBarReadonlyPipesExample,
+    FilterBarMasterCheckboxExample
 ];
 
 @NgModule({

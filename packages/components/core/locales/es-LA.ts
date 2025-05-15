@@ -76,7 +76,8 @@ export const esLALocaleData = {
             clearButtonTooltip: 'Borrar',
             removeButtonTooltip: 'Eliminar',
             applyButton: 'Aplicar',
-            emptySearchResult: 'No se encontró nada'
+            emptySearchResult: 'No se encontró nada',
+            selectAll: 'Seleccionar todo'
         },
         datePipe: {
             customPeriod: 'Período personalizado',

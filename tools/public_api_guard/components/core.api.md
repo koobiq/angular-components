@@ -354,6 +354,7 @@ export const enUSLocaleData: {
             removeButtonTooltip: string;
             applyButton: string;
             emptySearchResult: string;
+            selectAll: string;
         };
         datePipe: {
             customPeriod: string;
@@ -496,6 +497,7 @@ export const esLALocaleData: {
             removeButtonTooltip: string;
             applyButton: string;
             emptySearchResult: string;
+            selectAll: string;
         };
         datePipe: {
             customPeriod: string;
@@ -632,6 +634,7 @@ export const faIRLocaleData: {
             removeButtonTooltip: string;
             applyButton: string;
             emptySearchResult: string;
+            selectAll: string;
         };
         datePipe: {
             customPeriod: string;
@@ -832,6 +835,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 removeButtonTooltip: string;
                 applyButton: string;
                 emptySearchResult: string;
+                selectAll: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -954,6 +958,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 removeButtonTooltip: string;
                 applyButton: string;
                 emptySearchResult: string;
+                selectAll: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -1077,6 +1082,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 removeButtonTooltip: string;
                 applyButton: string;
                 emptySearchResult: string;
+                selectAll: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -1200,6 +1206,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 removeButtonTooltip: string;
                 applyButton: string;
                 emptySearchResult: string;
+                selectAll: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -1325,6 +1332,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 removeButtonTooltip: string;
                 applyButton: string;
                 emptySearchResult: string;
+                selectAll: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -1449,6 +1457,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 removeButtonTooltip: string;
                 applyButton: string;
                 emptySearchResult: string;
+                selectAll: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -1573,6 +1582,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 removeButtonTooltip: string;
                 applyButton: string;
                 emptySearchResult: string;
+                selectAll: string;
             };
             datePipe: {
                 customPeriod: string;
@@ -2035,6 +2045,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     get id(): string;
     get multiple(): boolean | undefined;
     // (undocumented)
+    static ngAcceptInputType_selectable: unknown;
+    // (undocumented)
     static ngAcceptInputType_userSelect: unknown;
     // (undocumented)
     ngAfterViewChecked(): void;
@@ -2043,6 +2055,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
     select(): void;
+    // (undocumented)
+    selectable: boolean;
     // (undocumented)
     get selected(): boolean;
     selectViaInteraction(): void;
@@ -2059,7 +2073,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     value: any;
     get viewValue(): string;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "userSelect": { "alias": "userSelect"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "userSelect": { "alias": "userSelect"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, [null, null, { optional: true; }, { optional: true; }]>;
 }
@@ -2831,6 +2845,7 @@ export const ptBRLocaleData: {
             removeButtonTooltip: string;
             applyButton: string;
             emptySearchResult: string;
+            selectAll: string;
         };
         datePipe: {
             customPeriod: string;
@@ -3136,6 +3151,7 @@ export const ruRULocaleData: {
             removeButtonTooltip: string;
             applyButton: string;
             emptySearchResult: string;
+            selectAll: string;
         };
         datePipe: {
             customPeriod: string;
@@ -3364,6 +3380,7 @@ export const tkTMLocaleData: {
             removeButtonTooltip: string;
             applyButton: string;
             emptySearchResult: string;
+            selectAll: string;
         };
         datePipe: {
             customPeriod: string;
@@ -3513,6 +3530,7 @@ export const zhCNLocaleData: {
             removeButtonTooltip: string;
             applyButton: string;
             emptySearchResult: string;
+            selectAll: string;
         };
         datePipe: {
             customPeriod: string;

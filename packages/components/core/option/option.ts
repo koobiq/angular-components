@@ -156,6 +156,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     /** The form value of the option. */
     @Input() value: any;
 
+    @Input({ transform: booleanAttribute }) selectable: boolean = true;
+
     // todo this flag will need to be rethought in the future (added for filter panel)
     @Input({ transform: booleanAttribute }) userSelect: boolean = false;
 
@@ -335,7 +337,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     selectViaInteraction(): void {
         if (this.userSelect) return;
 
-        if (!this.disabled) {
+        if (!this.disabled && this.selectable) {
             this._selected = this.multiple ? !this._selected : true;
 
             this.changeDetectorRef.markForCheck();

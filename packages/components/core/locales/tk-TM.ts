@@ -77,7 +77,8 @@ export const tkTMLocaleData = {
             clearButtonTooltip: 'Arassalamak',
             removeButtonTooltip: 'Pozmak',
             applyButton: 'Ulanmak',
-            emptySearchResult: 'Hiç zat tapylmady'
+            emptySearchResult: 'Hiç zat tapylmady',
+            selectAll: 'Hemmesini saýlaň'
         },
         datePipe: {
             customPeriod: 'Erkin döwür',

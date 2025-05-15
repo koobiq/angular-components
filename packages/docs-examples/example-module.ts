@@ -1442,6 +1442,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-custom-pipe-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-master-checkbox": {
+    "packagePath": "components/filter-bar/filter-bar-master-checkbox",
+    "title": "filter-bar-master-checkbox",
+    "componentName": "FilterBarMasterCheckboxExample",
+    "files": [
+      "filter-bar-master-checkbox-example.ts"
+    ],
+    "selector": "filter-bar-master-checkbox-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-master-checkbox-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-overview": {
     "packagePath": "components/filter-bar/filter-bar-overview",
     "title": "filter bar",
@@ -4356,6 +4368,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-complete-functions':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-custom-pipe':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
 return import('@koobiq/docs-examples/components/filter-bar');

@@ -491,7 +491,7 @@ export class KbqSelect
     private withVirtualScroll: boolean;
 
     get isEmptySearchResult(): boolean {
-        return this.search && this.options.length === 0 && !!this.search.value();
+        return this.search && this.options.filter((option) => option.selectable).length === 0 && !!this.search.value();
     }
 
     get canShowCleaner(): boolean {
