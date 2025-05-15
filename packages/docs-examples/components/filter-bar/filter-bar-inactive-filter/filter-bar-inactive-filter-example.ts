@@ -1,0 +1,52 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/filter-bar';
+
+/**
+ * @title filter-bar-readonly-pipe
+ */
+@Component({
+    standalone: true,
+    selector: 'filter-bar-inactive-filter-example',
+    imports: [
+        KbqFilterBarModule
+    ],
+    template: `
+        <kbq-filter-bar [(filter)]="activeFilter">
+            @for (pipe of activeFilter.pipes; track pipe) {
+                <ng-container *kbqPipe="pipe" />
+            }
+        </kbq-filter-bar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class FilterBarInactiveFilterExample {
+    activeFilter: KbqFilter = {
+        name: '',
+        readonly: false,
+        disabled: false,
+        changed: false,
+        saved: false,
+        pipes: [
+            {
+                name: 'Filter',
+                value: null,
+                type: KbqPipeTypes.ReadOnly,
+
+                required: true,
+                cleanable: false,
+                removable: false,
+                disabled: true
+            },
+            {
+                name: 'Filter',
+                value: 'Value',
+                type: KbqPipeTypes.ReadOnly,
+
+                required: false,
+                cleanable: false,
+                removable: true,
+                disabled: true
+            }
+        ]
+    };
+}

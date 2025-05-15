@@ -1,3 +1,19 @@
+# 18.27.0 (2025-05-15)
+
+### Koobiq
+
+ * bug fix  **breadcrumbs:** remove wrap-mode from default ([#DS-3760](https://github.com/koobiq/angular-components/issues/issue/DS-3760)) ([#726](https://github.com/koobiq/angular-components/issues/726)) ([08cced7](https://github.com/koobiq/angular-components/commit/08cced765b2d3926190c99967fbd1bfe67a27655))
+ * bug fix  **icon:** `[color]` is overridden by other states ([#DS-3476](https://github.com/koobiq/angular-components/issues/issue/DS-3476)) ([#716](https://github.com/koobiq/angular-components/issues/716)) ([02e487f](https://github.com/koobiq/angular-components/commit/02e487f4cb2499537b37f6d813e757086fd74a2c))
+ * bug fix  **input:** do nothing if insertion results is NaN ([#DS-3697](https://github.com/koobiq/angular-components/issues/issue/DS-3697)) ([#722](https://github.com/koobiq/angular-components/issues/722)) ([c9b7997](https://github.com/koobiq/angular-components/commit/c9b79979460008598d660b4300289208c8379b72))
+ * bug fix  **pop-up:** unstable hiding interval ([#DS-3766](https://github.com/koobiq/angular-components/issues/issue/DS-3766)) ([#727](https://github.com/koobiq/angular-components/issues/727)) ([019451a](https://github.com/koobiq/angular-components/commit/019451ace50029a46b1537f06fad964bd0b98f2d))
+ * bug fix  **select, tree-select:** state color ([#DS-3751](https://github.com/koobiq/angular-components/issues/issue/DS-3751)) ([#718](https://github.com/koobiq/angular-components/issues/718)) ([6eb31ef](https://github.com/koobiq/angular-components/commit/6eb31ef5cd12afce3a082881249570df53dbc9e1))
+ * bug fix  **toast:** adjust margin when used custom position ([#DS-3370](https://github.com/koobiq/angular-components/issues/issue/DS-3370)) ([#714](https://github.com/koobiq/angular-components/issues/714)) ([9d4a870](https://github.com/koobiq/angular-components/commit/9d4a870013932f4429e20bb837acc6a466c2868c))
+ * feature  **docs:** default icon color in modal ([#DS-3747](https://github.com/koobiq/angular-components/issues/issue/DS-3747)) ([#720](https://github.com/koobiq/angular-components/issues/720)) ([4a16621](https://github.com/koobiq/angular-components/commit/4a166212267dc4db7ef064d5deff5b90a260637d))
+ * feature  **docs:** schematics section ([#DS-3646](https://github.com/koobiq/angular-components/issues/issue/DS-3646)) ([#728](https://github.com/koobiq/angular-components/issues/728)) ([ebc60a4](https://github.com/koobiq/angular-components/commit/ebc60a45cbaa12f86d344ebe8c226b77d8b0c49e))
+ * feature  **filter-bar:** added master checkbox ([#DS-3731](https://github.com/koobiq/angular-components/issues/issue/DS-3731)) ([#730](https://github.com/koobiq/angular-components/issues/730)) ([00ecf64](https://github.com/koobiq/angular-components/commit/00ecf644c345aa6aae509e307c73a89edd1794c9))
+ * feature  **filter-bar:** added readonly pipe ([#DS-3690](https://github.com/koobiq/angular-components/issues/issue/DS-3690)) ([#723](https://github.com/koobiq/angular-components/issues/723)) ([0a09f03](https://github.com/koobiq/angular-components/commit/0a09f032b020d0dfbe3293264cb69d0408105313))
+ * feature  **toggle:** progress state ([#DS-3462](https://github.com/koobiq/angular-components/issues/issue/DS-3462)) ([#724](https://github.com/koobiq/angular-components/issues/724)) ([b752b40](https://github.com/koobiq/angular-components/commit/b752b4004d2e756eaadea1bf636774080e4725d5))
+
 # 18.26.0 (2025-04-29)
 
 ### Koobiq
