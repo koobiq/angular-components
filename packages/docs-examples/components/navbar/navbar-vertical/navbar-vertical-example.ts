@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -24,9 +24,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqButtonModule,
         KbqToolTipModule,
         KbqIconModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarVerticalExample {
-    popUpPlacements = PopUpPlacements;
-    colors = KbqComponentColors;
+    readonly popUpPlacements = PopUpPlacements;
+    readonly colors = KbqComponentColors;
 }

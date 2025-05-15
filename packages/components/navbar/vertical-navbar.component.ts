@@ -15,6 +15,7 @@ import {
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { Subject } from 'rxjs';
 import { KbqNavbarBento, KbqNavbarItem, KbqNavbarRectangleElement } from './navbar-item.component';
@@ -83,7 +84,7 @@ export class KbqVerticalNavbar extends KbqFocusableComponent implements AfterCon
     ) {
         super(changeDetectorRef, elementRef, focusMonitor);
 
-        this.animationDone.subscribe(this.updateTooltipForItems);
+        this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 
         effect(() => this.setItemsVerticalStateAndUpdateExpandedState(this.rectangleElements()));
     }

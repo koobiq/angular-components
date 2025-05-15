@@ -132,7 +132,9 @@ export class KbqNavbarBrand implements AfterContentInit {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((value) => (this.hovered = !!value));
 
-        this.navbar?.animationDone.subscribe(() => this.title?.checkTextOverflown());
+        this.navbar?.animationDone
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.title?.checkTextOverflown());
     }
 }
 

@@ -229,7 +229,7 @@ export class KbqNavbar extends KbqFocusableComponent implements AfterViewInit, A
         super(changeDetectorRef, elementRef, focusMonitor);
 
         this.resizeSubscription = this.resizeStream
-            .pipe(debounceTime(this.resizeDebounceInterval))
+            .pipe(debounceTime(this.resizeDebounceInterval), takeUntilDestroyed())
             .subscribe(this.updateExpandedStateForItems);
 
         effect(() => this.setItemsState(this.rectangleElements()));
