@@ -45,10 +45,9 @@ export class KbqToggleChange {
         '[class.kbq-toggle_big]': 'big',
         '[id]': 'id',
         '[attr.id]': 'id',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'disabled || loading',
         '[class.kbq-active]': 'checked',
-        '[class.kbq-indeterminate]': 'indeterminate',
-        '[class.kbq-toggle_loading]': 'loading'
+        '[class.kbq-indeterminate]': 'indeterminate'
     },
     animations: [
         trigger('switch', [

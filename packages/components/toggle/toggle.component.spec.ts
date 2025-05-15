@@ -15,7 +15,7 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
     return fixture;
 };
 
-const toggleLoadingCssClass = 'kbq-toggle_loading';
+const toggleLoadingCssClass = 'kbq-disabled';
 
 describe('KbqToggle', () => {
     describe('basic behaviors', () => {

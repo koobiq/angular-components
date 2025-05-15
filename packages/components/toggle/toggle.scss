@@ -130,7 +130,7 @@ $toggle-thumb-offset: 8px;
     }
 }
 
-.kbq-toggle:not(.kbq-disabled, .kbq-toggle_loading) {
+.kbq-toggle:not(.kbq-disabled) {
     cursor: pointer;
 }
 

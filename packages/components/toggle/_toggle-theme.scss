@@ -50,9 +50,7 @@
     }
 
     &.kbq-disabled,
-    &.kbq-active.kbq-disabled,
-    &.kbq-toggle_loading,
-    &.kbq-toggle_loading.kbq-active {
+    &.kbq-active.kbq-disabled {
         @include _kbq-toggle-state($type, states-disabled);
     }
 }
@@ -65,8 +63,7 @@
             @include _kbq-toggle-color(error);
         }
 
-        &.kbq-disabled,
-        &.kbq-toggle_loading {
+        &.kbq-disabled {
             color: var(--kbq-states-foreground-disabled);
         }
 
