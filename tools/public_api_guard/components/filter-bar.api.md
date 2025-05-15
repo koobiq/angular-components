@@ -364,8 +364,9 @@ export class KbqPipeButton {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly filterBar: KbqFilterBar;
     get localeData(): any;
-    protected readonly pipe: KbqBasePipe<any>;
     // (undocumented)
+    static ngAcceptInputType_readonly: unknown;
+    protected readonly pipe: KbqBasePipe<any>;
     readonly: boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, { "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, true, never>;

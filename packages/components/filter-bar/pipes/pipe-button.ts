@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewEncapsulation } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Input,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -45,7 +53,8 @@ export class KbqPipeButton {
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    @Input() readonly: boolean = false;
+    /** enables/disables read-only state */
+    @Input({ transform: booleanAttribute }) readonly: boolean = false;
 
     /** localized data
      * @docs-private */

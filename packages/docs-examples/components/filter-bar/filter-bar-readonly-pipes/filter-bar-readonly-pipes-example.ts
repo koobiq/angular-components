@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
@@ -44,7 +44,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
                 </kbq-dd>
             }
         </kbq-dl>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarReadonlyPipesExample {
     readonlyPipes = [

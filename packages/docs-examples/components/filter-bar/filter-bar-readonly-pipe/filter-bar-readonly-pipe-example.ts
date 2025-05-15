@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
@@ -16,7 +16,8 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTypes } from '@koobiq/components/
                 <ng-container *kbqPipe="pipe" />
             }
         </kbq-filter-bar>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterBarReadonlyPipeExample {
     activeFilter: KbqFilter = {
