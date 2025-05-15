@@ -265,7 +265,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     hide = (delay: number = this.leaveDelay) => {
-        this.hidingIntervalSubscription.unsubscribe();
+        this.hidingIntervalSubscription?.unsubscribe();
 
         this.ngZone.run(() => this.instance?.hide(delay));
     };
