@@ -1,0 +1,42 @@
+name: E2E update screenshots
+
+on:
+  pull_request:
+  # issue_comment:
+  #   types: [created, edited]
+  # workflow_dispatch:
+  #   inputs:
+  #     update_screenshots:
+  #       description: 'Should the E2E screenshots be updated?'
+  #       type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update_screenshots:
+    # if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/e2e-update-screenshots') }}
+    # if: ${{ inputs.update_screenshots == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup yarn
+        uses: ./.github/workflows/actions/setup-yarn
+
+      - name: Install browsers
+        run: yarn run e2e:setup
+
+      - name: Update screenshots
+        run: yarn run e2e --update-snapshots
+
+      - name: Commit and push screenshots
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'test: auto-updated e2e screenshots'
+          file_pattern: 'e2e/**/*.png'

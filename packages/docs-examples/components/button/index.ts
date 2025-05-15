@@ -7,6 +7,7 @@ import { ButtonFixedContentExample } from './button-fixed-content/button-fixed-c
 import { ButtonHugContentExample } from './button-hug-content/button-hug-content-example';
 import { ButtonLoadingStateExample } from './button-loading-state/button-loading-state-example';
 import { ButtonOverviewExample } from './button-overview/button-overview-example';
+import { ButtonStateAndStyleExample } from './button-state-and-style/button-state-and-style-example';
 
 export {
     ButtonContentExample,
@@ -16,7 +17,8 @@ export {
     ButtonFixedContentExample,
     ButtonHugContentExample,
     ButtonLoadingStateExample,
-    ButtonOverviewExample
+    ButtonOverviewExample,
+    ButtonStateAndStyleExample
 };
 
 const EXAMPLES = [
@@ -27,7 +29,8 @@ const EXAMPLES = [
     ButtonFixedContentExample,
     ButtonHugContentExample,
     ButtonLoadingStateExample,
-    ButtonFillAndStyleOnlyIconExample
+    ButtonFillAndStyleOnlyIconExample,
+    ButtonStateAndStyleExample
 ];
 
 @NgModule({

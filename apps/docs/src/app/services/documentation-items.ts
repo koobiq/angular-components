@@ -229,7 +229,7 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     svgPreview: 'button',
                     hasApi: true,
                     apiId: 'button',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: 'button-toggle',
