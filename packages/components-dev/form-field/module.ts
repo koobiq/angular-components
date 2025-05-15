@@ -18,7 +18,7 @@ import {
     defaultCompareViewValues
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { DevFileFlatNode, DevFileNode } from '../tree-select/module';
+import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
 const OPTIONS = [
     'Value Value Value Value Value Value Value Value Value Value',

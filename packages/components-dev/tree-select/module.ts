@@ -8,14 +8,14 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
+    defaultCompareValues,
+    defaultCompareViewValues,
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
     KbqTreeOption,
-    KbqTreeSelection,
-    defaultCompareValues,
-    defaultCompareViewValues
+    KbqTreeSelection
 } from '@koobiq/components/tree';
 import {
     KbqTreeSelect,
@@ -23,87 +23,7 @@ import {
     KbqTreeSelectModule,
     kbqTreeSelectOptionsProvider
 } from '@koobiq/components/tree-select';
-
-export class DevFileNode {
-    children: DevFileNode[];
-    name: string;
-    type: any;
-}
-
-/** Flat node with expandable and level information */
-export class DevFileFlatNode {
-    name: string;
-    type: any;
-    level: number;
-    expandable: boolean;
-    parent: any;
-}
-
-/**
- * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
- * The return value is the list of `FileNode`.
- */
-function buildFileTree(value: any, level: number): DevFileNode[] {
-    const data: any[] = [];
-
-    for (const k of Object.keys(value)) {
-        const v = value[k];
-        const node = new DevFileNode();
-
-        node.name = `${k}`;
-
-        if (v === null || v === undefined) {
-            // no action
-        } else if (typeof v === 'object') {
-            node.children = buildFileTree(v, level + 1);
-        } else {
-            node.type = v;
-        }
-
-        data.push(node);
-    }
-
-    return data;
-}
-
-const DATA_OBJECT = {
-    rootNode_1: 'app',
-    Pictures: {
-        Sun: 'png',
-        Woods: 'jpg',
-        PhotoBoothLibrary: {
-            Contents: 'dir',
-            Pictures_2: 'dir'
-        }
-    },
-    Documents: {
-        Pictures_3: 'Pictures',
-        angular: {
-            src1: {
-                core: 'ts',
-                compiler: 'ts'
-            }
-        },
-        material2: {
-            src2: {
-                button: 'ts',
-                checkbox: 'ts',
-                input: 'ts'
-            }
-        }
-    },
-    Downloads: {
-        Tutorial: 'html',
-        November: 'pdf',
-        October: 'pdf'
-    },
-    Applications: {
-        Chrome: 'app',
-        Calendar: 'app',
-        Webstorm: 'app'
-    },
-    rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app'
-};
+import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
     selector: 'dev-app',
@@ -167,7 +87,7 @@ export class DevApp implements OnInit {
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-        this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+        this.dataSource.data = devBuildFileTree(DEV_DATA_OBJECT, 0);
     }
 
     ngOnInit(): void {
