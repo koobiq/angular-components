@@ -4,6 +4,8 @@ import { FilterBarCompleteFunctionsExample } from './filter-bar-complete-functio
 import { FilterBarCustomPipeExample } from './filter-bar-custom-pipe/filter-bar-custom-pipe-example';
 import { FilterBarOverviewExample } from './filter-bar-overview/filter-bar-overview-example';
 import { FilterBarPipeTypesExample } from './filter-bar-pipe-types/filter-bar-pipe-types-example';
+import { FilterBarReadonlyPipeExample } from './filter-bar-readonly-pipe/filter-bar-readonly-pipe-example';
+import { FilterBarReadonlyPipesExample } from './filter-bar-readonly-pipes/filter-bar-readonly-pipes-example';
 import { FilterBarRemovableExample } from './filter-bar-removable/filter-bar-removable-example';
 import { FilterBarRequiredExample } from './filter-bar-required/filter-bar-required-example';
 import { FilterBarSavedFiltersExample } from './filter-bar-saved-filters/filter-bar-saved-filters-example';
@@ -16,6 +18,8 @@ export {
     FilterBarCustomPipeExample,
     FilterBarOverviewExample,
     FilterBarPipeTypesExample,
+    FilterBarReadonlyPipeExample,
+    FilterBarReadonlyPipesExample,
     FilterBarRemovableExample,
     FilterBarRequiredExample,
     FilterBarSavedFiltersExample,
@@ -33,7 +37,9 @@ const EXAMPLES = [
     FilterBarCompleteFunctionsExample,
     FilterBarSavedFiltersExample,
     FilterBarCustomPipeExample,
-    FilterBarUniqPipesExample
+    FilterBarUniqPipesExample,
+    FilterBarReadonlyPipeExample,
+    FilterBarReadonlyPipesExample
 ];
 
 @NgModule({

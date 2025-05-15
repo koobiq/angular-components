@@ -2,6 +2,7 @@ import { DestroyRef, Directive, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButton, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqFilterBar } from '../filter-bar';
 import { KbqBasePipe } from './base-pipe';
 
 @Directive({
@@ -9,9 +10,15 @@ import { KbqBasePipe } from './base-pipe';
     selector: '[kbqPipeState]'
 })
 export class KbqPipeState<T> implements OnInit {
+    /** @docs-private */
     private readonly destroyRef = inject(DestroyRef);
+    /** @docs-private */
     private readonly button = inject(KbqButton);
+    /** @docs-private */
     private readonly pipe = inject(KbqBasePipe);
+    /** KbqFilterBar instance
+     * @docs-private */
+    private readonly filterBar = inject(KbqFilterBar);
 
     /** calculates and updates styles of button from pipe state */
     @Input({ alias: 'kbqPipeState' })
@@ -28,7 +35,7 @@ export class KbqPipeState<T> implements OnInit {
     private _state: T | null = null;
 
     ngOnInit(): void {
-        this.pipe.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
+        this.filterBar.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
     }
 
     private updateState = () => {

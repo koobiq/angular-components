@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
+import {
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Input,
+    ViewEncapsulation
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -14,13 +22,14 @@ import { KbqPipeState } from './pipe-state';
     template: `
         <button
             class="kbq-pipe__remove-button"
+            [class.kbq-disabled]="readonly"
             [disabled]="pipe.data.disabled"
             [kbqPipeState]="pipe.data"
             (click)="pipe.data.cleanable ? pipe.onClear() : pipe.onRemove()"
             kbq-button
             kbqTooltip="{{ pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
         >
-            <i kbq-icon="kbq-xmark-s_16"></i>
+            <i [color]="'contrast'" kbq-icon="kbq-xmark-s_16"></i>
         </button>
     `,
     styleUrl: 'pipe-button.scss',
@@ -43,6 +52,9 @@ export class KbqPipeButton {
     protected readonly filterBar = inject(KbqFilterBar);
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
+    /** enables/disables read-only state */
+    @Input({ transform: booleanAttribute }) readonly: boolean = false;
 
     /** localized data
      * @docs-private */

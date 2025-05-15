@@ -322,15 +322,15 @@ export class KbqFilters implements OnInit {
 // @public (undocumented)
 export interface KbqPipe {
     // (undocumented)
-    cleanable: boolean;
+    cleanable?: boolean;
     // (undocumented)
-    disabled: boolean;
+    disabled?: boolean;
     // (undocumented)
     id?: string | number;
     // (undocumented)
     name: string;
     // (undocumented)
-    removable: boolean;
+    removable?: boolean;
     // (undocumented)
     required: boolean;
     // (undocumented)
@@ -364,9 +364,12 @@ export class KbqPipeButton {
     protected readonly changeDetectorRef: ChangeDetectorRef;
     protected readonly filterBar: KbqFilterBar;
     get localeData(): any;
-    protected readonly pipe: KbqBasePipe<any>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, {}, {}, never, never, true, never>;
+    static ngAcceptInputType_readonly: unknown;
+    protected readonly pipe: KbqBasePipe<any>;
+    readonly: boolean;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeButton, "kbq-pipe-button", never, { "readonly": { "alias": "readonly"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeButton, never>;
 }
@@ -521,6 +524,16 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 }
 
 // @public (undocumented)
+export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
+    // (undocumented)
+    open(): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeReadonlyComponent, "kbq-pipe-readonly", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeReadonlyComponent, never>;
+}
+
+// @public (undocumented)
 export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
     compareByValue: (o1: any, o2: any) => boolean;
     filteredOptions: Observable<any[]>;
@@ -619,6 +632,8 @@ export enum KbqPipeTypes {
     Datetime = "datetime",
     // (undocumented)
     MultiSelect = "multiselect",
+    // (undocumented)
+    ReadOnly = "readonly",
     // (undocumented)
     Select = "select",
     // (undocumented)

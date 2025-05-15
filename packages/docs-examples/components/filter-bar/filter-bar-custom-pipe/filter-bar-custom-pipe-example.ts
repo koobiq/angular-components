@@ -102,7 +102,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
     }
 
     get showRemoveButton(): boolean {
-        return !this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty));
+        return !!(!this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty)));
     }
 
     get disabled(): boolean {

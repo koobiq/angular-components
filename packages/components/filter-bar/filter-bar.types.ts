@@ -4,6 +4,7 @@ import { KbqFilterBar } from './filter-bar';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
 import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
+import { KbqPipeReadonlyComponent } from './pipes/pipe-readonly';
 import { KbqPipeSelectComponent } from './pipes/pipe-select';
 import { KbqPipeTextComponent } from './pipes/pipe-text';
 
@@ -26,6 +27,7 @@ export const kbqFilterBarPipesProvider = (): Provider => {
 
 /** list of pipe types available out of the box */
 export enum KbqPipeTypes {
+    ReadOnly = 'readonly',
     Text = 'text',
     Select = 'select',
     MultiSelect = 'multiselect',
@@ -37,6 +39,7 @@ export type KbqPipeType = `${KbqPipeTypes}` | string;
 
 /** list of pipes available out of the box. */
 export const defaultFilterBarPipes: [string, unknown][] = [
+    [KbqPipeTypes.ReadOnly, KbqPipeReadonlyComponent],
     [KbqPipeTypes.Text, KbqPipeTextComponent],
     [KbqPipeTypes.Select, KbqPipeSelectComponent],
     [KbqPipeTypes.MultiSelect, KbqPipeMultiSelectComponent],
@@ -77,9 +80,9 @@ export interface KbqPipe {
     search?: boolean;
 
     required: boolean;
-    cleanable: boolean;
-    removable: boolean;
-    disabled: boolean;
+    cleanable?: boolean;
+    removable?: boolean;
+    disabled?: boolean;
 }
 
 export interface KbqPipeData<V> extends KbqPipe {
