@@ -24,7 +24,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
             <kbq-pipe-add />
 
-            @if (activeFilter?.changed) {
+            @if (filterHasChanges()) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
 
@@ -140,6 +140,13 @@ export class FilterBarReadonlyPipesExample {
     onResetFilter() {
         console.log('onResetFilter: ');
         this.activeFilter = this.getDefaultFilter();
+    }
+
+    filterHasChanges(): boolean {
+        return (
+            this.activeFilter.pipes.length > 1 ||
+            this.activeFilter.pipes[0].value !== this.getDefaultFilter().pipes[0].value
+        );
     }
 
     getDefaultFilter(): KbqFilter {
