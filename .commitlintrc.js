@@ -42,6 +42,7 @@ const config = {
                 'typography',
                 'styles',
                 'option',
+                'pop-up',
 
                 // others
                 'security',
