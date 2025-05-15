@@ -120,6 +120,16 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     svgPreview: 'tokens',
                     hasApi: false,
                     hasExamples: false
+                },
+                {
+                    id: 'schematics',
+                    name: {
+                        ru: 'Схематики',
+                        en: 'Schematics'
+                    },
+                    hasApi: false,
+                    hasExamples: false,
+                    isNew: expiresAt('2025-06-01')
                 }
             ]
         }
