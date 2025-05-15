@@ -2,11 +2,23 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
 
 @Component({
     standalone: true,
-    imports: [KbqButtonModule, KbqIconModule, KbqToolTipModule],
+    imports: [ButtonExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <button-state-and-style-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
+
+@Component({
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule, DevExamples],
     selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
@@ -14,6 +26,6 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {
-    colors = KbqComponentColors;
-    styles = KbqButtonStyles;
+    readonly colors = KbqComponentColors;
+    readonly styles = KbqButtonStyles;
 }

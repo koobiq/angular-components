@@ -1,0 +1,57 @@
+import { defineConfig, devices, ViewportSize } from '@playwright/test';
+
+const isCI = !!process.env.CI;
+
+const viewport: ViewportSize = {
+    width: 1200,
+    height: 720
+};
+
+const baseURL = process.env.BASE_URL || 'http://localhost:4200';
+
+/** @see https://playwright.dev/docs/test-configuration */
+export default defineConfig({
+    testDir: __dirname,
+    testMatch: ['**/*.playwright-spec.ts'],
+    fullyParallel: true,
+    forbidOnly: isCI,
+    retries: isCI ? 2 : 0,
+    workers: isCI ? 1 : undefined,
+    reporter: [
+        ['line'],
+        ['html', { open: 'never' }]
+    ],
+    projects: [
+        {
+            name: 'Chromium',
+            use: {
+                ...devices['Desktop Chrome HiDPI'],
+                viewport,
+                channel: 'chromium'
+            }
+        }
+    ],
+    expect: {
+        toHaveScreenshot: {
+            pathTemplate: '{testFileDir}/__screenshots__/{arg}{ext}',
+            threshold: 0.2,
+            scale: 'device',
+            animations: 'disabled'
+        }
+    },
+    webServer: {
+        command: 'yarn run docs',
+        url: baseURL,
+        timeout: 10 * 60 * 1000,
+        reuseExistingServer: !isCI
+    },
+    use: {
+        baseURL: baseURL,
+        trace: 'on-first-retry',
+        contextOptions: {
+            deviceScaleFactor: 2,
+            reducedMotion: 'reduce',
+            viewport
+        }
+    }
+});

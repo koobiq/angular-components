@@ -658,6 +658,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "button-overview-example.ts",
     "importPath": "components/button"
   },
+  "button-state-and-style": {
+    "packagePath": "components/button/button-state-and-style",
+    "title": "Button state and style",
+    "componentName": "ButtonStateAndStyleExample",
+    "files": [
+      "button-state-and-style-example.ts"
+    ],
+    "selector": "button-state-and-style-example",
+    "additionalComponents": [],
+    "primaryFile": "button-state-and-style-example.ts",
+    "importPath": "components/button"
+  },
   "checkbox-indeterminate": {
     "packagePath": "components/checkbox/checkbox-indeterminate",
     "title": "Checkbox indeterminate",
@@ -4421,6 +4433,8 @@ return import('@koobiq/docs-examples/components/button');
   case 'button-loading-state':
 return import('@koobiq/docs-examples/components/button');
   case 'button-overview':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-state-and-style':
 return import('@koobiq/docs-examples/components/button');
   case 'checkbox-indeterminate':
 return import('@koobiq/docs-examples/components/checkbox');
