@@ -2,20 +2,20 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { FocusMonitor } from '@angular/cdk/a11y';
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ElementRef,
     EventEmitter,
+    forwardRef,
+    inject,
     Input,
+    numberAttribute,
     OnDestroy,
     Output,
     ViewChild,
-    ViewEncapsulation,
-    booleanAttribute,
-    forwardRef,
-    inject,
-    numberAttribute
+    ViewEncapsulation
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { KBQ_CHECKBOX_CLICK_ACTION, TransitionCheckState } from '@koobiq/components/checkbox';
@@ -42,7 +42,7 @@ export class KbqToggleChange {
         '[class.kbq-toggle_big]': 'big',
         '[id]': 'id',
         '[attr.id]': 'id',
-        '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-disabled]': 'disabled || loading',
         '[class.kbq-active]': 'checked',
         '[class.kbq-indeterminate]': 'indeterminate'
     },
@@ -157,6 +157,10 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     private _indeterminate: boolean = false;
+    /**
+     * Property for manually set loading state.
+     */
+    @Input({ transform: booleanAttribute }) loading: boolean = false;
 
     @Output() readonly change: EventEmitter<KbqToggleChange> = new EventEmitter<KbqToggleChange>();
 
@@ -204,6 +208,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     onInputClick(event: MouseEvent) {
+        if (this.loading) return;
         // We have to stop propagation for click events on the visual hidden input element.
         // By default, when a user clicks on a label element, a generated click event will be
         // dispatched on the associated input element. Since we are using a label element as our
@@ -222,9 +227,9 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
                 });
             }
 
-            this.updateModelValue();
+            this._checked = !this.checked;
+            this.onTouchedCallback();
             this.transitionCheckState(this._checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
-
             // Emit our custom change event if the native input emitted one.
             // It is important to only emit it, if the native input triggered one, because
             // we don't want to trigger a change event, when the `checked` variable changes for example.
@@ -254,7 +259,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     }
 
     private setTransitionCheckState() {
-        if (this._indeterminate) {
+        if (this.indeterminate) {
             this.transitionCheckState(TransitionCheckState.Indeterminate);
         } else {
             this.transitionCheckState(this.checked ? TransitionCheckState.Checked : TransitionCheckState.Unchecked);
@@ -264,11 +269,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     private onTouchedCallback = () => {};
 
     private onChangeCallback = (_: any) => {};
-
-    private updateModelValue() {
-        this._checked = !this.checked;
-        this.onTouchedCallback();
-    }
 
     private transitionCheckState(newState: TransitionCheckState) {
         const oldState = this.currentCheckState;

@@ -12,6 +12,10 @@ The `indeterminate` state is applied using the boolean attribute `[indeterminate
 
 <!-- example(toggle-indeterminate) -->
 
+### Loading
+
+<!-- example(toggle-loading) -->
+
 ## Recommendations
 
 -   Use a toggle for instant switching of settings that don’t require confirmation. For example, changes apply immediately without needing a "Save" button. If form submission is required to save, use a [Checkbox](/en/components/checkbox) instead.

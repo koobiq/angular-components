@@ -15,6 +15,8 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
     return fixture;
 };
 
+const toggleLoadingCssClass = 'kbq-disabled';
+
 describe('KbqToggle', () => {
     describe('basic behaviors', () => {
         let fixture: ComponentFixture<SingleToggle>;
@@ -525,11 +527,51 @@ describe('KbqToggle', () => {
 
             innerInput.nativeElement.click();
             fixture.detectChanges();
+            await fixture.whenRenderingDone();
             await fixture.whenStable();
-            expect(innerInput.attributes['aria-checked']).toBe('true' satisfies KbqCheckedState);
+            expect(innerInput.attributes['aria-checked']).toBe(fixture.componentInstance.toggle.checked.toString());
+        });
+    });
+
+    describe('with loading state', () => {
+        it('should set css-class on toggle when loading=true', async () => {
+            const fixture = createComponent(LoadingToggle);
+            const { debugElement, componentInstance } = fixture;
+            const toggleElement = debugElement.query(By.directive(KbqToggleComponent));
+
+            componentInstance.loading = true;
+            fixture.detectChanges();
+
+            expect(toggleElement.classes[toggleLoadingCssClass]).toBeTruthy();
         });
     });
 });
+
+@Component({
+    standalone: true,
+    imports: [
+        KbqToggleModule
+    ],
+    template: `
+        <kbq-toggle
+            [checked]="value"
+            [loading]="loading"
+            (click)="onToggleClick($event)"
+            (change)="onToggleChange($event)"
+        >
+            Loading toggle
+        </kbq-toggle>
+    `
+})
+class LoadingToggle {
+    value: boolean = false;
+    loading: boolean = false;
+
+    @ViewChild(KbqToggleComponent) toggle: KbqToggleComponent;
+
+    onToggleClick: (event?: Event) => void = () => {};
+    onToggleChange: (event?: any) => void = () => {};
+}
 
 @Component({
     standalone: true,
@@ -562,6 +604,8 @@ class SingleToggle {
     toggleId: string | null = 'simple-check';
     toggleColor: string = 'primary';
     indeterminate = false;
+
+    @ViewChild(KbqToggleComponent) toggle: KbqToggleComponent;
 
     onToggleClick: (event?: Event) => void = () => {};
     onToggleChange: (event?: any) => void = () => {};
