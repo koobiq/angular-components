@@ -21,7 +21,7 @@ import { debounceTime, startWith, switchMap } from 'rxjs/operators';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevListExamples {}
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -32,7 +32,7 @@ export class DevListExamples {}
         KbqDropdownModule,
         KbqIconModule,
         KbqTitleModule,
-        DevListExamples,
+        DevExamples,
         JsonPipe,
         AsyncPipe
     ],
