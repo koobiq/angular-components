@@ -165,8 +165,8 @@ const typescriptRules = {
 const templateRules = {
     files: ['*.html'],
     extends: [
-        'plugin:@angular-eslint/template/recommended',
-        'plugin:@angular-eslint/template/accessibility'
+        /** @see https://github.com/angular-eslint/angular-eslint/blob/main/packages/angular-eslint/src/configs/template-all.ts */
+        'plugin:@angular-eslint/template/all'
     ],
     rules: {
         // plugin:@angular-eslint/template
@@ -175,8 +175,13 @@ const templateRules = {
         '@angular-eslint/template/click-events-have-key-events': 0,
         '@angular-eslint/template/interactive-supports-focus': 0,
         '@angular-eslint/template/label-has-associated-control': 0,
-        '@angular-eslint/template/prefer-self-closing-tags': 1,
-        '@angular-eslint/template/prefer-control-flow': 1
+        '@angular-eslint/template/i18n': 0,
+        '@angular-eslint/template/no-call-expression': 0,
+        '@angular-eslint/template/prefer-ngsrc': 0,
+        '@angular-eslint/template/no-inline-styles': 0,
+        '@angular-eslint/template/button-has-type': 0,
+        '@angular-eslint/template/no-interpolation-in-attributes': 0,
+        '@angular-eslint/template/attributes-order': 0
     }
 };
 
@@ -235,7 +240,6 @@ const componentsExamplesRules = {
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const appDocsRules = {
-    // Override rules for docs app
     files: ['apps/docs/**/*.ts'],
     rules: {
         // plugin:eslint
@@ -269,7 +273,6 @@ const appDocsRules = {
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const specRules = {
-    // Override rules for test files
     files: ['*.spec.ts', '*.karma-spec.ts'],
     rules: {
         '@angular-eslint/use-component-selector': 0,
@@ -295,14 +298,15 @@ const config = {
         'file-progress'
     ],
     extends: [
-        'plugin:eslint-comments/recommended'
+        'plugin:@eslint-community/eslint-comments/recommended'
     ],
     rules: {
         // plugin:file-progress
         'file-progress/activate': isCI ? 0 : 1,
 
-        // plugin:eslint-comments
-        'eslint-comments/no-unused-disable': 1
+        // plugin:@eslint-community/eslint-comments
+        '@eslint-community/eslint-comments/no-unused-disable': 1,
+        '@eslint-community/eslint-comments/disable-enable-pair': [1, { allowWholeFile: true }]
     },
     overrides: [
         javascriptAndTypescriptRules,
