@@ -19,9 +19,6 @@ import { KbqColorDirective } from '@koobiq/components/core';
 import { OnDestroy } from '@angular/core';
 import { TransitionCheckState } from '@koobiq/components/checkbox';
 
-// @public
-export type KbqOnToggleHandler = (newState: boolean) => Promise<void>;
-
 // @public (undocumented)
 export class KbqToggleChange {
     // (undocumented)
@@ -86,7 +83,6 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     onInputClick(event: MouseEvent): void;
     // (undocumented)
     onLabelTextChange(): void;
-    onToggle?: KbqOnToggleHandler;
     // (undocumented)
     registerOnChange(fn: any): void;
     // (undocumented)
@@ -101,7 +97,7 @@ export class KbqToggleComponent extends KbqColorDirective implements AfterViewIn
     // (undocumented)
     writeValue(value: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "onToggle": { "alias": "onToggle"; "required": false; }; "loading": { "alias": "loading"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqToggleComponent, "kbq-toggle", ["kbqToggle"], { "big": { "alias": "big"; "required": false; }; "labelPosition": { "alias": "labelPosition"; "required": false; }; "ariaLabel": { "alias": "aria-label"; "required": false; }; "ariaLabelledby": { "alias": "aria-labelledby"; "required": false; }; "id": { "alias": "id"; "required": false; }; "name": { "alias": "name"; "required": false; }; "value": { "alias": "value"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "tabIndex": { "alias": "tabIndex"; "required": false; }; "checked": { "alias": "checked"; "required": false; }; "indeterminate": { "alias": "indeterminate"; "required": false; }; "loading": { "alias": "loading"; "required": false; }; }, { "change": "change"; "indeterminateChange": "indeterminateChange"; }, never, ["*", "kbq-hint"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqToggleComponent, never>;
 }
