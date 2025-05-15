@@ -10,7 +10,16 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    AbstractControl,
+    FormArray,
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validators
+} from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import {
@@ -33,15 +42,45 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { interval, takeWhile, timer } from 'rxjs';
 import { FileUploadExamplesModule } from '../../docs-examples/components/file-upload';
 import { DevLocaleSelector } from '../locale-selector';
-import { maxFileExceededFiveMbs, maxFileSize } from './validation';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 const hintMessage = 'file upload hint';
 
+const maxFileExceededFiveMbs = (file: File) => {
+    if (!file) return null;
+
+    if (file.size > MAX_FILE_SIZE) {
+        return 'Размер файла превышает максимально допустимый (5 МБ)';
+    }
+
+    return null;
+};
+
+const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
+    const kilo = 1024;
+    const mega = kilo * kilo;
+    const maxMbytes = 5;
+    const maxSize = maxMbytes * mega;
+
+    const value: KbqFileItem[] = control.value;
+    let result: string | true | null = null;
+
+    if (!value.length) return null;
+
+    for (const fileItem of value) {
+        if ((fileItem.file?.size ?? 0) > maxSize) {
+            fileItem.hasError = true;
+            result = true;
+        }
+    }
+
+    return { maxFileSize: result };
+};
+
 @Directive({
     standalone: true,
-    selector: '[custom-text]',
+    selector: '[devCustomText]',
     providers: [
         {
             provide: KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -59,12 +98,12 @@ const hintMessage = 'file upload hint';
         }
     ]
 })
-export class CustomTextDirective {}
+export class DevCustomTextDirective {}
 
 @Component({
     standalone: true,
     imports: [FileUploadExamplesModule],
-    selector: 'file-upload-examples',
+    selector: 'dev-examples',
     template: `
         <file-upload-single-with-signal-example />
     `,
@@ -73,12 +112,12 @@ export class CustomTextDirective {}
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class FileUploadExamplesComponent {}
+class DevExamples {}
 
 @Component({
     standalone: true,
     imports: [KbqFileUploadModule, KbqIconModule, KbqFormFieldModule],
-    selector: 'file-upload-compact',
+    selector: 'dev-file-upload-compact',
     template: `
         <kbq-multiple-file-upload
             [disabled]="disabled"
@@ -101,9 +140,10 @@ class FileUploadExamplesComponent {}
                 captionText: KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION.captionTextForCompactSize
             }
         }
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MultipleFileUploadCompactComponent {
+export class DevMultipleFileUploadCompact {
     @Input() disabled: boolean;
     @Input() files: KbqFileItem[] = [];
     @Output() addedFile: EventEmitter<any> = new EventEmitter<any>();
@@ -118,10 +158,9 @@ export class MultipleFileUploadCompactComponent {
 @Component({
     standalone: true,
     imports: [
-        FileUploadExamplesComponent,
+        DevExamples,
         FileUploadExamplesModule,
         DevLocaleSelector,
-        FileUploadExamplesComponent,
         FormsModule,
         ReactiveFormsModule,
         KbqLocaleServiceModule,
@@ -133,16 +172,16 @@ export class MultipleFileUploadCompactComponent {
         KbqCheckboxModule,
         KbqRadioModule,
         KbqDataSizePipe,
-        MultipleFileUploadCompactComponent,
-        CustomTextDirective
+        DevMultipleFileUploadCompact,
+        DevCustomTextDirective
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FileUploadDev {
+export class DevApp {
     disabled = false;
     validation: KbqFileValidatorFn[] = [maxFileExceededFiveMbs];
     hintMessage = hintMessage;

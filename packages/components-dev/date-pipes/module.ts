@@ -1,16 +1,18 @@
-import { Component, inject, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KbqFormattersModule, KbqLocaleService } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqLuxonDateModule, KbqFormattersModule],
+    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     protected readonly dateAdapter: DateAdapter<DateTime> = inject(DateAdapter<DateTime>);
     protected readonly formatter: DateFormatter<DateTime> = inject(DateFormatter<DateTime>);
     protected readonly localeService: KbqLocaleService = inject(KbqLocaleService);
@@ -390,14 +392,3 @@ export class DemoComponent {
         this.iso.absolute.long.dateTime.notCurrentYear = this.dateAdapter.toIso8601(now.minus({ years: 1 }));
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqLuxonDateModule,
-        KbqFormattersModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

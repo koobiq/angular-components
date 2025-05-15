@@ -1,7 +1,6 @@
-import { Component, NgModule, OnInit, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -11,12 +10,24 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqAutocompleteModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormFieldModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        AsyncPipe
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent implements OnInit {
+export class DevApp implements OnInit {
     options = [
         'One',
         'Two',
@@ -72,20 +83,3 @@ export class DemoComponent implements OnInit {
         return this.options.filter((option) => option.toLowerCase().includes(filterValue));
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        FormsModule,
-        KbqAutocompleteModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqFormFieldModule,
-        KbqIconModule,
-        ReactiveFormsModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

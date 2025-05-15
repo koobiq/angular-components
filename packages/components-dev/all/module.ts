@@ -1,7 +1,5 @@
-import { Component, NgModule, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqMomentDateModule } from '@koobiq/angular-moment-adapter/adapter';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -35,7 +33,7 @@ import { Observable, of as observableOf } from 'rxjs';
 // the `default as` syntax.
 import * as _moment from 'moment';
 import { default as _rollupMoment, Moment } from 'moment';
-import { buildFileTree, DATA_OBJECT, FileFlatNode, FileNode } from '../tree/module';
+import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 const moment = _rollupMoment || _moment;
 
@@ -44,12 +42,43 @@ const STEP: number = 4;
 const MAX_PERCENT: number = 100;
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        KbqIconModule,
+        KbqButtonModule,
+        KbqButtonToggleModule,
+        KbqLinkModule,
+        KbqCheckboxModule,
+        KbqDropdownModule,
+        KbqInputModule,
+        KbqFormFieldModule,
+        KbqNavbarModule,
+        KbqListModule,
+        KbqMarkdownModule,
+        KbqModalModule,
+        KbqMomentDateModule,
+        KbqLuxonDateModule,
+        KbqProgressBarModule,
+        KbqProgressSpinnerModule,
+        KbqRadioModule,
+        KbqSelectModule,
+        KbqSplitterModule,
+        KbqTagsModule,
+        KbqTextareaModule,
+        KbqTimepickerModule,
+        KbqToggleModule,
+        KbqToolTipModule,
+        KbqTreeModule
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent implements OnDestroy {
+export class DevApp implements OnDestroy {
     themePalette = ThemePalette;
     popUpPlacements = PopUpPlacements;
 
@@ -130,16 +159,16 @@ export class DemoComponent implements OnDestroy {
 
     timeValue1: Moment = moment();
 
-    treeControl: FlatTreeControl<FileFlatNode>;
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+    treeControl: FlatTreeControl<DevFileFlatNode>;
+    dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
+    treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
 
     constructor(private modalService: KbqModalService) {
         setInterval(() => (this.percent = (this.percent + STEP) % (MAX_PERCENT + STEP)), INTERVAL);
 
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
-        this.treeControl = new FlatTreeControl<FileFlatNode>(
+        this.treeControl = new FlatTreeControl<DevFileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
@@ -148,7 +177,7 @@ export class DemoComponent implements OnDestroy {
 
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-        this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+        this.dataSource.data = devBuildFileTree(DEV_DATA_OBJECT, 0);
     }
 
     showConfirm() {
@@ -164,8 +193,8 @@ export class DemoComponent implements OnDestroy {
         this.isDisabled = !this.isDisabled;
     }
 
-    transformer = (node: FileNode, level: number) => {
-        const flatNode = new FileFlatNode();
+    transformer = (node: DevFileNode, level: number) => {
+        const flatNode = new DevFileFlatNode();
 
         flatNode.name = node.name;
         flatNode.type = node.type;
@@ -175,11 +204,11 @@ export class DemoComponent implements OnDestroy {
         return flatNode;
     };
 
-    hasChild(_: number, nodeData: FileFlatNode) {
+    hasChild(_: number, nodeData: DevFileFlatNode) {
         return nodeData.expandable;
     }
 
-    hasNestedChild(_: number, nodeData: FileNode) {
+    hasNestedChild(_: number, nodeData: DevFileNode) {
         return !nodeData.type;
     }
 
@@ -187,60 +216,19 @@ export class DemoComponent implements OnDestroy {
         clearInterval(this.intervalId);
     }
 
-    private getValue = (node: FileFlatNode): string => {
+    private getValue = (node: DevFileFlatNode): string => {
         return node.name;
     };
 
-    private getViewValue = (node: FileFlatNode): string => {
+    private getViewValue = (node: DevFileFlatNode): string => {
         return `${node.name} view`;
     };
 
-    private getLevel = (node: FileFlatNode) => node.level;
+    private getLevel = (node: DevFileFlatNode) => node.level;
 
-    private isExpandable = (node: FileFlatNode) => node.expandable;
+    private isExpandable = (node: DevFileFlatNode) => node.expandable;
 
-    private getChildren = (node: FileNode): Observable<FileNode[]> => {
+    private getChildren = (node: DevFileNode): Observable<DevFileNode[]> => {
         return observableOf(node.children);
     };
 }
-
-@NgModule({
-    declarations: [
-        DemoComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        ReactiveFormsModule,
-        KbqIconModule,
-        KbqButtonModule,
-        KbqButtonToggleModule,
-        KbqLinkModule,
-        KbqCheckboxModule,
-        KbqDropdownModule,
-        KbqInputModule,
-        KbqFormFieldModule,
-        KbqNavbarModule,
-        KbqListModule,
-        KbqMarkdownModule,
-        KbqModalModule,
-        KbqMomentDateModule,
-        KbqLuxonDateModule,
-        KbqProgressBarModule,
-        KbqProgressSpinnerModule,
-        KbqRadioModule,
-        KbqSelectModule,
-        KbqSplitterModule,
-        KbqTagsModule,
-        KbqTextareaModule,
-        KbqTimepickerModule,
-        KbqToggleModule,
-        KbqToolTipModule,
-        KbqTreeModule
-    ],
-    bootstrap: [
-        DemoComponent
-    ]
-})
-export class DemoModule {}

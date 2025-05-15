@@ -1,10 +1,4 @@
-@use '../main';
-
-app {
+dev-app {
     display: block;
     max-width: 700px;
-}
-
-hr {
-    margin: var(--kbq-size-xxl) 0;
 }

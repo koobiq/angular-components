@@ -1,14 +1,11 @@
-@import '@koobiq/design-tokens/web/variables';
-@use '../main';
-
 .dev-container {
     display: flex;
     flex-wrap: wrap;
 
     width: 0;
 
-    & .example-button {
-        margin-bottom: $size-m;
+    & .dev-button {
+        margin-bottom: var(--kbq-size-m);
     }
 }
 

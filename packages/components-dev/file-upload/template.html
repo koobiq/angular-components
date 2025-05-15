@@ -9,7 +9,7 @@
 
 <dev-locale-selector class="layout-margin-bottom-l" />
 
-<file-upload-examples class="layout-margin-bottom-l" />
+<dev-examples class="layout-margin-bottom-l" />
 
 <div class="layout-row layout-align-space-between">
     <div>
@@ -134,7 +134,7 @@
             </kbq-multiple-file-upload>
         </div>
 
-        <div custom-text class="dev-container">
+        <div devCustomText class="dev-container">
             <div class="kbq-subheading">Multiple file with custom text</div>
             <br />
             <kbq-file-upload
@@ -158,7 +158,7 @@
             <file-upload-multiple-required-reactive-validation-example />
         </div>
 
-        <div custom-text class="dev-container">
+        <div devCustomText class="dev-container">
             <div class="kbq-subheading">Multiple file-upload, default UX validation</div>
             <br />
             <kbq-file-upload multiple (fileQueueChanged)="onFileQueueChange($event)">
@@ -177,7 +177,7 @@
             <file-upload-multiple-default-validation-reactive-forms-overview-example />
         </div>
 
-        <div custom-text class="dev-container">
+        <div devCustomText class="dev-container">
             <div class="kbq-subheading">Multiple file with ControlValueAccessor, overall hint error</div>
             <br />
             <kbq-file-upload multiple [formControl]="multipleFileUploadControl" [progressMode]="'indeterminate'">
@@ -221,7 +221,7 @@
         <div class="dev-container">
             <div class="kbq-subheading">Multiple file upload compact</div>
             <br />
-            <file-upload-compact [disabled]="disabled" [files]="files" (addedFile)="addFileMultiple($event)" />
+            <dev-file-upload-compact [disabled]="disabled" [files]="files" (addedFile)="addFileMultiple($event)" />
         </div>
     </div>
 </div>

@@ -1,12 +1,8 @@
 <div>Validation state: {{ formControlValue.errors | json }}</div>
 
-<kbq-radio-group class="example-radio-group" (change)="setFormat($event)">
+<kbq-radio-group class="dev-radio-group" (change)="setFormat($event)">
     @for (language of languageList; track language) {
-        <kbq-radio-button
-            class="example-radio-button"
-            [checked]="language.id === selectedLanguage.id"
-            [value]="language"
-        >
+        <kbq-radio-button class="dev-radio-button" [checked]="language.id === selectedLanguage.id" [value]="language">
             {{ language.id }}
         </kbq-radio-button>
     }

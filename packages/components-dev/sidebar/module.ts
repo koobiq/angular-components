@@ -1,17 +1,24 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { JsonPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
-import { KbqButtonModule } from '../../components/button';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        KbqSplitterModule,
+        KbqButtonModule,
+        KbqSidebarModule,
+        JsonPipe
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     direction = Direction;
     sidebarPositions = SidebarPositions;
 
@@ -36,20 +43,3 @@ export class DemoComponent {
         this.leftSplitterState = !this.leftSplitterState;
     }
 }
-
-@NgModule({
-    declarations: [
-        DemoComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqSplitterModule,
-        KbqButtonModule,
-        KbqSidebarModule
-    ],
-    bootstrap: [
-        DemoComponent
-    ]
-})
-export class DemoModule {}

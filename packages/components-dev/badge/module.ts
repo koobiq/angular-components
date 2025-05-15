@@ -1,27 +1,17 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqBadgeModule, KbqIconModule, DevThemeToggle],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     colors = KbqBadgeColors;
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        KbqIconModule,
-        KbqBadgeModule,
-        DevThemeToggle
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

@@ -1,28 +1,9 @@
-<div class="common-container">
-    <kbq-radio-group class="layout-column example-radio-group" (change)="setLocale($event)">
-        @for (language of languageList; track language) {
-            <kbq-radio-button
-                class="example-radio-button"
-                [checked]="language.name === selectedLanguage.name"
-                [value]="language"
-            >
-                {{ language.name }}
-            </kbq-radio-button>
-        }
-    </kbq-radio-group>
-
-    <br />
-
-    <div class="kbq-subheading">
-        <label>localeService.id:</label>
-        <span>{{ this.localeService.id | json }}</span>
-    </div>
-</div>
+<dev-locale-selector />
 
 <div class="kbq-text-big">
     <kbq-radio-group class="layout-column" [(ngModel)]="timeFormat">
-        <kbq-radio-button [value]="TimeFormats.HHmm">{{ TimeFormats.HHmm.toLowerCase() }}</kbq-radio-button>
-        <kbq-radio-button [value]="TimeFormats.HHmmss">{{ TimeFormats.HHmmss.toLowerCase() }}</kbq-radio-button>
+        <kbq-radio-button [value]="timeFormats.HHmm">{{ timeFormats.HHmm.toLowerCase() }}</kbq-radio-button>
+        <kbq-radio-button [value]="timeFormats.HHmmss">{{ timeFormats.HHmmss.toLowerCase() }}</kbq-radio-button>
     </kbq-radio-group>
 
     <br />

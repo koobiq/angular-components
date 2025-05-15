@@ -199,7 +199,7 @@
 <hr />
 
 <h4>Tabs vertical with custom label</h4>
-<kbq-tab-group vertical class="docs-vertical-tabs" (selectedTabChange)="selectedTabChange($event)">
+<kbq-tab-group vertical class="dev-vertical-tabs" (selectedTabChange)="selectedTabChange($event)">
     <kbq-tab [tabId]="'firstTab'">
         <ng-template kbq-tab-label>
             <i kbq-icon="kbq-play_16"></i>
@@ -236,8 +236,8 @@
 <hr />
 
 <h3>Tabs with actionbar</h3>
-<div class="example-tabs-actionbar">
-    <div class="example-tabs-actionbar_nav">
+<div class="dev-tabs-actionbar">
+    <div class="dev-tabs-actionbar_nav">
         <nav kbqTabNavBar underlined [tabNavPanel]="kbqTabNavPanel77">
             @for (dashboard of dashboards; track dashboard) {
                 <a kbqTabLink [active]="activeDashboard === dashboard" (click)="activeDashboard = dashboard">
@@ -247,7 +247,7 @@
         </nav>
     </div>
 
-    <div class="example-tabs-actionbar_controls">
+    <div class="dev-tabs-actionbar_controls">
         <button color="contrast" kbq-button class="kbq-button_transparent">
             <i kbq-icon="kbq-list_16"></i>
         </button>

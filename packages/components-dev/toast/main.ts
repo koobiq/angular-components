@@ -1,9 +1,9 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { kbqToastConfigurationProvider, KbqToastPosition } from '@koobiq/components/toast';
-import { ToastDev } from './module';
+import { DevApp } from './module';
 
-bootstrapApplication(ToastDev, {
+bootstrapApplication(DevApp, {
     providers: [
         provideAnimations(),
         kbqToastConfigurationProvider({

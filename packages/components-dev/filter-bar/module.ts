@@ -29,7 +29,7 @@ import { DevLocaleSelector } from '../locale-selector';
 @Component({
     standalone: true,
     imports: [FilterBarExamplesModule],
-    selector: 'dev-docs-examples',
+    selector: 'dev-examples',
     template: `
         <filter-bar-uniq-pipes-example />
         <br />
@@ -62,11 +62,11 @@ import { DevLocaleSelector } from '../locale-selector';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevDocsExamples {}
+export class DevExamples {}
 
 @Component({
     standalone: true,
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
@@ -76,12 +76,13 @@ export class DevDocsExamples {}
         KbqDividerModule,
         KbqButtonModule,
         KbqLuxonDateModule,
-        DevDocsExamples,
+        DevExamples,
         DevLocaleSelector,
         JsonPipe
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent implements AfterViewInit {
+export class DevApp implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
     protected readonly pipes = inject(KBQ_FILTER_BAR_PIPES);
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);

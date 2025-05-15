@@ -1,4 +1,4 @@
-export const OPTIONS = [
+export const DEV_OPTIONS = [
     'Abakan',
     'Almetyevsk',
     'Anadyr',

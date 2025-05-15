@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { Tabs } from './module';
+import { DevApp } from './module';
 
-bootstrapApplication(Tabs, {
+bootstrapApplication(DevApp, {
     providers: [
         provideAnimations()
     ]

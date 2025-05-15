@@ -1,7 +1,5 @@
-import { Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
@@ -12,17 +10,30 @@ import {
 } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqIconModule } from '../../components/icon';
-import { KbqNavbarModule } from '../../components/navbar';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        KbqLocaleServiceModule,
+        KbqNavbarModule,
+        KbqIconModule,
+        KbqButtonModule,
+        FormsModule,
+        KbqDropdownModule,
+        KbqFormFieldModule,
+        KbqOptionModule,
+        KbqSelectModule
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LocaleDemoComponent {
+export class DevApp {
     themePalette = ThemePalette;
     selectedLanguage;
     languages;
@@ -41,22 +52,3 @@ export class LocaleDemoComponent {
         this.localeService.setLocale(this.selectedLanguage.id);
     }
 }
-
-@NgModule({
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqLocaleServiceModule,
-        KbqNavbarModule,
-        KbqIconModule,
-        KbqButtonModule,
-        FormsModule,
-        KbqDropdownModule,
-        KbqFormFieldModule,
-        KbqOptionModule,
-        KbqSelectModule
-    ],
-    declarations: [LocaleDemoComponent],
-    bootstrap: [LocaleDemoComponent]
-})
-export class DemoModule {}

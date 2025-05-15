@@ -1,7 +1,5 @@
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
@@ -20,7 +18,7 @@ import {
     defaultCompareViewValues
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
-import { FileFlatNode, FileNode } from '../tree-select/module';
+import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
 const OPTIONS = [
     'Value Value Value Value Value Value Value Value Value Value',
@@ -41,12 +39,12 @@ const OPTIONS = [
     'Veliky Novgorod'
 ];
 
-export function buildFileTree(value: any, level: number): FileNode[] {
+function buildFileTree(value: any, level: number): DevFileNode[] {
     const data: any[] = [];
 
     for (const k of Object.keys(value)) {
         const v = value[k];
-        const node = new FileNode();
+        const node = new DevFileNode();
 
         node.name = `${k}`;
 
@@ -64,7 +62,7 @@ export function buildFileTree(value: any, level: number): FileNode[] {
     return data;
 }
 
-export const DATA_OBJECT = {
+const DATA_OBJECT = {
     rootNode_1: 'app',
     Pictures: {
         Sun: 'png',
@@ -104,12 +102,28 @@ export const DATA_OBJECT = {
 };
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqSelectModule,
+        KbqInputModule,
+        KbqFormFieldModule,
+        KbqIconModule,
+        KbqTagsModule,
+        KbqToolTipModule,
+        KbqHighlightModule,
+        KbqTreeModule,
+        KbqTreeSelectModule,
+        KbqPseudoCheckboxModule,
+        KbqAutocompleteModule
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     placeholder = 'PlaceHolder PlaceHolder PlaceHolder PlaceHolder PlaceHolder';
     value = 'Value Value Value Value Value Value Value Value Value Value';
     singleSelected = 'Moscow';
@@ -136,10 +150,10 @@ export class DemoComponent {
     treeModel = 'rootNode_1';
     multipleTreeModel = ['rootNode_1', 'Documents', 'November'];
 
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+    treeControl: FlatTreeControl<DevFileFlatNode>;
+    treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
 
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
 
     inputTags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7'];
 
@@ -158,7 +172,7 @@ export class DemoComponent {
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
-        this.treeControl = new FlatTreeControl<FileFlatNode>(
+        this.treeControl = new FlatTreeControl<DevFileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
@@ -172,12 +186,12 @@ export class DemoComponent {
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) {
+    hasChild(_: number, nodeData: DevFileFlatNode) {
         return nodeData.expandable;
     }
 
-    private transformer = (node: FileNode, level: number, parent: any) => {
-        const flatNode = new FileFlatNode();
+    private transformer = (node: DevFileNode, level: number, parent: any) => {
+        const flatNode = new DevFileFlatNode();
 
         flatNode.name = node.name;
         flatNode.parent = parent;
@@ -188,49 +202,27 @@ export class DemoComponent {
         return flatNode;
     };
 
-    private getLevel = (node: FileFlatNode) => {
+    private getLevel = (node: DevFileFlatNode) => {
         return node.level;
     };
 
-    private isExpandable = (node: FileFlatNode) => {
+    private isExpandable = (node: DevFileFlatNode) => {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] => {
         return node.children;
     };
 
-    private getValue = (node: FileFlatNode): string => {
+    private getValue = (node: DevFileFlatNode): string => {
         return node.name;
     };
 
-    private getViewValue = (node: FileFlatNode): string => {
+    private getViewValue = (node: DevFileFlatNode): string => {
         return `${node.name} view`;
     };
 
-    private isDisabled = (node: FileFlatNode): boolean => {
+    private isDisabled = (node: DevFileFlatNode): boolean => {
         return node.name === 'November';
     };
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        FormsModule,
-        KbqSelectModule,
-        KbqInputModule,
-        KbqFormFieldModule,
-        KbqIconModule,
-        KbqTagsModule,
-        KbqToolTipModule,
-        KbqHighlightModule,
-        KbqTreeModule,
-        KbqTreeSelectModule,
-        KbqPseudoCheckboxModule,
-        KbqAutocompleteModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

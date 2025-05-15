@@ -1,13 +1,6 @@
-@use '../main';
-
-app {
+dev-app {
     display: flex;
     flex-direction: column;
     align-items: center;
     max-width: 600px;
-}
-
-hr {
-    margin: var(--kbq-size-xxl) 0;
-    width: 100%;
 }

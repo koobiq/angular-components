@@ -1,38 +1,61 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     Inject,
-    NgModule,
     QueryList,
     ViewChild,
     ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { startWith } from 'rxjs';
 import {
     KbqFormField,
     KbqFormFieldModule,
     KbqPasswordHint,
     PasswordRules,
     hasPasswordStrengthError
-} from '../../components/form-field';
-import { KbqIconModule } from '../../components/icon';
-import { KbqInputModule } from '../../components/input/';
-import { InputNumberOverviewExample } from '../../docs-examples/components/input';
+} from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
+import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { startWith } from 'rxjs';
+import { InputExamplesModule } from '../../docs-examples/components/input';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [InputExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <input-number-overview-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
+
+@Component({
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        KbqLocaleServiceModule,
+        KbqFormFieldModule,
+        KbqButtonModule,
+        KbqInputModule,
+        KbqToolTipModule,
+        KbqIconModule,
+        DevExamples
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InputDemoComponent implements AfterViewInit {
+export class DevApp implements AfterViewInit {
     passwordRules = PasswordRules;
     password = '456';
 
@@ -68,22 +91,3 @@ export class InputDemoComponent implements AfterViewInit {
         };
     };
 }
-
-@NgModule({
-    declarations: [InputDemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        KbqLocaleServiceModule,
-        KbqFormFieldModule,
-        KbqButtonModule,
-        KbqInputModule,
-        KbqToolTipModule,
-        KbqIconModule,
-        InputNumberOverviewExample
-    ],
-    bootstrap: [InputDemoComponent]
-})
-export class DemoModule {}

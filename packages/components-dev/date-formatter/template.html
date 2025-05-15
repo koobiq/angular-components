@@ -1,21 +1,4 @@
-<div class="dev-container kbq-text-big dev-p-fixed">
-    <kbq-radio-group class="example-radio-group" (change)="setLocale($event)">
-        @for (language of languageList; track language) {
-            <kbq-radio-button
-                class="example-radio-button"
-                [checked]="language.name === selectedLanguage.name"
-                [value]="language"
-            >
-                {{ language.name }}
-            </kbq-radio-button>
-        }
-    </kbq-radio-group>
-
-    <div class="kbq-subheading">
-        <label>MC_LOCALE_ID:</label>
-        <span>{{ this.localeService.id | json }}</span>
-    </div>
-</div>
+<dev-locale-selector #devLocaleSelector="devLocaleSelector" />
 
 <div class="dev-container kbq-text-big">
     <br />
@@ -26,7 +9,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">absoluteLongDate (current year)</div>
@@ -79,7 +62,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">absoluteShortDate (current year)</div>
@@ -135,7 +118,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
 
             <div class="layout-row dev-row-border">
@@ -235,7 +218,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
 
             <div class="layout-row dev-row-border">
@@ -339,7 +322,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeLongDate (current month)</div>
@@ -438,7 +421,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">rangeMiddleDateTime</div>
@@ -524,7 +507,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">closedRangeShortDate (current month)</div>
@@ -625,7 +608,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">openedRangeShortDate (only start)</div>
@@ -715,7 +698,7 @@
             <div>
                 <div class="layout-row dev-row-border">
                     <div class="flex dev-light-text-secondary">Name</div>
-                    <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                    <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
                 </div>
                 <div class="layout-row dev-row-border">
                     <div class="flex">openedRangeLongDate (only start)</div>
@@ -837,7 +820,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">Seconds</div>
@@ -917,7 +900,7 @@
         <div>
             <div class="layout-row dev-row-border">
                 <div class="flex dev-light-text-secondary">Name</div>
-                <div class="flex dev-light-text-secondary">{{ selectedLanguage.name }}</div>
+                <div class="flex dev-light-text-secondary">{{ devLocaleSelector.locale() }}</div>
             </div>
             <div class="layout-row dev-row-border">
                 <div class="flex">Seconds and milliseconds</div>

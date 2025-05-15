@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, NgModule, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -18,13 +17,30 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { map, timer } from 'rxjs';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        KbqNavbarModule,
+        KbqIconModule,
+        KbqButtonModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule,
+        KbqDropdownModule,
+        KbqLinkModule,
+        KbqPopoverModule,
+        KbqToolTipModule,
+        KbqModalModule,
+        KbqBadgeModule,
+        KbqDividerModule,
+        AsyncPipe
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavbarDemoComponent {
+export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     @ViewChild('verticalNavbar', { static: false }) navbar: KbqNavbar;
@@ -68,26 +84,3 @@ export class NavbarDemoComponent {
         });
     }
 }
-
-@NgModule({
-    declarations: [NavbarDemoComponent],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        KbqNavbarModule,
-        KbqIconModule,
-        KbqButtonModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        FormsModule,
-        KbqDropdownModule,
-        KbqLinkModule,
-        KbqPopoverModule,
-        KbqToolTipModule,
-        KbqModalModule,
-        KbqBadgeModule,
-        KbqDividerModule
-    ],
-    bootstrap: [NavbarDemoComponent]
-})
-export class DemoModule {}

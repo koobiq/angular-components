@@ -3,11 +3,38 @@ import { KbqCodeBlockModule, kbqCodeBlockLocaleConfigurationProvider } from '@ko
 import { CodeBlockExamplesModule } from 'packages/docs-examples/components/code-block';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [CodeBlockExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <code-block-with-soft-wrap-example />
+        <hr />
+        <code-block-with-max-height-example />
+        <hr />
+        <code-block-with-line-numbers-example />
+        <hr />
+        <code-block-with-tabs-example />
+        <hr />
+        <code-block-with-tabs-and-shadow-example />
+        <hr />
+        <code-block-with-filled-example />
+        <hr />
+        <code-block-with-no-border-example />
+        <hr />
+        <code-block-with-custom-locale-configuration-example />
+        <hr />
+        <code-block-with-link-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
+
+@Component({
+    selector: 'dev-app',
     standalone: true,
     imports: [
         KbqCodeBlockModule,
-        CodeBlockExamplesModule
+        DevExamples
     ],
     providers: [
         kbqCodeBlockLocaleConfigurationProvider({
@@ -27,4 +54,4 @@ import { CodeBlockExamplesModule } from 'packages/docs-examples/components/code-
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CodeBlockDev {}
+export class DevApp {}

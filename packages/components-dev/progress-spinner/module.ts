@@ -1,6 +1,5 @@
-import { Component, NgModule, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule, ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 
@@ -9,12 +8,15 @@ const STEP: number = 4;
 const MAX_PERCENT: number = 100;
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [KbqProgressSpinnerModule, FormsModule],
+    selector: 'dev-app',
     templateUrl: './template.html',
     encapsulation: ViewEncapsulation.None,
-    styleUrls: ['./styles.scss']
+    styleUrls: ['./styles.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProgressSpinnerDemoComponent implements OnDestroy {
+export class DevApp implements OnDestroy {
     colors = KbqComponentColors;
 
     mode: ProgressSpinnerMode = 'determinate';
@@ -29,18 +31,3 @@ export class ProgressSpinnerDemoComponent implements OnDestroy {
         clearInterval(this.intervalId);
     }
 }
-
-@NgModule({
-    declarations: [
-        ProgressSpinnerDemoComponent
-    ],
-    imports: [
-        BrowserModule,
-        KbqProgressSpinnerModule,
-        FormsModule
-    ],
-    bootstrap: [
-        ProgressSpinnerDemoComponent
-    ]
-})
-export class DemoModule {}

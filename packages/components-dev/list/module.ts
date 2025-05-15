@@ -1,25 +1,48 @@
 import { Clipboard } from '@angular/cdk/clipboard';
-import { Component, NgModule, ViewEncapsulation } from '@angular/core';
+import { AsyncPipe, JsonPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule, UntypedFormControl } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListModule, KbqListSelectionChange } from '@koobiq/components/list';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { ListExamplesModule } from 'packages/docs-examples/components/list';
 import { of } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [ListExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <list-multiple-checkbox-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
+
+@Component({
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqListModule,
+        KbqToolTipModule,
+        KbqDropdownModule,
+        KbqIconModule,
+        KbqTitleModule,
+        DevExamples,
+        JsonPipe,
+        AsyncPipe
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     popUpPlacements = PopUpPlacements;
 
     typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
@@ -53,24 +76,3 @@ export class DemoComponent {
         this.clipboard.copy($event.option.value);
     }
 }
-
-@NgModule({
-    declarations: [
-        DemoComponent
-    ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        KbqCheckboxModule,
-        KbqListModule,
-        KbqToolTipModule,
-        KbqDropdownModule,
-        KbqIconModule,
-        KbqTitleModule
-    ],
-    bootstrap: [
-        DemoComponent
-    ]
-})
-export class DemoModule {}

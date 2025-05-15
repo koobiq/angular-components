@@ -1,18 +1,8 @@
+<dev-locale-selector />
+
 <kbq-form-field class="dev-number-input">
     <input kbqInput placeholder="Number" type="number" [(ngModel)]="value" />
 </kbq-form-field>
-&nbsp;
-
-@for (language of locales; track language) {
-    <button kbq-dropdown-item [class.kbq-selected]="language.selected" (click)="selectLanguage(language)">
-        {{ language.name }}
-    </button>
-}
-
-<div class="kbq-subheading">
-    <label>KBQ_LOCALE_ID:</label>
-    <span>{{ this.localeService.id | json }}</span>
-</div>
 
 <div class="kbq-subheading">
     <label>KbqDecimalPipe</label>

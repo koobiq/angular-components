@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { Scrollbar } from './module';
+import { DevApp } from './module';
 
-bootstrapApplication(Scrollbar, {
+bootstrapApplication(DevApp, {
     providers: [
         provideAnimations()
     ]

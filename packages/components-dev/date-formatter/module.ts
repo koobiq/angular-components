@@ -1,32 +1,32 @@
-import { ChangeDetectorRef, Component, Inject, NgModule, ViewEncapsulation } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import {
-    KBQ_LUXON_DATE_ADAPTER_OPTIONS,
-    KBQ_LUXON_DATE_FORMATS,
-    LuxonDateAdapter
-} from '@koobiq/angular-luxon-adapter/adapter';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     DateAdapter,
     DateFormatter,
-    KBQ_DATE_FORMATS,
-    KBQ_DATE_LOCALE,
     KBQ_LOCALE_SERVICE,
     KbqFormattersModule,
     KbqLocaleService,
     KbqLocaleServiceModule
 } from '@koobiq/components/core';
-import { KbqRadioChange, KbqRadioModule } from '@koobiq/components/radio';
 import { DateTime } from 'luxon';
 import { delay, distinctUntilChanged } from 'rxjs';
+import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        KbqLocaleServiceModule,
+        KbqFormattersModule,
+        KbqButtonModule,
+        DevLocaleSelector
+    ],
+    selector: 'dev-app',
     templateUrl: 'template.html',
     styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent {
+export class DevApp {
     lang = {
         absolute: {
             long: {
@@ -330,25 +330,13 @@ export class DemoComponent {
         }
     };
 
-    languageList: { id: string; name: string }[];
-    selectedLanguage!: { id: string; name: string };
-
     constructor(
         private cdr: ChangeDetectorRef,
         public formatter: DateFormatter<DateTime>,
         public adapter: DateAdapter<DateTime>,
         @Inject(KBQ_LOCALE_SERVICE) public localeService: KbqLocaleService
     ) {
-        this.languageList = this.localeService.locales.items;
-        this.selectedLanguage =
-            this.languageList.find(({ id }) => id === this.localeService.id) || this.languageList[0];
-
         this.localeService.changes.pipe(distinctUntilChanged(), delay(0)).subscribe(this.onLocaleChange);
-    }
-
-    setLocale($event: KbqRadioChange) {
-        this.selectedLanguage = this.languageList.find(({ id }) => id === $event.value.id) || this.languageList[0];
-        this.localeService.setLocale($event.value.id);
     }
 
     private onLocaleChange = (locale: string) => {
@@ -1128,39 +1116,3 @@ export class DemoComponent {
         );
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserModule,
-        KbqLocaleServiceModule,
-        KbqFormattersModule,
-        KbqButtonModule,
-        KbqRadioModule
-    ],
-    bootstrap: [DemoComponent],
-    providers: [
-        { provide: KBQ_DATE_FORMATS, useValue: KBQ_LUXON_DATE_FORMATS },
-        {
-            provide: DateAdapter,
-            useClass: LuxonDateAdapter,
-            deps: [KBQ_DATE_LOCALE, KBQ_LUXON_DATE_ADAPTER_OPTIONS, KBQ_LOCALE_SERVICE]
-        }
-        // { provide: KBQ_LOCALE_ID, useValue: 'en-US' },
-        // { provide: KBQ_LOCALE_ID, useValue: 'ru-RU' }
-        // {
-        //     provide: KBQ_LOCALE_SERVICE,
-        //     useFactory: (locale: string) => {
-        //         return new KbqLocaleService(locale, KBQ_DEFAULT_LOCALE_DATA_FACTORY());
-        //     },
-        //     deps: [KBQ_LOCALE_ID]
-        // },
-        // {
-        //     provide: KBQ_LOCALE_SERVICE,
-        //     useFactory: () => {
-        //         return new KbqLocaleService('en-US', KBQ_DEFAULT_LOCALE_DATA_FACTORY());
-        //     }
-        // }
-    ]
-})
-export class DemoModule {}

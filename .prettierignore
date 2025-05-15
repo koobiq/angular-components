@@ -23,3 +23,6 @@ CHANGELOG.md
 
 # ignores example markdown templates
 /packages/docs-examples/components/markdown/**/*.html
+
+# ignore mocks
+**/mock.ts

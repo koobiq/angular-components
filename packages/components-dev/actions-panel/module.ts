@@ -7,7 +7,7 @@ import { DevThemeToggle } from '../theme-toggle';
 @Component({
     standalone: true,
     imports: [ActionsPanelExamplesModule],
-    selector: 'dev-actions-panel-examples',
+    selector: 'dev-examples',
     template: `
         <actions-panel-custom-counter-example />
         <hr />
@@ -19,25 +19,25 @@ import { DevThemeToggle } from '../theme-toggle';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevActionsPanelExamples {}
+export class DevExamples {}
 
 @Component({
     standalone: true,
     imports: [
         RouterLink,
-        DevActionsPanelExamples
+        DevExamples
     ],
-    selector: 'page-1',
+    selector: 'dev-page-1',
     templateUrl: './template.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class Page1 {}
+export class DevPage1 {}
 
 @Component({
     standalone: true,
     imports: [RouterLink],
-    selector: 'page-2',
+    selector: 'dev-page-2',
     template: `
         <h2>Page2</h2>
         <a routerLink="/page-1">Go to page-1</a>
@@ -46,7 +46,7 @@ export class Page1 {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class Page2 {}
+export class DevPage2 {}
 
 @Component({
     standalone: true,
@@ -55,7 +55,7 @@ export class Page2 {}
         DevLocaleSelector,
         RouterOutlet
     ],
-    selector: 'app',
+    selector: 'dev-app',
     template: `
         <dev-theme-toggle />
         <dev-locale-selector />
@@ -66,4 +66,4 @@ export class Page2 {}
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActionsPanelDev {}
+export class DevApp {}

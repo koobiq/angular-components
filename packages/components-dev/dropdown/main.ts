@@ -1,8 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { DropdownDev } from './module';
+import { DevApp } from './module';
 
-bootstrapApplication(DropdownDev, {
+bootstrapApplication(DevApp, {
     providers: [
         provideAnimations()
     ]

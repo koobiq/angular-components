@@ -10,7 +10,7 @@ import {
 @Component({
     standalone: true,
     imports: [KbqScrollbarModule],
-    selector: 'scrollbar-with-options',
+    selector: 'dev-scrollbar-with-options',
     template: `
         <h4>ScrollbarWithOptions:</h4>
         <kbq-scrollbar [options]="options" style="width: 200px; height: 200px;">
@@ -22,7 +22,7 @@ import {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarWithOptions {
+export class DevScrollbarWithOptions {
     readonly options: KbqScrollbarOptions = {
         scrollbars: {
             autoHide: 'never'
@@ -33,7 +33,7 @@ export class ScrollbarWithOptions {
 
 @Component({
     standalone: true,
-    selector: 'scrollbar-with-custom-config',
+    selector: 'dev-scrollbar-with-custom-config',
     imports: [KbqScrollbarModule],
     providers: [
         {
@@ -56,13 +56,13 @@ export class ScrollbarWithOptions {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarWithCustomConfig {
+export class DevScrollbarWithCustomConfig {
     readonly items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
 }
 
 @Component({
     standalone: true,
-    selector: 'scrollbar-scroll-to-top',
+    selector: 'dev-scrollbar-scroll-to-top',
     imports: [
         KbqScrollbarModule,
         KbqButtonModule
@@ -85,7 +85,7 @@ export class ScrollbarWithCustomConfig {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScrollbarScrollToTop {
+export class DevScrollbarScrollToTop {
     readonly items = Array.from({ length: 1000 }).map((_, i) => `Item #${i}`);
 
     onScroll(event): void {
@@ -100,17 +100,17 @@ export class ScrollbarScrollToTop {
         KbqButtonModule,
 
         // components
-        ScrollbarWithOptions,
-        ScrollbarWithCustomConfig,
-        ScrollbarScrollToTop
+        DevScrollbarWithOptions,
+        DevScrollbarWithCustomConfig,
+        DevScrollbarScrollToTop
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class Scrollbar {
+export class DevApp {
     options: KbqScrollbarOptions;
     events: KbqScrollbarEvents = {
         initialized: (...args) => this.onInitialize(args)

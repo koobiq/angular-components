@@ -1,7 +1,14 @@
-import { AfterViewInit, Component, Inject, NgModule, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { JsonPipe } from '@angular/common';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    OnInit,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqLuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
 import { KbqDatepicker, KbqDatepickerModule } from '@koobiq/components/datepicker';
@@ -14,13 +21,28 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
 
 @Component({
-    selector: 'app',
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        KbqLocaleServiceModule,
+        KbqFormFieldModule,
+        KbqToolTipModule,
+        KbqDatepickerModule,
+        KbqTimepickerModule,
+        KbqLuxonDateModule,
+        KbqInputModule,
+        KbqIconModule,
+        KbqRadioModule,
+        JsonPipe
+    ],
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrls: ['./styles.scss'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DemoComponent implements AfterViewInit, OnInit {
-    // date = this.adapter.createDate(2015, 1, 1);
+export class DevApp implements AfterViewInit, OnInit {
     date = this.adapter.today();
     formControlValue: UntypedFormControl;
     minDate;
@@ -83,24 +105,3 @@ export class DemoComponent implements AfterViewInit, OnInit {
         console.log('onDateInput: ');
     }
 }
-
-@NgModule({
-    declarations: [DemoComponent],
-    imports: [
-        BrowserAnimationsModule,
-        BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        KbqLocaleServiceModule,
-        KbqFormFieldModule,
-        KbqToolTipModule,
-        KbqDatepickerModule,
-        KbqTimepickerModule,
-        KbqLuxonDateModule,
-        KbqInputModule,
-        KbqIconModule,
-        KbqRadioModule
-    ],
-    bootstrap: [DemoComponent]
-})
-export class DemoModule {}

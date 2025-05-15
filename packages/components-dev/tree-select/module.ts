@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
@@ -8,14 +8,14 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
+    defaultCompareValues,
+    defaultCompareViewValues,
     FlatTreeControl,
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
     KbqTreeOption,
-    KbqTreeSelection,
-    defaultCompareValues,
-    defaultCompareViewValues
+    KbqTreeSelection
 } from '@koobiq/components/tree';
 import {
     KbqTreeSelect,
@@ -23,91 +23,10 @@ import {
     KbqTreeSelectModule,
     kbqTreeSelectOptionsProvider
 } from '@koobiq/components/tree-select';
-import { TreeSelectExamplesModule } from 'packages/docs-examples/components/tree-select';
-
-export class FileNode {
-    children: FileNode[];
-    name: string;
-    type: any;
-}
-
-/** Flat node with expandable and level information */
-export class FileFlatNode {
-    name: string;
-    type: any;
-    level: number;
-    expandable: boolean;
-    parent: any;
-}
-
-/**
- * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
- * The return value is the list of `FileNode`.
- */
-function buildFileTree(value: any, level: number): FileNode[] {
-    const data: any[] = [];
-
-    for (const k of Object.keys(value)) {
-        const v = value[k];
-        const node = new FileNode();
-
-        node.name = `${k}`;
-
-        if (v === null || v === undefined) {
-            // no action
-        } else if (typeof v === 'object') {
-            node.children = buildFileTree(v, level + 1);
-        } else {
-            node.type = v;
-        }
-
-        data.push(node);
-    }
-
-    return data;
-}
-
-const DATA_OBJECT = {
-    rootNode_1: 'app',
-    Pictures: {
-        Sun: 'png',
-        Woods: 'jpg',
-        PhotoBoothLibrary: {
-            Contents: 'dir',
-            Pictures_2: 'dir'
-        }
-    },
-    Documents: {
-        Pictures_3: 'Pictures',
-        angular: {
-            src1: {
-                core: 'ts',
-                compiler: 'ts'
-            }
-        },
-        material2: {
-            src2: {
-                button: 'ts',
-                checkbox: 'ts',
-                input: 'ts'
-            }
-        }
-    },
-    Downloads: {
-        Tutorial: 'html',
-        November: 'pdf',
-        October: 'pdf'
-    },
-    Applications: {
-        Chrome: 'app',
-        Calendar: 'app',
-        Webstorm: 'app'
-    },
-    rootNode_1_long_text_long_long_text_long_long_text_long_long_text_long_text_: 'app'
-};
+import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
-    selector: 'app',
+    selector: 'dev-app',
     standalone: true,
     imports: [
         FormsModule,
@@ -121,8 +40,7 @@ const DATA_OBJECT = {
         KbqIconModule,
         ReactiveFormsModule,
         KbqPseudoCheckboxModule,
-        KbqTitleModule,
-        TreeSelectExamplesModule
+        KbqTitleModule
     ],
     providers: [
         kbqTreeSelectOptionsProvider({
@@ -132,9 +50,10 @@ const DATA_OBJECT = {
     ],
     templateUrl: './template.html',
     styleUrl: './styles.scss',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TreeSelectDev implements OnInit {
+export class DevApp implements OnInit {
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
     @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
 
@@ -145,10 +64,10 @@ export class TreeSelectDev implements OnInit {
     // modelValue = 'Chrome';
     modelValue: any[] | null = ['Applications', 'Documents', 'Calendar', 'Chrome'];
 
-    treeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: KbqTreeFlattener<FileNode, FileFlatNode>;
+    treeControl: FlatTreeControl<DevFileFlatNode>;
+    treeFlattener: KbqTreeFlattener<DevFileNode, DevFileFlatNode>;
 
-    dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
+    dataSource: KbqTreeFlatDataSource<DevFileNode, DevFileFlatNode>;
 
     multiSelectSelectFormControl = new UntypedFormControl([], Validators.pattern(/^w/));
 
@@ -157,7 +76,7 @@ export class TreeSelectDev implements OnInit {
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
 
-        this.treeControl = new FlatTreeControl<FileFlatNode>(
+        this.treeControl = new FlatTreeControl<DevFileFlatNode>(
             this.getLevel,
             this.isExpandable,
             this.getValue,
@@ -168,14 +87,14 @@ export class TreeSelectDev implements OnInit {
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-        this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+        this.dataSource.data = devBuildFileTree(DEV_DATA_OBJECT, 0);
     }
 
     ngOnInit(): void {
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
 
-    hasChild(_: number, nodeData: FileFlatNode) {
+    hasChild(_: number, nodeData: DevFileFlatNode) {
         return nodeData.expandable;
     }
 
@@ -226,8 +145,8 @@ export class TreeSelectDev implements OnInit {
         }
     }
 
-    private transformer = (node: FileNode, level: number, parent: any) => {
-        const flatNode = new FileFlatNode();
+    private transformer = (node: DevFileNode, level: number, parent: any) => {
+        const flatNode = new DevFileFlatNode();
 
         flatNode.name = node.name;
         flatNode.parent = parent;
@@ -238,27 +157,27 @@ export class TreeSelectDev implements OnInit {
         return flatNode;
     };
 
-    private getLevel = (node: FileFlatNode) => {
+    private getLevel = (node: DevFileFlatNode) => {
         return node.level;
     };
 
-    private isExpandable = (node: FileFlatNode) => {
+    private isExpandable = (node: DevFileFlatNode) => {
         return node.expandable;
     };
 
-    private getChildren = (node: FileNode): FileNode[] => {
+    private getChildren = (node: DevFileNode): DevFileNode[] => {
         return node.children;
     };
 
-    private getValue = (node: FileFlatNode): string => {
+    private getValue = (node: DevFileFlatNode): string => {
         return node.name;
     };
 
-    private getViewValue = (node: FileFlatNode): string => {
+    private getViewValue = (node: DevFileFlatNode): string => {
         return `${node.name} view`;
     };
 
-    private isDisabled = (node: FileFlatNode): boolean => {
+    private isDisabled = (node: DevFileFlatNode): boolean => {
         return node.name === 'November';
     };
 }

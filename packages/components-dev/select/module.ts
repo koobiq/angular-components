@@ -13,12 +13,12 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { SelectExamplesModule } from 'packages/docs-examples/components/select';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { OPTIONS } from './options';
+import { DEV_OPTIONS } from './mock';
 
 @Component({
     standalone: true,
     imports: [SelectExamplesModule],
-    selector: 'select-examples',
+    selector: 'dev-examples',
     template: `
         <select-with-panel-width-attribute-example />
         <select-virtual-scroll-example />
@@ -36,7 +36,7 @@ import { OPTIONS } from './options';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class SelectExamplesComponent {}
+class DevExamples {}
 
 @Component({
     standalone: true,
@@ -52,7 +52,7 @@ class SelectExamplesComponent {}
         KbqIconModule,
         ReactiveFormsModule,
         KbqTagsModule,
-        SelectExamplesComponent
+        DevExamples
     ],
     providers: [
         kbqSelectOptionsProvider({
@@ -60,13 +60,13 @@ class SelectExamplesComponent {}
         })
 
     ],
-    selector: 'app',
+    selector: 'dev-app',
     templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectDev implements OnInit {
+export class DevApp implements OnInit {
     singleSelected = '';
     multipleSelected = ['Disabled', 'Normal', 'Hovered', 'Selected', 'Selected1'];
     multipleSelectedForCustomTagText = ['Normal', 'Hovered'];
@@ -86,13 +86,13 @@ export class SelectDev implements OnInit {
 
     optionCounter = 0;
 
-    options: string[] = OPTIONS.sort();
+    options: string[] = DEV_OPTIONS.sort();
     selectedOptionsAsObject = [
         { id: 3, name: 'Anapa' },
         { id: 55, name: 'Lyubertsy' },
         { id: 114, name: 'Tomsk' }
     ];
-    optionsObj: { id: number; name: string }[] = OPTIONS.sort().map((option, index) => {
+    optionsObj: { id: number; name: string }[] = DEV_OPTIONS.sort().map((option, index) => {
         return { id: index, name: option, active: true };
     });
 
@@ -104,12 +104,12 @@ export class SelectDev implements OnInit {
 
     ngOnInit(): void {
         this.filteredOptions = merge(
-            of(OPTIONS),
+            of(DEV_OPTIONS),
             this.searchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
 
         this.filteredMultipleOptions = merge(
-            of(OPTIONS),
+            of(DEV_OPTIONS),
             this.multipleSearchCtrl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
     }

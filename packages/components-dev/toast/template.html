@@ -88,26 +88,26 @@
         <ng-template #template let-data>Template with data.title: {{ data.title }}</ng-template>
 
         <div class="dev-block">
-            <button kbq-button class="example-button" (click)="showToast('contrast')">contrast</button>
-            <button kbq-button class="example-button" (click)="showToast('success')">success</button>
-            <button kbq-button class="example-button" (click)="showToast('warning')">warning</button>
-            <button kbq-button class="example-button" (click)="showToast('error')">error</button>
-            <button kbq-button class="example-button" (click)="showErrorCustomIconToast(toastErrorActionsTemplate)">
+            <button kbq-button class="dev-button" (click)="showToast('contrast')">contrast</button>
+            <button kbq-button class="dev-button" (click)="showToast('success')">success</button>
+            <button kbq-button class="dev-button" (click)="showToast('warning')">warning</button>
+            <button kbq-button class="dev-button" (click)="showToast('error')">error</button>
+            <button kbq-button class="dev-button" (click)="showErrorCustomIconToast(toastErrorActionsTemplate)">
                 Error (custom icon)
             </button>
-            <button kbq-button class="example-button" (click)="showIconAndCaption()">showIconAndCaption</button>
-            <button kbq-button class="example-button" (click)="showOnlyCaption()">showOnlyCaption</button>
+            <button kbq-button class="dev-button" (click)="showIconAndCaption()">showIconAndCaption</button>
+            <button kbq-button class="dev-button" (click)="showOnlyCaption()">showOnlyCaption</button>
 
             <button
                 kbq-button
-                class="example-button"
+                class="dev-button"
                 (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)"
             >
                 Prevented from Auto Hiding
             </button>
             <button
                 kbq-button
-                class="example-button"
+                class="dev-button"
                 (click)="
                     showSingleActonToast(
                         toastSingleActonContentTemplate,
@@ -118,25 +118,23 @@
             >
                 Single Action
             </button>
-            <button kbq-button class="example-button" (click)="showTwoActonToast(toastTwoActonActionsTemplate)">
+            <button kbq-button class="dev-button" (click)="showTwoActonToast(toastTwoActonActionsTemplate)">
                 Two Actions
             </button>
-            <button kbq-button class="example-button" (click)="showManyActonToast(toastManyActonActionsTemplate)">
+            <button kbq-button class="dev-button" (click)="showManyActonToast(toastManyActonActionsTemplate)">
                 Many Actions
             </button>
-            <button kbq-button class="example-button" (click)="showToastWithInlineLink(toastWithInlineLinkTemplate)">
+            <button kbq-button class="dev-button" (click)="showToastWithInlineLink(toastWithInlineLinkTemplate)">
                 Show toast with inline-link
             </button>
-            <button kbq-button class="example-button" (click)="showToastWithLongText()">
-                Show toast with long text
-            </button>
+            <button kbq-button class="dev-button" (click)="showToastWithLongText()">Show toast with long text</button>
 
             <br />
             <br />
 
             <button
                 kbq-button
-                class="example-button"
+                class="dev-button"
                 (click)="
                     showToastWithTemplates(
                         'error',
@@ -151,15 +149,15 @@
                 Templates
             </button>
 
-            <button kbq-button class="example-button" (click)="showNewToast()">MyToast</button>
+            <button kbq-button class="dev-button" (click)="showNewToast()">MyToast</button>
 
-            <button kbq-button class="example-button" (click)="showTemplate(template)">show template</button>
+            <button kbq-button class="dev-button" (click)="showTemplate(template)">show template</button>
 
-            <button kbq-button class="example-button" (click)="showModal(modalTitle, modalContent, modalFooter)">
+            <button kbq-button class="dev-button" (click)="showModal(modalTitle, modalContent, modalFooter)">
                 show modal
             </button>
 
-            <button kbq-button class="example-button" (click)="openTemplateSidepanel()">show sidepanel</button>
+            <button kbq-button class="dev-button" (click)="openTemplateSidepanel()">show sidepanel</button>
         </div>
 
         <ng-template #modalTitle>
