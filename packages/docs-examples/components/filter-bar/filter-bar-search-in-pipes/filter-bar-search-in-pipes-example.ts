@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
 
 /**
@@ -9,17 +8,12 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
     standalone: true,
     selector: 'filter-bar-search-in-pipes-example',
     imports: [
-        KbqFilterBarModule,
-        LuxonDateModule
+        KbqFilterBarModule
     ],
     template: `
         <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates">
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
-            }
-
-            @if (activeFilter?.changed) {
-                <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
         </kbq-filter-bar>
     `
@@ -62,11 +56,6 @@ export class FilterBarSearchInPipesExample {
             disabled: false
         }
     ];
-
-    onResetFilter() {
-        console.log('onResetFilter: ');
-        this.activeFilter = this.getDefaultFilter();
-    }
 
     getDefaultFilter(): KbqFilter {
         return {
