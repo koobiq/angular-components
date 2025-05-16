@@ -126,6 +126,9 @@ const paths = [
     'components/select/overview',
     'components/select/api',
 
+    'components/sidebar/overview',
+    'components/sidebar/api',
+
     'components/sidepanel/overview',
     'components/sidepanel/api',
 
