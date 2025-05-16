@@ -107,6 +107,7 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     }
 
     ngOnDestroy() {
+        // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.themeService.ngOnDestroy();
 
         try {

@@ -116,8 +116,10 @@ const typescriptRules = {
         tsconfigRootDir: __dirname
     },
     extends: [
+        /** @see https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/all.ts */
         'plugin:@typescript-eslint/recommended',
-        'plugin:@angular-eslint/recommended',
+        /** @see https://github.com/angular-eslint/angular-eslint/blob/main/packages/angular-eslint/src/configs/ts-all.ts */
+        'plugin:@angular-eslint/all',
         'plugin:@angular-eslint/template/process-inline-templates',
         'plugin:rxjs/recommended'
     ],
@@ -144,8 +146,21 @@ const typescriptRules = {
         '@angular-eslint/no-input-rename': 0,
         '@angular-eslint/no-outputs-metadata-property': 0,
         '@angular-eslint/no-output-native': 0,
-        '@angular-eslint/no-async-lifecycle-method': 1,
-        '@angular-eslint/contextual-decorator': 1,
+        '@angular-eslint/prefer-on-push-component-change-detection': 0,
+        '@angular-eslint/relative-url-prefix': 0,
+        '@angular-eslint/component-max-inline-declarations': 0,
+        '@angular-eslint/consistent-component-styles': 0,
+        '@angular-eslint/use-component-view-encapsulation': 0,
+        '@angular-eslint/use-injectable-provided-in': 0,
+        '@angular-eslint/no-forward-ref': 0,
+        '@angular-eslint/prefer-standalone-component': 0,
+        '@angular-eslint/prefer-standalone': 0,
+        '@angular-eslint/sort-lifecycle-methods': 0,
+        '@angular-eslint/prefer-output-readonly': 0,
+        '@angular-eslint/no-conflicting-lifecycle': 0,
+        '@angular-eslint/no-attribute-decorator': 0,
+        '@angular-eslint/no-pipe-impure': 0,
+        '@angular-eslint/sort-ngmodule-metadata-arrays': 0,
 
         // plugin:rxjs
         'rxjs/no-implicit-any-catch': 0,
@@ -211,7 +226,7 @@ const componentsDevRules = {
                 style: 'kebab-case'
             }
         ],
-        '@angular-eslint/prefer-standalone-component': 1,
+        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1,
         '@angular-eslint/prefer-on-push-component-change-detection': 1,
 
@@ -230,7 +245,7 @@ const componentsDevRules = {
 const componentsExamplesRules = {
     files: ['packages/docs-examples/**/*.ts'],
     rules: {
-        '@angular-eslint/prefer-standalone-component': 1,
+        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1
     }
 };
@@ -263,7 +278,7 @@ const appDocsRules = {
                 style: 'kebab-case'
             }
         ],
-        '@angular-eslint/prefer-standalone-component': 1,
+        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1
     }
 };
