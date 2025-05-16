@@ -12,6 +12,8 @@ const paths = [
     'main/directory-structure/overview',
     'main/theming/overview',
     'main/typography/overview',
+    'main/design-tokens/overview',
+    'main/schematics/overview',
 
     // ---------------------- Components ----------------------
     'components/alert/overview',
