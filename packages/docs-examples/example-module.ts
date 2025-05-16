@@ -1442,6 +1442,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filter-bar-custom-pipe-example.ts",
     "importPath": "components/filter-bar"
   },
+  "filter-bar-inactive-filter": {
+    "packagePath": "components/filter-bar/filter-bar-inactive-filter",
+    "title": "filter-bar-readonly-pipe",
+    "componentName": "FilterBarInactiveFilterExample",
+    "files": [
+      "filter-bar-inactive-filter-example.ts"
+    ],
+    "selector": "filter-bar-inactive-filter-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-inactive-filter-example.ts",
+    "importPath": "components/filter-bar"
+  },
   "filter-bar-master-checkbox": {
     "packagePath": "components/filter-bar/filter-bar-master-checkbox",
     "title": "filter-bar-master-checkbox",
@@ -1536,6 +1548,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "filter-bar-saved-filters-example",
     "additionalComponents": [],
     "primaryFile": "filter-bar-saved-filters-example.ts",
+    "importPath": "components/filter-bar"
+  },
+  "filter-bar-search-in-pipes": {
+    "packagePath": "components/filter-bar/filter-bar-search-in-pipes",
+    "title": "filter-bar-search-in-pipes",
+    "componentName": "FilterBarSearchInPipesExample",
+    "files": [
+      "filter-bar-search-in-pipes-example.ts"
+    ],
+    "selector": "filter-bar-search-in-pipes-example",
+    "additionalComponents": [],
+    "primaryFile": "filter-bar-search-in-pipes-example.ts",
     "importPath": "components/filter-bar"
   },
   "filter-bar-search": {
@@ -4369,6 +4393,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-custom-pipe':
 return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-inactive-filter':
+return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-master-checkbox':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-overview':
@@ -4384,6 +4410,8 @@ return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-required':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-saved-filters':
+return import('@koobiq/docs-examples/components/filter-bar');
+  case 'filter-bar-search-in-pipes':
 return import('@koobiq/docs-examples/components/filter-bar');
   case 'filter-bar-search':
 return import('@koobiq/docs-examples/components/filter-bar');

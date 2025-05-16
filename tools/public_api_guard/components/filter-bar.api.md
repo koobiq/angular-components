@@ -325,17 +325,17 @@ export class KbqFilters implements OnInit {
 // @public (undocumented)
 export interface KbqPipe {
     // (undocumented)
-    cleanable?: boolean;
+    cleanable: boolean;
     // (undocumented)
-    disabled?: boolean;
+    disabled: boolean;
     // (undocumented)
     id?: string | number;
     // (undocumented)
     name: string;
     // (undocumented)
-    removable?: boolean;
-    // (undocumented)
-    required: boolean;
+    removable: boolean;
+    // @deprecated (undocumented)
+    required?: boolean;
     // (undocumented)
     search?: boolean;
     // (undocumented)

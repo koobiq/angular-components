@@ -44,7 +44,7 @@
 
     <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
 
-    @if (!select.isEmptySearchResult) {
+    @if (data.selectAll && !select.isEmptySearchResult) {
         <kbq-option [selectable]="false" (click)="toggleSelectionAll()" (keydown.enter)="toggleSelectionAll()">
             <kbq-pseudo-checkbox [state]="checkboxState" />
             {{ localeData.pipe.selectAll }}

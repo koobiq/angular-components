@@ -68,7 +68,6 @@ export class FilterBarReadonlyPipesExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -86,7 +85,6 @@ export class FilterBarReadonlyPipesExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -103,7 +101,6 @@ export class FilterBarReadonlyPipesExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -121,7 +118,6 @@ export class FilterBarReadonlyPipesExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -130,7 +126,6 @@ export class FilterBarReadonlyPipesExample {
             name: 'Text',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -162,7 +157,6 @@ export class FilterBarReadonlyPipesExample {
                     value: null,
                     type: KbqPipeTypes.ReadOnly,
 
-                    required: true,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -190,9 +184,9 @@ export class FilterBarReadonlyPipesExample {
                 value,
                 type: KbqPipeTypes.ReadOnly,
 
-                required: false,
                 cleanable: false,
-                removable: true
+                removable: true,
+                disabled: false
             });
 
             this.activeFilter.changed = true;

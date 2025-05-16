@@ -58,7 +58,6 @@ export class FilterBarUniqPipesExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -68,7 +67,6 @@ export class FilterBarUniqPipesExample {
                     value: { name: 'Option 6', id: '6' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -78,7 +76,6 @@ export class FilterBarUniqPipesExample {
                     value: 'Angular Rules',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -101,7 +98,6 @@ export class FilterBarUniqPipesExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -115,7 +111,6 @@ export class FilterBarUniqPipesExample {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -129,7 +124,6 @@ export class FilterBarUniqPipesExample {
                     },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -152,7 +146,6 @@ export class FilterBarUniqPipesExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -162,7 +155,6 @@ export class FilterBarUniqPipesExample {
                     value: { name: 'Option 5', id: '5' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -175,7 +167,6 @@ export class FilterBarUniqPipesExample {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -200,7 +191,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -213,7 +203,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Последние 3 дня', start: { days: -3 }, end: null },
                 { name: 'Последние 7 дней', start: { days: -7 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -231,7 +220,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -245,7 +233,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Последние 3 часа', start: { hours: -3 }, end: null },
                 { name: 'Последние 24 часа', start: { hours: -24 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -262,7 +249,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -277,7 +263,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Option 3', id: '3' },
                 { name: 'Option 4', id: '4' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -295,7 +280,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -314,7 +298,6 @@ export class FilterBarUniqPipesExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -323,7 +306,6 @@ export class FilterBarUniqPipesExample {
             name: 'Text',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -333,7 +315,6 @@ export class FilterBarUniqPipesExample {
             id: 'myText',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -409,7 +390,6 @@ export class FilterBarUniqPipesExample {
                     value: { name: 'Последние 24 часа', end: null, start: { hours: -24 } },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false

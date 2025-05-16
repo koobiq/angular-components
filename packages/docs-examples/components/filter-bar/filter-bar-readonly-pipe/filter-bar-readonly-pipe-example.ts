@@ -32,9 +32,9 @@ export class FilterBarReadonlyPipeExample {
                 value: 'Value',
                 type: KbqPipeTypes.ReadOnly,
 
-                required: false,
                 cleanable: false,
-                removable: true
+                removable: true,
+                disabled: false
             }
         ]
     };
