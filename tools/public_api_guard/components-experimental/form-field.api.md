@@ -38,10 +38,10 @@ export class KbqCleaner {
 
 // @public
 export class KbqError extends KbqHint {
-    set color(_color: null);
     get color(): KbqComponentColors.Error;
-    set fillTextOff(_fillTextOff: null);
+    set color(_color: null);
     get fillTextOff(): boolean;
+    set fillTextOff(_fillTextOff: null);
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqError, "kbq-error", ["kbqError"], { "color": { "alias": "color"; "required": false; }; "fillTextOff": { "alias": "fillTextOff"; "required": false; }; }, {}, never, ["[kbq-icon]", "*"], true, never>;
     // (undocumented)
@@ -122,14 +122,12 @@ export class KbqFormFieldModule {
 
 // @public
 export class KbqHint {
-    set color(color: KbqComponentColors);
-    // (undocumented)
     get color(): KbqComponentColors | undefined;
+    set color(color: KbqComponentColors);
     protected colors: typeof KbqComponentColors;
     compact: boolean;
-    set fillTextOff(fillTextOff: boolean);
-    // (undocumented)
     get fillTextOff(): boolean;
+    set fillTextOff(fillTextOff: boolean);
     id: string;
     // (undocumented)
     static ngAcceptInputType_compact: unknown;
@@ -152,10 +150,10 @@ export class KbqLabel {
 
 // @public
 export class KbqPasswordHint extends KbqHint {
-    set color(_color: null);
     get color(): KbqComponentColors;
-    set fillTextOff(_fillTextOff: null);
+    set color(_color: null);
     get fillTextOff(): boolean;
+    set fillTextOff(_fillTextOff: null);
     hasError: boolean;
     protected get icon(): string;
     // (undocumented)

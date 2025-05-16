@@ -191,16 +191,16 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
 
     /** Link tab index. */
     @Input({ transform: numberAttribute })
-    set tabIndex(value: number) {
-        this._tabIndex = value;
-    }
-
     get tabIndex(): number {
         if (this.tabNavBar.tabNavPanel) {
             return this.active && !this.disabled ? this._tabIndex : -1;
         } else {
             return this.disabled ? -1 : this._tabIndex;
         }
+    }
+
+    set tabIndex(value: number) {
+        this._tabIndex = value;
     }
 
     private _tabIndex: number = 0;

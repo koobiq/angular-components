@@ -350,9 +350,8 @@ export class KbqTabLink implements OnDestroy, AfterViewInit {
     // (undocumented)
     ngOnDestroy(): void;
     protected get role(): string | null;
-    set tabIndex(value: number);
-    // (undocumented)
     get tabIndex(): number;
+    set tabIndex(value: number);
     // (undocumented)
     get underlined(): boolean;
     // (undocumented)

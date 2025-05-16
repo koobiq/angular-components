@@ -37,23 +37,25 @@ export class KbqHint {
     protected colors = KbqComponentColors;
 
     /** Hint color */
-    @Input() set color(color: KbqComponentColors) {
-        this._color = color;
-    }
-
+    @Input()
     get color(): KbqComponentColors | undefined {
         return this._color;
+    }
+
+    set color(color: KbqComponentColors) {
+        this._color = color;
     }
 
     private _color: KbqComponentColors | undefined;
 
     /** Disables `color` for the hint text. */
-    @Input({ transform: booleanAttribute }) set fillTextOff(fillTextOff: boolean) {
-        this._fillTextOff = fillTextOff;
-    }
-
+    @Input({ transform: booleanAttribute })
     get fillTextOff(): boolean {
         return this._fillTextOff;
+    }
+
+    set fillTextOff(fillTextOff: boolean) {
+        this._fillTextOff = fillTextOff;
     }
 
     private _fillTextOff: boolean = false;
@@ -77,20 +79,22 @@ export class KbqHint {
 })
 export class KbqError extends KbqHint {
     /** @docs-private */
-    @Input() set color(_color: null) {}
-
     /** Overrides the hint `color` property. */
+    @Input()
     get color(): KbqComponentColors.Error {
         return KbqComponentColors.Error;
     }
 
-    /** @docs-private */
-    @Input() set fillTextOff(_fillTextOff: null) {}
+    set color(_color: null) {}
 
+    /** @docs-private */
     /** Overrides the hint `fillTextOff` property. */
+    @Input()
     get fillTextOff(): boolean {
         return false;
     }
+
+    set fillTextOff(_fillTextOff: null) {}
 }
 
 /** Password hint to be shown below the password form field control. */
@@ -116,20 +120,20 @@ export class KbqPasswordHint extends KbqHint {
     @Input({ transform: booleanAttribute }) hasError: boolean = false;
 
     /** @docs-private */
-    @Input() set fillTextOff(_fillTextOff: null) {}
-
     /** Overrides the hint `fillTextOff` property. */
+    @Input()
     get fillTextOff(): boolean {
         return true;
     }
+
+    set fillTextOff(_fillTextOff: null) {}
 
     // @TODO fix types (#DS-2915)
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
 
     /** @docs-private */
-    @Input() set color(_color: null) {}
-
     /** Overrides the hint `color` property. */
+    @Input()
     get color(): KbqComponentColors {
         if (this.formField?.invalid && this.hasError) {
             return KbqComponentColors.Error;
@@ -141,6 +145,8 @@ export class KbqPasswordHint extends KbqHint {
 
         return KbqComponentColors.ContrastFade;
     }
+
+    set color(_color: null) {}
 
     /** The form field hint icon. */
     protected get icon(): string {

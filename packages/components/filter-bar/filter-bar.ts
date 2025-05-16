@@ -84,14 +84,14 @@ export class KbqFilterBar {
 
     /** An array of templates that are used when adding a pipe. Also contains lists of options to select (values). */
     @Input()
+    get pipeTemplates(): KbqPipeTemplate[] {
+        return this._templates;
+    }
+
     set pipeTemplates(value: KbqPipeTemplate[]) {
         this._templates = value;
 
         this.internalTemplatesChanges.next(this._templates);
-    }
-
-    get pipeTemplates(): KbqPipeTemplate[] {
-        return this._templates;
     }
 
     private _templates: KbqPipeTemplate[] = [];

@@ -174,9 +174,8 @@ export class KbqFilterBar {
     readonly onChangePipe: EventEmitter<KbqPipe>;
     readonly onRemovePipe: EventEmitter<KbqPipe>;
     readonly openPipe: BehaviorSubject<string | number | null>;
-    set pipeTemplates(value: KbqPipeTemplate[]);
-    // (undocumented)
     get pipeTemplates(): KbqPipeTemplate[];
+    set pipeTemplates(value: KbqPipeTemplate[]);
     removePipe(pipe: KbqPipe): void;
     resetFilterChangedState(): void;
     restoreFilterState(filter?: KbqFilter): void;
@@ -562,9 +561,8 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
 export class KbqPipeState<T> implements OnInit {
     // (undocumented)
     ngOnInit(): void;
-    set state(pipe: T | null);
-    // (undocumented)
     get state(): T | null;
+    set state(pipe: T | null);
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqPipeState<any>, "[kbqPipeState]", never, { "state": { "alias": "kbqPipeState"; "required": false; }; }, {}, never, never, true, never>;
     // (undocumented)

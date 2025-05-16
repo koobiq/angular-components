@@ -22,14 +22,14 @@ export class KbqPipeState<T> implements OnInit {
 
     /** calculates and updates styles of button from pipe state */
     @Input({ alias: 'kbqPipeState' })
+    get state(): T | null {
+        return this._state;
+    }
+
     set state(pipe: T | null) {
         this._state = pipe;
 
         this.updateState();
-    }
-
-    get state(): T | null {
-        return this._state;
     }
 
     private _state: T | null = null;

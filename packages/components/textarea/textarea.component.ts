@@ -57,12 +57,12 @@ export class KbqTextarea
     /** Parameter enables or disables the ability to automatically increase the height.
      * If set to false, the textarea becomes vertically resizable. */
     @Input({ transform: booleanAttribute })
-    set canGrow(value: boolean) {
-        this._canGrow = value;
-    }
-
     get canGrow(): boolean {
         return !this.maxRowLimitReached && this._canGrow;
+    }
+
+    set canGrow(value: boolean) {
+        this._canGrow = value;
     }
 
     protected readonly isBrowser = inject(Platform).isBrowser;
