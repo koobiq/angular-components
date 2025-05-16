@@ -31,6 +31,18 @@
 		<loc>https://koobiq.io/ru/main/typography/overview</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/main/design-tokens/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/design-tokens/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/main/schematics/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/main/schematics/overview</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/alert/overview</loc>
 	</url>
 	<url>
@@ -53,6 +65,12 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/actions-panel/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/ag-grid/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/ag-grid/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/accordion/overview</loc>
@@ -149,6 +167,18 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/code-block/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/core/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/core/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/core/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/core/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/datepicker/overview</loc>
