@@ -1,7 +1,6 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
+import { KbqSidebarModule, KbqSidebarPositions } from '@koobiq/components/sidebar';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
 
 @Component({
@@ -9,8 +8,7 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
     imports: [
         KbqSplitterModule,
         KbqButtonModule,
-        KbqSidebarModule,
-        JsonPipe
+        KbqSidebarModule
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
@@ -19,16 +17,15 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {
-    direction = Direction;
-    sidebarPositions = SidebarPositions;
+    readonly direction = Direction;
+    readonly sidebarPositions = KbqSidebarPositions;
 
     leftSidebarSidebarState: boolean = false;
     leftSplitterState: boolean = false;
-
     rightSidebarSidebarState: boolean = false;
 
-    onStateChanged($event): void {
-        console.log('onStateChanged: ', $event);
+    onStateChanged(event: boolean): void {
+        console.log('onStateChanged: ', event);
     }
 
     toggleLeftSidebar() {
