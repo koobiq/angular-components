@@ -25,7 +25,6 @@ import { KbqMonthView } from './month-view.component';
         OverlayModule,
         A11yModule,
         PortalModule,
-        KbqButtonModule,
         KbqSelectModule,
         KbqIconModule,
         NgClass,

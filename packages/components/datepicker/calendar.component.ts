@@ -207,6 +207,7 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
 
     /** Updates today's date after an update of the active date */
     updateTodaysDate() {
+        // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.monthView.ngAfterContentInit();
     }
 

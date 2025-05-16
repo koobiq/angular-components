@@ -574,6 +574,7 @@ export class KbqTreeSelect
             }
         });
 
+        // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.tree.ngAfterContentInit();
 
         this.initKeyManager();

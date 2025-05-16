@@ -18,7 +18,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
             <kbq-radio-button [value]="'layout-column'">layout-column</kbq-radio-button>
             <kbq-radio-button [value]="'layout-row'">layout-row</kbq-radio-button>
         </kbq-radio-group>
-        <div class="layout-margin-top-4xl" [class]="layoutDirection">
+        <div class="layout-margin-top-4xl {{ layoutDirection }}">
             <div class="flex example-block">first</div>
             <div class="flex example-block">second</div>
             <div class="flex example-block">third</div>

@@ -14,8 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormFieldModule,
         KbqInputModule,
         FormsModule,
-        KbqFormsModule,
-        KbqInputModule
+        KbqFormsModule
     ],
     template: `
         <div class="kbq-text-big">
