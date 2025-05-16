@@ -32,7 +32,6 @@ export class FilterBarInactiveFilterExample {
                 value: null,
                 type: KbqPipeTypes.ReadOnly,
 
-                required: true,
                 cleanable: false,
                 removable: false,
                 disabled: true
@@ -42,7 +41,6 @@ export class FilterBarInactiveFilterExample {
                 value: 'Value',
                 type: KbqPipeTypes.ReadOnly,
 
-                required: false,
                 cleanable: false,
                 removable: true,
                 disabled: true

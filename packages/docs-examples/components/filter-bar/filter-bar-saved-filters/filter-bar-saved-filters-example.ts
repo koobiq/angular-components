@@ -58,7 +58,6 @@ export class FilterBarSavedFiltersExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -68,7 +67,6 @@ export class FilterBarSavedFiltersExample {
                     value: { name: 'Option 6', id: '6' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -78,7 +76,6 @@ export class FilterBarSavedFiltersExample {
                     value: 'Text: Edited filter with unsaved changes',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -101,7 +98,6 @@ export class FilterBarSavedFiltersExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -115,7 +111,6 @@ export class FilterBarSavedFiltersExample {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -129,7 +124,6 @@ export class FilterBarSavedFiltersExample {
                     },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -152,7 +146,6 @@ export class FilterBarSavedFiltersExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -162,7 +155,6 @@ export class FilterBarSavedFiltersExample {
                     value: { name: 'Option 5', id: '5' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -175,7 +167,6 @@ export class FilterBarSavedFiltersExample {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -201,7 +192,6 @@ export class FilterBarSavedFiltersExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -211,7 +201,6 @@ export class FilterBarSavedFiltersExample {
                     value: { name: 'Option 3', id: '3' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -221,7 +210,6 @@ export class FilterBarSavedFiltersExample {
                     value: 'Angular Rules',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -247,7 +235,6 @@ export class FilterBarSavedFiltersExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -265,7 +252,6 @@ export class FilterBarSavedFiltersExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -282,7 +268,6 @@ export class FilterBarSavedFiltersExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -300,7 +285,6 @@ export class FilterBarSavedFiltersExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -309,7 +293,6 @@ export class FilterBarSavedFiltersExample {
             name: 'Text',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -388,7 +371,6 @@ export class FilterBarSavedFiltersExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false

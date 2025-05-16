@@ -27,9 +27,37 @@ A filter can be added to the filter panel regardless of the operating mode, whic
 
 <!-- example(filter-bar-required) -->
 
+### Unchangeable filters
+
+The filter value cannot be changed, the filter can only be deleted.
+
+<!-- example(filter-bar-readonly-pipe) -->
+
+Clicking on a pseudo-link in the list of parameters will add a new value to the filter. If the filter is not in the menu or in the panel: then an inactive element will be added, the value of which cannot be changed, it can only be deleted.
+
+<!-- example(filter-bar-readonly-pipes) -->
+
 ### Filter types
 
 <!-- example(filter-bar-pipe-types) -->
+
+### Search in pipes
+
+If the filter has many values, it is useful to enable search in the drop-down menu.
+
+<!-- example(filter-bar-search-in-pipes) -->
+
+### Master checkbox "Select all"
+
+If there are many values, "Select All" will allow you to select all values ​​or deselect all values ​​in one action. When searching, the master checkbox selects only the results that match the query.
+
+<!-- example(filter-bar-master-checkbox) -->
+
+### Inactive filter
+
+The filter value cannot be changed or deleted.
+
+<!-- example(filter-bar-inactive-filter) -->
 
 ### Search
 

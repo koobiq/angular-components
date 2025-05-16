@@ -10,15 +10,15 @@ import { KbqPipeTitleDirective } from './pipe-title';
     standalone: true,
     selector: 'kbq-pipe-readonly',
     template: `
-        <button [class.kbq-disabled]="data.removable" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip" kbq-button>
+        <button [disabled]="data.disabled" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip" kbq-button>
             <span class="kbq-pipe__name" #kbqTitleText kbqPipeMinWidth>{{ data.name }}</span>
             <span class="kbq-pipe__value" #kbqTitleText [class.kbq-pipe__value_empty]="!data.value" kbqPipeMinWidth>
                 {{ data.value }}
             </span>
         </button>
 
-        @if (!data.required || (data.required && !isEmpty)) {
-            <kbq-pipe-button [readonly]="!!data.removable" />
+        @if (showRemoveButton) {
+            <kbq-pipe-button />
         }
 
         <ng-template #pipeTooltip>
@@ -26,11 +26,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
             <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ data.value }}</div>
         </ng-template>
     `,
-    styleUrls: ['base-pipe.scss'],
-    host: {
-        // by design. we need to use disabled styles for removable pipes
-        '[class.kbq-pipe_disabled]': 'data.removable'
-    },
+    styleUrls: ['base-pipe.scss', 'pipe-readonly.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [

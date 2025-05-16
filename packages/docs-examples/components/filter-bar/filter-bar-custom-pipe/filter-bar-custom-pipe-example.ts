@@ -171,7 +171,6 @@ export class FilterBarCustomPipeExample {
                 type: 'colorPipe',
                 value: '#112233',
 
-                required: false,
                 cleanable: false,
                 removable: true,
                 disabled: false
@@ -184,7 +183,6 @@ export class FilterBarCustomPipeExample {
             name: 'colorPipe',
             type: 'colorPipe',
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -200,7 +198,6 @@ export class FilterBarCustomPipeExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -218,7 +215,6 @@ export class FilterBarCustomPipeExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -235,7 +231,6 @@ export class FilterBarCustomPipeExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -253,7 +248,6 @@ export class FilterBarCustomPipeExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -262,7 +256,6 @@ export class FilterBarCustomPipeExample {
             name: 'Text',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false

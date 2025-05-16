@@ -65,7 +65,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
 
     /** Whether the current pipe is removable or cleanable. Used for apply style modifier */
     get showRemoveButton(): boolean {
-        return !!(!this.data.required && (this.data.removable || (this.data.cleanable && !this.isEmpty)));
+        return this.data.removable || (this.data.cleanable && !this.isEmpty);
     }
 
     /** localized data

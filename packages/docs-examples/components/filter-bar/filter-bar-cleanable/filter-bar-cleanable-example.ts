@@ -28,7 +28,6 @@ export class FilterBarCleanableExample {
             type: KbqPipeTypes.Select,
             value: { name: 'Option 1', id: '1' },
 
-            required: false,
             cleanable: true,
             removable: false,
             disabled: false
@@ -38,7 +37,6 @@ export class FilterBarCleanableExample {
             type: KbqPipeTypes.MultiSelect,
             value: null,
 
-            required: false,
             cleanable: true,
             removable: false,
             disabled: false
@@ -48,7 +46,6 @@ export class FilterBarCleanableExample {
             type: KbqPipeTypes.Text,
             value: null,
 
-            required: false,
             cleanable: true,
             removable: false,
             disabled: false
@@ -68,7 +65,6 @@ export class FilterBarCleanableExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
-            required: false,
             cleanable: false,
             removable: false,
             disabled: false
@@ -86,7 +82,6 @@ export class FilterBarCleanableExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: false,
             disabled: false

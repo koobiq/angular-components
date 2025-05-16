@@ -80,10 +80,11 @@ export interface KbqPipe {
     search?: boolean;
     selectAll?: boolean;
 
-    required: boolean;
-    cleanable?: boolean;
-    removable?: boolean;
-    disabled?: boolean;
+    /** @deprecated use cleanable = false and removable = false instead */
+    required?: boolean;
+    cleanable: boolean;
+    removable: boolean;
+    disabled: boolean;
 }
 
 export interface KbqPipeData<V> extends KbqPipe {

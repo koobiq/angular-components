@@ -127,7 +127,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** @docs-private */
     toggleSelectionAllByEnterKey() {
-        if (this.select.keyManager.activeItemIndex === 0) {
+        if (this.data.selectAll && this.select.keyManager.activeItemIndex === 0) {
             this.toggleSelectionAll();
         }
     }
