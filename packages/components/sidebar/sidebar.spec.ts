@@ -1,137 +1,122 @@
-import { Component, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, DebugElement, Provider, Type, viewChild } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
+import { KbqSidebar, KbqSidebarPositions } from './sidebar';
+import { KbqSidebarModule } from './sidebar.module';
 
-describe('Sidebar', () => {
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                NoopAnimationsModule,
-                FormsModule,
-                ReactiveFormsModule,
-                KbqSidebarModule
-            ],
-            declarations: [SimpleSidebar]
-        }).compileComponents();
+const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({
+        imports: [component, NoopAnimationsModule],
+        providers
     });
+    const fixture = TestBed.createComponent<T>(component);
 
-    describe('base', () => {
-        let fixture: ComponentFixture<SimpleSidebar>;
-        let testComponent: SimpleSidebar;
-        let sidebarComponent: KbqSidebar;
+    fixture.autoDetectChanges();
 
-        beforeEach(() => {
-            fixture = TestBed.createComponent(SimpleSidebar);
-            fixture.detectChanges();
+    return fixture;
+};
 
-            testComponent = fixture.debugElement.componentInstance;
-            sidebarComponent = fixture.debugElement.componentInstance.sidebar;
-        });
-
-        it('should render with default parameters', () => {
-            expect(sidebarComponent.opened).toBeTruthy();
-            expect(sidebarComponent.position).toBe(SidebarPositions.Left);
-            expect(sidebarComponent.openedContent).toBeDefined();
-            expect(sidebarComponent.closedContent).toBeDefined();
-        });
-
-        it('should change state by property', () => {
-            expect(sidebarComponent.opened).toBeTruthy();
-
-            testComponent.state = false;
-            fixture.detectChanges();
-
-            expect(sidebarComponent.opened).toBeFalsy();
-
-            testComponent.state = true;
-            fixture.detectChanges();
-
-            expect(sidebarComponent.opened).toBeTruthy();
-        });
-
-        it('should change state by method', () => {
-            expect(sidebarComponent.opened).toBeTruthy();
-
-            sidebarComponent.toggle();
-            fixture.detectChanges();
-
-            expect(sidebarComponent.opened).toBeFalsy();
-
-            sidebarComponent.toggle();
-            fixture.detectChanges();
-
-            expect(sidebarComponent.opened).toBeTruthy();
-        });
-
-        it('should change position', () => {
-            expect(sidebarComponent.position).toBe(SidebarPositions.Left);
-
-            testComponent.position = SidebarPositions.Right;
-            fixture.detectChanges();
-
-            expect(sidebarComponent.position).toBe(SidebarPositions.Right);
-        });
-
-        xit('should fire change event', () => {
-            const changeSpy = jest.fn();
-
-            sidebarComponent.stateChanged.subscribe(changeSpy);
-
-            expect(sidebarComponent.opened).toBeTruthy();
-
-            // sidebarComponent.stateChanged.emit(true);
-            sidebarComponent.toggle();
-            fixture.detectChanges();
-
-            expect(sidebarComponent.opened).toBeFalsy();
-
-            expect(changeSpy).toHaveBeenCalled();
-        });
-
-        it('should add and remove event listeners from document', () => {
-            const addEventListenerSpyFn = jest.spyOn(document, 'addEventListener');
-            const removeEventListenerSpyFn = jest.spyOn(document, 'removeEventListener');
-
-            testComponent.showContainer = false;
-            fixture.detectChanges();
-
-            expect(removeEventListenerSpyFn).toHaveBeenCalledWith('keypress', expect.any(Function), true);
-
-            testComponent.showContainer = true;
-            fixture.detectChanges();
-
-            expect(addEventListenerSpyFn).toHaveBeenCalledWith('keypress', expect.any(Function), true);
-        });
-    });
-});
+const getSidebarDebugElement = (debugElement: DebugElement): DebugElement => {
+    return debugElement.query(By.directive(KbqSidebar));
+};
 
 @Component({
+    standalone: true,
+    selector: 'test-sidebar',
+    imports: [KbqSidebarModule],
     template: `
-        @if (showContainer) {
-            <div>
-                <kbq-sidebar
-                    #sidebarRef="kbqSidebar"
-                    [position]="position"
-                    [opened]="state"
-                    (stateChanged)="onStateChanged($event)"
-                >
-                    <div kbq-sidebar-opened>kbq-sidebar-opened</div>
-                    <div kbq-sidebar-closed>kbq-sidebar-closed</div>
-                </kbq-sidebar>
-            </div>
-        }
-    `
+        <kbq-sidebar [(opened)]="opened" [position]="position" (stateChanged)="onStateChanged($event)">
+            <div kbqSidebarOpened>kbqSidebarOpened</div>
+            <div kbqSidebarClosed>kbqSidebarClosed</div>
+        </kbq-sidebar>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-class SimpleSidebar {
-    showContainer: boolean = true;
+class TestSidebar {
+    readonly sidebar = viewChild.required(KbqSidebar);
 
-    position: SidebarPositions = SidebarPositions.Left;
+    opened = true;
 
-    state: boolean = true;
+    position = KbqSidebarPositions.Left;
 
-    @ViewChild(KbqSidebar, { static: false }) sidebar: KbqSidebar;
-
-    onStateChanged(): void {}
+    readonly onStateChanged = jest.fn((_event: boolean) => {});
 }
+
+describe(KbqSidebar.name, () => {
+    it('should match snapshot when opened', () => {
+        const { debugElement } = createComponent(TestSidebar);
+
+        expect(getSidebarDebugElement(debugElement)).toMatchSnapshot();
+    });
+
+    it('should match snapshot when closed', fakeAsync(() => {
+        const { debugElement, componentInstance } = createComponent(TestSidebar);
+
+        componentInstance.sidebar().toggle();
+        tick();
+        expect(getSidebarDebugElement(debugElement)).toMatchSnapshot();
+    }));
+
+    it('should emit two-way data binding by toggle method', fakeAsync(() => {
+        const { componentInstance } = createComponent(TestSidebar);
+
+        expect(componentInstance.opened).toBe(true);
+        componentInstance.sidebar().toggle();
+        tick();
+        expect(componentInstance.opened).toBe(false);
+    }));
+
+    it('should emit stateChanged event by model change', fakeAsync(() => {
+        const { componentInstance } = createComponent(TestSidebar);
+        const spy = jest.spyOn(componentInstance, 'onStateChanged');
+
+        expect(spy).toHaveBeenCalledTimes(0);
+        componentInstance.opened = false;
+
+        tick();
+        expect(spy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should emit stateChanged event by toggle method', fakeAsync(() => {
+        const { componentInstance } = createComponent(TestSidebar);
+        const spy = jest.spyOn(componentInstance, 'onStateChanged');
+
+        expect(spy).toHaveBeenCalledTimes(0);
+        componentInstance.sidebar().toggle();
+
+        tick();
+        expect(spy).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should emit stateChanged event with correct $event value by toggle method', fakeAsync(() => {
+        const { componentInstance } = createComponent(TestSidebar);
+        const spy = jest.spyOn(componentInstance, 'onStateChanged');
+
+        componentInstance.sidebar().toggle();
+        tick();
+        expect(spy).toHaveBeenCalledWith(false);
+    }));
+
+    it('should close on `BracketLeft` key click', fakeAsync(() => {
+        const { componentInstance } = createComponent(TestSidebar);
+
+        expect(componentInstance.opened).toBe(true);
+        expect(componentInstance.position).toBe(KbqSidebarPositions.Left);
+
+        document.dispatchEvent(new KeyboardEvent('keypress', { code: 'BracketLeft' }));
+        tick();
+        expect(componentInstance.opened).toBe(false);
+    }));
+
+    it('should ignore on `BracketRight` key click', fakeAsync(() => {
+        const { componentInstance } = createComponent(TestSidebar);
+
+        expect(componentInstance.opened).toBe(true);
+        expect(componentInstance.position).toBe(KbqSidebarPositions.Left);
+
+        document.dispatchEvent(new KeyboardEvent('keypress', { code: 'BracketRight' }));
+        tick();
+        expect(componentInstance.opened).toBe(true);
+    }));
+});

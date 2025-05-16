@@ -4,65 +4,50 @@
 
 ```ts
 
-import { AfterContentInit } from '@angular/core';
-import { ElementRef } from '@angular/core';
-import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i2 from '@angular/common';
-import { NgZone } from '@angular/core';
+import { InputSignal } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { OutputEmitterRef } from '@angular/core';
+import { OutputRef } from '@angular/core';
+import { Signal } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
-export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
-    constructor(ngZone: NgZone, elementRef: ElementRef);
+export class KbqSidebar implements OnDestroy, OnInit {
+    constructor();
+    protected readonly animationStateParams: Signal<Partial<{
+    openedStateMinWidth: string;
+    openedStateWidth: string;
+    openedStateMaxWidth: string;
+    closedStateWidth: string;
+    }>>;
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    get animationState(): KbqSidebarAnimationState;
-    // (undocumented)
-    closedContent: KbqSidebarClosed;
-    // (undocumented)
-    protected readonly document: Document;
-    // (undocumented)
-    internalState: boolean;
-    // (undocumented)
-    ngAfterContentInit(): void;
+    protected readonly animationStateValue: Signal<KbqSidebarAnimationState>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     ngOnInit(): void;
-    // (undocumented)
-    onAnimationDone(): void;
-    // (undocumented)
-    onAnimationStart(): void;
-    // (undocumented)
-    get opened(): boolean;
-    set opened(value: boolean);
-    // (undocumented)
-    openedContent: KbqSidebarOpened;
-    // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    params: KbqSidebarParams;
-    // (undocumented)
-    position: SidebarPositions;
-    // (undocumented)
-    readonly stateChanged: EventEmitter<boolean>;
-    // (undocumented)
+    protected onAnimationDone(): void;
+    protected onAnimationStart(): void;
+    readonly opened: InputSignalWithTransform<boolean, unknown>;
+    readonly openedChange: OutputEmitterRef<boolean>;
+    readonly position: InputSignal<KbqSidebarPositions>;
+    protected readonly state: WritableSignal<boolean>;
+    readonly stateChanged: OutputRef<boolean>;
     toggle(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "opened": { "alias": "opened"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened]", "[kbq-sidebar-closed]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqSidebar, "kbq-sidebar", ["kbqSidebar"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "position": { "alias": "position"; "required": true; "isSignal": true; }; }, { "openedChange": "openedChange"; "stateChanged": "stateChanged"; }, ["openedContent", "closedContent"], ["[kbq-sidebar-opened],[kbqSidebarOpened]", "[kbq-sidebar-closed],[kbqSidebarClosed]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebar, never>;
 }
 
 // @public (undocumented)
 export class KbqSidebarClosed {
+    readonly width: InputSignal<string | undefined>;
     // (undocumented)
-    width: string;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarClosed, "[kbq-sidebar-closed]", ["kbqSidebarClosed"], { "width": { "alias": "width"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarClosed, "[kbq-sidebar-closed],[kbqSidebarClosed]", ["kbqSidebarClosed"], { "width": { "alias": "width"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarClosed, never>;
 }
@@ -76,25 +61,22 @@ export class KbqSidebarModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, [typeof i1.KbqSidebarClosed, typeof i1.KbqSidebarOpened, typeof i1.KbqSidebar], [typeof i2.CommonModule], [typeof i1.KbqSidebarClosed, typeof i1.KbqSidebarOpened, typeof i1.KbqSidebar]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqSidebarModule, never, [typeof i1.KbqSidebarClosed, typeof i1.KbqSidebarOpened, typeof i1.KbqSidebar], [typeof i1.KbqSidebarClosed, typeof i1.KbqSidebarOpened, typeof i1.KbqSidebar]>;
 }
 
 // @public (undocumented)
 export class KbqSidebarOpened {
+    readonly maxWidth: InputSignal<string | undefined>;
+    readonly minWidth: InputSignal<string | undefined>;
+    readonly width: InputSignal<string | undefined>;
     // (undocumented)
-    maxWidth: string;
-    // (undocumented)
-    minWidth: string;
-    // (undocumented)
-    width: string;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarOpened, "[kbq-sidebar-opened]", ["kbqSidebarOpened"], { "minWidth": { "alias": "minWidth"; "required": false; }; "width": { "alias": "width"; "required": false; }; "maxWidth": { "alias": "maxWidth"; "required": false; }; }, {}, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSidebarOpened, "[kbq-sidebar-opened],[kbqSidebarOpened]", ["kbqSidebarOpened"], { "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqSidebarOpened, never>;
 }
 
-// @public (undocumented)
-export enum SidebarPositions {
+// @public
+export enum KbqSidebarPositions {
     // (undocumented)
     Left = "left",
     // (undocumented)

@@ -550,6 +550,18 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: true
                 },
                 {
+                    id: 'sidebar',
+                    name: {
+                        ru: 'Sidebar',
+                        en: 'Sidebar'
+                    },
+                    svgPreview: 'sidebar',
+                    hasApi: true,
+                    apiId: 'sidebar',
+                    hasExamples: true,
+                    isNew: expiresAt('2025-06-16')
+                },
+                {
                     id: 'sidepanel',
                     name: {
                         ru: 'Sidepanel',
