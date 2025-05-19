@@ -16,6 +16,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
+
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `,
@@ -33,7 +35,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectPrioritizedSelectedExample {
     options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
-    readonly selected = [this.options.at(-1)!, this.options.at(-2)!];
+    selected = [this.options.at(-1)!, this.options.at(-2)!];
 
     constructor() {
         this.groupSelectedOptions();
