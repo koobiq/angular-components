@@ -1,0 +1,15 @@
+.example-fill-and-style__button-group {
+    display: inline-flex;
+    flex-direction: row;
+    gap: 32px;
+    flex-wrap: wrap;
+    max-width: 480px;
+}
+
+.example-label {
+    margin-bottom: 12px;
+}
+
+.example-fill-and-style__button-group .example-button {
+    width: 128px;
+}
