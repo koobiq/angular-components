@@ -1,17 +1,99 @@
 version: 2
 updates:
-  # Weekly updates for devDependencies.
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
       interval: 'weekly'
       day: 'tuesday'
-      time: '09:00'
-      # Use East Africa Standard Time (UTC +03:00)
-      timezone: 'Africa/Nairobi'
-    open-pull-requests-limit: 5
-    versioning-strategy: increase
+      time: '13:00'
+      timezone: 'Europe/Moscow'
+    # Ignores any major updates
+    ignore:
+      - dependency-name: '*'
+        update-types: ['version-update:semver-major']
     groups:
-      dev-dependencies:
+      linters:
         patterns:
-          - '*'
+          - 'eslint*'
+          - '@types/eslint'
+          - '@typescript-eslint/*'
+          - '@angular-eslint/*'
+          - '@stylistic/*'
+          - 'prettier*'
+          - 'stylelint*'
+          - '@commitlint/*'
+          - 'cspell'
+          - '@cspell/*'
+      angular:
+        patterns:
+          - '@angular/*'
+          - 'rxjs'
+          - 'zone.js'
+          - '@angular-builders/*'
+          - '@angular-devkit/*'
+          - '@schematics/angular'
+          - 'ng-packagr'
+          - 'tslib'
+      ag-grid:
+        patterns:
+          - '@koobiq/ag-grid-angular-theme'
+          - 'ag-grid-*'
+      koobiq:
+        patterns:
+          - '@koobiq/*'
+      docsearch:
+        patterns:
+          - '@docsearch/*'
+      rollup:
+        patterns:
+          - 'rollup*'
+          - '@rollup/*'
+      conventional-changelog:
+        patterns:
+          - 'conventional-changelog*'
+          - '@conventional-changelog/*'
+          - '@types/conventional-changelog'
+          - '@types/conventional-changelog-writer'
+      jest:
+        patterns:
+          - 'jest*'
+          - '@types/jest'
+          - 'ts-jest'
+      karma:
+        patterns:
+          - 'karma*'
+          - 'jasmine*'
+          - 'karma-jasmine*'
+          - '@types/jasmine'
+      nunjucks:
+        patterns:
+          - 'nunjucks'
+          - '@types/nunjucks'
+      spdx-satisfies:
+        patterns:
+          - 'spdx-satisfies'
+          - '@types/spdx-satisfies'
+      merge2:
+        patterns:
+          - 'merge2'
+          - '@types/merge2'
+      inquirer:
+        patterns:
+          - 'inquirer'
+          - '@types/inquirer'
+      chalk:
+        patterns:
+          - 'chalk'
+          - '@types/chalk'
+      fs-extra:
+        patterns:
+          - 'fs-extra'
+          - '@types/fs-extra'
+      glob:
+        patterns:
+          - 'glob'
+          - '@types/glob'
+      luxon:
+        patterns:
+          - 'luxon'
+          - '@types/luxon'
