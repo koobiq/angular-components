@@ -41,7 +41,7 @@
 <dev-examples />
 
 <div class="dev-container flex-100 layout-column layout-align-start-start">
-    <div class="kbq-form-vertical layout-row layou-align-start-start dev-config" [style]="getOrder('config')">
+    <div class="kbq-form-vertical layout-row layou-align-start-start dev-config" [style.order]="getOrder('config')">
         <div class="flex-20 kbq-form__fieldset">
             <div class="kbq-form__row">
                 <label for="order" class="kbq-form__label">Inverse layout order</label>
@@ -291,7 +291,7 @@
         </div>
     </div>
 
-    <div cdkScrollable class="{{ layoutClass }} dev-result" [style.overflow]="'scroll'" [style]="getOrder('result')">
+    <div cdkScrollable style="overflow: scroll" class="{{ layoutClass }} dev-result" [style.order]="getOrder('result')">
         <div style="min-width: 1500px; display: flex; justify-content: center">
             @switch (showElement()) {
                 @case (ELEMENTS.BUTTON) {
