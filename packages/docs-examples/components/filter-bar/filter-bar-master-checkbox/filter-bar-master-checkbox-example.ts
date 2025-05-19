@@ -39,7 +39,6 @@ export class FilterBarMasterCheckboxExample {
                 search: true,
                 selectAll: true,
 
-                required: false,
                 cleanable: true,
                 removable: false,
                 disabled: false
@@ -52,7 +51,6 @@ export class FilterBarMasterCheckboxExample {
             name: 'MultiSelect',
             type: KbqPipeTypes.MultiSelect,
             values: Array.from({ length: 20 }, (_, i) => ({ name: `Option #${i}`, id: i.toString() })),
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -70,7 +68,6 @@ export class FilterBarMasterCheckboxExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false

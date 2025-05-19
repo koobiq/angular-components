@@ -58,7 +58,6 @@ export class FilterBarOverviewExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -68,7 +67,6 @@ export class FilterBarOverviewExample {
                     value: { name: 'Option 6', id: '6' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -78,7 +76,6 @@ export class FilterBarOverviewExample {
                     value: 'Angular Rules',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -101,7 +98,6 @@ export class FilterBarOverviewExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -115,7 +111,6 @@ export class FilterBarOverviewExample {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -129,7 +124,6 @@ export class FilterBarOverviewExample {
                     },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -152,7 +146,6 @@ export class FilterBarOverviewExample {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -162,7 +155,6 @@ export class FilterBarOverviewExample {
                     value: { name: 'Option 5', id: '5' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -175,7 +167,6 @@ export class FilterBarOverviewExample {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -200,7 +191,6 @@ export class FilterBarOverviewExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -218,7 +208,6 @@ export class FilterBarOverviewExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -235,7 +224,6 @@ export class FilterBarOverviewExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -253,7 +241,6 @@ export class FilterBarOverviewExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -262,7 +249,6 @@ export class FilterBarOverviewExample {
             name: 'Text',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -338,7 +324,6 @@ export class FilterBarOverviewExample {
                     value: { name: 'Последние 24 часа', end: null, start: { hours: -24 } },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false

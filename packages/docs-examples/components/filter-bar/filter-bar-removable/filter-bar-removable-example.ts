@@ -35,7 +35,6 @@ export class FilterBarRemovableExample {
                 type: KbqPipeTypes.Select,
                 value: { name: 'Option 1', id: '1' },
 
-                required: false,
                 cleanable: false,
                 removable: true,
                 disabled: false
@@ -45,7 +44,6 @@ export class FilterBarRemovableExample {
                 type: KbqPipeTypes.MultiSelect,
                 value: [],
 
-                required: false,
                 cleanable: false,
                 removable: true,
                 disabled: false
@@ -65,7 +63,6 @@ export class FilterBarRemovableExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -83,7 +80,6 @@ export class FilterBarRemovableExample {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -100,7 +96,6 @@ export class FilterBarRemovableExample {
                 { name: 'Option 6', id: '6' },
                 { name: 'Option 7', id: '7' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -118,7 +113,6 @@ export class FilterBarRemovableExample {
                 { name: 'Option 7', id: '7' }
             ],
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -127,7 +121,6 @@ export class FilterBarRemovableExample {
             name: 'Text',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false

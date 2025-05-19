@@ -31,6 +31,12 @@ import { DevLocaleSelector } from '../locale-selector';
     imports: [FilterBarExamplesModule],
     selector: 'dev-examples',
     template: `
+        <filter-bar-search-in-pipes-example />
+        <br />
+        <br />
+        <filter-bar-inactive-filter-example />
+        <br />
+        <br />
         <filter-bar-master-checkbox-example />
         <br />
         <br />
@@ -113,7 +119,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -123,7 +128,6 @@ export class DevApp implements AfterViewInit {
                     type: KbqPipeTypes.Select,
                     value: null,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -133,7 +137,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -143,7 +146,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -153,7 +155,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -175,7 +176,6 @@ export class DevApp implements AfterViewInit {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -185,7 +185,6 @@ export class DevApp implements AfterViewInit {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -195,7 +194,6 @@ export class DevApp implements AfterViewInit {
                     type: KbqPipeTypes.MultiSelect,
                     value: null,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -205,7 +203,6 @@ export class DevApp implements AfterViewInit {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -215,7 +212,6 @@ export class DevApp implements AfterViewInit {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -225,7 +221,6 @@ export class DevApp implements AfterViewInit {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -244,7 +239,6 @@ export class DevApp implements AfterViewInit {
                     value: 'value',
                     type: KbqPipeTypes.Text,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -254,7 +248,6 @@ export class DevApp implements AfterViewInit {
                     type: KbqPipeTypes.Text,
                     value: 'valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue',
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -264,7 +257,6 @@ export class DevApp implements AfterViewInit {
                     value: 'valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -274,7 +266,6 @@ export class DevApp implements AfterViewInit {
                     value: 'value',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -284,7 +275,6 @@ export class DevApp implements AfterViewInit {
                     value: 'value',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -306,7 +296,6 @@ export class DevApp implements AfterViewInit {
                     },
                     type: KbqPipeTypes.Date,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -316,7 +305,6 @@ export class DevApp implements AfterViewInit {
                     value: null,
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -329,7 +317,6 @@ export class DevApp implements AfterViewInit {
                     },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -339,7 +326,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -349,7 +335,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Date,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -371,7 +356,6 @@ export class DevApp implements AfterViewInit {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -381,7 +365,6 @@ export class DevApp implements AfterViewInit {
                     value: null,
                     type: KbqPipeTypes.Datetime,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -394,7 +377,6 @@ export class DevApp implements AfterViewInit {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -404,7 +386,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Datetime,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -414,7 +395,6 @@ export class DevApp implements AfterViewInit {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -433,7 +413,6 @@ export class DevApp implements AfterViewInit {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -443,7 +422,6 @@ export class DevApp implements AfterViewInit {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -453,7 +431,6 @@ export class DevApp implements AfterViewInit {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -472,7 +449,6 @@ export class DevApp implements AfterViewInit {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -482,7 +458,6 @@ export class DevApp implements AfterViewInit {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -492,7 +467,6 @@ export class DevApp implements AfterViewInit {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -511,7 +485,6 @@ export class DevApp implements AfterViewInit {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -521,7 +494,6 @@ export class DevApp implements AfterViewInit {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -531,7 +503,6 @@ export class DevApp implements AfterViewInit {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -550,7 +521,6 @@ export class DevApp implements AfterViewInit {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -560,7 +530,6 @@ export class DevApp implements AfterViewInit {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -570,7 +539,6 @@ export class DevApp implements AfterViewInit {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -589,27 +557,27 @@ export class DevApp implements AfterViewInit {
                     value: null,
                     type: KbqPipeTypes.ReadOnly,
 
-                    required: true,
                     cleanable: true,
-                    removable: false
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'required',
                     value: 'value',
                     type: KbqPipeTypes.ReadOnly,
 
-                    required: true,
                     cleanable: true,
-                    removable: false
+                    removable: false,
+                    disabled: false
                 },
                 {
                     name: 'removable',
                     value: '1111111111111111111111111111111111111111111111111111111111111111111111111',
                     type: KbqPipeTypes.ReadOnly,
 
-                    required: false,
                     cleanable: false,
-                    removable: true
+                    removable: true,
+                    disabled: false
                 }
             ]
         }
@@ -638,7 +606,6 @@ export class DevApp implements AfterViewInit {
                 valueTemplate: this.optionTemplate,
                 search: true,
 
-                required: false,
                 cleanable: false,
                 removable: false,
                 disabled: false
@@ -657,7 +624,6 @@ export class DevApp implements AfterViewInit {
                 valueTemplate: this.optionTemplate,
                 search: true,
 
-                required: false,
                 cleanable: false,
                 removable: false,
                 disabled: false
@@ -680,7 +646,6 @@ export class DevApp implements AfterViewInit {
                 valueTemplate: this.optionTemplate,
                 search: true,
 
-                required: false,
                 cleanable: false,
                 removable: true,
                 disabled: false
@@ -699,7 +664,6 @@ export class DevApp implements AfterViewInit {
                 valueTemplate: this.optionTemplate,
                 search: true,
 
-                required: false,
                 cleanable: false,
                 removable: true,
                 disabled: false
@@ -708,7 +672,6 @@ export class DevApp implements AfterViewInit {
                 name: 'Text',
                 type: KbqPipeTypes.Text,
 
-                required: false,
                 cleanable: false,
                 removable: false,
                 disabled: false
@@ -718,7 +681,6 @@ export class DevApp implements AfterViewInit {
                 type: KbqPipeTypes.Text,
                 id: 'myText',
 
-                required: false,
                 cleanable: false,
                 removable: false,
                 disabled: false
@@ -734,7 +696,6 @@ export class DevApp implements AfterViewInit {
                     { name: 'Последние 90 дней', end: null, start: { days: -90 } },
                     { name: 'Последний год', end: null, start: { years: -1 } }
                 ],
-                required: false,
                 cleanable: false,
                 removable: false,
                 disabled: false
@@ -751,7 +712,6 @@ export class DevApp implements AfterViewInit {
                     { name: 'Последние 90 дней', end: null, start: { days: -90 } },
                     { name: 'Последний год', end: null, start: { years: -1 } }
                 ],
-                required: false,
                 cleanable: false,
                 removable: false,
                 disabled: false
@@ -767,7 +727,6 @@ export class DevApp implements AfterViewInit {
                     { name: 'Последние 90 дней', end: null, start: { days: -90 } },
                     { name: 'Последний год', end: null, start: { years: -1 } }
                 ],
-                required: false,
                 cleanable: true,
                 removable: false,
                 disabled: false
@@ -784,7 +743,6 @@ export class DevApp implements AfterViewInit {
                     { name: 'Последние 90 дней', end: null, start: { days: -90 } },
                     { name: 'Последний год', end: null, start: { years: -1 } }
                 ],
-                required: false,
                 cleanable: true,
                 removable: false,
                 disabled: false

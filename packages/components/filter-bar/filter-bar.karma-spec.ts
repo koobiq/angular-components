@@ -549,7 +549,6 @@ class BaseFunctions {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -559,7 +558,6 @@ class BaseFunctions {
                     type: KbqPipeTypes.Select,
                     value: null,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -569,7 +567,6 @@ class BaseFunctions {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -579,7 +576,6 @@ class BaseFunctions {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -589,7 +585,6 @@ class BaseFunctions {
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -611,7 +606,6 @@ class BaseFunctions {
                     ],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -621,7 +615,6 @@ class BaseFunctions {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -631,7 +624,6 @@ class BaseFunctions {
                     type: KbqPipeTypes.MultiSelect,
                     value: null,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -641,7 +633,6 @@ class BaseFunctions {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -651,7 +642,6 @@ class BaseFunctions {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -661,7 +651,6 @@ class BaseFunctions {
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -680,7 +669,6 @@ class BaseFunctions {
                     value: 'value',
                     type: KbqPipeTypes.Text,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -690,7 +678,6 @@ class BaseFunctions {
                     type: KbqPipeTypes.Text,
                     value: null,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -700,7 +687,6 @@ class BaseFunctions {
                     value: 'valuevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevaluevalue',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -710,7 +696,6 @@ class BaseFunctions {
                     value: 'value',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -720,7 +705,6 @@ class BaseFunctions {
                     value: 'value',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -742,7 +726,6 @@ class BaseFunctions {
                     },
                     type: KbqPipeTypes.Date,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -752,7 +735,6 @@ class BaseFunctions {
                     value: null,
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -765,7 +747,6 @@ class BaseFunctions {
                     },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -775,7 +756,6 @@ class BaseFunctions {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Date,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -785,7 +765,6 @@ class BaseFunctions {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Date,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -807,7 +786,6 @@ class BaseFunctions {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -817,7 +795,6 @@ class BaseFunctions {
                     value: null,
                     type: KbqPipeTypes.Datetime,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -830,7 +807,6 @@ class BaseFunctions {
                     },
                     type: KbqPipeTypes.Datetime,
 
-                    required: false,
                     cleanable: true,
                     removable: false,
                     disabled: false
@@ -840,7 +816,6 @@ class BaseFunctions {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Datetime,
 
-                    required: false,
                     cleanable: false,
                     removable: true,
                     disabled: false
@@ -850,7 +825,6 @@ class BaseFunctions {
                     value: { name: 'Последний день', start: { days: -1 }, end: null },
                     type: KbqPipeTypes.Datetime,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: true
@@ -869,7 +843,6 @@ class BaseFunctions {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -879,7 +852,6 @@ class BaseFunctions {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -889,7 +861,6 @@ class BaseFunctions {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -908,7 +879,6 @@ class BaseFunctions {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -918,7 +888,6 @@ class BaseFunctions {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -928,7 +897,6 @@ class BaseFunctions {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -947,7 +915,6 @@ class BaseFunctions {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -957,7 +924,6 @@ class BaseFunctions {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -967,7 +933,6 @@ class BaseFunctions {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: false,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -986,7 +951,6 @@ class BaseFunctions {
                     value: '1',
                     type: KbqPipeTypes.Text,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -996,7 +960,6 @@ class BaseFunctions {
                     value: '2',
                     type: KbqPipeTypes.Select,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -1006,7 +969,6 @@ class BaseFunctions {
                     value: ['3'],
                     type: KbqPipeTypes.MultiSelect,
 
-                    required: true,
                     cleanable: false,
                     removable: false,
                     disabled: false
@@ -1032,7 +994,6 @@ class BaseFunctions {
                 { name: 'Option 10', id: '10' }
             ],
 
-            required: false,
             cleanable: false,
             removable: false,
             disabled: false
@@ -1052,7 +1013,6 @@ class BaseFunctions {
                 { name: 'Option 9', id: '9' },
                 { name: 'Option 10', id: '10' }
             ],
-            required: false,
             cleanable: false,
             removable: true,
             disabled: false
@@ -1061,7 +1021,6 @@ class BaseFunctions {
             name: 'Text',
             type: KbqPipeTypes.Text,
 
-            required: false,
             cleanable: false,
             removable: false,
             disabled: false
@@ -1077,7 +1036,6 @@ class BaseFunctions {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: false,
             removable: false,
             disabled: false
@@ -1093,7 +1051,6 @@ class BaseFunctions {
                 { name: 'Последние 90 дней', start: { days: -90 }, end: null },
                 { name: 'Последний год', start: { years: -1 }, end: null }
             ],
-            required: false,
             cleanable: true,
             removable: false,
             disabled: false
