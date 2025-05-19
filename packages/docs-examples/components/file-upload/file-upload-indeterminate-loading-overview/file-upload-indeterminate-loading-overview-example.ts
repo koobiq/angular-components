@@ -20,7 +20,9 @@ import { take } from 'rxjs/operators';
         </kbq-file-upload>
 
         <kbq-file-upload (fileQueueChanged)="onFilesChange($event)" multiple progressMode="indeterminate">
-            <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+            <ng-template #kbqFileIcon>
+                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+            </ng-template>
         </kbq-file-upload>
 
         @if (isLoading) {

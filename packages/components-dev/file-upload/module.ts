@@ -105,10 +105,34 @@ export class DevCustomTextDirective {}
     imports: [FileUploadExamplesModule],
     selector: 'dev-examples',
     template: `
+        <file-upload-cva-overview-example />
+        <hr />
+        <file-upload-indeterminate-loading-overview-example />
+        <hr />
+        <file-upload-multiple-compact-overview-example />
+        <hr />
+        <file-upload-multiple-custom-text-overview-example />
+        <hr />
+        <file-upload-multiple-default-overview-example />
+        <hr />
+        <file-upload-multiple-default-validation-reactive-forms-overview-example />
+        <hr />
+        <file-upload-multiple-error-overview-example />
+        <hr />
+        <file-upload-multiple-required-reactive-validation-example />
+        <hr />
+        <file-upload-single-error-overview-example />
+        <hr />
+        <file-upload-single-overview-example />
+        <hr />
+        <file-upload-single-required-reactive-validation-example />
+        <hr />
+        <file-upload-single-validation-reactive-forms-overview-example />
+        <hr />
         <file-upload-single-with-signal-example />
     `,
     host: {
-        class: 'layout-row'
+        class: 'layout-column'
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })

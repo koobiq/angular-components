@@ -5,6 +5,7 @@ import {
     KbqFileUploadModule,
     KbqInputFileMultipleLabel
 } from '@koobiq/components/file-upload';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { enUSLocaleData } from '../en-US';
 import { esLALocaleData } from '../es-LA';
 import { faIRLocaleData } from '../fa-IR';
@@ -58,7 +59,8 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
         </kbq-multiple-file-upload>
     `,
     imports: [
-        KbqFileUploadModule
+        KbqFileUploadModule,
+        KbqIconModule
     ],
     providers: [
         {

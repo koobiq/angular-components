@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title File-upload single error
@@ -28,7 +29,8 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
     `,
     imports: [
         KbqFileUploadModule,
-        KbqFormFieldModule
+        KbqFormFieldModule,
+        KbqIconModule
     ]
 })
 export class FileUploadSingleErrorOverviewExample {

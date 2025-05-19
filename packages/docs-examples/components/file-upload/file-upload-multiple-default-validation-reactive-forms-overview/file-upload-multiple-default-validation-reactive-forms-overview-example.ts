@@ -41,10 +41,10 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
         </kbq-file-upload>
     `,
     imports: [
+        ReactiveFormsModule,
         KbqFileUploadModule,
         KbqFormFieldModule,
-        KbqIconModule,
-        ReactiveFormsModule
+        KbqIconModule
     ]
 })
 export class FileUploadMultipleDefaultValidationReactiveFormsOverviewExample {
