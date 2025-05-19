@@ -30,7 +30,7 @@
         "@koobiq/date-formatter": "^3.2.3",
         "@koobiq/icons": "^9.4.0",
         "@koobiq/tokens-builder": "3.11.0",
-        "@koobiq/design-tokens": "3.13.1",
+        "@koobiq/design-tokens": "3.13.2",
         "@radix-ng/primitives": "^0.23.0"
     },
     "dependencies": {
