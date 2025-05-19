@@ -116,8 +116,10 @@ const typescriptRules = {
         tsconfigRootDir: __dirname
     },
     extends: [
+        /** @see https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/all.ts */
         'plugin:@typescript-eslint/recommended',
-        'plugin:@angular-eslint/recommended',
+        /** @see https://github.com/angular-eslint/angular-eslint/blob/main/packages/angular-eslint/src/configs/ts-all.ts */
+        'plugin:@angular-eslint/all',
         'plugin:@angular-eslint/template/process-inline-templates',
         'plugin:rxjs/recommended'
     ],
@@ -144,8 +146,21 @@ const typescriptRules = {
         '@angular-eslint/no-input-rename': 0,
         '@angular-eslint/no-outputs-metadata-property': 0,
         '@angular-eslint/no-output-native': 0,
-        '@angular-eslint/no-async-lifecycle-method': 1,
-        '@angular-eslint/contextual-decorator': 1,
+        '@angular-eslint/prefer-on-push-component-change-detection': 0,
+        '@angular-eslint/relative-url-prefix': 0,
+        '@angular-eslint/component-max-inline-declarations': 0,
+        '@angular-eslint/consistent-component-styles': 0,
+        '@angular-eslint/use-component-view-encapsulation': 0,
+        '@angular-eslint/use-injectable-provided-in': 0,
+        '@angular-eslint/no-forward-ref': 0,
+        '@angular-eslint/prefer-standalone-component': 0,
+        '@angular-eslint/prefer-standalone': 0,
+        '@angular-eslint/sort-lifecycle-methods': 0,
+        '@angular-eslint/prefer-output-readonly': 0,
+        '@angular-eslint/no-conflicting-lifecycle': 0,
+        '@angular-eslint/no-attribute-decorator': 0,
+        '@angular-eslint/no-pipe-impure': 0,
+        '@angular-eslint/sort-ngmodule-metadata-arrays': 0,
 
         // plugin:rxjs
         'rxjs/no-implicit-any-catch': 0,
@@ -165,8 +180,8 @@ const typescriptRules = {
 const templateRules = {
     files: ['*.html'],
     extends: [
-        'plugin:@angular-eslint/template/recommended',
-        'plugin:@angular-eslint/template/accessibility'
+        /** @see https://github.com/angular-eslint/angular-eslint/blob/main/packages/angular-eslint/src/configs/template-all.ts */
+        'plugin:@angular-eslint/template/all'
     ],
     rules: {
         // plugin:@angular-eslint/template
@@ -175,8 +190,14 @@ const templateRules = {
         '@angular-eslint/template/click-events-have-key-events': 0,
         '@angular-eslint/template/interactive-supports-focus': 0,
         '@angular-eslint/template/label-has-associated-control': 0,
-        '@angular-eslint/template/prefer-self-closing-tags': 1,
-        '@angular-eslint/template/prefer-control-flow': 1
+        '@angular-eslint/template/i18n': 0,
+        '@angular-eslint/template/no-call-expression': 0,
+        '@angular-eslint/template/prefer-ngsrc': 0,
+        '@angular-eslint/template/no-inline-styles': 0,
+        '@angular-eslint/template/button-has-type': 0,
+        '@angular-eslint/template/no-interpolation-in-attributes': 0,
+        '@angular-eslint/template/attributes-order': 0,
+        '@angular-eslint/template/no-any': 0
     }
 };
 
@@ -205,7 +226,7 @@ const componentsDevRules = {
                 style: 'kebab-case'
             }
         ],
-        '@angular-eslint/prefer-standalone-component': 1,
+        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1,
         '@angular-eslint/prefer-on-push-component-change-detection': 1,
 
@@ -224,7 +245,7 @@ const componentsDevRules = {
 const componentsExamplesRules = {
     files: ['packages/docs-examples/**/*.ts'],
     rules: {
-        '@angular-eslint/prefer-standalone-component': 1,
+        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1
     }
 };
@@ -235,7 +256,6 @@ const componentsExamplesRules = {
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const appDocsRules = {
-    // Override rules for docs app
     files: ['apps/docs/**/*.ts'],
     rules: {
         // plugin:eslint
@@ -258,7 +278,7 @@ const appDocsRules = {
                 style: 'kebab-case'
             }
         ],
-        '@angular-eslint/prefer-standalone-component': 1,
+        '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1
     }
 };
@@ -269,7 +289,6 @@ const appDocsRules = {
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const specRules = {
-    // Override rules for test files
     files: ['*.spec.ts', '*.karma-spec.ts'],
     rules: {
         '@angular-eslint/use-component-selector': 0,
@@ -295,14 +314,15 @@ const config = {
         'file-progress'
     ],
     extends: [
-        'plugin:eslint-comments/recommended'
+        'plugin:@eslint-community/eslint-comments/recommended'
     ],
     rules: {
         // plugin:file-progress
         'file-progress/activate': isCI ? 0 : 1,
 
-        // plugin:eslint-comments
-        'eslint-comments/no-unused-disable': 1
+        // plugin:@eslint-community/eslint-comments
+        '@eslint-community/eslint-comments/no-unused-disable': 1,
+        '@eslint-community/eslint-comments/disable-enable-pair': [1, { allowWholeFile: true }]
     },
     overrides: [
         javascriptAndTypescriptRules,

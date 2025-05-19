@@ -20,7 +20,6 @@ import {
         KbqEmptyStateIcon,
         KbqEmptyStateText,
         KbqEmptyStateTitle,
-        KbqEmptyStateTitle,
         KbqEmptyStateActions
     ],
     exports: [

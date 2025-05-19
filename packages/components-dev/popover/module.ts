@@ -150,14 +150,16 @@ export class DevApp {
         return this.activatedPosition === value && this.selectedPlacement !== this.activatedPosition;
     }
 
-    getOrder(forElement: string) {
+    getOrder(forElement: string): number {
         if (forElement === 'config') {
-            return this.selectedOrder ? { order: 2 } : { order: 1 };
+            return this.selectedOrder ? 2 : 1;
         }
 
         if (forElement === 'result') {
-            return this.selectedOrder ? { order: 1 } : { order: 2 };
+            return this.selectedOrder ? 1 : 2;
         }
+
+        return 1;
     }
 
     get isFallbackActivated(): boolean {

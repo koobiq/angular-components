@@ -205,6 +205,7 @@ export class KbqTextarea
         // Force setter to be called in case id was not specified.
         this.id = this.id;
 
+        // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
         this.growSubscription = this.stateChanges.subscribe(this.grow);

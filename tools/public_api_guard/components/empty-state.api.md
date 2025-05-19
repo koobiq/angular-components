@@ -58,7 +58,7 @@ export class KbqEmptyStateModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, [typeof i1.KbqEmptyState, typeof i1.KbqEmptyStateIcon, typeof i1.KbqEmptyStateText, typeof i1.KbqEmptyStateTitle, typeof i1.KbqEmptyStateTitle, typeof i1.KbqEmptyStateActions], [typeof i2.A11yModule, typeof i3.PlatformModule], [typeof i1.KbqEmptyState, typeof i1.KbqEmptyStateIcon, typeof i1.KbqEmptyStateText, typeof i1.KbqEmptyStateTitle, typeof i1.KbqEmptyStateActions]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqEmptyStateModule, [typeof i1.KbqEmptyState, typeof i1.KbqEmptyStateIcon, typeof i1.KbqEmptyStateText, typeof i1.KbqEmptyStateTitle, typeof i1.KbqEmptyStateActions], [typeof i2.A11yModule, typeof i3.PlatformModule], [typeof i1.KbqEmptyState, typeof i1.KbqEmptyStateIcon, typeof i1.KbqEmptyStateText, typeof i1.KbqEmptyStateTitle, typeof i1.KbqEmptyStateActions]>;
 }
 
 // @public (undocumented)
