@@ -35,6 +35,7 @@ export class KbqSidebar implements OnDestroy, OnInit {
     readonly openedChange: OutputEmitterRef<boolean>;
     readonly position: InputSignal<KbqSidebarPositions>;
     protected readonly state: WritableSignal<boolean>;
+    // @deprecated
     readonly stateChanged: OutputRef<boolean>;
     toggle(): void;
     // (undocumented)
