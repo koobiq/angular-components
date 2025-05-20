@@ -132,6 +132,8 @@ export const DATA_OBJECT = {
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
                 </kbq-tree-selection>
+
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-tree-select>
         </kbq-form-field>
     `
