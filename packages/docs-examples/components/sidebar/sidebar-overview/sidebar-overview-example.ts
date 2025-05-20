@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSidebarModule, KbqSidebarPositions } from '@koobiq/components/sidebar';
 
@@ -10,12 +11,7 @@ import { KbqSidebarModule, KbqSidebarPositions } from '@koobiq/components/sideba
     imports: [KbqSidebarModule, KbqButtonModule],
     selector: 'sidebar-overview-example',
     template: `
-        <kbq-sidebar
-            #leftSidebar="kbqSidebar"
-            [(opened)]="leftOpened"
-            [position]="position.Left"
-            (stateChanged)="onStateChanged($event, position.Left)"
-        >
+        <kbq-sidebar #leftSidebar="kbqSidebar" [(opened)]="leftOpened" [position]="position.Left">
             <div kbqSidebarOpened width="170px">Left opened content</div>
             <div kbqSidebarClosed width="44px">Left closed content</div>
         </kbq-sidebar>
@@ -28,12 +24,7 @@ import { KbqSidebarModule, KbqSidebarPositions } from '@koobiq/components/sideba
             <div><button (click)="rightSidebar.toggle()" kbq-button>Toggle right</button></div>
         </main>
 
-        <kbq-sidebar
-            #rightSidebar="kbqSidebar"
-            [(opened)]="rightOpened"
-            [position]="position.Right"
-            (stateChanged)="onStateChanged($event, position.Right)"
-        >
+        <kbq-sidebar #rightSidebar="kbqSidebar" [(opened)]="rightOpened" [position]="position.Right">
             <div kbqSidebarOpened width="170px">Right opened content</div>
             <div kbqSidebarClosed width="44px">Right closed content</div>
         </kbq-sidebar>
@@ -74,15 +65,25 @@ export class SidebarOverviewExample {
     readonly leftOpened = model(true);
     readonly rightOpened = model(false);
 
+    constructor() {
+        toObservable(this.leftOpened)
+            .pipe(takeUntilDestroyed())
+            .subscribe((leftOpened) => {
+                console.log('Left sidebar opened: ', leftOpened);
+            });
+
+        toObservable(this.rightOpened)
+            .pipe(takeUntilDestroyed())
+            .subscribe((rightOpened) => {
+                console.log('Right sidebar opened: ', rightOpened);
+            });
+    }
+
     toggleLeft(): void {
         this.leftOpened.update((opened) => !opened);
     }
 
     toggleRight(): void {
         this.rightOpened.update((opened) => !opened);
-    }
-
-    onStateChanged(opened: boolean, position: KbqSidebarPositions): void {
-        console.log(`Sidebar ${position} onStateChanged: `, opened);
     }
 }

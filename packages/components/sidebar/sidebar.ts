@@ -160,14 +160,15 @@ export class KbqSidebar implements OnDestroy, OnInit {
     private readonly _opened = signal(this.opened());
 
     /**
-     * Two-way binding for the sidebar opened value.
-     *
-     * @docs-private
+     * Emits event when the sidebar opened state changes.
+     * Also used for two-way binding.
      */
     readonly openedChange = output<boolean>();
 
     /**
      * Emits event when the sidebar opened state changes.
+     *
+     * @deprecated Will be removed in next major release, use `openedChange` instead.
      */
     readonly stateChanged = outputFromObservable(outputToObservable(this.openedChange).pipe(distinctUntilChanged()));
 

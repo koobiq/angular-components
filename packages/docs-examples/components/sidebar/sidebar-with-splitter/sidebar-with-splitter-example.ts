@@ -16,7 +16,7 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
                 #sidebar="kbqSidebar"
                 [(opened)]="opened"
                 [position]="position.Left"
-                (stateChanged)="onStateChanged($event)"
+                (openedChange)="onOpenedChange($event)"
                 kbq-splitter-area
             >
                 <div kbqSidebarOpened minWidth="170px" width="170px" maxWidth="50%">Opened content</div>
@@ -74,7 +74,7 @@ export class SidebarWithSplitterExample {
         this.opened.update((opened) => !opened);
     }
 
-    onStateChanged(opened: boolean): void {
-        console.log('onStateChanged: ', opened);
+    onOpenedChange(opened: boolean): void {
+        console.log('Sidebar opened: ', opened);
     }
 }
