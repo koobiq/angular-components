@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -35,6 +34,7 @@ import {
 import { KbqTitleModule } from '@koobiq/components/title';
 import { Observable, merge } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { TagExamplesModule } from '../../docs-examples/components/tag';
 
 const customMaxLengthValidator = (max: number): ValidatorFn => {
     return ({ value }: AbstractControl): ValidationErrors | null => {
@@ -45,6 +45,25 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
         return value.length <= max ? null : { customMaxLengthValidator: true };
     };
 };
+
+@Component({
+    standalone: true,
+    imports: [TagExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <tag-overview-example />
+        <hr />
+        <tag-fill-and-style-example />
+        <hr />
+        <tag-disabled-example />
+        <hr />
+        <tag-with-icon-example />
+        <hr />
+        <tag-with-remove-button-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class DevExamples {}
 
 @Component({
     standalone: true,
@@ -136,8 +155,7 @@ export class DevTagInputValidation {
         KbqTagsModule,
         KbqIconModule,
         KbqTitleModule,
-        DevTagInputValidation,
-        AsyncPipe
+        DevExamples
     ],
     providers: [
         {

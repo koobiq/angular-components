@@ -13,48 +13,30 @@ import { KbqTagsModule } from '@koobiq/components/tags';
         KbqTagsModule,
         KbqIconModule
     ],
-    styles: `
-        .fill-and-style__example-tags-group {
-            display: inline-flex;
-            flex-direction: column;
-            gap: 32px;
-            max-width: 504px;
-        }
-
-        .fill-and-style__example-tags-group .example-tag {
-            width: 96px;
-        }
-
-        .fill-and-style__example-tags-group .fill-and-style__example-tag-row {
-            gap: 24px;
-        }
-    `,
+    host: {
+        class: 'layout-row layout-wrap layout-gap-l layout-margin-5xl layout-align-center-center'
+    },
     template: `
-        <div class="kbq-text-big layout-wrap fill-and-style__example-tags-group">
-            <div class="layout-row layout-wrap fill-and-style__example-tag-row">
-                <div class="example-tag">
-                    <div class="layout-margin-bottom-l kbq-form__label">Fade Theme</div>
-                    <kbq-tag [color]="colors.Theme">
-                        <i kbq-icon="kbq-check-circle_16"></i>
-                        Tag
-                    </kbq-tag>
-                </div>
-                <div class="example-tag">
-                    <div class="layout-margin-bottom-l kbq-form__label">Fade Contrast</div>
-                    <kbq-tag [color]="colors.ContrastFade">
-                        <i kbq-icon="kbq-check-circle_16"></i>
-                        Tag
-                    </kbq-tag>
-                </div>
-                <div class="example-tag">
-                    <div class="layout-margin-bottom-l kbq-form__label">Fade Error</div>
-                    <kbq-tag [color]="colors.Error">
-                        <i kbq-icon="kbq-check-circle_16"></i>
-                        Tag
-                    </kbq-tag>
-                </div>
-            </div>
-        </div>
+        <kbq-tag [color]="colors.ContrastFade">
+            <i kbq-icon="kbq-check-circle_16"></i>
+            Contrast
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+        </kbq-tag>
+        <kbq-tag [color]="colors.Theme">
+            <i kbq-icon="kbq-check-circle_16"></i>
+            Theme
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+        </kbq-tag>
+        <kbq-tag [color]="colors.Error">
+            <i kbq-icon="kbq-check-circle_16"></i>
+            Error
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+        </kbq-tag>
+        <kbq-tag [color]="colors.Warning">
+            <i kbq-icon="kbq-check-circle_16"></i>
+            Warning
+            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+        </kbq-tag>
     `
 })
 export class TagFillAndStyleExample {

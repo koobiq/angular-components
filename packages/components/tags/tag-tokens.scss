@@ -59,4 +59,21 @@
     --kbq-tag-error-fade-on-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-tag-error-fade-on-states-disabled-icon: var(--kbq-states-icon-disabled);
     --kbq-tag-error-fade-on-states-disabled-close-button: var(--kbq-states-icon-disabled);
+    --kbq-tag-warning-fade-default-background: var(--kbq-background-warning-fade);
+    --kbq-tag-warning-fade-default-text: var(--kbq-foreground-warning);
+    --kbq-tag-warning-fade-default-icon: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-default-close-button: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-states-hover-background: var(--kbq-states-background-warning-fade-hover);
+    --kbq-tag-warning-fade-states-hover-text: var(--kbq-foreground-warning);
+    --kbq-tag-warning-fade-states-hover-icon: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-states-hover-close-button: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-states-focus-background: var(--kbq-background-warning-fade);
+    --kbq-tag-warning-fade-states-focus-text: var(--kbq-foreground-warning);
+    --kbq-tag-warning-fade-states-focus-icon: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-states-focus-close-button: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-states-focus-outline: var(--kbq-states-line-focus-theme);
+    --kbq-tag-warning-fade-states-disabled-background: var(--kbq-states-background-disabled);
+    --kbq-tag-warning-fade-states-disabled-text: var(--kbq-states-foreground-disabled);
+    --kbq-tag-warning-fade-states-disabled-icon: var(--kbq-states-icon-disabled);
+    --kbq-tag-warning-fade-states-disabled-close-button: var(--kbq-states-icon-disabled);
 }

@@ -3313,16 +3313,16 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-autocomplete-example.ts",
     "importPath": "components/tag"
   },
-  "tag-content": {
-    "packagePath": "components/tag/tag-content",
-    "title": "Tag content",
-    "componentName": "TagContentExample",
+  "tag-disabled": {
+    "packagePath": "components/tag/tag-disabled",
+    "title": "Tag Disabled",
+    "componentName": "TagDisabledExample",
     "files": [
-      "tag-content-example.ts"
+      "tag-disabled-example.ts"
     ],
-    "selector": "tag-content-example",
+    "selector": "tag-disabled-example",
     "additionalComponents": [],
-    "primaryFile": "tag-content-example.ts",
+    "primaryFile": "tag-disabled-example.ts",
     "importPath": "components/tag"
   },
   "tag-fill-and-style": {
@@ -3335,18 +3335,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-fill-and-style-example",
     "additionalComponents": [],
     "primaryFile": "tag-fill-and-style-example.ts",
-    "importPath": "components/tag"
-  },
-  "tag-hug-content": {
-    "packagePath": "components/tag/tag-hug-content",
-    "title": "Tag hug content",
-    "componentName": "TagHugContentExample",
-    "files": [
-      "tag-hug-content-example.ts"
-    ],
-    "selector": "tag-hug-content-example",
-    "additionalComponents": [],
-    "primaryFile": "tag-hug-content-example.ts",
     "importPath": "components/tag"
   },
   "tag-input-with-form-control-validators": {
@@ -3385,6 +3373,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-list-example.ts",
     "importPath": "components/tag"
   },
+  "tag-long-text": {
+    "packagePath": "components/tag/tag-long-text",
+    "title": "Tag Long Text",
+    "componentName": "TagLongTextExample",
+    "files": [
+      "tag-long-text-example.ts"
+    ],
+    "selector": "tag-long-text-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-long-text-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-overview": {
     "packagePath": "components/tag/tag-overview",
     "title": "Tag",
@@ -3395,6 +3395,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-overview-example",
     "additionalComponents": [],
     "primaryFile": "tag-overview-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-with-icon": {
+    "packagePath": "components/tag/tag-with-icon",
+    "title": "Tag with icon",
+    "componentName": "TagWithIconExample",
+    "files": [
+      "tag-with-icon-example.ts"
+    ],
+    "selector": "tag-with-icon-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-with-icon-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-with-remove-button": {
+    "packagePath": "components/tag/tag-with-remove-button",
+    "title": "Tag with remove button",
+    "componentName": "TagWithRemoveButtonExample",
+    "files": [
+      "tag-with-remove-button-example.ts"
+    ],
+    "selector": "tag-with-remove-button-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-with-remove-button-example.ts",
     "importPath": "components/tag"
   },
   "tags-autocomplete-onpaste-off": {
@@ -4695,11 +4719,9 @@ return import('@koobiq/docs-examples/components/tabs');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-autocomplete':
 return import('@koobiq/docs-examples/components/tag');
-  case 'tag-content':
+  case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-fill-and-style':
-return import('@koobiq/docs-examples/components/tag');
-  case 'tag-hug-content':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tag');
@@ -4707,7 +4729,13 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list':
 return import('@koobiq/docs-examples/components/tag');
+  case 'tag-long-text':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-overview':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-with-icon':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-with-remove-button':
 return import('@koobiq/docs-examples/components/tag');
   case 'tags-autocomplete-onpaste-off':
 return import('@koobiq/docs-examples/components/tag');
