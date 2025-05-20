@@ -28,7 +28,7 @@
         "@koobiq/components-experimental": "${version}",
         "@koobiq/date-adapter": "^3.2.0",
         "@koobiq/date-formatter": "^3.2.3",
-        "@koobiq/design-tokens": "3.12.1",
+        "@koobiq/design-tokens": "3.13.2",
         "@koobiq/icons": "9.4.0",
         "@koobiq/luxon-date-adapter": "^3.2.3",
         "@koobiq/moment-date-adapter": "^3.2.3",
