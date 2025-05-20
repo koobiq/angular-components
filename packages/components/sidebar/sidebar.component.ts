@@ -33,7 +33,10 @@ interface KbqSidebarParams {
 
 @Directive({
     selector: '[kbq-sidebar-opened]',
-    exportAs: 'kbqSidebarOpened'
+    exportAs: 'kbqSidebarOpened',
+    host: {
+        class: 'kbq-sidebar-opened'
+    }
 })
 export class KbqSidebarOpened {
     @Input() minWidth: string;
@@ -43,7 +46,10 @@ export class KbqSidebarOpened {
 
 @Directive({
     selector: '[kbq-sidebar-closed]',
-    exportAs: 'kbqSidebarClosed'
+    exportAs: 'kbqSidebarClosed',
+    host: {
+        class: 'kbq-sidebar-closed'
+    }
 })
 export class KbqSidebarClosed {
     @Input() width: string;
