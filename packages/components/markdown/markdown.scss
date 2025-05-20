@@ -124,7 +124,7 @@
         border-radius: var(--kbq-markdown-code-size-border-radius);
     }
 
-    .kbq-markdown__code {
+    .kbq-markdown__code:not(.kbq-markdown__pre > .kbq-markdown__code) {
         white-space: nowrap;
         padding: var(--kbq-markdown-code-size-inline-padding);
     }
