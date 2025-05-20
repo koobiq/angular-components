@@ -1,5 +1,5 @@
 import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -47,7 +47,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         AsyncPipe
     ]
 })
-export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
+export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
     /** control for search options */
     searchControl: UntypedFormControl = new UntypedFormControl();
     /** filtered by search options */
@@ -66,11 +66,19 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
         return !this.data.value;
     }
 
+    /** @docs-private */
     ngOnInit(): void {
         this.filteredOptions = merge(
             of(this.values),
             this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
+    }
+
+    /** @docs-private */
+    override ngAfterViewInit() {
+        super.ngAfterViewInit();
+
+        this.select.closedStream.subscribe(() => this.filterBar?.onClosePipe.next(this.data));
     }
 
     onSelect(item: KbqSelectValue) {

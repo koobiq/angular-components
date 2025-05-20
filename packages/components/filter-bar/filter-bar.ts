@@ -105,6 +105,8 @@ export class KbqFilterBar {
     @Output() readonly onChangePipe = new EventEmitter<KbqPipe>();
     /** Event that emits whenever the pipe deleted. */
     @Output() readonly onRemovePipe = new EventEmitter<KbqPipe>();
+    /** Event that emits whenever the select or multiselect pipe closed. */
+    @Output() readonly onClosePipe = new EventEmitter<KbqPipe>();
 
     /** Whether the current filter is saved and changed */
     get isSavedAndChanged(): boolean {

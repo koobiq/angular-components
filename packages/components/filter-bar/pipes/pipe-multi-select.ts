@@ -1,5 +1,6 @@
 import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     OnInit,
@@ -59,7 +60,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPseudoCheckboxModule
     ]
 })
-export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit {
+export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     /** control for search options */
     searchControl: UntypedFormControl = new UntypedFormControl();
     /** filtered by search options */
@@ -108,6 +109,13 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
             of(this.values),
             this.searchControl.valueChanges.pipe(map((value) => this.getFilteredOptions(value)))
         );
+    }
+
+    /** @docs-private */
+    override ngAfterViewInit() {
+        super.ngAfterViewInit();
+
+        this.select.closedStream.subscribe(() => this.filterBar?.onClosePipe.next(this.data));
     }
 
     /** @docs-private */

@@ -172,6 +172,7 @@ export class KbqFilterBar {
     get isSavedAndChanged(): boolean;
     protected readonly localeService: KbqLocaleService | null;
     readonly onChangePipe: EventEmitter<KbqPipe>;
+    readonly onClosePipe: EventEmitter<KbqPipe>;
     readonly onRemovePipe: EventEmitter<KbqPipe>;
     readonly openPipe: BehaviorSubject<string | number | null>;
     get pipeTemplates(): KbqPipeTemplate[];
@@ -181,7 +182,7 @@ export class KbqFilterBar {
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-search, [kbq-filter-search]", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-search, [kbq-filter-search]", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -507,11 +508,12 @@ export class KbqPipeMinWidth {
 }
 
 // @public (undocumented)
-export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit {
+export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     get checkboxState(): KbqPseudoCheckboxState;
     compareByValue: (o1: any, o2: any) => boolean;
     filteredOptions: Observable<any[]>;
     get isEmpty(): boolean;
+    ngAfterViewInit(): void;
     ngOnInit(): void;
     onClear(): void;
     onSelect(item: KbqSelectValue[]): void;
@@ -539,11 +541,11 @@ export class KbqPipeReadonlyComponent extends KbqBasePipe<string | null> {
 }
 
 // @public (undocumented)
-export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
+export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implements AfterViewInit, OnInit {
     compareByValue: (o1: any, o2: any) => boolean;
     filteredOptions: Observable<any[]>;
     get isEmpty(): boolean;
-    // (undocumented)
+    ngAfterViewInit(): void;
     ngOnInit(): void;
     // (undocumented)
     onSelect(item: KbqSelectValue): void;
