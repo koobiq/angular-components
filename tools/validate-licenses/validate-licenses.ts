@@ -4,7 +4,7 @@ import spdxSatisfies from 'spdx-satisfies';
 
 type License = string;
 
-type PackageID = string;
+type PackageID = string | RegExp;
 
 // List of licenses considered valid and acceptable for use.
 const licensesWhitelist: License[] = [
@@ -57,7 +57,7 @@ const ignoredPackages: PackageID[] = [
     'gitconfiglocal@1.0.0',
 
     // https://github.com/streetsidesoftware/cspell-dicts/blob/main/dictionaries/en-common-misspellings/LICENSE
-    '@cspell/dict-en-common-misspellings@2.0.4'
+    /^@cspell\/dict-en-common-misspellings@.*$/
 ];
 
 // Normalizes the license string to a standard SPDX identifier, handling possible asterisks from guessed licenses.
@@ -90,6 +90,18 @@ const enum ReturnCode {
     InvalidLicense = 2
 }
 
+const isLicenseIgnored = (packageID: string): boolean => {
+    return ignoredPackages.some((ignoredPackageID) => {
+        if (typeof ignoredPackageID === 'string') {
+            return packageID === ignoredPackageID;
+        } else if (ignoredPackageID instanceof RegExp) {
+            return ignoredPackageID.test(packageID);
+        }
+
+        return false;
+    });
+};
+
 // Main function that initializes the license checker and processes the results.
 async function validateLicense(): Promise<ReturnCode> {
     try {
@@ -111,7 +123,7 @@ async function validateLicense(): Promise<ReturnCode> {
                     ? json[key].licenses.map(normalizeLicense)
                     : [normalizeLicense(json[key].licenses)]
             }))
-            .filter((pkg) => !ignoredPackages.includes(pkg.id))
+            .filter((pkg) => !isLicenseIgnored(pkg.id))
             .filter((pkg) => !isLicenseValid(pkg.licenses));
 
         if (badLicensePackages.length > 0) {
