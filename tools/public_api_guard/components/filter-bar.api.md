@@ -8,6 +8,7 @@ import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -102,6 +103,7 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     constructor();
     protected readonly changeDetectorRef: ChangeDetectorRef;
     readonly data: KbqPipeData<V>;
+    protected readonly destroyRef: DestroyRef;
     protected readonly filterBar: KbqFilterBar | null;
     get isEmpty(): boolean;
     isMac: boolean;

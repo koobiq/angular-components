@@ -9,6 +9,7 @@ import {
     ViewChildren,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -115,7 +116,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream.subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+        this.select.closedStream
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
     }
 
     /** @docs-private */

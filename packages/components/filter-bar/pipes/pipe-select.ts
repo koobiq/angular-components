@@ -1,5 +1,6 @@
 import { AsyncPipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDividerModule } from '@koobiq/components/divider';
@@ -78,7 +79,9 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.select.closedStream.subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+        this.select.closedStream
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
     }
 
     onSelect(item: KbqSelectValue) {
