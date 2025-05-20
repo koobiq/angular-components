@@ -679,7 +679,10 @@ export class KbqSelect
     }
 
     clearValue($event): void {
+        // need to prevent opening
         $event.stopPropagation();
+        // need to prevent scrolling
+        $event.preventDefault();
 
         this.selectionModel.clear();
         this.keyManager.setActiveItem(-1);

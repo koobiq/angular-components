@@ -668,7 +668,10 @@ export class KbqTreeSelect
     }
 
     clearValue($event): void {
+        // need to prevent opening
         $event.stopPropagation();
+        // need to prevent scrolling
+        $event.preventDefault();
 
         this.selectionModel.clear();
         this.tree.keyManager.setActiveItem(-1);
