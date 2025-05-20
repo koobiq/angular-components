@@ -1,8 +1,8 @@
 **I'm submitting a**
 
--   [ ] bug
--   [ ] feature request
--   [ ] question
+- [ ] bug
+- [ ] feature request
+- [ ] question
 
 **What is the current behavior?**
 
@@ -12,7 +12,7 @@
 
 **Please tell us about your environment:**
 
--   koobiq version: x.x.x
--   Browser: [all | Chrome XX | Firefox XX | Edge XX | Safari XX ]
+- koobiq version: x.x.x
+- Browser: [all | Chrome XX | Firefox XX | Edge XX | Safari XX ]
 
 **Other information**

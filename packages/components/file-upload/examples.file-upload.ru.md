@@ -23,20 +23,20 @@
 
 #### Обязательное поле
 
--   **Один файл**: Пример загрузчика, проверяющего, что файл обязательно должен быть загружен.
-<!-- example(file-upload-single-required-reactive-validation) -->
+- **Один файл**: Пример загрузчика, проверяющего, что файл обязательно должен быть загружен.
+      <!-- example(file-upload-single-required-reactive-validation) -->
 
--   **Несколько файлов**: Пример загрузчика, который требует обязательной загрузки нескольких файлов.
-<!-- example(file-upload-multiple-required-reactive-validation) -->
+- **Несколько файлов**: Пример загрузчика, который требует обязательной загрузки нескольких файлов.
+      <!-- example(file-upload-multiple-required-reactive-validation) -->
 
 #### Валидация размера файла
 
 В примерах используется [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - это набор статических методов для валидации поля загрузки файлов.
 
--   **Один файл**: Пример загрузки одного файла с применением `Reactive Forms` для проверки данных.
+- **Один файл**: Пример загрузки одного файла с применением `Reactive Forms` для проверки данных.
 
 <!-- example(file-upload-single-validation-reactive-forms-overview) -->
 
--   **Несколько файлов**: Пример загрузки нескольких файлов с использованием `Reactive Forms` и встроенной валидации.
+- **Несколько файлов**: Пример загрузки нескольких файлов с использованием `Reactive Forms` и встроенной валидации.
 
 <!-- example(file-upload-multiple-default-validation-reactive-forms-overview) -->

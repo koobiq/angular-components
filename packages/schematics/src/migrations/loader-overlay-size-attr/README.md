@@ -2,8 +2,8 @@
 
 This schematic provides migration for `KbqLoaderOverlay` new `size` attribute. It includes:
 
--   Removal of `compact` attribute usage
--   Replacement with `size` attribute
+- Removal of `compact` attribute usage
+- Replacement with `size` attribute
 
 [Params](schema.ts)
 

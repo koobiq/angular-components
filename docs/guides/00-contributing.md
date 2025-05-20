@@ -1,8 +1,8 @@
--   [Contribution checklist][contribution-checklist]
--   [Directory Structure][directory-structure]
--   [Versioning][versioning]
--   [Testing][testing]
--   [Linting][linting]
+- [Contribution checklist][contribution-checklist]
+- [Directory Structure][directory-structure]
+- [Versioning][versioning]
+- [Testing][testing]
+- [Linting][linting]
 
 ## Code of Conduct
 

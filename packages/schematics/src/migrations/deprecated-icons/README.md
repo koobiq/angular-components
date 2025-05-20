@@ -2,9 +2,9 @@
 
 This schematic provides migration for update icons pack. It includes:
 
--   Change prefixes from `mc` to `kbq` for ts, html, styles
--   Update icon names for updated/removed icons according to [mapping](data.ts)
--   Fix icons package prefix in styles
+- Change prefixes from `mc` to `kbq` for ts, html, styles
+- Update icon names for updated/removed icons according to [mapping](data.ts)
+- Fix icons package prefix in styles
 
 [Params](schema.ts)
 

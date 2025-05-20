@@ -180,18 +180,30 @@
                 background: map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-background'),
                 left-icon: map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-left-icon'),
                 right-icon: map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-right-icon'),
-                states-hover-background:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-hover-background'),
-                states-active-background:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-active-background'),
-                states-disabled-foreground:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-foreground'),
-                states-disabled-background:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-background'),
-                states-disabled-left-icon:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-left-icon'),
-                states-disabled-right-icon:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-off-states-disabled-right-icon')
+                states-hover-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-off-states-hover-background'
+                    ),
+                states-active-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-off-states-active-background'
+                    ),
+                states-disabled-foreground: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-off-states-disabled-foreground'
+                    ),
+                states-disabled-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-off-states-disabled-background'
+                    ),
+                states-disabled-left-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-off-states-disabled-left-icon'
+                    ),
+                states-disabled-right-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-off-states-disabled-right-icon'
+                    )
             ),
             contrast-fade-on: (
                 border: map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-border'),
@@ -199,18 +211,30 @@
                 background: map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-background'),
                 left-icon: map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-left-icon'),
                 right-icon: map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-right-icon'),
-                states-hover-background:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-hover-background'),
-                states-active-background:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-active-background'),
-                states-disabled-foreground:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-foreground'),
-                states-disabled-background:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-background'),
-                states-disabled-left-icon:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-left-icon'),
-                states-disabled-right-icon:
-                    map.get($tokens, 'button-#{$scheme}-filled-contrast-fade-on-states-disabled-right-icon')
+                states-hover-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-on-states-hover-background'
+                    ),
+                states-active-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-on-states-active-background'
+                    ),
+                states-disabled-foreground: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-on-states-disabled-foreground'
+                    ),
+                states-disabled-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-on-states-disabled-background'
+                    ),
+                states-disabled-left-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-on-states-disabled-left-icon'
+                    ),
+                states-disabled-right-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-filled-contrast-fade-on-states-disabled-right-icon'
+                    )
             )
         ),
         outline: (
@@ -220,18 +244,30 @@
                 background: map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-background'),
                 left-icon: map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-left-icon'),
                 right-icon: map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-right-icon'),
-                states-hover-background:
-                    map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-states-hover-background'),
-                states-active-background:
-                    map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-states-active-background'),
-                states_disabled_border:
-                    map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-border'),
-                states-disabled-foreground:
-                    map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-foreground'),
-                states-disabled-left-icon:
-                    map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-left-icon'),
-                states-disabled-right-icon:
-                    map.get($tokens, 'button-#{$scheme}-outline-theme-fade-on-states-disabled-right-icon')
+                states-hover-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-theme-fade-on-states-hover-background'
+                    ),
+                states-active-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-theme-fade-on-states-active-background'
+                    ),
+                states_disabled_border: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-theme-fade-on-states-disabled-border'
+                    ),
+                states-disabled-foreground: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-theme-fade-on-states-disabled-foreground'
+                    ),
+                states-disabled-left-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-theme-fade-on-states-disabled-left-icon'
+                    ),
+                states-disabled-right-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-theme-fade-on-states-disabled-right-icon'
+                    )
             ),
             contrast-fade-on: (
                 border: map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-border'),
@@ -239,18 +275,30 @@
                 background: map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-background'),
                 left-icon: map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-left-icon'),
                 right-icon: map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-right-icon'),
-                states-hover-background:
-                    map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-hover-background'),
-                states-active-background:
-                    map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-active-background'),
-                states_disabled_border:
-                    map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-border'),
-                states-disabled-foreground:
-                    map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-foreground'),
-                states-disabled-left-icon:
-                    map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-left-icon'),
-                states-disabled-right-icon:
-                    map.get($tokens, 'button-#{$scheme}-outline-contrast-fade-on-states-disabled-right-icon')
+                states-hover-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-contrast-fade-on-states-hover-background'
+                    ),
+                states-active-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-contrast-fade-on-states-active-background'
+                    ),
+                states_disabled_border: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-contrast-fade-on-states-disabled-border'
+                    ),
+                states-disabled-foreground: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-contrast-fade-on-states-disabled-foreground'
+                    ),
+                states-disabled-left-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-contrast-fade-on-states-disabled-left-icon'
+                    ),
+                states-disabled-right-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-outline-contrast-fade-on-states-disabled-right-icon'
+                    )
             )
         ),
         transparent: (
@@ -260,16 +308,26 @@
                 background: map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-background'),
                 left-icon: map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-left-icon'),
                 right-icon: map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-right-icon'),
-                states-hover-background:
-                    map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-hover-background'),
-                states-active-background:
-                    map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-active-background'),
-                states-disabled-foreground:
-                    map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-disabled-foreground'),
-                states-disabled-left-icon:
-                    map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-disabled-left-icon'),
-                states-disabled-right-icon:
-                    map.get($tokens, 'button-#{$scheme}-transparent-theme-fade-on-states-disabled-right-icon')
+                states-hover-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-theme-fade-on-states-hover-background'
+                    ),
+                states-active-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-theme-fade-on-states-active-background'
+                    ),
+                states-disabled-foreground: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-theme-fade-on-states-disabled-foreground'
+                    ),
+                states-disabled-left-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-theme-fade-on-states-disabled-left-icon'
+                    ),
+                states-disabled-right-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-theme-fade-on-states-disabled-right-icon'
+                    )
             ),
             contrast-fade-on: (
                 border: map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-border'),
@@ -277,16 +335,26 @@
                 background: map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-background'),
                 left-icon: map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-left-icon'),
                 right-icon: map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-right-icon'),
-                states-hover-background:
-                    map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-hover-background'),
-                states-active-background:
-                    map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-active-background'),
-                states-disabled-foreground:
-                    map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-foreground'),
-                states-disabled-left-icon:
-                    map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-left-icon'),
-                states-disabled-right-icon:
-                    map.get($tokens, 'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-right-icon')
+                states-hover-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-contrast-fade-on-states-hover-background'
+                    ),
+                states-active-background: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-contrast-fade-on-states-active-background'
+                    ),
+                states-disabled-foreground: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-foreground'
+                    ),
+                states-disabled-left-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-left-icon'
+                    ),
+                states-disabled-right-icon: map.get(
+                        $tokens,
+                        'button-#{$scheme}-transparent-contrast-fade-on-states-disabled-right-icon'
+                    )
             )
         )
     );
@@ -435,8 +503,10 @@
             collapse: (
                 expanded-background: map.get($tokens, 'code-block-#{$scheme}-filled-collapse-expanded-background'),
                 collapsed-background: map.get($tokens, 'code-block-#{$scheme}-filled-collapse-collapsed-background'),
-                button-expand-background:
-                    map.get($tokens, 'code-block-#{$scheme}-filled-collapse-button-expand-background')
+                button-expand-background: map.get(
+                        $tokens,
+                        'code-block-#{$scheme}-filled-collapse-button-expand-background'
+                    )
             )
         ),
         outline: (
@@ -455,8 +525,10 @@
             collapse: (
                 expanded-background: map.get($tokens, 'code-block-#{$scheme}-outline-collapse-expanded-background'),
                 collapsed-background: map.get($tokens, 'code-block-#{$scheme}-outline-collapse-collapsed-background'),
-                button-expand-background:
-                    map.get($tokens, 'code-block-#{$scheme}-outline-collapse-button-expand-background')
+                button-expand-background: map.get(
+                        $tokens,
+                        'code-block-#{$scheme}-outline-collapse-button-expand-background'
+                    )
             )
         ),
 
@@ -550,13 +622,17 @@
             title-color: map.get($tokens, 'code-block-#{$scheme}-hljs-title-color'),
             title-class-background: map.get($tokens, 'code-block-#{$scheme}-hljs-title-class-background'),
             title-class-color: map.get($tokens, 'code-block-#{$scheme}-hljs-title-class-color'),
-            title-class-inherited-background:
-                map.get($tokens, 'code-block-#{$scheme}-hljs-title-class-inherited-background'),
+            title-class-inherited-background: map.get(
+                    $tokens,
+                    'code-block-#{$scheme}-hljs-title-class-inherited-background'
+                ),
             title-class-inherited-color: map.get($tokens, 'code-block-#{$scheme}-hljs-title-class-inherited-color'),
             title-function-background: map.get($tokens, 'code-block-#{$scheme}-hljs-title-function-background'),
             title-function-color: map.get($tokens, 'code-block-#{$scheme}-hljs-title-function-color'),
-            title-function-invoke-background:
-                map.get($tokens, 'code-block-#{$scheme}-hljs-title-function-invoke-background'),
+            title-function-invoke-background: map.get(
+                    $tokens,
+                    'code-block-#{$scheme}-hljs-title-function-invoke-background'
+                ),
             title-function-invoke-color: map.get($tokens, 'code-block-#{$scheme}-hljs-title-function-invoke-color'),
             type-background: map.get($tokens, 'code-block-#{$scheme}-hljs-type-background'),
             type-color: map.get($tokens, 'code-block-#{$scheme}-hljs-type-color'),
@@ -754,8 +830,10 @@
                     grid-divider: map.get($tokens, 'file-upload-#{$scheme}-multiple-states-on-drag-grid-divider-color')
                 ),
                 error: (
-                    grid-cell-background:
-                        map.get($tokens, 'file-upload-#{$scheme}-multiple-states-error-grid-cell-background'),
+                    grid-cell-background: map.get(
+                            $tokens,
+                            'file-upload-#{$scheme}-multiple-states-error-grid-cell-background'
+                        ),
                     left-icon: map.get($tokens, 'file-upload-#{$scheme}-multiple-states-error-left-icon-color'),
                     text-block: map.get($tokens, 'file-upload-#{$scheme}-multiple-states-error-text-block-color'),
                     icon-button: map.get($tokens, 'file-upload-#{$scheme}-multiple-states-error-icon-button-color')
@@ -1092,50 +1170,80 @@
             ),
             states-checked: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-theme-states-checked-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-inner-circle-background')
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-inner-circle-background'
+                    )
             ),
             states-checked-hover: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-theme-states-checked-hover-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-hover-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-hover-inner-circle-background')
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-hover-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-hover-inner-circle-background'
+                    )
             ),
             states-checked-disabled: (
-                outer-circle-border:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-disabled-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-disabled-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-disabled-inner-circle-background')
+                outer-circle-border: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-disabled-outer-circle-border'
+                    ),
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-disabled-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-disabled-inner-circle-background'
+                    )
             ),
             states-focused: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-theme-states-focused-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-focused-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-focused-inner-circle-background'),
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-focused-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-focused-inner-circle-background'
+                    ),
                 outer-circle-shadow: map.get($tokens, 'radio-#{$scheme}-theme-states-focused-outer-circle-shadow')
             ),
             states-checked-focused: (
-                outer-circle-border:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-focused-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-focused-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-focused-inner-circle-background'),
-                outer-circle-shadow:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-checked-focused-outer-circle-shadow')
+                outer-circle-border: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-focused-outer-circle-border'
+                    ),
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-focused-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-focused-inner-circle-background'
+                    ),
+                outer-circle-shadow: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-checked-focused-outer-circle-shadow'
+                    )
             ),
             states-disabled: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-theme-states-disabled-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-disabled-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-theme-states-disabled-inner-circle-background'),
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-disabled-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-theme-states-disabled-inner-circle-background'
+                    ),
                 caption: map.get($tokens, 'radio-#{$scheme}-theme-states-disabled-caption')
             )
         ),
@@ -1153,50 +1261,80 @@
             ),
             states-checked: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-error-states-checked-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-inner-circle-background')
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-inner-circle-background'
+                    )
             ),
             states-checked-hover: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-error-states-checked-hover-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-hover-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-hover-inner-circle-background')
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-hover-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-hover-inner-circle-background'
+                    )
             ),
             states-checked-disabled: (
-                outer-circle-border:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-disabled-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-disabled-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-disabled-inner-circle-background')
+                outer-circle-border: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-disabled-outer-circle-border'
+                    ),
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-disabled-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-disabled-inner-circle-background'
+                    )
             ),
             states-focused: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-error-states-focused-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-focused-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-focused-inner-circle-background'),
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-focused-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-focused-inner-circle-background'
+                    ),
                 outer-circle-shadow: map.get($tokens, 'radio-#{$scheme}-error-states-focused-outer-circle-shadow')
             ),
             states-checked-focused: (
-                outer-circle-border:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-focused-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-focused-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-focused-inner-circle-background'),
-                outer-circle-shadow:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-checked-focused-outer-circle-shadow')
+                outer-circle-border: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-focused-outer-circle-border'
+                    ),
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-focused-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-focused-inner-circle-background'
+                    ),
+                outer-circle-shadow: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-checked-focused-outer-circle-shadow'
+                    )
             ),
             states-disabled: (
                 outer-circle-border: map.get($tokens, 'radio-#{$scheme}-error-states-disabled-outer-circle-border'),
-                outer-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-disabled-outer-circle-background'),
-                inner-circle-background:
-                    map.get($tokens, 'radio-#{$scheme}-error-states-disabled-inner-circle-background')
+                outer-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-disabled-outer-circle-background'
+                    ),
+                inner-circle-background: map.get(
+                        $tokens,
+                        'radio-#{$scheme}-error-states-disabled-inner-circle-background'
+                    )
             )
         )
     );
@@ -1284,47 +1422,48 @@
                     icon: map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-default-icon-color')
                 ),
                 states-hover: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-hover-background')
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-filled-on-background-states-hover-background'
+                        )
                 ),
                 states-focused: (
-                    border-color:
-                        map.get(
+                    border-color: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-background-states-focused-focus-outline-color'
                         )
                 ),
                 states-selected: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-background')
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-background'
+                        )
                 ),
                 states-selected-hover: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-hover-background'
                         )
                 ),
                 states-selected-disabled: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-disabled-background'
                         ),
-                    text:
-                        map.get(
+                    text: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-disabled-text-color'
                         ),
-                    icon:
-                        map.get(
+                    icon: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-background-states-selected-disabled-icon-color'
                         )
                 ),
                 states-disabled: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-disabled-background'),
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-filled-on-background-states-disabled-background'
+                        ),
                     text: map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-disabled-text-color'),
                     icon: map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-background-states-disabled-icon-color')
                 )
@@ -1339,40 +1478,42 @@
                     background: map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-hover-background')
                 ),
                 states-focused: (
-                    border-color:
-                        map.get(
+                    border-color: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-surface-states-focused-focus-outline-color'
                         )
                 ),
                 states-selected: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-background')
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-background'
+                        )
                 ),
                 states-selected-hover: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-hover-background')
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-hover-background'
+                        )
                 ),
                 states-selected-disabled: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-disabled-background'
                         ),
-                    text:
-                        map.get(
+                    text: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-disabled-text-color'
                         ),
-                    icon:
-                        map.get(
+                    icon: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-filled-on-surface-states-selected-disabled-icon-color'
                         )
                 ),
                 states-disabled: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-disabled-background'),
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-filled-on-surface-states-disabled-background'
+                        ),
                     text: map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-disabled-text-color'),
                     icon: map.get($tokens, 'tabs-#{$scheme}-tab-item-filled-on-surface-states-disabled-icon-color')
                 )
@@ -1381,66 +1522,61 @@
         transparent: (
             on-background: (
                 default: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-default-background'),
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-transparent-on-background-default-background'
+                        ),
                     text: map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-default-text-color'),
                     icon: map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-default-icon-color')
                 ),
                 states-hover: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-background-states-hover-background')
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-transparent-on-background-states-hover-background'
+                        )
                 ),
                 states-focused: (
-                    border-color:
-                        map.get(
+                    border-color: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-focused-focus-outline-color'
                         )
                 ),
                 states-selected: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-background'
                         )
                 ),
                 states-selected-hover: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-hover-background'
                         )
                 ),
                 states-selected-disabled: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-disabled-background'
                         ),
-                    text:
-                        map.get(
+                    text: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-disabled-text-color'
                         ),
-                    icon:
-                        map.get(
+                    icon: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-selected-disabled-icon-color'
                         )
                 ),
                 states-disabled: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-disabled-background'
                         ),
-                    text:
-                        map.get(
+                    text: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-disabled-text-color'
                         ),
-                    icon:
-                        map.get(
+                    icon: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-background-states-disabled-icon-color'
                         )
@@ -1453,47 +1589,48 @@
                     icon: map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-default-icon-color')
                 ),
                 states-hover: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-hover-background')
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-transparent-on-surface-states-hover-background'
+                        )
                 ),
                 states-focused: (
-                    border-color:
-                        map.get(
+                    border-color: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-surface-states-focused-focus-outline-color'
                         )
                 ),
                 states-selected: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-background')
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-background'
+                        )
                 ),
                 states-selected-hover: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-hover-background'
                         )
                 ),
                 states-selected-disabled: (
-                    background:
-                        map.get(
+                    background: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-disabled-background'
                         ),
-                    text:
-                        map.get(
+                    text: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-disabled-text-color'
                         ),
-                    icon:
-                        map.get(
+                    icon: map.get(
                             $tokens,
                             'tabs-#{$scheme}-tab-item-transparent-on-surface-states-selected-disabled-icon-color'
                         )
                 ),
                 states-disabled: (
-                    background:
-                        map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-disabled-background'),
+                    background: map.get(
+                            $tokens,
+                            'tabs-#{$scheme}-tab-item-transparent-on-surface-states-disabled-background'
+                        ),
                     text: map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-disabled-text-color'),
                     icon: map.get($tokens, 'tabs-#{$scheme}-tab-item-transparent-on-surface-states-disabled-icon-color')
                 )

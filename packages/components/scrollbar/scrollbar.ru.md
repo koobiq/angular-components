@@ -15,11 +15,11 @@ npm install overlayscrollbars@2.7.3
 
 ## Настройка и передача параметров:
 
--   для определенного скроллбара, при помощи атрибута `options`:
+- для определенного скроллбара, при помощи атрибута `options`:
 
 <!-- example(scrollbar-with-options) -->
 
--   для всех скроллбаров в модуле, при помощи _Dependency Injection_ c использованием `KBQ_SCROLLBAR_CONFIG` токена:
+- для всех скроллбаров в модуле, при помощи _Dependency Injection_ c использованием `KBQ_SCROLLBAR_CONFIG` токена:
 
 <!-- example(scrollbar-with-custom-config) -->
 

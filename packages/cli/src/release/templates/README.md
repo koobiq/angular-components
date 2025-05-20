@@ -5,5 +5,5 @@ https://github.com/conventional-changelog/conventional-changelog/tree/master/pac
 
 Some of them are customized:
 
--   commit.hbs
--   template.hbs
+- commit.hbs
+- template.hbs

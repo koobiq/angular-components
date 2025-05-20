@@ -47,5 +47,5 @@ The full documentation for using the theme is available [in the GitHub repositor
 
 ### Recommendations
 
--   Use the [Table](/en/components/table) component for simple tables with a small amount of data that do not require resizing or reordering of columns.
--   If the list contains only one column, use [List](/en/components/list) or [Tree](/en/components/tree).
+- Use the [Table](/en/components/table) component for simple tables with a small amount of data that do not require resizing or reordering of columns.
+- If the list contains only one column, use [List](/en/components/list) or [Tree](/en/components/tree).

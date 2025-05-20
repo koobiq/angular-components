@@ -2,7 +2,7 @@
 
 This schematic provides migration for css-selectors of typography. It includes:
 
--   Update css-classes for updated typography styles according to [mapping](data.ts)
+- Update css-classes for updated typography styles according to [mapping](data.ts)
 
 [Params](schema.ts)
 

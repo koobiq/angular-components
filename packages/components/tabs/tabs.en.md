@@ -76,15 +76,15 @@ Unlike `KbqTabGroup`, `KbqTabNavBar` is used for navigation between application 
 
 Use tabs in the following cases:
 
--   For content navigation on a page when it's vital to have quick access to separate parts.
--   For additional navigation.
+- For content navigation on a page when it's vital to have quick access to separate parts.
+- For additional navigation.
 
 Don't use tabs in the following cases:
 
--   When you can place all content on a single page or screen. There's no need to hide some of its parts under tabs.
--   For selecting values in forms. Don't confuse tabs with input boxes: [radio buttons](/en/components/radio) and [button toggles](/en/components/button-toggle).
--   For main navigation. Use the [Navbar](/en/components/navbar) component instead.
--   When you need to change the view for the same type of data (list, tile, or table). Instead, use a [button menu](/en/components/dropdown) or [button toggle](/en/components/button-toggle).
--   When there's already content in a tab. You can't use both vertical and horizontal tabs at the same time. Instead, use fewer tabs, use only one type of tab, a button toggle, or button menu.
--   If there's only one tab, you don't need a panel with tabs.
--   For indicating steps in the form master. Tabs have a similar appearance to steps. To make sure that there is no confusion, a designer must use different styles for these elements. It's useful to leave a comment for a developer as well. For example: Note that these are form steps, not tabs.
+- When you can place all content on a single page or screen. There's no need to hide some of its parts under tabs.
+- For selecting values in forms. Don't confuse tabs with input boxes: [radio buttons](/en/components/radio) and [button toggles](/en/components/button-toggle).
+- For main navigation. Use the [Navbar](/en/components/navbar) component instead.
+- When you need to change the view for the same type of data (list, tile, or table). Instead, use a [button menu](/en/components/dropdown) or [button toggle](/en/components/button-toggle).
+- When there's already content in a tab. You can't use both vertical and horizontal tabs at the same time. Instead, use fewer tabs, use only one type of tab, a button toggle, or button menu.
+- If there's only one tab, you don't need a panel with tabs.
+- For indicating steps in the form master. Tabs have a similar appearance to steps. To make sure that there is no confusion, a designer must use different styles for these elements. It's useful to leave a comment for a developer as well. For example: Note that these are form steps, not tabs.

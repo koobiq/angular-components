@@ -63,5 +63,5 @@ This area can contain any type of content.
 
 ### Recommendations
 
--   Each accordion section should have a clear and informative title that accurately reflects its content. This helps users quickly find the necessary information.
--   Accordion sections should be organized in a logical sequence, such as alphabetical order, hierarchical structure, or thematic grouping.
+- Each accordion section should have a clear and informative title that accurately reflects its content. This helps users quickly find the necessary information.
+- Accordion sections should be organized in a logical sequence, such as alphabetical order, hierarchical structure, or thematic grouping.

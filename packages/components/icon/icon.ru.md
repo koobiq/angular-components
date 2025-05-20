@@ -37,9 +37,9 @@ import { KbqIconModule } from '@koobiq/components';
 
 Если \*.css не используется вашем проекте, вы также можете добавить:
 
--   kbq-icons.less;
--   kbq-icons.scss;
--   kbq-icons-embed.css (включает встроенные шрифты)
+- kbq-icons.less;
+- kbq-icons.scss;
+- kbq-icons-embed.css (включает встроенные шрифты)
 
 ### Примеры использования
 

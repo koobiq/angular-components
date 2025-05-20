@@ -26,10 +26,10 @@ On the right side of the toolbar, there is a dedicated area for placing any acti
 
 We recommend using the following set of actions (from left to right):
 
--   Indicators (e.g., data refresh indicator)
--   A group of icon buttons (e.g., filters)
--   Frequently used actions as buttons (e.g., "Add...", "Share")
--   Additional actions in a dropdown menu, where all secondary actions related to the current page can be placed.
+- Indicators (e.g., data refresh indicator)
+- A group of icon buttons (e.g., filters)
+- Frequently used actions as buttons (e.g., "Add...", "Share")
+- Additional actions in a dropdown menu, where all secondary actions related to the current page can be placed.
 
 <!-- example(top-bar-actions) -->
 
