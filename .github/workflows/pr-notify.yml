@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Notification
+        if: ${{ github.actor != 'dependabot[bot]' }}
         uses: mattermost/action-mattermost-notify@master
         env:
           PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
