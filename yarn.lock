@@ -6608,10 +6608,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/luxon@npm:^3.4.2":
-  version: 3.4.2
-  resolution: "@types/luxon@npm:3.4.2"
-  checksum: 10c0/d835467de3daf7e17ba78b50bb5a14efd94272439ca067990d71332a54b311544459c69623eddd243b511b28d70194c9591a9ee8cf9c038962c965f991affd7e
+"@types/luxon@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "@types/luxon@npm:3.6.2"
+  checksum: 10c0/7572ee52b3d3e9dd10464b90561a728b90f34b9a257751cc3ce23762693dd1d14fa98b7f103e2efe2c6f49033331f91de5681ffd65cca88618cefe555be326db
   languageName: node
   linkType: hard
 
@@ -14853,7 +14853,7 @@ __metadata:
     "@types/jasmine": "npm:^4.6.4"
     "@types/jest": "npm:^29.5.14"
     "@types/license-checker": "npm:^25.0.6"
-    "@types/luxon": "npm:^3.4.2"
+    "@types/luxon": "npm:^3.6.2"
     "@types/merge2": "npm:^0.3.30"
     "@types/node": "npm:^18.19.0"
     "@types/nunjucks": "npm:^3.2.1"
@@ -14896,7 +14896,7 @@ __metadata:
     karma-spec-reporter: "npm:^0.0.36"
     license-checker: "npm:^25.0.1"
     lint-staged: "npm:^15.2.10"
-    luxon: "npm:^3.4.4"
+    luxon: "npm:^3.6.1"
     marked: "npm:^12.0.2"
     merge2: "npm:^1.2.3"
     moment: "npm:~2.29.2"
@@ -15562,10 +15562,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"luxon@npm:^3.4.4":
-  version: 3.4.4
-  resolution: "luxon@npm:3.4.4"
-  checksum: 10c0/02e26a0b039c11fd5b75e1d734c8f0332c95510f6a514a9a0991023e43fb233884da02d7f966823ffb230632a733fc86d4a4b1e63c3fbe00058b8ee0f8c728af
+"luxon@npm:^3.6.1":
+  version: 3.6.1
+  resolution: "luxon@npm:3.6.1"
+  checksum: 10c0/906d57a9dc4d1de9383f2e9223e378c298607c1b4d17b6657b836a3cd120feb1c1de3b5d06d846a3417e1ca764de8476e8c23b3cd4083b5cdb870adcb06a99d5
   languageName: node
   linkType: hard
 
