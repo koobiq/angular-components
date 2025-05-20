@@ -1,3 +1,14 @@
+# 18.28.0 (2025-05-20)
+
+### Koobiq
+
+ * bug fix  **docs:** upd article layout ([#DS-3706](https://github.com/koobiq/angular-components/issues/issue/DS-3706)) ([#735](https://github.com/koobiq/angular-components/issues/735)) ([77d0133](https://github.com/koobiq/angular-components/commit/77d0133846c09ebed32a33afc0f18303a9efd013))
+ * bug fix  **file-upload:** show icon when file is selected ([#DS-3183](https://github.com/koobiq/angular-components/issues/issue/DS-3183)) ([#737](https://github.com/koobiq/angular-components/issues/737)) ([d4dda20](https://github.com/koobiq/angular-components/commit/d4dda205ac6ed1d7e7bb19b3221592fd94947df2))
+ * bug fix  **filter-bar:** added onClosePipe output ([#DS-3769](https://github.com/koobiq/angular-components/issues/issue/DS-3769)) ([#755](https://github.com/koobiq/angular-components/issues/755)) ([af6346e](https://github.com/koobiq/angular-components/commit/af6346e061213877360ab5c3f5fa20e78b8a3abc))
+ * bug fix  **markdown:** white-space and paddings for code block ([#DS-3777](https://github.com/koobiq/angular-components/issues/issue/DS-3777)) ([#754](https://github.com/koobiq/angular-components/issues/754)) ([59f798d](https://github.com/koobiq/angular-components/commit/59f798d0e19948e22bf101d2d42199c1f9812c9d))
+ * bug fix  **select, tree-select:** added handler (keydown.space) for cleaner ([#DS-3143](https://github.com/koobiq/angular-components/issues/issue/DS-3143)) ([#747](https://github.com/koobiq/angular-components/issues/747)) ([cfc7bb0](https://github.com/koobiq/angular-components/commit/cfc7bb075e47471dacaddfb974f9da5349fc66a4))
+ * feature  **filter-bar:** examples with search ([#DS-3750](https://github.com/koobiq/angular-components/issues/issue/DS-3750)) ([#733](https://github.com/koobiq/angular-components/issues/733)) ([883ee4b](https://github.com/koobiq/angular-components/commit/883ee4b2a5af72e7be2ef17a2a132dba57046839))
+
 # 18.27.0 (2025-05-15)
 
 ### Koobiq
