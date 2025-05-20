@@ -6,6 +6,8 @@
 
 <!-- example(button-fill-and-style) -->
 
+<!-- example(button-fill-and-style-only-icon) -->
+
 ### Content
 
 <!-- example(button-content) -->

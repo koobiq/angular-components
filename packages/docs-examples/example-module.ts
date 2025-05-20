@@ -566,6 +566,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "button-content-example.ts",
     "importPath": "components/button"
   },
+  "button-fill-and-style-only-icon": {
+    "packagePath": "components/button/button-fill-and-style-only-icon",
+    "title": "button-fill-and-style-only-icon",
+    "componentName": "ButtonFillAndStyleOnlyIconExample",
+    "files": [
+      "button-fill-and-style-only-icon-example.ts",
+      "button-fill-and-style-only-icon-example.html",
+      "button-fill-and-style-only-icon-example.css"
+    ],
+    "selector": "button-fill-and-style-only-icon-example",
+    "additionalComponents": [],
+    "primaryFile": "button-fill-and-style-only-icon-example.ts",
+    "importPath": "components/button"
+  },
   "button-fill-and-style": {
     "packagePath": "components/button/button-fill-and-style",
     "title": "Button fill and style",
@@ -4250,6 +4264,8 @@ return import('@koobiq/docs-examples/components/button-toggle');
   case 'button-toggle-tooltip-overview':
 return import('@koobiq/docs-examples/components/button-toggle');
   case 'button-content':
+return import('@koobiq/docs-examples/components/button');
+  case 'button-fill-and-style-only-icon':
 return import('@koobiq/docs-examples/components/button');
   case 'button-fill-and-style':
 return import('@koobiq/docs-examples/components/button');

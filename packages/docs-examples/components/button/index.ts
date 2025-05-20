@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ButtonContentExample } from './button-content/button-content-example';
+import { ButtonFillAndStyleOnlyIconExample } from './button-fill-and-style-only-icon/button-fill-and-style-only-icon-example';
 import { ButtonFillAndStyleExample } from './button-fill-and-style/button-fill-and-style-example';
 import { ButtonFillContentExample } from './button-fill-content/button-fill-content-example';
 import { ButtonFixedContentExample } from './button-fixed-content/button-fixed-content-example';
@@ -10,6 +11,7 @@ import { ButtonOverviewExample } from './button-overview/button-overview-example
 export {
     ButtonContentExample,
     ButtonFillAndStyleExample,
+    ButtonFillAndStyleOnlyIconExample,
     ButtonFillContentExample,
     ButtonFixedContentExample,
     ButtonHugContentExample,
@@ -24,7 +26,8 @@ const EXAMPLES = [
     ButtonFillContentExample,
     ButtonFixedContentExample,
     ButtonHugContentExample,
-    ButtonLoadingStateExample
+    ButtonLoadingStateExample,
+    ButtonFillAndStyleOnlyIconExample
 ];
 
 @NgModule({
