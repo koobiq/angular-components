@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * @title File-upload single
@@ -8,7 +9,8 @@ import { KbqFileUploadModule } from '@koobiq/components/file-upload';
     standalone: true,
     selector: 'file-upload-single-overview-example',
     imports: [
-        KbqFileUploadModule
+        KbqFileUploadModule,
+        KbqIconModule
     ],
     template: `
         <kbq-single-file-upload>

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
@@ -20,9 +20,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 [progressMode]="'indeterminate'"
                 formControlName="fileUpload"
             >
-                <ng-template #kbqFileIcon>
-                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
-                </ng-template>
+                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
                 @if (formMultiple.controls.fileUpload.invalid && kbqFileUpload.invalid) {
                     <kbq-hint color="error">File required</kbq-hint>
                 }
@@ -31,12 +29,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </form>
     `,
     imports: [
+        ReactiveFormsModule,
         KbqFileUploadModule,
         KbqFormFieldModule,
-        FormsModule,
         KbqButtonModule,
-        KbqIconModule,
-        ReactiveFormsModule
+        KbqIconModule
     ],
     providers: [kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { kbqErrorStateMatcherProvider, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
@@ -32,12 +32,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
         </form>
     `,
     imports: [
+        ReactiveFormsModule,
         KbqFileUploadModule,
         KbqFormFieldModule,
-        FormsModule,
         KbqButtonModule,
-        KbqIconModule,
-        ReactiveFormsModule
+        KbqIconModule
     ],
     providers: [kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush

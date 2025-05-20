@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
@@ -34,7 +35,8 @@ const maxFileExceeded = (file: File): string | null => {
     `,
     imports: [
         KbqFileUploadModule,
-        KbqFormFieldModule
+        KbqFormFieldModule,
+        KbqIconModule
     ]
 })
 export class FileUploadMultipleErrorOverviewExample {
