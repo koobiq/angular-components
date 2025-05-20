@@ -24,10 +24,12 @@
 #### Обязательное поле
 
 - **Один файл**: Пример загрузчика, проверяющего, что файл обязательно должен быть загружен.
-    <!-- example(file-upload-single-required-reactive-validation) -->
+
+<!-- example(file-upload-single-required-reactive-validation) -->
 
 - **Несколько файлов**: Пример загрузчика, который требует обязательной загрузки нескольких файлов.
-    <!-- example(file-upload-multiple-required-reactive-validation) -->
+
+<!-- example(file-upload-multiple-required-reactive-validation) -->
 
 #### Валидация размера файла
 
