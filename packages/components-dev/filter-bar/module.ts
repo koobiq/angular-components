@@ -18,6 +18,7 @@ import {
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
+    KbqPipe,
     KbqPipeTemplate,
     KbqPipeTypes
 } from '@koobiq/components/filter-bar';
@@ -170,6 +171,7 @@ export class DevApp implements AfterViewInit {
             pipes: [
                 {
                     name: 'required',
+                    id: 'MultiSelect',
                     value: [
                         { name: 'Не определен', id: '1' },
                         { name: 'Легитимное действие', id: '2' }
@@ -182,6 +184,7 @@ export class DevApp implements AfterViewInit {
                 },
                 {
                     name: 'required',
+                    id: 'MultiSelect',
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
@@ -191,6 +194,7 @@ export class DevApp implements AfterViewInit {
                 },
                 {
                     name: 'empty',
+                    id: 'MultiSelect',
                     type: KbqPipeTypes.MultiSelect,
                     value: null,
 
@@ -200,6 +204,7 @@ export class DevApp implements AfterViewInit {
                 },
                 {
                     name: 'cleanable',
+                    id: 'MultiSelect',
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
@@ -209,6 +214,7 @@ export class DevApp implements AfterViewInit {
                 },
                 {
                     name: 'removable',
+                    id: 'MultiSelect',
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
@@ -218,6 +224,7 @@ export class DevApp implements AfterViewInit {
                 },
                 {
                     name: 'disabled',
+                    id: 'MultiSelect',
                     value: [{ name: 'Не определен', id: '1' }],
                     type: KbqPipeTypes.MultiSelect,
 
@@ -583,7 +590,7 @@ export class DevApp implements AfterViewInit {
         }
     ];
     pipeTemplates: KbqPipeTemplate[];
-    defaultFilter: KbqFilter | null = this.filters[9];
+    defaultFilter: KbqFilter | null = this.filters[1];
     activeFilter: KbqFilter | null = this.defaultFilter;
 
     ngAfterViewInit(): void {
@@ -630,6 +637,7 @@ export class DevApp implements AfterViewInit {
             },
             {
                 name: 'MultiSelect',
+                id: 'MultiSelect',
                 type: KbqPipeTypes.MultiSelect,
                 values: [
                     { name: 'Option 1', id: '1', type: 'error' },
@@ -819,5 +827,9 @@ export class DevApp implements AfterViewInit {
 
     onSearch(value: string) {
         console.log('onSearch: ', value);
+    }
+
+    onClosePipe($event: KbqPipe) {
+        console.log('onClosePipe: ', $event);
     }
 }

@@ -2,6 +2,7 @@ import {
     afterNextRender,
     AfterViewInit,
     ChangeDetectorRef,
+    DestroyRef,
     Directive,
     ElementRef,
     inject,
@@ -45,6 +46,8 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     protected readonly filterBar = inject(KbqFilterBar, { optional: true });
     /** @docs-private */
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    /** @docs-private */
+    protected readonly destroyRef = inject(DestroyRef);
 
     /** values to select from the pipe template */
     protected values;
