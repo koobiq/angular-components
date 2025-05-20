@@ -14,14 +14,14 @@ helpful.
 
 Before you submit your pull request (PR) consider the following guidelines:
 
--   Fork Koobiq into your namespace by using the fork button on github.
--   Make your changes in a new git branch: `git checkout -b my-fix-branch master`
--   Create your bugfix/feature including appropriate tests.
--   Test your changes with our supported browsers.
--   Run unit tests and ensure that all tests pass.
--   Push your branch to GitHub.
--   Create a new pull request from your branch against the angular-components:master
-    branch.
+- Fork Koobiq into your namespace by using the fork button on github.
+- Make your changes in a new git branch: `git checkout -b my-fix-branch master`
+- Create your bugfix/feature including appropriate tests.
+- Test your changes with our supported browsers.
+- Run unit tests and ensure that all tests pass.
+- Push your branch to GitHub.
+- Create a new pull request from your branch against the angular-components:master
+  branch.
 
 ## Commit message guidelines
 
@@ -47,17 +47,17 @@ cases. Format: `<type>(<scope>): <subject>`
 
 Must be one of the following:
 
--   **feat**: A new feature
--   **fix**: A bug fix
--   **docs**: Documentation only changes
--   **style**: Changes that do not affect the meaning of the code (white-space,
-    formatting, missing semi-colons, etc)
--   **refactor**: A code change that neither fixes a bug nor adds a feature
--   **test**: Adding missing tests or correcting existing tests
--   **ci**: Changes that affect the CI
--   **build**: Changes that affect the build system like npm scripts or
-    angular-cli related changes
--   **chore**: Other changes that don't modify src or test files
+- **feat**: A new feature
+- **fix**: A bug fix
+- **docs**: Documentation only changes
+- **style**: Changes that do not affect the meaning of the code (white-space,
+  formatting, missing semi-colons, etc)
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **test**: Adding missing tests or correcting existing tests
+- **ci**: Changes that affect the CI
+- **build**: Changes that affect the build system like npm scripts or
+  angular-cli related changes
+- **chore**: Other changes that don't modify src or test files
 
 ### Scope
 

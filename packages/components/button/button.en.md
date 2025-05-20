@@ -4,8 +4,8 @@ koobiq buttons are available using native `<button>` or `<a>` elements.
 
 There are two button variants, each applied as an attribute:
 
--   basic buttons;
--   icon buttons.
+- basic buttons;
+- icon buttons.
 
 #### Basic buttons
 

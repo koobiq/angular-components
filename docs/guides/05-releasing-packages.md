@@ -15,13 +15,13 @@ This command create and push a release commit and tag with changelog and bumped 
 
 CLI steps:
 
--   (**need validation**) choose bump version
--   (**need validation**) create `release name`
-    -   you can use [angular-release-name-generator](https://www.npmjs.com/package/angular-release-name-generator)
--   (**need validation**) create changelog
--   create a commit with changelog
--   create a git tag
--   pushed changes to current branch
+- (**need validation**) choose bump version
+- (**need validation**) create `release name`
+    - you can use [angular-release-name-generator](https://www.npmjs.com/package/angular-release-name-generator)
+- (**need validation**) create changelog
+- create a commit with changelog
+- create a git tag
+- pushed changes to current branch
 
 3. Just wait CircleCI job.
 

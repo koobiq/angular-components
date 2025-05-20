@@ -86,5 +86,5 @@ Add `cdk-virtual-scroll-viewport` to your component template to display only vis
 
 ### Recommendations
 
--   If you are using a select without a label, we suggest adding a placeholder to indicate what information the user should select. For example, “Country.”
--   If there are more than 10 items in the list of values, then enable the search display in the dropdown list header. This will make it easier to find values.
+- If you are using a select without a label, we suggest adding a placeholder to indicate what information the user should select. For example, “Country.”
+- If there are more than 10 items in the list of values, then enable the search display in the dropdown list header. This will make it easier to find values.

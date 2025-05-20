@@ -20,8 +20,8 @@ And finally import KbqIconModule to your component module.
 
 If kbq-icons.css does't suit your project, you can also add:
 
--   kbq-icons.less;
--   kbq-icons-embed.css with embedded font included.
+- kbq-icons.less;
+- kbq-icons-embed.css with embedded font included.
 
 ### Variants
 

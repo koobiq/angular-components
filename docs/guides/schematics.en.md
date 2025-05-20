@@ -66,16 +66,16 @@ ng generate @koobiq/components:loader-overlay-size-attr
 
 ### How to run a schematic
 
--   Make sure Angular CLI is installed:
+- Make sure Angular CLI is installed:
 
 ```bash
 ng version
 ```
 
--   Run the desired schematic using the `ng generate` command:
+- Run the desired schematic using the `ng generate` command:
 
 ```bash
 ng generate @koobiq/components:<schematic-name>
 ```
 
--   Some schematics support additional options. See the `schema.json` file inside the corresponding schematic folder.
+- Some schematics support additional options. See the `schema.json` file inside the corresponding schematic folder.

@@ -9,10 +9,10 @@ This component is experimental, it is backward compatible with the original comp
 
 Main changes:
 
--   removed support for `KbqTrim`
--   removed support for `KbqValidateDirective` directive, instead it is recommended to use `ErrorStateMatcher`([see](#changing-error-message-display-behavior))
--   removed `KbqFormFieldWithoutBorders` directive, instead it is recommended to use `noBorders` attribute ([see](#disabling-borders))
--   removed input field styling using the `.ng-invalid` selector, instead it is recommended to use the `.kbq-form-field_invalid` selector, which depends on `ErrorStateMatcher`([see](#changing-error-message-display-behavior))
+- removed support for `KbqTrim`
+- removed support for `KbqValidateDirective` directive, instead it is recommended to use `ErrorStateMatcher`([see](#changing-error-message-display-behavior))
+- removed `KbqFormFieldWithoutBorders` directive, instead it is recommended to use `noBorders` attribute ([see](#disabling-borders))
+- removed input field styling using the `.ng-invalid` selector, instead it is recommended to use the `.kbq-form-field_invalid` selector, which depends on `ErrorStateMatcher`([see](#changing-error-message-display-behavior))
 
 ---
 
@@ -20,15 +20,15 @@ Main changes:
 
 The following components are intended to work inside the `<kbq-form-field>` component:
 
--   [Autocomplete](/en/components/autocomplete)
--   [Input](/en/components/input)
--   [Select](/en/components/select)
--   [Tag autocomplete](/en/components/tag-autocomplete)
--   [Tag input](/en/components/tag-input)
--   [Textarea](/en/components/textarea)
--   [Timepicker](/en/components/timepicker)
--   [Timezone](/en/components/timezone)
--   [Tree select](/en/components/tree-select)
+- [Autocomplete](/en/components/autocomplete)
+- [Input](/en/components/input)
+- [Select](/en/components/select)
+- [Tag autocomplete](/en/components/tag-autocomplete)
+- [Tag input](/en/components/tag-input)
+- [Textarea](/en/components/textarea)
+- [Timepicker](/en/components/timepicker)
+- [Timezone](/en/components/timezone)
+- [Tree select](/en/components/tree-select)
 
 ### Label
 
