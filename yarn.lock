@@ -4797,44 +4797,44 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/design-tokens@npm:^3.12.1":
-  version: 3.12.1
-  resolution: "@koobiq/design-tokens@npm:3.12.1"
-  checksum: 10c0/848143b9ef4925766c52fd8764dffdb52cf1a3208e396a79af869507bca6d52f06cdf5a55ce5a23299f0618c2c361f78963d007b01f4fd5425c1ba20d7bbc91f
+"@koobiq/design-tokens@npm:^3.13.2":
+  version: 3.13.2
+  resolution: "@koobiq/design-tokens@npm:3.13.2"
+  checksum: 10c0/d3177d41c6f712a25535ace0c9613d7e260ae2faf395e8b2ca0b665c188c8bf05b26a6c545a850302b8e7ca6e7ea2a28e9171e603153bd1e69a0e1c750e70882
   languageName: node
   linkType: hard
 
-"@koobiq/icons@npm:9.4.0":
-  version: 9.4.0
-  resolution: "@koobiq/icons@npm:9.4.0"
-  checksum: 10c0/f7fc73860cd4ce527b6f0af39ee48c08a1e4b134841a5ebfeeb66781d8b1b7a3fd2a59f62024343f01596daec1fc1451c55d7d6457090ee431341cf2f48507a2
+"@koobiq/icons@npm:9.4.1":
+  version: 9.4.1
+  resolution: "@koobiq/icons@npm:9.4.1"
+  checksum: 10c0/8acd48705ab5937ed11bd5f599e1451892cc96eb7dfc855473b8c2cf58ee96f600e71fd9ea1e9a13bb704f31275db7a8b18a31dfe916eefbad3ed9d90b2fa1db
   languageName: node
   linkType: hard
 
-"@koobiq/luxon-date-adapter@npm:^3.1.4":
-  version: 3.2.0
-  resolution: "@koobiq/luxon-date-adapter@npm:3.2.0"
+"@koobiq/luxon-date-adapter@npm:^3.2.3":
+  version: 3.2.3
+  resolution: "@koobiq/luxon-date-adapter@npm:3.2.3"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     luxon: ^3.2.1
-  checksum: 10c0/69af0c32010189e5f9c8cb7ab08ccd3deaa9a00d309b14b0340609504da23fc11abe20d4c72dfddab24258da60eb0b1ea2d8ef02851e7507dd4f09121a0008df
+  checksum: 10c0/7974c8060d0bcdec4f07bbadac248dac825f365cbd5ad7281f3a2c86f2b5595015809221d5b85b5d42ab86a3fdda1d10eb2f6ac20e50c01a1eee2bd7949b6443
   languageName: node
   linkType: hard
 
-"@koobiq/moment-date-adapter@npm:^3.1.4":
-  version: 3.2.0
-  resolution: "@koobiq/moment-date-adapter@npm:3.2.0"
+"@koobiq/moment-date-adapter@npm:^3.2.3":
+  version: 3.2.3
+  resolution: "@koobiq/moment-date-adapter@npm:3.2.3"
   peerDependencies:
     "@koobiq/date-adapter": ^3.0.0
     moment: ^2.24.0
-  checksum: 10c0/a8d397363e8afe991afa32e664ccb150a1996129077fd457046c9fb99949a68a0639f8e43b24df62702bd888e052be12fbe73ec2c6ee610d30e0d4ee9cff1a12
+  checksum: 10c0/d0eed226974b11db63ad49c03595e530807f6f175097cf2d701ff95e1084bff5dbb7edc371e81343fa2e9d9efd7914ef74df974f97236e3c5517ca4ceaecee3b
   languageName: node
   linkType: hard
 
-"@koobiq/tokens-builder@npm:^3.11.0":
-  version: 3.11.0
-  resolution: "@koobiq/tokens-builder@npm:3.11.0"
-  checksum: 10c0/128299ea701e374561117f495ed62cf64c82667cd559f6232bcfbd916e642bfa4cf8315db68d42529e9a1ef0a90f45b84a9def7cca8b892b385a84cd6c1c1c23
+"@koobiq/tokens-builder@npm:^3.13.2":
+  version: 3.13.2
+  resolution: "@koobiq/tokens-builder@npm:3.13.2"
+  checksum: 10c0/27c51400b7c4ccf674708b63ffe6ec39e2099437a39773a8a14dddc433f095c374e276972f9bf66a334ed97bd2467ec0515659beeb589b94f90d9ac2b20c1b34
   languageName: node
   linkType: hard
 
@@ -14779,11 +14779,11 @@ __metadata:
     "@koobiq/ag-grid-angular-theme": "npm:^30.0.6"
     "@koobiq/date-adapter": "npm:^3.2.3"
     "@koobiq/date-formatter": "npm:^3.2.3"
-    "@koobiq/design-tokens": "npm:^3.12.1"
-    "@koobiq/icons": "npm:9.4.0"
-    "@koobiq/luxon-date-adapter": "npm:^3.1.4"
-    "@koobiq/moment-date-adapter": "npm:^3.1.4"
-    "@koobiq/tokens-builder": "npm:^3.11.0"
+    "@koobiq/design-tokens": "npm:^3.13.2"
+    "@koobiq/icons": "npm:9.4.1"
+    "@koobiq/luxon-date-adapter": "npm:^3.2.3"
+    "@koobiq/moment-date-adapter": "npm:^3.2.3"
+    "@koobiq/tokens-builder": "npm:^3.13.2"
     "@messageformat/core": "npm:^3.0.1"
     "@microsoft/api-extractor": "npm:7.40.2"
     "@octokit/rest": "npm:^18.9.1"
