@@ -28,7 +28,7 @@ import { merge, Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { KbqFilterBar } from './filter-bar';
 import { KbqFilterBarButton } from './filter-bar-button';
-import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent } from './filter-bar.types';
+import { KbqFilter, KbqSaveFilterError, KbqSaveFilterEvent, KbqSaveFilterStatuses } from './filter-bar.types';
 
 @Component({
     standalone: true,
@@ -105,7 +105,8 @@ export class KbqFilters implements OnInit {
     @Output() readonly onSave = new EventEmitter<KbqSaveFilterEvent>();
     /** Event that is generated whenever the user change a filter. */
     @Output() readonly onChangeFilter = new EventEmitter<KbqSaveFilterEvent>();
-    /** Event that is generated whenever the user saves a filter as new. */
+    /** Event that is generated whenever the user saves a filter as new.
+     * @deprecated use onSave with status = newFilter. */
     @Output() readonly onSaveAsNew = new EventEmitter<KbqSaveFilterEvent>();
     /** Event that is generated whenever the user remove a filter. */
     @Output() readonly onRemoveFilter = new EventEmitter<KbqFilter>();
@@ -152,7 +153,6 @@ export class KbqFilters implements OnInit {
     selectFilter(filter: KbqFilter) {
         this.filterBar.internalFilterChanges.next(structuredClone(filter));
 
-        this.filterBar.saveFilterState();
         this.onSelectFilter.next(filter);
     }
 
@@ -162,11 +162,13 @@ export class KbqFilters implements OnInit {
         this.filterBar.filter.saved = true;
         this.filterBar.filter.changed = false;
 
-        this.filterBar.saveFilterState();
-
         this.filterBar.internalFilterChanges.next(this.filterBar.filter);
 
-        this.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
+        this.onSave.emit({
+            filter: this.filterBar.filter,
+            filterBar: this.filterBar,
+            status: KbqSaveFilterStatuses.OnlyChanges
+        });
     }
 
     saveAsNew() {
@@ -174,21 +176,18 @@ export class KbqFilters implements OnInit {
 
         const name = this.filterName.value || '';
 
+        // @todo default filter
+        const filter = structuredClone<KbqFilter>(this.filter as KbqFilter) || { pipes: [] };
+
+        filter.name = name;
+        filter.saved = true;
+        filter.changed = false;
+
         if (this.saveNewFilter) {
-            // @todo default filter
-            const filter = structuredClone<KbqFilter>(this.filter as KbqFilter) || { pipes: [] };
-
-            filter.name = name;
-            filter.saved = true;
-            filter.changed = false;
-
             this.onSaveAsNew.emit({ filter, filterBar: this.filterBar });
+            this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewFilter });
         } else {
-            this.filterBar.filter!.name = name;
-            this.filterBar.filter!.saved = true;
-            this.filterBar.filter!.changed = false;
-
-            this.onSave.emit({ filter: this.filterBar.filter, filterBar: this.filterBar });
+            this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewName });
         }
     }
 
@@ -237,6 +236,8 @@ export class KbqFilters implements OnInit {
         this.restoreFocus();
 
         setTimeout(() => this.changeDetectorRef.detectChanges());
+
+        this.showFilterSavingError = false;
     };
 
     /** @docs-private */
