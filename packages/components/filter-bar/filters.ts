@@ -171,7 +171,7 @@ export class KbqFilters implements OnInit {
         });
     }
 
-    saveAsNew() {
+    saveAsNew(event?: Event) {
         if (this.filterName.invalid) return;
 
         const name = this.filterName.value || '';
@@ -189,6 +189,8 @@ export class KbqFilters implements OnInit {
         } else {
             this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewName });
         }
+
+        event?.preventDefault();
     }
 
     showError(error?: KbqSaveFilterError) {
@@ -215,7 +217,10 @@ export class KbqFilters implements OnInit {
         merge(...this.popover.defaultClosingActions()).subscribe(this.closePopover);
         this.popover.visibleChange.pipe(filter((state) => !state)).subscribe(this.closePopover);
 
-        setTimeout(() => this.newFilterName.nativeElement.focus());
+        setTimeout(() => {
+            this.newFilterName.nativeElement.focus();
+            this.filterName.setErrors(null);
+        });
     }
 
     openSaveAsNewFilterPopover() {
