@@ -7,21 +7,35 @@ updates:
       day: 'tuesday'
       time: '13:00'
       timezone: 'Europe/Moscow'
-    # Ignores any major updates
     ignore:
+      # Ignores any major updates
       - dependency-name: '*'
         update-types: ['version-update:semver-major']
+      # @angular-devkit/architect@0.x.x has a non-standard angular semantic version number
+      - dependency-name: '@angular-devkit/architect'
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
+      # @angular-devkit/architect-cli@0.x.x has a non-standard angular semantic version number
+      - dependency-name: '@angular-devkit/architect-cli'
+        update-types: ['version-update:semver-major', 'version-update:semver-minor']
     groups:
-      linters:
+      eslint:
         patterns:
           - 'eslint*'
           - '@types/eslint'
           - '@typescript-eslint/*'
           - '@angular-eslint/*'
           - '@stylistic/*'
+      prettier:
+        patterns:
           - 'prettier*'
+      stylelint:
+        patterns:
           - 'stylelint*'
+      commitlint:
+        patterns:
           - '@commitlint/*'
+      cspell:
+        patterns:
           - 'cspell'
           - '@cspell/*'
       angular:
