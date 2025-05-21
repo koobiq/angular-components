@@ -13,6 +13,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 import { SelectExamplesModule } from 'packages/docs-examples/components/select';
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DevThemeToggle } from '../theme-toggle';
 import { DEV_OPTIONS } from './mock';
 
 @Component({
@@ -21,17 +22,41 @@ import { DEV_OPTIONS } from './mock';
     selector: 'dev-examples',
     template: `
         <select-with-panel-width-attribute-example />
+        <hr />
+
         <select-virtual-scroll-example />
+        <hr />
+
         <select-validation-example />
+        <hr />
+
         <select-search-example />
+        <hr />
+
         <select-prioritized-selected-example />
+        <hr />
+
         <select-overview-example />
+        <hr />
+
         <select-multiple-example />
+        <hr />
+
         <select-icon-example />
+        <hr />
+
         <select-height-example />
+        <hr />
+
         <select-groups-example />
+        <hr />
+
         <select-cleaner-example />
+        <hr />
+
         <select-disabled-example />
+        <hr />
+
         <select-footer-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -52,7 +77,8 @@ class DevExamples {}
         KbqIconModule,
         ReactiveFormsModule,
         KbqTagsModule,
-        DevExamples
+        DevExamples,
+        DevThemeToggle
     ],
     providers: [
         kbqSelectOptionsProvider({
