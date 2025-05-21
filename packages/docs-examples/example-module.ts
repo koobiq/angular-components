@@ -2980,6 +2980,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-with-panel-width-attribute-example.ts",
     "importPath": "components/select"
   },
+  "sidebar-overview": {
+    "packagePath": "components/sidebar/sidebar-overview",
+    "title": "Sidebar overview",
+    "componentName": "SidebarOverviewExample",
+    "files": [
+      "sidebar-overview-example.ts"
+    ],
+    "selector": "sidebar-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "sidebar-overview-example.ts",
+    "importPath": "components/sidebar"
+  },
+  "sidebar-with-splitter": {
+    "packagePath": "components/sidebar/sidebar-with-splitter",
+    "title": "Sidebar with splitter",
+    "componentName": "SidebarWithSplitterExample",
+    "files": [
+      "sidebar-with-splitter-example.ts"
+    ],
+    "selector": "sidebar-with-splitter-example",
+    "additionalComponents": [],
+    "primaryFile": "sidebar-with-splitter-example.ts",
+    "importPath": "components/sidebar"
+  },
   "sidepanel-modal-mode": {
     "packagePath": "components/sidepanel/sidepanel-modal-mode",
     "title": "Sidepanel modal mode",
@@ -4655,6 +4679,10 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-with-panel-width-attribute':
 return import('@koobiq/docs-examples/components/select');
+  case 'sidebar-overview':
+return import('@koobiq/docs-examples/components/sidebar');
+  case 'sidebar-with-splitter':
+return import('@koobiq/docs-examples/components/sidebar');
   case 'sidepanel-modal-mode':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-normal-mode':

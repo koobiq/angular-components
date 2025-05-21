@@ -1,45 +1,29 @@
-import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqSidebarModule, SidebarPositions } from '@koobiq/components/sidebar';
-import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
+import { SidebarExamplesModule } from 'packages/docs-examples/components/sidebar';
+
+@Component({
+    standalone: true,
+    imports: [SidebarExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <sidebar-overview-example />
+        <hr />
+        <sidebar-with-splitter-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 @Component({
     standalone: true,
     imports: [
-        KbqSplitterModule,
-        KbqButtonModule,
-        KbqSidebarModule,
-        JsonPipe
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
-    styleUrls: ['./styles.scss'],
+    styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevApp {
-    direction = Direction;
-    sidebarPositions = SidebarPositions;
-
-    leftSidebarSidebarState: boolean = false;
-    leftSplitterState: boolean = false;
-
-    rightSidebarSidebarState: boolean = false;
-
-    onStateChanged($event): void {
-        console.log('onStateChanged: ', $event);
-    }
-
-    toggleLeftSidebar() {
-        this.leftSidebarSidebarState = !this.leftSidebarSidebarState;
-    }
-
-    toggleRightSidebar() {
-        this.rightSidebarSidebarState = !this.rightSidebarSidebarState;
-    }
-
-    toggleLeftSplitterState() {
-        this.leftSplitterState = !this.leftSplitterState;
-    }
-}
+export class DevApp {}

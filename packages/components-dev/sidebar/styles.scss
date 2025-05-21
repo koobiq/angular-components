@@ -1,25 +1,4 @@
 dev-app {
     display: block;
-}
-
-.dev-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-
-    height: 200px;
-}
-
-.dev-container__body {
-    flex: 1 1 30%;
-
-    background-color: antiquewhite;
-}
-
-.kbq-sidebar-opened {
-    background-color: #6fba53;
-}
-
-.kbq-sidebar-closed {
-    background-color: darkgray;
+    width: 700px;
 }
