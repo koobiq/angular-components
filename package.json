@@ -214,6 +214,7 @@
         "dev:empty-state": "ng serve dev-empty-state --port 3003",
         "dev:experimental-form-field": "ng serve dev-experimental-form-field --port 3003",
         "dev:file-upload": "ng serve dev-file-upload --port 3003",
+        "dev:filesize-formatter": "ng serve dev-filesize-formatter --port 3003",
         "dev:filter-bar": "ng serve dev-filter-bar --port 3003",
         "dev:flex-layout": "ng serve dev-flex-layout --port 3003",
         "dev:form-field": "ng serve dev-form-field --port 3003",
