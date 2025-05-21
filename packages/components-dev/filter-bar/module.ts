@@ -2,7 +2,6 @@ import { JsonPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     inject,
     TemplateRef,
@@ -14,7 +13,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
-    KBQ_FILTER_BAR_PIPES,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -100,8 +98,6 @@ export class DevExamples {}
 })
 export class DevApp implements AfterViewInit {
     protected readonly adapter = inject(DateAdapter<DateTime>);
-    protected readonly pipes = inject(KBQ_FILTER_BAR_PIPES);
-    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     @ViewChild('filterBar') filterBar: KbqFilterBar;
     @ViewChild('optionTemplate') optionTemplate: TemplateRef<any>;

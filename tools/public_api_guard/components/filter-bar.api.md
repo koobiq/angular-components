@@ -287,6 +287,7 @@ export class KbqFilters implements OnInit {
     readonly onRemoveFilter: EventEmitter<KbqFilter>;
     readonly onResetFilterChanges: EventEmitter<KbqFilter | null>;
     readonly onSave: EventEmitter<KbqSaveFilterEvent>;
+    // @deprecated
     readonly onSaveAsNew: EventEmitter<KbqSaveFilterEvent>;
     readonly onSelectFilter: EventEmitter<KbqFilter>;
     // (undocumented)
@@ -659,9 +660,21 @@ export interface KbqSaveFilterError {
 // @public (undocumented)
 export interface KbqSaveFilterEvent {
     // (undocumented)
-    filter: KbqFilter | null;
+    filter: KbqFilter;
     // (undocumented)
     filterBar: KbqFilterBar;
+    // (undocumented)
+    status?: KbqSaveFilterStatuses;
+}
+
+// @public
+export enum KbqSaveFilterStatuses {
+    // (undocumented)
+    NewFilter = "newFilter",
+    // (undocumented)
+    NewName = "newName",
+    // (undocumented)
+    OnlyChanges = "onlyChanges"
 }
 
 // @public (undocumented)

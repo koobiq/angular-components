@@ -1,6 +1,14 @@
 import { Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    KbqFilter,
+    KbqFilterBar,
+    KbqFilterBarModule,
+    KbqPipeTemplate,
+    KbqPipeTypes,
+    KbqSaveFilterEvent,
+    KbqSaveFilterStatuses
+} from '@koobiq/components/filter-bar';
 
 /**
  * @title filter-bar-saved-filters
@@ -21,7 +29,6 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"
-                (onSaveAsNew)="onSaveAsNewFilter($event)"
                 (onResetFilterChanges)="onResetFilterChanges($event)"
                 (onRemoveFilter)="onDeleteFilter($event)"
             />
@@ -328,22 +335,53 @@ export class FilterBarSavedFiltersExample {
         this.activeFilter = null;
     }
 
-    onSaveFilter({ filter, filterBar }) {
-        console.log('filter to save: ', filter);
-
-        this.filters.splice(
-            this.filters.findIndex(({ name }) => name === filter?.name),
-            1,
-            filter
-        );
-
-        filterBar.filters.filterSavedSuccessfully();
+    onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
+        if (status === KbqSaveFilterStatuses.NewFilter) {
+            this.saveNewFilter(filter, filterBar);
+        } else if (status === KbqSaveFilterStatuses.NewName) {
+            this.saveCurrentFilterWithNewName(filter, filterBar);
+        } else if (status === KbqSaveFilterStatuses.OnlyChanges) {
+            this.saveCurrentFilterWithChangesInPipes(filter, filterBar);
+        }
     }
 
-    onSaveAsNewFilter({ filter, filterBar }) {
-        if (filter) {
+    saveNewFilter(filter: KbqFilter, filterBar: KbqFilterBar) {
+        // This logic simulates the behavior of the backend
+        if (!this.filters.map(({ name }) => name).includes(filter.name)) {
             this.filters.push(filter);
+
+            this.activeFilter = filter;
+
+            filterBar.filters.filterSavedSuccessfully();
+        } else {
+            filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true });
         }
+    }
+
+    saveCurrentFilterWithNewName(filter: KbqFilter, filterBar: KbqFilterBar) {
+        // This logic simulates the behavior of the backend
+        if (filterBar.filter?.name !== filter.name) {
+            this.filters.splice(
+                this.filters.findIndex(({ name }) => name === filterBar.filter?.name),
+                1,
+                filter!
+            );
+
+            this.activeFilter = filter;
+
+            filterBar.filters.filterSavedSuccessfully();
+        } else {
+            filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true });
+        }
+    }
+
+    saveCurrentFilterWithChangesInPipes(filter: KbqFilter, filterBar: KbqFilterBar) {
+        // This logic simulates the behavior of the backend
+        this.filters.splice(
+            this.filters.findIndex(({ name }) => name === filter.name),
+            1,
+            filter!
+        );
 
         this.activeFilter = filter;
 

@@ -104,7 +104,15 @@ export interface KbqSaveFilterError {
     nameAlreadyExists?: boolean;
 }
 
+/** saving statuses for KbqSaveFilterEvent */
+export enum KbqSaveFilterStatuses {
+    OnlyChanges = 'onlyChanges',
+    NewName = 'newName',
+    NewFilter = 'newFilter'
+}
+
 export interface KbqSaveFilterEvent {
-    filter: KbqFilter | null;
+    filter: KbqFilter;
     filterBar: KbqFilterBar;
+    status?: KbqSaveFilterStatuses;
 }
