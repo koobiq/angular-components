@@ -305,7 +305,7 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     restoreFocus(): void;
     // (undocumented)
-    saveAsNew(): void;
+    saveAsNew(event?: Event): void;
     // (undocumented)
     saveChanges(): void;
     saveNewFilter: boolean;
