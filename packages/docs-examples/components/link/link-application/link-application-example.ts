@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
@@ -13,18 +13,33 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqIconModule
     ],
     template: `
-        <div style="padding: 16px">
-            <a class="kbq-link_external" href="https://koobiq.io/en/components/link" target="_blank" kbq-link>
-                <span class="kbq-link__text">Отчет сканирования в AI Desktop</span>
-                <i kbq-icon="kbq-north-east_16"></i>
-            </a>
-        </div>
-        <div style="padding: 16px">
-            <a class="kbq-link_external" href="https://koobiq.io/en/components/link" target="_blank" kbq-link>
-                <span class="kbq-link__text">Отчет сканирования в AI Desktop</span>
-            </a>
-            <img style="margin-left: 5px; vertical-align: middle" alt="" src="favicon.ico" />
-        </div>
-    `
+        <a class="kbq-link_external" href="https://koobiq.io/en/components/link" target="_blank" kbq-link>
+            <span class="kbq-link__text">The scan report in Deep Inspector</span>
+            <i kbq-icon="kbq-north-east_16"></i>
+        </a>
+
+        <a
+            class="kbq-link_external example-link-with-svg-icon"
+            href="https://koobiq.io/en/components/link"
+            target="_blank"
+            kbq-link
+        >
+            <span class="kbq-link__text">The scan report in Deep Inspector</span>
+            <img kbq-icon="" src="https://koobiq.io/assets/images/favicons/icon.svg" width="16" alt="icon" />
+        </a>
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+            gap: var(--kbq-size-s);
+        }
+
+        .example-link-with-svg-icon {
+            display: inline-flex;
+            align-items: center;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LinkApplicationExample {}
