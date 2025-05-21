@@ -10,7 +10,7 @@
         &.kbq-control_has-validate-directive.ng-invalid,
         // Invalid by control `ErrorStateMatcher`
         &.kbq-invalid {
-            color: var(--kbq-error-default);
+            color: var(--kbq-foreground-error);
 
             .kbq-select__placeholder {
                 color: var(--kbq-form-field-states-error-placeholder);
