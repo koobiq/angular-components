@@ -1,5 +1,10 @@
-🚧 **Documentation in progress** 🚧
+Component designed to add collapsible side content.
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(sidebar-overview) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+### Keyboard interaction
+
+| <div style="min-width: 110px;">Key</div>       | Action                   |
+| ---------------------------------------------- | ------------------------ |
+| <span class="docs-hot-key-button">&#91;</span> | Open/close left Sidebar  |
+| <span class="docs-hot-key-button">&#93;</span> | Open/close right Sidebar |

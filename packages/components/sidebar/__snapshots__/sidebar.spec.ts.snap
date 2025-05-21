@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqSidebar should match snapshot when closed 1`] = `
+DebugElement {
+  "nativeNode": <kbq-sidebar
+    class="kbq-sidebar ng-trigger ng-trigger-state"
+    style="min-width: 32px; width: 32px; max-width: 32px;"
+  >
+    
+    <div
+      class="kbq-sidebar-closed"
+      kbqsidebarclosed=""
+      style=""
+    >
+      kbqSidebarClosed
+    </div>
+    
+  </kbq-sidebar>,
+}
+`;
+
+exports[`KbqSidebar should match snapshot when opened 1`] = `
+DebugElement {
+  "nativeNode": <kbq-sidebar
+    class="kbq-sidebar ng-trigger ng-trigger-state"
+    style="min-width: inherit; width: inherit; max-width: inherit;"
+  >
+    <div
+      class="kbq-sidebar-opened"
+      kbqsidebaropened=""
+      style=""
+    >
+      kbqSidebarOpened
+    </div>
+    
+    
+  </kbq-sidebar>,
+}
+`;
