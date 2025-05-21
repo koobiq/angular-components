@@ -1,4 +1,10 @@
-export const formatDataSize = (value: number, precision: number, system): { value: string; unit: string } => {
+import { KbqUnitSystem } from './config';
+
+export const formatDataSize = (
+    value: number,
+    precision: number,
+    system: KbqUnitSystem
+): { value: string; unit: string } => {
     const { result, unit } = getHumanizedBytes(value, system);
     let volume: string;
 
@@ -15,13 +21,17 @@ export const formatDataSize = (value: number, precision: number, system): { valu
 };
 
 /**
- * Переводит байты в Кб, Мб, Гб
+ * Converts bytes to Kb, Mb, Gb
  *
- * @param value количество байт
- * @param system система измерения
- * @param threshold нижний порог подсчета
+ * @param value the number of bytes
+ * @param system the measurement system
+ * @param threshold the lower counting threshold
  */
-export const getHumanizedBytes = (value: number, system, threshold?: number): { result: number; unit: string } => {
+export const getHumanizedBytes = (
+    value: number,
+    system: KbqUnitSystem,
+    threshold?: number
+): { result: number; unit: string } => {
     if (!Number.isFinite(value)) {
         throw new Error('Argument "value" must be number!');
     }

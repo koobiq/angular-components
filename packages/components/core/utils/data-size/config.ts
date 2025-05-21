@@ -6,20 +6,23 @@ export enum MeasurementSystem {
     IEC = 'IEC'
 }
 
+export enum KbqMeasurementSystem {
+    SI = 'SI',
+    IEC = 'IEC'
+}
+
+export interface KbqUnitSystem {
+    abbreviations: string[];
+    base: number;
+    power: number;
+}
+
 export interface SizeUnitsConfig {
     defaultUnitSystem: string;
     defaultPrecision: number;
     unitSystems: {
-        [MeasurementSystem.SI]: {
-            abbreviations: string[];
-            base: number;
-            power: number;
-        };
-        [MeasurementSystem.IEC]: {
-            abbreviations: string[];
-            base: number;
-            power: number;
-        };
+        [MeasurementSystem.SI]: KbqUnitSystem;
+        [MeasurementSystem.IEC]: KbqUnitSystem;
     };
 }
 

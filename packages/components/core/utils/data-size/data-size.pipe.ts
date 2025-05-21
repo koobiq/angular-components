@@ -1,6 +1,12 @@
 import { Inject, Optional, Pipe, PipeTransform } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
-import { KBQ_SIZE_UNITS_CONFIG, KBQ_SIZE_UNITS_DEFAULT_CONFIG, SizeUnitsConfig } from './config';
+import {
+    KBQ_SIZE_UNITS_CONFIG,
+    KBQ_SIZE_UNITS_DEFAULT_CONFIG,
+    KbqMeasurementSystem,
+    KbqUnitSystem,
+    SizeUnitsConfig
+} from './config';
 import { formatDataSize } from './size';
 
 @Pipe({
@@ -22,8 +28,15 @@ export class KbqDataSizePipe implements PipeTransform {
         }
     }
 
-    transform(source: number, precision?: number, unitSystemName?: string): string {
-        const unitSystem = this.config.unitSystems[unitSystemName || this.config.defaultUnitSystem];
+    transform(
+        source: number,
+        precision?: number,
+        unitSystemName?: keyof typeof KbqMeasurementSystem,
+        locale?: string
+    ): string {
+        const selectedUnitSystemsConfig =
+            (locale && this.localeService?.locales[locale].sizeUnits.unitSystems) || this.config.unitSystems;
+        const unitSystem: KbqUnitSystem = selectedUnitSystemsConfig[unitSystemName || this.config.defaultUnitSystem];
 
         const { value, unit } = formatDataSize(source, precision || this.config.defaultPrecision, unitSystem);
 
