@@ -37,7 +37,7 @@ export class KbqDataSizePipe implements PipeTransform {
             : this.config.unitSystems;
         const unitSystem = selectedUnitSystemsConfig[unitSystemName || this.config.defaultUnitSystem];
 
-        const { value, unit } = formatDataSize(source, precision || this.config.defaultPrecision, unitSystem);
+        const { value, unit } = formatDataSize(source, precision ?? this.config.defaultPrecision, unitSystem);
 
         return `${value} ${unit}`;
     }
