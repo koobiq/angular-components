@@ -32,6 +32,7 @@
             0 0 0.1px 1px var(--kbq-tag-#{$type}-states-focus-outline);
     }
 
+    // TODO: Combine disabled states for all colors (#DS-3778)
     &.kbq-disabled {
         @include kbq-tag-state($type, states-disabled);
     }
@@ -49,6 +50,10 @@
 
         &.kbq-error {
             @include kbq-tag-color(error-fade-on);
+        }
+
+        &.kbq-warning {
+            @include kbq-tag-color(warning-fade);
         }
     }
 }

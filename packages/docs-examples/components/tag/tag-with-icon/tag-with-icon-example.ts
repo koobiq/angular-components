@@ -4,11 +4,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 
 /**
- * @title Tag
+ * @title Tag with icon
  */
 @Component({
     standalone: true,
-    selector: 'tag-overview-example',
+    selector: 'tag-with-icon-example',
     imports: [
         KbqTagsModule,
         KbqIconModule
@@ -18,11 +18,11 @@ import { KbqTagsModule } from '@koobiq/components/tags';
     },
     template: `
         <kbq-tag [color]="colors.ContrastFade">
+            <i kbq-icon="kbq-diamond-o_16"></i>
             Tag
-            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
     `
 })
-export class TagOverviewExample {
+export class TagWithIconExample {
     colors = KbqComponentColors;
 }

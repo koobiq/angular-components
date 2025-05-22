@@ -4,11 +4,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 
 /**
- * @title Tag
+ * @title Tag Disabled
  */
 @Component({
     standalone: true,
-    selector: 'tag-overview-example',
+    selector: 'tag-disabled-example',
     imports: [
         KbqTagsModule,
         KbqIconModule
@@ -17,12 +17,12 @@ import { KbqTagsModule } from '@koobiq/components/tags';
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     },
     template: `
-        <kbq-tag [color]="colors.ContrastFade">
+        <kbq-tag [color]="colors.ContrastFade" [disabled]="true">
             Tag
             <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
     `
 })
-export class TagOverviewExample {
+export class TagDisabledExample {
     colors = KbqComponentColors;
 }
