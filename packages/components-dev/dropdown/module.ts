@@ -16,6 +16,25 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     template: `
         <dropdown-nested-example />
+        <hr />
+
+        <dropdown-disabled-example />
+        <hr />
+
+        <dropdown-lazyload-data-example />
+        <hr />
+
+        <dropdown-navigation-wrap-example />
+        <hr />
+
+        <dropdown-open-by-arrow-down-example />
+        <hr />
+
+        <dropdown-overview-example />
+        <hr />
+
+        <dropdown-recursive-template-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
