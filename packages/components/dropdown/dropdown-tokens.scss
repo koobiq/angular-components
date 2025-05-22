@@ -10,6 +10,7 @@
     --kbq-dropdown-container-shadow: var(--kbq-shadow-popup);
     --kbq-dropdown-item-border-radius: var(--kbq-size-xs);
     --kbq-dropdown-item-caption-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-dropdown-item-trigger-icon-color: var(--kbq-icon-contrast-fade);
     /* LIST THEME TOKENS */
     @include list-tokens.list-theme-tokens;
 }

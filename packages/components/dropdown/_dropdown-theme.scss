@@ -3,10 +3,6 @@
 @mixin _kbq-dropdown-item-state($style-name) {
     background: var(--kbq-list-#{$style-name}-container-background);
     color: var(--kbq-list-#{$style-name}-text-color);
-
-    .kbq-icon.kbq-empty:not(.kbq-icon-button, .kbq-icon-item) {
-        color: var(--kbq-list-#{$style-name}-text-color);
-    }
 }
 
 @mixin kbq-dropdown-theme() {
@@ -17,6 +13,10 @@
 
     .kbq-dropdown-item {
         @include _kbq-dropdown-item-state(default);
+
+        .kbq-dropdown-trigger__icon {
+            color: var(--kbq-dropdown-item-trigger-icon-color);
+        }
 
         .kbq-dropdown-item__caption {
             color: var(--kbq-dropdown-item-caption-color);
