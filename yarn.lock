@@ -15073,7 +15073,7 @@ __metadata:
     overlayscrollbars: "npm:2.7.3"
     path-normalize: "npm:^6.0.7"
     postcss: "npm:^8.4.38"
-    postcss-discard-comments: "npm:^7.0.0"
+    postcss-discard-comments: "npm:^7.0.4"
     prettier: "npm:^3.5.3"
     prettier-plugin-multiline-arrays: "npm:^3.0.6"
     prettier-plugin-organize-attributes: "npm:^1.0.0"
@@ -17666,12 +17666,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-discard-comments@npm:^7.0.0":
-  version: 7.0.0
-  resolution: "postcss-discard-comments@npm:7.0.0"
+"postcss-discard-comments@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "postcss-discard-comments@npm:7.0.4"
+  dependencies:
+    postcss-selector-parser: "npm:^7.1.0"
   peerDependencies:
-    postcss: ^8.4.31
-  checksum: 10c0/7fef7deea85c1e68161f69057be19a3aedd54d23c9b464c9b1531faa7a115f0c96a4f0ee3a560ce300578599dbc8114fe0fb744208b20b9d2fd8df1b4b39c58a
+    postcss: ^8.4.32
+  checksum: 10c0/30081465fec33baa8507782d25cd96559cb3487c023d331a517cf94027d065c26227962a40b1806885400d76d3d27d27f9e7b14807866c7d9bb63c3030b5312a
   languageName: node
   linkType: hard
 
