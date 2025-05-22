@@ -183,6 +183,8 @@ const paths = [
     // ---------------------- Other ----------------------
     'other/date-formatter/overview',
     'other/date-formatter/api',
+    'other/filesize-formatter/overview',
+    'other/filesize-formatter/api',
     'other/forms/overview',
     'other/forms/api',
     'other/number-formatter/overview',

@@ -772,6 +772,18 @@ const DOCS: { [key: string]: DocCategory[] } = {
                     hasExamples: true
                 },
                 {
+                    id: 'filesize-formatter',
+                    name: {
+                        ru: 'Filesize formatter',
+                        en: 'Filesize formatter'
+                    },
+                    svgPreview: '',
+                    hasApi: true,
+                    apiId: 'filesize-formatter',
+                    hasExamples: false,
+                    isNew: expiresAt('2025-06-08')
+                },
+                {
                     id: 'forms',
                     name: {
                         ru: 'Forms',
