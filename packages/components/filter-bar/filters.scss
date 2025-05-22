@@ -18,6 +18,10 @@
 
     & .kbq-filters__filter-name {
         @include common.kbq-truncate-line();
+
+        & .kbq-icon {
+            margin-bottom: var(--kbq-size-3xs);
+        }
     }
 
     & .kbq-filter-bar__separator {
