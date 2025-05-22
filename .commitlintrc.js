@@ -47,7 +47,10 @@ const config = {
                 // others
                 'security',
                 'visual',
-                'deps'
+
+                // Dependabot scopes
+                'deps',
+                'deps-dev'
             ]
 
         ]
