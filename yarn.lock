@@ -6176,10 +6176,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stackblitz/sdk@npm:^1.9.0":
-  version: 1.9.0
-  resolution: "@stackblitz/sdk@npm:1.9.0"
-  checksum: 10c0/12e01d35d64b6fb4c6c64c1b46bd8cdc7af961baf8559822d79c02e4c511cced0802879af7484081054898237ae4eed260b79156e45990924d1743bbfad3619a
+"@stackblitz/sdk@npm:^1.11.0":
+  version: 1.11.0
+  resolution: "@stackblitz/sdk@npm:1.11.0"
+  checksum: 10c0/53a3303bf3572d69f31de220c1f23bc727d68f7113fa3cca0e792158b81deb9455d639df28759701af3761af611c1488a98ff16ab66bc3fdc4a08dc9e6bc7174
   languageName: node
   linkType: hard
 
@@ -14989,7 +14989,7 @@ __metadata:
     "@rollup/plugin-typescript": "npm:^11.1.6"
     "@rushstack/node-core-library": "npm:3.66.1"
     "@schematics/angular": "npm:18.2.6"
-    "@stackblitz/sdk": "npm:^1.9.0"
+    "@stackblitz/sdk": "npm:^1.11.0"
     "@stylistic/eslint-plugin": "npm:^3.1.0"
     "@types/chalk": "npm:^2.2.0"
     "@types/conventional-changelog": "npm:^3.1.5"
