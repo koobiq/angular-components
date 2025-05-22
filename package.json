@@ -33,7 +33,7 @@
         "@koobiq/date-adapter": "^3.2.3",
         "@koobiq/date-formatter": "^3.2.3",
         "@koobiq/icons": "9.4.1",
-        "@radix-ng/primitives": "^0.23.0",
+        "@radix-ng/primitives": "^0.39.1",
         "ag-grid-angular": "^30.2.1",
         "ag-grid-community": "^30.2.1",
         "highlight.js": "^11.10.0",
