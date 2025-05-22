@@ -1,3 +1,5 @@
+import { KbqSizeUnitsConfig } from '../utils';
+
 export const enUSFormattersData = {
     formatters: {
         number: {
@@ -32,7 +34,7 @@ export const enUSFormattersData = {
                 power: 10
             }
         }
-    }
+    } satisfies KbqSizeUnitsConfig
 };
 
 export const esLAFormattersData = {

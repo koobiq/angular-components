@@ -1,11 +1,12 @@
-import { Inject, Optional, Pipe, PipeTransform } from '@angular/core';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
+import { inject, Pipe, PipeTransform } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KBQ_LOCALE_SERVICE } from '../../locales';
 import {
     KBQ_SIZE_UNITS_CONFIG,
     KBQ_SIZE_UNITS_DEFAULT_CONFIG,
-    KbqMeasurementSystem,
-    KbqUnitSystem,
-    SizeUnitsConfig
+    KbqMeasurementSystemType,
+    KbqSizeUnitsConfig,
+    KbqUnitSystem
 } from './config';
 import { formatDataSize } from './size';
 
@@ -15,28 +16,26 @@ import { formatDataSize } from './size';
     pure: false
 })
 export class KbqDataSizePipe implements PipeTransform {
-    private config: SizeUnitsConfig;
+    /** Injects the external configuration for size units, if available. */
+    readonly externalConfig = inject(KBQ_SIZE_UNITS_CONFIG, { optional: true });
 
-    constructor(
-        @Optional() @Inject(KBQ_SIZE_UNITS_CONFIG) public readonly externalConfig: SizeUnitsConfig,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService?: KbqLocaleService
-    ) {
-        this.localeService?.changes.subscribe(this.updateLocaleParams);
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+    private config: KbqSizeUnitsConfig;
 
-        if (!localeService) {
-            this.config = KBQ_SIZE_UNITS_DEFAULT_CONFIG;
+    constructor() {
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.config = this.externalConfig || KBQ_SIZE_UNITS_DEFAULT_CONFIG;
         }
     }
 
-    transform(
-        source: number,
-        precision?: number,
-        unitSystemName?: keyof typeof KbqMeasurementSystem,
-        locale?: string
-    ): string {
-        const selectedUnitSystemsConfig =
-            (locale && this.localeService?.locales[locale].sizeUnits.unitSystems) || this.config.unitSystems;
-        const unitSystem: KbqUnitSystem = selectedUnitSystemsConfig[unitSystemName || this.config.defaultUnitSystem];
+    /** Transforms bytes into localized size string */
+    transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string {
+        const selectedUnitSystemsConfig: Record<KbqMeasurementSystemType, KbqUnitSystem> = locale
+            ? this.localeService?.locales[locale].sizeUnits.unitSystems
+            : this.config.unitSystems;
+        const unitSystem = selectedUnitSystemsConfig[unitSystemName || this.config.defaultUnitSystem];
 
         const { value, unit } = formatDataSize(source, precision || this.config.defaultPrecision, unitSystem);
 
