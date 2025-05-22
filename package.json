@@ -138,7 +138,7 @@
         "nunjucks": "^3.2.4",
         "path-normalize": "^6.0.7",
         "postcss": "^8.4.38",
-        "postcss-discard-comments": "^7.0.0",
+        "postcss-discard-comments": "^7.0.4",
         "prettier": "^3.5.3",
         "prettier-plugin-multiline-arrays": "^3.0.6",
         "prettier-plugin-organize-attributes": "^1.0.0",
