@@ -30,6 +30,9 @@ import { DevLocaleSelector } from '../locale-selector';
     imports: [FilterBarExamplesModule],
     selector: 'dev-examples',
     template: `
+        <filter-bar-overview-example />
+        <br />
+        <br />
         <filter-bar-search-in-pipes-example />
         <br />
         <br />
@@ -49,9 +52,6 @@ import { DevLocaleSelector } from '../locale-selector';
         <br />
         <br />
         <filter-bar-custom-pipe-example />
-        <br />
-        <br />
-        <filter-bar-overview-example />
         <br />
         <br />
         <filter-bar-cleanable-example />

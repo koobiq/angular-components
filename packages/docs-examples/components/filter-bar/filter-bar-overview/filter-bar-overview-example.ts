@@ -289,7 +289,7 @@ export class FilterBarOverviewExample {
 
         this.filters.splice(currentFilterIndex, 1);
 
-        this.activeFilter = null;
+        this.activeFilter = this.getDefaultFilter();
     }
 
     onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
