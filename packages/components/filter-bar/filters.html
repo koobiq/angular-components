@@ -159,7 +159,13 @@
             <label class="kbq-form__label">{{ localeData.name }}</label>
 
             <kbq-form-field class="kbq-form__control">
-                <input #newFilterName kbqInput type="text" [formControl]="filterName" />
+                <input
+                    #newFilterName
+                    kbqInput
+                    type="text"
+                    [formControl]="filterName"
+                    (keydown.enter)="saveAsNew($event)"
+                />
 
                 @if (filterName.hasError('filterNameAlreadyExist')) {
                     <kbq-hint [color]="'error'">{{ localeData.error }}</kbq-hint>
