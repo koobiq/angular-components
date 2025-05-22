@@ -29,6 +29,7 @@ import {
     RelativeShortDateTimeFormatterImpurePipe,
     RelativeShortDateTimeFormatterPipe
 } from './date/formatter.pipe';
+import { KbqDataSizePipe } from './filesize';
 import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './number/formatter';
 
 @NgModule({
@@ -58,7 +59,8 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         RangeShortDateFormatterImpurePipe,
         RangeDateTimeFormatterImpurePipe,
         RangeShortDateTimeFormatterImpurePipe,
-        RangeMiddleDateTimeFormatterImpurePipe
+        RangeMiddleDateTimeFormatterImpurePipe,
+        KbqDataSizePipe
     ],
     declarations: [
         KbqDecimalPipe,
@@ -94,7 +96,8 @@ import { KbqDecimalPipe, KbqRoundDecimalPipe, KbqTableNumberPipe } from './numbe
         RangeShortDateFormatterImpurePipe,
         RangeDateTimeFormatterImpurePipe,
         RangeShortDateTimeFormatterImpurePipe,
-        RangeMiddleDateTimeFormatterImpurePipe
+        RangeMiddleDateTimeFormatterImpurePipe,
+        KbqDataSizePipe
     ],
     providers: [{ provide: DateFormatter, deps: [DateAdapter, KBQ_DATE_LOCALE] }]
 })
@@ -102,4 +105,5 @@ export class KbqFormattersModule {}
 
 export * from './date/formatter';
 export * from './date/formatter.pipe';
+export * from './filesize/index';
 export * from './number/formatter';
