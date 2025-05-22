@@ -1,36 +1,35 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KbqThemeSelector, ThemeService } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
-import { map } from 'rxjs/operators';
 
 @Component({
     standalone: true,
     selector: 'dev-theme-toggle',
+    exportAs: 'devThemeToggle',
     imports: [KbqToggleModule, FormsModule],
     template: `
-        <kbq-toggle [ngModel]="isDarkTheme()" (ngModelChange)="theme.setTheme($event ? 1 : 0)">isDarkTheme</kbq-toggle>
+        <kbq-toggle [(ngModel)]="isDarkTheme">isDarkTheme</kbq-toggle>
     `,
-    styles: [
-        `
-            :host {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-        `
-
-    ],
+    styles: `
+        :host {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevThemeToggle {
-    protected readonly theme = inject(ThemeService);
+    private readonly theme = inject(ThemeService);
+    readonly isDarkTheme = model(this.theme.current.value?.className === KbqThemeSelector.Dark);
 
-    protected readonly isDarkTheme = toSignal(
-        this.theme.current.pipe(map((theme) => theme?.className === KbqThemeSelector.Dark)),
-        {
-            initialValue: false
-        }
-    );
+    constructor() {
+        toObservable(this.isDarkTheme)
+            .pipe(takeUntilDestroyed())
+            .subscribe((isDarkTheme) => {
+                this.theme.setTheme(isDarkTheme ? 1 : 0);
+            });
+    }
 }
