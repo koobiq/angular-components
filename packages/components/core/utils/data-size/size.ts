@@ -1,5 +1,17 @@
 import { KbqUnitSystem } from './config';
 
+/**
+ * Formats bytes into human-readable size (e.g. "1,23 MB").
+ * Uses specified precision and unit system (SI/IEC).
+ *
+ * @param value - size in bytes.
+ * @param precision - decimal places to round to (e.g., `2` → "1,02 KB").
+ * @param system - unit system  defining abbreviations and base scaling.
+ * @returns Object with the formatted size info.
+ *
+ * @example
+ * formatDataSize(1500, 2, 'SI'); // { value: "1,50", unit: "KB" }
+ */
 export const formatDataSize = (
     value: number,
     precision: number,
@@ -9,7 +21,7 @@ export const formatDataSize = (
     let volume: string;
 
     if (system.abbreviations[0] === unit) {
-        volume = result.toString();
+        volume = result.toString(); // No precision for bytes (e.g., "512 B")
     } else {
         volume = result.toFixed(precision).replace(/\./g, ',');
     }
