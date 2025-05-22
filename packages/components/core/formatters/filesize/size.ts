@@ -23,7 +23,7 @@ export const formatDataSize = (
     if (system.abbreviations[0] === unit) {
         volume = result.toString(); // No precision for bytes (e.g., "512 B")
     } else {
-        volume = result.toFixed(precision).replace(/\./g, ',');
+        volume = result.toFixed(precision);
     }
 
     return {
