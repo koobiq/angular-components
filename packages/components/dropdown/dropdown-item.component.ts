@@ -15,7 +15,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef } from '@koobiq/components/core';
+import { KBQ_TITLE_TEXT_REF, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { KBQ_DROPDOWN_PANEL, KbqDropdownPanel } from './dropdown.types';
@@ -72,6 +72,9 @@ export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, After
 
     /** Whether the dropdown item acts as a trigger for a nested dropdown. */
     isNested: boolean = false;
+
+    /** @docs-private */
+    protected readonly componentColors = KbqComponentColors;
 
     constructor(
         private elementRef: ElementRef<HTMLElement>,
