@@ -88,10 +88,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <div
             class="layout-padding-left-3xl layout-padding-right-3xl kbq-subheading layout-align-center-center layout-row example-filesize-formatter__result"
         >
-            {{
-                bytesControl.value
-                    | kbqDataSize: precisionControl.value : unitSystemNameControl.value || kbqMeasurementSystem.SI
-            }}
+            {{ bytesControl.value | kbqDataSize: precisionControl.value : unitSystemNameControl.value }}
         </div>
 
         <ng-template #tooltipText>
