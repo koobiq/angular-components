@@ -24,6 +24,7 @@ import * as i7 from '@angular/common';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
 import { Injector } from '@angular/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTitleTextRef } from '@koobiq/components/core';
 import { NgZone } from '@angular/core';
@@ -162,6 +163,7 @@ export interface KbqDropdownDefaultOptions {
 export class KbqDropdownItem implements KbqTitleTextRef, IFocusableOption, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef<HTMLElement>, focusMonitor: FocusMonitor, parentDropdownPanel?: KbqDropdownPanel | undefined);
     checkDisabled(event: Event): void;
+    protected readonly componentColors: typeof KbqComponentColors;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
