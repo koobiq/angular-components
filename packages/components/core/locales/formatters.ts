@@ -1,4 +1,4 @@
-import { KbqSizeUnitsConfig } from '../utils';
+import { KbqSizeUnitsConfig } from '../formatters';
 
 export const enUSFormattersData = {
     formatters: {
