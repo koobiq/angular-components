@@ -11,6 +11,7 @@
             [ file-upload-size-single-container-padding-horizontal,
             file-upload-size-single-container-border-width]
         );
+    min-height: var(--kbq-file-upload-single-min-height);
 
     border-radius: var(--kbq-file-upload-size-single-container-border-radius);
     border-width: var(--kbq-file-upload-size-single-container-border-width);
