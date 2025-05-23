@@ -104,6 +104,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         return this.visibleOptions.every((option) => option.selected);
     }
 
+    private selectionAllInProgress = false;
+
     /** @docs-private */
     ngOnInit(): void {
         this.filteredOptions = merge(
@@ -123,6 +125,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** @docs-private */
     onSelect(item: KbqSelectValue[]) {
+        if (this.selectionAllInProgress) return;
+
         this.data.value = item;
         this.filterBar?.onChangePipe.emit(this.data);
         this.stateChanges.next();
@@ -145,11 +149,19 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** @docs-private */
     toggleSelectionAll() {
+        this.selectionAllInProgress = true;
+
         if (this.allOptionsSelected) {
             this.visibleOptions.forEach((option) => option.deselect());
         } else {
             this.visibleOptions.forEach((option) => option.select());
         }
+
+        this.selectionAllInProgress = false;
+
+        this.data.value = [...this.select.value];
+        this.filterBar?.onChangePipe.emit(this.data);
+        this.stateChanges.next();
     }
 
     /** Comparator of selected options */

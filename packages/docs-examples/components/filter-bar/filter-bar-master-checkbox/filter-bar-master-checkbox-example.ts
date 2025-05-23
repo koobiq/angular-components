@@ -11,7 +11,12 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
         KbqFilterBarModule
     ],
     template: `
-        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates">
+        <kbq-filter-bar
+            [(filter)]="activeFilter"
+            [pipeTemplates]="pipeTemplates"
+            (filterChange)="onFilterChange($event)"
+            (onChangePipe)="onChangePipe($event)"
+        >
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -73,4 +78,12 @@ export class FilterBarMasterCheckboxExample {
             disabled: false
         }
     ];
+
+    onFilterChange($event) {
+        console.log('onFilterChange: ', $event);
+    }
+
+    onChangePipe($event) {
+        console.log('onChangePipe: ', $event);
+    }
 }
