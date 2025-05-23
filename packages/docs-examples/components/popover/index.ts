@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { PopoverArrowAndOffsetExample } from './popover-arrow-and-offset/popover-arrow-and-offset-example';
+import { PopoverArrowlessExample } from './popover-arrowless/popover-arrowless-example';
 import { PopoverCloseExample } from './popover-close/popover-close-example';
 import { PopoverCommonExample } from './popover-common/popover-common-example';
 import { PopoverContentExample } from './popover-content/popover-content-example';
@@ -11,6 +13,8 @@ import { PopoverScrollExample } from './popover-scroll/popover-scroll-example';
 import { PopoverWidthExample } from './popover-width/popover-width-example';
 
 export {
+    PopoverArrowAndOffsetExample,
+    PopoverArrowlessExample,
     PopoverCloseExample,
     PopoverCommonExample,
     PopoverContentExample,
@@ -24,6 +28,8 @@ export {
 };
 
 const EXAMPLES = [
+    PopoverArrowAndOffsetExample,
+    PopoverArrowlessExample,
     PopoverCommonExample,
     PopoverWidthExample,
     PopoverHeightExample,

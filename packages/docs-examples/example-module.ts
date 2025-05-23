@@ -2526,6 +2526,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "overflow-items-with-order-example.ts",
     "importPath": "components/overflow-items"
   },
+  "popover-arrow-and-offset": {
+    "packagePath": "components/popover/popover-arrow-and-offset",
+    "title": "Popover arrow and offset example",
+    "componentName": "PopoverArrowAndOffsetExample",
+    "files": [
+      "popover-arrow-and-offset-example.ts"
+    ],
+    "selector": "popover-arrow-and-offset-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-arrow-and-offset-example.ts",
+    "importPath": "components/popover"
+  },
+  "popover-arrowless": {
+    "packagePath": "components/popover/popover-arrowless",
+    "title": "Popover arrowless",
+    "componentName": "PopoverArrowlessExample",
+    "files": [
+      "popover-arrowless-example.ts"
+    ],
+    "selector": "popover-arrowless-example",
+    "additionalComponents": [],
+    "primaryFile": "popover-arrowless-example.ts",
+    "importPath": "components/popover"
+  },
   "popover-close": {
     "packagePath": "components/popover/popover-close",
     "title": "Popover close",
@@ -4629,6 +4653,10 @@ return import('@koobiq/docs-examples/components/number-formatter');
 return import('@koobiq/docs-examples/components/overflow-items');
   case 'overflow-items-with-order':
 return import('@koobiq/docs-examples/components/overflow-items');
+  case 'popover-arrow-and-offset':
+return import('@koobiq/docs-examples/components/popover');
+  case 'popover-arrowless':
+return import('@koobiq/docs-examples/components/popover');
   case 'popover-close':
 return import('@koobiq/docs-examples/components/popover');
   case 'popover-common':
