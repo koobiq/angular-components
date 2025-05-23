@@ -34,7 +34,7 @@ export interface KbqUnitSystem {
  * @docs-private
  */
 export interface SizeUnitsConfig {
-    defaultUnitSystem: KbqMeasurementSystemType;
+    defaultUnitSystem: string;
     defaultPrecision: number;
     unitSystems: {
         [MeasurementSystem.SI]: KbqUnitSystem;

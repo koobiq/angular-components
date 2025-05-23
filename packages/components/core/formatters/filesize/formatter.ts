@@ -5,11 +5,12 @@ import { KbqDecimalPipe } from '../number/formatter';
 import {
     KBQ_SIZE_UNITS_CONFIG,
     KBQ_SIZE_UNITS_DEFAULT_CONFIG,
+    KbqMeasurementSystem,
     KbqMeasurementSystemType,
     KbqSizeUnitsConfig,
     KbqUnitSystem
 } from './config';
-import { formatDataSize } from './size';
+import { getFormattedSizeParts } from './size';
 
 @Pipe({
     name: 'kbqDataSize',
@@ -35,19 +36,18 @@ export class KbqDataSizePipe implements PipeTransform {
     /** Transforms bytes into localized size string */
     transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string {
         const currentLocale = locale || this.localeService?.id || KBQ_DEFAULT_LOCALE_ID;
+        const selectedPrecision = precision ?? this.config.defaultPrecision;
 
-        const localizedUnitSystems: Record<KbqMeasurementSystemType, KbqUnitSystem> = locale
+        const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> = locale
             ? this.localeService?.locales[locale].sizeUnits.unitSystems
             : this.config.unitSystems;
 
-        const unitSystem = localizedUnitSystems[unitSystemName || this.config.defaultUnitSystem];
+        const unitSystem = resolvedUnitSystems[unitSystemName || this.config.defaultUnitSystem];
 
-        const selectedPrecision = precision ?? this.config.defaultPrecision;
-        const { value, unit } = formatDataSize(source, selectedPrecision, unitSystem);
+        const { value, unit } = getFormattedSizeParts(source, selectedPrecision, unitSystem);
+        const formattedValue = this.numberPipe?.transform(value, undefined, currentLocale) || value;
 
-        const formattedValue = this.numberPipe?.transform(+value, `1.${selectedPrecision}-3`, currentLocale) || value;
-
-        return `${formattedValue}\xa0${unit}`;
+        return formattedValue ? `${formattedValue}\xa0${unit}` : '';
     }
 
     private updateLocaleParams = () => {
