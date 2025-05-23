@@ -1,4 +1,4 @@
-import { InjectionToken } from '@angular/core';
+import { InjectionToken, Provider } from '@angular/core';
 import { enUSFormattersData } from '../../locales';
 
 /**
@@ -71,3 +71,9 @@ export const KBQ_SIZE_UNITS_DEFAULT_CONFIG: KbqSizeUnitsConfig = enUSFormattersD
  * Configuration for converting sizes in different unit systems.
  */
 export const KBQ_SIZE_UNITS_CONFIG = new InjectionToken<KbqSizeUnitsConfig>('KbqSizeUnitsConfig');
+
+/** Utility provider for `KBQ_SIZE_UNITS_CONFIG`. */
+export const kbqFilesizeFormatterConfigurationProvider = (configuration: Partial<KbqSizeUnitsConfig>): Provider => ({
+    provide: KBQ_SIZE_UNITS_CONFIG,
+    useValue: { ...KBQ_SIZE_UNITS_DEFAULT_CONFIG, ...configuration }
+});
