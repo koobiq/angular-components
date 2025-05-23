@@ -1824,6 +1824,9 @@ export const KbqDefaultThemes: KbqTheme[];
 // @public
 export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMatcher> | ErrorStateMatcher) => Provider;
 
+// @public
+export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<KbqSizeUnitsConfig>) => Provider;
+
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
     // (undocumented)
