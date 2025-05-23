@@ -2,10 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulatio
 import { FormsModule, ReactiveFormsModule, UntypedFormControl, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
     defaultCompareValues,
@@ -32,11 +29,8 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
         FormsModule,
         KbqTreeModule,
         KbqTreeSelectModule,
-        KbqSelectModule,
         KbqHighlightModule,
         KbqButtonModule,
-        KbqInputModule,
-        KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
         KbqPseudoCheckboxModule,
