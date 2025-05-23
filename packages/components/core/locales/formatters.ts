@@ -1,3 +1,5 @@
+import { KbqSizeUnitsConfig } from '../formatters';
+
 export const enUSFormattersData = {
     formatters: {
         number: {
@@ -32,7 +34,7 @@ export const enUSFormattersData = {
                 power: 10
             }
         }
-    }
+    } satisfies KbqSizeUnitsConfig
 };
 
 export const esLAFormattersData = {
@@ -60,12 +62,12 @@ export const esLAFormattersData = {
         defaultPrecision: 2,
         unitSystems: {
             SI: {
-                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
                 base: 10,
                 power: 3
             },
             IEC: {
-                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
                 base: 2,
                 power: 10
             }
@@ -98,12 +100,12 @@ export const faIRFormattersData = {
         defaultPrecision: 2,
         unitSystems: {
             SI: {
-                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
                 base: 10,
                 power: 3
             },
             IEC: {
-                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
                 base: 2,
                 power: 10
             }
@@ -135,12 +137,12 @@ export const ptBRFormattersData = {
         defaultPrecision: 2,
         unitSystems: {
             SI: {
-                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
                 base: 10,
                 power: 3
             },
             IEC: {
-                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
                 base: 2,
                 power: 10
             }
@@ -210,12 +212,12 @@ export const zhCNFormattersData = {
         defaultPrecision: 2,
         unitSystems: {
             SI: {
-                abbreviations: ['Б', 'КБ', 'МБ', 'ГБ', 'ТБ'],
+                abbreviations: ['B', 'KB', 'MB', 'GB', 'TB'],
                 base: 10,
                 power: 3
             },
             IEC: {
-                abbreviations: ['Б', 'КиБ', 'МиБ', 'ГиБ', 'ТиБ'],
+                abbreviations: ['B', 'KiB', 'MiB', 'GiB', 'TiB'],
                 base: 2,
                 power: 10
             }
