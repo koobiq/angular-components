@@ -651,8 +651,14 @@ export class FileValidators {
     static maxFileSize(maxSize: number): ValidatorFn;
 }
 
-// @public
+// @public @deprecated (undocumented)
 export const formatDataSize: (value: number, precision: number, system: KbqUnitSystem) => {
+    value: string;
+    unit: string;
+};
+
+// @public
+export const getFormattedSizeParts: (value: number, precision: number, system: KbqUnitSystem) => {
     value: string;
     unit: string;
 };
@@ -1600,6 +1606,9 @@ export const KBQ_DEFAULT_LOCALE_ID = "ru-RU";
 
 // @public
 export const KBQ_FORM_FIELD_REF: InjectionToken<KbqFormFieldRef>;
+
+// @public (undocumented)
+export const KBQ_INVALID_VALUE_ERROR = "Argument \"value\" must be a finite number!";
 
 // @public (undocumented)
 export const KBQ_LOCALE_DATA: InjectionToken<any>;
@@ -3210,7 +3219,7 @@ export interface SizeUnitsConfig {
     // (undocumented)
     defaultPrecision: number;
     // (undocumented)
-    defaultUnitSystem: KbqMeasurementSystemType;
+    defaultUnitSystem: string;
     // (undocumented)
     unitSystems: {
         [MeasurementSystem.SI]: KbqUnitSystem;
