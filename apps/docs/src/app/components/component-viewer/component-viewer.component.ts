@@ -255,11 +255,13 @@ export class DocsCdkApiComponent extends BaseOverviewComponent {
     ],
     selector: 'docs-component-examples',
     template: `
-        <docs-example-viewer
-            [documentUrl]="docItemUrl!"
-            (contentRendered)="scrollToSelectedContentSection()"
-            (contentRenderFailed)="showDocumentLostAlert()"
-        />
+        <div class="docs-component-viewer__article">
+            <docs-example-viewer
+                [documentUrl]="docItemUrl!"
+                (contentRendered)="scrollToSelectedContentSection()"
+                (contentRenderFailed)="showDocumentLostAlert()"
+            />
+        </div>
 
         <div class="docs-component-viewer__sticky-wrapper">
             <docs-anchors [headerSelectors]="'.docs-header-link'" />
