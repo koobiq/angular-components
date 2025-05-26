@@ -13,11 +13,28 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [ToggleExamplesModule],
     selector: 'dev-examples',
     template: `
-        <toggle-multiline-example />
-        <hr />
+        <toggle-overview-example />
+        <toggle-disabled-example />
+        <toggle-error-example />
         <toggle-indeterminate-example />
-        <hr />
         <toggle-loading-example />
+        <toggle-with-hint-example />
+        <toggle-multiline-example />
+        <toggle-label-left-example />
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            flex-wrap: wrap;
+        }
+
+        :host > * {
+            border-radius: var(--kbq-size-border-radius);
+            border: 1px solid var(--kbq-line-contrast-less);
+            margin-bottom: var(--kbq-size-l);
+            padding: var(--kbq-size-xl);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

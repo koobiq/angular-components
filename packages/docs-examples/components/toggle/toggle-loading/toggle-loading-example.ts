@@ -13,7 +13,7 @@ import { timer } from 'rxjs';
         <kbq-toggle [checked]="checked()" [loading]="loading" (change)="handleToggle($event)" />
     `,
     host: {
-        class: 'layout-row layout-align-center-center'
+        class: 'layout-margin-5xl layout-row layout-align-center-center'
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
