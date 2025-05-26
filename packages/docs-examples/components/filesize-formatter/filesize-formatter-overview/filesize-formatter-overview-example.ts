@@ -38,8 +38,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Size in bits</label>
-                    <kbq-form-field>
-                        <input [formControl]="passwordControl" kbqInput placeholder="Number MaxMin Step" />
+                    <kbq-form-field class="kbq-form__control">
+                        <input [min]="0" [formControl]="bytesControl" kbqNumberInput />
                         <kbq-cleaner />
                     </kbq-form-field>
                 </div>
@@ -137,7 +137,6 @@ export class FilesizeFormatterOverviewExample {
         nonNullable: true
     });
     protected readonly bytesControl = new FormControl(1024, { nonNullable: true });
-    protected readonly passwordControl = new FormControl();
 
     protected readonly kbqMeasurementSystem = KbqMeasurementSystem;
     protected readonly popUpPlacements = PopUpPlacements;
