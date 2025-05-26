@@ -11,7 +11,7 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectChange, KbqSelectModule } from '@koobiq/components/select';
+import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
 /**
@@ -31,27 +31,24 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     host: {
-        class: 'layout-gap-3xl example-filesize-formatter__container'
+        class: 'layout-gap-3xl example-filesize-formatter__container layout-margin-bottom-s'
     },
     template: `
         <form class="kbq-form-vertical" novalidate>
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Size in bits</label>
-                    <kbq-form-field class="kbq-form__control">
-                        <input [min]="0" [formControl]="bytesControl" kbqNumberInput />
-                        <kbq-stepper />
+                    <kbq-form-field>
+                        <input [formControl]="passwordControl" kbqInput placeholder="Number MaxMin Step" />
+                        <kbq-cleaner />
                     </kbq-form-field>
                 </div>
 
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Numbers behind decimal point</label>
                     <kbq-form-field class="kbq-form__control">
-                        <kbq-select
-                            [formControl]="precisionControl"
-                            (selectionChange)="onSelectionChange($event, precisionControl)"
-                        >
-                            <kbq-option [value]="2" [selectable]="false">Default (2)</kbq-option>
+                        <kbq-select [formControl]="precisionControl">
+                            <kbq-option [value]="2">Default (2)</kbq-option>
                             <kbq-option [value]="0">0</kbq-option>
                             <kbq-option [value]="1">1</kbq-option>
                             <kbq-option [value]="2">2</kbq-option>
@@ -72,11 +69,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                         ></i>
                     </label>
                     <kbq-form-field class="kbq-form__control">
-                        <kbq-select
-                            [formControl]="unitSystemNameControl"
-                            (selectionChange)="onSelectionChange($event, unitSystemNameControl)"
-                        >
-                            <kbq-option [value]="kbqMeasurementSystem.SI" [selectable]="false">Default (10)</kbq-option>
+                        <kbq-select [formControl]="unitSystemNameControl">
+                            <kbq-option [value]="kbqMeasurementSystem.SI">Default (10)</kbq-option>
                             <kbq-option [value]="kbqMeasurementSystem.IEC">2</kbq-option>
                             <kbq-option [value]="kbqMeasurementSystem.SI">10</kbq-option>
                         </kbq-select>
@@ -94,14 +88,18 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <ng-template #tooltipText>
             <div>Base 10</div>
             <div>
-                1&nbsp;KB = 10
-                <sup>3</sup>
+                <span>
+                    <span>1&nbsp;KB = 10</span>
+                    <sup>3</sup>
+                </span>
                 bytes = 1000&nbsp;bytes (SI standard)
             </div>
             <div>Base 2</div>
             <div>
-                1&nbsp;KiB = 2
-                <sup>10</sup>
+                <span>
+                    <span>1&nbsp;KiB = 2</span>
+                    <sup>10</sup>
+                </span>
                 bytes = 1024&nbsp;bytes (IEC)
             </div>
         </ng-template>
@@ -139,17 +137,12 @@ export class FilesizeFormatterOverviewExample {
         nonNullable: true
     });
     protected readonly bytesControl = new FormControl(1024, { nonNullable: true });
+    protected readonly passwordControl = new FormControl();
 
     protected readonly kbqMeasurementSystem = KbqMeasurementSystem;
     protected readonly popUpPlacements = PopUpPlacements;
 
     constructor() {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(() => this.cdr.markForCheck());
-    }
-
-    onSelectionChange({ value, source }: KbqSelectChange, control: FormControl): void {
-        if (value === control.defaultValue) {
-            source.options.first.select();
-        }
     }
 }

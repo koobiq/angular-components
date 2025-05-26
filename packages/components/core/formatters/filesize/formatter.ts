@@ -23,6 +23,7 @@ export class KbqDataSizePipe implements PipeTransform {
 
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
     private readonly numberPipe = inject(KbqDecimalPipe, { optional: true });
+    private readonly nonBreakingSpace = '\u00a0';
     private config: KbqSizeUnitsConfig;
 
     constructor() {
@@ -47,7 +48,7 @@ export class KbqDataSizePipe implements PipeTransform {
         const { value, unit } = getFormattedSizeParts(source, selectedPrecision, unitSystem);
         const formattedValue = this.numberPipe?.transform(value, undefined, currentLocale) || value;
 
-        return formattedValue ? `${formattedValue}\xa0${unit}` : '';
+        return formattedValue ? `${formattedValue}${this.nonBreakingSpace}${unit}` : '';
     }
 
     private updateLocaleParams = () => {
