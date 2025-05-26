@@ -23,6 +23,8 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
     template: `
         <popover-common-example />
         <popover-hover-example />
+        <popover-arrowless-example />
+        <popover-arrow-and-offset-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
