@@ -31,7 +31,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     host: {
-        class: 'layout-gap-3xl example-filesize-formatter__container layout-margin-bottom-s'
+        class: 'example-filesize-formatter__container layout-gap-3xl layout-margin-bottom-s'
     },
     template: `
         <form class="kbq-form-vertical" novalidate>
@@ -40,7 +40,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <label class="kbq-form__label">Size in bits</label>
                     <kbq-form-field class="kbq-form__control">
                         <input [min]="0" [formControl]="bytesControl" kbqNumberInput />
-                        <kbq-cleaner />
+                        <kbq-stepper />
                     </kbq-form-field>
                 </div>
 
