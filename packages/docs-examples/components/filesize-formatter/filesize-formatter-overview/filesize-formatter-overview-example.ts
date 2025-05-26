@@ -127,6 +127,12 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 max-width: unset;
             }
         }
+
+        @media (width > 768px) {
+            .kbq-form__control {
+                width: 240px;
+            }
+        }
     `
 })
 export class FilesizeFormatterOverviewExample {
