@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
 
@@ -6,6 +6,7 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
  * @title Splitter dynamic data
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'splitter-dynamic-data-example',
     imports: [

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -7,6 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Button toggle alignment
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'button-toggle-alignment-overview-example',
     templateUrl: 'button-toggle-alignment-overview-example.html',

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import {
@@ -156,6 +156,7 @@ abstract class TreeParams {
  * @title Tree descendants subcategories
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-descendants-subcategories-example',
     imports: [

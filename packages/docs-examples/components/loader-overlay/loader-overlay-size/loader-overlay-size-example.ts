@@ -1,4 +1,4 @@
-import { Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqDefaultSizes } from '@koobiq/components/core';
@@ -8,6 +8,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  * @title Loader-overlay size
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'loader-overlay-size-example',
     imports: [KbqLoaderOverlayModule, KbqButtonToggleModule, FormsModule],

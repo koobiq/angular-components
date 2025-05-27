@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
  * @title Link visited
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'link-visited-example',
     imports: [KbqLinkModule],

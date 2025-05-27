@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -108,6 +108,7 @@ export const DATA_OBJECT = {
  * @title Tree-select child selection
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-select-child-selection-overview-example',
     imports: [KbqFormFieldModule, ReactiveFormsModule, KbqTreeSelectModule, KbqTreeModule, KbqIconModule],

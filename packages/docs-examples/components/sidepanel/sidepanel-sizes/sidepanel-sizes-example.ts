@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
     KbqSidepanelModule,
@@ -11,6 +11,7 @@ import {
  * @title Sidepanel sizes
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'sidepanel-sizes-example',
     templateUrl: 'sidepanel-sizes-example.html',

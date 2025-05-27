@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
@@ -10,6 +10,7 @@ import { DateTime } from 'luxon';
  * @title Datepicker inactive
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'datepicker-inactive-example',
     imports: [
