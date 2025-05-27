@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqTableModule } from '@koobiq/components/table';
@@ -7,6 +7,7 @@ import { KbqTableModule } from '@koobiq/components/table';
  * @title Badge table
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'badge-table-example',
     templateUrl: 'badge-table-example.html',

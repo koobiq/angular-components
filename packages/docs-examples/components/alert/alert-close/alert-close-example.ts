@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -9,6 +9,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Alert close
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'alert-close-example',
     animations: [

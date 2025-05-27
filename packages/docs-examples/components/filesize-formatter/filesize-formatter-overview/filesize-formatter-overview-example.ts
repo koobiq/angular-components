@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -19,6 +19,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Filesize formatter
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'filesize-formatter-overview-example',
     imports: [

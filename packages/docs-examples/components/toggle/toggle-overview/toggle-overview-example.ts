@@ -5,6 +5,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'toggle-overview-example',
     imports: [KbqToggleModule],

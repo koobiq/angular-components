@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -9,6 +9,7 @@ import { take } from 'rxjs/operators';
  * @title Sidepanel normal mode
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'sidepanel-normal-mode-example',
     templateUrl: 'sidepanel-normal-mode-example.html',

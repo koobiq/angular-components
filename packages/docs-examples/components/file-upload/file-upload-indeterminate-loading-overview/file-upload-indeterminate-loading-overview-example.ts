@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { timer } from 'rxjs';
@@ -8,6 +8,7 @@ import { take } from 'rxjs/operators';
  * @title File-upload indeterminate loading
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'file-upload-indeterminate-loading-overview-example',
     imports: [

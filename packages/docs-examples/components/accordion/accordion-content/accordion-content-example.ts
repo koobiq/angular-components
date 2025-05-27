@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 
@@ -6,6 +6,7 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
  * @title Accordion content
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'accordion-content-example',
     templateUrl: 'accordion-content-example.html',

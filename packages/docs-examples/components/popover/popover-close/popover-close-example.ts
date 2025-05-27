@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -11,6 +11,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover close
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'popover-close-example',
     templateUrl: 'popover-close-example.html',

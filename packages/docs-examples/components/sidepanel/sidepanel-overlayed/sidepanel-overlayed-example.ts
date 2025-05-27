@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -8,6 +8,7 @@ import { KbqSidepanelModule, KbqSidepanelPosition, KbqSidepanelService } from '@
  * @title Sidepanel overlayed
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'sidepanel-overlayed-example',
     imports: [KbqFormFieldModule, KbqSelectModule, KbqButtonModule, KbqSidepanelModule],

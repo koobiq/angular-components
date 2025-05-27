@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -102,6 +102,7 @@ export const DATA_OBJECT = {
  * @title Tree-select footer
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-select-footer-overview-example',
     imports: [KbqFormFieldModule, KbqTreeSelectModule, FormsModule, KbqTreeModule, KbqIconModule, KbqLinkModule],

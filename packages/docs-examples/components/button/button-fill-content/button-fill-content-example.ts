@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 
@@ -6,6 +6,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
  * @title Button fill content
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'button-fill-content-example',
     styleUrls: ['button-fill-content-example.css'],

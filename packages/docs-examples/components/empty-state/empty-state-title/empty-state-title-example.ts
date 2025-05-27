@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 
 /**
  * @title Empty-state title
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'empty-state-title-example',
     imports: [

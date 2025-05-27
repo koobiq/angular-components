@@ -1,5 +1,5 @@
 import { NgStyle } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -12,6 +12,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover content
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'popover-content-example',
     templateUrl: 'popover-content-example.html',

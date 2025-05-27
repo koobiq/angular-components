@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpSizes } from '@koobiq/components/core';
 import { KbqPopoverModule } from '@koobiq/components/popover';
@@ -7,6 +7,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover width
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'popover-width-example',
     templateUrl: 'popover-width-example.html',

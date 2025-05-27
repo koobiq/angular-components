@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqRadioModule } from '@koobiq/components/radio';
 
@@ -6,6 +6,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
  * @title Layout-flex alignment
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'layout-flex-alignment-example',
     styleUrls: ['layout-flex-alignment-example.css'],

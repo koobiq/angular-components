@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     FlatTreeControl,
@@ -189,6 +189,7 @@ abstract class TreeParams {
  * @title Tree access rights
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-access-rights-example',
     imports: [

@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
 
 /**
  * @title Splitter fixed
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'splitter-fixed-example',
     imports: [

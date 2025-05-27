@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import {
     AbstractControl,
     FormControl,
@@ -49,6 +49,7 @@ const IP_PATTERN =
  * @title Validation composite
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'validation-composite-example',
     templateUrl: 'validation-composite-example.html',

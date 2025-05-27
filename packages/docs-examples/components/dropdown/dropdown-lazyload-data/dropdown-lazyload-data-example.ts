@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -10,6 +10,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Dropdown lazy load data
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'dropdown-lazyload-data-example',
     imports: [

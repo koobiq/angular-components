@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { KbqFormsModule } from '@koobiq/components/core';
@@ -12,6 +12,7 @@ import { DateTime } from 'luxon';
  * @title Datepicker and timepicker
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'datepicker-and-timepicker-example',
     imports: [

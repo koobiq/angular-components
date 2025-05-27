@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
 
@@ -6,6 +6,7 @@ import { KbqProgressSpinnerModule } from '@koobiq/components/progress-spinner';
  * @title Progress spinner indeterminate
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'progress-spinner-indeterminate-example',
     imports: [
