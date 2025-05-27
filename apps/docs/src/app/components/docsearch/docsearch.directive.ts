@@ -2,9 +2,9 @@ import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
 import { isMac } from '@koobiq/components/core';
-import { DocsLocaleState, isRuLocale } from '../../services/locale';
+import { docsIsRuLocale, DocsLocaleState } from '../../services/locale';
 
-type _DocSearchProps = Parameters<typeof docsearch>[0];
+type DocsDocsearchProps = Parameters<typeof docsearch>[0];
 
 const SELECTOR = 'docs-docsearch';
 
@@ -12,7 +12,7 @@ const HOST = 'koobiq.io';
 
 const PROTOCOL = 'https:';
 
-const CONFIG: _DocSearchProps = {
+const CONFIG: DocsDocsearchProps = {
     container: SELECTOR,
     appId: '7N2W9AKEM6',
     apiKey: '0f0df042e7b349df5cb381e72f268b4d',
@@ -30,7 +30,7 @@ const CONFIG: _DocSearchProps = {
         class: 'layout-align-center-center'
     }
 })
-export class DocsearchDirective extends DocsLocaleState {
+export class DocsDocsearchDirective extends DocsLocaleState {
     /** should transform item URL to work docsearch on DEV stand */
     private readonly shouldTransformItemURL = location.host !== HOST || location.protocol !== PROTOCOL;
 
@@ -46,7 +46,7 @@ export class DocsearchDirective extends DocsLocaleState {
 
     private initDocsearch(): void {
         this.docsLocaleService.changes.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((locale) => {
-            const _isRuLocale = isRuLocale(locale);
+            const _isRuLocale = docsIsRuLocale(locale);
 
             docsearch({
                 ...CONFIG,
@@ -61,7 +61,7 @@ export class DocsearchDirective extends DocsLocaleState {
         });
     }
 
-    private readonly transformItems: _DocSearchProps['transformItems'] = (items) => {
+    private readonly transformItems: DocsDocsearchProps['transformItems'] = (items) => {
         if (this.shouldTransformItemURL) {
             items = items.map((item) => {
                 item.url = item.url.replace(HOST, location.host);
@@ -84,7 +84,7 @@ export class DocsearchDirective extends DocsLocaleState {
         });
     };
 
-    private readonly translations = (isRuLocale: boolean): _DocSearchProps['translations'] => {
+    private readonly translations = (isRuLocale: boolean): DocsDocsearchProps['translations'] => {
         let buttonText = isRuLocale ? 'Поиск' : 'Search';
 
         buttonText += isMac() ? ' ⌘K' : ' Ctrl+K';

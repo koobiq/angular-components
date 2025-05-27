@@ -4,8 +4,8 @@ import { EXAMPLE_COMPONENTS, ExampleData } from '@koobiq/docs-examples';
 import { default as StackBlitzSDK } from '@stackblitz/sdk';
 import { Observable, firstValueFrom } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
-import { koobiqVersion } from '../../version';
-import { normalizePath } from './normalize-path';
+import { docsKoobiqVersion } from '../../version';
+import { docsNormalizePath } from './normalize-path';
 
 const COPYRIGHT = `Use of this source code is governed by an MIT-style license.`;
 
@@ -18,7 +18,7 @@ const DOCS_CONTENT_PATH = 'docs-content/examples-source';
 const TEMPLATE_PATH = 'assets/stackblitz/';
 const PROJECT_TEMPLATE = 'node';
 
-export const TEMPLATE_FILES = [
+export const DOCS_TEMPLATE_FILES = [
     '.editorconfig',
     '.gitignore',
     '.stackblitzrc',
@@ -37,7 +37,7 @@ type FileDictionary = { [path: string]: string };
  * Stackblitz writer, write example files to stackblitz
  */
 @Injectable({ providedIn: 'root' })
-export class StackblitzWriter {
+export class DocsStackblitzWriter {
     private fileCache = new Map<string, Observable<string>>();
 
     constructor(
@@ -73,7 +73,7 @@ export class StackblitzWriter {
      */
     private replaceExamplePlaceholders(data: ExampleData, fileName: string, fileContent: string): string {
         if (fileName === 'src/index.html' || fileName === 'package.json') {
-            fileContent = fileContent.replace(/\${version}/g, `^${koobiqVersion}`);
+            fileContent = fileContent.replace(/\${version}/g, `^${docsKoobiqVersion}`);
         }
 
         if (fileName === 'src/index.html') {
@@ -83,7 +83,7 @@ export class StackblitzWriter {
             fileContent = fileContent
                 .replace(/koobiq-docs-example/g, data.selectorName)
                 .replace(/{{title}}/g, data.description)
-                .replace(/{{version}}/g, koobiqVersion);
+                .replace(/{{version}}/g, docsKoobiqVersion);
         } else if (fileName === '.stackblitzrc') {
             fileContent = fileContent.replace(/\${startCommand}/, 'npm start');
         } else if (fileName === 'src/main.ts') {
@@ -126,7 +126,7 @@ export class StackblitzWriter {
         const liveExample = EXAMPLE_COMPONENTS[exampleId];
         const exampleBaseContentPath = `${DOCS_CONTENT_PATH}/${liveExample.importPath}/${exampleId}/`;
 
-        for (const relativeFilePath of TEMPLATE_FILES) {
+        for (const relativeFilePath of DOCS_TEMPLATE_FILES) {
             tasks.push(
                 this.loadFile(TEMPLATE_PATH + relativeFilePath)
                     // Replace example placeholders in the template files.
@@ -139,7 +139,7 @@ export class StackblitzWriter {
             // Note: Since we join with paths from the example data, we normalize
             // the final target path. This is necessary because StackBlitz does
             // not and paths like `./bla.ts` would result in a directory called `.`.
-            const targetPath = normalizePath(`src/example/${relativeFilePath}`);
+            const targetPath = docsNormalizePath(`src/example/${relativeFilePath}`);
 
             tasks.push(
                 this.loadFile(`${exampleBaseContentPath}${relativeFilePath}`)

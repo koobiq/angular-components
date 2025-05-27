@@ -6,7 +6,7 @@ import { KbqDividerModule } from '@koobiq/components/divider';
 import { map, Observable } from 'rxjs';
 import { DocsNavbarComponent } from './components/navbar/navbar.component';
 import { DocsSidenavComponent } from './components/sidenav/sidenav.component';
-import { DocsNavbarState, DocStates } from './services/doc-states';
+import { DocsDocStates, DocsNavbarState } from './services/doc-states';
 
 @Component({
     standalone: true,
@@ -56,9 +56,9 @@ import { DocsNavbarState, DocStates } from './services/doc-states';
     ]
 })
 export class DocsAppComponent {
-    readonly docStates = inject(DocStates);
+    readonly docStates = inject(DocsDocStates);
 
     readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
-        map((state) => state === DocsNavbarState.opened)
+        map((state) => state === DocsNavbarState.Opened)
     );
 }

@@ -1,12 +1,12 @@
 import { Directive, ElementRef, inject } from '@angular/core';
-import { DocStates } from '../../services/doc-states';
+import { DocsDocStates } from '../../services/doc-states';
 
 @Directive({
     standalone: true,
     selector: '[docsRegisterHeader]'
 })
 export class DocsRegisterHeaderDirective {
-    private readonly docStates = inject(DocStates);
+    private readonly docStates = inject(DocsDocStates);
     private readonly elementRef = inject(ElementRef);
 
     constructor() {

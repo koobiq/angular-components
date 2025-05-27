@@ -23,7 +23,7 @@ import { KbqModalModule, KbqModalRef } from '@koobiq/components/modal';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToastService } from '@koobiq/components/toast';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { IconItem } from 'src/app/services/icon-items';
+import { DocsIconItem } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
 import { DocsCodeSnippetDirective } from '../../code-snippet/code-snippet';
 
@@ -52,9 +52,9 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
     @ViewChild('iconPreview') iconPreview: KbqIcon;
     @ViewChild('wordExample') wordExample: ElementRef;
 
-    @Input() iconItem: IconItem;
+    @Input() iconItem: DocsIconItem;
 
-    SVGLink: string;
+    svgLink: string;
 
     readonly themePalettes = [
         KbqComponentColors.Theme,
@@ -81,7 +81,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
     });
 
     ngAfterViewInit(): void {
-        this.SVGLink = `assets/SVGIcons/${this.iconItem.id}.svg`;
+        this.svgLink = `assets/SVGIcons/${this.iconItem.id}.svg`;
     }
 
     onTagSelect(tag: string): void {
@@ -89,7 +89,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
     }
 
     copySVG(): void {
-        this.httpClient.get(this.SVGLink, { responseType: 'text' }).subscribe((data) => {
+        this.httpClient.get(this.svgLink, { responseType: 'text' }).subscribe((data) => {
             this.clipboard.copy(data);
             this.showSuccessfullyCopiedToast();
         });

@@ -24,4 +24,4 @@ import { DocsLocaleState } from 'src/app/services/locale';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class PageNotFoundComponent extends DocsLocaleState {}
+export class DocsPageNotFoundComponent extends DocsLocaleState {}

@@ -3,12 +3,12 @@ import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 export enum DocsNavbarState {
-    opened,
-    closed
+    Opened,
+    Closed
 }
 
 @Injectable({ providedIn: 'root' })
-export class DocStates {
+export class DocsDocStates {
     readonly viewerTopOverflown = new BehaviorSubject<boolean>(false);
     readonly navbarTopOverflown = new BehaviorSubject<boolean>(false);
 
@@ -22,18 +22,18 @@ export class DocStates {
         return this._navbarMenu;
     }
 
-    private _navbarMenu = new BehaviorSubject<DocsNavbarState>(DocsNavbarState.closed);
+    private _navbarMenu = new BehaviorSubject<DocsNavbarState>(DocsNavbarState.Closed);
 
     openNavbarMenu() {
-        this._navbarMenu.next(DocsNavbarState.opened);
+        this._navbarMenu.next(DocsNavbarState.Opened);
     }
 
     closeNavbarMenu() {
-        this._navbarMenu.next(DocsNavbarState.closed);
+        this._navbarMenu.next(DocsNavbarState.Closed);
     }
 
     toggleNavbarMenu() {
-        this._navbarMenu.value === DocsNavbarState.closed ? this.openNavbarMenu() : this.closeNavbarMenu();
+        this._navbarMenu.value === DocsNavbarState.Closed ? this.openNavbarMenu() : this.closeNavbarMenu();
     }
 
     scrollUp() {

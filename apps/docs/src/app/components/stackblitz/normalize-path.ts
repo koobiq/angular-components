@@ -6,7 +6,7 @@ import normalize from 'path-normalize';
  *    - Normalizing from backslashes to Posix forward slashes.
  *    - Removing a leading `./` if present.
  */
-export function normalizePath(input: string): string {
+export function docsNormalizePath(input: string): string {
     input = normalize(input.replace(/\\/g, '/'));
 
     if (input.startsWith('./')) {

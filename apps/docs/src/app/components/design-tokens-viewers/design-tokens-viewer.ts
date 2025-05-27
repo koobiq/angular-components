@@ -40,7 +40,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DesignTokensViewer extends DocsLocaleState {
+export class DocsDesignTokensViewer extends DocsLocaleState {
     readonly links: Array<{ title: Record<DocsLocale, string>; value: string }> = [
         {
             title: {

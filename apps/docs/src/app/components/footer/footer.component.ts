@@ -8,8 +8,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { distinctUntilKeyChanged } from 'rxjs';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { koobiqVersion } from '../../version';
-import { NavbarProperty } from '../navbar/navbar-property';
+import { docsKoobiqVersion } from '../../version';
+import { DocsNavbarProperty } from '../navbar/navbar-property';
 import { DocsVersionPickerDirective } from '../version-picker/version-picker.directive';
 
 @Component({
@@ -33,9 +33,9 @@ export class DocsFooterComponent extends DocsLocaleState {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE);
     private readonly location = inject(Location);
 
-    readonly version = koobiqVersion;
-    readonly examplesLanguageSwitch: NavbarProperty;
-    readonly docsLanguageSwitch: NavbarProperty;
+    readonly version = docsKoobiqVersion;
+    readonly examplesLanguageSwitch: DocsNavbarProperty;
+    readonly docsLanguageSwitch: DocsNavbarProperty;
 
     get selectedLanguages(): string {
         if (this.docsLanguageSwitch.currentValue.value === this.examplesLanguageSwitch.currentValue.value) {
@@ -48,7 +48,7 @@ export class DocsFooterComponent extends DocsLocaleState {
     constructor() {
         super();
 
-        this.docsLanguageSwitch = new NavbarProperty({
+        this.docsLanguageSwitch = new DocsNavbarProperty({
             property: 'docs_language',
             data: [
                 {
@@ -65,7 +65,7 @@ export class DocsFooterComponent extends DocsLocaleState {
             updateSelected: true
         });
 
-        this.examplesLanguageSwitch = new NavbarProperty({
+        this.examplesLanguageSwitch = new DocsNavbarProperty({
             property: 'docs_examples-language',
             data: this.localeService.locales.items
                 // exclude fa-IR (DS-2219)

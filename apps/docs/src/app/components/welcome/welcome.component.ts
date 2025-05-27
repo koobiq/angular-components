@@ -7,9 +7,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
-import { DocStates } from 'src/app/services/doc-states';
+import { DocsDocStates } from 'src/app/services/doc-states';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocCategory, DocumentationItems } from '../../services/documentation-items';
+import { DocsDocCategory, DocsDocumentationItems } from '../../services/documentation-items';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -30,12 +30,12 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     encapsulation: ViewEncapsulation.None
 })
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
-    docCategories: DocCategory[];
+    docCategories: DocsDocCategory[];
     currentTheme$: Observable<string>;
 
     private readonly elementRef = inject(ElementRef);
-    private readonly docStates = inject(DocStates);
-    private readonly docItems = inject(DocumentationItems);
+    private readonly docStates = inject(DocsDocStates);
+    private readonly docItems = inject(DocsDocumentationItems);
 
     constructor(private readonly themeService: ThemeService) {
         super();

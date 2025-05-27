@@ -15,8 +15,8 @@ import {
 } from '@koobiq/components/tree';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocStates } from '../../services/doc-states';
-import { DocCategory, DOCS_ITEM_SECTIONS, DocumentationItems } from '../../services/documentation-items';
+import { DocsDocStates } from '../../services/doc-states';
+import { DOCS_ITEM_SECTIONS, DocsDocCategory, DocsDocumentationItems } from '../../services/documentation-items';
 import { DocsFooterComponent } from '../footer/footer.component';
 
 enum TreeNodeType {
@@ -45,7 +45,7 @@ class TreeFlatNode {
     isNew: boolean;
 }
 
-function buildTree(categories: DocCategory[]): TreeNode[] {
+function buildTree(categories: DocsDocCategory[]): TreeNode[] {
     const data: TreeNode[] = [];
 
     categories.forEach(({ id, name, items }) => {
@@ -87,8 +87,8 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
     @ViewChild(KbqScrollbar) readonly sidenavMenuContainer: KbqScrollbar;
     @ViewChild(KbqTreeSelection) readonly tree: KbqTreeSelection;
 
-    protected readonly docStates = inject(DocStates);
-    private readonly docItems = inject(DocumentationItems);
+    protected readonly docStates = inject(DocsDocStates);
+    private readonly docItems = inject(DocsDocumentationItems);
     private readonly router = inject(Router);
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly location = inject(Location);

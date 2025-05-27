@@ -1,6 +1,6 @@
 import { Observable, ReplaySubject } from 'rxjs';
 
-export interface NavbarPropertyParameters {
+export interface DocsNavbarPropertyParameters {
     // name of local storage property
     property: string;
     // data array for dropdown
@@ -9,12 +9,12 @@ export interface NavbarPropertyParameters {
     updateSelected?: boolean;
 }
 
-export interface NavbarPropertyChange {
+export interface DocsNavbarPropertyChange {
     name: string;
     value: any;
 }
 
-export class NavbarProperty {
+export class DocsNavbarProperty {
     get data(): any[] {
         return this._data;
     }
@@ -27,13 +27,13 @@ export class NavbarProperty {
 
     private _currentValue!: any;
 
-    get changes(): Observable<NavbarPropertyChange> {
+    get changes(): Observable<DocsNavbarPropertyChange> {
         return this._changes;
     }
 
-    private _changes = new ReplaySubject<NavbarPropertyChange>(1);
+    private _changes = new ReplaySubject<DocsNavbarPropertyChange>(1);
 
-    constructor(readonly parameters: NavbarPropertyParameters) {
+    constructor(readonly parameters: DocsNavbarPropertyParameters) {
         this._data = parameters.data;
 
         const index =

@@ -12,7 +12,7 @@ const expiresAt = (expiresAt: string) => {
     return createdDate.diffNow('days').days > 0;
 };
 
-export type DocItem = {
+export type DocsDocItem = {
     id: string;
     name: Record<DocsLocale, string>;
     hasApi: boolean;
@@ -28,10 +28,10 @@ export type DocItem = {
     isNew?: boolean;
 };
 
-export type DocCategory = {
+export type DocsDocCategory = {
     id: string;
     name: Record<DocsLocale, string>;
-    items: DocItem[];
+    items: DocsDocItem[];
     isPreviewed?: boolean;
 };
 
@@ -47,7 +47,7 @@ const OTHER = 'other';
 const ICONS = 'icons';
 const CDK = 'cdk';
 
-const DOCS: { [key: string]: DocCategory[] } = {
+const DOCS: { [key: string]: DocsDocCategory[] } = {
     [MAIN]: [
         {
             id: 'main',
@@ -857,15 +857,18 @@ updatePackageName(DOCS[OTHER], OTHER);
 updatePackageName(DOCS[ICONS], ICONS);
 updatePackageName(DOCS[CDK], CDK);
 
-const ALL_MAIN = DOCS[MAIN].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+const ALL_MAIN = DOCS[MAIN].reduce((result, category) => result.concat(category.items), [] as DocsDocItem[]);
 
-const ALL_COMPONENTS = DOCS[COMPONENTS].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+const ALL_COMPONENTS = DOCS[COMPONENTS].reduce(
+    (result, category) => result.concat(category.items),
+    [] as DocsDocItem[]
+);
 
-const ALL_OTHER = DOCS[OTHER].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+const ALL_OTHER = DOCS[OTHER].reduce((result, category) => result.concat(category.items), [] as DocsDocItem[]);
 
-const ALL_ICONS = DOCS[ICONS].reduce((result, category) => result.concat(category.items), [] as DocItem[]);
+const ALL_ICONS = DOCS[ICONS].reduce((result, category) => result.concat(category.items), [] as DocsDocItem[]);
 
-const ALL_CDK = DOCS[CDK].reduce((result, cdk) => result.concat(cdk.items), [] as DocItem[]);
+const ALL_CDK = DOCS[CDK].reduce((result, cdk) => result.concat(cdk.items), [] as DocsDocItem[]);
 
 const ALL_DOCS = [
     ...ALL_MAIN,
@@ -884,8 +887,8 @@ const ALL_CATEGORIES = [
 ];
 
 @Injectable({ providedIn: 'root' })
-export class DocumentationItems {
-    getCategories(section?: string): DocCategory[] {
+export class DocsDocumentationItems {
+    getCategories(section?: string): DocsDocCategory[] {
         if (section) {
             return DOCS[section];
         }
@@ -893,7 +896,7 @@ export class DocumentationItems {
         return ALL_CATEGORIES;
     }
 
-    getItems(section: string): DocItem[] {
+    getItems(section: string): DocsDocItem[] {
         switch (section) {
             case COMPONENTS: {
                 return ALL_COMPONENTS;
@@ -907,7 +910,7 @@ export class DocumentationItems {
         }
     }
 
-    getItemById(id: string, section: string): DocItem | undefined {
+    getItemById(id: string, section: string): DocsDocItem | undefined {
         if (!id) {
             return;
         }
@@ -915,7 +918,7 @@ export class DocumentationItems {
         return ALL_DOCS.find((doc) => doc.id === id && doc.packageName === section);
     }
 
-    getCategoryById(id: string): DocCategory | undefined {
+    getCategoryById(id: string): DocsDocCategory | undefined {
         return ALL_CATEGORIES.find((c) => c.id === id);
     }
 }

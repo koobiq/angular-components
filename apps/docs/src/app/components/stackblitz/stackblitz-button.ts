@@ -4,12 +4,12 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLink, KbqLinkModule } from '@koobiq/components/link';
 import { ExampleData } from '@koobiq/docs-examples';
-import { StackblitzWriter } from './stackblitz-writer';
+import { DocsStackblitzWriter } from './stackblitz-writer';
 
 @Component({
     standalone: true,
     imports: [KbqButtonModule, KbqIconModule, KbqLinkModule],
-    providers: [StackblitzWriter],
+    providers: [DocsStackblitzWriter],
     selector: 'docs-stackblitz-button',
     template: `
         <span class="kbq-link__text">StackBlitz</span>
@@ -46,7 +46,7 @@ export class DocsStackblitzButtonComponent extends KbqLink {
         elementRef: ElementRef,
         focusMonitor: FocusMonitor,
         changeDetector: ChangeDetectorRef,
-        private stackBlitzWriter: StackblitzWriter,
+        private stackBlitzWriter: DocsStackblitzWriter,
         private ngZone: NgZone
     ) {
         super(elementRef, focusMonitor, changeDetector);
