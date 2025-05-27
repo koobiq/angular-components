@@ -13,6 +13,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
+    kbqBuildTree,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -24,6 +25,25 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
 import { DevLocaleSelector } from '../locale-selector';
+
+const DEV_DATA_OBJECT = {
+    'Без ролей': 'value 0',
+    'Management and Configuration': {
+        Администратор: 'value 1',
+        Оператор: 'value 2',
+        Пользователь: 'value 3'
+    },
+    'MP 10': {
+        Администратор: 'value 4',
+        Оператор: 'value 5',
+        Пользователь: 'value 6'
+    },
+    'Knowledge Base': {
+        Администратор: 'value 7',
+        Оператор: 'value 8',
+        Пользователь: 'value 9'
+    }
+};
 
 @Component({
     standalone: true,
@@ -104,7 +124,7 @@ export class DevApp implements AfterViewInit {
 
     filters: KbqFilter[] = [
         {
-            name: 'Select',
+            name: 'select',
             readonly: false,
             disabled: false,
             changed: false,
@@ -151,6 +171,72 @@ export class DevApp implements AfterViewInit {
                     name: 'disabled',
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: true
+                }
+            ]
+        },
+        {
+            name: 'tree-select',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'required',
+                    id: 'TreeSelect',
+                    // required - не может быть пустым, всегда есть дефолтное значение
+                    value: { name: 'Не определен', id: '1' },
+                    type: KbqPipeTypes.TreeSelect,
+
+                    search: true,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'empty',
+                    id: 'TreeSelect',
+                    type: KbqPipeTypes.TreeSelect,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    id: 'TreeSelect',
+                    value: { name: 'Не определен', id: '1' },
+                    type: KbqPipeTypes.TreeSelect,
+
+                    search: true,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'removable',
+                    id: 'TreeSelect',
+                    value: { name: 'Не определен', id: '1' },
+                    type: KbqPipeTypes.TreeSelect,
+
+                    search: true,
+
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    id: 'TreeSelect',
+                    value: { name: 'Не определен', id: '1' },
+                    type: KbqPipeTypes.TreeSelect,
 
                     cleanable: false,
                     removable: false,
@@ -607,7 +693,15 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
                 valueTemplate: this.optionTemplate,
-                search: true,
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'TreeSelect',
+                type: KbqPipeTypes.TreeSelect,
+                values: kbqBuildTree(DEV_DATA_OBJECT, 0),
 
                 cleanable: false,
                 removable: false,

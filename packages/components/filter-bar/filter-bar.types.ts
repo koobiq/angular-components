@@ -7,6 +7,7 @@ import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
 import { KbqPipeReadonlyComponent } from './pipes/pipe-readonly';
 import { KbqPipeSelectComponent } from './pipes/pipe-select';
 import { KbqPipeTextComponent } from './pipes/pipe-text';
+import { KbqPipeTreeSelectComponent } from './pipes/pipe-tree-select';
 
 /**default configuration of filter-bar */
 export const KBQ_FILTER_BAR_DEFAULT_CONFIGURATION = ruRULocaleData.filterBar;
@@ -30,7 +31,9 @@ export enum KbqPipeTypes {
     ReadOnly = 'readonly',
     Text = 'text',
     Select = 'select',
+    TreeSelect = 'treeSelect',
     MultiSelect = 'multiselect',
+    MultiTreeSelect = 'multiTreeSelect',
     Date = 'date',
     Datetime = 'datetime'
 }
@@ -42,6 +45,7 @@ export const defaultFilterBarPipes: [string, unknown][] = [
     [KbqPipeTypes.ReadOnly, KbqPipeReadonlyComponent],
     [KbqPipeTypes.Text, KbqPipeTextComponent],
     [KbqPipeTypes.Select, KbqPipeSelectComponent],
+    [KbqPipeTypes.TreeSelect, KbqPipeTreeSelectComponent],
     [KbqPipeTypes.MultiSelect, KbqPipeMultiSelectComponent],
     [KbqPipeTypes.Date, KbqPipeDateComponent],
     [KbqPipeTypes.Datetime, KbqPipeDatetimeComponent]
@@ -115,4 +119,37 @@ export interface KbqSaveFilterEvent {
     filter: KbqFilter;
     filterBar: KbqFilterBar;
     status?: KbqSaveFilterStatuses;
+}
+
+/** Flattened node */
+export class KbqTreeSelectFlatNode {
+    name: string;
+    type?: string | number;
+    level: number;
+    expandable: boolean;
+    parent?: KbqTreeSelectFlatNode;
+}
+
+export interface KbqTreeSelectNode {
+    children: KbqTreeSelectNode[] | null;
+    name: string;
+    type?: string | number;
+}
+
+/**
+ * Build the file structure tree. The `value` is the Json object, or a sub-tree of a Json object.
+ * The return value is the list of extends `KbqTreeSelectNode`.
+ */
+export function kbqBuildTree<T extends KbqTreeSelectNode>(value: any, level: number): T[] {
+    const data: T[] = [];
+
+    for (const [k, v] of Object.entries(value)) {
+        data.push({
+            name: k.toString(),
+            type: v,
+            children: typeof v === 'object' ? kbqBuildTree(v, level + 1) : null
+        } as T);
+    }
+
+    return data;
 }
