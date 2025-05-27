@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -6,6 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Icon-item
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'icon-item-default-example',
     styleUrls: ['icon-item-default-example.css'],

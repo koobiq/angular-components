@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqHighlightModule } from '@koobiq/components/core';
@@ -162,6 +162,7 @@ abstract class TreeParams {
  * @title Tree checked filtering
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-checked-filtering-example',
     imports: [

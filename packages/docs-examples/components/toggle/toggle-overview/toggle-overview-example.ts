@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -7,6 +7,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'toggle-overview-example',
     imports: [

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 
@@ -6,6 +6,7 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
  * @title Progress bar indeterminate
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'progress-bar-indeterminate-example',
     styles: `

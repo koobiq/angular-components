@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -101,6 +101,7 @@ export const DATA_OBJECT = {
  * @title tree-select-custom-matcher
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-select-custom-matcher-example',
     imports: [FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule, KbqButtonModule],

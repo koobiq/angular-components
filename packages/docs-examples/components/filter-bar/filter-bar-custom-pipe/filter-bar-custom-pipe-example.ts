@@ -131,6 +131,7 @@ export class ColorPipeComponent extends KbqBasePipe<string | null> implements Af
  * @title filter-bar-custom-pipe
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'filter-bar-custom-pipe-example',
     imports: [

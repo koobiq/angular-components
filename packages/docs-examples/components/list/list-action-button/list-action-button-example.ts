@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -9,6 +9,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title List action button
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'list-action-button-example',
     imports: [KbqListModule, FormsModule, KbqDropdownModule, KbqToolTipModule],
