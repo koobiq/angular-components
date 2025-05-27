@@ -17,6 +17,6 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `
 })
 export class ToggleErrorExample {
-    value = signal(false);
-    color = ThemePalette.Error;
+    protected readonly value = signal(false);
+    protected readonly color = ThemePalette.Error;
 }

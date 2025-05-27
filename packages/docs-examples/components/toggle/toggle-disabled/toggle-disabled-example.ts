@@ -16,5 +16,5 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     `
 })
 export class ToggleDisabledExample {
-    value = signal(false);
+    protected readonly value = signal(false);
 }
