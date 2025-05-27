@@ -12,13 +12,9 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     template: `
         <kbq-toggle [(ngModel)]="isDarkTheme">isDarkTheme</kbq-toggle>
     `,
-    styles: `
-        :host {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-    `,
+    host: {
+        class: 'layout-align-center-center'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevThemeToggle {
