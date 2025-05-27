@@ -6840,7 +6840,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/minimist@npm:^1.2.0":
+"@types/minimist@npm:^1.2.0, @types/minimist@npm:^1.2.1":
   version: 1.2.5
   resolution: "@types/minimist@npm:1.2.5"
   checksum: 10c0/3f791258d8e99a1d7d0ca2bda1ca6ea5a94e5e7b8fc6cde84dd79b0552da6fb68ade750f0e17718f6587783c24254bbca0357648dd59dc3812c150305cabdc46
@@ -15324,7 +15324,7 @@ __metadata:
     ts-jest: "npm:^29.3.4"
     ts-node: "npm:^10.9.1"
     tsconfig-paths: "npm:^3.9.0"
-    tsickle: "npm:^0.39.1"
+    tsickle: "npm:^0.46.3"
     tslib: "npm:^2.8.1"
     typescript: "npm:5.5.4"
     zone.js: "npm:^0.15.1"
@@ -21321,12 +21321,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsickle@npm:^0.39.1":
-  version: 0.39.1
-  resolution: "tsickle@npm:0.39.1"
+"tsickle@npm:^0.46.3":
+  version: 0.46.3
+  resolution: "tsickle@npm:0.46.3"
+  dependencies:
+    "@types/minimist": "npm:^1.2.1"
   peerDependencies:
-    typescript: ~3.9.5
-  checksum: 10c0/3db9b56a7745b78b2baa7a4352c2207cb99009647c02404f92e69a44d9546b7688c261c902b9c45e168e22c410e1991bbe7d8f7bd0f4a84d5c16487e69b7b659
+    typescript: ~4.7.2
+  checksum: 10c0/3eea9f1bd762e2f21676c70adbaae1ffeb698e41b43a65fb8799e8aafcc93508fb8ce824cdaf31f05d5e1c272caa4444d11ae06fd7da779fc42ddac8c18c1ea4
   languageName: node
   linkType: hard
 
