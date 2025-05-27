@@ -2,6 +2,7 @@ import { FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -16,7 +17,7 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { TAB, hasModifierKey } from '@koobiq/cdk/keycodes';
+import { hasModifierKey, TAB } from '@koobiq/cdk/keycodes';
 import {
     KBQ_OPTION_ACTION_PARENT,
     KBQ_TITLE_TEXT_REF,
@@ -125,6 +126,8 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     private _disabled: boolean = false;
+
+    @Input({ transform: booleanAttribute }) selectable: boolean = true;
 
     @Input()
     get showCheckbox() {
@@ -355,7 +358,7 @@ export class KbqTreeOption extends KbqTreeNode<KbqTreeOption> implements AfterCo
     }
 
     selectViaInteraction($event?: KeyboardEvent): void {
-        if (this.disabled) {
+        if (this.disabled || !this.selectable) {
             return;
         }
 

@@ -482,6 +482,8 @@ export class KbqTreeSelection
     toggleFocusedOption(): void {
         const focusedOption = this.keyManager.activeItem;
 
+        if (!focusedOption?.selectable) return;
+
         if (focusedOption && (!focusedOption.selected || this.canDeselectLast(focusedOption))) {
             this.selectionModel.toggle(focusedOption.data);
             this.emitChangeEvent(focusedOption);
