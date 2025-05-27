@@ -31,6 +31,7 @@ import { InputExamplesModule } from '../../docs-examples/components/input';
     template: `
         <input-number-overview-example />
         <hr />
+        <input-password-overview-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

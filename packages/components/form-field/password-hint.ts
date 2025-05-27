@@ -10,7 +10,7 @@ import {
     QueryList,
     ViewEncapsulation
 } from '@angular/core';
-import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
+import { KBQ_FORM_FIELD_REF, KbqComponentColors } from '@koobiq/components/core';
 import { Subject } from 'rxjs';
 import { KbqFormField } from './form-field';
 import { KbqHint } from './hint';
@@ -40,7 +40,7 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
 @Component({
     selector: 'kbq-password-hint',
     template: `
-        <i class="kbq-password-hint__icon" [ngClass]="icon" color="contrast-fade" kbq-icon=""></i>
+        <i class="kbq-password-hint__icon" [ngClass]="icon" kbq-icon=""></i>
 
         <span class="kbq-hint__text">
             <ng-content />
@@ -92,6 +92,8 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
         @Optional() @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: any
     ) {
         super();
+        this.color = KbqComponentColors.ContrastFade;
+        this.setDefaultColor(KbqComponentColors.ContrastFade);
     }
 
     ngAfterContentInit(): void {
