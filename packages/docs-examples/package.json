@@ -18,7 +18,7 @@
         "@koobiq/angular-luxon-adapter": "{{VERSION}}"
     },
     "dependencies": {
-        "tslib": "^2.8.1"
+        "tslib": "^2.6.2"
     },
     "exports": {
         "./fesm2022": {

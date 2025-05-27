@@ -34,7 +34,7 @@
         "@radix-ng/primitives": "^0.23.0"
     },
     "dependencies": {
-        "tslib": "^2.8.1"
+        "tslib": "^2.6.2"
     },
     "ng-update": {
         "packageGroup": [
