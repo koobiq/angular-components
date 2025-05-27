@@ -50,3 +50,13 @@ import { kbqFilesizeFormatterConfigurationProvider } from '@koobiq/components/co
     ]
 })
 ```
+
+### Number and Unit Formatting
+
+- A **non-breaking space** (`&nbsp;`) is used between the number and the unit.
+- By default, numbers are formatted using the **`KbqDecimalPipe`**.
+- To format numbers specifically for tables, use the **`KbqTableNumberPipe`**.
+
+To apply table-style number formatting with the `kbqTableNumber` pipe, override the `KbqDecimalPipe` by registering the appropriate provider in your component or module:
+
+<!-- example(filesize-formatter-table-number) -->

@@ -1429,6 +1429,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "filesize-formatter-overview-example.ts",
     "importPath": "components/filesize-formatter"
   },
+  "filesize-formatter-table-number": {
+    "packagePath": "components/filesize-formatter/filesize-formatter-table-number",
+    "title": "Filesize formatter Table Number",
+    "componentName": "FilesizeFormatterTableNumberExample",
+    "files": [
+      "filesize-formatter-table-number-example.ts"
+    ],
+    "selector": "filesize-formatter-table-number-example",
+    "additionalComponents": [],
+    "primaryFile": "filesize-formatter-table-number-example.ts",
+    "importPath": "components/filesize-formatter"
+  },
   "filter-bar-cleanable": {
     "packagePath": "components/filter-bar/filter-bar-cleanable",
     "title": "filter-bar-cleanable",
@@ -4464,6 +4476,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-with-signal':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'filesize-formatter-overview':
+return import('@koobiq/docs-examples/components/filesize-formatter');
+  case 'filesize-formatter-table-number':
 return import('@koobiq/docs-examples/components/filesize-formatter');
   case 'filter-bar-cleanable':
 return import('@koobiq/docs-examples/components/filter-bar');
