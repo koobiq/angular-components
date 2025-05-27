@@ -1063,6 +1063,36 @@
                 }
             }
         },
+        "dev-filesize-formatter": {
+            "projectType": "application",
+            "root": "packages/components-dev/filesize-formatter",
+            "sourceRoot": "packages/components-dev/filesize-formatter",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/filesize-formatter"
+                        },
+                        "tsConfig": "packages/components-dev/filesize-formatter/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/filesize-formatter/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-filesize-formatter:build"
+                    }
+                }
+            }
+        },
         "dev-filter-bar": {
             "projectType": "application",
             "root": "packages/components-dev/filter-bar",
