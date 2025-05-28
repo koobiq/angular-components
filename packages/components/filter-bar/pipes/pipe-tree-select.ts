@@ -130,15 +130,19 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
 
     /** opens select */
     override open() {
-        this.select.open();
+        setTimeout(() => this.select.open());
+    }
+
+    onOpen() {
+        this.treeControl.expandAll();
     }
 
     private transformer = (node: KbqTreeSelectNode, level: number, parent: any) => {
         const flatNode = new KbqTreeSelectFlatNode();
 
         flatNode.name = node.name;
+        flatNode.value = node.value;
         flatNode.parent = parent;
-        flatNode.type = node.type;
         flatNode.level = level;
         flatNode.expandable = !!node.children;
 
@@ -157,8 +161,8 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
         return node.children;
     };
 
-    private getValue = (node: KbqTreeSelectFlatNode): string => {
-        return node.name;
+    private getValue = (node: KbqTreeSelectFlatNode): unknown => {
+        return node.value;
     };
 
     private getViewValue = (node: KbqTreeSelectFlatNode): string => {

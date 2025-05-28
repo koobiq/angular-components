@@ -10,6 +10,7 @@
         [pipeTemplates]="pipeTemplates"
         [(filter)]="activeFilter"
         (filterChange)="onFilterChange($event)"
+        (onChangePipe)="onPipeChange($event)"
         (onClosePipe)="onClosePipe($event)"
     >
         <kbq-filters
