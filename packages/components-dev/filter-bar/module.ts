@@ -189,7 +189,7 @@ export class DevApp implements AfterViewInit {
                     name: 'required',
                     id: 'TreeSelect',
                     // required - не может быть пустым, всегда есть дефолтное значение
-                    value: { name: 'Не определен', id: '1' },
+                    value: 'value 0',
                     type: KbqPipeTypes.TreeSelect,
 
                     search: true,
@@ -237,6 +237,72 @@ export class DevApp implements AfterViewInit {
                     id: 'TreeSelect',
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.TreeSelect,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: true
+                }
+            ]
+        },
+        {
+            name: 'multi-tree-select',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'required',
+                    id: 'MultiTreeSelect',
+                    // required - не может быть пустым, всегда есть дефолтное значение
+                    value: ['value 0'],
+                    type: KbqPipeTypes.MultiTreeSelect,
+
+                    search: true,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'empty',
+                    id: 'MultiTreeSelect',
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    id: 'MultiTreeSelect',
+                    value: ['value 2', 'value 3'],
+                    type: KbqPipeTypes.MultiTreeSelect,
+
+                    search: true,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'removable',
+                    id: 'MultiTreeSelect',
+                    value: [],
+                    type: KbqPipeTypes.MultiTreeSelect,
+
+                    search: true,
+
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    id: 'MultiTreeSelect',
+                    value: [],
+                    type: KbqPipeTypes.MultiTreeSelect,
 
                     cleanable: false,
                     removable: false,
@@ -672,7 +738,7 @@ export class DevApp implements AfterViewInit {
         }
     ];
     pipeTemplates: KbqPipeTemplate[];
-    defaultFilter: KbqFilter | null = this.filters[1];
+    defaultFilter: KbqFilter | null = this.filters[2];
     activeFilter: KbqFilter | null = this.defaultFilter;
 
     ngAfterViewInit(): void {
@@ -699,7 +765,38 @@ export class DevApp implements AfterViewInit {
                 disabled: false
             },
             {
+                name: 'MultiSelect',
+                id: 'MultiSelect',
+                type: KbqPipeTypes.MultiSelect,
+                values: [
+                    { name: 'Option 1', id: '1', type: 'error' },
+                    { name: 'Option 2', id: '2', type: 'warning' },
+                    { name: 'Option 3', id: '3', type: 'success' },
+                    { name: 'Option 4', id: '4', type: 'error' },
+                    { name: 'Option 5', id: '5', type: 'warning' },
+                    { name: 'Option 6', id: '6', type: 'success' },
+                    { name: 'Option 7', id: '7', type: 'error' },
+                    { name: 'Option 8', id: '8', type: 'warning' },
+                    { name: 'Option 9', id: '9', type: 'success' },
+                    { name: 'Option 10', id: '10', type: 'error' }
+                ],
+                valueTemplate: this.optionTemplate,
+
+                cleanable: false,
+                removable: true,
+                disabled: false
+            },
+            {
                 name: 'TreeSelect',
+                type: KbqPipeTypes.TreeSelect,
+                values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiTreeSelect',
                 type: KbqPipeTypes.TreeSelect,
                 values: kbqBuildTree(DEV_DATA_OBJECT, 0),
 
@@ -719,33 +816,9 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 5', id: '5', type: 'warning' }
                 ],
                 valueTemplate: this.optionTemplate,
-                search: true,
 
                 cleanable: false,
                 removable: false,
-                disabled: false
-            },
-            {
-                name: 'MultiSelect',
-                id: 'MultiSelect',
-                type: KbqPipeTypes.MultiSelect,
-                values: [
-                    { name: 'Option 1', id: '1', type: 'error' },
-                    { name: 'Option 2', id: '2', type: 'warning' },
-                    { name: 'Option 3', id: '3', type: 'success' },
-                    { name: 'Option 4', id: '4', type: 'error' },
-                    { name: 'Option 5', id: '5', type: 'warning' },
-                    { name: 'Option 6', id: '6', type: 'success' },
-                    { name: 'Option 7', id: '7', type: 'error' },
-                    { name: 'Option 8', id: '8', type: 'warning' },
-                    { name: 'Option 9', id: '9', type: 'success' },
-                    { name: 'Option 10', id: '10', type: 'error' }
-                ],
-                valueTemplate: this.optionTemplate,
-                search: true,
-
-                cleanable: false,
-                removable: true,
                 disabled: false
             },
             {
@@ -760,7 +833,6 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 5', id: '5', type: 'warning' }
                 ],
                 valueTemplate: this.optionTemplate,
-                search: true,
 
                 cleanable: false,
                 removable: true,

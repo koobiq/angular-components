@@ -3,12 +3,13 @@
     [autoSelect]="false"
     [disabled]="data.disabled"
     [kbqPipeTitle]="pipeTooltip"
+    [multiple]="true"
     [ngClass]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
-    [panelClass]="'kbq-pipe-tree-select__panel'"
+    [panelClass]="'kbq-pipe-multi-tree-select__panel'"
     [tabIndex]="-1"
     (opened)="onOpen()"
-    (selectionChange)="onSelect($event.value)"
+    (selectionChange)="onSelect()"
 >
     <!-- eslint-disable-next-line @angular-eslint/template/prefer-control-flow -->
     <kbq-form-field *ngIf="data.search" kbqFormFieldWithoutBorders kbqSelectSearch>
@@ -35,14 +36,16 @@
         [ngClass]="{ 'kbq-active': select.panelOpen }"
     >
         <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
-        <span
-            #kbqTitleText
-            kbqPipeMinWidth
-            class="kbq-pipe__value"
-            [class.kbq-pipe__value_empty]="!select.triggerValue"
-        >
-            {{ select.triggerValue }}
-        </span>
+
+        @if (select.triggerValues.length === 1) {
+            <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
+                {{ select.selected[0].name }}
+            </span>
+        } @else if (select.triggerValues.length > 1) {
+            <kbq-badge [badgeColor]="'contrast'" [compact]="true">
+                {{ select.triggerValues.length }}
+            </kbq-badge>
+        }
     </button>
 
     <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
@@ -50,7 +53,7 @@
             <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
         </kbq-tree-option>
 
-        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [selectable]="false">
+        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
             <kbq-tree-node-toggle [node]="node" />
             <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
         </kbq-tree-option>
