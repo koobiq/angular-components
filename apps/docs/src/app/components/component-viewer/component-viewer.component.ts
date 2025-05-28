@@ -20,8 +20,8 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 import { filter } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocStates } from '../../services/doc-states';
-import { DocItem, DocumentationItems } from '../../services/documentation-items';
+import { DocsDocStates } from '../../services/doc-states';
+import { DocsDocItem, DocsDocumentationItems } from '../../services/documentation-items';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
@@ -52,15 +52,15 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
-    docItem: DocItem;
+    docItem: DocsDocItem;
     docCategory: string;
 
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly docItems = inject(DocumentationItems);
+    private readonly docItems = inject(DocsDocumentationItems);
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
-    private readonly docStates = inject(DocStates);
+    private readonly docStates = inject(DocsDocStates);
     private readonly elementRef = inject(ElementRef);
 
     constructor() {
@@ -90,13 +90,13 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
 }
 
 @Directive()
-export class BaseOverviewComponent extends DocsLocaleState {
+export class DocsOverviewComponentBase extends DocsLocaleState {
     private readonly activatedRoute = inject(ActivatedRoute);
-    private readonly docItems = inject(DocumentationItems);
+    private readonly docItems = inject(DocsDocumentationItems);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly titleService = inject(Title);
 
-    componentDocItem: DocItem | null = null;
+    componentDocItem: DocsDocItem | null = null;
 
     @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
 
@@ -159,7 +159,7 @@ export class BaseOverviewComponent extends DocsLocaleState {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsCdkOverviewComponent extends BaseOverviewComponent {
+export class DocsCdkOverviewComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -185,7 +185,7 @@ export class DocsCdkOverviewComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsComponentOverviewComponent extends BaseOverviewComponent {
+export class DocsComponentOverviewComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -211,7 +211,7 @@ export class DocsComponentOverviewComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsComponentApiComponent extends BaseOverviewComponent {
+export class DocsComponentApiComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -237,7 +237,7 @@ export class DocsComponentApiComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsCdkApiComponent extends BaseOverviewComponent {
+export class DocsCdkApiComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;
@@ -273,7 +273,7 @@ export class DocsCdkApiComponent extends BaseOverviewComponent {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DocsComponentExamplesComponent extends BaseOverviewComponent {
+export class DocsComponentExamplesComponent extends DocsOverviewComponentBase {
     get docItemUrl(): string | null {
         if (!this.componentDocItem) {
             return null;

@@ -12,10 +12,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
+import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { filter, fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-import { PopUpPlacements } from '../../../../../../packages/components/core';
 
 interface KbqDocsAnchor {
     href: string;
@@ -252,5 +252,5 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         this.ref.detectChanges();
     }
 
-    protected readonly PopUpPlacements = PopUpPlacements;
+    protected readonly popUpPlacements = PopUpPlacements;
 }

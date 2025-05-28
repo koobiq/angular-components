@@ -19,8 +19,7 @@ const makeNamingConventionOptions = (prefix) => {
         {
             selector: 'variable',
             modifiers: ['exported'],
-            format: ['camelCase', 'UPPER_CASE'],
-            leadingUnderscore: 'allow',
+            format: ['StrictPascalCase', 'UPPER_CASE'],
             prefix: [prefix, `${prefix.toUpperCase()}_`]
         },
 
@@ -279,7 +278,12 @@ const appDocsRules = {
             }
         ],
         '@angular-eslint/prefer-standalone': 1,
-        '@angular-eslint/use-component-selector': 1
+        '@angular-eslint/use-component-selector': 1,
+
+        // plugin:@typescript-eslint
+        '@typescript-eslint/naming-convention': [
+            1,
+            ...makeNamingConventionOptions('docs')]
     }
 };
 

@@ -11,9 +11,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { map, Observable } from 'rxjs';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocsNavbarState, DocStates } from '../../services/doc-states';
-import { DocsearchDirective } from '../docsearch/docsearch.directive';
-import { NavbarProperty } from './navbar-property';
+import { DocsDocStates, DocsNavbarState } from '../../services/doc-states';
+import { DocsDocsearchDirective } from '../docsearch/docsearch.directive';
+import { DocsNavbarProperty } from './navbar-property';
 
 @Component({
     standalone: true,
@@ -25,7 +25,7 @@ import { NavbarProperty } from './navbar-property';
         KbqIconModule,
         KbqSelectModule,
         KbqNavbarModule,
-        DocsearchDirective,
+        DocsDocsearchDirective,
         AsyncPipe
     ],
     selector: 'docs-navbar',
@@ -37,9 +37,9 @@ import { NavbarProperty } from './navbar-property';
     encapsulation: ViewEncapsulation.None
 })
 export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
-    readonly docStates = inject(DocStates);
+    readonly docStates = inject(DocsDocStates);
 
-    readonly themeSwitch: NavbarProperty;
+    readonly themeSwitch: DocsNavbarProperty;
 
     // To add for checking of current color theme of OS preferences
     private readonly colorAutomaticTheme = window.matchMedia('(prefers-color-scheme: light)');
@@ -75,7 +75,7 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
     ];
 
     readonly opened$: Observable<boolean> = this.docStates.navbarMenu.pipe(
-        map((state) => state === DocsNavbarState.opened)
+        map((state) => state === DocsNavbarState.Opened)
     );
 
     constructor(private readonly themeService: ThemeService) {
@@ -84,7 +84,7 @@ export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
         // set custom theme configs for light/dark themes
         this.themeService.setThemes(this.kbqThemes);
 
-        this.themeSwitch = new NavbarProperty({
+        this.themeSwitch = new DocsNavbarProperty({
             property: 'docs_theme',
             data: this.kbqThemes,
             updateSelected: false

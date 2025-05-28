@@ -21,7 +21,7 @@ import { shareReplay, take, tap } from 'rxjs/operators';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
 
 @Injectable({ providedIn: 'root' })
-export class DocFetcher {
+export class DocsDocFetcher {
     private cache: Record<string, Observable<string>> = {};
 
     constructor(private http: HttpClient) {}
@@ -80,7 +80,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
         private viewContainerRef: ViewContainerRef,
         private ngZone: NgZone,
         private domSanitizer: DomSanitizer,
-        private docFetcher: DocFetcher
+        private docFetcher: DocsDocFetcher
     ) {}
 
     ngOnDestroy() {

@@ -8,10 +8,10 @@ import {
     DocsComponentOverviewComponent,
     DocsComponentViewerComponent
 } from './components/component-viewer/component-viewer.component';
-import { DesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
-import { TokensOverview } from './components/design-tokens-viewers/tokens-overview';
+import { DocsDesignTokensViewer } from './components/design-tokens-viewers/design-tokens-viewer';
+import { DocsTokensOverview } from './components/design-tokens-viewers/tokens-overview';
 import { DocsIconsViewerComponent } from './components/icons-viewer/icons-viewer.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
@@ -43,14 +43,14 @@ export const DOCS_ROUTES: Routes = [
             { path: 'main', redirectTo: 'main/installation', pathMatch: 'full' },
             {
                 path: 'main/design-tokens',
-                component: DesignTokensViewer,
+                component: DocsDesignTokensViewer,
                 children: [
                     { path: '', redirectTo: 'colors', pathMatch: 'full' },
-                    { path: 'colors', component: TokensOverview, pathMatch: 'full' },
-                    { path: 'shadows', component: TokensOverview, pathMatch: 'full' },
-                    { path: 'border-radius', component: TokensOverview, pathMatch: 'full' },
-                    { path: 'sizes', component: TokensOverview, pathMatch: 'full' },
-                    { path: 'palette', component: TokensOverview, pathMatch: 'full' },
+                    { path: 'colors', component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: 'shadows', component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: 'border-radius', component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: 'sizes', component: DocsTokensOverview, pathMatch: 'full' },
+                    { path: 'palette', component: DocsTokensOverview, pathMatch: 'full' },
                     { path: '**', redirectTo: 'colors' }
                 ]
             },
@@ -126,6 +126,6 @@ export const DOCS_ROUTES: Routes = [
     /**
      * Error routes
      */
-    { path: '404', component: PageNotFoundComponent },
+    { path: '404', component: DocsPageNotFoundComponent },
     { path: '**', redirectTo: '404' }
 ];

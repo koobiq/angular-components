@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-export interface IconItem {
+export interface DocsIconItem {
     id: string;
     name: string;
     cssClass: string;
@@ -11,8 +11,8 @@ export interface IconItem {
 }
 
 @Injectable({ providedIn: 'root' })
-export class IconItems {
-    allIcons: IconItem[] = [];
+export class DocsIconItems {
+    allIcons: DocsIconItem[] = [];
     sizes: Set<number> = new Set();
 
     // eslint-disable-next-line @typescript-eslint/ban-types
@@ -30,15 +30,15 @@ export class IconItems {
 
             name = name.charAt(0).toUpperCase() + name.slice(1);
 
-            return { id, name, cssClass, code: parseInt(codepoint), size, tags, description } as IconItem;
+            return { id, name, cssClass, code: parseInt(codepoint), size, tags, description } as DocsIconItem;
         });
     }
 
-    getItems(): IconItem[] {
+    getItems(): DocsIconItem[] {
         return [...this.allIcons];
     }
 
-    getItemById(id: string): IconItem | undefined {
+    getItemById(id: string): DocsIconItem | undefined {
         return this.allIcons.find((item) => item.id === id);
     }
 }

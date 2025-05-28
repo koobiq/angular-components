@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
-import { BaseOverviewComponent } from '../component-viewer/component-viewer.component';
+import { DocsOverviewComponentBase } from '../component-viewer/component-viewer.component';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
 
 @Component({
@@ -21,7 +21,7 @@ import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TokensOverview extends BaseOverviewComponent {
+export class DocsTokensOverview extends DocsOverviewComponentBase {
     private readonly router = inject(Router);
 
     get docItemUrl(): string | null {

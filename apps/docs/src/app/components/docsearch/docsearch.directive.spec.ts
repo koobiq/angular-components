@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { DocsearchDirective } from './docsearch.directive';
+import { DocsDocsearchDirective } from './docsearch.directive';
 
 @Component({
     standalone: true,
     template: '<docs-docsearch />',
-    imports: [DocsearchDirective]
+    imports: [DocsDocsearchDirective]
 })
 class TestApp {}
 
@@ -26,7 +26,7 @@ const getDocsearchModal = (): HTMLDivElement => {
     return document.getElementsByClassName('DocSearch-Modal')[0] as HTMLDivElement;
 };
 
-describe(DocsearchDirective.name, () => {
+describe(DocsDocsearchDirective.name, () => {
     it(`should render docsearch button`, async () => {
         render();
         expect(getDocsearchButton()).toBeInstanceOf(HTMLButtonElement);

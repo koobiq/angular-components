@@ -21,9 +21,9 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { auditTime, BehaviorSubject, distinctUntilChanged, map } from 'rxjs';
-import { IconItem, IconItems } from 'src/app/services/icon-items';
+import { DocsIconItem, DocsIconItems } from 'src/app/services/icon-items';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocStates } from '../../services/doc-states';
+import { DocsDocStates } from '../../services/doc-states';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 import { DocsIconPreviewModalComponent } from './icon-preview-modal/icon-preview-modal.component';
 
@@ -62,7 +62,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     private readonly router = inject(Router);
     private readonly location = inject(Location);
     private readonly titleService = inject(Title);
-    private readonly docStates = inject(DocStates);
+    private readonly docStates = inject(DocsDocStates);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly elementRef = inject(ElementRef);
     private readonly destroyRef = inject(DestroyRef);
@@ -70,18 +70,18 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
     readonly themePalette = ThemePalette;
 
     searchControl = new FormControl<string>('');
-    filteredIcons = new BehaviorSubject<IconItem[]>([]);
+    filteredIcons = new BehaviorSubject<DocsIconItem[]>([]);
 
     availableSizes: number[];
 
-    private iconItems: IconItems;
+    private iconItems: DocsIconItems;
     private queryParamMap: Params;
 
     constructor() {
         super();
 
         this.http.get('assets/SVGIcons/kbq-icons-info.json', { responseType: 'json' }).subscribe((data) => {
-            this.iconItems = new IconItems(data);
+            this.iconItems = new DocsIconItems(data);
 
             this.availableSizes = Array.from(this.iconItems.sizes).sort((a, b) => a - b);
 
@@ -148,11 +148,11 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
         });
     }
 
-    filterBySize(icons: IconItem[], size: number): IconItem[] {
-        return icons.filter((iconItem: IconItem) => iconItem.size === size);
+    filterBySize(icons: DocsIconItem[], size: number): DocsIconItem[] {
+        return icons.filter((iconItem: DocsIconItem) => iconItem.size === size);
     }
 
-    setActiveIcon(iconItem: IconItem | undefined): void {
+    setActiveIcon(iconItem: DocsIconItem | undefined): void {
         this.router.navigate([], {
             relativeTo: this.activeRoute,
             queryParams: {
@@ -164,7 +164,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
         this.refreshTitle(iconItem);
     }
 
-    openIconPreview(iconItem: IconItem): void {
+    openIconPreview(iconItem: DocsIconItem): void {
         this.modalService
             .open({
                 kbqComponent: DocsIconPreviewModalComponent,
@@ -194,7 +194,7 @@ export class DocsIconsViewerComponent extends DocsLocaleState {
         });
     }
 
-    private refreshTitle(activeIcon: IconItem | undefined): void {
+    private refreshTitle(activeIcon: DocsIconItem | undefined): void {
         this.titleService.setTitle(`${activeIcon ? `${activeIcon.name} \u00B7 ` : ''} Icon \u00B7 Mosaic`);
     }
 }
