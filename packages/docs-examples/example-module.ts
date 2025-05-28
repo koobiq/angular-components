@@ -3708,6 +3708,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "toast-user-data-example.ts",
     "importPath": "components/toast"
   },
+  "toggle-disabled": {
+    "packagePath": "components/toggle/toggle-disabled",
+    "title": "Toggle Disabled",
+    "componentName": "ToggleDisabledExample",
+    "files": [
+      "toggle-disabled-example.ts"
+    ],
+    "selector": "toggle-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "toggle-disabled-example.ts",
+    "importPath": "components/toggle"
+  },
+  "toggle-error": {
+    "packagePath": "components/toggle/toggle-error",
+    "title": "Toggle Error",
+    "componentName": "ToggleErrorExample",
+    "files": [
+      "toggle-error-example.ts"
+    ],
+    "selector": "toggle-error-example",
+    "additionalComponents": [],
+    "primaryFile": "toggle-error-example.ts",
+    "importPath": "components/toggle"
+  },
   "toggle-indeterminate": {
     "packagePath": "components/toggle/toggle-indeterminate",
     "title": "Toggle Indeterminate",
@@ -3718,6 +3742,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "toggle-indeterminate-example",
     "additionalComponents": [],
     "primaryFile": "toggle-indeterminate-example.ts",
+    "importPath": "components/toggle"
+  },
+  "toggle-label-left": {
+    "packagePath": "components/toggle/toggle-label-left",
+    "title": "Toggle Label Left",
+    "componentName": "ToggleLabelLeftExample",
+    "files": [
+      "toggle-label-left-example.ts"
+    ],
+    "selector": "toggle-label-left-example",
+    "additionalComponents": [],
+    "primaryFile": "toggle-label-left-example.ts",
     "importPath": "components/toggle"
   },
   "toggle-loading": {
@@ -3749,12 +3785,23 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Toggle",
     "componentName": "ToggleOverviewExample",
     "files": [
-      "toggle-overview-example.ts",
-      "toggle-overview-example.html"
+      "toggle-overview-example.ts"
     ],
     "selector": "toggle-overview-example",
     "additionalComponents": [],
     "primaryFile": "toggle-overview-example.ts",
+    "importPath": "components/toggle"
+  },
+  "toggle-with-hint": {
+    "packagePath": "components/toggle/toggle-with-hint",
+    "title": "Toggle With Hint",
+    "componentName": "ToggleWithHintExample",
+    "files": [
+      "toggle-with-hint-example.ts"
+    ],
+    "selector": "toggle-with-hint-example",
+    "additionalComponents": [],
+    "primaryFile": "toggle-with-hint-example.ts",
     "importPath": "components/toggle"
   },
   "tooltip-arrow-and-offset": {
@@ -4869,13 +4916,21 @@ return import('@koobiq/docs-examples/components/toast');
 return import('@koobiq/docs-examples/components/toast');
   case 'toast-user-data':
 return import('@koobiq/docs-examples/components/toast');
+  case 'toggle-disabled':
+return import('@koobiq/docs-examples/components/toggle');
+  case 'toggle-error':
+return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-indeterminate':
+return import('@koobiq/docs-examples/components/toggle');
+  case 'toggle-label-left':
 return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-loading':
 return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-multiline':
 return import('@koobiq/docs-examples/components/toggle');
   case 'toggle-overview':
+return import('@koobiq/docs-examples/components/toggle');
+  case 'toggle-with-hint':
 return import('@koobiq/docs-examples/components/toggle');
   case 'tooltip-arrow-and-offset':
 return import('@koobiq/docs-examples/components/tooltip');

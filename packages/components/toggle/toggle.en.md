@@ -1,22 +1,44 @@
-State toggle button: On or Off. For example, Wi-Fi on a phone can be toggled on or off.
+**State toggle button:** on or off. For example, Wi-Fi is turned on or off on a phone.
 
 <!-- example(toggle-overview) -->
 
-### Indeterminate state
+### Properties
 
-The `indeterminate` state is applied using the boolean attribute `[indeterminate]` and can be used when you have a group of options, and a higher-level toggle needs to display their state:
+#### Disabled state
 
-- If only some options in the group are selected, the higher-level toggle appears partially selected (`[indeterminate]="true"`).
-- If all options are selected, the higher-level toggle appears checked.
-- If none are selected, the higher-level toggle appears unchecked.
+<!-- example(toggle-disabled) -->
+
+#### Error
+
+<!-- example(toggle-error) -->
+
+#### Indeterminate state
+
+This state is used to reflect partial selection or uncertainty.
 
 <!-- example(toggle-indeterminate) -->
 
-### Loading
+#### Loading
 
 <!-- example(toggle-loading) -->
 
-## Recommendations
+### Content
 
-- Use a toggle for instant switching of settings that don’t require confirmation. For example, changes apply immediately without needing a "Save" button. If form submission is required to save, use a [Checkbox](/en/components/checkbox) instead.
-- Avoid using a toggle if the selection options don’t fit binary logic (e.g., on/off, yes/no).
+##### Hint
+
+<!-- example(toggle-with-hint) -->
+
+##### Label on the right
+
+The toggle is placed to the right of the field name and hint block.
+
+<!-- example(toggle-multiline) -->
+
+The toggle can be placed to the right and on the same line after the label.
+
+<!-- example(toggle-label-left) -->
+
+### Recommendations
+
+- Use a toggle for instant switching of settings that do not require confirmation. For example, changes are applied immediately without a “Save” button. If saving requires submitting a form, use a [checkbox](/en/components/checkbox).
+- Do not use a toggle if the choice options do not fit binary logic: on or off, yes or no.

@@ -10,25 +10,32 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'toggle-multiline-example',
     imports: [KbqToggleModule, KbqFormFieldModule],
     template: `
-        <kbq-toggle>
-            I accept the security policy terms and acknowledge the responsibility to safeguard sensitive information
-            <kbq-hint>
-                Please review our security policy for detailed information about data protection and privacy standards.
-                By checking this box, you confirm that you understand and agree to comply with all security
-                requirements.
-            </kbq-hint>
-        </kbq-toggle>
+        <div
+            class="example-toggle-multiline__container layout-align-center-start layout-column layout-gap-s layout-padding-top-l layout-padding-left-l layout-padding-right-l layout-padding-bottom-xl "
+        >
+            <kbq-toggle labelPosition="left">
+                Shake to undo
+                <kbq-hint>
+                    If you tend to share your phone by accident, you can disable
+                    <span class="kbq-text-compact-strong">Shake to Undo</span>
+                    to prevent the
+                    <span class="kbq-text-compact-strong">Undo</span>
+                    alert from appearing.
+                </kbq-hint>
+            </kbq-toggle>
+        </div>
     `,
     styles: `
-        :host {
-            display: flex;
-            justify-content: center;
-        }
-
-        .kbq-toggle {
-            max-width: 400px;
+        .example-toggle-multiline__container {
+            max-width: 320px;
+            background: var(--kbq-background-card);
+            box-shadow: var(--kbq-shadow-card);
+            border-radius: var(--kbq-size-border-radius);
         }
     `,
+    host: {
+        class: 'layout-align-center-center layout-row layout-margin-top-l layout-margin-bottom-l'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToggleMultilineExample {}
