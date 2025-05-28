@@ -4,6 +4,7 @@ import { KbqFilterBar } from './filter-bar';
 import { KbqPipeDateComponent } from './pipes/pipe-date';
 import { KbqPipeDatetimeComponent } from './pipes/pipe-datetime';
 import { KbqPipeMultiSelectComponent } from './pipes/pipe-multi-select';
+import { KbqPipeMultiTreeSelectComponent } from './pipes/pipe-multi-tree-select';
 import { KbqPipeReadonlyComponent } from './pipes/pipe-readonly';
 import { KbqPipeSelectComponent } from './pipes/pipe-select';
 import { KbqPipeTextComponent } from './pipes/pipe-text';
@@ -31,9 +32,9 @@ export enum KbqPipeTypes {
     ReadOnly = 'readonly',
     Text = 'text',
     Select = 'select',
-    TreeSelect = 'treeSelect',
+    TreeSelect = 'tree-select',
     MultiSelect = 'multiselect',
-    MultiTreeSelect = 'multiTreeSelect',
+    MultiTreeSelect = 'multi-tree-select',
     Date = 'date',
     Datetime = 'datetime'
 }
@@ -47,6 +48,7 @@ export const defaultFilterBarPipes: [string, unknown][] = [
     [KbqPipeTypes.Select, KbqPipeSelectComponent],
     [KbqPipeTypes.TreeSelect, KbqPipeTreeSelectComponent],
     [KbqPipeTypes.MultiSelect, KbqPipeMultiSelectComponent],
+    [KbqPipeTypes.MultiTreeSelect, KbqPipeMultiTreeSelectComponent],
     [KbqPipeTypes.Date, KbqPipeDateComponent],
     [KbqPipeTypes.Datetime, KbqPipeDatetimeComponent]
 
