@@ -391,6 +391,9 @@ export const esLAFormattersData: {
                 billion: string;
                 trillion: string;
             };
+            decimal: {
+                groupSeparator: string;
+            };
         };
     };
     input: {
@@ -986,6 +989,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     billion: string;
                     trillion: string;
                 };
+                decimal: {
+                    groupSeparator: string;
+                };
             };
         };
         input: {
@@ -1233,6 +1239,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     million: string;
                     billion: string;
                     trillion: string;
+                };
+                decimal: {
+                    groupSeparator: string;
                 };
             };
         };
@@ -1668,6 +1677,14 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
 
 // @public
+export abstract class KbqAbstractNumberPipe {
+    protected formatNumberWithLocale(value: unknown, currentLocale: string, options: Intl.NumberFormatOptions): string;
+    protected localeService: KbqLocaleService | null;
+    // (undocumented)
+    abstract transform(value: unknown, digitsInfo?: string, locale?: string): string | null;
+}
+
+// @public
 export abstract class KbqAbstractSelect {
     // (undocumented)
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];
@@ -1801,14 +1818,14 @@ export class KbqDataSizePipe implements PipeTransform {
 export type KbqDateFormats = DateFormats;
 
 // @public (undocumented)
-export class KbqDecimalPipe implements PipeTransform {
-    constructor(id: string, localeService: KbqLocaleService, options: ParsedDigitsInfo);
+export class KbqDecimalPipe extends KbqAbstractNumberPipe implements PipeTransform {
+    constructor(id: string, options: ParsedDigitsInfo);
     // (undocumented)
     isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean;
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDecimalPipe, [{ optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDecimalPipe, [{ optional: true; }, { optional: true; }]>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqDecimalPipe, "kbqNumber", false>;
     // (undocumented)
@@ -2010,6 +2027,13 @@ export class KbqMeasureScrollbarService {
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
 }
+
+// @public
+export type KbqNumberLocaleConfig = {
+    groupSeparator: string[];
+    fractionSeparator: string;
+    startFormattingFrom?: number;
+};
 
 // @public
 export class KbqOptgroup {
@@ -2521,12 +2545,12 @@ export interface KbqSizeUnitsConfig {
 }
 
 // @public (undocumented)
-export class KbqTableNumberPipe implements PipeTransform {
-    constructor(id: string, localeService: KbqLocaleService, options: ParsedDigitsInfo);
+export class KbqTableNumberPipe extends KbqAbstractNumberPipe implements PipeTransform {
+    constructor(id: string, options: ParsedDigitsInfo);
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableNumberPipe, [{ optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqTableNumberPipe, [{ optional: true; }, { optional: true; }]>;
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqTableNumberPipe, "kbqTableNumber", false>;
     // (undocumented)
@@ -3070,6 +3094,9 @@ export const ruRUFormattersData: {
                 million: string;
                 billion: string;
                 trillion: string;
+            };
+            decimal: {
+                groupSeparator: string;
             };
         };
     };
