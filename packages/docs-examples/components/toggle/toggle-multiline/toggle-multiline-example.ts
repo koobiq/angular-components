@@ -10,28 +10,31 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'toggle-multiline-example',
     imports: [KbqToggleModule, KbqFormFieldModule],
     template: `
-        <kbq-toggle labelPosition="left">
-            Shake to undo
-            <kbq-hint>
-                If you tend to share your phone by accident, you can disable
-                <span class="kbq-text-compact-strong">Shake to Undo</span>
-                to prevent the
-                <span class="kbq-text-compact-strong">Undo</span>
-                alert from appearing.
-            </kbq-hint>
-        </kbq-toggle>
+        <div
+            class="example-toggle-multiline__container layout-align-center-start layout-column layout-gap-s layout-padding-top-l layout-padding-left-l layout-padding-right-l layout-padding-bottom-xl "
+        >
+            <kbq-toggle labelPosition="left">
+                Shake to undo
+                <kbq-hint>
+                    If you tend to share your phone by accident, you can disable
+                    <span class="kbq-text-compact-strong">Shake to Undo</span>
+                    to prevent the
+                    <span class="kbq-text-compact-strong">Undo</span>
+                    alert from appearing.
+                </kbq-hint>
+            </kbq-toggle>
+        </div>
     `,
     styles: `
-        :host {
+        .example-toggle-multiline__container {
             max-width: 320px;
             background: var(--kbq-background-card);
             box-shadow: var(--kbq-shadow-card);
             border-radius: var(--kbq-size-border-radius);
-            justify-self: center;
         }
     `,
     host: {
-        class: 'layout-align-center-center layout-row layout-padding-top-l layout-padding-left-l layout-padding-right-l layout-padding-bottom-xl layout-margin-top-l layout-margin-bottom-l'
+        class: 'layout-align-center-center layout-row layout-margin-top-l layout-margin-bottom-l'
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })

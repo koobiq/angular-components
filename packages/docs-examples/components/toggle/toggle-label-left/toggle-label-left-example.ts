@@ -9,18 +9,19 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     selector: 'toggle-label-left-example',
     imports: [KbqToggleModule],
     template: `
-        <kbq-toggle [checked]="true" labelPosition="left">Tap to wake</kbq-toggle>
-        <kbq-toggle labelPosition="left">Shake to undo</kbq-toggle>
-        <kbq-toggle labelPosition="left">Vibration</kbq-toggle>
+        <div class="example-toggle-label-left__container layout-align-center-start layout-column layout-gap-s">
+            <kbq-toggle [checked]="true" labelPosition="left">Tap to wake</kbq-toggle>
+            <kbq-toggle labelPosition="left">Shake to undo</kbq-toggle>
+            <kbq-toggle labelPosition="left">Vibration</kbq-toggle>
+        </div>
     `,
     styles: `
-        :host {
+        .example-toggle-label-left__container {
             margin-bottom: 28px;
-            justify-self: center;
         }
     `,
     host: {
-        class: 'layout-align-center-start layout-column layout-gap-s layout-margin-top-xxl'
+        class: 'layout-align-center-center layout-row layout-gap-s layout-margin-top-xxl'
     },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
