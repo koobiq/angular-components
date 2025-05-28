@@ -1,4 +1,5 @@
 import { KbqSizeUnitsConfig } from '../formatters';
+import { KbqNumberLocaleConfig } from './types';
 
 export const enUSFormattersData = {
     formatters: {
@@ -17,7 +18,7 @@ export const enUSFormattersData = {
         number: {
             groupSeparator: [','],
             fractionSeparator: '.'
-        }
+        } satisfies KbqNumberLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -47,6 +48,9 @@ export const esLAFormattersData = {
                 million: 'M',
                 billion: 'MRD',
                 trillion: 'B'
+            },
+            decimal: {
+                groupSeparator: '\u2009'
             }
         }
     },
@@ -55,7 +59,7 @@ export const esLAFormattersData = {
             // nbsp is generated automatically and used by default in spec
             groupSeparator: [' ', ' '],
             fractionSeparator: ','
-        }
+        } satisfies KbqNumberLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -93,7 +97,7 @@ export const faIRFormattersData = {
         number: {
             groupSeparator: ['\u066C'],
             fractionSeparator: '\u066B'
-        }
+        } satisfies KbqNumberLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -130,7 +134,7 @@ export const ptBRFormattersData = {
         number: {
             groupSeparator: ['.'],
             fractionSeparator: ','
-        }
+        } satisfies KbqNumberLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -160,6 +164,9 @@ export const ruRUFormattersData = {
                 million: 'М',
                 billion: 'М',
                 trillion: 'Т'
+            },
+            decimal: {
+                groupSeparator: '\u2009'
             }
         }
     },
@@ -169,7 +176,7 @@ export const ruRUFormattersData = {
             groupSeparator: [' ', ' '],
             fractionSeparator: ',',
             startFormattingFrom: 4
-        }
+        } satisfies KbqNumberLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -205,7 +212,7 @@ export const zhCNFormattersData = {
         number: {
             groupSeparator: [','],
             fractionSeparator: '.'
-        }
+        } satisfies KbqNumberLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -242,7 +249,7 @@ export const tkTMFormattersData = {
         number: {
             groupSeparator: [' '],
             fractionSeparator: ','
-        }
+        } satisfies KbqNumberLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',

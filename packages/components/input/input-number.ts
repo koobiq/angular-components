@@ -42,6 +42,7 @@ import {
     checkAndNormalizeLocalizedNumber,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
+    KbqNumberLocaleConfig,
     normalizeNumber,
     ruRUFormattersData
 } from '@koobiq/components/core';
@@ -86,12 +87,6 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     useExisting: forwardRef(() => KbqNumberInput),
     multi: true
 };
-
-interface NumberLocaleConfig {
-    groupSeparator: string[];
-    fractionSeparator: string;
-    startFormattingFrom?: number;
-}
 
 @Directive({
     selector: `input[kbqNumberInput]`,
@@ -221,7 +216,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private control: AbstractControl;
 
-    private config: NumberLocaleConfig;
+    private config: KbqNumberLocaleConfig;
 
     private valueFromPaste: number | null;
 

@@ -1,4 +1,4 @@
-import { Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
+import { inject, Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
 import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<string>('KbqNumberFormatterOptions');
@@ -14,7 +14,7 @@ function isEmpty(value: any): boolean {
     return value == null || value === '' || value !== value;
 }
 
-function strToNumber(value: number | string): number {
+function strToNumber(value: unknown): number {
     if (typeof value === 'string' && !isNaN(Number(value) - parseFloat(value))) {
         return Number(value);
     }
@@ -32,22 +32,6 @@ const minIntGroupPosition = 1;
 const minFractionGroupPosition = 3;
 const maxFractionGroupPosition = 5;
 const useGroupingPosition = 7;
-
-interface NumberFormatOptions {
-    useGrouping: boolean;
-
-    minimumIntegerDigits: number;
-    minimumFractionDigits: number;
-    maximumFractionDigits: number;
-    minimumSignificantDigits: number;
-    maximumSignificantDigits: number;
-
-    localeMatcher?: string;
-    style?: string;
-
-    currency?: string;
-    currencyDisplay?: string;
-}
 
 interface RoundDecimalOptions {
     separator: string;
@@ -125,14 +109,38 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
     return result;
 }
 
+/** @docs-private */
+export abstract class KbqAbstractNumberPipe {
+    /** @docs-private */
+    protected localeService: KbqLocaleService | null = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    abstract transform(value: unknown, digitsInfo?: string, locale?: string): string | null;
+
+    /** Formats a number value according to locale and formatting options */
+    protected formatNumberWithLocale(value: unknown, currentLocale: string, options: Intl.NumberFormatOptions): string {
+        const num = strToNumber(value);
+        const numberFormatParts = new Intl.NumberFormat(currentLocale, options).formatToParts(num);
+
+        for (const numberFormatPart of numberFormatParts) {
+            if (numberFormatPart.type === 'group') {
+                numberFormatPart.value =
+                    this.localeService?.locales[currentLocale].formatters.number.decimal?.groupSeparator ||
+                    numberFormatPart.value;
+            }
+        }
+
+        return numberFormatParts.map(({ value }) => value).join('');
+    }
+}
+
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqNumber', pure: false })
-export class KbqDecimalPipe implements PipeTransform {
+export class KbqDecimalPipe extends KbqAbstractNumberPipe implements PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
         @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
     ) {
+        super();
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
@@ -159,13 +167,13 @@ export class KbqDecimalPipe implements PipeTransform {
 
         const currentLocale = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        let parsedDigitsInfo;
+        let parsedDigitsInfo: ParsedDigitsInfo | undefined;
 
         if (digitsInfo) {
             parsedDigitsInfo = parseDigitsInfo(digitsInfo);
         }
 
-        const options: NumberFormatOptions = {
+        const options: Intl.NumberFormatOptions = {
             ...this.options,
             ...parsedDigitsInfo
         };
@@ -175,34 +183,29 @@ export class KbqDecimalPipe implements PipeTransform {
         }
 
         try {
-            const num = strToNumber(value);
-
-            /* Guideline requires for group separator to be `space`, as in 'ru-RU' locale.
-             * But by default in es-LA locale is used `comma`.
-             * To reduce data manipulation, 'ru-RU' locale is used. */
-            if (currentLocale === 'es-LA') {
-                return Intl.NumberFormat.call(this, 'ru-RU', options).format(num);
-            }
-
-            return Intl.NumberFormat.call(this, currentLocale, options).format(num);
+            return this.formatNumberWithLocale(value, currentLocale, options);
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
         }
     }
 
     isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean {
-        return ['ru', 'ru-RU'].includes(locale) && grouping === undefined && value < defaultValueForGroupingInRULocale;
+        return (
+            ['ru', 'ru-RU'].includes(locale) &&
+            grouping === undefined &&
+            Math.abs(value) < defaultValueForGroupingInRULocale
+        );
     }
 }
 
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqTableNumber', pure: false })
-export class KbqTableNumberPipe implements PipeTransform {
+export class KbqTableNumberPipe extends KbqAbstractNumberPipe implements PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
         @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
     ) {
+        super();
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
@@ -229,28 +232,19 @@ export class KbqTableNumberPipe implements PipeTransform {
 
         const currentLocale = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        let parsedDigitsInfo;
+        let parsedDigitsInfo: ParsedDigitsInfo | undefined;
 
         if (digitsInfo) {
             parsedDigitsInfo = parseDigitsInfo(digitsInfo);
         }
 
-        const options: NumberFormatOptions = {
+        const options: Intl.NumberFormatOptions = {
             ...this.options,
             ...parsedDigitsInfo
         };
 
         try {
-            const num = strToNumber(value);
-
-            /* Guideline requires for group separator to be `space`, as in 'ru-RU' locale.
-             * But by default in es-LA locale is used `comma`.
-             * To reduce data manipulation, 'ru-RU' locale is used. */
-            if (currentLocale === 'es-LA') {
-                return Intl.NumberFormat.call(this, 'ru-RU', options).format(num);
-            }
-
-            return Intl.NumberFormat.call(this, currentLocale, options).format(num);
+            return this.formatNumberWithLocale(value, currentLocale, options);
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`);
         }

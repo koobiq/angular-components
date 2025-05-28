@@ -20,3 +20,12 @@ export type KbqCodeBlockLocaleConfiguration = {
 export type KbqActionsPanelLocaleConfiguration = {
     closeTooltip: string;
 };
+
+/**
+ * Locale configuration for `KbqNumberInput`.
+ */
+export type KbqNumberLocaleConfig = {
+    groupSeparator: string[];
+    fractionSeparator: string;
+    startFormattingFrom?: number;
+};
