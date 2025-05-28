@@ -124,7 +124,7 @@ export interface KbqSaveFilterEvent {
 /** Flattened node */
 export class KbqTreeSelectFlatNode {
     name: string;
-    type?: string | number;
+    value: unknown;
     level: number;
     expandable: boolean;
     parent?: KbqTreeSelectFlatNode;
@@ -133,7 +133,7 @@ export class KbqTreeSelectFlatNode {
 export interface KbqTreeSelectNode {
     children: KbqTreeSelectNode[] | null;
     name: string;
-    type?: string | number;
+    value: unknown;
 }
 
 /**
@@ -146,8 +146,8 @@ export function kbqBuildTree<T extends KbqTreeSelectNode>(value: any, level: num
     for (const [k, v] of Object.entries(value)) {
         data.push({
             name: k.toString(),
-            type: v,
-            children: typeof v === 'object' ? kbqBuildTree(v, level + 1) : null
+            value: v,
+            children: typeof v === 'object' && v && !v['value'] ? kbqBuildTree(v, level + 1) : null
         } as T);
     }
 

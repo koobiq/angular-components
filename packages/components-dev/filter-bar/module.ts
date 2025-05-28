@@ -29,7 +29,7 @@ import { DevLocaleSelector } from '../locale-selector';
 const DEV_DATA_OBJECT = {
     'Без ролей': 'value 0',
     'Management and Configuration': {
-        Администратор: 'value 1',
+        Администратор: { value: 'value 1' },
         Оператор: 'value 2',
         Пользователь: 'value 3'
     },
@@ -854,6 +854,10 @@ export class DevApp implements AfterViewInit {
 
     onFilterChange(filter: KbqFilter | null) {
         console.log('onFilterChange: ', filter);
+    }
+
+    onPipeChange(pipe: KbqPipe | null) {
+        console.log('onPipeChange: ', pipe);
     }
 
     onSelectFilter(filter: KbqFilter) {

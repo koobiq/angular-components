@@ -11,6 +11,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { DestroyRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FlatTreeControl } from '@koobiq/components/tree';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -25,6 +26,10 @@ import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqSelect } from '@koobiq/components/select';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqTreeFlatDataSource } from '@koobiq/components/tree';
+import { KbqTreeFlattener } from '@koobiq/components/tree';
+import { KbqTreeOption } from '@koobiq/components/tree';
+import { KbqTreeSelect } from '@koobiq/components/tree-select';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -124,6 +129,9 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBasePipe<any>, never>;
 }
+
+// @public
+export function kbqBuildTree<T extends KbqTreeSelectNode>(value: any, level: number): T[];
 
 // @public (undocumented)
 export interface KbqDateTimeValue {
@@ -631,6 +639,38 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
 }
 
 // @public (undocumented)
+export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
+    constructor();
+    // (undocumented)
+    dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    filteredOptions: Observable<any[]>;
+    // (undocumented)
+    hasChild(_: number, nodeData: any): any;
+    get isEmpty(): boolean;
+    // (undocumented)
+    ngOnInit(): void;
+    // (undocumented)
+    onOpen(): void;
+    // (undocumented)
+    onSelect(item: KbqTreeOption): void;
+    open(): void;
+    searchControl: UntypedFormControl;
+    select: KbqTreeSelect;
+    get selected(): KbqSelectValue | null;
+    // (undocumented)
+    template: any;
+    // (undocumented)
+    treeControl: FlatTreeControl<KbqTreeSelectFlatNode>;
+    // (undocumented)
+    treeFlattener: KbqTreeFlattener<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
+    updateTemplates: (templates: KbqPipeTemplate[] | null) => void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeTreeSelectComponent, "kbq-pipe-tree-select", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqPipeTreeSelectComponent, never>;
+}
+
+// @public (undocumented)
 export type KbqPipeType = `${KbqPipeTypes}` | string;
 
 // @public
@@ -642,11 +682,15 @@ export enum KbqPipeTypes {
     // (undocumented)
     MultiSelect = "multiselect",
     // (undocumented)
+    MultiTreeSelect = "multiTreeSelect",
+    // (undocumented)
     ReadOnly = "readonly",
     // (undocumented)
     Select = "select",
     // (undocumented)
-    Text = "text"
+    Text = "text",
+    // (undocumented)
+    TreeSelect = "treeSelect"
 }
 
 // @public (undocumented)
@@ -679,6 +723,30 @@ export enum KbqSaveFilterStatuses {
 
 // @public (undocumented)
 export interface KbqSelectValue {
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    value: unknown;
+}
+
+// @public
+export class KbqTreeSelectFlatNode {
+    // (undocumented)
+    expandable: boolean;
+    // (undocumented)
+    level: number;
+    // (undocumented)
+    name: string;
+    // (undocumented)
+    parent?: KbqTreeSelectFlatNode;
+    // (undocumented)
+    value: unknown;
+}
+
+// @public (undocumented)
+export interface KbqTreeSelectNode {
+    // (undocumented)
+    children: KbqTreeSelectNode[] | null;
     // (undocumented)
     name: string;
     // (undocumented)
