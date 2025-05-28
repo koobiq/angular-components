@@ -30,6 +30,7 @@ const config = {
                 'experimental',
                 'schematics',
                 'dev',
+                'examples',
 
                 // data-grid
                 'ag-grid',

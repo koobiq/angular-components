@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -6,6 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File-upload multiple default
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'file-upload-multiple-default-overview-example',
     template: `

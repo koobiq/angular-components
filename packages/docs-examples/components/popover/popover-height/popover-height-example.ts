@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -9,6 +9,7 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
  * @title Popover height
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'popover-height-example',
     templateUrl: 'popover-height-example.html',

@@ -245,7 +245,8 @@ const componentsExamplesRules = {
     files: ['packages/docs-examples/**/*.ts'],
     rules: {
         '@angular-eslint/prefer-standalone': 1,
-        '@angular-eslint/use-component-selector': 1
+        '@angular-eslint/use-component-selector': 1,
+        '@angular-eslint/prefer-on-push-component-change-detection': 1
     }
 };
 

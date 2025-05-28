@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     DateAdapter,
@@ -15,6 +15,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
  * @title Relative date-formatter
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'relative-date-formatter-example',
     templateUrl: 'relative-date-formatter-example.html',

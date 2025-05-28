@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
@@ -12,6 +12,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
  * @title Dropdown disabled
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'dropdown-disabled-example',
     imports: [

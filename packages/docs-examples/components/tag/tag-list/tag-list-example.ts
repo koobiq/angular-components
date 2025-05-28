@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagsModule } from '@koobiq/components/tags';
 
@@ -6,6 +6,7 @@ import { KbqTagsModule } from '@koobiq/components/tags';
  * @title Tag list
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tag-list-example',
     imports: [

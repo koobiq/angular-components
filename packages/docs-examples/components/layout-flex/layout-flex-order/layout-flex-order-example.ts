@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -6,6 +6,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Layout-flex order
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'layout-flex-order-example',
     styleUrls: ['layout-flex-order-example.css'],
