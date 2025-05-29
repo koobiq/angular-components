@@ -24,8 +24,9 @@ export type KbqActionsPanelLocaleConfiguration = {
 /**
  * Locale configuration for `KbqNumberInput`.
  */
-export type KbqNumberLocaleConfig = {
+export type KbqNumberInputLocaleConfig = {
     groupSeparator: string[];
     fractionSeparator: string;
     startFormattingFrom?: number;
+    viewGroupSeparator?: string;
 };
