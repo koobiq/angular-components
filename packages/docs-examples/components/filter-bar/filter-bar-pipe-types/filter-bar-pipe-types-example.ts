@@ -1,6 +1,31 @@
 import { Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    kbqBuildTree,
+    KbqFilter,
+    KbqFilterBarModule,
+    KbqPipeTemplate,
+    KbqPipeTypes
+} from '@koobiq/components/filter-bar';
+
+const DATA_OBJECT = {
+    'Без ролей': 'value 0',
+    'Management and Configuration': {
+        Администратор: { value: 'value 1' },
+        Оператор: 'value 2',
+        Пользователь: 'value 3'
+    },
+    'MP 10': {
+        Администратор: 'value 4',
+        Оператор: 'value 5',
+        Пользователь: 'value 6'
+    },
+    'Knowledge Base': {
+        Администратор: 'value 7',
+        Оператор: 'value 8',
+        Пользователь: 'value 9'
+    }
+};
 
 /**
  * @title filter-bar-pipe-types
@@ -92,6 +117,24 @@ export class FilterBarPipeTypesExample {
             cleanable: false,
             removable: false,
             disabled: false
+        },
+        {
+            name: 'TreeSelect',
+            type: KbqPipeTypes.TreeSelect,
+            values: kbqBuildTree(DATA_OBJECT, 0),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiTreeSelect',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: kbqBuildTree(DATA_OBJECT, 0),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
         }
     ];
 
@@ -120,6 +163,25 @@ export class FilterBarPipeTypesExample {
                 {
                     name: 'MultiSelect',
                     type: KbqPipeTypes.MultiSelect,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'TreeSelect',
+                    type: KbqPipeTypes.TreeSelect,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'TreeSelect Multiple',
+                    id: 'MultiTreeSelect',
+                    type: KbqPipeTypes.MultiTreeSelect,
                     value: null,
 
                     cleanable: true,
