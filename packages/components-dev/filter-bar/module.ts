@@ -259,6 +259,7 @@ export class DevApp implements AfterViewInit {
                     type: KbqPipeTypes.MultiTreeSelect,
 
                     search: true,
+                    selectAll: true,
 
                     cleanable: false,
                     removable: false,
@@ -281,6 +282,7 @@ export class DevApp implements AfterViewInit {
                     type: KbqPipeTypes.MultiTreeSelect,
 
                     search: true,
+                    selectAll: true,
 
                     cleanable: true,
                     removable: false,
@@ -293,6 +295,7 @@ export class DevApp implements AfterViewInit {
                     type: KbqPipeTypes.MultiTreeSelect,
 
                     search: true,
+                    selectAll: true,
 
                     cleanable: false,
                     removable: true,

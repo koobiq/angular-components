@@ -4,13 +4,19 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqHighlightModule } from '@koobiq/components/core';
+import { KbqHighlightModule, KbqPseudoCheckboxModule, KbqPseudoCheckboxState } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
+import {
+    FlatTreeControl,
+    KbqTreeFlatDataSource,
+    KbqTreeFlattener,
+    KbqTreeModule,
+    KbqTreeSelection
+} from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { Observable } from 'rxjs';
 import { KbqPipeTemplate, KbqSelectValue, KbqTreeSelectFlatNode, KbqTreeSelectNode } from '../filter-bar.types';
@@ -50,7 +56,8 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqTreeSelectModule,
         NgIf,
         FormsModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqPseudoCheckboxModule
     ]
 })
 export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
@@ -69,6 +76,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
     /** @docs-private */
     @ViewChild(KbqTreeSelect) select: KbqTreeSelect;
 
+    /** @docs-private */
+    @ViewChild(KbqTreeSelection) tree: KbqTreeSelection;
+
     /** selected value */
     get selected() {
         return this.data.value;
@@ -77,6 +87,27 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
         return !this.data.value;
+    }
+
+    get selectAllCheckboxState(): KbqPseudoCheckboxState {
+        if (!this.select) return 'unchecked';
+
+        const arrayOfOptions = this.select.options.toArray().filter((option) => option.value !== 'selectAll');
+
+        if (arrayOfOptions.every((option) => option.selected)) {
+            return 'checked';
+        } else if (arrayOfOptions.every((option) => !option.selected)) {
+            return 'unchecked';
+        }
+
+        return 'indeterminate';
+    }
+
+    get numberOfSelectedLeaves(): number {
+        return this.select.options
+            .filter((option) => option.value !== 'selectAll')
+            .filter((option) => option.selected)
+            .filter((option) => !option.isExpandable).length;
     }
 
     constructor() {
@@ -104,11 +135,22 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
         return nodeData.expandable;
     }
 
-    onSelect() {
-        console.log('onSelect: ');
-        this.data.value = this.select.selectedValues;
-        this.filterBar?.onChangePipe.emit(this.data);
-        this.stateChanges.next();
+    onSelect({ value: option }) {
+        if (!option) return;
+
+        if (option.value === 'selectAll') {
+            this.tree.selectAllOptions();
+        } else {
+            if (option.isExpandable) {
+                this.tree.setStateChildren(option, !option.selected);
+            }
+
+            this.toggleParents(option.data.parent);
+
+            this.data.value = this.select.selectedValues;
+            this.filterBar?.onChangePipe.emit(this.data);
+            this.stateChanges.next();
+        }
     }
 
     /** updates values for selection and value template */
@@ -119,7 +161,19 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
             this.values = template.values;
             this.valueTemplate = template.valueTemplate;
 
-            this.dataSource.data = template.values as KbqTreeSelectNode[];
+            const values = [...(template.values as KbqTreeSelectNode[])];
+
+            console.log('if (this.data.selectAll) {: ');
+
+            if (this.data.selectAll) {
+                values.unshift({
+                    name: this.localeData.pipe.selectAll,
+                    value: 'selectAll',
+                    children: null
+                });
+            }
+
+            this.dataSource.data = values;
         }
     };
 
@@ -130,6 +184,23 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
 
     onOpen() {
         this.treeControl.expandAll();
+    }
+
+    private toggleParents(parent) {
+        if (!parent) {
+            return;
+        }
+
+        const descendants = this.treeControl.getDescendants(parent);
+        const isParentSelected = this.select.selectionModel.selected.includes(parent);
+
+        if (!isParentSelected && descendants.every((d: any) => this.select.selectionModel.selected.includes(d))) {
+            this.select.selectionModel.select(parent);
+            this.toggleParents(parent.parent);
+        } else if (isParentSelected) {
+            this.select.selectionModel.deselect(parent);
+            this.toggleParents(parent.parent);
+        }
     }
 
     private transformer = (node: KbqTreeSelectNode, level: number, parent: any) => {

@@ -682,7 +682,7 @@ export enum KbqPipeTypes {
     // (undocumented)
     MultiSelect = "multiselect",
     // (undocumented)
-    MultiTreeSelect = "multiTreeSelect",
+    MultiTreeSelect = "multi-tree-select",
     // (undocumented)
     ReadOnly = "readonly",
     // (undocumented)
@@ -690,7 +690,7 @@ export enum KbqPipeTypes {
     // (undocumented)
     Text = "text",
     // (undocumented)
-    TreeSelect = "treeSelect"
+    TreeSelect = "tree-select"
 }
 
 // @public (undocumented)
