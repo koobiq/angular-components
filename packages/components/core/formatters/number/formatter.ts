@@ -1,4 +1,5 @@
-import { inject, Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
+import { coerceNumberProperty } from '@angular/cdk/coercion';
+import { Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
 import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
 
 export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<string>('KbqNumberFormatterOptions');
@@ -10,20 +11,47 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     maximumFractionDigits: 3
 };
 
+/** Formats a number value according to locale and formatting options */
+export function formatNumberWithLocale(
+    value: unknown,
+    formatter: Intl.NumberFormat,
+    options?: { viewGroupSeparator?: string }
+): string {
+    const num = strToNumber(value);
+
+    if (!options?.viewGroupSeparator) return formatter.format(num);
+
+    const numberFormatParts = formatter.formatToParts(num);
+
+    for (const numberFormatPart of numberFormatParts) {
+        if (numberFormatPart.type === 'group') {
+            numberFormatPart.value = options.viewGroupSeparator;
+        }
+    }
+
+    return numberFormatParts.map(({ value }) => value).join('');
+}
+
+/**
+ * Special contract between `KbqDecimalPipe` and `KbqTableNumberPipe`,
+ * so they can be interchangeable in the cases of usage
+ */
+export interface KbqNumericPipe {
+    transform(value: unknown, digitsInfo?: string, locale?: string): string | null;
+}
+
 function isEmpty(value: any): boolean {
     return value == null || value === '' || value !== value;
 }
 
 function strToNumber(value: unknown): number {
-    if (typeof value === 'string' && !isNaN(Number(value) - parseFloat(value))) {
-        return Number(value);
-    }
+    const coerced = coerceNumberProperty(value, null);
 
-    if (typeof value !== 'number') {
+    if (coerced === null) {
         throw new Error(`${value} is not a number`);
     }
 
-    return value;
+    return coerced;
 }
 
 export const NUMBER_FORMAT_REGEXP = /^(\d+)?\.((\d+)(-(\d+))?(-(true|false))?)?$/;
@@ -109,38 +137,14 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
     return result;
 }
 
-/** @docs-private */
-export abstract class KbqAbstractNumberPipe {
-    /** @docs-private */
-    protected localeService: KbqLocaleService | null = inject(KBQ_LOCALE_SERVICE, { optional: true });
-
-    abstract transform(value: unknown, digitsInfo?: string, locale?: string): string | null;
-
-    /** Formats a number value according to locale and formatting options */
-    protected formatNumberWithLocale(value: unknown, currentLocale: string, options: Intl.NumberFormatOptions): string {
-        const num = strToNumber(value);
-        const numberFormatParts = new Intl.NumberFormat(currentLocale, options).formatToParts(num);
-
-        for (const numberFormatPart of numberFormatParts) {
-            if (numberFormatPart.type === 'group') {
-                numberFormatPart.value =
-                    this.localeService?.locales[currentLocale].formatters.number.decimal?.groupSeparator ||
-                    numberFormatPart.value;
-            }
-        }
-
-        return numberFormatParts.map(({ value }) => value).join('');
-    }
-}
-
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqNumber', pure: false })
-export class KbqDecimalPipe extends KbqAbstractNumberPipe implements PipeTransform {
+export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
         @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
     ) {
-        super();
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
@@ -183,7 +187,13 @@ export class KbqDecimalPipe extends KbqAbstractNumberPipe implements PipeTransfo
         }
 
         try {
-            return this.formatNumberWithLocale(value, currentLocale, options);
+            const formatter = new Intl.NumberFormat(currentLocale, options);
+
+            return formatNumberWithLocale(
+                value,
+                formatter,
+                this.localeService?.locales[currentLocale].formatters.number.decimal
+            );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
         }
@@ -200,12 +210,12 @@ export class KbqDecimalPipe extends KbqAbstractNumberPipe implements PipeTransfo
 
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqTableNumber', pure: false })
-export class KbqTableNumberPipe extends KbqAbstractNumberPipe implements PipeTransform {
+export class KbqTableNumberPipe implements PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
+        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
         @Optional() @Inject(KBQ_NUMBER_FORMATTER_OPTIONS) private readonly options: ParsedDigitsInfo
     ) {
-        super();
         this.options = this.options || KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS;
 
         this.localeService?.changes.subscribe((newId: string) => (this.id = newId));
@@ -244,7 +254,13 @@ export class KbqTableNumberPipe extends KbqAbstractNumberPipe implements PipeTra
         };
 
         try {
-            return this.formatNumberWithLocale(value, currentLocale, options);
+            const formatter = new Intl.NumberFormat(currentLocale, options);
+
+            return formatNumberWithLocale(
+                value,
+                formatter,
+                this.localeService?.locales[currentLocale].formatters.number.decimal
+            );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`);
         }

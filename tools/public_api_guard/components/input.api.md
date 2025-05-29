@@ -54,6 +54,7 @@ export const KBQ_INPUT_NUMBER_DEFAULT_CONFIGURATION: {
     groupSeparator: string[];
     fractionSeparator: string;
     startFormattingFrom: number;
+    viewGroupSeparator: string;
 };
 
 // @public (undocumented)

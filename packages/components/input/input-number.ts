@@ -40,9 +40,10 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     checkAndNormalizeLocalizedNumber,
+    formatNumberWithLocale,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
-    KbqNumberLocaleConfig,
+    KbqNumberInputLocaleConfig,
     normalizeNumber,
     ruRUFormattersData
 } from '@koobiq/components/core';
@@ -216,7 +217,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private control: AbstractControl;
 
-    private config: KbqNumberLocaleConfig;
+    private config: KbqNumberInputLocaleConfig;
 
     private valueFromPaste: number | null;
 
@@ -503,14 +504,17 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const localeId = !this.localeService || this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
 
         const formatter = new Intl.NumberFormat(localeId, formatOptions);
-        const formattedFractionPart = fractionPart
-            ?.split('')
-            .map((numChar) => formatter.format(+numChar))
-            .join('');
+        let formattedFractionPart: string = '';
 
-        return formattedFractionPart === undefined
-            ? formatter.format(intPart)
-            : `${formatter.format(intPart)}${this.fractionSeparator}${formattedFractionPart}`;
+        for (const numChar of fractionPart || '') {
+            formattedFractionPart += formatter.format(+numChar);
+        }
+
+        const formattedIntPart = formatNumberWithLocale(intPart, formatter, this.config);
+
+        return formattedFractionPart === ''
+            ? formattedIntPart
+            : `${formattedIntPart}${this.fractionSeparator}${formattedFractionPart}`;
     }
 
     private updateLocaleParams = () => {

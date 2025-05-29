@@ -1,5 +1,5 @@
 import { KbqSizeUnitsConfig } from '../formatters';
-import { KbqNumberLocaleConfig } from './types';
+import { KbqNumberInputLocaleConfig } from './types';
 
 export const enUSFormattersData = {
     formatters: {
@@ -18,7 +18,7 @@ export const enUSFormattersData = {
         number: {
             groupSeparator: [','],
             fractionSeparator: '.'
-        } satisfies KbqNumberLocaleConfig
+        } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -50,16 +50,17 @@ export const esLAFormattersData = {
                 trillion: 'B'
             },
             decimal: {
-                groupSeparator: '\u2009'
+                viewGroupSeparator: '\u2009'
             }
         }
     },
     input: {
         number: {
             // nbsp is generated automatically and used by default in spec
-            groupSeparator: [' ', ' '],
-            fractionSeparator: ','
-        } satisfies KbqNumberLocaleConfig
+            groupSeparator: [' ', ' ', '\u2009'],
+            fractionSeparator: ',',
+            viewGroupSeparator: '\u2009'
+        } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -97,7 +98,7 @@ export const faIRFormattersData = {
         number: {
             groupSeparator: ['\u066C'],
             fractionSeparator: '\u066B'
-        } satisfies KbqNumberLocaleConfig
+        } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -134,7 +135,7 @@ export const ptBRFormattersData = {
         number: {
             groupSeparator: ['.'],
             fractionSeparator: ','
-        } satisfies KbqNumberLocaleConfig
+        } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -166,17 +167,18 @@ export const ruRUFormattersData = {
                 trillion: 'Т'
             },
             decimal: {
-                groupSeparator: '\u2009'
+                viewGroupSeparator: '\u2009'
             }
         }
     },
     input: {
         number: {
             // nbsp is generated automatically and used by default in spec
-            groupSeparator: [' ', ' '],
+            groupSeparator: [' ', ' ', '\u2009'],
             fractionSeparator: ',',
-            startFormattingFrom: 4
-        } satisfies KbqNumberLocaleConfig
+            startFormattingFrom: 4,
+            viewGroupSeparator: '\u2009'
+        } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -212,7 +214,7 @@ export const zhCNFormattersData = {
         number: {
             groupSeparator: [','],
             fractionSeparator: '.'
-        } satisfies KbqNumberLocaleConfig
+        } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
@@ -249,7 +251,7 @@ export const tkTMFormattersData = {
         number: {
             groupSeparator: [' '],
             fractionSeparator: ','
-        } satisfies KbqNumberLocaleConfig
+        } satisfies KbqNumberInputLocaleConfig
     },
     sizeUnits: {
         defaultUnitSystem: 'SI',
