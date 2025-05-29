@@ -662,9 +662,7 @@ export const formatDataSize: (value: number, precision: number, system: KbqUnitS
 };
 
 // @public
-export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: {
-    viewGroupSeparator?: string;
-}): string;
+export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
 // @public
 export const getFormattedSizeParts: (value: number, precision: number, system: KbqUnitSystem) => {
@@ -1645,7 +1643,7 @@ export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
 
 // @public (undocumented)
-export const KBQ_NUMBER_FORMATTER_OPTIONS: InjectionToken<string>;
+export const KBQ_NUMBER_FORMATTER_OPTIONS: InjectionToken<ParsedDigitsInfo>;
 
 // @public (undocumented)
 export const KBQ_OPTION_ACTION_PARENT: InjectionToken<KbqOptionActionParent>;
@@ -2029,12 +2027,16 @@ export class KbqMeasureScrollbarService {
 }
 
 // @public
+export type KbqNumberFormatOptions = {
+    viewGroupSeparator?: string;
+};
+
+// @public
 export type KbqNumberInputLocaleConfig = {
     groupSeparator: string[];
     fractionSeparator: string;
     startFormattingFrom?: number;
-    viewGroupSeparator?: string;
-};
+} & KbqNumberFormatOptions;
 
 // @public
 export interface KbqNumericPipe {
@@ -2552,7 +2554,7 @@ export interface KbqSizeUnitsConfig {
 }
 
 // @public (undocumented)
-export class KbqTableNumberPipe implements PipeTransform {
+export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor(id: string, localeService: KbqLocaleService, options: ParsedDigitsInfo);
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;

@@ -6,6 +6,7 @@
 
 import { AbstractControl } from '@angular/forms';
 import { CanUpdateErrorState } from '@koobiq/components/core';
+import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -210,6 +211,17 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInputPassword, "input[kbqInputPassword]", ["kbqInputPassword"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "required": { "alias": "required"; "required": false; }; "value": { "alias": "value"; "required": false; }; }, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInputPassword, [null, { optional: true; self: true; }, { optional: true; }, { optional: true; }, null, { optional: true; self: true; }]>;
+}
+
+// @public (undocumented)
+export class kbqNormalizeWhitespace {
+    protected clipboard: Clipboard_2;
+    protected elementRef: ElementRef;
+    onCopy($event: ClipboardEvent): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<kbqNormalizeWhitespace, "[kbqNormalizeWhitespace]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<kbqNormalizeWhitespace, never>;
 }
 
 // @public (undocumented)
