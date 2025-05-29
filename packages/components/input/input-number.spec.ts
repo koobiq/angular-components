@@ -10,12 +10,19 @@ import {
 import { By } from '@angular/platform-browser';
 import { COMMA, DASH, DOWN_ARROW, FF_MINUS, NUMPAD_MINUS, UP_ARROW } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchEvent, dispatchFakeEvent, dispatchKeyboardEvent } from '@koobiq/cdk/testing';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
+import {
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqLocaleServiceModule,
+    ruRUFormattersData
+} from '@koobiq/components/core';
 import {
     KbqFormFieldModule,
     getKbqFormFieldYouCanNotUseCleanerInNumberInputError
 } from '@koobiq/components/form-field';
 import { KbqInput, KbqInputModule, KbqNumberInput } from './index';
+
+const defaultLocaleGroupSep = ruRUFormattersData.input.number.viewGroupSeparator;
 
 function createComponent<T>(component: Type<T>, imports: any[] = [], providers: Provider[] = []): ComponentFixture<T> {
     TestBed.resetTestingModule();
@@ -899,7 +906,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('12 345');
+            expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(12345);
         }));
@@ -926,7 +933,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('11 145');
+            expect(inputElement.value).toBe(`11${defaultLocaleGroupSep}145`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
         }));
 
@@ -953,7 +960,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('10 234,1234');
+            expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}234,1234`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(10234.1234);
         }));
@@ -981,7 +988,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('99 999,999');
+            expect(inputElement.value).toBe(`99${defaultLocaleGroupSep}999,999`);
             expect(previousGroupSep.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
 
             const previousValue = fixture.componentInstance.value;
@@ -1006,7 +1013,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('12 345,12345');
+            expect(inputElement.value).toBe(`12${defaultLocaleGroupSep}345,12345`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
             expect(fixture.componentInstance.value).toBe(12345.12345);
             expect(typeof fixture.componentInstance.value).toBe('number');
@@ -1055,7 +1062,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('10 000');
+            expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000`);
             expect(groupSeparator.some((separator) => inputElement.value.includes(separator))).toBeTruthy();
         }));
 
@@ -1075,7 +1082,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('1 234 567,89');
+            expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,89`);
 
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
@@ -1089,7 +1096,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('10 000,7');
+            expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000,7`);
         }));
 
         it('nothing should happen when inserting a text value', fakeAsync(() => {
@@ -1114,7 +1121,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(preventDefault).not.toHaveBeenCalled();
-            expect(inputElement.value).toBe('1 234 567,89');
+            expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,89`);
 
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault,
@@ -1126,7 +1133,7 @@ describe('KbqNumberInput', () => {
             flush();
 
             expect(preventDefault).toHaveBeenCalled();
-            expect(inputElement.value).toBe('1 234 567,89');
+            expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567,89`);
         }));
     });
 
@@ -1156,7 +1163,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('1 234 567');
+            expect(inputElement.value).toBe(`1${defaultLocaleGroupSep}234${defaultLocaleGroupSep}567`);
 
             inputElementDebug.triggerEventHandler('paste', {
                 preventDefault: () => null,
@@ -1167,7 +1174,7 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            expect(inputElement.value).toBe('10 000');
+            expect(inputElement.value).toBe(`10${defaultLocaleGroupSep}000`);
         }));
     });
 });

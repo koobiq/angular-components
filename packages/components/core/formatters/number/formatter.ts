@@ -1,8 +1,14 @@
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
-import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
+import {
+    KBQ_DEFAULT_LOCALE_ID,
+    KBQ_LOCALE_ID,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqNumberFormatOptions
+} from '../../locales';
 
-export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<string>('KbqNumberFormatterOptions');
+export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
 
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     useGrouping: true,
@@ -15,7 +21,7 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
 export function formatNumberWithLocale(
     value: unknown,
     formatter: Intl.NumberFormat,
-    options?: { viewGroupSeparator?: string }
+    options?: KbqNumberFormatOptions
 ): string {
     const num = strToNumber(value);
 
@@ -210,7 +216,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
 
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqTableNumber', pure: false })
-export class KbqTableNumberPipe implements PipeTransform {
+export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,

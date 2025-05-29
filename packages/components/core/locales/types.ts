@@ -21,12 +21,18 @@ export type KbqActionsPanelLocaleConfiguration = {
     closeTooltip: string;
 };
 
-/**
- * Locale configuration for `KbqNumberInput`.
- */
-export type KbqNumberInputLocaleConfig = {
-    groupSeparator: string[];
-    fractionSeparator: string;
-    startFormattingFrom?: number;
+/** Options for overriding locale-based number formatting */
+export type KbqNumberFormatOptions = {
+    /** Overrides the default group separator in the formatted output */
     viewGroupSeparator?: string;
 };
+
+/** Locale configuration for `KbqNumberInput`. */
+export type KbqNumberInputLocaleConfig = {
+    /** Characters recognized as group (thousands) separators. */
+    groupSeparator: string[];
+    /** Character used for the decimal separator */
+    fractionSeparator: string;
+    /** Number of digits before applying group separators */
+    startFormattingFrom?: number;
+} & KbqNumberFormatOptions;

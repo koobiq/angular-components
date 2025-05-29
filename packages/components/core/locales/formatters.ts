@@ -1,5 +1,5 @@
 import { KbqSizeUnitsConfig } from '../formatters';
-import { KbqNumberInputLocaleConfig } from './types';
+import { KbqNumberFormatOptions, KbqNumberInputLocaleConfig } from './types';
 
 export const enUSFormattersData = {
     formatters: {
@@ -51,7 +51,7 @@ export const esLAFormattersData = {
             },
             decimal: {
                 viewGroupSeparator: '\u2009'
-            }
+            } satisfies KbqNumberFormatOptions
         }
     },
     input: {
@@ -168,7 +168,7 @@ export const ruRUFormattersData = {
             },
             decimal: {
                 viewGroupSeparator: '\u2009'
-            }
+            } satisfies KbqNumberFormatOptions
         }
     },
     input: {
