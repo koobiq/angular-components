@@ -9,7 +9,7 @@
     [panelClass]="'kbq-pipe-multi-tree-select__panel'"
     [tabIndex]="-1"
     (opened)="onOpen()"
-    (selectionChange)="onSelect()"
+    (selectionChange)="onSelect($event)"
 >
     <!-- eslint-disable-next-line @angular-eslint/template/prefer-control-flow -->
     <kbq-form-field *ngIf="data.search" kbqFormFieldWithoutBorders kbqSelectSearch>
@@ -43,17 +43,20 @@
             </span>
         } @else if (select.triggerValues.length > 1) {
             <kbq-badge [badgeColor]="'contrast'" [compact]="true">
-                {{ select.triggerValues.length }}
+                {{ numberOfSelectedLeaves }}
             </kbq-badge>
         }
     </button>
 
     <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-        <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+        <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+            @if (node.value === 'selectAll') {
+                <kbq-pseudo-checkbox [state]="selectAllCheckboxState" />
+            }
             <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
         </kbq-tree-option>
 
-        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
+        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
             <kbq-tree-node-toggle [node]="node" />
             <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
         </kbq-tree-option>
