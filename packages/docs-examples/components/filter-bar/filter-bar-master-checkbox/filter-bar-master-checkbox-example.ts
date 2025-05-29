@@ -1,5 +1,30 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    kbqBuildTree,
+    KbqFilter,
+    KbqFilterBarModule,
+    KbqPipeTemplate,
+    KbqPipeTypes
+} from '@koobiq/components/filter-bar';
+
+const DATA_OBJECT = {
+    'Без ролей': 'value 0',
+    'Management and Configuration': {
+        Администратор: { value: 'value 1' },
+        Оператор: 'value 2',
+        Пользователь: 'value 3'
+    },
+    'MP 10': {
+        Администратор: 'value 4',
+        Оператор: 'value 5',
+        Пользователь: 'value 6'
+    },
+    'Knowledge Base': {
+        Администратор: 'value 7',
+        Оператор: 'value 8',
+        Пользователь: 'value 9'
+    }
+};
 
 /**
  * @title filter-bar-master-checkbox
@@ -47,6 +72,19 @@ export class FilterBarMasterCheckboxExample {
                 cleanable: true,
                 removable: false,
                 disabled: false
+            },
+            {
+                name: 'TreeSelect Multiple',
+                id: 'MultiTreeSelect',
+                type: KbqPipeTypes.MultiTreeSelect,
+                value: ['value 2', 'value 3'],
+
+                search: true,
+                selectAll: true,
+
+                cleanable: true,
+                removable: false,
+                disabled: false
             }
         ]
     };
@@ -61,18 +99,9 @@ export class FilterBarMasterCheckboxExample {
             disabled: false
         },
         {
-            name: 'Select',
-            type: KbqPipeTypes.Select,
-            values: [
-                { name: 'Option 1', id: '1' },
-                { name: 'Option 2', id: '2' },
-                { name: 'Option 3', id: '3' },
-                { name: 'Option 4', id: '4' },
-                { name: 'Option 5', id: '5' },
-                { name: 'Option 6', id: '6' },
-                { name: 'Option 7', id: '7' }
-            ],
-
+            name: 'MultiTreeSelect',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: kbqBuildTree(DATA_OBJECT, 0),
             cleanable: false,
             removable: true,
             disabled: false
