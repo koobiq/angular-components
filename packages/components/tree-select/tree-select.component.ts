@@ -802,7 +802,7 @@ export class KbqTreeSelect
     }
 
     get selected(): any {
-        return this.multiple ? this.selectionModel.selected : this.selectionModel.selected[0];
+        return this.multiple ? this.selectionModel?.selected : this.selectionModel?.selected[0];
     }
 
     get selectedValues(): any {

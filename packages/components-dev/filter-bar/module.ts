@@ -50,49 +50,49 @@ const DEV_DATA_OBJECT = {
     imports: [FilterBarExamplesModule],
     selector: 'dev-examples',
     template: `
-        <!--        <filter-bar-overview-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
+        <filter-bar-overview-example />
+        <br />
+        <br />
         <filter-bar-search-in-pipes-example />
         <br />
         <br />
-        <!--        <filter-bar-inactive-filter-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
+        <filter-bar-inactive-filter-example />
+        <br />
+        <br />
         <filter-bar-master-checkbox-example />
         <br />
         <br />
-        <!--        <filter-bar-readonly-pipe-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-readonly-pipes-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-uniq-pipes-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-custom-pipe-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-cleanable-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-removable-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-required-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-pipe-types-example />-->
+        <filter-bar-readonly-pipe-example />
         <br />
         <br />
-        <!--        <filter-bar-search-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-saved-filters-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <filter-bar-complete-functions-example />-->
+        <filter-bar-readonly-pipes-example />
+        <br />
+        <br />
+        <filter-bar-uniq-pipes-example />
+        <br />
+        <br />
+        <filter-bar-custom-pipe-example />
+        <br />
+        <br />
+        <filter-bar-cleanable-example />
+        <br />
+        <br />
+        <filter-bar-removable-example />
+        <br />
+        <br />
+        <filter-bar-required-example />
+        <br />
+        <br />
+        <filter-bar-pipe-types-example />
+        <br />
+        <br />
+        <filter-bar-search-example />
+        <br />
+        <br />
+        <filter-bar-saved-filters-example />
+        <br />
+        <br />
+        <filter-bar-complete-functions-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
