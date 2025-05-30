@@ -96,12 +96,13 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         return 'indeterminate';
     }
 
-    private get visibleOptions(): KbqOption[] {
-        return this.options.filter((option) => option.selectable);
+    /** true if all visible options selected */
+    get allOptionsSelected(): boolean {
+        return this.visibleOptions?.every((option) => option.selected);
     }
 
-    private get allOptionsSelected(): boolean {
-        return this.visibleOptions.every((option) => option.selected);
+    private get visibleOptions(): KbqOption[] {
+        return this.options?.filter((option) => option.selectable);
     }
 
     private selectionAllInProgress = false;
