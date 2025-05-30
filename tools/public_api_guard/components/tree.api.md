@@ -552,6 +552,9 @@ export class KbqTreeSelectAllEvent<T> {
 }
 
 // @public (undocumented)
+export const kbqTreeSelectAllValue = "selectAll";
+
+// @public (undocumented)
 export class KbqTreeSelection extends KbqTreeBase<any> implements ControlValueAccessor, AfterContentInit, AfterViewInit, OnDestroy {
     constructor(elementRef: ElementRef, scheduler: AsyncScheduler, differs: IterableDiffers, changeDetectorRef: ChangeDetectorRef, multiple: MultipleMode, clipboard: Clipboard_2);
     // (undocumented)

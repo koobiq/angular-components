@@ -15,6 +15,7 @@ import {
     KbqTreeFlatDataSource,
     KbqTreeFlattener,
     KbqTreeModule,
+    kbqTreeSelectAllValue,
     KbqTreeSelection
 } from '@koobiq/components/tree';
 import { KbqTreeSelect, KbqTreeSelectModule } from '@koobiq/components/tree-select';
@@ -92,7 +93,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
     get selectAllCheckboxState(): KbqPseudoCheckboxState {
         if (!this.select) return 'unchecked';
 
-        const arrayOfOptions = this.select.options.toArray().filter((option) => option.value !== 'selectAll');
+        const arrayOfOptions = this.select.options.toArray().filter((option) => option.value !== kbqTreeSelectAllValue);
 
         if (arrayOfOptions.every((option) => option.selected)) {
             return 'checked';
@@ -104,10 +105,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
     }
 
     get numberOfSelectedLeaves(): number {
-        return this.select.options
-            .filter((option) => option.value !== 'selectAll')
-            .filter((option) => option.selected)
-            .filter((option) => !option.isExpandable).length;
+        return this.select.selected.filter(({ value }) => value !== kbqTreeSelectAllValue).length;
     }
 
     constructor() {
@@ -138,7 +136,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
     onSelect({ value: option }) {
         if (!option) return;
 
-        if (option.value === 'selectAll') {
+        if (option.value === kbqTreeSelectAllValue) {
             this.tree.selectAllOptions();
         } else {
             if (option.isExpandable) {
@@ -168,7 +166,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue>
             if (this.data.selectAll) {
                 values.unshift({
                     name: this.localeData.pipe.selectAll,
-                    value: 'selectAll',
+                    value: kbqTreeSelectAllValue,
                     children: null
                 });
             }
