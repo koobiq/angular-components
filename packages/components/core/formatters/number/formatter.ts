@@ -198,7 +198,7 @@ export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
             return formatNumberWithLocale(
                 value,
                 formatter,
-                this.localeService?.locales[currentLocale].formatters.number.decimal
+                this.localeService?.locales[currentLocale]?.formatters.number.decimal
             );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
@@ -265,7 +265,7 @@ export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
             return formatNumberWithLocale(
                 value,
                 formatter,
-                this.localeService?.locales[currentLocale].formatters.number.decimal
+                this.localeService?.locales[currentLocale]?.formatters.number.decimal
             );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`);
@@ -296,7 +296,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
         const currentLocale: string = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        this.roundingOptions = this.localeService.locales[currentLocale].formatters.number.rounding;
+        this.roundingOptions = this.localeService?.locales[currentLocale].formatters.number.rounding;
 
         try {
             const num = strToNumber(value);
