@@ -1,5 +1,7 @@
 import { FlatTreeControl } from './flat-tree-control';
 
+export const kbqTreeSelectAllValue = 'selectAll';
+
 export interface FlatTreeControlFilter<T> {
     result: T[];
 
@@ -14,9 +16,15 @@ export class FilterByViewValue<T> implements FlatTreeControlFilter<T> {
     handle(value: string | null): T[] {
         const viewValue = value || null;
 
-        this.result = this.control.dataNodes.filter((node) =>
-            this.control.compareViewValues(this.control.getViewValue(node), viewValue)
-        );
+        this.result = this.control.dataNodes.filter((node) => {
+            if (node['value'] === kbqTreeSelectAllValue) return true;
+
+            return this.control.compareViewValues(this.control.getViewValue(node), viewValue);
+        });
+
+        if (this.result.length === 1 && this.result[0]['value'] === kbqTreeSelectAllValue) {
+            this.result.pop();
+        }
 
         return this.result;
     }
