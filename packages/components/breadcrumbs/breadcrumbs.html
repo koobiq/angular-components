@@ -16,6 +16,8 @@
         [style.max-width.px]="maxWidth"
     >
         <div class="kbq-breadcrumb-item__container" [kbqOverflowItem]="0" [order]="items.length">
+            <!--  resolved SSR issue with official hack https://github.com/angular/angular/issues/50543#issuecomment-1572900259-->
+            <ng-content />
             <ng-container *ngTemplateOutlet="breadcrumbTemplate; context: { $implicit: items.first, last: false }" />
             <ng-container [ngTemplateOutlet]="separatorTemplate" />
         </div>
