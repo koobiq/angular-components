@@ -1,14 +1,11 @@
+#
+# This workflow updates the E2E screenshots when a comment with `/e2e-update-screenshots` is added to a pull request.
+#
 name: E2E update screenshots
 
 on:
-  pull_request:
-  # issue_comment:
-  #   types: [created, edited]
-  # workflow_dispatch:
-  #   inputs:
-  #     update_screenshots:
-  #       description: 'Should the E2E screenshots be updated?'
-  #       type: boolean
+  issue_comment:
+    types: [created, edited]
 
 permissions:
   contents: write
@@ -19,12 +16,12 @@ concurrency:
 
 jobs:
   update_screenshots:
-    # if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/e2e-update-screenshots') }}
-    # if: ${{ inputs.update_screenshots == 'true' }}
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/e2e-update-screenshots') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
       - name: Setup yarn
         uses: ./.github/workflows/actions/setup-yarn
