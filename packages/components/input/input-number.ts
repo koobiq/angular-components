@@ -1,4 +1,3 @@
-import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Attribute,
@@ -100,18 +99,18 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
 })
 export class kbqNormalizeWhitespace {
     /** @docs-private */
-    protected elementRef: ElementRef = inject(ElementRef);
-    /** @docs-private */
-    protected clipboard = inject(Clipboard);
+    protected elementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
     /**
      * Replace thin-space with space on copy event
      */
     onCopy($event: ClipboardEvent) {
-        if ($event.type === 'copy' && (this.elementRef.nativeElement as HTMLInputElement).value) {
+        const value =
+            (this.elementRef.nativeElement as HTMLInputElement).value || this.elementRef.nativeElement.textContent;
+
+        if ($event.type === 'copy' && value) {
             $event.preventDefault();
-            $event.stopPropagation();
-            this.clipboard.copy(this.elementRef.nativeElement.value.replace(/\u2009/g, ' '));
+            $event.clipboardData?.setData('text', value?.replace(/\u2009/g, ' '));
         }
     }
 }
