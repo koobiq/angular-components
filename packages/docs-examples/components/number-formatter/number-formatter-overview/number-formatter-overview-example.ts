@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KBQ_LOCALE_SERVICE, KbqFormattersModule, KbqLocaleService } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input';
 import { delay } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
@@ -17,17 +17,18 @@ import { distinctUntilChanged } from 'rxjs/operators';
         FormsModule,
         KbqFormFieldModule,
         KbqFormattersModule,
-        KbqInputModule
+        KbqInputModule,
+        kbqNormalizeWhitespace
     ],
     styles: `
         :host {
             .light-text-secondary {
-                color: #ccc;
+                color: var(--kbq-foreground-contrast-secondary);
             }
 
             .row-border {
-                padding: 8px;
-                border-bottom: 1px solid #ccc;
+                padding: var(--kbq-size-s);
+                border-bottom: 1px solid var(--kbq-line-contrast-less);
             }
         }
     `

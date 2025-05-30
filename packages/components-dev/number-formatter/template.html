@@ -1,7 +1,7 @@
 <dev-locale-selector />
 
 <kbq-form-field class="dev-number-input">
-    <input kbqInput placeholder="Number" type="number" [(ngModel)]="value" />
+    <input kbqNormalizeWhitespace kbqNumberInput placeholder="Number" [(ngModel)]="value" />
 </kbq-form-field>
 
 <div class="kbq-subheading">
@@ -67,8 +67,8 @@
         </div>
         <div class="layout-row dev-row-border">
             <div class="flex">locale ru</div>
-            <div class="flex">{{ 1000 | kbqNumber: '' : 'ru' }}</div>
-            <div class="flex">{{ 1000 | kbqTableNumber: '' : 'ru' }}</div>
+            <div class="flex">{{ 1000 | kbqNumber: '' : 'ru-RU' }}</div>
+            <div class="flex">{{ 1000 | kbqTableNumber: '' : 'ru-RU' }}</div>
         </div>
     </div>
 </div>

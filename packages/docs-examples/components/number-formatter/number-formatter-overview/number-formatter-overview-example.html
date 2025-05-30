@@ -1,5 +1,5 @@
 <kbq-form-field style="margin-top: 32px; margin-bottom: 32px; max-width: 200px">
-    <input kbqInput placeholder="Number" type="number" [(ngModel)]="value" />
+    <input kbqNormalizeWhitespace kbqNumberInput placeholder="Number" [(ngModel)]="value" />
 </kbq-form-field>
 
 <div class="kbq-text-big">
@@ -11,7 +11,7 @@
         </div>
 
         <div class="layout-row row-border">
-            <div class="flex">-</div>
+            <div class="flex">—</div>
             <div class="flex">{{ value | kbqNumber }}</div>
             <div class="flex">{{ value | kbqTableNumber }}</div>
         </div>
@@ -41,27 +41,27 @@
             <div class="flex">{{ value | kbqTableNumber: '4.0-0' }}</div>
         </div>
         <div class="layout-row row-border">
-            <div class="flex">-</div>
+            <div class="flex">—</div>
             <div class="flex">{{ 10000 | kbqNumber }}</div>
             <div class="flex">{{ 10000 | kbqTableNumber }}</div>
         </div>
         <div class="layout-row row-border">
-            <div class="flex">-</div>
+            <div class="flex">—</div>
             <div class="flex">{{ 1000000 | kbqNumber }}</div>
             <div class="flex">{{ 1000000 | kbqTableNumber }}</div>
         </div>
         <div class="layout-row row-border">
-            <div class="flex">-</div>
+            <div class="flex">—</div>
             <div class="flex">{{ 10000000 | kbqNumber }}</div>
             <div class="flex">{{ 10000000 | kbqTableNumber }}</div>
         </div>
         <div class="layout-row row-border">
-            <div class="flex">-</div>
+            <div class="flex">—</div>
             <div class="flex">{{ 100000000 | kbqNumber }}</div>
             <div class="flex">{{ 100000000 | kbqTableNumber }}</div>
         </div>
         <div class="layout-row row-border">
-            <div class="flex">locale ru</div>
+            <div class="flex">locale ru-RU</div>
             <div class="flex">{{ 1000 | kbqNumber: '' : 'ru' }}</div>
             <div class="flex">{{ 1000 | kbqTableNumber: '' : 'ru' }}</div>
         </div>
@@ -77,24 +77,24 @@
                 <div class="flex light-text-secondary">Formatted value</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">-</div>
+                <div class="flex">—</div>
                 <div class="flex">{{ value | kbqRoundNumber }}</div>
             </div>
 
             <div class="layout-row row-border">
-                <div class="flex">-</div>
+                <div class="flex">—</div>
                 <div class="flex">{{ 10000 | kbqRoundNumber }}</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">-</div>
+                <div class="flex">—</div>
                 <div class="flex">{{ 1000000 | kbqRoundNumber }}</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">-</div>
+                <div class="flex">—</div>
                 <div class="flex">{{ 10000000 | kbqRoundNumber }}</div>
             </div>
             <div class="layout-row row-border">
-                <div class="flex">-</div>
+                <div class="flex">—</div>
                 <div class="flex">{{ 100000000 | kbqRoundNumber }}</div>
             </div>
             <div class="layout-row row-border">

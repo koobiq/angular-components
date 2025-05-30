@@ -1,7 +1,14 @@
+import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { Inject, Injectable, InjectionToken, Optional, Pipe, PipeTransform } from '@angular/core';
-import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_ID, KBQ_LOCALE_SERVICE, KbqLocaleService } from '../../locales';
+import {
+    KBQ_DEFAULT_LOCALE_ID,
+    KBQ_LOCALE_ID,
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqNumberFormatOptions
+} from '../../locales';
 
-export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<string>('KbqNumberFormatterOptions');
+export const KBQ_NUMBER_FORMATTER_OPTIONS = new InjectionToken<ParsedDigitsInfo>('KbqNumberFormatterOptions');
 
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     useGrouping: true,
@@ -10,20 +17,47 @@ export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo = {
     maximumFractionDigits: 3
 };
 
+/** Formats a number value according to locale and formatting options */
+export function formatNumberWithLocale(
+    value: unknown,
+    formatter: Intl.NumberFormat,
+    options?: KbqNumberFormatOptions
+): string {
+    const num = strToNumber(value);
+
+    if (!options?.viewGroupSeparator) return formatter.format(num);
+
+    const numberFormatParts = formatter.formatToParts(num);
+
+    for (const numberFormatPart of numberFormatParts) {
+        if (numberFormatPart.type === 'group') {
+            numberFormatPart.value = options.viewGroupSeparator;
+        }
+    }
+
+    return numberFormatParts.map(({ value }) => value).join('');
+}
+
+/**
+ * Special contract between `KbqDecimalPipe` and `KbqTableNumberPipe`,
+ * so they can be interchangeable in the cases of usage
+ */
+export interface KbqNumericPipe {
+    transform(value: unknown, digitsInfo?: string, locale?: string): string | null;
+}
+
 function isEmpty(value: any): boolean {
     return value == null || value === '' || value !== value;
 }
 
-function strToNumber(value: number | string): number {
-    if (typeof value === 'string' && !isNaN(Number(value) - parseFloat(value))) {
-        return Number(value);
-    }
+function strToNumber(value: unknown): number {
+    const coerced = coerceNumberProperty(value, null);
 
-    if (typeof value !== 'number') {
+    if (coerced === null) {
         throw new Error(`${value} is not a number`);
     }
 
-    return value;
+    return coerced;
 }
 
 export const NUMBER_FORMAT_REGEXP = /^(\d+)?\.((\d+)(-(\d+))?(-(true|false))?)?$/;
@@ -32,22 +66,6 @@ const minIntGroupPosition = 1;
 const minFractionGroupPosition = 3;
 const maxFractionGroupPosition = 5;
 const useGroupingPosition = 7;
-
-interface NumberFormatOptions {
-    useGrouping: boolean;
-
-    minimumIntegerDigits: number;
-    minimumFractionDigits: number;
-    maximumFractionDigits: number;
-    minimumSignificantDigits: number;
-    maximumSignificantDigits: number;
-
-    localeMatcher?: string;
-    style?: string;
-
-    currency?: string;
-    currencyDisplay?: string;
-}
 
 interface RoundDecimalOptions {
     separator: string;
@@ -127,7 +145,7 @@ function parseDigitsInfo(digitsInfo: string): ParsedDigitsInfo {
 
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqNumber', pure: false })
-export class KbqDecimalPipe implements PipeTransform {
+export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
@@ -159,13 +177,13 @@ export class KbqDecimalPipe implements PipeTransform {
 
         const currentLocale = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        let parsedDigitsInfo;
+        let parsedDigitsInfo: ParsedDigitsInfo | undefined;
 
         if (digitsInfo) {
             parsedDigitsInfo = parseDigitsInfo(digitsInfo);
         }
 
-        const options: NumberFormatOptions = {
+        const options: Intl.NumberFormatOptions = {
             ...this.options,
             ...parsedDigitsInfo
         };
@@ -175,29 +193,30 @@ export class KbqDecimalPipe implements PipeTransform {
         }
 
         try {
-            const num = strToNumber(value);
+            const formatter = new Intl.NumberFormat(currentLocale, options);
 
-            /* Guideline requires for group separator to be `space`, as in 'ru-RU' locale.
-             * But by default in es-LA locale is used `comma`.
-             * To reduce data manipulation, 'ru-RU' locale is used. */
-            if (currentLocale === 'es-LA') {
-                return Intl.NumberFormat.call(this, 'ru-RU', options).format(num);
-            }
-
-            return Intl.NumberFormat.call(this, currentLocale, options).format(num);
+            return formatNumberWithLocale(
+                value,
+                formatter,
+                this.localeService?.locales[currentLocale]?.formatters.number.decimal
+            );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqDecimalPipe for pipe '${JSON.stringify(error.message)}'`);
         }
     }
 
     isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean {
-        return ['ru', 'ru-RU'].includes(locale) && grouping === undefined && value < defaultValueForGroupingInRULocale;
+        return (
+            ['ru', 'ru-RU'].includes(locale) &&
+            grouping === undefined &&
+            Math.abs(value) < defaultValueForGroupingInRULocale
+        );
     }
 }
 
 @Injectable({ providedIn: 'root' })
 @Pipe({ name: 'kbqTableNumber', pure: false })
-export class KbqTableNumberPipe implements PipeTransform {
+export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor(
         @Optional() @Inject(KBQ_LOCALE_ID) private id: string,
         @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService,
@@ -229,28 +248,25 @@ export class KbqTableNumberPipe implements PipeTransform {
 
         const currentLocale = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        let parsedDigitsInfo;
+        let parsedDigitsInfo: ParsedDigitsInfo | undefined;
 
         if (digitsInfo) {
             parsedDigitsInfo = parseDigitsInfo(digitsInfo);
         }
 
-        const options: NumberFormatOptions = {
+        const options: Intl.NumberFormatOptions = {
             ...this.options,
             ...parsedDigitsInfo
         };
 
         try {
-            const num = strToNumber(value);
+            const formatter = new Intl.NumberFormat(currentLocale, options);
 
-            /* Guideline requires for group separator to be `space`, as in 'ru-RU' locale.
-             * But by default in es-LA locale is used `comma`.
-             * To reduce data manipulation, 'ru-RU' locale is used. */
-            if (currentLocale === 'es-LA') {
-                return Intl.NumberFormat.call(this, 'ru-RU', options).format(num);
-            }
-
-            return Intl.NumberFormat.call(this, currentLocale, options).format(num);
+            return formatNumberWithLocale(
+                value,
+                formatter,
+                this.localeService?.locales[currentLocale]?.formatters.number.decimal
+            );
         } catch (error: any) {
             throw Error(`InvalidPipeArgument: KbqTableNumberPipe for pipe '${JSON.stringify(error.message)}'`);
         }
@@ -280,7 +296,7 @@ export class KbqRoundDecimalPipe implements PipeTransform {
 
         const currentLocale: string = locale || this.id || KBQ_DEFAULT_LOCALE_ID;
 
-        this.roundingOptions = this.localeService.locales[currentLocale].formatters.number.rounding;
+        this.roundingOptions = this.localeService?.locales[currentLocale].formatters.number.rounding;
 
         try {
             const num = strToNumber(value);

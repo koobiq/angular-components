@@ -3,8 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormattersModule, KbqLocaleServiceModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
@@ -16,8 +15,8 @@ import { DevLocaleSelector } from '../locale-selector';
         KbqInputModule,
         KbqFormFieldModule,
         FormsModule,
-        KbqIconModule,
-        DevLocaleSelector
+        DevLocaleSelector,
+        kbqNormalizeWhitespace
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

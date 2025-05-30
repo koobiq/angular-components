@@ -391,12 +391,16 @@ export const esLAFormattersData: {
                 billion: string;
                 trillion: string;
             };
+            decimal: {
+                viewGroupSeparator: string;
+            };
         };
     };
     input: {
         number: {
             groupSeparator: string[];
             fractionSeparator: string;
+            viewGroupSeparator: string;
         };
     };
     sizeUnits: {
@@ -656,6 +660,9 @@ export const formatDataSize: (value: number, precision: number, system: KbqUnitS
     value: string;
     unit: string;
 };
+
+// @public
+export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
 // @public
 export const getFormattedSizeParts: (value: number, precision: number, system: KbqUnitSystem) => {
@@ -986,12 +993,16 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     billion: string;
                     trillion: string;
                 };
+                decimal: {
+                    viewGroupSeparator: string;
+                };
             };
         };
         input: {
             number: {
                 groupSeparator: string[];
                 fractionSeparator: string;
+                viewGroupSeparator: string;
             };
         };
         sizeUnits: {
@@ -1234,6 +1245,9 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                     billion: string;
                     trillion: string;
                 };
+                decimal: {
+                    viewGroupSeparator: string;
+                };
             };
         };
         input: {
@@ -1241,6 +1255,7 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 groupSeparator: string[];
                 fractionSeparator: string;
                 startFormattingFrom: number;
+                viewGroupSeparator: string;
             };
         };
         sizeUnits: {
@@ -1628,7 +1643,7 @@ export const KBQ_LOCALE_SERVICE_LANG_ATTR_NAME: InjectionToken<string>;
 export const KBQ_NUMBER_FORMATTER_DEFAULT_OPTIONS: ParsedDigitsInfo;
 
 // @public (undocumented)
-export const KBQ_NUMBER_FORMATTER_OPTIONS: InjectionToken<string>;
+export const KBQ_NUMBER_FORMATTER_OPTIONS: InjectionToken<ParsedDigitsInfo>;
 
 // @public (undocumented)
 export const KBQ_OPTION_ACTION_PARENT: InjectionToken<KbqOptionActionParent>;
@@ -1801,7 +1816,7 @@ export class KbqDataSizePipe implements PipeTransform {
 export type KbqDateFormats = DateFormats;
 
 // @public (undocumented)
-export class KbqDecimalPipe implements PipeTransform {
+export class KbqDecimalPipe implements KbqNumericPipe, PipeTransform {
     constructor(id: string, localeService: KbqLocaleService, options: ParsedDigitsInfo);
     // (undocumented)
     isSpecialFormatForRULocale(locale: string, value: number, grouping?: boolean): boolean;
@@ -2009,6 +2024,24 @@ export class KbqMeasureScrollbarService {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqMeasureScrollbarService, never>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
+}
+
+// @public
+export type KbqNumberFormatOptions = {
+    viewGroupSeparator?: string;
+};
+
+// @public
+export type KbqNumberInputLocaleConfig = {
+    groupSeparator: string[];
+    fractionSeparator: string;
+    startFormattingFrom?: number;
+} & KbqNumberFormatOptions;
+
+// @public
+export interface KbqNumericPipe {
+    // (undocumented)
+    transform(value: unknown, digitsInfo?: string, locale?: string): string | null;
 }
 
 // @public
@@ -2521,7 +2554,7 @@ export interface KbqSizeUnitsConfig {
 }
 
 // @public (undocumented)
-export class KbqTableNumberPipe implements PipeTransform {
+export class KbqTableNumberPipe implements KbqNumericPipe, PipeTransform {
     constructor(id: string, localeService: KbqLocaleService, options: ParsedDigitsInfo);
     // (undocumented)
     transform(value: any, digitsInfo?: string, locale?: string): string | null;
@@ -3071,6 +3104,9 @@ export const ruRUFormattersData: {
                 billion: string;
                 trillion: string;
             };
+            decimal: {
+                viewGroupSeparator: string;
+            };
         };
     };
     input: {
@@ -3078,6 +3114,7 @@ export const ruRUFormattersData: {
             groupSeparator: string[];
             fractionSeparator: string;
             startFormattingFrom: number;
+            viewGroupSeparator: string;
         };
     };
     sizeUnits: {

@@ -10,7 +10,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
@@ -28,7 +28,8 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqFormFieldModule,
         KbqFormsModule,
         KbqInputModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        kbqNormalizeWhitespace
     ],
     host: {
         class: 'example-filesize-formatter__container layout-gap-3xl layout-margin-bottom-s'
@@ -39,7 +40,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Size in bits</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input [min]="0" [formControl]="bytesControl" kbqNumberInput />
+                        <input [min]="0" [formControl]="bytesControl" kbqNumberInput kbqNormalizeWhitespace />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>

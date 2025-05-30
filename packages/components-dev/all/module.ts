@@ -9,7 +9,7 @@ import { PopUpPlacements, ThemePalette } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqListModule } from '@koobiq/components/list';
 import { KbqMarkdownModule } from '@koobiq/components/markdown';
@@ -70,7 +70,8 @@ const MAX_PERCENT: number = 100;
         KbqTimepickerModule,
         KbqToggleModule,
         KbqToolTipModule,
-        KbqTreeModule
+        KbqTreeModule,
+        kbqNormalizeWhitespace
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

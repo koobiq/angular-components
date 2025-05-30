@@ -19,7 +19,7 @@ import {
     hasPasswordStrengthError
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
+import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { startWith } from 'rxjs';
 import { InputExamplesModule } from '../../docs-examples/components/input';
@@ -48,7 +48,8 @@ export class DevExamples {}
         KbqInputModule,
         KbqToolTipModule,
         KbqIconModule,
-        DevExamples
+        DevExamples,
+        kbqNormalizeWhitespace
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

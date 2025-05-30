@@ -1,3 +1,4 @@
+import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Attribute,
@@ -6,6 +7,7 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    inject,
     Inject,
     Input,
     OnDestroy,
@@ -40,8 +42,10 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     checkAndNormalizeLocalizedNumber,
+    formatNumberWithLocale,
     KBQ_LOCALE_SERVICE,
     KbqLocaleService,
+    KbqNumberInputLocaleConfig,
     normalizeNumber,
     ruRUFormattersData
 } from '@koobiq/components/core';
@@ -87,10 +91,29 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     multi: true
 };
 
-interface NumberLocaleConfig {
-    groupSeparator: string[];
-    fractionSeparator: string;
-    startFormattingFrom?: number;
+@Directive({
+    standalone: true,
+    selector: '[kbqNormalizeWhitespace]',
+    host: {
+        '(copy)': 'onCopy($event)'
+    }
+})
+export class kbqNormalizeWhitespace {
+    /** @docs-private */
+    protected elementRef: ElementRef = inject(ElementRef);
+    /** @docs-private */
+    protected clipboard = inject(Clipboard);
+
+    /**
+     * Replace thin-space with space on copy event
+     */
+    onCopy($event: ClipboardEvent) {
+        if ($event.type === 'copy' && (this.elementRef.nativeElement as HTMLInputElement).value) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            this.clipboard.copy(this.elementRef.nativeElement.value.replace(/\u2009/g, ' '));
+        }
+    }
 }
 
 @Directive({
@@ -221,7 +244,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     private control: AbstractControl;
 
-    private config: NumberLocaleConfig;
+    private config: KbqNumberInputLocaleConfig;
 
     private valueFromPaste: number | null;
 
@@ -508,14 +531,17 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
         const localeId = !this.localeService || this.localeService.id === 'es-LA' ? 'ru-RU' : this.localeService.id;
 
         const formatter = new Intl.NumberFormat(localeId, formatOptions);
-        const formattedFractionPart = fractionPart
-            ?.split('')
-            .map((numChar) => formatter.format(+numChar))
-            .join('');
+        let formattedFractionPart: string = '';
 
-        return formattedFractionPart === undefined
-            ? formatter.format(intPart)
-            : `${formatter.format(intPart)}${this.fractionSeparator}${formattedFractionPart}`;
+        for (const numChar of fractionPart || '') {
+            formattedFractionPart += formatter.format(+numChar);
+        }
+
+        const formattedIntPart = formatNumberWithLocale(intPart, formatter, this.config);
+
+        return formattedFractionPart === ''
+            ? formattedIntPart
+            : `${formattedIntPart}${this.fractionSeparator}${formattedFractionPart}`;
     }
 
     private updateLocaleParams = () => {
