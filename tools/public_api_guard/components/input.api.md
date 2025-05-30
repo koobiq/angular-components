@@ -6,7 +6,6 @@
 
 import { AbstractControl } from '@angular/forms';
 import { CanUpdateErrorState } from '@koobiq/components/core';
-import { Clipboard as Clipboard_2 } from '@angular/cdk/clipboard';
 import { ControlValueAccessor } from '@angular/forms';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -215,8 +214,7 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
 
 // @public (undocumented)
 export class kbqNormalizeWhitespace {
-    protected clipboard: Clipboard_2;
-    protected elementRef: ElementRef;
+    protected elementRef: ElementRef<HTMLElement>;
     onCopy($event: ClipboardEvent): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<kbqNormalizeWhitespace, "[kbqNormalizeWhitespace]", never, {}, {}, never, never, true, never>;
