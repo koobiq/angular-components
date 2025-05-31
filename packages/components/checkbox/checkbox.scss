@@ -1,9 +1,58 @@
 @use '../core/styles/common/tokens' as *;
 @use './checkbox-theme' as *;
 
-.kbq-checkbox-checkmark,
+@mixin _checkbox-big() {
+    .kbq-checkbox_big & {
+        @content;
+    }
+}
+
+@mixin _checkbox-label-before() {
+    .kbq-checkbox_label-before & {
+        @content;
+    }
+}
+
+@mixin _checkbox-checked() {
+    .kbq-checked & {
+        @content;
+    }
+}
+
+@mixin _checkbox-disabled() {
+    .kbq-disabled & {
+        @content;
+    }
+}
+
+@mixin _checkbox-indeterminate() {
+    .kbq-indeterminate & {
+        @content;
+    }
+}
+
+.kbq-checkbox-checkmark {
+    display: none;
+
+    @include _checkbox-checked {
+        display: block;
+    }
+
+    @include _checkbox-indeterminate {
+        display: none;
+    }
+}
+
 .kbq-checkbox-mixedmark {
     display: none;
+
+    @include _checkbox-checked {
+        display: none;
+    }
+
+    @include _checkbox-indeterminate {
+        display: block;
+    }
 }
 
 .kbq-checkbox__frame {
@@ -16,14 +65,21 @@
     background-color: transparent;
 
     border-radius: var(--kbq-checkbox-size-normal-border-radius);
+    border-width: var(--kbq-checkbox-size-normal-border-width);
+    border-style: solid;
 
-    border: {
-        width: var(--kbq-checkbox-size-normal-border-width);
-        style: solid;
+    @include _checkbox-big {
+        border-radius: var(--kbq-checkbox-size-big-border-radius);
+        border-width: var(--kbq-checkbox-size-big-border-width);
+        border-style: solid;
     }
 
     height: var(--kbq-checkbox-size-normal-width);
     width: var(--kbq-checkbox-size-normal-width);
+
+    @include _checkbox-disabled {
+        box-shadow: none;
+    }
 }
 
 .kbq-checkbox__layout {
@@ -44,10 +100,20 @@
     cursor: inherit;
 
     padding-top: var(--kbq-checkbox-size-normal-padding-top);
-
     padding-bottom: var(--kbq-checkbox-size-normal-padding-bottom);
-
     padding-left: $padding-left;
+
+    @include _checkbox-label-before {
+        $padding-right: kbq-sum-series-css-variables(
+            [ checkbox-size-normal-width,
+            checkbox-size-normal-horizontal-content-padding]
+        );
+
+        max-width: calc(100% - $padding-right);
+
+        padding-left: 0;
+        padding-right: $padding-right;
+    }
 
     vertical-align: top;
 }
@@ -68,68 +134,8 @@
 
     max-width: 100%;
 
-    &.kbq-checked {
-        .kbq-checkbox-checkmark {
-            display: block;
-        }
-
-        .kbq-checkbox-mixedmark {
-            display: none;
-        }
-    }
-
-    &.kbq-indeterminate {
-        .kbq-checkbox-checkmark {
-            display: none;
-        }
-
-        .kbq-checkbox-mixedmark {
-            display: block;
-        }
-    }
-
     &.kbq-disabled {
         cursor: default;
-
-        .kbq-checkbox__frame {
-            box-shadow: none;
-        }
-    }
-
-    & .kbq-hint {
-        margin-top: var(--kbq-checkbox-size-normal-vertical-content-padding);
-    }
-}
-
-.kbq-checkbox.kbq-checkbox_big {
-    & .kbq-checkbox__layout {
-        $padding-left: kbq-sum-series-css-variables(
-            [ checkbox-size-normal-width,
-            checkbox-size-normal-horizontal-content-padding]
-        );
-
-        max-width: calc(100% - $padding-left);
-
-        padding-left: $padding-left;
-    }
-
-    & .kbq-checkbox__inner-container {
-        top: var(--kbq-checkbox-size-big-top);
-        height: var(--kbq-checkbox-size-big-width);
-        width: var(--kbq-checkbox-size-big-width);
-    }
-
-    & .kbq-checkbox__frame {
-        border-radius: var(--kbq-checkbox-size-big-border-radius);
-
-        border: {
-            width: var(--kbq-checkbox-size-big-border-width);
-            style: solid;
-        }
-    }
-
-    & .kbq-hint {
-        margin-top: var(--kbq-checkbox-size-big-vertical-content-padding);
     }
 }
 
@@ -141,25 +147,8 @@
 }
 
 .kbq-checkbox__inner-container_no-side-margin {
-    margin: {
-        left: 0;
-        right: 0;
-    }
-}
-
-.kbq-checkbox_label-before {
-    .kbq-checkbox__layout {
-        padding-left: 0;
-        padding-right: kbq-sum-series-css-variables(
-            [ checkbox-size-normal-width,
-            checkbox-size-normal-horizontal-content-padding]
-        );
-    }
-
-    .kbq-checkbox__inner-container {
-        right: 0;
-        left: unset;
-    }
+    margin-left: 0;
+    margin-right: 0;
 }
 
 @include kbq-checkbox-theme();
