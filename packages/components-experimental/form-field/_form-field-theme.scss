@@ -72,12 +72,12 @@
         .kbq-hint___EXPERIMENTAL {
             color: var(--kbq-form-field-hint-text);
         }
-    }
 
-    .kbq-form-field__prefix,
-    .kbq-form-field__suffix {
-        .kbq-icon.kbq-empty {
-            color: var(--kbq-icon-contrast-fade);
+        .kbq-form-field__prefix,
+        .kbq-form-field__suffix {
+            .kbq-icon.kbq-empty {
+                color: var(--kbq-icon-contrast-fade);
+            }
         }
     }
 }

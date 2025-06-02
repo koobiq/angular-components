@@ -15,7 +15,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field>
-            <input [formControl]="formControl" [maxLength]="20" placeholder="Password" kbqInputPassword />
+            <input [formControl]="formControl" placeholder="Password" kbqInputPassword />
 
             <kbq-password-toggle />
 
