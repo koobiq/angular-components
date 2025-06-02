@@ -8,6 +8,10 @@
 
         margin-left: var(--kbq-size-xs);
     }
+
+    & .kbq-tree-select .kbq-select__trigger {
+        height: unset;
+    }
 }
 
 .kbq-pipe-multi-tree-select__panel .kbq-select__content {

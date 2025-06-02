@@ -1,3 +1,9 @@
 .kbq-pipe-tree-select__panel .kbq-tree-select__content {
     max-height: 404px;
 }
+
+.kbq-pipe__tree-select {
+    .kbq-select__trigger {
+        height: unset;
+    }
+}
