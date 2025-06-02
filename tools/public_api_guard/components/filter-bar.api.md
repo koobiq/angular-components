@@ -521,6 +521,7 @@ export class KbqPipeMinWidth {
 // @public (undocumented)
 export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements AfterViewInit, OnInit {
     get allOptionsSelected(): boolean;
+    get allVisibleOptionsSelected(): boolean;
     get checkboxState(): KbqPseudoCheckboxState;
     compareByValue: (o1: any, o2: any) => boolean;
     filteredOptions: Observable<any[]>;
@@ -528,6 +529,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     ngAfterViewInit(): void;
     ngOnInit(): void;
     onClear(): void;
+    // (undocumented)
+    onClose(): void;
     onSelect(item: KbqSelectValue[]): void;
     open(): void;
     options: QueryList<KbqOption>;
