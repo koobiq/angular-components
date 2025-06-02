@@ -15,7 +15,7 @@ import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
     ],
     selector: 'overflow-items-with-order-example',
     template: `
-        <div #kbqOverflowItemsReverse="kbqOverflowItems" [debounceTime]="0" reverseOverflowOrder kbqOverflowItems>
+        <div #kbqOverflowItemsReverse="kbqOverflowItems" reverseOverflowOrder kbqOverflowItems>
             <kbq-badge class="layout-margin-right-xs" [kbqOverflowItem]="items[0]" [order]="items.length">
                 {{ items[0] }}
             </kbq-badge>

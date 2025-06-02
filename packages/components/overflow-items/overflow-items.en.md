@@ -9,8 +9,13 @@ Configurable via the `reverseOverflowOrder` attribute.
 
 <!-- example(overflow-items-overview) -->
 
-### Order of Hiding
+### Order of hiding
 
 The order in which elements are hidden is determined using the `order` attribute for the `KbqOverflowItem` directive.
 
 <!-- example(overflow-items-with-order) -->
+
+### Delay when hiding/showing
+
+The delay for hiding/showing elements is set using the `debounceTime` attribute. Enabling this option positively
+affects performance when there are many elements or when the container size changes frequently.
