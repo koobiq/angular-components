@@ -1,8 +1,8 @@
-## 🔧 Server-side rendering (SSR) setup for local development
+## Server-side rendering (SSR) setup for local development
 
 This guide explains how to enable SSR for your component development.
 
-### ✅ Step 1: update `angular.json`
+### Step 1: update `angular.json`
 
 Modify `angular.json` with specific component configuration:
 
@@ -29,7 +29,7 @@ Replace `<component>` with the actual component name (e.g., `button`, `modal`, e
 
 ---
 
-### ✅ Step 2: create SSR entry files
+### Step 2: create SSR entry files
 
 Inside your component’s development folder (`packages/components-dev/<component>/`), add the following files:
 
@@ -41,7 +41,7 @@ These files handle bootstrapping, rendering logic, and server configuration.
 
 ---
 
-### ▶️ How to run SSR locally
+### How to run SSR locally
 
 Build and run the server using the following commands:
 
