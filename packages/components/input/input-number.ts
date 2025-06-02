@@ -97,7 +97,7 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
         '(copy)': 'onCopy($event)'
     }
 })
-export class kbqNormalizeWhitespace {
+export class KbqNormalizeWhitespace {
     /** @docs-private */
     protected elementRef: ElementRef<HTMLElement> = inject(ElementRef);
 

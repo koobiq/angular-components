@@ -10,7 +10,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input';
+import { KbqInputModule, KbqNormalizeWhitespace } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 
@@ -29,7 +29,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqFormsModule,
         KbqInputModule,
         KbqToolTipModule,
-        kbqNormalizeWhitespace
+        KbqNormalizeWhitespace
     ],
     host: {
         class: 'example-filesize-formatter__container layout-gap-3xl layout-margin-bottom-s'

@@ -213,13 +213,13 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
 }
 
 // @public (undocumented)
-export class kbqNormalizeWhitespace {
+export class KbqNormalizeWhitespace {
     protected elementRef: ElementRef<HTMLElement>;
     onCopy($event: ClipboardEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<kbqNormalizeWhitespace, "[kbqNormalizeWhitespace]", never, {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNormalizeWhitespace, "[kbqNormalizeWhitespace]", never, {}, {}, never, never, true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<kbqNormalizeWhitespace, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNormalizeWhitespace, never>;
 }
 
 // @public (undocumented)

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input';
+import { KbqInputModule, KbqNormalizeWhitespace } from '@koobiq/components/input';
 
 /**
  * @title Input number
@@ -15,7 +15,7 @@ import { KbqInputModule, kbqNormalizeWhitespace } from '@koobiq/components/input
         KbqInputModule,
         FormsModule,
         KbqFormsModule,
-        kbqNormalizeWhitespace
+        KbqNormalizeWhitespace
     ],
     template: `
         <div class="kbq-text-big">
