@@ -163,7 +163,7 @@
     "scripts": {
         "ng": "ng",
         "prepare": "husky",
-        "clean": "rimraf .angular dist playwright-report test-results --verbose",
+        "clean": "playwright clear-cache && rimraf .angular dist playwright-report test-results --verbose",
         "postinstall": "tsc -p tools/builders/tsconfig.json",
         "build:cdk": "ng build cdk",
         "build:angular-moment-adapter": "ng build angular-moment-adapter",
@@ -271,7 +271,7 @@
         "unit:koobiq-docs": "ng test koobiq-docs",
         "unit:api-gen": "jest --roots tools/api-gen",
         "-----E2E_TESTS-----": "--------------------------------------------------------------------------------------",
-        "e2e:setup": "playwright install chrome --with-deps",
+        "e2e:setup": "playwright install --with-deps",
         "e2e:components": "playwright test e2e/components",
         "-----CI-----": "---------------------------------------------------------------------------------------------",
         "approve-api": "ts-node --project tools/api-extractor/tsconfig.json tools/api-extractor/api-extractor.ts",
