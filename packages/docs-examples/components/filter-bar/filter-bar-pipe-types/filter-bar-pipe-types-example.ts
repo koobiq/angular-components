@@ -43,7 +43,7 @@ const DATA_OBJECT = {
                 <ng-container *kbqPipe="pipe" />
             }
 
-            @if (activeFilter?.changed) {
+            @if (isFilterChanged) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
         </kbq-filter-bar>
@@ -138,6 +138,10 @@ export class FilterBarPipeTypesExample {
         }
     ];
 
+    get isFilterChanged(): boolean {
+        return JSON.stringify(this.activeFilter.pipes) !== JSON.stringify(this.getDefaultFilter().pipes);
+    }
+
     onResetFilter() {
         console.log('onResetFilter: ');
         this.activeFilter = this.getDefaultFilter();
@@ -163,7 +167,7 @@ export class FilterBarPipeTypesExample {
                 {
                     name: 'MultiSelect',
                     type: KbqPipeTypes.MultiSelect,
-                    value: null,
+                    value: [],
 
                     cleanable: true,
                     removable: false,
