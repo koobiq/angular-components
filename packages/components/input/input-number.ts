@@ -1,4 +1,3 @@
-import { Clipboard } from '@angular/cdk/clipboard';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Attribute,
@@ -7,7 +6,6 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
-    inject,
     Inject,
     Input,
     OnDestroy,
@@ -90,31 +88,6 @@ export const KBQ_NUMBER_INPUT_VALUE_ACCESSOR: any = {
     useExisting: forwardRef(() => KbqNumberInput),
     multi: true
 };
-
-@Directive({
-    standalone: true,
-    selector: '[kbqNormalizeWhitespace]',
-    host: {
-        '(copy)': 'onCopy($event)'
-    }
-})
-export class kbqNormalizeWhitespace {
-    /** @docs-private */
-    protected elementRef: ElementRef = inject(ElementRef);
-    /** @docs-private */
-    protected clipboard = inject(Clipboard);
-
-    /**
-     * Replace thin-space with space on copy event
-     */
-    onCopy($event: ClipboardEvent) {
-        if ($event.type === 'copy' && (this.elementRef.nativeElement as HTMLInputElement).value) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            this.clipboard.copy(this.elementRef.nativeElement.value.replace(/\u2009/g, ' '));
-        }
-    }
-}
 
 @Directive({
     selector: `input[kbqNumberInput]`,
