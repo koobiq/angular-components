@@ -77,7 +77,7 @@ export class KbqBreadcrumbs implements AfterContentInit {
     size: KbqDefaultSizes;
     wrapMode: KbqBreadcrumbsWrapMode;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], never, true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqBreadcrumbs, "kbq-breadcrumbs,[kbq-breadcrumbs]", never, { "firstItemNegativeMargin": { "alias": "firstItemNegativeMargin"; "required": false; }; "size": { "alias": "size"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "wrapMode": { "alias": "wrapMode"; "required": false; }; }, {}, ["separator", "items"], ["*"], true, [{ directive: typeof i1.RdxRovingFocusGroupDirective; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqBreadcrumbs, never>;
 }
