@@ -1,0 +1,35 @@
+name: E2E tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup yarn
+        uses: ./.github/workflows/actions/setup-yarn
+
+      - name: Setup test environment
+        run: yarn run e2e:setup
+
+      - name: Run e2e tests
+        run: yarn run e2e:components
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 1

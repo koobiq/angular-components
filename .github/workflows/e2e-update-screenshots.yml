@@ -1,0 +1,39 @@
+#
+# This workflow updates the E2E screenshots when a comment with `/e2e-update-screenshots` is added to a pull request.
+#
+name: E2E update screenshots
+
+on:
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  update_screenshots:
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/e2e-update-screenshots') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup yarn
+        uses: ./.github/workflows/actions/setup-yarn
+
+      - name: Setup test environment
+        run: yarn run e2e:setup
+
+      - name: Update screenshots
+        run: yarn run e2e:components --update-snapshots
+
+      - name: Commit and push screenshots
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'test: auto-updated e2e screenshots'
+          file_pattern: 'e2e/**/*.png'

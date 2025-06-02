@@ -885,6 +885,36 @@
                 }
             }
         },
+        "dev-e2e": {
+            "projectType": "application",
+            "root": "packages/components-dev/e2e",
+            "sourceRoot": "packages/components-dev/e2e",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/e2e"
+                        },
+                        "tsConfig": "packages/components-dev/e2e/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/e2e/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-e2e:build"
+                    }
+                }
+            }
+        },
         "dev-empty-state": {
             "projectType": "application",
             "root": "packages/components-dev/empty-state",
