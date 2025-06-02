@@ -213,16 +213,6 @@ export class KbqInputPassword implements KbqFormFieldControl<any>, OnChanges, On
 }
 
 // @public (undocumented)
-export class KbqNormalizeWhitespace {
-    protected elementRef: ElementRef<HTMLElement>;
-    onCopy($event: ClipboardEvent): void;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNormalizeWhitespace, "[kbqNormalizeWhitespace]", never, {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNormalizeWhitespace, never>;
-}
-
-// @public (undocumented)
 export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAccessor, OnDestroy {
     constructor(elementRef: ElementRef, renderer: Renderer2, step: string, bigStep: string, min: string, max: string, localeService?: KbqLocaleService | undefined);
     // (undocumented)

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormattersModule, KbqLocaleServiceModule } from '@koobiq/components/core';
+import { KbqFormattersModule, KbqLocaleServiceModule, KbqNormalizeWhitespace } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqInputModule, KbqNormalizeWhitespace } from '@koobiq/components/input';
+import { KbqInputModule } from '@koobiq/components/input';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({

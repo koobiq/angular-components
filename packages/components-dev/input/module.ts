@@ -10,7 +10,12 @@ import {
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KBQ_LOCALE_SERVICE, KbqLocaleService, KbqLocaleServiceModule } from '@koobiq/components/core';
+import {
+    KBQ_LOCALE_SERVICE,
+    KbqLocaleService,
+    KbqLocaleServiceModule,
+    KbqNormalizeWhitespace
+} from '@koobiq/components/core';
 import {
     KbqFormField,
     KbqFormFieldModule,
@@ -19,7 +24,7 @@ import {
     hasPasswordStrengthError
 } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule, KbqNormalizeWhitespace } from '@koobiq/components/input';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { startWith } from 'rxjs';
 import { InputExamplesModule } from '../../docs-examples/components/input';

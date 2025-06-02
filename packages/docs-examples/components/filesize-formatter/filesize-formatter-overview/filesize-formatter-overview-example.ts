@@ -6,11 +6,12 @@ import {
     KbqDataSizePipe,
     KbqFormsModule,
     KbqMeasurementSystem,
+    KbqNormalizeWhitespace,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule, KbqNormalizeWhitespace } from '@koobiq/components/input';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 

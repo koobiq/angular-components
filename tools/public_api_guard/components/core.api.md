@@ -2026,6 +2026,16 @@ export class KbqMeasureScrollbarService {
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqMeasureScrollbarService>;
 }
 
+// @public (undocumented)
+export class KbqNormalizeWhitespace {
+    protected elementRef: ElementRef<HTMLElement>;
+    onCopy($event: ClipboardEvent): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqNormalizeWhitespace, "[kbqNormalizeWhitespace]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqNormalizeWhitespace, never>;
+}
+
 // @public
 export type KbqNumberFormatOptions = {
     viewGroupSeparator?: string;

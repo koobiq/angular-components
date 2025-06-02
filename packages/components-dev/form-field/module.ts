@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/
 import { FormsModule } from '@angular/forms';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
+import { KbqHighlightModule, KbqNormalizeWhitespace, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule, KbqNormalizeWhitespace } from '@koobiq/components/input';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
