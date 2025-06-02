@@ -39,5 +39,5 @@ yarn run e2e:setup
 ### Available commands
 
 ```bash
-yarn run e2e
+yarn run e2e:components
 ```

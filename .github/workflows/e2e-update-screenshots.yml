@@ -20,17 +20,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup yarn
         uses: ./.github/workflows/actions/setup-yarn
 
-      - name: Install browsers
+      - name: Setup test environment
         run: yarn run e2e:setup
 
       - name: Update screenshots
-        run: yarn run e2e --update-snapshots
+        run: yarn run e2e:components --update-snapshots
 
       - name: Commit and push screenshots
         uses: stefanzweifel/git-auto-commit-action@v5

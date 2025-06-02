@@ -15,16 +15,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup yarn
         uses: ./.github/workflows/actions/setup-yarn
 
-      - name: Install browsers
+      - name: Setup test environment
         run: yarn run e2e:setup
 
       - name: Run e2e tests
-        run: yarn run e2e
+        run: yarn run e2e:components
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

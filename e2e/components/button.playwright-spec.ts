@@ -1,12 +1,12 @@
 import { expect, Locator, Page, test } from '@playwright/test';
 
 const component = {
-    stateAndStyle: 'button-state-and-style-example'
+    stateAndStyle: 'dev-button-state-and-style'
 };
 
 test.describe('KbqButtonModule', () => {
     test.describe(component.stateAndStyle, () => {
-        const goToPage = (page: Page) => page.goto('/en/components/button/examples');
+        const goToPage = (page: Page) => page.goto('');
         const getComponent = (page: Page) => page.locator(component.stateAndStyle);
         const togglePrefix = (locator: Locator) => locator.getByText('show prefix icon').click();
         const toggleTitle = (locator: Locator) => locator.getByText('show title').click();
