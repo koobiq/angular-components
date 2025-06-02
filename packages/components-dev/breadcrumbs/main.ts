@@ -32,5 +32,7 @@ const routes: Routes = [
 bootstrapApplication(DevApp, {
     providers: [
         provideAnimations(),
-        provideRouter(routes)]
+        provideRouter(routes)
+        // provideClientHydration()
+    ]
 }).catch((error) => console.error(error));

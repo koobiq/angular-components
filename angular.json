@@ -574,7 +574,12 @@
                         "sourceMap": true,
                         "optimization": false,
                         "namedChunks": true,
-                        "browser": "packages/components-dev/breadcrumbs/main.ts"
+                        "browser": "packages/components-dev/breadcrumbs/main.ts",
+                        "server": "packages/components-dev/breadcrumbs/main.server.ts",
+                        "prerender": true,
+                        "ssr": {
+                            "entry": "packages/components-dev/breadcrumbs/server.ts"
+                        }
                     }
                 },
                 "serve": {
