@@ -8,21 +8,21 @@ import {
 } from '@koobiq/components/filter-bar';
 
 const DATA_OBJECT = {
-    'Без ролей': 'value 0',
+    'No roles': 'value 0',
     'Management and Configuration': {
-        Администратор: { value: 'value 1' },
-        Оператор: 'value 2',
-        Пользователь: 'value 3'
+        Administrator: { value: 'value 1' },
+        Operator: 'value 2',
+        User: 'value 3'
     },
     'MP 10': {
-        Администратор: 'value 4',
-        Оператор: 'value 5',
-        Пользователь: 'value 6'
+        Administrator: 'value 4',
+        Operator: 'value 5',
+        User: 'value 6'
     },
     'Knowledge Base': {
-        Администратор: 'value 7',
-        Оператор: 'value 8',
-        Пользователь: 'value 9'
+        Administrator: 'value 7',
+        Operator: 'value 8',
+        User: 'value 9'
     }
 };
 
