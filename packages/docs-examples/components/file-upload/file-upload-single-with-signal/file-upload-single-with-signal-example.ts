@@ -12,12 +12,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="layout-margin-bottom-l">
             <kbq-file-upload [file]="file()" (fileQueueChange)="onSingleChange($event)">
-                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+                <i kbq-icon="kbq-file-o_16"></i>
             </kbq-file-upload>
         </div>
 
         <kbq-file-upload [files]="files()" (fileQueueChanged)="onMultipleChange($event)" multiple>
-            <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+            <i kbq-icon="kbq-file-o_16"></i>
         </kbq-file-upload>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

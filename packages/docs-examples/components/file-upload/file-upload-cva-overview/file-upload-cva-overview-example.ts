@@ -14,7 +14,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <div class="kbq-form__row layout-margin-bottom-m">
                 <label class="kbq-form__label flex-20">Single file-upload with formControl</label>
                 <kbq-file-upload class="kbq-form__control flex-80" [formControl]="control">
-                    <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+                    <i kbq-icon="kbq-file-o_16"></i>
                 </kbq-file-upload>
             </div>
         </div>
