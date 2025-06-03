@@ -10,7 +10,7 @@
     @if (!files.length) {
         <div class="dropzone">
             @if (size === 'default') {
-                <i color="contrast-fade" kbq-icon="kbq-cloud-arrow-up-o_32"></i>
+                <i kbq-icon="kbq-cloud-arrow-up-o_32" class="kbq-dropzone__icon"></i>
                 <div class="dropzone__text">
                     <span class="multiple__header">{{ config.title }}</span>
                     <div>
@@ -19,7 +19,7 @@
                     </div>
                 </div>
             } @else {
-                <i color="contrast-fade" kbq-icon="kbq-cloud-arrow-up-o_24"></i>
+                <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-dropzone__icon"></i>
                 <span class="dropzone__text multiple__caption">
                     {{ separatedCaptionTextForCompactSize[0] }}
                     <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
@@ -87,7 +87,7 @@
             </div>
             <div class="btn-upload">
                 <div class="dropzone">
-                    <i kbq-icon="kbq-cloud-arrow-up-o_24"></i>
+                    <i kbq-icon="kbq-cloud-arrow-up-o_24" class="kbq-dropzone__icon"></i>
                     <span class="dropzone__text multiple__caption">
                         {{ separatedCaptionTextWhenSelected[0] }}
                         <label kbq-link pseudo [disabled]="disabled" [for]="inputId" [tabIndex]="-1">
