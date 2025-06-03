@@ -14449,9 +14449,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-preset-angular@npm:^14.5.5":
-  version: 14.5.5
-  resolution: "jest-preset-angular@npm:14.5.5"
+"jest-preset-angular@npm:^14.6.0":
+  version: 14.6.0
+  resolution: "jest-preset-angular@npm:14.6.0"
   dependencies:
     bs-logger: "npm:^0.2.6"
     esbuild: "npm:>=0.15.13"
@@ -14461,9 +14461,9 @@ __metadata:
     pretty-format: "npm:^29.7.0"
     ts-jest: "npm:^29.3.0"
   peerDependencies:
-    "@angular/compiler-cli": ">=15.0.0 <20.0.0"
-    "@angular/core": ">=15.0.0 <20.0.0"
-    "@angular/platform-browser-dynamic": ">=15.0.0 <20.0.0"
+    "@angular/compiler-cli": ">=15.0.0 <21.0.0"
+    "@angular/core": ">=15.0.0 <21.0.0"
+    "@angular/platform-browser-dynamic": ">=15.0.0 <21.0.0"
     jest: ^29.0.0
     jsdom: ">=20.0.0"
     typescript: ">=4.8"
@@ -14473,7 +14473,7 @@ __metadata:
   peerDependenciesMeta:
     jsdom:
       optional: true
-  checksum: 10c0/1c463d62c2a9b8fd6e6b94538e5f33f6ef494ed705271cae07c1d7589e5acf447d516d5bd7212f6006bd94d006789405bb6e4ea21681b823b9e3fc984c32e1b6
+  checksum: 10c0/d19f3d8b37914c3ab5a45c7709669696fd21e54a02ae25f6030a9e0dcf157bb630b163e8bd0bc9314cb69c9953b4cdeb4786d79b1b46291da76cfdd59b79b80c
   languageName: node
   linkType: hard
 
@@ -15316,7 +15316,7 @@ __metadata:
     jasmine: "npm:^4.6.0"
     jasmine-core: "npm:^3.99.1"
     jest: "npm:^29.7.0"
-    jest-preset-angular: "npm:^14.5.5"
+    jest-preset-angular: "npm:^14.6.0"
     karma: "npm:^6.4.4"
     karma-chrome-launcher: "npm:^3.2.0"
     karma-coverage: "npm:^2.2.1"
