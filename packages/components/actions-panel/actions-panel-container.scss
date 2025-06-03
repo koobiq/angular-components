@@ -4,7 +4,6 @@
     box-shadow: var(--kbq-actions-panel-box-shadow);
     height: var(--kbq-actions-panel-height);
     padding: var(--kbq-actions-panel-padding);
-    margin: var(--kbq-actions-panel-margin);
     border-radius: var(--kbq-actions-panel-border-radius);
     display: flex;
     flex-grow: 1;
@@ -24,6 +23,10 @@
         height: var(--kbq-actions-panel-vertical-divider-height) !important;
         margin: var(--kbq-actions-panel-vertical-divider-margin);
     }
+}
+
+.kbq-actions-panel-overlay {
+    margin: var(--kbq-actions-panel-margin);
 }
 
 .kbq-actions-panel-overlay-container {
