@@ -772,7 +772,7 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     hasExamples: true
                 },
                 {
-                    id: '',
+                    id: 'filesize-formatter',
                     name: {
                         ru: 'Filesize formatter',
                         en: 'Filesize formatter'
