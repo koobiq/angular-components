@@ -772,12 +772,12 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     hasExamples: true
                 },
                 {
-                    id: 'filesize-formatter',
+                    id: '',
                     name: {
                         ru: 'Filesize formatter',
                         en: 'Filesize formatter'
                     },
-                    svgPreview: '',
+                    svgPreview: 'formatter-filesize',
                     hasApi: false,
                     hasExamples: false,
                     isNew: expiresAt('2025-06-08')
