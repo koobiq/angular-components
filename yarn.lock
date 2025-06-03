@@ -5096,9 +5096,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@messageformat/core@npm:^3.0.1":
-  version: 3.3.0
-  resolution: "@messageformat/core@npm:3.3.0"
+"@messageformat/core@npm:^3.4.0":
+  version: 3.4.0
+  resolution: "@messageformat/core@npm:3.4.0"
   dependencies:
     "@messageformat/date-skeleton": "npm:^1.0.0"
     "@messageformat/number-skeleton": "npm:^1.0.0"
@@ -5106,7 +5106,7 @@ __metadata:
     "@messageformat/runtime": "npm:^3.0.1"
     make-plural: "npm:^7.0.0"
     safe-identifier: "npm:^0.4.1"
-  checksum: 10c0/5880d96be2551fbe156db9fe6a41411e8a0e01bb27192fd9f3dae020be8178e41f78846d1b689f150b9ac9b4692f5951c49ed23624ecc68150344aa57eff200c
+  checksum: 10c0/8f5591c3e72b7771b036452465ee60c912c1cea6adb3d0f55e7a4be8737c02e1d1cb8620bb894dbc9dfcf28f77faff378c3c159e177a0cbe500b1ee74c41f70f
   languageName: node
   linkType: hard
 
@@ -15258,7 +15258,7 @@ __metadata:
     "@koobiq/luxon-date-adapter": "npm:^3.2.3"
     "@koobiq/moment-date-adapter": "npm:^3.2.3"
     "@koobiq/tokens-builder": "npm:^3.13.2"
-    "@messageformat/core": "npm:^3.0.1"
+    "@messageformat/core": "npm:^3.4.0"
     "@microsoft/api-extractor": "npm:7.40.2"
     "@octokit/rest": "npm:^18.9.1"
     "@playwright/test": "npm:^1.52.0"
