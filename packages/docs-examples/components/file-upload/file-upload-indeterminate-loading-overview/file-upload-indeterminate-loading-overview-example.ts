@@ -16,12 +16,12 @@ import { take } from 'rxjs/operators';
     ],
     template: `
         <kbq-file-upload (fileQueueChange)="onFileChange($event)" progressMode="indeterminate">
-            <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+            <i kbq-icon="kbq-file-o_16"></i>
         </kbq-file-upload>
 
         <kbq-file-upload (fileQueueChanged)="onFilesChange($event)" multiple progressMode="indeterminate">
             <ng-template #kbqFileIcon>
-                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+                <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>
         </kbq-file-upload>
 

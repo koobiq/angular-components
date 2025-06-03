@@ -11,7 +11,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <kbq-multiple-file-upload>
             <ng-template #kbqFileIcon>
-                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+                <i kbq-icon="kbq-file-o_16"></i>
             </ng-template>
         </kbq-multiple-file-upload>
     `,

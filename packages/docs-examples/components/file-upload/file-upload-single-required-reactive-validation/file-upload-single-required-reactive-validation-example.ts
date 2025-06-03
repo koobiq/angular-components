@@ -20,7 +20,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 [progressMode]="'indeterminate'"
                 formControlName="fileUpload"
             >
-                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+                <i kbq-icon="kbq-file-o_16"></i>
                 @if (formMultiple.controls.fileUpload.invalid && kbqFileUpload.invalid) {
                     <kbq-hint color="error">File required</kbq-hint>
                 }

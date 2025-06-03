@@ -14,7 +14,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ],
     template: `
         <kbq-single-file-upload>
-            <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+            <i kbq-icon="kbq-file-o_16"></i>
         </kbq-single-file-upload>
     `
 })
