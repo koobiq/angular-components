@@ -25,11 +25,11 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
         factory: () => ({
             'ru-RU': {
                 breadcrumbShortening:
-                    'За основу берется автоматическое сокращение хлебных крошек, когда средние пункты скрываются при отсутсвии свободного пространства.',
+                    'За основу берется автоматическое сокращение хлебных крошек, когда средние пункты скрываются при отсутствии свободного пространства.',
                 leftmostHidden:
-                    'Если пространство становится еще уже, то скрывается и левый крайний уровень  у хлебных крошек, оставляя видимым только крайний правый уровень.',
+                    'Если пространство становится еще уже, то скрывается и левый крайний уровень у хлебных крошек, оставляя видимым только крайний правый уровень.',
                 currentItemTruncation:
-                    'Минимальная ширина левой стороны зависит от заголовка текущего пункта,  который может быть обрезан до 3 символов с добавлением трех точек (…).',
+                    'Минимальная ширина левой стороны зависит от заголовка текущего пункта, который может быть обрезан до 3 символов с добавлением трех точек (…).',
                 rightSideCompression:
                     'После достижения минимальной ширины у левой стороны можно приступить к сжатию правой стороны с действиями. '
             } satisfies ExampleLocalizedText,
@@ -91,13 +91,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                 </nav>
             </div>
             <div kbqTopBarSpacer></div>
-            <div
-                #kbqOverflowItems="kbqOverflowItems"
-                [debounceTime]="0"
-                kbqOverflowItems
-                kbqTopBarContainer
-                placement="end"
-            >
+            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
                 <button
                     [kbqStyle]="KbqButtonStyles.Transparent"
                     [color]="KbqComponentColors.Contrast"

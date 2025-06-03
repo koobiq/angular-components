@@ -137,9 +137,9 @@ export class KbqOverflowItems {
     /**
      * Debounce time for recalculating items visibility.
      *
-     * @default 100
+     * @default 0
      */
-    readonly debounceTime = input(100, { transform: numberAttribute });
+    readonly debounceTime = input(0, { transform: numberAttribute });
 
     /**
      * Emits when the set of hidden items changes.
