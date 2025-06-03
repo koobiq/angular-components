@@ -16,12 +16,24 @@ concurrency:
 
 jobs:
   update_screenshots:
-    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/e2e-update-screenshots') }}
+    if: ${{ github.event.issue.pull_request && github.event.comment.body == '/e2e-update-screenshots' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: React to the triggering comment
+        run: hub api repos/${{ github.repository }}/issues/comments/${{ github.event.comment.id }}/reactions --raw-field 'content=rocket'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Checkout the branch from the PR that triggered the job
+        run: |
+          git config --global hub.protocol https
+          hub pr checkout ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup yarn
         uses: ./.github/workflows/actions/setup-yarn
