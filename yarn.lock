@@ -10258,7 +10258,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:^4.3.6, debug@npm:^4.3.7, debug@npm:^4.4.0":
+"debug@npm:^4.3.6, debug@npm:^4.4.0, debug@npm:^4.4.1":
   version: 4.4.1
   resolution: "debug@npm:4.4.1"
   dependencies:
@@ -11894,7 +11894,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"file-entry-cache@npm:^10.0.8":
+"file-entry-cache@npm:^10.1.0":
   version: 10.1.0
   resolution: "file-entry-cache@npm:10.1.0"
   dependencies:
@@ -13365,10 +13365,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ignore@npm:^7.0.3":
-  version: 7.0.4
-  resolution: "ignore@npm:7.0.4"
-  checksum: 10c0/90e1f69ce352b9555caecd9cbfd07abe7626d312a6f90efbbb52c7edca6ea8df065d66303863b30154ab1502afb2da8bc59d5b04e1719a52ef75bbf675c488eb
+"ignore@npm:^7.0.4":
+  version: 7.0.5
+  resolution: "ignore@npm:7.0.5"
+  checksum: 10c0/ae00db89fe873064a093b8999fe4cc284b13ef2a178636211842cceb650b9c3e390d3339191acb145d81ed5379d2074840cf0c33a20bdbd6f32821f79eb4ad5d
   languageName: node
   linkType: hard
 
@@ -15349,7 +15349,7 @@ __metadata:
     sass: "npm:^1.75.0"
     spdx-satisfies: "npm:^5.0.1"
     style-dictionary: "npm:^3.7.1"
-    stylelint: "npm:^16.19.1"
+    stylelint: "npm:^16.20.0"
     stylelint-config-recommended-scss: "npm:^14.1.0"
     stylelint-prettier: "npm:^5.0.3"
     ts-jest: "npm:^29.3.4"
@@ -20685,9 +20685,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint@npm:^16.19.1":
-  version: 16.19.1
-  resolution: "stylelint@npm:16.19.1"
+"stylelint@npm:^16.20.0":
+  version: 16.20.0
+  resolution: "stylelint@npm:16.20.0"
   dependencies:
     "@csstools/css-parser-algorithms": "npm:^3.0.4"
     "@csstools/css-tokenizer": "npm:^3.0.3"
@@ -20699,15 +20699,15 @@ __metadata:
     cosmiconfig: "npm:^9.0.0"
     css-functions-list: "npm:^3.2.3"
     css-tree: "npm:^3.1.0"
-    debug: "npm:^4.3.7"
+    debug: "npm:^4.4.1"
     fast-glob: "npm:^3.3.3"
     fastest-levenshtein: "npm:^1.0.16"
-    file-entry-cache: "npm:^10.0.8"
+    file-entry-cache: "npm:^10.1.0"
     global-modules: "npm:^2.0.0"
     globby: "npm:^11.1.0"
     globjoin: "npm:^0.1.4"
     html-tags: "npm:^3.3.1"
-    ignore: "npm:^7.0.3"
+    ignore: "npm:^7.0.4"
     imurmurhash: "npm:^0.1.4"
     is-plain-object: "npm:^5.0.0"
     known-css-properties: "npm:^0.36.0"
@@ -20729,7 +20729,7 @@ __metadata:
     write-file-atomic: "npm:^5.0.1"
   bin:
     stylelint: bin/stylelint.mjs
-  checksum: 10c0/e633f323ff730e8f2ac982067e4caa9a6c98b81a519e7adff96fa7a7d047f68a24c0dd2d81f3511b0943d99c915f20f19da911d16d47336705ea70d46e960c89
+  checksum: 10c0/9094424554666aae2bf88773ff0ae9873343c7a9bc29a529665396f1f24b460e037023bd07fe4fe8f18b587369d88afda0452e91e0a9d1e97a6c09803f3c862d
   languageName: node
   linkType: hard
 
