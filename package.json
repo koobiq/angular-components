@@ -248,6 +248,8 @@
         "dev:sidebar": "ng serve dev-sidebar --port 3003",
         "dev:sidepanel": "ng serve dev-sidepanel --port 3003",
         "dev:splitter": "ng serve dev-splitter --port 3003",
+        "dev:ssr": "ng serve dev-ssr --port 3003",
+        "dev:ssr-start": "ng build dev-ssr && node dist/components-dev/ssr/server/server.mjs",
         "dev:table": "ng serve dev-table --port 3003",
         "dev:tabs": "ng serve dev-tabs --port 3003",
         "dev:tag": "ng serve dev-tag --port 3003",

@@ -2,42 +2,31 @@
 
 This guide explains how to enable SSR for your component development.
 
-### Step 1: update `angular.json`
+### Set up server config
 
-Modify `angular.json` with specific component configuration:
+Update `main.server.ts` with specific component development app:
 
-```json5
-{
-    // ...other config
-    architect: {
-        build: {
-            // ...other build options
-            options: {
-                // ...other options
-                server: 'packages/components-dev/<component>/main.server.ts',
-                prerender: true,
-                ssr: {
-                    entry: 'packages/components-dev/<component>/server.ts'
-                }
-            }
-        }
-    }
-}
+```typescript
+// ...other imports
+import { DevApp } from '../<component>/module';
+// ...other code
 ```
 
 Replace `<component>` with the actual component name (e.g., `button`, `modal`, etc.).
 
 ---
 
-### Step 2: create SSR entry files
+### Client Hydration with live server
 
-Inside your component’s development folder (`packages/components-dev/<component>/`), add the following files:
+Update `main.ts` with specific component development app:
 
-- `main.server.ts`
-- `server.ts`
-- `app.config.server.ts`
+```typescript
+// ...other imports
+import { DevApp } from '../<component>/module';
+// ...other code
+```
 
-These files handle bootstrapping, rendering logic, and server configuration.
+Replace `<component>` with the actual component name (e.g., `button`, `modal`, etc.).
 
 ---
 
@@ -46,6 +35,11 @@ These files handle bootstrapping, rendering logic, and server configuration.
 Build and run the server using the following commands:
 
 ```bash
-ng build dev-<component-name>
-node dist/components-dev/<component-name>/server/server.mjs
+yarn run dev:ssr-start
+```
+
+or for live server with client hydration
+
+```bash
+yarn run dev:ssr
 ```

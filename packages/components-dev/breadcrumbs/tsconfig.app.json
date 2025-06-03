@@ -1,14 +1,5 @@
 {
     "extends": "../tsconfig.json",
     "include": ["**/*.d.ts"],
-    "files": [
-        "main.ts",
-        "main.server.ts",
-        "server.ts"
-    ],
-    "compilerOptions": {
-        "types": [
-            "node"
-        ]
-    }
+    "files": ["main.ts"]
 }
