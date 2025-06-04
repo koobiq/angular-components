@@ -8,5 +8,11 @@
 
     .kbq-input.kbq-input-password {
         @include kbq-typography-level-to-styles-css-variables(typography, mono-normal);
+        // disable font-specific symbols replacements
+        font-variant-ligatures: none;
+        font-feature-settings:
+            'liga' 0,
+            'clig' 0,
+            'calt' 0;
     }
 }
