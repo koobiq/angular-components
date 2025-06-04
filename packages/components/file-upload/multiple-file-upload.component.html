@@ -51,7 +51,7 @@
                             (keydown.delete)="deleteFile(index)"
                         >
                             <div class="kbq-file-upload__row" [class.error]="file.hasError">
-                                <div class="kbq-file-upload__file">
+                                <div class="kbq-file-upload__file kbq-file-upload__grid-cell">
                                     @if (
                                         { loading: file.loading | async, progress: file.progress | async };
                                         as asyncData
@@ -76,9 +76,14 @@
                                         [minVisibleLength]="10"
                                     ></span>
                                 </div>
-                                <div class="kbq-file-upload__size">{{ file.file.size | kbqDataSize }}</div>
-                                <div class="kbq-file-upload__action">
-                                    <i kbq-icon-button="kbq-xmark-circle_16" (click)="deleteFile(index, $event)"></i>
+                                <div class="kbq-file-upload__size kbq-file-upload__grid-cell">
+                                    {{ file.file.size | kbqDataSize }}
+                                </div>
+                                <div
+                                    class="kbq-file-upload__action layout-row layout-align-center-center kbq-file-upload__grid-cell"
+                                    (click)="deleteFile(index, $event)"
+                                >
+                                    <i kbq-icon-button="kbq-xmark-circle_16" [disabled]="disabled"></i>
                                 </div>
                             </div>
                         </kbq-list-option>
