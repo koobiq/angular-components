@@ -32,6 +32,8 @@
         checkbox-size-normal-horizontal-content-padding]
     );
 
+    box-sizing: initial;
+
     // required for `.cdk-visually-hidden` input to be positioned correctly
     position: relative;
 

@@ -19,6 +19,8 @@
 .kbq-select__content {
     @extend %kbq-select-content;
 
+    box-sizing: initial;
+
     .kbq-option {
         position: relative;
 
