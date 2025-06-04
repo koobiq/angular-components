@@ -30,7 +30,7 @@ export interface ModalOptions<C = any, R = any> {
     // eslint-disable-next-line @typescript-eslint/ban-types
     kbqContent?: string | TemplateRef<{}> | Type<C>;
     kbqComponent?: Type<C>; // The instance of component opened into the dialog.
-    /** deprecated. Use field data and KBQ_MODAL_DATA */
+    /** @deprecated. Use field data and KBQ_MODAL_DATA */
     kbqComponentParams?: any;
     kbqClosable?: boolean;
     kbqMask?: boolean;
