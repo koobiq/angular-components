@@ -103,7 +103,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** true if all options selected */
     get allOptionsSelected(): boolean {
-        return !!this.data.selectAll && this.select?.triggerValues.length === this.values?.length;
+        return this.select?.triggerValues.length === this.values?.length;
     }
 
     private get visibleOptions(): KbqOption[] {

@@ -115,7 +115,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         const dataNodesLength = this.treeControl?.dataNodes?.length;
         const dataNodesForSelect = this.data.selectAll ? dataNodesLength - 1 : dataNodesLength;
 
-        return !!this.data.selectAll && this.select?.triggerValues?.length === dataNodesForSelect;
+        return this.select?.triggerValues?.length === dataNodesForSelect;
     }
 
     /** true if all visible options selected */
