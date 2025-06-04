@@ -40,13 +40,20 @@ type DevButton = DevButtonState & DevButtonStyle;
     standalone: true,
     imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule],
     selector: 'dev-button-state-and-style',
+    host: {
+        'data-testid': 'e2eButtonStateAndStyle'
+    },
     template: `
         <div class="dev-options">
-            <kbq-checkbox [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>
-            <kbq-checkbox [(ngModel)]="showTitle" [disabled]="!showPrefixIcon() && !showSuffixIcon()">
+            <kbq-checkbox [(ngModel)]="showPrefixIcon" data-testid="e2eShowPrefixIcon">show prefix icon</kbq-checkbox>
+            <kbq-checkbox
+                [(ngModel)]="showTitle"
+                [disabled]="!showPrefixIcon() && !showSuffixIcon()"
+                data-testid="e2eShowTitle"
+            >
                 show title
             </kbq-checkbox>
-            <kbq-checkbox [(ngModel)]="showSuffixIcon">show suffix icon</kbq-checkbox>
+            <kbq-checkbox [(ngModel)]="showSuffixIcon" data-testid="e2eShowSuffixIcon">show suffix icon</kbq-checkbox>
         </div>
 
         <table>
