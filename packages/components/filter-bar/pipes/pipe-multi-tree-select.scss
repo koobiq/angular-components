@@ -1,0 +1,19 @@
+.kbq-pipe__multi-tree-select {
+    .kbq-pipe__value {
+        margin-left: var(--kbq-size-xxs);
+    }
+
+    .kbq-badge {
+        align-self: center;
+
+        margin-left: var(--kbq-size-xs);
+    }
+
+    & .kbq-tree-select .kbq-select__trigger {
+        height: unset;
+    }
+}
+
+.kbq-pipe-multi-tree-select__panel .kbq-select__content {
+    max-height: 404px;
+}

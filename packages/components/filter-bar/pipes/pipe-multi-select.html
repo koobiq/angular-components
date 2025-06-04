@@ -8,6 +8,7 @@
     [panelClass]="'kbq-pipe-multiselect__panel'"
     [tabIndex]="-1"
     [value]="selected"
+    (closed)="onClose()"
     (selectionChange)="onSelect($event.value)"
 >
     <button
@@ -22,7 +23,7 @@
             <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
                 {{ select.triggerValue }}
             </span>
-        } @else if (select.triggerValues.length > 1) {
+        } @else if (select.triggerValues.length > 1 && !allOptionsSelected) {
             <kbq-badge [badgeColor]="'contrast'" [compact]="true">
                 {{ select.triggerValues.length }}
             </kbq-badge>
@@ -45,7 +46,12 @@
     <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
 
     @if (data.selectAll && !select.isEmptySearchResult) {
-        <kbq-option [selectable]="false" (click)="toggleSelectionAll()" (keydown.enter)="toggleSelectionAll()">
+        <kbq-option
+            [class.kbq-selected]="allVisibleOptionsSelected"
+            [selectable]="false"
+            (click)="toggleSelectionAll()"
+            (keydown.enter)="toggleSelectionAll()"
+        >
             <kbq-pseudo-checkbox [state]="checkboxState" />
             {{ localeData.pipe.selectAll }}
         </kbq-option>

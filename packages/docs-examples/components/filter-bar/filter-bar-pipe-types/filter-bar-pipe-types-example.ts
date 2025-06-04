@@ -1,6 +1,31 @@
 import { Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    kbqBuildTree,
+    KbqFilter,
+    KbqFilterBarModule,
+    KbqPipeTemplate,
+    KbqPipeTypes
+} from '@koobiq/components/filter-bar';
+
+const DATA_OBJECT = {
+    'No roles': 'value 0',
+    'Management and Configuration': {
+        Administrator: { value: 'value 1' },
+        Operator: 'value 2',
+        User: 'value 3'
+    },
+    'MP 10': {
+        Administrator: 'value 4',
+        Operator: 'value 5',
+        User: 'value 6'
+    },
+    'Knowledge Base': {
+        Administrator: 'value 7',
+        Operator: 'value 8',
+        User: 'value 9'
+    }
+};
 
 /**
  * @title filter-bar-pipe-types
@@ -18,7 +43,7 @@ import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@k
                 <ng-container *kbqPipe="pipe" />
             }
 
-            @if (activeFilter?.changed) {
+            @if (isFilterChanged) {
                 <kbq-filter-reset (onResetFilter)="onResetFilter()" />
             }
         </kbq-filter-bar>
@@ -92,8 +117,30 @@ export class FilterBarPipeTypesExample {
             cleanable: false,
             removable: false,
             disabled: false
+        },
+        {
+            name: 'TreeSelect',
+            type: KbqPipeTypes.TreeSelect,
+            values: kbqBuildTree(DATA_OBJECT, 0),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiTreeSelect',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: kbqBuildTree(DATA_OBJECT, 0),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
         }
     ];
+
+    get isFilterChanged(): boolean {
+        return JSON.stringify(this.activeFilter.pipes) !== JSON.stringify(this.getDefaultFilter().pipes);
+    }
 
     onResetFilter() {
         console.log('onResetFilter: ');
@@ -120,6 +167,25 @@ export class FilterBarPipeTypesExample {
                 {
                     name: 'MultiSelect',
                     type: KbqPipeTypes.MultiSelect,
+                    value: [],
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'TreeSelect',
+                    type: KbqPipeTypes.TreeSelect,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'TreeSelect Multiple',
+                    id: 'MultiTreeSelect',
+                    type: KbqPipeTypes.MultiTreeSelect,
                     value: null,
 
                     cleanable: true,

@@ -305,7 +305,6 @@ describe('KbqFilterBar', () => {
                 expect(required.nativeElement.classList).not.toContain('kbq-pipe_cleanable');
                 expect(required.nativeElement.classList).not.toContain('kbq-pipe_removable');
                 expect(required.nativeElement.classList).not.toContain('kbq-pipe_disabled');
-                expect(required.nativeElement.classList).not.toContain('kbq-pipe_empty');
             });
 
             it('MultiSelect: state empty', () => {

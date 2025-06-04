@@ -1,0 +1,67 @@
+<kbq-tree-select
+    #select
+    [autoSelect]="false"
+    [disabled]="data.disabled"
+    [kbqPipeTitle]="pipeTooltip"
+    [ngClass]="{ 'kbq-active': select.panelOpen }"
+    [ngModel]="selected"
+    [panelClass]="'kbq-pipe-tree-select__panel'"
+    [tabIndex]="-1"
+    (opened)="onOpen()"
+    (selectionChange)="onSelect($event.value)"
+>
+    <!-- eslint-disable-next-line @angular-eslint/template/prefer-control-flow -->
+    <kbq-form-field *ngIf="data.search" kbqFormFieldWithoutBorders kbqSelectSearch>
+        <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+        <input
+            autocomplete="off"
+            kbqInput
+            placeholder="{{ localeData.search.placeholder }}"
+            type="text"
+            [formControl]="searchControl"
+        />
+        <kbq-cleaner />
+    </kbq-form-field>
+
+    <div kbq-select-search-empty-result>{{ localeData.pipe.emptySearchResult }}</div>
+
+    <kbq-cleaner #kbqSelectCleaner />
+
+    <button
+        kbq-button
+        kbq-select-matcher
+        [disabled]="data.disabled"
+        [kbqPipeState]="data"
+        [ngClass]="{ 'kbq-active': select.panelOpen }"
+    >
+        <span #kbqTitleText kbqPipeMinWidth class="kbq-pipe__name">{{ data.name }}</span>
+        <span
+            #kbqTitleText
+            kbqPipeMinWidth
+            class="kbq-pipe__value"
+            [class.kbq-pipe__value_empty]="!select.triggerValue"
+        >
+            {{ select.triggerValue }}
+        </span>
+    </button>
+
+    <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+        <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
+            <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+        </kbq-tree-option>
+
+        <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [selectable]="false">
+            <kbq-tree-node-toggle [node]="node" />
+            <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+        </kbq-tree-option>
+    </kbq-tree-selection>
+</kbq-tree-select>
+
+@if (showRemoveButton) {
+    <kbq-pipe-button />
+}
+
+<ng-template #pipeTooltip>
+    <div class="kbq-pipe-tooltip__name kbq-text-compact">{{ data.name }}</div>
+    <div class="kbq-pipe-tooltip__value kbq-text-compact">{{ select.triggerValue }}</div>
+</ng-template>

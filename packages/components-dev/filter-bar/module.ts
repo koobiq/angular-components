@@ -13,6 +13,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { DateAdapter } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import {
+    kbqBuildTree,
     KbqFilter,
     KbqFilterBar,
     KbqFilterBarModule,
@@ -24,6 +25,25 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 import { FilterBarExamplesModule } from '../../docs-examples/components/filter-bar';
 import { DevLocaleSelector } from '../locale-selector';
+
+const DEV_DATA_OBJECT = {
+    'No roles': 'value 0',
+    'Management and Configuration': {
+        Administrator: { value: 'value 1' },
+        Operator: 'value 2',
+        User: 'value 3'
+    },
+    'MP 10': {
+        Administrator: 'value 4',
+        Operator: 'value 5',
+        User: 'value 6'
+    },
+    'Knowledge Base': {
+        Administrator: 'value 7',
+        Operator: 'value 8',
+        User: 'value 9'
+    }
+};
 
 @Component({
     standalone: true,
@@ -104,7 +124,7 @@ export class DevApp implements AfterViewInit {
 
     filters: KbqFilter[] = [
         {
-            name: 'Select',
+            name: 'select',
             readonly: false,
             disabled: false,
             changed: false,
@@ -151,6 +171,141 @@ export class DevApp implements AfterViewInit {
                     name: 'disabled',
                     value: { name: 'Не определен', id: '1' },
                     type: KbqPipeTypes.Select,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: true
+                }
+            ]
+        },
+        {
+            name: 'tree-select',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'required',
+                    id: 'TreeSelect',
+                    // required - не может быть пустым, всегда есть дефолтное значение
+                    value: 'value 0',
+                    type: KbqPipeTypes.TreeSelect,
+
+                    search: true,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'empty',
+                    id: 'TreeSelect',
+                    type: KbqPipeTypes.TreeSelect,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    id: 'TreeSelect',
+                    value: { name: 'Не определен', id: '1' },
+                    type: KbqPipeTypes.TreeSelect,
+
+                    search: true,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'removable',
+                    id: 'TreeSelect',
+                    value: { name: 'Не определен', id: '1' },
+                    type: KbqPipeTypes.TreeSelect,
+
+                    search: true,
+
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    id: 'TreeSelect',
+                    value: { name: 'Не определен', id: '1' },
+                    type: KbqPipeTypes.TreeSelect,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: true
+                }
+            ]
+        },
+        {
+            name: 'multi-tree-select',
+            readonly: false,
+            disabled: false,
+            changed: false,
+            saved: false,
+            pipes: [
+                {
+                    name: 'required',
+                    id: 'MultiTreeSelect',
+                    // required - не может быть пустым, всегда есть дефолтное значение
+                    value: ['value 0'],
+                    type: KbqPipeTypes.MultiTreeSelect,
+
+                    search: true,
+                    selectAll: true,
+
+                    cleanable: false,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'empty',
+                    id: 'MultiTreeSelect',
+                    type: KbqPipeTypes.MultiTreeSelect,
+                    value: null,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'cleanable',
+                    id: 'MultiTreeSelect',
+                    value: ['value 2', 'value 3'],
+                    type: KbqPipeTypes.MultiTreeSelect,
+
+                    search: true,
+                    selectAll: true,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'removable',
+                    id: 'MultiTreeSelect',
+                    value: [],
+                    type: KbqPipeTypes.MultiTreeSelect,
+
+                    search: true,
+                    selectAll: true,
+
+                    cleanable: false,
+                    removable: true,
+                    disabled: false
+                },
+                {
+                    name: 'disabled',
+                    id: 'MultiTreeSelect',
+                    value: [],
+                    type: KbqPipeTypes.MultiTreeSelect,
 
                     cleanable: false,
                     removable: false,
@@ -586,7 +741,7 @@ export class DevApp implements AfterViewInit {
         }
     ];
     pipeTemplates: KbqPipeTemplate[];
-    defaultFilter: KbqFilter | null = this.filters[1];
+    defaultFilter: KbqFilter | null = this.filters[2];
     activeFilter: KbqFilter | null = this.defaultFilter;
 
     ngAfterViewInit(): void {
@@ -607,25 +762,6 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
                 valueTemplate: this.optionTemplate,
-                search: true,
-
-                cleanable: false,
-                removable: false,
-                disabled: false
-            },
-            {
-                name: 'mySelect',
-                type: KbqPipeTypes.Select,
-                id: 'mySelect',
-                values: [
-                    { name: 'Option 1', id: '1', type: 'error' },
-                    { name: 'Option 2', id: '2', type: 'warning' },
-                    { name: 'Option 3', id: '3', type: 'success' },
-                    { name: 'Option 4', id: '4', type: 'error' },
-                    { name: 'Option 5', id: '5', type: 'warning' }
-                ],
-                valueTemplate: this.optionTemplate,
-                search: true,
 
                 cleanable: false,
                 removable: false,
@@ -648,10 +784,44 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 10', id: '10', type: 'error' }
                 ],
                 valueTemplate: this.optionTemplate,
-                search: true,
 
                 cleanable: false,
                 removable: true,
+                disabled: false
+            },
+            {
+                name: 'TreeSelect',
+                type: KbqPipeTypes.TreeSelect,
+                values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'MultiTreeSelect',
+                type: KbqPipeTypes.MultiTreeSelect,
+                values: kbqBuildTree(DEV_DATA_OBJECT, 0),
+
+                cleanable: false,
+                removable: false,
+                disabled: false
+            },
+            {
+                name: 'mySelect',
+                type: KbqPipeTypes.Select,
+                id: 'mySelect',
+                values: [
+                    { name: 'Option 1', id: '1', type: 'error' },
+                    { name: 'Option 2', id: '2', type: 'warning' },
+                    { name: 'Option 3', id: '3', type: 'success' },
+                    { name: 'Option 4', id: '4', type: 'error' },
+                    { name: 'Option 5', id: '5', type: 'warning' }
+                ],
+                valueTemplate: this.optionTemplate,
+
+                cleanable: false,
+                removable: false,
                 disabled: false
             },
             {
@@ -666,7 +836,6 @@ export class DevApp implements AfterViewInit {
                     { name: 'Option 5', id: '5', type: 'warning' }
                 ],
                 valueTemplate: this.optionTemplate,
-                search: true,
 
                 cleanable: false,
                 removable: true,
@@ -760,6 +929,10 @@ export class DevApp implements AfterViewInit {
 
     onFilterChange(filter: KbqFilter | null) {
         console.log('onFilterChange: ', filter);
+    }
+
+    onPipeChange(pipe: KbqPipe | null) {
+        console.log('onPipeChange: ', pipe);
     }
 
     onSelectFilter(filter: KbqFilter) {

@@ -80,7 +80,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
-        return !this.data.value?.length;
+        return !this.data.value?.length || this.allOptionsSelected;
     }
 
     /** state for checkbox 'select all'. */
@@ -96,12 +96,18 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         return 'indeterminate';
     }
 
-    private get visibleOptions(): KbqOption[] {
-        return this.options.filter((option) => option.selectable);
+    /** true if all visible options selected */
+    get allVisibleOptionsSelected(): boolean {
+        return this.visibleOptions?.every((option) => option.selected);
     }
 
-    private get allOptionsSelected(): boolean {
-        return this.visibleOptions.every((option) => option.selected);
+    /** true if all options selected */
+    get allOptionsSelected(): boolean {
+        return this.select?.triggerValues.length === this.values?.length;
+    }
+
+    private get visibleOptions(): KbqOption[] {
+        return this.options?.filter((option) => option.selectable);
     }
 
     private selectionAllInProgress = false;
@@ -151,7 +157,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     toggleSelectionAll() {
         this.selectionAllInProgress = true;
 
-        if (this.allOptionsSelected) {
+        if (this.allVisibleOptionsSelected) {
             this.visibleOptions.forEach((option) => option.deselect());
         } else {
             this.visibleOptions.forEach((option) => option.select());
@@ -166,6 +172,12 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** Comparator of selected options */
     compareByValue = (o1: any, o2: any): boolean => o1?.id === o2?.id;
+
+    onClose() {
+        if (this.allOptionsSelected) {
+            this.toggleSelectionAll();
+        }
+    }
 
     /** opens select */
     override open() {

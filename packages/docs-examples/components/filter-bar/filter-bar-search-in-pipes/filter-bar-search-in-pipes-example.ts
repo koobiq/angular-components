@@ -1,5 +1,30 @@
 import { Component } from '@angular/core';
-import { KbqFilter, KbqFilterBarModule, KbqPipeTemplate, KbqPipeTypes } from '@koobiq/components/filter-bar';
+import {
+    kbqBuildTree,
+    KbqFilter,
+    KbqFilterBarModule,
+    KbqPipeTemplate,
+    KbqPipeTypes
+} from '@koobiq/components/filter-bar';
+
+const DATA_OBJECT = {
+    'No roles': 'value 0',
+    'Management and Configuration': {
+        Administrator: { value: 'value 1' },
+        Operator: 'value 2',
+        User: 'value 3'
+    },
+    'MP 10': {
+        Administrator: 'value 4',
+        Operator: 'value 5',
+        User: 'value 6'
+    },
+    'Knowledge Base': {
+        Administrator: 'value 7',
+        Operator: 'value 8',
+        User: 'value 9'
+    }
+};
 
 /**
  * @title filter-bar-search-in-pipes
@@ -54,6 +79,24 @@ export class FilterBarSearchInPipesExample {
             cleanable: false,
             removable: false,
             disabled: false
+        },
+        {
+            name: 'TreeSelect',
+            type: KbqPipeTypes.TreeSelect,
+            values: kbqBuildTree(DATA_OBJECT, 0),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
+        },
+        {
+            name: 'MultiTreeSelect',
+            type: KbqPipeTypes.MultiTreeSelect,
+            values: kbqBuildTree(DATA_OBJECT, 0),
+
+            cleanable: false,
+            removable: false,
+            disabled: false
         }
     ];
 
@@ -79,6 +122,29 @@ export class FilterBarSearchInPipesExample {
                 {
                     name: 'MultiSelect',
                     type: KbqPipeTypes.MultiSelect,
+                    value: null,
+
+                    search: true,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'TreeSelect',
+                    type: KbqPipeTypes.TreeSelect,
+                    value: null,
+
+                    search: true,
+
+                    cleanable: true,
+                    removable: false,
+                    disabled: false
+                },
+                {
+                    name: 'TreeSelect Multiple',
+                    id: 'MultiTreeSelect',
+                    type: KbqPipeTypes.MultiTreeSelect,
                     value: null,
 
                     search: true,
