@@ -16,7 +16,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             inputId="file-upload-single-error-overview"
         >
             @if (!errors.length) {
-                <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>
+                <i kbq-icon="kbq-file-o_16"></i>
             }
             @if (errors.length) {
                 <i kbq-icon="kbq-exclamation-triangle_16"></i>

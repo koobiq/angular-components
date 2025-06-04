@@ -1,4 +1,6 @@
+import { DOCUMENT } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -7,6 +9,9 @@ import {
     inject,
     Input,
     Output,
+    Renderer2,
+    viewChild,
+    viewChildren,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -33,7 +38,9 @@ import {
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
     KbqFileItem,
     KbqFileUploadModule,
-    KbqFileValidatorFn
+    KbqFileValidatorFn,
+    KbqMultipleFileUploadComponent,
+    KbqSingleFileUploadComponent
 } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -99,6 +106,178 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
     ]
 })
 export class DevCustomTextDirective {}
+
+@Component({
+    standalone: true,
+    imports: [KbqFileUploadModule, ReactiveFormsModule, KbqIconModule],
+    selector: 'dev-file-upload-state-and-style',
+    template: `
+        <table>
+            <tr>
+                <td>
+                    <kbq-file-upload>
+                        <i kbq-icon="kbq-file-o_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload [disabled]="true">
+                        <i kbq-icon="kbq-info-circle_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload #withEmptyErrorState>
+                        <i kbq-icon="kbq-info-circle_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload class="dev-dragover">
+                        <i kbq-icon="kbq-info-circle_16"></i>
+                    </kbq-file-upload>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <kbq-file-upload [formControl]="file">
+                        <i kbq-icon="kbq-file-o_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload [formControl]="fileControlDisabled">
+                        <i kbq-icon="kbq-file-o_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload #withErrorState [formControl]="fileControlInvalid">
+                        <i kbq-icon="kbq-info-circle_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload class="dev-dragover" [formControl]="file">
+                        <i kbq-icon="kbq-file-o_16"></i>
+                    </kbq-file-upload>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <kbq-multiple-file-upload>
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload [disabled]="true">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload #multipleEmptyWithErrorState>
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload class="dev-dragover">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <kbq-multiple-file-upload [formControl]="multipleFileControl">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload [formControl]="multipleFileControlDisabled">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload #multipleWithErrorState [formControl]="multipleFileControlInvalid">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload class="dev-dragover" [formControl]="multipleFileControl">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <kbq-multiple-file-upload
+                        class="dev-dragover"
+                        #multipleWithErrorState
+                        [formControl]="multipleFileControlInvalid"
+                    >
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+            </tr>
+        </table>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevFileUploadStateAndStyle {
+    protected readonly testFile = new File(['test'] satisfies BlobPart[], 'test.file');
+
+    protected readonly singleWithEmptyErrorState = viewChild<KbqSingleFileUploadComponent>('withEmptyErrorState');
+    protected readonly singleWithErrorState = viewChild<KbqSingleFileUploadComponent>('withErrorState');
+    protected readonly multipleEmptyWithErrorState =
+        viewChild<KbqMultipleFileUploadComponent>('multipleEmptyWithErrorState');
+    protected readonly multipleWithErrorState = viewChildren<KbqMultipleFileUploadComponent>('multipleWithErrorState');
+
+    protected readonly file = new FormControl(this.testFile);
+    protected readonly multipleFileControl = new FormControl([{ file: this.testFile } satisfies KbqFileItem]);
+
+    protected readonly fileControlDisabled = new FormControl(this.testFile);
+    protected readonly multipleFileControlDisabled = new FormControl([{ file: this.testFile } satisfies KbqFileItem]);
+
+    protected readonly fileControlInvalid = new FormControl(this.testFile, () => ({ error: true }));
+    protected readonly multipleFileControlInvalid = new FormControl([{ file: this.testFile } satisfies KbqFileItem]);
+
+    private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
+
+    constructor() {
+        afterNextRender(() => {
+            this.singleWithEmptyErrorState()!.errorState = true;
+            this.singleWithErrorState()!.errorState = true;
+            this.multipleEmptyWithErrorState()!.errorState = true;
+            this.document.querySelectorAll('.dev-dragover .kbq-file-upload').forEach((el) => {
+                this.renderer.addClass(el, 'dragover');
+            });
+            this.fileControlInvalid.updateValueAndValidity();
+            this.multipleFileControlInvalid.updateValueAndValidity();
+
+            const multipleWithErrorState = this.multipleWithErrorState();
+
+            multipleWithErrorState.forEach((el) => {
+                if (el) {
+                    el.files[0].hasError = true;
+                }
+            });
+        });
+        this.fileControlDisabled.disable();
+        this.multipleFileControlDisabled.disable();
+    }
+}
 
 @Component({
     standalone: true,
@@ -197,7 +376,8 @@ export class DevMultipleFileUploadCompact {
         KbqRadioModule,
         KbqDataSizePipe,
         DevMultipleFileUploadCompact,
-        DevCustomTextDirective
+        DevCustomTextDirective,
+        DevFileUploadStateAndStyle
     ],
     selector: 'dev-app',
     templateUrl: 'template.html',
@@ -286,6 +466,7 @@ export class DevApp {
                 }
             });
         });
+        this.toggleDisabled();
     }
 
     addFileMultiple(files: KbqFileItem[]) {
