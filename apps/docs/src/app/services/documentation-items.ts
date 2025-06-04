@@ -777,7 +777,7 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                         ru: 'Filesize formatter',
                         en: 'Filesize formatter'
                     },
-                    svgPreview: '',
+                    svgPreview: 'formatter-filesize',
                     hasApi: false,
                     hasExamples: false,
                     isNew: expiresAt('2025-06-08')
