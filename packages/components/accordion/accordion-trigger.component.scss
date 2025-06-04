@@ -8,6 +8,8 @@
     outline: none;
 
     & .kbq-accordion-trigger__icon {
+        box-sizing: initial;
+
         padding: var(--kbq-size-xxs);
 
         transition: transform 300ms ease-out;
