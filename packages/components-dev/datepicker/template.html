@@ -1,19 +1,11 @@
-<div>Validation state: {{ formControlValue.errors | json }}</div>
+<dev-theme-toggle />
+<hr />
+<dev-locale-selector />
+<hr />
 
-<kbq-radio-group class="dev-radio-group" (change)="setFormat($event)">
-    @for (language of languageList; track language) {
-        <kbq-radio-button class="dev-radio-button" [checked]="language.id === selectedLanguage.id" [value]="language">
-            {{ language.id }}
-        </kbq-radio-button>
-    }
-    <br />
-</kbq-radio-group>
-
-<br />
 <br />
 <br />
 <div>{{ date }}</div>
-<br />
 <br />
 <br />
 
