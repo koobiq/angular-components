@@ -115,3 +115,7 @@ updates:
         patterns:
           - 'luxon'
           - '@types/luxon'
+      express:
+        patterns:
+          - 'express'
+          - '@types/express'

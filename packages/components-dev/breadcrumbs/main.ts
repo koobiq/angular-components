@@ -1,9 +1,10 @@
+import { ApplicationConfig } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter, Routes } from '@angular/router';
 import { DevAboutPage, DevApp, DevProductDetailsPage, DevProductsPage } from './module';
 
-const routes: Routes = [
+export const devRoutes: Routes = [
     {
         path: '',
         data: { breadcrumb: 'Home' },
@@ -29,8 +30,10 @@ const routes: Routes = [
     }
 ];
 
-bootstrapApplication(DevApp, {
+export const devAppConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
-        provideRouter(routes)]
-}).catch((error) => console.error(error));
+        provideRouter(devRoutes)]
+};
+
+bootstrapApplication(DevApp, devAppConfig).catch((error) => console.error(error));
