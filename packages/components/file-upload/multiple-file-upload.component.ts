@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
+import { KbqListSelection } from '@koobiq/components/list';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -118,6 +119,9 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
+
+    /** @docs-private */
+    @ViewChild(KbqListSelection) listSelection: KbqListSelection;
 
     /** @docs-private */
     @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
@@ -287,6 +291,8 @@ export class KbqMultipleFileUploadComponent
         this.fileRemoved.emit([removedFile, index]);
         this.filesChange.emit(this.files);
         this.onTouched();
+
+        this.listSelection.keyManager.setActiveItem(-1);
     }
 
     private updateLocaleParams = () => {

@@ -18,58 +18,36 @@
 
         min-width: var(--kbq-file-upload-size-multiple-big-container-min-width);
 
-        & .dropzone {
+        .dropzone {
             gap: var(--kbq-file-upload-size-multiple-big-container-content-gap-horizontal);
         }
 
-        & .dropzone__text {
-            & .multiple__header {
-                display: block;
-            }
-
-            & .multiple__caption {
-                display: block;
+        .dropzone__text {
+            .multiple__caption {
                 padding-top: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-vertical);
-                // гап не применяется тк не флекс. в целом гап не нужен, тк по логике дизайна ссылка от текста отделяется пробелом
-                gap: var(--kbq-file-upload-size-multiple-big-text-block-content-gap-horizontal);
             }
         }
     }
 
     &.compact:not(.selected) {
+        // todo replace with vars related to multiple file upload
         padding: var(--kbq-file-upload-size-single-container-padding-vertical)
             var(--kbq-file-upload-size-single-container-padding-horizontal);
 
-        & .dropzone {
+        .dropzone {
             gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
 
-            & .dropzone__text.multiple__caption {
+            .dropzone__text.multiple__caption {
                 padding-top: var(--kbq-file-upload-size-single-text-block-padding-vertical);
 
                 padding-bottom: var(--kbq-file-upload-size-single-text-block-padding-vertical);
-
-                gap: var(--kbq-file-upload-size-single-text-block-content-gap-horizontal);
             }
         }
     }
 
-    & .kbq-list-option.multiple__uploaded-item {
-        padding: 0;
-
-        & .kbq-list-text {
-            padding: calc(
-                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical) - var(
-                            --kbq-list-size-container-focus-outline-width,
-                            var(--kbq-size-3xs)
-                        )
-                )
-                calc(
-                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal) - var(
-                            --kbq-list-size-container-focus-outline-width,
-                            var(--kbq-size-3xs)
-                        )
-                );
-        }
+    .kbq-list-option.multiple__uploaded-item {
+        border-radius: 0;
+        padding: 0 1px;
 
         .kbq-icon {
             margin-right: 0;
@@ -86,29 +64,44 @@
         align-items: center;
 
         .kbq-file-upload__file {
-            width: 65%;
-            max-width: 65%;
-
-            gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
+            flex-grow: 1;
         }
 
         .kbq-file-upload__size {
-            width: var(--kbq-size-7xl);
-            min-width: var(--kbq-size-7xl);
+            width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
+            min-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
+            max-width: var(--kbq-file-upload-size-multiple-big-grid-cell-file-size-width);
             text-align: left;
             flex-grow: 1;
+            flex-shrink: 1;
         }
     }
 
     .kbq-file-upload__row {
+        .kbq-file-upload__grid-cell {
+            padding: 0 8px;
+        }
+
         .kbq-file-upload__file {
             display: flex;
             align-items: center;
+            gap: var(--kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal);
 
             .file-item__text {
                 margin-left: 0;
                 width: 90%;
             }
+        }
+
+        .kbq-file-upload__action {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            // todo replace with vars
+            padding-top: 6px;
+            padding-bottom: 6px;
+            min-height: 24px;
+            min-width: 24px;
         }
     }
 
@@ -116,37 +109,30 @@
         border-bottom-width: 1px;
         border-bottom-style: solid;
 
-        .kbq-file-multiple-uploaded__header-inner {
-            padding: kbq-sum-series-css-variables([file-upload-size-multiple-big-grid-cell-padding-vertical, 2px])
-                kbq-sum-series-css-variables([file-upload-size-multiple-big-grid-cell-padding-horizontal 2px]);
+        padding: 0 3px;
+
+        .kbq-file-upload__grid-cell {
+            // todo replace with vars
+            padding: 9px 8px;
+        }
+
+        .kbq-file-upload__action {
+            min-height: 24px;
+            min-width: 24px;
+            padding: 7px 8px;
         }
     }
 
     .btn-upload {
-        padding: kbq-difference-series-css-variables(
-                [ file-upload-size-single-container-padding-vertical,
-                file-upload-size-single-container-border-width]
-            )
-            kbq-difference-series-css-variables(
-                [ file-upload-size-single-container-padding-horizontal,
-                file-upload-size-single-container-border-width]
-            );
-        border-top-left-radius: var(--kbq-file-upload-size-single-container-border-radius);
+        margin: -1px;
+        // todo replace with vars
+        padding: 11px var(--kbq-size-m) var(--kbq-size-m) var(--kbq-size-m);
 
-        border-top-right-radius: var(--kbq-file-upload-size-single-container-border-radius);
-        border-top-width: var(--kbq-file-upload-size-single-container-border-width);
+        border-top-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
         border-top-style: dashed;
 
-        & .dropzone {
-            gap: var(--kbq-file-upload-size-single-container-content-gap-horizontal);
-
-            & .dropzone__text.multiple__caption {
-                padding-top: var(--kbq-file-upload-size-single-text-block-padding-vertical);
-
-                padding-bottom: var(--kbq-file-upload-size-single-text-block-padding-vertical);
-
-                gap: var(--kbq-file-upload-size-single-text-block-content-gap-horizontal);
-            }
+        .dropzone {
+            gap: var(--kbq-file-upload-size-multiple-big-dropzone-content-gap-horizontal);
         }
     }
 
