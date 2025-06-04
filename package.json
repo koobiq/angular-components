@@ -69,7 +69,7 @@
         "@koobiq/moment-date-adapter": "^3.2.3",
         "@koobiq/tokens-builder": "^3.13.2",
         "@messageformat/core": "^3.4.0",
-        "@microsoft/api-extractor": "7.40.2",
+        "@microsoft/api-extractor": "7.52.8",
         "@octokit/rest": "^18.9.1",
         "@playwright/test": "^1.52.0",
         "@prettier/plugin-xml": "^3.4.1",
