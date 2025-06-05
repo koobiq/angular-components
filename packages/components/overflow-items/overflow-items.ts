@@ -24,7 +24,9 @@ import { debounceTime, merge, skip } from 'rxjs';
  */
 @Directive({
     host: {
-        '[attr.aria-hidden]': 'hidden()'
+        '[attr.aria-hidden]': 'hidden()',
+        // @TODO should be refactored (#DS-3834)
+        '[class.kbq-overflow-item-hidden]': 'hidden()'
     }
 })
 export class ElementVisibilityManager {

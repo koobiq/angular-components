@@ -21,11 +21,11 @@ const getOverflowItemDebugElements = (debugElement: DebugElement): DebugElement[
 };
 
 const getOverflowHiddenItems = (debugElement: DebugElement): DebugElement[] => {
-    return getOverflowItemDebugElements(debugElement).filter(({ injector }) => injector.get(KbqOverflowItem).hidden());
+    return getOverflowItemDebugElements(debugElement).filter(({ classes }) => classes['kbq-overflow-item-hidden']);
 };
 
 const getOverflowVisibleItems = (debugElement: DebugElement): DebugElement[] => {
-    return getOverflowItemDebugElements(debugElement).filter(({ injector }) => !injector.get(KbqOverflowItem).hidden());
+    return getOverflowItemDebugElements(debugElement).filter(({ classes }) => !classes['kbq-overflow-item-hidden']);
 };
 
 const getOverflowItemsResultDebugElement = (debugElement: DebugElement): DebugElement => {
@@ -33,7 +33,7 @@ const getOverflowItemsResultDebugElement = (debugElement: DebugElement): DebugEl
 };
 
 const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
-    return !getOverflowItemsResultDebugElement(debugElement).injector.get(KbqOverflowItemsResult).hidden();
+    return !getOverflowItemsResultDebugElement(debugElement).classes['kbq-overflow-item-hidden'];
 };
 
 @Component({

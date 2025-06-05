@@ -1057,17 +1057,11 @@ class BaseFunctions {
         }
     ];
 
-    onAddPipe(pipe: KbqPipeTemplate) {
-        console.log('onAddPipe: ', pipe);
-    }
+    onAddPipe(_pipe: KbqPipeTemplate) {}
 
-    onFilterChange(filter: KbqFilter | null) {
-        console.log('onFilterChange: ', filter);
-    }
+    onFilterChange(_filter: KbqFilter | null) {}
 
     onSelectFilter(filter: KbqFilter) {
-        console.log('onSelectFilter: ', filter);
-
         this.activeFilter = filter;
     }
 
