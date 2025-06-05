@@ -41,14 +41,17 @@ type ExampleAction = {
         <button (click)="open()" kbq-button>open</button>
 
         <ng-template let-data>
-            <div class="example-counter">
-                <div>Selected: {{ data.selected }}</div>
-                <kbq-badge [outline]="true" badgeColor="fade-contrast">+{{ data.counter }}</kbq-badge>
-            </div>
-            <kbq-divider class="example-divider-vertical" [vertical]="true" />
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                <div [kbqOverflowItem]="action.Counter" order="99">
+                    <div class="example-counter">
+                        <div>Selected: {{ data.selected }}</div>
+                        <kbq-badge [outline]="true" badgeColor="fade-contrast">+{{ data.counter }}</kbq-badge>
+                    </div>
+                    <kbq-divider class="example-divider-vertical" [vertical]="true" />
+                </div>
+
                 @for (action of actions; track action.id) {
-                    <div class="example-action-container" [kbqOverflowItem]="action.id">
+                    <div [kbqOverflowItem]="action.id">
                         @if (action.divider) {
                             <kbq-divider class="example-divider-vertical" [vertical]="true" />
                         }
@@ -63,34 +66,35 @@ type ExampleAction = {
                         </button>
                     </div>
                 }
-                <div kbqOverflowItemsResult>
-                    <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
-                        <i kbq-icon="kbq-ellipsis-vertical_16"></i>
-                    </button>
-
-                    <kbq-dropdown #dropdown="kbqDropdown">
-                        <div class="example-counter-dropdown">
-                            <div>Selected: {{ data.selected }}</div>
-                            <kbq-badge badgeColor="fade-contrast">+{{ data.counter }}</kbq-badge>
-                        </div>
-                        <kbq-divider />
-
-                        @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
-
-                        @for (action of actions; track action.id) {
-                            @if (hiddenItemIDs.has(action.id)) {
-                                @if (action.divider && hiddenItemIDs.has(actions[$index - 1]?.id)) {
-                                    <kbq-divider />
-                                }
-                                <button (click)="onAction(action)" kbq-dropdown-item>
-                                    <i [class]="action.icon" kbq-icon></i>
-                                    {{ action.id }}
-                                </button>
-                            }
-                        }
-                    </kbq-dropdown>
-                </div>
             </div>
+
+            @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
+            <!-- ignores when only action.Counter is hidden -->
+            @if (hiddenItemIDs.size > 1) {
+                <button [kbqDropdownTriggerFor]="dropdown" kbqOverflowItemsResult color="contrast" kbq-button>
+                    <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                </button>
+            }
+
+            <kbq-dropdown #dropdown="kbqDropdown">
+                <div class="example-counter-dropdown">
+                    <div>Selected: {{ data.selected }}</div>
+                    <kbq-badge badgeColor="fade-contrast">+{{ data.counter }}</kbq-badge>
+                </div>
+                <kbq-divider />
+
+                @for (action of actions; track action.id) {
+                    @if (hiddenItemIDs.has(action.id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1].id)) {
+                            <kbq-divider />
+                        }
+                        <button (click)="onAction(action)" kbq-dropdown-item>
+                            <i [class]="action.icon" kbq-icon></i>
+                            {{ action.id }}
+                        </button>
+                    }
+                }
+            </kbq-dropdown>
         </ng-template>
     `,
     styles: `
@@ -100,14 +104,6 @@ type ExampleAction = {
             justify-content: center;
             height: 64px;
             overflow: hidden;
-            container-type: inline-size;
-
-            @container (width < 596px) {
-                .example-counter,
-                .example-counter + .example-divider-vertical {
-                    display: none;
-                }
-            }
         }
 
         .example-counter {
@@ -143,7 +139,7 @@ type ExampleAction = {
             margin-left: var(--kbq-size-xxs);
         }
 
-        .example-action-container {
+        .kbq-overflow-item {
             display: flex;
             align-items: center;
         }
@@ -153,35 +149,29 @@ type ExampleAction = {
             height: var(--kbq-actions-panel-vertical-divider-height) !important;
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
-
-        .kbq-button,
-        .kbq-dropdown-trigger {
-            margin: var(--kbq-size-border-width);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActionsPanelCustomCounterExample {
-    readonly actions: ExampleAction[] = [
+    protected readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
         { id: 'Link to incident', icon: 'kbq-link_16' },
         { id: 'Remove', icon: 'kbq-trash_16', divider: true }
     ];
-    readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    readonly elementRef = inject(ElementRef);
-    readonly templateRef = viewChild.required(TemplateRef);
-    readonly toast = inject(KbqToastService);
-    actionsPanelRef: KbqActionsPanelRef | null;
+    protected readonly action = { Counter: 'counter' };
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly elementRef = inject(ElementRef);
+    private readonly templateRef = viewChild.required(TemplateRef);
+    private readonly toast = inject(KbqToastService);
+    private actionsPanelRef: KbqActionsPanelRef | null;
 
     constructor() {
         afterNextRender(() => this.open());
     }
 
-    open(): void {
+    protected open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
-            width: '100%',
-            minWidth: 106,
-            maxWidth: 596,
             data: { selected: 3, counter: 6 },
             overlayContainer: this.elementRef
         });
@@ -196,7 +186,7 @@ export class ActionsPanelCustomCounterExample {
         });
     }
 
-    onAction(action: ExampleAction): void {
+    protected onAction(action: ExampleAction): void {
         this.toast.show({ title: `Action initiated ${action.id}` });
     }
 }
