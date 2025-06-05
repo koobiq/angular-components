@@ -525,7 +525,7 @@ export class KbqSelect
     }
 
     get empty(): boolean {
-        return !this.selectionModel || this.selectionModel.isEmpty();
+        return !!this.selectionModel?.isEmpty();
     }
 
     get firstSelected(): KbqOptionBase | null {
@@ -638,6 +638,12 @@ export class KbqSelect
         this.options.changes.pipe(startWith(null), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.resetOptions();
             this.initializeSelection();
+        });
+
+        this.search?.changes.pipe(takeUntilDestroyed(this.destroyRef), delay(0)).subscribe(() => {
+            if (!this.keyManager.activeItem) {
+                this.keyManager.updateActiveItem(0);
+            }
         });
     }
 
@@ -1234,12 +1240,6 @@ export class KbqSelect
             .pipe(takeUntilDestroyed(this.destroyRef), takeUntil(this.options.changes))
             .subscribe((event) => {
                 this.onSelect(event.source, event.isUserInput);
-
-                if (this.search && this.search.isSearchChanged) {
-                    Promise.resolve().then(() => this.keyManager.updateActiveItem(0));
-
-                    this.search.isSearchChanged = false;
-                }
 
                 if (event.isUserInput && !this.multiple && this.panelOpen) {
                     this.close();

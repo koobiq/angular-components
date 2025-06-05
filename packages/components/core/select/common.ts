@@ -1,5 +1,5 @@
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
-import { AfterContentInit, Directive, Inject, OnDestroy, Optional } from '@angular/core';
+import { AfterContentInit, Directive, EventEmitter, Inject, OnDestroy, Optional } from '@angular/core';
 import { END, ESCAPE, HOME, SPACE } from '@koobiq/cdk/keycodes';
 import { Subscription } from 'rxjs';
 import { KBQ_FORM_FIELD_REF, KbqFormFieldRef } from '../form-field';
@@ -33,13 +33,15 @@ export class KbqSelectFooter {}
     }
 })
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
-    searchChangesSubscription: Subscription = new Subscription();
+    readonly changes: EventEmitter<string> = new EventEmitter<string>();
 
     isSearchChanged: boolean = false;
 
     get ngControl() {
         return this.formField.control.ngControl;
     }
+
+    private searchChangesSubscription: Subscription = new Subscription();
 
     constructor(@Optional() @Inject(KBQ_FORM_FIELD_REF) protected formField: KbqFormFieldRef) {
         formField.canCleanerClearByEsc = false;
@@ -75,8 +77,9 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
         }
 
         Promise.resolve().then(() => {
-            this.searchChangesSubscription = this.ngControl.valueChanges!.subscribe(() => {
+            this.searchChangesSubscription = this.ngControl.valueChanges!.subscribe((value) => {
                 this.isSearchChanged = true;
+                this.changes.next(value);
             });
         });
     }
