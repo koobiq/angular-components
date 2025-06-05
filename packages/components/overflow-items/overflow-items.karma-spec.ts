@@ -183,7 +183,7 @@ describe(KbqOverflowItemsModule.name, () => {
         expect(visibleItems[0].nativeElement.textContent.trim()).toEqual(componentInstance.items[0]);
     });
 
-    it('should disable hiding overflow-item with disableHide attribute', async () => {
+    it('should prevent hiding item with alwaysVisible attribute', async () => {
         const fixture = createComponent(OverflowItemsWithDisabledHideItem);
         const { debugElement, componentInstance } = fixture;
 
