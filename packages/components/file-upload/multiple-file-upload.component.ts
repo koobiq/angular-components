@@ -49,6 +49,8 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipleLabel =
     ruRULocaleData.fileUpload.multiple;
 
+const fileSizeCellPadding = 16;
+
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
     templateUrl: './multiple-file-upload.component.html',
@@ -119,6 +121,9 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
+
+    /** @docs-private */
+    @ViewChild('fileSizeHeaderCell') fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
     @ViewChild(KbqListSelection) listSelection: KbqListSelection;
@@ -293,6 +298,14 @@ export class KbqMultipleFileUploadComponent
         this.onTouched();
 
         this.listSelection.keyManager.setActiveItem(-1);
+    }
+
+    /**
+     * Set maxWidth for filesize cell to enable proper ellipsis center
+     * @docs-private
+     */
+    protected calculateFileSizeCellMaxWidth() {
+        return this.fileSizeHeaderCell?.nativeElement.offsetWidth - fileSizeCellPadding;
     }
 
     private updateLocaleParams = () => {

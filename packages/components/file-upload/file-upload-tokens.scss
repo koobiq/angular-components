@@ -1,4 +1,5 @@
-.kbq-file-upload {
+/* stylelint-disable selector-class-pattern */
+:where(.kbq-file-upload) {
     --kbq-file-upload-size-single-container-border-radius: var(--kbq-size-s);
     --kbq-file-upload-size-single-container-border-width: 1px;
     --kbq-file-upload-size-single-container-content-gap-horizontal: var(--kbq-size-s);
@@ -73,4 +74,11 @@
     --kbq-file-upload-multiple-states-disabled-text-block-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-multiple-states-disabled-grid-divider-color: var(--kbq-states-line-disabled);
     --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
+}
+
+:where(.kbq-file-upload.compact) {
+    --kbq-file-upload-multiple-compact-container-content-gap-horizontal: var(--kbq-size-s);
+    --kbq-file-upload-multiple-compact-text-block-padding-vertical: var(--kbq-size-3xs);
+    --kbq-file-upload-multiple-compact-container-padding-vertical: 11px;
+    --kbq-file-upload-multiple-compact-container-padding-horizontal: 11px;
 }
