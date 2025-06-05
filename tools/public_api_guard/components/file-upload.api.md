@@ -157,6 +157,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
+    protected calculateFileSizeCellMaxWidth(): number;
     columnDefs: {
         header: string;
         cssClass: string;
@@ -179,6 +180,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     set files(currentFileList: KbqFileItem[]);
     filesAdded: EventEmitter<KbqFileItem[]>;
     filesChange: EventEmitter<KbqFileItem[]>;
+    fileSizeHeaderCell: ElementRef<HTMLElement>;
     // @deprecated (undocumented)
     get hasErrors(): boolean;
     hasFocus: boolean;
