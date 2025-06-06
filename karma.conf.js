@@ -3,11 +3,7 @@
 const { constants } = require('karma');
 const isCI = !!process.env.CI;
 
-/**
- * @see https://karma-runner.github.io/6.4/config/configuration-file.html
- *
- * @returns {import('karma').ConfigOptions}
- */
+/** @returns {import('karma').ConfigOptions} */
 module.exports = () => {
     return {
         basePath: '',
