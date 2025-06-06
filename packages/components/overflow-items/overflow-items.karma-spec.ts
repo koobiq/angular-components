@@ -51,13 +51,13 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
                 and {{ kbqOverflowItems.hiddenItemIDs().size }} more
             </div>
             @for (item of items; track item) {
-                <div [kbqOverflowItem]="item" [style.min-width.px]="itemWidth()">{{ item }}</div>
+                <div [kbqOverflowItem]="item" [style.width.px]="itemWidth()" [style.flex-shrink]="0">{{ item }}</div>
             }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsTest {
+export class TestOverflowItems {
     readonly reverseOverflowOrder = signal(false);
     readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
 
@@ -77,20 +77,27 @@ export class OverflowItemsTest {
             reverseOverflowOrder
             kbqOverflowItems
         >
-            <div [style.min-width.px]="itemWidth()" [order]="items.length + 1" kbqOverflowItem="lastOrderItem">
-                lastOrderItem
+            <div
+                [style.width.px]="itemWidth()"
+                [style.flex-shrink]="0"
+                [order]="items.length + 1"
+                kbqOverflowItem="lastHiddenItem"
+            >
+                lastHiddenItem
             </div>
             <div [style.width.px]="resultWidth()" [style.flex-shrink]="0" kbqOverflowItemsResult>
                 and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
             </div>
             @for (item of items; track item) {
-                <div [kbqOverflowItem]="item" [style.min-width.px]="itemWidth()">{{ item }}</div>
+                <div [kbqOverflowItem]="item" [style.width.px]="itemWidth()" [style.flex-shrink]="0">
+                    {{ item }}
+                </div>
             }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsWithOrderedItem {
+export class TestOrderedOverflowItems {
     readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
 
     readonly containerMaxWidth = signal(500);
@@ -105,11 +112,16 @@ export class OverflowItemsWithOrderedItem {
     template: `
         <div #kbqOverflowItemsReverse="kbqOverflowItems" [style.max-width.px]="containerMaxWidth()" kbqOverflowItems>
             @for (item of items; track item) {
-                <div [kbqOverflowItem]="item" [style.min-width.px]="itemWidth()">{{ item }}</div>
+                @let alwaysVisible = $index === 3;
+                <div
+                    [kbqOverflowItem]="item"
+                    [style.width.px]="itemWidth()"
+                    [style.flex-shrink]="0"
+                    [alwaysVisible]="alwaysVisible"
+                >
+                    {{ item }}
+                </div>
             }
-            <div [style.min-width.px]="itemWidth()" kbqOverflowItem="alwaysVisibleItem" alwaysVisible>
-                alwaysVisibleItem
-            </div>
             <div [style.width.px]="resultWidth()" [style.flex-shrink]="0" kbqOverflowItemsResult>
                 and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
             </div>
@@ -117,7 +129,7 @@ export class OverflowItemsWithOrderedItem {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OverflowItemsWithDisabledHideItem {
+export class TestAlwaysVisibleOverflowItem {
     readonly items = Array.from({ length: 20 }).map((_, i) => `Item${i}`);
 
     readonly containerMaxWidth = signal(500);
@@ -127,13 +139,13 @@ export class OverflowItemsWithDisabledHideItem {
 
 describe(KbqOverflowItemsModule.name, () => {
     it('should render all items', () => {
-        const { debugElement } = createComponent(OverflowItemsTest);
+        const { debugElement } = createComponent(TestOverflowItems);
 
         expect(getOverflowItemDebugElements(debugElement).length).toBe(20);
     });
 
     it('should hide overflown items', async () => {
-        const fixture = createComponent(OverflowItemsTest);
+        const fixture = createComponent(TestOverflowItems);
         const { debugElement } = fixture;
 
         await fixture.whenStable();
@@ -141,7 +153,7 @@ describe(KbqOverflowItemsModule.name, () => {
     });
 
     it('should recalculate hidden items on container width change', async () => {
-        const fixture = createComponent(OverflowItemsTest);
+        const fixture = createComponent(TestOverflowItems);
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerMaxWidth.set(600);
@@ -151,7 +163,7 @@ describe(KbqOverflowItemsModule.name, () => {
     });
 
     it('should recalculate hidden items on `reverseOverflowOrder` attribute change', async () => {
-        const fixture = createComponent(OverflowItemsTest);
+        const fixture = createComponent(TestOverflowItems);
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.reverseOverflowOrder.set(true);
@@ -161,13 +173,13 @@ describe(KbqOverflowItemsModule.name, () => {
     });
 
     it('should render result', () => {
-        const { debugElement } = createComponent(OverflowItemsTest);
+        const { debugElement } = createComponent(TestOverflowItems);
 
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement).toBeInstanceOf(HTMLDivElement);
     });
 
     it('should display result', async () => {
-        const fixture = createComponent(OverflowItemsTest);
+        const fixture = createComponent(TestOverflowItems);
         const { debugElement } = fixture;
 
         await fixture.whenStable();
@@ -175,7 +187,7 @@ describe(KbqOverflowItemsModule.name, () => {
     });
 
     it('should hide result', async () => {
-        const fixture = createComponent(OverflowItemsTest);
+        const fixture = createComponent(TestOverflowItems);
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerMaxWidth.set(1500);
@@ -184,15 +196,15 @@ describe(KbqOverflowItemsModule.name, () => {
     });
 
     it('should display result score', async () => {
-        const fixture = createComponent(OverflowItemsTest);
+        const fixture = createComponent(TestOverflowItems);
         const { debugElement } = fixture;
 
         await fixture.whenStable();
         expect(getOverflowItemsResultDebugElement(debugElement).nativeElement.textContent.trim()).toBe('and 12 more');
     });
 
-    it('should prioritize other overflow items before hiding the ordered item', async () => {
-        const fixture = createComponent(OverflowItemsWithOrderedItem);
+    it('should hide items by order', async () => {
+        const fixture = createComponent(TestOrderedOverflowItems);
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.containerMaxWidth.set(150);
@@ -200,18 +212,18 @@ describe(KbqOverflowItemsModule.name, () => {
         const visibleItems = getOverflowVisibleItems(debugElement);
 
         expect(visibleItems.length).toEqual(1);
-        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('lastOrderItem');
+        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('lastHiddenItem');
     });
 
     it('should prevent hiding item with alwaysVisible attribute', async () => {
-        const fixture = createComponent(OverflowItemsWithDisabledHideItem);
+        const fixture = createComponent(TestAlwaysVisibleOverflowItem);
         const { debugElement, componentInstance } = fixture;
 
-        componentInstance.containerMaxWidth.set(150);
+        componentInstance.containerMaxWidth.set(100);
         await fixture.whenStable();
         const visibleItems = getOverflowVisibleItems(debugElement);
 
         expect(visibleItems.length).toEqual(1);
-        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('alwaysVisibleItem');
+        expect(visibleItems[0].nativeElement.textContent.trim()).toEqual('Item3');
     });
 });

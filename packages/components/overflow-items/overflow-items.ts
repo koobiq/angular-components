@@ -173,7 +173,7 @@ export class KbqOverflowItems {
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
                 const hiddenItems = this.calculateItemsVisibility(
-                    this.getSortedItemsByOrder(),
+                    this.sortItemsByOrder(this.filterAlwaysVisibleItems(this.items())),
                     this.reverseOverflowOrder(),
                     this.result(),
                     this.elementRef.nativeElement
@@ -185,13 +185,20 @@ export class KbqOverflowItems {
     }
 
     /**
-     * Returns a list of items sorted by their specified `order` value.
+     * Sort items by their `order` attribute.
      * If an item does not have an `order` defined, its index is used as a fallback.
      */
-    private getSortedItemsByOrder(): KbqOverflowItem[] {
-        const items = Array.from(this.items(), (item, index) => ({ item, order: item.order() ?? index }));
+    private sortItemsByOrder(items: Readonly<KbqOverflowItem[]>): KbqOverflowItem[] {
+        const itemsWithOrder = Array.from(items, (item, index) => ({ item, order: item.order() ?? index }));
 
-        return items.sort((a, b) => a.order - b.order).map(({ item }) => item);
+        return itemsWithOrder.sort((a, b) => a.order - b.order).map(({ item }) => item);
+    }
+
+    /**
+     * Filters items that have the `alwaysVisible` attribute.
+     */
+    private filterAlwaysVisibleItems(items: Readonly<KbqOverflowItem[]>): KbqOverflowItem[] {
+        return items.filter(({ alwaysVisible }) => !alwaysVisible());
     }
 
     /**
