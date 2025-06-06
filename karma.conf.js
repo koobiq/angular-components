@@ -30,7 +30,7 @@ module.exports = () => {
                 stopOnSpecFailure: true
             }
         },
-        reporters: isCI ? ['dot'] : ['spec', 'kjhtml'],
+        reporters: isCI ? ['dots'] : ['spec', 'kjhtml'],
         specReporter: {
             maxLogLines: 5,
             suppressSummary: false,
