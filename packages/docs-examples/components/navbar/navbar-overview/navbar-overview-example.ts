@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
@@ -12,6 +12,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Navbar
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'navbar-overview-example',
     templateUrl: 'navbar-overview-example.html',

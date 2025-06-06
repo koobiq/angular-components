@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -7,6 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title button-fill-and-style-only-icon
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'button-fill-and-style-only-icon-example',
     templateUrl: 'button-fill-and-style-only-icon-example.html',

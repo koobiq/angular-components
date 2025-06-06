@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
@@ -6,6 +6,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
  * @title Toggle Error
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'toggle-error-example',
     imports: [KbqToggleModule],

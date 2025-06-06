@@ -30,6 +30,7 @@ const DATA_OBJECT = {
  * @title filter-bar-search-in-pipes
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'filter-bar-search-in-pipes-example',
     imports: [

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FileValidators } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
@@ -11,6 +11,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
  * @title File-upload multiple default validation reactive forms
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'file-upload-multiple-default-validation-reactive-forms-overview-example',
     template: `

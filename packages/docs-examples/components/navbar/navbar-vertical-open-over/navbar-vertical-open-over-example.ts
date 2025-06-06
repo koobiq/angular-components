@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
@@ -10,6 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Navbar vertical open over
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'navbar-vertical-open-over-example',
     templateUrl: 'navbar-vertical-open-over-example.html',

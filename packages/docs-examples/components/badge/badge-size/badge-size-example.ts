@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 
 /**
  * @title Badge size
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'badge-size-example',
     imports: [

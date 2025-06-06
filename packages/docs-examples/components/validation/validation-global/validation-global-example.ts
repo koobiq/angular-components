@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -11,6 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Validation global
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'validation-global-example',
     templateUrl: 'validation-global-example.html',

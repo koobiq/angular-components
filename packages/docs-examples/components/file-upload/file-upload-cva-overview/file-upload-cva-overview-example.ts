@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -7,6 +7,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title File-upload with control value accessor
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'file-upload-cva-overview-example',
     template: `

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleGroup, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
@@ -10,6 +10,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip arrow and offset example
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tooltip-arrow-and-offset-example',
     imports: [

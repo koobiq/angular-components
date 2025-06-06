@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -8,6 +8,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Horizontal form labels
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'horizontal-form-labels-example',
     templateUrl: 'horizontal-form-labels-example.html',
