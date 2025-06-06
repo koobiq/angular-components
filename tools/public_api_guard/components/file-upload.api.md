@@ -28,6 +28,7 @@ import * as i7 from '@koobiq/components/icon';
 import * as i8 from '@koobiq/components/button';
 import * as i9 from '@koobiq/components/list';
 import { InjectionToken } from '@angular/core';
+import { KbqListSelection } from '@koobiq/components/list';
 import { KbqLocaleService } from '@koobiq/components/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
@@ -156,6 +157,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     constructor();
     accept?: string[];
     get acceptedFiles(): string;
+    protected calculateFileSizeCellMaxWidth(): number;
     columnDefs: {
         header: string;
         cssClass: string;
@@ -178,6 +180,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     set files(currentFileList: KbqFileItem[]);
     filesAdded: EventEmitter<KbqFileItem[]>;
     filesChange: EventEmitter<KbqFileItem[]>;
+    fileSizeHeaderCell: ElementRef<HTMLElement>;
     // @deprecated (undocumented)
     get hasErrors(): boolean;
     hasFocus: boolean;
@@ -186,6 +189,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     input: ElementRef<HTMLInputElement>;
     inputId: string;
     get invalid(): boolean;
+    listSelection: KbqListSelection;
     // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)

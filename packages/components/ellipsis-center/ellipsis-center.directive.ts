@@ -24,13 +24,13 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
     @Input() charWidth = 7;
 
+    @Input() debounceInterval: number = 50;
+
     readonly resizeStream = new Subject<Event>();
 
     private _kbqEllipsisCenter: string;
 
     private resizeSubscription = Subscription.EMPTY;
-
-    private readonly debounceInterval: number = 50;
 
     override ngOnInit(): void {
         super.ngOnInit();
