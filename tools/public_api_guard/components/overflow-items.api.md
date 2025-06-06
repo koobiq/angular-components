@@ -4,18 +4,15 @@
 
 ```ts
 
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { OutputEmitterRef } from '@angular/core';
 import { Signal } from '@angular/core';
-import { WritableSignal } from '@angular/core';
 
 // @public
 export class ElementVisibilityManager {
-    readonly elementRef: ElementRef<any>;
-    readonly hidden: WritableSignal<boolean>;
+    readonly hidden: Signal<boolean>;
     hide(): void;
     show(): void;
     // (undocumented)
@@ -27,6 +24,7 @@ export class ElementVisibilityManager {
 // @public
 export class KbqOverflowItem extends ElementVisibilityManager {
     readonly alwaysVisible: InputSignalWithTransform<boolean, unknown>;
+    hide(): void;
     readonly id: InputSignal<unknown>;
     readonly order: InputSignalWithTransform<number | null, unknown>;
     // (undocumented)
