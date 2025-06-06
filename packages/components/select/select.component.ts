@@ -640,11 +640,13 @@ export class KbqSelect
             this.initializeSelection();
         });
 
-        this.search?.changes.pipe(takeUntilDestroyed(this.destroyRef), delay(0)).subscribe(() => {
-            if (!this.keyManager.activeItem) {
-                this.keyManager.updateActiveItem(0);
-            }
-        });
+        this.search?.changes
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                delay(0),
+                filter(() => !this.keyManager.activeItem)
+            )
+            .subscribe(() => this.keyManager.updateActiveItem(0));
     }
 
     ngAfterViewInit(): void {
