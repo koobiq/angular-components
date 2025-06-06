@@ -2507,6 +2507,8 @@ export function kbqSelectScrollStrategyProviderFactory(overlay: Overlay): () => 
 export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     constructor(formField: KbqFormFieldRef);
     // (undocumented)
+    readonly changes: EventEmitter<string>;
+    // (undocumented)
     focus(): void;
     // (undocumented)
     protected formField: KbqFormFieldRef;
@@ -2524,8 +2526,6 @@ export class KbqSelectSearch implements AfterContentInit, OnDestroy {
     ngOnDestroy(): void;
     // (undocumented)
     reset(): void;
-    // (undocumented)
-    searchChangesSubscription: Subscription;
     // (undocumented)
     setPlaceholder(value: string): void;
     // (undocumented)
