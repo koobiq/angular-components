@@ -1,6 +1,13 @@
-const { join } = require('path');
-const { constants } = require('karma');
+// @ts-check
 
+const { constants } = require('karma');
+const isCI = !!process.env.CI;
+
+/**
+ * @see https://karma-runner.github.io/6.4/config/configuration-file.html
+ *
+ * @returns {import('karma').ConfigOptions}
+ */
 module.exports = () => {
     return {
         basePath: '',
@@ -11,52 +18,43 @@ module.exports = () => {
         plugins: [
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
-            require('karma-coverage'),
-            require('karma-junit-reporter'),
+            require('karma-spec-reporter'),
+            require('karma-jasmine-html-reporter'),
+            // @ts-ignore
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
             clearContext: true,
             jasmine: {
-                random: false
+                random: false,
+                stopOnSpecFailure: true
             }
         },
-        angularCli: {
-            sourceMap: true
+        reporters: isCI ? ['dot'] : ['spec', 'kjhtml'],
+        specReporter: {
+            maxLogLines: 5,
+            suppressSummary: false,
+            suppressErrorSummary: false,
+            suppressFailed: false,
+            suppressPassed: false,
+            suppressSkipped: false,
+            showSpecTiming: true,
+            failFast: true
         },
-
-        reporters: [
-            'dots',
-            'junit'
-        ],
-
         port: 9876,
         colors: true,
         logLevel: constants.LOG_INFO,
         autoWatch: false,
         singleRun: true,
-
-        junitReporter: {
-            outputDir: process.env.JUNIT_REPORT_PATH || join(__dirname, './dist/reports/junit'),
-            outputFile: process.env.JUNIT_REPORT_NAME || join(__dirname, './dist/reports/junit/test-results.xml'),
-            suite: '', // suite will become the package name attribute in xml testsuite element
-            useBrowserName: true, // add browser name to report and classes names
-            nameFormatter: undefined, // function (browser, result) to customize the name attribute in xml testcase element
-            classNameFormatter: undefined, // function (browser, result) to customize the classname attribute in xml testcase element
-            properties: {} // key value pair of properties to add to the <properties> section of the report
-        },
-
         customLaunchers: {
-            ChromeHeadlessLocal: {
+            ChromeHeadlessNoSandbox: {
                 base: 'ChromeHeadless',
                 flags: [
                     '--window-size=1024,768',
                     '--no-sandbox'
-                ],
-                debug: true
+                ]
             }
         },
-
-        browsers: ['ChromeHeadlessLocal']
+        browsers: ['ChromeHeadlessNoSandbox']
     };
 };

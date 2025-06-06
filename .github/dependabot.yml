@@ -83,6 +83,7 @@ updates:
           - 'jasmine*'
           - 'karma-jasmine*'
           - '@types/jasmine'
+          - '@types/karma'
       nunjucks:
         patterns:
           - 'nunjucks'
