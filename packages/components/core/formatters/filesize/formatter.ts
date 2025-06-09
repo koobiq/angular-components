@@ -35,18 +35,19 @@ export class KbqDataSizePipe implements PipeTransform {
     }
 
     /** Transforms bytes into localized size string */
-    transform(source: number, precision?: number, unitSystemName?: KbqMeasurementSystemType, locale?: string): string {
-        const currentLocale = locale || this.localeService?.id || KBQ_DEFAULT_LOCALE_ID;
-        const selectedPrecision = precision ?? this.config.defaultPrecision;
-
+    transform(
+        source: number,
+        precision: number = this.config.defaultPrecision,
+        unitSystemName: KbqMeasurementSystemType = this.config.defaultUnitSystem,
+        locale: string = this.localeService?.id || KBQ_DEFAULT_LOCALE_ID
+    ): string {
         const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> = locale
             ? this.localeService?.locales[locale].sizeUnits.unitSystems
             : this.config.unitSystems;
 
-        const unitSystem = resolvedUnitSystems[unitSystemName || this.config.defaultUnitSystem];
+        const { value, unit } = getFormattedSizeParts(source, precision, resolvedUnitSystems[unitSystemName]);
 
-        const { value, unit } = getFormattedSizeParts(source, selectedPrecision, unitSystem);
-        const formattedValue = this.numberPipe?.transform(value, undefined, currentLocale) || value;
+        const formattedValue = this.numberPipe?.transform(value, `1.${precision}-${precision}`, locale) || value;
 
         return formattedValue ? `${formattedValue}${this.nonBreakingSpace}${unit}` : '';
     }
