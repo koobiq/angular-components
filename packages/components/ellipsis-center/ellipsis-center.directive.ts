@@ -1,4 +1,14 @@
-import { AfterViewInit, Directive, inject, Input, NgModule, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import {
+    AfterViewInit,
+    Directive,
+    inject,
+    Input,
+    NgModule,
+    numberAttribute,
+    OnDestroy,
+    OnInit,
+    Renderer2
+} from '@angular/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -24,7 +34,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
     @Input() charWidth = 7;
 
-    @Input() debounceInterval: number = 50;
+    @Input({ transform: numberAttribute }) debounceInterval: number = 50;
 
     readonly resizeStream = new Subject<Event>();
 

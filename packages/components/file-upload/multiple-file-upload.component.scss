@@ -46,8 +46,7 @@
 
     .kbq-list-option.multiple__uploaded-item {
         border-radius: 0;
-        // size-3xs subtract border-width
-        padding: 0 1px;
+        padding: 0 calc(var(--kbq-size-3xs) - var(--kbq-file-upload-size-multiple-big-container-border-width));
 
         .kbq-icon {
             margin-right: 0;
@@ -93,39 +92,50 @@
         }
 
         .kbq-file-upload__action {
+            $list-option-border-width: var(--kbq-size-3xs);
             display: flex;
             justify-content: center;
             align-items: center;
-            // grid-cell-padding-vertical subtract list-option-border-width
-            padding-top: 6px;
-            padding-bottom: 6px;
+            padding-top: calc(
+                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical) - $list-option-border-width
+            );
+            padding-bottom: calc(
+                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal) - $list-option-border-width
+            );
             min-height: var(--kbq-size-xxl);
             min-width: var(--kbq-size-xxl);
         }
     }
 
     .kbq-file-multiple-uploaded__header {
+        margin: -1px;
         border-bottom-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
         border-bottom-style: solid;
 
-        padding: 0 3px;
+        padding: 0 var(--kbq-size-xxs);
 
         .kbq-file-upload__grid-cell {
-            padding: 9px var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal);
+            padding: 10px var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal) 9px
+                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal);
         }
 
         .kbq-file-upload__action {
             min-height: var(--kbq-size-xxl);
             min-width: var(--kbq-size-xxl);
-            // grid-cell-padding-vertical subtract border-width
-            padding: 7px var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal);
+            padding: var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal)
+                var(--kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal)
+                calc(
+                    var(--kbq-file-upload-size-multiple-big-grid-cell-padding-vertical) - var(
+                            --kbq-file-upload-size-multiple-big-container-border-width
+                        )
+                );
         }
     }
 
     .btn-upload {
         margin: -1px;
-        // size-m subtract border-width
-        padding: 11px var(--kbq-size-m) var(--kbq-size-m) var(--kbq-size-m);
+        padding: calc(var(--kbq-size-m) - var(--kbq-file-upload-size-multiple-big-container-border-width))
+            var(--kbq-size-m) var(--kbq-size-m) var(--kbq-size-m);
 
         border-top-width: var(--kbq-file-upload-size-multiple-big-container-border-width);
         border-top-style: dashed;
