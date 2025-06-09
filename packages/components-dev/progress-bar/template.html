@@ -7,23 +7,23 @@
     </select>
 </div>
 <div class="dev-container">
-    <div class="dev-percent">{{ mode === 'indeterminate' ? '--' : percent }}%</div>
+    <div class="dev-percent">{{ mode === 'indeterminate' ? '--' : percent() }}%</div>
     <div class="dev-lines">
         <div class="dev-line-container">
-            <kbq-progress-bar [mode]="mode" [value]="percent" />
+            <kbq-progress-bar [mode]="mode" [value]="percent()" />
         </div>
         <div class="dev-line-container">
-            <kbq-progress-bar [mode]="mode" [value]="percent">
+            <kbq-progress-bar [mode]="mode" [value]="percent()">
                 <div kbq-progress-bar-text>kbq-progress-bar-text</div>
             </kbq-progress-bar>
         </div>
         <div class="dev-line-container">
-            <kbq-progress-bar [mode]="mode" [value]="percent">
+            <kbq-progress-bar [mode]="mode" [value]="percent()">
                 <div kbq-progress-bar-caption>kbq-progress-bar-caption</div>
             </kbq-progress-bar>
         </div>
         <div class="dev-line-container">
-            <kbq-progress-bar [mode]="mode" [value]="percent">
+            <kbq-progress-bar [mode]="mode" [value]="percent()">
                 <div kbq-progress-bar-text>kbq-progress-bar-text</div>
                 <div kbq-progress-bar-caption>kbq-progress-bar-caption</div>
             </kbq-progress-bar>

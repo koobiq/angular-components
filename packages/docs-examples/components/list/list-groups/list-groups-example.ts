@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqListModule } from '@koobiq/components/list';
 
 /**
  * @title List groups
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'list-groups-example',
     imports: [KbqListModule],

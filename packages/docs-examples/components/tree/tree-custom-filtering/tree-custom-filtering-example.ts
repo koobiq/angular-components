@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -154,6 +154,7 @@ export class CustomTreeControlFilter<T> implements FlatTreeControlFilter<T> {
  * @title Tree custom filtering
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-custom-filtering-example',
     imports: [KbqFormFieldModule, KbqInputModule, FormsModule, KbqTreeModule, KbqHighlightModule],

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import {
@@ -13,6 +13,7 @@ import { timezones } from '../mock';
  * @title Timezone
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'timezone-overview-example',
     imports: [KbqFormFieldModule, KbqTimezoneModule, KbqOptionModule],

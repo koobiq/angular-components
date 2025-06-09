@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqListModule } from '@koobiq/components/list';
 
@@ -6,6 +6,7 @@ import { KbqListModule } from '@koobiq/components/list';
  * @title List multiple checkbox
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'list-multiple-checkbox-example',
     imports: [KbqListModule, FormsModule],

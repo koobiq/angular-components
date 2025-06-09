@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
     KBQ_LOCALE_SERVICE,
@@ -15,6 +15,7 @@ import { distinctUntilChanged } from 'rxjs/operators';
  * @title Number-formatter
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'number-formatter-overview-example',
     templateUrl: 'number-formatter-overview-example.html',

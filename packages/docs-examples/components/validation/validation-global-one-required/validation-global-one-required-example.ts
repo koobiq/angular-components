@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -11,6 +11,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Validation global one required
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'validation-global-one-required-example',
     templateUrl: 'validation-global-one-required-example.html',

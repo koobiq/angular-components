@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ThemePalette } from '@koobiq/components/core';
 import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
@@ -6,6 +6,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  * @title Loader-overlay
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'loader-overlay-overview-example',
     imports: [KbqLoaderOverlayModule],

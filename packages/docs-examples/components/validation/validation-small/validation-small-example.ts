@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import {
     AbstractControl,
     FormControl,
@@ -23,6 +23,7 @@ function emptyFormValidator(): ValidatorFn {
  * @title Validation small
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'validation-small-example',
     templateUrl: 'validation-small-example.html',
