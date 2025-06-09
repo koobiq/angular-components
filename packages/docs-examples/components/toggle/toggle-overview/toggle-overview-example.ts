@@ -1,11 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Toggle
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'toggle-overview-example',
     imports: [KbqToggleModule],
@@ -14,7 +13,8 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     },
     template: `
         <kbq-toggle [checked]="value()" (change)="value.set($event.checked)">Wi-Fi</kbq-toggle>
-    `
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ToggleOverviewExample {
     protected readonly value = signal(false);
