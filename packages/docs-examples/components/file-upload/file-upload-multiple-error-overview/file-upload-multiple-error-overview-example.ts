@@ -6,9 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 const MAX_FILE_SIZE = 5 * 2 ** 20;
 
 const maxFileExceeded = (file: File): string | null => {
-    return (file?.size ?? 0) > MAX_FILE_SIZE
-        ? `${file.name} - Размер файла превышает максимально допустимый (5 МБ)`
-        : null;
+    return (file?.size ?? 0) > MAX_FILE_SIZE ? `${file.name} — The file size has exceeded the limit (5 MB)` : null;
 };
 
 /**
@@ -27,7 +25,7 @@ const maxFileExceeded = (file: File): string | null => {
                     <i kbq-icon="kbq-exclamation-triangle_16"></i>
                 }
             </ng-template>
-            <kbq-hint>Максимальный размер файла 5 МБ</kbq-hint>
+            <kbq-hint>Maximum file size 5 MB</kbq-hint>
             @for (error of errors; track error) {
                 <kbq-hint color="error">{{ error }}</kbq-hint>
             }

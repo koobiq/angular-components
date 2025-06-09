@@ -93,6 +93,7 @@
             }
 
             .kbq-file-multiple-uploaded__header {
+                color: var(--kbq-foreground-contrast-secondary);
                 border-bottom-color: var(--kbq-file-upload-multiple-default-grid-divider-color);
             }
 
@@ -106,18 +107,16 @@
                 background-color: var(--kbq-file-upload-multiple-states-on-drag-container-background);
                 border-color: var(--kbq-file-upload-multiple-states-on-drag-container-border) !important;
 
+                .btn-upload {
+                    border-top-color: var(--kbq-file-upload-multiple-states-on-drag-container-border);
+                }
+
                 .kbq-file-multiple-uploaded__header {
-                    border-bottom-color: var(--kbq-file-upload-multiple-states-on-drag-container-background) !important;
+                    border-bottom-color: var(--kbq-file-upload-multiple-states-on-drag-grid-divider-color) !important;
                 }
 
                 .kbq-dropzone__icon {
                     color: var(--kbq-file-upload-multiple-states-on-drag-upload-icon-color);
-                }
-
-                &.selected {
-                    .dropzone {
-                        border-top-color: var(--kbq-file-upload-multiple-states-on-drag-container-border);
-                    }
                 }
             }
 
@@ -134,6 +133,10 @@
                     color: var(--kbq-file-upload-multiple-states-disabled-text-block-color);
                 }
 
+                .kbq-file-multiple-uploaded__header {
+                    border-bottom-color: var(--kbq-file-upload-multiple-states-disabled-grid-divider-color) !important;
+                }
+
                 .multiple__uploaded-item {
                     .kbq-file-upload__file .kbq-icon.kbq-empty {
                         color: var(--kbq-file-upload-multiple-states-disabled-left-icon-color);
@@ -148,12 +151,6 @@
                         color: var(--kbq-file-upload-multiple-states-disabled-icon-button-color);
                     }
                 }
-
-                &.selected {
-                    .dropzone {
-                        border-top-color: var(--kbq-file-upload-multiple-states-disabled-container-border);
-                    }
-                }
             }
 
             &:not(.kbq-disabled) {
@@ -162,12 +159,12 @@
                     border-color: var(--kbq-line-error) !important;
 
                     .kbq-dropzone__icon {
-                        color: var(--kbq-file-upload-single-states-error-upload-icon-color);
+                        color: var(--kbq-file-upload-multiple-states-error-upload-icon-color);
                     }
 
                     .dropzone__text:not(.kbq-link),
                     .kbq-file-multiple-uploaded__header {
-                        color: var(--kbq-file-upload-single-states-error-text-block-color);
+                        color: var(--kbq-file-upload-multiple-states-error-text-block-color);
                     }
                 }
 

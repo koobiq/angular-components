@@ -219,6 +219,36 @@ export class DevCustomTextDirective {}
             </tr>
             <tr>
                 <td>
+                    <kbq-multiple-file-upload size="compact">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload [disabled]="true" size="compact">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload class="dev-with-error" size="compact">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+                <td>
+                    <kbq-multiple-file-upload class="dev-dragover" size="compact">
+                        <ng-template #kbqFileIcon>
+                            <i kbq-icon="kbq-file-o_16"></i>
+                        </ng-template>
+                    </kbq-multiple-file-upload>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
                     <kbq-multiple-file-upload
                         class="dev-dragover"
                         #multipleWithErrorState
@@ -239,8 +269,6 @@ export class DevFileUploadStateAndStyle {
 
     protected readonly singleWithEmptyErrorState = viewChild<KbqSingleFileUploadComponent>('withEmptyErrorState');
     protected readonly singleWithErrorState = viewChild<KbqSingleFileUploadComponent>('withErrorState');
-    protected readonly multipleEmptyWithErrorState =
-        viewChild<KbqMultipleFileUploadComponent>('multipleEmptyWithErrorState');
     protected readonly multipleWithErrorState = viewChildren<KbqMultipleFileUploadComponent>('multipleWithErrorState');
 
     protected readonly file = new FormControl(this.testFile);
@@ -259,9 +287,11 @@ export class DevFileUploadStateAndStyle {
         afterNextRender(() => {
             this.singleWithEmptyErrorState()!.errorState = true;
             this.singleWithErrorState()!.errorState = true;
-            this.multipleEmptyWithErrorState()!.errorState = true;
             this.document.querySelectorAll('.dev-dragover .kbq-file-upload').forEach((el) => {
                 this.renderer.addClass(el, 'dragover');
+            });
+            this.document.querySelectorAll('.dev-with-error .kbq-file-upload').forEach((el) => {
+                this.renderer.addClass(el, 'kbq-error');
             });
             this.fileControlInvalid.updateValueAndValidity();
             this.multipleFileControlInvalid.updateValueAndValidity();
