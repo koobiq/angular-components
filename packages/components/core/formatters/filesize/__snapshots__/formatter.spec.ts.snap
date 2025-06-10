@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Filesize formatter getFormattedSizeParts should format value to locale-independent numeric string 1`] = `"50.634944915771484"`;
+
+exports[`Filesize formatter getFormattedSizeParts should format value to selected unit system 1`] = `"53.094588"`;

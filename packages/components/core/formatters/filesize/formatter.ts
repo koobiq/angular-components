@@ -41,13 +41,13 @@ export class KbqDataSizePipe implements PipeTransform {
         unitSystemName: KbqMeasurementSystemType = this.config.defaultUnitSystem,
         locale: string = this.localeService?.id || KBQ_DEFAULT_LOCALE_ID
     ): string {
-        const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> = locale
-            ? this.localeService?.locales[locale].sizeUnits.unitSystems
+        const resolvedUnitSystems: Record<KbqMeasurementSystem, KbqUnitSystem> = this.localeService
+            ? this.localeService.locales[locale].sizeUnits.unitSystems
             : this.config.unitSystems;
 
-        const { value, unit } = getFormattedSizeParts(source, precision, resolvedUnitSystems[unitSystemName]);
+        const { value, unit } = getFormattedSizeParts(source, resolvedUnitSystems[unitSystemName]);
 
-        const formattedValue = this.numberPipe?.transform(value, `1.${precision}-${precision}`, locale) || value;
+        const formattedValue = this.numberPipe?.transform(value, `1.0-${precision}`, locale) || value;
 
         return formattedValue ? `${formattedValue}${this.nonBreakingSpace}${unit}` : '';
     }

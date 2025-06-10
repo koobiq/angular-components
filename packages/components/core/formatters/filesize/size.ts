@@ -30,23 +30,17 @@ export const formatDataSize = (
  * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
  *
  * @param value - size in bytes.
- * @param precision - digits after the decimal point (e.g., `2` → "1.02 KB").
  * @param system - unit system defining abbreviations and base scaling (SI/IEC).
  * @returns Object with the formatted size info.
  *
  * @example
  * formatDataSize(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
  */
-export const getFormattedSizeParts = (
-    value: number,
-    precision: number,
-    system: KbqUnitSystem
-): { value: string; unit: string } => {
+export const getFormattedSizeParts = (value: number, system: KbqUnitSystem): { value: string; unit: string } => {
     const { result, unit } = getHumanizedBytes(value, system);
 
     return {
-        // No precision for bytes (e.g., "512 B")
-        value: unit === system.abbreviations[0] ? result.toString() : result.toFixed(precision),
+        value: result.toString(),
         unit
     };
 };
