@@ -15690,7 +15690,7 @@ __metadata:
     ng-packagr: "npm:^18.2.1"
     node-fetch: "npm:^3.3.1"
     nunjucks: "npm:^3.2.4"
-    overlayscrollbars: "npm:2.7.3"
+    overlayscrollbars: "npm:2.11.4"
     path-normalize: "npm:^6.0.7"
     postcss: "npm:^8.5.4"
     postcss-discard-comments: "npm:^7.0.4"
@@ -17755,10 +17755,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"overlayscrollbars@npm:2.7.3":
-  version: 2.7.3
-  resolution: "overlayscrollbars@npm:2.7.3"
-  checksum: 10c0/260ebc198eed8bf82656321a37ad13133f40062d2d2a3523574d940616f1330e97313d8b7442981e5314e680c26aa1966e0b704d678e5adb6a05d72f05dd6e82
+"overlayscrollbars@npm:2.11.4":
+  version: 2.11.4
+  resolution: "overlayscrollbars@npm:2.11.4"
+  checksum: 10c0/ef107ede6702f202c4889489b35440d7d92dbf44ade286696e02bdf45293e3c8bb76d4bb3c2d0cdcef02aaaa2ed33d3f1eb1db7a5bb7b03e2c956213f415eec1
   languageName: node
   linkType: hard
 
