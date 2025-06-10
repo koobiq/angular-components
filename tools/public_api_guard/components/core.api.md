@@ -665,7 +665,7 @@ export const formatDataSize: (value: number, precision: number, system: KbqUnitS
 export function formatNumberWithLocale(value: unknown, formatter: Intl.NumberFormat, options?: KbqNumberFormatOptions): string;
 
 // @public
-export const getFormattedSizeParts: (value: number, precision: number, system: KbqUnitSystem) => {
+export const getFormattedSizeParts: (value: number, system: KbqUnitSystem) => {
     value: string;
     unit: string;
 };
