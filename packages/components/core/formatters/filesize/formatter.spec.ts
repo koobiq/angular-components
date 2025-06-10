@@ -80,48 +80,17 @@ describe('Filesize formatter', () => {
         const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC];
 
         it('should format value to locale-independent numeric string', () => {
-            const precision = 2;
-            const expected = '50.63';
+            const { value } = getFormattedSizeParts(raw, selectedUnitSystem);
 
-            const { value } = getFormattedSizeParts(raw, precision, selectedUnitSystem);
-
-            expect(value).toBe(expected);
-        });
-
-        it('should format value to selected precision', () => {
-            const precision = 1;
-            const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC];
-
-            const { value } = getFormattedSizeParts(raw, precision, selectedUnitSystem);
-
-            expect(value.split('.')[1].length).toBe(precision);
-        });
-
-        it('should NOT format value to selected precision if value is less than 1 KB', () => {
-            let raw = 1000;
-            let res: { value: string; unit: string };
-            const precision = 2;
-            const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.IEC];
-
-            res = getFormattedSizeParts(raw, precision, selectedUnitSystem);
-
-            expect(res.value.split('.')[1]?.length).not.toBe(precision);
-
-            raw = 1000.153;
-
-            res = getFormattedSizeParts(raw, precision, selectedUnitSystem);
-
-            expect(res.value.split('.')[1].length).not.toBe(precision);
+            expect(value).toMatchSnapshot();
         });
 
         it('should format value to selected unit system', () => {
-            const precision = 2;
-            const expected = '53.09';
             const selectedUnitSystem = KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.SI];
 
-            const { value } = getFormattedSizeParts(raw, precision, selectedUnitSystem);
+            const { value } = getFormattedSizeParts(raw, selectedUnitSystem);
 
-            expect(value).toBe(expected);
+            expect(value).toMatchSnapshot();
         });
     });
 
@@ -255,7 +224,6 @@ describe('Filesize formatter', () => {
                 const result = pipe.transform(1500);
                 const { value, unit } = getFormattedSizeParts(
                     1500,
-                    2,
                     KBQ_SIZE_UNITS_DEFAULT_CONFIG.unitSystems[KbqMeasurementSystem.SI]
                 );
 
