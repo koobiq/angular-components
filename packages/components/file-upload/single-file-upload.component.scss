@@ -44,5 +44,13 @@
                 flex-grow: 1;
             }
         }
+
+        .kbq-file-item__size {
+            padding: 0 var(--kbq-size-s);
+        }
+
+        .kbq-file-upload__action {
+            padding: var(--kbq-size-xxs);
+        }
     }
 }
