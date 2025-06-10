@@ -16,6 +16,10 @@
             background-color: var(--kbq-file-upload-single-default-container-background);
             border-color: var(--kbq-file-upload-single-default-container-border) !important;
 
+            .kbq-file-item__size {
+                color: var(--kbq-file-upload-single-file-size-text-color);
+            }
+
             &:not(.kbq-disabled, .kbq-error) {
                 .kbq-file-upload__action {
                     color: var(--kbq-file-upload-single-default-icon-button-color);
@@ -36,6 +40,10 @@
             }
 
             &.kbq-error:not(.kbq-disabled) {
+                --kbq-file-upload-single-file-size-text-color: var(
+                    --kbq-file-upload-single-states-error-text-block-color
+                );
+
                 &:not(.dragover) {
                     background-color: var(--kbq-file-upload-single-states-error-container-background);
                     border-color: var(--kbq-file-upload-single-states-error-container-border) !important;
@@ -60,6 +68,10 @@
             }
 
             &.kbq-disabled {
+                --kbq-file-upload-single-file-size-text-color: var(
+                    --kbq-file-upload-single-states-disabled-text-block-color
+                );
+
                 background-color: var(--kbq-file-upload-single-states-disabled-container-background);
                 border-color: var(--kbq-file-upload-single-states-disabled-container-border) !important;
 
