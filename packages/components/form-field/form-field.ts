@@ -66,7 +66,7 @@ let nextUniqueId = 0;
         '[class.kbq-form-field_has-suffix]': 'hasSuffix',
         '[class.kbq-form-field_has-password-toggle]': 'hasPasswordToggle',
         '[class.kbq-form-field_has-cleaner]': 'canShowCleaner',
-        '[class.kbq-form-field_has-stepper]': 'canShowStepper',
+        '[class.kbq-form-field_has-stepper]': 'hasStepper',
 
         '[class.kbq-disabled]': 'control.disabled',
 
@@ -156,6 +156,7 @@ export class KbqFormField
         return this.control?.disabled;
     }
 
+    /** @deprecated should be always visible */
     get canShowStepper(): boolean {
         return this.hasStepper && !this.disabled && (this.control?.focused || this.hovered);
     }
@@ -187,10 +188,6 @@ export class KbqFormField
 
             this.changeDetectorRef.markForCheck();
         });
-
-        if (this.hasStepper) {
-            this.stepper.connectTo((this.control as any).numberInput);
-        }
 
         // Run change detection if the value changes.
         const valueChanges = this.control.ngControl?.valueChanges || EMPTY;

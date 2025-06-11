@@ -23,9 +23,7 @@
 
     <ng-content select="kbq-password-toggle" />
 
-    @if (canShowStepper) {
-        <ng-content select="kbq-stepper" />
-    }
+    <ng-content select="kbq-stepper" />
 </div>
 
 @if (hasHint || passwordHints.length) {
