@@ -28,7 +28,7 @@
     --kbq-file-upload-single-default-left-icon-color: var(--kbq-icon-contrast-fade);
     --kbq-file-upload-single-default-text-block-color: var(--kbq-foreground-contrast);
     --kbq-file-upload-single-default-icon-button-color: var(--kbq-icon-contrast);
-    --kbq-file-upload-single-file-size-text-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-file-upload-single-default-file-size-text-color: var(--kbq-foreground-contrast-secondary);
     --kbq-file-upload-single-states-on-drag-container-border: var(--kbq-line-theme-fade);
     --kbq-file-upload-single-states-on-drag-container-background: var(--kbq-background-theme-fade);
     --kbq-file-upload-single-states-on-drag-upload-icon-color: var(--kbq-icon-contrast-fade);
@@ -40,12 +40,14 @@
     --kbq-file-upload-single-states-error-left-icon-color: var(--kbq-icon-error);
     --kbq-file-upload-single-states-error-text-block-color: var(--kbq-foreground-error);
     --kbq-file-upload-single-states-error-icon-button-color: var(--kbq-icon-error);
+    --kbq-file-upload-single-states-error-file-size-text-color: var(--kbq-foreground-error);
     --kbq-file-upload-single-states-disabled-container-border: var(--kbq-states-line-disabled);
     --kbq-file-upload-single-states-disabled-container-background: var(--kbq-states-background-disabled);
     --kbq-file-upload-single-states-disabled-upload-icon-color: var(--kbq-states-icon-disabled);
     --kbq-file-upload-single-states-disabled-left-icon-color: var(--kbq-states-icon-disabled);
     --kbq-file-upload-single-states-disabled-icon-button-color: var(--kbq-states-icon-disabled);
     --kbq-file-upload-single-states-disabled-text-block-color: var(--kbq-states-foreground-disabled);
+    --kbq-file-upload-single-states-disabled-file-size-text-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-single-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
     --kbq-file-upload-multiple-default-container-border: var(--kbq-line-contrast-fade);
     --kbq-file-upload-multiple-default-container-background: var(--kbq-background-bg);
@@ -54,6 +56,7 @@
     --kbq-file-upload-multiple-default-text-block-color: var(--kbq-foreground-contrast);
     --kbq-file-upload-multiple-default-icon-button-color: var(--kbq-icon-contrast);
     --kbq-file-upload-multiple-default-grid-divider-color: var(--kbq-line-contrast-less);
+    --kbq-file-upload-multiple-default-file-size-text-color: var(--kbq-foreground-contrast-secondary);
     --kbq-file-upload-multiple-states-on-drag-container-border: var(--kbq-line-theme-fade);
     --kbq-file-upload-multiple-states-on-drag-container-background: var(--kbq-background-theme-fade);
     --kbq-file-upload-multiple-states-on-drag-upload-icon-color: var(--kbq-icon-contrast-fade);

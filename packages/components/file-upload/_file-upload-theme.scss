@@ -16,10 +16,6 @@
             background-color: var(--kbq-file-upload-single-default-container-background);
             border-color: var(--kbq-file-upload-single-default-container-border) !important;
 
-            .kbq-file-item__size {
-                color: var(--kbq-file-upload-single-file-size-text-color);
-            }
-
             &:not(.kbq-disabled, .kbq-error) {
                 .kbq-file-upload__action {
                     color: var(--kbq-file-upload-single-default-icon-button-color);
@@ -32,6 +28,10 @@
                 .file-item__text-wrapper .kbq-icon.kbq-empty {
                     color: var(--kbq-file-upload-single-default-left-icon-color);
                 }
+
+                .kbq-file-item__size {
+                    color: var(--kbq-file-upload-single-default-file-size-text-color);
+                }
             }
 
             &.dragover {
@@ -40,10 +40,6 @@
             }
 
             &.kbq-error:not(.kbq-disabled) {
-                --kbq-file-upload-single-file-size-text-color: var(
-                    --kbq-file-upload-single-states-error-text-block-color
-                );
-
                 &:not(.dragover) {
                     background-color: var(--kbq-file-upload-single-states-error-container-background);
                     border-color: var(--kbq-file-upload-single-states-error-container-border) !important;
@@ -62,16 +58,16 @@
                     color: var(--kbq-file-upload-single-states-error-text-block-color);
                 }
 
+                .kbq-file-item__size {
+                    color: var(--kbq-file-upload-single-states-error-file-size-text-color);
+                }
+
                 .kbq-file-upload__action {
                     color: var(--kbq-file-upload-single-states-error-icon-button-color);
                 }
             }
 
             &.kbq-disabled {
-                --kbq-file-upload-single-file-size-text-color: var(
-                    --kbq-file-upload-single-states-disabled-text-block-color
-                );
-
                 background-color: var(--kbq-file-upload-single-states-disabled-container-background);
                 border-color: var(--kbq-file-upload-single-states-disabled-container-border) !important;
 
@@ -86,6 +82,10 @@
                 .dropzone__text,
                 .file-item__text {
                     color: var(--kbq-file-upload-single-states-disabled-text-block-color);
+                }
+
+                .kbq-file-item__size {
+                    color: var(--kbq-file-upload-single-states-disabled-file-size-text-color);
                 }
 
                 .kbq-file-upload__action {
@@ -203,6 +203,10 @@
             .multiple__uploaded-item {
                 .kbq-file-upload__file .kbq-icon.kbq-empty {
                     color: var(--kbq-file-upload-multiple-default-left-icon-color);
+                }
+
+                .kbq-file-upload__size {
+                    color: var(--kbq-file-upload-multiple-default-file-size-text-color);
                 }
 
                 .kbq-file-upload__action .kbq-icon.kbq-empty {
