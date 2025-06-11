@@ -92,6 +92,6 @@ export class KbqStepper {
     onStepDown($event: MouseEvent) {
         this.stepDown.emit();
         $event.preventDefault();
-        this.control.stepUp(this.control.step);
+        this.control.stepDown(this.control.step);
     }
 }
