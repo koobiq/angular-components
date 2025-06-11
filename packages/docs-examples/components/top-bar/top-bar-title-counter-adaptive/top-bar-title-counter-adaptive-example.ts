@@ -132,6 +132,18 @@ type ExampleAction = {
             min-width: 110px;
             container-type: inline-size;
 
+            @container (width < 590px) {
+                .kbq-overflow-items {
+                    max-width: 96px;
+                }
+            }
+
+            @container (width > 590px) {
+                .kbq-overflow-items {
+                    max-width: 190px;
+                }
+            }
+
             .kbq-top-bar {
                 width: 100%;
             }
@@ -141,7 +153,6 @@ type ExampleAction = {
             }
 
             .kbq-overflow-items {
-                max-width: 142px;
                 min-width: 32px;
             }
         }
