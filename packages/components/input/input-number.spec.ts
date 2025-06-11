@@ -190,10 +190,10 @@ describe('KbqNumberInput', () => {
         dispatchFakeEvent(inputElement, 'focus');
         fixture.detectChanges();
 
-        const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-        const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+        const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+        const icons = stepper.queryAll(By.css('.kbq-icon'));
 
-        expect(mcStepper).not.toBeNull();
+        expect(stepper).not.toBeNull();
         expect(icons.length).toBe(2);
     }));
 
@@ -216,9 +216,9 @@ describe('KbqNumberInput', () => {
         fixture.detectChanges();
         flush();
 
-        const mcStepper = fixture.debugElement.query(By.css('kbq-cleaner'));
+        const stepper = fixture.debugElement.query(By.css('kbq-cleaner'));
 
-        expect(mcStepper).toBeNull();
+        expect(stepper).toBeNull();
     }));
 
     describe('formControl', () => {
@@ -237,8 +237,8 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
@@ -262,8 +262,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconDown = icons[1];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
@@ -289,8 +289,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
@@ -314,8 +314,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconDown = icons[1];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
@@ -340,8 +340,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
@@ -363,8 +363,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconDown = icons[0];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
@@ -386,8 +386,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
@@ -414,8 +414,8 @@ describe('KbqNumberInput', () => {
 
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconDown = icons[1];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
@@ -447,8 +447,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
@@ -475,8 +475,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const stepUp = icons[0];
 
             dispatchFakeEvent(stepUp.nativeElement, 'mousedown');
@@ -511,8 +511,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconDown = icons[1];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
@@ -574,8 +574,8 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
@@ -601,8 +601,8 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconDown = icons[1];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
@@ -844,8 +844,8 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
@@ -872,8 +872,8 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
 
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconDown = icons[1];
 
             dispatchFakeEvent(iconDown.nativeElement, 'mousedown');
@@ -1054,8 +1054,8 @@ describe('KbqNumberInput', () => {
             dispatchFakeEvent(inputElement, 'focus');
             fixture.detectChanges();
             flush();
-            const mcStepper = fixture.debugElement.query(By.css('kbq-stepper'));
-            const icons = mcStepper.queryAll(By.css('.kbq-icon'));
+            const stepper = fixture.debugElement.query(By.css('kbq-stepper'));
+            const icons = stepper.queryAll(By.css('.kbq-icon'));
             const iconUp = icons[0];
 
             dispatchFakeEvent(iconUp.nativeElement, 'mousedown');
