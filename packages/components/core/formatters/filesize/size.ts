@@ -26,6 +26,7 @@ export const formatDataSize = (
     };
 };
 
+// @TODO: remove deprecated (#DS-3849)
 /**
  * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
  *
@@ -36,14 +37,38 @@ export const formatDataSize = (
  * @example
  * formatDataSize(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
  */
-export const getFormattedSizeParts = (value: number, system: KbqUnitSystem): { value: string; unit: string } => {
-    const { result, unit } = getHumanizedBytes(value, system);
+export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { value: string; unit: string };
+/**
+ * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
+ *
+ * @param value - size in bytes.
+ * @param  _deprecatedPrecision deprecated, use `Intl.NumberFormat` rounding options instead. This param will be remove in next major version.
+ * @param system - unit system defining abbreviations and base scaling (SI/IEC).
+ * @returns Object with the formatted size info.
+ *
+ * @example
+ * formatDataSize(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
+ */
+export function getFormattedSizeParts(
+    value: number,
+    _deprecatedPrecision: number,
+    system: KbqUnitSystem
+): { value: string; unit: string };
+export function getFormattedSizeParts(
+    value: number,
+    _deprecatedPrecisionOrUnitSystem: number | KbqUnitSystem,
+    system?: KbqUnitSystem
+): { value: string; unit: string } {
+    const resolvedSystem =
+        typeof _deprecatedPrecisionOrUnitSystem === 'number' ? system! : _deprecatedPrecisionOrUnitSystem;
+
+    const { result, unit } = getHumanizedBytes(value, resolvedSystem);
 
     return {
         value: result.toString(),
         unit
     };
-};
+}
 
 /**
  * Converts bytes to Kb, Mb, Gb
