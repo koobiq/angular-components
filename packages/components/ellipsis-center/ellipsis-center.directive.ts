@@ -34,6 +34,10 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
     @Input() charWidth = 7;
 
+    /**
+     * Debounce time (ms) for resize events before recalculating ellipsis position.
+     * @default 50
+     */
     @Input({ transform: numberAttribute }) debounceInterval: number = 50;
 
     readonly resizeStream = new Subject<Event>();

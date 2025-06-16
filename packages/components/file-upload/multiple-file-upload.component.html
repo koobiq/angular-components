@@ -55,7 +55,7 @@
                             <div class="kbq-file-upload__row" [class.error]="file.hasError">
                                 <div
                                     class="kbq-file-upload__file kbq-file-upload__grid-cell"
-                                    [style.max-width.px]="calculateFileSizeCellMaxWidth()"
+                                    [style.max-width.px]="fileSizeCellMaxWidth"
                                 >
                                     @if (
                                         { loading: file.loading | async, progress: file.progress | async };

@@ -123,10 +123,10 @@ export class KbqMultipleFileUploadComponent
     @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
     /** @docs-private */
-    @ViewChild('fileSizeHeaderCell') fileSizeHeaderCell: ElementRef<HTMLElement>;
+    @ViewChild(KbqListSelection) listSelection: KbqListSelection;
 
     /** @docs-private */
-    @ViewChild(KbqListSelection) listSelection: KbqListSelection;
+    @ViewChild('fileSizeHeaderCell') private fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
     @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
@@ -178,6 +178,14 @@ export class KbqMultipleFileUploadComponent
      */
     get invalid(): boolean {
         return this.errorState;
+    }
+
+    /**
+     * Set maxWidth for filesize cell to enable proper ellipsis center,
+     * @docs-private
+     */
+    protected get fileSizeCellMaxWidth() {
+        return this.fileSizeHeaderCell?.nativeElement.offsetWidth - fileSizeCellPadding;
     }
 
     /** @docs-private */
@@ -298,14 +306,6 @@ export class KbqMultipleFileUploadComponent
         this.onTouched();
 
         this.listSelection.keyManager.setActiveItem(-1);
-    }
-
-    /**
-     * Set maxWidth for filesize cell to enable proper ellipsis center
-     * @docs-private
-     */
-    protected calculateFileSizeCellMaxWidth() {
-        return this.fileSizeHeaderCell?.nativeElement.offsetWidth - fileSizeCellPadding;
     }
 
     private updateLocaleParams = () => {
