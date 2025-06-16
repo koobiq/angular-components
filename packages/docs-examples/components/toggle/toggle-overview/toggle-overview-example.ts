@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
