@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, ViewE
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqFormFieldControl } from './form-field-control';
 
-/** @docs-private */
 const getKbqStepperToggleMissingControlError = (): Error => {
     return Error('kbq-stepper should use with kbqNumberInput');
 };
@@ -10,7 +9,6 @@ const getKbqStepperToggleMissingControlError = (): Error => {
 /**
  * Used as temporary solution to resolve circular dependency.
  * Moving `KbqStepper` to standalone will resolve the issue
- * @docs-private
  */
 type KbqNumberInput = KbqFormFieldControl<unknown> & {
     stepUp: (val: number) => void;
