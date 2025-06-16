@@ -31,7 +31,7 @@ describe('KbqTitleDirective', () => {
             fixture.detectChanges();
         });
 
-        xit('should open tooltip for overflown text', fakeAsync(() => {
+        it('should open tooltip for overflown text', fakeAsync(() => {
             dispatchMouseEvent(debugElement.query(By.css('#parent1')).nativeElement, 'mouseenter');
 
             fixture.detectChanges();
@@ -42,7 +42,7 @@ describe('KbqTitleDirective', () => {
             expect(tooltipInstance).not.toBeNull();
         }));
 
-        xit('should open tooltip for overflown text with inline element', fakeAsync(() => {
+        it('should open tooltip for overflown text with inline element', fakeAsync(() => {
             dispatchMouseEvent(debugElement.query(By.css('#parent3')).nativeElement, 'mouseenter');
 
             fixture.detectChanges();
@@ -72,7 +72,7 @@ describe('KbqTitleDirective', () => {
             fixture.detectChanges();
         });
 
-        xit('should open tooltip for overflown complex container', fakeAsync(() => {
+        it('should open tooltip for overflown complex container', fakeAsync(() => {
             dispatchMouseEvent(debugElement.query(By.css('#parent1')).nativeElement as HTMLDivElement, 'mouseenter');
 
             fixture.detectChanges();

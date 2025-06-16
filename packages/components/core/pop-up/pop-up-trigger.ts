@@ -82,9 +82,6 @@ const getOffset = (
     return offset;
 };
 
-/** parameter is used in interval to hide the popup */
-export const hidingIntervalForHover = 500;
-
 @Directive({
     host: {
         '(mouseenter)': 'hovered.next(true)',
@@ -96,6 +93,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     readonly hovered = new BehaviorSubject<boolean>(false);
 
     protected readonly scheduler = inject(AsyncScheduler, { optional: true }) || undefined;
+
     protected readonly overlay: Overlay = inject(Overlay);
     protected readonly elementRef: ElementRef = inject(ElementRef);
     protected readonly ngZone: NgZone = inject(NgZone);
@@ -146,8 +144,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
     protected mouseEvent?: MouseEvent;
     protected strategy: FlexibleConnectedPositionStrategy;
-    /** @docs-private */
-    protected hidingIntervalSubscription: Subscription;
+
+    /** Hide pop-up with timeout. Need if you want to show pop-up after leaving trigger */
+    protected hideWithTimeout: boolean = false;
 
     abstract updateClassMap(newPlacement?: string): void;
 
@@ -167,8 +166,6 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         this.listeners.forEach(this.removeEventListener);
 
         this.listeners.clear();
-
-        this.hidingIntervalSubscription?.unsubscribe();
     }
 
     updatePlacement(value: PopUpPlacements) {
@@ -252,10 +249,11 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
 
         this.instance.show(delay);
 
-        if (this.trigger.includes(PopUpTriggers.Hover)) {
+        if (this.hideWithTimeout && this.trigger.includes(PopUpTriggers.Hover)) {
             this.ngZone.runOutsideAngular(() => {
-                this.hidingIntervalSubscription = interval(hidingIntervalForHover, this.scheduler)
+                interval(this.leaveDelay, this.scheduler)
                     .pipe(
+                        takeUntilDestroyed(this.instance?.destroyRef),
                         filter(() => this.trigger.includes(PopUpTriggers.Hover)),
                         filter(() => !this.hovered.getValue() && !this.instance?.hovered.getValue())
                     )
@@ -265,9 +263,12 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     hide = (delay: number = this.leaveDelay) => {
-        this.hidingIntervalSubscription?.unsubscribe();
-
-        this.ngZone.run(() => this.instance?.hide(delay));
+        if (
+            (this.instance && this.triggerName !== 'mouseleave') ||
+            (this.triggerName === 'mouseleave' && !this.instance?.hovered.getValue())
+        ) {
+            this.ngZone.run(() => this.instance?.hide(delay));
+        }
     };
 
     detach = (): void => {
@@ -353,7 +354,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         }
 
         if (this.trigger.includes(PopUpTriggers.Hover)) {
-            this.listeners.set(...this.createListener('mouseenter', this.show));
+            this.listeners
+                .set(...this.createListener('mouseenter', this.show))
+                .set(...this.createListener('mouseleave', this.getMouseLeaveListener()));
         }
 
         if (this.trigger.includes(PopUpTriggers.Focus)) {
@@ -371,6 +374,14 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
         }
 
         this.listeners.forEach(this.addEventListener);
+    }
+
+    getMouseLeaveListener() {
+        if (this.hideWithTimeout) {
+            return () => setTimeout(this.hide, this.leaveDelay);
+        }
+
+        return this.hide;
     }
 
     /** Updates the position of the current popover. */

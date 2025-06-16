@@ -150,7 +150,7 @@ describe('KbqDropdown', () => {
             fixture.detectChanges();
         });
 
-        xit('should display tooltip if text is overflown', fakeAsync(() => {
+        it('should display tooltip if text is overflown', fakeAsync(() => {
             const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
 
             dispatchMouseEvent(dropdownItems[0], 'mouseenter');
@@ -162,7 +162,7 @@ describe('KbqDropdown', () => {
             expect(tooltipInstance).not.toBeNull();
         }));
 
-        xit('should display tooltip if text is complex and overflown', fakeAsync(() => {
+        it('should display tooltip if text is complex and overflown', fakeAsync(() => {
             const dropdownItems: NodeListOf<HTMLElement> = overlayContainerElement.querySelectorAll('[kbq-title]');
 
             dispatchMouseEvent(dropdownItems[2], 'mouseenter');

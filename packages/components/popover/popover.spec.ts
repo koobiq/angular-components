@@ -58,7 +58,7 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        xit('kbqTrigger = hover', fakeAsync(() => {
+        it('kbqTrigger = hover', fakeAsync(() => {
             const expectedValue = '_TEST1';
             const triggerElement = componentInstance.test1.nativeElement;
 
@@ -120,7 +120,7 @@ describe('KbqPopover', () => {
             expect(triggerElement.classList).not.toContain('kbq-active');
         }));
 
-        xit('Can set kbqPopoverHeader', fakeAsync(() => {
+        it('Can set kbqPopoverHeader', fakeAsync(() => {
             const expectedValue = '_TEST4';
             const triggerElement = componentInstance.test4.nativeElement;
 
@@ -133,7 +133,7 @@ describe('KbqPopover', () => {
             expect(header.nativeElement.textContent).toEqual(expectedValue);
         }));
 
-        xit('Can set kbqPopoverContent', fakeAsync(() => {
+        it('Can set kbqPopoverContent', fakeAsync(() => {
             const expectedValue = '_TEST5';
             const triggerElement = componentInstance.test5.nativeElement;
 
@@ -146,7 +146,7 @@ describe('KbqPopover', () => {
             expect(content.nativeElement.textContent).toEqual(expectedValue);
         }));
 
-        xit('Can set kbqPopoverFooter', fakeAsync(() => {
+        it('Can set kbqPopoverFooter', fakeAsync(() => {
             const expectedValue = '_TEST6';
             const triggerElement = componentInstance.test6.nativeElement;
 
