@@ -191,6 +191,7 @@ export class KbqStepper {
     protected stepDown(event: MouseEvent): void;
     // (undocumented)
     protected stepUp(event: MouseEvent): void;
+    // @deprecated
     get visible(): boolean;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqStepper, "kbq-stepper", ["kbqStepper"], {}, {}, never, never, true, never>;
