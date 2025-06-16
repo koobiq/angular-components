@@ -3,10 +3,7 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
-      day: 'tuesday'
-      time: '13:00'
-      timezone: 'Europe/Moscow'
+      interval: 'monthly'
     ignore:
       # Ignores any major updates
       - dependency-name: '*'
