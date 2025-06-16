@@ -671,7 +671,7 @@ export function getFormattedSizeParts(value: number, system: KbqUnitSystem): {
 };
 
 // @public
-export function getFormattedSizeParts(value: number, _deprecatedPrecision: number, system: KbqUnitSystem): {
+export function getFormattedSizeParts(value: number, _precision: number, system: KbqUnitSystem): {
     value: string;
     unit: string;
 };
