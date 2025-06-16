@@ -42,7 +42,7 @@ export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { v
  * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
  *
  * @param value - size in bytes.
- * @param  _deprecatedPrecision deprecated, use `Intl.NumberFormat` rounding options instead. This param will be remove in next major version.
+ * @param  _precision deprecated, use `Intl.NumberFormat` rounding options instead. This param will be remove in next major version.
  * @param system - unit system defining abbreviations and base scaling (SI/IEC).
  * @returns Object with the formatted size info.
  *
@@ -51,16 +51,15 @@ export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { v
  */
 export function getFormattedSizeParts(
     value: number,
-    _deprecatedPrecision: number,
+    _precision: number,
     system: KbqUnitSystem
 ): { value: string; unit: string };
 export function getFormattedSizeParts(
     value: number,
-    _deprecatedPrecisionOrUnitSystem: number | KbqUnitSystem,
+    _precision: number | KbqUnitSystem,
     system?: KbqUnitSystem
 ): { value: string; unit: string } {
-    const resolvedSystem =
-        typeof _deprecatedPrecisionOrUnitSystem === 'number' ? system! : _deprecatedPrecisionOrUnitSystem;
+    const resolvedSystem = typeof _precision === 'number' ? system! : _precision;
 
     const { result, unit } = getHumanizedBytes(value, resolvedSystem);
 
