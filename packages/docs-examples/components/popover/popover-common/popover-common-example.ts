@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -8,6 +8,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
  * @title Popover common
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'popover-common-example',
     imports: [KbqPopoverModule, KbqButtonModule, KbqFormFieldModule, KbqInputModule],

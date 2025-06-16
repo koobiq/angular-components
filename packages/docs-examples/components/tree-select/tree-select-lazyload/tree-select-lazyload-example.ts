@@ -1,5 +1,5 @@
 import { SelectionChange } from '@angular/cdk/collections';
-import { Component, Injectable } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -166,6 +166,7 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
  * @title Tree-select lazyload
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tree-select-lazyload-example',
     imports: [

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -14,6 +14,7 @@ import {
  * @title Tags input onpaste off
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tags-input-onpaste-off-example',
     templateUrl: 'tags-input-onpaste-off-example.html',

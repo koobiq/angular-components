@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxonDateAdapter } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, DateFormatter, KBQ_DATE_LOCALE } from '@koobiq/components/core';
 import { DateTime } from 'luxon';
@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
  * @title date-formatter-special-use
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'date-formatter-special-use-example',
     template: '{{ date }}',

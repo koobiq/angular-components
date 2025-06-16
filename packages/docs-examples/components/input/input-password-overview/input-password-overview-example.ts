@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqFormFieldModule, PasswordRules } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -7,6 +7,7 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Input password
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'input-password-overview-example',
     imports: [

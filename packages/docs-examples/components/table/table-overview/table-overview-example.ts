@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
 
@@ -6,6 +6,7 @@ import { KbqTableModule } from '@koobiq/components/table';
  * @title Table
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'table-overview-example',
     imports: [

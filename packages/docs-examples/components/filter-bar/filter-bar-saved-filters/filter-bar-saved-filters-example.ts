@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     KbqFilter,
@@ -14,6 +14,7 @@ import {
  * @title filter-bar-saved-filters
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'filter-bar-saved-filters-example',
     imports: [

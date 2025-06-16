@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
  * @title Link pseudo
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'link-pseudo-example',
     imports: [KbqLinkModule],

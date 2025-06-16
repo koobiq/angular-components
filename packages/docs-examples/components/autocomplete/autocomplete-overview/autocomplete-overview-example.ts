@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
 import { KbqFormsModule } from '@koobiq/components/core';
@@ -12,6 +12,7 @@ import { map, startWith } from 'rxjs/operators';
  * @title Autocomplete
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'autocomplete-overview-example',
     imports: [

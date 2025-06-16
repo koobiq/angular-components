@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -7,6 +7,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Tooltip multiple lines
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tooltip-multiple-lines-example',
     imports: [

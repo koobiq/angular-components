@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAccordionModule } from '@koobiq/components/accordion';
 
 /**
  * @title Accordion in section
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'accordion-in-section-example',
     templateUrl: 'accordion-in-section-example.html',

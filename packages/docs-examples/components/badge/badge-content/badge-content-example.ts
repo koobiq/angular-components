@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqIconModule } from '@koobiq/components/icon';
 
@@ -6,6 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
  * @title Badge content
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'badge-content-example',
     imports: [

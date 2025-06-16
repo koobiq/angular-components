@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 
@@ -6,6 +6,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Link
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'link-overview-example',
     imports: [KbqLinkModule, KbqIconModule],

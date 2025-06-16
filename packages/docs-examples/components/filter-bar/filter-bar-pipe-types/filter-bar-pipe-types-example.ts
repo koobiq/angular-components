@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import {
     kbqBuildTree,
@@ -31,6 +31,7 @@ const DATA_OBJECT = {
  * @title filter-bar-pipe-types
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'filter-bar-pipe-types-example',
     imports: [

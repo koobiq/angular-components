@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -9,6 +9,7 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
  * @title Tag input
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'tag-input-example',
     imports: [

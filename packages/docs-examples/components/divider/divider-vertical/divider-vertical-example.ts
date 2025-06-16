@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 
 /**
  * @title Divider vertical
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'divider-vertical-example',
     imports: [

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_LOCALE_SERVICE, KbqDataSizePipe, KbqDecimalPipe, KbqTableNumberPipe } from '@koobiq/components/core';
 import { KbqTableModule } from '@koobiq/components/table';
@@ -7,6 +7,7 @@ import { KbqTableModule } from '@koobiq/components/table';
  * @title Filesize formatter Table Number
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'filesize-formatter-table-number-example',
     imports: [

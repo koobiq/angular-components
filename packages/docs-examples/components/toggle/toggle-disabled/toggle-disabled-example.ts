@@ -1,10 +1,11 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Toggle Disabled
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'toggle-disabled-example',
     imports: [KbqToggleModule],

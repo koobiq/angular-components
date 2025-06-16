@@ -1,5 +1,14 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, Directive, Injector, Input, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Directive,
+    Injector,
+    Input,
+    OnInit,
+    TemplateRef,
+    ViewContainerRef
+} from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_DROPDOWN_PANEL, KbqDropdown, KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -37,6 +46,7 @@ export class ExampleDropdownPortal implements OnInit {
  * @title Dropdown Recursive Template
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'dropdown-recursive-template-example',
     imports: [

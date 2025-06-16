@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { PopUpPlacements } from '@koobiq/components/core';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -7,6 +7,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
  * @title Badge tooltip
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'badge-tooltip-example',
     styleUrls: ['badge-tooltip-example.css'],

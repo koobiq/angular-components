@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KBQ_LOCALE_SERVICE, KbqLocaleService } from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -49,6 +49,7 @@ class FileUploadConfiguration implements KbqInputFileMultipleLabel {
  * @title File-upload multiple custom text
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'file-upload-multiple-custom-text-overview-example',
     template: `

@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
 
 /**
  * @title Basic Splitter
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'splitter-vertical-example',
     imports: [
