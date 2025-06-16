@@ -7091,12 +7091,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.19.0":
-  version: 18.19.110
-  resolution: "@types/node@npm:18.19.110"
+"@types/node@npm:^18.19.112":
+  version: 18.19.112
+  resolution: "@types/node@npm:18.19.112"
   dependencies:
     undici-types: "npm:~5.26.4"
-  checksum: 10c0/d90ccd5d437a5c93c1cd73ad6fd463db9e7571dbaf1b6314dcf9e45a0928c791dd4f2611b184680785b440d87b5d50ee279a6f217787cd78d1ca3e8f8b96609e
+  checksum: 10c0/e3421fb3c755337a0477014b235026d914cac8266b67de5867d778b2d4ce2ed0c8052c922e61810f2364d6b29ee24c6ea18671c5636076371b82b0d3e480fbef
   languageName: node
   linkType: hard
 
@@ -15641,7 +15641,7 @@ __metadata:
     "@types/license-checker": "npm:^25.0.6"
     "@types/luxon": "npm:^3.6.2"
     "@types/merge2": "npm:^0.3.30"
-    "@types/node": "npm:^18.19.0"
+    "@types/node": "npm:^18.19.112"
     "@types/nunjucks": "npm:^3.2.1"
     "@types/spdx-satisfies": "npm:^0.1.2"
     "@types/ws": "npm:<8.18.2"
