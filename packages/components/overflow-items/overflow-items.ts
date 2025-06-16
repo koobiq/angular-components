@@ -172,8 +172,8 @@ export class KbqOverflowItems {
         )
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
-                const hiddenItems = this.calculateItemsVisibility(
-                    this.sortItemsByOrder(this.filterAlwaysVisibleItems(this.items())),
+                const hiddenItems = this.getHiddenItems(
+                    this.sortItemsByOrder(this.excludeAlwaysVisibleItems(this.items())),
                     this.reverseOverflowOrder(),
                     this.result(),
                     this.elementRef.nativeElement
@@ -195,9 +195,9 @@ export class KbqOverflowItems {
     }
 
     /**
-     * Filters items that have the `alwaysVisible` attribute.
+     * Excludes items that have the `alwaysVisible` attribute.
      */
-    private filterAlwaysVisibleItems(items: Readonly<KbqOverflowItem[]>): KbqOverflowItem[] {
+    private excludeAlwaysVisibleItems(items: Readonly<KbqOverflowItem[]>): KbqOverflowItem[] {
         return items.filter(({ alwaysVisible }) => !alwaysVisible());
     }
 
@@ -205,7 +205,7 @@ export class KbqOverflowItems {
      * Manages the visibility of items based on the available space in the container and returns the hidden items.
      * Direction of hiding is determined by the `reverseOverflowOrder` attribute.
      */
-    private calculateItemsVisibility(
+    private getHiddenItems(
         items: Readonly<KbqOverflowItem[]>,
         reverseOverflowOrder: boolean,
         result: KbqOverflowItemsResult | undefined,
@@ -225,9 +225,7 @@ export class KbqOverflowItems {
             result?.show();
         }
 
-        const hiddenItems = items.filter(({ hidden }) => hidden());
-
-        return hiddenItems;
+        return items.filter(({ hidden }) => hidden());
     }
 
     /**
