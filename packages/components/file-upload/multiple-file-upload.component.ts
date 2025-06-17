@@ -104,29 +104,26 @@ export class KbqMultipleFileUploadComponent
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
-    @Output('fileQueueChanged') filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    @Output('fileQueueChanged') readonly filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.
      * Useful when handling added files, skipping filtering file list.
      */
-    @Output() filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    @Output() readonly filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.
      */
-    @Output() fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
+    @Output() readonly fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
 
     /** File Icon Template */
-    @ContentChild('kbqFileIcon', { static: false, read: TemplateRef }) customFileIcon: TemplateRef<HTMLElement>;
+    @ContentChild('kbqFileIcon', { static: false, read: TemplateRef })
+    protected readonly customFileIcon: TemplateRef<HTMLElement>;
 
     /** @docs-private */
-    @ViewChild('input') input: ElementRef<HTMLInputElement>;
-
-    /** @docs-private */
-    @ViewChild(KbqListSelection) listSelection: KbqListSelection;
-
-    /** @docs-private */
-    @ViewChild('fileSizeHeaderCell') private fileSizeHeaderCell: ElementRef<HTMLElement>;
+    @ViewChild('input') readonly input: ElementRef<HTMLInputElement>;
+    @ViewChild(KbqListSelection) private readonly listSelection: KbqListSelection;
+    @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
     @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
