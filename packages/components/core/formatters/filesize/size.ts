@@ -26,7 +26,6 @@ export const formatDataSize = (
     };
 };
 
-// @TODO: remove deprecated (#DS-3849)
 /**
  * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
  *
@@ -35,19 +34,21 @@ export const formatDataSize = (
  * @returns Object with the formatted size info.
  *
  * @example
- * formatDataSize(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
+ * getFormattedSizeParts(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
  */
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { value: string; unit: string };
 /**
  * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
  *
  * @param value - size in bytes.
- * @param  _precision deprecated, use `Intl.NumberFormat` rounding options instead. This param will be remove in next major version.
+ * @param _precision param is deprecated, use `Intl.NumberFormat` rounding options instead.
  * @param system - unit system defining abbreviations and base scaling (SI/IEC).
  * @returns Object with the formatted size info.
+ * @deprecated `_precision` - this param will be remove in next major version.
+ * @TODO remove deprecated (#DS-3849).
  *
  * @example
- * formatDataSize(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
+ * getFormattedSizeParts(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
  */
 export function getFormattedSizeParts(
     value: number,
@@ -59,7 +60,19 @@ export function getFormattedSizeParts(
     _precision: number | KbqUnitSystem,
     system?: KbqUnitSystem
 ): { value: string; unit: string } {
-    const resolvedSystem = typeof _precision === 'number' ? system! : _precision;
+    let resolvedSystem: KbqUnitSystem | null = null;
+
+    if (arguments.length === 2 && typeof _precision === 'object') {
+        resolvedSystem = _precision satisfies KbqUnitSystem;
+    }
+
+    if (arguments.length === 3 && typeof _precision === 'number' && system) {
+        resolvedSystem = system;
+    }
+
+    if (!resolvedSystem) {
+        throw new Error('Unexpected arguments size');
+    }
 
     const { result, unit } = getHumanizedBytes(value, resolvedSystem);
 
