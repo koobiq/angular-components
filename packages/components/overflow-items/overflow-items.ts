@@ -32,14 +32,14 @@ import { debounceTime, merge, skip } from 'rxjs';
 export class ElementVisibilityManager {
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject(ElementRef);
-    private readonly _hidden = signal(false);
+    private readonly hiddenState = signal(false);
 
     /**
      * Whether the element is hidden.
      *
      * @docs-private
      */
-    readonly hidden = computed(() => this._hidden());
+    readonly hidden = computed(() => this.hiddenState());
 
     /**
      * Hides the element.
@@ -49,7 +49,7 @@ export class ElementVisibilityManager {
     hide(): void {
         this.renderer.setStyle(this.elementRef.nativeElement, 'visibility', 'hidden');
         this.renderer.setStyle(this.elementRef.nativeElement, 'position', 'absolute');
-        this._hidden.set(true);
+        this.hiddenState.set(true);
     }
 
     /**
@@ -60,7 +60,7 @@ export class ElementVisibilityManager {
     show(): void {
         this.renderer.removeStyle(this.elementRef.nativeElement, 'visibility');
         this.renderer.removeStyle(this.elementRef.nativeElement, 'position');
-        this._hidden.set(false);
+        this.hiddenState.set(false);
     }
 }
 
