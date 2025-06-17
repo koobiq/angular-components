@@ -34,7 +34,7 @@ export const formatDataSize = (
  * @returns Object with the formatted size info.
  *
  * @example
- * getFormattedSizeParts(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
+ * getFormattedSizeParts(1500, 'SI'); // { value: "1.50", unit: "KB" }
  */
 export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { value: string; unit: string };
 /**
