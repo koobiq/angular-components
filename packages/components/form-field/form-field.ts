@@ -156,10 +156,9 @@ export class KbqFormField
         return this.control?.disabled;
     }
 
-    /** @deprecated should be always visible */
-    get canShowStepper(): boolean {
-        return this.hasStepper && !this.disabled && (this.control?.focused || this.hovered);
-    }
+    /** @deprecated stepper should be always visible when provided, so this parameter is redundant,
+     * use `hasStepper` instead */
+    canShowStepper = true;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,
@@ -188,6 +187,10 @@ export class KbqFormField
 
             this.changeDetectorRef.markForCheck();
         });
+
+        if (this.hasStepper) {
+            this.stepper.connectTo((this.control as any).numberInput);
+        }
 
         // Run change detection if the value changes.
         const valueChanges = this.control.ngControl?.valueChanges || EMPTY;

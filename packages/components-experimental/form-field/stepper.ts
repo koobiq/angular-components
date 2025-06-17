@@ -49,10 +49,8 @@ export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
 
     /** Whether the stepper is visible.
-     * @deprecated should be always visible */
-    get visible(): boolean {
-        return true;
-    }
+     * @deprecated stepper should be always visible when provided, so this parameter is redundant */
+    visible = true;
 
     /** Form field number control. */
     protected get control(): KbqNumberInput {

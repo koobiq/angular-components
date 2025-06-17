@@ -66,11 +66,8 @@ export class KbqStepper {
         return control.numberInput;
     }
 
-    /** @deprecated */
-    connectTo(numberInput: any) {
-        if (!numberInput) {
-            return;
-        }
+    connectTo(numberInput: KbqNumberInput) {
+        if (!numberInput) return;
 
         this.stepUp.subscribe(() => {
             numberInput.stepUp(numberInput.step);
@@ -84,12 +81,10 @@ export class KbqStepper {
     onStepUp($event: MouseEvent) {
         this.stepUp.emit();
         $event.preventDefault();
-        this.control.stepUp(this.control.step);
     }
 
     onStepDown($event: MouseEvent) {
         this.stepDown.emit();
         $event.preventDefault();
-        this.control.stepDown(this.control.step);
     }
 }
