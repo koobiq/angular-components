@@ -188,7 +188,7 @@ export class KbqOverflowItems {
      * Sort items by their `order` attribute.
      * If an item does not have an `order` defined, its index is used as a fallback.
      */
-    private sortItemsByOrder(items: Readonly<KbqOverflowItem[]>): KbqOverflowItem[] {
+    private sortItemsByOrder(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
         const itemsWithOrder = Array.from(items, (item, index) => ({ item, order: item.order() ?? index }));
 
         return itemsWithOrder.sort((a, b) => a.order - b.order).map(({ item }) => item);
@@ -197,7 +197,7 @@ export class KbqOverflowItems {
     /**
      * Excludes items that have the `alwaysVisible` attribute.
      */
-    private excludeAlwaysVisibleItems(items: Readonly<KbqOverflowItem[]>): KbqOverflowItem[] {
+    private excludeAlwaysVisibleItems(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
         return items.filter(({ alwaysVisible }) => !alwaysVisible());
     }
 
@@ -206,11 +206,11 @@ export class KbqOverflowItems {
      * Direction of hiding is determined by the `reverseOverflowOrder` attribute.
      */
     private getHiddenItems(
-        items: Readonly<KbqOverflowItem[]>,
+        items: ReadonlyArray<KbqOverflowItem>,
         reverseOverflowOrder: boolean,
         result: KbqOverflowItemsResult | undefined,
         container: HTMLElement
-    ): KbqOverflowItem[] {
+    ): ReadonlyArray<KbqOverflowItem> {
         result?.hide();
         items.forEach((item) => item.show());
 
