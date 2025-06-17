@@ -12,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     styleUrls: ['layout-flex-order-example.css'],
     imports: [KbqSelectModule, KbqFormFieldModule],
     template: `
-        <div class="docs-layout-flex-order layout-margin-top-4xl">
+        <div class="example-layout-flex-order layout-margin-top-4xl">
             <div class="example-controls">
                 <div class="layout-column flex">
                     <label class="layout-padding">'Block 1'</label>

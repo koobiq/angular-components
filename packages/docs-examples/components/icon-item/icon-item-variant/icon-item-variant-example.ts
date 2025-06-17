@@ -14,15 +14,15 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <div class="docs-icon-item-layout layout-row">
-            <div class="docs-icon-item-container">
+        <div class="example-icon-item-layout layout-row">
+            <div class="example-icon-item-container">
                 <i [color]="colors.Theme" kbq-icon-item="kbq-bell_16"></i>
-                <div class="docs-icon-item-container__name kbq-text-normal">Solid</div>
+                <div class="example-icon-item-container__name kbq-text-normal">Solid</div>
             </div>
 
-            <div class="docs-icon-item-container">
+            <div class="example-icon-item-container">
                 <i [color]="colors.Theme" [fade]="true" kbq-icon-item="kbq-bell_16"></i>
-                <div class="docs-icon-item-container__name kbq-text-normal">Fade</div>
+                <div class="example-icon-item-container__name kbq-text-normal">Fade</div>
             </div>
         </div>
     `
