@@ -128,6 +128,108 @@ describe('Validators', () => {
                 control.setValue(null);
                 expect(control.errors).toBeNull();
             });
+
+            describe(FileValidators.isCorrectExtension.name, () => {
+                it('should return null if the value contains correct extensions', () => {
+                    const control = new FormControl<KbqFileItem | File | null>(
+                        null,
+                        FileValidators.isCorrectExtension(['.txt'])
+                    );
+                    const kbqFileItem: KbqFileItem = {
+                        file: new File(['content'], 'test.txt', { type: 'text/plain' })
+                    };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toBeNull();
+                });
+
+                it('should return null if the value contains correct extensions with deep level > 2', () => {
+                    const control = new FormControl<KbqFileItem | File | null>(
+                        null,
+                        FileValidators.isCorrectExtension(['.tmp.txt'])
+                    );
+                    const kbqFileItem: KbqFileItem = {
+                        file: new File(['content'], 'test.tmp.txt', { type: 'text/plain' })
+                    };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toBeNull();
+                });
+
+                it('should return an error if the value contains wrong extensions', () => {
+                    const accept = ['.pdf'];
+                    const control = new FormControl<KbqFileItem | File | null>(
+                        null,
+                        FileValidators.isCorrectExtension(accept)
+                    );
+                    let kbqFileItem: KbqFileItem = {
+                        file: new File(['content'], 'test.txt', { type: 'text/plain' })
+                    };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toEqual({
+                        fileExtensionMismatch: { expected: accept, actual: kbqFileItem.file.name }
+                    });
+
+                    kbqFileItem = { file: new File(['content'], 'test.pdf.txt', { type: 'text/plain' }) };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toEqual({
+                        fileExtensionMismatch: { expected: accept, actual: kbqFileItem.file.name }
+                    });
+                });
+                it('should return an error if the value contains wrong extensions with deep level > 2', () => {
+                    const accept = ['.tmp.pdf'];
+                    const control = new FormControl<KbqFileItem | File | null>(
+                        null,
+                        FileValidators.isCorrectExtension(accept)
+                    );
+
+                    let kbqFileItem: KbqFileItem = {
+                        file: new File(['content'], 'test.txt', { type: 'text/plain' })
+                    };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toEqual({
+                        fileExtensionMismatch: { expected: accept, actual: kbqFileItem.file.name }
+                    });
+
+                    kbqFileItem = { file: new File(['content'], 'test.tmp.pdf.txt', { type: 'text/plain' }) };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toEqual({
+                        fileExtensionMismatch: { expected: accept, actual: kbqFileItem.file.name }
+                    });
+                });
+                it('should return null if file type is correct', () => {
+                    const control = new FormControl<KbqFileItem | File | null>(
+                        null,
+                        FileValidators.isCorrectExtension(['text/plain'])
+                    );
+                    const kbqFileItem: KbqFileItem = {
+                        file: new File(['content'], 'test.txt', { type: 'text/plain' })
+                    };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toBeNull();
+                });
+
+                it('should return null if file type is wrong', () => {
+                    const accept = ['text/plain'];
+                    const control = new FormControl<KbqFileItem | File | null>(
+                        null,
+                        FileValidators.isCorrectExtension(accept)
+                    );
+                    const kbqFileItem: KbqFileItem = {
+                        file: new File(['content'], 'test.txt', { type: 'text/css' })
+                    };
+
+                    control.setValue(kbqFileItem);
+                    expect(control.errors).toEqual({
+                        fileExtensionMismatch: { expected: accept, actual: kbqFileItem.file.name }
+                    });
+                });
+            });
         });
     });
 });

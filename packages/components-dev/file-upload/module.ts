@@ -354,6 +354,10 @@ export class DevFileUploadStateAndStyle {
         <file-upload-single-validation-reactive-forms-overview-example />
         <hr />
         <file-upload-single-with-signal-example />
+        <hr />
+        <file-upload-single-accept-validation-example />
+        <hr />
+        <file-upload-multiple-accept-validation-example />
     `,
     host: {
         class: 'layout-column'

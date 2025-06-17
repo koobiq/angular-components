@@ -1,5 +1,4 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { KbqFileItem } from '@koobiq/components/file-upload';
 
 /** Provides a set of validators for password form controls. */
 export class PasswordValidators {
@@ -181,8 +180,15 @@ export class FileValidators {
         };
     }
 
+    /**
+     * Validator that checks whether file's name or MIME type
+     * matches one of the accepted extensions or MIME types.
+     *
+     * @param accept - Array of allowed file extensions or MIME types.
+     * @returns ValidatorFn that returns validation error if file type is not accepted, or null otherwise.
+     */
     static isCorrectExtension(accept: string[]): ValidatorFn {
-        return (control: AbstractControl<KbqFileItem | null>): ValidationErrors | null => {
+        return (control: AbstractControl<{ file: File } | null>): ValidationErrors | null => {
             if (!accept?.length || !control.value) return null;
             const { name, type } = control.value.file;
 
@@ -190,7 +196,7 @@ export class FileValidators {
                 const typeAsRegExp = new RegExp(`${acceptedExtensionOrMimeType}$`);
 
                 if (!typeAsRegExp.test(name) && !typeAsRegExp.test(type)) {
-                    return { fileExtensionMismatch: { allowedTypes: accept, actual: name } };
+                    return { fileExtensionMismatch: { expected: accept, actual: name } };
                 }
             }
 

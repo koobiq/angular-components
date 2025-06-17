@@ -652,6 +652,7 @@ export const faIRLocaleData: {
 
 // @public
 export class FileValidators {
+    static isCorrectExtension(accept: string[]): ValidatorFn;
     static maxFileSize(maxSize: number): ValidatorFn;
 }
 
