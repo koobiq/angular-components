@@ -254,6 +254,10 @@ export class KbqCodeBlock implements AfterViewInit {
                 this.copyButtonTooltip!.content = this.localeConfiguration.copyTooltip;
             }
         });
+
+        // Should call `markForCheck` to ensure the `codeContentTabIndex` is updated after the view is initialized,
+        // for correct focus behavior.
+        this.changeDetectorRef.markForCheck();
     }
 
     /**

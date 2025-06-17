@@ -86,39 +86,43 @@
     </div>
 </div>
 
-<pre
+<div
     #tabPanel="kbqTabNavPanel"
     cdkMonitorElementFocus
     cdkScrollable
     kbqTabNavPanel
-    class="kbq-code-block__content kbq-scrollbar"
+    class="kbq-code-block__main kbq-scrollbar"
     [style.max-height.px]="calculatedMaxHeight"
     [tabIndex]="codeContentTabIndex"
-><code kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file"></code></pre>
+>
+    <pre
+        class="kbq-code-block__pre"
+    ><code kbqCodeBlockHighlight class="kbq-code-block__code" [file]="file"></code></pre>
 
-@if (maxHeight) {
-    <div
-        class="kbq-code-block__view-all"
-        [class.kbq-code-block__view-all_collapsed]="!viewAll"
-        [class.kbq-code-block__view-all_expanded]="viewAll"
-    >
-        <div class="kbq-code-block__view-all__wrapper">
-            <button
-                kbq-button
-                class="kbq-code-block__view-all__button"
-                [color]="componentColor.Theme"
-                [kbqStyle]="buttonStyle.Transparent"
-                (click)="toggleViewAll()"
-                (keydown.enter)="onViewAllEnterKeydown()"
-            >
-                @if (viewAll) {
-                    <i kbq-icon="kbq-chevron-up_16"></i>
-                    {{ localeConfiguration.viewLessText }}
-                } @else {
-                    <i kbq-icon="kbq-chevron-down_16"></i>
-                    {{ localeConfiguration.viewAllText }}
-                }
-            </button>
+    @if (maxHeight) {
+        <div
+            class="kbq-code-block__view-all"
+            [class.kbq-code-block__view-all_collapsed]="!viewAll"
+            [class.kbq-code-block__view-all_expanded]="viewAll"
+        >
+            <div class="kbq-code-block__view-all__wrapper">
+                <button
+                    kbq-button
+                    class="kbq-code-block__view-all__button"
+                    [color]="componentColor.Theme"
+                    [kbqStyle]="buttonStyle.Transparent"
+                    (click)="toggleViewAll()"
+                    (keydown.enter)="onViewAllEnterKeydown()"
+                >
+                    @if (viewAll) {
+                        <i kbq-icon="kbq-chevron-up_16"></i>
+                        {{ localeConfiguration.viewLessText }}
+                    } @else {
+                        <i kbq-icon="kbq-chevron-down_16"></i>
+                        {{ localeConfiguration.viewAllText }}
+                    }
+                </button>
+            </div>
         </div>
-    </div>
-}
+    }
+</div>
