@@ -4272,10 +4272,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fontsource/inter@npm:^5.2.5":
-  version: 5.2.5
-  resolution: "@fontsource/inter@npm:5.2.5"
-  checksum: 10c0/071e12a6a9c8cf6e95da43ba532e80eb8e35c1ffd2384c9c6555d7f222e306e22968f7c4fff5065b9f81503db622cf3de8a688fbc1cb0c04aa3803c797f6f6a0
+"@fontsource/inter@npm:^5.2.6":
+  version: 5.2.6
+  resolution: "@fontsource/inter@npm:5.2.6"
+  checksum: 10c0/7a1347608aab06e53665272ed41fd906ffa96c57b004e8aae91b98177bba97c54b60305d956254c4771387c383f9bdbd917006fb34c9721c020e6017d33e9a5c
   languageName: node
   linkType: hard
 
@@ -15621,7 +15621,7 @@ __metadata:
     "@docsearch/css": "npm:^3.9.0"
     "@docsearch/js": "npm:^3.9.0"
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.5.0"
-    "@fontsource/inter": "npm:^5.2.5"
+    "@fontsource/inter": "npm:^5.2.6"
     "@fontsource/jetbrains-mono": "npm:^5.2.6"
     "@koobiq/ag-grid-angular-theme": "npm:^30.0.6"
     "@koobiq/date-adapter": "npm:^3.2.3"
