@@ -84,6 +84,8 @@ updates:
           - 'karma-jasmine*'
           - '@types/jasmine'
           - '@types/karma'
+          - '@types/karma-jasmine'
+          - '@types/karma-spec-reporter'
       nunjucks:
         patterns:
           - 'nunjucks'

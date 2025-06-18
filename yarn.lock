@@ -6964,6 +6964,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/jasmine@npm:*":
+  version: 5.1.8
+  resolution: "@types/jasmine@npm:5.1.8"
+  checksum: 10c0/a43a93058e2dee95a1e4de083e5ac8c3a212d3d37855f9af2c73807f6948ff6a1759446193e3032ef4a34df995a038a7cc6594634ca3d977b75bdddb3df20b46
+  languageName: node
+  linkType: hard
+
 "@types/jasmine@npm:^4.6.5":
   version: 4.6.5
   resolution: "@types/jasmine@npm:4.6.5"
@@ -7006,7 +7013,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/karma@npm:^6.3.9":
+"@types/karma-jasmine@npm:^4.0.5":
+  version: 4.0.5
+  resolution: "@types/karma-jasmine@npm:4.0.5"
+  dependencies:
+    "@types/jasmine": "npm:*"
+    "@types/karma": "npm:*"
+  checksum: 10c0/a4f414fe31d4a49fb3ac37131d2cd9bb4f2861be39e7ea9389989055732ea5080b6b361cd4937c8ba795e17ffac23963203c404b2a6c786d12caccbbea72b5ff
+  languageName: node
+  linkType: hard
+
+"@types/karma-spec-reporter@npm:^0.0.6":
+  version: 0.0.6
+  resolution: "@types/karma-spec-reporter@npm:0.0.6"
+  dependencies:
+    "@types/karma": "npm:*"
+  checksum: 10c0/0af621a31aa0adf88997111ab3b41dde7fd1995b57784869dc97d5b949188e3364a4ac826b1eb45f51fa775ecda307148b0a16a19a3bfa645c01454c0ca62dbc
+  languageName: node
+  linkType: hard
+
+"@types/karma@npm:*, @types/karma@npm:^6.3.9":
   version: 6.3.9
   resolution: "@types/karma@npm:6.3.9"
   dependencies:
@@ -15623,6 +15649,8 @@ __metadata:
     "@types/jasmine": "npm:^4.6.5"
     "@types/jest": "npm:^29.5.14"
     "@types/karma": "npm:^6.3.9"
+    "@types/karma-jasmine": "npm:^4.0.5"
+    "@types/karma-spec-reporter": "npm:^0.0.6"
     "@types/license-checker": "npm:^25.0.6"
     "@types/luxon": "npm:^3.6.2"
     "@types/merge2": "npm:^0.3.30"

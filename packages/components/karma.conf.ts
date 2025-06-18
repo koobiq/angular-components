@@ -1,8 +1,7 @@
-// @ts-check
+import { Config } from 'karma';
 
-/** @param {import('karma').Config} config */
-module.exports = function (config) {
-    return config.set({
+module.exports = (config: Config): void => {
+    config.set({
         ...require('../../karma.conf')(),
         files: [
             { pattern: '../../dist/components/prebuilt-themes/theme.css', included: true, watched: true },

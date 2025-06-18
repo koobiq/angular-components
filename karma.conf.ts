@@ -1,10 +1,8 @@
-// @ts-check
+import { ConfigOptions, constants } from 'karma';
 
-const { constants } = require('karma');
 const isCI = !!process.env.CI;
 
-/** @returns {import('karma').ConfigOptions} */
-module.exports = () => {
+module.exports = (): ConfigOptions => {
     return {
         basePath: '',
         frameworks: [
@@ -16,7 +14,6 @@ module.exports = () => {
             require('karma-chrome-launcher'),
             require('karma-spec-reporter'),
             require('karma-jasmine-html-reporter'),
-            // @ts-ignore
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
@@ -39,7 +36,7 @@ module.exports = () => {
         },
         port: 9876,
         colors: true,
-        logLevel: constants.LOG_INFO,
+        logLevel: isCI ? constants.LOG_WARN : constants.LOG_INFO,
         autoWatch: false,
         singleRun: true,
         customLaunchers: {
