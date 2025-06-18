@@ -3,18 +3,16 @@
 @use '../core/styles/common/tokens';
 
 @mixin kbq-file-upload-theme() {
-    .kbq-file-upload {
-        .kbq-focused,
-        .kbq-link.kbq-focused {
-            border: 2px solid var(--kbq-file-upload-single-states-focused-focus-outline-color);
-        }
-    }
-
     .kbq-single-file-upload {
         .kbq-file-upload {
             // FIXME: move to mixin kbq-file-upload-state
             background-color: var(--kbq-file-upload-single-default-container-background);
             border-color: var(--kbq-file-upload-single-default-container-border) !important;
+
+            .kbq-focused,
+            .kbq-link.kbq-focused {
+                border: 2px solid var(--kbq-file-upload-single-states-focused-focus-outline-color);
+            }
 
             &:not(.kbq-disabled, .kbq-error) {
                 .kbq-file-upload__action {
@@ -99,6 +97,11 @@
         .kbq-file-upload {
             background-color: var(--kbq-file-upload-multiple-default-container-background);
             border-color: var(--kbq-file-upload-multiple-default-container-border) !important;
+
+            .kbq-focused,
+            .kbq-link.kbq-focused {
+                border: 2px solid var(--kbq-file-upload-multiple-states-focused-focus-outline-color);
+            }
 
             .btn-upload {
                 border-top-color: var(--kbq-file-upload-multiple-default-container-border);
