@@ -66,7 +66,7 @@ let nextUniqueId = 0;
         '[class.kbq-form-field_has-suffix]': 'hasSuffix',
         '[class.kbq-form-field_has-password-toggle]': 'hasPasswordToggle',
         '[class.kbq-form-field_has-cleaner]': 'canShowCleaner',
-        '[class.kbq-form-field_has-stepper]': 'canShowStepper',
+        '[class.kbq-form-field_has-stepper]': 'hasStepper',
 
         '[class.kbq-disabled]': 'control.disabled',
 
@@ -156,9 +156,9 @@ export class KbqFormField
         return this.control?.disabled;
     }
 
-    get canShowStepper(): boolean {
-        return this.hasStepper && !this.disabled && (this.control?.focused || this.hovered);
-    }
+    /** @deprecated stepper should be always visible when provided, so this parameter is redundant,
+     * use `hasStepper` instead */
+    canShowStepper = true;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef,

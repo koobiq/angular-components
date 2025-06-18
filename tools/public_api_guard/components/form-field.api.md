@@ -55,8 +55,8 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     canCleanerClearByEsc: boolean;
     // (undocumented)
     get canShowCleaner(): boolean;
-    // (undocumented)
-    get canShowStepper(): boolean;
+    // @deprecated (undocumented)
+    canShowStepper: boolean;
     // (undocumented)
     cleaner: KbqCleaner | null;
     // (undocumented)
@@ -262,7 +262,9 @@ export class KbqPrefix {
 // @public (undocumented)
 export class KbqStepper {
     // (undocumented)
-    connectTo(numberInput: any): void;
+    connectTo(numberInput: KbqNumberInput): void;
+    // Warning: (ae-forgotten-export) The symbol "KbqNumberInput" needs to be exported by the entry point index.d.ts
+    protected get control(): KbqNumberInput;
     // (undocumented)
     onStepDown($event: MouseEvent): void;
     // (undocumented)

@@ -21,6 +21,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
             [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
+            [disabled]="control.disabled"
             (click)="stepUp($event)"
             color="contrast-fade"
             kbq-icon-button="kbq-chevron-down_16"
@@ -30,6 +31,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
             [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
+            [disabled]="control.disabled"
             (mousedown)="stepDown($event)"
             color="contrast-fade"
             kbq-icon-button="kbq-chevron-down_16"
@@ -37,9 +39,7 @@ const getKbqStepperToggleMissingControlError = (): Error => {
     `,
     styleUrl: './stepper.scss',
     host: {
-        class: 'kbq-stepper___EXPERIMENTAL',
-        '[style.visibility]': 'visible ? "visible" : "hidden"',
-        '[attr.aria-hidden]': '!visible'
+        class: 'kbq-stepper___EXPERIMENTAL'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -48,10 +48,9 @@ export class KbqStepper {
     // @TODO fix types (#DS-2915)
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
 
-    /** Whether the stepper is visible. */
-    get visible(): boolean {
-        return !!((this.formField?.focused || this.formField?.hovered) && !this.formField?.disabled);
-    }
+    /** Whether the stepper is visible.
+     * @deprecated stepper should be always visible when provided, so this parameter is redundant */
+    visible = true;
 
     /** Form field number control. */
     protected get control(): KbqNumberInput {
