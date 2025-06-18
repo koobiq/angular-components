@@ -1,10 +1,8 @@
-const getBaseKarmaConfig = require('../../karma.conf');
+import { Config } from 'karma';
 
-module.exports = function (config) {
-    const baseConfig = getBaseKarmaConfig();
-
-    return config.set({
-        ...baseConfig,
+module.exports = (config: Config): void => {
+    config.set({
+        ...require('../../karma.conf')(),
         files: [
             { pattern: '../../dist/components/prebuilt-themes/theme.css', included: true, watched: true },
             { pattern: '../../node_modules/@koobiq/design-tokens/web/css-tokens.css', included: true, watched: true },
