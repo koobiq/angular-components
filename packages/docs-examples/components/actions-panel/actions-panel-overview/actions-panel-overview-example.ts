@@ -73,7 +73,7 @@ type ExampleTableItem = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleTable {
-    readonly data: ExampleTableItem[] = Array.from({ length: 4 })
+    protected readonly data: ExampleTableItem[] = Array.from({ length: 4 })
         .map((_, index) => [
             {
                 threat: 'DDoS attacks',
@@ -113,7 +113,7 @@ export class ExampleTable {
         this.change();
     }
 
-    change(): void {
+    protected change(): void {
         this.selectedItems.emit(this.data.filter(({ selected }) => selected));
     }
 }
@@ -129,11 +129,14 @@ export class ExampleTable {
     ],
     selector: 'example-actions-panel',
     template: `
-        <div class="example-counter">Selected: {{ data().length }}</div>
-        <kbq-divider class="example-divider-vertical" [vertical]="true" />
         <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+            <div [kbqOverflowItem]="action.Counter" order="99">
+                <div class="example-counter">Selected: {{ data().length }}</div>
+                <kbq-divider class="example-divider-vertical" [vertical]="true" />
+            </div>
+
             @for (action of actions; track action.id) {
-                <div class="example-action-container" [kbqOverflowItem]="action.id">
+                <div [kbqOverflowItem]="action.id">
                     @if (action.divider) {
                         <kbq-divider class="example-divider-vertical" [vertical]="true" />
                     }
@@ -148,30 +151,31 @@ export class ExampleTable {
                     </button>
                 </div>
             }
-            <div kbqOverflowItemsResult>
-                <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
+
+            @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
+            <!-- ignores when only action.Counter is hidden -->
+            @if (hiddenItemIDs.size > 1) {
+                <button [kbqDropdownTriggerFor]="dropdown" kbqOverflowItemsResult color="contrast" kbq-button>
                     <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                 </button>
+            }
 
-                <kbq-dropdown #dropdown="kbqDropdown">
-                    <div class="example-counter-dropdown">Selected: {{ data().length }}</div>
-                    <kbq-divider />
+            <kbq-dropdown #dropdown="kbqDropdown">
+                <div class="example-counter-dropdown">Selected: {{ data().length }}</div>
+                <kbq-divider />
 
-                    @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
-
-                    @for (action of actions; track action.id) {
-                        @if (hiddenItemIDs.has(action.id)) {
-                            @if (action.divider && hiddenItemIDs.has(actions[$index - 1]?.id)) {
-                                <kbq-divider />
-                            }
-                            <button (click)="onAction(action)" kbq-dropdown-item>
-                                <i [class]="action.icon" kbq-icon></i>
-                                {{ action.id }}
-                            </button>
+                @for (action of actions; track action.id) {
+                    @if (hiddenItemIDs.has(action.id)) {
+                        @if (action.divider && hiddenItemIDs.has(actions[$index - 1].id)) {
+                            <kbq-divider />
                         }
+                        <button (click)="onAction(action)" kbq-dropdown-item>
+                            <i [class]="action.icon" kbq-icon></i>
+                            {{ action.id }}
+                        </button>
                     }
-                </kbq-dropdown>
-            </div>
+                }
+            </kbq-dropdown>
         </div>
     `,
     styles: `
@@ -180,14 +184,6 @@ export class ExampleTable {
             align-items: center;
             overflow: hidden;
             flex-grow: 1;
-            container-type: inline-size;
-        }
-
-        @container (width < 495px) {
-            .example-counter,
-            .example-counter + .example-divider-vertical {
-                display: none;
-            }
         }
 
         .example-counter {
@@ -206,7 +202,7 @@ export class ExampleTable {
             margin: var(--kbq-size-s) var(--kbq-size-m);
         }
 
-        .example-action-container {
+        .kbq-overflow-item {
             display: flex;
             align-items: center;
         }
@@ -216,26 +212,22 @@ export class ExampleTable {
             height: var(--kbq-actions-panel-vertical-divider-height) !important;
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
-
-        .kbq-button,
-        .kbq-dropdown-trigger {
-            margin: var(--kbq-size-border-width);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
-    readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
-    readonly actionsPanelRef = inject(KbqActionsPanelRef);
-    readonly toast = inject(KbqToastService);
-
-    readonly actions: ExampleAction[] = [
+    protected readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
         { id: 'Link to incident', icon: 'kbq-link_16' },
         { id: 'Remove', icon: 'kbq-trash_16', divider: true }
     ];
+    protected readonly action = { Counter: 'counter' };
 
-    onAction(action: ExampleAction): void {
+    protected readonly data = inject<Signal<ExampleTableItem[]>>(KBQ_ACTIONS_PANEL_DATA);
+    protected readonly actionsPanelRef = inject(KbqActionsPanelRef);
+    private readonly toast = inject(KbqToastService);
+
+    protected onAction(action: ExampleAction): void {
         this.toast.show({ title: `Action initiated ${action.id}` });
     }
 }
@@ -256,10 +248,6 @@ export class ExampleActionsPanel {
             display: flex;
             overflow: hidden;
         }
-
-        ::ng-deep .docs-live-example__example:has(actions-panel-overview-example) {
-            padding: 0;
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -270,7 +258,7 @@ export class ActionsPanelOverviewExample {
     private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null;
     private readonly data = signal<ExampleTableItem[]>([]);
 
-    toggleActionsPanel(selectedItems: ExampleTableItem[]): void {
+    protected toggleActionsPanel(selectedItems: ExampleTableItem[]): void {
         this.data.set(selectedItems);
 
         if (selectedItems.length === 0) {
@@ -282,9 +270,6 @@ export class ActionsPanelOverviewExample {
         }
 
         this.actionsPanelRef = this.actionsPanel.open(ExampleActionsPanel, {
-            width: '100%',
-            minWidth: 106,
-            maxWidth: 568,
             data: this.data,
             overlayContainer: this.elementRef
         });

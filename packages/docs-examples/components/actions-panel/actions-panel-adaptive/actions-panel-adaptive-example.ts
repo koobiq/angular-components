@@ -35,9 +35,12 @@ type ExampleAction = {
         <button (click)="open()" kbq-button>open</button>
 
         <ng-template let-data>
-            <div class="example-counter">Selected: {{ data.length }}</div>
-            <kbq-divider class="example-divider-vertical" [vertical]="true" />
             <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                <div [kbqOverflowItem]="action.Counter" order="99">
+                    <div class="example-counter">Selected: {{ data.length }}</div>
+                    <kbq-divider class="example-divider-vertical" [vertical]="true" />
+                </div>
+
                 @for (action of actions; track action.id) {
                     <button
                         [kbqOverflowItem]="action.id"
@@ -50,25 +53,28 @@ type ExampleAction = {
                         {{ action.id }}
                     </button>
                 }
-                <div kbqOverflowItemsResult>
-                    <button [kbqDropdownTriggerFor]="dropdown" color="contrast" kbq-button>
+
+                @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
+                <!-- ignores when only action.Counter is hidden -->
+                @if (hiddenItemIDs.size > 1) {
+                    <button [kbqDropdownTriggerFor]="dropdown" kbqOverflowItemsResult color="contrast" kbq-button>
                         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                     </button>
+                }
 
-                    <kbq-dropdown #dropdown="kbqDropdown">
-                        <div class="example-counter-dropdown">Selected: {{ data.length }}</div>
-                        <kbq-divider />
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <div class="example-counter-dropdown">Selected: {{ data.length }}</div>
+                    <kbq-divider />
 
-                        @for (action of actions; track action.id) {
-                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                <button (click)="onAction(action)" kbq-dropdown-item>
-                                    <i [class]="action.icon" kbq-icon></i>
-                                    {{ action.id }}
-                                </button>
-                            }
+                    @for (action of actions; track action.id) {
+                        @if (hiddenItemIDs.has(action.id)) {
+                            <button (click)="onAction(action)" kbq-dropdown-item>
+                                <i [class]="action.icon" kbq-icon></i>
+                                {{ action.id }}
+                            </button>
                         }
-                    </kbq-dropdown>
-                </div>
+                    }
+                </kbq-dropdown>
             </div>
         </ng-template>
     `,
@@ -78,18 +84,12 @@ type ExampleAction = {
             align-items: center;
             justify-content: center;
             height: 64px;
-            resize: horizontal;
-            max-width: 100%;
-            min-width: 110px;
             overflow: hidden;
-            container-type: inline-size;
+        }
 
-            @container (width < 498px) {
-                .example-counter,
-                .example-counter + .example-divider-vertical {
-                    display: none;
-                }
-            }
+        .kbq-overflow-item {
+            display: flex;
+            align-items: center;
         }
 
         .example-counter {
@@ -113,35 +113,29 @@ type ExampleAction = {
             height: var(--kbq-actions-panel-vertical-divider-height) !important;
             margin: var(--kbq-actions-panel-vertical-divider-margin);
         }
-
-        .kbq-button,
-        .kbq-dropdown-trigger {
-            margin: var(--kbq-size-border-width);
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
-    readonly actions: ExampleAction[] = [
+    protected readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
         { id: 'Status', icon: 'kbq-arrow-right-s_16' },
         { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16' }
     ];
-    readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    readonly elementRef = inject(ElementRef);
-    readonly templateRef = viewChild.required(TemplateRef);
-    actionsPanelRef: KbqActionsPanelRef | null;
-    readonly toast = inject(KbqToastService);
+    protected readonly action = { Counter: 'counter' };
+
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly elementRef = inject(ElementRef);
+    private readonly templateRef = viewChild.required(TemplateRef);
+    private actionsPanelRef: KbqActionsPanelRef | null;
+    private readonly toast = inject(KbqToastService);
 
     constructor() {
         afterNextRender(() => this.open());
     }
 
-    open(): void {
+    protected open(): void {
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
-            width: '100%',
-            maxWidth: 498,
-            minWidth: 106,
             data: { length: 5 },
             overlayContainer: this.elementRef
         });
@@ -156,7 +150,7 @@ export class ExampleActionsPanel {
         });
     }
 
-    onAction(action: ExampleAction): void {
+    protected onAction(action: ExampleAction): void {
         this.toast.show({ title: `Action initiated ${action.id}` });
     }
 }
@@ -170,15 +164,20 @@ export class ExampleActionsPanel {
     selector: 'actions-panel-adaptive-example',
     template: `
         <div>First, the number of records is hidden</div>
-        <example-actions-panel [style.width.px]="395" />
+        <example-actions-panel [style.width.px]="377" />
 
         <div>Then, the actions are hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="329" />
+        <example-actions-panel [style.width.px]="308" />
 
         <div>Everything is hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="106" />
+        <example-actions-panel [style.width.px]="89" />
     `,
     styles: `
+        :host {
+            min-width: 480px;
+            display: block;
+        }
+
         div {
             color: var(--kbq-foreground-contrast-secondary);
             margin: var(--kbq-size-s) var(--kbq-size-s) 0;
