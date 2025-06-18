@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
+import { KbqListSelection } from '@koobiq/components/list';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -47,6 +48,8 @@ export interface KbqInputFileMultipleLabel extends KbqInputFileLabel {
 
 export const KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION: KbqInputFileMultipleLabel =
     ruRULocaleData.fileUpload.multiple;
+
+const fileSizeCellPadding = 16;
 
 @Component({
     selector: 'kbq-multiple-file-upload,kbq-file-upload[multiple]',
@@ -101,23 +104,26 @@ export class KbqMultipleFileUploadComponent
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
-    @Output('fileQueueChanged') filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    @Output('fileQueueChanged') readonly filesChange: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
      * Emits an event containing a chunk of files added to the file list.
      * Useful when handling added files, skipping filtering file list.
      */
-    @Output() filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
+    @Output() readonly filesAdded: EventEmitter<KbqFileItem[]> = new EventEmitter<KbqFileItem[]>();
     /**
      * Emits an event containing a tuple of file and file's index when removed from the file list.
      * Useful when handle removed files, skipping filtering file list.
      */
-    @Output() fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
+    @Output() readonly fileRemoved: EventEmitter<[KbqFileItem, number]> = new EventEmitter<[KbqFileItem, number]>();
 
     /** File Icon Template */
-    @ContentChild('kbqFileIcon', { static: false, read: TemplateRef }) customFileIcon: TemplateRef<HTMLElement>;
+    @ContentChild('kbqFileIcon', { static: false, read: TemplateRef })
+    protected readonly customFileIcon: TemplateRef<HTMLElement>;
 
     /** @docs-private */
-    @ViewChild('input') input: ElementRef<HTMLInputElement>;
+    @ViewChild('input') readonly input: ElementRef<HTMLInputElement>;
+    @ViewChild(KbqListSelection) private readonly listSelection: KbqListSelection;
+    @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
     @ContentChildren(KbqHint) protected readonly hint: QueryList<TemplateRef<any>>;
@@ -169,6 +175,14 @@ export class KbqMultipleFileUploadComponent
      */
     get invalid(): boolean {
         return this.errorState;
+    }
+
+    /**
+     * Set maxWidth for filesize cell to enable proper ellipsis center,
+     * @docs-private
+     */
+    protected get fileSizeCellMaxWidth() {
+        return this.fileSizeHeaderCell?.nativeElement.offsetWidth - fileSizeCellPadding;
     }
 
     /** @docs-private */
@@ -287,6 +301,8 @@ export class KbqMultipleFileUploadComponent
         this.fileRemoved.emit([removedFile, index]);
         this.filesChange.emit(this.files);
         this.onTouched();
+
+        this.listSelection.keyManager.setActiveItem(-1);
     }
 
     private updateLocaleParams = () => {

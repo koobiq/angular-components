@@ -162,7 +162,7 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     }[];
     config: KbqInputFileMultipleLabel;
     readonly configuration: KbqInputFileMultipleLabel | null;
-    customFileIcon: TemplateRef<HTMLElement>;
+    protected readonly customFileIcon: TemplateRef<HTMLElement>;
     // @deprecated (undocumented)
     customValidation?: KbqFileValidatorFn[];
     cvaOnChange: (_: KbqFileItem[]) => void;
@@ -172,18 +172,19 @@ export class KbqMultipleFileUploadComponent extends KbqFileUploadBase implements
     // @deprecated (undocumented)
     errors: string[];
     errorStateMatcher: ErrorStateMatcher;
-    fileRemoved: EventEmitter<[KbqFileItem, number]>;
+    readonly fileRemoved: EventEmitter<[KbqFileItem, number]>;
     // (undocumented)
     get files(): KbqFileItem[];
     set files(currentFileList: KbqFileItem[]);
-    filesAdded: EventEmitter<KbqFileItem[]>;
-    filesChange: EventEmitter<KbqFileItem[]>;
+    readonly filesAdded: EventEmitter<KbqFileItem[]>;
+    readonly filesChange: EventEmitter<KbqFileItem[]>;
+    protected get fileSizeCellMaxWidth(): number;
     // @deprecated (undocumented)
     get hasErrors(): boolean;
     hasFocus: boolean;
     get hasHint(): boolean;
     protected readonly hint: QueryList<TemplateRef<any>>;
-    input: ElementRef<HTMLInputElement>;
+    readonly input: ElementRef<HTMLInputElement>;
     inputId: string;
     get invalid(): boolean;
     // (undocumented)

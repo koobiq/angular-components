@@ -35,7 +35,7 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
             @for (control of fileList.controls; track $index) {
                 <kbq-hint color="error">
                     @if (control.hasError('maxFileSize')) {
-                        {{ control.value?.file?.name }} - {{ maxFileSizeErrorMessage }}
+                        {{ control.value?.file?.name }} — {{ maxFileSizeErrorMessage }}
                     }
                 </kbq-hint>
             }

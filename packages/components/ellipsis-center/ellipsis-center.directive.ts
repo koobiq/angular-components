@@ -1,4 +1,15 @@
-import { AfterViewInit, Directive, inject, Input, NgModule, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Directive,
+    inject,
+    Input,
+    NgModule,
+    numberAttribute,
+    OnDestroy,
+    OnInit,
+    Renderer2
+} from '@angular/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -14,23 +25,30 @@ const MIN_VISIBLE_LENGTH = 50;
 })
 export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnInit, AfterViewInit, OnDestroy {
     private renderer: Renderer2 = inject(Renderer2);
+    private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     @Input() set kbqEllipsisCenter(value: string) {
         this._kbqEllipsisCenter = value;
         this.refresh();
+        // check the view to properly calculate text-start and text-end on text initialized
+        this.cdr.detectChanges();
     }
 
     @Input() minVisibleLength: number = MIN_VISIBLE_LENGTH;
 
     @Input() charWidth = 7;
 
+    /**
+     * Debounce time (ms) for resize events before recalculating ellipsis position.
+     * @default 50
+     */
+    @Input({ transform: numberAttribute }) debounceInterval: number = 50;
+
     readonly resizeStream = new Subject<Event>();
 
     private _kbqEllipsisCenter: string;
 
     private resizeSubscription = Subscription.EMPTY;
-
-    private readonly debounceInterval: number = 50;
 
     override ngOnInit(): void {
         super.ngOnInit();
