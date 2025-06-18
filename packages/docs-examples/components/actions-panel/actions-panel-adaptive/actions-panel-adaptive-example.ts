@@ -164,13 +164,13 @@ export class ExampleActionsPanel {
     selector: 'actions-panel-adaptive-example',
     template: `
         <div>First, the number of records is hidden</div>
-        <example-actions-panel [style.width.px]="450" />
+        <example-actions-panel [style.width.px]="377" />
 
         <div>Then, the actions are hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="370" />
+        <example-actions-panel [style.width.px]="308" />
 
         <div>Everything is hidden under the dropdown menu</div>
-        <example-actions-panel [style.width.px]="210" />
+        <example-actions-panel [style.width.px]="89" />
     `,
     styles: `
         :host {
