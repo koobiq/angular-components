@@ -25,6 +25,11 @@
                     }
                     <div class="file-item__text" [kbqEllipsisCenter]="file.file.name" [minVisibleLength]="10"></div>
                 </div>
+                @if (showFileSize) {
+                    <div class="kbq-file-item__size">
+                        {{ file.file.size | kbqDataSize }}
+                    </div>
+                }
                 <i
                     kbq-icon-button="kbq-xmark-circle_16"
                     class="kbq-file-upload__action"

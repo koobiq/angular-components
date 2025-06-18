@@ -27,12 +27,7 @@ import {
 } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import {
-    FileValidators,
-    KbqDataSizePipe,
-    KbqLocaleServiceModule,
-    ShowOnFormSubmitErrorStateMatcher
-} from '@koobiq/components/core';
+import { FileValidators, KbqLocaleServiceModule, ShowOnFormSubmitErrorStateMatcher } from '@koobiq/components/core';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION,
@@ -129,7 +124,7 @@ export class DevCustomTextDirective {}
                         <i kbq-icon="kbq-info-circle_16"></i>
                     </kbq-file-upload>
                 </td>
-                <td>
+                <td colspan="2">
                     <kbq-file-upload class="dev-dragover">
                         <i kbq-icon="kbq-info-circle_16"></i>
                     </kbq-file-upload>
@@ -151,8 +146,30 @@ export class DevCustomTextDirective {}
                         <i kbq-icon="kbq-info-circle_16"></i>
                     </kbq-file-upload>
                 </td>
-                <td>
+                <td colspan="2">
                     <kbq-file-upload class="dev-dragover" [formControl]="file">
+                        <i kbq-icon="kbq-file-o_16"></i>
+                    </kbq-file-upload>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <kbq-file-upload [formControl]="file" [showFileSize]="false">
+                        <i kbq-icon="kbq-file-o_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload [formControl]="fileControlDisabled" [showFileSize]="false">
+                        <i kbq-icon="kbq-file-o_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td>
+                    <kbq-file-upload #withErrorState [formControl]="fileControlInvalid" [showFileSize]="false">
+                        <i kbq-icon="kbq-info-circle_16"></i>
+                    </kbq-file-upload>
+                </td>
+                <td colspan="2">
+                    <kbq-file-upload class="dev-dragover" [formControl]="file" [showFileSize]="false">
                         <i kbq-icon="kbq-file-o_16"></i>
                     </kbq-file-upload>
                 </td>
@@ -179,7 +196,7 @@ export class DevCustomTextDirective {}
                         </ng-template>
                     </kbq-multiple-file-upload>
                 </td>
-                <td>
+                <td colspan="2">
                     <kbq-multiple-file-upload class="dev-dragover">
                         <ng-template #kbqFileIcon>
                             <i kbq-icon="kbq-file-o_16"></i>
@@ -216,8 +233,6 @@ export class DevCustomTextDirective {}
                         </ng-template>
                     </kbq-multiple-file-upload>
                 </td>
-            </tr>
-            <tr>
                 <td>
                     <kbq-multiple-file-upload size="compact">
                         <ng-template #kbqFileIcon>
@@ -404,7 +419,6 @@ export class DevMultipleFileUploadCompact {
         KbqIconModule,
         KbqCheckboxModule,
         KbqRadioModule,
-        KbqDataSizePipe,
         DevMultipleFileUploadCompact,
         DevCustomTextDirective,
         DevFileUploadStateAndStyle

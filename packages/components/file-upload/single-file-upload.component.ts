@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     ContentChildren,
@@ -81,6 +82,12 @@ export class KbqSingleFileUploadComponent
         this.cvaOnChange(this._file);
         this.cdr.markForCheck();
     }
+
+    /**
+     * Controls whether to display the file size information.
+     * @default true
+     */
+    @Input({ transform: booleanAttribute }) showFileSize: boolean = true;
 
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
