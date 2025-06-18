@@ -1,6 +1,5 @@
 :where(.kbq-file-upload) {
     --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
-    --kbq-file-upload-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
 }
 
 :where(.kbq-single-file-upload) {
