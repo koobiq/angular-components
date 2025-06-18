@@ -71,7 +71,7 @@
         "@messageformat/core": "^3.4.0",
         "@microsoft/api-extractor": "7.52.8",
         "@octokit/rest": "^18.9.1",
-        "@playwright/test": "^1.52.0",
+        "@playwright/test": "^1.53.0",
         "@prettier/plugin-xml": "^3.4.1",
         "@rollup/plugin-commonjs": "^24.0.0",
         "@rollup/plugin-json": "^6.0.0",
