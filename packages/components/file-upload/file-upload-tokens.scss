@@ -1,4 +1,9 @@
 :where(.kbq-file-upload) {
+    --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-file-upload-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
+}
+
+:where(.kbq-single-file-upload) {
     --kbq-file-upload-size-single-container-border-radius: var(--kbq-size-s);
     --kbq-file-upload-size-single-container-border-width: 1px;
     --kbq-file-upload-size-single-container-content-gap-horizontal: var(--kbq-size-s);
@@ -7,20 +12,6 @@
     --kbq-file-upload-size-single-text-block-padding-vertical: var(--kbq-size-3xs);
     --kbq-file-upload-size-single-text-block-content-gap-horizontal: var(--kbq-size-xxs);
     --kbq-file-upload-single-min-height: var(--kbq-size-5xl);
-    --kbq-file-upload-size-multiple-big-container-min-height: 192px;
-    --kbq-file-upload-size-multiple-big-container-min-width: 320px;
-    --kbq-file-upload-size-multiple-big-container-border-radius: var(--kbq-size-s);
-    --kbq-file-upload-size-multiple-big-container-border-width: 1px;
-    --kbq-file-upload-size-multiple-big-container-content-gap-horizontal: var(--kbq-size-m);
-    --kbq-file-upload-size-multiple-big-container-padding-vertical: var(--kbq-size-xxl);
-    --kbq-file-upload-size-multiple-big-container-padding-horizontal: var(--kbq-size-xxl);
-    --kbq-file-upload-size-multiple-big-dropzone-content-gap-horizontal: var(--kbq-size-s);
-    --kbq-file-upload-size-multiple-big-text-block-content-gap-vertical: 0px;
-    --kbq-file-upload-size-multiple-big-text-block-content-gap-horizontal: var(--kbq-size-xxs);
-    --kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal: var(--kbq-size-s);
-    --kbq-file-upload-size-multiple-big-grid-cell-padding-vertical: var(--kbq-size-s);
-    --kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal: var(--kbq-size-xxs);
-    --kbq-file-upload-size-multiple-big-grid-cell-file-size-width: var(--kbq-size-7xl);
     /* THEME TOKENS */
     --kbq-file-upload-single-default-container-border: var(--kbq-line-contrast-fade);
     --kbq-file-upload-single-default-container-background: var(--kbq-background-bg);
@@ -49,6 +40,24 @@
     --kbq-file-upload-single-states-disabled-text-block-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-single-states-disabled-file-size-text-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-single-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
+}
+
+:where(.kbq-multiple-file-upload) {
+    --kbq-file-upload-size-multiple-big-container-min-height: 192px;
+    --kbq-file-upload-size-multiple-big-container-min-width: 320px;
+    --kbq-file-upload-size-multiple-big-container-border-radius: var(--kbq-size-s);
+    --kbq-file-upload-size-multiple-big-container-border-width: 1px;
+    --kbq-file-upload-size-multiple-big-container-content-gap-horizontal: var(--kbq-size-m);
+    --kbq-file-upload-size-multiple-big-container-padding-vertical: var(--kbq-size-xxl);
+    --kbq-file-upload-size-multiple-big-container-padding-horizontal: var(--kbq-size-xxl);
+    --kbq-file-upload-size-multiple-big-dropzone-content-gap-horizontal: var(--kbq-size-s);
+    --kbq-file-upload-size-multiple-big-text-block-content-gap-vertical: 0px;
+    --kbq-file-upload-size-multiple-big-text-block-content-gap-horizontal: var(--kbq-size-xxs);
+    --kbq-file-upload-size-multiple-big-grid-cell-padding-horizontal: var(--kbq-size-s);
+    --kbq-file-upload-size-multiple-big-grid-cell-padding-vertical: var(--kbq-size-s);
+    --kbq-file-upload-size-multiple-big-grid-cell-content-gap-horizontal: var(--kbq-size-xxs);
+    --kbq-file-upload-size-multiple-big-grid-cell-file-size-width: var(--kbq-size-7xl);
+    /* THEME TOKENS */
     --kbq-file-upload-multiple-default-container-border: var(--kbq-line-contrast-fade);
     --kbq-file-upload-multiple-default-container-background: var(--kbq-background-bg);
     --kbq-file-upload-multiple-default-upload-icon-color: var(--kbq-icon-contrast-fade);
@@ -76,7 +85,7 @@
     --kbq-file-upload-multiple-states-disabled-icon-button-color: var(--kbq-states-icon-disabled);
     --kbq-file-upload-multiple-states-disabled-text-block-color: var(--kbq-states-foreground-disabled);
     --kbq-file-upload-multiple-states-disabled-grid-divider-color: var(--kbq-states-line-disabled);
-    --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
+    --kbq-file-upload-multiple-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
 }
 
 /* stylelint-disable-next-line selector-class-pattern */
