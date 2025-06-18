@@ -2,6 +2,7 @@ import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { DOCUMENT } from '@angular/common';
 import {
     booleanAttribute,
+    computed,
     contentChild,
     contentChildren,
     Directive,
@@ -23,25 +24,22 @@ import { debounceTime, merge, skip } from 'rxjs';
  */
 @Directive({
     host: {
-        '[attr.aria-hidden]': 'hidden()'
+        '[attr.aria-hidden]': 'hidden()',
+        // @TODO should be refactored (#DS-3834)
+        '[class.kbq-overflow-item-hidden]': 'hidden()'
     }
 })
 export class ElementVisibilityManager {
     private readonly renderer = inject(Renderer2);
-
-    /**
-     * Reference to the element.
-     *
-     * @docs-private
-     */
-    readonly elementRef = inject(ElementRef);
+    private readonly elementRef = inject(ElementRef);
+    private readonly hiddenState = signal(false);
 
     /**
      * Whether the element is hidden.
      *
      * @docs-private
      */
-    readonly hidden = signal(false);
+    readonly hidden = computed(() => this.hiddenState());
 
     /**
      * Hides the element.
@@ -51,7 +49,7 @@ export class ElementVisibilityManager {
     hide(): void {
         this.renderer.setStyle(this.elementRef.nativeElement, 'visibility', 'hidden');
         this.renderer.setStyle(this.elementRef.nativeElement, 'position', 'absolute');
-        this.hidden.set(true);
+        this.hiddenState.set(true);
     }
 
     /**
@@ -62,7 +60,7 @@ export class ElementVisibilityManager {
     show(): void {
         this.renderer.removeStyle(this.elementRef.nativeElement, 'visibility');
         this.renderer.removeStyle(this.elementRef.nativeElement, 'position');
-        this.hidden.set(false);
+        this.hiddenState.set(false);
     }
 }
 
@@ -101,6 +99,15 @@ export class KbqOverflowItem extends ElementVisibilityManager {
      * @default false
      */
     readonly alwaysVisible = input(false, { transform: booleanAttribute });
+
+    /**
+     * @docs-private
+     */
+    override hide(): void {
+        if (this.alwaysVisible()) return;
+
+        super.hide();
+    }
 }
 
 /**
@@ -115,15 +122,11 @@ export class KbqOverflowItem extends ElementVisibilityManager {
 export class KbqOverflowItems {
     /**
      * `KbqOverflowItem` directive references.
-     *
-     * @docs-private
      */
     private readonly items = contentChildren(KbqOverflowItem);
 
     /**
      * `KbqOverflowItemsResult` directive reference.
-     *
-     * @docs-private
      */
     private readonly result = contentChild(KbqOverflowItemsResult);
 
@@ -164,12 +167,13 @@ export class KbqOverflowItems {
         merge(
             toObservable(this.items),
             toObservable(this.reverseOverflowOrder).pipe(skip(1)),
-            this.resizeObserver.observe(this.elementRef.nativeElement)
+            this.resizeObserver.observe(this.elementRef.nativeElement),
+            this.resizeObserver.observe(this.document.body)
         )
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
-                const hiddenItems = this.calculateItemsVisibility(
-                    this.getSortedItemsByOrder(),
+                const hiddenItems = this.getHiddenItems(
+                    this.sortItemsByOrder(this.excludeAlwaysVisibleItems(this.items())),
                     this.reverseOverflowOrder(),
                     this.result(),
                     this.elementRef.nativeElement
@@ -181,76 +185,47 @@ export class KbqOverflowItems {
     }
 
     /**
-     * Returns a list of items sorted by their specified `order` value.
+     * Sort items by their `order` attribute.
      * If an item does not have an `order` defined, its index is used as a fallback.
-     * This ensures a stable order while allowing custom positioning.
      */
-    private getSortedItemsByOrder(): KbqOverflowItem[] {
-        const items = Array.from(this.items(), (item, index) => ({ item, order: item.order() ?? index }));
+    private sortItemsByOrder(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
+        const itemsWithOrder = Array.from(items, (item, index) => ({ item, order: item.order() ?? index }));
 
-        return items.sort((a, b) => a.order - b.order).map(({ item }) => item);
+        return itemsWithOrder.sort((a, b) => a.order - b.order).map(({ item }) => item);
     }
 
     /**
-     * Calculates the visibility of items, based on the container width and `reverseOverflowOrder` property.
+     * Excludes items that have the `alwaysVisible` attribute.
      */
-    private calculateItemsVisibility(
-        items: readonly KbqOverflowItem[],
+    private excludeAlwaysVisibleItems(items: ReadonlyArray<KbqOverflowItem>): ReadonlyArray<KbqOverflowItem> {
+        return items.filter(({ alwaysVisible }) => !alwaysVisible());
+    }
+
+    /**
+     * Manages the visibility of items based on the available space in the container and returns the hidden items.
+     * Direction of hiding is determined by the `reverseOverflowOrder` attribute.
+     */
+    private getHiddenItems(
+        items: ReadonlyArray<KbqOverflowItem>,
         reverseOverflowOrder: boolean,
         result: KbqOverflowItemsResult | undefined,
-        { offsetWidth: totalWidth }: HTMLElement
-    ): KbqOverflowItem[] {
+        container: HTMLElement
+    ): ReadonlyArray<KbqOverflowItem> {
         result?.hide();
-        items.forEach((item) => {
-            item.show();
-        });
-        let itemsWidth = items.reduce(
-            (width, { elementRef }) => width + this.getElementWidthWithMargins(elementRef),
-            0
-        );
-        const startIndex = reverseOverflowOrder ? 0 : items.length - 1;
-        const endIndex = reverseOverflowOrder ? items.length : -1;
-        const step = reverseOverflowOrder ? 1 : -1;
-        const resultWidth = result ? this.getElementWidthWithMargins(result.elementRef) : 0;
+        items.forEach((item) => item.show());
 
-        for (let index = startIndex; index !== endIndex; index += step) {
-            const current = items[index];
+        while (this.hasScrollbar(container)) {
+            const visibleItems = items.filter(({ hidden }) => !hidden());
 
-            if (current.alwaysVisible()) continue;
+            if (visibleItems.length === 0) break;
 
-            const currentWidth = this.getElementWidthWithMargins(current.elementRef);
-            const _resultWidth = items.some(this.isHiddenItem) ? resultWidth : 0;
+            const itemToHide = reverseOverflowOrder ? visibleItems[0] : visibleItems[visibleItems.length - 1];
 
-            if (itemsWidth + _resultWidth > totalWidth) {
-                current.hide();
-                itemsWidth -= currentWidth;
-            } else {
-                const isEdgeElement = reverseOverflowOrder ? index === 0 : index === items.length - 1;
-                const _resultWidth = isEdgeElement ? 0 : resultWidth;
-
-                if (itemsWidth + currentWidth + _resultWidth <= totalWidth) {
-                    current.show();
-                    itemsWidth += currentWidth;
-                }
-            }
-        }
-
-        const hiddenItems = items.filter(this.isHiddenItem);
-
-        if (hiddenItems.length > 0) {
+            itemToHide.hide();
             result?.show();
         }
 
-        return hiddenItems;
-    }
-
-    /**
-     * Returns the width of the element including margins.
-     */
-    private getElementWidthWithMargins({ nativeElement }: ElementRef<HTMLElement>): number {
-        const { marginLeft, marginRight } = this.getWindow().getComputedStyle(nativeElement);
-
-        return Math.ceil(parseFloat(marginLeft) + nativeElement.offsetWidth + parseFloat(marginRight));
+        return items.filter(({ hidden }) => hidden());
     }
 
     /**
@@ -265,14 +240,7 @@ export class KbqOverflowItems {
     }
 
     /**
-     * Determines if the given item is hidden.
+     * Determines if the given element has a scrollbar.
      */
-    private isHiddenItem = ({ hidden }: KbqOverflowItem) => hidden();
-
-    /**
-     * Returns the window object.
-     */
-    private getWindow(): Window {
-        return this.document.defaultView || window;
-    }
+    private readonly hasScrollbar = ({ scrollWidth, clientWidth }: HTMLElement): boolean => scrollWidth > clientWidth;
 }

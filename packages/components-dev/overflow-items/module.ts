@@ -7,7 +7,7 @@ import { OverflowItemsExamplesModule } from 'packages/docs-examples/components/o
     selector: 'dev-examples',
     template: `
         <overflow-items-overview-example />
-
+        <hr />
         <overflow-items-with-order-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
