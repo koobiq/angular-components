@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -15,8 +15,17 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         FormsModule
     ],
     template: `
-        <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="viewAll">Show all</kbq-toggle>
-        <kbq-code-block [(viewAll)]="viewAll" [files]="files" canToggleSoftWrap maxHeight="200" lineNumbers />
+        <kbq-toggle class="layout-margin-bottom-m layout-margin-right-m" [(ngModel)]="viewAll">Show all</kbq-toggle>
+        <kbq-toggle [(ngModel)]="filled">Filled</kbq-toggle>
+
+        <kbq-code-block
+            [(viewAll)]="viewAll"
+            [filled]="filled()"
+            [files]="files"
+            canToggleSoftWrap
+            maxHeight="200"
+            lineNumbers
+        />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -28,5 +37,6 @@ export class CodeBlockWithMaxHeightExample {
         }
     ];
 
-    viewAll: boolean = false;
+    readonly viewAll = model(false);
+    readonly filled = model(false);
 }

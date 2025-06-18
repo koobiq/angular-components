@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
 import { KbqToggleModule } from '@koobiq/components/toggle';
@@ -15,12 +15,16 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         FormsModule
     ],
     template: `
-        <kbq-toggle [(ngModel)]="hideTabs">Hide tabs</kbq-toggle>
+        <kbq-toggle class="layout-margin-right-m layout-margin-bottom-m" [(ngModel)]="hideTabs">Hide tabs</kbq-toggle>
+        <kbq-toggle class="layout-margin-right-m" [(ngModel)]="filled">Filled</kbq-toggle>
+        <kbq-toggle [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
+
         <kbq-code-block
             [files]="files"
-            [hideTabs]="hideTabs"
+            [hideTabs]="hideTabs()"
+            [filled]="filled()"
+            [lineNumbers]="lineNumbers()"
             activeFileIndex="1"
-            lineNumbers
             canToggleSoftWrap
             canDownload
         />
@@ -46,5 +50,7 @@ export class CodeBlockWithTabsExample {
         }
     ];
 
-    hideTabs: boolean = false;
+    readonly hideTabs = model(false);
+    readonly filled = model(false);
+    readonly lineNumbers = model(true);
 }
