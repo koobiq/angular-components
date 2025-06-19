@@ -30,26 +30,57 @@ export const formatDataSize = (
  * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
  *
  * @param value - size in bytes.
- * @param precision - digits after the decimal point (e.g., `2` → "1.02 KB").
  * @param system - unit system defining abbreviations and base scaling (SI/IEC).
  * @returns Object with the formatted size info.
  *
  * @example
- * formatDataSize(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
+ * getFormattedSizeParts(1500, 'SI'); // { value: "1.50", unit: "KB" }
  */
-export const getFormattedSizeParts = (
+export function getFormattedSizeParts(value: number, system: KbqUnitSystem): { value: string; unit: string };
+/**
+ * Converts a byte value into locale-independent file size parts: numeric value and unit abbreviation.
+ *
+ * @param value - size in bytes.
+ * @param _precision param is deprecated, use `Intl.NumberFormat` rounding options instead.
+ * @param system - unit system defining abbreviations and base scaling (SI/IEC).
+ * @returns Object with the formatted size info.
+ * @deprecated `_precision` - this param will be remove in next major version.
+ * @TODO remove deprecated (#DS-3849).
+ *
+ * @example
+ * getFormattedSizeParts(1500, 2, 'SI'); // { value: "1.50", unit: "KB" }
+ */
+export function getFormattedSizeParts(
     value: number,
-    precision: number,
+    _precision: number,
     system: KbqUnitSystem
-): { value: string; unit: string } => {
-    const { result, unit } = getHumanizedBytes(value, system);
+): { value: string; unit: string };
+export function getFormattedSizeParts(
+    value: number,
+    _precision: number | KbqUnitSystem,
+    system?: KbqUnitSystem
+): { value: string; unit: string } {
+    let resolvedSystem: KbqUnitSystem | null = null;
+
+    if (arguments.length === 2 && typeof _precision === 'object') {
+        resolvedSystem = _precision satisfies KbqUnitSystem;
+    }
+
+    if (arguments.length === 3 && typeof _precision === 'number' && system) {
+        resolvedSystem = system;
+    }
+
+    if (!resolvedSystem) {
+        throw new Error('Unexpected arguments size');
+    }
+
+    const { result, unit } = getHumanizedBytes(value, resolvedSystem);
 
     return {
-        // No precision for bytes (e.g., "512 B")
-        value: unit === system.abbreviations[0] ? result.toString() : result.toFixed(precision),
+        value: result.toString(),
         unit
     };
-};
+}
 
 /**
  * Converts bytes to Kb, Mb, Gb
