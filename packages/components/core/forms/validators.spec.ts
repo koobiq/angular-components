@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { FileValidators } from '@koobiq/components/core';
+import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqFileItem } from '@koobiq/components/file-upload';
 import { PasswordValidators } from './validators';
 
@@ -157,7 +157,7 @@ describe('Validators', () => {
                 });
 
                 it('should return an error if the value contains wrong extensions', () => {
-                    const accept = ['.pdf'];
+                    const accept: KbqFileTypeSpecifier = ['.pdf'];
                     const control = new FormControl<KbqFileItem | File | null>(
                         null,
                         FileValidators.isCorrectExtension(accept)
@@ -179,7 +179,7 @@ describe('Validators', () => {
                     });
                 });
                 it('should return an error if the value contains wrong extensions with deep level > 2', () => {
-                    const accept = ['.tmp.pdf'];
+                    const accept: KbqFileTypeSpecifier = ['.tmp.pdf'];
                     const control = new FormControl<KbqFileItem | File | null>(
                         null,
                         FileValidators.isCorrectExtension(accept)
@@ -215,7 +215,7 @@ describe('Validators', () => {
                 });
 
                 it('should return null if file type is wrong', () => {
-                    const accept = ['text/plain'];
+                    const accept: KbqFileTypeSpecifier = ['text/plain'];
                     const control = new FormControl<KbqFileItem | File | null>(
                         null,
                         FileValidators.isCorrectExtension(accept)

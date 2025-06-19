@@ -187,7 +187,7 @@ export class FileValidators {
      * @param accept - Array of allowed file extensions or MIME types.
      * @returns ValidatorFn that returns validation error if file type is not accepted, or null otherwise.
      */
-    static isCorrectExtension(accept: string[]): ValidatorFn {
+    static isCorrectExtension(accept: (`.${string}` | `${string}/${string}`)[]): ValidatorFn {
         return (control: AbstractControl<{ file: File } | null>): ValidationErrors | null => {
             if (!accept?.length || !control.value) return null;
             const { name, type } = control.value.file;
@@ -204,3 +204,9 @@ export class FileValidators {
         };
     }
 }
+
+/**
+ * Type helper describing accepted file types, referring to:
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file#unique_file_type_specifiers
+ */
+export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];

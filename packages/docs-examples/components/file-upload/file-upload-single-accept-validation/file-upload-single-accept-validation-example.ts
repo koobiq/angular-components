@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FileValidators } from '@koobiq/components/core';
+import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -38,7 +38,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ]
 })
 export class FileUploadSingleAcceptValidationExample {
-    protected accept = ['.txt'];
+    protected accept: KbqFileTypeSpecifier = ['.txt'];
 
     protected readonly formGroup = new FormGroup({
         fileControl: new FormControl(null, FileValidators.isCorrectExtension(this.accept))

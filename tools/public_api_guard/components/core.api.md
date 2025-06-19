@@ -652,7 +652,7 @@ export const faIRLocaleData: {
 
 // @public
 export class FileValidators {
-    static isCorrectExtension(accept: string[]): ValidatorFn;
+    static isCorrectExtension(accept: (`.${string}` | `${string}/${string}`)[]): ValidatorFn;
     static maxFileSize(maxSize: number): ValidatorFn;
 }
 
@@ -1848,6 +1848,9 @@ export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMa
 
 // @public
 export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<KbqSizeUnitsConfig>) => Provider;
+
+// @public
+export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];
 
 // @public (undocumented)
 export class KbqForm implements AfterContentInit {
