@@ -1,9 +1,11 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     Directive,
+    DoCheck,
     ElementRef,
     EventEmitter,
     forwardRef,
+    inject,
     Inject,
     Input,
     OnDestroy,
@@ -14,8 +16,11 @@ import {
 import {
     AbstractControl,
     ControlValueAccessor,
+    FormGroupDirective,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
+    NgControl,
+    NgForm,
     ValidationErrors,
     Validator,
     ValidatorFn,
@@ -42,9 +47,11 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     DateAdapter,
+    ErrorStateMatcher,
     KBQ_DATE_FORMATS,
     KBQ_LOCALE_SERVICE,
     KbqDateFormats,
+    KbqErrorStateTracker,
     KbqLocaleService,
     validationTooltipHideDelay,
     validationTooltipShowDelay
@@ -231,10 +238,17 @@ interface DateTimeObject {
         '(keydown)': 'onKeyDown($event)'
     }
 })
-export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
+export class KbqDatepickerInput<D>
+    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck
+{
     readonly stateChanges: Subject<void> = new Subject<void>();
 
-    readonly errorState: boolean;
+    get errorState() {
+        return this.errorStateTracker.errorState;
+    }
+    set errorState(value: boolean) {
+        this.errorStateTracker.errorState = value;
+    }
 
     controlType: string = 'datepicker';
 
@@ -250,6 +264,16 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     /** Emits when the disabled state has changed */
     disabledChange = new EventEmitter<boolean>();
+
+    /** Object used to control when error messages are shown. */
+    @Input()
+    get errorStateMatcher() {
+        return this.errorStateTracker.errorStateMatcher;
+    }
+
+    set errorStateMatcher(value: ErrorStateMatcher) {
+        this.errorStateTracker.errorStateMatcher = value;
+    }
 
     @Input()
     get placeholder(): string {
@@ -494,6 +518,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     private usePlaceholderFromInput: boolean = false;
 
+    private errorStateTracker: KbqErrorStateTracker;
+
     constructor(
         public elementRef: ElementRef<HTMLInputElement>,
         private readonly renderer: Renderer2,
@@ -512,9 +538,27 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             throw createMissingDateImplError('DateAdapter');
         }
 
+        this.errorStateTracker = new KbqErrorStateTracker(
+            inject(ErrorStateMatcher),
+            // update ngControl later, so it will be accessible
+            null,
+            inject(FormGroupDirective, { optional: true }),
+            inject(NgForm, { optional: true }),
+            this.stateChanges
+        );
+
         this.setFormat(this.dateInputFormat);
 
         this.localeSubscription = adapter.localeChanges.subscribe(this.updateLocaleParams);
+    }
+
+    ngDoCheck() {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
+        }
     }
 
     onContainerClick() {
@@ -768,6 +812,11 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     toISO8601(value: D): string {
         return this.adapter.toIso8601(value);
+    }
+
+    /** Refreshes the error state of the input. */
+    updateErrorState() {
+        this.errorStateTracker.updateErrorState();
     }
 
     private saveTimePart(selected: D) {
@@ -1318,6 +1367,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         this.control = control;
 
         this.control.valueChanges.subscribe((value) => (this._value = value));
+
+        // @TODO resolve types
+        this.errorStateTracker.ngControl = { control } as unknown as NgControl;
     }
 
     /**

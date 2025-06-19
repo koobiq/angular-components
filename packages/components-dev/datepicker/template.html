@@ -22,7 +22,14 @@
             (dateInput)="onDateInput()"
         />
         <!--        <kbq-datepicker-toggle [tabIndex]="7" kbqSuffix [for]="myDatepicker1"></kbq-datepicker-toggle>-->
-        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+        <i
+            color="contrast-fade"
+            kbq-icon-button="kbq-calendar-o_16"
+            kbqSuffix
+            [autoColor]="true"
+            [class.kbq-active]="myDatepicker1.opened"
+            [tabindex]="-1"
+        ></i>
         <kbq-datepicker #myDatepicker1 [maxDate]="maxDate" [minDate]="minDate" [startAt]="startAt" />
     </kbq-form-field>
 
