@@ -1,3 +1,19 @@
+# 18.30.0 (2025-06-19)
+
+### Koobiq
+
+ * bug fix  **core:** provide rounding options in filesize formatter ([#DS-3806](https://github.com/koobiq/angular-components/issues/issue/DS-3806)) ([#830](https://github.com/koobiq/angular-components/issues/830)) ([5e58197](https://github.com/koobiq/angular-components/commit/5e58197fb032b5e814064aaf3f43462da91261ec))
+ * bug fix  **docs:** changed table cell vertical align ([#DS-3349](https://github.com/koobiq/angular-components/issues/issue/DS-3349)) ([#849](https://github.com/koobiq/angular-components/issues/849)) ([a47040c](https://github.com/koobiq/angular-components/commit/a47040caec2804d0b4727129318fc58c2bd68357))
+ * bug fix  **file-upload:** layout improvements ([#DS-3714](https://github.com/koobiq/angular-components/issues/issue/DS-3714)) ([#825](https://github.com/koobiq/angular-components/issues/825)) ([848ebfc](https://github.com/koobiq/angular-components/commit/848ebfc66ca1a1c40bc386647835d5888a0e9da7))
+ * bug fix  **file-upload:** synced file type validation ([#DS-3331](https://github.com/koobiq/angular-components/issues/issue/DS-3331)) ([#848](https://github.com/koobiq/angular-components/issues/848)) ([7fa8ab6](https://github.com/koobiq/angular-components/commit/7fa8ab6e0524f8b98f3bd7ef1f21828003a9c67f))
+ * bug fix  **overflow-items:** does not stretch to maximum width ([#DS-3809](https://github.com/koobiq/angular-components/issues/issue/DS-3809)) ([#827](https://github.com/koobiq/angular-components/issues/827)) ([da410ef](https://github.com/koobiq/angular-components/commit/da410ef11e0217b98f170ea6145b093cdafbef80))
+ * bug fix  **select:** two elements with focus frame ([#DS-3407](https://github.com/koobiq/angular-components/issues/issue/DS-3407)) ([#826](https://github.com/koobiq/angular-components/issues/826)) ([4c486b0](https://github.com/koobiq/angular-components/commit/4c486b08606b324e3145651d18a864dfae97197b))
+ * bug fix  **tooltip:** restore previous logic by default and add option for new ([#DS-3677](https://github.com/koobiq/angular-components/issues/issue/DS-3677)) ([#851](https://github.com/koobiq/angular-components/issues/851)) ([7b9f753](https://github.com/koobiq/angular-components/commit/7b9f7535e897d3ce4a61308176da0b644455183e))
+ * feature  **code-block:** updated keyboard focus state according to design ([#DS-3247](https://github.com/koobiq/angular-components/issues/issue/DS-3247)) ([#850](https://github.com/koobiq/angular-components/issues/850)) ([38fef80](https://github.com/koobiq/angular-components/commit/38fef80d384880871b668a8387f56991bdf33b24))
+ * feature  **file-upload:** added file size info in single ([#DS-2362](https://github.com/koobiq/angular-components/issues/issue/DS-2362)) ([#838](https://github.com/koobiq/angular-components/issues/838)) ([ae56dee](https://github.com/koobiq/angular-components/commit/ae56dee88f8bc0089726ae82b1fba74bfdf9834a))
+ * feature  **file-upload:** split css vars by component type ([#DS-3784](https://github.com/koobiq/angular-components/issues/issue/DS-3784)) ([#836](https://github.com/koobiq/angular-components/issues/836)) ([56bc769](https://github.com/koobiq/angular-components/commit/56bc769eba7315550d55d0dc15f7856c33528154))
+ * feature  **input:** make stepper always visible ([#DS-3794](https://github.com/koobiq/angular-components/issues/issue/DS-3794)) ([#837](https://github.com/koobiq/angular-components/issues/837)) ([86b46b3](https://github.com/koobiq/angular-components/commit/86b46b3aa532f2d76e3864ca37ed40199bdde92f))
+
 # 18.29.0 (2025-06-04)
 
 ### Koobiq
