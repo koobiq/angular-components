@@ -9,7 +9,7 @@
     <div class="layout-row docs-navbar__anchor">
         @if (docStates.isHeaderOverflown) {
             <button kbq-button [color]="'contrast'" [kbqStyle]="'transparent'" (click)="docStates.scrollUp()">
-                {{ docStates.currentHeader?.textContent }}
+                {{ docStates.currentHeader.textContent }}
             </button>
         }
     </div>
