@@ -713,7 +713,7 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     svgPreview: 'tooltip',
                     hasApi: true,
                     apiId: 'tooltip',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: 'top-bar',

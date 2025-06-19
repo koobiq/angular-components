@@ -60,7 +60,7 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        xit('should change offset for arrowless tooltip', fakeAsync(() => {
+        it('should change offset for arrowless tooltip', fakeAsync(() => {
             let [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger);
 
             expect(tooltip).toBeTruthy();

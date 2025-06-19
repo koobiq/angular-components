@@ -79,7 +79,7 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        xit('should show/hide most simple tooltip with moving through all around', fakeAsync(() => {
+        it('should show/hide most simple tooltip with moving through all around', fakeAsync(() => {
             const featureKey = 'MOST-SIMPLE';
             const triggerElement = component.mostSimpleTrigger.nativeElement;
             const tooltipDirective = component.mostSimpleDirective;
@@ -111,7 +111,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
         }));
 
-        xit('should show/hide normal tooltip', fakeAsync(() => {
+        it('should show/hide normal tooltip', fakeAsync(() => {
             const featureKey = 'NORMAL';
             const triggerElement = component.normalTrigger.nativeElement;
 
@@ -149,7 +149,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
         }));
 
-        xit('should kbqTitle support string', fakeAsync(() => {
+        it('should kbqTitle support string', fakeAsync(() => {
             const featureKey = 'NORMAL';
             const triggerElement = component.normalTrigger.nativeElement;
             const tooltipDirective = component.normalDirective;
@@ -181,7 +181,7 @@ describe('KbqTooltip', () => {
             expect(overlayContainerElement.textContent).not.toContain(featureKey);
         }));
 
-        xit('should hide arrow', fakeAsync(() => {
+        it('should hide arrow', fakeAsync(() => {
             let [tooltip] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
 
             expect(tooltip).toBeFalsy();
@@ -267,7 +267,7 @@ describe('KbqTooltip', () => {
             fixture.detectChanges();
         });
 
-        xit('should add offset for position config if element is less than arrow margin', fakeAsync(() => {
+        it('should add offset for position config if element is less than arrow margin', fakeAsync(() => {
             const rect = ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT * 2 - 1;
 
             componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
@@ -285,7 +285,7 @@ describe('KbqTooltip', () => {
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeTruthy();
         }));
 
-        xit('should not add offset to tooltip position config if element is large', fakeAsync(() => {
+        it('should not add offset to tooltip position config if element is large', fakeAsync(() => {
             componentInstance.triggerElementRef.nativeElement.getBoundingClientRect = () => ({
                 width: 100,
                 height: 100
@@ -301,7 +301,7 @@ describe('KbqTooltip', () => {
             expect(strategy.positions.some((pos) => 'offsetX' in pos || 'offsetY' in pos)).toBeFalsy();
         }));
 
-        xit('should not apply adjusted positions if tooltip initialized without arrow', fakeAsync(() => {
+        it('should not apply adjusted positions if tooltip initialized without arrow', fakeAsync(() => {
             componentInstance.tooltipTrigger.arrow = false;
             fixture.detectChanges();
 

@@ -7,12 +7,14 @@ import { TooltipOverviewExample } from './tooltip-overview/tooltip-overview-exam
 import { TooltipPlacementCenterExample } from './tooltip-placement-center/tooltip-placement-center-example';
 import { TooltipPlacementEdgesExample } from './tooltip-placement-edges/tooltip-placement-edges-example';
 
+import { TooltipHideWithTimeoutExample } from './tooltip-hide-with-timeout/tooltip-hide-with-timeout-example';
 import { TooltipRelativeToPointerExample } from './tooltip-relative-to-pointer/tooltip-relative-to-pointer-example';
 import { TooltipStyleExample } from './tooltip-style/tooltip-style-example';
 
 export {
     TooltipArrowAndOffsetExample,
     TooltipExtendedExample,
+    TooltipHideWithTimeoutExample,
     TooltipLongExample,
     TooltipMultipleLinesExample,
     TooltipOverviewExample,
@@ -31,7 +33,8 @@ const EXAMPLES = [
     TooltipPlacementCenterExample,
     TooltipPlacementEdgesExample,
     TooltipStyleExample,
-    TooltipRelativeToPointerExample
+    TooltipRelativeToPointerExample,
+    TooltipHideWithTimeoutExample
 ];
 
 @NgModule({

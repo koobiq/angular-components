@@ -7,6 +7,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { dispatchFakeEvent, dispatchKeyboardEvent, dispatchMouseEvent } from '@koobiq/cdk/testing';
 import { ARROW_BOTTOM_MARGIN_AND_HALF_HEIGHT } from '@koobiq/components/core';
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
+import { TestScheduler } from 'rxjs/testing';
 import { KBQ_POPOVER_CONFIRM_BUTTON_TEXT, KBQ_POPOVER_CONFIRM_TEXT } from './popover-confirm.component';
 import { KbqPopoverTrigger } from './popover.component';
 import { KbqPopoverModule } from './popover.module';
@@ -23,27 +25,32 @@ function openAndAssertPopover<T>(componentFixture: ComponentFixture<T>, triggerE
     return popover;
 }
 
-const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({
-        imports: [component, NoopAnimationsModule],
-        providers
-    });
-    const fixture = TestBed.createComponent<T>(component);
-
-    fixture.autoDetectChanges();
-
-    return fixture;
-};
-
 describe('KbqPopover', () => {
-    describe('Check test cases', () => {
-        let fixture: ComponentFixture<KbqPopoverTestComponent>;
-        let componentInstance: KbqPopoverTestComponent;
-        let debugElement: DebugElement;
-        let overlayContainer: OverlayContainer;
-        let overlayContainerElement: HTMLElement;
+    let fixture: ComponentFixture<KbqPopoverTestComponent>;
+    let componentInstance: KbqPopoverTestComponent;
+    let debugElement: DebugElement;
+    let overlayContainer: OverlayContainer;
+    let overlayContainerElement: HTMLElement;
+    let testScheduler: TestScheduler;
 
+    const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+        TestBed.configureTestingModule({
+            imports: [component, NoopAnimationsModule],
+            providers: [
+                { provide: AsyncScheduler, useValue: testScheduler },
+                ...providers
+            ]
+        });
+        const fixture = TestBed.createComponent<T>(component);
+
+        fixture.autoDetectChanges();
+
+        return fixture;
+    };
+
+    describe('Check test cases', () => {
         beforeEach(() => {
+            testScheduler = new TestScheduler((act, exp) => expect(exp).toEqual(act));
             fixture = createComponent(KbqPopoverTestComponent);
             componentInstance = fixture.componentInstance;
             debugElement = fixture.debugElement;
@@ -58,7 +65,7 @@ describe('KbqPopover', () => {
             overlayContainer.ngOnDestroy();
         });
 
-        xit('kbqTrigger = hover', fakeAsync(() => {
+        it('kbqTrigger = hover', fakeAsync(() => {
             const expectedValue = '_TEST1';
             const triggerElement = componentInstance.test1.nativeElement;
 
@@ -120,7 +127,7 @@ describe('KbqPopover', () => {
             expect(triggerElement.classList).not.toContain('kbq-active');
         }));
 
-        xit('Can set kbqPopoverHeader', fakeAsync(() => {
+        it('Can set kbqPopoverHeader', fakeAsync(() => {
             const expectedValue = '_TEST4';
             const triggerElement = componentInstance.test4.nativeElement;
 
@@ -133,7 +140,7 @@ describe('KbqPopover', () => {
             expect(header.nativeElement.textContent).toEqual(expectedValue);
         }));
 
-        xit('Can set kbqPopoverContent', fakeAsync(() => {
+        it('Can set kbqPopoverContent', fakeAsync(() => {
             const expectedValue = '_TEST5';
             const triggerElement = componentInstance.test5.nativeElement;
 
@@ -146,7 +153,7 @@ describe('KbqPopover', () => {
             expect(content.nativeElement.textContent).toEqual(expectedValue);
         }));
 
-        xit('Can set kbqPopoverFooter', fakeAsync(() => {
+        it('Can set kbqPopoverFooter', fakeAsync(() => {
             const expectedValue = '_TEST6';
             const triggerElement = componentInstance.test6.nativeElement;
 

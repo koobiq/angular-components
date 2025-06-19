@@ -1,6 +1,7 @@
 import { AnimationEvent } from '@angular/animations';
 import {
     ChangeDetectorRef,
+    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -23,6 +24,7 @@ export abstract class KbqPopUp implements OnDestroy {
     protected readonly renderer: Renderer2 = inject(Renderer2);
     protected readonly elementRef = inject(ElementRef);
     protected readonly changeDetectorRef: ChangeDetectorRef = inject(ChangeDetectorRef);
+    readonly destroyRef = inject(DestroyRef);
 
     /** Stream that emits when the popup item is hovered. */
     readonly hovered = new BehaviorSubject<boolean>(false);
@@ -79,6 +81,10 @@ export abstract class KbqPopUp implements OnDestroy {
             // Mark for check so if any parent component has set the
             // ChangeDetectionStrategy to OnPush it will be checked anyways
             this.markForCheck();
+
+            if (this.trigger.triggerName === 'mouseenter') {
+                this.addEventListenerForHide();
+            }
         }, delay);
     }
 

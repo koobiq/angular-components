@@ -12,7 +12,6 @@ import {
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
-    DestroyRef,
     Directive,
     ElementRef,
     EventEmitter,
@@ -73,7 +72,6 @@ export class KbqPopoverComponent extends KbqPopUp implements AfterViewInit {
     @ViewChild(CdkTrapFocus) cdkTrapFocus: CdkTrapFocus;
 
     private debounceTime = 15;
-    private readonly destroyRef = inject(DestroyRef);
     isContentTopOverflow: boolean = false;
     isContentBottomOverflow: boolean = false;
 
@@ -260,6 +258,11 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     set trigger(value: string) {
         if (value) {
             this._trigger = value;
+
+            if (this.trigger.includes(PopUpTriggers.Hover)) {
+                this.hideWithTimeout = true;
+                this.leaveDelay = this.leaveDelay ?? 500;
+            }
         } else {
             this._trigger = `${PopUpTriggers.Click}, ${PopUpTriggers.Keydown}`;
         }
@@ -333,6 +336,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     @Input({ alias: 'kbqPopoverArrow', transform: booleanAttribute }) arrow: boolean = true;
 
     @Input({ alias: 'kbqPopoverOffset', transform: numberAttribute }) offset: number | null = defaultOffsetYWithArrow;
+
+    /** Delay before closing in milliseconds. The default value for kbqTrigger=PopUpTriggers.Hover is 500 ms. */
+    @Input({ alias: 'kbqLeaveDelay', transform: numberAttribute }) leaveDelay: number;
 
     @Output('kbqPopoverPlacementChange') placementChange = new EventEmitter();
 

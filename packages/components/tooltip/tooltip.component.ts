@@ -135,6 +135,13 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     protected parentPopup = inject<KbqParentPopup>(KBQ_PARENT_POPUP, { optional: true });
     protected focusMonitor: FocusMonitor = inject(FocusMonitor);
 
+    /**
+     * Changes hiding behavior. By default, tooltip is hidden on mouseleave from trigger.
+     * Setting hideWithTimeout to true will delay tooltip hiding and will not hide when the mouse moves from trigger
+     * to tooltip.
+     */
+    @Input({ transform: booleanAttribute }) hideWithTimeout: boolean = false;
+
     @Input('kbqVisible')
     get tooltipVisible(): boolean {
         return this.visible;

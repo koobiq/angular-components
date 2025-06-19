@@ -707,9 +707,6 @@ export interface HasTabIndex {
 // @public (undocumented)
 export type HasTabIndexCtor = Constructor<HasTabIndex> & AbstractConstructor<HasTabIndex>;
 
-// @public
-export const hidingIntervalForHover = 500;
-
 // @public (undocumented)
 export function isBoolean(value: unknown): value is boolean;
 
@@ -2269,6 +2266,8 @@ export abstract class KbqPopUp implements OnDestroy {
         $implicit: any;
     } | null;
     // (undocumented)
+    readonly destroyRef: DestroyRef;
+    // (undocumented)
     detectChanges(): void;
     // (undocumented)
     protected readonly elementRef: ElementRef<any>;
@@ -2352,6 +2351,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
     // (undocumented)
+    getMouseLeaveListener(): (delay?: number) => void;
+    // (undocumented)
     abstract getOverlayHandleComponentType(): Type<T>;
     // (undocumented)
     protected getPrioritizedPositions(): ConnectionPositionPair[];
@@ -2363,7 +2364,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     handleTouchend(): void;
     // (undocumented)
     hide: (delay?: number) => void;
-    protected hidingIntervalSubscription: Subscription;
+    protected hideWithTimeout: boolean;
     // (undocumented)
     protected readonly hostView: ViewContainerRef;
     readonly hovered: BehaviorSubject<boolean>;

@@ -3828,6 +3828,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tooltip-extended-example.ts",
     "importPath": "components/tooltip"
   },
+  "tooltip-hide-with-timeout": {
+    "packagePath": "components/tooltip/tooltip-hide-with-timeout",
+    "title": "tooltip-hide-with-timeout",
+    "componentName": "TooltipHideWithTimeoutExample",
+    "files": [
+      "tooltip-hide-with-timeout-example.ts"
+    ],
+    "selector": "tooltip-hide-with-timeout-example",
+    "additionalComponents": [],
+    "primaryFile": "tooltip-hide-with-timeout-example.ts",
+    "importPath": "components/tooltip"
+  },
   "tooltip-long": {
     "packagePath": "components/tooltip/tooltip-long",
     "title": "Tooltip long",
@@ -4935,6 +4947,8 @@ return import('@koobiq/docs-examples/components/toggle');
   case 'tooltip-arrow-and-offset':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-extended':
+return import('@koobiq/docs-examples/components/tooltip');
+  case 'tooltip-hide-with-timeout':
 return import('@koobiq/docs-examples/components/tooltip');
   case 'tooltip-long':
 return import('@koobiq/docs-examples/components/tooltip');

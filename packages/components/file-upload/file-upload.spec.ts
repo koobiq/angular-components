@@ -435,7 +435,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
     });
 
     describe('with ellipsis in the center', () => {
-        xit('should add tooltip and ellipsis in the center for a file with a long name', fakeAsync(() => {
+        it('should add tooltip and ellipsis in the center for a file with a long name', fakeAsync(() => {
             component.disabled = false;
             fixture.detectChanges();
 
