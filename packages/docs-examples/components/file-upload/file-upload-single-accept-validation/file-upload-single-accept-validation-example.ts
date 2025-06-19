@@ -38,9 +38,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ]
 })
 export class FileUploadSingleAcceptValidationExample {
-    accept = ['.txt'];
+    protected accept = ['.txt'];
 
-    formGroup = new FormGroup({
+    protected readonly formGroup = new FormGroup({
         fileControl: new FormControl(null, FileValidators.isCorrectExtension(this.accept))
     });
 }

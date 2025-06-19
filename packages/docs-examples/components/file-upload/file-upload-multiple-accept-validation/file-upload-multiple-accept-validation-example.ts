@@ -42,10 +42,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ]
 })
 export class FileUploadMultipleAcceptValidationExample {
-    accept = ['.txt'];
-    fileExtensionMismatchErrorMessage = 'Provide valid extension';
+    protected accept = ['.txt'];
+    protected fileExtensionMismatchErrorMessage = 'Provide valid extension';
 
-    fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
+    protected readonly fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
 
     constructor() {
         this.fileList.statusChanges.subscribe(() => {
@@ -63,11 +63,11 @@ export class FileUploadMultipleAcceptValidationExample {
     ]: [
         KbqFileItem,
         number
-    ]) {
+    ]): void {
         this.fileList.removeAt(index);
     }
 
-    onFilesAdded($event: KbqFileItem[]) {
+    onFilesAdded($event: KbqFileItem[]): void {
         for (const fileItem of $event.slice()) {
             this.fileList.push(new FormControl(fileItem, FileValidators.isCorrectExtension(this.accept)));
         }
