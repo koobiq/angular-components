@@ -1,6 +1,7 @@
 .kbq-code-block {
-    --kbq-code-block-size-container-border-width: 1px;
-    --kbq-code-block-size-container-border-radius: var(--kbq-size-m);
+    --kbq-code-block-size-container-border-width: var(--kbq-size-border-width);
+    --kbq-code-block-size-container-border-width-focused: 2px;
+    --kbq-code-block-size-container-border-radius: var(--kbq-size-border-radius);
     --kbq-code-block-size-with-header-content-padding-top: var(--kbq-size-xxs);
     --kbq-code-block-size-with-header-content-padding-bottom: var(--kbq-size-l);
     --kbq-code-block-size-with-header-content-padding-horizontal: var(--kbq-size-xl);

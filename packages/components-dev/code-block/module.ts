@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqCodeBlockModule, kbqCodeBlockLocaleConfigurationProvider } from '@koobiq/components/code-block';
 import { CodeBlockExamplesModule } from 'packages/docs-examples/components/code-block';
+import { DevLocaleSelector } from '../locale-selector';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -34,7 +36,9 @@ export class DevExamples {}
     standalone: true,
     imports: [
         KbqCodeBlockModule,
-        DevExamples
+        DevExamples,
+        DevThemeToggle,
+        DevLocaleSelector
     ],
     providers: [
         kbqCodeBlockLocaleConfigurationProvider({

@@ -27,13 +27,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class DevLocaleSelector {
     readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
-    readonly locale = model(this.localeService!.id);
+    readonly locale = model(this.localeService?.id);
 
     constructor() {
         toObservable(this.locale)
             .pipe(takeUntilDestroyed())
             .subscribe((locale) => {
-                this.localeService?.setLocale(locale);
+                if (locale) this.localeService?.setLocale(locale);
             });
     }
 }

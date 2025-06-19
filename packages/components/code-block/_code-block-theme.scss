@@ -327,13 +327,8 @@
             @include kbq-code-block-style(filled);
         }
 
-        .kbq-code-block__content {
-            border-color: transparent;
-        }
-
-        .kbq-code-block__content.cdk-keyboard-focused {
-            outline: none;
-            border-color: var(--kbq-states-line-focus-theme);
+        .kbq-code-block__main.cdk-keyboard-focused {
+            outline-color: var(--kbq-states-line-focus-theme);
         }
     }
 }
@@ -342,12 +337,9 @@
     .kbq-code-block {
         @include kbq-typography-level-to-styles-css-variables(typography, mono-codeblock);
 
-        .kbq-code-block__content {
+        .kbq-code-block__pre,
+        .kbq-code-block__code {
             font: inherit;
-
-            .kbq-code-block__code {
-                font: inherit;
-            }
         }
     }
 }
