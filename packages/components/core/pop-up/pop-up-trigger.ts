@@ -253,9 +253,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
             this.ngZone.runOutsideAngular(() => {
                 interval(this.leaveDelay, this.scheduler)
                     .pipe(
-                        takeUntilDestroyed(this.instance?.destroyRef),
                         filter(() => this.trigger.includes(PopUpTriggers.Hover)),
-                        filter(() => !this.hovered.getValue() && !this.instance?.hovered.getValue())
+                        filter(() => !this.hovered.getValue() && !this.instance?.hovered.getValue()),
+                        takeUntilDestroyed(this.instance?.destroyRef)
                     )
                     .subscribe(this.hide);
             });

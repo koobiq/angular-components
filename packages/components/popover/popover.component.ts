@@ -259,7 +259,7 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
         if (value) {
             this._trigger = value;
 
-            if (this.trigger === PopUpTriggers.Hover) {
+            if (this.trigger.includes(PopUpTriggers.Hover)) {
                 this.hideWithTimeout = true;
                 this.leaveDelay = this.leaveDelay ?? 500;
             }
