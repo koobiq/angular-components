@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { FileValidators } from '@koobiq/components/core';
+import { FileValidators, KbqFileTypeSpecifier } from '@koobiq/components/core';
 import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -42,7 +42,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ]
 })
 export class FileUploadMultipleAcceptValidationExample {
-    protected accept = ['.txt'];
+    protected accept: KbqFileTypeSpecifier = ['.txt'];
     protected fileExtensionMismatchErrorMessage = 'Provide valid extension';
 
     protected readonly fileList = new FormArray<FormControl<KbqFileItem | null>>([]);
