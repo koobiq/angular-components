@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Notification
         if: ${{ github.actor != 'dependabot[bot]' }}
-        uses: mattermost/action-mattermost-notify@master
+        uses: mattermost/action-mattermost-notify@2.0.0
         env:
           PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         with:
@@ -23,7 +23,7 @@ jobs:
             [${{ github.repository }}] | [${{ github.event.pull_request.title }} #${{ github.event.number }}](${{ env.PR_URL }}) was created by ${{ github.actor }}
 
       - name: Notification to BotChannel
-        uses: mattermost/action-mattermost-notify@master
+        uses: mattermost/action-mattermost-notify@2.0.0
         env:
           PR_URL: https://github.com/${{ github.repository }}/pull/${{ github.event.number }}
         with:
