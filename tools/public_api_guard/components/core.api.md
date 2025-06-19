@@ -10,6 +10,7 @@ import { AfterViewChecked } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { AnimationEvent as AnimationEvent_2 } from '@angular/animations';
 import { AnimationTriggerMetadata } from '@angular/animations';
+import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { BehaviorSubject } from 'rxjs';
 import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkScrollable } from '@angular/cdk/overlay';
@@ -2255,6 +2256,8 @@ export abstract class KbqPopUp implements OnDestroy {
         $implicit: any;
     } | null;
     // (undocumented)
+    readonly destroyRef: DestroyRef;
+    // (undocumented)
     detectChanges(): void;
     // (undocumented)
     protected readonly elementRef: ElementRef<any>;
@@ -2338,6 +2341,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     focus(): void;
     protected getAdjustedPositions(): ConnectionPositionPair[];
     // (undocumented)
+    getMouseLeaveListener(): (delay?: number) => void;
+    // (undocumented)
     abstract getOverlayHandleComponentType(): Type<T>;
     // (undocumented)
     protected getPrioritizedPositions(): ConnectionPositionPair[];
@@ -2349,8 +2354,10 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     handleTouchend(): void;
     // (undocumented)
     hide: (delay?: number) => void;
+    protected hideWithTimeout: boolean;
     // (undocumented)
     protected readonly hostView: ViewContainerRef;
+    readonly hovered: BehaviorSubject<boolean>;
     // (undocumented)
     initListeners(): void;
     // (undocumented)
@@ -2389,6 +2396,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected portal: ComponentPortal<T>;
     // (undocumented)
     resetOrigin(): void;
+    // (undocumented)
+    protected readonly scheduler: AsyncScheduler | undefined;
     // (undocumented)
     protected readonly scrollable: CdkScrollable | null;
     // (undocumented)
