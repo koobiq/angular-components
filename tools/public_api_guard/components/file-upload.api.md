@@ -37,7 +37,7 @@ import { Renderer2 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplateRef } from '@angular/core';
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export const isCorrectExtension: (file: File, accept?: string[]) => boolean;
 
 // @public (undocumented)

@@ -179,4 +179,34 @@ export class FileValidators {
             return null;
         };
     }
+
+    /**
+     * Validator that checks whether file's name or MIME type
+     * matches one of the accepted extensions or MIME types.
+     *
+     * @param accept - Array of allowed file extensions or MIME types.
+     * @returns ValidatorFn that returns validation error if file type is not accepted, or null otherwise.
+     */
+    static isCorrectExtension(accept: (`.${string}` | `${string}/${string}`)[]): ValidatorFn {
+        return (control: AbstractControl<{ file: File } | null>): ValidationErrors | null => {
+            if (!accept?.length || !control.value) return null;
+            const { name, type } = control.value.file;
+
+            for (const acceptedExtensionOrMimeType of accept) {
+                const typeAsRegExp = new RegExp(`${acceptedExtensionOrMimeType}$`);
+
+                if (!typeAsRegExp.test(name) && !typeAsRegExp.test(type)) {
+                    return { fileExtensionMismatch: { expected: accept, actual: name } };
+                }
+            }
+
+            return null;
+        };
+    }
 }
+
+/**
+ * Type helper describing accepted file types, referring to:
+ * @link https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/input/file#unique_file_type_specifiers
+ */
+export type KbqFileTypeSpecifier = Parameters<typeof FileValidators.isCorrectExtension>[0];

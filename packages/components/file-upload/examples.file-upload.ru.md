@@ -42,3 +42,15 @@
 - **Несколько файлов**: Пример загрузки нескольких файлов с использованием `Reactive Forms` и встроенной валидации.
 
 <!-- example(file-upload-multiple-default-validation-reactive-forms-overview) -->
+
+#### Валидация типа или расширения файла
+
+В примерах используется [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts).
+
+- **Один файл**: Пример загрузки одного файла с применением `Reactive Forms` для проверки данных.
+
+<!-- example(file-upload-single-accept-validation) -->
+
+- **Несколько файлов**: Пример загрузки нескольких файлов с использованием `Reactive Forms` и валидации.
+
+<!-- example(file-upload-multiple-accept-validation) -->

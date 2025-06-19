@@ -40,3 +40,15 @@ The examples use [FileValidators](https://github.com/koobiq/angular-components/b
 - **Multiple Files**: An example of uploading multiple files with Reactive Forms and built-in validation.
 
 <!-- example(file-upload-multiple-default-validation-reactive-forms-overview) -->
+
+#### File type or extension validation
+
+The examples use [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts).
+
+- **Single file**: example of uploading a single file using `Reactive Forms` with validation.
+
+<!-- example(file-upload-single-accept-validation) -->
+
+- **Multiple files**: Example of uploading multiple files using `Reactive Forms` with validation.
+
+<!-- example(file-upload-multiple-accept-validation) -->

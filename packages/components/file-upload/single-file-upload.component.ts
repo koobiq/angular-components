@@ -22,7 +22,6 @@ import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import {
-    isCorrectExtension,
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
@@ -243,7 +242,7 @@ export class KbqSingleFileUploadComponent
             return;
         }
 
-        if (files?.length && isCorrectExtension(files[0], this.accept)) {
+        if (files?.length) {
             this.file = this.mapToFileItem(files[0]);
             this.fileChange.emit(this.file);
         }

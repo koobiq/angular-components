@@ -23,7 +23,6 @@ import { KbqListSelection } from '@koobiq/components/list';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
 import { BehaviorSubject } from 'rxjs';
 import {
-    isCorrectExtension,
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
     KbqFileItem,
@@ -324,14 +323,12 @@ export class KbqMultipleFileUploadComponent
             return [];
         }
 
-        return Array.from(files)
-            .filter((file) => isCorrectExtension(file, this.accept))
-            .map((file: File) => ({
-                file,
-                hasError: this.validateFile(file),
-                loading: new BehaviorSubject<boolean>(false),
-                progress: new BehaviorSubject<number>(0)
-            }));
+        return Array.from(files).map((file: File) => ({
+            file,
+            hasError: this.validateFile(file),
+            loading: new BehaviorSubject<boolean>(false),
+            progress: new BehaviorSubject<number>(0)
+        }));
     }
 
     private validateFile(file: File): boolean | undefined {
