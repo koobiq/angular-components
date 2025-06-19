@@ -64,7 +64,7 @@ describe('KbqTooltip', () => {
             let [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger);
 
             expect(tooltip).toBeTruthy();
-            expect(styles?.marginBottom).toEqual(`${defaultOffsetForTooltip}px`);
+            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltip}px`);
 
             // hide tooltip
             dispatchMouseEvent(component.dynamicArrowAndOffsetTrigger.nativeElement, 'mouseleave');
@@ -77,7 +77,7 @@ describe('KbqTooltip', () => {
             [tooltip, styles] = getTooltipAndStyles(component.dynamicArrowAndOffsetTrigger, '.kbq-tooltip_arrowless');
 
             expect(tooltip).toBeTruthy();
-            expect(styles?.marginBottom).toEqual(`${defaultOffsetForTooltipWithoutArrow}px`);
+            expect(styles?.marginTop).toEqual(`${defaultOffsetForTooltipWithoutArrow}px`);
         }));
     });
 });
