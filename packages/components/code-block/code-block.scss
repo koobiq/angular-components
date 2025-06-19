@@ -62,6 +62,7 @@
         &.cdk-keyboard-focused {
             outline-style: solid;
             outline-width: var(--kbq-code-block-size-container-border-width-focused);
+            outline-offset: -1px;
         }
 
         .kbq-code-block__pre {
