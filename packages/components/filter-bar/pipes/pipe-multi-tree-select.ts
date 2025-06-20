@@ -175,7 +175,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     toggleSelectAllNode() {
-        if (this.select.search.ngControl.value) {
+        if (this.select.search?.ngControl.value) {
             const renderedOptions = this.tree.renderedOptions.filter(({ value }) => value !== kbqTreeSelectAllValue);
 
             if (this.allVisibleOptionsSelected) {
