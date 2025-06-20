@@ -1,4 +1,4 @@
-import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
+import { AbstractControl, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { ErrorStateMatcher } from '../error/error-state-matcher';
 import { AbstractConstructor, Constructor } from './constructor';
@@ -57,4 +57,38 @@ export function mixinErrorState<T extends Constructor<HasErrorState>>(base: T): 
             }
         }
     };
+}
+
+/**
+ * Class that tracks the error state of a component.
+ * @docs-private
+ */
+export class KbqErrorStateTracker implements CanUpdateErrorState {
+    /** Whether the tracker is currently in an error state. */
+    errorState = false;
+
+    /** User-defined matcher for the error state. */
+    errorStateMatcher: ErrorStateMatcher;
+
+    constructor(
+        private defaultMatcher: ErrorStateMatcher | null,
+        public ngControl: NgControl | null,
+        private parentFormGroup: FormGroupDirective | null,
+        private parentForm: NgForm | null,
+        private stateChanges: Subject<void>
+    ) {}
+
+    /** Updates the error state based on the provided error state matcher. */
+    updateErrorState() {
+        const oldState = this.errorState;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultMatcher;
+        const control = this.ngControl ? (this.ngControl.control as AbstractControl) : null;
+        const newState = matcher?.isErrorState(control, parent) ?? false;
+
+        if (newState !== oldState) {
+            this.errorState = newState;
+            this.stateChanges.next();
+        }
+    }
 }

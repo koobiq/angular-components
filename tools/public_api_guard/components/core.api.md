@@ -1844,6 +1844,16 @@ export const KbqDefaultThemes: KbqTheme[];
 export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMatcher> | ErrorStateMatcher) => Provider;
 
 // @public
+export class KbqErrorStateTracker implements CanUpdateErrorState {
+    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null, stateChanges: Subject<void>);
+    errorState: boolean;
+    errorStateMatcher: ErrorStateMatcher;
+    // (undocumented)
+    ngControl: NgControl | null;
+    updateErrorState(): void;
+}
+
+// @public
 export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<KbqSizeUnitsConfig>) => Provider;
 
 // @public
