@@ -35,6 +35,7 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import * as i2_2 from '@angular/common';
 import { InjectionToken } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -696,6 +697,20 @@ export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 
 // @public
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
+
+// @public
+export interface HasErrorState {
+    // (undocumented)
+    defaultErrorStateMatcher: ErrorStateMatcher;
+    // (undocumented)
+    ngControl: NgControl | null;
+    // (undocumented)
+    parentForm: NgForm | null;
+    // (undocumented)
+    parentFormGroup: FormGroupDirective | null;
+    // (undocumented)
+    stateChanges: Subject<void>;
+}
 
 // @public (undocumented)
 export interface HasTabIndex {
@@ -1739,6 +1754,24 @@ export enum KbqAnimationDurations {
 }
 
 // @public
+export class KbqAutoColor implements AfterContentInit {
+    // (undocumented)
+    readonly autoColor: InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    protected readonly cdr: ChangeDetectorRef;
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
+    // (undocumented)
+    protected readonly formField: KbqFormFieldRef | null;
+    hasError: boolean;
+    ngAfterContentInit(): void;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutoColor, "[kbqAutoColor]", ["kbqAutoColor"], { "autoColor": { "alias": "kbqAutoColor"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutoColor, never>;
+}
+
+// @public
 export type KbqCheckedState = 'true' | 'false' | 'mixed';
 
 // @public
@@ -2685,8 +2718,6 @@ export function mixinColor<T extends AbstractConstructor<HasElementRef>>(base: T
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 
-// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point index.d.ts
-//
 // @public
 export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
 

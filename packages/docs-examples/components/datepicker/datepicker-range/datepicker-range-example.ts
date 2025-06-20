@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
+import { DateAdapter, KbqAutoColor, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -14,17 +14,18 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-range-example',
     imports: [
+        LuxonDateModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
         KbqIconModule,
-        LuxonDateModule,
-        KbqFormsModule
+        KbqFormsModule,
+        KbqAutoColor
     ],
     template: `
         <div class="docs-example__datepicker-range">
             <div class="kbq-form-vertical">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">Начало и конец отпуска:</label>
+                    <label class="kbq-form__label">Vacation period:</label>
                     <div>
                         <kbq-form-field
                             class="layout-margin-right-s"
@@ -35,7 +36,7 @@ import { DateTime } from 'luxon';
                             <i
                                 [tabindex]="-1"
                                 [class.kbq-active]="datepicker.opened"
-                                [autoColor]="true"
+                                kbqAutoColor
                                 kbq-icon-button="kbq-calendar-o_16"
                                 kbqSuffix
                                 color="contrast-fade"
@@ -48,7 +49,7 @@ import { DateTime } from 'luxon';
                             <i
                                 [tabindex]="-1"
                                 [class.kbq-active]="datepicker2.opened"
-                                [autoColor]="true"
+                                kbqAutoColor
                                 kbq-icon-button="kbq-calendar-o_16"
                                 kbqSuffix
                                 color="contrast-fade"
@@ -62,11 +63,8 @@ import { DateTime } from 'luxon';
     `
 })
 export class DatepickerRangeExample {
-    minDate: DateTime;
-    maxDate: DateTime;
+    readonly minDate = this.adapter.createDate(2023, 11, 14);
+    readonly maxDate = this.adapter.createDate(2024, 7, 25);
 
-    constructor(private adapter: DateAdapter<DateTime>) {
-        this.minDate = this.adapter.createDate(2023, 11, 14);
-        this.maxDate = this.adapter.createDate(2024, 7, 25);
-    }
+    constructor(private adapter: DateAdapter<DateTime>) {}
 }
