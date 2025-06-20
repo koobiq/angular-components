@@ -71,24 +71,24 @@ export class KbqErrorStateTracker implements CanUpdateErrorState {
     errorStateMatcher: ErrorStateMatcher;
 
     constructor(
-        private _defaultMatcher: ErrorStateMatcher | null,
+        private defaultMatcher: ErrorStateMatcher | null,
         public ngControl: NgControl | null,
-        private _parentFormGroup: FormGroupDirective | null,
-        private _parentForm: NgForm | null,
-        private _stateChanges: Subject<void>
+        private parentFormGroup: FormGroupDirective | null,
+        private parentForm: NgForm | null,
+        private stateChanges: Subject<void>
     ) {}
 
     /** Updates the error state based on the provided error state matcher. */
     updateErrorState() {
         const oldState = this.errorState;
-        const parent = this._parentFormGroup || this._parentForm;
-        const matcher = this.errorStateMatcher || this._defaultMatcher;
+        const parent = this.parentFormGroup || this.parentForm;
+        const matcher = this.errorStateMatcher || this.defaultMatcher;
         const control = this.ngControl ? (this.ngControl.control as AbstractControl) : null;
         const newState = matcher?.isErrorState(control, parent) ?? false;
 
         if (newState !== oldState) {
             this.errorState = newState;
-            this._stateChanges.next();
+            this.stateChanges.next();
         }
     }
 }

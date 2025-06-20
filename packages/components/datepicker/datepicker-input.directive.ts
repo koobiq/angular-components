@@ -1,5 +1,6 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentInit,
     Directive,
     DoCheck,
     ElementRef,
@@ -7,10 +8,12 @@ import {
     forwardRef,
     inject,
     Inject,
+    Injectable,
     Input,
     OnDestroy,
     Optional,
     Output,
+    Provider,
     Renderer2
 } from '@angular/core';
 import {
@@ -182,6 +185,27 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
 };
 
 /**
+ * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
+ * Used to sync control's errorState and icon's errorState, since now datepicker-input is validating on initial.
+ * After merging form-fields, default error-state matcher will be used
+ */
+@Injectable()
+class KbqDatepickerErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null): boolean {
+        return !!control?.invalid;
+    }
+}
+
+/**
+ * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
+ * After merging form-fields, default error-state matcher will be used
+ */
+const KBQ_DATEPICKER_ERROR_STATE_MATCHER: Provider = {
+    provide: ErrorStateMatcher,
+    useClass: KbqDatepickerErrorStateMatcher
+};
+
+/**
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
  * calendar popup. For consistency, we always use KbqDatepickerInputEvent instead.
@@ -219,6 +243,7 @@ interface DateTimeObject {
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
+        KBQ_DATEPICKER_ERROR_STATE_MATCHER,
         { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }],
     host: {
         class: 'kbq-input kbq-datepicker',
@@ -239,7 +264,7 @@ interface DateTimeObject {
     }
 })
 export class KbqDatepickerInput<D>
-    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck
+    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
 {
     readonly stateChanges: Subject<void> = new Subject<void>();
 
@@ -540,7 +565,7 @@ export class KbqDatepickerInput<D>
 
         this.errorStateTracker = new KbqErrorStateTracker(
             inject(ErrorStateMatcher),
-            // update ngControl later, so it will be accessible
+            // update ngControl later, so it will be initialized
             null,
             inject(FormGroupDirective, { optional: true }),
             inject(NgForm, { optional: true }),
@@ -578,6 +603,10 @@ export class KbqDatepickerInput<D>
     }
 
     onTouched = () => {};
+
+    ngAfterContentInit() {
+        this.updateErrorState();
+    }
 
     ngOnDestroy() {
         this.datepickerSubscription.unsubscribe();

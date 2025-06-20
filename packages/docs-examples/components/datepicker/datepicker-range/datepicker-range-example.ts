@@ -32,13 +32,27 @@ import { DateTime } from 'luxon';
                             style="width: 136px"
                         >
                             <input [kbqDatepicker]="datepicker" />
-                            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                            <i
+                                [tabindex]="-1"
+                                [class.kbq-active]="datepicker.opened"
+                                [autoColor]="true"
+                                kbq-icon-button="kbq-calendar-o_16"
+                                kbqSuffix
+                                color="contrast-fade"
+                            ></i>
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
                         <kbq-form-field (click)="datepicker2.toggle()" style="width: 136px">
                             <input [kbqDatepicker]="datepicker2" />
-                            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                            <i
+                                [tabindex]="-1"
+                                [class.kbq-active]="datepicker2.opened"
+                                [autoColor]="true"
+                                kbq-icon-button="kbq-calendar-o_16"
+                                kbqSuffix
+                                color="contrast-fade"
+                            ></i>
                             <kbq-datepicker #datepicker2 />
                         </kbq-form-field>
                     </div>

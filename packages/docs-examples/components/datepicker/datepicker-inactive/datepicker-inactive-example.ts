@@ -4,6 +4,7 @@ import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { DateTime } from 'luxon';
 
 /**
@@ -18,7 +19,8 @@ import { DateTime } from 'luxon';
         KbqFormFieldModule,
         FormsModule,
         LuxonDateModule,
-        KbqFormsModule
+        KbqFormsModule,
+        KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-inactive kbq-form-vertical">
@@ -26,7 +28,13 @@ import { DateTime } from 'luxon';
                 <label class="kbq-form__label">Пустое неактивное поле</label>
                 <kbq-form-field style="width: 136px">
                     <input [disabled]="true" [kbqDatepicker]="emptyDatepicker" [placeholder]="''" />
-                    <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                    <i
+                        [disabled]="true"
+                        [tabindex]="-1"
+                        kbq-icon-button="kbq-calendar-o_16"
+                        kbqSuffix
+                        color="contrast-fade"
+                    ></i>
                     <kbq-datepicker #emptyDatepicker />
                 </kbq-form-field>
             </div>
@@ -37,7 +45,13 @@ import { DateTime } from 'luxon';
                 <label class="kbq-form__label">Заполненное неактивное поле</label>
                 <kbq-form-field style="width: 136px">
                     <input [disabled]="true" [kbqDatepicker]="datepicker" [ngModel]="selectedDate" />
-                    <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                    <i
+                        [disabled]="true"
+                        [tabindex]="-1"
+                        kbq-icon-button="kbq-calendar-o_16"
+                        kbqSuffix
+                        color="contrast-fade"
+                    ></i>
                     <kbq-datepicker #datepicker />
                 </kbq-form-field>
             </div>
