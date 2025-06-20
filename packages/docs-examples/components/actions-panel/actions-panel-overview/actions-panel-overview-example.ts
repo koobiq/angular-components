@@ -259,11 +259,11 @@ export class ActionsPanelOverviewExample {
     private readonly data = signal<ExampleTableItem[]>([]);
 
     protected toggleActionsPanel(selectedItems: ExampleTableItem[]): void {
-        this.data.set(selectedItems);
-
         if (selectedItems.length === 0) {
             return this.actionsPanel.close();
         }
+
+        this.data.set(selectedItems);
 
         if (this.actionsPanelRef) {
             return;
