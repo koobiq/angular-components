@@ -46,7 +46,9 @@
     }
 
     & .kbq-alert__title {
-        margin-bottom: var(--kbq-alert-size-normal-title-margin-bottom);
+        &:not(:has(+ .kbq-alert__text:empty)) {
+            margin-bottom: var(--kbq-alert-size-normal-title-margin-bottom);
+        }
     }
 
     & .kbq-alert__button-stack {
@@ -97,7 +99,9 @@
     }
 
     & .kbq-alert__title {
-        margin-bottom: var(--kbq-alert-size-compact-title-margin-bottom);
+        &:not(:has(+ .kbq-alert__text:empty)) {
+            margin-bottom: var(--kbq-alert-size-compact-title-margin-bottom);
+        }
     }
 
     & .kbq-alert__button-stack {
