@@ -1847,7 +1847,7 @@ export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMa
 
 // @public
 export class KbqErrorStateTracker implements CanUpdateErrorState {
-    constructor(_defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, _parentFormGroup: FormGroupDirective | null, _parentForm: NgForm | null, _stateChanges: Subject<void>);
+    constructor(defaultMatcher: ErrorStateMatcher | null, ngControl: NgControl | null, parentFormGroup: FormGroupDirective | null, parentForm: NgForm | null, stateChanges: Subject<void>);
     errorState: boolean;
     errorStateMatcher: ErrorStateMatcher;
     // (undocumented)
@@ -3259,16 +3259,6 @@ export const SELECT_PANEL_VIEWPORT_PADDING = 8;
 
 // @public (undocumented)
 export const selectEvents = "selectEvents";
-
-// @public (undocumented)
-export class ShowErrorStateMatcher implements ErrorStateMatcher {
-    // (undocumented)
-    isErrorState(control: AbstractControl | null, _: FormGroupDirective | NgForm | null): boolean;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<ShowErrorStateMatcher, never>;
-    // (undocumented)
-    static ɵprov: i0.ɵɵInjectableDeclaration<ShowErrorStateMatcher>;
-}
 
 // @public
 export class ShowOnControlDirtyErrorStateMatcher implements ErrorStateMatcher {

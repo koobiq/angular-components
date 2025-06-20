@@ -604,6 +604,7 @@ export class KbqDatepickerInput<D>
 
     onTouched = () => {};
 
+    /** @docs-private */
     ngAfterContentInit() {
         this.updateErrorState();
     }

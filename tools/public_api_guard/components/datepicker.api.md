@@ -268,7 +268,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 }
 
 // @public
-export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck {
+export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
     constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, adapter: DateAdapter<D>, dateFormats: KbqDateFormats, localeService: KbqLocaleService);
     // (undocumented)
     readonly adapter: DateAdapter<D>;
@@ -318,6 +318,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set max(value: D | null);
     get min(): D | null;
     set min(value: D | null);
+    ngAfterContentInit(): void;
     // (undocumented)
     get ngControl(): any;
     // (undocumented)
