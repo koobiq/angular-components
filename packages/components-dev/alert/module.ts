@@ -15,8 +15,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {
-    colors = KbqComponentColors;
-    alertColors = KbqAlertColors;
-    alertStyles = KbqAlertStyles;
-    style = KbqButtonStyles;
+    readonly colors = KbqComponentColors;
+    readonly alertColors = KbqAlertColors;
+    readonly alertStyles = KbqAlertStyles;
+    readonly buttonStyles = KbqButtonStyles;
 }

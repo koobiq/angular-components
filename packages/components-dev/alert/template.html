@@ -1,5 +1,5 @@
 <div class="kbq-text-big layout-row flex-100">
-    <div class="flex-33 kbq-column-container">
+    <div class="flex-33 dev-column-container">
         <h3>Colors</h3>
 
         <kbq-alert [alertColor]="alertColors.Contrast">
@@ -74,7 +74,7 @@
             <i kbq-alert-close-button kbq-icon-button="kbq-xmark-s_16" [color]="colors.ContrastFade"></i>
         </kbq-alert>
     </div>
-    <div class="flex-33 kbq-column-container">
+    <div class="flex-33 dev-column-container">
         <h3>Normal composition</h3>
 
         <kbq-alert class="kbq-alert_error">
@@ -100,7 +100,9 @@
             Lorem ipsum dolor sit amet, consectetur adipiscing elit
             <button kbq-alert-control kbq-button [color]="colors.Contrast">normal</button>
             &nbsp;
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="style.Transparent">normal</button>
+            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="buttonStyles.Transparent">
+                normal
+            </button>
             &nbsp;
         </kbq-alert>
 
@@ -116,18 +118,20 @@
             Lorem ipsum dolor sit amet, consectetur adipiscing elit
             <button kbq-alert-control kbq-button [color]="colors.Contrast">normal</button>
             &nbsp;
-            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="style.Transparent">normal</button>
+            <button kbq-alert-control kbq-button [color]="colors.Theme" [kbqStyle]="buttonStyles.Transparent">
+                normal
+            </button>
             &nbsp;
         </kbq-alert>
     </div>
 </div>
 
-<div class="kbq-column-container">
+<div class="dev-column-container">
     <h2 class="kbq-title">Long text</h2>
 </div>
 
 <div class="kbq-text-big layout-row flex-100">
-    <div class="flex-50 kbq-column-container">
+    <div class="flex-50 dev-column-container">
         <h3 class="kbq-title">normal</h3>
 
         <kbq-alert>
