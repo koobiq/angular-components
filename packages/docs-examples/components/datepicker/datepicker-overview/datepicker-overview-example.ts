@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
+import { KbqAutoColor } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -14,11 +15,12 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-overview-example',
     imports: [
+        FormsModule,
+        LuxonDateModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
-        FormsModule,
         KbqIconModule,
-        LuxonDateModule
+        KbqAutoColor
     ],
     template: `
         <div class="docs-example__datepicker-overview">
@@ -27,7 +29,7 @@ import { DateTime } from 'luxon';
                 <i
                     [tabindex]="-1"
                     [class.kbq-active]="datepicker.opened"
-                    [autoColor]="true"
+                    kbqAutoColor
                     kbq-icon-button="kbq-calendar-o_16"
                     kbqSuffix
                     color="contrast-fade"
