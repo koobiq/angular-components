@@ -14,11 +14,11 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-required-example',
     imports: [
+        FormsModule,
+        LuxonDateModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
-        KbqIconModule,
-        FormsModule,
-        LuxonDateModule
+        KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-required">
@@ -31,5 +31,5 @@ import { DateTime } from 'luxon';
     `
 })
 export class DatepickerRequiredExample {
-    date: DateTime;
+    date: DateTime | null = null;
 }
