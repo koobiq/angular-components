@@ -5,6 +5,7 @@ import {
     AfterContentInit,
     AfterViewInit,
     Attribute,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -14,8 +15,11 @@ import {
     Directive,
     ElementRef,
     inject,
+    InjectionToken,
+    Input,
     OnDestroy,
     Optional,
+    Provider,
     QueryList,
     Self,
     ViewChild,
@@ -28,47 +32,78 @@ import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
+import { KbqError } from './error';
 import { KbqFormFieldControl } from './form-field-control';
-import {
-    getKbqFormFieldMissingControlError,
-    getKbqFormFieldYouCanNotUseCleanerInNumberInputError
-} from './form-field-errors';
 import { KbqHint } from './hint';
+import { KbqLabel } from './label';
 import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
-let nextUniqueId = 0;
+/** @docs-private */
+function getKbqFormFieldMissingControlError(): Error {
+    return Error('kbq-form-field must contain a KbqFormFieldControl.');
+}
+
+/** @docs-private */
+function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
+    return Error(`You can't use kbq-cleaner with input that have type="number"`);
+}
+
+/**
+ * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`
+ * injection token.
+ */
+export type KbqFormFieldDefaultOptions = Partial<{
+    /** Disables form field borders and shadows. */
+    noBorders: boolean;
+}>;
+
+/**
+ * Injection token that can be used to configure the default options for all kbq-form-field's.
+ */
+export const KBQ_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<KbqFormFieldDefaultOptions>(
+    'KBQ_FORM_FIELD_DEFAULT_OPTIONS'
+);
+
+/** Utility provider for `KBQ_FORM_FIELD_DEFAULT_OPTIONS`. */
+export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultOptions): Provider => ({
+    provide: KBQ_FORM_FIELD_DEFAULT_OPTIONS,
+    useValue: options
+});
 
 @Component({
+    standalone: true,
     selector: 'kbq-form-field',
     exportAs: 'kbqFormField',
     templateUrl: 'form-field.html',
-    // KbqInput is a directive and can't have styles, so we need to include its styles here.
-    // The KbqInput styles are fairly minimal so it shouldn't be a big deal for people who
-    // aren't using KbqInput.
     styleUrls: [
         'form-field.scss',
+        'form-field-tokens.scss',
+        /**
+         * KbqInput is a directive and can't have styles, so we need to include its styles here.
+         * The KbqInput styles are fairly minimal so it shouldn't be a big deal for people who aren't using KbqInput.
+         */
         '../input/input.scss',
+        '../input/input-tokens.scss',
         '../timepicker/timepicker.scss',
         '../datepicker/datepicker-input.scss',
         '../textarea/textarea.scss',
-        'form-field-tokens.scss',
-        '../input/input-tokens.scss',
         '../tags/tag-input-tokens.scss'
     ],
     host: {
         class: 'kbq-form-field',
-        '[class.kbq-form-field_invalid]': 'control.errorState',
+        '[class.kbq-form-field_invalid]': 'invalid',
+        '[class.kbq-disabled]': 'control.disabled',
+        '[class.kbq-form-field_no-borders]': 'noBorders',
+
         '[class.kbq-form-field_has-prefix]': 'hasPrefix',
         '[class.kbq-form-field_has-suffix]': 'hasSuffix',
         '[class.kbq-form-field_has-password-toggle]': 'hasPasswordToggle',
         '[class.kbq-form-field_has-cleaner]': 'canShowCleaner',
         '[class.kbq-form-field_has-stepper]': 'hasStepper',
-
-        '[class.kbq-disabled]': 'control.disabled',
 
         '[class.ng-untouched]': 'shouldForward("untouched")',
         '[class.ng-touched]': 'shouldForward("touched")',
@@ -84,88 +119,207 @@ let nextUniqueId = 0;
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        { provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
+    providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
 export class KbqFormField
     extends KbqColorDirective
     implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
 {
-    @ContentChild(KbqFormFieldControl, { static: false }) control: KbqFormFieldControl<any>;
-    @ContentChild(KbqStepper, { static: false }) stepper: KbqStepper;
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
+
+    /** Disables form field borders and shadows. */
+    @Input({ transform: booleanAttribute }) noBorders: boolean | undefined = this.defaultOptions?.noBorders;
+
+    /**
+     * @docs-private
+     */
+    @ContentChild(KbqFormFieldControl, { static: false }) readonly control: KbqFormFieldControl<any>;
+    /**
+     * @docs-private
+     */
+    @ContentChild(KbqStepper, { static: false }) readonly stepper: KbqStepper;
+    /**
+     * @docs-private
+     *
+     * @TODO Should be readonly (#DS-3883)
+     */
     @ContentChild(KbqCleaner, { static: false }) cleaner: KbqCleaner | null;
-    @ContentChild(KbqPasswordToggle, { static: false }) passwordToggle: KbqPasswordToggle | null;
+    /**
+     * @docs-private
+     */
+    @ContentChild(KbqPasswordToggle, { static: false }) readonly passwordToggle: KbqPasswordToggle | null;
+    /**
+     * @docs-private
+     */
+    @ContentChildren(KbqHint) readonly hint: QueryList<KbqHint>;
+    /**
+     * @docs-private
+     */
+    @ContentChildren(KbqPasswordHint) readonly passwordHints: QueryList<KbqPasswordHint>;
+    /**
+     * @docs-private
+     */
+    @ContentChildren(KbqSuffix) readonly suffix: QueryList<KbqSuffix>;
+    /**
+     * @docs-private
+     */
+    @ContentChildren(KbqPrefix) readonly prefix: QueryList<KbqPrefix>;
+    /**
+     * @docs-private
+     */
+    @ContentChild(KbqLabel) private readonly label: KbqLabel | null;
+    /**
+     * @docs-private
+     */
+    @ContentChildren(KbqError) private readonly errors: QueryList<KbqError>;
+    /**
+     * @docs-private
+     */
+    @ViewChild('connectionContainer', { static: true }) readonly connectionContainerRef: ElementRef;
 
-    @ContentChildren(KbqHint) hint: QueryList<KbqHint>;
-    @ContentChildren(KbqPasswordHint) passwordHints: QueryList<KbqPasswordHint>;
-    @ContentChildren(KbqSuffix) suffix: QueryList<KbqSuffix>;
-    @ContentChildren(KbqPrefix) prefix: QueryList<KbqPrefix>;
-
-    @ViewChild('connectionContainer', { static: true }) connectionContainerRef: ElementRef;
-
-    // Unique id for the internal form field label.
-    labelId = `kbq-form-field-label-${nextUniqueId++}`;
-
+    /**
+     * @docs-private
+     */
     hovered: boolean = false;
 
+    /**
+     * @docs-private
+     */
     canCleanerClearByEsc: boolean = true;
 
-    private readonly destroyRef = inject(DestroyRef);
+    /**
+     * @docs-private
+     */
+    readonly elementRef = inject(ElementRef);
 
+    /** Whether the form field is invalid. */
+    get invalid(): boolean {
+        return !!this.control?.errorState;
+    }
+
+    /**
+     * Whether the form-field contains kbq-error.
+     *
+     * @docs-private
+     */
+    get hasError(): boolean {
+        return this.errors.length > 0;
+    }
+
+    /**
+     * Whether the form-field contains kbq-password-hint.
+     *
+     * @docs-private
+     */
+    get hasPasswordHint(): boolean {
+        return this.passwordHints?.length > 0;
+    }
+
+    /**
+     * Whether the form-field contains kbq-label.
+     *
+     * @docs-private
+     */
+    get hasLabel(): boolean {
+        return !!this.label;
+    }
+
+    /**
+     * Current focus origin state.
+     *
+     * @docs-private
+     */
     get focusOrigin(): FocusOrigin {
         return this._focusOrigin;
     }
 
     private _focusOrigin: FocusOrigin;
 
+    /**
+     * @docs-private
+     */
     get hasFocus(): boolean {
         return this.control?.focused;
     }
 
+    /**
+     * Whether the form-field contains kbq-hint.
+     *
+     * @docs-private
+     */
     get hasHint(): boolean {
         return this.hint?.length > 0;
     }
 
+    /**
+     * Whether the form-field contains kbqSuffix.
+     *
+     * @docs-private
+     */
     get hasSuffix(): boolean {
         return this.suffix?.length > 0;
     }
 
+    /**
+     * Whether the form-field contains kbqPrefix.
+     *
+     * @docs-private
+     */
     get hasPrefix(): boolean {
         return this.prefix?.length > 0;
     }
 
+    /**
+     * Whether the form-field contains kbq-cleaner.
+     *
+     * @docs-private
+     */
     get hasCleaner(): boolean {
         return !!this.cleaner;
     }
 
+    /**
+     * Whether the form-field contains kbq-stepper.
+     *
+     * @docs-private
+     */
     get hasStepper(): boolean {
         return !!this.stepper;
     }
 
+    /**
+     * Whether the form-field contains kbq-password-toggle.
+     *
+     * @docs-private
+     */
     get hasPasswordToggle(): boolean {
         return !!this.passwordToggle;
     }
 
+    /**
+     * @docs-private
+     */
     get canShowCleaner(): boolean {
         return this.hasCleaner && this.control?.ngControl
             ? this.control.ngControl.value && !this.control.disabled
             : false;
     }
 
+    /** Whether the form field is disabled. */
     get disabled(): boolean {
         return this.control?.disabled;
     }
 
-    /** @deprecated stepper should be always visible when provided, so this parameter is redundant,
-     * use `hasStepper` instead */
+    /**
+     * @deprecated stepper should be always visible when provided, so this parameter is redundant,
+     * use `hasStepper` instead
+     *
+     * @docs-private
+     */
     canShowStepper = true;
-
-    constructor(
-        private changeDetectorRef: ChangeDetectorRef,
-        private focusMonitor: FocusMonitor
-    ) {
-        super();
-    }
 
     ngAfterContentInit() {
         if ((this.control as any).numberInput && this.hasCleaner) {
@@ -200,15 +354,19 @@ export class KbqFormField
             .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
-    ngAfterContentChecked() {
+    ngAfterContentChecked(): void {
         this.validateControlChild();
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.runFocusMonitor();
 
         // Avoid animations on load.
         this.changeDetectorRef.detectChanges();
+    }
+
+    ngOnDestroy(): void {
+        this.stopFocusMonitor();
     }
 
     /** Focuses the control. */
@@ -218,6 +376,8 @@ export class KbqFormField
 
     /**
      * @deprecated Use `focus` instead.
+     *
+     * @docs-private
      */
     focusViaKeyboard(options?: FocusOptions): void {
         this.control.focus(options);
@@ -230,12 +390,22 @@ export class KbqFormField
         this.control?.focus();
     }
 
-    onContainerClick($event) {
+    /**
+     * Handles a click on the control's container.
+     *
+     * @docs-private
+     */
+    onContainerClick(event: MouseEvent): void {
         if (this.control?.onContainerClick) {
-            this.control.onContainerClick($event);
+            this.control.onContainerClick(event);
         }
     }
 
+    /**
+     * Handles keydown events.
+     *
+     * @docs-private
+     */
     onKeyDown(event: KeyboardEvent): void {
         if (this.control.controlType === 'input-password' && event.altKey && event.keyCode === F8) {
             (this.control as unknown as { toggleType(): void }).toggleType();
@@ -248,7 +418,10 @@ export class KbqFormField
         }
     }
 
-    onHoverChanged(isHovered: boolean) {
+    /**
+     * @docs-private
+     */
+    onHoverChanged(isHovered: boolean): void {
         if (isHovered !== this.hovered) {
             this.hovered = isHovered;
             this.changeDetectorRef.markForCheck();
@@ -256,24 +429,28 @@ export class KbqFormField
     }
 
     /**
-     * Gets an ElementRef for the element that a overlay attached to the form-field should be
-     * positioned relative to.
+     * Gets an ElementRef for the element that a overlay attached to the form-field should be positioned relative to.
      */
     getConnectedOverlayOrigin(): ElementRef {
         return this.connectionContainerRef || this.elementRef;
     }
 
-    /** Determines whether a class from the NgControl should be forwarded to the host element. */
+    /**
+     * Determines whether a class from the NgControl should be forwarded to the host element.
+     *
+     * @docs-private
+     */
     shouldForward(prop: keyof NgControl): boolean {
         const ngControl = this.control?.ngControl;
 
         return ngControl && ngControl[prop];
     }
 
-    ngOnDestroy(): void {
-        this.stopFocusMonitor();
-    }
-
+    /**
+     * Runs the focus monitor for the form field.
+     *
+     * @docs-private
+     */
     runFocusMonitor = () => {
         this.focusMonitor
             .monitor(this.elementRef.nativeElement, true)
@@ -281,11 +458,20 @@ export class KbqFormField
             .subscribe((origin) => (this._focusOrigin = origin));
     };
 
-    stopFocusMonitor() {
+    /**
+     * Stops the focus monitor for the form field.
+     *
+     * @docs-private
+     */
+    stopFocusMonitor(): void {
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
     }
 
-    /** Throws an error if the form field's control is missing. */
+    /**
+     * Throws an error if the form field's control is missing.
+     *
+     * @docs-private
+     */
     protected validateControlChild() {
         if (!this.control) {
             throw getKbqFormFieldMissingControlError();
@@ -293,14 +479,24 @@ export class KbqFormField
     }
 }
 
+/**
+ * @docs-private
+ *
+ * @deprecated Will be removed in next major release, use `noBorders` input instead.
+ */
 @Directive({
+    standalone: true,
     selector: 'kbq-form-field[kbqFormFieldWithoutBorders]',
     exportAs: 'kbqFormFieldWithoutBorders',
     host: { class: 'kbq-form-field_without-borders' }
 })
 export class KbqFormFieldWithoutBorders {}
 
+/**
+ * @docs-private
+ */
 @Directive({
+    standalone: true,
     selector: '[kbqInput], [kbqTextarea]',
     exportAs: 'KbqTrim',
     host: { class: 'kbq-trim' }

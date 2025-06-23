@@ -1,25 +1,22 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
-import { PasswordValidators } from '@koobiq/components/core';
+import { kbqDisableLegacyValidationDirectiveProvider, PasswordValidators } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field password overview */
 @Component({
     standalone: true,
     selector: 'form-field-password-overview-example',
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        ReactiveFormsModule
-    ],
+    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <input [formControl]="formControl" placeholder="Password" kbqInputPassword />
 
             <kbq-password-toggle />
 
-            <kbq-password-hint [hasError]="formControl.hasError('minLength')">
+            <!-- <kbq-password-hint [hasError]="formControl.hasError('minLength')">
                 Min length
                 @let minLength = formControl.getError('minLength');
                 @if (minLength) {
@@ -61,7 +58,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
             @if (formControl.hasError('required')) {
                 <kbq-error>Should enter password</kbq-error>
-            }
+            } -->
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -18,7 +18,7 @@ import {
 } from '@angular/forms';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { KBQ_VALIDATION, KbqComponentColors, KbqValidationOptions } from '@koobiq/components/core';
+import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -32,7 +32,7 @@ import {
     KbqTagsModule
 } from '@koobiq/components/tags';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { Observable, merge } from 'rxjs';
+import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TagExamplesModule } from '../../docs-examples/components/tag';
 
@@ -74,15 +74,7 @@ class DevExamples {}
         ReactiveFormsModule,
         KbqIconModule
     ],
-    providers: [
-        // Disables KbqValidateDirective
-        {
-            provide: KBQ_VALIDATION,
-            useValue: {
-                useValidation: false
-            } satisfies KbqValidationOptions
-        }
-    ],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     selector: 'dev-tag-input-validation',
     template: `
         <kbq-form-field>

@@ -1,28 +1,38 @@
+import { NgClass } from '@angular/common';
 import {
-    AfterViewInit,
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    Inject,
+    inject,
     Input,
     TemplateRef,
     ViewChild,
-    ViewEncapsulation,
-    forwardRef
+    ViewEncapsulation
 } from '@angular/core';
-import { KBQ_FORM_FIELD_REF, KbqFormFieldRef, PopUpTriggers } from '@koobiq/components/core';
-import { KbqIconButton } from '@koobiq/components/icon';
+import { KBQ_FORM_FIELD_REF, PopUpTriggers } from '@koobiq/components/core';
+import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputPassword } from '@koobiq/components/input';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqFormField } from './form-field';
 
+const getKbqPasswordToggleMissingControlError = (): Error => {
+    return Error('kbq-password-toggle should use with kbqInputPassword');
+};
+
+/** Component which changes password visibility. */
 @Component({
+    standalone: true,
+    imports: [NgClass, KbqIconModule],
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
-    template: '<i kbq-icon-button="" color="contrast-fade" [ngClass]="iconClass"></i>',
+    template: `
+        <i [ngClass]="iconClass" [autoColor]="true" kbq-icon-button="" color="contrast-fade"></i>
+    `,
     styleUrls: ['password-toggle.scss'],
     host: {
         class: 'kbq-password-toggle',
 
-        '[style.visibility]': 'visibility',
+        '[class.cdk-visually-hidden]': 'visibility === "hidden"',
+        '[attr.aria-hidden]': 'visibility === "hidden"',
 
         '(click)': 'toggle($event)',
         '(keydown.ENTER)': 'toggle($event)',
@@ -31,11 +41,18 @@ import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit {
-    @ViewChild(KbqIconButton) icon: KbqIconButton;
+export class KbqPasswordToggle extends KbqTooltipTrigger {
+    // @TODO fix types (#DS-2915)
+    private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
+
+    /**
+     * @docs-private
+     */
+    @ViewChild(KbqIconButton) readonly icon: KbqIconButton;
+
     @Input('kbqTooltipNotHidden')
     get content(): string | TemplateRef<any> {
-        return (this.formField.control as any).elementType === 'password' ? this.kbqTooltipHidden : this._content;
+        return this.control.elementType === 'password' ? this.kbqTooltipHidden : this._content;
     }
 
     set content(content: string | TemplateRef<any>) {
@@ -46,35 +63,51 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
 
     @Input() kbqTooltipHidden: string | TemplateRef<any>;
 
-    get hidden(): boolean {
-        return (this.formField.control as any).elementType === 'password';
+    /** Form field password control. */
+    private get control(): KbqInputPassword {
+        const control = this.formField?.control;
+
+        if (!(control instanceof KbqInputPassword)) {
+            throw getKbqPasswordToggleMissingControlError();
+        }
+
+        return control;
     }
 
+    /**
+     * @docs-private
+     */
+    get hidden(): boolean {
+        return this.control.elementType === 'password';
+    }
+
+    /**
+     * @docs-private
+     */
     get iconClass(): string {
         return this.hidden ? 'kbq-eye_16' : 'kbq-eye-slash_16';
     }
 
-    get visibility(): string {
-        return this.disabled && this.formField.control.empty ? 'hidden' : 'visible';
+    /**
+     * @docs-private
+     */
+    get visibility(): 'hidden' | 'visible' {
+        return !this.control.disabled && !!this.control.value ? 'visible' : 'hidden';
     }
 
-    constructor(
-        @Inject(forwardRef(() => KBQ_FORM_FIELD_REF)) private formField: KbqFormFieldRef,
-        private changeDetector: ChangeDetectorRef
-    ) {
+    constructor() {
         super();
 
         this.trigger = `${PopUpTriggers.Hover}`;
     }
 
-    ngAfterViewInit(): void {
-        this.formField.control?.stateChanges.subscribe(this.updateState);
-    }
-
+    /**
+     * @docs-private
+     */
     toggle(event: KeyboardEvent) {
         this.hide();
 
-        const input = this.formField.control as any;
+        const input = this.control;
 
         input.toggleType();
 
@@ -82,10 +115,4 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
 
         event.preventDefault();
     }
-
-    private updateState = () => {
-        this.icon.hasError = this.formField.control.errorState;
-
-        this.changeDetector.markForCheck();
-    };
 }

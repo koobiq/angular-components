@@ -1,23 +1,18 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, ViewEncapsulation } from '@angular/core';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
-import { KbqFormFieldControl } from './form-field-control';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInput, KbqNumberInput } from '@koobiq/components/input';
 
 const getKbqStepperToggleMissingControlError = (): Error => {
     return Error('kbq-stepper should use with kbqNumberInput');
 };
 
-/**
- * Used as temporary solution to resolve circular dependency.
- * Moving `KbqStepper` to standalone will resolve the issue
- */
-type KbqNumberInput = KbqFormFieldControl<unknown> & {
-    stepUp: (val: number) => void;
-    stepDown: (val: number) => void;
-    step: number;
-};
-
+/** Component which allow to increment or decrement number value. */
 @Component({
+    standalone: true,
     selector: 'kbq-stepper',
+    exportAs: 'kbqStepper',
+    imports: [KbqIconModule],
     template: `
         <i
             class="kbq-stepper-step-up"
@@ -50,23 +45,31 @@ type KbqNumberInput = KbqFormFieldControl<unknown> & {
 export class KbqStepper {
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
 
-    @Output()
-    readonly stepUp: EventEmitter<void> = new EventEmitter<void>();
-    @Output()
-    readonly stepDown: EventEmitter<void> = new EventEmitter<void>();
+    /** Emitted when the stepper is incremented. */
+    @Output() readonly stepUp: EventEmitter<void> = new EventEmitter<void>();
 
-    /** Form field number control. */
+    /** Emitted when the stepper is decremented. */
+    @Output() readonly stepDown: EventEmitter<void> = new EventEmitter<void>();
+
+    /**
+     * Form field number control.
+     *
+     * @docs-private
+     */
     protected get control(): KbqNumberInput {
         const control = this.formField?.control;
 
-        if (!control?.numberInput) {
+        if (!(control instanceof KbqInput && control.numberInput)) {
             throw getKbqStepperToggleMissingControlError();
         }
 
         return control.numberInput;
     }
 
-    connectTo(numberInput: KbqNumberInput) {
+    /**
+     * @docs-private
+     */
+    connectTo(numberInput: KbqNumberInput): void {
         if (!numberInput) return;
 
         this.stepUp.subscribe(() => {
@@ -78,12 +81,18 @@ export class KbqStepper {
         });
     }
 
-    onStepUp($event: MouseEvent) {
+    /**
+     * @docs-private
+     */
+    onStepUp($event: MouseEvent): void {
         this.stepUp.emit();
         $event.preventDefault();
     }
 
-    onStepDown($event: MouseEvent) {
+    /**
+     * @docs-private
+     */
+    onStepDown($event: MouseEvent): void {
         this.stepDown.emit();
         $event.preventDefault();
     }

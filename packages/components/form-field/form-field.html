@@ -1,3 +1,9 @@
+@if (hasLabel) {
+    <label class="kbq-form-field__label" [attr.for]="control.id">
+        <ng-content select="kbq-label" />
+    </label>
+}
+
 <div #connectionContainer class="kbq-form-field__container" (click)="onContainerClick($event)">
     @if (hasPrefix) {
         <div class="kbq-form-field__prefix">
@@ -9,25 +15,29 @@
         <ng-content />
     </div>
 
-    @if (hasSuffix) {
+    @if (hasSuffix || hasCleaner || hasPasswordToggle || hasStepper) {
         <div class="kbq-form-field__suffix">
+            @if (canShowCleaner) {
+                <div class="kbq-form-field__cleaner" (click)="clearValue($event)" (keydown.enter)="clearValue($event)">
+                    <ng-content select="kbq-cleaner" />
+                </div>
+            }
+
+            <ng-content select="kbq-password-toggle" />
+
+            <ng-content select="kbq-stepper" />
+
             <ng-content select="[kbqSuffix]" />
         </div>
     }
-
-    @if (canShowCleaner && !hasSuffix) {
-        <div class="kbq-form-field__cleaner" (click)="clearValue($event)" (keydown.enter)="clearValue($event)">
-            <ng-content select="kbq-cleaner" />
-        </div>
-    }
-
-    <ng-content select="kbq-password-toggle" />
-
-    <ng-content select="kbq-stepper" />
 </div>
 
-@if (hasHint || passwordHints.length) {
+@if (hasHint || hasPasswordHint || hasError) {
     <div class="kbq-form-field__hint">
+        @if (invalid) {
+            <ng-content select="kbq-error" />
+        }
+
         <ng-content select="kbq-hint, kbq-password-hint" />
     </div>
 }

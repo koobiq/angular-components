@@ -1,10 +1,6 @@
-/* stylelint-disable scss/operator-no-newline-after */
-
 @use '../core/forms/forms';
-
-@use '../core/styles/common/tokens' as *;
-
-@use './form-field-theme' as *;
+@use '../core/styles/common/tokens';
+@use './form-field-theme' as theme;
 
 .kbq-form-field {
     position: relative;
@@ -13,7 +9,9 @@
 
     .kbq-form-field__container {
         box-sizing: border-box;
-        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         border-width: var(--kbq-form-field-size-border-width);
         border-style: solid;
         border-color: transparent;
@@ -22,6 +20,11 @@
 
     .kbq-form-field:not(.kbq-form-field-type-textarea) {
         height: var(--kbq-form-field-size-height);
+    }
+
+    .kbq-form-field__infix {
+        width: 100%;
+        flex-grow: 1;
     }
 
     &,
@@ -39,28 +42,10 @@
         z-index: 2;
     }
 
-    &.kbq-form-field_without-borders .kbq-form-field__container {
+    &.kbq-form-field_without-borders .kbq-form-field__container,
+    &.kbq-form-field_no-borders .kbq-form-field__container {
         border-color: transparent !important;
         box-shadow: none !important;
-    }
-
-    &.kbq-form-field_has-prefix {
-        .kbq-input {
-            padding-left: kbq-sum-series-css-variables([form-field-size-icon-size, size-m, size-s]);
-        }
-    }
-
-    &.kbq-form-field_has-password-toggle,
-    &.kbq-form-field_has-cleaner,
-    &.kbq-form-field_has-stepper,
-    &.kbq-form-field_has-suffix {
-        .kbq-input {
-            padding-right: kbq-sum-series-css-variables(
-                [form-field-size-icon-button-size,
-                form-field-size-icon-button-margin-left,
-                form-field-size-icon-button-margin-right]
-            );
-        }
     }
 
     & + .kbq-password-hint {
@@ -69,61 +54,23 @@
 
     .kbq-form-field__prefix,
     .kbq-form-field__suffix {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-
         display: flex;
-        flex-direction: row;
         justify-content: center;
         align-items: center;
     }
 
     .kbq-form-field__prefix {
-        left: 0;
-        padding-left: var(--kbq-size-m);
-        padding-right: var(--kbq-size-s);
+        margin-left: var(--kbq-size-s);
     }
 
     .kbq-form-field__suffix {
-        right: 0;
-        padding-right: var(--kbq-size-m);
-        padding-left: var(--kbq-size-s);
-    }
-
-    .kbq-form-field__cleaner,
-    .kbq-password-toggle,
-    .kbq-stepper {
-        position: absolute;
-
-        top: 0;
-        bottom: 0;
-        right: 0;
-    }
-
-    .kbq-stepper {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-
-        width: var(--kbq-form-field-size-icon-button-size);
-
-        .kbq-stepper-step-up,
-        .kbq-stepper-step-down {
-            cursor: pointer;
-            width: var(--kbq-form-field-size-icon-button-size);
-            text-align: center;
-        }
-
-        .kbq-stepper-step-up {
-            transform: scaleY(-1);
-        }
+        margin-right: var(--kbq-size-s);
     }
 
     .kbq-form-field__hint {
         display: flex;
         flex-direction: column;
+        gap: var(--kbq-size-xxs);
         margin-top: var(--kbq-form-field-hint-size-margin-top);
 
         & .kbq-password-hint:first-child {
@@ -136,5 +83,5 @@
     }
 }
 
-@include kbq-form-field-theme();
-@include kbq-form-field-typography();
+@include theme.kbq-form-field-theme();
+@include theme.kbq-form-field-typography();

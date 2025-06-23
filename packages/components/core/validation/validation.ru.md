@@ -10,15 +10,10 @@
 ### Отключение KbqValidateDirective
 
 ```ts
-import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 
 @NgModule({
-    providers: [
-        {
-            provide: KBQ_VALIDATION,
-            useValue: { useValidation: false } satisfies KbqValidationOptions
-        }
-    ]
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
 })
 ```
 
