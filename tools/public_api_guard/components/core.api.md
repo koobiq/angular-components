@@ -697,20 +697,6 @@ export const getNodesWithoutComments: (nodes: NodeList) => Node[];
 // @public
 export function getOptionScrollPosition(optionIndex: number, optionHeight: number, currentScrollPosition: number, panelHeight: number): number;
 
-// @public
-export interface HasErrorState {
-    // (undocumented)
-    defaultErrorStateMatcher: ErrorStateMatcher;
-    // (undocumented)
-    ngControl: NgControl | null;
-    // (undocumented)
-    parentForm: NgForm | null;
-    // (undocumented)
-    parentFormGroup: FormGroupDirective | null;
-    // (undocumented)
-    stateChanges: Subject<void>;
-}
-
 // @public (undocumented)
 export interface HasTabIndex {
     // (undocumented)
@@ -2699,6 +2685,8 @@ export function mixinColor<T extends AbstractConstructor<HasElementRef>>(base: T
 // @public
 export function mixinDisabled<T extends AbstractConstructor<{}>>(base: T): CanDisableCtor & T;
 
+// Warning: (ae-forgotten-export) The symbol "HasErrorState" needs to be exported by the entry point index.d.ts
+//
 // @public
 export function mixinErrorState<T extends AbstractConstructor<HasErrorState>>(base: T): CanUpdateErrorStateCtor & T;
 
