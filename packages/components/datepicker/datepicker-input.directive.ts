@@ -268,13 +268,6 @@ export class KbqDatepickerInput<D>
 {
     readonly stateChanges: Subject<void> = new Subject<void>();
 
-    get errorState() {
-        return this.errorStateTracker.errorState;
-    }
-    set errorState(value: boolean) {
-        this.errorStateTracker.errorState = value;
-    }
-
     controlType: string = 'datepicker';
 
     focused: boolean = false;
@@ -498,6 +491,14 @@ export class KbqDatepickerInput<D>
 
     get dateInputFormat(): string {
         return this.dateFormats?.dateInput || this.adapter.config.dateInput;
+    }
+
+    get errorState() {
+        return this.errorStateTracker.errorState;
+    }
+
+    set errorState(value: boolean) {
+        this.errorStateTracker.errorState = value;
     }
 
     private get readyForParse(): boolean {

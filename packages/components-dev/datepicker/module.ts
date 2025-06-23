@@ -10,33 +10,8 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { DateTime } from 'luxon';
-import { DatepickerExamplesModule } from '../../docs-examples/components/datepicker';
 import { DevLocaleSelector } from '../locale-selector';
 import { DevThemeToggle } from '../theme-toggle';
-
-@Component({
-    standalone: true,
-    imports: [DatepickerExamplesModule],
-    selector: 'dev-examples',
-    template: `
-        <datepicker-and-timepicker-example />
-        <hr />
-        <datepicker-inactive-example />
-        <hr />
-        <datepicker-minimax-example />
-        <hr />
-        <datepicker-overview-example />
-        <hr />
-        <datepicker-range-example />
-        <hr />
-        <datepicker-required-example />
-    `,
-    host: {
-        class: 'layout-column'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-class DevExamples {}
 
 @Component({
     standalone: true,
@@ -52,8 +27,7 @@ class DevExamples {}
         KbqIconModule,
         KbqRadioModule,
         DevLocaleSelector,
-        DevThemeToggle,
-        DevExamples
+        DevThemeToggle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
