@@ -53,6 +53,7 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
+import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -1754,17 +1755,12 @@ export enum KbqAnimationDurations {
 }
 
 // @public
-export class KbqAutoColor implements AfterContentInit {
+export class KbqAutoColor {
     // (undocumented)
     readonly autoColor: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
-    protected readonly cdr: ChangeDetectorRef;
-    // (undocumented)
-    protected readonly destroyRef: DestroyRef;
-    // (undocumented)
     protected readonly formField: KbqFormFieldRef | null;
-    hasError: boolean;
-    ngAfterContentInit(): void;
+    readonly hasError: Signal<boolean>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutoColor, "[kbqAutoColor]", ["kbqAutoColor"], { "autoColor": { "alias": "kbqAutoColor"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
     // (undocumented)

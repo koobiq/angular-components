@@ -1,15 +1,8 @@
-import {
-    AfterContentInit,
-    booleanAttribute,
-    ChangeDetectorRef,
-    DestroyRef,
-    Directive,
-    inject,
-    input
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { booleanAttribute, Directive, inject, input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ErrorStateMatcher } from '../error/error-state-matcher';
 import { KBQ_FORM_FIELD_REF } from '../form-field';
 import { AbstractConstructor, Constructor } from './constructor';
@@ -113,33 +106,19 @@ export class KbqErrorStateTracker implements CanUpdateErrorState {
     selector: '[kbqAutoColor]',
     exportAs: 'kbqAutoColor',
     host: {
-        '[class.kbq-error]': 'hasError'
+        '[class.kbq-error]': 'hasError()'
     }
 })
-export class KbqAutoColor implements AfterContentInit {
+export class KbqAutoColor {
     readonly autoColor = input(false, { alias: 'kbqAutoColor', transform: booleanAttribute });
     protected readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
-    protected readonly cdr = inject(ChangeDetectorRef);
-    protected readonly destroyRef = inject(DestroyRef);
 
-    /** Flag that controls css-class on host when control state changes. */
-    hasError: boolean = false;
-
-    /** @docs-private */
-    ngAfterContentInit(): void {
-        if (this.autoColor()) {
-            this.setupHostErrorStyling();
-        }
-    }
-
-    private setupHostErrorStyling() {
-        this.formField?.control?.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(this.updateState);
-
-        this.updateState();
-    }
-
-    private updateState = () => {
-        this.hasError = this.formField?.control?.errorState;
-        this.cdr.markForCheck();
-    };
+    /**
+     * Flag that controls css-class on host when control state changes.
+     * @docs-private
+     * */
+    readonly hasError = toSignal<boolean, boolean>(
+        this.formField?.control?.stateChanges.pipe(map(() => !!this.formField?.control?.errorState)),
+        { initialValue: false }
+    );
 }
