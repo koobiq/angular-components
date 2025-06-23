@@ -318,6 +318,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set max(value: D | null);
     get min(): D | null;
     set min(value: D | null);
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     get ngControl(): any;
