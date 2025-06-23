@@ -31,7 +31,7 @@ import { DateTime } from 'luxon';
                     <label class="kbq-form__label">Select a date between December 14, 2023, and August 25, 2024.</label>
                     <kbq-form-field
                         #tooltip="kbqWarningTooltip"
-                        [kbqWarningTooltip]="'Только цифры'"
+                        [kbqWarningTooltip]="'Only numbers'"
                         (click)="datepicker.toggle()"
                         style="width: 136px"
                     >
