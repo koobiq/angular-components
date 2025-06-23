@@ -537,7 +537,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     searchControl: UntypedFormControl;
     select: KbqSelect;
     get selected(): KbqSelectValue[] | null;
-    toggleSelectionAll(): void;
+    toggleSelectionAll(emitEvent?: boolean): void;
     toggleSelectionAllByEnterKey(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqPipeMultiSelectComponent, "kbq-pipe-multi-select", never, {}, {}, never, never, true, never>;

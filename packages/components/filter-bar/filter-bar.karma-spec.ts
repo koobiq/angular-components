@@ -498,11 +498,7 @@ describe('KbqFilterBar', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <kbq-filter-bar
-            [(filter)]="activeFilter"
-            [pipeTemplates]="pipeTemplates"
-            (filterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates">
             <kbq-filters
                 [filters]="filters"
                 (onChangeFilter)="onChangeFilter($event)"
@@ -516,7 +512,7 @@ describe('KbqFilterBar', () => {
                 <ng-container *kbqPipe="pipe" />
             }
 
-            <kbq-pipe-add (onAddPipe)="onAddPipe($event)" />
+            <kbq-pipe-add />
 
             <kbq-filter-reset (onResetFilter)="onResetFilter($event)" />
 
@@ -1056,17 +1052,7 @@ class BaseFunctions {
         }
     ];
 
-    onAddPipe(pipe: KbqPipeTemplate) {
-        console.log('onAddPipe: ', pipe);
-    }
-
-    onFilterChange(filter: KbqFilter | null) {
-        console.log('onFilterChange: ', filter);
-    }
-
     onSelectFilter(filter: KbqFilter) {
-        console.log('onSelectFilter: ', filter);
-
         this.activeFilter = filter;
     }
 
@@ -1074,7 +1060,6 @@ class BaseFunctions {
         this.filters.push(filter);
 
         filterBar.filters.filterSavedSuccessfully();
-        // filterBar.filters.filterSavedUnsuccessfully({ nameAlreadyExists: true, text: 'custom error text' });
     }
 
     onSaveFilter({ filter, filterBar }) {
