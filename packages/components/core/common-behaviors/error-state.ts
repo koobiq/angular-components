@@ -1,10 +1,6 @@
-import { booleanAttribute, Directive, inject, input } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ErrorStateMatcher } from '../error/error-state-matcher';
-import { KBQ_FORM_FIELD_REF } from '../form-field';
 import { AbstractConstructor, Constructor } from './constructor';
 
 /** @docs-private */
@@ -95,33 +91,4 @@ export class KbqErrorStateTracker implements CanUpdateErrorState {
             this.stateChanges.next();
         }
     }
-}
-
-/**
- * Directive to automatically apply error-based styling to a host element
- * when used within a form field component.
- */
-@Directive({
-    standalone: true,
-    selector: '[kbqAutoColor]',
-    exportAs: 'kbqAutoColor',
-    host: {
-        '[class.kbq-error]': 'hasError()'
-    }
-})
-export class KbqAutoColor {
-    /**
-     * Flag that controls whether to enable form-control's errorState-based css-class
-     */
-    readonly autoColor = input(false, { alias: 'kbqAutoColor', transform: booleanAttribute });
-    protected readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
-
-    /**
-     * Flag that controls css-class on host when control state changes.
-     * @docs-private
-     * */
-    readonly hasError = toSignal<boolean, boolean>(
-        this.formField?.control?.stateChanges.pipe(map(() => !!this.formField?.control?.errorState)),
-        { initialValue: false }
-    );
 }

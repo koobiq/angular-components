@@ -35,7 +35,6 @@ import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/bidi';
 import * as i2_2 from '@angular/common';
 import { InjectionToken } from '@angular/core';
-import { InputSignalWithTransform } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { NgForm } from '@angular/forms';
 import { NgZone } from '@angular/core';
@@ -53,7 +52,6 @@ import { RendererFactory2 } from '@angular/core';
 import { RepositionScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollDispatcher } from '@angular/cdk/overlay';
 import { ScrollStrategy } from '@angular/cdk/overlay';
-import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { TemplateRef } from '@angular/core';
@@ -1752,18 +1750,6 @@ export enum KbqAnimationDurations {
     Instant = "50ms",
     // (undocumented)
     Rapid = "100ms"
-}
-
-// @public
-export class KbqAutoColor {
-    readonly autoColor: InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    protected readonly formField: KbqFormFieldRef | null;
-    readonly hasError: Signal<boolean>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqAutoColor, "[kbqAutoColor]", ["kbqAutoColor"], { "autoColor": { "alias": "kbqAutoColor"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutoColor, never>;
 }
 
 // @public
