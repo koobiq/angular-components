@@ -1756,7 +1756,6 @@ export enum KbqAnimationDurations {
 
 // @public
 export class KbqAutoColor {
-    // (undocumented)
     readonly autoColor: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     protected readonly formField: KbqFormFieldRef | null;

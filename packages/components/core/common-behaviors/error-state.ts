@@ -110,6 +110,9 @@ export class KbqErrorStateTracker implements CanUpdateErrorState {
     }
 })
 export class KbqAutoColor {
+    /**
+     * Flag that controls whether to enable form-control's errorState-based css-class
+     */
     readonly autoColor = input(false, { alias: 'kbqAutoColor', transform: booleanAttribute });
     protected readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true });
 
