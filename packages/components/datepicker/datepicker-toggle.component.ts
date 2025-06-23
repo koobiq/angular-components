@@ -5,7 +5,9 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
+    DestroyRef,
     Directive,
+    inject,
     Input,
     OnChanges,
     OnDestroy,
@@ -13,8 +15,10 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KbqButton } from '@koobiq/components/button';
-import { Subscription, merge, of as observableOf } from 'rxjs';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { merge, of as observableOf, Subscription } from 'rxjs';
 import { KbqDatepickerIntl } from './datepicker-intl';
 import { KbqDatepicker } from './datepicker.component';
 
@@ -24,6 +28,98 @@ import { KbqDatepicker } from './datepicker.component';
 })
 export class KbqDatepickerToggleIcon {}
 
+@Component({
+    standalone: true,
+    selector: 'kbq-datepicker-toggle-icon',
+    imports: [KbqIconModule],
+    template: `
+        @if (!customIcon) {
+            <i
+                [tabindex]="-1"
+                [class.kbq-active]="datepicker && datepicker.opened"
+                [disabled]="disabled"
+                [autoColor]="true"
+                color="contrast-fade"
+                kbq-icon-button="kbq-calendar-o_16"
+            ></i>
+        }
+
+        <ng-content select="[kbqDatepickerToggleIcon]" />
+    `,
+    styleUrls: ['./datepicker-toggle.scss'],
+    host: {
+        class: 'kbq-datepicker-toggle-icon',
+        '[attr.aria-expanded]': 'datepicker.opened',
+        '[attr.aria-disabled]': 'disabled',
+        '(click)': 'open($event)'
+    },
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
+    /** Whether the toggle button is disabled. */
+    @Input()
+    get disabled(): boolean {
+        return this.datepicker.disabled || this._disabled;
+    }
+
+    set disabled(value: boolean) {
+        this._disabled = coerceBooleanProperty(value);
+    }
+
+    private _disabled = false;
+
+    /** Datepicker instance that the button will toggle. */
+    @Input('for') datepicker: KbqDatepicker<D>;
+
+    /** Custom icon set by the consumer. */
+    @ContentChild(KbqDatepickerToggleIcon, { static: false }) protected readonly customIcon: KbqDatepickerToggleIcon;
+
+    private readonly destroyRef = inject(DestroyRef);
+    private readonly cdr = inject(ChangeDetectorRef);
+    private stateChangesSubscription = Subscription.EMPTY;
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.datepicker && !changes.datepicker.firstChange) {
+            this.watchStateChanges();
+        }
+    }
+
+    ngAfterContentInit() {
+        this.watchStateChanges();
+    }
+
+    ngOnDestroy() {
+        this.stateChangesSubscription.unsubscribe();
+    }
+
+    /** Open datepicker */
+    open($event: MouseEvent) {
+        if (this.datepicker && !this.disabled) {
+            this.datepicker.open();
+            $event.stopPropagation();
+        }
+    }
+
+    private watchStateChanges() {
+        this.stateChangesSubscription.unsubscribe();
+
+        if (!this.datepicker) return;
+
+        this.stateChangesSubscription = merge(
+            this.datepicker.disabledChange,
+            this.datepicker.datepickerInput.disabledChange,
+            this.datepicker.openedStream,
+            this.datepicker.closedStream
+        )
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.cdr.markForCheck());
+    }
+}
+
+/**
+ * @deprecated Use `KbqDatepickerToggleIconComponent` instead
+ */
 @Component({
     selector: 'kbq-datepicker-toggle',
     templateUrl: 'datepicker-toggle.html',

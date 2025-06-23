@@ -11,7 +11,11 @@ import { KbqCalendarHeader } from './calendar-header.component';
 import { KbqCalendar } from './calendar.component';
 import { KbqDatepickerInput } from './datepicker-input.directive';
 import { KbqDatepickerIntl } from './datepicker-intl';
-import { KbqDatepickerToggle, KbqDatepickerToggleIcon } from './datepicker-toggle.component';
+import {
+    KbqDatepickerToggle,
+    KbqDatepickerToggleIcon,
+    KbqDatepickerToggleIconComponent
+} from './datepicker-toggle.component';
 import {
     KBQ_DATEPICKER_SCROLL_STRATEGY_FACTORY_PROVIDER,
     KbqDatepicker,
@@ -27,6 +31,7 @@ import { KbqMonthView } from './month-view.component';
         PortalModule,
         KbqSelectModule,
         KbqIconModule,
+        KbqDatepickerToggleIconComponent,
         NgClass,
         TitleCasePipe
     ],
@@ -38,6 +43,7 @@ import { KbqMonthView } from './month-view.component';
         KbqDatepickerInput,
         KbqDatepickerToggle,
         KbqDatepickerToggleIcon,
+        KbqDatepickerToggleIconComponent,
         KbqMonthView,
         KbqCalendarHeader
     ],

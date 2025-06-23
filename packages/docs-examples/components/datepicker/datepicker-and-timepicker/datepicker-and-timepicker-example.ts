@@ -36,14 +36,7 @@ import { DateTime } from 'luxon';
                             style="width: 136px"
                         >
                             <input [kbqDatepicker]="datepicker" [ngModel]="selectedDateTime" />
-                            <i
-                                [autoColor]="true"
-                                [tabindex]="-1"
-                                [class.kbq-active]="datepicker.opened"
-                                kbq-icon-button="kbq-calendar-o_16"
-                                color="contrast-fade"
-                                kbqSuffix
-                            ></i>
+                            <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 

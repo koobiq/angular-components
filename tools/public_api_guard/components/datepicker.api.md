@@ -417,10 +417,10 @@ export class KbqDatepickerModule {
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i5.KbqDatepickerToggleIconComponent, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i5.KbqDatepickerToggleIconComponent, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader]>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     constructor(intl: KbqDatepickerIntl, changeDetectorRef: ChangeDetectorRef);
     button: KbqButton;
@@ -451,6 +451,25 @@ export class KbqDatepickerToggleIcon {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerToggleIcon, "[kbqDatepickerToggleIcon]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIcon, never>;
+}
+
+// @public (undocumented)
+export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
+    protected readonly customIcon: KbqDatepickerToggleIcon;
+    datepicker: KbqDatepicker<D>;
+    get disabled(): boolean;
+    set disabled(value: boolean);
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    open($event: MouseEvent): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggleIconComponent<any>, "kbq-datepicker-toggle-icon", never, { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; }, {}, ["customIcon"], ["[kbqDatepickerToggleIcon]"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIconComponent<any>, never>;
 }
 
 // @public

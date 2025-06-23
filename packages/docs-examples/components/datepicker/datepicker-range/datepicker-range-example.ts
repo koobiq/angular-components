@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
@@ -18,7 +19,8 @@ import { DateTime } from 'luxon';
         KbqFormFieldModule,
         KbqIconModule,
         LuxonDateModule,
-        KbqFormsModule
+        KbqFormsModule,
+        ReactiveFormsModule
     ],
     template: `
         <div class="docs-example__datepicker-range">
@@ -32,27 +34,13 @@ import { DateTime } from 'luxon';
                             style="width: 136px"
                         >
                             <input [kbqDatepicker]="datepicker" />
-                            <i
-                                [tabindex]="-1"
-                                [class.kbq-active]="datepicker.opened"
-                                [autoColor]="true"
-                                kbq-icon-button="kbq-calendar-o_16"
-                                kbqSuffix
-                                color="contrast-fade"
-                            ></i>
+                            <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
                         <kbq-form-field (click)="datepicker2.toggle()" style="width: 136px">
                             <input [kbqDatepicker]="datepicker2" />
-                            <i
-                                [tabindex]="-1"
-                                [class.kbq-active]="datepicker2.opened"
-                                [autoColor]="true"
-                                kbq-icon-button="kbq-calendar-o_16"
-                                kbqSuffix
-                                color="contrast-fade"
-                            ></i>
+                            <kbq-datepicker-toggle-icon [for]="datepicker2" kbqSuffix />
                             <kbq-datepicker #datepicker2 />
                         </kbq-form-field>
                     </div>

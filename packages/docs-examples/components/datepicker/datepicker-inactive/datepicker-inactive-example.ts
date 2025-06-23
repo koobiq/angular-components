@@ -28,13 +28,7 @@ import { DateTime } from 'luxon';
                 <label class="kbq-form__label">Пустое неактивное поле</label>
                 <kbq-form-field style="width: 136px">
                     <input [disabled]="true" [kbqDatepicker]="emptyDatepicker" [placeholder]="''" />
-                    <i
-                        [disabled]="true"
-                        [tabindex]="-1"
-                        kbq-icon-button="kbq-calendar-o_16"
-                        kbqSuffix
-                        color="contrast-fade"
-                    ></i>
+                    <kbq-datepicker-toggle-icon [for]="emptyDatepicker" kbqSuffix />
                     <kbq-datepicker #emptyDatepicker />
                 </kbq-form-field>
             </div>
@@ -45,13 +39,7 @@ import { DateTime } from 'luxon';
                 <label class="kbq-form__label">Заполненное неактивное поле</label>
                 <kbq-form-field style="width: 136px">
                     <input [disabled]="true" [kbqDatepicker]="datepicker" [ngModel]="selectedDate" />
-                    <i
-                        [disabled]="true"
-                        [tabindex]="-1"
-                        kbq-icon-button="kbq-calendar-o_16"
-                        kbqSuffix
-                        color="contrast-fade"
-                    ></i>
+                    <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                     <kbq-datepicker #datepicker />
                 </kbq-form-field>
             </div>
