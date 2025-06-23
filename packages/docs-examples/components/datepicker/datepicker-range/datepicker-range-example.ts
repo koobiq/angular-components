@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { DateAdapter, KbqFormsModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
