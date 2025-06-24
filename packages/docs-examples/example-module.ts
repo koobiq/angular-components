@@ -1285,6 +1285,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-indeterminate-loading-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-multiple-accept-validation": {
+    "packagePath": "components/file-upload/file-upload-multiple-accept-validation",
+    "title": "File upload multiple accept validation",
+    "componentName": "FileUploadMultipleAcceptValidationExample",
+    "files": [
+      "file-upload-multiple-accept-validation-example.ts"
+    ],
+    "selector": "file-upload-multiple-accept-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-accept-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
     "title": "File-upload multiple compact",
@@ -1355,6 +1367,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-required-reactive-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-required-reactive-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-single-accept-validation": {
+    "packagePath": "components/file-upload/file-upload-single-accept-validation",
+    "title": "File upload single accept validation",
+    "componentName": "FileUploadSingleAcceptValidationExample",
+    "files": [
+      "file-upload-single-accept-validation-example.ts"
+    ],
+    "selector": "file-upload-single-accept-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-accept-validation-example.ts",
     "importPath": "components/file-upload"
   },
   "file-upload-single-error-overview": {
@@ -4536,6 +4560,8 @@ return import('@koobiq/docs-examples/components/empty-state');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-indeterminate-loading-overview':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-accept-validation':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-compact-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-custom-text-overview':
@@ -4547,6 +4573,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-required-reactive-validation':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
