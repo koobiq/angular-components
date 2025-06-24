@@ -32,14 +32,14 @@
             @include _kbq-list-item(states-active);
         }
 
-        &.kbq-selected {
+        &.kbq-selected:not(.kbq-disabled) {
             @include _kbq-list-item(states-selected);
 
-            &:hover:not(.kbq-disabled) {
+            &:hover {
                 @include _kbq-list-item(states-selected-hover);
             }
 
-            &:active:not(.kbq-disabled) {
+            &:active {
                 @include _kbq-list-item(states-selected-active);
             }
         }
@@ -50,14 +50,14 @@
     }
 
     .kbq-list-option.kbq-list-option_multiple {
-        &.kbq-selected {
+        &.kbq-selected:not(.kbq-disabled) {
             @include _kbq-list-item(multiple-states-selected);
 
-            &:hover:not(.kbq-disabled) {
+            &:hover {
                 @include _kbq-list-item(multiple-states-selected-hover);
             }
 
-            &:active:not(.kbq-disabled) {
+            &:active {
                 @include _kbq-list-item(multiple-states-selected-active);
             }
         }
