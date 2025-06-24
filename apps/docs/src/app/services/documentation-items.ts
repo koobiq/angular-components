@@ -127,6 +127,7 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                         ru: 'Схематики',
                         en: 'Schematics'
                     },
+                    svgPreview: 'schematics',
                     hasApi: false,
                     hasExamples: false,
                     isNew: expiresAt('2025-06-01')
