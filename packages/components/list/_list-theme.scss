@@ -28,16 +28,38 @@
             @include _kbq-list-item(states-hover);
         }
 
+        &:active:not(.kbq-disabled) {
+            @include _kbq-list-item(states-active);
+        }
+
         &.kbq-selected {
             @include _kbq-list-item(states-selected);
 
             &:hover:not(.kbq-disabled) {
                 @include _kbq-list-item(states-selected-hover);
             }
+
+            &:active:not(.kbq-disabled) {
+                @include _kbq-list-item(states-selected-active);
+            }
         }
 
         &.kbq-disabled {
             @include _kbq-list-item(states-disabled);
+        }
+    }
+
+    .kbq-list-option.kbq-list-option_multiple {
+        &.kbq-selected {
+            @include _kbq-list-item(multiple-states-selected);
+
+            &:hover:not(.kbq-disabled) {
+                @include _kbq-list-item(multiple-states-selected-hover);
+            }
+
+            &:active:not(.kbq-disabled) {
+                @include _kbq-list-item(multiple-states-selected-active);
+            }
         }
     }
 

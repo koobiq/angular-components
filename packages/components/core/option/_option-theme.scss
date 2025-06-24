@@ -24,11 +24,19 @@
             @include kbq-option(states-hover);
         }
 
-        &.kbq-selected {
+        &:active:not(.kbq-disabled) {
+            @include kbq-option(states-active);
+        }
+
+        &.kbq-selected:not(.kbq-disabled) {
             @include kbq-option(states-selected);
 
-            &:hover:not(.kbq-disabled) {
+            &:hover {
                 @include kbq-option(states-selected-hover);
+            }
+
+            &:active {
+                @include kbq-option(states-selected-active);
             }
         }
 
@@ -44,6 +52,20 @@
         &:is(.kbq-selected, .kbq-focused, .kbq-active) + :is(.kbq-selected, .kbq-focused, .kbq-active) {
             border-top-left-radius: 0;
             border-top-right-radius: 0;
+        }
+    }
+
+    .kbq-option-multiple {
+        &.kbq-selected:not(.kbq-disabled) {
+            @include kbq-option(multiple-states-selected);
+
+            &:hover {
+                @include kbq-option(multiple-states-selected-hover);
+            }
+
+            &:active {
+                @include kbq-option(multiple-states-selected-active);
+            }
         }
     }
 

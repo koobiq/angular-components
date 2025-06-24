@@ -37,11 +37,19 @@
             @include kbq-tree-option(states-hover);
         }
 
-        &.kbq-selected {
+        &:active:not(.kbq-disabled) {
+            @include kbq-tree-option(states-active);
+        }
+
+        &.kbq-selected:not(.kbq-disabled) {
             @include kbq-tree-option(states-selected);
 
-            &:hover:not(.kbq-disabled) {
+            &:hover {
                 @include kbq-tree-option(states-selected-hover);
+            }
+
+            &:active {
+                @include kbq-tree-option(states-selected-active);
             }
         }
 
@@ -50,6 +58,20 @@
 
             & .kbq-icon.kbq-empty {
                 color: var(--kbq-states-icon-disabled);
+            }
+        }
+    }
+
+    .kbq-tree-option.kbq-tree-option_multiple {
+        &.kbq-selected:not(.kbq-disabled) {
+            @include kbq-tree-option(multiple-states-selected);
+
+            &:hover {
+                @include kbq-tree-option(multiple-states-selected-hover);
+            }
+
+            &:active {
+                @include kbq-tree-option(multiple-states-selected-active);
             }
         }
     }
