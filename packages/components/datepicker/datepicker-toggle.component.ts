@@ -33,7 +33,7 @@ export class KbqDatepickerToggleIcon {}
     selector: 'kbq-datepicker-toggle-icon',
     imports: [KbqIconModule],
     template: `
-        @if (!customIcon) {
+        <ng-content select="[kbqDatepickerToggleIcon]">
             <i
                 [tabindex]="-1"
                 [class.kbq-active]="datepicker && datepicker.opened"
@@ -42,9 +42,7 @@ export class KbqDatepickerToggleIcon {}
                 color="contrast-fade"
                 kbq-icon-button="kbq-calendar-o_16"
             ></i>
-        }
-
-        <ng-content select="[kbqDatepickerToggleIcon]" />
+        </ng-content>
     `,
     styleUrls: ['./datepicker-toggle.scss'],
     host: {
@@ -71,9 +69,6 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
 
     /** Datepicker instance that the button will toggle. */
     @Input('for') datepicker: KbqDatepicker<D>;
-
-    /** Custom icon set by the consumer. */
-    @ContentChild(KbqDatepickerToggleIcon, { static: false }) protected readonly customIcon: KbqDatepickerToggleIcon;
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly cdr = inject(ChangeDetectorRef);
