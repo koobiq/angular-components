@@ -14,17 +14,17 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-overview-example',
     imports: [
+        FormsModule,
+        LuxonDateModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
-        FormsModule,
-        KbqIconModule,
-        LuxonDateModule
+        KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-overview">
             <kbq-form-field (click)="datepicker.toggle()" style="width: 136px">
                 <input [(ngModel)]="date" [kbqDatepicker]="datepicker" />
-                <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                 <kbq-datepicker #datepicker />
             </kbq-form-field>
         </div>

@@ -1,21 +1,29 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentInit,
     Directive,
+    DoCheck,
     ElementRef,
     EventEmitter,
     forwardRef,
+    inject,
     Inject,
+    Injectable,
     Input,
     OnDestroy,
     Optional,
     Output,
+    Provider,
     Renderer2
 } from '@angular/core';
 import {
     AbstractControl,
     ControlValueAccessor,
+    FormGroupDirective,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
+    NgControl,
+    NgForm,
     ValidationErrors,
     Validator,
     ValidatorFn,
@@ -42,9 +50,11 @@ import {
 } from '@koobiq/cdk/keycodes';
 import {
     DateAdapter,
+    ErrorStateMatcher,
     KBQ_DATE_FORMATS,
     KBQ_LOCALE_SERVICE,
     KbqDateFormats,
+    KbqErrorStateTracker,
     KbqLocaleService,
     validationTooltipHideDelay,
     validationTooltipShowDelay
@@ -175,6 +185,27 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
 };
 
 /**
+ * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
+ * Used to sync control's errorState and icon's errorState, since now datepicker-input is validating on initial.
+ * After merging form-fields, default error-state matcher will be used
+ */
+@Injectable()
+class KbqDatepickerErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null): boolean {
+        return !!control?.invalid;
+    }
+}
+
+/**
+ * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
+ * After merging form-fields, default error-state matcher will be used
+ */
+const KBQ_DATEPICKER_ERROR_STATE_MATCHER: Provider = {
+    provide: ErrorStateMatcher,
+    useClass: KbqDatepickerErrorStateMatcher
+};
+
+/**
  * An event used for datepicker input and change events. We don't always have access to a native
  * input or change event because the event may have been triggered by the user clicking on the
  * calendar popup. For consistency, we always use KbqDatepickerInputEvent instead.
@@ -212,6 +243,7 @@ interface DateTimeObject {
     providers: [
         KBQ_DATEPICKER_VALUE_ACCESSOR,
         KBQ_DATEPICKER_VALIDATORS,
+        KBQ_DATEPICKER_ERROR_STATE_MATCHER,
         { provide: KbqFormFieldControl, useExisting: KbqDatepickerInput }],
     host: {
         class: 'kbq-input kbq-datepicker',
@@ -231,10 +263,10 @@ interface DateTimeObject {
         '(keydown)': 'onKeyDown($event)'
     }
 })
-export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
+export class KbqDatepickerInput<D>
+    implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
+{
     readonly stateChanges: Subject<void> = new Subject<void>();
-
-    readonly errorState: boolean;
 
     controlType: string = 'datepicker';
 
@@ -250,6 +282,16 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     /** Emits when the disabled state has changed */
     disabledChange = new EventEmitter<boolean>();
+
+    /** Object used to control when error messages are shown. */
+    @Input()
+    get errorStateMatcher() {
+        return this.errorStateTracker.errorStateMatcher;
+    }
+
+    set errorStateMatcher(value: ErrorStateMatcher) {
+        this.errorStateTracker.errorStateMatcher = value;
+    }
 
     @Input()
     get placeholder(): string {
@@ -451,6 +493,14 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         return this.dateFormats?.dateInput || this.adapter.config.dateInput;
     }
 
+    get errorState() {
+        return this.errorStateTracker.errorState;
+    }
+
+    set errorState(value: boolean) {
+        this.errorStateTracker.errorState = value;
+    }
+
     private get readyForParse(): boolean {
         return !!(this.firstDigit && this.secondDigit && this.thirdDigit);
     }
@@ -494,6 +544,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     private usePlaceholderFromInput: boolean = false;
 
+    private errorStateTracker: KbqErrorStateTracker;
+
     constructor(
         public elementRef: ElementRef<HTMLInputElement>,
         private readonly renderer: Renderer2,
@@ -512,9 +564,27 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
             throw createMissingDateImplError('DateAdapter');
         }
 
+        this.errorStateTracker = new KbqErrorStateTracker(
+            inject(ErrorStateMatcher),
+            // update ngControl later, so it will be initialized
+            null,
+            inject(FormGroupDirective, { optional: true }),
+            inject(NgForm, { optional: true }),
+            this.stateChanges
+        );
+
         this.setFormat(this.dateInputFormat);
 
         this.localeSubscription = adapter.localeChanges.subscribe(this.updateLocaleParams);
+    }
+
+    ngDoCheck() {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
+        }
     }
 
     onContainerClick() {
@@ -534,6 +604,10 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     }
 
     onTouched = () => {};
+
+    ngAfterContentInit() {
+        this.updateErrorState();
+    }
 
     ngOnDestroy() {
         this.datepickerSubscription.unsubscribe();
@@ -768,6 +842,11 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
 
     toISO8601(value: D): string {
         return this.adapter.toIso8601(value);
+    }
+
+    /** Refreshes the error state of the input. */
+    updateErrorState() {
+        this.errorStateTracker.updateErrorState();
     }
 
     private saveTimePart(selected: D) {
@@ -1318,6 +1397,9 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
         this.control = control;
 
         this.control.valueChanges.subscribe((value) => (this._value = value));
+
+        // @TODO resolve types
+        this.errorStateTracker.ngControl = { control } as unknown as NgControl;
     }
 
     /**

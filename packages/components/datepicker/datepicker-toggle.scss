@@ -1,6 +1,12 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
+.kbq-datepicker-toggle-icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .kbq-datepicker-toggle:focus {
     outline: 0;
 }

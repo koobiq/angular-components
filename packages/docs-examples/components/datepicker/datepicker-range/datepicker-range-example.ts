@@ -14,17 +14,17 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-range-example',
     imports: [
+        LuxonDateModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
         KbqIconModule,
-        LuxonDateModule,
         KbqFormsModule
     ],
     template: `
         <div class="docs-example__datepicker-range">
             <div class="kbq-form-vertical">
                 <div class="kbq-form__row">
-                    <label class="kbq-form__label">Начало и конец отпуска:</label>
+                    <label class="kbq-form__label">Vacation period:</label>
                     <div>
                         <kbq-form-field
                             class="layout-margin-right-s"
@@ -32,13 +32,13 @@ import { DateTime } from 'luxon';
                             style="width: 136px"
                         >
                             <input [kbqDatepicker]="datepicker" />
-                            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                            <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
                         <kbq-form-field (click)="datepicker2.toggle()" style="width: 136px">
                             <input [kbqDatepicker]="datepicker2" />
-                            <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                            <kbq-datepicker-toggle-icon [for]="datepicker2" kbqSuffix />
                             <kbq-datepicker #datepicker2 />
                         </kbq-form-field>
                     </div>
@@ -48,11 +48,8 @@ import { DateTime } from 'luxon';
     `
 })
 export class DatepickerRangeExample {
-    minDate: DateTime;
-    maxDate: DateTime;
+    readonly minDate = this.adapter.createDate(2023, 11, 14);
+    readonly maxDate = this.adapter.createDate(2024, 7, 25);
 
-    constructor(private adapter: DateAdapter<DateTime>) {
-        this.minDate = this.adapter.createDate(2023, 11, 14);
-        this.maxDate = this.adapter.createDate(2024, 7, 25);
-    }
+    constructor(private adapter: DateAdapter<DateTime>) {}
 }

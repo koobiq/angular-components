@@ -1,110 +1,92 @@
+@use 'sass:map';
+
+@mixin _kbq-icon-button-color($map) {
+    color: map.get($map, default);
+
+    &:hover {
+        color: map.get($map, hover);
+    }
+
+    &:active,
+    &.kbq-active {
+        color: map.get($map, active);
+    }
+
+    &.kbq-disabled {
+        color: map.get($map, disabled);
+    }
+}
+
 @mixin kbq-icon-button-theme() {
     .kbq-icon-button {
         &:focus {
             outline: none;
         }
 
-        // FIXME: move to unified mixin
         &.kbq-theme {
-            color: var(--kbq-icon-button-theme-default);
-
-            &:active,
-            &.kbq-active {
-                color: var(--kbq-icon-button-theme-states-active);
-            }
-
-            &:not(.kbq-disabled):hover {
-                color: var(--kbq-icon-button-theme-states-hover);
-            }
-
-            &.kbq-disabled {
-                color: var(--kbq-icon-button-theme-states-disabled);
-            }
+            @include _kbq-icon-button-color(
+                (
+                    default: var(--kbq-icon-button-theme-default),
+                    hover: var(--kbq-icon-button-theme-states-hover),
+                    active: var(--kbq-icon-button-theme-states-active),
+                    disabled: var(--kbq-icon-button-theme-states-disabled)
+                )
+            );
         }
 
         &.kbq-contrast {
-            color: var(--kbq-icon-button-contrast-default);
-
-            &:active,
-            &.kbq-active {
-                color: var(--kbq-icon-button-contrast-states-active);
-            }
-
-            &:not(.kbq-disabled):hover {
-                color: var(--kbq-icon-button-contrast-states-hover);
-            }
-
-            &.kbq-disabled {
-                color: var(--kbq-icon-button-contrast-states-disabled);
-            }
+            @include _kbq-icon-button-color(
+                (
+                    default: var(--kbq-icon-button-contrast-default),
+                    hover: var(--kbq-icon-button-contrast-states-hover),
+                    active: var(--kbq-icon-button-contrast-states-active),
+                    disabled: var(--kbq-icon-button-contrast-states-disabled)
+                )
+            );
         }
 
         &.kbq-contrast-fade {
-            color: var(--kbq-icon-button-fade-contrast-default);
-
-            &:active,
-            &.kbq-active {
-                color: var(--kbq-icon-button-fade-contrast-states-active);
-            }
-
-            &:not(.kbq-disabled):hover {
-                color: var(--kbq-icon-button-fade-contrast-states-hover);
-            }
-
-            &.kbq-disabled {
-                color: var(--kbq-icon-button-fade-contrast-states-disabled);
-            }
+            @include _kbq-icon-button-color(
+                (
+                    default: var(--kbq-icon-button-fade-contrast-default),
+                    hover: var(--kbq-icon-button-fade-contrast-states-hover),
+                    active: var(--kbq-icon-button-fade-contrast-states-active),
+                    disabled: var(--kbq-icon-button-fade-contrast-states-disabled)
+                )
+            );
         }
 
         &.kbq-error {
-            color: var(--kbq-icon-button-error-default);
-
-            &:active,
-            &.kbq-active {
-                color: var(--kbq-icon-button-error-states-active);
-            }
-
-            &:not(.kbq-disabled):hover {
-                color: var(--kbq-icon-button-error-states-hover);
-            }
-
-            &.kbq-disabled {
-                color: var(--kbq-icon-button-error-states-disabled);
-            }
+            @include _kbq-icon-button-color(
+                (
+                    default: var(--kbq-icon-button-error-default),
+                    hover: var(--kbq-icon-button-error-states-hover),
+                    active: var(--kbq-icon-button-error-states-active),
+                    disabled: var(--kbq-icon-button-error-states-disabled)
+                )
+            );
         }
 
         &.kbq-success {
-            color: var(--kbq-icon-button-success-default);
-
-            &:active,
-            &.kbq-active {
-                color: var(--kbq-icon-button-success-states-active);
-            }
-
-            &:not(.kbq-disabled):hover {
-                color: var(--kbq-icon-button-success-states-hover);
-            }
-
-            &.kbq-disabled {
-                color: var(--kbq-icon-button-success-states-disabled);
-            }
+            @include _kbq-icon-button-color(
+                (
+                    default: var(--kbq-icon-button-success-default),
+                    hover: var(--kbq-icon-button-success-states-hover),
+                    active: var(--kbq-icon-button-success-states-active),
+                    disabled: var(--kbq-icon-button-success-states-disabled)
+                )
+            );
         }
 
         &.kbq-warning {
-            color: var(--kbq-icon-button-warning-default);
-
-            &:active,
-            &.kbq-active {
-                color: var(--kbq-icon-button-warning-states-active);
-            }
-
-            &:not(.kbq-disabled):hover {
-                color: var(--kbq-icon-button-warning-states-hover);
-            }
-
-            &.kbq-disabled {
-                color: var(--kbq-icon-button-warning-states-disabled);
-            }
+            @include _kbq-icon-button-color(
+                (
+                    default: var(--kbq-icon-button-warning-default),
+                    hover: var(--kbq-icon-button-warning-states-hover),
+                    active: var(--kbq-icon-button-warning-states-active),
+                    disabled: var(--kbq-icon-button-warning-states-disabled)
+                )
+            );
         }
 
         &.cdk-keyboard-focused {

@@ -14,22 +14,22 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-required-example',
     imports: [
+        FormsModule,
+        LuxonDateModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
-        KbqIconModule,
-        FormsModule,
-        LuxonDateModule
+        KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-required">
             <kbq-form-field (click)="datepicker.toggle()" style="width: 136px">
-                <input [kbqDatepicker]="datepicker" [ngModel]="date" [required]="true" />
-                <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+                <input [(ngModel)]="date" [kbqDatepicker]="datepicker" [required]="true" />
+                <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                 <kbq-datepicker #datepicker />
             </kbq-form-field>
         </div>
     `
 })
 export class DatepickerRequiredExample {
-    date: DateTime;
+    date: DateTime | null = null;
 }

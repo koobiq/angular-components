@@ -12,7 +12,9 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { DateAdapter } from '@koobiq/components/core';
 import { Directionality } from '@angular/cdk/bidi';
+import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
+import { ErrorStateMatcher } from '@koobiq/components/core';
 import { EventEmitter } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i10 from '@angular/cdk/a11y';
@@ -266,7 +268,7 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 }
 
 // @public
-export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy {
+export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
     constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, adapter: DateAdapter<D>, dateFormats: KbqDateFormats, localeService: KbqLocaleService);
     // (undocumented)
     readonly adapter: DateAdapter<D>;
@@ -290,7 +292,10 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     get empty(): boolean;
     // (undocumented)
-    readonly errorState: boolean;
+    get errorState(): boolean;
+    set errorState(value: boolean);
+    get errorStateMatcher(): ErrorStateMatcher;
+    set errorStateMatcher(value: ErrorStateMatcher);
     // (undocumented)
     focus(): void;
     // (undocumented)
@@ -314,7 +319,11 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     get min(): D | null;
     set min(value: D | null);
     // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
     get ngControl(): any;
+    // (undocumented)
+    ngDoCheck(): void;
     // (undocumented)
     ngOnDestroy(): void;
     onBlur(): void;
@@ -349,6 +358,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     readonly stateChanges: Subject<void>;
     // (undocumented)
     toISO8601(value: D): string;
+    updateErrorState(): void;
     validate(control: AbstractControl): ValidationErrors | null;
     get value(): D | null;
     set value(value: D | null);
@@ -358,7 +368,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     writeValue(value: D): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, [null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
 }
@@ -407,10 +417,10 @@ export class KbqDatepickerModule {
     // Warning: (ae-forgotten-export) The symbol "i7" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqDatepickerModule, [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader], [typeof i8.KbqButtonModule, typeof i9.OverlayModule, typeof i10.A11yModule, typeof i11.PortalModule, typeof i12.KbqSelectModule, typeof i13.KbqIconModule, typeof i5.KbqDatepickerToggleIconComponent, typeof i14.NgClass, typeof i14.TitleCasePipe], [typeof i1.KbqCalendar, typeof i2.KbqCalendarBody, typeof i3.KbqDatepicker, typeof i3.KbqDatepickerContent, typeof i4.KbqDatepickerInput, typeof i5.KbqDatepickerToggle, typeof i5.KbqDatepickerToggleIcon, typeof i5.KbqDatepickerToggleIconComponent, typeof i6.KbqMonthView, typeof i7.KbqCalendarHeader]>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDestroy {
     constructor(intl: KbqDatepickerIntl, changeDetectorRef: ChangeDetectorRef);
     button: KbqButton;
@@ -441,6 +451,24 @@ export class KbqDatepickerToggleIcon {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerToggleIcon, "[kbqDatepickerToggleIcon]", never, {}, {}, never, never, false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIcon, never>;
+}
+
+// @public (undocumented)
+export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
+    datepicker: KbqDatepicker<D>;
+    get disabled(): boolean;
+    set disabled(value: boolean);
+    // (undocumented)
+    ngAfterContentInit(): void;
+    // (undocumented)
+    ngOnChanges(changes: SimpleChanges): void;
+    // (undocumented)
+    ngOnDestroy(): void;
+    open($event: MouseEvent): void;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggleIconComponent<any>, "kbq-datepicker-toggle-icon", never, { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; }, {}, never, ["[kbqDatepickerToggleIcon]"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIconComponent<any>, never>;
 }
 
 // @public

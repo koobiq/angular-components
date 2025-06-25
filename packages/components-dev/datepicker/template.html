@@ -3,6 +3,8 @@
 <dev-locale-selector />
 <hr />
 
+<dev-examples class="layout-margin-bottom-l" />
+
 <br />
 <br />
 <div>{{ date }}</div>
@@ -21,8 +23,7 @@
             (dateChange)="onDateChange()"
             (dateInput)="onDateInput()"
         />
-        <!--        <kbq-datepicker-toggle [tabIndex]="7" kbqSuffix [for]="myDatepicker1"></kbq-datepicker-toggle>-->
-        <i kbq-icon="kbq-calendar-o_16" kbqSuffix></i>
+        <kbq-datepicker-toggle-icon kbqSuffix [for]="myDatepicker1" />
         <kbq-datepicker #myDatepicker1 [maxDate]="maxDate" [minDate]="minDate" [startAt]="startAt" />
     </kbq-form-field>
 
