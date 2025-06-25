@@ -58,6 +58,7 @@ let uniqueIdCounter: number = 0;
     styleUrls: ['./tree-option.scss', './tree-tokens.scss'],
     host: {
         class: 'kbq-tree-option',
+        '[class.kbq-tree-option_multiple]': 'tree.multiple',
         '[class.kbq-selected]': 'selected',
         '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-disabled]': 'disabled',

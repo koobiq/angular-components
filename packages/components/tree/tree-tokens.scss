@@ -16,6 +16,7 @@
     --kbq-tree-default-action-button-color: var(--kbq-icon-contrast-fade);
     --kbq-tree-default-caption-color: var(--kbq-foreground-contrast-secondary);
     --kbq-tree-states-hover-container-background: var(--kbq-states-background-transparent-hover);
+    --kbq-tree-states-active-container-background: var(--kbq-states-background-transparent-active);
     --kbq-tree-states-hover-text-color: var(--kbq-foreground-contrast);
     --kbq-tree-states-hover-icon-color: var(--kbq-icon-contrast);
     --kbq-tree-states-hover-tree-toggle-color: var(--kbq-icon-contrast-fade);
@@ -23,12 +24,16 @@
     --kbq-tree-states-hover-caption-color: var(--kbq-foreground-contrast-secondary);
     --kbq-tree-states-focused-focus-outline-color: var(--kbq-states-line-focus-theme);
     --kbq-tree-states-selected-container-background: var(--kbq-background-theme-less);
+    --kbq-tree-multiple-states-selected-container-background: var(--kbq-background-contrast-less);
     --kbq-tree-states-selected-text-color: var(--kbq-foreground-contrast);
     --kbq-tree-states-selected-icon-color: var(--kbq-icon-contrast);
     --kbq-tree-states-selected-tree-toggle-color: var(--kbq-icon-contrast-fade);
     --kbq-tree-states-selected-action-button-color: var(--kbq-icon-contrast-fade);
     --kbq-tree-states-selected-caption-color: var(--kbq-foreground-contrast-secondary);
     --kbq-tree-states-selected-hover-container-background: var(--kbq-states-background-theme-less-hover);
+    --kbq-tree-states-selected-active-container-background: var(--kbq-states-background-theme-less-active);
+    --kbq-tree-multiple-states-selected-hover-container-background: var(--kbq-states-background-contrast-less-hover);
+    --kbq-tree-multiple-states-selected-active-container-background: var(--kbq-states-background-contrast-less-active);
     --kbq-tree-states-selected-hover-text-color: var(--kbq-foreground-contrast);
     --kbq-tree-states-selected-hover-icon-color: var(--kbq-icon-contrast);
     --kbq-tree-states-selected-hover-tree-toggle-color: var(--kbq-icon-contrast-fade);

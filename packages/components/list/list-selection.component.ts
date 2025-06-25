@@ -651,6 +651,7 @@ export class KbqListOptionCaption {}
         class: 'kbq-list-option',
 
         '[class.kbq-selected]': 'selected',
+        '[class.kbq-list-option_multiple]': 'listSelection.multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-focused]': 'hasFocus',
 

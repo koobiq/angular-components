@@ -583,7 +583,8 @@ export class KbqTreeSelect
         this.tree.autoSelect = this.autoSelect;
 
         if (this.tree.multipleMode === null) {
-            this.tree.multipleMode = this.multiple ? MultipleMode.CHECKBOX : null;
+            // setTimeout need for prevent an error "NG0100: ExpressionChangedAfterItHasBeenCheckedError"
+            setTimeout(() => (this.tree.multipleMode = this.multiple ? MultipleMode.CHECKBOX : null));
         }
 
         if (this.multiple) {
