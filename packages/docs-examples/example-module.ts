@@ -1285,6 +1285,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "file-upload-indeterminate-loading-overview-example.ts",
     "importPath": "components/file-upload"
   },
+  "file-upload-multiple-accept-validation": {
+    "packagePath": "components/file-upload/file-upload-multiple-accept-validation",
+    "title": "File upload multiple accept validation",
+    "componentName": "FileUploadMultipleAcceptValidationExample",
+    "files": [
+      "file-upload-multiple-accept-validation-example.ts"
+    ],
+    "selector": "file-upload-multiple-accept-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-multiple-accept-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
   "file-upload-multiple-compact-overview": {
     "packagePath": "components/file-upload/file-upload-multiple-compact-overview",
     "title": "File-upload multiple compact",
@@ -1355,6 +1367,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "file-upload-multiple-required-reactive-validation-example",
     "additionalComponents": [],
     "primaryFile": "file-upload-multiple-required-reactive-validation-example.ts",
+    "importPath": "components/file-upload"
+  },
+  "file-upload-single-accept-validation": {
+    "packagePath": "components/file-upload/file-upload-single-accept-validation",
+    "title": "File upload single accept validation",
+    "componentName": "FileUploadSingleAcceptValidationExample",
+    "files": [
+      "file-upload-single-accept-validation-example.ts"
+    ],
+    "selector": "file-upload-single-accept-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "file-upload-single-accept-validation-example.ts",
     "importPath": "components/file-upload"
   },
   "file-upload-single-error-overview": {
@@ -4242,6 +4266,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-overview-example.ts",
     "importPath": "components/tree"
   },
+  "tree-select-and-mark": {
+    "packagePath": "components/tree/tree-select-and-mark",
+    "title": "tree-select-and-mark",
+    "componentName": "TreeSelectAndMarkExample",
+    "files": [
+      "tree-select-and-mark-example.ts"
+    ],
+    "selector": "tree-select-and-mark-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-and-mark-example.ts",
+    "importPath": "components/tree"
+  },
+  "tree-selection-separate-from-focus": {
+    "packagePath": "components/tree/tree-selection-separate-from-focus",
+    "title": "tree-selection-separate-from-focus",
+    "componentName": "TreeSelectionSeparateFromFocusExample",
+    "files": [
+      "tree-selection-separate-from-focus-example.ts"
+    ],
+    "selector": "tree-selection-separate-from-focus-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-selection-separate-from-focus-example.ts",
+    "importPath": "components/tree"
+  },
   "validation-composite": {
     "packagePath": "components/validation/validation-composite",
     "title": "Validation composite",
@@ -4536,6 +4584,8 @@ return import('@koobiq/docs-examples/components/empty-state');
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-indeterminate-loading-overview':
 return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-multiple-accept-validation':
+return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-compact-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-custom-text-overview':
@@ -4547,6 +4597,8 @@ return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-multiple-required-reactive-validation':
+return import('@koobiq/docs-examples/components/file-upload');
+  case 'file-upload-single-accept-validation':
 return import('@koobiq/docs-examples/components/file-upload');
   case 'file-upload-single-error-overview':
 return import('@koobiq/docs-examples/components/file-upload');
@@ -5015,6 +5067,10 @@ return import('@koobiq/docs-examples/components/tree');
   case 'tree-multiple-keyboard':
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-overview':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-select-and-mark':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-selection-separate-from-focus':
 return import('@koobiq/docs-examples/components/tree');
   case 'validation-composite':
 return import('@koobiq/docs-examples/components/validation');

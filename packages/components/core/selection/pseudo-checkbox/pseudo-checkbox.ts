@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { KbqColorDirective } from '../../common-behaviors';
 
-export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
+export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 /**
  * Component that shows a simplified checkbox without including any kind of "real" checkbox.
@@ -24,7 +24,7 @@ export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
         class: 'kbq-pseudo-checkbox',
         '[class.kbq-checkbox_big]': 'big',
         '[class.kbq-indeterminate]': 'state === "indeterminate"',
-        '[class.kbq-checked]': 'state === "checked"',
+        '[class.kbq-checked]': 'state === true || state === "checked"',
         '[class.kbq-disabled]': 'disabled'
     },
     preserveWhitespaces: false,
