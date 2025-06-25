@@ -10,9 +10,20 @@ import {
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF, PopUpTriggers } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputPassword } from '@koobiq/components/input';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqFormField } from './form-field';
+import { KbqFormFieldControl } from './form-field-control';
+
+// @TODO Temporary solution to resolve circular dependency (#DS-3893)
+type KbqInputPassword = KbqFormFieldControl<unknown> & {
+    elementType: string;
+    toggleType: () => void;
+};
+
+// @TODO Temporary solution to resolve circular dependency (#DS-3893)
+const isInputPassword = (control: KbqFormFieldControl<unknown>): control is KbqInputPassword => {
+    return 'elementType' in control;
+};
 
 const getKbqPasswordToggleMissingControlError = (): Error => {
     return Error('kbq-password-toggle should use with kbqInputPassword');
@@ -67,7 +78,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger {
     private get control(): KbqInputPassword {
         const control = this.formField?.control;
 
-        if (!(control instanceof KbqInputPassword)) {
+        if (!control || !isInputPassword(control)) {
             throw getKbqPasswordToggleMissingControlError();
         }
 

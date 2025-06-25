@@ -1,7 +1,19 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Output, ViewEncapsulation } from '@angular/core';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInput, KbqNumberInput } from '@koobiq/components/input';
+import { KbqFormFieldControl } from './form-field-control';
+
+// @TODO Temporary solution to resolve circular dependency (#DS-3893)
+type KbqNumberInput = KbqFormFieldControl<unknown> & {
+    stepUp: (step: number) => void;
+    stepDown: (step: number) => void;
+    step: number;
+};
+
+// @TODO Temporary solution to resolve circular dependency (#DS-3893)
+const isNumberInput = (control: KbqFormFieldControl<unknown>): control is KbqNumberInput => {
+    return 'stepUp' in control && 'stepDown' in control;
+};
 
 const getKbqStepperToggleMissingControlError = (): Error => {
     return Error('kbq-stepper should use with kbqNumberInput');
@@ -58,12 +70,13 @@ export class KbqStepper {
      */
     protected get control(): KbqNumberInput {
         const control = this.formField?.control;
+        const input = control.numberInput;
 
-        if (!(control instanceof KbqInput && control.numberInput)) {
+        if (!isNumberInput(input)) {
             throw getKbqStepperToggleMissingControlError();
         }
 
-        return control.numberInput;
+        return input;
     }
 
     /**
