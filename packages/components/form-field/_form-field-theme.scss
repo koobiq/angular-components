@@ -1,6 +1,6 @@
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
-@mixin kbq-form-field-state($state-name) {
+@mixin _kbq-form-field-state($state-name) {
     .kbq-form-field__container {
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
         background-color: var(--kbq-form-field-#{$state-name}-background);
@@ -27,7 +27,7 @@
 
 @mixin kbq-form-field-theme() {
     .kbq-form-field {
-        @include kbq-form-field-state(default);
+        @include _kbq-form-field-state(default);
 
         & .kbq-input {
             //https://css-tricks.com/almanac/selectors/a/autofill/
@@ -44,7 +44,7 @@
         &.kbq-form-field_invalid,
         // Invalid by `KbqValidateDirective`
         &.kbq-form-field_has-validate-directive.ng-invalid {
-            @include kbq-form-field-state(states-error);
+            @include _kbq-form-field-state(states-error);
         }
 
         &.kbq-form-field-type-input,
@@ -55,7 +55,7 @@
         &.kbq-form-field-type-tag-list,
         &.kbq-form-field-type-select.cdk-keyboard-focused {
             &.cdk-focused {
-                @include kbq-form-field-state(states-focused);
+                @include _kbq-form-field-state(states-focused);
 
                 & .kbq-form-field__container {
                     box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
@@ -66,7 +66,7 @@
             &.kbq-form-field_invalid,
             // Invalid by `KbqValidateDirective`
             &.kbq-form-field_has-validate-directive.ng-invalid {
-                @include kbq-form-field-state(states-error);
+                @include _kbq-form-field-state(states-error);
 
                 &.cdk-focused .kbq-form-field__container {
                     box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
@@ -75,7 +75,7 @@
         }
 
         &.kbq-disabled {
-            @include kbq-form-field-state(states-disabled);
+            @include _kbq-form-field-state(states-disabled);
 
             .kbq-icon.kbq-empty {
                 color: var(--kbq-form-field-states-disabled-text);
@@ -100,10 +100,10 @@
 
 @mixin kbq-form-field-typography() {
     .kbq-form-field {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
         .kbq-form-field__hint > .kbq-hint:not(.kbq-password-hint) .kbq-hint__text {
-            @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
         }
     }
 }
