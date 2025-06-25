@@ -15,17 +15,17 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-inactive-example',
     imports: [
-        KbqDatepickerModule,
-        KbqFormFieldModule,
         FormsModule,
         LuxonDateModule,
+        KbqDatepickerModule,
+        KbqFormFieldModule,
         KbqFormsModule,
         KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-inactive kbq-form-vertical">
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Пустое неактивное поле</label>
+                <label class="kbq-form__label">Disabled empty field</label>
                 <kbq-form-field style="width: 136px">
                     <input [disabled]="true" [kbqDatepicker]="emptyDatepicker" [placeholder]="''" />
                     <kbq-datepicker-toggle-icon [for]="emptyDatepicker" kbqSuffix />
@@ -36,7 +36,7 @@ import { DateTime } from 'luxon';
             <br />
 
             <div class="kbq-form__row">
-                <label class="kbq-form__label">Заполненное неактивное поле</label>
+                <label class="kbq-form__label">Read-only field with data</label>
                 <kbq-form-field style="width: 136px">
                     <input [disabled]="true" [kbqDatepicker]="datepicker" [ngModel]="selectedDate" />
                     <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />

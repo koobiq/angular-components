@@ -16,18 +16,18 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-and-timepicker-example',
     imports: [
+        FormsModule,
+        LuxonDateModule,
         KbqTimepickerModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
-        FormsModule,
-        LuxonDateModule,
         KbqFormsModule,
         KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-and-timepicker">
             <div class="kbq-form-vertical">
-                <label class="kbq-form__label">Время выпуска пакета</label>
+                <label class="kbq-form__label">Package release date and time</label>
                 <div class="kbq-form__row">
                     <div>
                         <kbq-form-field

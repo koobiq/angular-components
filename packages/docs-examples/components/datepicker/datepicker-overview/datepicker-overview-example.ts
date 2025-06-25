@@ -14,11 +14,11 @@ import { DateTime } from 'luxon';
     standalone: true,
     selector: 'datepicker-overview-example',
     imports: [
+        FormsModule,
+        LuxonDateModule,
         KbqDatepickerModule,
         KbqFormFieldModule,
-        FormsModule,
-        KbqIconModule,
-        LuxonDateModule
+        KbqIconModule
     ],
     template: `
         <div class="docs-example__datepicker-overview">
