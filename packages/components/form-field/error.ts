@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqHint } from './hint';
 
 /** Error text to be shown below the form field control. */
@@ -7,11 +8,20 @@ import { KbqHint } from './hint';
     selector: 'kbq-error',
     exportAs: 'kbqError',
     templateUrl: './hint.html',
-    styleUrls: ['./hint.scss', './hint-tokens.scss'],
+    styleUrls: [
+        './hint.scss',
+        './hint-tokens.scss'
+    ],
     host: {
         class: 'kbq-error'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqError extends KbqHint {}
+export class KbqError extends KbqHint {
+    constructor() {
+        super();
+
+        this.color = KbqComponentColors.Error;
+    }
+}

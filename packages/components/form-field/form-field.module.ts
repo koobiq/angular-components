@@ -7,6 +7,7 @@ import { KbqLabel } from './label';
 import { KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
+import { KbqReactivePasswordHint } from './reactive-password-hint';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 import { KbqValidateDirective } from './validate.directive';
@@ -21,6 +22,7 @@ const COMPONENTS = [
     KbqLabel,
     KbqHint,
     KbqError,
+    KbqReactivePasswordHint,
 
     // Legacy components
     KbqPasswordHint,

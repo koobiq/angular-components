@@ -16,49 +16,49 @@ import { KbqInputModule } from '@koobiq/components/input';
 
             <kbq-password-toggle />
 
-            <!-- <kbq-password-hint [hasError]="formControl.hasError('minLength')">
+            <kbq-reactive-password-hint [hasError]="formControl.hasError('minLength')">
                 Min length
                 @let minLength = formControl.getError('minLength');
                 @if (minLength) {
                     ({{ minLength.actual }}/{{ minLength.min }})
                 }
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
 
-            <kbq-password-hint [hasError]="formControl.hasError('minUppercase')">
+            <kbq-reactive-password-hint [hasError]="formControl.hasError('minUppercase')">
                 Uppercase characters
                 @let minUppercaseError = formControl.getError('minUppercase');
                 @if (minUppercaseError) {
                     ({{ minUppercaseError.actual }}/{{ minUppercaseError.min }})
                 }
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
 
-            <kbq-password-hint [hasError]="formControl.hasError('minLowercase')">
+            <kbq-reactive-password-hint [hasError]="formControl.hasError('minLowercase')">
                 Lowercase characters
                 @let minLowercaseError = formControl.getError('minLowercase');
                 @if (minLowercaseError) {
                     ({{ minLowercaseError?.actual }}/{{ minLowercaseError?.min }})
                 }
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
 
-            <kbq-password-hint [hasError]="formControl.hasError('minNumber')">
+            <kbq-reactive-password-hint [hasError]="formControl.hasError('minNumber')">
                 Number characters
                 @let minNumberError = formControl.getError('minNumber');
                 @if (minNumberError) {
                     ({{ minNumberError.actual }}/{{ minNumberError.min }})
                 }
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
 
-            <kbq-password-hint [hasError]="formControl.hasError('minSpecial')">
+            <kbq-reactive-password-hint [hasError]="formControl.hasError('minSpecial')">
                 Special characters
                 @let minSpecialError = formControl.getError('minSpecial');
                 @if (minSpecialError) {
                     ({{ minSpecialError.actual }}/{{ minSpecialError.min }})
                 }
-            </kbq-password-hint>
+            </kbq-reactive-password-hint>
 
             @if (formControl.hasError('required')) {
                 <kbq-error>Should enter password</kbq-error>
-            } -->
+            }
         </kbq-form-field>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,15 +1,18 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
-    AfterContentChecked,
     AfterContentInit,
+    afterNextRender,
     AfterViewInit,
     Attribute,
     booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    computed,
+    contentChild,
     ContentChild,
+    contentChildren,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -29,7 +32,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
 import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
-import { EMPTY, merge } from 'rxjs';
+import { merge } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
@@ -39,18 +42,18 @@ import { KbqLabel } from './label';
 import { hasPasswordStrengthError, KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
+import { KbqReactivePasswordHint } from './reactive-password-hint';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
 /** @docs-private */
-function getKbqFormFieldMissingControlError(): Error {
-    return Error('kbq-form-field must contain a KbqFormFieldControl.');
-}
+export const getKbqFormFieldMissingControlError = (): Error => {
+    return Error('kbq-form-field must contain a KbqFormFieldControl');
+};
 
-/** @docs-private */
-function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
+const getKbqFormFieldYouCanNotUseCleanerInNumberInputError = (): Error => {
     return Error(`You can't use kbq-cleaner with input that have type="number"`);
-}
+};
 
 /**
  * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`
@@ -82,10 +85,8 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
     styleUrls: [
         'form-field.scss',
         'form-field-tokens.scss',
-        /**
-         * KbqInput is a directive and can't have styles, so we need to include its styles here.
-         * The KbqInput styles are fairly minimal so it shouldn't be a big deal for people who aren't using KbqInput.
-         */
+        // KbqInput is a directive and can't have styles, so we need to include its styles here.
+        // The KbqInput styles are fairly minimal so it shouldn't be a big deal for people who aren't using KbqInput.
         '../input/input.scss',
         '../input/input-tokens.scss',
         '../timepicker/timepicker.scss',
@@ -121,22 +122,18 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
-export class KbqFormField
-    extends KbqColorDirective
-    implements AfterContentInit, AfterContentChecked, AfterViewInit, OnDestroy
-{
+export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy {
     private readonly destroyRef = inject(DestroyRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly defaultOptions = inject(KBQ_FORM_FIELD_DEFAULT_OPTIONS, { optional: true });
-
-    /** Disables form field borders and shadows. */
-    @Input({ transform: booleanAttribute }) noBorders: boolean | undefined = this.defaultOptions?.noBorders;
-
     /**
      * @docs-private
      */
-    @ContentChild(KbqFormFieldControl, { static: false }) readonly control: KbqFormFieldControl<any>;
+    readonly elementRef = inject(ElementRef);
+
+    /** Disables form field borders and shadows. */
+    @Input({ transform: booleanAttribute }) noBorders: boolean | undefined = this.defaultOptions?.noBorders;
     /**
      * @docs-private
      */
@@ -170,15 +167,12 @@ export class KbqFormField
     /**
      * @docs-private
      */
-    @ContentChild(KbqLabel) private readonly label: KbqLabel | null;
-    /**
-     * @docs-private
-     */
-    @ContentChildren(KbqError) private readonly errors: QueryList<KbqError>;
-    /**
-     * @docs-private
-     */
     @ViewChild('connectionContainer', { static: true }) readonly connectionContainerRef: ElementRef;
+
+    private readonly reactivePasswordHint = contentChildren(KbqReactivePasswordHint);
+    private readonly error = contentChildren(KbqError);
+    private readonly label = contentChild(KbqLabel);
+    private readonly _control = contentChild(KbqFormFieldControl);
 
     /**
      * @docs-private
@@ -190,10 +184,16 @@ export class KbqFormField
      */
     canCleanerClearByEsc: boolean = true;
 
-    /**
-     * @docs-private
-     */
-    readonly elementRef = inject(ElementRef);
+    /** The form field control. */
+    get control() {
+        const control = this._control();
+
+        if (!control) {
+            throw getKbqFormFieldMissingControlError();
+        }
+
+        return control;
+    }
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
@@ -201,13 +201,25 @@ export class KbqFormField
     }
 
     /**
+     * Whether the form field control has an reactive password hint.
+     *
+     * @docs-private
+     */
+    protected readonly hasReactivePasswordHint = computed(() => this.reactivePasswordHint().length > 0);
+
+    /**
      * Whether the form-field contains kbq-error.
      *
      * @docs-private
      */
-    get hasError(): boolean {
-        return this.errors.length > 0;
-    }
+    protected readonly hasError = computed(() => this.error().length > 0);
+
+    /**
+     * Whether the form-field contains kbq-label.
+     *
+     * @docs-private
+     */
+    protected readonly hasLabel = computed(() => !!this.label());
 
     /**
      * Whether the form-field contains kbq-password-hint.
@@ -216,15 +228,6 @@ export class KbqFormField
      */
     get hasPasswordHint(): boolean {
         return this.passwordHints?.length > 0;
-    }
-
-    /**
-     * Whether the form-field contains kbq-label.
-     *
-     * @docs-private
-     */
-    get hasLabel(): boolean {
-        return !!this.label;
     }
 
     /**
@@ -321,16 +324,19 @@ export class KbqFormField
      */
     canShowStepper = true;
 
-    ngAfterContentInit() {
+    constructor() {
+        super();
+
+        afterNextRender(() => {
+            // Should be called after the view has been initialized
+            this.changeDetectorRef.detectChanges();
+        });
+    }
+
+    ngAfterContentInit(): void {
         if ((this.control as any).numberInput && this.hasCleaner) {
             this.cleaner = null;
             throw getKbqFormFieldYouCanNotUseCleanerInNumberInputError();
-        }
-
-        this.validateControlChild();
-
-        if (this.control.controlType) {
-            this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${this.control.controlType}`);
         }
 
         // Subscribe to changes in the child control state in order to update the form field UI.
@@ -338,31 +344,19 @@ export class KbqFormField
             if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
                 this.control.ngControl?.control?.setErrors({ passwordStrength: true });
             }
-
-            this.changeDetectorRef.markForCheck();
         });
 
         if (this.hasStepper) {
             this.stepper.connectTo((this.control as any).numberInput);
         }
 
-        // Run change detection if the value changes.
-        const valueChanges = this.control.ngControl?.valueChanges || EMPTY;
-
-        merge(valueChanges, this.hint.changes, this.passwordHints.changes)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.changeDetectorRef.markForCheck());
-    }
-
-    ngAfterContentChecked(): void {
-        this.validateControlChild();
+        this.initializeControl();
+        this.initializePrefixAndSuffix();
+        this.initializeHint();
     }
 
     ngAfterViewInit(): void {
         this.runFocusMonitor();
-
-        // Avoid animations on load.
-        this.changeDetectorRef.detectChanges();
     }
 
     ngOnDestroy(): void {
@@ -383,8 +377,11 @@ export class KbqFormField
         this.control.focus(options);
     }
 
-    clearValue($event) {
-        $event.stopPropagation();
+    /**
+     * @docs-private
+     */
+    clearValue(event: Event): void {
+        event.stopPropagation();
 
         this.control?.ngControl?.reset();
         this.control?.focus();
@@ -467,15 +464,39 @@ export class KbqFormField
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
     }
 
-    /**
-     * Throws an error if the form field's control is missing.
-     *
-     * @docs-private
-     */
-    protected validateControlChild() {
-        if (!this.control) {
-            throw getKbqFormFieldMissingControlError();
+    /** Initializes the form field control. */
+    private initializeControl(): void {
+        if (this.control.controlType) {
+            this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${this.control.controlType}`);
         }
+
+        this.control.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
+
+        this.control.ngControl?.valueChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.changeDetectorRef.markForCheck();
+        });
+    }
+
+    /** Initializes the kbqPrefix and kbqSuffix containers. */
+    private initializePrefixAndSuffix(): void {
+        // Mark the form field as dirty whenever the prefix or suffix children change. This is necessary because we
+        // conditionally display the prefix/suffix containers based on whether there is projected content.
+        merge(this.prefix.changes, this.suffix.changes)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            });
+    }
+
+    /** Initializes the KbqHint, KbqPasswordHint containers. */
+    private initializeHint(): void {
+        merge(this.hint.changes, this.passwordHints.changes)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            });
     }
 }
 

@@ -129,7 +129,7 @@ export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy 
      */
     canCleanerClearByEsc: boolean = true;
 
-    /** The form field's control. */
+    /** The form field control. */
     get control() {
         if (!this._control) {
             throw getKbqFormFieldMissingControlError();

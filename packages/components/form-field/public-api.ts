@@ -8,6 +8,7 @@ export * from './label';
 export * from './password-hint';
 export * from './password-toggle';
 export * from './prefix';
+export * from './reactive-password-hint';
 export * from './stepper';
 export * from './suffix';
 export * from './validate.directive';

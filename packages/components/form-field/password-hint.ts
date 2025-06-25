@@ -39,6 +39,9 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
     return passwordHints.some((hint) => hint.hasError);
 };
 
+/**
+ * @deprecated Will be removed in next major release, use `KbqReactivePasswordHint` instead.
+ */
 @Component({
     standalone: true,
     imports: [NgClass, KbqIconModule],

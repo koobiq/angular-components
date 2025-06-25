@@ -25,23 +25,23 @@
         &.kbq-error {
             @include _kbq-hint-color(fill-text-on, error);
         }
-    }
 
-    .kbq-hint.kbq-hint_fill-text-off {
-        &.kbq-contrast-fade {
-            @include _kbq-hint-color(fill-text-off, fade-contrast);
-        }
+        &.kbq-hint_fill-text-off {
+            &.kbq-contrast-fade {
+                @include _kbq-hint-color(fill-text-off, fade-contrast);
+            }
 
-        &.kbq-success {
-            @include _kbq-hint-color(fill-text-off, success);
-        }
+            &.kbq-success {
+                @include _kbq-hint-color(fill-text-off, success);
+            }
 
-        &.kbq-warning {
-            @include _kbq-hint-color(fill-text-off, warning);
-        }
+            &.kbq-warning {
+                @include _kbq-hint-color(fill-text-off, warning);
+            }
 
-        &.kbq-error {
-            @include _kbq-hint-color(fill-text-off, error);
+            &.kbq-error {
+                @include _kbq-hint-color(fill-text-off, error);
+            }
         }
     }
 }

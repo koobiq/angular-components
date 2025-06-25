@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqIconModule } from '../icon';
+import { KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * Element to be placed in end of the form field.
