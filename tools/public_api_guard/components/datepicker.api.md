@@ -455,7 +455,6 @@ export class KbqDatepickerToggleIcon {
 
 // @public (undocumented)
 export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, OnChanges, OnDestroy {
-    protected readonly customIcon: KbqDatepickerToggleIcon;
     datepicker: KbqDatepicker<D>;
     get disabled(): boolean;
     set disabled(value: boolean);
@@ -467,7 +466,7 @@ export class KbqDatepickerToggleIconComponent<D> implements AfterContentInit, On
     ngOnDestroy(): void;
     open($event: MouseEvent): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggleIconComponent<any>, "kbq-datepicker-toggle-icon", never, { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; }, {}, ["customIcon"], ["[kbqDatepickerToggleIcon]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqDatepickerToggleIconComponent<any>, "kbq-datepicker-toggle-icon", never, { "disabled": { "alias": "disabled"; "required": false; }; "datepicker": { "alias": "for"; "required": false; }; }, {}, never, ["[kbqDatepickerToggleIcon]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerToggleIconComponent<any>, never>;
 }
