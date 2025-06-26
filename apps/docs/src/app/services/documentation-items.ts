@@ -129,8 +129,19 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     },
                     svgPreview: 'schematics',
                     hasApi: false,
+                    hasExamples: false
+                },
+
+                {
+                    id: 'migration',
+                    name: {
+                        ru: 'Гайды по миграции',
+                        en: 'Migration guides'
+                    },
+                    svgPreview: '',
+                    hasApi: false,
                     hasExamples: false,
-                    isNew: expiresAt('2025-06-01')
+                    isNew: expiresAt('2025-07-13')
                 }
             ]
         }
