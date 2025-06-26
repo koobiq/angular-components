@@ -134,7 +134,9 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         if (this.selectionAllInProgress) return;
 
         this.data.value = item;
-        this.filterBar?.onChangePipe.emit(this.data);
+
+        this.emitChangePipeEvent();
+
         this.stateChanges.next();
     }
 
@@ -154,7 +156,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     /** @docs-private */
-    toggleSelectionAll() {
+    toggleSelectionAll(emitEvent: boolean = true) {
         this.selectionAllInProgress = true;
 
         if (this.allVisibleOptionsSelected) {
@@ -166,8 +168,20 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.selectionAllInProgress = false;
 
         this.data.value = [...this.select.value];
-        this.filterBar?.onChangePipe.emit(this.data);
+
+        if (emitEvent) {
+            this.emitChangePipeEvent();
+        }
+
         this.stateChanges.next();
+    }
+
+    private emitChangePipeEvent() {
+        if (this.allOptionsSelected) {
+            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
+        } else {
+            this.filterBar?.onChangePipe.emit(this.data);
+        }
     }
 
     /** Comparator of selected options */
@@ -175,7 +189,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     onClose() {
         if (this.allOptionsSelected) {
-            this.toggleSelectionAll();
+            this.toggleSelectionAll(false);
         }
     }
 
