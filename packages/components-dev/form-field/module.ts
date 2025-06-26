@@ -44,7 +44,6 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
         <form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example />
         <hr />
         <form-field-password-overview-example />
-        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

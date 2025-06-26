@@ -74,7 +74,7 @@
             }
         }
 
-        &.kbq-disabled {
+        &.kbq-form-field_disabled {
             @include _kbq-form-field-state(states-disabled);
 
             .kbq-icon.kbq-empty {

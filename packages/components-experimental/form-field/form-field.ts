@@ -44,7 +44,7 @@ export type KbqFormFieldDefaultOptions = Partial<{
 
 /** Injection token that can be used to configure the default options for all kbq-form-field's. */
 export const KBQ_FORM_FIELD_DEFAULT_OPTIONS = new InjectionToken<KbqFormFieldDefaultOptions>(
-    'KBQ_FORM_FIELD_DEFAULT_OPTIONS'
+    'KBQ_FORM_FIELD_DEFAULT_OPTIONS___EXPERIMENTAL'
 );
 
 /** Utility provider for `KBQ_FORM_FIELD_DEFAULT_OPTIONS`. */

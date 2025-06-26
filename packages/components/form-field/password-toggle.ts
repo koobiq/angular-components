@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF, PopUpTriggers } from '@koobiq/components/core';
 import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqFormField } from './form-field';
 import { KbqFormFieldControl } from './form-field-control';
 
@@ -32,7 +32,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
 /** Component which changes password visibility. */
 @Component({
     standalone: true,
-    imports: [NgClass, KbqIconModule],
+    imports: [NgClass, KbqIconModule, KbqToolTipModule],
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
     template: `
