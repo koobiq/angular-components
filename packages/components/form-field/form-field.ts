@@ -137,17 +137,17 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     /**
      * @docs-private
      */
-    @ContentChild(KbqStepper, { static: false }) readonly stepper: KbqStepper;
+    @ContentChild(KbqStepper) readonly stepper: KbqStepper;
     /**
      * @docs-private
      *
      * @TODO Should be readonly (#DS-3883)
      */
-    @ContentChild(KbqCleaner, { static: false }) cleaner: KbqCleaner | null;
+    @ContentChild(KbqCleaner) cleaner: KbqCleaner | null;
     /**
      * @docs-private
      */
-    @ContentChild(KbqPasswordToggle, { static: false }) readonly passwordToggle: KbqPasswordToggle | null;
+    @ContentChild(KbqPasswordToggle) readonly passwordToggle: KbqPasswordToggle | null;
     /**
      * @docs-private
      */

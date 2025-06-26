@@ -19,6 +19,7 @@ import {
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { FormFieldExamplesModule } from 'packages/docs-examples/components/form-field';
+import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
@@ -26,23 +27,23 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
     imports: [FormFieldExamplesModule],
     selector: 'dev-examples',
     template: `
-        <form-field-password-overview-example />
+        <form-field-with-hint-example />
+        <hr />
+        <form-field-with-label-example />
+        <hr />
+        <form-field-with-error-example />
         <hr />
         <form-field-with-cleaner-example />
+        <hr />
+        <form-field-with-prefix-and-suffix-example />
+        <hr />
+        <form-field-without-borders-example />
         <hr />
         <form-field-with-custom-error-state-matcher-set-by-attribute-example />
         <hr />
         <form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example />
         <hr />
-        <form-field-with-error-example />
-        <hr />
-        <form-field-with-hint-example />
-        <hr />
-        <form-field-with-label-example />
-        <hr />
-        <form-field-without-borders-example />
-        <hr />
-        <form-field-with-prefix-and-suffix-example />
+        <form-field-password-overview-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -146,7 +147,8 @@ const DATA_OBJECT = {
         KbqPseudoCheckboxModule,
         KbqAutocompleteModule,
         KbqNormalizeWhitespace,
-        DevExamples
+        DevExamples,
+        DevThemeToggle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

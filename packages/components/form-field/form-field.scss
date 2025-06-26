@@ -1,11 +1,20 @@
 @use '../core/forms/forms';
-@use '../core/styles/common/tokens';
 @use './form-field-theme' as theme;
 
 .kbq-form-field {
     position: relative;
     display: inline-block;
     width: 100%;
+
+    .kbq-form-field__label {
+        display: flex;
+        margin-bottom: var(--kbq-size-s);
+    }
+
+    // We should override suffix spacing for select type, because it has custom suffix
+    &.kbq-form-field-type-select .kbq-form-field__suffix {
+        margin-right: 0;
+    }
 
     .kbq-form-field__container {
         box-sizing: border-box;
