@@ -26,8 +26,6 @@ export class FileFlatNode {
 export function buildFileTree(countries: any, level: number): FileNode[] {
     const data: any[] = [];
 
-    console.log('buildFileTree: ');
-
     for (const country of countries) {
         const node = new FileNode();
 
@@ -166,7 +164,7 @@ export class TreeSelectionSeparateFromFocusExample {
 
     dataSource: KbqTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    modelValue: any = '';
+    modelValue: FileFlatNode;
 
     constructor() {
         this.treeFlattener = new KbqTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
@@ -180,6 +178,7 @@ export class TreeSelectionSeparateFromFocusExample {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+        this.modelValue = this.treeControl.dataNodes[0];
     }
 
     hasChild(_: number, nodeData: FileFlatNode) {
