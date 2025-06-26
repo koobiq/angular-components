@@ -1761,7 +1761,6 @@ export class KbqColorDirective {
     protected _color: KbqComponentColors | ThemePalette | string;
     // (undocumented)
     get colorClassName(): KbqComponentColors | ThemePalette | string;
-    // (undocumented)
     readonly elementRef: ElementRef<any>;
     setDefaultColor(color: KbqComponentColors | ThemePalette | string): void;
     // (undocumented)
@@ -1840,6 +1839,9 @@ export type KbqDefaultSizes = 'compact' | 'normal' | 'big';
 // @public (undocumented)
 export const KbqDefaultThemes: KbqTheme[];
 
+// @public @deprecated
+export const kbqDisableLegacyValidationDirectiveProvider: () => Provider;
+
 // @public
 export const kbqErrorStateMatcherProvider: (errorStateMatcher: Type<ErrorStateMatcher> | ErrorStateMatcher) => Provider;
 
@@ -1900,7 +1902,7 @@ export class KbqFormElement implements AfterContentInit {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormElement, never>;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export interface KbqFormFieldRef {
     // (undocumented)
     canCleanerClearByEsc: boolean;
@@ -2621,7 +2623,7 @@ export interface KbqUnitSystem {
     power: number;
 }
 
-// @public (undocumented)
+// @public @deprecated (undocumented)
 export interface KbqValidationOptions {
     // (undocumented)
     useValidation: boolean;
@@ -3482,10 +3484,10 @@ export const TOP_POSITION_PRIORITY: ConnectionPositionPair[];
 // @public (undocumented)
 export const TOP_RIGHT_POSITION_PRIORITY: ConnectionPositionPair[];
 
-// @public (undocumented)
+// @public
 export const validationTooltipHideDelay = 3000;
 
-// @public (undocumented)
+// @public
 export const validationTooltipShowDelay = 10;
 
 // @public (undocumented)
