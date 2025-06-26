@@ -191,8 +191,9 @@ export class KbqFilterBar {
     resetFilterChangedState(): void;
     restoreFilterState(filter?: KbqFilter): void;
     saveFilterState(filter?: KbqFilter): void;
+    selectedAllEqualsSelectedNothing: boolean;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-search, [kbq-filter-search]", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFilterBar, "kbq-filter-bar, [kbq-filter-bar]", never, { "selectedAllEqualsSelectedNothing": { "alias": "selectedAllEqualsSelectedNothing"; "required": false; }; "filter": { "alias": "filter"; "required": false; }; "pipeTemplates": { "alias": "pipeTemplates"; "required": false; }; }, { "filterChange": "filterChange"; "onChangePipe": "onChangePipe"; "onRemovePipe": "onRemovePipe"; "onClosePipe": "onClosePipe"; }, ["filters", "filterReset"], ["kbq-filters", "*", "kbq-pipe-add", "kbq-filter-reset", "kbq-filter-search, [kbq-filter-search]", "kbq-filter-refresher, [kbq-filter-refresher]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFilterBar, never>;
 }
@@ -351,6 +352,7 @@ export interface KbqPipe {
     search?: boolean;
     // (undocumented)
     selectAll?: boolean;
+    selectedAllEqualsSelectedNothing?: boolean;
     // (undocumented)
     type: KbqPipeType;
     // (undocumented)
@@ -537,6 +539,8 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     searchControl: UntypedFormControl;
     select: KbqSelect;
     get selected(): KbqSelectValue[] | null;
+    // (undocumented)
+    get selectedAllEqualsSelectedNothing(): boolean;
     toggleSelectionAll(emitEvent?: boolean): void;
     toggleSelectionAllByEnterKey(): void;
     // (undocumented)

@@ -37,7 +37,11 @@ const DATA_OBJECT = {
         KbqFilterBarModule
     ],
     template: `
-        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates">
+        <kbq-filter-bar
+            [(filter)]="activeFilter"
+            [pipeTemplates]="pipeTemplates"
+            [selectedAllEqualsSelectedNothing]="false"
+        >
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
@@ -149,6 +153,7 @@ export class FilterBarSearchInPipesExample {
                     value: null,
 
                     search: true,
+                    selectedAllEqualsSelectedNothing: true,
 
                     cleanable: true,
                     removable: false,

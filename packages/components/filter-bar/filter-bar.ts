@@ -66,6 +66,12 @@ export class KbqFilterBar {
     /** @docs-private */
     @ContentChild(KbqFilterReset) filterReset: KbqFilterReset;
 
+    /**
+     * This is special logic that unselect all items when all selected because "all selected = nothing selected".
+     * Default is true
+     * */
+    @Input() selectedAllEqualsSelectedNothing: boolean = true;
+
     /** Filter that is currently selected */
     @Input()
     get filter(): KbqFilter | null {

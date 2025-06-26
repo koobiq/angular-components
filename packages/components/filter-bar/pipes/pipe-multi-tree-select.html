@@ -43,7 +43,10 @@
             <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
                 {{ select.selected[0].name }}
             </span>
-        } @else if (select.selected?.length > 1 && !allOptionsSelected) {
+        } @else if (
+            select.selected?.length > 1 &&
+            (!selectedAllEqualsSelectedNothing || (selectedAllEqualsSelectedNothing && !allOptionsSelected))
+        ) {
             <kbq-badge [badgeColor]="'contrast'" [compact]="true">
                 {{ numberOfSelectedLeaves }}
             </kbq-badge>

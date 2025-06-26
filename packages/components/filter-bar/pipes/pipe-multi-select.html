@@ -23,7 +23,10 @@
             <span #kbqTitleText class="kbq-pipe__value" [class.kbq-pipe__value_empty]="!select.triggerValue">
                 {{ select.triggerValue }}
             </span>
-        } @else if (select.triggerValues.length > 1 && !allOptionsSelected) {
+        } @else if (
+            select.triggerValues.length > 1 &&
+            (!selectedAllEqualsSelectedNothing || (selectedAllEqualsSelectedNothing && !allOptionsSelected))
+        ) {
             <kbq-badge [badgeColor]="'contrast'" [compact]="true">
                 {{ select.triggerValues.length }}
             </kbq-badge>
