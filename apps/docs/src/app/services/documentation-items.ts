@@ -395,6 +395,7 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     svgPreview: 'form-field',
                     hasApi: true,
                     apiId: 'form-field',
+                    isNew: expiresAt('2025-07-26'),
                     hasExamples: false
                 },
                 {

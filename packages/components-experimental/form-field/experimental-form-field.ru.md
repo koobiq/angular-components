@@ -1,8 +1,8 @@
 <div class="kbq-callout kbq-callout_warning">
-<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__header">Обратите внимание</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Этот компонент является экспериментальным, он обратно совместим с оригинальным компонентом, но его не рекомендуется использовать в продакшн-приложениях.
+Функциональность модуля была перенесена в [оригинальный пакет](/ru/components/form-field).
 
 </div>
 </div>

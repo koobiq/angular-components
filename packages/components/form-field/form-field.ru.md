@@ -1,7 +1,7 @@
 `<kbq-form-field>` - это компонент, который используется для создания форм и полей ввода с поддержкой стилизации и дополнительных
 функций.
 
-Следующие компоненты предназначены для работы внутри `<kbq-form-field>` компонента:
+Следующие компоненты предназначены для использования внутри `<kbq-form-field>`:
 
 - [Autocomplete](/ru/components/autocomplete)
 - [Input](/ru/components/input)
@@ -30,6 +30,23 @@
 `<kbq-error>` — это компонент, который используется для отображения сообщений об ошибках валидации поля формы внутри `<kbq-form-field>`
 компонента. Ошибки изначально **скрыты** и будут отображаться **только** для невалидных полей формы после пользовательского
 взаимодействия или в момент отправки формы.
+
+<div class="kbq-callout kbq-callout_warning">
+<div class="kbq-callout__header">Обратите внимание</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+Для корректной работы компонента необходимо отключить устаревшую директиву [`KbqValidateDirective`](https://github.com/koobiq/angular-components/blob/main/packages/components/form-field/validate.directive.ts).
+
+```ts
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+
+@NgModule({
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+})
+```
+
+</div>
+</div>
 
 <!-- example(form-field-with-error) -->
 
@@ -97,9 +114,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components-experimental/form-field';
 
 @NgModule({
-    providers: [
-        kbqFormFieldDefaultOptionsProvider({ noBorders: true })
-    ]
+    providers: [kbqFormFieldDefaultOptionsProvider({ noBorders: true })]
 })
 ```
 

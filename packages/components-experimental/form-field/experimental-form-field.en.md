@@ -2,7 +2,7 @@
 <div class="kbq-callout__header">Attention</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-This component is experimental, it is backward compatible with the original component, but it is not recommended to use it in production applications.
+The module functionality has been moved to the [original package](/en/components/form-field).
 
 </div>
 </div>

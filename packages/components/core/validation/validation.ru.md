@@ -1,5 +1,5 @@
 <div class="kbq-callout kbq-callout_warning">
-<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__header">Обратите внимание</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
 К элементам формы применяется [`KbqValidateDirective`](https://github.com/koobiq/angular-components/blob/main/packages/components/form-field/validate.directive.ts), которая подменяет методы формы (`Validators`, `onSubmit`), что может привести к _"непредсказуемому"_ поведению.

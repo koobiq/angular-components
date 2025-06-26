@@ -21,6 +21,10 @@ const COMPONENTS = [
     KbqPasswordHint
 ];
 
+/**
+ * @deprecated Will be removed in the next major release.
+ * Module functionality has been moved to the original package (`@koobiq/components/form-field`).
+ */
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS

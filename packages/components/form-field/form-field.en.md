@@ -28,6 +28,23 @@ or for displaying additional instructions.
 
 `<kbq-error>` is a component used to display validation error messages for form fields inside the `<kbq-form-field>` component. Errors are initially **hidden** and will be displayed **only** for invalid form fields after user interaction or form submission.
 
+<div class="kbq-callout kbq-callout_warning">
+<div class="kbq-callout__header">Note</div>
+<div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
+
+For the component to work correctly, it is necessary to disable the deprecated [`KbqValidateDirective`](https://github.com/koobiq/angular-components/blob/main/packages/components/form-field/validate.directive.ts).
+
+```ts
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+
+@NgModule({
+    providers: [kbqDisableLegacyValidationDirectiveProvider()]
+})
+```
+
+</div>
+</div>
+
 <!-- example(form-field-with-error) -->
 
 ### Changing error message display behavior

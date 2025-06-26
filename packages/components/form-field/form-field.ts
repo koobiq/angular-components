@@ -18,7 +18,7 @@ import {
     ElementRef,
     inject,
     InjectionToken,
-    Input,
+    input,
     OnDestroy,
     Optional,
     Provider,
@@ -97,7 +97,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         class: 'kbq-form-field',
         '[class.kbq-form-field_invalid]': 'invalid',
         '[class.kbq-form-field_disabled]': 'disabled',
-        '[class.kbq-form-field_no-borders]': 'noBorders',
+        '[class.kbq-form-field_no-borders]': 'noBorders()',
 
         '[class.ng-untouched]': 'shouldForward("untouched")',
         '[class.ng-touched]': 'shouldForward("touched")',
@@ -126,7 +126,8 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly elementRef = inject(ElementRef);
 
     /** Disables form field borders and shadows. */
-    @Input({ transform: booleanAttribute }) noBorders: boolean | undefined = this.defaultOptions?.noBorders;
+    readonly noBorders = input(this.defaultOptions?.noBorders, { transform: booleanAttribute });
+
     /**
      * @docs-private
      */
