@@ -181,6 +181,8 @@ export class KbqFilterBar {
     get isSaved(): boolean;
     get isSavedAndChanged(): boolean;
     protected readonly localeService: KbqLocaleService | null;
+    // (undocumented)
+    static ngAcceptInputType_selectedAllEqualsSelectedNothing: unknown;
     readonly onChangePipe: EventEmitter<KbqPipe>;
     readonly onClosePipe: EventEmitter<KbqPipe>;
     readonly onRemovePipe: EventEmitter<KbqPipe>;
