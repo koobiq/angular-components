@@ -135,11 +135,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
         this.data.value = item;
 
-        if (this.allOptionsSelected) {
-            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-        } else {
-            this.filterBar?.onChangePipe.emit(this.data);
-        }
+        this.emitChangePipeEvent();
 
         this.stateChanges.next();
     }
@@ -174,14 +170,18 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         this.data.value = [...this.select.value];
 
         if (emitEvent) {
-            if (this.allOptionsSelected) {
-                this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-            } else {
-                this.filterBar?.onChangePipe.emit(this.data);
-            }
+            this.emitChangePipeEvent();
         }
 
         this.stateChanges.next();
+    }
+
+    private emitChangePipeEvent() {
+        if (this.allOptionsSelected) {
+            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
+        } else {
+            this.filterBar?.onChangePipe.emit(this.data);
+        }
     }
 
     /** Comparator of selected options */

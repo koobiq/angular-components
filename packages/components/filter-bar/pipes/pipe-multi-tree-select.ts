@@ -165,11 +165,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
         this.data.value = this.select.selectedValues;
 
-        if (this.allOptionsSelected) {
-            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-        } else {
-            this.filterBar?.onChangePipe.emit(this.data);
-        }
+        this.emitChangePipeEvent();
 
         this.stateChanges.next();
     }
@@ -203,14 +199,18 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         this.data.value = [...this.select.selectedValues];
 
         if (emitEvent) {
-            if (this.allOptionsSelected) {
-                this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
-            } else {
-                this.filterBar?.onChangePipe.emit(this.data);
-            }
+            this.emitChangePipeEvent();
         }
 
         this.stateChanges.next();
+    }
+
+    private emitChangePipeEvent() {
+        if (this.allOptionsSelected) {
+            this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
+        } else {
+            this.filterBar?.onChangePipe.emit(this.data);
+        }
     }
 
     /** updates values for selection and value template */
