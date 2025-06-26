@@ -7,6 +7,7 @@
     [ngClass]="{ 'kbq-active': select.panelOpen }"
     [ngModel]="selected"
     [panelClass]="'kbq-pipe-multi-tree-select__panel'"
+    [selectAllHandler]="selectAllHandler"
     [tabIndex]="-1"
     (closed)="onClose()"
     (opened)="onOpen()"
