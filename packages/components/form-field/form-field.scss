@@ -102,6 +102,8 @@
     }
 
     .kbq-stepper {
+        --kbq-form-field-size-icon-button-size: var(--kbq-size-3xl);
+
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -111,13 +113,8 @@
 
         .kbq-stepper-step-up,
         .kbq-stepper-step-down {
-            cursor: pointer;
             width: var(--kbq-form-field-size-icon-button-size);
             text-align: center;
-        }
-
-        .kbq-stepper-step-up {
-            transform: scaleY(-1);
         }
     }
 

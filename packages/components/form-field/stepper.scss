@@ -5,21 +5,19 @@
     align-items: center;
 
     width: var(--kbq-form-field-size-icon-button-size);
-    margin-right: var(--kbq-form-field-size-icon-button-margin-right);
     height: 100%;
+
+    .kbq-stepper-step-up {
+        margin-bottom: -2px;
+    }
+
+    .kbq-stepper-step-down {
+        margin-top: -2px;
+    }
 
     .kbq-stepper-step-up,
     .kbq-stepper-step-down {
-        cursor: pointer;
         width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
-    }
-
-    .kbq-stepper-step-up {
-        transform: scaleY(-1);
-    }
-
-    .kbq-icon-button.kbq-icon-button_small {
-        padding: 0;
     }
 }
