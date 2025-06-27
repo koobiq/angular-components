@@ -47,7 +47,7 @@ ng g @koobiq/angular-components:new-icons-pack --project <your project>
 
 ---
 
-### 🎨 2. Token Update (18.6.x)
+### 2. Token Update (18.6.x)
 
 - Deprecated color tokens were removed and typography token names were changed.
 
