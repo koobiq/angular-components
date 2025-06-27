@@ -1,3 +1,19 @@
+# 18.31.0 (2025-06-27)
+
+### Koobiq
+
+ * bug fix  **docs:** actions-panel overview example ([#DS-3518](https://github.com/koobiq/angular-components/issues/issue/DS-3518)) ([#860](https://github.com/koobiq/angular-components/issues/860)) ([bd35fd8](https://github.com/koobiq/angular-components/commit/bd35fd8f657e5e7fb964a3d2508f09e49a7b963b))
+ * bug fix  **docs:** build warning ([#DS-3823](https://github.com/koobiq/angular-components/issues/issue/DS-3823)) ([#857](https://github.com/koobiq/angular-components/issues/857)) ([f338cb0](https://github.com/koobiq/angular-components/commit/f338cb0c375043bf686362aa4487e1c542a3e491))
+ * bug fix  **filter-bar:** after selection all values ​​are not reset ([#DS-3863](https://github.com/koobiq/angular-components/issues/issue/DS-3863)) ([#863](https://github.com/koobiq/angular-components/issues/863)) ([aff9a48](https://github.com/koobiq/angular-components/commit/aff9a48db47ea4b24ffbe8cd876a4b315ba01b4b))
+ * bug fix  **filter-bar:** event is emitted 2 times when selecting and closing a filter ([#DS-3862](https://github.com/koobiq/angular-components/issues/issue/DS-3862)) ([#867](https://github.com/koobiq/angular-components/issues/867)) ([bc258a6](https://github.com/koobiq/angular-components/commit/bc258a6879dd7f371dab3f576ab9df3a783477ab))
+ * bug fix  **filter-bar:** incorrect operation of ctrl+a ([#DS-3884](https://github.com/koobiq/angular-components/issues/issue/DS-3884)) ([#873](https://github.com/koobiq/angular-components/issues/873)) ([f9216c5](https://github.com/koobiq/angular-components/commit/f9216c5922bfb190de3104bf6e4821f71e35d8c1))
+ * feature  **datepicker:** added calendar button states ([#DS-2870](https://github.com/koobiq/angular-components/issues/issue/DS-2870)) ([#859](https://github.com/koobiq/angular-components/issues/859)) ([92c0701](https://github.com/koobiq/angular-components/commit/92c07013c0cd60338eb9e861f2a356f8f59dfb0d))
+ * feature  **docs:** schematics welcome images ([#DS-3831](https://github.com/koobiq/angular-components/issues/issue/DS-3831)) ([#865](https://github.com/koobiq/angular-components/issues/865)) ([d31872d](https://github.com/koobiq/angular-components/commit/d31872d22c1e3c1b05774f6996c47b6e4219824d))
+ * feature  **docs:** v17 -> v18 migration guide ([#DS-3848](https://github.com/koobiq/angular-components/issues/issue/DS-3848)) ([#871](https://github.com/koobiq/angular-components/issues/871)) ([5aed576](https://github.com/koobiq/angular-components/commit/5aed5767cbf76e4f14d8e63d1f64edf689da8ad0))
+ * feature  **filter-bar:** added option for "all selected = nothing selected" behavior ([#DS-3881](https://github.com/koobiq/angular-components/issues/issue/DS-3881)) ([#872](https://github.com/koobiq/angular-components/issues/872)) ([e9f3ee0](https://github.com/koobiq/angular-components/commit/e9f3ee00c14eb763a69435136badb5290438dcc1))
+ * feature  **option:** gray highlighting of selected options ([#DS-3587](https://github.com/koobiq/angular-components/issues/issue/DS-3587)) ([#868](https://github.com/koobiq/angular-components/issues/868)) ([546fddc](https://github.com/koobiq/angular-components/commit/546fddc58352bafab2e066be89e0de272f307479))
+ * feature  **tree:** added checked state + examples ([#DS-3580](https://github.com/koobiq/angular-components/issues/issue/DS-3580)) ([#870](https://github.com/koobiq/angular-components/issues/870)) ([6c3e94c](https://github.com/koobiq/angular-components/commit/6c3e94c508c3f473fc69419eb82670d35b0990ca))
+
 # 18.30.0 (2025-06-19)
 
 ### Koobiq
