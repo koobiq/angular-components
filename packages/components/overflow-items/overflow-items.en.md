@@ -24,7 +24,7 @@ affects performance when there are many elements or when the container size chan
 <div kbqOverflowItems [debounceTime]="300">...</div>
 ```
 
-### Additional target for `ResizeObserver`
+### Additional target for ResizeObserver
 
 Sometimes the container size can change not only when the browser window is resized, but also when other elements on the page change size (for example: [Sidebar](en/components/sidebar)). To track such changes, you can use the `additionalResizeObserverTargets` attribute.
 The attribute accepts either a single element or an array of elements whose size changes will trigger recalculation of hidden elements. By default, `document.body` is tracked.
