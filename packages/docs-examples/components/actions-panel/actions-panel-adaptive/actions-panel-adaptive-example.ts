@@ -35,7 +35,11 @@ type ExampleAction = {
         <button (click)="open()" kbq-button>open</button>
 
         <ng-template let-data>
-            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+            <div
+                #kbqOverflowItems="kbqOverflowItems"
+                [additionalResizeObserverTargets]="additionalResizeObserverTargets"
+                kbqOverflowItems
+            >
                 <div [kbqOverflowItem]="action.Counter" order="99">
                     <div class="example-counter">Selected: {{ data.length }}</div>
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
@@ -84,7 +88,6 @@ type ExampleAction = {
             align-items: center;
             justify-content: center;
             height: 64px;
-            overflow: hidden;
         }
 
         .kbq-overflow-item {
@@ -117,18 +120,19 @@ type ExampleAction = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleActionsPanel {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly elementRef = inject(ElementRef);
+    private readonly templateRef = viewChild.required(TemplateRef);
+    private actionsPanelRef: KbqActionsPanelRef | null;
+    private readonly toast = inject(KbqToastService);
+
     protected readonly actions: ExampleAction[] = [
         { id: 'Responsible', icon: 'kbq-user_16' },
         { id: 'Status', icon: 'kbq-arrow-right-s_16' },
         { id: 'Archive', icon: 'kbq-box-archive-arrow-down_16' }
     ];
     protected readonly action = { Counter: 'counter' };
-
-    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
-    private readonly elementRef = inject(ElementRef);
-    private readonly templateRef = viewChild.required(TemplateRef);
-    private actionsPanelRef: KbqActionsPanelRef | null;
-    private readonly toast = inject(KbqToastService);
+    protected readonly additionalResizeObserverTargets = this.elementRef.nativeElement;
 
     constructor() {
         afterNextRender(() => this.open());
@@ -173,14 +177,16 @@ export class ExampleActionsPanel {
         <example-actions-panel [style.width.px]="89" />
     `,
     styles: `
-        :host {
-            min-width: 480px;
-            display: block;
-        }
-
         div {
             color: var(--kbq-foreground-contrast-secondary);
             margin: var(--kbq-size-s) var(--kbq-size-s) 0;
+        }
+
+        example-actions-panel {
+            min-width: 89px;
+            max-width: 100%;
+            overflow: hidden;
+            resize: horizontal;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
