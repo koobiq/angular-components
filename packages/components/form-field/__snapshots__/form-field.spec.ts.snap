@@ -5,6 +5,7 @@ DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
     class="kbq-password-toggle"
+    style="visibility: visible;"
   >
     <i
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye-slash_16"
@@ -77,6 +78,7 @@ DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="false"
     class="kbq-password-toggle"
+    style="visibility: visible;"
   >
     <i
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
@@ -177,6 +179,7 @@ DebugElement {
   "nativeNode": <kbq-password-toggle
     aria-hidden="true"
     class="kbq-password-toggle cdk-visually-hidden"
+    style="visibility: hidden;"
   >
     <i
       class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"

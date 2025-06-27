@@ -42,6 +42,8 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     host: {
         class: 'kbq-password-toggle',
 
+        // legacy for backward compatibility
+        '[style.visibility]': 'visibility',
         '[class.cdk-visually-hidden]': 'visibility === "hidden"',
         '[attr.aria-hidden]': 'visibility === "hidden"',
 
@@ -103,7 +105,7 @@ export class KbqPasswordToggle extends KbqTooltipTrigger {
      * @docs-private
      */
     get visibility(): 'hidden' | 'visible' {
-        return !this.control.disabled && !!this.control.value ? 'visible' : 'hidden';
+        return this.control.disabled || this.control.empty ? 'hidden' : 'visible';
     }
 
     constructor() {

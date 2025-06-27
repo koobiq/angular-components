@@ -33,6 +33,9 @@ import { ValidatorFn } from '@angular/forms';
 // @public
 export const getKbqFormFieldMissingControlError: () => Error;
 
+// @public
+export const getKbqFormFieldYouCanNotUseCleanerInNumberInputError: () => Error;
+
 // @public (undocumented)
 export const hasPasswordStrengthError: (passwordHints: QueryList<KbqPasswordHint>) => boolean;
 

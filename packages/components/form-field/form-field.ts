@@ -50,7 +50,8 @@ export const getKbqFormFieldMissingControlError = (): Error => {
     return Error('kbq-form-field must contain a KbqFormFieldControl');
 };
 
-const getKbqFormFieldYouCanNotUseCleanerInNumberInputError = (): Error => {
+/** @docs-private */
+export const getKbqFormFieldYouCanNotUseCleanerInNumberInputError = (): Error => {
     return Error(`You can't use kbq-cleaner with input that have type="number"`);
 };
 
@@ -95,7 +96,10 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
     ],
     host: {
         class: 'kbq-form-field',
+
         '[class.kbq-form-field_invalid]': 'invalid',
+        // legacy class for backward compatibility
+        '[class.kbq-disabled]': 'disabled',
         '[class.kbq-form-field_disabled]': 'disabled',
         '[class.kbq-form-field_no-borders]': 'noBorders()',
 
