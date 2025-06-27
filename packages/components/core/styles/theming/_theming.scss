@@ -48,10 +48,6 @@
         background: var(--kbq-background-bg);
         color: var(--kbq-foreground-contrast);
     }
-
-    .kbq-theme-loaded-marker {
-        display: none;
-    }
 }
 
 @function _theme_foreground($tokens, $scheme) {
