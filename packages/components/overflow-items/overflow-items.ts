@@ -15,7 +15,7 @@ import {
     signal
 } from '@angular/core';
 import { outputToObservable, takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { debounceTime, merge, skip } from 'rxjs';
+import { debounceTime, merge, skip, switchMap } from 'rxjs';
 
 /**
  * Manages the visibility of the element.
@@ -120,6 +120,11 @@ export class KbqOverflowItem extends ElementVisibilityManager {
     host: { class: 'kbq-overflow-items' }
 })
 export class KbqOverflowItems {
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly resizeObserver = inject(SharedResizeObserver);
+    private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
+
     /**
      * `KbqOverflowItem` directive references.
      */
@@ -145,6 +150,13 @@ export class KbqOverflowItems {
     readonly debounceTime = input(0, { transform: numberAttribute });
 
     /**
+     * List of additional elements to observe for resize changes.
+     *
+     * @default document.body
+     */
+    readonly additionalResizeObserverTargets = input<Element | Element[]>(this.document.body);
+
+    /**
      * Emits when the set of hidden items changes.
      */
     readonly changes = output<ReadonlySet<unknown>>();
@@ -156,20 +168,24 @@ export class KbqOverflowItems {
         initialValue: new Set<unknown>([]) as ReadonlySet<unknown>
     });
 
-    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly renderer = inject(Renderer2);
-    private readonly document = inject(DOCUMENT);
-
     constructor() {
         this.setStyles();
+        this.setupObservers();
+    }
 
-        merge(
-            toObservable(this.items),
-            toObservable(this.reverseOverflowOrder).pipe(skip(1)),
+    private setupObservers(): void {
+        const resizeObservers = merge(
             this.resizeObserver.observe(this.elementRef.nativeElement),
-            this.resizeObserver.observe(this.document.body)
-        )
+            toObservable(this.additionalResizeObserverTargets).pipe(
+                switchMap((targets) => {
+                    return Array.isArray(targets)
+                        ? merge(...targets.map((target) => this.resizeObserver.observe(target)))
+                        : this.resizeObserver.observe(targets);
+                })
+            )
+        );
+
+        merge(toObservable(this.items), toObservable(this.reverseOverflowOrder).pipe(skip(1)), resizeObservers)
             .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed())
             .subscribe(() => {
                 const hiddenItems = this.getHiddenItems(
