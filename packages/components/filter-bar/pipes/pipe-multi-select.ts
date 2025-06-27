@@ -195,6 +195,13 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     /** Comparator of selected options */
     compareByValue = (o1: any, o2: any): boolean => o1?.id === o2?.id;
 
+    /** handler for select all options in select */
+    selectAllHandler = (event: KeyboardEvent) => {
+        event.preventDefault();
+
+        this.toggleSelectionAll();
+    };
+
     onClose() {
         if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.toggleSelectionAll(false);

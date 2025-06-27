@@ -439,6 +439,37 @@ export class KbqTreeSelect
 
     private _disabled: boolean = false;
 
+    /**
+     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
+     */
+    @Input()
+    get selectAllHandler() {
+        return this._selectAllHandler;
+    }
+
+    set selectAllHandler(fn: (event: KeyboardEvent, select: KbqTreeSelect) => void) {
+        if (typeof fn !== 'function') {
+            throw Error('`selectAllHandler` must be a function.');
+        }
+
+        this._selectAllHandler = fn;
+    }
+
+    /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
+    private _selectAllHandler(event: KeyboardEvent, select: KbqTreeSelect): void {
+        event.preventDefault();
+
+        const hasDeselectedOptions = select.options.some((option) => !option.selected);
+
+        select.options.forEach((option) => {
+            if (hasDeselectedOptions && !option.disabled) {
+                option.select(false);
+            } else {
+                option.deselect();
+            }
+        });
+    }
+
     /** Whether the select is focused. */
     get focused(): boolean {
         return this._focused || this._panelOpen;
@@ -1095,17 +1126,7 @@ export class KbqTreeSelect
                 this.focus();
             }
         } else if (this.multiple && isSelectAll(event)) {
-            event.preventDefault();
-
-            const hasDeselectedOptions = this.options.some((option) => !option.selected);
-
-            this.options.forEach((option) => {
-                if (hasDeselectedOptions && !option.disabled) {
-                    option.select(false);
-                } else {
-                    option.deselect();
-                }
-            });
+            this.selectAllHandler(event, this);
         } else {
             const previouslyFocusedIndex = this.tree.keyManager.activeItemIndex;
 

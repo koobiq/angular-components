@@ -540,6 +540,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     options: QueryList<KbqOption>;
     searchControl: UntypedFormControl;
     select: KbqSelect;
+    selectAllHandler: (event: KeyboardEvent) => void;
     get selected(): KbqSelectValue[] | null;
     // (undocumented)
     get selectedAllEqualsSelectedNothing(): boolean;

@@ -406,6 +406,22 @@ export class KbqSelect
     }
 
     /**
+     * Function for handling the combination Ctrl + A (select all). By default, the internal handler is used.
+     */
+    @Input()
+    get selectAllHandler() {
+        return this._selectAllHandler;
+    }
+
+    set selectAllHandler(fn: (event: KeyboardEvent, select: KbqSelect) => void) {
+        if (typeof fn !== 'function') {
+            throw Error('`selectAllHandler` must be a function.');
+        }
+
+        this._selectAllHandler = fn;
+    }
+
+    /**
      * Width of the panel. If set to `auto`, the panel will match the trigger width.
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
@@ -1102,16 +1118,7 @@ export class KbqSelect
             event.preventDefault();
             this.keyManager.activeItem.selectViaInteraction();
         } else if (this.multiple && keyCode === A && event.ctrlKey) {
-            event.preventDefault();
-            const hasDeselectedOptions = this.options.some((option) => !option.selected);
-
-            this.options.forEach((option) => {
-                if (hasDeselectedOptions && !option.disabled) {
-                    option.select();
-                } else {
-                    option.deselect();
-                }
-            });
+            this.selectAllHandler(event, this);
         } else {
             const previouslyFocusedIndex = this.keyManager.activeItemIndex;
 
@@ -1364,6 +1371,21 @@ export class KbqSelect
 
     /** Comparison function to specify which option is displayed. Defaults to object equality. */
     private _compareWith = (o1: any, o2: any) => o1 === o2;
+
+    /** Function for handling the combination Ctrl + A (select all). By default, the internal handler is used. */
+    private _selectAllHandler(event: KeyboardEvent, select: KbqSelect): void {
+        event.preventDefault();
+
+        const hasDeselectedOptions = select.options.some((option) => !option.selected);
+
+        select.options.forEach((option) => {
+            if (hasDeselectedOptions && !option.disabled) {
+                option.select();
+            } else {
+                option.deselect();
+            }
+        });
+    }
 
     private getTotalVisibleItems(): [number, number] {
         const triggerClone = this.buildTriggerClone();

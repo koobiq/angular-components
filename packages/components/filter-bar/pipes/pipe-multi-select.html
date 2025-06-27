@@ -6,6 +6,7 @@
     [kbqPipeTitle]="pipeTooltip"
     [ngClass]="{ 'kbq-active': select.panelOpen }"
     [panelClass]="'kbq-pipe-multiselect__panel'"
+    [selectAllHandler]="selectAllHandler"
     [tabIndex]="-1"
     [value]="selected"
     (closed)="onClose()"
