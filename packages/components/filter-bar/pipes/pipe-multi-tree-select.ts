@@ -88,7 +88,9 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
         return (
-            super.isEmpty || (Array.isArray(this.data.value) && this.data.value.length === 0) || this.allOptionsSelected
+            super.isEmpty ||
+            (Array.isArray(this.data.value) && !this.data.value.length) ||
+            (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected)
         );
     }
 
@@ -116,6 +118,10 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
         const dataNodesForSelect = this.data.selectAll ? dataNodesLength - 1 : dataNodesLength;
 
         return this.select?.triggerValues?.length === dataNodesForSelect;
+    }
+
+    get selectedAllEqualsSelectedNothing(): boolean {
+        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing;
     }
 
     /** true if all visible options selected */
@@ -206,7 +212,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     private emitChangePipeEvent() {
-        if (this.allOptionsSelected) {
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
         } else {
             this.filterBar?.onChangePipe.emit(this.data);
@@ -245,7 +251,7 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
     }
 
     onClose() {
-        if (this.allOptionsSelected) {
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.toggleSelectAllNode(false);
         }
     }

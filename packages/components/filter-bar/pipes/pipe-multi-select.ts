@@ -80,7 +80,11 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
 
     /** Whether the current pipe is empty. */
     get isEmpty(): boolean {
-        return !this.data.value?.length || this.allOptionsSelected;
+        return (
+            super.isEmpty ||
+            (Array.isArray(this.data.value) && !this.data.value.length) ||
+            (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected)
+        );
     }
 
     /** state for checkbox 'select all'. */
@@ -104,6 +108,10 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     /** true if all options selected */
     get allOptionsSelected(): boolean {
         return this.select?.triggerValues.length === this.values?.length;
+    }
+
+    get selectedAllEqualsSelectedNothing(): boolean {
+        return this.data.selectedAllEqualsSelectedNothing ?? this.filterBar!.selectedAllEqualsSelectedNothing;
     }
 
     private get visibleOptions(): KbqOption[] {
@@ -177,7 +185,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     }
 
     private emitChangePipeEvent() {
-        if (this.allOptionsSelected) {
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.filterBar?.onChangePipe.emit({ ...this.data, value: [] });
         } else {
             this.filterBar?.onChangePipe.emit(this.data);
@@ -188,7 +196,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     compareByValue = (o1: any, o2: any): boolean => o1?.id === o2?.id;
 
     onClose() {
-        if (this.allOptionsSelected) {
+        if (this.selectedAllEqualsSelectedNothing && this.allOptionsSelected) {
             this.toggleSelectionAll(false);
         }
     }

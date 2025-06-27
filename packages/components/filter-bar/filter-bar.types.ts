@@ -85,6 +85,11 @@ export interface KbqPipe {
 
     search?: boolean;
     selectAll?: boolean;
+    /**
+     * This is special logic that unselect all items when all selected because "all selected = nothing selected".
+     * Default is true
+     * */
+    selectedAllEqualsSelectedNothing?: boolean;
 
     /** @deprecated use cleanable = false and removable = false instead */
     required?: boolean;

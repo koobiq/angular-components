@@ -1,4 +1,5 @@
 import {
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -65,6 +66,12 @@ export class KbqFilterBar {
     @ContentChild(KbqFilters) filters: KbqFilters;
     /** @docs-private */
     @ContentChild(KbqFilterReset) filterReset: KbqFilterReset;
+
+    /**
+     * This is special logic that unselect all items when all selected because "all selected = nothing selected".
+     * Default is true
+     * */
+    @Input({ transform: booleanAttribute }) selectedAllEqualsSelectedNothing: boolean = true;
 
     /** Filter that is currently selected */
     @Input()
