@@ -16,10 +16,16 @@
 ### 1. Обновление до 18.5.3
 
 ```bash
-npm install koobiq/cdk@18.5.3
+npm install @koobiq/cdk@18.5.3
 npm install @koobiq/components@18.5.3
+npm install @koobiq/icons@^9.0.0
+npm install @koobiq/design-tokens@~3.7.3
 npm install @koobiq/angular-luxon-adapter@18.5.3
-npm install @koobiq/design-tokens@^3.7.3
+npm install @koobiq/date-adapter^3.1.3
+npm install @koobiq/date-formatter^3.1.3
+npm install luxon
+npm install @messageformat/core
+npm install @radix-ng/primitives@0.14.0
 ```
 
 #### Новая темизация
