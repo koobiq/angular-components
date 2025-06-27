@@ -10,6 +10,8 @@ import { TreeMultipleCheckboxExample } from './tree-multiple-checkbox/tree-multi
 import { TreeMultipleChecklistExample } from './tree-multiple-checklist/tree-multiple-checklist-example';
 import { TreeMultipleKeyboardExample } from './tree-multiple-keyboard/tree-multiple-keyboard-example';
 import { TreeOverviewExample } from './tree-overview/tree-overview-example';
+import { TreeSelectAndMarkExample } from './tree-select-and-mark/tree-select-and-mark-example';
+import { TreeSelectionSeparateFromFocusExample } from './tree-selection-separate-from-focus/tree-selection-separate-from-focus-example';
 
 export {
     TreeAccessRightsExample,
@@ -22,7 +24,9 @@ export {
     TreeMultipleCheckboxExample,
     TreeMultipleChecklistExample,
     TreeMultipleKeyboardExample,
-    TreeOverviewExample
+    TreeOverviewExample,
+    TreeSelectAndMarkExample,
+    TreeSelectionSeparateFromFocusExample
 };
 
 const EXAMPLES = [
@@ -36,7 +40,9 @@ const EXAMPLES = [
     TreeCheckedFilteringExample,
     TreeLazyloadExample,
     TreeDescendantsSubcategoriesExample,
-    TreeAccessRightsExample
+    TreeAccessRightsExample,
+    TreeSelectAndMarkExample,
+    TreeSelectionSeparateFromFocusExample
 ];
 
 @NgModule({

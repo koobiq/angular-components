@@ -33,23 +33,38 @@
     .kbq-tree-option {
         @include kbq-tree-option(default);
 
-        &:hover:not(.kbq-disabled) {
-            @include kbq-tree-option(states-hover);
-        }
-
-        &:active:not(.kbq-disabled) {
-            @include kbq-tree-option(states-active);
-        }
-
-        &.kbq-selected:not(.kbq-disabled) {
-            @include kbq-tree-option(states-selected);
-
+        &:not(.kbq-disabled) {
             &:hover {
-                @include kbq-tree-option(states-selected-hover);
+                @include kbq-tree-option(states-hover);
             }
 
             &:active {
-                @include kbq-tree-option(states-selected-active);
+                background: var(--kbq-tree-states-active-container-background);
+            }
+
+            &.kbq-selected {
+                @include kbq-tree-option(states-selected);
+
+                &:hover {
+                    @include kbq-tree-option(states-selected-hover);
+                }
+
+                &:active {
+                    background: var(--kbq-tree-states-selected-active-container-background);
+                }
+            }
+
+            &.kbq-checked:not(.kbq-selected),
+            &.kbq-tree-option_multiple.kbq-selected {
+                background: var(--kbq-tree-multiple-states-selected-container-background);
+
+                &:hover {
+                    background: var(--kbq-tree-multiple-states-selected-hover-container-background);
+                }
+
+                &:active {
+                    background: var(--kbq-tree-multiple-states-selected-active-container-background);
+                }
             }
         }
 
@@ -58,20 +73,6 @@
 
             & .kbq-icon.kbq-empty {
                 color: var(--kbq-states-icon-disabled);
-            }
-        }
-    }
-
-    .kbq-tree-option.kbq-tree-option_multiple {
-        &.kbq-selected:not(.kbq-disabled) {
-            @include kbq-tree-option(multiple-states-selected);
-
-            &:hover {
-                @include kbq-tree-option(multiple-states-selected-hover);
-            }
-
-            &:active {
-                @include kbq-tree-option(multiple-states-selected-active);
             }
         }
     }

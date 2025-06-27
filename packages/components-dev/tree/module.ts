@@ -21,6 +21,7 @@ import {
     KbqTreeModule
 } from '@koobiq/components/tree';
 import { Subject, debounceTime } from 'rxjs';
+import { TreeExamplesModule } from '../../docs-examples/components/tree';
 import { DEV_TREE_DATA } from './mock';
 
 export class DevFileNode {
@@ -105,6 +106,20 @@ export const DEV_DATA_OBJECT = {
 
 @Component({
     standalone: true,
+    imports: [TreeExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <tree-select-and-mark-example />
+        <br />
+        <br />
+        <tree-selection-separate-from-focus-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
+
+@Component({
+    standalone: true,
     imports: [
         FormsModule,
         KbqFormFieldModule,
@@ -119,7 +134,8 @@ export const DEV_DATA_OBJECT = {
         KbqOptionModule,
         KbqTitleModule,
         KbqButtonToggleModule,
-        JsonPipe
+        JsonPipe,
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

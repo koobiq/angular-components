@@ -2480,7 +2480,7 @@ export class KbqPseudoCheckboxModule {
 }
 
 // @public (undocumented)
-export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate';
+export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 // @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
