@@ -4,18 +4,19 @@
     justify-content: center;
     align-items: center;
 
+    .kbq-stepper__step-up {
+        margin-bottom: -2px;
+    }
+
+    .kbq-stepper__step-down {
+        margin-top: -2px;
+    }
+
     .kbq-stepper__step-up,
     .kbq-stepper__step-down {
-        cursor: pointer;
+        --kbq-form-field-size-icon-button-size: var(--kbq-size-3xl);
+
         width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
-    }
-
-    .kbq-stepper__step-up {
-        transform: scaleY(-1);
-    }
-
-    .kbq-icon-button.kbq-icon-button_small {
-        padding: 0;
     }
 }

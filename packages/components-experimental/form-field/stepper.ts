@@ -17,23 +17,21 @@ const getKbqStepperToggleMissingControlError = (): Error => {
     template: `
         <i
             class="kbq-stepper__step-up"
-            [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
             [disabled]="control.disabled"
-            (click)="stepUp($event)"
+            (mousedown)="stepUp($event)"
             color="contrast-fade"
-            kbq-icon-button="kbq-chevron-down_16"
+            kbq-icon-button="kbq-chevron-up-s_16"
         ></i>
         <i
             class="kbq-stepper__step-down"
-            [small]="true"
             [tabindex]="-1"
             [autoColor]="true"
             [disabled]="control.disabled"
             (mousedown)="stepDown($event)"
             color="contrast-fade"
-            kbq-icon-button="kbq-chevron-down_16"
+            kbq-icon-button="kbq-chevron-down-s_16"
         ></i>
     `,
     styleUrl: './stepper.scss',
