@@ -1,6 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './hint-theme' as *;
+@use './hint-theme' as theme;
 
 .kbq-hint {
     display: flex;
@@ -18,5 +16,5 @@
     }
 }
 
-@include kbq-hint-theme();
-@include kbq-hint-typography();
+@include theme.kbq-hint-theme();
+@include theme.kbq-hint-typography();

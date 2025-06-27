@@ -1,7 +1,7 @@
 import { NgControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 
-/** An interface which allows a control to work inside of a `MсFormField`. */
+/** An interface which allows a control to work inside of a `KbqFormField`. */
 export abstract class KbqFormFieldControl<T> {
     /** The value of the control. */
     value: T | null;

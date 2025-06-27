@@ -4,7 +4,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqNumberInput } from '@koobiq/components/input';
 import { KbqFormField } from './form-field';
 
-/** @docs-private */
 const getKbqStepperToggleMissingControlError = (): Error => {
     return Error('kbq-stepper should use with kbqNumberInput');
 };

@@ -5,8 +5,8 @@ import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/
 import {
     DateAdapter,
     DateFormatter,
-    KBQ_VALIDATION,
     KbqComponentColors,
+    kbqDisableLegacyValidationDirectiveProvider,
     KbqFormattersModule,
     PopUpPlacements
 } from '@koobiq/components/core';
@@ -33,10 +33,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     providers: [
-        {
-            provide: KBQ_VALIDATION,
-            useValue: { useValidation: false }
-        },
+        kbqDisableLegacyValidationDirectiveProvider(),
         {
             provide: KbqBasePipe,
             useExisting: this

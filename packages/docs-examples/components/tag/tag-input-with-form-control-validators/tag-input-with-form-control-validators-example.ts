@@ -7,7 +7,7 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -33,15 +33,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
         KbqIconModule,
         ReactiveFormsModule
     ],
-    providers: [
-        // Disables KbqValidateDirective
-        {
-            provide: KBQ_VALIDATION,
-            useValue: {
-                useValidation: false
-            } satisfies KbqValidationOptions
-        }
-    ],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     selector: 'tag-input-with-form-control-validators-example',
     template: `
         <kbq-form-field>

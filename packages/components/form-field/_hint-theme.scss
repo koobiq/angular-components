@@ -1,7 +1,6 @@
-@use '../core/styles/theming/theming' as *;
-@use '../core/styles/common/tokens' as *;
+@use '../core/styles/common/tokens';
 
-@mixin kbq-hint-color($type, $style-name) {
+@mixin _kbq-hint-color($type, $style-name) {
     color: var(--kbq-hint-#{$type}-#{$style-name}-text);
 
     & .kbq-icon.kbq-empty {
@@ -12,47 +11,47 @@
 @mixin kbq-hint-theme() {
     .kbq-hint {
         &.kbq-contrast-fade {
-            @include kbq-hint-color(fill-text-on, fade-contrast);
+            @include _kbq-hint-color(fill-text-on, fade-contrast);
         }
 
         &.kbq-success {
-            @include kbq-hint-color(fill-text-on, success);
+            @include _kbq-hint-color(fill-text-on, success);
         }
 
         &.kbq-warning {
-            @include kbq-hint-color(fill-text-on, warning);
+            @include _kbq-hint-color(fill-text-on, warning);
         }
 
         &.kbq-error {
-            @include kbq-hint-color(fill-text-on, error);
-        }
-    }
-
-    .kbq-hint.kbq-hint_fill-text-off {
-        &.kbq-contrast-fade {
-            @include kbq-hint-color(fill-text-off, fade-contrast);
+            @include _kbq-hint-color(fill-text-on, error);
         }
 
-        &.kbq-success {
-            @include kbq-hint-color(fill-text-off, success);
-        }
+        &.kbq-hint_fill-text-off {
+            &.kbq-contrast-fade {
+                @include _kbq-hint-color(fill-text-off, fade-contrast);
+            }
 
-        &.kbq-warning {
-            @include kbq-hint-color(fill-text-off, warning);
-        }
+            &.kbq-success {
+                @include _kbq-hint-color(fill-text-off, success);
+            }
 
-        &.kbq-error {
-            @include kbq-hint-color(fill-text-off, error);
+            &.kbq-warning {
+                @include _kbq-hint-color(fill-text-off, warning);
+            }
+
+            &.kbq-error {
+                @include _kbq-hint-color(fill-text-off, error);
+            }
         }
     }
 }
 
 @mixin kbq-hint-typography() {
     .kbq-hint .kbq-hint__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
     }
 
     .kbq-hint.kbq-hint_compact .kbq-hint__text {
-        @include kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
     }
 }

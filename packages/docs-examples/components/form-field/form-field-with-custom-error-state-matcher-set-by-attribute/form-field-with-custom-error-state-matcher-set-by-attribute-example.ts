@@ -8,9 +8,9 @@ import {
     ReactiveFormsModule,
     Validators
 } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { ErrorStateMatcher } from '@koobiq/components/core';
+import { ErrorStateMatcher, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /**
@@ -27,12 +27,8 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 @Component({
     standalone: true,
     selector: 'form-field-with-custom-error-state-matcher-set-by-attribute-example',
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        ReactiveFormsModule,
-        KbqButtonModule
-    ],
+    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule, KbqButtonModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
@@ -43,7 +39,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
                     kbqInput
                     placeholder="mail@koobiq.io"
                 />
-                <kbq-hint>Enter email</kbq-hint>
+                <kbq-hint>Error will be shown when the control is invalid and the form is submitted</kbq-hint>
                 <kbq-error>
                     @if (formGroup.get('email')?.hasError('required')) {
                         Should enter a value

@@ -1,46 +1,38 @@
-import { NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqCleaner } from './cleaner';
+import { KbqError } from './error';
 import { KbqFormField, KbqFormFieldWithoutBorders, KbqTrim } from './form-field';
 import { KbqHint } from './hint';
+import { KbqLabel } from './label';
 import { KbqPasswordHint } from './password-hint';
 import { KbqPasswordToggle } from './password-toggle';
 import { KbqPrefix } from './prefix';
+import { KbqReactivePasswordHint } from './reactive-password-hint';
 import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 import { KbqValidateDirective } from './validate.directive';
 
+const COMPONENTS = [
+    KbqCleaner,
+    KbqFormField,
+    KbqPrefix,
+    KbqSuffix,
+    KbqPasswordToggle,
+    KbqStepper,
+    KbqLabel,
+    KbqHint,
+    KbqError,
+    KbqReactivePasswordHint,
+
+    // Legacy components
+    KbqPasswordHint,
+    KbqFormFieldWithoutBorders,
+    KbqValidateDirective,
+    KbqTrim
+];
+
 @NgModule({
-    declarations: [
-        KbqFormField,
-        KbqFormFieldWithoutBorders,
-        KbqHint,
-        KbqPasswordHint,
-        KbqPrefix,
-        KbqSuffix,
-        KbqCleaner,
-        KbqStepper,
-        KbqValidateDirective,
-        KbqTrim,
-        KbqPasswordToggle
-    ],
-    imports: [
-        KbqIconModule,
-        NgClass
-    ],
-    exports: [
-        KbqFormField,
-        KbqFormFieldWithoutBorders,
-        KbqHint,
-        KbqPasswordHint,
-        KbqPrefix,
-        KbqSuffix,
-        KbqCleaner,
-        KbqStepper,
-        KbqValidateDirective,
-        KbqTrim,
-        KbqPasswordToggle
-    ]
+    imports: COMPONENTS,
+    exports: COMPONENTS
 })
 export class KbqFormFieldModule {}

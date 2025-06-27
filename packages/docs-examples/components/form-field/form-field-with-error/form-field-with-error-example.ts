@@ -1,17 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
 /** @title Form field with kbq-error */
 @Component({
     standalone: true,
     selector: 'form-field-with-error-example',
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        ReactiveFormsModule
-    ],
+    imports: [KbqFormFieldModule, KbqInputModule, ReactiveFormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
             <kbq-label>Email</kbq-label>

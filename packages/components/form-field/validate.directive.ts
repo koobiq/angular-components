@@ -2,6 +2,7 @@ import {
     AfterContentInit,
     ChangeDetectorRef,
     Directive,
+    ElementRef,
     forwardRef,
     Host,
     Inject,
@@ -29,24 +30,22 @@ import { KbqFormFieldControl } from './form-field-control';
 /**
  * @deprecated Will be removed in next major release (#DS-2838)
  *
- * Legacy mosaic validation
+ * Legacy validation directive.
  *
  * ### How to disable?
  *
  * ```typescript
- * import { KBQ_VALIDATION, KbqValidationOptions } from '@koobiq/components/core';
+ * import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
  *
  * @NgModule({
- *      providers: [
- *           {
- *              provide: KBQ_VALIDATION,
- *              useValue: { useValidation: false } satisfies KbqValidationOptions
- *           }
- *      ]
+ *      providers: [kbqDisableLegacyValidationDirectiveProvider()]
  * })
  * ```
+ *
+ * @docs-private
  */
 @Directive({
+    standalone: true,
     selector: `
         input[kbqInput],
         input[kbqNumberInput],
@@ -58,10 +57,7 @@ import { KbqFormFieldControl } from './form-field-control';
         kbq-tree-select,
         kbq-tag-list
     `,
-    exportAs: 'KbqValidate',
-    host: {
-        class: 'kbq-control_has-validate-directive'
-    }
+    exportAs: 'KbqValidate'
 })
 export class KbqValidateDirective implements AfterContentInit {
     get isNgModel(): boolean {
@@ -96,13 +92,15 @@ export class KbqValidateDirective implements AfterContentInit {
         @Optional() private parentFormGroup: FormGroupDirective,
         @Optional() @Inject(KBQ_VALIDATION) private mcValidation: KbqValidationOptions,
         private cdr: ChangeDetectorRef,
-        @Optional() @Host() private readonly parentFormField: KbqFormField | null
-    ) {
-        this.parentFormField?.elementRef.nativeElement.classList.add('kbq-form-field_has-validate-directive');
-    }
+        @Optional() @Host() private readonly parentFormField: KbqFormField | null,
+        private readonly elementRef: ElementRef
+    ) {}
 
     ngAfterContentInit() {
         if (this.mcValidation.useValidation) {
+            this.parentFormField?.elementRef.nativeElement.classList.add('kbq-form-field_has-validate-directive');
+            this.elementRef.nativeElement.classList.add('kbq-control_has-validate-directive');
+
             this.setMosaicValidation();
         }
     }

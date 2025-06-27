@@ -1,367 +1,331 @@
-<div class="dev-container">
-    <kbq-form-field>
-        <kbq-select [placeholder]="placeholder" [value]="''">
-            <kbq-cleaner />
+<dev-theme-toggle />
 
-            @for (option of options; track option) {
-                <kbq-option [value]="option">
-                    <span [innerHTML]="option"></span>
-                </kbq-option>
-            }
-        </kbq-select>
-    </kbq-form-field>
+<hr />
 
-    <br />
-    <br />
+<dev-examples />
 
-    <kbq-form-field>
-        <kbq-select [value]="value">
-            <kbq-cleaner />
+<hr />
 
-            @for (option of options; track option) {
-                <kbq-option [value]="option">
-                    <span [innerHTML]="option"></span>
-                </kbq-option>
-            }
-        </kbq-select>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-select [multiple]="true" [placeholder]="placeholder" [(value)]="emptyMultipleValue">
-            <kbq-cleaner #kbqSelectCleaner />
-
-            @for (option of options; track option) {
-                <kbq-option [value]="option">
-                    <span [innerHTML]="option"></span>
-                </kbq-option>
-            }
-        </kbq-select>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-select [multiple]="true" [(value)]="multipleSelected">
-            <kbq-cleaner #kbqSelectCleaner />
-
-            @for (option of options; track option) {
-                <kbq-option [showCheckbox]="false" [value]="option">
-                    <span [innerHTML]="option"></span>
-                </kbq-option>
-            }
-        </kbq-select>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tree-select [ngModel]="value" [placeholder]="placeholder">
-            <kbq-cleaner />
-
-            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
-                    <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                </kbq-tree-option>
-
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node; when: hasChild"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        kbqTreeNodeToggle
-                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
-                    ></i>
-                    <span
-                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
-                    ></span>
-                </kbq-tree-option>
-            </kbq-tree-selection>
-
-            <div kbq-select-footer class="dev-custom-footer">
-                <div>Custom footer</div>
-            </div>
-        </kbq-tree-select>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tree-select [ngModel]="treeModel" [placeholder]="placeholder">
-            <kbq-cleaner />
-
-            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
-                    <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                </kbq-tree-option>
-
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node; when: hasChild"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        kbqTreeNodeToggle
-                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
-                    ></i>
-                    <span
-                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
-                    ></span>
-                </kbq-tree-option>
-            </kbq-tree-selection>
-
-            <div kbq-select-footer class="dev-custom-footer">
-                <div>Custom footer</div>
-            </div>
-        </kbq-tree-select>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tree-select placeholder="this is placeholder" [multiple]="true" [ngModel]="multipleTreeModel">
-            <kbq-cleaner />
-
-            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
-                    <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                </kbq-tree-option>
-
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node; when: hasChild"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        kbqTreeNodeToggle
-                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
-                    ></i>
-                    <span
-                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
-                    ></span>
-                </kbq-tree-option>
-            </kbq-tree-selection>
-
-            <div kbq-select-footer class="dev-custom-footer">
-                <div>Custom footer</div>
-            </div>
-        </kbq-tree-select>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tree-select [multiple]="true" [ngModel]="emptyMultipleValue" [placeholder]="placeholder">
-            <kbq-cleaner />
-
-            <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
-                    <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                </kbq-tree-option>
-
-                <kbq-tree-option
-                    *kbqTreeNodeDef="let node; when: hasChild"
-                    kbqTreeNodePadding
-                    [checkboxThirdState]="true"
-                >
-                    <i
-                        kbq-icon="kbq-chevron-down-s_16"
-                        kbqTreeNodeToggle
-                        [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
-                    ></i>
-                    <span
-                        [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"
-                    ></span>
-                </kbq-tree-option>
-            </kbq-tree-selection>
-
-            <div kbq-select-footer class="dev-custom-footer">
-                <div>Custom footer</div>
-            </div>
-        </kbq-tree-select>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tag-list #inputTagList>
-            @for (tag of inputTags; track tag) {
-                <kbq-tag [value]="tag">
-                    {{ tag }}
-                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
-                </kbq-tag>
-            }
-
-            <input
-                kbqInput
-                placeholder="{{ placeholder }}"
-                [kbqTagInputFor]="inputTagList"
-                [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                [ngModel]="''"
-            />
-            <kbq-cleaner />
-        </kbq-tag-list>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tag-list #inputTagList1>
-            @for (tag of inputTags; track tag) {
-                <kbq-tag [value]="tag">
-                    {{ tag }}
-                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
-                </kbq-tag>
-            }
-
-            <input
-                kbqInput
-                placeholder="{{ placeholder }}"
-                [kbqTagInputFor]="inputTagList1"
-                [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
-                [ngModel]="'value'"
-            />
-            <kbq-cleaner />
-        </kbq-tag-list>
-    </kbq-form-field>
-
-    <br />
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tag-list #autocompleteTagList>
-            @for (tag of ['tag']; track tag) {
-                <kbq-tag [value]="tag">
-                    {{ tag }}
-                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
-                </kbq-tag>
-            }
-            <input
-                #autocompleteTagInput
-                placeholder="{{ placeholder }}"
-                [kbqAutocomplete]="autocomplete"
-                [kbqTagInputAddOnBlur]="false"
-                [kbqTagInputFor]="autocompleteTagList"
-                [ngModel]="''"
-            />
-        </kbq-tag-list>
-        <kbq-autocomplete #autocomplete>
-            @if (autocompleteTagInput.value) {
-                <kbq-option [value]="{ new: true, value: autocompleteTagInput.value }">
-                    Создать: {{ autocompleteTagInput.value }}
-                </kbq-option>
-            }
-            @for (tag of inputTags; track tag) {
-                <kbq-option [value]="tag">
-                    {{ tag }}
-                </kbq-option>
-            }
-        </kbq-autocomplete>
-    </kbq-form-field>
-
-    <br />
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <kbq-tag-list #autocompleteTagList1>
-            @for (tag of autocompleteSelectedTags; track tag) {
-                <kbq-tag [value]="tag">
-                    {{ tag }}
-                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
-                </kbq-tag>
-            }
-            <input
-                #autocompleteTagInput1
-                [kbqAutocomplete]="autocomplete1"
-                [kbqTagInputFor]="autocompleteTagList1"
-                [ngModel]="'value'"
-            />
-        </kbq-tag-list>
-        <kbq-autocomplete #autocomplete1>
-            @if (autocompleteTagInput1.value) {
-                <kbq-option [value]="{ new: true, value: autocompleteTagInput1.value }">
-                    Создать: {{ autocompleteTagInput1.value }}
-                </kbq-option>
-            }
-            @for (tag of inputTags; track tag) {
-                <kbq-option [value]="tag">
-                    {{ tag }}
-                </kbq-option>
-            }
-        </kbq-autocomplete>
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <input kbqInputPassword placeholder="Number MaxMin Step" [ngModel]="password" [required]="true" />
-        <kbq-password-toggle />
-    </kbq-form-field>
-
-    <br />
-    <br />
-
-    <kbq-form-field>
-        <input kbqInput placeholder="Placeholder" [ngModel]="'value'" />
-
+<kbq-form-field>
+    <kbq-select [placeholder]="placeholder" [value]="''">
         <kbq-cleaner />
-    </kbq-form-field>
 
-    <br />
-    <br />
+        @for (option of options; track option) {
+            <kbq-option [value]="option">
+                <span [innerHTML]="option"></span>
+            </kbq-option>
+        }
+    </kbq-select>
+</kbq-form-field>
 
-    <kbq-form-field>
-        <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
-        <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
+<hr />
 
-        <input kbqInput placeholder="{{ placeholder }}" [ngModel]="''" />
-    </kbq-form-field>
+<kbq-form-field>
+    <kbq-select [value]="value">
+        <kbq-cleaner />
 
-    <br />
-    <br />
+        @for (option of options; track option) {
+            <kbq-option [value]="option">
+                <span [innerHTML]="option"></span>
+            </kbq-option>
+        }
+    </kbq-select>
+</kbq-form-field>
 
-    <kbq-form-field>
-        <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
-        <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
+<hr />
+
+<kbq-form-field>
+    <kbq-select [multiple]="true" [placeholder]="placeholder" [(value)]="emptyMultipleValue">
+        <kbq-cleaner #kbqSelectCleaner />
+
+        @for (option of options; track option) {
+            <kbq-option [value]="option">
+                <span [innerHTML]="option"></span>
+            </kbq-option>
+        }
+    </kbq-select>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-select [multiple]="true" [(value)]="multipleSelected">
+        <kbq-cleaner #kbqSelectCleaner />
+
+        @for (option of options; track option) {
+            <kbq-option [showCheckbox]="false" [value]="option">
+                <span [innerHTML]="option"></span>
+            </kbq-option>
+        }
+    </kbq-select>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-tree-select [ngModel]="value" [placeholder]="placeholder">
+        <kbq-cleaner />
+
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <i
+                    kbq-icon="kbq-chevron-down-s_16"
+                    kbqTreeNodeToggle
+                    [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                ></i>
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <div kbq-select-footer class="dev-custom-footer">
+            <div>Custom footer</div>
+        </div>
+    </kbq-tree-select>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-tree-select [ngModel]="treeModel" [placeholder]="placeholder">
+        <kbq-cleaner />
+
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <i
+                    kbq-icon="kbq-chevron-down-s_16"
+                    kbqTreeNodeToggle
+                    [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                ></i>
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <div kbq-select-footer class="dev-custom-footer">
+            <div>Custom footer</div>
+        </div>
+    </kbq-tree-select>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-tree-select placeholder="this is placeholder" [multiple]="true" [ngModel]="multipleTreeModel">
+        <kbq-cleaner />
+
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <i
+                    kbq-icon="kbq-chevron-down-s_16"
+                    kbqTreeNodeToggle
+                    [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                ></i>
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <div kbq-select-footer class="dev-custom-footer">
+            <div>Custom footer</div>
+        </div>
+    </kbq-tree-select>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-tree-select [multiple]="true" [ngModel]="emptyMultipleValue" [placeholder]="placeholder">
+        <kbq-cleaner />
+
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
+                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+            </kbq-tree-option>
+
+            <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding [checkboxThirdState]="true">
+                <i
+                    kbq-icon="kbq-chevron-down-s_16"
+                    kbqTreeNodeToggle
+                    [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
+                ></i>
+                <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
+            </kbq-tree-option>
+        </kbq-tree-selection>
+
+        <div kbq-select-footer class="dev-custom-footer">
+            <div>Custom footer</div>
+        </div>
+    </kbq-tree-select>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-tag-list #inputTagList>
+        @for (tag of inputTags; track tag) {
+            <kbq-tag [value]="tag">
+                {{ tag }}
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+            </kbq-tag>
+        }
 
         <input
             kbqInput
-            placeholder="Placeholder"
-            [ngModel]="'value value value value value value value value value value'"
+            placeholder="{{ placeholder }}"
+            [kbqTagInputFor]="inputTagList"
+            [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+            [ngModel]="''"
         />
-    </kbq-form-field>
+        <kbq-cleaner />
+    </kbq-tag-list>
+</kbq-form-field>
 
-    <br />
-    <br />
+<hr />
 
-    <kbq-form-field class="kbq-group-item">
+<kbq-form-field>
+    <kbq-tag-list #inputTagList1>
+        @for (tag of inputTags; track tag) {
+            <kbq-tag [value]="tag">
+                {{ tag }}
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+            </kbq-tag>
+        }
+
         <input
-            kbqNormalizeWhitespace
-            kbqNumberInput
-            placeholder="Number MaxMin Step"
-            type="number"
-            [bigStep]="1.5"
-            [max]="7"
-            [min]="-10"
-            [step]="0.5"
-            [(ngModel)]="numberValue"
+            kbqInput
+            placeholder="{{ placeholder }}"
+            [kbqTagInputFor]="inputTagList1"
+            [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
+            [ngModel]="'value'"
         />
-        <kbq-stepper />
-    </kbq-form-field>
-</div>
+        <kbq-cleaner />
+    </kbq-tag-list>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-tag-list #autocompleteTagList>
+        @for (tag of ['tag']; track tag) {
+            <kbq-tag [value]="tag">
+                {{ tag }}
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+            </kbq-tag>
+        }
+        <input
+            #autocompleteTagInput
+            placeholder="{{ placeholder }}"
+            [kbqAutocomplete]="autocomplete"
+            [kbqTagInputAddOnBlur]="false"
+            [kbqTagInputFor]="autocompleteTagList"
+            [ngModel]="''"
+        />
+    </kbq-tag-list>
+    <kbq-autocomplete #autocomplete>
+        @if (autocompleteTagInput.value) {
+            <kbq-option [value]="{ new: true, value: autocompleteTagInput.value }">
+                Создать: {{ autocompleteTagInput.value }}
+            </kbq-option>
+        }
+        @for (tag of inputTags; track tag) {
+            <kbq-option [value]="tag">
+                {{ tag }}
+            </kbq-option>
+        }
+    </kbq-autocomplete>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <kbq-tag-list #autocompleteTagList1>
+        @for (tag of autocompleteSelectedTags; track tag) {
+            <kbq-tag [value]="tag">
+                {{ tag }}
+                <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+            </kbq-tag>
+        }
+        <input
+            #autocompleteTagInput1
+            [kbqAutocomplete]="autocomplete1"
+            [kbqTagInputFor]="autocompleteTagList1"
+            [ngModel]="'value'"
+        />
+    </kbq-tag-list>
+    <kbq-autocomplete #autocomplete1>
+        @if (autocompleteTagInput1.value) {
+            <kbq-option [value]="{ new: true, value: autocompleteTagInput1.value }">
+                Создать: {{ autocompleteTagInput1.value }}
+            </kbq-option>
+        }
+        @for (tag of inputTags; track tag) {
+            <kbq-option [value]="tag">
+                {{ tag }}
+            </kbq-option>
+        }
+    </kbq-autocomplete>
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <input kbqInputPassword placeholder="Number MaxMin Step" [ngModel]="password" [required]="true" />
+    <kbq-password-toggle />
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <input kbqInput placeholder="Placeholder" [ngModel]="'value'" />
+
+    <kbq-cleaner />
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
+    <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
+
+    <input kbqInput placeholder="{{ placeholder }}" [ngModel]="''" />
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field>
+    <i kbq-icon="kbq-calendar-o_16" kbqPrefix [autoColor]="true"></i>
+    <i kbq-icon="kbq-calendar-o_16" kbqSuffix [autoColor]="true"></i>
+
+    <input
+        kbqInput
+        placeholder="Placeholder"
+        [ngModel]="'value value value value value value value value value value'"
+    />
+</kbq-form-field>
+
+<hr />
+
+<kbq-form-field class="kbq-group-item">
+    <input
+        kbqNormalizeWhitespace
+        kbqNumberInput
+        placeholder="Number MaxMin Step"
+        type="number"
+        [bigStep]="1.5"
+        [max]="7"
+        [min]="-10"
+        [step]="0.5"
+        [(ngModel)]="numberValue"
+    />
+    <kbq-stepper />
+</kbq-form-field>

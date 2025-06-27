@@ -2,7 +2,7 @@
 <div class="kbq-callout__header">Attention</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-This component is experimental, it is backward compatible with the original component, but it is not recommended to use it in production applications.
+The module functionality has been moved to the [original package](/en/components/form-field).
 
 </div>
 </div>
@@ -32,7 +32,7 @@ The following components are intended to work inside the `<kbq-form-field>` comp
 
 ### Label
 
-<!-- example(form-field-with-label) -->
+<!-- example(experimental-form-field-with-label) -->
 
 ### Hints
 
@@ -40,13 +40,13 @@ The following components are intended to work inside the `<kbq-form-field>` comp
 Hints can be useful for providing additional information on how to fill out the field, what data is expected,
 or for displaying additional instructions.
 
-<!-- example(form-field-with-hint) -->
+<!-- example(experimental-form-field-with-hint) -->
 
 ### Error messages
 
 `<kbq-error>` is a component used to display validation error messages for form fields inside the `<kbq-form-field>` component. Errors are initially **hidden** and will be displayed **only** for invalid form fields after user interaction or form submission.
 
-<!-- example(form-field-with-error) -->
+<!-- example(experimental-form-field-with-error) -->
 
 ### Changing error message display behavior
 
@@ -70,23 +70,23 @@ Override
 
 For a specific field, using the `errorStateMatcher` attribute:
 
-<!-- example(form-field-with-custom-error-state-matcher-set-by-attribute) -->
+<!-- example(experimental-form-field-with-custom-error-state-matcher-set-by-attribute) -->
 
 For all fields, using the `ErrorStateMatcher` token:
 
-<!-- example(form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
+<!-- example(experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
 
 ### Field cleaning
 
 `<kbq-cleaner />` is a component that adds a clear button for **filled** form fields inside the `<kbq-form-field>` component.
 
-<!-- example(form-field-with-cleaner) -->
+<!-- example(experimental-form-field-with-cleaner) -->
 
 ### Prefix and suffix
 
 `kbqPrefix` and `kbqSuffix` are directives that allow adding custom elements **before** and **after** the form field inside the `<kbq-form-field>` component. These directives are useful for adding icons, text, buttons, and other elements that should be placed next to the form field.
 
-<!-- example(form-field-with-prefix-and-suffix) -->
+<!-- example(experimental-form-field-with-prefix-and-suffix) -->
 
 ### Focus
 
@@ -98,7 +98,7 @@ the focus border is shown only during keyboard navigation (using the `Tab` key) 
 
 For a specific field, using the `noBorders` attribute:
 
-<!-- example(form-field-without-borders) -->
+<!-- example(experimental-form-field-without-borders) -->
 
 For all fields, using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS` token:
 
@@ -120,7 +120,7 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components-experimen
 
 The example uses [PasswordValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - a set of static methods for password validation.
 
-<!-- example(form-field-password-overview) -->
+<!-- example(experimental-form-field-password-overview) -->
 
 ### Troubleshooting
 

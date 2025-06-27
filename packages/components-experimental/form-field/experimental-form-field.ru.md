@@ -1,8 +1,8 @@
 <div class="kbq-callout kbq-callout_warning">
-<div class="kbq-callout__header">Обрати внимание</div>
+<div class="kbq-callout__header">Обратите внимание</div>
 <div class="kbq-callout__content kbq-docs-element-last-child-margin-bottom-0">
 
-Этот компонент является экспериментальным, он обратно совместим с оригинальным компонентом, но его не рекомендуется использовать в продакшн-приложениях.
+Функциональность модуля была перенесена в [оригинальный пакет](/ru/components/form-field).
 
 </div>
 </div>
@@ -33,7 +33,7 @@
 
 ### Лейбл
 
-<!-- example(form-field-with-label) -->
+<!-- example(experimental-form-field-with-label) -->
 
 ### Подсказки
 
@@ -41,7 +41,7 @@
 Подсказки могут быть полезны для предоставления дополнительной информации о том, как заполнить поле, какие данные ожидаются
 или для отображения дополнительных инструкций.
 
-<!-- example(form-field-with-hint) -->
+<!-- example(experimental-form-field-with-hint) -->
 
 ### Сообщения об ошибке
 
@@ -49,7 +49,7 @@
 компонента. Ошибки изначально **скрыты** и будут отображаться **только** для невалидных полей формы после пользовательского
 взаимодействия или в момент отправки формы.
 
-<!-- example(form-field-with-error) -->
+<!-- example(experimental-form-field-with-error) -->
 
 ### Изменение поведения отображения подсветки и сообщения об ошибке
 
@@ -76,18 +76,18 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 Для определенного поля, при помощи `errorStateMatcher` атрибута:
 
-<!-- example(form-field-with-custom-error-state-matcher-set-by-attribute) -->
+<!-- example(experimental-form-field-with-custom-error-state-matcher-set-by-attribute) -->
 
 Для всех полей, при помощи `ErrorStateMatcher` токена:
 
-<!-- example(form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
+<!-- example(experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider) -->
 
 ### Очистка поля
 
 `<kbq-cleaner />` - это компонент, который добавляет кнопку очистки для **заполненного** поля формы внутри `<kbq-form-field>`
 компонента.
 
-<!-- example(form-field-with-cleaner) -->
+<!-- example(experimental-form-field-with-cleaner) -->
 
 ### Префикс и суффикс
 
@@ -95,7 +95,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 формы внутри `<kbq-form-field>` компонента. Эти директивы полезны для добавления иконок, текста, кнопок и других элементов,
 которые должны быть расположены рядом с полем формы.
 
-<!-- example(form-field-with-prefix-and-suffix) -->
+<!-- example(experimental-form-field-with-prefix-and-suffix) -->
 
 ### Фокус
 
@@ -107,7 +107,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
 
 Для определенного поля, при помощи `noBorders` атрибута:
 
-<!-- example(form-field-without-borders) -->
+<!-- example(experimental-form-field-without-borders) -->
 
 Для всех полей, при помощи `KBQ_FORM_FIELD_DEFAULT_OPTIONS` токена:
 
@@ -131,7 +131,7 @@ import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components-experimen
 
 В примере используется [PasswordValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - это набор статических методов для валидации пароля.
 
-<!-- example(form-field-password-overview) -->
+<!-- example(experimental-form-field-password-overview) -->
 
 ### Устранение неисправностей
 

@@ -1,9 +1,7 @@
-.dev-container {
-    max-width: 30%;
-
-    border: 1px solid red;
-
-    padding: 24px;
+dev-app {
+    width: 608px;
+    display: block;
+    margin: var(--kbq-size-s);
 }
 
 .dev-custom-footer {

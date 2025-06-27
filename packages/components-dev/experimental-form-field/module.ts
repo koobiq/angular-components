@@ -1,28 +1,28 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { FormFieldExamplesModule } from 'packages/docs-examples/components/form-field';
+import { ExperimentalFormFieldExamplesModule } from 'packages/docs-examples/components/experimental-form-field';
 
 @Component({
     standalone: true,
-    imports: [FormFieldExamplesModule],
+    imports: [ExperimentalFormFieldExamplesModule],
     selector: 'dev-examples',
     template: `
-        <form-field-password-overview-example />
+        <experimental-form-field-password-overview-example />
         <hr />
-        <form-field-with-cleaner-example />
+        <experimental-form-field-with-cleaner-example />
         <hr />
-        <form-field-with-custom-error-state-matcher-set-by-attribute-example />
+        <experimental-form-field-with-custom-error-state-matcher-set-by-attribute-example />
         <hr />
-        <form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example />
+        <experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example />
         <hr />
-        <form-field-with-error-example />
+        <experimental-form-field-with-error-example />
         <hr />
-        <form-field-with-hint-example />
+        <experimental-form-field-with-hint-example />
         <hr />
-        <form-field-with-label-example />
+        <experimental-form-field-with-label-example />
         <hr />
-        <form-field-without-borders-example />
+        <experimental-form-field-without-borders-example />
         <hr />
-        <form-field-with-prefix-and-suffix-example />
+        <experimental-form-field-with-prefix-and-suffix-example />
         <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
