@@ -42,54 +42,56 @@ import { map } from 'rxjs/operators';
                 </nav>
             </div>
             <div kbqTopBarSpacer></div>
-            <div #kbqOverflowItems="kbqOverflowItems" kbqTopBarContainer kbqOverflowItems placement="end">
-                <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqOverflowItem="0"
-                    kbqTooltip="Filter"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-filter_16"></i>
-                </button>
-
-                <button
-                    [kbqStyle]="KbqButtonStyles.Filled"
-                    [color]="KbqComponentColors.ContrastFade"
-                    [kbqTooltipDisabled]="isDesktop()"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqOverflowItem="1"
-                    kbqTooltip="Share"
-                    kbq-button
-                >
-                    @if (isDesktop()) {
-                        Share
-                    } @else {
-                        <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
-                    }
-                </button>
-
-                <div kbqOverflowItemsResult>
+            <div kbqTopBarContainer placement="end">
+                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
-                        [kbqDropdownTriggerFor]="appDropdown"
+                        [kbqPlacement]="PopUpPlacements.Bottom"
+                        [kbqTooltipArrow]="false"
+                        kbqOverflowItem="0"
+                        kbqTooltip="Filter"
                         kbq-button
                     >
-                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        <i kbq-icon="kbq-filter_16"></i>
                     </button>
 
-                    <kbq-dropdown #appDropdown="kbqDropdown">
-                        @if (kbqOverflowItems.hiddenItemIDs().has('0')) {
-                            <button kbq-dropdown-item>Filter</button>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Filled"
+                        [color]="KbqComponentColors.ContrastFade"
+                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqPlacement]="PopUpPlacements.Bottom"
+                        [kbqTooltipArrow]="false"
+                        kbqOverflowItem="1"
+                        kbqTooltip="Share"
+                        kbq-button
+                    >
+                        @if (isDesktop()) {
+                            Share
+                        } @else {
+                            <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
                         }
-                        @if (kbqOverflowItems.hiddenItemIDs().has('1')) {
-                            <button kbq-dropdown-item>Share</button>
-                        }
-                    </kbq-dropdown>
+                    </button>
+
+                    <div kbqOverflowItemsResult>
+                        <button
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqDropdownTriggerFor]="appDropdown"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        </button>
+
+                        <kbq-dropdown #appDropdown="kbqDropdown">
+                            @if (kbqOverflowItems.hiddenItemIDs().has('0')) {
+                                <button kbq-dropdown-item>Filter</button>
+                            }
+                            @if (kbqOverflowItems.hiddenItemIDs().has('1')) {
+                                <button kbq-dropdown-item>Share</button>
+                            }
+                        </kbq-dropdown>
+                    </div>
                 </div>
             </div>
         </kbq-top-bar>
@@ -98,10 +100,6 @@ import { map } from 'rxjs/operators';
         :host {
             .kbq-top-bar-container[placement='start'] {
                 min-width: 238px;
-            }
-
-            .kbq-top-bar-container[placement='end'] {
-                flex-grow: 0.3 !important;
             }
         }
     `

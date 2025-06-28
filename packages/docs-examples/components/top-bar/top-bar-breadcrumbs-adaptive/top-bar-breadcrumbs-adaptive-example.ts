@@ -91,54 +91,56 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                 </nav>
             </div>
             <div kbqTopBarSpacer></div>
-            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
-                <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqOverflowItem="filter"
-                    kbqTooltip="Filter"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-filter_16"></i>
-                </button>
-
-                <button
-                    [kbqStyle]="KbqButtonStyles.Filled"
-                    [color]="KbqComponentColors.ContrastFade"
-                    [kbqTooltipDisabled]="isDesktop()"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqOverflowItem="share"
-                    kbqTooltip="Share"
-                    kbq-button
-                >
-                    @if (isDesktop()) {
-                        Share
-                    } @else {
-                        <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
-                    }
-                </button>
-
-                <div kbqOverflowItemsResult>
+            <div kbqTopBarContainer placement="end">
+                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
-                        [kbqDropdownTriggerFor]="appDropdown"
+                        [kbqPlacement]="PopUpPlacements.Bottom"
+                        [kbqTooltipArrow]="false"
+                        kbqOverflowItem="filter"
+                        kbqTooltip="Filter"
                         kbq-button
                     >
-                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        <i kbq-icon="kbq-filter_16"></i>
                     </button>
 
-                    <kbq-dropdown #appDropdown="kbqDropdown">
-                        @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
-                            <button kbq-dropdown-item>Filter</button>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Filled"
+                        [color]="KbqComponentColors.ContrastFade"
+                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqPlacement]="PopUpPlacements.Bottom"
+                        [kbqTooltipArrow]="false"
+                        kbqOverflowItem="share"
+                        kbqTooltip="Share"
+                        kbq-button
+                    >
+                        @if (isDesktop()) {
+                            Share
+                        } @else {
+                            <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
                         }
-                        @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
-                            <button kbq-dropdown-item>Share</button>
-                        }
-                    </kbq-dropdown>
+                    </button>
+
+                    <div kbqOverflowItemsResult>
+                        <button
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqDropdownTriggerFor]="appDropdown"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        </button>
+
+                        <kbq-dropdown #appDropdown="kbqDropdown">
+                            @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
+                                <button kbq-dropdown-item>Filter</button>
+                            }
+                            @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
+                                <button kbq-dropdown-item>Share</button>
+                            }
+                        </kbq-dropdown>
+                    </div>
                 </div>
             </div>
         </kbq-top-bar>
@@ -158,12 +160,8 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
             }
 
             .kbq-top-bar-container[placement='start'] {
-                min-width: 135px;
-                --kbq-top-bar-container-start-basis: 135px;
-            }
-
-            .kbq-top-bar-container[placement='end'] {
-                flex-grow: 0.3 !important;
+                min-width: 180px;
+                --kbq-top-bar-container-start-basis: 180px;
             }
         }
 
@@ -215,7 +213,7 @@ export class ExampleTopBarBreadcrumbs {
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
             {{ text().rightSideCompression }}
         </div>
-        <example-top-bar-breadcrumbs [style.width.px]="300" />
+        <example-top-bar-breadcrumbs [style.width.px]="342" />
     `,
     styles: `
         div {

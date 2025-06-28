@@ -78,46 +78,48 @@ type ExampleAction = {
 
             <div kbqTopBarSpacer></div>
 
-            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
-                @for (action of actions; track action.id) {
-                    <button
-                        [kbqOverflowItem]="action.id"
-                        [kbqStyle]="action.style"
-                        [color]="action.color"
-                        [kbqPlacement]="PopUpPlacements.Bottom"
-                        [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="isDesktop()"
-                        [kbqTooltip]="action.text || action.id"
-                        kbq-button
-                    >
-                        @if (action.icon) {
-                            <i [class]="action.icon" kbq-icon=""></i>
-                        }
-                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
-                            {{ action.text }}
-                        }
-                    </button>
-                }
-
-                <div kbqOverflowItemsResult>
-                    <button
-                        [kbqStyle]="KbqButtonStyles.Transparent"
-                        [color]="KbqComponentColors.Contrast"
-                        [kbqDropdownTriggerFor]="appDropdown"
-                        kbq-button
-                    >
-                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                    </button>
-
-                    <kbq-dropdown #appDropdown="kbqDropdown">
-                        @for (action of actions; track action.id) {
-                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                <button kbq-dropdown-item>
-                                    {{ action.text || action.id }}
-                                </button>
+            <div kbqTopBarContainer placement="end">
+                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                    @for (action of actions; track action.id) {
+                        <button
+                            [kbqOverflowItem]="action.id"
+                            [kbqStyle]="action.style"
+                            [color]="action.color"
+                            [kbqPlacement]="PopUpPlacements.Bottom"
+                            [kbqTooltipArrow]="false"
+                            [kbqTooltipDisabled]="isDesktop()"
+                            [kbqTooltip]="action.text || action.id"
+                            kbq-button
+                        >
+                            @if (action.icon) {
+                                <i [class]="action.icon" kbq-icon=""></i>
                             }
-                        }
-                    </kbq-dropdown>
+                            @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                                {{ action.text }}
+                            }
+                        </button>
+                    }
+
+                    <div kbqOverflowItemsResult>
+                        <button
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqDropdownTriggerFor]="appDropdown"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        </button>
+
+                        <kbq-dropdown #appDropdown="kbqDropdown">
+                            @for (action of actions; track action.id) {
+                                @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
+                                    <button kbq-dropdown-item>
+                                        {{ action.text || action.id }}
+                                    </button>
+                                }
+                            }
+                        </kbq-dropdown>
+                    </div>
                 </div>
             </div>
         </kbq-top-bar>
@@ -131,18 +133,6 @@ type ExampleAction = {
             max-width: 100%;
             min-width: 110px;
             container-type: inline-size;
-
-            @container (width < 590px) {
-                .kbq-overflow-items {
-                    max-width: 96px;
-                }
-            }
-
-            @container (width > 590px) {
-                .kbq-overflow-items {
-                    max-width: 190px;
-                }
-            }
 
             .kbq-top-bar {
                 width: 100%;
