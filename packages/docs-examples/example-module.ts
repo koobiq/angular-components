@@ -3631,6 +3631,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "timezone-trigger-overview-example.ts",
     "importPath": "components/timezone"
   },
+  "title-overview": {
+    "packagePath": "components/title/title-overview",
+    "title": "Title",
+    "componentName": "TitleOverviewExample",
+    "files": [
+      "title-overview-example.ts"
+    ],
+    "selector": "title-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "title-overview-example.ts",
+    "importPath": "components/title"
+  },
   "toast-actions-overview": {
     "packagePath": "components/toast/toast-actions-overview",
     "title": "Toast actions",
@@ -4964,6 +4976,8 @@ return import('@koobiq/docs-examples/components/timezone');
 return import('@koobiq/docs-examples/components/timezone');
   case 'timezone-trigger-overview':
 return import('@koobiq/docs-examples/components/timezone');
+  case 'title-overview':
+return import('@koobiq/docs-examples/components/title');
   case 'toast-actions-overview':
 return import('@koobiq/docs-examples/components/toast');
   case 'toast-hide-overview':
