@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, inject, InjectionToken, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
@@ -8,6 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 interface ExampleLocalizedText {
@@ -209,15 +210,13 @@ export class ExampleTopBar {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarTitleCounterAdaptiveExample implements OnInit {
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+export class TopBarTitleCounterAdaptiveExample {
     protected readonly data = inject(ExampleLocalizedData);
+    protected readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
 
-    protected readonly text = signal(this.data.default);
+    protected readonly text = computed(() => {
+        const localeId = this.localeId();
 
-    ngOnInit() {
-        if (this.localeService) {
-            this.localeService.changes.subscribe((id: string) => this.text.set(this.data[id] || this.data.default));
-        }
-    }
+        return (localeId && this.data[localeId]) || this.data.default;
+    });
 }

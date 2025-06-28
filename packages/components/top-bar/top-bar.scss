@@ -31,6 +31,11 @@
     padding: var(--kbq-top-bar-padding-vertical) var(--kbq-top-bar-padding-horizontal);
     border-radius: var(--kbq-top-bar-border-radius);
 
+    &.kbq-top-bar_with-shadow {
+        box-shadow: var(--kbq-top-bar-shadow-bottom);
+        transition: box-shadow var(--kbq-top-bar-shadow-transition);
+    }
+
     .kbq-top-bar-spacer {
         height: 100%;
         flex: 0 0 var(--kbq-top-bar-spacer-min-width);
@@ -45,32 +50,27 @@
         .kbq-overflow-items {
             @include _overflow-items-margins;
         }
-    }
 
-    .kbq-top-bar-container__start {
-        display: flex;
-        gap: var(--kbq-top-bar-container-start-gap);
-        flex: 1 0 var(--kbq-top-bar-container-start-basis);
-        justify-content: flex-start;
-        min-width: 0;
-    }
+        &.kbq-top-bar-container__start {
+            display: flex;
+            gap: var(--kbq-top-bar-container-start-gap);
+            flex: 1 0 var(--kbq-top-bar-container-start-basis);
+            justify-content: flex-start;
+            min-width: 0;
+        }
 
-    .kbq-top-bar-container__end {
-        display: flex;
-        gap: var(--kbq-top-bar-container-end-gap);
-        justify-content: end;
-    }
+        &.kbq-top-bar-container__end {
+            display: flex;
+            gap: var(--kbq-top-bar-container-end-gap);
+            justify-content: end;
+        }
 
-    .kbq-top-bar-container__with-overflow-items {
-        gap: unset;
-        justify-content: unset;
+        &.kbq-top-bar-container__with-overflow-items {
+            gap: unset;
+            justify-content: unset;
 
-        @include _overflow-items-margins;
-    }
-
-    &.kbq-top-bar_with-shadow {
-        box-shadow: var(--kbq-top-bar-shadow-bottom);
-        transition: box-shadow var(--kbq-top-bar-shadow-transition);
+            @include _overflow-items-margins;
+        }
     }
 
     @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
