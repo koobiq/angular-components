@@ -60,47 +60,49 @@ type ExampleAction = {
                 </div>
             </div>
             <div kbqTopBarSpacer></div>
-            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
-                @for (action of actions; track action.id) {
-                    <button
-                        [kbqOverflowItem]="action.id"
-                        [kbqStyle]="action.style"
-                        [color]="action.color"
-                        [kbqPlacement]="PopUpPlacements.Bottom"
-                        [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="canTooltipBeAppied(action)"
-                        [kbqTooltip]="action.text || action.id"
-                        [alwaysVisible]="action?.alwaysVisible"
-                        kbq-button
-                    >
-                        @if (action.icon) {
-                            <i [class]="action.icon" kbq-icon=""></i>
-                        }
-                        @if (canTooltipBeAppied(action)) {
-                            {{ action.text }}
-                        }
-                    </button>
-                }
-
-                <div kbqOverflowItemsResult>
-                    <button
-                        [kbqStyle]="KbqButtonStyles.Transparent"
-                        [color]="KbqComponentColors.Contrast"
-                        [kbqDropdownTriggerFor]="appDropdown"
-                        kbq-button
-                    >
-                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                    </button>
-
-                    <kbq-dropdown #appDropdown="kbqDropdown">
-                        @for (action of actions; track action.id) {
-                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                <button kbq-dropdown-item>
-                                    {{ action.text || action.id }}
-                                </button>
+            <div kbqTopBarContainer placement="end">
+                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                    @for (action of actions; track action.id) {
+                        <button
+                            [kbqOverflowItem]="action.id"
+                            [kbqStyle]="action.style"
+                            [color]="action.color"
+                            [kbqPlacement]="PopUpPlacements.Bottom"
+                            [kbqTooltipArrow]="false"
+                            [kbqTooltipDisabled]="canTooltipBeAppied(action)"
+                            [kbqTooltip]="action.text || action.id"
+                            [alwaysVisible]="action?.alwaysVisible"
+                            kbq-button
+                        >
+                            @if (action.icon) {
+                                <i [class]="action.icon" kbq-icon=""></i>
                             }
-                        }
-                    </kbq-dropdown>
+                            @if (canTooltipBeAppied(action)) {
+                                {{ action.text }}
+                            }
+                        </button>
+                    }
+
+                    <div kbqOverflowItemsResult>
+                        <button
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqDropdownTriggerFor]="appDropdown"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        </button>
+
+                        <kbq-dropdown #appDropdown="kbqDropdown">
+                            @for (action of actions; track action.id) {
+                                @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
+                                    <button kbq-dropdown-item>
+                                        {{ action.text || action.id }}
+                                    </button>
+                                }
+                            }
+                        </kbq-dropdown>
+                    </div>
                 </div>
             </div>
         </kbq-top-bar>
@@ -152,10 +154,6 @@ type ExampleAction = {
 
             .kbq-top-bar {
                 border-radius: var(--kbq-size-border-radius) var(--kbq-size-border-radius) 0 0;
-            }
-
-            .kbq-overflow-items {
-                max-width: 291px;
             }
         }
 
