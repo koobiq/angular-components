@@ -6,7 +6,7 @@
 
 #### Adaptability
 
-The bulk actions panel becomes compact to fit in the available screen area.
+The bulk actions panel becomes compact to fit within the available screen area. Adaptability is implemented using the [`KbqOverflowItems`](en/components/overflow-items) component, which automatically hides elements with dynamic adaptation to the container width. The `additionalResizeObserverTargets` attribute is used to track panel size changes, allowing you to monitor size changes of specified elements on the page.
 
 <!-- example(actions-panel-adaptive) -->
 
