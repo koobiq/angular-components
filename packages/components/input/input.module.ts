@@ -1,7 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputMono } from './input';
 import { KbqNumberInput } from './input-number';
@@ -11,7 +10,6 @@ import { KbqInputPassword } from './input-password';
 @NgModule({
     imports: [
         A11yModule,
-        KbqCommonModule,
         FormsModule,
         KbqIconModule
     ],

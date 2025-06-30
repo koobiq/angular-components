@@ -3,7 +3,6 @@ import { CdkObserveContent } from '@angular/cdk/observers';
 import { PortalModule } from '@angular/cdk/portal';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { NgModule } from '@angular/core';
-import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTabBody, KbqTabBodyPortal } from './tab-body.component';
@@ -47,7 +46,6 @@ const COMPONENTS = [
         PortalModule,
         A11yModule,
         CdkScrollableModule,
-        KbqCommonModule,
         KbqIconModule,
         KbqToolTipModule,
         CdkObserveContent,

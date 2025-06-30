@@ -1,7 +1,7 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgClass } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { KbqCommonModule, KbqOptionModule } from '@koobiq/components/core';
+import { KbqOptionModule } from '@koobiq/components/core';
 import { KbqAutocompleteOrigin } from './autocomplete-origin.directive';
 import {
     KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER,
@@ -13,15 +13,13 @@ import { KbqAutocomplete } from './autocomplete.component';
     imports: [
         KbqOptionModule,
         OverlayModule,
-        KbqCommonModule,
         NgClass
     ],
     exports: [
         KbqAutocomplete,
         KbqOptionModule,
         KbqAutocompleteTrigger,
-        KbqAutocompleteOrigin,
-        KbqCommonModule
+        KbqAutocompleteOrigin
     ],
     declarations: [KbqAutocomplete, KbqAutocompleteTrigger, KbqAutocompleteOrigin],
     providers: [KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER]

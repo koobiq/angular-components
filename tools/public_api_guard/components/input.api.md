@@ -14,9 +14,8 @@ import { EventEmitter } from '@angular/core';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
 import * as i5 from '@angular/cdk/a11y';
-import * as i6 from '@koobiq/components/core';
-import * as i7 from '@angular/forms';
-import * as i8 from '@koobiq/components/icon';
+import * as i6 from '@angular/forms';
+import * as i7 from '@koobiq/components/icon';
 import { InjectionToken } from '@angular/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { KbqLocaleService } from '@koobiq/components/core';
@@ -138,7 +137,7 @@ export class KbqInputModule {
     // Warning: (ae-forgotten-export) The symbol "i4" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, [typeof i1.KbqInput, typeof i2.KbqNumberInput, typeof i3.KbqInputPassword, typeof i1.KbqInputMono, typeof i4.MinValidator, typeof i4.MaxValidator], [typeof i5.A11yModule, typeof i6.KbqCommonModule, typeof i7.FormsModule, typeof i8.KbqIconModule], [typeof i1.KbqInput, typeof i2.KbqNumberInput, typeof i3.KbqInputPassword, typeof i1.KbqInputMono, typeof i4.MinValidator, typeof i4.MaxValidator]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInputModule, [typeof i1.KbqInput, typeof i2.KbqNumberInput, typeof i3.KbqInputPassword, typeof i1.KbqInputMono, typeof i4.MinValidator, typeof i4.MaxValidator], [typeof i5.A11yModule, typeof i6.FormsModule, typeof i7.KbqIconModule], [typeof i1.KbqInput, typeof i2.KbqNumberInput, typeof i3.KbqInputPassword, typeof i1.KbqInputMono, typeof i4.MinValidator, typeof i4.MaxValidator]>;
 }
 
 // @public (undocumented)

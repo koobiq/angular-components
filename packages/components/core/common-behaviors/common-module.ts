@@ -27,8 +27,6 @@ export function mcSanityChecksFactory(): boolean {
  * Module that captures anything that should be loaded and/or run for *all* Koobiq
  * components. This includes Bidi, etc.
  *
- * This module should be imported to each top-level component module (e.g., KbqTabsModule).
- *
  * @deprecated No longer used and will be removed in next major release.
  *
  * @docs-private

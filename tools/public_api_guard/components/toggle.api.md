@@ -12,7 +12,6 @@ import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
 import * as i2 from '@angular/cdk/a11y';
-import * as i3 from '@koobiq/components/core';
 import { KbqCheckboxClickAction } from '@koobiq/components/checkbox';
 import { KbqCheckedState } from '@koobiq/components/core';
 import { KbqColorDirective } from '@koobiq/components/core';
@@ -111,7 +110,7 @@ export class KbqToggleModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToggleModule, [typeof i1.KbqToggleComponent], [typeof i2.A11yModule, typeof i3.KbqCommonModule], [typeof i1.KbqToggleComponent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqToggleModule, [typeof i1.KbqToggleComponent], [typeof i2.A11yModule], [typeof i1.KbqToggleComponent]>;
 }
 
 // (No @packageDocumentation comment for this package)
