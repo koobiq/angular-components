@@ -9,7 +9,7 @@
         }
 
         // apply margin if the last item needs to be alwaysVisible
-        &:last-of-type:is([aria-hidden='false']) + .kbq-overflow-items-result {
+        &:last-of-type:is(.kbq-overflow-item_always-visible) + .kbq-overflow-items-result {
             margin-left: var(--kbq-top-bar-container-end-gap);
         }
     }

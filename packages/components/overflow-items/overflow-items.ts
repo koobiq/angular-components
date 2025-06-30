@@ -82,7 +82,10 @@ export class KbqOverflowItemsResult extends ElementVisibilityManager {}
     standalone: true,
     selector: '[kbqOverflowItem]',
     exportAs: 'kbqOverflowItem',
-    host: { class: 'kbq-overflow-item' }
+    host: {
+        class: 'kbq-overflow-item',
+        '[class.kbq-overflow-item_always-visible]': 'alwaysVisible()'
+    }
 })
 export class KbqOverflowItem extends ElementVisibilityManager {
     /**
