@@ -9,6 +9,7 @@ require('@koobiq/tokens-builder/transforms/attribute/prefix.js')(StyleDictionary
 require('@koobiq/tokens-builder/transforms/attribute/font.js')(StyleDictionary);
 require('@koobiq/tokens-builder/transforms/attribute/theme.js')(StyleDictionary);
 require('@koobiq/tokens-builder/transforms/attribute/scss-value.js')(StyleDictionary);
+require('@koobiq/tokens-builder/transforms/attribute/deprecation-comment.js')(StyleDictionary);
 
 // ==== Include custom filters ====
 require('@koobiq/tokens-builder/filters/palette.js')(StyleDictionary);

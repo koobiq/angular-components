@@ -230,9 +230,11 @@
   --kbq-palette-blue-15-a40: hsla(216, 100%, 15%, 40%);
   --kbq-palette-blue-15-a50: hsla(216, 100%, 15%, 50%);
   --kbq-palette-blue-15-a60: hsla(216, 100%, 15%, 60%);
+  --kbq-palette-blue-26-a88: hsla(216, 100%, 26%, 88%);
   --kbq-palette-blue-50-a8: hsla(216, 100%, 50%, 8%);
   --kbq-palette-blue-50-a16: hsla(216, 100%, 50%, 16%);
   --kbq-palette-blue-50-a55: hsla(216, 100%, 50%, 55%);
+  --kbq-palette-blue-86-a88: hsla(216, 100%, 86%, 88%);
   --kbq-palette-blue-92-a20: hsla(216, 100%, 92%, 20%);
   --kbq-palette-blue-92-a30: hsla(216, 100%, 92%, 30%);
   --kbq-palette-blue-92-a40: hsla(216, 100%, 92%, 40%);
@@ -910,10 +912,12 @@
   --kbq-palette-red-100: hsla(7, 97%, 100%, 100%);
   --kbq-palette-red-5-a8: hsla(7, 97%, 5%, 8%);
   --kbq-palette-red-5-a16: hsla(7, 97%, 5%, 16%);
+  --kbq-palette-red-22-a88: hsla(7, 97%, 22%, 88%);
   --kbq-palette-red-50-a8: hsla(7, 97%, 50%, 8%);
   --kbq-palette-red-50-a16: hsla(7, 97%, 50%, 16%);
   --kbq-palette-red-51-s69: hsla(7, 69%, 51%, 100%);
   --kbq-palette-red-60-a55: hsla(7, 97%, 60%, 55%);
+  --kbq-palette-red-88-a88: hsla(7, 97%, 88%, 88%);
   --kbq-palette-red-a8: hsla(7, 97%, 5%, 8%);
   --kbq-palette-red-a8-l50: hsla(7, 97%, 50%, 8%);
   --kbq-palette-red-a16: hsla(7, 97%, 5%, 16%);
