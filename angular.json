@@ -44,6 +44,11 @@
                             },
                             {
                                 "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/images",
+                                "output": "/assets/images"
+                            },
+                            {
+                                "glob": "**/*",
                                 "input": "apps/docs/src/assets",
                                 "output": "/assets"
                             },
@@ -926,6 +931,13 @@
                         "outputPath": {
                             "base": "dist/components-dev/empty-state"
                         },
+                        "assets": [
+                            {
+                                "glob": "**/*",
+                                "input": "node_modules/@koobiq/icons/images",
+                                "output": "/assets/images"
+                            }
+                        ],
                         "tsConfig": "packages/components-dev/empty-state/tsconfig.app.json",
                         "index": "packages/components-dev/index.html",
                         "styles": ["packages/components-dev/main.scss"],
