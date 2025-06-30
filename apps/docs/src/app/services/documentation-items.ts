@@ -695,6 +695,17 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     hasExamples: false
                 },
                 {
+                    id: 'title',
+                    name: {
+                        ru: 'Title',
+                        en: 'Title'
+                    },
+                    svgPreview: 'title',
+                    hasApi: true,
+                    apiId: 'title',
+                    hasExamples: false
+                },
+                {
                     id: 'toast',
                     name: {
                         ru: 'Toast',

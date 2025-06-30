@@ -3636,7 +3636,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Title",
     "componentName": "TitleOverviewExample",
     "files": [
-      "title-overview-example.ts"
+      "title-overview-example.ts",
+      "./title-overview-example.css"
     ],
     "selector": "title-overview-example",
     "additionalComponents": [],

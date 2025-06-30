@@ -11,4 +11,4 @@ const EXAMPLES = [
     imports: EXAMPLES,
     exports: EXAMPLES
 })
-export class TimezoneExamplesModule {}
+export class TitleExamplesModule {}
