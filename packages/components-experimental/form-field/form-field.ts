@@ -25,7 +25,7 @@ import { AbstractControlDirective } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
 import { KBQ_FORM_FIELD_REF } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
-import { merge } from 'rxjs';
+import { EMPTY, merge } from 'rxjs';
 import { KbqCleaner } from './cleaner';
 import { KbqError, KbqHint, KbqPasswordHint } from './hint';
 import { KbqLabel } from './label';
@@ -398,12 +398,10 @@ export class KbqFormField implements AfterContentInit, AfterViewInit, OnDestroy 
             this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${this.control.controlType}`);
         }
 
-        this.control.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-        });
-
-        this.control.ngControl?.valueChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-        });
+        merge(this.control.stateChanges, this.control.ngControl?.valueChanges || EMPTY)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            });
     }
 }

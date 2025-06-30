@@ -31,7 +31,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgControl } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
 import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
-import { merge } from 'rxjs';
+import { EMPTY, merge } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
@@ -460,13 +460,11 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
             this.elementRef.nativeElement.classList.add(`kbq-form-field-type-${this.control.controlType}`);
         }
 
-        this.control.stateChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-        });
-
-        this.control.ngControl?.valueChanges?.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.changeDetectorRef.markForCheck();
-        });
+        merge(this.control.stateChanges, this.control.ngControl?.valueChanges || EMPTY)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
     /** Initializes the kbqPrefix and kbqSuffix containers. */
