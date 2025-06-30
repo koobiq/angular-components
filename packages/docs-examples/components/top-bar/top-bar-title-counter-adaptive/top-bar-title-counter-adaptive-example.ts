@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, inject, InjectionToken, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqComponentColors, KbqFormattersModule, PopUpPlacements } from '@koobiq/components/core';
@@ -8,6 +8,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 interface ExampleLocalizedText {
@@ -78,46 +79,48 @@ type ExampleAction = {
 
             <div kbqTopBarSpacer></div>
 
-            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
-                @for (action of actions; track action.id) {
-                    <button
-                        [kbqOverflowItem]="action.id"
-                        [kbqStyle]="action.style"
-                        [color]="action.color"
-                        [kbqPlacement]="PopUpPlacements.Bottom"
-                        [kbqTooltipArrow]="false"
-                        [kbqTooltipDisabled]="isDesktop()"
-                        [kbqTooltip]="action.text || action.id"
-                        kbq-button
-                    >
-                        @if (action.icon) {
-                            <i [class]="action.icon" kbq-icon=""></i>
-                        }
-                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
-                            {{ action.text }}
-                        }
-                    </button>
-                }
-
-                <div kbqOverflowItemsResult>
-                    <button
-                        [kbqStyle]="KbqButtonStyles.Transparent"
-                        [color]="KbqComponentColors.Contrast"
-                        [kbqDropdownTriggerFor]="appDropdown"
-                        kbq-button
-                    >
-                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                    </button>
-
-                    <kbq-dropdown #appDropdown="kbqDropdown">
-                        @for (action of actions; track action.id) {
-                            @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                <button kbq-dropdown-item>
-                                    {{ action.text || action.id }}
-                                </button>
+            <div kbqTopBarContainer placement="end">
+                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
+                    @for (action of actions; track action.id) {
+                        <button
+                            [kbqOverflowItem]="action.id"
+                            [kbqStyle]="action.style"
+                            [color]="action.color"
+                            [kbqPlacement]="PopUpPlacements.Bottom"
+                            [kbqTooltipArrow]="false"
+                            [kbqTooltipDisabled]="isDesktop()"
+                            [kbqTooltip]="action.text || action.id"
+                            kbq-button
+                        >
+                            @if (action.icon) {
+                                <i [class]="action.icon" kbq-icon=""></i>
                             }
-                        }
-                    </kbq-dropdown>
+                            @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                                {{ action.text }}
+                            }
+                        </button>
+                    }
+
+                    <div kbqOverflowItemsResult>
+                        <button
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqDropdownTriggerFor]="appDropdown"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        </button>
+
+                        <kbq-dropdown #appDropdown="kbqDropdown">
+                            @for (action of actions; track action.id) {
+                                @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
+                                    <button kbq-dropdown-item>
+                                        {{ action.text || action.id }}
+                                    </button>
+                                }
+                            }
+                        </kbq-dropdown>
+                    </div>
                 </div>
             </div>
         </kbq-top-bar>
@@ -131,18 +134,6 @@ type ExampleAction = {
             max-width: 100%;
             min-width: 110px;
             container-type: inline-size;
-
-            @container (width < 590px) {
-                .kbq-overflow-items {
-                    max-width: 96px;
-                }
-            }
-
-            @container (width > 590px) {
-                .kbq-overflow-items {
-                    max-width: 190px;
-                }
-            }
 
             .kbq-top-bar {
                 width: 100%;
@@ -219,15 +210,13 @@ export class ExampleTopBar {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarTitleCounterAdaptiveExample implements OnInit {
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+export class TopBarTitleCounterAdaptiveExample {
     protected readonly data = inject(ExampleLocalizedData);
+    protected readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
 
-    protected readonly text = signal(this.data.default);
+    protected readonly text = computed(() => {
+        const localeId = this.localeId();
 
-    ngOnInit() {
-        if (this.localeService) {
-            this.localeService.changes.subscribe((id: string) => this.text.set(this.data[id] || this.data.default));
-        }
-    }
+        return (localeId && this.data[localeId]) || this.data.default;
+    });
 }

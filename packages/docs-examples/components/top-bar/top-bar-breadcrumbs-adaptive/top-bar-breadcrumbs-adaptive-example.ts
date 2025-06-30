@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { ChangeDetectionStrategy, Component, inject, InjectionToken, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, InjectionToken } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { kbqBreadcrumbsConfigurationProvider, KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
@@ -10,6 +10,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqOverflowItemsModule } from '@koobiq/components/overflow-items';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
+import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 interface ExampleLocalizedText {
@@ -91,54 +92,56 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                 </nav>
             </div>
             <div kbqTopBarSpacer></div>
-            <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems kbqTopBarContainer placement="end">
-                <button
-                    [kbqStyle]="KbqButtonStyles.Transparent"
-                    [color]="KbqComponentColors.Contrast"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqOverflowItem="filter"
-                    kbqTooltip="Filter"
-                    kbq-button
-                >
-                    <i kbq-icon="kbq-filter_16"></i>
-                </button>
-
-                <button
-                    [kbqStyle]="KbqButtonStyles.Filled"
-                    [color]="KbqComponentColors.ContrastFade"
-                    [kbqTooltipDisabled]="isDesktop()"
-                    [kbqPlacement]="PopUpPlacements.Bottom"
-                    [kbqTooltipArrow]="false"
-                    kbqOverflowItem="share"
-                    kbqTooltip="Share"
-                    kbq-button
-                >
-                    @if (isDesktop()) {
-                        Share
-                    } @else {
-                        <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
-                    }
-                </button>
-
-                <div kbqOverflowItemsResult>
+            <div kbqTopBarContainer placement="end">
+                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
-                        [kbqDropdownTriggerFor]="appDropdown"
+                        [kbqPlacement]="PopUpPlacements.Bottom"
+                        [kbqTooltipArrow]="false"
+                        kbqOverflowItem="filter"
+                        kbqTooltip="Filter"
                         kbq-button
                     >
-                        <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        <i kbq-icon="kbq-filter_16"></i>
                     </button>
 
-                    <kbq-dropdown #appDropdown="kbqDropdown">
-                        @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
-                            <button kbq-dropdown-item>Filter</button>
+                    <button
+                        [kbqStyle]="KbqButtonStyles.Filled"
+                        [color]="KbqComponentColors.ContrastFade"
+                        [kbqTooltipDisabled]="isDesktop()"
+                        [kbqPlacement]="PopUpPlacements.Bottom"
+                        [kbqTooltipArrow]="false"
+                        kbqOverflowItem="share"
+                        kbqTooltip="Share"
+                        kbq-button
+                    >
+                        @if (isDesktop()) {
+                            Share
+                        } @else {
+                            <i kbq-icon="kbq-arrow-up-from-rectangle_16"></i>
                         }
-                        @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
-                            <button kbq-dropdown-item>Share</button>
-                        }
-                    </kbq-dropdown>
+                    </button>
+
+                    <div kbqOverflowItemsResult>
+                        <button
+                            [kbqStyle]="KbqButtonStyles.Transparent"
+                            [color]="KbqComponentColors.Contrast"
+                            [kbqDropdownTriggerFor]="appDropdown"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                        </button>
+
+                        <kbq-dropdown #appDropdown="kbqDropdown">
+                            @if (kbqOverflowItems.hiddenItemIDs().has('filter')) {
+                                <button kbq-dropdown-item>Filter</button>
+                            }
+                            @if (kbqOverflowItems.hiddenItemIDs().has('share')) {
+                                <button kbq-dropdown-item>Share</button>
+                            }
+                        </kbq-dropdown>
+                    </div>
                 </div>
             </div>
         </kbq-top-bar>
@@ -158,12 +161,8 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
             }
 
             .kbq-top-bar-container[placement='start'] {
-                min-width: 135px;
-                --kbq-top-bar-container-start-basis: 135px;
-            }
-
-            .kbq-top-bar-container[placement='end'] {
-                flex-grow: 0.3 !important;
+                min-width: 180px;
+                --kbq-top-bar-container-start-basis: 180px;
             }
         }
 
@@ -215,7 +214,7 @@ export class ExampleTopBarBreadcrumbs {
         <div class="layout-margin-top-3xl layout-margin-bottom-l">
             {{ text().rightSideCompression }}
         </div>
-        <example-top-bar-breadcrumbs [style.width.px]="300" />
+        <example-top-bar-breadcrumbs [style.width.px]="342" />
     `,
     styles: `
         div {
@@ -225,15 +224,13 @@ export class ExampleTopBarBreadcrumbs {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopBarBreadcrumbsAdaptiveExample implements OnInit {
-    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+export class TopBarBreadcrumbsAdaptiveExample {
     protected readonly data = inject(ExampleLocalizedData);
+    protected readonly localeId = toSignal(inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes || of(''));
 
-    protected readonly text = signal(this.data.default);
+    protected readonly text = computed(() => {
+        const localeId = this.localeId();
 
-    ngOnInit() {
-        if (this.localeService) {
-            this.localeService.changes.subscribe((id: string) => this.text.set(this.data[id] || this.data.default));
-        }
-    }
+        return (localeId && this.data[localeId]) || this.data.default;
+    });
 }
