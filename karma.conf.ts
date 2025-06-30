@@ -13,7 +13,6 @@ module.exports = (): ConfigOptions => {
             require('karma-jasmine'),
             require('karma-chrome-launcher'),
             require('karma-spec-reporter'),
-            require('karma-jasmine-html-reporter'),
             require('@angular-devkit/build-angular/plugins/karma')
         ],
         client: {
@@ -23,14 +22,8 @@ module.exports = (): ConfigOptions => {
                 stopOnSpecFailure: true
             }
         },
-        reporters: isCI ? ['dots'] : ['spec', 'kjhtml'],
+        reporters: isCI ? ['dots'] : ['spec'],
         specReporter: {
-            maxLogLines: 5,
-            suppressSummary: false,
-            suppressErrorSummary: false,
-            suppressFailed: false,
-            suppressPassed: false,
-            suppressSkipped: false,
             showSpecTiming: true,
             failFast: true
         },

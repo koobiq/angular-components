@@ -14532,7 +14532,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jasmine-core@npm:^3.6.0, jasmine-core@npm:^3.99.1":
+"jasmine-core@npm:^3.6.0":
   version: 3.99.1
   resolution: "jasmine-core@npm:3.99.1"
   checksum: 10c0/f89721874e2af19a098e214b8f3f201a644d625339c010733b6b0dba4ff9149f16997712a639c2bb427e7533526f82e0477b7927e175d3a2b2f9ff92928a5329
@@ -15457,17 +15457,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"karma-jasmine-html-reporter@npm:1.7.0":
-  version: 1.7.0
-  resolution: "karma-jasmine-html-reporter@npm:1.7.0"
-  peerDependencies:
-    jasmine-core: ">=3.8"
-    karma: ">=0.9"
-    karma-jasmine: ">=1.1"
-  checksum: 10c0/d37bbc8fb435ecf1a3bd50e63cc0782e9d8a2736c30a814c6928fae51562caf97e3710a2005a2dfd0aeaefa67cf876c4f593eb16faa3f4adecb38db2d6d079bf
-  languageName: node
-  linkType: hard
-
 "karma-jasmine@npm:^4.0.2":
   version: 4.0.2
   resolution: "karma-jasmine@npm:4.0.2"
@@ -15692,13 +15681,12 @@ __metadata:
     husky: "npm:^9.1.7"
     inquirer: "npm:^7.3.3"
     jasmine: "npm:^4.6.0"
-    jasmine-core: "npm:^3.99.1"
+    jasmine-core: "npm:^4.6.0"
     jest: "npm:^29.7.0"
     jest-preset-angular: "npm:^14.6.0"
     karma: "npm:^6.4.4"
     karma-chrome-launcher: "npm:^3.2.0"
     karma-jasmine: "npm:^4.0.2"
-    karma-jasmine-html-reporter: "npm:1.7.0"
     karma-spec-reporter: "npm:^0.0.36"
     license-checker: "npm:^25.0.1"
     lint-staged: "npm:^15.5.2"
