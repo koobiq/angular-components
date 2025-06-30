@@ -75,8 +75,8 @@ import { KbqCleaner, KbqFormField, KbqFormFieldControl } from '@koobiq/component
 import { KbqTag } from '@koobiq/components/tags';
 import { KbqTree, KbqTreeOption, KbqTreeSelection } from '@koobiq/components/tree';
 import { SizeXxs as SelectSizeMultipleContentGap } from '@koobiq/design-tokens';
-import { Observable, Subject, Subscription, defer, merge } from 'rxjs';
-import { delay, distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
+import { Observable, Subject, Subscription, audit, defer, merge } from 'rxjs';
+import { distinctUntilChanged, filter, map, startWith, switchMap, take } from 'rxjs/operators';
 
 let nextUniqueId = 0;
 
@@ -1247,11 +1247,9 @@ export class KbqTreeSelect
     }
 
     private subscribeOnSearchChanges() {
-        if (!this.search?.ngControl.valueChanges) {
-            return;
-        }
+        if (!this.search?.ngControl.valueChanges) return;
 
-        this.search.ngControl.valueChanges.pipe(delay(0)).subscribe((value) => {
+        this.search.ngControl.valueChanges.pipe(audit(() => this.tree.unorderedOptions.changes)).subscribe((value) => {
             this.isEmptySearchResult = !!value && this.tree.isEmpty;
             this.changeDetectorRef.markForCheck();
         });
