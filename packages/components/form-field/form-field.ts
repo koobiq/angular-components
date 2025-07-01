@@ -75,6 +75,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
     useValue: options
 });
 
+/** Container for form controls that applies styling and behavior. */
 @Component({
     standalone: true,
     selector: 'kbq-form-field',

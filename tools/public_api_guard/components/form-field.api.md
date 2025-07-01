@@ -62,7 +62,7 @@ export class KbqError extends KbqHint {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqError, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
