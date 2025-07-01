@@ -154,7 +154,7 @@
         "sass": "^1.89.2",
         "spdx-satisfies": "^5.0.1",
         "style-dictionary": "^3.7.1",
-        "stylelint": "^16.20.0",
+        "stylelint": "^16.21.0",
         "stylelint-config-recommended-scss": "^14.1.0",
         "stylelint-prettier": "^5.0.3",
         "ts-jest": "^29.4.0",
