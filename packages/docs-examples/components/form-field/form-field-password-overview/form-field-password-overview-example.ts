@@ -36,7 +36,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 Lowercase characters
                 @let minLowercaseError = formControl.getError('minLowercase');
                 @if (minLowercaseError) {
-                    ({{ minLowercaseError?.actual }}/{{ minLowercaseError?.min }})
+                    ({{ minLowercaseError.actual }}/{{ minLowercaseError.min }})
                 }
             </kbq-reactive-password-hint>
 

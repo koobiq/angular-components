@@ -10,9 +10,10 @@ import {
     input,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KBQ_FORM_FIELD_REF, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { EMPTY, merge } from 'rxjs';
 import { KbqFormField } from './form-field';
 import { KbqHint } from './hint';
 
@@ -61,29 +62,23 @@ export class KbqReactivePasswordHint extends KbqHint {
         this.compact = false;
         this.color = KbqComponentColors.ContrastFade;
 
+        const hasError = toObservable(this.hasError);
+
         afterNextRender(() => {
-            this.formField?.control?.stateChanges
+            merge(this.formField?.control?.stateChanges || EMPTY, hasError)
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => this.setupColor());
+                .subscribe(() => (this.color = this.makeColor()));
         });
     }
 
-    private setupColor(): void {
+    private makeColor(): KbqComponentColors {
         const invalid = this.formField?.invalid;
         const hasError = this.hasError();
 
-        if (invalid && hasError) {
-            this.color = KbqComponentColors.Error;
+        if (invalid && hasError) return KbqComponentColors.Error;
 
-            return;
-        }
+        if ((!invalid && !hasError) || !hasError) return KbqComponentColors.Success;
 
-        if ((!invalid && !hasError) || !hasError) {
-            this.color = KbqComponentColors.Success;
-
-            return;
-        }
-
-        this.color = KbqComponentColors.ContrastFade;
+        return KbqComponentColors.ContrastFade;
     }
 }
