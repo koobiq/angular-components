@@ -46,14 +46,14 @@ import { KbqStepper } from './stepper';
 import { KbqSuffix } from './suffix';
 
 /** @docs-private */
-export const getKbqFormFieldMissingControlError = (): Error => {
+export function getKbqFormFieldMissingControlError(): Error {
     return Error('kbq-form-field must contain a KbqFormFieldControl');
-};
+}
 
 /** @docs-private */
-export const getKbqFormFieldYouCanNotUseCleanerInNumberInputError = (): Error => {
+export function getKbqFormFieldYouCanNotUseCleanerInNumberInputError(): Error {
     return Error(`You can't use kbq-cleaner with input that have type="number"`);
-};
+}
 
 /**
  * Default options for the kbq-form-field that can be configured using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS`

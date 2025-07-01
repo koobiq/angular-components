@@ -42,7 +42,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     host: {
         class: 'kbq-password-toggle',
 
-        // legacy for backward compatibility
+        // legacy style for backward compatibility
         '[style.visibility]': 'visibility',
         '[class.cdk-visually-hidden]': 'visibility === "hidden"',
         '[attr.aria-hidden]': 'visibility === "hidden"',
