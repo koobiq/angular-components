@@ -84,13 +84,9 @@ $toggle-thumb-offset: 8px;
             }
         }
 
-        &:not(.kbq-disabled) {
-            .kbq-toggle-bar {
-                &:hover {
-                    .kbq-toggle__thumb {
-                        left: $toggle-thumb-offset + 2px;
-                    }
-                }
+        &:not(.kbq-disabled) .kbq-toggle-bar:hover {
+            .kbq-toggle__thumb {
+                left: $toggle-thumb-offset + 2px;
             }
         }
 
