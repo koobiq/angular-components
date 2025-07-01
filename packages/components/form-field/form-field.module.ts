@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
+import { KbqFieldset, KbqFieldsetItem } from './fieldset';
 import { KbqFormField, KbqFormFieldWithoutBorders, KbqTrim } from './form-field';
 import { KbqHint } from './hint';
 import { KbqLabel } from './label';
@@ -23,6 +24,8 @@ const COMPONENTS = [
     KbqHint,
     KbqError,
     KbqReactivePasswordHint,
+    KbqFieldset,
+    KbqFieldsetItem,
 
     // Legacy components
     KbqPasswordHint,

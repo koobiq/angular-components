@@ -1864,6 +1864,42 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "form-field-without-borders-example.ts",
     "importPath": "components/form-field"
   },
+  "form-fieldset-invalid": {
+    "packagePath": "components/forms/form-fieldset-invalid",
+    "title": "Form fieldset",
+    "componentName": "FormFieldsetInvalidExample",
+    "files": [
+      "form-fieldset-invalid-example.ts"
+    ],
+    "selector": "form-fieldset-invalid-example",
+    "additionalComponents": [],
+    "primaryFile": "form-fieldset-invalid-example.ts",
+    "importPath": "components/forms"
+  },
+  "form-fieldset-overview": {
+    "packagePath": "components/forms/form-fieldset-overview",
+    "title": "Form fieldset",
+    "componentName": "FormFieldsetOverviewExample",
+    "files": [
+      "form-fieldset-overview-example.ts"
+    ],
+    "selector": "form-fieldset-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "form-fieldset-overview-example.ts",
+    "importPath": "components/forms"
+  },
+  "form-fieldset-with-button": {
+    "packagePath": "components/forms/form-fieldset-with-button",
+    "title": "Form fieldset with button",
+    "componentName": "FormFieldsetWithButtonExample",
+    "files": [
+      "form-fieldset-with-button-example.ts"
+    ],
+    "selector": "form-fieldset-with-button-example",
+    "additionalComponents": [],
+    "primaryFile": "form-fieldset-with-button-example.ts",
+    "importPath": "components/forms"
+  },
   "horizontal-form-labels": {
     "packagePath": "components/forms/horizontal-form-labels",
     "title": "Horizontal form labels",
@@ -4801,6 +4837,12 @@ return import('@koobiq/docs-examples/components/form-field');
 return import('@koobiq/docs-examples/components/form-field');
   case 'form-field-without-borders':
 return import('@koobiq/docs-examples/components/form-field');
+  case 'form-fieldset-invalid':
+return import('@koobiq/docs-examples/components/forms');
+  case 'form-fieldset-overview':
+return import('@koobiq/docs-examples/components/forms');
+  case 'form-fieldset-with-button':
+return import('@koobiq/docs-examples/components/forms');
   case 'horizontal-form-labels':
 return import('@koobiq/docs-examples/components/forms');
   case 'horizontal-form':

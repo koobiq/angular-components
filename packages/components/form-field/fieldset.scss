@@ -1,0 +1,67 @@
+.kbq-fieldset {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+
+    > .kbq-fieldset-item {
+        &.cdk-focused,
+        &.kbq-focused {
+            z-index: 3;
+        }
+
+        &:first-of-type {
+            margin-right: -1px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &:not(:first-of-type):not(:last-of-type) {
+            border-radius: 0;
+        }
+
+        &:last-of-type {
+            margin-left: -1px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+
+    .kbq-form-field {
+        // set selector specifity to 0 , so focused state will override z-index
+        :where(&.kbq-form-field_invalid) {
+            z-index: 2;
+        }
+
+        &:first-child {
+            margin-right: -1px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+
+            .kbq-form-field__container,
+            .kbq-form-field__container .kbq-input {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        }
+
+        &:not(:first-child):not(:last-child) {
+            --kbq-form-field-size-border-radius: 0;
+
+            .kbq-form-field__container {
+                border-radius: 0;
+            }
+        }
+
+        &:last-child {
+            margin-left: -1px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+
+            .kbq-form-field__container,
+            .kbq-form-field__container .kbq-input {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+    }
+}
