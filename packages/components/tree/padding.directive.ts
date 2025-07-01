@@ -2,7 +2,6 @@ import { Directionality } from '@angular/cdk/bidi';
 import { coerceNumberProperty } from '@angular/cdk/coercion';
 import { AfterViewInit, Directive, ElementRef, Input, Optional, Renderer2 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SizeXxl as TreeSizeIndentLevel } from '@koobiq/design-tokens';
 import { KbqTreeBase, KbqTreeNode } from './tree-base';
 import { KbqTreeOption } from './tree-option.component';
 
@@ -33,16 +32,20 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
         this.setIndentInput(indent);
     }
 
-    private _indent: number = parseInt(TreeSizeIndentLevel);
+    private _indent: number = 12;
 
     get leftPadding(): number {
-        return (this.withIcon ? 0 : this.iconWidth) + this.baseLeftPadding;
+        return (this.withIcon ? 0 : this.iconWidth) + this._indent;
+    }
+
+    get leftPaddingForFirstLevel(): number {
+        const border = 2;
+        
+        return (this.withIcon ? 0 : this.iconWidth) + this._indent - border;
     }
 
     /** CSS units used for the indentation value. */
     indentUnits = 'px';
-
-    baseLeftPadding: number = 8;
 
     withIcon: boolean;
     iconWidth: number = 24;
@@ -71,7 +74,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 
         const level = this.level || nodeLevel;
 
-        return level > 0 ? `${level * this._indent + this.leftPadding}px` : `${this.leftPadding}px`;
+        return level > 0 ? `${level * this._indent + this.leftPadding}px` : `${this.leftPaddingForFirstLevel}px`;
     }
 
     /**
