@@ -40,7 +40,7 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
 
     get leftPaddingForFirstLevel(): number {
         const border = 2;
-        
+
         return (this.withIcon ? 0 : this.iconWidth) + this._indent - border;
     }
 

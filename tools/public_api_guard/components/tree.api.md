@@ -357,8 +357,6 @@ export class KbqTreeNodeOutletContext<T> {
 export class KbqTreeNodePadding<T> implements AfterViewInit {
     constructor(treeNode: KbqTreeNode<T>, tree: KbqTreeBase<T>, renderer: Renderer2, element: ElementRef<HTMLElement>, option: KbqTreeOption, dir: Directionality);
     // (undocumented)
-    baseLeftPadding: number;
-    // (undocumented)
     iconWidth: number;
     // (undocumented)
     get indent(): number | string;
@@ -366,6 +364,8 @@ export class KbqTreeNodePadding<T> implements AfterViewInit {
     indentUnits: string;
     // (undocumented)
     get leftPadding(): number;
+    // (undocumented)
+    get leftPaddingForFirstLevel(): number;
     // (undocumented)
     get level(): number;
     set level(value: number);

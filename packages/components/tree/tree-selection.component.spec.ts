@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { C } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, createMouseEvent, dispatchEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
-import { SizeS } from '@koobiq/design-tokens';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
 import { TestScheduler } from 'rxjs/testing';
 import {
@@ -98,7 +97,6 @@ describe('KbqTreeSelection', () => {
                 const treeOption = fixture.debugElement.queryAll(By.directive(KbqTreeNodePadding))[0];
                 const paddingDirective = treeOption.injector.get(KbqTreeNodePadding);
 
-                expect(paddingDirective.baseLeftPadding).toBe(parseInt(SizeS));
                 expect(treeOption.styles.paddingLeft).toBe(paddingDirective.paddingIndent());
             });
 
