@@ -120,7 +120,7 @@ export class KbqAutocompleteModule {
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, [typeof i1.KbqAutocomplete, typeof i2.KbqAutocompleteTrigger, typeof i3.KbqAutocompleteOrigin], [typeof i4.KbqOptionModule, typeof i5.OverlayModule, typeof i4.KbqCommonModule, typeof i6.NgClass], [typeof i1.KbqAutocomplete, typeof i4.KbqOptionModule, typeof i2.KbqAutocompleteTrigger, typeof i3.KbqAutocompleteOrigin, typeof i4.KbqCommonModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqAutocompleteModule, [typeof i1.KbqAutocomplete, typeof i2.KbqAutocompleteTrigger, typeof i3.KbqAutocompleteOrigin], [typeof i4.KbqOptionModule, typeof i5.OverlayModule, typeof i6.NgClass], [typeof i1.KbqAutocomplete, typeof i4.KbqOptionModule, typeof i2.KbqAutocompleteTrigger, typeof i3.KbqAutocompleteOrigin]>;
 }
 
 // @public

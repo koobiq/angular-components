@@ -1661,7 +1661,7 @@ export const KBQ_PARENT_ANIMATION_COMPONENT: InjectionToken<any>;
 // @public
 export const KBQ_PARENT_POPUP: InjectionToken<KbqParentPopup>;
 
-// @public (undocumented)
+// @public @deprecated
 export const KBQ_SANITY_CHECKS: InjectionToken<boolean>;
 
 // @public
@@ -1770,7 +1770,7 @@ export class KbqColorDirective {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqColorDirective, never>;
 }
 
-// @public
+// @public @deprecated
 export class KbqCommonModule {
     constructor(_sanityChecksEnabled: boolean);
     // (undocumented)

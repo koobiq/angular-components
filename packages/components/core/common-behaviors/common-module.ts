@@ -2,12 +2,23 @@ import { BidiModule } from '@angular/cdk/bidi';
 import { DOCUMENT } from '@angular/common';
 import { inject, Inject, InjectionToken, isDevMode, NgModule, Optional } from '@angular/core';
 
-// Injection token that configures whether the koobiq sanity checks are enabled.
+/**
+ * Injection token that configures whether the koobiq sanity checks are enabled.
+ *
+ * @deprecated No longer used and will be removed in next major release.
+ *
+ * @docs-private
+ */
 export const KBQ_SANITY_CHECKS = new InjectionToken<boolean>('kbq-sanity-checks', {
     providedIn: 'root',
     factory: mcSanityChecksFactory
 });
 
+/**
+ * @deprecated No longer used and will be removed in next major release.
+ *
+ * @docs-private
+ */
 export function mcSanityChecksFactory(): boolean {
     return true;
 }
@@ -16,7 +27,9 @@ export function mcSanityChecksFactory(): boolean {
  * Module that captures anything that should be loaded and/or run for *all* Koobiq
  * components. This includes Bidi, etc.
  *
- * This module should be imported to each top-level component module (e.g., KbqTabsModule).
+ * @deprecated No longer used and will be removed in next major release.
+ *
+ * @docs-private
  */
 @NgModule({
     imports: [BidiModule],
@@ -31,7 +44,6 @@ export class KbqCommonModule {
     constructor(@Optional() @Inject(KBQ_SANITY_CHECKS) private _sanityChecksEnabled: boolean) {
         if (this.areChecksEnabled() && !this.hasDoneGlobalChecks) {
             this.checkDoctypeIsDefined();
-            this.checkThemeIsPresent();
             this.hasDoneGlobalChecks = true;
         }
     }
@@ -54,30 +66,6 @@ export class KbqCommonModule {
                 'Current document does not have a doctype. This may cause ' +
                     'some koobiq components not to behave as expected.'
             );
-        }
-    }
-
-    private checkThemeIsPresent(): void {
-        if (this.document && typeof getComputedStyle === 'function') {
-            const testElement = this.document.createElement('div');
-
-            testElement.classList.add('kbq-theme-loaded-marker');
-            this.document.body.appendChild(testElement);
-
-            const computedStyle = getComputedStyle(testElement);
-
-            // In some situations, the computed style of the test element can be null. For example in
-            // Firefox, the computed style is null if an application is running inside of a hidden iframe.
-            // See: https://bugzilla.mozilla.org/show_bug.cgi?id=548397
-            if (computedStyle && computedStyle.display !== 'none') {
-                console.warn(
-                    'Could not find koobiq core theme. Most koobiq ' +
-                        'components may not work as expected. For more info refer ' +
-                        'to the theming guide: https://koobiq.io/en/main/theming/overview'
-                );
-            }
-
-            this.document.body.removeChild(testElement);
         }
     }
 

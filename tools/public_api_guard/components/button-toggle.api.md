@@ -12,9 +12,8 @@ import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i2 from '@koobiq/components/core';
-import * as i3 from '@koobiq/components/button';
-import * as i4 from '@koobiq/components/title';
+import * as i2 from '@koobiq/components/button';
+import * as i3 from '@koobiq/components/title';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { OnDestroy } from '@angular/core';
@@ -118,7 +117,7 @@ export class KbqButtonToggleModule {
     // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, [typeof i1.KbqButtonToggleGroup, typeof i1.KbqButtonToggle], [typeof i2.KbqCommonModule, typeof i3.KbqButtonModule, typeof i4.KbqTitleModule], [typeof i2.KbqCommonModule, typeof i1.KbqButtonToggleGroup, typeof i1.KbqButtonToggle]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqButtonToggleModule, [typeof i1.KbqButtonToggleGroup, typeof i1.KbqButtonToggle], [typeof i2.KbqButtonModule, typeof i3.KbqTitleModule], [typeof i1.KbqButtonToggleGroup, typeof i1.KbqButtonToggle]>;
 }
 
 // @public

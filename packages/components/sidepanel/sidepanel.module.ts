@@ -3,7 +3,6 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { NgModule } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqCommonModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { KbqSidepanelContainerComponent } from './sidepanel-container.component';
@@ -20,7 +19,6 @@ import { KbqSidepanelService } from './sidepanel.service';
     imports: [
         OverlayModule,
         PortalModule,
-        KbqCommonModule,
         KbqButtonModule,
         KbqIconModule,
         KbqTitleModule,
