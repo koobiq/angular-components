@@ -1,4 +1,4 @@
-.docs-title-overview-container {
+.example-title-overview-container {
     max-width: 400px;
 
     border: 1px solid red;
@@ -11,15 +11,15 @@
     margin-bottom: 24px;
 }
 
-.docs-title-overview-container.docs-title-overview-container-responsive {
+.example-title-overview-container.example-title-overview-container-responsive {
     max-width: 50%;
 }
 
-.docs-title-overview-container:last-of-type {
+.example-title-overview-container:last-of-type {
     margin-bottom: 0;
 }
 
-.docs-title-overview-parent {
+.example-title-overview-parent {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -28,7 +28,7 @@
     max-width: 100%;
 }
 
-.docs-title-overview-child {
+.example-title-overview-child {
     flex-grow: 1;
     overflow: hidden;
     white-space: nowrap;

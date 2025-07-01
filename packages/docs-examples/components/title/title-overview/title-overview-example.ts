@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqTitleModule } from '@koobiq/components/title';
 
@@ -14,21 +14,21 @@ import { KbqTitleModule } from '@koobiq/components/title';
         KbqButtonModule
     ],
     template: `
-        <div class="docs-title-overview-container docs-title-overview-container-responsive">
+        <div class="example-title-overview-container example-title-overview-container-responsive">
             <div class="kbq-subheading">Responsive text with tooltip</div>
             <br />
-            <div class="docs-title-overview-child wide kbq-text-big" kbq-title>
+            <div class="example-title-overview-child wide kbq-text-big" kbq-title>
                 {{ longValue }}
             </div>
         </div>
 
-        <div class="docs-title-overview-container">
+        <div class="example-title-overview-container">
             <div class="kbq-subheading">Tooltip tracking for parent & child as parameters</div>
             <br />
 
             <div kbq-title style="max-width: 50%">
-                <div class="docs-title-overview-parent" #kbqTitleContainer>
-                    <div class="docs-title-overview-child kbq-text-normal" #kbqTitleText>
+                <div class="example-title-overview-parent" #kbqTitleContainer>
+                    <div class="example-title-overview-child kbq-text-normal" #kbqTitleText>
                         {{ field }}
                     </div>
                 </div>
