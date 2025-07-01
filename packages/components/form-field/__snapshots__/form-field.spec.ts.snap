@@ -145,7 +145,7 @@ DebugElement {
 exports[`KbqFormField should display KbqReactivePasswordHint success for valid password 1`] = `
 DebugElement {
   "nativeNode": <kbq-reactive-password-hint
-    class="kbq-reactive-password-hint kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
+    class="kbq-reactive-password-hint kbq-hint kbq-hint_fill-text-off kbq-success"
     id="test-reactive-password-hint-id"
   >
     <i

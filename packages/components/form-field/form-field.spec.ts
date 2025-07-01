@@ -556,7 +556,7 @@ describe(KbqFormField.name, () => {
 
         input.value = 'koobiq';
         input.dispatchEvent(new Event('input'));
-        input.dispatchEvent(new Event('blur'));
+
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
@@ -566,7 +566,7 @@ describe(KbqFormField.name, () => {
 
         input.value = 'koobiq-is-awesome';
         input.dispatchEvent(new Event('input'));
-        input.dispatchEvent(new Event('blur'));
+
         expect(getReactivePasswordHintDebugElement(debugElement)).toMatchSnapshot();
     });
 
