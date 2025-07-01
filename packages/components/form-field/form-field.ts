@@ -8,10 +8,7 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    computed,
-    contentChild,
     ContentChild,
-    contentChildren,
     ContentChildren,
     DestroyRef,
     Directive,
@@ -168,10 +165,9 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     @ViewChild('connectionContainer', { static: true }) readonly connectionContainerRef: ElementRef;
 
     @ContentChild(KbqFormFieldControl) private readonly _control: KbqFormFieldControl<unknown>;
-
-    private readonly reactivePasswordHint = contentChildren(KbqReactivePasswordHint);
-    private readonly error = contentChildren(KbqError);
-    private readonly label = contentChild(KbqLabel);
+    @ContentChildren(KbqReactivePasswordHint) private readonly reactivePasswordHint: QueryList<KbqReactivePasswordHint>;
+    @ContentChildren(KbqError) private readonly error: QueryList<KbqError>;
+    @ContentChild(KbqLabel) private readonly label: KbqLabel | null;
 
     /**
      * @docs-private
@@ -202,21 +198,27 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
      *
      * @docs-private
      */
-    protected readonly hasReactivePasswordHint = computed(() => this.reactivePasswordHint().length > 0);
+    protected get hasReactivePasswordHint(): boolean {
+        return this.reactivePasswordHint.length > 0;
+    }
 
     /**
      * Whether the form-field contains kbq-error.
      *
      * @docs-private
      */
-    protected readonly hasError = computed(() => this.error().length > 0);
+    protected get hasError(): boolean {
+        return this.error.length > 0;
+    }
 
     /**
      * Whether the form-field contains kbq-label.
      *
      * @docs-private
      */
-    protected readonly hasLabel = computed(() => !!this.label());
+    protected get hasLabel(): boolean {
+        return !!this.label;
+    }
 
     /**
      * Whether the form-field contains kbq-password-hint.
@@ -462,9 +464,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
 
         merge(this.control.stateChanges, this.control.ngControl?.valueChanges || EMPTY)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            });
+            .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
     /** Initializes the kbqPrefix and kbqSuffix containers. */
@@ -473,18 +473,14 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
         // conditionally display the prefix/suffix containers based on whether there is projected content.
         merge(this.prefix.changes, this.suffix.changes)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            });
+            .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
-    /** Initializes the KbqHint, KbqPasswordHint containers. */
+    /** Initializes the KbqHint, KbqPasswordHint, KbqReactivePasswordHint and KbqError containers. */
     private initializeHint(): void {
-        merge(this.hint.changes, this.passwordHints.changes)
+        merge(this.hint.changes, this.passwordHints.changes, this.reactivePasswordHint.changes, this.error.changes)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.changeDetectorRef.markForCheck();
-            });
+            .subscribe(() => this.changeDetectorRef.markForCheck());
     }
 }
 

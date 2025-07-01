@@ -1,4 +1,4 @@
-@if (hasLabel()) {
+@if (hasLabel) {
     <label class="kbq-form-field__label" [attr.for]="control.id">
         <ng-content select="kbq-label" />
     </label>
@@ -28,7 +28,7 @@
     }
 </div>
 
-@if (hasHint || hasPasswordHint || hasError() || hasReactivePasswordHint()) {
+@if (hasHint || hasPasswordHint || hasError || hasReactivePasswordHint) {
     <div class="kbq-form-field__hint">
         @if (invalid) {
             <ng-content select="kbq-error" />

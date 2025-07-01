@@ -79,14 +79,14 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     focusViaKeyboard(options?: FocusOptions): void;
     getConnectedOverlayOrigin(): ElementRef;
     get hasCleaner(): boolean;
-    protected readonly hasError: Signal<boolean>;
+    protected get hasError(): boolean;
     get hasFocus(): boolean;
     get hasHint(): boolean;
-    protected readonly hasLabel: Signal<boolean>;
+    protected get hasLabel(): boolean;
     get hasPasswordHint(): boolean;
     get hasPasswordToggle(): boolean;
     get hasPrefix(): boolean;
-    protected readonly hasReactivePasswordHint: Signal<boolean>;
+    protected get hasReactivePasswordHint(): boolean;
     get hasStepper(): boolean;
     get hasSuffix(): boolean;
     readonly hint: QueryList<KbqHint>;
@@ -111,7 +111,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     stopFocusMonitor(): void;
     readonly suffix: QueryList<KbqSuffix>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; }, {}, ["reactivePasswordHint", "error", "label", "stepper", "cleaner", "passwordToggle", "_control", "hint", "passwordHints", "suffix", "prefix"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; }, {}, ["stepper", "cleaner", "passwordToggle", "_control", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
