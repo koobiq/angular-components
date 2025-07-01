@@ -68,8 +68,9 @@ export class EmptyStateContentExample {
     readonly styles = KbqButtonStyles;
     protected readonly currentTheme = toSignal(
         inject(ThemeService, { optional: true })?.current.pipe(
-            map((theme) => (theme && theme.className.replace('kbq-', '')) || 'light')
-        ) || of('light')
+            map((theme) => theme && theme.className.replace('kbq-', ''))
+        ) || of('light'),
+        { initialValue: 'light' }
     );
 
     protected readonly srcSet = computed(() => {

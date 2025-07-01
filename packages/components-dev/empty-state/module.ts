@@ -48,7 +48,6 @@ class DevExamples {}
         KbqEmptyStateModule,
         KbqButtonModule,
         KbqIconModule,
-        EmptyStateExamplesModule,
         DevExamples,
         DevThemeToggle
     ],
