@@ -62,7 +62,6 @@ const options = [
 })
 export class DevExamples {}
 
-
 @Component({
     standalone: true,
     imports: [

@@ -39,7 +39,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
             <button (click)="field = defaultValue" kbq-button>Set Default text</button>
         </div>
     `,
-    styleUrls: ['./title-overview-example.css'],
+    styleUrls: ['./title-overview-example.css']
 })
 export class TitleOverviewExample {
     defaultValue = 'Just a text';
