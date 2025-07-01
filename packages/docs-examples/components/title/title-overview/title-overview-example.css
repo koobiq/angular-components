@@ -1,0 +1,36 @@
+.example-title-overview-container {
+    max-width: 400px;
+
+    border: 1px solid red;
+
+    padding: 24px;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 24px;
+}
+
+.example-title-overview-container.example-title-overview-container-responsive {
+    max-width: 50%;
+}
+
+.example-title-overview-container:last-of-type {
+    margin-bottom: 0;
+}
+
+.example-title-overview-parent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    max-width: 100%;
+}
+
+.example-title-overview-child {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

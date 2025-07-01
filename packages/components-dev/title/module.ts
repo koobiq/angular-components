@@ -13,6 +13,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { TitleExamplesModule } from '../../docs-examples/components/title';
 
 const options = [
     'One',
@@ -50,6 +51,19 @@ const options = [
 
 @Component({
     standalone: true,
+    imports: [TitleExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <title-overview-example />
+        <br />
+        <br />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
+
+@Component({
+    standalone: true,
     imports: [
         KbqTitleModule,
         KbqButtonModule,
@@ -62,7 +76,8 @@ const options = [
         KbqInputModule,
         ReactiveFormsModule,
         KbqDividerModule,
-        AsyncPipe
+        AsyncPipe,
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
