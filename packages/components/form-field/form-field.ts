@@ -95,9 +95,7 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
         class: 'kbq-form-field',
 
         '[class.kbq-form-field_invalid]': 'invalid',
-        // legacy class for backward compatibility
         '[class.kbq-disabled]': 'disabled',
-        '[class.kbq-form-field_disabled]': 'disabled',
         '[class.kbq-form-field_no-borders]': 'noBorders()',
 
         '[class.ng-untouched]': 'shouldForward("untouched")',

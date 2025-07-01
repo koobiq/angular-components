@@ -408,15 +408,15 @@ describe(KbqFormField.name, () => {
         expect(formField.classes['cdk-focused']).toBeTruthy();
     });
 
-    it('should add KbqFormField_disabled selector for KbqFormField when form control is disabled', () => {
+    it('should add kbq-disabled selector for KbqFormField when form control is disabled', () => {
         const fixture = createComponent(InputFormFieldWithHintAndError);
         const { debugElement, componentInstance } = fixture;
         const formField = getFormFieldDebugElement(debugElement);
 
-        expect(formField.classes['kbq-form-field_disabled']).toBeFalsy();
+        expect(formField.classes['kbq-disabled']).toBeFalsy();
         componentInstance.control.disable();
         fixture.detectChanges();
-        expect(formField.classes['kbq-form-field_disabled']).toBeTruthy();
+        expect(formField.classes['kbq-disabled']).toBeTruthy();
     });
 
     it('should add kbq-form-field_invalid selector for KbqFormField initially', () => {
