@@ -70,8 +70,8 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     canShowStepper: boolean;
     cleaner: KbqCleaner | null;
     clearValue(event: Event): void;
-    readonly connectionContainerRef: ElementRef;
-    readonly control: KbqFormFieldControl<unknown>;
+    connectionContainerRef: ElementRef;
+    control: KbqFormFieldControl<unknown>;
     get disabled(): boolean;
     readonly elementRef: ElementRef<any>;
     focus(options?: FocusOptions): void;
@@ -90,7 +90,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     protected get hasReactivePasswordHint(): boolean;
     get hasStepper(): boolean;
     get hasSuffix(): boolean;
-    readonly hint: QueryList<KbqHint>;
+    hint: QueryList<KbqHint>;
     hovered: boolean;
     get invalid(): boolean;
     // (undocumented)
@@ -105,14 +105,14 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     onContainerClick(event: MouseEvent): void;
     onHoverChanged(isHovered: boolean): void;
     onKeyDown(event: KeyboardEvent): void;
-    readonly passwordHints: QueryList<KbqPasswordHint>;
-    readonly passwordToggle: KbqPasswordToggle | null;
-    readonly prefix: QueryList<KbqPrefix>;
+    passwordHints: QueryList<KbqPasswordHint>;
+    passwordToggle: KbqPasswordToggle | null;
+    prefix: QueryList<KbqPrefix>;
     runFocusMonitor: () => void;
     shouldForward(prop: keyof NgControl): boolean;
     readonly stepper: KbqStepper;
     stopFocusMonitor(): void;
-    readonly suffix: QueryList<KbqSuffix>;
+    suffix: QueryList<KbqSuffix>;
     protected validateControlChild(): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;

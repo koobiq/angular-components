@@ -137,7 +137,7 @@ export class KbqFormField
      *
      * @docs-private
      */
-    @ContentChild(KbqFormFieldControl) readonly control: KbqFormFieldControl<unknown>;
+    @ContentChild(KbqFormFieldControl) control: KbqFormFieldControl<unknown>;
     /**
      * @docs-private
      */
@@ -151,27 +151,27 @@ export class KbqFormField
     /**
      * @docs-private
      */
-    @ContentChild(KbqPasswordToggle) readonly passwordToggle: KbqPasswordToggle | null;
+    @ContentChild(KbqPasswordToggle) passwordToggle: KbqPasswordToggle | null;
     /**
      * @docs-private
      */
-    @ContentChildren(KbqHint) readonly hint: QueryList<KbqHint>;
+    @ContentChildren(KbqHint) hint: QueryList<KbqHint>;
     /**
      * @docs-private
      */
-    @ContentChildren(KbqPasswordHint) readonly passwordHints: QueryList<KbqPasswordHint>;
+    @ContentChildren(KbqPasswordHint) passwordHints: QueryList<KbqPasswordHint>;
     /**
      * @docs-private
      */
-    @ContentChildren(KbqSuffix) readonly suffix: QueryList<KbqSuffix>;
+    @ContentChildren(KbqSuffix) suffix: QueryList<KbqSuffix>;
     /**
      * @docs-private
      */
-    @ContentChildren(KbqPrefix) readonly prefix: QueryList<KbqPrefix>;
+    @ContentChildren(KbqPrefix) prefix: QueryList<KbqPrefix>;
     /**
      * @docs-private
      */
-    @ViewChild('connectionContainer', { static: true }) readonly connectionContainerRef: ElementRef;
+    @ViewChild('connectionContainer', { static: true }) connectionContainerRef: ElementRef;
 
     @ContentChildren(KbqReactivePasswordHint) private readonly reactivePasswordHint: QueryList<KbqReactivePasswordHint>;
     @ContentChildren(KbqError) private readonly error: QueryList<KbqError>;
