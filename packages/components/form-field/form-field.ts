@@ -1,6 +1,7 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
+    AfterContentChecked,
     AfterContentInit,
     AfterViewInit,
     Attribute,
@@ -114,7 +115,10 @@ export const kbqFormFieldDefaultOptionsProvider = (options: KbqFormFieldDefaultO
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [{ provide: KBQ_FORM_FIELD_REF, useExisting: KbqFormField }]
 })
-export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqFormField
+    extends KbqColorDirective
+    implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked
+{
     private readonly destroyRef = inject(DestroyRef);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly focusMonitor = inject(FocusMonitor);
@@ -127,6 +131,12 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     /** Disables form field borders and shadows. */
     readonly noBorders = input(this.defaultOptions?.noBorders, { transform: booleanAttribute });
 
+    /**
+     * The form field control.
+     *
+     * @docs-private
+     */
+    @ContentChild(KbqFormFieldControl) readonly control: KbqFormFieldControl<unknown>;
     /**
      * @docs-private
      */
@@ -162,7 +172,6 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
      */
     @ViewChild('connectionContainer', { static: true }) readonly connectionContainerRef: ElementRef;
 
-    @ContentChild(KbqFormFieldControl) private readonly _control: KbqFormFieldControl<unknown>;
     @ContentChildren(KbqReactivePasswordHint) private readonly reactivePasswordHint: QueryList<KbqReactivePasswordHint>;
     @ContentChildren(KbqError) private readonly error: QueryList<KbqError>;
     @ContentChild(KbqLabel) private readonly label: KbqLabel | null;
@@ -176,15 +185,6 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
      * @docs-private
      */
     canCleanerClearByEsc: boolean = true;
-
-    /** The form field control. */
-    get control(): KbqFormFieldControl<unknown> {
-        if (!this._control) {
-            throw getKbqFormFieldMissingControlError();
-        }
-
-        return this._control;
-    }
 
     /** Whether the form field is invalid. */
     get invalid(): boolean {
@@ -320,6 +320,8 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     canShowStepper = true;
 
     ngAfterContentInit(): void {
+        this.validateControlChild();
+
         if ((this.control as any).numberInput && this.hasCleaner) {
             this.cleaner = null;
             throw getKbqFormFieldYouCanNotUseCleanerInNumberInputError();
@@ -339,6 +341,10 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
         this.initializeControl();
         this.initializePrefixAndSuffix();
         this.initializeHint();
+    }
+
+    ngAfterContentChecked(): void {
+        this.validateControlChild();
     }
 
     ngAfterViewInit(): void {
@@ -452,6 +458,17 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
      */
     stopFocusMonitor(): void {
         this.focusMonitor.stopMonitoring(this.elementRef.nativeElement);
+    }
+
+    /**
+     * Throws an error if the form-field control is missing.
+     *
+     * @docs-private
+     */
+    protected validateControlChild() {
+        if (!this.control) {
+            throw getKbqFormFieldMissingControlError();
+        }
     }
 
     /** Initializes the form field control. */

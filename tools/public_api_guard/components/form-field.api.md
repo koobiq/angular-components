@@ -5,6 +5,7 @@
 ```ts
 
 import { AbstractControl } from '@angular/forms';
+import { AfterContentChecked } from '@angular/core';
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
@@ -62,7 +63,7 @@ export class KbqError extends KbqHint {
 }
 
 // @public (undocumented)
-export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
     // @deprecated (undocumented)
@@ -70,7 +71,7 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     cleaner: KbqCleaner | null;
     clearValue(event: Event): void;
     readonly connectionContainerRef: ElementRef;
-    get control(): KbqFormFieldControl<unknown>;
+    readonly control: KbqFormFieldControl<unknown>;
     get disabled(): boolean;
     readonly elementRef: ElementRef<any>;
     focus(options?: FocusOptions): void;
@@ -93,6 +94,8 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     hovered: boolean;
     get invalid(): boolean;
     // (undocumented)
+    ngAfterContentChecked(): void;
+    // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngAfterViewInit(): void;
@@ -110,8 +113,9 @@ export class KbqFormField extends KbqColorDirective implements AfterContentInit,
     readonly stepper: KbqStepper;
     stopFocusMonitor(): void;
     readonly suffix: QueryList<KbqSuffix>;
+    protected validateControlChild(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; }, {}, ["stepper", "cleaner", "passwordToggle", "_control", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFormField, "kbq-form-field", ["kbqFormField"], { "noBorders": { "alias": "noBorders"; "required": false; "isSignal": true; }; }, {}, ["control", "stepper", "cleaner", "passwordToggle", "label", "hint", "passwordHints", "suffix", "prefix", "reactivePasswordHint", "error"], ["kbq-label", "[kbqPrefix]", "*", "kbq-cleaner", "kbq-password-toggle, kbq-stepper, [kbqSuffix]", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormField, never>;
 }
