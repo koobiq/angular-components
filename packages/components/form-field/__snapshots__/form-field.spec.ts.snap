@@ -66,7 +66,6 @@ exports[`KbqFormField should display KbqLabel 1`] = `
 DebugElement {
   "nativeNode": <kbq-label
     class="kbq-label"
-    id="test-label-id"
   >
     Label
   </kbq-label>,

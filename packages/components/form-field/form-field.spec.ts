@@ -163,7 +163,7 @@ export class InputFormFieldWithoutFormFieldControl {
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <kbq-label id="test-label-id">Label</kbq-label>
+            <kbq-label>Label</kbq-label>
             <input [id]="id" kbqInput />
         </kbq-form-field>
     `

@@ -1,6 +1,4 @@
-import { Directive, Input } from '@angular/core';
-
-let nextUniqueId = 0;
+import { Directive } from '@angular/core';
 
 /** Label for the form field. */
 @Directive({
@@ -8,11 +6,7 @@ let nextUniqueId = 0;
     exportAs: 'kbqLabel',
     standalone: true,
     host: {
-        class: 'kbq-label',
-        '[attr.id]': 'id'
+        class: 'kbq-label'
     }
 })
-export class KbqLabel {
-    /** Unique id for the label. */
-    @Input() id: string = `kbq-label-${nextUniqueId++}`;
-}
+export class KbqLabel {}

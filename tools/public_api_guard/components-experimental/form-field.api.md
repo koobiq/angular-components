@@ -101,7 +101,7 @@ export type KbqFormFieldDefaultOptions = Partial<{
 // @public
 export const kbqFormFieldDefaultOptionsProvider: (options: KbqFormFieldDefaultOptions) => Provider;
 
-// @public @deprecated (undocumented)
+// @public (undocumented)
 export class KbqFormFieldModule {
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFormFieldModule, never>;

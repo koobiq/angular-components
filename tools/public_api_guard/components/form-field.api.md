@@ -189,9 +189,8 @@ export class KbqHint extends KbqColorDirective {
 
 // @public
 export class KbqLabel {
-    id: string;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLabel, "kbq-label", ["kbqLabel"], { "id": { "alias": "id"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLabel, "kbq-label", ["kbqLabel"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLabel, never>;
 }
