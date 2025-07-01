@@ -1,6 +1,13 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 
+/**
+ * Element to be placed in end of the form field.
+ * Resets form control by click.
+ */
 @Component({
+    standalone: true,
+    imports: [KbqIconModule],
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',
     template: `
@@ -10,6 +17,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     host: {
         class: 'kbq-cleaner'
     },
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqCleaner {}

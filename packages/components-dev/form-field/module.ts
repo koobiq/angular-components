@@ -18,7 +18,36 @@ import {
     defaultCompareViewValues
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { FormFieldExamplesModule } from 'packages/docs-examples/components/form-field';
+import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
+
+@Component({
+    standalone: true,
+    imports: [FormFieldExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <form-field-with-hint-example />
+        <hr />
+        <form-field-with-label-example />
+        <hr />
+        <form-field-with-error-example />
+        <hr />
+        <form-field-with-cleaner-example />
+        <hr />
+        <form-field-with-prefix-and-suffix-example />
+        <hr />
+        <form-field-without-borders-example />
+        <hr />
+        <form-field-with-custom-error-state-matcher-set-by-attribute-example />
+        <hr />
+        <form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example />
+        <hr />
+        <form-field-password-overview-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 const OPTIONS = [
     'Value Value Value Value Value Value Value Value Value Value',
@@ -116,7 +145,9 @@ const DATA_OBJECT = {
         KbqTreeSelectModule,
         KbqPseudoCheckboxModule,
         KbqAutocompleteModule,
-        KbqNormalizeWhitespace
+        KbqNormalizeWhitespace,
+        DevExamples,
+        DevThemeToggle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

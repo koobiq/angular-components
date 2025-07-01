@@ -109,6 +109,10 @@ export class KbqError extends KbqHint {
             <ng-content />
         </span>
     `,
+    styleUrls: [
+        './hint.scss',
+        './hint-tokens.scss'
+    ],
     host: {
         class: 'kbq-password-hint___EXPERIMENTAL'
     },

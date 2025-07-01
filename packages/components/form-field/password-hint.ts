@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
     AfterContentInit,
     ChangeDetectionStrategy,
@@ -11,6 +12,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { KBQ_FORM_FIELD_REF, KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { KbqFormField } from './form-field';
 import { KbqHint } from './hint';
@@ -37,7 +39,12 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
     return passwordHints.some((hint) => hint.hasError);
 };
 
+/**
+ * @deprecated Will be removed in next major release, use `KbqReactivePasswordHint` instead.
+ */
 @Component({
+    standalone: true,
+    imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
     template: `
         <i class="kbq-password-hint__icon" [ngClass]="icon" kbq-icon=""></i>

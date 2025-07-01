@@ -1,0 +1,191 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqFormField should change KbqPasswordToggle icon by click 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-toggle
+    aria-hidden="false"
+    class="kbq-password-toggle"
+    style="visibility: visible;"
+  >
+    <i
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye-slash_16"
+      color="contrast-fade"
+      kbq-icon-button=""
+      tabindex="0"
+    />
+  </kbq-password-toggle>,
+}
+`;
+
+exports[`KbqFormField should display KbqCleaner 1`] = `
+DebugElement {
+  "nativeNode": <kbq-cleaner
+    class="kbq-cleaner"
+  >
+    <i
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-xmark-circle_16"
+      color="contrast-fade"
+      kbq-icon-button="kbq-xmark-circle_16"
+      tabindex="0"
+    />
+  </kbq-cleaner>,
+}
+`;
+
+exports[`KbqFormField should display KbqError 1`] = `
+DebugElement {
+  "nativeNode": <kbq-error
+    class="kbq-error kbq-hint"
+    id="test-error-id"
+  >
+    <span
+      class="kbq-hint__text"
+    >
+      Error
+    </span>
+  </kbq-error>,
+}
+`;
+
+exports[`KbqFormField should display KbqHint 1`] = `
+DebugElement {
+  "nativeNode": <kbq-hint
+    class="kbq-hint kbq-empty"
+    id="test-hint-id"
+  >
+    <span
+      class="kbq-hint__text"
+    >
+      Hint
+    </span>
+  </kbq-hint>,
+}
+`;
+
+exports[`KbqFormField should display KbqLabel 1`] = `
+DebugElement {
+  "nativeNode": <kbq-label
+    class="kbq-label"
+  >
+    Label
+  </kbq-label>,
+}
+`;
+
+exports[`KbqFormField should display KbqPasswordToggle by input 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-toggle
+    aria-hidden="false"
+    class="kbq-password-toggle"
+    style="visibility: visible;"
+  >
+    <i
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      color="contrast-fade"
+      kbq-icon-button=""
+      tabindex="0"
+    />
+  </kbq-password-toggle>,
+}
+`;
+
+exports[`KbqFormField should display KbqPrefix 1`] = `
+DebugElement {
+  "nativeNode": <span
+    class="kbq-prefix"
+    kbqprefix=""
+  >
+    Prefix
+  </span>,
+}
+`;
+
+exports[`KbqFormField should display KbqReactivePasswordHint error for invalid password 1`] = `
+DebugElement {
+  "nativeNode": <kbq-reactive-password-hint
+    class="kbq-reactive-password-hint kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
+    id="test-reactive-password-hint-id"
+  >
+    <i
+      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
+      kbq-icon=""
+    />
+    <span
+      class="kbq-hint__text"
+    >
+       Min length 
+       (6/8) 
+      
+    </span>
+  </kbq-reactive-password-hint>,
+}
+`;
+
+exports[`KbqFormField should display KbqReactivePasswordHint initially 1`] = `
+DebugElement {
+  "nativeNode": <kbq-reactive-password-hint
+    class="kbq-reactive-password-hint kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
+    id="test-reactive-password-hint-id"
+  >
+    <i
+      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
+      kbq-icon=""
+    />
+    <span
+      class="kbq-hint__text"
+    >
+       Min length 
+       (0/8) 
+      
+    </span>
+  </kbq-reactive-password-hint>,
+}
+`;
+
+exports[`KbqFormField should display KbqReactivePasswordHint success for valid password 1`] = `
+DebugElement {
+  "nativeNode": <kbq-reactive-password-hint
+    class="kbq-reactive-password-hint kbq-hint kbq-hint_fill-text-off kbq-success"
+    id="test-reactive-password-hint-id"
+  >
+    <i
+      class="kbq kbq-icon kbq-empty kbq-check-s_16"
+      kbq-icon=""
+    />
+    <span
+      class="kbq-hint__text"
+    >
+       Min length 
+      
+    </span>
+  </kbq-reactive-password-hint>,
+}
+`;
+
+exports[`KbqFormField should display KbqSuffix 1`] = `
+DebugElement {
+  "nativeNode": <span
+    class="kbq-suffix"
+    kbqsuffix=""
+  >
+    Suffix
+  </span>,
+}
+`;
+
+exports[`KbqFormField should hide KbqPasswordToggle initially 1`] = `
+DebugElement {
+  "nativeNode": <kbq-password-toggle
+    aria-hidden="true"
+    class="kbq-password-toggle cdk-visually-hidden"
+    style="visibility: hidden;"
+  >
+    <i
+      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      color="contrast-fade"
+      kbq-icon-button=""
+      tabindex="0"
+    />
+  </kbq-password-toggle>,
+}
+`;

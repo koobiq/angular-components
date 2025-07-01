@@ -5,7 +5,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputPassword } from '@koobiq/components/input';
 import { KbqFormField } from './form-field';
 
-/** @docs-private */
 const getKbqPasswordToggleMissingControlError = (): Error => {
     return Error('kbq-password-toggle should use with kbqInputPassword');
 };

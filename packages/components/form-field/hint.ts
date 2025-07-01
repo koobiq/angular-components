@@ -1,19 +1,15 @@
 import { booleanAttribute, ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
 
-let nextHintUniqueId = 0;
+let nextUniqueId = 0;
 
+/** Hint text to be shown below the form field control. */
 @Component({
+    standalone: true,
     selector: 'kbq-hint',
     exportAs: 'kbqHint',
-    template: `
-        <ng-content select="[kbq-icon]" />
-
-        <span class="kbq-hint__text">
-            <ng-content />
-        </span>
-    `,
-    styleUrls: ['hint.scss', 'hint-tokens.scss'],
+    templateUrl: './hint.html',
+    styleUrls: ['./hint.scss', './hint-tokens.scss'],
     host: {
         class: 'kbq-hint',
         '[attr.id]': 'id',
@@ -24,9 +20,12 @@ let nextHintUniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqHint extends KbqColorDirective {
-    @Input() id: string = `kbq-hint-${nextHintUniqueId++}`;
+    /** Unique ID for the hint. */
+    @Input() id: string = `kbq-hint-${nextUniqueId++}`;
 
+    /** Disables `color` for the hint text. */
     @Input({ transform: booleanAttribute }) fillTextOff: boolean = false;
 
+    /** Makes the hint size smaller. */
     @Input({ transform: booleanAttribute }) compact: boolean = false;
 }

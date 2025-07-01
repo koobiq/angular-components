@@ -399,6 +399,18 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     hasExamples: true
                 },
                 {
+                    id: 'form-field',
+                    name: {
+                        ru: 'Form field',
+                        en: 'Form field'
+                    },
+                    svgPreview: 'form-field',
+                    hasApi: true,
+                    apiId: 'form-field',
+                    isNew: expiresAt('2025-07-26'),
+                    hasExamples: false
+                },
+                {
                     id: 'experimental-form-field',
                     name: {
                         ru: 'Form field (experimental)',
