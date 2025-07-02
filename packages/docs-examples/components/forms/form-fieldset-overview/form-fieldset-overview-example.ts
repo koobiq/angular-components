@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqOptionModule, PasswordValidators } from '@koobiq/components/core';
+import { kbqDisableLegacyValidationDirectiveProvider, KbqOptionModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -10,12 +10,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
  * @title Form fieldset
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'form-fieldset-overview-example',
     template: `
         <kbq-fieldset>
-            <legend kbqLegend>Тест</legend>
+            <legend kbqLegend>Field group title</legend>
 
             <kbq-form-field style="width: 96px; min-width: 96px">
                 <kbq-select [formControl]="control" panelWidth="auto">
@@ -29,12 +28,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
 
             <kbq-form-field kbqFieldsetItem>
                 <input kbqInput placeholder="IP-address" />
-            </kbq-form-field>
-
-            <kbq-form-field kbqFieldsetItem>
-                <input [formControl]="passwordControl" placeholder="Password" kbqInputPassword />
-
-                <kbq-password-toggle />
             </kbq-form-field>
 
             <kbq-hint>
@@ -51,7 +44,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqOptionModule,
         KbqSelectModule,
         ReactiveFormsModule
-    ]
+    ],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldsetOverviewExample {
     options = [
@@ -59,13 +54,5 @@ export class FormFieldsetOverviewExample {
         'http://'
     ];
 
-    control = new FormControl(this.options[0], Validators.required);
-
-    readonly passwordControl = new FormControl('', [
-        Validators.required,
-        PasswordValidators.minLength(8),
-        PasswordValidators.minUppercase(2),
-        PasswordValidators.minLowercase(2),
-        PasswordValidators.minNumber(2),
-        PasswordValidators.minSpecial(2)]);
+    control = new FormControl(this.options[0]);
 }

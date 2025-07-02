@@ -1,15 +1,13 @@
 import { afterNextRender, ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ErrorStateMatcher } from '@koobiq/components/core';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
  * @title Form fieldset
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'form-fieldset-invalid-example',
     template: `
@@ -27,38 +25,41 @@ import { KbqSelectModule } from '@koobiq/components/select';
                     <input [formControl]="form.controls.patronymic" kbqInput placeholder="Patronymic" />
                 </kbq-form-field>
 
-                <kbq-error>Surname: error message for the first field</kbq-error>
-                <kbq-error>Name: error message for the second field</kbq-error>
-                <kbq-error>Patronymic: error message for the third field</kbq-error>
+                @if (form.controls.surname.hasError('required')) {
+                    <kbq-error>Surname: error message for the first field</kbq-error>
+                }
+                @if (form.controls.name.hasError('required')) {
+                    <kbq-error>Name: error message for the second field</kbq-error>
+                }
+                @if (form.controls.patronymic.hasError('required')) {
+                    <kbq-error>Patronymic: error message for the third field</kbq-error>
+                }
             </kbq-fieldset>
         </form>
     `,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
-        KbqInputModule,
-        KbqSelectModule
+        KbqInputModule
     ],
     providers: [
-        {
-            provide: ErrorStateMatcher,
-            useValue: { isErrorState: () => true } satisfies ErrorStateMatcher
-        }
-    ]
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldsetInvalidExample {
-    options = [
-        'https://',
-        'http://'
-    ];
-
     form = new FormGroup({
-        surname: new FormControl(null, Validators.required),
-        name: new FormControl(null, Validators.required),
-        patronymic: new FormControl(null, Validators.required)
+        surname: new FormControl('', Validators.required),
+        name: new FormControl('', Validators.required),
+        patronymic: new FormControl('', Validators.required)
     });
 
     constructor() {
-        afterNextRender(() => this.form.updateValueAndValidity());
+        afterNextRender(() =>
+            Object.values(this.form.controls).forEach((control) => {
+                control.markAsTouched();
+                control.updateValueAndValidity();
+            })
+        );
     }
 }

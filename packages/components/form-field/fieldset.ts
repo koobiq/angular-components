@@ -1,5 +1,9 @@
 import { Component, computed, contentChild, Directive, ElementRef, Signal, ViewEncapsulation } from '@angular/core';
 
+/**
+ * A group of form-fields and related controls.
+ * Container component emulating the native <fieldset> element.
+ */
 @Component({
     standalone: true,
     selector: 'kbq-fieldset',
@@ -8,7 +12,7 @@ import { Component, computed, contentChild, Directive, ElementRef, Signal, ViewE
         role: 'group',
         '[attr.aria-label]': 'ariaLabel()'
     },
-    styleUrls: ['./fieldset.scss'],
+    styleUrls: ['./fieldset.scss', './fieldset-tokens.scss'],
     template: `
         <ng-content select="[kbqLegend]" />
 
@@ -25,14 +29,19 @@ import { Component, computed, contentChild, Directive, ElementRef, Signal, ViewE
     encapsulation: ViewEncapsulation.None
 })
 export class KbqFieldset {
-    private readonly legend: Signal<ElementRef<HTMLLegendElement> | undefined> = contentChild(KbqLegend, {
+    private readonly legend: Signal<ElementRef<HTMLElement> | undefined> = contentChild(KbqLegend, {
         read: ElementRef
     });
 
-    /** @docs-private */
+    /**
+     * Computes the aria-label from the inner text of the legend element.
+     * Used to enhance accessibility by labeling the group.
+     * @docs-private
+     */
     protected readonly ariaLabel = computed(() => this.legend()?.nativeElement?.innerText);
 }
 
+/** Directive for marking an element as legend of `KbqFieldset` */
 @Directive({
     standalone: true,
     selector: '[kbqLegend]',
@@ -42,6 +51,7 @@ export class KbqFieldset {
 })
 export class KbqLegend {}
 
+/** Directive for marking elements as items inside `KbqFieldset` */
 @Directive({
     standalone: true,
     selector: '[kbqFieldsetItem]',

@@ -2,13 +2,21 @@
 @use './form-field';
 
 .kbq-fieldset {
-    --kbq-fieldset-legend-margin: var(--kbq-size-s);
-
     display: flex;
     flex-direction: column;
 
     :where(.kbq-legend) {
         margin-bottom: var(--kbq-fieldset-legend-margin);
+    }
+
+    .kbq-form-field__hint {
+        @include form-field-theme.kbq-form-field-hint-theme();
+        @include form-field-theme.kbq-form-field-hint-typography();
+        @include form-field.kbq-form-field-hint-geometry();
+
+        &:empty {
+            margin-top: 0;
+        }
     }
 
     .kbq-form-field {
@@ -28,31 +36,18 @@
         &:not(:first-child):not(:last-child) {
             --kbq-form-field-size-border-radius: 0;
 
-            margin-left: -1px;
-
             .kbq-form-field__container {
                 border-radius: 0;
             }
         }
 
         &:last-child {
-            margin-left: -1px;
-
             .kbq-form-field__container,
             .kbq-form-field__container .kbq-input {
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
             }
         }
-    }
-
-    .kbq-form-field__hint {
-        --kbq-form-field-hint-size-margin-top: var(--kbq-size-xxs);
-        --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
-
-        @include form-field-theme.kbq-form-field-hint-theme();
-        @include form-field-theme.kbq-form-field-hint-typography();
-        @include form-field.kbq-form-field-hint-geometry();
     }
 }
 
@@ -68,7 +63,6 @@
         }
 
         &:first-child {
-            margin-right: -1px;
             border-top-right-radius: 0;
             border-bottom-right-radius: 0;
         }
@@ -78,9 +72,12 @@
         }
 
         &:last-child {
-            margin-left: -1px;
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
+        }
+
+        &:not(:first-child) {
+            margin-left: calc(var(--kbq-size-border-width) * -1);
         }
     }
 }

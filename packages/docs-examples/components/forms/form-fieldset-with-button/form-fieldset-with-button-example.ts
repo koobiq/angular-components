@@ -8,11 +8,14 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Form fieldset with button
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     selector: 'form-fieldset-with-button-example',
     template: `
         <kbq-fieldset>
+            <legend kbqLegend>
+                A long field name that wraps to a new line and is positioned even above the button.
+            </legend>
+
             <kbq-form-field kbqFieldsetItem>
                 <input kbqInput />
             </kbq-form-field>
@@ -21,6 +24,10 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <i kbq-icon="kbq-floppy-disk_16"></i>
                 Save
             </button>
+
+            <kbq-hint>
+                A long hint text under the field that wraps to a new line and even extends beneath the button.
+            </kbq-hint>
         </kbq-fieldset>
     `,
     imports: [
@@ -28,6 +35,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqInputModule,
         KbqButtonModule,
         KbqIconModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldsetWithButtonExample {}
