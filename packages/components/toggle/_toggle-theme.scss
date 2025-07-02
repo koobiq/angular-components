@@ -49,9 +49,17 @@
         }
     }
 
-    &.kbq-disabled,
-    &.kbq-active.kbq-disabled {
+    &.kbq-disabled {
         @include _kbq-toggle-state($type, states-disabled);
+    }
+
+    &.kbq-active.kbq-disabled,
+    &.kbq-indeterminate.kbq-disabled {
+        @include _kbq-toggle-state($type, states-active-disabled);
+
+        .kbq-toggle-bar {
+            opacity: var(--kbq-opacity-disabled);
+        }
     }
 }
 

@@ -34,6 +34,8 @@
   --kbq-background-transparent: transparent;
   --kbq-background-overlay: hsla(229, 15%, 20%, 32%);
   --kbq-background-overlay-inverse: hsla(229, 15%, 99%, 88%);
+  --kbq-background-overlay-error: hsla(7, 97%, 88%, 88%);
+  --kbq-background-overlay-theme: hsla(216, 100%, 86%, 88%);
   --kbq-foreground-white: hsla(0, 0%, 100%, 100%);
   --kbq-foreground-white-secondary: hsla(0, 0%, 100%, 72%);
   --kbq-foreground-theme: hsla(216, 100%, 50%, 100%);
@@ -78,6 +80,7 @@
   --kbq-shadow-outline: hsla(229, 15%, 6%, 3%);
   --kbq-shadow-key: hsla(229, 15%, 6%, 6%);
   --kbq-shadow-ambient: hsla(229, 15%, 6%, 12%);
+  --kbq-opacity-disabled: 0.32;
   --kbq-states-background-theme-hover: hsla(216, 100%, 45%, 100%);
   --kbq-states-background-theme-active: hsla(216, 100%, 39%, 100%);
   --kbq-states-background-theme-fade-hover: hsla(216, 100%, 85%, 100%);
@@ -134,7 +137,7 @@
   --kbq-states-line-focus-theme: hsla(216, 100%, 60%, 100%);
   --kbq-states-line-disabled: hsla(229, 15%, 50%, 32%);
   --kbq-states-line-focus-error: hsla(7, 97%, 45%, 100%);
-  --kbq-states-disabled-opacity: 0.32;
+  --kbq-states-disabled-opacity: 0.32; /* DEPRECATED: use --kbq-opacity-disabled */
   --kbq-shadow-overflow-compact-top:  0px -1px 0px 0px hsla(229, 15%, 6%, 12%);
   --kbq-shadow-overflow-compact-right:  1px  0px 0px 0px hsla(229, 15%, 6%, 12%);
   --kbq-shadow-overflow-compact-bottom:  0px  1px 0px 0px hsla(229, 15%, 6%, 12%);

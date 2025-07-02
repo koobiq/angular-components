@@ -30,13 +30,16 @@
     --kbq-toggle-theme-states-disabled-border: var(--kbq-states-line-disabled);
     --kbq-toggle-theme-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-toggle-theme-states-disabled-circle-background: var(--kbq-states-icon-disabled);
+    --kbq-toggle-theme-states-active-disabled-border: var(--kbq-background-theme);
+    --kbq-toggle-theme-states-active-disabled-background: var(--kbq-background-theme);
+    --kbq-toggle-theme-states-active-disabled-circle-background: var(--kbq-icon-white);
     --kbq-toggle-error-default-border: var(--kbq-line-error);
     --kbq-toggle-error-default-background: var(--kbq-background-error-less);
     --kbq-toggle-error-default-circle-background: var(--kbq-icon-error);
     --kbq-toggle-error-states-hover-border: var(--kbq-line-error);
     --kbq-toggle-error-states-hover-background: var(--kbq-states-background-error-fade-hover);
     --kbq-toggle-error-states-hover-circle-background: var(--kbq-icon-error);
-    --kbq-toggle-error-states-checked-border: var(--kbq-line-error);
+    --kbq-toggle-error-states-checked-border: var(--kbq-background-error);
     --kbq-toggle-error-states-checked-background: var(--kbq-background-error);
     --kbq-toggle-error-states-checked-circle-background: var(--kbq-icon-white);
     --kbq-toggle-error-states-checked-hover-border: var(--kbq-line-error);
@@ -53,4 +56,7 @@
     --kbq-toggle-error-states-disabled-border: var(--kbq-states-line-disabled);
     --kbq-toggle-error-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-toggle-error-states-disabled-circle-background: var(--kbq-states-icon-disabled);
+    --kbq-toggle-error-states-active-disabled-border: var(--kbq-background-error);
+    --kbq-toggle-error-states-active-disabled-background: var(--kbq-background-error);
+    --kbq-toggle-error-states-active-disabled-circle-background: var(--kbq-icon-white);
 }
