@@ -1,5 +1,25 @@
 import { Component, computed, contentChild, Directive, ElementRef, Signal, ViewEncapsulation } from '@angular/core';
 
+/** Directive for marking an element as legend of `KbqFieldset` */
+@Directive({
+    standalone: true,
+    selector: '[kbqLegend]',
+    host: {
+        class: 'kbq-legend'
+    }
+})
+export class KbqLegend {}
+
+/** Directive for marking elements as items inside `KbqFieldset` */
+@Directive({
+    standalone: true,
+    selector: '[kbqFieldsetItem]',
+    host: {
+        class: 'kbq-fieldset-item'
+    }
+})
+export class KbqFieldsetItem {}
+
 /**
  * A group of form-fields and related controls.
  * Container component emulating the native <fieldset> element.
@@ -40,23 +60,3 @@ export class KbqFieldset {
      */
     protected readonly ariaLabel = computed(() => this.legend()?.nativeElement?.innerText);
 }
-
-/** Directive for marking an element as legend of `KbqFieldset` */
-@Directive({
-    standalone: true,
-    selector: '[kbqLegend]',
-    host: {
-        class: 'kbq-legend'
-    }
-})
-export class KbqLegend {}
-
-/** Directive for marking elements as items inside `KbqFieldset` */
-@Directive({
-    standalone: true,
-    selector: '[kbqFieldsetItem]',
-    host: {
-        class: 'kbq-fieldset-item'
-    }
-})
-export class KbqFieldsetItem {}
