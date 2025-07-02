@@ -1,21 +1,24 @@
 .kbq-stepper___EXPERIMENTAL {
+    // margin used by design to reduce gap between step arrows
+    $step-margin: -2px;
+    --kbq-form-field-size-icon-button-size: var(--kbq-size-3xl);
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
+    .kbq-stepper__step-up {
+        margin-bottom: $step-margin;
+    }
+
+    .kbq-stepper__step-down {
+        margin-top: $step-margin;
+    }
+
     .kbq-stepper__step-up,
     .kbq-stepper__step-down {
-        cursor: pointer;
         width: var(--kbq-form-field-size-icon-button-size);
         text-align: center;
-    }
-
-    .kbq-stepper__step-up {
-        transform: scaleY(-1);
-    }
-
-    .kbq-icon-button.kbq-icon-button_small {
-        padding: 0;
     }
 }

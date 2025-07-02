@@ -74,6 +74,10 @@
 
     .kbq-form-field__suffix {
         margin-right: var(--kbq-size-s);
+
+        &:has(> .kbq-stepper) {
+            margin-right: 0;
+        }
     }
 
     .kbq-form-field__hint {
