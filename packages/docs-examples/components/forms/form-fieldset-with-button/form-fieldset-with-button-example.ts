@@ -36,6 +36,15 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqButtonModule,
         KbqIconModule
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row'
+    },
+    styles: `
+        :host {
+            margin: var(--kbq-size-m) auto;
+            width: 320px;
+        }
+    `
 })
 export class FormFieldsetWithButtonExample {}

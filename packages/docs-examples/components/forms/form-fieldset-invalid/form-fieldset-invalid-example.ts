@@ -45,7 +45,16 @@ import { KbqInputModule } from '@koobiq/components/input';
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row'
+    },
+    styles: `
+        :host {
+            margin: var(--kbq-size-m) auto;
+            width: 320px;
+        }
+    `
 })
 export class FormFieldsetInvalidExample {
     form = new FormGroup({

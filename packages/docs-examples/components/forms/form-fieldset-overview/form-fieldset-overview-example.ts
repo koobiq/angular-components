@@ -46,7 +46,16 @@ import { KbqSelectModule } from '@koobiq/components/select';
         ReactiveFormsModule
     ],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        class: 'layout-row'
+    },
+    styles: `
+        :host {
+            margin: var(--kbq-size-m) auto;
+            width: 320px;
+        }
+    `
 })
 export class FormFieldsetOverviewExample {
     options = [
