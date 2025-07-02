@@ -1,6 +1,17 @@
 @use '../core/forms/forms';
 @use './form-field-theme' as theme;
 
+@mixin kbq-form-field-hint-geometry {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-xxs);
+    margin-top: var(--kbq-form-field-hint-size-margin-top);
+
+    .kbq-password-hint:first-child {
+        margin-top: var(--kbq-size-s);
+    }
+}
+
 .kbq-form-field {
     position: relative;
     display: inline-block;
@@ -81,14 +92,7 @@
     }
 
     .kbq-form-field__hint {
-        display: flex;
-        flex-direction: column;
-        gap: var(--kbq-size-xxs);
-        margin-top: var(--kbq-form-field-hint-size-margin-top);
-
-        & .kbq-password-hint:first-child {
-            margin-top: var(--kbq-size-s);
-        }
+        @include kbq-form-field-hint-geometry();
     }
 
     .kbq-password-hint {

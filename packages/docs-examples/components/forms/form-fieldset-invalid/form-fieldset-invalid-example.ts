@@ -26,6 +26,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 <kbq-form-field kbqFieldsetItem>
                     <input [formControl]="form.controls.patronymic" kbqInput placeholder="Patronymic" />
                 </kbq-form-field>
+
+                <kbq-error>Surname: error message for the first field</kbq-error>
+                <kbq-error>Name: error message for the second field</kbq-error>
+                <kbq-error>Patronymic: error message for the third field</kbq-error>
             </kbq-fieldset>
         </form>
     `,

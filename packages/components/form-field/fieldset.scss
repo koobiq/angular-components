@@ -1,29 +1,14 @@
+@use './form-field-theme';
+@use './form-field';
+
 .kbq-fieldset {
+    --kbq-fieldset-legend-margin: var(--kbq-size-s);
+
     display: flex;
-    flex-direction: row;
-    position: relative;
+    flex-direction: column;
 
-    > .kbq-fieldset-item {
-        &.cdk-focused,
-        &.kbq-focused {
-            z-index: 3;
-        }
-
-        &:first-of-type {
-            margin-right: -1px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        &:not(:first-of-type):not(:last-of-type) {
-            border-radius: 0;
-        }
-
-        &:last-of-type {
-            margin-left: -1px;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
+    :where(.kbq-legend) {
+        margin-bottom: var(--kbq-fieldset-legend-margin);
     }
 
     .kbq-form-field {
@@ -33,10 +18,6 @@
         }
 
         &:first-child {
-            margin-right: -1px;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-
             .kbq-form-field__container,
             .kbq-form-field__container .kbq-input {
                 border-top-right-radius: 0;
@@ -47,6 +28,8 @@
         &:not(:first-child):not(:last-child) {
             --kbq-form-field-size-border-radius: 0;
 
+            margin-left: -1px;
+
             .kbq-form-field__container {
                 border-radius: 0;
             }
@@ -54,14 +37,50 @@
 
         &:last-child {
             margin-left: -1px;
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
 
             .kbq-form-field__container,
             .kbq-form-field__container .kbq-input {
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
             }
+        }
+    }
+
+    .kbq-form-field__hint {
+        --kbq-form-field-hint-size-margin-top: var(--kbq-size-xxs);
+        --kbq-form-field-hint-text: var(--kbq-foreground-contrast-secondary);
+
+        @include form-field-theme.kbq-form-field-hint-theme();
+        @include form-field-theme.kbq-form-field-hint-typography();
+        @include form-field.kbq-form-field-hint-geometry();
+    }
+}
+
+.kbq-fieldset__container {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+
+    > .kbq-fieldset-item {
+        &.cdk-focused,
+        &.kbq-focused {
+            z-index: 3;
+        }
+
+        &:first-child {
+            margin-right: -1px;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &:not(:first-child):not(:last-child) {
+            border-radius: 0;
+        }
+
+        &:last-child {
+            margin-left: -1px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
         }
     }
 }
