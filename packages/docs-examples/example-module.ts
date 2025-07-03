@@ -1302,11 +1302,11 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Form field with CustomErrorStateMatcher which set by DI provider",
     "componentName": "ExperimentalFormFieldWithCustomErrorStateMatcherSetByDependencyInjectionProviderExample",
     "files": [
-      "experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts"
+      "experimental-form-field-with-error-state-matcher-set-by-di-example.ts"
     ],
     "selector": "experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example",
     "additionalComponents": [],
-    "primaryFile": "experimental-form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example.ts",
+    "primaryFile": "experimental-form-field-with-error-state-matcher-set-by-di-example.ts",
     "importPath": "components/experimental-form-field"
   },
   "experimental-form-field-with-error": {

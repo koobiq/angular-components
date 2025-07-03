@@ -199,7 +199,7 @@ export class KbqLabel {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLabel, never>;
 }
 
-// @public @deprecated (undocumented)
+// @public (undocumented)
 export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     constructor(changeDetectorRef: ChangeDetectorRef, formField: any);
     // (undocumented)
