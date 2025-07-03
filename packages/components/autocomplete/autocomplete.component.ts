@@ -181,15 +181,14 @@ export class KbqAutocomplete implements AfterContentInit {
         this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.options);
         this.setVisibility();
 
-        this.parentFormField.control.ngControl?.valueChanges
+        this.parentFormField?.control.ngControl?.valueChanges
             ?.pipe(
                 delay(0),
                 filter((value) => value === null || value === undefined || value === ''),
-                takeUntilDestroyed(this.destroyRef))
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe(() => {
-                this.options
-                    .filter(({ selected }) => selected)
-                    .forEach((option) => option.deselect(false));
+                this.options.filter(({ selected }) => selected).forEach((option) => option.deselect(false));
             });
     }
 

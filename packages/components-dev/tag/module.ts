@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -35,7 +36,6 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TagExamplesModule } from '../../docs-examples/components/tag';
-import { AsyncPipe } from '@angular/common';
 
 const customMaxLengthValidator = (max: number): ValidatorFn => {
     return ({ value }: AbstractControl): ValidationErrors | null => {
