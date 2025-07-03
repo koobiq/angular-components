@@ -1,4 +1,13 @@
-import { Component, computed, contentChild, Directive, ElementRef, Signal, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    contentChild,
+    Directive,
+    ElementRef,
+    Signal,
+    ViewEncapsulation
+} from '@angular/core';
 
 /** Directive for marking an element as legend of `KbqFieldset` */
 @Directive({
@@ -46,7 +55,8 @@ export class KbqFieldsetItem {}
             <ng-content select="kbq-hint, kbq-password-hint, kbq-reactive-password-hint" />
         </div>
     `,
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqFieldset {
     private readonly legend: Signal<ElementRef<HTMLElement> | undefined> = contentChild(KbqLegend, {
