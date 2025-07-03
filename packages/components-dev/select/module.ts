@@ -7,7 +7,6 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqHighlightModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectChange, KbqSelectModule, kbqSelectOptionsProvider } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { SelectExamplesModule } from 'packages/docs-examples/components/select';
@@ -72,7 +71,6 @@ class DevExamples {}
         KbqButtonModule,
         KbqSelectModule,
         KbqHighlightModule,
-        KbqInputModule,
         KbqFormFieldModule,
         KbqIconModule,
         ReactiveFormsModule,
