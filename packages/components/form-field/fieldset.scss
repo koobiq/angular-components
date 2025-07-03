@@ -6,7 +6,7 @@
     display: flex;
     flex-direction: column;
 
-    :where(.kbq-legend) {
+    .kbq-legend {
         margin-bottom: var(--kbq-fieldset-legend-margin);
     }
 
@@ -22,6 +22,11 @@
         // set selector specifity to 0 , so focused state will override z-index
         :where(&.kbq-form-field_invalid, &.kbq-form-field_has-validate-directive.ng-invalid) {
             z-index: 2;
+        }
+
+        // Keep form-field__container and parent heights in sync (zoom-safe)
+        .kbq-form-field__container {
+            height: 100%;
         }
 
         &:first-child {
