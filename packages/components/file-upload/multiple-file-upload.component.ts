@@ -121,7 +121,7 @@ export class KbqMultipleFileUploadComponent
 
     /** @docs-private */
     @ViewChild('input') readonly input: ElementRef<HTMLInputElement>;
-    @ViewChild(KbqListSelection) private readonly listSelection: KbqListSelection;
+    @ViewChild(KbqListSelection) private readonly listSelection?: KbqListSelection;
     @ViewChild('fileSizeHeaderCell') private readonly fileSizeHeaderCell: ElementRef<HTMLElement>;
 
     /** @docs-private */
@@ -301,7 +301,7 @@ export class KbqMultipleFileUploadComponent
         this.filesChange.emit(this.files);
         this.onTouched();
 
-        this.listSelection.keyManager.setActiveItem(-1);
+        this.listSelection?.keyManager.setActiveItem(-1);
     }
 
     private updateLocaleParams = () => {

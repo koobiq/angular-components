@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -207,6 +207,23 @@ describe(KbqMultipleFileUploadComponent.name, () => {
                 expect(component.files).toHaveLength(0);
                 done();
             });
+        });
+
+        it('should NOT throw error on detectChanges in handler', () => {
+            component.onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
+                component.files = files;
+                component.cdr.detectChanges();
+            });
+
+            jest.spyOn(component.fileUpload, 'deleteFile');
+
+            dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
+            fixture.detectChanges();
+
+            fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
+            fixture.detectChanges();
+
+            expect(component.fileUpload.deleteFile).not.toThrow();
         });
     });
 
@@ -651,7 +668,10 @@ class BasicMultipleFileUpload {
     files: KbqFileItem[];
     validation: KbqFileValidatorFn[] = [];
 
-    constructor(public elementRef: ElementRef) {}
+    constructor(
+        public elementRef: ElementRef,
+        public cdr: ChangeDetectorRef
+    ) {}
 
     onChange = jest.fn().mockImplementation((files: KbqFileItem[]) => {
         this.files = files;
