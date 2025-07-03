@@ -106,6 +106,8 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
 
             dataTextStart.innerText = start;
             dataTextEnd.innerText = end;
+
+            this.cdr.markForCheck();
         });
 
         this.renderer.appendChild(this.elementRef.nativeElement, dataTextStart);
