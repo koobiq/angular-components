@@ -35,6 +35,7 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TagExamplesModule } from '../../docs-examples/components/tag';
+import { AsyncPipe } from '@angular/common';
 
 const customMaxLengthValidator = (max: number): ValidatorFn => {
     return ({ value }: AbstractControl): ValidationErrors | null => {
@@ -147,7 +148,8 @@ export class DevTagInputValidation {
         KbqTagsModule,
         KbqIconModule,
         KbqTitleModule,
-        DevExamples
+        DevExamples,
+        AsyncPipe
     ],
     providers: [
         {
@@ -235,10 +237,6 @@ export class DevApp implements AfterViewInit {
                 })
             )
         );
-    }
-
-    onClear(): void {
-        this.inputTags.length = 0;
     }
 
     inputOnCreate(event: KbqTagInputEvent): void {
@@ -351,7 +349,7 @@ export class DevApp implements AfterViewInit {
     }
 
     private filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
+        const filterValue = value ? value.toLowerCase() : '';
 
         return [...new Set(this.autocompleteAllTags.concat(this.autocompleteSelectedTags))].filter(
             (tag) => tag.toLowerCase().indexOf(filterValue) === 0

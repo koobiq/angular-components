@@ -16,6 +16,6 @@
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
             (kbqTagInputTokenEnd)="onCreate($event)"
         />
-        <kbq-cleaner (click)="onClear()" />
+        <kbq-cleaner #kbqTagListCleaner (click)="onClear()" />
     </kbq-tag-list>
 </kbq-form-field>

@@ -71,7 +71,7 @@ export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
  * @docs-private
  */
-export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
+export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqAutocompleteTrigger),
     multi: true
@@ -103,7 +103,7 @@ export function getKbqAutocompleteMissingPanelError(): Error {
         '(click)': 'handleClick($event)'
     },
     exportAs: 'kbqAutocompleteTrigger',
-    providers: [MAT_AUTOCOMPLETE_VALUE_ACCESSOR]
+    providers: [KBQ_AUTOCOMPLETE_VALUE_ACCESSOR]
 })
 export class KbqAutocompleteTrigger
     implements AfterViewInit, ControlValueAccessor, OnDestroy, KeyboardNavigationHandler

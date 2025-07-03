@@ -57,6 +57,9 @@ export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
     useFactory: typeof KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY;
 };
 
+// @public
+export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: any;
+
 // @public (undocumented)
 export class KbqAutocomplete implements AfterContentInit {
     constructor(changeDetectorRef: ChangeDetectorRef, elementRef: ElementRef<HTMLElement>, defaults: KbqAutocompleteDefaultOptions, parentFormField: KbqFormField);
@@ -193,9 +196,6 @@ export class KbqAutocompleteTrigger implements AfterViewInit, ControlValueAccess
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqAutocompleteTrigger, [null, null, null, null, null, null, { optional: true; }, { optional: true; host: true; }, null]>;
 }
-
-// @public
-export const MAT_AUTOCOMPLETE_VALUE_ACCESSOR: any;
 
 // (No @packageDocumentation comment for this package)
 
