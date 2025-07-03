@@ -23,6 +23,7 @@ import {
 } from './filter-bar.types';
 import { KbqFilterReset } from './filter-reset';
 import { KbqFilters } from './filters';
+import { getId } from './pipes/base-pipe';
 
 @Component({
     standalone: true,
@@ -167,12 +168,27 @@ export class KbqFilterBar {
 
         merge(this.onChangePipe, this.onRemovePipe)
             .pipe(takeUntilDestroyed())
-            .subscribe(() => {
+            .subscribe((changedPipe) => {
                 if (this.filter) {
                     this.filter.changed = true;
-                }
 
-                this.filterChange.emit(this.filter);
+                    // need to give out fake data. Data will be synchronized after pipe closing
+                    if (this.filter.pipes.find((pipe) => getId(pipe) === getId(changedPipe) && pipe.value !== changedPipe.value)) {
+                        const filter = { ...this.filter };
+
+                        filter.pipes = filter.pipes.map((pipe) => {
+                            if (getId(pipe) === getId(changedPipe)) {
+                                return changedPipe
+                            }
+
+                            return pipe;
+                        });
+
+                        this.filterChange.emit(filter);
+                    } else {
+                        this.filterChange.emit(this.filter);
+                    }
+                }
             });
 
         merge(this.filterChange, this.onChangePipe, this.onRemovePipe, this.internalFilterChanges)

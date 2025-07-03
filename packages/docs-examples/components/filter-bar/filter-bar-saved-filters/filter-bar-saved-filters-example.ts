@@ -23,7 +23,7 @@ import {
     ],
     template: `
         <kbq-filter-bar
-            [(filter)]="activeFilter"
+            [filter]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             (filterChange)="onFilterChange($event)"
         >

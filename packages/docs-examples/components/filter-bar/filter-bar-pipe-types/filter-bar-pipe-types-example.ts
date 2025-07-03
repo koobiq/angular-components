@@ -39,7 +39,7 @@ const DATA_OBJECT = {
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates" (onChangePipe)="onChangePipe($event)">
+        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates" (onChangePipe)="onChangePipe($event)">
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }

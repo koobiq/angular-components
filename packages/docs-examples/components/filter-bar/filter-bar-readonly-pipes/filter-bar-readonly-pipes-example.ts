@@ -17,7 +17,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqLinkModule
     ],
     template: `
-        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates">
+        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates">
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
             }
