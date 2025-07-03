@@ -1,5 +1,6 @@
 @use './form-field-theme';
 @use './form-field';
+@use './fiedset-theme';
 
 .kbq-fieldset {
     display: flex;
@@ -10,8 +11,6 @@
     }
 
     .kbq-form-field__hint {
-        @include form-field-theme.kbq-form-field-hint-theme();
-        @include form-field-theme.kbq-form-field-hint-typography();
         @include form-field.kbq-form-field-hint-geometry();
 
         &:empty {
@@ -21,7 +20,7 @@
 
     .kbq-form-field {
         // set selector specifity to 0 , so focused state will override z-index
-        :where(&.kbq-form-field_invalid) {
+        :where(&.kbq-form-field_invalid, &.kbq-form-field_has-validate-directive.ng-invalid) {
             z-index: 2;
         }
 
@@ -49,6 +48,8 @@
             }
         }
     }
+
+    @include fiedset-theme.kbq-fieldset-theme();
 }
 
 .kbq-fieldset__container {

@@ -43,7 +43,7 @@ export class KbqFieldsetItem {}
         <div class="kbq-form-field__hint">
             <ng-content select="kbq-error" />
 
-            <ng-content select="kbq-hint, kbq-password-hint" />
+            <ng-content select="kbq-hint, kbq-password-hint, kbq-reactive-password-hint" />
         </div>
     `,
     encapsulation: ViewEncapsulation.None
