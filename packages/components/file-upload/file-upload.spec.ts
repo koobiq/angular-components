@@ -6,6 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TAB } from '@koobiq/cdk/keycodes';
 import {
     createFakeEvent,
+    createMouseEvent,
     dispatchEvent,
     dispatchFakeEvent,
     dispatchKeyboardEvent,
@@ -220,10 +221,12 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             dispatchEvent(component.fileUpload.input.nativeElement, getMockedChangeEventForMultiple(FILE_NAME));
             fixture.detectChanges();
 
-            fixture.debugElement.query(By.css(`.${fileItemActionCssClass} .kbq-icon`)).nativeElement.click();
-            fixture.detectChanges();
+            const event = createMouseEvent('click');
 
-            expect(component.fileUpload.deleteFile).not.toThrow();
+            expect(() => {
+                component.fileUpload.deleteFile(0, event);
+                fixture.detectChanges();
+            }).not.toThrow();
         });
     });
 
