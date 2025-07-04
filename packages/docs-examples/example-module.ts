@@ -197,6 +197,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "ag-grid-overview-example.ts",
     "importPath": "components/ag-grid"
   },
+  "ag-grid-row-dragging": {
+    "packagePath": "components/ag-grid/ag-grid-row-dragging",
+    "title": "AG Grid with row dragging",
+    "componentName": "AgGridRowDraggingExample",
+    "files": [
+      "ag-grid-row-dragging-example.ts"
+    ],
+    "selector": "ag-grid-row-dragging-example",
+    "additionalComponents": [],
+    "primaryFile": "ag-grid-row-dragging-example.ts",
+    "importPath": "components/ag-grid"
+  },
   "alert-close": {
     "packagePath": "components/alert/alert-close",
     "title": "Alert close",
@@ -4566,6 +4578,8 @@ return import('@koobiq/docs-examples/components/actions-panel');
   case 'actions-panel-overview':
 return import('@koobiq/docs-examples/components/actions-panel');
   case 'ag-grid-overview':
+return import('@koobiq/docs-examples/components/ag-grid');
+  case 'ag-grid-row-dragging':
 return import('@koobiq/docs-examples/components/ag-grid');
   case 'alert-close':
 return import('@koobiq/docs-examples/components/alert');

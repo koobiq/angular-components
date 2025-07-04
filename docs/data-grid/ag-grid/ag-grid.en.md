@@ -45,6 +45,18 @@ import { AgGridModule } from 'ag-grid-angular';
 
 The full documentation for using the theme is available [in the GitHub repository](https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md).
 
+### Disabling cell focus styles
+
+To disable the focus styles for table cells, add the `disableCellFocusStyles` attribute to `<ag-grid-angular>`:
+
+```html
+<ag-grid-angular kbqAgGridTheme disableCellFocusStyles />
+```
+
+### Row dragging
+
+<!-- example(ag-grid-row-dragging) -->
+
 ### Recommendations
 
 - Use the [Table](/en/components/table) component for simple tables with a small amount of data that do not require resizing or reordering of columns.
