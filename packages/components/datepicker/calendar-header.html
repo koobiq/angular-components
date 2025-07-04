@@ -5,6 +5,7 @@
         [panelClass]="'kbq-calendar-select-panel'"
         [value]="selectedMonth"
         (selectionChange)="onMonthSelected($event.value)"
+        [tabIndex]="-1"
     >
         <button
             kbq-button
@@ -13,7 +14,6 @@
             [class.kbq-active]="monthSelect.panelOpen"
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
-            [tabindex]="-1"
         >
             {{ monthNames[selectedMonth].nameShort | titlecase }}
 
@@ -32,6 +32,7 @@
         [panelClass]="'kbq-calendar-select-panel'"
         [value]="selectedYear"
         (selectionChange)="onYearSelected($event.value)"
+        [tabIndex]="-1"
     >
         <button
             kbq-button
@@ -40,7 +41,6 @@
             [class.kbq-active]="yearSelect.panelOpen"
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
-            [tabindex]="-1"
         >
             {{ selectedYear }}
 
