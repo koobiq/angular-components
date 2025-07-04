@@ -31,7 +31,7 @@ export class KbqFieldsetItem {}
 
 /**
  * A group of form-fields and related controls.
- * Container component emulating the native <fieldset> element.
+ * Container component emulating the native `fieldset` element.
  */
 @Component({
     standalone: true,
