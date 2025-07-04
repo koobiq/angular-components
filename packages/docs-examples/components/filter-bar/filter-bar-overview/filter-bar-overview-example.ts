@@ -22,11 +22,7 @@ import {
         LuxonDateModule
     ],
     template: `
-        <kbq-filter-bar
-            [filter]="activeFilter"
-            [pipeTemplates]="pipeTemplates"
-            (filterChange)="onFilterChange($event)"
-        >
+        <kbq-filter-bar [filter]="activeFilter" [pipeTemplates]="pipeTemplates" (filterChange)="onFilterChange($event)">
             <kbq-filters
                 [filters]="filters"
                 (onSave)="onSaveFilter($event)"

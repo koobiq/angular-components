@@ -173,12 +173,16 @@ export class KbqFilterBar {
                     this.filter.changed = true;
 
                     // need to give out fake data. Data will be synchronized after pipe closing
-                    if (this.filter.pipes.find((pipe) => getId(pipe) === getId(changedPipe) && pipe.value !== changedPipe.value)) {
+                    if (
+                        this.filter.pipes.find(
+                            (pipe) => getId(pipe) === getId(changedPipe) && pipe.value !== changedPipe.value
+                        )
+                    ) {
                         const filter = { ...this.filter };
 
                         filter.pipes = filter.pipes.map((pipe) => {
                             if (getId(pipe) === getId(changedPipe)) {
-                                return changedPipe
+                                return changedPipe;
                             }
 
                             return pipe;
