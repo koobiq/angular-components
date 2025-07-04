@@ -61,6 +61,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
             (firstDataRendered)="onFirstDataRendered($event)"
             rowSelection="multiple"
             kbqAgGridTheme
+            disableCellFocusStyles
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -36,6 +36,7 @@ type ExampleRowData = {
             (firstDataRendered)="onFirstDataRendered($event)"
             rowSelection="multiple"
             kbqAgGridTheme
+            disableCellFocusStyles
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
