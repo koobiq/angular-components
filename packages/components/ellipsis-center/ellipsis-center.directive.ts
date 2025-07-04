@@ -71,7 +71,6 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
     /**
      * Updates the displayed text with center ellipsis truncation based on container width.
      * Recreates start/end span elements, measures available space, and adjusts text accordingly.
-     *
      * @docs-private
      */
     refresh(): void {
