@@ -3,9 +3,9 @@
         #monthSelect="kbqSelect"
         class="kbq-calendar-header__select"
         [panelClass]="'kbq-calendar-select-panel'"
+        [tabIndex]="-1"
         [value]="selectedMonth"
         (selectionChange)="onMonthSelected($event.value)"
-        [tabIndex]="-1"
     >
         <button
             kbq-button
@@ -30,9 +30,9 @@
     <kbq-select
         #yearSelect="kbqSelect"
         [panelClass]="'kbq-calendar-select-panel'"
+        [tabIndex]="-1"
         [value]="selectedYear"
         (selectionChange)="onYearSelected($event.value)"
-        [tabIndex]="-1"
     >
         <button
             kbq-button
