@@ -26,6 +26,7 @@ import { NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { Provider } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { TemplateRef } from '@angular/core';
@@ -58,7 +59,7 @@ export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER: {
 };
 
 // @public
-export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: any;
+export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider;
 
 // @public (undocumented)
 export class KbqAutocomplete implements AfterContentInit {

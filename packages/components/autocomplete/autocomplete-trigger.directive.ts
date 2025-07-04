@@ -27,7 +27,8 @@ import {
     Optional,
     ViewContainerRef,
     forwardRef,
-    inject
+    inject,
+    Provider
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
@@ -71,7 +72,7 @@ export const KBQ_AUTOCOMPLETE_SCROLL_STRATEGY_FACTORY_PROVIDER = {
  * Provider that allows the autocomplete to register as a ControlValueAccessor.
  * @docs-private
  */
-export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: any = {
+export const KBQ_AUTOCOMPLETE_VALUE_ACCESSOR: Provider = {
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => KbqAutocompleteTrigger),
     multi: true
