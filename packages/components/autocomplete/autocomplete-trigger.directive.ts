@@ -25,10 +25,10 @@ import {
     NgZone,
     OnDestroy,
     Optional,
+    Provider,
     ViewContainerRef,
     forwardRef,
-    inject,
-    Provider
+    inject
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
