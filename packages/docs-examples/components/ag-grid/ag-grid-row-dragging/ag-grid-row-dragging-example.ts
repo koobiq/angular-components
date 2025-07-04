@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { KbqAgGridTheme } from '@koobiq/ag-grid-angular-theme';
-import { KbqLinkModule } from '@koobiq/components/link';
-import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
-import { ColDef, FirstDataRenderedEvent, ICellRendererParams } from 'ag-grid-community';
+import { AgGridModule } from 'ag-grid-angular';
+import { ColDef, FirstDataRenderedEvent } from 'ag-grid-community';
 
 type ExampleRowData = {
     column0: string;
@@ -17,46 +16,22 @@ type ExampleRowData = {
     column9: string;
 };
 
-@Component({
-    standalone: true,
-    imports: [KbqLinkModule],
-    selector: 'example-link-cell-renderer',
-    template: `
-        <a kbq-link href="https://koobiq.io/en/components/ag-grid" target="_blank">{{ cellValue }}</a>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
-    cellValue: string;
-
-    agInit(params: ICellRendererParams): void {
-        this.cellValue = this.getValueToDisplay(params);
-    }
-
-    refresh(params: ICellRendererParams): boolean {
-        this.cellValue = this.getValueToDisplay(params);
-
-        return true;
-    }
-
-    private getValueToDisplay(params: ICellRendererParams): string {
-        return params.valueFormatted ? params.valueFormatted : params.value;
-    }
-}
-
 /**
- * @title AG Grid overview
+ * @title AG Grid with row dragging
  */
 @Component({
     standalone: true,
     imports: [AgGridModule, KbqAgGridTheme],
-    selector: 'ag-grid-overview-example',
+    selector: 'ag-grid-row-dragging-example',
     template: `
         <ag-grid-angular
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
+            [rowDragManaged]="true"
+            [rowDragMultiRow]="true"
+            [suppressMoveWhenRowDragging]="true"
             [suppressRowClickSelection]="true"
             (firstDataRendered)="onFirstDataRendered($event)"
             rowSelection="multiple"
@@ -65,7 +40,7 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AgGridOverviewExample {
+export class AgGridRowDraggingExample {
     readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
@@ -87,8 +62,9 @@ export class AgGridOverviewExample {
         },
         {
             field: 'column0',
-            headerName: 'Link',
-            cellRenderer: ExampleLinkCellRenderer
+            headerName: 'Project name',
+            width: 180,
+            rowDrag: true
         },
         {
             field: 'column1',
@@ -129,7 +105,7 @@ export class AgGridOverviewExample {
     ];
 
     readonly rowData: ExampleRowData[] = Array.from({ length: 1000 }, (_, index) => ({
-        column0: 'Link ' + index,
+        column0: 'Project name ' + index,
         column1: 'Text ' + index,
         column2: 'Text ' + index,
         column3: 'Text ' + index,
