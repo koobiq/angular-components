@@ -12,6 +12,7 @@ import { TreeMultipleKeyboardExample } from './tree-multiple-keyboard/tree-multi
 import { TreeOverviewExample } from './tree-overview/tree-overview-example';
 import { TreeSelectAndMarkExample } from './tree-select-and-mark/tree-select-and-mark-example';
 import { TreeSelectionSeparateFromFocusExample } from './tree-selection-separate-from-focus/tree-selection-separate-from-focus-example';
+import { TreeToggleOnClickExample } from './tree-toggle-on-click/tree-toggle-on-click-example';
 
 export {
     TreeAccessRightsExample,
@@ -26,7 +27,8 @@ export {
     TreeMultipleKeyboardExample,
     TreeOverviewExample,
     TreeSelectAndMarkExample,
-    TreeSelectionSeparateFromFocusExample
+    TreeSelectionSeparateFromFocusExample,
+    TreeToggleOnClickExample
 };
 
 const EXAMPLES = [
@@ -42,7 +44,8 @@ const EXAMPLES = [
     TreeDescendantsSubcategoriesExample,
     TreeAccessRightsExample,
     TreeSelectAndMarkExample,
-    TreeSelectionSeparateFromFocusExample
+    TreeSelectionSeparateFromFocusExample,
+    TreeToggleOnClickExample
 ];
 
 @NgModule({
