@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocompleteModule } from '@koobiq/components/autocomplete';
-import { KbqHighlightModule, KbqNormalizeWhitespace, KbqPseudoCheckboxModule } from '@koobiq/components/core';
+import { KbqButtonModule } from '@koobiq/components/button';
+import { KbqHighlightModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
+import { KbqModalModule } from '@koobiq/components/modal';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -19,12 +21,13 @@ import {
 } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
 import { FormFieldExamplesModule } from 'packages/docs-examples/components/form-field';
+import { FormsExamplesModule } from '../../docs-examples/components/forms';
 import { DevThemeToggle } from '../theme-toggle';
 import { DevFileFlatNode, DevFileNode } from '../tree/module';
 
 @Component({
     standalone: true,
-    imports: [FormFieldExamplesModule],
+    imports: [FormFieldExamplesModule, FormsExamplesModule],
     selector: 'dev-examples',
     template: `
         <form-field-with-hint-example />
@@ -44,6 +47,12 @@ import { DevFileFlatNode, DevFileNode } from '../tree/module';
         <form-field-with-custom-error-state-matcher-set-by-dependency-injection-provider-example />
         <hr />
         <form-field-password-overview-example />
+        <hr />
+        <form-fieldset-overview-example />
+        <hr />
+        <form-fieldset-invalid-example />
+        <hr />
+        <form-fieldset-with-button-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -145,7 +154,9 @@ const DATA_OBJECT = {
         KbqTreeSelectModule,
         KbqPseudoCheckboxModule,
         KbqAutocompleteModule,
-        KbqNormalizeWhitespace,
+        ReactiveFormsModule,
+        KbqButtonModule,
+        KbqModalModule,
         DevExamples,
         DevThemeToggle
     ],
@@ -156,6 +167,7 @@ const DATA_OBJECT = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevApp {
+    readonly invalidControl = new FormControl(null, [Validators.required]);
     placeholder = 'PlaceHolder PlaceHolder PlaceHolder PlaceHolder PlaceHolder';
     value = 'Value Value Value Value Value Value Value Value Value Value';
     singleSelected = 'Moscow';
@@ -216,6 +228,7 @@ export class DevApp {
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
         this.dataSource.data = buildFileTree(DATA_OBJECT, 0);
+        this.invalidControl.updateValueAndValidity();
     }
 
     hasChild(_: number, nodeData: DevFileFlatNode) {

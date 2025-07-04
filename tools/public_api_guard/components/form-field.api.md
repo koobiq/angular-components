@@ -63,6 +63,23 @@ export class KbqError extends KbqHint {
 }
 
 // @public
+export class KbqFieldset {
+    protected readonly ariaLabel: Signal<string | undefined>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqFieldset, "kbq-fieldset", never, {}, {}, ["legend"], ["[kbqLegend]", "*", "kbq-error", "kbq-hint, kbq-password-hint, kbq-reactive-password-hint"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFieldset, never>;
+}
+
+// @public
+export class KbqFieldsetItem {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFieldsetItem, "[kbqFieldsetItem]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFieldsetItem, never>;
+}
+
+// @public
 export class KbqFormField extends KbqColorDirective implements AfterContentInit, AfterViewInit, OnDestroy, AfterContentChecked {
     canCleanerClearByEsc: boolean;
     get canShowCleaner(): boolean;
@@ -163,9 +180,10 @@ export class KbqFormFieldModule {
     // Warning: (ae-forgotten-export) The symbol "i10" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i11" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i12" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i13" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i12.KbqValidateDirective, typeof i2.KbqTrim], [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i12.KbqValidateDirective, typeof i2.KbqTrim]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqFormFieldModule, never, [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i13.KbqValidateDirective, typeof i2.KbqTrim], [typeof i1.KbqCleaner, typeof i2.KbqFormField, typeof i3.KbqPrefix, typeof i4.KbqSuffix, typeof i5.KbqPasswordToggle, typeof i6.KbqStepper, typeof i7.KbqLabel, typeof i8.KbqHint, typeof i9.KbqError, typeof i10.KbqReactivePasswordHint, typeof i11.KbqLegend, typeof i11.KbqFieldset, typeof i11.KbqFieldsetItem, typeof i12.KbqPasswordHint, typeof i2.KbqFormFieldWithoutBorders, typeof i13.KbqValidateDirective, typeof i2.KbqTrim]>;
 }
 
 // @public @deprecated
@@ -197,6 +215,14 @@ export class KbqLabel {
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLabel, "kbq-label", ["kbqLabel"], {}, {}, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqLabel, never>;
+}
+
+// @public
+export class KbqLegend {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqLegend, "[kbqLegend]", never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqLegend, never>;
 }
 
 // @public (undocumented)

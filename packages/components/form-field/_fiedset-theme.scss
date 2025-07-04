@@ -1,0 +1,13 @@
+@use './form-field-theme';
+@use './form-field';
+
+@mixin kbq-fieldset-theme {
+    .kbq-form-field__hint {
+        @include form-field-theme.kbq-form-field-hint-theme();
+        @include form-field-theme.kbq-form-field-hint-typography();
+
+        &:empty {
+            margin-top: 0;
+        }
+    }
+}

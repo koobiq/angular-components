@@ -1,5 +1,6 @@
 export * from './cleaner';
 export * from './error';
+export * from './fieldset';
 export * from './form-field';
 export * from './form-field-control';
 export * from './form-field.module';

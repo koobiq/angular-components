@@ -1,0 +1,93 @@
+@use './form-field-theme';
+@use './form-field';
+@use './fiedset-theme';
+
+.kbq-fieldset {
+    display: flex;
+    flex-direction: column;
+
+    .kbq-legend {
+        margin-bottom: var(--kbq-fieldset-legend-margin);
+    }
+
+    .kbq-form-field__hint {
+        @include form-field.kbq-form-field-hint-geometry();
+
+        &:empty {
+            margin-top: 0;
+        }
+    }
+
+    .kbq-form-field {
+        // set selector specifity to 0 , so focused state will override z-index
+        :where(&.kbq-form-field_invalid, &.kbq-form-field_has-validate-directive.ng-invalid) {
+            z-index: 2;
+        }
+
+        // Keep form-field__container and parent heights in sync (zoom-safe)
+        .kbq-form-field__container {
+            height: 100%;
+        }
+
+        &:first-child:not(:last-child) {
+            .kbq-form-field__container,
+            .kbq-form-field__container .kbq-input {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+        }
+
+        &:not(:first-child):not(:last-child) {
+            --kbq-form-field-size-border-radius: 0;
+
+            .kbq-form-field__container {
+                border-radius: 0;
+            }
+        }
+
+        &:last-child:not(:first-child) {
+            .kbq-form-field__container,
+            .kbq-form-field__container .kbq-input {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+        }
+
+        &:not(:first-child) {
+            margin-left: calc(var(--kbq-size-border-width) * -1);
+        }
+    }
+
+    @include fiedset-theme.kbq-fieldset-theme();
+}
+
+.kbq-fieldset__container {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+
+    > .kbq-fieldset-item {
+        &.cdk-focused,
+        &.kbq-focused {
+            z-index: 3;
+        }
+
+        &:first-child:not(:last-child) {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        &:not(:first-child):not(:last-child) {
+            border-radius: 0;
+        }
+
+        &:last-child:not(:first-child) {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        &:not(:first-child) {
+            margin-left: calc(var(--kbq-size-border-width) * -1);
+        }
+    }
+}

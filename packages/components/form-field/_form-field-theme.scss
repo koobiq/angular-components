@@ -1,5 +1,17 @@
 @use '../core/styles/common/tokens';
 
+@mixin kbq-form-field-hint-theme {
+    > .kbq-hint:not(.kbq-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning, .kbq-error) {
+        color: var(--kbq-form-field-hint-text);
+    }
+}
+
+@mixin kbq-form-field-hint-typography {
+    > .kbq-hint:not(.kbq-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning) .kbq-hint__text {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+    }
+}
+
 @mixin _kbq-form-field-state($state-name) {
     .kbq-form-field__container {
         border-color: var(--kbq-form-field-#{$state-name}-border-color);
@@ -91,9 +103,7 @@
         }
 
         .kbq-form-field__hint {
-            & > .kbq-hint:not(.kbq-password-hint, .kbq-contrast-fade, .kbq-success, .kbq-warning, .kbq-error) {
-                color: var(--kbq-form-field-hint-text);
-            }
+            @include kbq-form-field-hint-theme();
         }
     }
 }
@@ -102,8 +112,8 @@
     .kbq-form-field {
         @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
 
-        .kbq-form-field__hint > .kbq-hint:not(.kbq-password-hint, .kbq-reactive-password-hint) .kbq-hint__text {
-            @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-compact);
+        .kbq-form-field__hint {
+            @include kbq-form-field-hint-typography();
         }
     }
 }
