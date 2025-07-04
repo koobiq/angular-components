@@ -38,9 +38,11 @@ const DATA_OBJECT = {
     ],
     template: `
         <kbq-filter-bar
-            [(filter)]="activeFilter"
+            [filter]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             [selectedAllEqualsSelectedNothing]="false"
+            (filterChange)="onFilterChange($event)"
+            (onChangePipe)="onChangePipe($event)"
         >
             @for (pipe of activeFilter.pipes; track pipe) {
                 <ng-container *kbqPipe="pipe" />
@@ -161,5 +163,13 @@ export class FilterBarSearchInPipesExample {
                 }
             ]
         };
+    }
+
+    onFilterChange($event) {
+        console.log('onFilterChange: ', $event);
+    }
+
+    onChangePipe($event) {
+        console.log('onChangePipe: ', $event);
     }
 }

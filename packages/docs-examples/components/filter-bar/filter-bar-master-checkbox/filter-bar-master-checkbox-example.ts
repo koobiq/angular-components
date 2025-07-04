@@ -37,7 +37,7 @@ const DATA_OBJECT = {
     ],
     template: `
         <kbq-filter-bar
-            [(filter)]="activeFilter"
+            [filter]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             (filterChange)="onFilterChange($event)"
             (onChangePipe)="onChangePipe($event)"
