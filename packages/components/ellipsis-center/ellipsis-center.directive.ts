@@ -44,6 +44,7 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
      */
     @Input({ transform: numberAttribute }) debounceInterval: number = 50;
 
+    /** @docs-private */
     readonly resizeStream = new Subject<Event>();
 
     private _kbqEllipsisCenter: string;
@@ -67,7 +68,11 @@ export class KbqEllipsisCenterDirective extends KbqTooltipTrigger implements OnI
         this.resizeSubscription.unsubscribe();
     }
 
-    private refresh() {
+    /**
+     * Updates the displayed text with center ellipsis truncation based on container width.
+     * Recreates start/end span elements, measures available space, and adjusts text accordingly.
+     */
+    refresh(): void {
         let start = '';
         let end = '';
 

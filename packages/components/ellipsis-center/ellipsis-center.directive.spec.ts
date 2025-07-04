@@ -28,7 +28,7 @@ const getEllipsisDirectiveDebugElement = (debugElement: DebugElement): DebugElem
     ]
 })
 class SimpleTestComponent {
-    @ViewChild(KbqEllipsisCenterDirective) dir: KbqEllipsisCenterDirective;
+    @ViewChild(KbqEllipsisCenterDirective) ellipsisCenterDirective: KbqEllipsisCenterDirective;
 
     text = 'This is a long sample string used to test ellipsis center logic.';
     charWidth = 7;
@@ -53,7 +53,7 @@ describe(KbqEllipsisCenterDirective.name, () => {
         componentInstance.text = 'Updated string for testing.';
         fixture.detectChanges();
 
-        expect(componentInstance.dir['content']).toBe('Updated string for testing.');
+        expect(componentInstance.ellipsisCenterDirective['content']).toBe('Updated string for testing.');
     });
 
     it('should properly split content on refresh', fakeAsync(() => {
@@ -67,7 +67,7 @@ describe(KbqEllipsisCenterDirective.name, () => {
         const nativeElement: HTMLElement = directiveDebugElement.nativeElement;
 
         jest.spyOn(nativeElement, 'clientWidth', 'get').mockImplementation(() => 150);
-        componentInstance.dir['refresh']();
+        componentInstance.ellipsisCenterDirective.refresh();
         tick(); // wait for setTimeout
 
         const startEl: HTMLElement = nativeElement.querySelector('.data-text-start')!;
