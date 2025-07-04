@@ -5,9 +5,11 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChildren,
+    DestroyRef,
     ElementRef,
     EventEmitter,
     Host,
+    inject,
     Inject,
     InjectionToken,
     Input,
@@ -18,9 +20,11 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActiveDescendantKeyManager } from '@koobiq/cdk/a11y';
 import { KBQ_OPTION_PARENT_COMPONENT, KbqOptgroup, KbqOption } from '@koobiq/components/core';
 import { KbqFormField } from '@koobiq/components/form-field';
+import { delay, filter } from 'rxjs/operators';
 
 /**
  * Autocomplete IDs need to be unique across components, so this counter exists outside of
@@ -72,6 +76,7 @@ export function KBQ_AUTOCOMPLETE_DEFAULT_OPTIONS_FACTORY(): KbqAutocompleteDefau
     ]
 })
 export class KbqAutocomplete implements AfterContentInit {
+    private readonly destroyRef = inject(DestroyRef);
     /** Unique ID to be used by autocomplete trigger's "aria-owns" property. */
     id: string = `kbq-autocomplete-${uniqueAutocompleteIdCounter++}`;
 
@@ -175,6 +180,16 @@ export class KbqAutocomplete implements AfterContentInit {
     ngAfterContentInit() {
         this.keyManager = new ActiveDescendantKeyManager<KbqOption>(this.options);
         this.setVisibility();
+
+        this.parentFormField?.control.ngControl?.valueChanges
+            ?.pipe(
+                delay(0),
+                filter((value) => value === null || value === undefined || value === ''),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => {
+                this.options.filter(({ selected }) => selected).forEach((option) => option.deselect(false));
+            });
     }
 
     setScrollTop(scrollTop: number): void {

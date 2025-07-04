@@ -264,21 +264,21 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
         return DOMRect ? DOMRect.height : 0;
     }
 
-    select(): void {
+    select(emitEvent: boolean = true): void {
         if (!this._selected) {
             this._selected = true;
 
             this.changeDetectorRef.markForCheck();
-            this.emitSelectionChangeEvent();
+            if (emitEvent) this.emitSelectionChangeEvent();
         }
     }
 
-    deselect(): void {
+    deselect(emitEvent: boolean = true): void {
         if (this._selected) {
             this._selected = false;
 
             this.changeDetectorRef.markForCheck();
-            this.emitSelectionChangeEvent();
+            if (emitEvent) this.emitSelectionChangeEvent();
         }
     }
 

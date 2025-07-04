@@ -36,7 +36,7 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
                     placeholder="New tag..."
                 />
 
-                <kbq-cleaner (click)="onClear()" />
+                <kbq-cleaner #kbqTagListCleaner (click)="onClear()" />
             </kbq-tag-list>
         </kbq-form-field>
     `

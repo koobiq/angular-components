@@ -131,7 +131,7 @@ export class TagsAutocompleteOnpasteOffExample implements AfterViewInit {
 
     private filter(value: string): string[] {
         // Convert the input value to lowercase for case-insensitive comparison
-        const filterValue = value.toLowerCase();
+        const filterValue = value ? value.toLowerCase() : '';
 
         // Combine all tags and selected tags into a single array, removing duplicates
         const uniqueTags = [...new Set(this.suggestions.concat(this.selectedTags))];

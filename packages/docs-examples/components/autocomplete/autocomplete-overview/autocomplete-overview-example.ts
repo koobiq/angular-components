@@ -37,6 +37,8 @@ import { map, startWith } from 'rxjs/operators';
                             </kbq-option>
                         }
                     </kbq-autocomplete>
+
+                    <kbq-cleaner />
                 </kbq-form-field>
             </div>
         </div>
@@ -229,7 +231,7 @@ export class AutocompleteOverviewExample implements OnInit {
     }
 
     private filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
+        const filterValue = value ? value.toLowerCase() : '';
 
         return this.options.filter((option) => option.toLowerCase().includes(filterValue));
     }

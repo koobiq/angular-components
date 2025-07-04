@@ -2094,7 +2094,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     constructor(element: ElementRef, changeDetectorRef: ChangeDetectorRef, parent: KbqOptionParentComponent, group: KbqOptgroup);
     get active(): boolean;
     // (undocumented)
-    deselect(): void;
+    deselect(emitEvent?: boolean): void;
     // (undocumented)
     get disabled(): any;
     set disabled(value: any);
@@ -2123,7 +2123,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     ngOnDestroy(): void;
     readonly onSelectionChange: EventEmitter<KbqOptionSelectionChange<KbqOption>>;
     // (undocumented)
-    select(): void;
+    select(emitEvent?: boolean): void;
     // (undocumented)
     selectable: boolean;
     // (undocumented)

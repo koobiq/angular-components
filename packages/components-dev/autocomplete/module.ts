@@ -78,7 +78,7 @@ export class DevApp implements OnInit {
     }
 
     private filter(value: string): string[] {
-        const filterValue = value.toLowerCase();
+        const filterValue = value ? value.toLowerCase() : '';
 
         return this.options.filter((option) => option.toLowerCase().includes(filterValue));
     }

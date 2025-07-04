@@ -1,4 +1,5 @@
 <dev-examples />
+
 <h4 class="kbq-title">Tag list</h4>
 <kbq-tag-list>
     <kbq-tag value="Test" [selectable]="false" (removed)="onRemoveTag('Test')">Test</kbq-tag>
@@ -73,7 +74,7 @@
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
             (kbqTagInputTokenEnd)="inputOnCreate($event)"
         />
-        <kbq-cleaner #kbqTagListCleaner (click)="onClear()" />
+        <kbq-cleaner #kbqTagListCleaner (click)="inputTags.length = 0" />
     </kbq-tag-list>
 </kbq-form-field>
 
@@ -99,6 +100,8 @@
             (blur)="addOnBlurFunc($event)"
             (kbqTagInputTokenEnd)="autocompleteOnCreate($event)"
         />
+
+        <kbq-cleaner #kbqTagListCleaner (click)="autocompleteSelectedTags.length = 0" />
     </kbq-tag-list>
     <kbq-autocomplete #autocomplete (optionSelected)="autocompleteOnSelect($event)">
         @if (canCreate) {
@@ -137,6 +140,8 @@
             [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
             (kbqTagInputTokenEnd)="enterOnCreate($event)"
         />
+
+        <kbq-cleaner #kbqTagListCleaner (click)="enterTags.length = 0" />
     </kbq-tag-list>
 </kbq-form-field>
 
@@ -209,6 +214,6 @@
 
 <hr />
 
-<dev-tag-input-validation />
+<!--<dev-tag-input-validation />-->
 
 <hr />
