@@ -16,7 +16,7 @@
                 [style.paddingBottom]="cellPadding"
                 [style.paddingTop]="cellPadding"
                 [style.width]="cellWidth"
-                [tabindex]="isActiveCell(rowIndex, colIndex) ? 0 : -1"
+                [tabindex]="-1"
                 (click)="cellClicked(item)"
             >
                 <div

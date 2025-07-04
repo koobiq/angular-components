@@ -3,6 +3,7 @@
         #monthSelect="kbqSelect"
         class="kbq-calendar-header__select"
         [panelClass]="'kbq-calendar-select-panel'"
+        [tabIndex]="-1"
         [value]="selectedMonth"
         (selectionChange)="onMonthSelected($event.value)"
     >
@@ -13,7 +14,6 @@
             [class.kbq-active]="monthSelect.panelOpen"
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
-            [tabindex]="-1"
         >
             {{ monthNames[selectedMonth].nameShort | titlecase }}
 
@@ -30,6 +30,7 @@
     <kbq-select
         #yearSelect="kbqSelect"
         [panelClass]="'kbq-calendar-select-panel'"
+        [tabIndex]="-1"
         [value]="selectedYear"
         (selectionChange)="onYearSelected($event.value)"
     >
@@ -40,7 +41,6 @@
             [class.kbq-active]="yearSelect.panelOpen"
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
-            [tabindex]="-1"
         >
             {{ selectedYear }}
 
