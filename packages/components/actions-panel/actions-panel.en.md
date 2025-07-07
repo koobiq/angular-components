@@ -31,12 +31,18 @@ By default, the `ESCAPE` key closes `KbqActionsPanel`. While you can disable thi
 You can use the `data` option to pass information to the component:
 
 ```ts
+import { inject } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
 
-const actionsPanel = inject(KbqActionsPanel);
-const actionsPanelRef = actionsPanel.open(YourActionsPanelComponent, {
-    data: { name: 'koobiq' }
-});
+export class YourComponent {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
+    openActionsPanel() {
+        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+            data: { name: 'koobiq' }
+        });
+    }
+}
 ```
 
 Access to data in the component is performed using `KBQ_ACTIONS_PANEL_DATA` injection token:
@@ -65,4 +71,42 @@ If you are using a `TemplateRef` for your actions panel content, the `data` and 
     <div>{{ data.name }}</div>
     <button (click)="actionsPanelRef.close()">close</button>
 </ng-template>
+```
+
+### Managing OverlayContainer
+
+`OverlayContainer` determines where in the DOM tree the actions panel will be displayed. By default - in the document body (`document.body`).
+
+#### Configuring container for a specific panel
+
+If you need to display the actions panel in a specific element (for example, inside a [Sidebar](/en/components/sidebar)), use the `overlayContainer` option:
+
+```ts
+import { ElementRef, inject } from '@angular/core';
+import { KbqActionsPanel } from '@koobiq/components/actions-panel';
+
+export class YourComponent {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly customContainer = inject(ElementRef);
+
+    openActionsPanel() {
+        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+            overlayContainer: this.customContainer
+        });
+    }
+}
+```
+
+#### Global container configuration
+
+```ts
+import { Injectable } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+
+@Injectable()
+export class CustomOverlayContainer extends OverlayContainer {}
+
+@NgModule({
+    providers: [{ provide: OverlayContainer, useClass: CustomOverlayContainer }]
+})
 ```

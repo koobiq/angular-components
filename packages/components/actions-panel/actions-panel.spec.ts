@@ -1,4 +1,4 @@
-import { ScrollStrategy } from '@angular/cdk/overlay';
+import { OverlayContainer, ScrollStrategy } from '@angular/cdk/overlay';
 import { Location } from '@angular/common';
 import { SpyLocation } from '@angular/common/testing';
 import {
@@ -18,8 +18,7 @@ import {
     KBQ_ACTIONS_PANEL_DATA,
     KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR,
     KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR,
-    KbqActionsPanel,
-    KbqActionsPanelOverlayContainer
+    KbqActionsPanel
 } from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
@@ -38,7 +37,7 @@ const createComponent = <T>(component: Type<T>, providers: Provider[] = []): Com
 };
 
 const getOverlayContainerElement = (): HTMLElement => {
-    return TestBed.inject(KbqActionsPanelOverlayContainer).getContainerElement();
+    return TestBed.inject(OverlayContainer).getContainerElement();
 };
 
 const getOverlayPaneElement = (): HTMLElement => {
@@ -385,15 +384,33 @@ describe(KbqActionsPanelModule.name, () => {
         expect(scrollStrategy.enable).toHaveBeenCalledTimes(1);
     });
 
-    it('should apply custom overlay container', () => {
+    it('should apply custom OverlayContainer element by KbqActionsPanelConfig', () => {
         const { componentInstance } = createComponent(ActionsPanelController);
+        const element = componentInstance.elementRef.nativeElement;
 
-        expect(
-            componentInstance.elementRef.nativeElement.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)
-        ).toBeFalsy();
+        expect(element.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)).toBeFalsy();
         componentInstance.openFromTemplate({ overlayContainer: componentInstance.elementRef });
-        expect(
-            componentInstance.elementRef.nativeElement.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)
-        ).toBeTruthy();
+        expect(element.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)).toBeTruthy();
+    });
+
+    it('should apply global custom OverlayContainer by providers', () => {
+        const selector = 'TEST_CUSTOM_OVERLAY_CONTAINER';
+        const testOverlayContainer = class extends OverlayContainer {
+            getContainerElement(): HTMLElement {
+                if (!this._containerElement) {
+                    this._createContainer();
+                }
+
+                this._containerElement.classList.add(selector);
+
+                return this._containerElement;
+            }
+        };
+        const { componentInstance } = createComponent(ActionsPanelController, [
+            { provide: OverlayContainer, useClass: testOverlayContainer }]);
+
+        componentInstance.openFromTemplate();
+
+        expect(getOverlayContainerElement().classList.contains(selector)).toBeTruthy();
     });
 });

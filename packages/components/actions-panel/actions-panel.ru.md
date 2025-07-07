@@ -31,12 +31,18 @@
 Вы можете использовать опцию `data` для передачи информации компоненту:
 
 ```ts
+import { inject } from '@angular/core';
 import { KbqActionsPanel } from '@koobiq/components/actions-panel';
 
-const actionsPanel = inject(KbqActionsPanel);
-const actionsPanelRef = actionsPanel.open(YourActionsPanelComponent, {
-    data: { name: 'koobiq' }
-});
+export class YourComponent {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+
+    openActionsPanel() {
+        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+            data: { name: 'koobiq' }
+        });
+    }
+}
 ```
 
 Доступ к данным в компоненте осуществляется при помощи `KBQ_ACTIONS_PANEL_DATA` токена:
@@ -65,4 +71,42 @@ export class YourActionsPanelComponent {
     <div>{{ data.name }}</div>
     <button (click)="actionsPanelRef.close()">close</button>
 </ng-template>
+```
+
+### Управление OverlayContainer
+
+`OverlayContainer` определяет, где в DOM-дереве будет отображаться панель действий. По умолчанию - в теле документа (`document.body`).
+
+#### Настройка контейнера для конкретной панели
+
+Если вам необходимо отобразить панель действий в определенном элементе (например, внутри [Sidebar](/ru/components/sidebar)), используйте опцию `overlayContainer`:
+
+```ts
+import { ElementRef, inject } from '@angular/core';
+import { KbqActionsPanel } from '@koobiq/components/actions-panel';
+
+export class YourComponent {
+    private readonly actionsPanel = inject(KbqActionsPanel, { self: true });
+    private readonly customContainer = inject(ElementRef);
+
+    openActionsPanel() {
+        const actionsPanelRef = this.actionsPanel.open(YourActionsPanelComponent, {
+            overlayContainer: this.customContainer
+        });
+    }
+}
+```
+
+#### Глобальная настройка контейнера
+
+```ts
+import { Injectable } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+
+@Injectable()
+export class CustomOverlayContainer extends OverlayContainer {}
+
+@NgModule({
+    providers: [{ provide: OverlayContainer, useClass: CustomOverlayContainer }]
+})
 ```
