@@ -109,6 +109,9 @@ export const DEV_DATA_OBJECT = {
     imports: [TreeExamplesModule],
     selector: 'dev-examples',
     template: `
+        <tree-toggle-on-click-example />
+        <br />
+        <br />
         <tree-select-and-mark-example />
         <br />
         <br />

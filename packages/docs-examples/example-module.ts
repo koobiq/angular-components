@@ -4459,6 +4459,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-selection-separate-from-focus-example.ts",
     "importPath": "components/tree"
   },
+  "tree-toggle-on-click": {
+    "packagePath": "components/tree/tree-toggle-on-click",
+    "title": "tree-select-and-mark",
+    "componentName": "TreeToggleOnClickExample",
+    "files": [
+      "tree-toggle-on-click-example.ts"
+    ],
+    "selector": "tree-toggle-on-click-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-toggle-on-click-example.ts",
+    "importPath": "components/tree"
+  },
   "validation-composite": {
     "packagePath": "components/validation/validation-composite",
     "title": "Validation composite",
@@ -5268,6 +5280,8 @@ return import('@koobiq/docs-examples/components/tree');
   case 'tree-select-and-mark':
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-selection-separate-from-focus':
+return import('@koobiq/docs-examples/components/tree');
+  case 'tree-toggle-on-click':
 return import('@koobiq/docs-examples/components/tree');
   case 'validation-composite':
 return import('@koobiq/docs-examples/components/validation');
