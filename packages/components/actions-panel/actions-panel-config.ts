@@ -51,6 +51,8 @@ export class KbqActionsPanelConfig<D = unknown> {
 
     /**
      * Overlay container element in which the actions panel are rendered.
+     *
+     * @default `document.body`
      */
     overlayContainer?: ElementRef<HTMLElement>;
 
