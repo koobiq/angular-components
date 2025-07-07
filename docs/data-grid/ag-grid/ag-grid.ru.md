@@ -45,6 +45,18 @@ import { AgGridModule } from 'ag-grid-angular';
 
 Полная документация по использованию темы хранится [в репозитории на GitHub](https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md).
 
+### Отключение стилей фокуса ячеек
+
+Для этого добавьте атрибут `disableCellFocusStyles` к `<ag-grid-angular>`:
+
+```html
+<ag-grid-angular kbqAgGridTheme disableCellFocusStyles />
+```
+
+### Перетаскивание строк
+
+<!-- example(ag-grid-row-dragging) -->
+
 ### Рекомендации
 
 - Используйте компонент [Table](/ru/components/table) для простых таблиц с малым объемом данных, не требующих изменения ширины и порядка колонок.

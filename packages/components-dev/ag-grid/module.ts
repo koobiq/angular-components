@@ -8,6 +8,9 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     template: `
         <ag-grid-overview-example />
+        <hr />
+        <ag-grid-row-dragging-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
