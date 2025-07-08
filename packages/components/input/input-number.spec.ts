@@ -762,6 +762,16 @@ describe('KbqNumberInput', () => {
             fixture.detectChanges();
             flush();
             expect(fixture.componentInstance.value).toBeNull();
+        }));
+
+        it('should allow entering minus', fakeAsync(() => {
+            const fixture = createComponent(KbqNumberInputMaxMinStep);
+
+            fixture.detectChanges();
+            flush();
+
+            const inputElementDebug = fixture.debugElement.query(By.directive(KbqInput));
+            const inputElement = inputElementDebug.nativeElement;
 
             inputElement.value = '-';
             dispatchFakeEvent(inputElement, 'input');

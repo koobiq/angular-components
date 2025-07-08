@@ -373,7 +373,10 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
             }
 
             this.setViewValue(formattedValue, !fromPaste);
-            this.viewToModelUpdate(formattedValue);
+
+            if (this.viewValue !== '-') {
+                this.viewToModelUpdate(formattedValue);
+            }
         });
     }
 
@@ -465,6 +468,9 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
     }
 
     private formatViewValue(): string | null {
+        // we just need to skip the minus sign and not do any formatting
+        if (this.viewValue === '-') return this.viewValue;
+
         if (
             this.viewValue === null ||
             this.viewValue === '' ||
