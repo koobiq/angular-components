@@ -74,7 +74,6 @@ ng g @koobiq/angular-components:css-selectors --fix=false --project <your projec
 ### 3. Attribute update (18.22.0)
 
 - Component attribute names have changed:
-
     - `KbqLoaderOverlay`: `compact` → `size`
     - `KbqEmptyState`: `big` → `size`
 
