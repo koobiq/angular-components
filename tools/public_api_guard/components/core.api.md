@@ -1687,6 +1687,9 @@ export const KBQ_TITLE_TEXT_REF: InjectionToken<KbqTitleTextRef>;
 export const KBQ_VALIDATION: InjectionToken<KbqValidationOptions>;
 
 // @public
+export const KBQ_WINDOW: InjectionToken<Window>;
+
+// @public
 export abstract class KbqAbstractSelect {
     // (undocumented)
     protected calculateOverlayOffsetX(baseOffsetX: number): number[];

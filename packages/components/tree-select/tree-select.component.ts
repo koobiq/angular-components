@@ -59,6 +59,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqLocaleService,
@@ -535,6 +536,7 @@ export class KbqTreeSelect
     private tempValues: string | string[] | null;
 
     private readonly destroyRef = inject(DestroyRef);
+    private readonly window = inject(KBQ_WINDOW);
 
     constructor(
         public elementRef: ElementRef,
@@ -739,7 +741,7 @@ export class KbqTreeSelect
         this.triggerRect = this.trigger.nativeElement.getBoundingClientRect();
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
-        this.triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement)['font-size']);
+        this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger.nativeElement)['font-size']);
 
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may
@@ -1063,7 +1065,7 @@ export class KbqTreeSelect
     }
 
     private getItemWidth(element: HTMLElement): number {
-        const computedStyle = getComputedStyle(element);
+        const computedStyle = this.window.getComputedStyle(element);
 
         const width: number = parseInt(computedStyle.width as string);
         const marginLeft: number = parseInt(computedStyle.marginLeft as string);

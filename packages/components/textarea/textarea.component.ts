@@ -21,7 +21,12 @@ import {
     Self
 } from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
-import { CanUpdateErrorState, ErrorStateMatcher, KBQ_PARENT_ANIMATION_COMPONENT } from '@koobiq/components/core';
+import {
+    CanUpdateErrorState,
+    ErrorStateMatcher,
+    KBQ_PARENT_ANIMATION_COMPONENT,
+    KBQ_WINDOW
+} from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject, Subscription } from 'rxjs';
 
@@ -67,6 +72,7 @@ export class KbqTextarea
 
     protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly renderer = inject(Renderer2);
+    private readonly window = inject(KBQ_WINDOW);
 
     private _canGrow: boolean = true;
 
@@ -215,10 +221,13 @@ export class KbqTextarea
         if (!this.isBrowser) return;
 
         Promise.resolve().then(() => {
-            this.lineHeight = parseInt(getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
+            this.lineHeight = parseInt(this.window.getComputedStyle(this.elementRef.nativeElement).lineHeight!, 10);
 
-            const paddingTop = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
-            const paddingBottom = parseInt(getComputedStyle(this.elementRef.nativeElement).paddingBottom!, 10);
+            const paddingTop = parseInt(this.window.getComputedStyle(this.elementRef.nativeElement).paddingTop!, 10);
+            const paddingBottom = parseInt(
+                this.window.getComputedStyle(this.elementRef.nativeElement).paddingBottom!,
+                10
+            );
 
             this.minHeight = this.lineHeight + paddingTop + paddingBottom;
             this.freeRowsHeight = this.freeRowsHeight ?? this.lineHeight;
@@ -285,7 +294,7 @@ export class KbqTextarea
 
             this.renderer.appendChild(this.renderer.parentNode(textarea), clone);
 
-            const outerHeight = parseInt(getComputedStyle(textarea).height!, 10);
+            const outerHeight = parseInt(this.window.getComputedStyle(textarea).height!, 10);
             const diff = outerHeight - +textarea.clientHeight;
 
             clone.style.minHeight = 0; // this line is important to height recalculation

@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 // organize-imports-ignore
 import 'zone.js';
 import 'zone.js/testing';

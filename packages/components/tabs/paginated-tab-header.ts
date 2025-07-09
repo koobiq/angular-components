@@ -23,6 +23,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DOWN_ARROW, END, HOME, LEFT_ARROW, RIGHT_ARROW, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { fromEvent, merge, of as observableOf, Subject, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -185,6 +186,7 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
     private readonly ngZone = inject(NgZone);
     private readonly platform = inject(Platform);
     private readonly dir = inject(Directionality, { optional: true });
+    private readonly window = inject(KBQ_WINDOW);
 
     constructor() {
         // Bind the `mouseleave` event on the outside since it doesn't change anything in the view.
@@ -223,7 +225,9 @@ export abstract class KbqPaginatedTabHeader implements AfterContentChecked, Afte
 
         // Defer the first call in order to allow for slower browsers to lay out the elements.
         // This helps in cases where the user lands directly on a page with paginated tabs.
-        typeof requestAnimationFrame !== 'undefined' ? requestAnimationFrame(realign) : realign();
+        typeof this.window.requestAnimationFrame !== 'undefined'
+            ? this.window.requestAnimationFrame(realign)
+            : realign();
 
         // On dir change or window resize, realign the ink bar and update the orientation of
         // the key manager if the direction has changed.

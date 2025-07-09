@@ -6,6 +6,7 @@ import {
     ComponentFactoryResolver,
     ElementRef,
     EventEmitter,
+    inject,
     Injectable,
     Injector,
     Input,
@@ -16,6 +17,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Observable, Subscription } from 'rxjs';
 import { shareReplay, take, tap } from 'rxjs/operators';
 import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live-example-viewer';
@@ -51,6 +53,7 @@ export class DocsDocFetcher {
 export class DocsExampleViewerComponent implements OnDestroy {
     private portalHosts: DomPortalOutlet[] = [];
     private documentFetchSubscription: Subscription | undefined;
+    private readonly window = inject(KBQ_WINDOW);
 
     /** The URL of the document to display. */
     @Input()
@@ -107,7 +110,7 @@ export class DocsExampleViewerComponent implements OnDestroy {
         // "/components/button/api#my-section". This is necessary because otherwise these fragment
         // links would redirect to "/#my-section".
         rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
-            const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
+            const absoluteUrl = `${this.window.location.pathname}#${fragmentUrl}`;
 
             return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
         });

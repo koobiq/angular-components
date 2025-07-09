@@ -18,6 +18,7 @@ import {
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -92,6 +93,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
     private readonly ngZone = inject(NgZone);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly httpClient = inject(HttpClient);
+    private readonly window = inject(KBQ_WINDOW);
 
     ngOnDestroy() {
         this.clearLiveExamples();
@@ -127,7 +129,7 @@ export class DocsLiveExampleComponent extends DocsLocaleState implements OnDestr
         // "/components/button/api#my-section". This is necessary because otherwise these fragment
         // links would redirect to "/#my-section".
         rawDocument = rawDocument.replace(/href="#([^"]*)"/g, (_m: string, fragmentUrl: string) => {
-            const absoluteUrl = `${location.pathname}#${fragmentUrl}`;
+            const absoluteUrl = `${this.window.location.pathname}#${fragmentUrl}`;
 
             return `href="${this.domSanitizer.sanitize(SecurityContext.URL, absoluteUrl)}"`;
         });

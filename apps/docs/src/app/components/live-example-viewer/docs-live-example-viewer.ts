@@ -2,6 +2,7 @@ import { NgComponentOutlet } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, ElementRef, inject, Input, Type, ViewEncapsulation } from '@angular/core';
 import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-block';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { EXAMPLE_COMPONENTS, LiveExample, loadExample } from '@koobiq/docs-examples';
 import { forkJoin, Observable } from 'rxjs';
@@ -75,6 +76,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
     private readonly elementRef = inject(ElementRef);
     private readonly httpClient = inject(HttpClient);
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly window = inject(KBQ_WINDOW);
 
     toggleSourceView() {
         this.isSourceShown = !this.isSourceShown;
@@ -160,7 +162,7 @@ export class DocsLiveExampleViewerComponent extends DocsLocaleState {
             // Since the data is loaded asynchronously, we can't count on the native behavior
             // that scrolls the element into view automatically. We do it ourselves while giving
             // the page some time to render.
-            if (typeof location !== 'undefined' && location.hash.slice(1) === this._example) {
+            if (typeof this.window.location !== 'undefined' && this.window.location.hash.slice(1) === this._example) {
                 setTimeout(() => this.elementRef.nativeElement.scrollIntoView(), 300);
             }
 

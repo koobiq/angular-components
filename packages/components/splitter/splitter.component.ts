@@ -20,8 +20,10 @@ import {
     ViewChild,
     ViewChildren,
     ViewEncapsulation,
-    forwardRef
+    forwardRef,
+    inject
 } from '@angular/core';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import { Subscription } from 'rxjs';
 
 interface IArea {
@@ -554,6 +556,8 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     @Output() sizeChange: EventEmitter<number> = new EventEmitter<number>();
 
+    private readonly window = inject(KBQ_WINDOW);
+
     constructor(
         private elementRef: ElementRef,
         private renderer: Renderer2,
@@ -612,7 +616,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     }
 
     getMinSize(): number {
-        const styles = getComputedStyle(this.elementRef.nativeElement);
+        const styles = this.window.getComputedStyle(this.elementRef.nativeElement);
 
         return parseFloat(styles[this.getMinSizeProperty()]);
     }

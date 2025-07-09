@@ -54,6 +54,49 @@ const makeNamingConventionOptions = (prefix) => {
 };
 
 /**
+ * @see https://eslint.org/docs/latest/rules/no-restricted-globals
+ */
+const noRestrictedGlobalsOptionsForSSR = (() => {
+    /** @type {Array<keyof Window>} */
+    const restrictedWindowGlobals = [
+        'window',
+        'open',
+        'close',
+        'scroll',
+        'scrollTo',
+        'scrollBy',
+        'requestAnimationFrame',
+        'cancelAnimationFrame',
+        'requestIdleCallback',
+        'cancelIdleCallback',
+        'getComputedStyle',
+        'matchMedia',
+        'navigator',
+        'location',
+        'history',
+        'screen',
+        'localStorage',
+        'sessionStorage',
+        'crypto',
+        'caches',
+        'performance',
+        'speechSynthesis'
+    ];
+
+    const restrictedOptions = restrictedWindowGlobals.map((name) => ({
+        name,
+        message: `Global property '${name}' is not available is SSR. Use 'KBQ_WINDOW' injection token from '@koobiq/components/core' instead.`
+    }));
+
+    restrictedOptions.push({
+        name: 'document',
+        message: `Global property 'document' is not available is SSR. Use 'DOCUMENT' injection token from '@angular/common' instead.`
+    });
+
+    return restrictedOptions;
+})();
+
+/**
  * Rules for JavaScript and TypeScript files
  *
  * @type {import('eslint').Linter.ConfigOverride}
@@ -201,13 +244,19 @@ const templateRules = {
 };
 
 /**
- * Override rules for dev components
+ * Override rules for packages/components-dev
  *
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const componentsDevRules = {
     files: ['packages/components-dev/**/*.ts'],
     rules: {
+        // plugin:eslint
+        'no-restricted-globals': [
+            1,
+            ...noRestrictedGlobalsOptionsForSSR
+        ],
+
         // plugin:@angular-eslint
         '@angular-eslint/directive-selector': [
             1,
@@ -237,13 +286,20 @@ const componentsDevRules = {
 };
 
 /**
- * Override rules for components examples
+ * Override rules for packages/docs-examples
  *
  * @type {import('eslint').Linter.ConfigOverride}
  */
 const componentsExamplesRules = {
     files: ['packages/docs-examples/**/*.ts'],
     rules: {
+        // plugin:eslint
+        'no-restricted-globals': [
+            1,
+            ...noRestrictedGlobalsOptionsForSSR
+        ],
+
+        // plugin:@angular-eslint
         '@angular-eslint/prefer-standalone': 1,
         '@angular-eslint/use-component-selector': 1,
         '@angular-eslint/prefer-on-push-component-change-detection': 1
@@ -251,7 +307,23 @@ const componentsExamplesRules = {
 };
 
 /**
- * Override rules for docs
+ * Override rules for packages/components
+ *
+ * @type {import('eslint').Linter.ConfigOverride}
+ */
+const componentsRules = {
+    files: ['packages/components/**/*.ts'],
+    rules: {
+        // plugin:eslint
+        'no-restricted-globals': [
+            1,
+            ...noRestrictedGlobalsOptionsForSSR
+        ]
+    }
+};
+
+/**
+ * Override rules for apps/docs
  *
  * @type {import('eslint').Linter.ConfigOverride}
  */
@@ -260,6 +332,10 @@ const appDocsRules = {
     rules: {
         // plugin:eslint
         'no-console': [1, { allow: ['warn', 'error'] }],
+        'no-restricted-globals': [
+            1,
+            ...noRestrictedGlobalsOptionsForSSR
+        ],
 
         // plugin:@angular-eslint
         '@angular-eslint/directive-selector': [
@@ -296,6 +372,11 @@ const appDocsRules = {
 const specRules = {
     files: ['*.spec.ts', '*.karma-spec.ts'],
     rules: {
+        // plugin:eslint
+        // ignore `noRestrictedGlobalsOptionsForSSR` in specs, because they are not executed in SSR context
+        'no-restricted-globals': 0,
+
+        // plugin:@angular-eslint
         '@angular-eslint/use-component-selector': 0,
         '@angular-eslint/prefer-on-push-component-change-detection': 0
     }
@@ -336,6 +417,7 @@ const config = {
         appDocsRules,
         componentsDevRules,
         componentsExamplesRules,
+        componentsRules,
         specRules,
         // should be last
         prettierRules

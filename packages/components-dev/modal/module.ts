@@ -309,7 +309,7 @@ export class DevApp {
 
         this.modalService.afterAllClose.subscribe(() => console.log('afterAllClose emitted!'));
 
-        window.setTimeout(() => this.modalService.closeAll(), 5000);
+        setTimeout(() => this.modalService.closeAll(), 5000);
     }
 
     destroyTplModal() {

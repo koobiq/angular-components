@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { CdkScrollable } from '@angular/cdk/overlay';
 import { Directive, Inject, Input, NgZone, OnDestroy } from '@angular/core';
 import { OverlayScrollbars } from 'overlayscrollbars';

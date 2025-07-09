@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqComponentColors } from '@koobiq/components/core';
 import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIcon, KbqIconModule } from '@koobiq/components/icon';
@@ -71,6 +71,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
     private readonly toastService = inject(KbqToastService);
     private readonly httpClient = inject(HttpClient);
     readonly modal = inject(KbqModalRef);
+    private readonly window = inject(KBQ_WINDOW);
 
     readonly selectedColorTheme = model<KbqComponentColors | string>(KbqComponentColors.Contrast);
     readonly codeExampleText = computed(() => {
@@ -100,7 +101,7 @@ export class DocsIconPreviewModalComponent extends DocsLocaleState implements Af
             return null;
         }
 
-        const color = window
+        const color = this.window
             .getComputedStyle(this.iconPreview.elementRef.nativeElement, null)
             .getPropertyValue('color');
 

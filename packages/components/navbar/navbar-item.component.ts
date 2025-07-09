@@ -25,7 +25,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, ENTER, NUMPAD_DIVIDE, RIGHT_ARROW, SLASH, SPACE } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
+import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -71,6 +71,7 @@ export class KbqNavbarBento {}
 export class KbqNavbarTitle implements AfterViewInit {
     protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly nativeElement = inject(ElementRef).nativeElement;
+    private readonly window = inject(KBQ_WINDOW);
 
     readonly hovered = new Subject<boolean>();
 
@@ -88,7 +89,7 @@ export class KbqNavbarTitle implements AfterViewInit {
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
-        const { width, marginLeft, marginRight } = getComputedStyle(this.nativeElement);
+        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
 
         return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item) || 0, 0);
     }
@@ -311,6 +312,7 @@ export class KbqNavbarFocusableItem implements AfterContentInit, AfterViewInit, 
 export class KbqNavbarRectangleElement {
     protected readonly isBrowser = inject(Platform).isBrowser;
     protected readonly nativeElement = inject(ElementRef).nativeElement;
+    private readonly window = inject(KBQ_WINDOW);
 
     readonly state = new Subject<void>();
 
@@ -355,7 +357,7 @@ export class KbqNavbarRectangleElement {
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
-        const { width, marginLeft, marginRight } = getComputedStyle(this.nativeElement);
+        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
 
         return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item), 0);
     }
@@ -566,6 +568,7 @@ export class KbqNavbarItem extends KbqTooltipTrigger implements AfterContentInit
 })
 export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
     protected readonly document = inject<Document>(DOCUMENT);
+    private readonly window = inject(KBQ_WINDOW);
 
     @ContentChild(KbqIcon) customIcon: KbqIcon;
 
@@ -594,11 +597,9 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
 
         this.placement = PopUpPlacements.Right;
 
-        const window = this.getWindow();
-
-        if (window) {
+        if (this.window) {
             this.ngZone.runOutsideAngular(() => {
-                window.addEventListener('keydown', this.windowToggleHandler);
+                this.window.addEventListener('keydown', this.windowToggleHandler);
             });
         }
     }
@@ -615,7 +616,7 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.getWindow()?.removeEventListener('keydown', this.windowToggleHandler);
+        this.window.removeEventListener('keydown', this.windowToggleHandler);
     }
 
     toggle = () => {
@@ -625,10 +626,6 @@ export class KbqNavbarToggle extends KbqTooltipTrigger implements OnDestroy {
 
         this.hide();
     };
-
-    private getWindow(): Window | null {
-        return this.document?.defaultView || window;
-    }
 
     private windowToggleHandler = (event: KeyboardEvent) => {
         if (event.ctrlKey && [NUMPAD_DIVIDE, SLASH].includes(event.keyCode)) {

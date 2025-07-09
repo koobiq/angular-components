@@ -28,6 +28,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import {
     KBQ_LOCALE_SERVICE,
+    KBQ_WINDOW,
     KbqCodeBlockLocaleConfiguration,
     KbqComponentColors,
     ruRULocaleData
@@ -237,6 +238,7 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly document = inject<Document>(DOCUMENT);
     protected readonly fallbackFileName = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_NAME);
+    private readonly window = inject(KBQ_WINDOW);
 
     constructor() {
         this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
@@ -420,12 +422,11 @@ export class KbqCodeBlock implements AfterViewInit {
      * Opens the file link in a new window.
      */
     protected openLink(): void {
-        const window = this.getWindow();
         const file = this.files[this.activeFileIndex];
         const safeURL = this.domSanitizer.sanitize(SecurityContext.URL, file.link!);
 
         if (safeURL) {
-            window?.open(safeURL.toString(), '_blank');
+            this.window.open(safeURL.toString(), '_blank');
         }
     }
 
@@ -444,10 +445,5 @@ export class KbqCodeBlock implements AfterViewInit {
         link.setAttribute('href', url);
         link.setAttribute('download', file.filename || this.fallbackFileName);
         link.click();
-    }
-
-    /** Use defaultView of injected document if available or fallback to global window reference */
-    private getWindow(): Window | null {
-        return this.document?.defaultView || window;
     }
 }
