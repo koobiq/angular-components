@@ -33,7 +33,6 @@ import { DateTime } from 'luxon';
                         #tooltip="kbqWarningTooltip"
                         [kbqWarningTooltip]="'Only numbers'"
                         (click)="datepicker.toggle()"
-                        style="width: 136px"
                     >
                         <input
                             [kbqDatepicker]="datepicker"

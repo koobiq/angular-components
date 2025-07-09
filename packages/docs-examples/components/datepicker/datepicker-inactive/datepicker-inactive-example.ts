@@ -26,7 +26,7 @@ import { DateTime } from 'luxon';
         <div class="docs-example__datepicker-inactive kbq-form-vertical">
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Disabled empty field</label>
-                <kbq-form-field style="width: 136px">
+                <kbq-form-field>
                     <input [disabled]="true" [kbqDatepicker]="emptyDatepicker" [placeholder]="''" />
                     <kbq-datepicker-toggle-icon [for]="emptyDatepicker" kbqSuffix />
                     <kbq-datepicker #emptyDatepicker />
@@ -37,7 +37,7 @@ import { DateTime } from 'luxon';
 
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Read-only field with data</label>
-                <kbq-form-field style="width: 136px">
+                <kbq-form-field>
                     <input [disabled]="true" [kbqDatepicker]="datepicker" [ngModel]="selectedDate" />
                     <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                     <kbq-datepicker #datepicker />

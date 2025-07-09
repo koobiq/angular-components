@@ -29,13 +29,18 @@
 
     .kbq-form-field__container {
         box-sizing: border-box;
+
         display: flex;
         justify-content: space-between;
         align-items: center;
+
         border-width: var(--kbq-form-field-size-border-width);
         border-style: solid;
         border-color: transparent;
         border-radius: var(--kbq-form-field-size-border-radius);
+
+        padding-left: var(--kbq-form-field-size-container-left-padding);
+        padding-right: var(--kbq-form-field-size-container-right-padding);
     }
 
     .kbq-form-field:not(.kbq-form-field-type-textarea) {
@@ -44,7 +49,15 @@
 
     .kbq-form-field__infix {
         width: 100%;
+        max-width: calc(100% - var(--kbq-size-xs));
         flex-grow: 1;
+
+        padding-left: var(--kbq-form-field-size-infix-left-padding);
+
+        & .kbq-input,
+        & .kbq-tag-input {
+            padding-right: var(--kbq-form-field-size-infix-right-padding);
+        }
     }
 
     &,
@@ -77,17 +90,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
+        min-width: var(--kbq-form-field-size-addon-width);
     }
 
     .kbq-form-field__prefix {
-        margin-left: var(--kbq-size-s);
-    }
-
-    .kbq-form-field__suffix {
-        margin-right: var(--kbq-size-s);
-
-        &:has(> .kbq-stepper) {
-            margin-right: 0;
+        & + .kbq-form-field__infix {
+            padding-left: 0;
         }
     }
 
