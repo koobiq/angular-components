@@ -65,6 +65,7 @@ import {
     KBQ_OPTION_PARENT_COMPONENT,
     KBQ_PARENT_POPUP,
     KBQ_SELECT_SCROLL_STRATEGY,
+    KBQ_WINDOW,
     KbqAbstractSelect,
     KbqComponentColors,
     KbqLocaleService,
@@ -169,6 +170,8 @@ export class KbqSelect
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
+
+    private readonly window = inject(KBQ_WINDOW);
 
     /** Whether the component is in an error state. */
     errorState: boolean = false;
@@ -758,7 +761,7 @@ export class KbqSelect
 
         // Note: The computed font-size will be a string pixel value (e.g. "16px").
         // `parseInt` ignores the trailing 'px' and converts this to a number.
-        this.triggerFontSize = parseInt(getComputedStyle(this.trigger.nativeElement)['font-size']);
+        this.triggerFontSize = parseInt(this.window.getComputedStyle(this.trigger.nativeElement)['font-size']);
 
         // It's important that we read this as late as possible, because doing so earlier will
         // return a different element since it's based on queries in the form field which may
@@ -1064,7 +1067,7 @@ export class KbqSelect
     }
 
     private getItemWidth(element: HTMLElement): number {
-        const computedStyle = getComputedStyle(element);
+        const computedStyle = this.window.getComputedStyle(element);
 
         const width: number = parseInt(computedStyle.width);
         const marginLeft: number = parseInt(computedStyle.marginLeft);

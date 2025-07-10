@@ -1,6 +1,7 @@
 import { BidiModule } from '@angular/cdk/bidi';
 import { DOCUMENT } from '@angular/common';
 import { inject, Inject, InjectionToken, isDevMode, NgModule, Optional } from '@angular/core';
+import { KBQ_WINDOW } from '../tokens';
 
 /**
  * Injection token that configures whether the koobiq sanity checks are enabled.
@@ -37,6 +38,7 @@ export function mcSanityChecksFactory(): boolean {
 })
 export class KbqCommonModule {
     protected readonly document = inject<Document>(DOCUMENT);
+    private readonly window = inject(KBQ_WINDOW);
 
     // Whether we've done the global sanity checks (e.g. a theme is loaded, there is a doctype).
     private hasDoneGlobalChecks = false;
@@ -55,9 +57,7 @@ export class KbqCommonModule {
 
     // Whether the code is running in tests.
     private isTestEnv(): boolean {
-        const window = this.getWindow();
-
-        return !!(window && (window['__karma__'] || window['jasmine'] || window['__jest__']));
+        return !!(this.window && (this.window['__karma__'] || this.window['jasmine'] || this.window['__jest__']));
     }
 
     private checkDoctypeIsDefined(): void {
@@ -67,9 +67,5 @@ export class KbqCommonModule {
                     'some koobiq components not to behave as expected.'
             );
         }
-    }
-
-    private getWindow(): Window | null {
-        return this.document?.defaultView || window;
     }
 }

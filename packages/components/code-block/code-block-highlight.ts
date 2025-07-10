@@ -12,6 +12,7 @@ import {
     SecurityContext
 } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 import hljs from 'highlight.js';
 import { KbqCodeBlockFile } from './types';
 
@@ -46,13 +47,12 @@ export class KbqCodeBlockHighlight {
     private readonly renderer = inject(Renderer2);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly fallbackFileLanguage = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_LANGUAGE);
+    private readonly window = inject(KBQ_WINDOW);
 
     /** The code file. */
     @Input({ required: true })
     set file(file: KbqCodeBlockFile) {
-        const window = this.getWindow();
-
-        if (!window) return;
+        if (!this.window) return;
 
         let { language } = file;
 
@@ -82,7 +82,7 @@ export class KbqCodeBlockHighlight {
         }
 
         const safeHTML = this.domSanitizer.sanitize(SecurityContext.HTML, highlightedHTML);
-        const highlightedHTMLWithLineNumbers = window['hljs'].lineNumbersValue(safeHTML, {
+        const highlightedHTMLWithLineNumbers = this.window['hljs'].lineNumbersValue(safeHTML, {
             startFrom: this.startFrom,
             singleLine: this.singleLine
         });
@@ -101,22 +101,15 @@ export class KbqCodeBlockHighlight {
         this.initLineNumbersPlugin();
     }
 
-    /** Use defaultView of injected document if available or fallback to global window reference */
-    private getWindow(): Window {
-        return this.document?.defaultView || window;
-    }
-
     /**
      * Initialize the HighlightJS line numbers plugin. This method is called once when
      * the component is constructed.
      */
     private initLineNumbersPlugin(): void {
-        const window = this.getWindow();
+        if (!this.window) return;
 
-        if (!window) return;
-
-        window['hljs'] = hljs;
-        this.highlightJSLineNumbersPlugin(this.document, window);
+        this.window['hljs'] = hljs;
+        this.highlightJSLineNumbersPlugin(this.document, this.window);
     }
 
     /**

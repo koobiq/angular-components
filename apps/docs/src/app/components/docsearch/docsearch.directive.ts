@@ -1,7 +1,7 @@
 import { afterNextRender, DestroyRef, Directive, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import docsearch from '@docsearch/js';
-import { isMac } from '@koobiq/components/core';
+import { isMac, KBQ_WINDOW } from '@koobiq/components/core';
 import { docsIsRuLocale, DocsLocaleState } from '../../services/locale';
 
 type DocsDocsearchProps = Parameters<typeof docsearch>[0];
@@ -31,8 +31,10 @@ const CONFIG: DocsDocsearchProps = {
     }
 })
 export class DocsDocsearchDirective extends DocsLocaleState {
+    private readonly window = inject(KBQ_WINDOW);
     /** should transform item URL to work docsearch on DEV stand */
-    private readonly shouldTransformItemURL = location.host !== HOST || location.protocol !== PROTOCOL;
+    private readonly shouldTransformItemURL =
+        this.window.location.host !== HOST || this.window.location.protocol !== PROTOCOL;
 
     private readonly destroyRef = inject(DestroyRef);
 
@@ -64,8 +66,8 @@ export class DocsDocsearchDirective extends DocsLocaleState {
     private readonly transformItems: DocsDocsearchProps['transformItems'] = (items) => {
         if (this.shouldTransformItemURL) {
             items = items.map((item) => {
-                item.url = item.url.replace(HOST, location.host);
-                item.url = item.url.replace(PROTOCOL, location.protocol);
+                item.url = item.url.replace(HOST, this.window.location.host);
+                item.url = item.url.replace(PROTOCOL, this.window.location.protocol);
 
                 return item;
             });

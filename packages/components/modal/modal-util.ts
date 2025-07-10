@@ -22,4 +22,5 @@ export class ModalUtil {
     }
 }
 
+// eslint-disable-next-line no-restricted-globals
 export const modalUtilObject = new ModalUtil(document);

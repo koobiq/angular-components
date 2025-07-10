@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { KBQ_WINDOW, PopUpPlacements } from '@koobiq/components/core';
 import { KbqTitleModule } from '@koobiq/components/title';
 import { filter, fromEvent, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
@@ -83,6 +83,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
     }
 
     private readonly destroyRef = inject(DestroyRef);
+    private readonly window = inject(KBQ_WINDOW);
 
     constructor(
         private router: Router,
@@ -97,7 +98,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
         }
 
         this.pathName = router.url.split('#')[0];
-        localStorage.setItem(NEXT_ROUTE_KEY, this.pathName);
+        this.window.localStorage.setItem(NEXT_ROUTE_KEY, this.pathName);
 
         this.router.events
             .pipe(
@@ -108,7 +109,7 @@ export class DocsAnchorsComponent implements OnDestroy, OnInit {
                 const [rootUrl] = router.url.split('#');
 
                 if (rootUrl !== this.pathName) {
-                    localStorage.setItem(NEXT_ROUTE_KEY, rootUrl);
+                    this.window.localStorage.setItem(NEXT_ROUTE_KEY, rootUrl);
 
                     this.pathName = rootUrl;
                 }

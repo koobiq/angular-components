@@ -28,7 +28,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { DOWN_ARROW, ENTER, LEFT_ARROW, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
-import { defaultOffsetY } from '@koobiq/components/core';
+import { defaultOffsetY, KBQ_WINDOW } from '@koobiq/components/core';
 import { asapScheduler, merge, Observable, of as observableOf, Subscription } from 'rxjs';
 import { delay, filter, take, takeUntil } from 'rxjs/operators';
 import { throwKbqDropdownMissingError } from './dropdown-errors';
@@ -75,6 +75,7 @@ const passiveEventListenerOptions = normalizePassiveListenerOptions({ passive: t
 })
 export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     protected readonly isBrowser = inject(Platform).isBrowser;
+    private readonly window = inject(KBQ_WINDOW);
 
     lastDestroyReason: DropdownCloseReason;
 
@@ -600,7 +601,7 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
 
         const nativeElement = this.elementRef.nativeElement;
 
-        const { width, borderRightWidth, borderLeftWidth } = getComputedStyle(nativeElement);
+        const { width, borderRightWidth, borderLeftWidth } = this.window.getComputedStyle(nativeElement);
 
         return `${parseInt(width) - parseInt(borderRightWidth) - parseInt(borderLeftWidth)}px`;
     }

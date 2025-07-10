@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Directive, inject } from '@angular/core';
+import { KBQ_WINDOW } from '@koobiq/components/core';
 
 type DocsVersion = {
     version: string;
@@ -22,6 +23,7 @@ export class DocsVersionPickerDirective {
 
     private readonly httpClient = inject(HttpClient);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
+    private readonly window = inject(KBQ_WINDOW);
 
     constructor() {
         this.httpClient
@@ -47,14 +49,14 @@ export class DocsVersionPickerDirective {
     }
 
     goToVersion(version: DocsVersion) {
-        if (!version.url.startsWith(window.location.href)) {
-            window.location.assign(version.url);
+        if (!version.url.startsWith(this.window.location.href)) {
+            this.window.location.assign(version.url);
         }
     }
 
     setSelectedVersion() {
         this.versions.forEach((version, index) => {
-            if (window.location.href.startsWith(version.url)) {
+            if (this.window.location.href.startsWith(version.url)) {
                 version.selected = true;
 
                 this.selected = version;

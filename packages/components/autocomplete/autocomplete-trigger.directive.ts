@@ -33,6 +33,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DOWN_ARROW, ENTER, ESCAPE, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
 import {
+    KBQ_WINDOW,
     KbqOption,
     KbqOptionSelectionChange,
     KeyboardNavigationHandler,
@@ -205,6 +206,7 @@ export class KbqAutocompleteTrigger
 
     /** Stream of keyboard events that can close the panel. */
     private readonly closeKeyEventStream = new Subject<void>();
+    private readonly window = inject(KBQ_WINDOW);
 
     constructor(
         private elementRef: ElementRef<HTMLInputElement>,
@@ -218,10 +220,8 @@ export class KbqAutocompleteTrigger
         // @breaking-change 8.0.0 Make `_viewportRuler` required.
         private viewportRuler?: ViewportRuler
     ) {
-        const window = this.getWindow();
-
-        if (window) {
-            zone.runOutsideAngular(() => window.addEventListener('blur', this.windowBlurHandler));
+        if (this.window) {
+            zone.runOutsideAngular(() => this.window.addEventListener('blur', this.windowBlurHandler));
         }
 
         this.scrollStrategy = scrollStrategy;
@@ -241,7 +241,7 @@ export class KbqAutocompleteTrigger
     }
 
     ngOnDestroy() {
-        this.getWindow()?.removeEventListener('blur', this.windowBlurHandler);
+        this.window.removeEventListener('blur', this.windowBlurHandler);
 
         this.viewportSubscription.unsubscribe();
         this.componentDestroyed = true;
@@ -675,10 +675,5 @@ export class KbqAutocompleteTrigger
         const element = this.elementRef.nativeElement;
 
         return !element.readOnly && !element.disabled && !this._autocompleteDisabled;
-    }
-
-    /** Use defaultView of injected document if available or fallback to global window reference */
-    private getWindow(): Window | null {
-        return this.document?.defaultView || window;
     }
 }

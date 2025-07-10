@@ -2,7 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqTheme, KbqThemeSelector, ThemeService } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
@@ -37,12 +37,14 @@ import { DocsNavbarProperty } from './navbar-property';
     encapsulation: ViewEncapsulation.None
 })
 export class DocsNavbarComponent extends DocsLocaleState implements OnDestroy {
+    private readonly window = inject(KBQ_WINDOW);
+
     readonly docStates = inject(DocsDocStates);
 
     readonly themeSwitch: DocsNavbarProperty;
 
     // To add for checking of current color theme of OS preferences
-    private readonly colorAutomaticTheme = window.matchMedia('(prefers-color-scheme: light)');
+    private readonly colorAutomaticTheme = this.window.matchMedia('(prefers-color-scheme: light)');
 
     private readonly kbqThemes: (KbqTheme & { title: Record<DocsLocale, string> })[] = [
         {
