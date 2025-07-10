@@ -147,7 +147,7 @@ export class KbqFormField
      *
      * @TODO Should be readonly (#DS-3883)
      */
-    @ContentChild(KbqCleaner) cleaner: KbqCleaner | null;
+    @ContentChild(KbqCleaner, { descendants: false }) cleaner: KbqCleaner | null;
     /**
      * @docs-private
      */

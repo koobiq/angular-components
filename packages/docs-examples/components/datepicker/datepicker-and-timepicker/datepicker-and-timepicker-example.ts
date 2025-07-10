@@ -30,17 +30,13 @@ import { DateTime } from 'luxon';
                 <label class="kbq-form__label">Package release date and time</label>
                 <div class="kbq-form__row">
                     <div>
-                        <kbq-form-field
-                            class="layout-margin-right-s"
-                            (click)="datepicker.toggle()"
-                            style="width: 136px"
-                        >
+                        <kbq-form-field class="layout-margin-right-s" (click)="datepicker.toggle()">
                             <input [kbqDatepicker]="datepicker" [ngModel]="selectedDateTime" />
                             <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
-                        <kbq-form-field style="width: 136px">
+                        <kbq-form-field>
                             <i kbq-icon="kbq-clock_16" kbqPrefix></i>
                             <input [ngModel]="selectedDateTime" kbqTimepicker />
                         </kbq-form-field>

@@ -1,4 +1,4 @@
 .kbq-input {
-    --kbq-input-size-padding-horizontal: var(--kbq-size-m);
-    --kbq-input-size-padding-vertical: var(--kbq-size-xs);
+    --kbq-input-size-padding-horizontal: 0;
+    --kbq-input-size-padding-vertical: var(--kbq-form-field-size-container-vertical-padding);
 }

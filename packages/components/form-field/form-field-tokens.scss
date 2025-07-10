@@ -1,14 +1,25 @@
 .kbq-form-field {
     --kbq-form-field-size-height: var(--kbq-size-3xl);
-    --kbq-form-field-size-border-width: 1px;
+
+    --kbq-form-field-size-border-width: var(--kbq-size-border-width);
     --kbq-form-field-size-border-radius: var(--kbq-size-border-radius);
+
     --kbq-form-field-size-icon-size: var(--kbq-size-l);
     --kbq-form-field-size-icon-margin-left: var(--kbq-size-s);
     --kbq-form-field-size-icon-margin-right: var(--kbq-size-s);
     --kbq-form-field-size-icon-button-size: var(--kbq-size-xxl);
     --kbq-form-field-size-icon-button-margin-left: var(--kbq-size-xxs);
+
     --kbq-form-field-hint-size-margin-top: var(--kbq-size-xxs);
     --kbq-form-field-hint-size-gap: var(--kbq-size-s);
+
+    --kbq-form-field-size-container-vertical-padding: calc(var(--kbq-size-xs) - var(--kbq-size-border-width));
+    --kbq-form-field-size-container-left-padding: calc(var(--kbq-size-xs) - var(--kbq-size-border-width));
+    --kbq-form-field-size-container-right-padding: calc(var(--kbq-size-xs) - var(--kbq-size-border-width));
+    --kbq-form-field-size-infix-left-padding: var(--kbq-size-xs);
+    --kbq-form-field-size-infix-right-padding: var(--kbq-size-xxs);
+
+    --kbq-form-field-size-addon-width: 28px;
     /* THEME TOKENS */
     --kbq-form-field-default-border-color: var(--kbq-line-contrast-fade);
     --kbq-form-field-default-background: var(--kbq-background-bg);

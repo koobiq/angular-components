@@ -124,7 +124,7 @@ export class KbqTreeSelectChange {
     selector: 'kbq-tree-select',
     exportAs: 'kbqTreeSelect',
     templateUrl: 'tree-select.html',
-    styleUrls: ['./tree-select.scss', 'tree-select-tokens.scss'],
+    styleUrls: ['./tree-select.scss', './tree-select-tokens.scss', '../select/select-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {

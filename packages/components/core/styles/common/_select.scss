@@ -14,9 +14,8 @@
         @include vendor-prefixes.user-select(none);
 
         display: flex;
+        flex-grow: 1;
         align-items: center;
-
-        width: 100%;
 
         overflow: hidden;
 
@@ -36,31 +35,21 @@
 
         cursor: pointer;
 
-        height: calc(var(--kbq-form-field-size-height, var(--kbq-size-3xl)) - calc(var(--kbq-size-border-width) * 2));
+        height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
     }
 
     .kbq-select__trigger.kbq-select__trigger_single,
     .kbq-select__trigger.kbq-select__trigger_multiple.kbq-select__trigger_empty {
         & .kbq-select__matcher {
-            padding: calc(
-                    var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs)) - var(--kbq-size-border-width)
-                )
-                calc(var(--kbq-select-size-single-padding-right, var(--kbq-size-xxs)) - var(--kbq-size-border-width))
-                calc(var(--kbq-select-size-single-padding-vertical, var(--kbq-size-xs)) - var(--kbq-size-border-width))
-                calc(var(--kbq-select-size-single-padding-left, var(--kbq-size-m)) - var(--kbq-size-border-width));
+            padding: var(--kbq-select-size-single-padding-vertical) var(--kbq-select-size-single-padding-right)
+                var(--kbq-select-size-single-padding-vertical) var(--kbq-select-size-single-padding-left);
         }
     }
 
     .kbq-select__trigger.kbq-select__trigger_multiple:not(.kbq-select__trigger_empty) {
         & .kbq-select__matcher {
-            padding: calc(
-                    var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) - var(--kbq-size-border-width)
-                )
-                calc(var(--kbq-select-size-multiple-padding-right, var(--kbq-size-xxs)) - var(--kbq-size-border-width))
-                calc(
-                    var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) - var(--kbq-size-border-width)
-                )
-                calc(var(--kbq-select-size-multiple-padding-left, var(--kbq-size-xxs)) - var(--kbq-size-border-width));
+            padding: var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-right)
+                var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-left);
 
             .kbq-select__match-container {
                 display: flex;
@@ -72,15 +61,11 @@
                 overflow: hidden;
 
                 height: calc(
-                    var(--kbq-form-field-size-height, var(--kbq-size-3xl)) - calc(
-                            var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) * 2
-                        )
+                    var(--kbq-form-field-size-height) - calc(var(--kbq-select-size-multiple-padding-vertical) * 2)
                 );
 
                 max-height: calc(
-                    var(--kbq-form-field-size-height, var(--kbq-size-3xl)) - calc(
-                            var(--kbq-select-size-multiple-padding-vertical, var(--kbq-size-xxs)) * 2
-                        )
+                    var(--kbq-form-field-size-height) - calc(var(--kbq-select-size-multiple-padding-vertical) * 2)
                 );
 
                 gap: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
@@ -109,8 +94,9 @@
     .kbq-select__arrow-wrapper {
         display: flex;
         align-self: center;
+        justify-content: center;
 
-        padding: 4px;
+        width: var(--kbq-form-field-size-addon-width);
 
         // When used in a box or standard appearance form-field the arrow should be shifted up 50%.
         .kbq-form-field-appearance-fill &,
