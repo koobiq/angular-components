@@ -1,6 +1,6 @@
 /** required to run tests without using @angular-builders/jest */
 if (!('Zone' in global)) {
-    require('jest-preset-angular/setup-jest');
+    require('jest-preset-angular/setup-env/zone').setupZoneTestEnv();
 }
 
 global['__jest__'] = true;
