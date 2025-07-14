@@ -167,6 +167,9 @@ export class KbqSelect
         KbqFormFieldControl<any>,
         CanUpdateErrorState
 {
+    /** @docs-private */
+    protected readonly destroyRef = inject(DestroyRef);
+
     protected readonly isBrowser = inject(Platform).isBrowser;
 
     protected readonly defaultOptions = inject(KBQ_SELECT_OPTIONS, { optional: true });
@@ -584,8 +587,6 @@ export class KbqSelect
 
     /** Origin for the overlay panel. */
     protected overlayOrigin?: CdkOverlayOrigin | ElementRef;
-
-    private readonly destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly _changeDetectorRef: ChangeDetectorRef,
