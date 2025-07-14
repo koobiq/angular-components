@@ -52,6 +52,12 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
     imports: [TagExamplesModule],
     selector: 'dev-examples',
     template: `
+        <tag-autocomplete-option-operations-example />
+        <hr />
+        <tag-input-example />
+        <hr />
+        <tag-autocomplete-example />
+        <hr />
         <tag-overview-example />
         <hr />
         <tag-fill-and-style-example />
