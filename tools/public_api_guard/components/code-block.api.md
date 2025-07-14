@@ -27,11 +27,8 @@ export const KBQ_CODE_BLOCK_LOCALE_CONFIGURATION: InjectionToken<KbqCodeBlockLoc
 export class KbqCodeBlock implements AfterViewInit {
     constructor();
     activeFileIndex: number;
-    // (undocumented)
     readonly activeFileIndexChange: EventEmitter<number>;
-    // (undocumented)
     protected readonly buttonStyle: typeof KbqButtonStyles;
-    // (undocumented)
     protected get calculatedMaxHeight(): number | null;
     canCopy: boolean;
     canDownload: boolean;
@@ -41,11 +38,9 @@ export class KbqCodeBlock implements AfterViewInit {
     protected get codeContentTabIndex(): number;
     // @deprecated (undocumented)
     set codeFiles(files: KbqCodeBlockFile[]);
-    // (undocumented)
     protected readonly componentColor: typeof KbqComponentColors;
     protected copyCode(): void;
     protected downloadCode(): void;
-    // (undocumented)
     protected readonly fallbackFileName: string;
     get files(): KbqCodeBlockFile[];
     set files(files: KbqCodeBlockFile[]);
@@ -85,7 +80,6 @@ export class KbqCodeBlock implements AfterViewInit {
     protected onSelectedTabChange(index: number): void;
     protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
-    // (undocumented)
     readonly scrollableCodeContent: CdkScrollable;
     softWrap: boolean;
     readonly softWrapChange: EventEmitter<boolean>;
