@@ -38,10 +38,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
             display: flex;
             justify-content: center;
             padding: var(--kbq-size-l);
-
-            ::ng-deep .kbq-icon {
-                margin-right: var(--kbq-size-s);
-            }
         }
 
         .kbq-form-field {
