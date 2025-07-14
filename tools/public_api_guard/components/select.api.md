@@ -14,6 +14,7 @@ import { CdkVirtualForOf } from '@angular/cdk/scrolling';
 import { ChangeDetectorRef } from '@angular/core';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ControlValueAccessor } from '@angular/forms';
+import { DestroyRef } from '@angular/core';
 import { Directionality } from '@angular/cdk/bidi';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -120,6 +121,7 @@ export class KbqSelect extends KbqAbstractSelect implements AfterContentInit, Af
     protected readonly defaultOptions: Partial<{
         panelWidth: KbqSelectPanelWidth;
     }> | null;
+    protected readonly destroyRef: DestroyRef;
     // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);

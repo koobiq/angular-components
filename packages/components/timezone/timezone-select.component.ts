@@ -37,7 +37,9 @@ export class KbqTimezoneSelect extends KbqSelect implements AfterContentInit {
     ngAfterContentInit() {
         super.ngAfterContentInit();
 
-        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParamsForSearch);
+        this.localeService?.changes
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(this.updateLocaleParamsForSearch);
 
         this.updateLocaleParamsForSearch();
     }
