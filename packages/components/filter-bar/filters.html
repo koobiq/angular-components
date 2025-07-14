@@ -168,7 +168,7 @@
                 />
 
                 @if (filterName.hasError('filterNameAlreadyExist')) {
-                    <kbq-hint [color]="'error'">{{ localeData.error }}</kbq-hint>
+                    <kbq-error>{{ localeData.error }}</kbq-error>
                 }
             </kbq-form-field>
         </div>

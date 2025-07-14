@@ -5,7 +5,7 @@
             <kbq-form-field class="kbq-form__control">
                 <input kbqInput [formControl]="ipAddress" />
                 @if (ipAddress.invalid) {
-                    <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
+                    <kbq-error>IP-адрес не соответствует стандартам RFC</kbq-error>
                 }
 
                 <kbq-cleaner />
@@ -18,10 +18,10 @@
                 <input kbqInput type="number" [formControl]="frequency" />
                 <kbq-hint>Введите значение от 1 до 24</kbq-hint>
                 @if (frequency.errors?.min) {
-                    <kbq-hint [color]="themePalette.Error">Минимальное значение: 1 час</kbq-hint>
+                    <kbq-error>Минимальное значение: 1 час</kbq-error>
                 }
                 @if (frequency.errors?.max) {
-                    <kbq-hint [color]="themePalette.Error">Максимальное значение: 24 часа</kbq-hint>
+                    <kbq-error>Максимальное значение: 24 часа</kbq-error>
                 }
             </kbq-form-field>
         </div>

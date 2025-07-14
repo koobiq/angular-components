@@ -11,7 +11,7 @@
                 <kbq-form-field class="kbq-form__control">
                     <input formControlName="firstName" kbqInput />
                     @if (feedbackFormWithHints.controls.firstName.invalid) {
-                        <kbq-hint [color]="'error'">Укажите ваше имя</kbq-hint>
+                        <kbq-error>Укажите ваше имя</kbq-error>
                     }
                 </kbq-form-field>
             </div>
@@ -22,7 +22,7 @@
                 <kbq-form-field class="kbq-form__control">
                     <input formControlName="lastName" kbqInput />
                     @if (feedbackFormWithHints.controls.lastName.invalid) {
-                        <kbq-hint [color]="'error'">Укажите вашу фамилию</kbq-hint>
+                        <kbq-error>Укажите вашу фамилию</kbq-error>
                     }
                 </kbq-form-field>
             </div>
@@ -41,7 +41,7 @@
                 <kbq-form-field class="kbq-form__control">
                     <input formControlName="email" kbqInput />
                     @if (feedbackFormWithHints.controls.email.invalid) {
-                        <kbq-hint [color]="'error'">Оставьте свой адрес эл. почты</kbq-hint>
+                        <kbq-error>Оставьте свой адрес эл. почты</kbq-error>
                     }
                 </kbq-form-field>
             </div>
@@ -56,7 +56,7 @@
                         <kbq-option [value]="3">3</kbq-option>
                     </kbq-select>
                     @if (feedbackFormWithHints.controls.reason.invalid) {
-                        <kbq-hint [color]="'error'">Укажите причину обращения</kbq-hint>
+                        <kbq-error>Укажите причину обращения</kbq-error>
                     }
                 </kbq-form-field>
             </div>
@@ -72,7 +72,7 @@
                     </kbq-select>
 
                     @if (feedbackFormWithHints.controls.rating.invalid) {
-                        <kbq-hint [color]="'error'">Дайте оценку работы наших специалистов</kbq-hint>
+                        <kbq-error>Дайте оценку работы наших специалистов</kbq-error>
                     }
                 </kbq-form-field>
             </div>

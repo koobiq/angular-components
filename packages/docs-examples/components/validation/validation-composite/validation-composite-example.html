@@ -21,7 +21,7 @@
                     <input formControlName="start" kbqInput (input)="onInput($event, startTooltip, 'start')" />
 
                     @if (compositeFormGroup.controls.start.invalid) {
-                        <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
+                        <kbq-error>IP-адрес не соответствует стандартам RFC</kbq-error>
                     }
 
                     <kbq-cleaner />
@@ -41,7 +41,7 @@
                     <input formControlName="end" kbqInput (input)="onInput($event, endTooltip, 'end')" />
 
                     @if (compositeFormGroup.controls.end.invalid) {
-                        <kbq-hint [color]="themePalette.Error">IP-адрес не соответствует стандартам RFC</kbq-hint>
+                        <kbq-error>IP-адрес не соответствует стандартам RFC</kbq-error>
                     }
 
                     <kbq-cleaner />
@@ -49,9 +49,9 @@
             </div>
 
             @if (compositeFormGroup.errors?.range) {
-                <kbq-hint style="margin-top: 4px" [color]="themePalette.Error">
+                <kbq-error style="margin-top: 4px">
                     IP-адрес окончания диапазона должен быть больше, чем IP-адрес начала
-                </kbq-hint>
+                </kbq-error>
             }
         </div>
     </form>
