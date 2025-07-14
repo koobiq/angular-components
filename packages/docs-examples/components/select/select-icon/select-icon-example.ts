@@ -13,16 +13,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
+            <i kbqPrefix color="contrast-fade" kbq-icon="kbq-globe_16"></i>
             <kbq-select [(value)]="selected">
                 <kbq-select-matcher class="kbq-select__matcher">
-                    <i color="contrast-fade" kbq-icon="kbq-globe_16"></i>
-                    <span>
-                        <div class="kbq-select__match-container">
-                            <span class="kbq-select__matcher-text">
-                                {{ selected }}
-                            </span>
-                        </div>
-                    </span>
+                    <div class="kbq-select__match-container">
+                        <span class="kbq-select__matcher-text">
+                            {{ selected }}
+                        </span>
+                    </div>
                     <div class="kbq-select__arrow-wrapper">
                         <i class="kbq-select__arrow" color="contrast-fade" kbq-icon="kbq-chevron-down-s_16"></i>
                     </div>
@@ -47,5 +45,5 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectIconExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
-    readonly selected = this.options[0];
+    selected = this.options[0];
 }

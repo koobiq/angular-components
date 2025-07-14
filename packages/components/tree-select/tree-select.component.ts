@@ -128,6 +128,7 @@ export class KbqTreeSelectChange {
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-tree-select',
+        '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
 
@@ -351,7 +352,7 @@ export class KbqTreeSelect
 
     private _required: boolean = false;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     get multiple(): boolean {
         return this._multiple;
     }

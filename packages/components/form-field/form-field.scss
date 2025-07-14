@@ -54,6 +54,13 @@
 
         padding-left: var(--kbq-form-field-size-infix-left-padding);
 
+        &:has(.kbq-select_multiple),
+        &:has(.kbq-tag-list) {
+            padding-left: 0;
+
+            max-width: 100%;
+        }
+
         & .kbq-input,
         & .kbq-tag-input {
             padding-right: var(--kbq-form-field-size-infix-right-padding);
