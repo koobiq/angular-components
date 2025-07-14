@@ -390,7 +390,9 @@ export class KbqCodeBlock implements AfterViewInit {
     }
 
     /** Handles the enter keydown event on `viewAll` button. */
-    protected onViewAllEnterKeydown(): void {
+    protected onViewAllEnterKeydown(event: Event): void {
+        event.preventDefault();
+
         this.toggleViewAll();
 
         if (this.canCodeContentBeFocused) {
