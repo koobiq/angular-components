@@ -1,9 +1,12 @@
 import {
     afterNextRender,
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
+    inject,
+    Injector,
     Input,
     NgZone,
     OnDestroy,
@@ -63,7 +66,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqScrollbar implements OnDestroy {
+export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Element that is being overflowed */
     @ViewChild('content') contentElement: ElementRef<HTMLDivElement>;
     @ViewChild('content', { read: KbqScrollbarDirective }) private kbqScrollbarDirective?: KbqScrollbarDirective;
@@ -87,13 +90,30 @@ export class KbqScrollbar implements OnDestroy {
         return this.targetElement.nativeElement;
     }
 
+    private readonly injector = inject(Injector);
+
     constructor(
         private ngZone: NgZone,
         private targetElement: ElementRef<HTMLElement>
-    ) {
-        afterNextRender(() => {
-            this.initialize();
-        });
+    ) {}
+
+    ngAfterViewInit() {
+        afterNextRender(
+            () => {
+                if (this.element && this.contentElement.nativeElement) {
+                    this.kbqScrollbarDirective?.initialize(
+                        this.initializationTarget || {
+                            target: this.targetElement.nativeElement,
+                            elements: {
+                                viewport: this.contentElement.nativeElement,
+                                content: this.contentElement.nativeElement
+                            }
+                        }
+                    );
+                }
+            },
+            { injector: this.injector }
+        );
     }
 
     ngOnDestroy() {
@@ -122,20 +142,6 @@ export class KbqScrollbar implements OnDestroy {
             ...defaultListeners,
             ...filterEvents(this.events, defaultListeners)
         };
-    }
-
-    private initialize(): void {
-        if (this.element && this.contentElement.nativeElement) {
-            this.kbqScrollbarDirective?.initialize(
-                this.initializationTarget || {
-                    target: this.targetElement.nativeElement,
-                    elements: {
-                        viewport: this.contentElement.nativeElement,
-                        content: this.contentElement.nativeElement
-                    }
-                }
-            );
-        }
     }
 
     private dispatchEventIfHasObservers<T>(eventEmitter: EventEmitter<T>, args: T): void {
