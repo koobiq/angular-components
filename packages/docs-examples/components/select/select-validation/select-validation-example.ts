@@ -50,9 +50,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectValidationExample {
     readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    readonly invalidControl = new FormControl(null, [Validators.required]);
+    readonly invalidControl = new FormControl(null, Validators.required);
 
     constructor() {
-        afterNextRender(() => this.invalidControl.updateValueAndValidity());
+        afterNextRender(() => {
+            this.invalidControl.markAsTouched();
+            this.invalidControl.updateValueAndValidity();
+        });
     }
 }
