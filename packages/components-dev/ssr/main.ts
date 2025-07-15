@@ -1,5 +1,11 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { devAppConfig } from '../breadcrumbs/main';
-import { DevApp } from '../breadcrumbs/module';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
+import { DevApp } from './module';
 
-bootstrapApplication(DevApp, devAppConfig).catch((error) => console.error(error));
+bootstrapApplication(DevApp, {
+    providers: [
+        provideRouter([]),
+        provideAnimations()
+    ]
+}).catch((error) => console.error(error));

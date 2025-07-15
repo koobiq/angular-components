@@ -1,7 +1,13 @@
-import { bootstrapApplication } from '@angular/platform-browser';
-import { DevApp } from '../breadcrumbs/module';
-import { devConfig } from './app.config.server';
+import { bootstrapApplication, provideClientHydration, withEventReplay } from '@angular/platform-browser';
+import { provideServerRendering } from '@angular/platform-server';
+import { provideRouter } from '@angular/router';
+import { DevApp } from './module';
 
-const devBootstrap = () => bootstrapApplication(DevApp, devConfig);
-
-export default devBootstrap;
+export default () =>
+    bootstrapApplication(DevApp, {
+        providers: [
+            provideClientHydration(withEventReplay()),
+            provideRouter([]),
+            provideServerRendering()
+        ]
+    });

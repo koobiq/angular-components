@@ -4,9 +4,7 @@
     "files": [
         "main.ts",
         "main.server.ts",
-        "server.ts",
-        "../breadcrumbs/main.ts",
-        "../breadcrumbs/module.ts"
+        "server.ts"
     ],
     "compilerOptions": {
         "types": [
