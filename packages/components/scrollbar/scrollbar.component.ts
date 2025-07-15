@@ -1,5 +1,5 @@
 import {
-    AfterViewInit,
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
@@ -63,7 +63,7 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqScrollbar implements AfterViewInit, OnDestroy {
+export class KbqScrollbar implements OnDestroy {
     /** Element that is being overflowed */
     @ViewChild('content') contentElement: ElementRef<HTMLDivElement>;
     @ViewChild('content', { read: KbqScrollbarDirective }) private kbqScrollbarDirective?: KbqScrollbarDirective;
@@ -90,20 +90,10 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     constructor(
         private ngZone: NgZone,
         private targetElement: ElementRef<HTMLElement>
-    ) {}
-
-    ngAfterViewInit() {
-        if (this.element && this.contentElement.nativeElement) {
-            this.kbqScrollbarDirective?.initialize(
-                this.initializationTarget || {
-                    target: this.targetElement.nativeElement,
-                    elements: {
-                        viewport: this.contentElement.nativeElement,
-                        content: this.contentElement.nativeElement
-                    }
-                }
-            );
-        }
+    ) {
+        afterNextRender(() => {
+            this.initialize();
+        });
     }
 
     ngOnDestroy() {
@@ -132,6 +122,20 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
             ...defaultListeners,
             ...filterEvents(this.events, defaultListeners)
         };
+    }
+
+    private initialize(): void {
+        if (this.element && this.contentElement.nativeElement) {
+            this.kbqScrollbarDirective?.initialize(
+                this.initializationTarget || {
+                    target: this.targetElement.nativeElement,
+                    elements: {
+                        viewport: this.contentElement.nativeElement,
+                        content: this.contentElement.nativeElement
+                    }
+                }
+            );
+        }
     }
 
     private dispatchEventIfHasObservers<T>(eventEmitter: EventEmitter<T>, args: T): void {

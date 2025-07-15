@@ -4,7 +4,6 @@
 
 ```ts
 
-import { AfterViewInit } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { EventListenerArgs } from 'overlayscrollbars';
@@ -56,7 +55,7 @@ export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG: KbqScrollbarOptions;
 export const KBQ_SCROLLBAR_OPTIONS_DEFAULT_CONFIG_PROVIDER: Provider;
 
 // @public
-export class KbqScrollbar implements AfterViewInit, OnDestroy {
+export class KbqScrollbar implements OnDestroy {
     constructor(ngZone: NgZone, targetElement: ElementRef<HTMLElement>);
     contentElement: ElementRef<HTMLDivElement>;
     defer?: boolean | IdleRequestOptions;
@@ -67,8 +66,6 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     initializationTarget?: KbqScrollbarTarget;
     // (undocumented)
     mergeEvents(): KbqScrollbarEvents;
-    // (undocumented)
-    ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
     onDestroy: EventEmitter<[instance: OverlayScrollbars, canceled: boolean]>;
