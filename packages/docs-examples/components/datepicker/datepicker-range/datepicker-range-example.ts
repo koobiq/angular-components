@@ -26,17 +26,13 @@ import { DateTime } from 'luxon';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Vacation period:</label>
                     <div>
-                        <kbq-form-field
-                            class="layout-margin-right-s"
-                            (click)="datepicker.toggle()"
-                            style="width: 136px"
-                        >
+                        <kbq-form-field class="layout-margin-right-s" (click)="datepicker.toggle()">
                             <input [kbqDatepicker]="datepicker" />
                             <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
-                        <kbq-form-field (click)="datepicker2.toggle()" style="width: 136px">
+                        <kbq-form-field (click)="datepicker2.toggle()">
                             <input [kbqDatepicker]="datepicker2" />
                             <kbq-datepicker-toggle-icon [for]="datepicker2" kbqSuffix />
                             <kbq-datepicker #datepicker2 />

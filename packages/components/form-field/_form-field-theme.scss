@@ -83,6 +83,11 @@
                 &.cdk-focused .kbq-form-field__container {
                     box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
                 }
+
+                & .kbq-icon.kbq-empty {
+                    color: var(--kbq-form-field-states-error-text);
+                    -webkit-text-fill-color: var(--kbq-form-field-states-error-text);
+                }
             }
         }
 

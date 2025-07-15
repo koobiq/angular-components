@@ -135,6 +135,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
         '[attr.disabled]': 'disabled || null',
 
         class: 'kbq-select',
+        '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
 

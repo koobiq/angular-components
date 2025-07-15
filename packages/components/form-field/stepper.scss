@@ -1,14 +1,13 @@
 .kbq-stepper {
     // margin used by design to reduce gap between step arrows
     $step-margin: -2px;
-    --kbq-form-field-size-icon-button-size: var(--kbq-size-3xl);
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    width: var(--kbq-form-field-size-icon-button-size);
+    width: var(--kbq-form-field-size-addon-width);
     height: 100%;
 
     .kbq-stepper-step-up {
@@ -21,7 +20,7 @@
 
     .kbq-stepper-step-up,
     .kbq-stepper-step-down {
-        width: var(--kbq-form-field-size-icon-button-size);
+        width: 100%;
         text-align: center;
     }
 }

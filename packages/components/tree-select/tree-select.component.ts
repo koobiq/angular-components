@@ -124,11 +124,12 @@ export class KbqTreeSelectChange {
     selector: 'kbq-tree-select',
     exportAs: 'kbqTreeSelect',
     templateUrl: 'tree-select.html',
-    styleUrls: ['./tree-select.scss', 'tree-select-tokens.scss'],
+    styleUrls: ['./tree-select.scss', './tree-select-tokens.scss', '../select/select-tokens.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-tree-select',
+        '[class.kbq-select_multiple]': 'multiple',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
 
@@ -352,7 +353,7 @@ export class KbqTreeSelect
 
     private _required: boolean = false;
 
-    @Input()
+    @Input({ transform: booleanAttribute })
     get multiple(): boolean {
         return this._multiple;
     }
