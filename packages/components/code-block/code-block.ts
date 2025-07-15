@@ -96,6 +96,9 @@ export const kbqCodeBlockFallbackFileNameProvider = (fileName: string): Provider
 })
 export class KbqCodeBlock implements AfterViewInit {
     @ViewChild('copyButtonTooltip') private readonly copyButtonTooltip?: KbqTooltipTrigger;
+    /**
+     * Reference to the scrollable code content.
+     */
     @ViewChild(CdkScrollable) readonly scrollableCodeContent: CdkScrollable;
 
     /** Whether to display line numbers. */
@@ -110,7 +113,9 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Whether sequences of whitespace should be preserved. */
     @Input({ transform: booleanAttribute }) softWrap: boolean = false;
 
-    /** Event emitted when `softWrap` is changed. */
+    /**
+     * Output to support two-way binding on `[(softWrap)]` property.
+     */
     @Output() readonly softWrapChange = new EventEmitter<boolean>();
 
     /**
@@ -119,7 +124,9 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     @Input({ transform: booleanAttribute }) viewAll: boolean = false;
 
-    /** Event emitted when `viewAll` is changed. */
+    /**
+     * Output to support two-way binding on `[(viewAll)]` property.
+     */
     @Output() readonly viewAllChange = new EventEmitter<boolean>();
 
     /**
@@ -128,11 +135,18 @@ export class KbqCodeBlock implements AfterViewInit {
      */
     @Input({ transform: numberAttribute }) maxHeight: number;
 
+    /**
+     * @docs-private
+     */
     protected get calculatedMaxHeight(): number | null {
         return this.maxHeight > 0 && !this.viewAll ? this.maxHeight : null;
     }
 
-    /** @deprecated Will be removed in next major release, use `canDownload` instead. */
+    /**
+     * @deprecated Will be removed in next major release, use `canDownload` instead.
+     *
+     * @docs-private
+     */
     @Input({ transform: booleanAttribute })
     set canLoad(value: boolean) {
         this.canDownload = value;
@@ -144,7 +158,9 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Added copy code button. */
     @Input({ transform: booleanAttribute }) canCopy: boolean = true;
 
-    /** @deprecated Will be removed in next major release, use `files` instead. */
+    /**
+     * @deprecated Will be removed in next major release, use `files` instead.
+     */
     @Input()
     set codeFiles(files: KbqCodeBlockFile[]) {
         this.files = files;
@@ -177,6 +193,9 @@ export class KbqCodeBlock implements AfterViewInit {
     /** Defines which file (index) is active. */
     @Input({ transform: numberAttribute }) activeFileIndex = 0;
 
+    /**
+     * Output to support two-way binding on `[(activeFileIndex)]` property.
+     */
     @Output() readonly activeFileIndexChange = new EventEmitter<number>();
 
     /** Whether to hide border. */
@@ -200,14 +219,22 @@ export class KbqCodeBlock implements AfterViewInit {
 
     private _hideTabs: boolean = false;
 
-    /** Component locale configuration. */
+    /**
+     * Component locale configuration.
+     *
+     * @docs-private
+     */
     protected get localeConfiguration(): KbqCodeBlockLocaleConfiguration {
         return this._localeConfiguration;
     }
 
     private _localeConfiguration: KbqCodeBlockLocaleConfiguration = inject(KBQ_CODE_BLOCK_LOCALE_CONFIGURATION);
 
-    /** Code content tab index. */
+    /**
+     * Code content tab index.
+     *
+     * @docs-private
+     */
     protected get codeContentTabIndex(): number {
         return this.canCodeContentBeFocused ? 0 : -1;
     }
@@ -224,7 +251,13 @@ export class KbqCodeBlock implements AfterViewInit {
         return element && this.hasScroll(element) && !this.calculatedMaxHeight;
     }
 
+    /**
+     * @docs-private
+     */
     protected readonly componentColor = KbqComponentColors;
+    /**
+     * @docs-private
+     */
     protected readonly buttonStyle = KbqButtonStyles;
 
     private readonly elementRef = inject(ElementRef);
@@ -237,6 +270,9 @@ export class KbqCodeBlock implements AfterViewInit {
     private readonly clipboard = inject(Clipboard);
     private readonly domSanitizer = inject(DomSanitizer);
     private readonly document = inject<Document>(DOCUMENT);
+    /**
+     * @docs-private
+     */
     protected readonly fallbackFileName = inject(KBQ_CODE_BLOCK_FALLBACK_FILE_NAME);
     private readonly window = inject(KBQ_WINDOW);
 
@@ -298,6 +334,8 @@ export class KbqCodeBlock implements AfterViewInit {
      * and scrolling to the top of the scrollable content.
      *
      * @param index - The index of the newly selected tab.
+     *
+     * @docs-private
      */
     protected onSelectedTabChange(index: number): void {
         if (this.activeFileIndex !== index) {
@@ -415,6 +453,8 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * If the copy was successful, the copy button tooltip content is updated
      * to show the "copied" message.
+     *
+     * @docs-private
      */
     protected copyCode(): void {
         const file = this.files[this.activeFileIndex];
@@ -426,6 +466,8 @@ export class KbqCodeBlock implements AfterViewInit {
 
     /**
      * Opens the file link in a new window.
+     *
+     * @docs-private
      */
     protected openLink(): void {
         const file = this.files[this.activeFileIndex];
@@ -441,6 +483,8 @@ export class KbqCodeBlock implements AfterViewInit {
      *
      * Creates a link with a blob as href and the file name as download attribute.
      * Then simulates a click event on the link to initiate the download.
+     *
+     * @docs-private
      */
     protected downloadCode(): void {
         const file = this.files[this.activeFileIndex];
