@@ -1,9 +1,12 @@
 import {
+    afterNextRender,
     AfterViewInit,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
     EventEmitter,
+    inject,
+    Injector,
     Input,
     NgZone,
     OnDestroy,
@@ -87,23 +90,30 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
         return this.targetElement.nativeElement;
     }
 
+    private readonly injector = inject(Injector);
+
     constructor(
         private ngZone: NgZone,
         private targetElement: ElementRef<HTMLElement>
     ) {}
 
     ngAfterViewInit() {
-        if (this.element && this.contentElement.nativeElement) {
-            this.kbqScrollbarDirective?.initialize(
-                this.initializationTarget || {
-                    target: this.targetElement.nativeElement,
-                    elements: {
-                        viewport: this.contentElement.nativeElement,
-                        content: this.contentElement.nativeElement
-                    }
+        afterNextRender(
+            () => {
+                if (this.element && this.contentElement.nativeElement) {
+                    this.kbqScrollbarDirective?.initialize(
+                        this.initializationTarget || {
+                            target: this.targetElement.nativeElement,
+                            elements: {
+                                viewport: this.contentElement.nativeElement,
+                                content: this.contentElement.nativeElement
+                            }
+                        }
+                    );
                 }
-            );
-        }
+            },
+            { injector: this.injector }
+        );
     }
 
     ngOnDestroy() {

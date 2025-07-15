@@ -48,6 +48,7 @@ describe(KbqScrollbarModule.name, () => {
             const runOutsideAngularSpyFn = jest.spyOn(component['ngZone'], 'runOutsideAngular');
 
             component.ngAfterViewInit();
+            fixture.detectChanges();
             expect(runOutsideAngularSpyFn).toHaveBeenCalled();
             expect(component['kbqScrollbarDirective']!.scrollbarInstance).toBeDefined();
         });
