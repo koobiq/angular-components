@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ThemePalette } from '@koobiq/components/core';
 import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
 
 /**
@@ -10,24 +9,15 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
     standalone: true,
     selector: 'progress-bar-indeterminate-example',
     styles: `
-        .example-progress-bar-group {
-            display: flex;
-            flex-direction: column;
-        }
-
         .example-progress-bar {
-            margin-bottom: 12px;
+            margin-bottom: var(--kbq-size-m);
         }
     `,
     imports: [
         KbqProgressBarModule
     ],
     template: `
-        <div class="example-progress-bar-group">
-            <kbq-progress-bar class="example-progress-bar" [mode]="'indeterminate'" />
-        </div>
+        <kbq-progress-bar class="example-progress-bar" [mode]="'indeterminate'" />
     `
 })
-export class ProgressBarIndeterminateExample {
-    themePalette = ThemePalette;
-}
+export class ProgressBarIndeterminateExample {}
