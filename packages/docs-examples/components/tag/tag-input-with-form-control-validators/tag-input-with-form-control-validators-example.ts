@@ -54,7 +54,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
             </kbq-tag-list>
 
             @if (formControl.invalid) {
-                <kbq-hint color="error">
+                <kbq-error>
                     @if (formControl.hasError('required')) {
                         Field is required
                     }
@@ -62,7 +62,7 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
                     @if (formControl.hasError('customMaxLengthValidator')) {
                         Max keywords count is 3
                     }
-                </kbq-hint>
+                </kbq-error>
             }
         </kbq-form-field>
     `,
