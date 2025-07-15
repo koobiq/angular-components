@@ -50,6 +50,10 @@ const getLinkButtonElement = (debugElement: DebugElement): HTMLButtonElement => 
     return debugElement.nativeElement.querySelector('.kbq-code-block__actionbar__link-button');
 };
 
+const getViewAllButtonElement = (debugElement: DebugElement): HTMLButtonElement => {
+    return debugElement.nativeElement.querySelector('.kbq-code-block__view-all__button');
+};
+
 @Component({
     standalone: true,
     imports: [KbqCodeBlockModule],
@@ -65,6 +69,7 @@ const getLinkButtonElement = (debugElement: DebugElement): HTMLButtonElement => 
             [noBorder]="noBorder"
             [hideTabs]="hideTabs"
             [canCopy]="canCopy"
+            [maxHeight]="maxHeight"
         />
     `,
     changeDetection: ChangeDetectionStrategy.Default
@@ -96,6 +101,7 @@ class BaseCodeBlock {
     noBorder: boolean = false;
     hideTabs: boolean = false;
     softWrap: boolean = false;
+    maxHeight: number | undefined = undefined;
 }
 
 describe(KbqCodeBlock.name, () => {
@@ -413,4 +419,42 @@ describe(KbqCodeBlock.name, () => {
         tick(100); // debounceTime
         expect(codeBlock.classes['kbq-code-block_show-actionbar']).toBeFalsy();
     }));
+
+    it('should show viewAll button', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+
+        expect(getViewAllButtonElement(debugElement)).toBeNull();
+
+        componentInstance.maxHeight = 300;
+        fixture.detectChanges();
+
+        expect(getViewAllButtonElement(debugElement)).toBeInstanceOf(HTMLButtonElement);
+    });
+
+    it('should toggle viewAll property by click', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+        const spy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
+
+        componentInstance.maxHeight = 300;
+        fixture.detectChanges();
+
+        getViewAllButtonElement(debugElement).click();
+
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should toggle viewAll property by ENTER keydown', () => {
+        const fixture = createComponent(BaseCodeBlock);
+        const { debugElement, componentInstance } = fixture;
+        const spy = jest.spyOn(geCodeBlockDebugElement(debugElement).componentInstance, 'toggleViewAll');
+
+        componentInstance.maxHeight = 300;
+        fixture.detectChanges();
+
+        getViewAllButtonElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+
+        expect(spy).toHaveBeenCalledTimes(1);
+    });
 });

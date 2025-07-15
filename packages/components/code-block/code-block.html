@@ -112,7 +112,7 @@
                     [color]="componentColor.Theme"
                     [kbqStyle]="buttonStyle.Transparent"
                     (click)="toggleViewAll()"
-                    (keydown.enter)="onViewAllEnterKeydown()"
+                    (keydown.enter)="onViewAllEnterKeydown($event)"
                 >
                     @if (viewAll) {
                         <i kbq-icon="kbq-chevron-up_16"></i>

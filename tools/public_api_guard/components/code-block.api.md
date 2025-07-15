@@ -83,7 +83,7 @@ export class KbqCodeBlock implements AfterViewInit {
     ngAfterViewInit(): void;
     noBorder: boolean;
     protected onSelectedTabChange(index: number): void;
-    protected onViewAllEnterKeydown(): void;
+    protected onViewAllEnterKeydown(event: Event): void;
     protected openLink(): void;
     // (undocumented)
     readonly scrollableCodeContent: CdkScrollable;
