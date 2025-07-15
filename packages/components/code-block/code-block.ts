@@ -114,9 +114,7 @@ export class KbqCodeBlock implements AfterViewInit {
     @Input({ transform: booleanAttribute }) softWrap: boolean = false;
 
     /**
-     * Event emitted when `softWrap` is changed.
-     *
-     * @docs-private
+     * Output to support two-way binding on `[(softWrap)]` property.
      */
     @Output() readonly softWrapChange = new EventEmitter<boolean>();
 
@@ -127,9 +125,7 @@ export class KbqCodeBlock implements AfterViewInit {
     @Input({ transform: booleanAttribute }) viewAll: boolean = false;
 
     /**
-     * Event emitted when `viewAll` is changed.
-     *
-     * @docs-private
+     * Output to support two-way binding on `[(viewAll)]` property.
      */
     @Output() readonly viewAllChange = new EventEmitter<boolean>();
 
@@ -198,9 +194,7 @@ export class KbqCodeBlock implements AfterViewInit {
     @Input({ transform: numberAttribute }) activeFileIndex = 0;
 
     /**
-     * Event emitted when `activeFileIndex` is changed.
-     *
-     * @docs-private
+     * Output to support two-way binding on `[(activeFileIndex)]` property.
      */
     @Output() readonly activeFileIndexChange = new EventEmitter<number>();
 
