@@ -10,6 +10,8 @@
     & .kbq-accordion-trigger__icon {
         box-sizing: initial;
 
+        align-self: flex-start;
+
         padding: var(--kbq-size-xxs);
 
         transition: transform 300ms ease-out;
