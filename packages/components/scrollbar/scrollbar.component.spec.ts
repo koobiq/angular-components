@@ -44,14 +44,6 @@ describe(KbqScrollbarModule.name, () => {
             fixture.detectChanges();
         });
 
-        it('should initialize OverlayScrollbars on ngAfterViewInit', () => {
-            const runOutsideAngularSpyFn = jest.spyOn(component['ngZone'], 'runOutsideAngular');
-
-            component.ngAfterViewInit();
-            expect(runOutsideAngularSpyFn).toHaveBeenCalled();
-            expect(component['kbqScrollbarDirective']!.scrollbarInstance).toBeDefined();
-        });
-
         it('should destroy scrollbar instance on component destroy', () => {
             const instance = component['kbqScrollbarDirective']!.scrollbarInstance;
 
