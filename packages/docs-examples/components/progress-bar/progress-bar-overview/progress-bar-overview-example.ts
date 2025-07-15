@@ -32,7 +32,7 @@ import { KbqProgressBarModule } from '@koobiq/components/progress-bar';
         <div class="example-progress-bar-group">
             <kbq-progress-bar class="example-progress-bar" [value]="percent" />
             <kbq-form-field>
-                <input [(ngModel)]="percent" [min]="0" kbqInput max="100" step="5" type="number" />
+                <input [(ngModel)]="percent" [min]="0" [max]="100" [step]="5" kbqInput kbqNumberInput />
                 <kbq-stepper />
             </kbq-form-field>
         </div>
