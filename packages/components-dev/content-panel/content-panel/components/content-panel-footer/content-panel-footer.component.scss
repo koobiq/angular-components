@@ -1,0 +1,14 @@
+:host {
+    &.ic-sidepanel__footer_shadow {
+        position: relative;
+        z-index: 2;
+        box-shadow: var(--kbq-shadow-overflow-normal-top);
+    }
+}
+
+.ic-content-panel__footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: var(--kbq-size-xl) var(--kbq-size-xxl);
+}
