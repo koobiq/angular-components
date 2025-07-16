@@ -301,6 +301,18 @@
 		<loc>https://koobiq.io/ru/components/filter-bar/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/form-field/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/form-field/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/form-field/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/form-field/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/experimental-form-field/overview</loc>
 	</url>
 	<url>
