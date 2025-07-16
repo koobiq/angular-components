@@ -1,0 +1,14 @@
+<div class="ic-content-panel__header">
+    <ng-content />
+    @if (hasCloseButton) {
+        <button
+            kbq-button
+            kbqSidepanelClose
+            type="button"
+            [color]="KbqComponentColors.Contrast"
+            [kbqStyle]="KbqButtonStyles.Transparent"
+        >
+            <i kbq-icon="kbq-xmark_16"></i>
+        </button>
+    }
+</div>

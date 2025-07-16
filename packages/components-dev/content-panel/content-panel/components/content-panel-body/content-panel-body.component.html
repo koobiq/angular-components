@@ -1,0 +1,10 @@
+<kbq-scrollbar
+    icOverflowContentTracker
+    class="layout-column flex"
+    (contentBottomOverflow)="contentBottomOverflow.emit($event)"
+    (contentTopOverflow)="contentTopOverflow.emit($event)"
+>
+    <div class="ic-content-panel__body">
+        <ng-content />
+    </div>
+</kbq-scrollbar>
