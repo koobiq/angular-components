@@ -12,6 +12,7 @@ const webServerCommand = process.env.WEB_SERVER_COMMAND || 'yarn run dev:e2e';
 export default defineConfig({
     testDir: __dirname,
     testMatch: ['**/*.playwright-spec.ts'],
+    tsconfig: 'tsconfig.playwright-spec.json',
     fullyParallel: true,
     forbidOnly: isCI,
     retries: isCI ? 2 : 0,

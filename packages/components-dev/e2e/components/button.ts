@@ -1,24 +1,11 @@
-import { ChangeDetectionStrategy, Component, model, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { ButtonExamplesModule } from 'packages/docs-examples/components/button';
 import { combineLatest } from 'rxjs';
-
-@Component({
-    standalone: true,
-    imports: [ButtonExamplesModule],
-    selector: 'dev-examples',
-    template: `
-        <button-overview-example />
-        <hr />
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class DevExamples {}
 
 type DevButtonState = Partial<{
     title: string;
@@ -40,13 +27,20 @@ type DevButton = DevButtonState & DevButtonStyle;
     standalone: true,
     imports: [KbqButtonModule, KbqIconModule, FormsModule, KbqCheckboxModule],
     selector: 'dev-button-state-and-style',
+    host: {
+        'data-testid': 'e2eButtonStateAndStyle'
+    },
     template: `
         <div class="dev-options">
-            <kbq-checkbox [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>
-            <kbq-checkbox [(ngModel)]="showTitle" [disabled]="!showPrefixIcon() && !showSuffixIcon()">
+            <kbq-checkbox [(ngModel)]="showPrefixIcon" data-testid="e2eShowPrefixIcon">show prefix icon</kbq-checkbox>
+            <kbq-checkbox
+                [(ngModel)]="showTitle"
+                [disabled]="!showPrefixIcon() && !showSuffixIcon()"
+                data-testid="e2eShowTitle"
+            >
                 show title
             </kbq-checkbox>
-            <kbq-checkbox [(ngModel)]="showSuffixIcon">show suffix icon</kbq-checkbox>
+            <kbq-checkbox [(ngModel)]="showSuffixIcon" data-testid="e2eShowSuffixIcon">show suffix icon</kbq-checkbox>
         </div>
 
         <table>
@@ -128,18 +122,4 @@ export class DevButtonStateAndStyle {
                 if (args.every((a) => a === false)) this.showTitle.set(true);
             });
     }
-}
-
-@Component({
-    standalone: true,
-    imports: [KbqButtonModule, KbqIconModule, DevExamples, DevButtonStateAndStyle],
-    selector: 'dev-app',
-    templateUrl: 'template.html',
-    styleUrls: ['styles.scss'],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class DevApp {
-    readonly colors = KbqComponentColors;
-    readonly styles = KbqButtonStyles;
 }

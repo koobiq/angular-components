@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { DevButtonStateAndStyle } from 'packages/components-dev/button/module';
 import { DevThemeToggle } from '../theme-toggle';
+import { DevButtonStateAndStyle } from './components/button';
 
 @Component({
     standalone: true,

@@ -31,4 +31,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'test: auto-updated e2e screenshots'
-          file_pattern: 'e2e/**/*.png'
+          file_pattern: '**/*.png'
