@@ -671,6 +671,10 @@ export class KbqTreeSelect
         this.tags.changes.pipe(startWith(null)).subscribe(() => {
             this.calculateHiddenItems();
         });
+
+        this.tree.treeControl.expansionModel.changed
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.setOverlayPosition());
     }
 
     ngDoCheck() {
