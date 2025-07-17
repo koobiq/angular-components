@@ -1,6 +1,8 @@
 @use '../core/styles/common/tokens';
 
 @mixin _kbq-list-item($state-name) {
+    --kbq-option-background: var(--kbq-list-#{$state-name}-container-background);
+
     background: var(--kbq-list-#{$state-name}-container-background);
 
     .kbq-list-text {

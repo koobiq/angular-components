@@ -17,6 +17,9 @@ import { debounceTime, startWith, switchMap } from 'rxjs/operators';
     imports: [ListExamplesModule],
     selector: 'dev-examples',
     template: `
+        <list-action-button-example />
+        <br />
+        <br />
         <list-multiple-checkbox-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

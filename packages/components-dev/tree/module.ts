@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqButtonToggleChange, KbqButtonToggleModule } from '@koobiq/components/button-toggle';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
-import { KbqHighlightModule, KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
+import { KbqHighlightModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
@@ -109,13 +109,16 @@ export const DEV_DATA_OBJECT = {
     imports: [TreeExamplesModule],
     selector: 'dev-examples',
     template: `
-        <tree-toggle-on-click-example />
+        <tree-action-button-example />
         <br />
         <br />
-        <tree-select-and-mark-example />
-        <br />
-        <br />
-        <tree-selection-separate-from-focus-example />
+        <!--        <tree-toggle-on-click-example />-->
+        <!--        <br />-->
+        <!--        <br />-->
+        <!--        <tree-select-and-mark-example />-->
+        <!--        <br />-->
+        <!--        <br />-->
+        <!--        <tree-selection-separate-from-focus-example />-->
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -134,7 +137,6 @@ export class DevExamples {}
         KbqIconModule,
         KbqToolTipModule,
         KbqHighlightModule,
-        KbqOptionModule,
         KbqTitleModule,
         KbqButtonToggleModule,
         JsonPipe,

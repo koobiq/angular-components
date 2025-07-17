@@ -32,19 +32,13 @@
 
     &:not(.kbq-disabled) {
         cursor: pointer;
-    }
 
-    & .kbq-option-action {
-        display: none;
-        height: var(--kbq-size-xl);
-        align-items: center;
-    }
-
-    &:not(.kbq-disabled):hover,
-    &:not(.kbq-disabled).kbq-focused,
-    &:not(.kbq-disabled).kbq-action-button-focused {
-        & .kbq-option-action {
-            display: flex;
+        &:hover,
+        &.kbq-focused,
+        &.kbq-action-button-focused {
+            & .kbq-action-container {
+                display: flex;
+            }
         }
     }
 }
