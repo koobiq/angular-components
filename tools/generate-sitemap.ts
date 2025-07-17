@@ -81,6 +81,9 @@ const paths = [
     'components/filter-bar/overview',
     'components/filter-bar/api',
 
+    'components/form-field/overview',
+    'components/form-field/api',
+
     'components/experimental-form-field/overview',
     'components/experimental-form-field/api',
 
