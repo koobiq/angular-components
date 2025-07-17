@@ -9,4 +9,8 @@
     <ng-content select="[kbq-list-option-caption]" />
 </div>
 
-<ng-content select="kbq-option-action" />
+@if (actionButton) {
+    <kbq-action-container>
+        <ng-content select="kbq-option-action" />
+    </kbq-action-container>
+}

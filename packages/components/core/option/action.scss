@@ -3,27 +3,19 @@
 @use './option-action-theme' as *;
 
 .kbq-option-action {
-    box-sizing: border-box;
-
-    position: relative;
-
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-
-    margin-right: -2px;
-
-    width: var(--kbq-typography-text-normal-line-height);
-    height: var(--kbq-typography-text-normal-line-height);
 
     cursor: pointer;
 
     outline: none;
 
     border: var(--kbq-size-3xs) solid transparent;
+    border-radius: var(--kbq-size-xs);
 
-    background: transparent;
+    width: var(--kbq-size-xl);
+    height: var(--kbq-size-xl);
 
     &.kbq-disabled {
         cursor: default;

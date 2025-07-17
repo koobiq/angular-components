@@ -1,0 +1,45 @@
+@use '../styles/common/tokens' as *;
+
+.kbq-action-container {
+    box-sizing: border-box;
+
+    position: absolute;
+
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    display: none;
+    align-items: center;
+
+    overflow: hidden;
+
+    border: 1px solid transparent;
+    border-top-right-radius: var(--kbq-size-xs);
+    border-bottom-right-radius: var(--kbq-size-xs);
+}
+
+.kbq-action-container__gradient {
+    display: flex;
+
+    margin-right: calc(var(--kbq-size-xs) * -1);
+
+    width: var(--kbq-size-3xl);
+    height: 100%;
+
+    background:
+        linear-gradient(to right, transparent 0%, var(--kbq-option-background) 70%),
+        linear-gradient(to right, transparent 0%, white 80%);
+}
+
+.kbq-action-container__box {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(to right, var(--kbq-option-background) 0%, var(--kbq-option-background) 100%),
+        linear-gradient(to right, white 0%, white 100%);
+}

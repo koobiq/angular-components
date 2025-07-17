@@ -267,7 +267,7 @@ export class KbqTreeModule {
     // Warning: (ae-forgotten-export) The symbol "i8" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective], [typeof i9.KbqPseudoCheckboxModule, typeof i10.KbqIconModule], [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTreeModule, [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective], [typeof i9.KbqPseudoCheckboxModule, typeof i10.KbqIconModule, typeof i9.KbqActionContainerComponent], [typeof i1.KbqTreeNodeOutlet, typeof i2.KbqTreeNodeDef, typeof i3.KbqTreeNode, typeof i4.KbqTreeNodePadding, typeof i5.KbqTree, typeof i6.KbqTreeSelection, typeof i7.KbqTreeOption, typeof i8.KbqTreeNodeToggleComponent, typeof i8.KbqTreeNodeToggleDirective]>;
 }
 
 // @public (undocumented)

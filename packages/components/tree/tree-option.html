@@ -2,10 +2,8 @@
 
 @if (externalPseudoCheckbox) {
     <ng-content select="kbq-pseudo-checkbox" />
-} @else {
-    @if (showCheckbox) {
-        <kbq-pseudo-checkbox [disabled]="disabled" [state]="checkboxState" />
-    }
+} @else if (showCheckbox) {
+    <kbq-pseudo-checkbox [disabled]="disabled" [state]="checkboxState" />
 }
 
 <ng-content select="kbq-checkbox" />
@@ -18,4 +16,8 @@
     <ng-content />
 </span>
 
-<ng-content select="kbq-option-action" />
+@if (actionButton) {
+    <kbq-action-container>
+        <ng-content select="kbq-option-action" />
+    </kbq-action-container>
+}

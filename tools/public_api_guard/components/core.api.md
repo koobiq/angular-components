@@ -1706,6 +1706,14 @@ export abstract class KbqAbstractSelect {
     protected triggerRect: DOMRect;
 }
 
+// @public (undocumented)
+export class KbqActionContainerComponent {
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionContainerComponent, "kbq-action-container", ["kbqActionContainer"], {}, {}, never, ["*"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionContainerComponent, never>;
+}
+
 // @public
 export type KbqActionsPanelLocaleConfiguration = {
     closeTooltip: string;
@@ -2156,8 +2164,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     get active(): boolean;
     // (undocumented)
-    customIcon: ElementRef;
-    // (undocumented)
     get disabled(): boolean;
     set disabled(value: boolean);
     // (undocumented)
@@ -2171,15 +2177,11 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
-    onBlur(): void;
-    // (undocumented)
     onClick($event: any): void;
-    // (undocumented)
-    onFocus($event: any): void;
     // (undocumented)
     onKeyDown($event: any): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, ["customIcon"], ["[kbq-icon]"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOptionActionComponent, "kbq-option-action", ["kbqOptionAction"], { "disabled": { "alias": "disabled"; "required": false; }; }, {}, never, ["[kbq-icon]"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOptionActionComponent, never>;
 }
