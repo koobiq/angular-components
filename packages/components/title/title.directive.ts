@@ -11,14 +11,21 @@ import {
     Optional
 } from '@angular/core';
 import { KBQ_TITLE_TEXT_REF, KbqTitleTextRef, PopUpTriggers } from '@koobiq/components/core';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import {
+    KBQ_TOOLTIP_OPEN_TIME_PROVIDER,
+    KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER,
+    KbqTooltipTrigger
+} from '@koobiq/components/tooltip';
 import { Subject, Subscription, throttleTime } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 @Directive({
+    standalone: true,
+    providers: [KBQ_TOOLTIP_SCROLL_STRATEGY_FACTORY_PROVIDER, KBQ_TOOLTIP_OPEN_TIME_PROVIDER],
     selector: '[kbq-title]',
     exportAs: 'kbqTitle',
     host: {
+        class: 'test_test_Test',
         '(mouseenter)': 'handleElementEnter()',
         '(mouseleave)': 'hideTooltip()',
         '(window:resize)': 'resizeStream.next($event)'
