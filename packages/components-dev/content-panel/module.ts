@@ -1,37 +1,44 @@
 import {
-    AfterViewInit,
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    inject,
     Input,
+    TemplateRef,
+    viewChild,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
+import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { KbqSidepanelService } from '@koobiq/components/sidepanel';
 import { DevThemeToggle } from '../theme-toggle';
-import {
-    IcContentPanelConfig,
-    IcContentPanelGhostDirective,
-    IcContentPanelModule,
-    IcContentPanelService
-} from './content-panel';
+import { IcContentPanelGhostDirective, IcContentPanelModule, IcContentPanelService } from './content-panel';
 
 const DUMMY_BTNS_ARRAY_LENGTH = 122;
 
 @Component({
+    standalone: true,
+    imports: [
+        KbqButtonModule,
+        KbqBadgeModule,
+        KbqLinkModule,
+        KbqIconModule,
+        IcContentPanelModule,
+        IcContentPanelGhostDirective,
+        KbqContentPanelModule
+    ],
     selector: 'ic-content-panel-wrapper',
     template: `
         <div>
-            <div class="top__btns">
-                <button [config]="config" [contentPanelTpl]="icContentPanelTpl" kbq-button icOpenContentPanel>
-                    Открыть панель
-                </button>
-                <button kbq-button>Заглушка</button>
-            </div>
+            <button (click)="openContentPanel()" kbq-button>content panel</button>
+            <button (click)="openSidePanel()" kbq-button>side panel</button>
+            <hr />
             <div class="page-content">
                 <div class="content__buttons">
                     @for (dummyBtn of dummyBtnsArray; track $index) {
@@ -43,24 +50,24 @@ const DUMMY_BTNS_ARRAY_LENGTH = 122;
             </div>
         </div>
 
-        <ng-template #icContentPanelTpl let-data>
-            <ic-content-panel [data]="data">
-                <ic-content-panel-sidemenu>
+        <ng-template #contentPanel let-data>
+            <kbq-content-panel [data]="data || {}">
+                <div kbqContentPanelToolbar>
                     <button kbq-button>
-                        <i kbq-icon="kbq-plus_16"></i>
+                        <i kbq-icon="kbq-bug_16"></i>
                     </button>
                     <button kbq-button>
-                        <i kbq-icon="kbq-plus_16"></i>
+                        <i kbq-icon="kbq-bug_16"></i>
                     </button>
                     <button kbq-button>
-                        <i kbq-icon="kbq-plus_16"></i>
+                        <i kbq-icon="kbq-bug_16"></i>
                     </button>
-                </ic-content-panel-sidemenu>
-                <ic-content-panel-header [hasCloseButton]="hasCloseButton">
+                </div>
+                <kbq-content-panel-header [hasCloseButton]="hasCloseButton">
                     <div class="header__content">
                         <div class="content__top">
                             <div class="top__info">
-                                <ic-content-panel-title>Title</ic-content-panel-title>
+                                <ic-content-panel-title>Title Title</ic-content-panel-title>
                                 <kbq-badge [badgeColor]="KbqBadgeColors.FadeError">
                                     <span>8,6</span>
                                 </kbq-badge>
@@ -96,8 +103,8 @@ const DUMMY_BTNS_ARRAY_LENGTH = 122;
                             <button kbq-button>Заглушка</button>
                         </div>
                     </div>
-                </ic-content-panel-header>
-                <ic-content-panel-body>
+                </kbq-content-panel-header>
+                <div kbqContentPanelBody>
                     <div class="body__content">
                         <span class="kbq-subheading">That's Title!</span>
                         <span>
@@ -141,9 +148,9 @@ const DUMMY_BTNS_ARRAY_LENGTH = 122;
                             placerat risus placerat non. Mauris aliquet sed metus ac faucibus.
                         </span>
                     </div>
-                </ic-content-panel-body>
+                </div>
                 @if (hasFooter) {
-                    <ic-content-panel-footer>
+                    <kbq-content-panel-footer>
                         <div class="footer__btns">
                             <button [color]="KbqComponentColors.Contrast" kbq-button>Кнопка</button>
                             <button kbq-button>Кнопка</button>
@@ -151,9 +158,9 @@ const DUMMY_BTNS_ARRAY_LENGTH = 122;
                         <div class="footer__btns">
                             <button kbq-button>Кнопка</button>
                         </div>
-                    </ic-content-panel-footer>
+                    </kbq-content-panel-footer>
                 }
-            </ic-content-panel>
+            </kbq-content-panel>
         </ng-template>
     `,
     styles: `
@@ -221,27 +228,18 @@ const DUMMY_BTNS_ARRAY_LENGTH = 122;
             flex-direction: row;
             gap: var(--kbq-size-m);
         }
-
-        .top__btns {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [IcContentPanelService],
-    encapsulation: ViewEncapsulation.None,
-    imports: [
-        KbqButtonModule,
-        KbqBadgeModule,
-        KbqLinkModule,
-        KbqIconModule,
-        IcContentPanelModule,
-        IcContentPanelGhostDirective
-    ],
-    standalone: true
+    encapsulation: ViewEncapsulation.None
 })
-export class ContentPanelWrapperComponent implements AfterViewInit {
+export class ContentPanelWrapperComponent {
+    private readonly contentPanel = inject(IcContentPanelService);
+    private readonly sidepanel = inject(KbqSidepanelService);
+    readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    readonly contentPanelTemplateRef = viewChild.required('contentPanel', { read: TemplateRef });
+
     protected readonly KbqComponentColors = KbqComponentColors;
     protected readonly KbqButtonStyles = KbqButtonStyles;
     protected readonly KbqBadgeColors = KbqBadgeColors;
@@ -256,12 +254,21 @@ export class ContentPanelWrapperComponent implements AfterViewInit {
     @Input()
     hasFooter = true;
 
-    config?: IcContentPanelConfig;
+    constructor() {
+        afterNextRender(() => this.openContentPanel());
+    }
 
-    ngAfterViewInit(): void {
-        this.config = {
+    openContentPanel(): void {
+        this.contentPanel.open(this.contentPanelTemplateRef(), {
             ghostElement: this.contentPanelGhost?.nativeElement
-        };
+        });
+    }
+
+    openSidePanel(): void {
+        // this.elementRef.nativeElement.style.display = 'block';
+        // this.elementRef.nativeElement.style.backgroundColor = 'cyan';
+        // this.elementRef.nativeElement.style.position = 'relative';
+        this.sidepanel.open(this.contentPanelTemplateRef());
     }
 }
 
