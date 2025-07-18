@@ -6,15 +6,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { KbqSidepanelModule } from '@koobiq/components/sidepanel';
-// import { IcLineClampDirective, IcOverflowContentTrackerDirective } from '@mosaic-design/infosec-components/directives';
-import {
-    ContentPanelBodyComponent,
-    ContentPanelComponent,
-    ContentPanelFooterComponent,
-    ContentPanelHeaderComponent
-} from './components';
-import { ContentPanelSidemenuDirective, ContentPanelTitleDirective, OpenContentPanelDirective } from './directives';
-import { IcOverflowContentTrackerDirective } from './overflow-content-tracker.directive';
+// import { IcLineClampDirective } from '@mosaic-design/infosec-components/directives';
 import { IcContentPanelService } from './services';
 
 /**
@@ -28,28 +20,11 @@ import { IcContentPanelService } from './services';
         KbqBadgeModule,
         KbqIconModule,
         KbqSidepanelModule,
-        KbqScrollbarModule,
-        IcOverflowContentTrackerDirective
+        KbqScrollbarModule
         // IcLineClampDirective
     ],
     providers: [IcContentPanelService],
-    declarations: [
-        ContentPanelComponent,
-        ContentPanelHeaderComponent,
-        ContentPanelBodyComponent,
-        ContentPanelFooterComponent,
-        OpenContentPanelDirective,
-        ContentPanelSidemenuDirective,
-        ContentPanelTitleDirective
-    ],
-    exports: [
-        ContentPanelComponent,
-        ContentPanelHeaderComponent,
-        ContentPanelBodyComponent,
-        ContentPanelFooterComponent,
-        OpenContentPanelDirective,
-        ContentPanelSidemenuDirective,
-        ContentPanelTitleDirective
-    ]
+    declarations: [],
+    exports: []
 })
 export class IcContentPanelModule {}
