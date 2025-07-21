@@ -1,6 +1,6 @@
 import { Component, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, ComponentFixtureAutoDetect, TestBed, fakeAsync, flush, tick } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { KbqFormFieldModule, KbqPasswordHint, KbqPasswordToggle, PasswordRules } from '@koobiq/components/form-field';
@@ -111,6 +111,21 @@ class KbqPasswordInputCustomPasswordRule {
     };
 }
 
+@Component({
+    template: `
+        <form [formGroup]="form">
+            <kbq-form-field>
+                <input [formControl]="form.controls.control" kbqInputPassword />
+            </kbq-form-field>
+        </form>
+    `
+})
+class PasswordInputWithReactiveControl {
+    form = new FormGroup({
+        control: new FormControl('', [Validators.required, Validators.maxLength(5)])
+    });
+}
+
 describe('KbqPasswordInput', () => {
     it('should have toggle', fakeAsync(() => {
         const fixture = createComponent(KbqPasswordInputDefault);
@@ -204,5 +219,26 @@ describe('KbqPasswordInput', () => {
         expect(fixture.componentInstance.passwordHint.hasError).toEqual(
             fixture.componentInstance.passwordHint.customCheckRule(valueToTest)
         );
+    }));
+
+    it('should apply validation rules on blur', fakeAsync(() => {
+        const fixture = createComponent(PasswordInputWithReactiveControl);
+        const { componentInstance } = fixture;
+
+        fixture.detectChanges();
+        flush();
+
+        const passwordInput: HTMLInputElement = fixture.debugElement.query(
+            By.directive(KbqInputPassword)
+        ).nativeElement;
+
+        dispatchFakeEvent(passwordInput, 'focus');
+        passwordInput.value = '123456';
+        dispatchFakeEvent(passwordInput, 'input');
+        dispatchFakeEvent(passwordInput, 'blur');
+
+        fixture.detectChanges();
+
+        expect(componentInstance.form.controls.control.hasError('maxlength')).toBeTruthy();
     }));
 });
