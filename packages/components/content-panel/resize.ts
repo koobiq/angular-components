@@ -16,6 +16,8 @@ import { fromEvent } from 'rxjs';
 
 /**
  * Directive (container) sets whether the element is resizable.
+ *
+ * @docs-private
  */
 @Directive({
     standalone: true,
@@ -34,6 +36,8 @@ export class KbqResizable {
 
 /**
  * Directive which defines element resizing direction.
+ *
+ * @docs-private
  */
 @Directive({
     standalone: true,
@@ -148,6 +152,9 @@ export class KbqResizer {
 
 const COMPONENTS = [KbqResizable, KbqResizer];
 
+/**
+ * @docs-private
+ */
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS

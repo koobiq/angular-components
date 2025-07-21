@@ -3,6 +3,7 @@ import {
     AfterContentInit,
     afterNextRender,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     Component,
     contentChild,
@@ -11,15 +12,17 @@ import {
     ElementRef,
     HostBinding,
     inject,
+    input,
     Input,
     OnDestroy,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KBQ_SIDEPANEL_DATA } from '@koobiq/components/sidepanel';
-import { KbqButtonModule, KbqButtonStyles } from '../button';
+import { KbqIconModule } from '../icon';
 import { KbqResizable, KbqResizeModule } from './resize';
 
 export enum KbqContentPanelSize {
@@ -30,13 +33,92 @@ export enum KbqContentPanelSize {
 
 @Directive({
     standalone: true,
-    selector: '[kbqContentPanelToolbar]',
-    exportAs: 'kbqContentPanelToolbar',
+    selector: '[kbqContentPanelAside]',
+    exportAs: 'kbqContentPanelAside',
     host: {
-        class: 'kbq-content-panel-toolbar'
+        class: 'kbq-content-panel-aside'
     }
 })
-export class KbqContentPanelToolbar {}
+export class KbqContentPanelAside {}
+
+@Directive({
+    standalone: true,
+    selector: '[kbqContentPanelHeaderTitle]',
+    exportAs: 'kbqContentPanelHeaderTitle',
+    host: {
+        class: 'kbq-content-panel-header-title'
+    }
+})
+export class KbqContentPanelHeaderTitle {}
+
+@Directive({
+    standalone: true,
+    selector: '[kbqContentPanelHeaderActions]',
+    exportAs: 'kbqContentPanelHeaderActions',
+    host: {
+        class: 'kbq-content-panel-header-actions'
+    }
+})
+export class KbqContentPanelHeaderActions {}
+
+@Component({
+    standalone: true,
+    imports: [KbqButtonModule, KbqIconModule],
+    selector: 'kbq-content-panel-header',
+    host: {
+        class: 'kbq-content-panel-header'
+    },
+    template: `
+        <div class="kbq-content-panel-header__wrapper">
+            <ng-content select="[kbqContentPanelHeaderTitle]" />
+            <div class="kbq-content-panel-header__actions">
+                <ng-content select="[kbqContentPanelHeaderActions]" />
+                @if (hasCloseButton()) {
+                    <button
+                        class="kbq-content-panel-header__close-button"
+                        [color]="componentColors.Contrast"
+                        [kbqStyle]="buttonStyles.Transparent"
+                        kbq-button
+                        type="button"
+                    >
+                        <i kbq-icon="kbq-xmark_16"></i>
+                    </button>
+                }
+            </div>
+        </div>
+        <ng-content />
+    `,
+    styles: `
+        :host {
+            display: flex;
+            flex-direction: column;
+
+            padding: var(--kbq-size-l) var(--kbq-size-xxl);
+        }
+
+        .kbq-content-panel-header__wrapper,
+        .kbq-content-panel-header__actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .kbq-content-panel-header__actions {
+            overflow: hidden;
+            justify-content: flex-end;
+        }
+
+        .kbq-content-panel-header__close-button {
+            margin-left: var(--kbq-size-m);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class KbqContentPanelHeader {
+    protected readonly buttonStyles = KbqButtonStyles;
+    protected readonly componentColors = KbqComponentColors;
+
+    readonly hasCloseButton = input(true, { transform: booleanAttribute });
+}
 
 @Directive({
     standalone: true,
@@ -48,67 +130,6 @@ export class KbqContentPanelToolbar {}
     hostDirectives: [CdkScrollable]
 })
 export class KbqContentPanelBody {}
-
-@Directive({
-    standalone: true,
-    selector: '[icContentPanelTitle], ic-content-panel-title, [ic-content-panel-title]'
-    // host: {
-    //     class: 'kbq-title'
-    // }
-})
-export class KbqContentPanelTitle {}
-
-@Component({
-    standalone: true,
-    imports: [KbqButtonModule],
-    selector: 'kbq-content-panel-header',
-    host: {
-        class: 'kbq-content-panel-header'
-    },
-    template: `
-        <div class="ic-content-panel__header">
-            <ng-content />
-            @if (hasCloseButton) {
-                <button
-                    [color]="componentColors.Contrast"
-                    [kbqStyle]="buttonStyles.Transparent"
-                    kbq-button
-                    kbqSidepanelClose
-                    type="button"
-                >
-                    <i kbq-icon="kbq-xmark_16"></i>
-                </button>
-            }
-        </div>
-    `,
-    styles: `
-        :host {
-            &.ic-sidepanel__header_shadow {
-                position: relative;
-                z-index: 2;
-                box-shadow: var(--kbq-shadow-overflow-normal-bottom);
-            }
-        }
-
-        .ic-content-panel__header {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            padding: var(--kbq-size-l) var(--kbq-size-l) var(--kbq-size-l) var(--kbq-size-xxl);
-        }
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class KbqContentPanelHeader {
-    protected readonly buttonStyles = KbqButtonStyles;
-    protected readonly componentColors = KbqComponentColors;
-
-    @HostBinding('class.ic-sidepanel__header_shadow')
-    isShadowRequired = false;
-
-    @Input()
-    hasCloseButton = false;
-}
 
 @Component({
     standalone: true,
@@ -151,7 +172,7 @@ export class KbqContentPanelFooter {
     hostDirectives: [KbqResizable],
     template: `
         <div class="kbq-content-panel__resizer" [kbqResizer]="[-1, 0]"></div>
-        <ng-content select="[kbqContentPanelToolbar]" />
+        <ng-content select="[kbqContentPanelAside]" />
         <div class="kbq-content-panel__content">
             <ng-content select="kbq-content-panel-header" />
             <ng-content select="[kbqContentPanelBody]" />

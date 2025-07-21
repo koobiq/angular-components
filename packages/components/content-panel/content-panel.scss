@@ -1,5 +1,8 @@
+@use '../core/styles/common/tokens';
+
 .kbq-content-panel {
     position: relative;
+    border-radius: var(--kbq-size-l);
 
     &.kbq-content-panel_header-with-shadow .kbq-content-panel-header {
         box-shadow: var(--kbq-shadow-overflow-normal-bottom);
@@ -9,19 +12,27 @@
         box-shadow: var(--kbq-shadow-overflow-normal-top);
     }
 
-    .kbq-content-panel-toolbar {
+    .kbq-content-panel-aside {
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: var(--kbq-size-s);
+
         padding: var(--kbq-size-l) var(--kbq-size-m);
-        border-right: 1px solid var(--kbq-line-contrast-less);
+
+        border-top-left-radius: inherit;
+        border-bottom-left-radius: inherit;
+
+        border-right: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
     }
 
     .kbq-content-panel__content {
         display: flex;
         flex: 1;
         flex-direction: column;
+
+        border-top-right-radius: inherit;
+        border-bottom-right-radius: inherit;
     }
 
     .kbq-content-panel-body {
@@ -39,6 +50,22 @@
 
         width: var(--kbq-content-panel-resizer-width);
         height: 100%;
+
+        z-index: 2;
+    }
+
+    .kbq-content-panel-header-title {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
+
+        flex-grow: 1;
+        flex-shrink: 0;
+    }
+
+    .kbq-content-panel-header-title,
+    .kbq-content-panel-header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--kbq-size-s);
     }
 }
 
@@ -50,7 +77,6 @@
     min-width: 480px;
     max-width: 800px;
     height: 100%;
-    border-radius: var(--kbq-size-m);
     border: 1px solid var(--kbq-line-contrast-less);
 
     &.ic-content-panel_small {
@@ -106,15 +132,11 @@
     .kbq-sidepanel-container {
         width: fit-content !important;
         max-width: 800px !important;
-        border-radius: var(--kbq-size-m);
+        // border-radius: var(--kbq-size-m);
     }
 
     .kbq-sidepanel-container_hide {
         transform: translateX(20%) !important;
-    }
-
-    .kbq-sidepanel-content {
-        border-radius: var(--kbq-size-m);
     }
 
     .kbq-sidepanel-container_right {

@@ -827,6 +827,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "code-block-with-tabs-example.ts",
     "importPath": "components/code-block"
   },
+  "content-panel-overview": {
+    "packagePath": "components/content-panel/content-panel-overview",
+    "title": "Content Panel overview",
+    "componentName": "ContentPanelOverviewExample",
+    "files": [
+      "content-panel-overview-example.ts"
+    ],
+    "selector": "content-panel-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "content-panel-overview-example.ts",
+    "importPath": "components/content-panel"
+  },
   "absolute-date-formatter": {
     "packagePath": "components/date-formatter/absolute-date-formatter",
     "title": "Absolute date-formatter",
@@ -4715,6 +4727,8 @@ return import('@koobiq/docs-examples/components/code-block');
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-tabs':
 return import('@koobiq/docs-examples/components/code-block');
+  case 'content-panel-overview':
+return import('@koobiq/docs-examples/components/content-panel');
   case 'absolute-date-formatter':
 return import('@koobiq/docs-examples/components/date-formatter');
   case 'date-formatter-special-use':

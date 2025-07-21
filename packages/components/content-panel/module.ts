@@ -1,20 +1,22 @@
 import { NgModule } from '@angular/core';
 import {
     KbqContentPanel,
+    KbqContentPanelAside,
     KbqContentPanelBody,
     KbqContentPanelFooter,
     KbqContentPanelHeader,
-    KbqContentPanelTitle,
-    KbqContentPanelToolbar
+    KbqContentPanelHeaderActions,
+    KbqContentPanelHeaderTitle
 } from './content-panel';
 
 const COMPONENTS = [
     KbqContentPanel,
-    KbqContentPanelBody,
-    KbqContentPanelToolbar,
+    KbqContentPanelAside,
     KbqContentPanelHeader,
-    KbqContentPanelFooter,
-    KbqContentPanelTitle
+    KbqContentPanelHeaderTitle,
+    KbqContentPanelHeaderActions,
+    KbqContentPanelBody,
+    KbqContentPanelFooter
 ];
 
 @NgModule({
