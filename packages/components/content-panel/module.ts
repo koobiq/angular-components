@@ -7,7 +7,6 @@ import {
     KbqContentPanelTitle,
     KbqContentPanelToolbar
 } from './content-panel';
-import { KbqResizable } from './resize';
 
 const COMPONENTS = [
     KbqContentPanel,
@@ -15,8 +14,7 @@ const COMPONENTS = [
     KbqContentPanelToolbar,
     KbqContentPanelHeader,
     KbqContentPanelFooter,
-    KbqContentPanelTitle,
-    KbqResizable
+    KbqContentPanelTitle
 ];
 
 @NgModule({

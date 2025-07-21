@@ -1,8 +1,22 @@
 import { DOCUMENT } from '@angular/common';
-import { afterNextRender, DestroyRef, Directive, ElementRef, inject, Input, NgModule, NgZone } from '@angular/core';
+import {
+    afterNextRender,
+    computed,
+    DestroyRef,
+    Directive,
+    ElementRef,
+    inject,
+    input,
+    NgModule,
+    NgZone,
+    output
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent } from 'rxjs';
 
+/**
+ * Directive (container) sets whether the element is resizable.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqResizable]',
@@ -12,58 +26,71 @@ import { fromEvent } from 'rxjs';
     }
 })
 export class KbqResizable {
+    /**
+     * @docs-private
+     */
     readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 }
 
+/**
+ * Directive which defines element resizing direction.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqResizer]',
     exportAs: 'kbqResizer',
     host: {
         class: 'kbq-resizer',
-        '[style.cursor]': 'cursor'
+        '[style.cursor]': 'cursor()'
     }
 })
 export class KbqResizer {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-    private readonly resizable: ElementRef<HTMLElement> = inject(KbqResizable).elementRef;
+    private readonly resizable = inject(KbqResizable);
     private readonly zone = inject(NgZone);
     private readonly document = inject<Document>(DOCUMENT);
     private readonly destroyRef = inject(DestroyRef);
 
     private x = NaN;
     private y = NaN;
+
     private width = 0;
     private height = 0;
 
     /**
-     * Направление изменения размера элемента.
+     * Direction of element resizing.
      *
-     * Массив из двух чисел [x, y], где:
-     * - x: направление по горизонтали (-1 влево, 0 без изменения, 1 вправо)
-     * - y: направление по вертикали (-1 вверх, 0 без изменения, 1 вниз)
+     * Array of two numbers [x, y], where:
+     * - x: horizontal direction (left: -1, unchanged: 0, right: 1)
+     * - y: vertical direction (up: -1, unchanged: 0, down: 1)
      */
-    @Input()
-    public kbqResizer: readonly [x: number, y: number] = [0, 0];
+    readonly direction = input.required<[x: -1 | 0 | 1, y: -1 | 0 | 1]>({ alias: 'kbqResizer' });
 
-    // @Output()
-    // public readonly kbqSizeChange = new EventEmitter<readonly [x: number, y: number]>();
+    /**
+     * Emits the new size of the element after resizing.
+     */
+    readonly sizeChange = output<[width: number, height: number]>();
 
-    protected get cursor(): string {
-        if (!this.kbqResizer[0]) {
+    /**
+     * @docs-private
+     */
+    protected readonly cursor = computed(() => {
+        const [x, y] = this.direction();
+
+        if (!x) {
             return 'ns-resize';
         }
 
-        if (!this.kbqResizer[1]) {
+        if (!y) {
             return 'ew-resize';
         }
 
-        if (this.kbqResizer[0] * this.kbqResizer[1] > 0) {
+        if (x * y > 0) {
             return 'nwse-resize';
         }
 
         return 'nesw-resize';
-    }
+    });
 
     constructor() {
         afterNextRender(() => {
@@ -88,43 +115,34 @@ export class KbqResizer {
 
         this.x = event.x;
         this.y = event.y;
-        this.width = this.resizable.nativeElement.clientWidth;
-        this.height = this.resizable.nativeElement.clientHeight;
+
+        this.width = this.resizable.elementRef.nativeElement.clientWidth;
+        this.height = this.resizable.elementRef.nativeElement.clientHeight;
     }
 
     private handleDocumentPointerMove(event: PointerEvent): void {
-        if (!event.buttons) {
-            this.handleDocumentPointerUp();
-        } else {
-            this.onMove(event);
-        }
+        if (!event.buttons) return this.handleDocumentPointerUp(event);
+
+        this.onMove(event);
     }
 
-    private handleDocumentPointerUp(_event?: PointerEvent): void {
+    private handleDocumentPointerUp(_event: PointerEvent): void {
         this.x = NaN;
     }
 
     private onMove({ x, y }: PointerEvent): void {
-        if (Number.isNaN(this.x)) {
-            return;
-        }
+        if (Number.isNaN(this.x)) return;
 
-        const { style } = this.resizable.nativeElement;
-        const size = [
-            this.width + this.kbqResizer[0] * (x - this.x),
-            this.height + this.kbqResizer[1] * (y - this.y)
-        ] as const;
+        const { style } = this.resizable.elementRef.nativeElement;
 
-        if (this.kbqResizer[0]) {
-            style.width = `${size[0]}px`;
-        }
+        const [directionX, directionY] = this.direction();
+        const width = this.width + directionX * (x - this.x);
+        const height = this.height + directionY * (y - this.y);
 
-        if (this.kbqResizer[1]) {
-            style.height = `${size[1]}px`;
-        }
+        if (directionX) style.width = `${width}px`;
+        if (directionY) style.height = `${height}px`;
 
-        // console.log('size', size);
-        // this.kbqSizeChange.emit(size);
+        this.sizeChange.emit([width, height]);
     }
 }
 

@@ -5,8 +5,8 @@
     ],
     "caseSensitive": false,
     "words": [
-        "autoselect",
         "actionbar",
+        "autoselect",
         "behaviour",
         "bento",
         "codeowners",
@@ -23,15 +23,16 @@
         "noborder",
         "opensource",
         "overlayed",
+        "overlayscrollbars",
+        "prerender",
         "Repobeats",
+        "Resizer",
         "sidepanel",
         "sidepanels",
         "stackblitz",
         "stylelintrc",
         "timepicker",
-        "unclickable",
-        "overlayscrollbars",
         "Topbar",
-        "prerender"
+        "unclickable"
     ]
 }

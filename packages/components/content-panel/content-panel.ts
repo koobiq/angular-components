@@ -9,23 +9,18 @@ import {
     DestroyRef,
     Directive,
     ElementRef,
-    EventEmitter,
     HostBinding,
-    HostListener,
     inject,
     Input,
-    NgZone,
     OnDestroy,
-    Output,
     Renderer2,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KBQ_WINDOW, KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KBQ_SIDEPANEL_DATA } from '@koobiq/components/sidepanel';
-import { distinctUntilChanged, filter, fromEvent, map, switchMap, takeUntil } from 'rxjs';
 import { KbqButtonModule, KbqButtonStyles } from '../button';
-import { KbqResizable, KbqResizer } from './resize';
+import { KbqResizable, KbqResizeModule } from './resize';
 
 export enum KbqContentPanelSize {
     Small = 'small',
@@ -53,83 +48,6 @@ export class KbqContentPanelToolbar {}
     hostDirectives: [CdkScrollable]
 })
 export class KbqContentPanelBody {}
-
-@Directive({
-    selector: '[icResizableContentPanel]',
-    standalone: true
-})
-export class ResizableContentPanelDirective implements AfterViewInit, OnDestroy {
-    @Input() minWidth = 480;
-    @Input() maxWidth = 800;
-
-    @Output() widthChange = new EventEmitter<number>();
-
-    readonly #el: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);
-    readonly #ngZone: NgZone = inject(NgZone);
-    readonly #destroyRef: DestroyRef = inject(DestroyRef);
-    readonly #icContentPanelComponent = inject(KbqContentPanel);
-
-    private get initialPanelWidth(): number {
-        return this.#icContentPanelComponent.initialWidth || this.minWidth;
-    }
-
-    ngAfterViewInit(): void {
-        this.widthChange.emit(this.#el.nativeElement.offsetWidth);
-        this.#ngZone.runOutsideAngular(() => {
-            fromEvent<MouseEvent>(this.#el.nativeElement, 'mousedown')
-                .pipe(
-                    filter((event) => (event.target as HTMLElement).classList.contains('ic-content-panel__resizer')),
-                    switchMap((event: MouseEvent) => {
-                        event.preventDefault();
-
-                        const startX: number = event.clientX;
-                        const startWidth: number = this.#el.nativeElement.offsetWidth;
-
-                        const mousemove$ = fromEvent<MouseEvent>(document, 'mousemove');
-                        const mouseup$ = fromEvent<MouseEvent>(document, 'mouseup');
-
-                        return mousemove$.pipe(
-                            map((moveEvent) => {
-                                const dx = moveEvent.clientX - startX;
-                                let newWidth = startWidth - dx;
-
-                                newWidth = Math.max(this.minWidth, Math.min(this.maxWidth, newWidth));
-
-                                return newWidth;
-                            }),
-                            distinctUntilChanged(),
-                            takeUntil(mouseup$)
-                        );
-                    }),
-                    takeUntilDestroyed(this.#destroyRef)
-                )
-                .subscribe((newWidth) => {
-                    this.#ngZone.run(() => {
-                        this.widthChange.emit(newWidth);
-                    });
-                });
-
-            fromEvent<MouseEvent>(this.#el.nativeElement, 'dblclick')
-                .pipe(
-                    filter(
-                        (event) =>
-                            (event.target as HTMLElement).classList.contains('ic-content-panel__resizer') &&
-                            this.#el.nativeElement.offsetWidth !== this.initialPanelWidth
-                    ),
-                    takeUntilDestroyed(this.#destroyRef)
-                )
-                .subscribe(() => {
-                    this.#ngZone.run(() => {
-                        this.widthChange.emit(this.initialPanelWidth);
-                    });
-                });
-        });
-    }
-
-    ngOnDestroy(): void {
-        this.widthChange.emit(0);
-    }
-}
 
 @Directive({
     standalone: true,
@@ -229,30 +147,23 @@ export class KbqContentPanelFooter {
 @Component({
     standalone: true,
     selector: 'kbq-content-panel',
-    imports: [KbqResizer],
+    imports: [KbqResizeModule],
+    hostDirectives: [KbqResizable],
     template: `
-        <div [kbqResizer]="[-1, 0]">res</div>
+        <div class="kbq-content-panel__resizer" [kbqResizer]="[-1, 0]"></div>
         <ng-content select="[kbqContentPanelToolbar]" />
         <div class="kbq-content-panel__content">
             <ng-content select="kbq-content-panel-header" />
             <ng-content select="[kbqContentPanelBody]" />
             <ng-content select="kbq-content-panel-footer" />
         </div>
-        <!-- <div class="ic-content-panel__resizer"></div> -->
     `,
     styleUrls: ['./content-panel.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
         class: 'kbq-content-panel'
-    },
-    hostDirectives: [
-        // {
-        //     directive: ResizableContentPanelDirective,
-        //     outputs: ['widthChange']
-        // }
-        KbqResizable
-    ]
+    }
 })
 export class KbqContentPanel implements AfterContentInit, AfterViewInit, OnDestroy {
     private readonly scrollableContentBody = contentChild(KbqContentPanelBody, { read: CdkScrollable });
@@ -260,7 +171,7 @@ export class KbqContentPanel implements AfterContentInit, AfterViewInit, OnDestr
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
-    readonly #window = inject(KBQ_WINDOW);
+    // readonly #window = inject(KBQ_WINDOW);
     readonly #el: ElementRef<HTMLElement> = inject<ElementRef<HTMLElement>>(ElementRef);
 
     @Input()
@@ -282,24 +193,24 @@ export class KbqContentPanel implements AfterContentInit, AfterViewInit, OnDestr
     @HostBinding('style.width.px')
     protected width: number | null = null;
 
-    @HostListener('widthChange', ['$event'])
-    onWidthChange(newWidth: number): void {
-        this.width = newWidth;
+    // @HostListener('widthChange', ['$event'])
+    // onWidthChange(newWidth: number): void {
+    //     this.width = newWidth;
 
-        if (this.data.ghostElement) {
-            let contentPanelGhostOffset = 0;
+    //     if (this.data.ghostElement) {
+    //         let contentPanelGhostOffset = 0;
 
-            if (this.data.ghostElement.parentElement) {
-                contentPanelGhostOffset =
-                    this.#window.innerWidth - this.data.ghostElement.parentElement.getBoundingClientRect().right;
-            }
+    //         if (this.data.ghostElement.parentElement) {
+    //             contentPanelGhostOffset =
+    //                 this.#window.innerWidth - this.data.ghostElement.parentElement.getBoundingClientRect().right;
+    //         }
 
-            this.data.ghostElement.style.setProperty(
-                '--content-panel-width',
-                `${newWidth + 8 - contentPanelGhostOffset}px`
-            );
-        }
-    }
+    //         this.data.ghostElement.style.setProperty(
+    //             '--content-panel-width',
+    //             `${newWidth + 8 - contentPanelGhostOffset}px`
+    //         );
+    //     }
+    // }
 
     get initialWidth(): number {
         return this.#initialWidth || 0;

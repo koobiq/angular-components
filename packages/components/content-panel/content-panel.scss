@@ -1,4 +1,6 @@
 .kbq-content-panel {
+    position: relative;
+
     &.kbq-content-panel_header-with-shadow .kbq-content-panel-header {
         box-shadow: var(--kbq-shadow-overflow-normal-bottom);
     }
@@ -27,12 +29,22 @@
         flex-grow: 1;
         padding: 0 var(--kbq-size-xxl);
     }
+
+    .kbq-content-panel__resizer {
+        --kbq-content-panel-resizer-width: var(--kbq-size-l);
+
+        position: absolute;
+        top: 0;
+        left: calc(var(--kbq-content-panel-resizer-width) / -2);
+
+        width: var(--kbq-content-panel-resizer-width);
+        height: 100%;
+    }
 }
 
 // ##########################################################################
 
 .kbq-content-panel {
-    position: relative;
     display: flex;
     flex-direction: row;
     min-width: 480px;
