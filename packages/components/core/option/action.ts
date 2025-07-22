@@ -39,7 +39,7 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
     exportAs: 'kbqOptionAction',
     template: `
         <ng-content select="[kbq-icon]">
-            <i class="kbq kbq-icon kbq-ellipsis-vertical_16"></i>
+            <i class="kbq kbq-icon kbq-contrast-fade kbq-ellipsis-vertical_16"></i>
         </ng-content>
     `,
     styleUrls: ['./action.scss'],

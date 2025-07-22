@@ -17,6 +17,15 @@
     width: var(--kbq-size-xl);
     height: var(--kbq-size-xl);
 
+    &:not(.kbq-disabled) {
+        &:hover,
+        &:focus {
+            & .kbq-icon {
+                color: var(--kbq-icon-button-fade-contrast-states-hover);
+            }
+        }
+    }
+
     &.kbq-disabled {
         cursor: default;
     }
