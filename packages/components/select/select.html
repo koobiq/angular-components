@@ -4,6 +4,7 @@
     cdkOverlayOrigin
     class="kbq-select__trigger"
     [class.kbq-select__trigger_empty]="empty"
+    [class.kbq-select__trigger_multiline]="multiline"
     [class.kbq-select__trigger_multiple]="multiple"
     [class.kbq-select__trigger_single]="!multiple"
 >
@@ -15,56 +16,59 @@
                 <span class="kbq-select__placeholder">
                     {{ placeholder || '\u00A0' }}
                 </span>
-            }
-            @if (!empty) {
-                <span>
-                    @if (!!customTrigger) {
-                        <ng-content select="kbq-select-trigger, [kbq-select-trigger]" />
-                    } @else {
-                        <div class="kbq-select__match-container">
-                            @if (multiple) {
-                                <div class="kbq-select__match-list">
-                                    @if (!customTagTemplateRef) {
-                                        @for (option of triggerValues; track option) {
-                                            <kbq-tag
-                                                [color]="colorForState"
-                                                [disabled]="option.disabled || disabled"
-                                                [selectable]="false"
-                                            >
-                                                {{ option.viewValue }}
-                                                @if (!option.disabled && !disabled) {
-                                                    <i
-                                                        kbq-icon="kbq-xmark-s_16"
-                                                        kbqTagRemove
-                                                        (click)="onRemoveMatcherItem(option, $event)"
-                                                    ></i>
-                                                }
-                                            </kbq-tag>
-                                        }
-                                    }
-                                    @if (customTagTemplateRef) {
-                                        @for (option of triggerValues; track option) {
-                                            <ng-container
-                                                [ngTemplateOutlet]="$any(customTagTemplateRef)"
-                                                [ngTemplateOutletContext]="{ $implicit: option, select: this }"
-                                            />
-                                        }
-                                    }
-                                </div>
-                            } @else {
-                                <span class="kbq-select__matcher-text">
-                                    {{ triggerValue }}
-                                </span>
-                            }
+            } @else {
+                @if (!!customTrigger) {
+                    <ng-content select="kbq-select-trigger, [kbq-select-trigger]" />
+                } @else {
+                    <div class="kbq-select__match-container">
+                        @if (multiple) {
                             <div
-                                class="kbq-select__match-hidden-text"
-                                [style.display]="hiddenItems > 0 ? 'block' : 'none'"
+                                [class.kbq-select__match-list]="!multiline"
+                                [class.kbq-select__multiline-match-list]="multiline"
                             >
-                                {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
+                                @if (!customTagTemplateRef) {
+                                    @for (option of triggerValues; track option) {
+                                        <kbq-tag
+                                            [color]="colorForState"
+                                            [disabled]="option.disabled || disabled"
+                                            [selectable]="false"
+                                        >
+                                            {{ option.viewValue }}
+                                            @if (!option.disabled && !disabled) {
+                                                <i
+                                                    kbq-icon="kbq-xmark-s_16"
+                                                    kbqTagRemove
+                                                    (click)="onRemoveMatcherItem(option, $event)"
+                                                ></i>
+                                            }
+                                        </kbq-tag>
+                                    }
+                                }
+                                @if (customTagTemplateRef) {
+                                    @for (option of triggerValues; track option) {
+                                        <ng-container
+                                            [ngTemplateOutlet]="$any(customTagTemplateRef)"
+                                            [ngTemplateOutletContext]="{ $implicit: option, select: this }"
+                                        />
+                                    }
+                                }
                             </div>
-                        </div>
-                    }
-                </span>
+
+                            @if (!multiline) {
+                                <div
+                                    class="kbq-select__match-hidden-text"
+                                    [style.display]="hiddenItems > 0 ? 'block' : 'none'"
+                                >
+                                    {{ hiddenItemsTextFormatter(hiddenItemsText, hiddenItems) }}
+                                </div>
+                            }
+                        } @else {
+                            <span class="kbq-select__matcher-text">
+                                {{ triggerValue }}
+                            </span>
+                        }
+                    </div>
+                }
             }
 
             @if (canShowCleaner) {

@@ -294,6 +294,11 @@ export class KbqSelect
      */
     @Input() sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
 
+    /**
+     * Whether to use a multiline matcher or not. Default is false
+     */
+    @Input({ transform: booleanAttribute }) multiline: boolean = false;
+
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
         if (this.options) {
@@ -644,7 +649,15 @@ export class KbqSelect
 
         merge(this.optionSelectionChanges, this.visibleChanges)
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => setTimeout(() => this.calculateHiddenItems(), 0));
+            .subscribe(() =>
+                setTimeout(() => {
+                    this.calculateHiddenItems();
+
+                    if (this.multiline && this.overlayDir.overlayRef) {
+                        this.setOverlayPosition();
+                    }
+                }, 0)
+            );
     }
 
     ngAfterContentInit() {
@@ -952,7 +965,15 @@ export class KbqSelect
     }
 
     calculateHiddenItems(): void {
-        if (!this.isBrowser || this.customTrigger || this.empty || !this.multiple || this.customMatcher) return;
+        if (
+            this.multiline ||
+            !this.isBrowser ||
+            this.customTrigger ||
+            this.empty ||
+            !this.multiple ||
+            this.customMatcher
+        )
+            return;
 
         const totalItemsWidth = this.getTotalItemsWidthInMatcher();
         const [totalVisibleItemsWidth, visibleItems] = this.getTotalVisibleItems();
