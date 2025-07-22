@@ -37,6 +37,8 @@ import { InputExamplesModule } from '../../docs-examples/components/input';
         <input-number-overview-example />
         <hr />
         <input-password-overview-example />
+        <hr />
+        <input-change-password-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
