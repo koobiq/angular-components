@@ -3196,6 +3196,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-virtual-scroll-example.ts",
     "importPath": "components/select"
   },
+  "select-with-multiline-matcher": {
+    "packagePath": "components/select/select-with-multiline-matcher",
+    "title": "Select with panelWidth attribute",
+    "componentName": "SelectWithMultilineMatcherExample",
+    "files": [
+      "select-with-multiline-matcher-example.ts"
+    ],
+    "selector": "select-with-multiline-matcher-example",
+    "additionalComponents": [],
+    "primaryFile": "select-with-multiline-matcher-example.ts",
+    "importPath": "components/select"
+  },
   "select-with-panel-width-attribute": {
     "packagePath": "components/select/select-with-panel-width-attribute",
     "title": "Select with panelWidth attribute",
@@ -4303,6 +4315,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-select-search-overview-example.ts",
     "importPath": "components/tree-select"
   },
+  "tree-select-with-multiline-matcher": {
+    "packagePath": "components/tree-select/tree-select-with-multiline-matcher-overview",
+    "title": "tree-select-with-multiline-matcher",
+    "componentName": "TreeSelectWithMultilineMatcherExample",
+    "files": [
+      "tree-select-with-multiline-matcher-example.ts"
+    ],
+    "selector": "tree-select-with-multiline-matcher-example",
+    "additionalComponents": [],
+    "primaryFile": "tree-select-with-multiline-matcher-example.ts",
+    "importPath": "components/tree-select"
+  },
   "tree-access-rights": {
     "packagePath": "components/tree/tree-access-rights",
     "title": "Tree access rights",
@@ -5075,6 +5099,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-virtual-scroll':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-with-multiline-matcher':
+return import('@koobiq/docs-examples/components/select');
   case 'select-with-panel-width-attribute':
 return import('@koobiq/docs-examples/components/select');
   case 'sidebar-overview':
@@ -5254,6 +5280,8 @@ return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-overview':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-select-search-overview':
+return import('@koobiq/docs-examples/components/tree-select');
+  case 'tree-select-with-multiline-matcher':
 return import('@koobiq/docs-examples/components/tree-select');
   case 'tree-access-rights':
 return import('@koobiq/docs-examples/components/tree');

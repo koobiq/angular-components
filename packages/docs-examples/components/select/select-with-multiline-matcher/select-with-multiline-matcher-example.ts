@@ -16,7 +16,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div>
             <label class="kbq-form__label">Multiline matcher</label>
             <kbq-form-field>
-                <kbq-select [multiple]="true" [multiline]="true" [panelWidth]="400" placeholder="Placeholder">
+                <kbq-select [multiline]="true" [value]="selected" [panelWidth]="400" placeholder="Placeholder">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -49,4 +49,5 @@ export class SelectWithMultilineMatcherExample {
     readonly options = [
         'Option with very very very very very very very very very very very very very very very very very very very very very long text',
         ...Array.from({ length: 10 }).map((_, i) => `Option ${i}`)];
+    selected: string[] = [this.options[0], this.options[1], this.options[2], this.options[3]];
 }

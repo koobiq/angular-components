@@ -22,6 +22,10 @@ When a value is selected once, the reset control is hidden. Its display can be e
 
 <!-- example(select-multiple) -->
 
+#### Multiple selection (multiline)
+
+<!-- example(select-with-multiline-matcher) -->
+
 #### Grouping values
 
 <!-- example(select-groups) -->

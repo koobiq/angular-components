@@ -43,6 +43,7 @@ export class KbqOptionSelectionChange<T = KbqOption> {
  */
 export interface KbqOptionParentComponent {
     multiple?: boolean;
+    multiSelection?: boolean;
 }
 
 /**
@@ -188,8 +189,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     }
 
     /** Whether the wrapping component is in multiple selection mode. */
-    get multiple() {
-        return this.parent && this.parent.multiple;
+    get multiple(): boolean {
+        return !!this.parent?.multiSelection;
     }
 
     get id(): string {

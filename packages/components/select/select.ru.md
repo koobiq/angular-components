@@ -22,6 +22,10 @@
 
 <!-- example(select-multiple) -->
 
+#### Множественный выбор (многострочный)
+
+<!-- example(select-with-multiline-matcher) -->
+
 #### Группировка значений
 
 <!-- example(select-groups) -->

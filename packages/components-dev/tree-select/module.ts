@@ -23,7 +23,20 @@ import {
     KbqTreeSelectModule,
     kbqTreeSelectOptionsProvider
 } from '@koobiq/components/tree-select';
+import { TreeSelectExamplesModule } from '../../docs-examples/components/tree-select';
 import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
+
+@Component({
+    standalone: true,
+    imports: [TreeSelectExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <tree-select-with-multiline-matcher-example />
+        <hr />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+class DevExamples {}
 
 @Component({
     selector: 'dev-app',
@@ -40,7 +53,8 @@ import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from 
         KbqIconModule,
         ReactiveFormsModule,
         KbqPseudoCheckboxModule,
-        KbqTitleModule
+        KbqTitleModule,
+        DevExamples
     ],
     providers: [
         kbqTreeSelectOptionsProvider({

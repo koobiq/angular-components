@@ -88,6 +88,9 @@
 
         & .kbq-select__matcher {
             max-width: 100%;
+
+            padding: var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-right)
+                var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-left);
         }
 
         & .kbq-select__cleaner,

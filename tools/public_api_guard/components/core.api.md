@@ -2115,7 +2115,7 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     get id(): string;
-    get multiple(): boolean | undefined;
+    get multiple(): boolean;
     // (undocumented)
     static ngAcceptInputType_selectable: unknown;
     // (undocumented)
@@ -2135,8 +2135,8 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     setActiveStyles(): void;
     setInactiveStyles(): void;
     // (undocumented)
-    get showCheckbox(): boolean | undefined;
-    set showCheckbox(value: boolean | undefined);
+    get showCheckbox(): boolean;
+    set showCheckbox(value: boolean);
     readonly stateChanges: Subject<void>;
     // (undocumented)
     textElement: ElementRef;
@@ -2240,6 +2240,8 @@ export class KbqOptionModule {
 export interface KbqOptionParentComponent {
     // (undocumented)
     multiple?: boolean;
+    // (undocumented)
+    multiSelection?: boolean;
 }
 
 // @public

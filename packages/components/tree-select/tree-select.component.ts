@@ -130,6 +130,7 @@ export class KbqTreeSelectChange {
     host: {
         class: 'kbq-tree-select',
         '[class.kbq-select_multiple]': 'multiple',
+        '[class.kbq-select_multiline]': 'multiline',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
 
@@ -297,6 +298,11 @@ export class KbqTreeSelect
      */
     @Input() sortComparator: (a: KbqTreeOption, b: KbqTreeOption, options: KbqTreeOption[]) => number;
 
+    /**
+     * Whether to use a multiline matcher or not. Default is false
+     */
+    @Input({ transform: booleanAttribute }) multiline: boolean = false;
+
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqTreeSelectChange> = defer(() => {
         if (this.options) {
@@ -370,7 +376,7 @@ export class KbqTreeSelect
 
     @Input()
     get autoSelect(): boolean {
-        if (this.multiple) {
+        if (this.multiSelection) {
             return false;
         }
 
@@ -479,6 +485,11 @@ export class KbqTreeSelect
 
     set focused(value: boolean) {
         this._focused = value;
+    }
+
+    /** Whether multiple choice is enabled or not. True if multiple or multiline */
+    get multiSelection(): boolean {
+        return this.multiple || this.multiline;
     }
 
     private _focused = false;
@@ -598,12 +609,12 @@ export class KbqTreeSelect
         this.tree.resetFocusedItemOnBlur = false;
         this.tree.optionShouldHoldFocusOnBlur = true;
 
-        this.selectionModel = this.tree.selectionModel = new SelectionModel<any>(this.multiple);
+        this.selectionModel = this.tree.selectionModel = new SelectionModel<any>(this.multiSelection);
 
         this.selectionModel.changed.subscribe(() => {
             this.onChange(this.selectedValues);
 
-            if (this.multiple) {
+            if (this.multiSelection) {
                 this.refreshTriggerValues();
             }
         });
@@ -618,10 +629,10 @@ export class KbqTreeSelect
 
         if (this.tree.multipleMode === null) {
             // setTimeout need for prevent an error "NG0100: ExpressionChangedAfterItHasBeenCheckedError"
-            setTimeout(() => (this.tree.multipleMode = this.multiple ? MultipleMode.CHECKBOX : null));
+            setTimeout(() => (this.tree.multipleMode = this.multiSelection ? MultipleMode.CHECKBOX : null));
         }
 
-        if (this.multiple) {
+        if (this.multiSelection) {
             this.tree.noUnselectLast = false;
         }
 
@@ -631,7 +642,7 @@ export class KbqTreeSelect
         }
 
         this.userInteractionChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            if (!this.multiple && this.panelOpen) {
+            if (!this.multiSelection && this.panelOpen) {
                 this.close();
 
                 Promise.resolve().then(() => this.focus());
@@ -648,7 +659,7 @@ export class KbqTreeSelect
             }
         });
 
-        if (!this.multiple) {
+        if (!this.multiSelection) {
             this.selectionModel.changed
                 .pipe(
                     filter(({ added }) => !!added.length),
@@ -664,12 +675,14 @@ export class KbqTreeSelect
     }
 
     ngAfterViewInit() {
-        if (!this.tree) {
-            return;
-        }
+        if (!this.tree) return;
 
         this.tags.changes.pipe(startWith(null)).subscribe(() => {
             this.calculateHiddenItems();
+
+            if (this.multiline && this.overlayDir.overlayRef) {
+                this.setOverlayPosition();
+            }
         });
 
         this.tree.treeControl.expansionModel.changed
@@ -841,13 +854,13 @@ export class KbqTreeSelect
     }
 
     get selected(): any {
-        return this.multiple ? this.selectionModel?.selected : this.selectionModel?.selected[0];
+        return this.multiSelection ? this.selectionModel?.selected : this.selectionModel?.selected[0];
     }
 
     get selectedValues(): any {
         const selectedValues = this.selectionModel.selected.map((value) => this.tree.treeControl.getValue(value));
 
-        return this.multiple ? selectedValues : selectedValues[0];
+        return this.multiSelection ? selectedValues : selectedValues[0];
     }
 
     get triggerValue(): string {
@@ -1086,12 +1099,12 @@ export class KbqTreeSelect
         const isOpenKey = keyCode === ENTER || keyCode === SPACE;
 
         // Open the select on ALT + arrow key to match the native <select>
-        if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
+        if (isOpenKey || ((this.multiSelection || event.altKey) && isArrowKey)) {
             // prevents the page from scrolling down when pressing space
             event.preventDefault();
 
             this.open();
-        } else if (!this.multiple && this.tree.keyManager && this.tree.keyManager.onKeydown) {
+        } else if (!this.multiSelection && this.tree.keyManager && this.tree.keyManager.onKeydown) {
             this.tree.keyManager.onKeydown(event);
         }
     }
@@ -1132,7 +1145,7 @@ export class KbqTreeSelect
                 this.close();
                 this.focus();
             }
-        } else if (this.multiple && isSelectAll(event)) {
+        } else if (this.multiSelection && isSelectAll(event)) {
             this.selectAllHandler(event, this);
         } else {
             const previouslyFocusedIndex = this.tree.keyManager.activeItemIndex;
@@ -1141,7 +1154,7 @@ export class KbqTreeSelect
             this.tree.keyManager.onKeydown(event);
 
             if (
-                this.multiple &&
+                this.multiSelection &&
                 isArrowKey &&
                 event.shiftKey &&
                 this.tree.keyManager.activeItem &&
@@ -1180,7 +1193,7 @@ export class KbqTreeSelect
      * found with the designated value, the select trigger is cleared.
      */
     private setSelectionByValue(value: any | any[]) {
-        if (this.multiple && value) {
+        if (this.multiSelection && value) {
             if (!Array.isArray(value)) {
                 throw getKbqSelectNonArrayValueError();
             }
@@ -1203,7 +1216,7 @@ export class KbqTreeSelect
         this.tree.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this._panelOpen && this.panel) {
                 this.scrollActiveOptionIntoView();
-            } else if (!this._panelOpen && !this.multiple && this.tree.keyManager.activeItem) {
+            } else if (!this._panelOpen && !this.multiSelection && this.tree.keyManager.activeItem) {
                 this.tree.keyManager.activeItem.selectViaInteraction();
             }
         });
@@ -1211,7 +1224,7 @@ export class KbqTreeSelect
 
     /** Sorts the selected values in the selected based on their order in the panel. */
     private sortValues() {
-        if (this.multiple) {
+        if (this.multiSelection) {
             const options = this.options.toArray();
 
             this.selectionModel.sort((a, b) => {
