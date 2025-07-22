@@ -175,6 +175,7 @@ export class KbqButton extends KbqColorDirective implements OnDestroy, AfterView
         super();
 
         this.color = KbqComponentColors.ContrastFade;
+        this.setDefaultColor(KbqComponentColors.ContrastFade);
     }
 
     ngAfterViewInit(): void {
