@@ -236,14 +236,14 @@ export class KbqInputPassword
     }
 
     onBlur(): void {
+        this.focusChanged(false);
+
         if (this.ngControl?.control) {
             const control = this.ngControl.control;
 
             control.updateValueAndValidity({ emitEvent: false });
             (control.statusChanges as EventEmitter<string>).emit(control.status);
         }
-
-        this.focusChanged(false);
     }
 
     /** Callback for the cases where the focused state of the input changes. */
