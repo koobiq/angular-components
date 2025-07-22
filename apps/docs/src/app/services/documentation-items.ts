@@ -374,7 +374,7 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     svgPreview: 'input',
                     hasApi: true,
                     apiId: 'input',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: 'file-upload',
