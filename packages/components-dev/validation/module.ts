@@ -26,6 +26,7 @@ import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { ValidationExamplesModule } from '../../docs-examples/components/validation';
 import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
@@ -35,6 +36,39 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         return allowed ? null : { ldapLogin: { value: control.value } };
     };
 }
+
+@Component({
+    standalone: true,
+    imports: [ValidationExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <validation-overview-example />
+        <validation-composite-example />
+        <validation-global-example />
+        <validation-global-one-required-example />
+        <validation-on-blur-example />
+        <validation-on-type-example />
+        <validation-small-example />
+        ,
+        <validation-on-open-example />
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            flex-wrap: wrap;
+        }
+
+        :host > * {
+            border-radius: var(--kbq-size-border-radius);
+            border: 1px solid var(--kbq-line-contrast-less);
+            margin-bottom: var(--kbq-size-l);
+            padding: var(--kbq-size-m);
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -54,7 +88,8 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         KbqIconModule,
         KbqDatepickerModule,
         KbqTimepickerModule,
-        KbqLuxonDateModule
+        KbqLuxonDateModule,
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

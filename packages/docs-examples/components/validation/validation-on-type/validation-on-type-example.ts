@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
 /**
  * @title Validation on type
@@ -19,30 +19,57 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqInputModule,
         KbqFormsModule
     ],
-    templateUrl: 'validation-on-type-example.html'
+    template: `
+        <div class="layout-margin" style="width: 400px">
+            <form class="kbq-form-vertical" [formGroup]="checkOnFlyForm" novalidate>
+                <div class="kbq-form__fieldset">
+                    <div class="kbq-form__row">
+                        <div class="kbq-form__label">Folder name</div>
+                        <kbq-form-field
+                            class="kbq-form__control"
+                            #tooltip="kbqTooltip"
+                            [kbqEnterDelay]="10"
+                            [kbqPlacement]="popUpPlacements.Top"
+                            [kbqTrigger]="'manual'"
+                            [kbqTooltip]="'Буквы и цифры'"
+                            [kbqTooltipColor]="colors.Error"
+                        >
+                            <input (input)="onInput($event)" formControlName="folderName" kbqInput />
+
+                            <kbq-cleaner />
+
+                            <kbq-hint>Only letters and numbers</kbq-hint>
+                        </kbq-form-field>
+                    </div>
+                </div>
+            </form>
+        </div>
+    `,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    }
 })
 export class ValidationOnTypeExample {
-    popUpPlacements = PopUpPlacements;
+    @ViewChild('tooltip', { static: false }) tooltip: KbqTooltipTrigger;
 
-    checkOnFlyForm: FormGroup;
+    protected readonly popUpPlacements = PopUpPlacements;
+    protected readonly colors = KbqComponentColors;
 
-    @ViewChild('tooltip', { static: false }) tooltip: any;
+    protected readonly checkOnFlyForm = new FormGroup({
+        folderName: new FormControl('')
+    });
 
-    constructor() {
-        this.checkOnFlyForm = new FormGroup({
-            folderName: new FormControl('')
-        });
-    }
-
-    onInput(event) {
+    onInput(event: Event): void {
         const regex = /^[\d\w]+$/g;
 
-        if (!regex.test(event.target.value)) {
-            const newValue = event.target.value.replace(/[^\d\w]+/g, '');
+        const target = event.target as HTMLInputElement | null;
+
+        if (target?.value && !regex.test(target.value)) {
+            const newValue = target.value.replace(/[^\d\w]+/g, '');
 
             this.checkOnFlyForm.controls.folderName.setValue(newValue);
 
-            if (!this.tooltip.isTooltipOpen) {
+            if (!this.tooltip.isOpen) {
                 this.tooltip.show();
 
                 setTimeout(() => this.tooltip.hide(), 3000);
