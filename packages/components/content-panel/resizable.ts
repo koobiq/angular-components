@@ -7,7 +7,6 @@ import {
     ElementRef,
     inject,
     input,
-    NgModule,
     NgZone,
     output
 } from '@angular/core';
@@ -16,6 +15,14 @@ import { fromEvent } from 'rxjs';
 
 /**
  * Directive (container) sets whether the element is resizable.
+ *
+ * @example
+ *
+ * ```html
+ * <div kbqResizable>
+ *     <div kbqResizer [direction]="[1, 0]"></div>
+ * </div>
+ * ```
  *
  * @docs-private
  */
@@ -149,14 +156,3 @@ export class KbqResizer {
         this.sizeChange.emit([width, height]);
     }
 }
-
-const COMPONENTS = [KbqResizable, KbqResizer];
-
-/**
- * @docs-private
- */
-@NgModule({
-    imports: COMPONENTS,
-    exports: COMPONENTS
-})
-export class KbqResizeModule {}

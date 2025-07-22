@@ -1,8 +1,14 @@
 @use '../core/styles/common/tokens';
 
 .kbq-content-panel {
+    display: flex;
     position: relative;
     border-radius: var(--kbq-size-l);
+    background-color: var(--kbq-background-card);
+    border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
+
+    height: 100%;
+    max-width: 100%;
 
     &.kbq-content-panel_header-with-shadow .kbq-content-panel-header {
         box-shadow: var(--kbq-shadow-overflow-normal-bottom);
@@ -12,20 +18,6 @@
         box-shadow: var(--kbq-shadow-overflow-normal-top);
     }
 
-    .kbq-content-panel-aside {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--kbq-size-s);
-
-        padding: var(--kbq-size-l) var(--kbq-size-m);
-
-        border-top-left-radius: inherit;
-        border-bottom-left-radius: inherit;
-
-        border-right: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
-    }
-
     .kbq-content-panel__content {
         display: flex;
         flex: 1;
@@ -33,12 +25,6 @@
 
         border-top-right-radius: inherit;
         border-bottom-right-radius: inherit;
-    }
-
-    .kbq-content-panel-body {
-        overflow-y: scroll;
-        flex-grow: 1;
-        padding: 0 var(--kbq-size-xxl);
     }
 
     .kbq-content-panel__resizer {
@@ -54,94 +40,37 @@
         z-index: 2;
     }
 
-    .kbq-content-panel-header-title {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
-
-        flex-grow: 1;
-        flex-shrink: 0;
-    }
-
-    .kbq-content-panel-header-title,
-    .kbq-content-panel-header-actions {
+    .kbq-content-panel-aside {
         display: flex;
+        flex-direction: column;
         align-items: center;
         gap: var(--kbq-size-s);
-    }
-}
 
-// ##########################################################################
+        padding: var(--kbq-size-l) var(--kbq-size-m);
 
-.kbq-content-panel {
-    display: flex;
-    flex-direction: row;
-    min-width: 480px;
-    max-width: 800px;
-    height: 100%;
-    border: 1px solid var(--kbq-line-contrast-less);
+        border-top-left-radius: inherit;
+        border-bottom-left-radius: inherit;
 
-    &.ic-content-panel_small {
-        width: 480px;
+        border-right: inherit;
     }
 
-    &.ic-content-panel_medium {
-        width: 640px;
+    .kbq-content-panel-body {
+        overflow-y: scroll;
+        flex-grow: 1;
+        padding: 0 var(--kbq-size-xxl);
     }
 
-    &.ic-content-panel_large {
-        width: 800px;
-    }
-}
-
-.ic-content-panel__resizer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 8px;
-    height: 100%;
-    cursor: ew-resize;
-}
-
-.ic-content-panel:has(kbq-tab-group) {
-    .ic-content-panel__header-wrapper {
-        padding: var(--kbq-size-l) var(--kbq-size-l) 0 var(--kbq-size-xxl);
+    .kbq-content-panel-footer {
+        display: flex;
+        padding: var(--kbq-size-l) var(--kbq-size-xxl);
     }
 
-    .ic-content-panel__body {
-        padding-top: var(--kbq-size-l);
-    }
-}
-
-.ic-content-panel:not(:has(kbq-content-panel-footer)) {
-    .ic-content-panel__body::after {
-        padding: 0 var(--kbq-size-xxl) 80px var(--kbq-size-xxl);
-        content: '';
-    }
-}
-
-.kbq-content-panel-content:has(.ic-content-panel) {
-    border: 1px solid var(--kbq-line-contrast-less);
-    box-shadow: none;
-}
-
-// чтобы другие всплывающие элементы перекрывали сайдпанель
-.cdk-overlay-container:has(.ic-content-panel-overlay) {
-    z-index: 99;
-}
-
-.ic-content-panel-overlay {
-    .kbq-sidepanel-container {
-        width: fit-content !important;
-        max-width: 800px !important;
-        // border-radius: var(--kbq-size-m);
+    .kbq-content-panel-header-title {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
     }
 
-    .kbq-sidepanel-container_hide {
-        transform: translateX(20%) !important;
-    }
-
-    .kbq-sidepanel-container_right {
-        top: auto !important;
-        right: var(--kbq-size-s) !important;
-        bottom: var(--kbq-size-s);
+    .kbq-content-panel-header-actions {
+        display: flex;
+        gap: var(--kbq-size-s);
     }
 }
