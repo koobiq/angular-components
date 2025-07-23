@@ -82,7 +82,7 @@ export class KbqListModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption], [typeof i3.A11yModule, typeof i4.KbqPseudoCheckboxModule, typeof i4.KbqLineModule, typeof i4.KbqOptionModule, typeof i4.KbqActionContainerComponent, typeof i5.KbqIconModule], [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption, typeof i4.KbqOptionModule]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqListModule, [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption], [typeof i3.A11yModule, typeof i4.KbqPseudoCheckboxModule, typeof i4.KbqLineModule, typeof i4.KbqOptionModule, typeof i4.KbqActionContainer, typeof i5.KbqIconModule], [typeof i1.KbqList, typeof i2.KbqListSelection, typeof i1.KbqListItem, typeof i2.KbqListOption, typeof i2.KbqListOptionCaption, typeof i4.KbqOptionModule]>;
 }
 
 // @public

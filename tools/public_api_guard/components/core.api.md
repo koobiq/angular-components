@@ -1707,11 +1707,11 @@ export abstract class KbqAbstractSelect {
 }
 
 // @public (undocumented)
-export class KbqActionContainerComponent {
+export class KbqActionContainer {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionContainerComponent, "kbq-action-container", ["kbqActionContainer"], {}, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqActionContainer, "kbq-action-container", ["kbqActionContainer"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionContainerComponent, never>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqActionContainer, never>;
 }
 
 // @public
