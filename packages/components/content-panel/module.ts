@@ -3,6 +3,7 @@ import {
     KbqContentPanel,
     KbqContentPanelAside,
     KbqContentPanelBody,
+    KbqContentPanelContainer,
     KbqContentPanelFooter,
     KbqContentPanelHeader,
     KbqContentPanelHeaderActions,
@@ -10,6 +11,7 @@ import {
 } from './content-panel';
 
 const COMPONENTS = [
+    KbqContentPanelContainer,
     KbqContentPanel,
     KbqContentPanelAside,
     KbqContentPanelHeader,

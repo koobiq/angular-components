@@ -4,21 +4,19 @@
 
 ```ts
 
-import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/scrolling';
-import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { OutputEmitterRef } from '@angular/core';
-import { Signal } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export class KbqContentPanel {
     constructor();
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["scrollableContentBody"], ["[kbqContentPanelAside]", "kbq-content-panel-header", "[kbqContentPanelBody]", "[kbqContentPanelFooter]"], true, [{ directive: typeof i2.KbqResizable; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["scrollableContentBody"], ["[kbqContentPanelAside]", "kbq-content-panel-header", "[kbqContentPanelBody]", "[kbqContentPanelFooter]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanel, never>;
 }
@@ -40,6 +38,33 @@ export class KbqContentPanelBody {
 }
 
 // @public (undocumented)
+export class KbqContentPanelContainer {
+    // (undocumented)
+    close(): void;
+    // (undocumented)
+    readonly disableClose: InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    readonly maxWidth: InputSignalWithTransform<number, unknown>;
+    // (undocumented)
+    readonly minWidth: InputSignalWithTransform<number, unknown>;
+    // (undocumented)
+    open(): void;
+    // (undocumented)
+    readonly opened: InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    readonly openedChange: OutputEmitterRef<boolean>;
+    protected readonly openedState: WritableSignal<boolean>;
+    // (undocumented)
+    toggle(): void;
+    // (undocumented)
+    readonly width: InputSignalWithTransform<number, unknown>;
+    // (undocumented)
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelContainer, never>;
+}
+
+// @public (undocumented)
 export class KbqContentPanelFooter {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqContentPanelFooter, "[kbqContentPanelFooter]", never, {}, {}, never, never, true, never>;
@@ -49,14 +74,11 @@ export class KbqContentPanelFooter {
 
 // @public (undocumented)
 export class KbqContentPanelHeader {
-    // (undocumented)
     protected readonly buttonStyles: typeof KbqButtonStyles;
-    // (undocumented)
     protected readonly componentColors: typeof KbqComponentColors;
+    protected readonly contentPanelContainer: KbqContentPanelContainer;
     // (undocumented)
-    readonly hasCloseButton: InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelHeader, "kbq-content-panel-header", never, { "hasCloseButton": { "alias": "hasCloseButton"; "required": false; "isSignal": true; }; }, {}, never, ["[kbqContentPanelHeaderTitle]", "[kbqContentPanelHeaderActions]", "*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelHeader, "kbq-content-panel-header", never, {}, {}, never, ["[kbqContentPanelHeaderTitle]", "[kbqContentPanelHeaderActions]", "*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelHeader, never>;
 }
@@ -86,33 +108,8 @@ export class KbqContentPanelModule {
     // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter], [typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof i1_2.KbqContentPanelContainer, typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter], [typeof i1_2.KbqContentPanelContainer, typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter]>;
 }
-
-// @public
-export class KbqResizable {
-    readonly elementRef: ElementRef<HTMLElement>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizable, "[kbqResizable]", ["kbqResizable"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizable, never>;
-}
-
-// @public
-export class KbqResizer {
-    constructor();
-    protected readonly cursor: Signal<"ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
-    readonly direction: InputSignal<[x: 0 | 1 | -1, y: 0 | 1 | -1]>;
-    readonly sizeChange: OutputEmitterRef<[width: number, height: number]>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizer, "[kbqResizer]", ["kbqResizer"], { "direction": { "alias": "kbqResizer"; "required": true; "isSignal": true; }; }, { "sizeChange": "sizeChange"; }, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizer, never>;
-}
-
-// Warnings were encountered during analysis:
-//
-// dist/components/content-panel/content-panel.d.ts:43:241 - (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

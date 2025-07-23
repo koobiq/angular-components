@@ -1,0 +1,20 @@
+.kbq-content-panel-header {
+    display: flex;
+    flex-direction: column;
+
+    padding: var(--kbq-size-l) var(--kbq-size-xxl);
+
+    .kbq-content-panel-header__wrapper {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .kbq-content-panel-header__actions {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .kbq-content-panel-header__close-button {
+        margin-left: var(--kbq-size-m);
+    }
+}

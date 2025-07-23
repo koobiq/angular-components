@@ -1,0 +1,10 @@
+.kbq-content-panel-container {
+    display: flex;
+    // width: 100%;
+    overflow: hidden;
+
+    .kbq-content-panel-container__content {
+        overflow: hidden;
+        // flex-grow: 1;
+    }
+}
