@@ -14,7 +14,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'select-with-multiline-matcher-example',
     template: `
         <div>
-            <label class="kbq-form__label">Multiline matcher</label>
             <kbq-form-field>
                 <kbq-select [multiline]="true" [value]="selected" [panelWidth]="400" placeholder="Placeholder">
                     @for (option of options; track option) {
@@ -46,8 +45,6 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectWithMultilineMatcherExample {
-    readonly options = [
-        'Option with very very very very very very very very very very very very very very very very very very very very very long text',
-        ...Array.from({ length: 10 }).map((_, i) => `Option ${i}`)];
+    readonly options = Array.from({ length: 10 }).map((_, i) => `Option ${i}`);
     selected: string[] = [this.options[0], this.options[1], this.options[2], this.options[3]];
 }
