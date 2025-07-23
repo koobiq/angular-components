@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { KbqComponentColors, KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
+import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+
+const lettersAndNumbersRegex = /^[\d\w]+$/g;
+const restSymbolsRegex = /[^\d\w]+/g;
 
 /**
  * @title Validation on type
@@ -16,32 +19,29 @@ import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip'
         ReactiveFormsModule,
         KbqFormFieldModule,
         KbqToolTipModule,
-        KbqInputModule,
-        KbqFormsModule
+        KbqInputModule
     ],
     template: `
-        <div class="layout-margin" style="width: 400px">
-            <form class="kbq-form-vertical" [formGroup]="checkOnFlyForm" novalidate>
-                <div class="kbq-form__fieldset">
-                    <div class="kbq-form__row">
-                        <div class="kbq-form__label">Folder name</div>
-                        <kbq-form-field
-                            class="kbq-form__control"
-                            #tooltip="kbqTooltip"
-                            [kbqEnterDelay]="10"
-                            [kbqPlacement]="popUpPlacements.Top"
-                            [kbqTrigger]="'manual'"
-                            [kbqTooltip]="'Буквы и цифры'"
-                            [kbqTooltipColor]="colors.Error"
-                        >
-                            <input (input)="onInput($event)" formControlName="folderName" kbqInput />
+        <div class="layout-margin" style="width: 320px">
+            <form [formGroup]="checkOnFlyForm" novalidate>
+                <kbq-form-field>
+                    <kbq-label>Folder name</kbq-label>
+                    <input
+                        #tooltip="kbqTooltip"
+                        [kbqEnterDelay]="10"
+                        [kbqPlacement]="popUpPlacements.Top"
+                        [kbqTrigger]="'manual'"
+                        [kbqTooltip]="'Letters and numbers'"
+                        [kbqTooltipColor]="colors.Error"
+                        (input)="onInput($event)"
+                        formControlName="folderName"
+                        kbqInput
+                    />
 
-                            <kbq-cleaner />
+                    <kbq-cleaner />
 
-                            <kbq-hint>Only letters and numbers</kbq-hint>
-                        </kbq-form-field>
-                    </div>
-                </div>
+                    <kbq-hint>Only letters and numbers</kbq-hint>
+                </kbq-form-field>
             </form>
         </div>
     `,
@@ -60,12 +60,10 @@ export class ValidationOnTypeExample {
     });
 
     onInput(event: Event): void {
-        const regex = /^[\d\w]+$/g;
-
         const target = event.target as HTMLInputElement | null;
 
-        if (target?.value && !regex.test(target.value)) {
-            const newValue = target.value.replace(/[^\d\w]+/g, '');
+        if (target?.value && !lettersAndNumbersRegex.test(target.value)) {
+            const newValue = target.value.replace(restSymbolsRegex, '');
 
             this.checkOnFlyForm.controls.folderName.setValue(newValue);
 

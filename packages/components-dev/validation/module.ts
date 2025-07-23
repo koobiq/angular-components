@@ -42,15 +42,16 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
     imports: [ValidationExamplesModule],
     selector: 'dev-examples',
     template: `
-        <validation-overview-example />
-        <validation-composite-example />
-        <validation-global-example />
-        <validation-global-one-required-example />
-        <validation-on-blur-example />
-        <validation-on-type-example />
-        <validation-small-example />
-        ,
         <validation-on-open-example />
+        <validation-optional-label-example />
+        <validation-required-label-example />
+        <validation-on-type-example />
+        <validation-on-blur-example />
+        <validation-on-submit-example />
+        <validation-message-for-specific-field-example />
+        <validation-no-message-example />
+
+        <validation-global-one-required-example />
     `,
     styles: `
         :host {
@@ -64,6 +65,7 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
             border: 1px solid var(--kbq-line-contrast-less);
             margin-bottom: var(--kbq-size-l);
             padding: var(--kbq-size-m);
+            flex: 1 0 auto;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -21,21 +21,15 @@ const IP_PATTERN =
         KbqFormsModule
     ],
     template: `
-        <div class="kbq-form-vertical" style="width: 400px">
-            <div class="kbq-form__fieldset">
-                <div class="kbq-form__row">
-                    <div class="kbq-form__label">IP-address</div>
-                    <kbq-form-field class="kbq-form__control">
-                        <input [formControl]="ipAddressControl" kbqInput />
-                        @if (ipAddressControl.invalid) {
-                            <kbq-error>The IP address does not comply with RFC standards</kbq-error>
-                        }
+        <kbq-form-field class="kbq-form__control" style="width: 320px;">
+            <kbq-label>IP-address</kbq-label>
+            <input [formControl]="ipAddressControl" kbqInput />
+            @if (ipAddressControl.invalid) {
+                <kbq-error>The IP address does not comply with RFC standards</kbq-error>
+            }
 
-                        <kbq-cleaner />
-                    </kbq-form-field>
-                </div>
-            </div>
-        </div>
+            <kbq-cleaner />
+        </kbq-form-field>
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
@@ -44,9 +38,5 @@ const IP_PATTERN =
 export class ValidationOnBlurExample {
     protected readonly themePalette = ThemePalette;
 
-    protected readonly ipAddressControl: FormControl;
-
-    constructor() {
-        this.ipAddressControl = new FormControl('', [Validators.pattern(IP_PATTERN)]);
-    }
+    protected readonly ipAddressControl = new FormControl('', [Validators.pattern(IP_PATTERN)]);
 }

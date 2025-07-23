@@ -4471,19 +4471,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-toggle-on-click-example.ts",
     "importPath": "components/tree"
   },
-  "validation-composite": {
-    "packagePath": "components/validation/validation-composite",
-    "title": "Validation composite",
-    "componentName": "ValidationCompositeExample",
-    "files": [
-      "validation-composite-example.ts",
-      "validation-composite-example.html"
-    ],
-    "selector": "validation-composite-example",
-    "additionalComponents": [],
-    "primaryFile": "validation-composite-example.ts",
-    "importPath": "components/validation"
-  },
   "validation-global-one-required": {
     "packagePath": "components/validation/validation-global-one-required",
     "title": "Validation global one required",
@@ -4497,17 +4484,28 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "validation-global-one-required-example.ts",
     "importPath": "components/validation"
   },
-  "validation-global": {
-    "packagePath": "components/validation/validation-global",
-    "title": "Validation global",
-    "componentName": "ValidationGlobalExample",
+  "validation-message-for-specific-field": {
+    "packagePath": "components/validation/validation-message-for-specific-field",
+    "title": "Validation message for specific field",
+    "componentName": "ValidationMessageForSpecificFieldExample",
     "files": [
-      "validation-global-example.ts",
-      "validation-global-example.html"
+      "validation-message-for-specific-field-example.ts"
     ],
-    "selector": "validation-global-example",
+    "selector": "validation-message-for-specific-field-example",
     "additionalComponents": [],
-    "primaryFile": "validation-global-example.ts",
+    "primaryFile": "validation-message-for-specific-field-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-no-message": {
+    "packagePath": "components/validation/validation-no-message",
+    "title": "Validation no message",
+    "componentName": "ValidationNoMessageExample",
+    "files": [
+      "validation-no-message-example.ts"
+    ],
+    "selector": "validation-no-message-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-no-message-example.ts",
     "importPath": "components/validation"
   },
   "validation-on-blur": {
@@ -4515,12 +4513,37 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Validation on blur",
     "componentName": "ValidationOnBlurExample",
     "files": [
-      "validation-on-blur-example.ts",
-      "validation-on-blur-example.html"
+      "validation-on-blur-example.ts"
     ],
     "selector": "validation-on-blur-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-blur-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-on-open": {
+    "packagePath": "components/validation/validation-on-open",
+    "title": "Validation on open",
+    "componentName": "ValidationOnOpenExample",
+    "files": [
+      "validation-on-open-example.ts"
+    ],
+    "selector": "validation-on-open-example",
+    "additionalComponents": [
+      "DocsNameFormComponent"
+    ],
+    "primaryFile": "validation-on-open-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-on-submit": {
+    "packagePath": "components/validation/validation-on-submit",
+    "title": "Validation on submit",
+    "componentName": "ValidationOnSubmitExample",
+    "files": [
+      "validation-on-submit-example.ts"
+    ],
+    "selector": "validation-on-submit-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-on-submit-example.ts",
     "importPath": "components/validation"
   },
   "validation-on-type": {
@@ -4528,12 +4551,23 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "title": "Validation on type",
     "componentName": "ValidationOnTypeExample",
     "files": [
-      "validation-on-type-example.ts",
-      "validation-on-type-example.html"
+      "validation-on-type-example.ts"
     ],
     "selector": "validation-on-type-example",
     "additionalComponents": [],
     "primaryFile": "validation-on-type-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-optional-label": {
+    "packagePath": "components/validation/validation-optional-label",
+    "title": "Validation optional label",
+    "componentName": "ValidationOptionalLabelExample",
+    "files": [
+      "validation-optional-label-example.ts"
+    ],
+    "selector": "validation-optional-label-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-optional-label-example.ts",
     "importPath": "components/validation"
   },
   "validation-overview": {
@@ -4547,6 +4581,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "validation-overview-example",
     "additionalComponents": [],
     "primaryFile": "validation-overview-example.ts",
+    "importPath": "components/validation"
+  },
+  "validation-required-label": {
+    "packagePath": "components/validation/validation-required-label",
+    "title": "Validation required label",
+    "componentName": "ValidationRequiredLabelExample",
+    "files": [
+      "validation-required-label-example.ts"
+    ],
+    "selector": "validation-required-label-example",
+    "additionalComponents": [],
+    "primaryFile": "validation-required-label-example.ts",
     "importPath": "components/validation"
   },
   "validation-small": {
@@ -5283,17 +5329,25 @@ return import('@koobiq/docs-examples/components/tree');
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-toggle-on-click':
 return import('@koobiq/docs-examples/components/tree');
-  case 'validation-composite':
-return import('@koobiq/docs-examples/components/validation');
   case 'validation-global-one-required':
 return import('@koobiq/docs-examples/components/validation');
-  case 'validation-global':
+  case 'validation-message-for-specific-field':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-no-message':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-blur':
 return import('@koobiq/docs-examples/components/validation');
+  case 'validation-on-open':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-on-submit':
+return import('@koobiq/docs-examples/components/validation');
   case 'validation-on-type':
 return import('@koobiq/docs-examples/components/validation');
+  case 'validation-optional-label':
+return import('@koobiq/docs-examples/components/validation');
   case 'validation-overview':
+return import('@koobiq/docs-examples/components/validation');
+  case 'validation-required-label':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-small':
 return import('@koobiq/docs-examples/components/validation');

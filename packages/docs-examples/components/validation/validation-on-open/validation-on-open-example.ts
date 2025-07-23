@@ -5,6 +5,7 @@ import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
+import { take } from 'rxjs';
 
 type DocsFormData = {
     firstName: string;
@@ -87,7 +88,7 @@ export class ValidationOnOpenExample {
     protected readonly modalService = inject(KbqModalService);
     protected modalRef: KbqModalRef<DocsNameFormComponent>;
 
-    openEmptyForm(footer: TemplateRef<any>) {
+    openEmptyForm(footer: TemplateRef<any>): void {
         this.modalRef = this.modalService.create({
             kbqSize: ModalSize.Small,
             kbqContent: DocsNameFormComponent,
@@ -95,19 +96,20 @@ export class ValidationOnOpenExample {
         });
     }
 
-    openDraftForm(footer: TemplateRef<any>) {
+    openDraftForm(footer: TemplateRef<any>): void {
         this.modalRef = this.modalService.create({
             kbqSize: ModalSize.Small,
             kbqContent: DocsNameFormComponent,
             kbqFooter: footer,
             data: {
-                firstName: 'Roman',
+                firstName: 'Romano',
                 lastName: ''
             } satisfies DocsFormData
         });
 
-        this.modalRef.afterOpen.subscribe(() => {
-            this.modalRef.getContentComponent().userDetailsForm.markAsDirty();
+        this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
+            this.modalRef.getElement().getElementsByTagName('input').item(0)?.focus();
+            this.modalRef.getElement().getElementsByTagName('button').item(0)?.click();
         });
     }
 
