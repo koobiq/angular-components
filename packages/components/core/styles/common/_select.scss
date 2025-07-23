@@ -10,24 +10,6 @@
 
     outline: none;
 
-    .kbq-select__matcher {
-        @include vendor-prefixes.user-select(none);
-
-        display: flex;
-        flex-grow: 1;
-        align-items: center;
-
-        overflow: hidden;
-
-        white-space: nowrap;
-
-        // todo
-        & > span {
-            flex: 1;
-            overflow: hidden;
-        }
-    }
-
     .kbq-select__trigger {
         display: flex;
         box-sizing: border-box;
@@ -35,7 +17,31 @@
 
         cursor: pointer;
 
-        height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
+        min-height: var(--kbq-form-field-size-height);
+
+        &:not(.kbq-select__trigger_multiline) {
+            height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
+
+            & .kbq-select__matcher {
+                overflow: hidden;
+
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .kbq-select__matcher {
+        @include vendor-prefixes.user-select(none);
+
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+
+        // todo
+        & > span {
+            flex: 1;
+            overflow: hidden;
+        }
     }
 
     .kbq-select__trigger.kbq-select__trigger_single,
@@ -75,6 +81,37 @@
         }
     }
 
+    .kbq-select__trigger.kbq-select__trigger_multiline:not(.kbq-select__trigger_empty) {
+        .kbq-select__match-container {
+            flex-direction: column;
+        }
+
+        & .kbq-select__matcher {
+            max-width: 100%;
+
+            padding: var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-right)
+                var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-left);
+        }
+
+        & .kbq-select__cleaner,
+        & .kbq-select__arrow-wrapper {
+            align-self: flex-start;
+            align-items: center;
+
+            height: calc(var(--kbq-form-field-size-height) - var(--kbq-size-s));
+        }
+
+        & .kbq-select__multiline-match-list {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+
+            margin-right: var(--kbq-select-size-multiple-content-gap, var(--kbq-size-xxs));
+
+            gap: var(--kbq-size-xxs);
+        }
+    }
+
     .kbq-select__match-container {
         width: 100%;
 
@@ -96,7 +133,7 @@
         align-self: center;
         justify-content: center;
 
-        width: var(--kbq-form-field-size-addon-width);
+        min-width: var(--kbq-form-field-size-addon-width);
 
         // When used in a box or standard appearance form-field the arrow should be shifted up 50%.
         .kbq-form-field-appearance-fill &,

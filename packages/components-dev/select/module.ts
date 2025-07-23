@@ -21,6 +21,9 @@ import { DEV_OPTIONS } from './mock';
     imports: [SelectExamplesModule],
     selector: 'dev-examples',
     template: `
+        <select-with-multiline-matcher-example />
+        <hr />
+
         <select-with-panel-width-attribute-example />
         <hr />
 

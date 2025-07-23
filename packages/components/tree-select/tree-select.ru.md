@@ -6,6 +6,10 @@
 
 <!-- example(tree-select-multiple-overview) -->
 
+### Multiline tree-select (multiline)
+
+<!-- example(tree-select-with-multiline-matcher) -->
+
 ### Multiple with child selection
 
 <!-- example(tree-select-child-selection-overview) -->

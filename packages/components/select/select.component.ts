@@ -136,6 +136,7 @@ export const kbqSelectOptionsProvider = (options: KbqSelectOptions): Provider =>
 
         class: 'kbq-select',
         '[class.kbq-select_multiple]': 'multiple',
+        '[class.kbq-select_multiline]': 'multiline',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
 
@@ -293,6 +294,11 @@ export class KbqSelect
      * Follows the same logic as `Array.prototype.sort`.
      */
     @Input() sortComparator: (a: KbqOptionBase, b: KbqOptionBase, options: KbqOptionBase[]) => number;
+
+    /**
+     * Whether to use a multiline matcher or not. Default is false
+     */
+    @Input({ transform: booleanAttribute }) multiline: boolean = false;
 
     /** Combined stream of all of the child options' change events. */
     readonly optionSelectionChanges: Observable<KbqOptionSelectionChange> = defer(() => {
@@ -522,7 +528,7 @@ export class KbqSelect
     }
 
     get selected(): KbqOptionBase | KbqOptionBase[] {
-        return this.multiple ? this.selectionModel.selected : this.selectionModel.selected[0];
+        return this.multiSelection ? this.selectionModel.selected : this.selectionModel.selected[0];
     }
 
     get triggerValue(): string {
@@ -568,6 +574,11 @@ export class KbqSelect
         return (hasLegacyValidateDirective && this.ngControl?.invalid) || this.errorState
             ? KbqComponentColors.Error
             : KbqComponentColors.ContrastFade;
+    }
+
+    /** Whether multiple choice is enabled or not. True if multiple or multiline */
+    get multiSelection(): boolean {
+        return this.multiple || this.multiline;
     }
 
     private closeSubscription = Subscription.EMPTY;
@@ -619,7 +630,7 @@ export class KbqSelect
     }
 
     ngOnInit() {
-        this.selectionModel = new SelectionModel(this.multiple);
+        this.selectionModel = new SelectionModel(this.multiSelection);
         this.stateChanges.next();
 
         // We need `distinctUntilChanged` here, because some browsers will
@@ -644,7 +655,15 @@ export class KbqSelect
 
         merge(this.optionSelectionChanges, this.visibleChanges)
             .pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => setTimeout(() => this.calculateHiddenItems(), 0));
+            .subscribe(() =>
+                setTimeout(() => {
+                    this.calculateHiddenItems();
+
+                    if (this.multiline && this.overlayDir.overlayRef) {
+                        this.setOverlayPosition();
+                    }
+                }, 0)
+            );
     }
 
     ngAfterContentInit() {
@@ -1085,10 +1104,10 @@ export class KbqSelect
         const isOpenKey = [ENTER, SPACE].includes(keyCode);
 
         // Open the select on ALT + arrow key to match the native <select>
-        if (isOpenKey || ((this.multiple || event.altKey) && isArrowKey)) {
+        if (isOpenKey || ((this.multiSelection || event.altKey) && isArrowKey)) {
             event.preventDefault(); // prevents the page from scrolling down when pressing space
             this.open();
-        } else if (!this.multiple) {
+        } else if (!this.multiSelection) {
             this.keyManager.onKeydown(event);
         }
     }
@@ -1122,7 +1141,7 @@ export class KbqSelect
         } else if ((keyCode === ENTER || keyCode === SPACE) && this.keyManager.activeItem) {
             event.preventDefault();
             this.keyManager.activeItem.selectViaInteraction();
-        } else if (this.multiple && keyCode === A && event.ctrlKey) {
+        } else if (this.multiSelection && keyCode === A && event.ctrlKey) {
             this.selectAllHandler(event, this);
         } else {
             const previouslyFocusedIndex = this.keyManager.activeItemIndex;
@@ -1130,7 +1149,7 @@ export class KbqSelect
             this.keyManager.onKeydown(event);
 
             if (
-                this.multiple &&
+                this.multiSelection &&
                 isArrowKey &&
                 event.shiftKey &&
                 this.keyManager.activeItem &&
@@ -1164,7 +1183,7 @@ export class KbqSelect
     private setSelectionByValue(value: any | any[]): void {
         this.previousSelectionModelSelected = this.selectionModel.selected;
 
-        if (this.multiple && value) {
+        if (this.multiSelection && value) {
             if (!Array.isArray(value)) {
                 throw getKbqSelectNonArrayValueError();
             }
@@ -1242,7 +1261,7 @@ export class KbqSelect
         this.keyManager.change.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             if (this.panelOpen && this.panel) {
                 this.scrollActiveOptionIntoView();
-            } else if (!this.panelOpen && !this.multiple && this.keyManager.activeItem) {
+            } else if (!this.panelOpen && !this.multiSelection && this.keyManager.activeItem) {
                 this.keyManager.activeItem.selectViaInteraction();
             }
         });
@@ -1255,7 +1274,7 @@ export class KbqSelect
             .subscribe((event) => {
                 this.onSelect(event.source, event.isUserInput);
 
-                if (event.isUserInput && !this.multiple && this.panelOpen) {
+                if (event.isUserInput && !this.multiSelection && this.panelOpen) {
                     this.close();
                     this.focus();
                 }
@@ -1275,7 +1294,7 @@ export class KbqSelect
     private onSelect(option: KbqOption, isUserInput: boolean): void {
         const wasSelected = this.selectionModel.isSelected(option);
 
-        if (option.value == null && !this.multiple) {
+        if (option.value == null && !this.multiSelection) {
             option.deselect();
             this.selectionModel.clear();
             this.propagateChanges(option.value);
@@ -1290,7 +1309,7 @@ export class KbqSelect
                 this.keyManager.setActiveItem(option);
             }
 
-            if (this.multiple) {
+            if (this.multiSelection) {
                 this.sortValues();
 
                 if (isUserInput) {
@@ -1317,7 +1336,7 @@ export class KbqSelect
 
     /** Sorts the selected values in the selected based on their order in the panel. */
     private sortValues() {
-        if (this.multiple) {
+        if (this.multiSelection) {
             const options = this.options.toArray();
 
             this.selectionModel.sort((a, b) =>
@@ -1331,7 +1350,7 @@ export class KbqSelect
     private propagateChanges(fallbackValue?: any): void {
         let valueToEmit: any;
 
-        if (this.multiple) {
+        if (this.multiSelection) {
             valueToEmit = (this.selected as KbqOption[]).map((option) => option.value);
         } else {
             valueToEmit = this.selected ? (this.selected as KbqOption).value : fallbackValue;

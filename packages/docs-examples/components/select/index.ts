@@ -13,6 +13,7 @@ import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/
 import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
+import { SelectWithMultilineMatcherExample } from './select-with-multiline-matcher/select-with-multiline-matcher-example';
 import { SelectWithPanelWidthAttributeExample } from './select-with-panel-width-attribute/select-with-panel-width-attribute-example';
 
 export {
@@ -30,6 +31,7 @@ export {
     SelectSearchExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
+    SelectWithMultilineMatcherExample,
     SelectWithPanelWidthAttributeExample
 };
 
@@ -48,7 +50,8 @@ const EXAMPLES = [
     SelectVirtualScrollExample,
     SelectWithPanelWidthAttributeExample,
     SelectCustomMatcherExample,
-    SelectCustomTriggerExample
+    SelectCustomTriggerExample,
+    SelectWithMultilineMatcherExample
 ];
 
 @NgModule({
