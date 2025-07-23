@@ -1,11 +1,6 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { NgModule } from '@angular/core';
-import {
-    KbqActionContainerComponent,
-    KbqLineModule,
-    KbqOptionModule,
-    KbqPseudoCheckboxModule
-} from '@koobiq/components/core';
+import { KbqActionContainer, KbqLineModule, KbqOptionModule, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqListOption, KbqListOptionCaption, KbqListSelection } from './list-selection.component';
 import { KbqList, KbqListItem } from './list.component';
@@ -16,7 +11,7 @@ import { KbqList, KbqListItem } from './list.component';
         KbqPseudoCheckboxModule,
         KbqLineModule,
         KbqOptionModule,
-        KbqActionContainerComponent,
+        KbqActionContainer,
         KbqIconModule
     ],
     exports: [

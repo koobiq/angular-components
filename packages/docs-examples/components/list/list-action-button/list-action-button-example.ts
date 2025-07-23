@@ -29,7 +29,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 <kbq-list-option [value]="'Item ' + item">
                     <div class="layout-row layout-align-space-between">
                         Item {{ item }}
-                        <kbq-badge badgeColor="theme">badge</kbq-badge>
+                        <kbq-badge [compact]="true" style="align-self: center" badgeColor="theme">badge</kbq-badge>
                     </div>
                     <kbq-option-action
                         [kbqDropdownTriggerFor]="dropdown"

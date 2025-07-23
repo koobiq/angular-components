@@ -29,7 +29,7 @@
 
     background:
         linear-gradient(to right, transparent 0%, var(--kbq-option-background) 70%),
-        linear-gradient(to right, transparent 0%, white 80%);
+        linear-gradient(to right, transparent 0%, var(--kbq-background-bg) 80%);
 }
 
 .kbq-action-container__box {
@@ -41,5 +41,5 @@
 
     background:
         linear-gradient(to right, var(--kbq-option-background) 0%, var(--kbq-option-background) 100%),
-        linear-gradient(to right, white 0%, white 100%);
+        linear-gradient(to right, var(--kbq-background-bg) 0%, var(--kbq-background-bg) 100%);
 }

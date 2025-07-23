@@ -11,6 +11,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { ListExamplesModule } from 'packages/docs-examples/components/list';
 import { of } from 'rxjs';
 import { debounceTime, startWith, switchMap } from 'rxjs/operators';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -37,7 +38,8 @@ export class DevExamples {}
         KbqTitleModule,
         DevExamples,
         JsonPipe,
-        AsyncPipe
+        AsyncPipe,
+        DevThemeToggle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

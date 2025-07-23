@@ -112,13 +112,13 @@ export const DEV_DATA_OBJECT = {
         <tree-action-button-example />
         <br />
         <br />
-        <!--        <tree-toggle-on-click-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <tree-select-and-mark-example />-->
-        <!--        <br />-->
-        <!--        <br />-->
-        <!--        <tree-selection-separate-from-focus-example />-->
+        <tree-toggle-on-click-example />
+        <br />
+        <br />
+        <tree-select-and-mark-example />
+        <br />
+        <br />
+        <tree-selection-separate-from-focus-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
