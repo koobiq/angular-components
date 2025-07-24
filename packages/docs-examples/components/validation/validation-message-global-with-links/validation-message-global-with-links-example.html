@@ -1,7 +1,13 @@
 <div class="example-container layout-margin">
     <form novalidate class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="submitForm()">
         @if (showError()) {
-            <kbq-alert alertColor="error" alertStyle="colored" class="layout-margin-bottom-l" [compact]="true">
+            <kbq-alert
+                alertColor="error"
+                alertStyle="colored"
+                class="example-alert layout-margin-bottom-l"
+                [class.example-alert_in-progress]="inProgress()"
+                [compact]="true"
+            >
                 <i kbq-icon="kbq-info-circle_16" [color]="'error'"></i>
                 <span>
                     Fill in at least one of the fields:

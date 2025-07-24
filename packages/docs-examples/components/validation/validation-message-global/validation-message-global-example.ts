@@ -77,10 +77,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
         KbqLoaderOverlayModule
     ],
     styles: `
-        .example-alert {
-            transition: opacity 50ms ease-in-out;
-        }
-
         .example-container {
             width: 320px;
         }

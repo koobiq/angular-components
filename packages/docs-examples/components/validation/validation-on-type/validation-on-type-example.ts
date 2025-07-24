@@ -5,7 +5,6 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
-const lettersAndNumbersRegex = /^[\d\w]+$/g;
 const restSymbolsRegex = /[^\d\w]+/g;
 
 /**
@@ -60,9 +59,10 @@ export class ValidationOnTypeExample {
     });
 
     onInput(event: Event): void {
+        const regex = /^[\d\w]+$/g;
         const target = event.target as HTMLInputElement | null;
 
-        if (target?.value && !lettersAndNumbersRegex.test(target.value)) {
+        if (target?.value && !regex.test(target.value)) {
             const newValue = target.value.replace(restSymbolsRegex, '');
 
             this.checkOnFlyForm.controls.folderName.setValue(newValue);

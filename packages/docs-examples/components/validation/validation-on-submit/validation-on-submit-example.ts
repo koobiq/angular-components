@@ -20,7 +20,7 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
                 class="example-alert layout-margin-bottom-l"
                 [compact]="true"
                 [style.display]="showServerErrors() ? null : 'none'"
-                [class.example-progress]="inProgress()"
+                [class.example-alert_in-progress]="inProgress()"
                 tabindex="0"
                 alertColor="error"
                 alertStyle="colored"
@@ -76,7 +76,7 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
             transition: opacity 50ms ease-in-out;
         }
 
-        .example-alert.example-progress {
+        .example-alert.example-alert_in-progress {
             opacity: var(--kbq-opacity-disabled);
         }
 

@@ -35,6 +35,14 @@ import { KbqLinkModule } from '@koobiq/components/link';
             width: 320px;
         }
 
+        .example-alert {
+            transition: opacity 50ms ease-in-out;
+        }
+
+        .example-alert.example-alert_in-progress {
+            opacity: var(--kbq-opacity-disabled);
+        }
+
         form {
             width: 100%;
         }
