@@ -9,14 +9,15 @@ import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
 
 /**
- * @title Validation global one required
+ * @title Validation message global with links
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    selector: 'validation-global-one-required-example',
-    templateUrl: 'validation-global-one-required-example.html',
+    selector: 'validation-message-global-with-links-example',
+    templateUrl: 'validation-message-global-with-links-example.html',
     imports: [
+        ReactiveFormsModule,
         KbqAlertModule,
         KbqIconModule,
         KbqFormFieldModule,
@@ -24,19 +25,24 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqButtonModule,
         KbqFormsModule,
         KbqLinkModule,
-        FormsModule,
-        ReactiveFormsModule
+        FormsModule
     ],
-    styles: `
-        :host ::ng-deep .kbq-alert {
-            margin-bottom: 16px;
-        }
-    `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-column'
-    }
+    },
+    styles: `
+        .example-container {
+            width: 320px;
+        }
+
+        form {
+            width: 100%;
+        }
+    `
 })
-export class ValidationGlobalOneRequiredExample {
+export class ValidationMessageGlobalWithLinksExample {
+    protected readonly inProgress = signal(false);
+    protected readonly showError = signal(false);
     protected readonly form = new FormGroup({
         series: new FormControl(''),
         number: new FormControl(''),
@@ -45,14 +51,18 @@ export class ValidationGlobalOneRequiredExample {
         patronymic: new FormControl('')
     });
 
-    protected readonly showServerErrors = signal(false);
-    protected readonly inProgress = signal(false);
-    protected readonly disabled = signal(false);
-    protected readonly showError = signal(false);
+    submitForm() {
+        this.inProgress.set(true);
+
+        setTimeout(() => {
+            this.checkForm();
+            this.inProgress.set(false);
+        }, 1000);
+    }
 
     checkForm() {
         this.showError.set(
-            [this.form.controls.series, this.form.controls.number, this.form.controls.lastName].some(
+            [this.form.controls.series, this.form.controls.number, this.form.controls.lastName].every(
                 (control) => !control.value
             )
         );

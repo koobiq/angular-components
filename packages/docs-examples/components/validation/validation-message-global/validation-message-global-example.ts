@@ -6,21 +6,25 @@ import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInput, KbqInputModule } from '@koobiq/components/input';
+import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
 /**
- * @title Validation on submit
+ * @title Validation message global
  */
 @Component({
     standalone: true,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'validation-on-submit-example',
+    selector: 'validation-message-global-example',
     template: `
         <div class="example-container">
+            @if (inProgress()) {
+                <kbq-loader-overlay [size]="'compact'" />
+            }
+
             <kbq-alert
                 class="example-alert layout-margin-bottom-l"
                 [compact]="true"
                 [style.display]="showServerErrors() ? null : 'none'"
-                [class.example-progress]="inProgress()"
                 tabindex="0"
                 alertColor="error"
                 alertStyle="colored"
@@ -69,15 +73,12 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
         KbqFormFieldModule,
         KbqInputModule,
         KbqButtonModule,
-        KbqFormsModule
+        KbqFormsModule,
+        KbqLoaderOverlayModule
     ],
     styles: `
         .example-alert {
             transition: opacity 50ms ease-in-out;
-        }
-
-        .example-alert.example-progress {
-            opacity: var(--kbq-opacity-disabled);
         }
 
         .example-container {
@@ -92,7 +93,7 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationOnSubmitExample {
+export class ValidationMessageGlobalExample {
     protected readonly requiredInput = viewChild<KbqInput>('requiredInput');
     protected readonly alert = viewChild<KbqAlert, ElementRef<HTMLElement>>(KbqAlert, { read: ElementRef });
 
@@ -119,6 +120,6 @@ export class ValidationOnSubmitExample {
             if (this.showServerErrors()) {
                 this.alert()?.nativeElement?.focus({ preventScroll: false });
             }
-        }, 1000);
+        }, 2000);
     }
 }

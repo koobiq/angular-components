@@ -13,7 +13,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     standalone: true,
     selector: 'validation-optional-label-example',
     template: `
-        <div class="layout-margin" style="width: 400px">
+        <div class="layout-margin" style="width: 320px">
             <form class="kbq-form-vertical" [formGroup]="form" novalidate>
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">

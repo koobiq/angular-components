@@ -1,7 +1,9 @@
 import { NgModule } from '@angular/core';
-import { ValidationGlobalOneRequiredExample } from './validation-global-one-required/validation-global-one-required-example';
 import { ValidationMessageForSpecificFieldExample } from './validation-message-for-specific-field/validation-message-for-specific-field-example';
+import { ValidationMessageGlobalWithLinksExample } from './validation-message-global-with-links/validation-message-global-with-links-example';
+import { ValidationMessageGlobalExample } from './validation-message-global/validation-message-global-example';
 import { ValidationNoMessageExample } from './validation-no-message/validation-no-message-example';
+import { ValidationOnBlurFilledExample } from './validation-on-blur-filled/validation-on-blur-filled-example';
 import { ValidationOnBlurExample } from './validation-on-blur/validation-on-blur-example';
 import { ValidationOnOpenExample } from './validation-on-open/validation-on-open-example';
 import { ValidationOnSubmitExample } from './validation-on-submit/validation-on-submit-example';
@@ -10,10 +12,12 @@ import { ValidationOptionalLabelExample } from './validation-optional-label/vali
 import { ValidationRequiredLabelExample } from './validation-required-label/validation-required-label-example';
 
 export {
-    ValidationGlobalOneRequiredExample,
     ValidationMessageForSpecificFieldExample,
+    ValidationMessageGlobalExample,
+    ValidationMessageGlobalWithLinksExample,
     ValidationNoMessageExample,
     ValidationOnBlurExample,
+    ValidationOnBlurFilledExample,
     ValidationOnOpenExample,
     ValidationOnSubmitExample,
     ValidationOnTypeExample,
@@ -24,12 +28,14 @@ export {
 const EXAMPLES = [
     ValidationOnSubmitExample,
     ValidationOnBlurExample,
+    ValidationOnBlurFilledExample,
     ValidationOnTypeExample,
-    ValidationGlobalOneRequiredExample,
+    ValidationMessageGlobalWithLinksExample,
     ValidationOnOpenExample,
     ValidationOptionalLabelExample,
     ValidationRequiredLabelExample,
     ValidationMessageForSpecificFieldExample,
+    ValidationMessageGlobalExample,
     ValidationNoMessageExample
 ];
 

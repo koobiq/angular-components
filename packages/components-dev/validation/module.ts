@@ -47,11 +47,12 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         <validation-required-label-example />
         <validation-on-type-example />
         <validation-on-blur-example />
+        <validation-on-blur-filled-example />
         <validation-on-submit-example />
         <validation-message-for-specific-field-example />
         <validation-no-message-example />
-
-        <validation-global-one-required-example />
+        <validation-message-global-example />
+        <validation-message-global-with-links-example />
     `,
     styles: `
         :host {

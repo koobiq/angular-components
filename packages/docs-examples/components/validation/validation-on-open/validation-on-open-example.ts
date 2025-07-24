@@ -94,6 +94,10 @@ export class ValidationOnOpenExample {
             kbqContent: DocsNameFormComponent,
             kbqFooter: footer
         });
+
+        this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
+            this.modalRef.getElement().getElementsByTagName('input').item(0)?.focus();
+        });
     }
 
     openDraftForm(footer: TemplateRef<any>): void {

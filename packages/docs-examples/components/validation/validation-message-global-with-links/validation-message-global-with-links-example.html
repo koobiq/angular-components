@@ -1,22 +1,18 @@
-<div class="layout-margin">
-    <form novalidate style="width: 320px" class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="checkForm()">
+<div class="example-container layout-margin">
+    <form novalidate class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="submitForm()">
         @if (showError()) {
-            <kbq-alert alertColor="error" alertStyle="colored" [compact]="true">
+            <kbq-alert alertColor="error" alertStyle="colored" class="layout-margin-bottom-l" [compact]="true">
                 <i kbq-icon="kbq-info-circle_16" [color]="'error'"></i>
                 <span>
                     Fill in at least one of the fields:
-                    @if (!form.get('series')?.value) {
-                        <span kbq-link pseudo (click)="seriesInput.focus()" (keydown.enter)="seriesInput.focus()">
-                            Series
-                        </span>
-                        ,
-                    }
-                    @if (!form.get('number')?.value) {
-                        <span kbq-link pseudo (click)="numberInput.focus()" (keydown.enter)="numberInput.focus()">
-                            Number
-                        </span>
-                        or
-                    }
+                    <span kbq-link pseudo (click)="seriesInput.focus()" (keydown.enter)="seriesInput.focus()">
+                        Series,
+                    </span>
+                    <span>&nbsp;</span>
+                    <span kbq-link pseudo (click)="numberInput.focus()" (keydown.enter)="numberInput.focus()">
+                        Number
+                    </span>
+                    or
                     <span kbq-link pseudo (click)="lastNameInput.focus()" (keydown.enter)="lastNameInput.focus()">
                         Last name
                     </span>
@@ -69,11 +65,11 @@
 
         <div class="kbq-form__row">
             <button
+                color="contrast"
                 kbq-button
                 type="submit"
                 class="flex-30"
                 [class.kbq-progress]="inProgress()"
-                [color]="'contrast'"
                 [disabled]="inProgress()"
             >
                 Send
