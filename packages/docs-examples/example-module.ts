@@ -836,7 +836,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     ],
     "selector": "content-panel-overview-example",
     "additionalComponents": [
-      "ExampleTable"
+      "ExampleGrid",
+      "ExampleContentPanel"
     ],
     "primaryFile": "content-panel-overview-example.ts",
     "importPath": "components/content-panel"

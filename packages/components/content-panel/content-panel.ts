@@ -4,6 +4,7 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
+    computed,
     contentChild,
     DestroyRef,
     Directive,
@@ -16,18 +17,24 @@ import {
     signal,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 
-@Directive({
+@Component({
     standalone: true,
-    selector: '[kbqContentPanelAside]',
+    selector: 'kbq-content-panel-aside',
     exportAs: 'kbqContentPanelAside',
+    template: `
+        <ng-content />
+    `,
+    styleUrl: './content-panel-aside.scss',
     host: {
         class: 'kbq-content-panel-aside'
-    }
+    },
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqContentPanelAside {}
 
@@ -81,8 +88,8 @@ export class KbqContentPanelHeaderActions {}
         <ng-content />
     `,
     styleUrl: './content-panel-header.scss',
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqContentPanelHeader {
     /**
@@ -99,23 +106,35 @@ export class KbqContentPanelHeader {
     protected readonly componentColors = KbqComponentColors;
 }
 
-@Directive({
+@Component({
     standalone: true,
-    selector: '[kbqContentPanelBody]',
+    selector: 'kbq-content-panel-body',
     exportAs: 'kbqContentPanelBody',
     host: {
         class: 'kbq-content-panel-body kbq-scrollbar'
     },
-    hostDirectives: [CdkScrollable]
+    template: `
+        <ng-content />
+    `,
+    styleUrl: './content-panel-body.scss',
+    hostDirectives: [CdkScrollable],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqContentPanelBody {}
 
-@Directive({
+@Component({
     standalone: true,
-    selector: '[kbqContentPanelFooter]',
+    selector: 'kbq-content-panel-footer',
     host: {
         class: 'kbq-content-panel-footer'
-    }
+    },
+    template: `
+        <ng-content />
+    `,
+    styleUrl: './content-panel-footer.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None
 })
 export class KbqContentPanelFooter {}
 
@@ -126,14 +145,14 @@ export class KbqContentPanelFooter {}
         class: 'kbq-content-panel'
     },
     template: `
-        <ng-content select="[kbqContentPanelAside]" />
+        <ng-content select="kbq-content-panel-aside" />
         <div class="kbq-content-panel__content">
             <ng-content select="kbq-content-panel-header" />
-            <ng-content select="[kbqContentPanelBody]" />
-            <ng-content select="[kbqContentPanelFooter]" />
+            <ng-content select="kbq-content-panel-body" />
+            <ng-content select="kbq-content-panel-footer" />
         </div>
     `,
-    styleUrls: ['./content-panel.scss'],
+    styleUrl: './content-panel.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -149,8 +168,6 @@ export class KbqContentPanel {
 
     private handleContentBodyScroll(): void {
         const scrollableCodeContent = this.scrollableContentBody();
-
-        console.log('handleContentBodyScroll', scrollableCodeContent);
 
         if (!scrollableCodeContent) return;
 
@@ -219,17 +236,25 @@ export class KbqContentPanelContainer {
 
     readonly openedChange = output<boolean>();
 
-    // 480
-    readonly minWidth = input(400, { transform: numberAttribute });
-    // 640
-    readonly width = input(500, { transform: numberAttribute });
-    // 800
-    readonly maxWidth = input(600, { transform: numberAttribute });
+    readonly minWidth = input(480, { transform: numberAttribute });
+    readonly width = input(640, { transform: numberAttribute });
+    readonly maxWidth = input(800, { transform: numberAttribute });
+
+    readonly isOpened = computed(() => this.openedState());
 
     /**
      * @docs-private
      */
     protected readonly openedState = signal(this.opened());
+
+    constructor() {
+        // TODO: Should use linked signal
+        toObservable(this.opened)
+            .pipe(takeUntilDestroyed())
+            .subscribe((opened) => {
+                this.openedState.set(opened);
+            });
+    }
 
     toggle(): void {
         this.openedState.update((state) => !state);

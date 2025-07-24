@@ -1,3 +1,5 @@
+@use '../core/styles/common/tokens';
+
 .kbq-content-panel-header {
     display: flex;
     flex-direction: column;
@@ -16,5 +18,14 @@
 
     .kbq-content-panel-header__close-button {
         margin-left: var(--kbq-size-m);
+    }
+
+    .kbq-content-panel-header-title {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
+    }
+
+    .kbq-content-panel-header-actions {
+        display: flex;
+        gap: var(--kbq-size-s);
     }
 }

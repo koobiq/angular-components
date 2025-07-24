@@ -1,8 +1,7 @@
-import { Overlay, OverlayConfig, OverlayContainer, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal, ComponentType, TemplatePortal } from '@angular/cdk/portal';
 import {
     ComponentRef,
-    inject,
     Inject,
     Injectable,
     InjectionToken,
@@ -25,8 +24,6 @@ export const KBQ_SIDEPANEL_DEFAULT_OPTIONS = new InjectionToken<KbqSidepanelConf
 
 @Injectable()
 export class KbqSidepanelService implements OnDestroy {
-    private readonly overlayContainer = inject(OverlayContainer);
-
     private openedSidepanelsAtThisLevel: KbqSidepanelRef[] = [];
 
     /** Keeps track of the currently-open sidepanels. */
@@ -52,7 +49,6 @@ export class KbqSidepanelService implements OnDestroy {
     open<T, D = any>(
         componentOrTemplateRef: ComponentType<T> | TemplateRef<T>,
         config?: KbqSidepanelConfig<D>
-        // elementRef?: ElementRef
     ): KbqSidepanelRef<T> {
         const fullConfig = {
             ...(this.defaultOptions || new KbqSidepanelConfig()),
@@ -68,20 +64,6 @@ export class KbqSidepanelService implements OnDestroy {
         overlayRef.hostElement.classList.add('kbq-sidepanel-overlay');
         const container = this.attachContainer(overlayRef, fullConfig);
         const ref = new KbqSidepanelRef(container, overlayRef, fullConfig);
-
-        // if (elementRef) {
-        //     console.log('setup _containerElement', elementRef);
-        //     // We should override protected `_containerElement` property to set custom container without creating
-        //     // new `OverlayContainer` instance.
-        //     overlayRef['overlayElement'] = elementRef.nativeElement;
-        //     this.overlayContainer['_containerElement'] = elementRef.nativeElement;
-        // }
-
-        const overlayContainerElement = this.overlayContainer.getContainerElement();
-
-        overlayContainerElement.classList.add('TEST_TEST_TEST');
-
-        overlayContainerElement.style.position = 'relative';
 
         if (componentOrTemplateRef instanceof TemplateRef) {
             container.attachTemplatePortal(

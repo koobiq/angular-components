@@ -1,5 +1,3 @@
-@use '../core/styles/common/tokens';
-
 .kbq-content-panel {
     display: flex;
     position: relative;
@@ -24,52 +22,5 @@
 
         border-top-right-radius: inherit;
         border-bottom-right-radius: inherit;
-    }
-
-    .kbq-content-panel__resizer {
-        --kbq-content-panel-resizer-width: var(--kbq-size-l);
-
-        position: absolute;
-        top: 0;
-        left: calc(var(--kbq-content-panel-resizer-width) / -2);
-
-        width: var(--kbq-content-panel-resizer-width);
-        height: 100%;
-
-        z-index: 2;
-    }
-
-    .kbq-content-panel-aside {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: var(--kbq-size-s);
-
-        padding: var(--kbq-size-l) var(--kbq-size-m);
-
-        border-top-left-radius: inherit;
-        border-bottom-left-radius: inherit;
-
-        border-right: inherit;
-    }
-
-    .kbq-content-panel-body {
-        overflow-y: scroll;
-        flex-grow: 1;
-        padding: 0 var(--kbq-size-xxl);
-    }
-
-    .kbq-content-panel-footer {
-        display: flex;
-        padding: var(--kbq-size-l) var(--kbq-size-xxl);
-    }
-
-    .kbq-content-panel-header-title {
-        @include tokens.kbq-typography-level-to-styles-css-variables(typography, title);
-    }
-
-    .kbq-content-panel-header-actions {
-        display: flex;
-        gap: var(--kbq-size-s);
     }
 }

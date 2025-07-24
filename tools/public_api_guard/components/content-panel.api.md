@@ -10,13 +10,14 @@ import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { OutputEmitterRef } from '@angular/core';
+import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
 // @public (undocumented)
 export class KbqContentPanel {
     constructor();
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["scrollableContentBody"], ["[kbqContentPanelAside]", "kbq-content-panel-header", "[kbqContentPanelBody]", "[kbqContentPanelFooter]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["scrollableContentBody"], ["kbq-content-panel-aside", "kbq-content-panel-header", "kbq-content-panel-body", "kbq-content-panel-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanel, never>;
 }
@@ -24,7 +25,7 @@ export class KbqContentPanel {
 // @public (undocumented)
 export class KbqContentPanelAside {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqContentPanelAside, "[kbqContentPanelAside]", ["kbqContentPanelAside"], {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelAside, "kbq-content-panel-aside", ["kbqContentPanelAside"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelAside, never>;
 }
@@ -32,7 +33,7 @@ export class KbqContentPanelAside {
 // @public (undocumented)
 export class KbqContentPanelBody {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqContentPanelBody, "[kbqContentPanelBody]", ["kbqContentPanelBody"], {}, {}, never, never, true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelBody, never>;
 }
@@ -43,6 +44,8 @@ export class KbqContentPanelContainer {
     close(): void;
     // (undocumented)
     readonly disableClose: InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    readonly isOpened: Signal<boolean>;
     // (undocumented)
     readonly maxWidth: InputSignalWithTransform<number, unknown>;
     // (undocumented)
@@ -67,7 +70,7 @@ export class KbqContentPanelContainer {
 // @public (undocumented)
 export class KbqContentPanelFooter {
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqContentPanelFooter, "[kbqContentPanelFooter]", never, {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelFooter, "kbq-content-panel-footer", never, {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelFooter, never>;
 }
