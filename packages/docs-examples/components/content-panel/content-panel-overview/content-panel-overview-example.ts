@@ -11,18 +11,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 import { AgGridModule } from 'ag-grid-angular';
 import { CellClickedEvent, CellFocusedEvent, ColDef, FirstDataRenderedEvent } from 'ag-grid-community';
 
-type ExampleRowData = {
-    column0: string;
-    column1: string;
-    column2: string;
-    column3: string;
-    column4: string;
-    column5: string;
-    column6: string;
-    column7: string;
-    column8: string;
-    column9: string;
-};
+type ExampleRowData = Record<string, string>;
 
 @Component({
     standalone: true,
@@ -55,6 +44,11 @@ export class ExampleGrid {
         width: 140
     };
 
+    private readonly _columnDefs: ColDef[] = Array.from({ length: 20 }, (_, index) => ({
+        headerName: 'Test ',
+        field: 'column' + index
+    }));
+
     protected readonly columnDefs: ColDef[] = [
         {
             headerCheckboxSelection: true,
@@ -68,60 +62,17 @@ export class ExampleGrid {
             editable: false,
             lockPosition: true
         },
-        {
-            field: 'column0',
-            headerName: 'Text'
-        },
-        {
-            field: 'column1',
-            headerName: 'Text'
-        },
-        {
-            field: 'column2',
-            headerName: 'Text'
-        },
-        {
-            field: 'column3',
-            headerName: 'Text'
-        },
-        {
-            field: 'column4',
-            headerName: 'Text'
-        },
-        {
-            field: 'column5',
-            headerName: 'Text'
-        },
-        {
-            field: 'column6',
-            headerName: 'Text'
-        },
-        {
-            field: 'column7',
-            headerName: 'Text'
-        },
-        {
-            field: 'column8',
-            headerName: 'Text'
-        },
-        {
-            field: 'column9',
-            headerName: 'Text'
-        }
+        ...this._columnDefs
+
     ];
 
-    protected readonly rowData: ExampleRowData[] = Array.from({ length: 1000 }, (_, index) => ({
-        column0: 'Text ' + index,
-        column1: 'Text ' + index,
-        column2: 'Text ' + index,
-        column3: 'Text ' + index,
-        column4: 'Text ' + index,
-        column5: 'Text ' + index,
-        column6: 'Text ' + index,
-        column7: 'Text ' + index,
-        column8: 'Text ' + index,
-        column9: 'Text ' + index
-    }));
+    protected readonly rowData: ExampleRowData[] = Array.from({ length: 1000 }, (_, index) => {
+        return this._columnDefs.reduce((prev, _cur, i) => {
+            prev['column' + i] = 'Text ' + index;
+
+            return prev;
+        }, {} as ExampleRowData);
+    });
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.setFocusedCell(0, 'column0');

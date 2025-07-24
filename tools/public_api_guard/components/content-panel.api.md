@@ -40,6 +40,7 @@ export class KbqContentPanelBody {
 
 // @public (undocumented)
 export class KbqContentPanelContainer {
+    constructor();
     // (undocumented)
     close(): void;
     // (undocumented)
