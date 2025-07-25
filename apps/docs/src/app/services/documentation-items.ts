@@ -712,7 +712,6 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                         ru: 'Title',
                         en: 'Title'
                     },
-                    svgPreview: 'title',
                     hasApi: true,
                     apiId: 'title',
                     hasExamples: false

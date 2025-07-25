@@ -1104,7 +1104,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "importPath": "components/dropdown"
   },
   "dropdown-open-by-arrow-down": {
-    "packagePath": "components/dropdown/dropdown-open-by-arrowdown",
+    "packagePath": "components/dropdown/dropdown-open-by-arrow-down",
     "title": "Dropdown open by arrow down",
     "componentName": "DropdownOpenByArrowDownExample",
     "files": [

@@ -3,7 +3,7 @@ import { DropdownDisabledExample } from './dropdown-disabled/dropdown-disabled-e
 import { DropdownLazyloadDataExample } from './dropdown-lazyload-data/dropdown-lazyload-data-example';
 import { DropdownNavigationWrapExample } from './dropdown-navigation-wrap/dropdown-navigation-wrap-example';
 import { DropdownNestedExample } from './dropdown-nested/dropdown-nested-example';
-import { DropdownOpenByArrowDownExample } from './dropdown-open-by-arrowdown/dropdown-open-by-arrow-down-example';
+import { DropdownOpenByArrowDownExample } from './dropdown-open-by-arrow-down/dropdown-open-by-arrow-down-example';
 import { DropdownOverviewExample } from './dropdown-overview/dropdown-overview-example';
 import { DropdownRecursiveTemplateExample } from './dropdown-recursive-template/dropdown-recursive-template-example';
 
