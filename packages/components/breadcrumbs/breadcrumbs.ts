@@ -148,10 +148,7 @@ export class KbqBreadcrumbItem {
         KbqIconModule,
         KbqButtonModule,
         KbqDropdownModule,
-        KbqBreadcrumbItem,
         KbqBreadcrumbButton,
-        RdxRovingFocusGroupDirective,
-        RdxRovingFocusItemDirective,
         KbqTitleModule,
         KbqOverflowItemsModule
     ],
