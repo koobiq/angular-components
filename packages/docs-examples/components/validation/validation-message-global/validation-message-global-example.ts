@@ -1,6 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, signal, viewChild } from '@angular/core';
+import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    inject,
+    OnDestroy,
+    signal,
+    viewChild
+} from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KbqAlert, KbqAlertModule } from '@koobiq/components/alert';
+import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -21,17 +31,18 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                 <kbq-loader-overlay [size]="'compact'" />
             }
 
-            <kbq-alert
-                class="example-alert layout-margin-bottom-l"
-                [compact]="true"
-                [style.display]="showServerErrors() ? null : 'none'"
+            <div
+                class="example-alert__container"
+                #alertContainer
+                [class.example-alert__container_hidden]="!showServerErrors()"
+                [class.layout-margin-bottom-l]="showServerErrors()"
                 tabindex="0"
-                alertColor="error"
-                alertStyle="colored"
             >
-                <i color="error" kbq-icon="kbq-info-circle_16"></i>
-                The server didn’t respond while sending data. Please try again.
-            </kbq-alert>
+                <kbq-alert class="example-alert" [compact]="true" alertColor="error" alertStyle="colored">
+                    <i color="error" kbq-icon="kbq-info-circle_16"></i>
+                    The server didn’t respond while sending data. Please try again.
+                </kbq-alert>
+            </div>
 
             <form class="kbq-form-vertical" [formGroup]="globalErrorForm" (ngSubmit)="submitForm()" novalidate>
                 <div class="kbq-form__fieldset">
@@ -55,6 +66,9 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                             #submitButton
                             [class.kbq-progress]="inProgress()"
                             [disabled]="inProgress()"
+                            (keydown.enter)="submitOrigin = 'keyboard'"
+                            (keydown.space)="submitOrigin = 'keyboard'"
+                            (mouseleave)="submitOrigin = 'mouse'"
                             color="contrast"
                             kbq-button
                             type="submit"
@@ -84,14 +98,35 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
         form {
             width: 100%;
         }
+
+        .example-alert__container {
+            border: 2px solid transparent;
+            border-radius: 14px;
+        }
+
+        .example-alert__container_hidden {
+            border: 0;
+            overflow: hidden;
+            height: 0;
+        }
+
+        .example-alert__container.cdk-mouse-focused:focus-visible {
+            border-color: transparent;
+            outline: none;
+        }
+
+        .example-alert__container.cdk-keyboard-focused:focus-visible {
+            border-color: var(--kbq-states-line-focus);
+            outline: none;
+        }
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-column'
     }
 })
-export class ValidationMessageGlobalExample {
+export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {
     protected readonly requiredInput = viewChild<KbqInput>('requiredInput');
-    protected readonly alert = viewChild<KbqAlert, ElementRef<HTMLElement>>(KbqAlert, { read: ElementRef });
+    protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
 
     protected readonly showServerErrors = signal(false);
     protected readonly inProgress = signal(false);
@@ -99,6 +134,25 @@ export class ValidationMessageGlobalExample {
         firstName: new FormControl('', [Validators.required]),
         lastName: new FormControl('')
     });
+
+    protected readonly focusMonitor = inject(FocusMonitor);
+    protected submitOrigin: FocusOrigin | null = null;
+
+    ngAfterViewInit() {
+        const alert = this.alertContainer();
+
+        if (alert) {
+            this.focusMonitor.monitor(alert.nativeElement);
+        }
+    }
+
+    ngOnDestroy(): void {
+        const alert = this.alertContainer();
+
+        if (alert) {
+            this.focusMonitor.stopMonitoring(alert.nativeElement);
+        }
+    }
 
     submitForm(): void {
         if (this.globalErrorForm.invalid) {
@@ -113,8 +167,11 @@ export class ValidationMessageGlobalExample {
             this.inProgress.set(false);
             this.showServerErrors.set(Math.random() > 0.5);
 
-            if (this.showServerErrors()) {
-                this.alert()?.nativeElement?.focus({ preventScroll: false });
+            const alert = this.alertContainer();
+
+            if (this.showServerErrors() && alert) {
+                this.focusMonitor.focusVia(alert.nativeElement, this.submitOrigin);
+                this.submitOrigin = null;
             }
         }, 2000);
     }
