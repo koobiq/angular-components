@@ -93,7 +93,7 @@ import { DevThemeToggle } from '../theme-toggle';
 
         .example-content-panel-container__content {
             background: blueviolet;
-            height: 100%;
+            height: 1000px;
         }
 
         .example-content-panel-container {

@@ -1,5 +1,5 @@
 .kbq-content-panel-body {
-    overflow-y: scroll;
+    overflow: auto;
     flex-grow: 1;
     padding: 0 var(--kbq-size-xxl);
 }

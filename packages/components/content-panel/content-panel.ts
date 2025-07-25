@@ -15,6 +15,7 @@ import {
     output,
     Renderer2,
     signal,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
@@ -157,17 +158,18 @@ export class KbqContentPanelFooter {}
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqContentPanel {
-    private readonly scrollableContentBody = contentChild(KbqContentPanelBody, { read: CdkScrollable });
     private readonly destroyRef = inject(DestroyRef);
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+
+    readonly scrollableBody = contentChild(KbqContentPanelBody, { read: CdkScrollable });
 
     constructor() {
         afterNextRender(() => this.handleContentBodyScroll());
     }
 
     private handleContentBodyScroll(): void {
-        const scrollableCodeContent = this.scrollableContentBody();
+        const scrollableCodeContent = this.scrollableBody();
 
         if (!scrollableCodeContent) return;
 
@@ -203,7 +205,7 @@ export class KbqContentPanel {
 
 @Component({
     standalone: true,
-    imports: [],
+    imports: [CdkScrollable],
     selector: 'kbq-content-panel-container',
     exportAs: 'kbqContentPanelContainer',
     host: {
@@ -211,7 +213,7 @@ export class KbqContentPanel {
         '[class.kbq-content-panel-container__opened]': 'openedState()'
     },
     template: `
-        <div class="kbq-content-panel-container__content">
+        <div class="kbq-content-panel-container__content kbq-scrollbar" cdkScrollable>
             <ng-content />
         </div>
         @if (openedState()) {
@@ -230,6 +232,8 @@ export class KbqContentPanel {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqContentPanelContainer {
+    readonly scrollableContent = viewChild.required(CdkScrollable);
+
     readonly opened = input(false, { transform: booleanAttribute });
 
     readonly disableClose = input(false, { transform: booleanAttribute });
