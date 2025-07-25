@@ -51,6 +51,8 @@ export class KbqContentPanelContainer {
     readonly disableClose: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
     readonly disableCloseByEscape: InputSignalWithTransform<boolean, unknown>;
+    // (undocumented)
+    readonly disableResizer: InputSignalWithTransform<boolean, unknown>;
     protected handleResizerDBClick(event: MouseEvent): void;
     protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void;
     // (undocumented)
@@ -73,7 +75,7 @@ export class KbqContentPanelContainer {
     readonly width: InputSignalWithTransform<number, unknown>;
     protected readonly widthState: WritableSignal<number>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "disableResizer": { "alias": "disableResizer"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelContainer, never>;
 }

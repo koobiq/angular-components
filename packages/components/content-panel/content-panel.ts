@@ -254,12 +254,14 @@ export class KbqContentPanel {
                 [style.max-width.px]="maxWidth()"
                 kbqResizable
             >
-                <div
-                    class="kbq-content-panel-container__panel-resizer"
-                    [kbqResizer]="[-1, 0]"
-                    (sizeChange)="handleResizerSizeChange($event)"
-                    (dblclick)="handleResizerDBClick($event)"
-                ></div>
+                @if (!disableResizer()) {
+                    <div
+                        class="kbq-content-panel-container__panel-resizer"
+                        [kbqResizer]="[-1, 0]"
+                        (sizeChange)="handleResizerSizeChange($event)"
+                        (dblclick)="handleResizerDBClick($event)"
+                    ></div>
+                }
                 <ng-content select="kbq-content-panel" />
             </div>
         }
@@ -276,29 +278,31 @@ export class KbqContentPanelContainer {
 
     readonly opened = input(false, { transform: booleanAttribute });
 
+    readonly openedChange = output<boolean>();
+
     readonly disableClose = input(false, { transform: booleanAttribute });
 
     readonly disableCloseByEscape = input(false, { transform: booleanAttribute });
 
-    readonly openedChange = output<boolean>();
+    readonly disableResizer = input(false, { transform: booleanAttribute });
 
     readonly minWidth = input(480, { transform: numberAttribute });
 
     readonly width = input(640, { transform: numberAttribute });
+
+    readonly maxWidth = input(800, { transform: numberAttribute });
+
+    /**
+     * @docs-private
+     */
+    protected readonly openedState = signal(this.opened());
 
     /**
      * @docs-private
      */
     protected readonly widthState = signal(this.width());
 
-    readonly maxWidth = input(800, { transform: numberAttribute });
-
     readonly isOpened = computed(() => this.openedState());
-
-    /**
-     * @docs-private
-     */
-    protected readonly openedState = signal(this.opened());
 
     constructor() {
         // TODO: Should use linked signal
