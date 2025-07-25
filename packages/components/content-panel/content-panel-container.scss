@@ -10,6 +10,18 @@
     }
 
     .kbq-content-panel-container__panel {
+        position: relative;
         padding: 0 var(--kbq-size-s) var(--kbq-size-s) 0;
+    }
+
+    .kbq-content-panel-container__panel-resizer {
+        --kbq-content-panel-resizer-width: var(--kbq-size-l);
+
+        position: absolute;
+        top: 0;
+        left: calc(var(--kbq-content-panel-resizer-width) / -2);
+
+        width: var(--kbq-content-panel-resizer-width);
+        height: 100%;
     }
 }

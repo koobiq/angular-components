@@ -91,6 +91,11 @@ import { DevThemeToggle } from '../theme-toggle';
             border: 1px solid cyan;
         }
 
+        :host ::ng-deep .kbq-content-panel-container__panel-resizer {
+            background-color: yellow;
+            opacity: 0.3;
+        }
+
         .example-content-panel-container__content {
             background: blueviolet;
             height: 1000px;

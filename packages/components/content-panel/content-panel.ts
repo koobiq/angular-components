@@ -22,6 +22,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable';
 
 @Component({
     standalone: true,
@@ -162,6 +163,9 @@ export class KbqContentPanel {
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
+    /**
+     * @docs-private
+     */
     readonly scrollableBody = contentChild(KbqContentPanelBody, { read: CdkScrollable });
 
     constructor() {
@@ -205,7 +209,7 @@ export class KbqContentPanel {
 
 @Component({
     standalone: true,
-    imports: [CdkScrollable],
+    imports: [CdkScrollable, KbqResizable, KbqResizer],
     selector: 'kbq-content-panel-container',
     exportAs: 'kbqContentPanelContainer',
     host: {
@@ -214,15 +218,23 @@ export class KbqContentPanel {
     },
     template: `
         <div class="kbq-content-panel-container__content kbq-scrollbar" cdkScrollable>
+            {{ widthState() }}
             <ng-content />
         </div>
         @if (openedState()) {
             <div
                 class="kbq-content-panel-container__panel"
                 [style.min-width.px]="minWidth()"
-                [style.width.px]="width()"
+                [style.width.px]="widthState()"
                 [style.max-width.px]="maxWidth()"
+                kbqResizable
             >
+                <div
+                    class="kbq-content-panel-container__panel-resizer"
+                    [kbqResizer]="[-1, 0]"
+                    (sizeChange)="handleResizerSizeChange($event)"
+                    (dblclick)="handleResizerDBClick($event)"
+                ></div>
                 <ng-content select="kbq-content-panel" />
             </div>
         }
@@ -232,6 +244,9 @@ export class KbqContentPanel {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqContentPanelContainer {
+    /**
+     * @docs-private
+     */
     readonly scrollableContent = viewChild.required(CdkScrollable);
 
     readonly opened = input(false, { transform: booleanAttribute });
@@ -241,7 +256,14 @@ export class KbqContentPanelContainer {
     readonly openedChange = output<boolean>();
 
     readonly minWidth = input(480, { transform: numberAttribute });
+
     readonly width = input(640, { transform: numberAttribute });
+
+    /**
+     * @docs-private
+     */
+    protected readonly widthState = signal(this.width());
+
     readonly maxWidth = input(800, { transform: numberAttribute });
 
     readonly isOpened = computed(() => this.openedState());
@@ -257,6 +279,13 @@ export class KbqContentPanelContainer {
             .pipe(takeUntilDestroyed())
             .subscribe((opened) => {
                 this.openedState.set(opened);
+            });
+
+        // TODO: Should use linked signal
+        toObservable(this.width)
+            .pipe(takeUntilDestroyed())
+            .subscribe((width) => {
+                this.widthState.set(width);
             });
     }
 
@@ -277,5 +306,22 @@ export class KbqContentPanelContainer {
 
         this.openedState.set(false);
         this.openedChange.emit(this.openedState());
+    }
+
+    /**
+     * @docs-private
+     */
+    protected handleResizerDBClick(event: MouseEvent): void {
+        event.preventDefault();
+
+        this.widthState.set(this.width());
+    }
+
+    /**
+     * @docs-private
+     */
+    protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void {
+        if (width > this.maxWidth()) this.widthState.set(this.maxWidth());
+        if (width < this.minWidth()) this.widthState.set(this.minWidth());
     }
 }
