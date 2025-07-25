@@ -7,7 +7,7 @@ Form elements use the [`KbqValidateDirective`](https://github.com/koobiq/angular
 </div>
 </div>
 
-### Disabling `KbqValidateDirective`
+### Disabling KbqValidateDirective
 
 ```ts
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';

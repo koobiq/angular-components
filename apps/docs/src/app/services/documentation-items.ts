@@ -847,7 +847,8 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     },
                     svgPreview: 'validation',
                     hasApi: false,
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2025-08-10')
                 }
             ]
         }
