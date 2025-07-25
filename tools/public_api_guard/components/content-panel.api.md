@@ -4,8 +4,11 @@
 
 ```ts
 
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import * as i1 from '@angular/cdk/scrolling';
+import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
@@ -16,8 +19,9 @@ import { WritableSignal } from '@angular/core';
 // @public (undocumented)
 export class KbqContentPanel {
     constructor();
+    readonly scrollableBody: Signal<CdkScrollable | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["scrollableContentBody"], ["kbq-content-panel-aside", "kbq-content-panel-header", "kbq-content-panel-body", "kbq-content-panel-footer"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["scrollableBody"], ["kbq-content-panel-aside", "kbq-content-panel-header", "kbq-content-panel-body", "kbq-content-panel-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanel, never>;
 }
@@ -46,6 +50,10 @@ export class KbqContentPanelContainer {
     // (undocumented)
     readonly disableClose: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)
+    readonly disableCloseByEscape: InputSignalWithTransform<boolean, unknown>;
+    protected handleResizerDBClick(event: MouseEvent): void;
+    protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void;
+    // (undocumented)
     readonly isOpened: Signal<boolean>;
     // (undocumented)
     readonly maxWidth: InputSignalWithTransform<number, unknown>;
@@ -58,12 +66,14 @@ export class KbqContentPanelContainer {
     // (undocumented)
     readonly openedChange: OutputEmitterRef<boolean>;
     protected readonly openedState: WritableSignal<boolean>;
+    readonly scrollableContent: Signal<CdkScrollable>;
     // (undocumented)
     toggle(): void;
     // (undocumented)
     readonly width: InputSignalWithTransform<number, unknown>;
+    protected readonly widthState: WritableSignal<number>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelContainer, "kbq-content-panel-container", ["kbqContentPanelContainer"], { "opened": { "alias": "opened"; "required": false; "isSignal": true; }; "disableClose": { "alias": "disableClose"; "required": false; "isSignal": true; }; "disableCloseByEscape": { "alias": "disableCloseByEscape"; "required": false; "isSignal": true; }; "minWidth": { "alias": "minWidth"; "required": false; "isSignal": true; }; "width": { "alias": "width"; "required": false; "isSignal": true; }; "maxWidth": { "alias": "maxWidth"; "required": false; "isSignal": true; }; }, { "openedChange": "openedChange"; }, never, ["*", "kbq-content-panel"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelContainer, never>;
 }
@@ -78,6 +88,7 @@ export class KbqContentPanelFooter {
 
 // @public (undocumented)
 export class KbqContentPanelHeader {
+    constructor();
     protected readonly buttonStyles: typeof KbqButtonStyles;
     protected readonly componentColors: typeof KbqComponentColors;
     protected readonly contentPanelContainer: KbqContentPanelContainer;
@@ -114,6 +125,36 @@ export class KbqContentPanelModule {
     // (undocumented)
     static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof i1_2.KbqContentPanelContainer, typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter], [typeof i1_2.KbqContentPanelContainer, typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter]>;
 }
+
+// @public
+export class KbqResizable {
+    readonly elementRef: ElementRef<HTMLElement>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizable, "[kbqResizable]", ["kbqResizable"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizable, never>;
+}
+
+// @public
+export class KbqResizer {
+    constructor();
+    protected readonly cursor: Signal<"ns-resize" | "ew-resize" | "nwse-resize" | "nesw-resize">;
+    readonly direction: InputSignal<KbqResizerDirection>;
+    readonly sizeChange: OutputEmitterRef<KbqResizerSizeChangeEvent>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqResizer, "[kbqResizer]", ["kbqResizer"], { "direction": { "alias": "kbqResizer"; "required": true; "isSignal": true; }; }, { "sizeChange": "sizeChange"; }, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqResizer, never>;
+}
+
+// @public
+export type KbqResizerDirection = [x: -1 | 0 | 1, y: -1 | 0 | 1];
+
+// @public (undocumented)
+export type KbqResizerSizeChangeEvent = {
+    width: number;
+    height: number;
+};
 
 // (No @packageDocumentation comment for this package)
 

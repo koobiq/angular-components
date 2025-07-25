@@ -4,8 +4,8 @@
 
 ### Keyboard interaction
 
-By default, the `ESCAPE` key closes the panel, but you can disable this behavior using the `disableClose` attribute:
+By default, the `ESCAPE` key closes the panel, but you can disable this behavior using the `disableCloseByEscape` attribute:
 
 ```html
-<kbq-content-panel-container disableClose>...</kbq-content-panel-container>
+<kbq-content-panel-container disableCloseByEscape>...</kbq-content-panel-container>
 ```

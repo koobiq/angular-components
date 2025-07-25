@@ -1,4 +1,6 @@
+import { ESCAPE } from '@angular/cdk/keycodes';
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     booleanAttribute,
@@ -11,6 +13,7 @@ import {
     ElementRef,
     inject,
     input,
+    NgZone,
     numberAttribute,
     output,
     Renderer2,
@@ -22,6 +25,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { fromEvent } from 'rxjs';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable';
 
 @Component({
@@ -78,7 +82,6 @@ export class KbqContentPanelHeaderActions {}
                         [color]="componentColors.Contrast"
                         [kbqStyle]="buttonStyles.Transparent"
                         (click)="contentPanelContainer.close()"
-                        (document:keydown.escape)="contentPanelContainer.close()"
                         kbq-button
                         type="button"
                     >
@@ -94,6 +97,10 @@ export class KbqContentPanelHeaderActions {}
     encapsulation: ViewEncapsulation.None
 })
 export class KbqContentPanelHeader {
+    private readonly zone = inject(NgZone);
+    private readonly document = inject(DOCUMENT);
+    private readonly destroyRef = inject(DestroyRef);
+
     /**
      * @docs-private
      */
@@ -106,6 +113,25 @@ export class KbqContentPanelHeader {
      * @docs-private
      */
     protected readonly componentColors = KbqComponentColors;
+
+    constructor() {
+        afterNextRender(() => {
+            this.zone.runOutsideAngular(() => {
+                fromEvent<KeyboardEvent>(this.document, 'keydown')
+                    .pipe(takeUntilDestroyed(this.destroyRef))
+                    .subscribe((event) => {
+                        if (event.keyCode === ESCAPE) this.handleDocumentEscapeKeydown(event);
+                    });
+            });
+        });
+    }
+
+    private handleDocumentEscapeKeydown(event: KeyboardEvent): void {
+        if (this.contentPanelContainer.disableClose() || this.contentPanelContainer.disableCloseByEscape()) return;
+
+        event.preventDefault();
+        this.contentPanelContainer.close();
+    }
 }
 
 @Component({
@@ -218,7 +244,6 @@ export class KbqContentPanel {
     },
     template: `
         <div class="kbq-content-panel-container__content kbq-scrollbar" cdkScrollable>
-            {{ widthState() }}
             <ng-content />
         </div>
         @if (openedState()) {
@@ -252,6 +277,8 @@ export class KbqContentPanelContainer {
     readonly opened = input(false, { transform: booleanAttribute });
 
     readonly disableClose = input(false, { transform: booleanAttribute });
+
+    readonly disableCloseByEscape = input(false, { transform: booleanAttribute });
 
     readonly openedChange = output<boolean>();
 

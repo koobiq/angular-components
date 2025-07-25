@@ -4,8 +4,8 @@
 
 ### Взаимодействие с клавиатурой
 
-По умолчанию клавиша `ESCAPE` закрывает панель, но вы можете отключить это поведение с помощью атрибута `disableClose`:
+По умолчанию клавиша `ESCAPE` закрывает панель, но вы можете отключить это поведение с помощью атрибута `disableCloseByEscape`:
 
 ```html
-<kbq-content-panel-container disableClose>...</kbq-content-panel-container>
+<kbq-content-panel-container disableCloseByEscape>...</kbq-content-panel-container>
 ```
