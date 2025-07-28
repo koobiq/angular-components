@@ -7,12 +7,9 @@ import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { of, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-/**
- * @title Breadcrumbs ssr test
- */
 @Component({
     standalone: true,
-    selector: 'dev-breadcrumbs-ssr-test',
+    selector: 'dev-breadcrumbs-hydration',
     template: `
         <kbq-top-bar>
             @if (breadcrumbItems$ | async; as breadcrumbs) {
@@ -44,7 +41,7 @@ import { map } from 'rxjs/operators';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DevBreadcrumbsSsrTest {
+export class DevBreadcrumbsHydration {
     breadcrumbItems$ = of(null).pipe(
         map(() => [
             { label: 'Main', url: '/main' },
@@ -58,7 +55,7 @@ export class DevBreadcrumbsSsrTest {
         /*
         When setTimeout in the code, it delays the time when hydration kicks off the cleanup operation (is depends on the ApplicationRef.isStable).
         As a result, the cleanup operation happens a bit later, thus leaving duplicated content visible.
-        ref: https://github.com/angular/angular/issues/50543#issuecomment-1572900259
+        link: https://github.com/angular/angular/issues/50543#issuecomment-1572900259
         */
         timer(2000).subscribe(() => console.log('Timer!'));
     }
