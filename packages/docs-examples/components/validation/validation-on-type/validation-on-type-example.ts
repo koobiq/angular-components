@@ -60,10 +60,9 @@ export class ValidationOnTypeExample {
 
     onInput(event: Event): void {
         const regex = /^[\d\w]+$/g;
-        const target = event.target as HTMLInputElement | null;
 
-        if (target?.value && !regex.test(target.value)) {
-            const newValue = target.value.replace(restSymbolsRegex, '');
+        if (event.target instanceof HTMLInputElement && !regex.test(event.target.value)) {
+            const newValue = event.target.value.replace(restSymbolsRegex, '');
 
             this.checkOnFlyForm.controls.folderName.setValue(newValue);
 

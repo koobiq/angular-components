@@ -46,7 +46,7 @@ type DocsFormData = {
     `
 })
 export class DocsNameFormComponent {
-    protected readonly modalData = inject(KBQ_MODAL_DATA, { optional: true }) as DocsFormData | null;
+    protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });
     protected readonly formFieldList = viewChildren(KbqFormField);
     readonly userDetailsForm = new FormGroup({
         firstName: new FormControl(this.modalData?.firstName || '', Validators.required),
