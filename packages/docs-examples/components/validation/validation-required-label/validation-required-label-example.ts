@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule, KbqOptionModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
@@ -16,7 +16,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     selector: 'validation-required-label-example',
     template: `
         <div class="layout-margin" style="width: 400px">
-            <form class="kbq-form-horizontal" [formGroup]="form" novalidate>
+            <form class="kbq-form-horizontal" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">
                         <label class="kbq-form__label flex-20">Name</label>
@@ -67,10 +67,11 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                         <label class="kbq-form__label flex-20">Estimation</label>
                         <kbq-form-field class="kbq-form__control flex-80">
                             <kbq-select [required]="true" formControlName="estimation">
-                                <kbq-option [value]="1">Bad</kbq-option>
-                                <kbq-option [value]="2">Satisfactory</kbq-option>
-                                <kbq-option [value]="3">Good</kbq-option>
-                                <kbq-option [value]="4">best of all</kbq-option>
+                                @for (option of estimation; track option.value) {
+                                    <kbq-option [value]="option.value">
+                                        {{ option.label }}
+                                    </kbq-option>
+                                }
                             </kbq-select>
 
                             @if (form.get('estimation')?.hasError('required')) {
@@ -141,4 +142,25 @@ export class ValidationRequiredLabelExample {
         { value: 9, label: 'Emotional disorders' },
         { value: 10, label: 'Other' }
     ];
+
+    protected readonly estimation = [
+        { value: 1, label: 'Bad' },
+        { value: 2, label: 'Satisfactory' },
+        { value: 3, label: 'Good' },
+        { value: 4, label: 'Best of all' }
+    ];
+
+    private readonly formFieldList = viewChildren(KbqFormField);
+
+    onSubmit(): void {
+        this.focusFirstInvalidControl();
+    }
+
+    private focusFirstInvalidControl(): void {
+        setTimeout(() => {
+            const invalidControl = this.formFieldList().find((control) => control.invalid);
+
+            invalidControl?.focus();
+        });
+    }
 }

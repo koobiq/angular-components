@@ -7,15 +7,16 @@ import {
     inject,
     OnDestroy,
     signal,
-    viewChild
+    viewChild,
+    viewChildren
 } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInput, KbqInputModule } from '@koobiq/components/input';
+import { KbqInputModule } from '@koobiq/components/input';
 
 /**
  * @title Validation on submit
@@ -44,7 +45,7 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
                     <div class="kbq-form__row">
                         <kbq-form-field>
                             <kbq-label>Name</kbq-label>
-                            <input #requiredInput="kbqInput" formControlName="firstName" kbqInput />
+                            <input formControlName="firstName" kbqInput />
                         </kbq-form-field>
                     </div>
 
@@ -127,7 +128,6 @@ import { KbqInput, KbqInputModule } from '@koobiq/components/input';
     }
 })
 export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
-    protected readonly requiredInput = viewChild<KbqInput>('requiredInput');
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');
 
     protected readonly showServerErrors = signal(false);
@@ -139,6 +139,7 @@ export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
 
     protected readonly focusMonitor = inject(FocusMonitor);
     protected submitOrigin: FocusOrigin | null = null;
+    private readonly formFieldList = viewChildren(KbqFormField);
 
     ngAfterViewInit() {
         const alert = this.alertContainer();
@@ -158,7 +159,7 @@ export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
 
     submitForm(): void {
         if (this.globalErrorForm.invalid) {
-            this.requiredInput()?.focus();
+            this.focusFirstInvalidControl();
 
             return;
         }
@@ -176,5 +177,13 @@ export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
                 this.submitOrigin = null;
             }
         }, 1000);
+    }
+
+    private focusFirstInvalidControl(): void {
+        setTimeout(() => {
+            const invalidControl = this.formFieldList().find((control) => control.invalid);
+
+            invalidControl?.focus();
+        });
     }
 }

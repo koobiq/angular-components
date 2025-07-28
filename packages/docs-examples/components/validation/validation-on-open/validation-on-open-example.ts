@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormsModule } from '@koobiq/components/core';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
 import { take } from 'rxjs';
@@ -19,7 +19,13 @@ type DocsFormData = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="layout-margin">
-            <form class="kbq-form-vertical" id="docs-form" [formGroup]="userDetailsForm" novalidate>
+            <form
+                class="kbq-form-vertical"
+                id="docs-form"
+                [formGroup]="userDetailsForm"
+                (ngSubmit)="onSubmit()"
+                novalidate
+            >
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">
                         <div class="kbq-form__label">Name</div>
@@ -40,13 +46,22 @@ type DocsFormData = {
     `
 })
 export class DocsNameFormComponent {
-    readonly userDetailsForm: FormGroup;
     protected readonly modalData = inject(KBQ_MODAL_DATA, { optional: true }) as DocsFormData | null;
+    protected readonly formFieldList = viewChildren(KbqFormField);
+    readonly userDetailsForm = new FormGroup({
+        firstName: new FormControl(this.modalData?.firstName || '', Validators.required),
+        lastName: new FormControl(this.modalData?.lastName || '', Validators.required)
+    });
 
-    constructor() {
-        this.userDetailsForm = new FormGroup({
-            firstName: new FormControl(this.modalData?.firstName || '', Validators.required),
-            lastName: new FormControl(this.modalData?.lastName || '', Validators.required)
+    onSubmit(): void {
+        this.focusFirstInvalidControl();
+    }
+
+    private focusFirstInvalidControl(): void {
+        setTimeout(() => {
+            const invalidControl = this.formFieldList().find((control) => control.invalid);
+
+            invalidControl?.focus();
         });
     }
 }
@@ -112,7 +127,6 @@ export class ValidationOnOpenExample {
         });
 
         this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
-            this.modalRef.getElement().getElementsByTagName('input').item(0)?.focus();
             this.modalRef.getElement().getElementsByTagName('button').item(0)?.click();
         });
     }
