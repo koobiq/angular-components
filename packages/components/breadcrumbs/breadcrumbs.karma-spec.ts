@@ -184,9 +184,7 @@ describe(KbqBreadcrumbs.name, () => {
     standalone: true,
     imports: [
         KbqBreadcrumbs,
-        KbqBreadcrumbItem,
-        KbqBreadcrumbsSeparator,
-        KbqBreadcrumbView
+        KbqBreadcrumbItem
     ]
 })
 class SimpleBreadcrumbs {

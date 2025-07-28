@@ -1,15 +1,15 @@
 import { isPlatformBrowser, isPlatformServer } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, PLATFORM_ID, ViewEncapsulation } from '@angular/core';
-import { BreadcrumbsExamplesModule } from 'packages/docs-examples/components/breadcrumbs';
 import { ScrollbarExamplesModule } from 'packages/docs-examples/components/scrollbar';
 import { DevThemeToggle } from '../theme-toggle';
+import { DevBreadcrumbsHydration } from './components/breadcrumbs';
 
 @Component({
     standalone: true,
-    imports: [BreadcrumbsExamplesModule, ScrollbarExamplesModule],
+    imports: [ScrollbarExamplesModule, DevBreadcrumbsHydration],
     selector: 'dev-examples',
     template: `
-        <breadcrumbs-overview-example />
+        <dev-breadcrumbs-hydration />
         <hr />
         <scrollbar-with-options-example />
     `,
