@@ -227,6 +227,10 @@
 }
 
 @mixin kbq-file-upload-typography() {
+    .kbq-file-upload {
+        @include tokens.kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    }
+
     .kbq-single-file-upload {
         & .file-item__text-wrapper,
         & .dropzone__text {
