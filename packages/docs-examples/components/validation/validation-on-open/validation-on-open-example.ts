@@ -47,6 +47,7 @@ type DocsFormData = {
 })
 export class DocsNameFormComponent {
     protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });
+    protected readonly modalRef = inject(KbqModalRef);
     protected readonly formFieldList = viewChildren(KbqFormField);
     readonly userDetailsForm = new FormGroup({
         firstName: new FormControl(this.modalData?.firstName || '', Validators.required),
@@ -55,6 +56,10 @@ export class DocsNameFormComponent {
 
     onSubmit(): void {
         this.focusFirstInvalidControl();
+
+        if (this.userDetailsForm.invalid) return;
+
+        this.modalRef.close(this.userDetailsForm.value);
     }
 
     private focusFirstInvalidControl(): void {
@@ -85,7 +90,7 @@ export class DocsNameFormComponent {
         <button (click)="openDraftForm(footer)" kbq-button color="contrast-fade">Open draft</button>
 
         <ng-template #footer>
-            <button (click)="onSave()" type="submit" form="docs-form" kbq-button color="contrast">Save</button>
+            <button type="submit" form="docs-form" kbq-button color="contrast">Save</button>
             <button
                 (click)="modalRef.close(modalRef.getContentComponent().userDetailsForm.value)"
                 kbq-button
@@ -128,16 +133,6 @@ export class ValidationOnOpenExample {
 
         this.modalRef.afterOpen.pipe(take(1)).subscribe(() => {
             this.modalRef.getElement().getElementsByTagName('button').item(0)?.click();
-        });
-    }
-
-    onSave() {
-        const form = this.modalRef.getContentComponent().userDetailsForm;
-
-        setTimeout(() => {
-            if (form.invalid) return;
-
-            this.modalRef.close(form.value);
         });
     }
 }
