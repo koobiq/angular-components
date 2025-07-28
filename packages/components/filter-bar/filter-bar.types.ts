@@ -85,6 +85,10 @@ export interface KbqPipe {
 
     search?: boolean;
     selectAll?: boolean;
+
+    openOnAdd?: boolean;
+    openOnReset?: boolean;
+
     /**
      * This is special logic that unselect all items when all selected because "all selected = nothing selected".
      * Default is true
@@ -100,9 +104,6 @@ export interface KbqPipe {
 
 export interface KbqPipeData<V> extends KbqPipe {
     value: V | null;
-
-    search?: boolean;
-    openOnAdd?: boolean;
 }
 
 export interface KbqPipeTemplate extends Omit<KbqPipe, 'value'> {

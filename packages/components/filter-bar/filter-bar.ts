@@ -143,6 +143,8 @@ export class KbqFilterBar {
 
     private savedFilter: KbqFilter | null = null;
 
+    /** Event that emits whenever the filter is reset. */
+    readonly onResetFilter = new BehaviorSubject<boolean>(false);
     /** all changes */
     readonly changes = new BehaviorSubject<void>(undefined);
     /** internal filter changes */
