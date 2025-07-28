@@ -7,7 +7,7 @@ import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
+import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { AgGridModule } from 'ag-grid-angular';
 import {
@@ -109,7 +109,15 @@ export class ExampleGrid {
     ],
     selector: 'example-content-panel',
     template: `
-        <kbq-modal-title>Page Title</kbq-modal-title>
+        <kbq-modal-title class="example-modal-title">
+            <div>Page Title</div>
+            <div class="example-modal-title-actions">
+                <button [color]="componentColors.Contrast" (click)="modalRef.close()" kbq-button>Close window</button>
+                <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                    <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
+                </button>
+            </div>
+        </kbq-modal-title>
         <kbq-content-panel-container class="example-content-panel-container" [(opened)]="opened" kbqModalBody>
             <example-grid
                 (cellClicked)="onGridCellClicked($event)"
@@ -119,8 +127,8 @@ export class ExampleGrid {
             <kbq-content-panel>
                 <kbq-content-panel-aside>
                     <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar vertical>
-                        @for (_i of asideTabs; track $index) {
-                            <a kbqTabLink>
+                        @for (_i of [0, 1, 2, 3]; track $index) {
+                            <a [active]="$index === 0" kbqTabLink>
                                 <i kbq-icon="kbq-bug_16"></i>
                             </a>
                         }
@@ -133,16 +141,34 @@ export class ExampleGrid {
                         <a kbq-link pseudo>July 21, 2025 2:29 PM</a>
                     </div>
                     <div class="example-content-header-actions" kbqContentPanelHeaderActions>
-                        @for (_a of headerActions; track $index) {
-                            <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
-                                <i kbq-icon="kbq-link_16"></i>
-                            </button>
-                        }
+                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                            <i kbq-icon="kbq-link_16"></i>
+                        </button>
+                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                            <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
+                        </button>
+                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                            <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                        </button>
                     </div>
                     <div class="example-content-header-caption">Caption</div>
+                    <div class="example-content-header-buttons">
+                        <button [color]="componentColors.ContrastFade" kbq-button>
+                            <i kbq-icon="kbq-pencil_16"></i>
+                            Edit
+                        </button>
+                        <button [color]="componentColors.ContrastFade" kbq-button>
+                            <i kbq-icon="kbq-square-multiple-o_16"></i>
+                            Copy
+                        </button>
+                        <button [color]="componentColors.ContrastFade" kbq-button>
+                            <i kbq-icon="kbq-trash_16"></i>
+                            Delete
+                        </button>
+                    </div>
                 </kbq-content-panel-header>
                 <kbq-content-panel-body class="example-content-panel-body" #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
-                    @for (_p of bodyParagraphs; track $index) {
+                    @for (_p of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
                         <p>
                             In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
                             which the perpetrator seeks to make a machine or network resource unavailable to its
@@ -157,14 +183,9 @@ export class ExampleGrid {
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer class="example-content-panel-footer">
-                    @for (action of footerActions; track $index) {
-                        <button
-                            [color]="$index > 0 ? componentColors.ContrastFade : componentColors.Contrast"
-                            kbq-button
-                        >
-                            Button {{ $index }}
-                        </button>
-                    }
+                    <button [color]="componentColors.Contrast" kbq-button>Button 0</button>
+                    <button [color]="componentColors.ContrastFade" kbq-button>Button 1</button>
+                    <button [color]="componentColors.ContrastFade" kbq-button>Button 2</button>
                 </kbq-content-panel-footer>
             </kbq-content-panel>
         </kbq-content-panel-container>
@@ -176,6 +197,21 @@ export class ExampleGrid {
             height: 90vh;
         }
 
+        ::ng-deep .example-modal-title {
+            padding: var(--kbq-size-xxl);
+        }
+
+        ::ng-deep .example-modal-title .kbq-modal-title {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .example-modal-title-actions {
+            display: flex;
+            gap: var(--kbq-size-s);
+        }
+
         .example-content-panel-container {
             display: flex;
             flex-grow: 1;
@@ -185,6 +221,12 @@ export class ExampleGrid {
         .example-content-header-caption {
             color: var(--kbq-foreground-contrast-secondary);
             margin-top: var(--kbq-size-xxs);
+            margin-bottom: var(--kbq-size-l);
+        }
+
+        .example-content-header-buttons {
+            display: flex;
+            gap: var(--kbq-size-l);
         }
 
         .example-content-header-title {
@@ -214,14 +256,10 @@ export class ExampleGrid {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExampleContentPanel {
+    protected readonly modalRef = inject(KbqModalRef);
     protected readonly componentColors = KbqComponentColors;
     protected readonly buttonStyles = KbqButtonStyles;
     protected readonly badgeColors = KbqBadgeColors;
-
-    protected readonly asideTabs = Array.from({ length: 4 });
-    protected readonly headerActions = Array.from({ length: 2 });
-    protected readonly footerActions = Array.from({ length: 3 });
-    protected readonly bodyParagraphs = Array.from({ length: 10 });
 
     protected readonly selectedRowIndex = signal(0);
     protected readonly opened = model(false);
@@ -270,7 +308,8 @@ export class ContentPanelOverviewExample {
         this.modal.open({
             kbqComponent: ExampleContentPanel,
             kbqWidth: '90vw',
-            kbqCloseByESC: false
+            kbqCloseByESC: false,
+            kbqClosable: false
         });
     }
 }
