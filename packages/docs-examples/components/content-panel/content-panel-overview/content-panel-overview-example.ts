@@ -118,83 +118,93 @@ export class ExampleGrid {
                 </button>
             </div>
         </kbq-modal-title>
-        <kbq-content-panel-container class="example-content-panel-container" [(opened)]="opened" kbqModalBody>
-            <example-grid
-                (cellClicked)="onGridCellClicked($event)"
-                (cellFocused)="onGridCellFocused($event)"
-                (cellKeyDown)="onGridCellKeyDown($event)"
-            />
-            <kbq-content-panel>
-                <kbq-content-panel-aside>
-                    <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar vertical>
-                        @for (_i of [0, 1, 2, 3]; track $index) {
-                            <a [active]="$index === 0" kbqTabLink>
-                                <i kbq-icon="kbq-bug_16"></i>
-                            </a>
+        <kbq-modal-body class="example-modal-body">
+            <kbq-content-panel-container class="example-content-panel-container" [(opened)]="opened">
+                <example-grid
+                    (cellClicked)="onGridCellClicked($event)"
+                    (cellFocused)="onGridCellFocused($event)"
+                    (cellKeyDown)="onGridCellKeyDown($event)"
+                />
+                <kbq-content-panel>
+                    <kbq-content-panel-aside>
+                        <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar vertical>
+                            @for (_i of [0, 1, 2, 3]; track $index) {
+                                <a [active]="$index === 0" kbqTabLink>
+                                    <i kbq-icon="kbq-bug_16"></i>
+                                </a>
+                            }
+                        </nav>
+                    </kbq-content-panel-aside>
+                    <kbq-content-panel-header>
+                        <div class="example-content-header-title" kbqContentPanelHeaderTitle>
+                            <span>Selected row {{ selectedRowIndex() }}</span>
+                            <kbq-badge [badgeColor]="badgeColors.FadeError">8,6</kbq-badge>
+                            <a kbq-link pseudo>July 21, 2025 2:29 PM</a>
+                        </div>
+                        <div class="example-content-header-actions" kbqContentPanelHeaderActions>
+                            <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                                <i kbq-icon="kbq-link_16"></i>
+                            </button>
+                            <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                                <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
+                            </button>
+                            <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
+                            </button>
+                        </div>
+                        <div class="example-content-header-caption">Caption</div>
+                        <div class="example-content-header-buttons">
+                            <button [color]="componentColors.ContrastFade" kbq-button>
+                                <i kbq-icon="kbq-pencil_16"></i>
+                                Edit
+                            </button>
+                            <button [color]="componentColors.ContrastFade" kbq-button>
+                                <i kbq-icon="kbq-square-multiple-o_16"></i>
+                                Copy
+                            </button>
+                            <button [color]="componentColors.ContrastFade" kbq-button>
+                                <i kbq-icon="kbq-trash_16"></i>
+                                Delete
+                            </button>
+                        </div>
+                    </kbq-content-panel-header>
+                    <kbq-content-panel-body
+                        class="example-content-panel-body"
+                        #tabNavPanel="kbqTabNavPanel"
+                        kbqTabNavPanel
+                    >
+                        @for (_p of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
+                            <p>
+                                In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack
+                                in which the perpetrator seeks to make a machine or network resource unavailable to its
+                                intended users by temporarily or indefinitely disrupting services of a host connected to
+                                a network. Denial of service is typically accomplished by flooding the targeted machine
+                                or resource with superfluous requests in an attempt to overload systems and prevent some
+                                or all legitimate requests from being fulfilled. The range of attacks varies widely,
+                                spanning from inundating a server with millions of requests to slow its performance,
+                                overwhelming a server with a substantial amount of invalid data, to submitting requests
+                                with an illegitimate IP address.
+                            </p>
                         }
-                    </nav>
-                </kbq-content-panel-aside>
-                <kbq-content-panel-header>
-                    <div class="example-content-header-title" kbqContentPanelHeaderTitle>
-                        <span>Selected row {{ selectedRowIndex() }}</span>
-                        <kbq-badge [badgeColor]="badgeColors.FadeError">8,6</kbq-badge>
-                        <a kbq-link pseudo>July 21, 2025 2:29 PM</a>
-                    </div>
-                    <div class="example-content-header-actions" kbqContentPanelHeaderActions>
-                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
-                            <i kbq-icon="kbq-link_16"></i>
-                        </button>
-                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
-                            <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
-                        </button>
-                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
-                            <i kbq-icon="kbq-ellipsis-vertical_16"></i>
-                        </button>
-                    </div>
-                    <div class="example-content-header-caption">Caption</div>
-                    <div class="example-content-header-buttons">
-                        <button [color]="componentColors.ContrastFade" kbq-button>
-                            <i kbq-icon="kbq-pencil_16"></i>
-                            Edit
-                        </button>
-                        <button [color]="componentColors.ContrastFade" kbq-button>
-                            <i kbq-icon="kbq-square-multiple-o_16"></i>
-                            Copy
-                        </button>
-                        <button [color]="componentColors.ContrastFade" kbq-button>
-                            <i kbq-icon="kbq-trash_16"></i>
-                            Delete
-                        </button>
-                    </div>
-                </kbq-content-panel-header>
-                <kbq-content-panel-body class="example-content-panel-body" #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
-                    @for (_p of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
-                        <p>
-                            In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
-                            which the perpetrator seeks to make a machine or network resource unavailable to its
-                            intended users by temporarily or indefinitely disrupting services of a host connected to a
-                            network. Denial of service is typically accomplished by flooding the targeted machine or
-                            resource with superfluous requests in an attempt to overload systems and prevent some or all
-                            legitimate requests from being fulfilled. The range of attacks varies widely, spanning from
-                            inundating a server with millions of requests to slow its performance, overwhelming a server
-                            with a substantial amount of invalid data, to submitting requests with an illegitimate IP
-                            address.
-                        </p>
-                    }
-                </kbq-content-panel-body>
-                <kbq-content-panel-footer class="example-content-panel-footer">
-                    <button [color]="componentColors.Contrast" kbq-button>Button 0</button>
-                    <button [color]="componentColors.ContrastFade" kbq-button>Button 1</button>
-                    <button [color]="componentColors.ContrastFade" kbq-button>Button 2</button>
-                </kbq-content-panel-footer>
-            </kbq-content-panel>
-        </kbq-content-panel-container>
+                    </kbq-content-panel-body>
+                    <kbq-content-panel-footer class="example-content-panel-footer">
+                        <button [color]="componentColors.Contrast" kbq-button>Button 0</button>
+                        <button [color]="componentColors.ContrastFade" kbq-button>Button 1</button>
+                        <button [color]="componentColors.ContrastFade" kbq-button>Button 2</button>
+                    </kbq-content-panel-footer>
+                </kbq-content-panel>
+            </kbq-content-panel-container>
+        </kbq-modal-body>
     `,
     styles: `
         :host {
             display: flex;
             flex-direction: column;
             height: 90vh;
+        }
+
+        .example-modal-body {
+            height: 100%;
         }
 
         ::ng-deep .example-modal-title {
@@ -216,6 +226,7 @@ export class ExampleGrid {
             display: flex;
             flex-grow: 1;
             max-height: unset;
+            height: 100%;
         }
 
         .example-content-header-caption {

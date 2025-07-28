@@ -3,6 +3,7 @@
     gap: var(--kbq-size-l);
     overflow: hidden;
     position: relative;
+    box-sizing: border-box;
 
     .kbq-content-panel-container__content {
         overflow: auto;
