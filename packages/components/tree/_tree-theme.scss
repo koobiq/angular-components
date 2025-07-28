@@ -36,7 +36,8 @@
         @include kbq-tree-option(default);
 
         &:not(.kbq-disabled) {
-            &:hover {
+            &:hover,
+            &.kbq-action-button-focused {
                 @include kbq-tree-option(states-hover);
             }
 

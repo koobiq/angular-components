@@ -129,7 +129,7 @@ export const DATA_OBJECT = {
 
                 <div class="layout-row layout-align-space-between">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                    <kbq-badge badgeColor="theme">badge</kbq-badge>
+                    <kbq-badge [compact]="true" badgeColor="theme">badge</kbq-badge>
                 </div>
 
                 <kbq-option-action
@@ -146,7 +146,7 @@ export const DATA_OBJECT = {
 
                 <div class="layout-row layout-align-space-between">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                    <kbq-badge badgeColor="theme">badge</kbq-badge>
+                    <kbq-badge [compact]="true" badgeColor="theme">badge</kbq-badge>
                 </div>
 
                 <kbq-option-action
