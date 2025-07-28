@@ -55,6 +55,7 @@ export class KbqContentPanelContainer {
     readonly disableClose: InputSignalWithTransform<boolean, unknown>;
     readonly disableCloseByEscape: InputSignalWithTransform<boolean, unknown>;
     readonly disableResizer: InputSignalWithTransform<boolean, unknown>;
+    protected handleEscapeKeydown(event: KeyboardEvent): void;
     protected handleResizerDBClick(event: MouseEvent): void;
     protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void;
     readonly isOpened: Signal<boolean>;
@@ -84,7 +85,6 @@ export class KbqContentPanelFooter {
 
 // @public (undocumented)
 export class KbqContentPanelHeader {
-    constructor();
     protected readonly buttonStyles: typeof KbqButtonStyles;
     protected readonly componentColors: typeof KbqComponentColors;
     protected readonly contentPanelContainer: KbqContentPanelContainer;

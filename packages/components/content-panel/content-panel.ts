@@ -1,7 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { ESCAPE } from '@angular/cdk/keycodes';
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { DOCUMENT } from '@angular/common';
 import {
     afterNextRender,
     booleanAttribute,
@@ -14,7 +12,6 @@ import {
     ElementRef,
     inject,
     input,
-    NgZone,
     numberAttribute,
     output,
     Renderer2,
@@ -27,8 +24,32 @@ import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqAnimationCurves, KbqAnimationDurations, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { SizeL } from '@koobiq/design-tokens';
-import { fromEvent } from 'rxjs';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable';
+
+const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
+    state('false', style({ 'margin-right': 0 })),
+    state('true', style({ 'margin-right': '{{ marginRight }}px' }), { params: { marginRight: 0 } }),
+    transition('true => false', [
+        animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.AccelerationCurve}`)]),
+    transition('false => true', [
+        animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.DecelerationCurve}`)])
+
+]);
+
+const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
+    transition(':enter', [
+        style({ transform: 'translateX(100%)' }),
+        animate(
+            `${KbqAnimationDurations.Entering} ${KbqAnimationCurves.DecelerationCurve}`,
+            style({ transform: 'translateX(0%)' })
+        )]),
+    transition(':leave', [
+        animate(
+            `${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.AccelerationCurve}`,
+            style({ transform: 'translateX(100%)' })
+        )])
+
+]);
 
 @Component({
     standalone: true,
@@ -99,10 +120,6 @@ export class KbqContentPanelHeaderActions {}
     encapsulation: ViewEncapsulation.None
 })
 export class KbqContentPanelHeader {
-    private readonly zone = inject(NgZone);
-    private readonly document = inject(DOCUMENT);
-    private readonly destroyRef = inject(DestroyRef);
-
     /**
      * @docs-private
      */
@@ -115,25 +132,6 @@ export class KbqContentPanelHeader {
      * @docs-private
      */
     protected readonly componentColors = KbqComponentColors;
-
-    constructor() {
-        afterNextRender(() => {
-            this.zone.runOutsideAngular(() => {
-                fromEvent<KeyboardEvent>(this.document, 'keydown')
-                    .pipe(takeUntilDestroyed(this.destroyRef))
-                    .subscribe((event) => {
-                        if (event.keyCode === ESCAPE) this.handleDocumentEscapeKeydown(event);
-                    });
-            });
-        });
-    }
-
-    private handleDocumentEscapeKeydown(event: KeyboardEvent): void {
-        if (this.contentPanelContainer.disableClose() || this.contentPanelContainer.disableCloseByEscape()) return;
-
-        event.preventDefault();
-        this.contentPanelContainer.close();
-    }
 }
 
 @Component({
@@ -242,7 +240,8 @@ export class KbqContentPanel {
     exportAs: 'kbqContentPanelContainer',
     host: {
         class: 'kbq-content-panel-container',
-        '[class.kbq-content-panel-container__opened]': 'openedState()'
+        '[class.kbq-content-panel-container__opened]': 'openedState()',
+        '(keydown.escape)': 'handleEscapeKeydown($event)'
     },
     template: `
         <div
@@ -275,30 +274,8 @@ export class KbqContentPanel {
     `,
     styleUrl: './content-panel-container.scss',
     animations: [
-        trigger('contentAnimation', [
-            state('false', style({ 'margin-right': 0 })),
-            state('true', style({ 'margin-right': '{{ marginRight }}px' }), { params: { marginRight: 0 } }),
-            transition('true => false', [
-                animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.AccelerationCurve}`)]),
-            transition('false => true', [
-                animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.DecelerationCurve}`)])
-
-        ]),
-        trigger('panelAnimation', [
-            transition(':enter', [
-                style({ transform: 'translateX(100%)' }),
-                animate(
-                    `${KbqAnimationDurations.Entering} ${KbqAnimationCurves.DecelerationCurve}`,
-                    style({ transform: 'translateX(0%)' })
-                )]),
-            transition(':leave', [
-                animate(
-                    `${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.AccelerationCurve}`,
-                    style({ transform: 'translateX(100%)' })
-                )])
-
-        ])
-
+        KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION,
+        KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -445,5 +422,15 @@ export class KbqContentPanelContainer {
         if (width < this.minWidth()) return this.widthState.set(this.minWidth());
 
         this.widthState.set(width);
+    }
+
+    /**
+     * @docs-private
+     */
+    protected handleEscapeKeydown(event: KeyboardEvent): void {
+        if (this.openedState() && (this.disableClose() || this.disableCloseByEscape())) return;
+
+        event.preventDefault();
+        this.close();
     }
 }
