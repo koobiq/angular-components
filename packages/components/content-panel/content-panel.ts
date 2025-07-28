@@ -138,6 +138,7 @@ export class KbqContentPanelHeader {
 
 @Component({
     standalone: true,
+    hostDirectives: [CdkScrollable],
     selector: 'kbq-content-panel-body',
     exportAs: 'kbqContentPanelBody',
     host: {
@@ -147,7 +148,6 @@ export class KbqContentPanelHeader {
         <ng-content />
     `,
     styleUrl: './content-panel-body.scss',
-    hostDirectives: [CdkScrollable],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -192,7 +192,7 @@ export class KbqContentPanel {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
 
     /**
-     * @docs-private
+     * Reference to the `CdkScrollable` instance of the `KbqContentPanelBody`.
      */
     readonly scrollableBody = contentChild(KbqContentPanelBody, { read: CdkScrollable });
 
@@ -305,24 +305,58 @@ export class KbqContentPanel {
 })
 export class KbqContentPanelContainer {
     /**
-     * @docs-private
+     * Reference to the `CdkScrollable` instance of the `KbqContentPanelContainer` content.
      */
     readonly scrollableContent = viewChild.required(CdkScrollable);
 
+    /**
+     * Whether the content panel is opened.
+     *
+     * @default false
+     */
     readonly opened = input(false, { transform: booleanAttribute });
 
+    /**
+     * Emits event when the content panel opened state is changed.
+     */
     readonly openedChange = output<boolean>();
 
+    /**
+     * Whether the content panel can not be closed by clicking on the close button or pressing the ESCAPE key.
+     *
+     * @default false
+     */
     readonly disableClose = input(false, { transform: booleanAttribute });
 
-    readonly disableCloseByEscape = input(false, { transform: booleanAttribute });
+    /**
+     * Whether the content panel can not be closed by pressing the ESCAPE key.
+     */
+    readonly disableCloseByEscape = input(this.disableClose(), { transform: booleanAttribute });
 
+    /**
+     * Whether the content panel resizer is disabled.
+     */
     readonly disableResizer = input(false, { transform: booleanAttribute });
 
+    /**
+     * Minimum width of the `KbqContentPanel`.
+     *
+     * @default 480
+     */
     readonly minWidth = input(480, { transform: numberAttribute });
 
+    /**
+     * Width of the `KbqContentPanel`.
+     *
+     * @default 640
+     */
     readonly width = input(640, { transform: numberAttribute });
 
+    /**
+     * Max width of the `KbqContentPanel`.
+     *
+     * @default 800
+     */
     readonly maxWidth = input(800, { transform: numberAttribute });
 
     /**
@@ -335,6 +369,9 @@ export class KbqContentPanelContainer {
      */
     protected readonly widthState = signal(this.width());
 
+    /**
+     * Whether the content panel is opened.
+     */
     readonly isOpened = computed(() => this.openedState());
 
     /**
@@ -363,11 +400,17 @@ export class KbqContentPanelContainer {
             });
     }
 
+    /**
+     * Toggles the content panel opened state.
+     */
     toggle(): void {
         this.openedState.update((state) => !state);
         this.openedChange.emit(this.openedState());
     }
 
+    /**
+     * Opens the content panel.
+     */
     open(): void {
         if (this.openedState()) return;
 
@@ -375,6 +418,9 @@ export class KbqContentPanelContainer {
         this.openedChange.emit(this.openedState());
     }
 
+    /**
+     * Closes the content panel.
+     */
     close(): void {
         if (!this.openedState()) return;
 

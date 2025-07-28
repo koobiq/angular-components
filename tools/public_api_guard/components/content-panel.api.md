@@ -45,7 +45,6 @@ export class KbqContentPanelBody {
 // @public (undocumented)
 export class KbqContentPanelContainer {
     constructor();
-    // (undocumented)
     close(): void;
     protected readonly contentAnimationState: Signal<    {
     value: boolean;
@@ -53,31 +52,20 @@ export class KbqContentPanelContainer {
     marginRight: number;
     };
     }>;
-    // (undocumented)
     readonly disableClose: InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     readonly disableCloseByEscape: InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     readonly disableResizer: InputSignalWithTransform<boolean, unknown>;
     protected handleResizerDBClick(event: MouseEvent): void;
     protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void;
-    // (undocumented)
     readonly isOpened: Signal<boolean>;
-    // (undocumented)
     readonly maxWidth: InputSignalWithTransform<number, unknown>;
-    // (undocumented)
     readonly minWidth: InputSignalWithTransform<number, unknown>;
-    // (undocumented)
     open(): void;
-    // (undocumented)
     readonly opened: InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     readonly openedChange: OutputEmitterRef<boolean>;
     protected readonly openedState: WritableSignal<boolean>;
     readonly scrollableContent: Signal<CdkScrollable>;
-    // (undocumented)
     toggle(): void;
-    // (undocumented)
     readonly width: InputSignalWithTransform<number, unknown>;
     protected readonly widthState: WritableSignal<number>;
     // (undocumented)
