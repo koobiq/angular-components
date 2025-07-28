@@ -47,6 +47,12 @@ export class KbqContentPanelContainer {
     constructor();
     // (undocumented)
     close(): void;
+    protected readonly contentAnimationState: Signal<    {
+    value: boolean;
+    params: {
+    marginRight: number;
+    };
+    }>;
     // (undocumented)
     readonly disableClose: InputSignalWithTransform<boolean, unknown>;
     // (undocumented)

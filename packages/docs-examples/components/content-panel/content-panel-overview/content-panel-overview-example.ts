@@ -1,3 +1,4 @@
+import { ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, inject, model, output, signal } from '@angular/core';
 import { KbqAgGridTheme } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
@@ -9,7 +10,14 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalService } from '@koobiq/components/modal';
 import { KbqTabsModule } from '@koobiq/components/tabs';
 import { AgGridModule } from 'ag-grid-angular';
-import { CellClickedEvent, CellFocusedEvent, ColDef, FirstDataRenderedEvent } from 'ag-grid-community';
+import {
+    CellClickedEvent,
+    CellFocusedEvent,
+    CellKeyDownEvent,
+    ColDef,
+    FirstDataRenderedEvent,
+    FullWidthCellKeyDownEvent
+} from 'ag-grid-community';
 
 type ExampleRowData = Record<string, string>;
 
@@ -27,6 +35,7 @@ type ExampleRowData = Record<string, string>;
             (firstDataRendered)="onFirstDataRendered($event)"
             (cellClicked)="cellClicked.emit($event)"
             (cellFocused)="cellFocused.emit($event)"
+            (cellKeyDown)="cellKeyDown.emit($event)"
             rowSelection="multiple"
             kbqAgGridTheme
             disableCellFocusStyles
@@ -37,6 +46,7 @@ type ExampleRowData = Record<string, string>;
 export class ExampleGrid {
     readonly cellClicked = output<CellClickedEvent>();
     readonly cellFocused = output<CellFocusedEvent>();
+    readonly cellKeyDown = output<CellKeyDownEvent | FullWidthCellKeyDownEvent>();
 
     protected readonly defaultColDef: ColDef = {
         sortable: true,
@@ -101,7 +111,11 @@ export class ExampleGrid {
     template: `
         <kbq-modal-title>Page Title</kbq-modal-title>
         <kbq-content-panel-container class="example-content-panel-container" [(opened)]="opened" kbqModalBody>
-            <example-grid (cellClicked)="onGridCellClicked($event)" (cellFocused)="onGridCellFocused($event)" />
+            <example-grid
+                (cellClicked)="onGridCellClicked($event)"
+                (cellFocused)="onGridCellFocused($event)"
+                (cellKeyDown)="onGridCellKeyDown($event)"
+            />
             <kbq-content-panel>
                 <kbq-content-panel-aside>
                     <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar vertical>
@@ -212,13 +226,20 @@ export class ExampleContentPanel {
     protected readonly selectedRowIndex = signal(0);
     protected readonly opened = model(false);
 
-    protected onGridCellClicked(event: CellClickedEvent): void {
-        this.selectedRowIndex.set(event.rowIndex!);
+    protected onGridCellClicked({ rowIndex }: CellClickedEvent): void {
+        this.selectedRowIndex.set(rowIndex!);
         this.opened.set(true);
     }
 
     protected onGridCellFocused(event: CellFocusedEvent): void {
         if (this.opened()) this.selectedRowIndex.set(event.rowIndex!);
+    }
+
+    protected onGridCellKeyDown({ rowIndex, event }: CellKeyDownEvent | FullWidthCellKeyDownEvent): void {
+        if (event instanceof KeyboardEvent && event.keyCode === ENTER) {
+            this.selectedRowIndex.set(rowIndex!);
+            this.opened.set(true);
+        }
     }
 }
 
