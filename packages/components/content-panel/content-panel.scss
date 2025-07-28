@@ -5,6 +5,7 @@
     border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
     height: 100%;
     box-sizing: border-box;
+    position: relative;
 
     &.kbq-content-panel_header-with-shadow .kbq-content-panel-header {
         box-shadow: var(--kbq-shadow-overflow-normal-bottom);

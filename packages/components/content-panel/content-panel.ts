@@ -1,3 +1,4 @@
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { ESCAPE } from '@angular/cdk/keycodes';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { DOCUMENT } from '@angular/common';
@@ -23,8 +24,9 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqAnimationCurves, KbqAnimationDurations, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { SizeL } from '@koobiq/design-tokens';
 import { fromEvent } from 'rxjs';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable';
 
@@ -243,12 +245,17 @@ export class KbqContentPanel {
         '[class.kbq-content-panel-container__opened]': 'openedState()'
     },
     template: `
-        <div class="kbq-content-panel-container__content kbq-scrollbar" cdkScrollable>
+        <div
+            class="kbq-content-panel-container__content kbq-scrollbar"
+            [@contentAnimation]="contentAnimationState()"
+            cdkScrollable
+        >
             <ng-content />
         </div>
         @if (openedState()) {
             <div
                 class="kbq-content-panel-container__panel"
+                @panelAnimation
                 [style.min-width.px]="minWidth()"
                 [style.width.px]="widthState()"
                 [style.max-width.px]="maxWidth()"
@@ -267,6 +274,32 @@ export class KbqContentPanel {
         }
     `,
     styleUrl: './content-panel-container.scss',
+    animations: [
+        trigger('contentAnimation', [
+            state('false', style({ 'margin-right': 0 })),
+            state('true', style({ 'margin-right': '{{ marginRight }}px' }), { params: { marginRight: 0 } }),
+            transition('true => false', [
+                animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.AccelerationCurve}`)]),
+            transition('false => true', [
+                animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.DecelerationCurve}`)])
+
+        ]),
+        trigger('panelAnimation', [
+            transition(':enter', [
+                style({ transform: 'translateX(100%)' }),
+                animate(
+                    `${KbqAnimationDurations.Entering} ${KbqAnimationCurves.DecelerationCurve}`,
+                    style({ transform: 'translateX(0%)' })
+                )]),
+            transition(':leave', [
+                animate(
+                    `${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.AccelerationCurve}`,
+                    style({ transform: 'translateX(100%)' })
+                )])
+
+        ])
+
+    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -303,6 +336,16 @@ export class KbqContentPanelContainer {
     protected readonly widthState = signal(this.width());
 
     readonly isOpened = computed(() => this.openedState());
+
+    /**
+     * @docs-private
+     */
+    protected readonly contentAnimationState = computed(() => {
+        return {
+            value: this.openedState(),
+            params: { marginRight: this.widthState() + (parseInt(SizeL) || 16) }
+        };
+    });
 
     constructor() {
         // TODO: Should use linked signal
@@ -352,7 +395,9 @@ export class KbqContentPanelContainer {
      * @docs-private
      */
     protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void {
-        if (width > this.maxWidth()) this.widthState.set(this.maxWidth());
-        if (width < this.minWidth()) this.widthState.set(this.minWidth());
+        if (width > this.maxWidth()) return this.widthState.set(this.maxWidth());
+        if (width < this.minWidth()) return this.widthState.set(this.minWidth());
+
+        this.widthState.set(width);
     }
 }

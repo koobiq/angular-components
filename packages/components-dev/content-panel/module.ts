@@ -24,7 +24,6 @@ import { DevThemeToggle } from '../theme-toggle';
         <kbq-content-panel-container
             class="example-content-panel-container"
             #contentPanelContainer="kbqContentPanelContainer"
-            kbqModalBody
         >
             <div class="example-content-panel-container__content">
                 <button (click)="contentPanelContainer.toggle()" kbq-button>Toggle</button>
