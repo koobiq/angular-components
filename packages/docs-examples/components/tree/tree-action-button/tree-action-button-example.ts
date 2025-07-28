@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { PopUpPlacements } from '@koobiq/components/core';
+import { KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqOptionModule, PopUpPlacements } from '@koobiq/components/core';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
@@ -110,7 +111,9 @@ export const DATA_OBJECT = {
         FormsModule,
         KbqToolTipModule,
         KbqDropdownModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqOptionModule,
+        KbqBadgeModule
     ],
     template: `
         <kbq-tree-selection
@@ -119,11 +122,15 @@ export const DATA_OBJECT = {
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             (onSelectAll)="onSelectAll($event)"
+            style="width: 400px"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
                 <i kbq-icon="kbq-info-circle_16"></i>
 
-                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                <div class="layout-row layout-align-space-between">
+                    <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    <kbq-badge [compact]="true" badgeColor="theme">badge</kbq-badge>
+                </div>
 
                 <kbq-option-action
                     [kbqDropdownTriggerFor]="dropdown"
@@ -137,7 +144,10 @@ export const DATA_OBJECT = {
 
                 <kbq-tree-node-toggle [node]="node" />
 
-                <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                <div class="layout-row layout-align-space-between">
+                    <span [innerHTML]="treeControl.getViewValue(node)"></span>
+                    <kbq-badge [compact]="true" badgeColor="theme">badge</kbq-badge>
+                </div>
 
                 <kbq-option-action
                     [kbqDropdownTriggerFor]="dropdown"

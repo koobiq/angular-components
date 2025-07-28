@@ -5,6 +5,8 @@
 .kbq-tree-option {
     @include vendor-prefixes.user-select(none);
 
+    position: relative;
+
     box-sizing: border-box;
 
     display: flex;
@@ -20,15 +22,15 @@
     border-radius: var(--kbq-tree-option-border-radius);
 
     padding-top: kbq-difference-series-css-variables(
-        [ tree-size-container-padding-vertical,
+        [tree-size-container-padding-vertical,
         tree-size-container-focus-outline-width]
     );
     padding-right: kbq-difference-series-css-variables(
-        [ tree-size-container-padding-right,
+        [tree-size-container-padding-right,
         tree-size-container-focus-outline-width]
     );
     padding-bottom: kbq-difference-series-css-variables(
-        [ tree-size-container-padding-vertical,
+        [tree-size-container-padding-vertical,
         tree-size-container-focus-outline-width]
     );
 
@@ -48,25 +50,18 @@
         outline: none;
     }
 
-    &.kbq-disabled {
-        .kbq-icon {
-            cursor: default;
-        }
+    &.kbq-disabled .kbq-icon {
+        cursor: default;
     }
 
     &:not(.kbq-disabled) {
         cursor: pointer;
-    }
 
-    & .kbq-option-action {
-        display: none;
-    }
-
-    &:not(.kbq-disabled):hover,
-    &:not(.kbq-disabled).kbq-focused,
-    &:not(.kbq-disabled).kbq-action-button-focused {
-        & .kbq-option-action {
-            display: flex;
+        &:hover,
+        &.kbq-action-button-focused {
+            & .kbq-action-container {
+                display: flex;
+            }
         }
     }
 

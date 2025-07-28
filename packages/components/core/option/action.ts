@@ -4,7 +4,6 @@ import {
     booleanAttribute,
     ChangeDetectionStrategy,
     Component,
-    ContentChild,
     DestroyRef,
     ElementRef,
     EventEmitter,
@@ -39,11 +38,9 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
     selector: 'kbq-option-action',
     exportAs: 'kbqOptionAction',
     template: `
-        @if (!!customIcon) {
-            <ng-content select="[kbq-icon]" />
-        } @else {
-            <i class="kbq kbq-icon kbq-ellipsis-vertical_16"></i>
-        }
+        <ng-content select="[kbq-icon]">
+            <i class="kbq kbq-icon kbq-contrast-fade kbq-ellipsis-vertical_16"></i>
+        </ng-content>
     `,
     styleUrls: ['./action.scss'],
     host: {
@@ -54,8 +51,6 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
         '[attr.disabled]': 'disabled || null',
         '[attr.tabIndex]': '-1',
 
-        '(focus)': 'onFocus($event)',
-        '(blur)': 'onBlur()',
         '(click)': 'onClick($event)',
         '(keydown)': 'onKeyDown($event)'
     },
@@ -63,8 +58,6 @@ export const KBQ_OPTION_ACTION_PARENT = new InjectionToken<KbqOptionActionParent
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
-    @ContentChild('customIcon') customIcon: ElementRef;
-
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
         return this._disabled;
@@ -93,7 +86,10 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     ) {}
 
     ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef.nativeElement);
+        this.focusMonitor
+            .monitor(this.elementRef.nativeElement, true)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result) => (this.hasFocus = !!result));
 
         if (!this.option.dropdownTrigger) return;
 
@@ -123,16 +119,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
         this.hasFocus = true;
     }
 
-    onFocus($event) {
-        $event.stopPropagation();
-
-        this.hasFocus = true;
-    }
-
-    onBlur() {
-        this.hasFocus = false;
-    }
-
     onClick($event) {
         $event.stopPropagation();
     }
@@ -140,7 +126,6 @@ export class KbqOptionActionComponent implements AfterViewInit, OnDestroy {
     onKeyDown($event) {
         if ([SPACE, ENTER].includes($event.keyCode) && this.option.dropdownTrigger) {
             this.option.dropdownTrigger.openedBy = 'keyboard';
-            this.option.dropdownTrigger.toggle();
         } else if ($event.shiftKey && $event.keyCode === TAB) {
             this.hasFocus = false;
 

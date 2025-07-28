@@ -3,6 +3,8 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-tree-option($state-name) {
+    --kbq-option-background: var(--kbq-tree-#{$state-name}-container-background);
+
     background: var(--kbq-tree-#{$state-name}-container-background);
 
     .kbq-option-text {
@@ -34,11 +36,14 @@
         @include kbq-tree-option(default);
 
         &:not(.kbq-disabled) {
-            &:hover {
+            &:hover,
+            &.kbq-action-button-focused {
                 @include kbq-tree-option(states-hover);
             }
 
             &:active {
+                --kbq-option-background: var(--kbq-tree-states-active-container-background);
+
                 background: var(--kbq-tree-states-active-container-background);
             }
 
@@ -50,6 +55,8 @@
                 }
 
                 &:active {
+                    --kbq-option-background: var(--kbq-tree-states-selected-active-container-background);
+
                     background: var(--kbq-tree-states-selected-active-container-background);
                 }
             }
@@ -78,8 +85,12 @@
     }
 
     .cdk-keyboard-focused {
-        & .kbq-tree-option.kbq-focused {
+        & .kbq-tree-option.kbq-focused:not(.kbq-action-button-focused) {
             border-color: var(--kbq-tree-states-focused-focus-outline-color);
+
+            & .kbq-action-container {
+                display: flex;
+            }
         }
     }
 }

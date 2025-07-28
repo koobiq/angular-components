@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { KbqPseudoCheckboxModule } from '@koobiq/components/core';
+import { KbqActionContainer, KbqPseudoCheckboxModule } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { asyncScheduler } from 'rxjs';
 import { AsyncScheduler } from 'rxjs/internal/scheduler/AsyncScheduler';
@@ -27,7 +27,8 @@ const KBQ_TREE_DIRECTIVES = [
 @NgModule({
     imports: [
         KbqPseudoCheckboxModule,
-        KbqIconModule
+        KbqIconModule,
+        KbqActionContainer
     ],
     exports: KBQ_TREE_DIRECTIVES,
     declarations: KBQ_TREE_DIRECTIVES,
