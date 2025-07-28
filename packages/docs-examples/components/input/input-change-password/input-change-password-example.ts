@@ -102,10 +102,10 @@ export class InputChangePasswordExample {
     }
 
     constructor() {
-        this.form = this.#createForm();
+        this.form = this.createForm();
     }
 
-    #createForm() {
+    createForm() {
         const compareWith =
             (compareControlName: string): ValidatorFn =>
             (control: AbstractControl) => {
