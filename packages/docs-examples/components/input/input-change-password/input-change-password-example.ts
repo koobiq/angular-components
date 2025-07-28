@@ -46,9 +46,11 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
     template: `
         <form class="layout-column layout-gap-m" [formGroup]="form">
             <kbq-form-field style="width: 250px">
-                <input formControlName="newPassword" kbqInputPassword />
+                <input formControlName="newPassword" kbqInputPassword placeholder="Enter new password" />
 
                 <kbq-password-toggle [kbqTooltipHidden]="'Show password'" [kbqTooltipNotHidden]="'Hide password'" />
+
+                <kbq-hint>Password must not exceed 5 characters</kbq-hint>
 
                 @if (newPasswordControl.errors?.required) {
                     <kbq-error>Required</kbq-error>
@@ -60,7 +62,7 @@ class RequiredErrorStateMatcher implements ErrorStateMatcher {
             </kbq-form-field>
 
             <kbq-form-field style="width: 250px">
-                <input formControlName="confirmNewPassword" kbqInputPassword />
+                <input formControlName="confirmNewPassword" kbqInputPassword placeholder="Confirm new password" />
 
                 <kbq-password-toggle [kbqTooltipHidden]="'Show password'" [kbqTooltipNotHidden]="'Hide password'" />
 
