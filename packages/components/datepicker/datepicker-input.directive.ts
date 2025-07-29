@@ -800,6 +800,11 @@ export class KbqDatepickerInput<D>
         this.focusChanged(false);
 
         this.onInput();
+
+        if (this.control) {
+            this.control.updateValueAndValidity({ emitEvent: false });
+            (this.control.statusChanges as EventEmitter<string>).emit(this.control.status);
+        }
     }
 
     onPaste($event) {
