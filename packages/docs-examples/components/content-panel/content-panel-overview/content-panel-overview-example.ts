@@ -206,6 +206,10 @@ export class ExampleGrid {
             max-height: unset;
         }
 
+        .example-modal-body:has(.kbq-content-panel-container__opened) {
+            padding-right: 0;
+        }
+
         ::ng-deep .example-modal-title {
             padding: var(--kbq-size-xl) var(--kbq-size-xxl);
         }
