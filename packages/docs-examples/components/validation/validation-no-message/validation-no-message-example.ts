@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
+import {
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    KbqFormsModule,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -9,9 +14,15 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Validation no message
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-no-message-example',
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormsModule
+    ],
     template: `
         <form class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
             <div class="kbq-form__fieldset">
@@ -35,21 +46,18 @@ import { KbqInputModule } from '@koobiq/components/input';
             </div>
         </form>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqFormsModule
-    ],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     styles: `
         form {
             width: 320px;
         }
-    `
+    `,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    },
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationNoMessageExample {
     protected readonly form = new FormGroup({

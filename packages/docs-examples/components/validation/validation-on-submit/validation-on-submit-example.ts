@@ -13,7 +13,12 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
+import {
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    KbqFormsModule,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -22,9 +27,17 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Validation on submit
  */
 @Component({
-    standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'validation-on-submit-example',
+    standalone: true,
+    imports: [
+        KbqAlertModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormsModule
+    ],
     template: `
         <div class="example-container">
             <div
@@ -76,15 +89,6 @@ import { KbqInputModule } from '@koobiq/components/input';
             </form>
         </div>
     `,
-    imports: [
-        KbqAlertModule,
-        KbqIconModule,
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqFormsModule
-    ],
     styles: `
         .example-alert {
             transition: opacity 50ms ease-in-out;
@@ -125,7 +129,11 @@ import { KbqInputModule } from '@koobiq/components/input';
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-column'
-    }
+    },
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnSubmitExample implements AfterViewInit, OnDestroy {
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');

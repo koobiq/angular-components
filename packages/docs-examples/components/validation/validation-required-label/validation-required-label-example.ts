@@ -1,7 +1,13 @@
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule, KbqOptionModule } from '@koobiq/components/core';
+import {
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    KbqFormsModule,
+    KbqOptionModule,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -11,9 +17,18 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
  * @title Validation required label
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-required-label-example',
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormsModule,
+        KbqOptionModule,
+        KbqSelectModule,
+        KbqTextareaModule
+    ],
     template: `
         <div class="layout-margin" style="width: 400px">
             <form class="kbq-form-horizontal" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
@@ -23,9 +38,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                         <kbq-form-field class="kbq-form__control flex-80">
                             <input [required]="true" formControlName="firstName" kbqInput />
 
-                            @if (form.get('firstName')?.hasError('required')) {
-                                <kbq-error>Required</kbq-error>
-                            }
+                            <kbq-error>Required</kbq-error>
                         </kbq-form-field>
                     </div>
 
@@ -74,9 +87,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                                 }
                             </kbq-select>
 
-                            @if (form.get('estimation')?.hasError('required')) {
-                                <kbq-error>Required</kbq-error>
-                            }
+                            <kbq-error>Required</kbq-error>
                         </kbq-form-field>
                     </div>
 
@@ -97,16 +108,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             </form>
         </div>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqFormsModule,
-        KbqOptionModule,
-        KbqSelectModule,
-        KbqTextareaModule
-    ],
     styles: `
         :host {
             label:has(+ .kbq-form-field input:required, + .kbq-form-field .kbq-select[required])::after {
@@ -121,19 +122,13 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
-    }
+    },
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationRequiredLabelExample {
-    protected readonly form = new FormGroup({
-        firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        lastName: new FormControl<string>('', { nonNullable: true }),
-        thirdName: new FormControl<string>('', { nonNullable: true }),
-        email: new FormControl<string>('', { nonNullable: true, validators: [Validators.email] }),
-        reason: new FormControl<number>(3, { nonNullable: true }),
-        estimation: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
-        comment: new FormControl<string>('', { nonNullable: true })
-    });
-
     protected readonly docsReasons = [
         { value: 1, label: 'Parenting issues' },
         { value: 2, label: 'Depression, anxiety, fear' },
@@ -153,6 +148,16 @@ export class ValidationRequiredLabelExample {
         { value: 3, label: 'Good' },
         { value: 4, label: 'Best of all' }
     ];
+
+    protected readonly form = new FormGroup({
+        firstName: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        lastName: new FormControl<string>('', { nonNullable: true }),
+        thirdName: new FormControl<string>('', { nonNullable: true }),
+        email: new FormControl<string>('', { nonNullable: true, validators: [Validators.email] }),
+        reason: new FormControl<number>(this.docsReasons[2].value, { nonNullable: true }),
+        estimation: new FormControl<string>('', { nonNullable: true, validators: [Validators.required] }),
+        comment: new FormControl<string>('', { nonNullable: true })
+    });
 
     private readonly formFieldList = viewChildren(KbqFormField);
 

@@ -13,7 +13,12 @@ import {
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
+import {
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    KbqFormsModule,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -23,9 +28,18 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
  * @title Validation message global
  */
 @Component({
-    standalone: true,
-    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'validation-message-global-example',
+    standalone: true,
+    imports: [
+        KbqAlertModule,
+        KbqIconModule,
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormsModule,
+        KbqLoaderOverlayModule
+    ],
     template: `
         <div class="example-container">
             @if (inProgress()) {
@@ -81,16 +95,6 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             </form>
         </div>
     `,
-    imports: [
-        KbqAlertModule,
-        KbqIconModule,
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqFormsModule,
-        KbqLoaderOverlayModule
-    ],
     styles: `
         .example-container {
             width: 320px;
@@ -123,7 +127,11 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-column'
-    }
+    },
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationMessageGlobalExample implements AfterViewInit, OnDestroy {
     protected readonly alertContainer = viewChild<ElementRef<HTMLDivElement>>('alertContainer');

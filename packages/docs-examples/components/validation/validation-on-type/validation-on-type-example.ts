@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    kbqDisableLegacyValidationDirectiveProvider,
+    PopUpPlacements
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -11,9 +15,8 @@ const restSymbolsRegex = /[^0-9a-zA-Z]+/g;
  * @title Validation on type
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-on-type-example',
+    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -46,7 +49,9 @@ const restSymbolsRegex = /[^0-9a-zA-Z]+/g;
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
-    }
+    },
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnTypeExample {
     @ViewChild('tooltip', { static: false }) tooltip: KbqTooltipTrigger;

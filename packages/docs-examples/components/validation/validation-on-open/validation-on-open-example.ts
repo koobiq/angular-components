@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject, TemplateRef, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
+import {
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    KbqFormsModule,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KBQ_MODAL_DATA, KbqModalModule, KbqModalRef, KbqModalService, ModalSize } from '@koobiq/components/modal';
@@ -13,10 +18,9 @@ type DocsFormData = {
 };
 
 @Component({
-    standalone: true,
     selector: 'docs-empty-form',
+    standalone: true,
     imports: [KbqFormsModule, KbqFormFieldModule, FormsModule, KbqButtonModule, KbqInputModule, ReactiveFormsModule],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <div class="layout-margin">
             <form
@@ -43,7 +47,11 @@ type DocsFormData = {
                 </div>
             </form>
         </div>
-    `
+    `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsNameFormComponent {
     protected readonly modalData = inject<DocsFormData>(KBQ_MODAL_DATA, { optional: true });

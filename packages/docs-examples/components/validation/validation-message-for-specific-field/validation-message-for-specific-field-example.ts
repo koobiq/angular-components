@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, viewChildren } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
+import {
+    kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
+    KbqFormsModule,
+    ShowOnFormSubmitErrorStateMatcher
+} from '@koobiq/components/core';
 import { KbqFormField, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 
@@ -9,9 +14,15 @@ import { KbqInputModule } from '@koobiq/components/input';
  * @title Validation message for specific field
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-message-for-specific-field-example',
+    standalone: true,
+    imports: [
+        ReactiveFormsModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqButtonModule,
+        KbqFormsModule
+    ],
     template: `
         <form class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
             <div class="kbq-form__fieldset">
@@ -20,9 +31,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                         <kbq-label>The error message appears above the hint</kbq-label>
                         <input formControlName="first" kbqInput />
 
-                        @if (form.get('first')?.hasError('required')) {
-                            <kbq-error>Required</kbq-error>
-                        }
+                        <kbq-error>Required</kbq-error>
 
                         <kbq-hint>Hint under the field</kbq-hint>
                     </kbq-form-field>
@@ -31,9 +40,9 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
                         <kbq-label>The error message replaces the hint</kbq-label>
-                        <input formControlName="last" kbqInput />
+                        <input #input="kbqInput" formControlName="last" kbqInput />
 
-                        @if (form.get('first')?.hasError('required')) {
+                        @if (input.errorState) {
                             <kbq-error>Required</kbq-error>
                         } @else {
                             <kbq-hint>Hint under the field</kbq-hint>
@@ -47,21 +56,18 @@ import { KbqInputModule } from '@koobiq/components/input';
             </div>
         </form>
     `,
-    imports: [
-        ReactiveFormsModule,
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqButtonModule,
-        KbqFormsModule
-    ],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-row'
-    },
     styles: `
         form {
             width: 320px;
         }
-    `
+    `,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    },
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(ShowOnFormSubmitErrorStateMatcher)],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationMessageForSpecificFieldExample {
     protected readonly form = new FormGroup({

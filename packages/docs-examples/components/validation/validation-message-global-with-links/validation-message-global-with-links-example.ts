@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { KbqAlertModule } from '@koobiq/components/alert';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqFormsModule } from '@koobiq/components/core';
+import { kbqDisableLegacyValidationDirectiveProvider, KbqFormsModule } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -12,10 +12,8 @@ import { KbqLinkModule } from '@koobiq/components/link';
  * @title Validation message global with links
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-message-global-with-links-example',
-    templateUrl: 'validation-message-global-with-links-example.html',
+    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqAlertModule,
@@ -27,9 +25,7 @@ import { KbqLinkModule } from '@koobiq/components/link';
         KbqLinkModule,
         FormsModule
     ],
-    host: {
-        class: 'layout-margin-5xl layout-align-center-center layout-column'
-    },
+    templateUrl: 'validation-message-global-with-links-example.html',
     styles: `
         .example-container {
             width: 320px;
@@ -46,7 +42,12 @@ import { KbqLinkModule } from '@koobiq/components/link';
         form {
             width: 100%;
         }
-    `
+    `,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-column'
+    },
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationMessageGlobalWithLinksExample {
     protected readonly inProgress = signal(false);

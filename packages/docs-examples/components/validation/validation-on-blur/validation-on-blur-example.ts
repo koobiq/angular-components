@@ -1,6 +1,10 @@
 import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
-import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    kbqDisableLegacyValidationDirectiveProvider,
+    PopUpPlacements
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -14,9 +18,8 @@ const restSymbolsRegex = /[^0-9.]+/g;
  * @title Validation on blur
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-on-blur-example',
+    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
@@ -44,7 +47,9 @@ const restSymbolsRegex = /[^0-9.]+/g;
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
-    }
+    },
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnBlurExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
