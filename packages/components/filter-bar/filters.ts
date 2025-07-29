@@ -261,6 +261,7 @@ export class KbqFilters implements OnInit {
 
     /** @docs-private */
     onDropdownOpen() {
+        this.searchControl.setValue(null);
         setTimeout(() => this.search.nativeElement.focus());
     }
 
