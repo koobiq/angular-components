@@ -147,8 +147,6 @@ export class DevContentPanelOverview {
         <content-panel-overview-example />
         <hr />
         <content-panel-with-grid-example />
-        <hr />
-        <content-panel-scroll-events-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

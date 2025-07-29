@@ -4,13 +4,13 @@
 
 ```ts
 
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqScrollbar } from '@koobiq/components/scrollbar';
 import { OutputEmitterRef } from '@angular/core';
 import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
@@ -18,9 +18,8 @@ import { WritableSignal } from '@angular/core';
 // @public (undocumented)
 export class KbqContentPanel {
     constructor();
-    readonly scrollableBody: Signal<CdkScrollable | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["scrollableBody"], ["kbq-content-panel-aside", "kbq-content-panel-header", "kbq-content-panel-body", "kbq-content-panel-footer"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanel, "kbq-content-panel", never, {}, {}, ["contentPanelBody"], ["kbq-content-panel-aside", "kbq-content-panel-header", "kbq-content-panel-body", "kbq-content-panel-footer"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanel, never>;
 }
@@ -35,6 +34,7 @@ export class KbqContentPanelAside {
 
 // @public (undocumented)
 export class KbqContentPanelBody {
+    readonly scrollbar: Signal<KbqScrollbar>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
@@ -64,7 +64,6 @@ export class KbqContentPanelContainer {
     readonly opened: InputSignalWithTransform<boolean, unknown>;
     readonly openedChange: OutputEmitterRef<boolean>;
     protected readonly openedState: WritableSignal<boolean>;
-    readonly scrollableContent: Signal<CdkScrollable>;
     toggle(): void;
     readonly width: InputSignalWithTransform<number, unknown>;
     protected readonly widthState: WritableSignal<number>;

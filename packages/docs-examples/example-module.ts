@@ -839,18 +839,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "content-panel-overview-example.ts",
     "importPath": "components/content-panel"
   },
-  "content-panel-scroll-events": {
-    "packagePath": "components/content-panel/content-panel-scroll-events",
-    "title": "Content panel scroll events",
-    "componentName": "ContentPanelScrollEventsExample",
-    "files": [
-      "content-panel-scroll-events-example.ts"
-    ],
-    "selector": "content-panel-scroll-events-example",
-    "additionalComponents": [],
-    "primaryFile": "content-panel-scroll-events-example.ts",
-    "importPath": "components/content-panel"
-  },
   "content-panel-with-grid": {
     "packagePath": "components/content-panel/content-panel-with-grid",
     "title": "Content panel with grid",
@@ -4755,8 +4743,6 @@ return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-tabs':
 return import('@koobiq/docs-examples/components/code-block');
   case 'content-panel-overview':
-return import('@koobiq/docs-examples/components/content-panel');
-  case 'content-panel-scroll-events':
 return import('@koobiq/docs-examples/components/content-panel');
   case 'content-panel-with-grid':
 return import('@koobiq/docs-examples/components/content-panel');

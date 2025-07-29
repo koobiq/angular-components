@@ -20,12 +20,6 @@ The panel width is configured using the `width`, `minWidth` and `maxWidth` attri
 </kbq-content-panel-container>
 ```
 
-### Reacting to scroll events
-
-To react to scrolling inside the `<kbq-content-panel-container>` or `<kbq-content-panel>`, you can get `CdkScrollable` instances and subscribe to their `elementScrolled()` observable.
-
-<!-- example(content-panel-scroll-events) -->
-
 ### Keyboard interaction
 
 By default, the `ESCAPE` key closes the panel, but you can disable this behavior using the `disableCloseByEscape` attribute:

@@ -1,5 +1,4 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { CdkScrollable } from '@angular/cdk/scrolling';
 import {
     afterNextRender,
     booleanAttribute,
@@ -23,7 +22,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqAnimationCurves, KbqAnimationDurations, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
+import { KbqScrollbar, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable';
 
@@ -152,7 +151,12 @@ export class KbqContentPanelHeader {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqContentPanelBody {}
+export class KbqContentPanelBody {
+    /**
+     * @docs-private
+     */
+    readonly scrollbar = viewChild.required(KbqScrollbar);
+}
 
 @Component({
     standalone: true,
@@ -191,27 +195,25 @@ export class KbqContentPanel {
     private readonly destroyRef = inject(DestroyRef);
     private readonly renderer = inject(Renderer2);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
-
-    /**
-     * Reference to the `CdkScrollable` instance of the `KbqContentPanelBody`.
-     */
-    readonly scrollableBody = contentChild(KbqContentPanelBody, { read: CdkScrollable });
+    private readonly contentPanelBody = contentChild(KbqContentPanelBody);
 
     constructor() {
         afterNextRender(() => this.handleContentBodyScroll());
     }
 
     private handleContentBodyScroll(): void {
-        const scrollableCodeContent = this.scrollableBody();
+        const contentPanelBody = this.contentPanelBody();
 
-        if (!scrollableCodeContent) return;
+        if (!contentPanelBody) return;
 
-        scrollableCodeContent
-            .elementScrolled()
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.setupContentHeaderShadow(scrollableCodeContent.measureScrollOffset('top') > 0);
-                this.setupContentFooterShadow(scrollableCodeContent.measureScrollOffset('bottom') > 0);
+        contentPanelBody
+            .scrollbar()
+            .onScroll.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(([instance]) => {
+                const { scrollTop, scrollHeight, clientHeight } = instance.elements().scrollOffsetElement;
+
+                this.setupContentHeaderShadow(scrollTop >= 1);
+                this.setupContentFooterShadow(scrollHeight - (scrollTop + clientHeight) >= 1);
             });
     }
 
@@ -280,11 +282,6 @@ export class KbqContentPanel {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqContentPanelContainer {
-    /**
-     * Reference to the `CdkScrollable` instance of the `KbqContentPanelContainer` content.
-     */
-    readonly scrollableContent = viewChild.required(CdkScrollable);
-
     /**
      * Whether the content panel is opened.
      *

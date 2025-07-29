@@ -20,12 +20,6 @@
 </kbq-content-panel-container>
 ```
 
-### Реакция на события прокрутки
-
-Для реакции на прокрутку внутри `<kbq-content-panel-container>` или `<kbq-content-panel>`, вы можете получить экземпляры `CdkScrollable` и подписаться на их observable `elementScrolled()`.
-
-<!-- example(content-panel-scroll-events) -->
-
 ### Взаимодействие с клавиатурой
 
 По умолчанию клавиша `ESCAPE` закрывает панель, но вы можете отключить это поведение с помощью атрибута `disableCloseByEscape`:
