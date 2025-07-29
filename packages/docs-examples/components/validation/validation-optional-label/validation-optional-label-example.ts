@@ -30,7 +30,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                         </kbq-form-field>
                     </div>
 
-                    <div class="kbq-form__row">
+                    <div class="kbq-form__row layout-margin-bottom-xxl">
                         <div class="kbq-form__label">Patronymic</div>
                         <kbq-form-field class="kbq-form__control">
                             <input formControlName="patronymic" kbqInput placeholder="Optional" />

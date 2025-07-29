@@ -54,7 +54,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
                         </kbq-form-field>
                     </div>
 
-                    <div class="kbq-form__row">
+                    <div class="kbq-form__row layout-margin-bottom-xxl">
                         <kbq-form-field>
                             <kbq-label>Last name</kbq-label>
                             <input formControlName="lastName" kbqInput />

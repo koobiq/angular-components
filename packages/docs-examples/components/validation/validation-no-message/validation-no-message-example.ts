@@ -22,7 +22,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                     </kbq-form-field>
                 </div>
 
-                <div class="kbq-form__row">
+                <div class="kbq-form__row layout-margin-bottom-xxl">
                     <kbq-form-field>
                         <kbq-label>Comment</kbq-label>
                         <input formControlName="last" kbqInput />

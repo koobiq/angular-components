@@ -80,7 +80,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                         </kbq-form-field>
                     </div>
 
-                    <div class="kbq-form__row">
+                    <div class="kbq-form__row layout-margin-bottom-xxl">
                         <label class="kbq-form__label flex-20">Comment</label>
                         <kbq-form-field class="kbq-form__control flex-80">
                             <textarea formControlName="comment" kbqTextarea></textarea>
@@ -89,8 +89,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 
                     <div class="kbq-form__row">
                         <div class="kbq-form__label flex-20"></div>
-                        <div class="kbq-form__control flex-25">
-                            <button color="contrast" kbq-button type="submit" style="width: 100%;">Send</button>
+                        <div class="kbq-form__control">
+                            <button color="contrast" kbq-button type="submit">Send</button>
                         </div>
                     </div>
                 </div>
@@ -113,6 +113,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 content: ' *';
                 color: var(--kbq-foreground-error);
             }
+        }
+
+        .kbq-form__row:has(> .kbq-form-field-type-select) {
+            --kbq-forms-size-vertical-row-margin-bottom: var(--kbq-size-xl);
         }
     `,
     host: {
