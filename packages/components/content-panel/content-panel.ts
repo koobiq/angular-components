@@ -23,6 +23,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqAnimationCurves, KbqAnimationDurations, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqScrollbarDirective, KbqScrollbarModule } from '@koobiq/components/scrollbar';
 import { SizeL } from '@koobiq/design-tokens';
 import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable';
 
@@ -136,11 +137,11 @@ export class KbqContentPanelHeader {
 
 @Component({
     standalone: true,
-    hostDirectives: [CdkScrollable],
+    hostDirectives: [KbqScrollbarDirective],
     selector: 'kbq-content-panel-body',
     exportAs: 'kbqContentPanelBody',
     host: {
-        class: 'kbq-content-panel-body kbq-scrollbar'
+        class: 'kbq-content-panel-body'
     },
     template: `
         <ng-content />
@@ -235,7 +236,7 @@ export class KbqContentPanel {
 
 @Component({
     standalone: true,
-    imports: [CdkScrollable, KbqResizable, KbqResizer],
+    imports: [KbqResizable, KbqResizer, KbqScrollbarModule],
     selector: 'kbq-content-panel-container',
     exportAs: 'kbqContentPanelContainer',
     host: {
@@ -244,11 +245,7 @@ export class KbqContentPanel {
         '(keydown.escape)': 'handleEscapeKeydown($event)'
     },
     template: `
-        <div
-            class="kbq-content-panel-container__content kbq-scrollbar"
-            [@contentAnimation]="contentAnimationState()"
-            cdkScrollable
-        >
+        <div class="kbq-content-panel-container__content" [@contentAnimation]="contentAnimationState()" kbqScrollbar>
             <ng-content />
         </div>
         @if (openedState()) {
