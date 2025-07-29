@@ -94,11 +94,17 @@ export abstract class KbqBasePipe<V> implements AfterViewInit {
             this.open();
         }
 
-        this.filterBar?.openPipe.pipe(filter(Boolean)).subscribe((id) => {
+        this.filterBar?.openPipe.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe((id) => {
             if (getId(this.data) === id) {
                 this.open();
             }
         });
+
+        if (this.data.openOnReset) {
+            this.filterBar?.onResetFilter.pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+                this.open();
+            });
+        }
     }
 
     /** templateRef checker utility */

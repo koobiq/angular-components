@@ -126,7 +126,8 @@ export class FilterBarRequiredExample {
 
                     cleanable: false,
                     removable: false,
-                    disabled: false
+                    disabled: false,
+                    openOnReset: true
                 }
             ]
         };

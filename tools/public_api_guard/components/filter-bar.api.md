@@ -186,6 +186,7 @@ export class KbqFilterBar {
     readonly onChangePipe: EventEmitter<KbqPipe>;
     readonly onClosePipe: EventEmitter<KbqPipe>;
     readonly onRemovePipe: EventEmitter<KbqPipe>;
+    readonly onResetFilter: BehaviorSubject<boolean>;
     readonly openPipe: BehaviorSubject<string | number | null>;
     get pipeTemplates(): KbqPipeTemplate[];
     set pipeTemplates(value: KbqPipeTemplate[]);
@@ -347,6 +348,10 @@ export interface KbqPipe {
     // (undocumented)
     name: string;
     // (undocumented)
+    openOnAdd?: boolean;
+    // (undocumented)
+    openOnReset?: boolean;
+    // (undocumented)
     removable: boolean;
     // @deprecated (undocumented)
     required?: boolean;
@@ -396,10 +401,6 @@ export class KbqPipeButton {
 
 // @public (undocumented)
 export interface KbqPipeData<V> extends KbqPipe {
-    // (undocumented)
-    openOnAdd?: boolean;
-    // (undocumented)
-    search?: boolean;
     // (undocumented)
     value: V | null;
 }

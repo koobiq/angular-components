@@ -398,17 +398,18 @@ export class FilterBarSavedFiltersExample {
             saved: false,
             pipes: [
                 {
-                    name: 'Datetime',
+                    name: 'Date',
                     value: {
                         name: 'Последний день',
                         start: { days: -1 },
                         end: null
                     },
-                    type: KbqPipeTypes.Datetime,
+                    type: KbqPipeTypes.Date,
 
                     cleanable: false,
                     removable: false,
-                    disabled: false
+                    disabled: false,
+                    openOnReset: true
                 }
             ]
         };
