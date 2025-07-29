@@ -8,7 +8,6 @@ import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components/modal';
-import { KbqTabsModule } from '@koobiq/components/tabs';
 import { AgGridModule } from 'ag-grid-angular';
 import {
     CellClickedEvent,
@@ -101,7 +100,6 @@ export class ExampleGrid {
         KbqLinkModule,
         KbqIconModule,
         KbqContentPanelModule,
-        KbqTabsModule,
         KbqModalModule,
         ExampleGrid
     ],
@@ -125,13 +123,16 @@ export class ExampleGrid {
                 />
                 <kbq-content-panel>
                     <kbq-content-panel-aside>
-                        <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar vertical>
-                            @for (_i of [0, 1, 2, 3]; track $index) {
-                                <a [active]="$index === 0" kbqTabLink>
-                                    <i kbq-icon="kbq-bug_16"></i>
-                                </a>
-                            }
-                        </nav>
+                        @for (_i of [0, 1, 2, 3]; track $index) {
+                            <button
+                                [class.kbq-active]="$index === 0"
+                                [color]="componentColors.Contrast"
+                                [kbqStyle]="buttonStyles.Transparent"
+                                kbq-button
+                            >
+                                <i kbq-icon="kbq-bug_16"></i>
+                            </button>
+                        }
                     </kbq-content-panel-aside>
                     <kbq-content-panel-header>
                         <div class="example-content-header-title" kbqContentPanelHeaderTitle>
@@ -166,12 +167,8 @@ export class ExampleGrid {
                             </button>
                         </div>
                     </kbq-content-panel-header>
-                    <kbq-content-panel-body
-                        class="example-content-panel-body"
-                        #tabNavPanel="kbqTabNavPanel"
-                        kbqTabNavPanel
-                    >
-                        @for (_p of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
+                    <kbq-content-panel-body class="example-content-panel-body">
+                        @for (_i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]; track $index) {
                             <p>
                                 In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack
                                 in which the perpetrator seeks to make a machine or network resource unavailable to its

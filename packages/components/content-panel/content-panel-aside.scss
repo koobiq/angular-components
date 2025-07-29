@@ -1,4 +1,7 @@
 .kbq-content-panel-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kbq-size-s);
     padding: var(--kbq-size-l) var(--kbq-size-m);
     border-top-left-radius: inherit;
     border-bottom-left-radius: inherit;

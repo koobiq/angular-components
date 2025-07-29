@@ -5,7 +5,6 @@ import { KbqContentPanelModule } from '@koobiq/components/content-panel';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqTabsModule } from '@koobiq/components/tabs';
 import { ContentPanelExamplesModule } from 'packages/docs-examples/components/content-panel';
 import { DevThemeToggle } from '../theme-toggle';
 
@@ -16,8 +15,7 @@ import { DevThemeToggle } from '../theme-toggle';
         KbqBadgeModule,
         KbqLinkModule,
         KbqIconModule,
-        KbqContentPanelModule,
-        KbqTabsModule
+        KbqContentPanelModule
     ],
     selector: 'dev-content-panel-overview',
     template: `
@@ -30,13 +28,16 @@ import { DevThemeToggle } from '../theme-toggle';
             </div>
             <kbq-content-panel>
                 <kbq-content-panel-aside>
-                    <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar vertical>
-                        @for (_i of asideTabs; track $index) {
-                            <a kbqTabLink>
-                                <i kbq-icon="kbq-bug_16"></i>
-                            </a>
-                        }
-                    </nav>
+                    @for (_b of asideButtons; track $index) {
+                        <button
+                            [class.kbq-active]="$index === 0"
+                            [color]="componentColors.Contrast"
+                            [kbqStyle]="buttonStyles.Transparent"
+                            kbq-button
+                        >
+                            <i kbq-icon="kbq-bug_16"></i>
+                        </button>
+                    }
                 </kbq-content-panel-aside>
                 <kbq-content-panel-header>
                     <div class="example-content-header-title" kbqContentPanelHeaderTitle>
@@ -53,7 +54,7 @@ import { DevThemeToggle } from '../theme-toggle';
                     </div>
                     <div class="example-content-header-caption">Caption</div>
                 </kbq-content-panel-header>
-                <kbq-content-panel-body #tabNavPanel="kbqTabNavPanel" kbqTabNavPanel>
+                <kbq-content-panel-body>
                     @for (_p of bodyParagraphs; track $index) {
                         <p>
                             In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
@@ -137,7 +138,7 @@ export class DevContentPanelOverview {
     protected readonly buttonStyles = KbqButtonStyles;
     protected readonly badgeColors = KbqBadgeColors;
 
-    protected readonly asideTabs = Array.from({ length: 4 });
+    protected readonly asideButtons = Array.from({ length: 4 });
     protected readonly headerActions = Array.from({ length: 2 });
     protected readonly footerActions = Array.from({ length: 3 });
     protected readonly bodyParagraphs = Array.from({ length: 10 });
