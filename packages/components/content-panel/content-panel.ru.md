@@ -2,22 +2,20 @@
 
 <!-- example(content-panel-overview) -->
 
+### Грид и контент-панель
+
+<!-- example(content-panel-with-grid) -->
+
 ### Открытие и закрытие
 
 Панель может быть открыта или закрыта с помощью методов `toggle()`, `open()` и `close()`.
 
-```html
-<kbq-content-panel-container #panel="kbqContentPanelContainer">
-    <button (click)="panel.toggle()">переключить видимость</button>
-    <kbq-content-panel>...</kbq-content-panel>
-</kbq-content-panel-container>
-```
+### Ширина панели
 
-Открытое состояние также может быть установлено через свойство `opened`, которое поддерживает двустороннее связывание.
+Ширина панели настраивается при помощи атрибута `width`, `minWidth` и `maxWidth`. По умолчанию: `width="640"`, `minWidth="480"` и `maxWidth="800"`.
 
 ```html
-<kbq-content-panel-container [(opened)]="opened">
-    <button (click)="opened = !opened">переключить видимость</button>
+<kbq-content-panel-container width="400" minWidth="300" maxWidth="500">
     <kbq-content-panel>...</kbq-content-panel>
 </kbq-content-panel-container>
 ```
@@ -33,5 +31,7 @@
 По умолчанию клавиша `ESCAPE` закрывает панель, но вы можете отключить это поведение с помощью атрибута `disableCloseByEscape`:
 
 ```html
-<kbq-content-panel-container disableCloseByEscape>...</kbq-content-panel-container>
+<kbq-content-panel-container disableCloseByEscape>
+    <kbq-content-panel>...</kbq-content-panel>
+</kbq-content-panel-container>
 ```

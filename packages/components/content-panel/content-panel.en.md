@@ -2,22 +2,20 @@
 
 <!-- example(content-panel-overview) -->
 
+### Grid and content-panel
+
+<!-- example(content-panel-with-grid) -->
+
 ### Opening and closing
 
 The panel can be opened or closed using the `toggle()`, `open()` and `close()` methods.
 
-```html
-<kbq-content-panel-container #panel="kbqContentPanelContainer">
-    <button (click)="panel.toggle()">toggle</button>
-    <kbq-content-panel>...</kbq-content-panel>
-</kbq-content-panel-container>
-```
+### Panel width
 
-The opened state can also be set via `opened` property, which supports two-way binding.
+The panel width is configured using the `width`, `minWidth` and `maxWidth` attributes. Default values: `width="640"`, `minWidth="480"` and `maxWidth="800"`.
 
 ```html
-<kbq-content-panel-container [(opened)]="opened">
-    <button (click)="opened = !opened">toggle</button>
+<kbq-content-panel-container width="400" minWidth="300" maxWidth="500">
     <kbq-content-panel>...</kbq-content-panel>
 </kbq-content-panel-container>
 ```
@@ -33,5 +31,7 @@ To react to scrolling inside the `<kbq-content-panel-container>` or `<kbq-conten
 By default, the `ESCAPE` key closes the panel, but you can disable this behavior using the `disableCloseByEscape` attribute:
 
 ```html
-<kbq-content-panel-container disableCloseByEscape>...</kbq-content-panel-container>
+<kbq-content-panel-container disableCloseByEscape>
+    <kbq-content-panel>...</kbq-content-panel>
+</kbq-content-panel-container>
 ```
