@@ -102,6 +102,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
         form {
             width: 100%;
+            padding: 1px;
         }
 
         .example-alert__container {

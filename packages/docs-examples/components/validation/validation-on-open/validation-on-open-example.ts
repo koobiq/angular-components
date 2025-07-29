@@ -22,31 +22,28 @@ type DocsFormData = {
     standalone: true,
     imports: [KbqFormsModule, KbqFormFieldModule, FormsModule, KbqButtonModule, KbqInputModule, ReactiveFormsModule],
     template: `
-        <div class="layout-margin">
-            <form
-                class="kbq-form-vertical"
-                id="docs-form"
-                [formGroup]="userDetailsForm"
-                (ngSubmit)="onSubmit()"
-                novalidate
-            >
-                <div class="kbq-form__fieldset">
-                    <div class="kbq-form__row">
-                        <div class="kbq-form__label">Name</div>
-                        <kbq-form-field class="kbq-form__control">
-                            <input formControlName="firstName" kbqInput />
-                        </kbq-form-field>
-                    </div>
-
-                    <div class="kbq-form__row">
-                        <div class="kbq-form__label">Surname</div>
-                        <kbq-form-field class="kbq-form__control">
-                            <input formControlName="lastName" kbqInput />
-                        </kbq-form-field>
-                    </div>
+        <form class="kbq-form-vertical" id="docs-form" [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()" novalidate>
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__row">
+                    <div class="kbq-form__label">Name</div>
+                    <kbq-form-field class="kbq-form__control">
+                        <input formControlName="firstName" kbqInput />
+                    </kbq-form-field>
                 </div>
-            </form>
-        </div>
+
+                <div class="kbq-form__row">
+                    <div class="kbq-form__label">Surname</div>
+                    <kbq-form-field class="kbq-form__control">
+                        <input formControlName="lastName" kbqInput />
+                    </kbq-form-field>
+                </div>
+            </div>
+        </form>
+    `,
+    styles: `
+        form {
+            padding: 1px;
+        }
     `,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider(),

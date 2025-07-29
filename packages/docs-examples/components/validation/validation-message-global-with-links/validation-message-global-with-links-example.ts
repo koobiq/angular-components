@@ -27,8 +27,9 @@ import { KbqLinkModule } from '@koobiq/components/link';
     ],
     templateUrl: 'validation-message-global-with-links-example.html',
     styles: `
-        .example-container {
+        form {
             width: 320px;
+            padding: 1px;
         }
 
         .example-alert {
@@ -37,10 +38,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
         .example-alert.example-alert_in-progress {
             opacity: var(--kbq-opacity-disabled);
-        }
-
-        form {
-            width: 100%;
         }
     `,
     host: {

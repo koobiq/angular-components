@@ -24,36 +24,40 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormsModule
     ],
     template: `
-        <div class="layout-margin" style="width: 320px">
-            <form class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-                <div class="kbq-form__fieldset">
-                    <div class="kbq-form__row">
-                        <div class="kbq-form__label">Name</div>
-                        <kbq-form-field class="kbq-form__control">
-                            <input formControlName="firstName" kbqInput />
-                        </kbq-form-field>
-                    </div>
-
-                    <div class="kbq-form__row">
-                        <div class="kbq-form__label">Last name</div>
-                        <kbq-form-field class="kbq-form__control">
-                            <input formControlName="lastName" kbqInput />
-                        </kbq-form-field>
-                    </div>
-
-                    <div class="kbq-form__row layout-margin-bottom-xxl">
-                        <div class="kbq-form__label">Patronymic</div>
-                        <kbq-form-field class="kbq-form__control">
-                            <input formControlName="patronymic" kbqInput placeholder="Optional" />
-                        </kbq-form-field>
-                    </div>
-
-                    <div class="kbq-form__row">
-                        <button class="flex-25" color="contrast" kbq-button type="submit">Send</button>
-                    </div>
+        <form class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__row">
+                    <div class="kbq-form__label">Name</div>
+                    <kbq-form-field class="kbq-form__control">
+                        <input formControlName="firstName" kbqInput />
+                    </kbq-form-field>
                 </div>
-            </form>
-        </div>
+
+                <div class="kbq-form__row">
+                    <div class="kbq-form__label">Last name</div>
+                    <kbq-form-field class="kbq-form__control">
+                        <input formControlName="lastName" kbqInput />
+                    </kbq-form-field>
+                </div>
+
+                <div class="kbq-form__row layout-margin-bottom-xxl">
+                    <div class="kbq-form__label">Patronymic</div>
+                    <kbq-form-field class="kbq-form__control">
+                        <input formControlName="patronymic" kbqInput placeholder="Optional" />
+                    </kbq-form-field>
+                </div>
+
+                <div class="kbq-form__row">
+                    <button class="flex-25" color="contrast" kbq-button type="submit">Send</button>
+                </div>
+            </div>
+        </form>
+    `,
+    styles: `
+        form {
+            width: 320px;
+            padding: 1px;
+        }
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'

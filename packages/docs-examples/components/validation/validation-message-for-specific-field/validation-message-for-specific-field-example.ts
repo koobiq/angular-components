@@ -59,6 +59,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     styles: `
         form {
             width: 320px;
+            padding: 1px;
         }
     `,
     host: {

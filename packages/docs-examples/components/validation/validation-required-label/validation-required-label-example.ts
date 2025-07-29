@@ -30,83 +30,81 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqTextareaModule
     ],
     template: `
-        <div class="layout-margin" style="width: 400px">
-            <form class="kbq-form-horizontal" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-                <div class="kbq-form__fieldset">
-                    <div class="kbq-form__row">
-                        <label class="kbq-form__label flex-20">Name</label>
-                        <kbq-form-field class="kbq-form__control flex-80">
-                            <input [required]="true" formControlName="firstName" kbqInput />
+        <form class="kbq-form-horizontal" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+            <div class="kbq-form__fieldset">
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-20">Name</label>
+                    <kbq-form-field class="kbq-form__control flex-80">
+                        <input [required]="true" formControlName="firstName" kbqInput />
 
-                            <kbq-error>Required</kbq-error>
-                        </kbq-form-field>
-                    </div>
+                        <kbq-error>Required</kbq-error>
+                    </kbq-form-field>
+                </div>
 
-                    <div class="kbq-form__row">
-                        <label class="kbq-form__label flex-20">Last name</label>
-                        <kbq-form-field class="kbq-form__control flex-80">
-                            <input formControlName="lastName" kbqInput />
-                        </kbq-form-field>
-                    </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-20">Last name</label>
+                    <kbq-form-field class="kbq-form__control flex-80">
+                        <input formControlName="lastName" kbqInput />
+                    </kbq-form-field>
+                </div>
 
-                    <div class="kbq-form__row">
-                        <label class="kbq-form__label flex-20">Patronymic</label>
-                        <kbq-form-field class="kbq-form__control flex-80">
-                            <input formControlName="thirdName" kbqInput placeholder="Optional" />
-                        </kbq-form-field>
-                    </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-20">Patronymic</label>
+                    <kbq-form-field class="kbq-form__control flex-80">
+                        <input formControlName="thirdName" kbqInput placeholder="Optional" />
+                    </kbq-form-field>
+                </div>
 
-                    <div class="kbq-form__row">
-                        <label class="kbq-form__label flex-20">Email</label>
-                        <kbq-form-field class="kbq-form__control flex-80">
-                            <input formControlName="email" kbqInput type="email" />
-                        </kbq-form-field>
-                    </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-20">Email</label>
+                    <kbq-form-field class="kbq-form__control flex-80">
+                        <input formControlName="email" kbqInput type="email" />
+                    </kbq-form-field>
+                </div>
 
-                    <div class="kbq-form__row">
-                        <label class="kbq-form__label flex-20">Request reason</label>
-                        <kbq-form-field class="kbq-form__control flex-80">
-                            <kbq-select formControlName="reason">
-                                @for (option of docsReasons; track option.value) {
-                                    <kbq-option [value]="option.value">
-                                        {{ option.label }}
-                                    </kbq-option>
-                                }
-                            </kbq-select>
-                        </kbq-form-field>
-                    </div>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-20">Request reason</label>
+                    <kbq-form-field class="kbq-form__control flex-80">
+                        <kbq-select formControlName="reason">
+                            @for (option of docsReasons; track option.value) {
+                                <kbq-option [value]="option.value">
+                                    {{ option.label }}
+                                </kbq-option>
+                            }
+                        </kbq-select>
+                    </kbq-form-field>
+                </div>
 
-                    <div class="kbq-form__row">
-                        <label class="kbq-form__label flex-20">Estimation</label>
-                        <kbq-form-field class="kbq-form__control flex-80">
-                            <kbq-select [required]="true" formControlName="estimation">
-                                @for (option of estimation; track option.value) {
-                                    <kbq-option [value]="option.value">
-                                        {{ option.label }}
-                                    </kbq-option>
-                                }
-                            </kbq-select>
+                <div class="kbq-form__row">
+                    <label class="kbq-form__label flex-20">Estimation</label>
+                    <kbq-form-field class="kbq-form__control flex-80">
+                        <kbq-select [required]="true" formControlName="estimation">
+                            @for (option of estimation; track option.value) {
+                                <kbq-option [value]="option.value">
+                                    {{ option.label }}
+                                </kbq-option>
+                            }
+                        </kbq-select>
 
-                            <kbq-error>Required</kbq-error>
-                        </kbq-form-field>
-                    </div>
+                        <kbq-error>Required</kbq-error>
+                    </kbq-form-field>
+                </div>
 
-                    <div class="kbq-form__row layout-margin-bottom-xxl">
-                        <label class="kbq-form__label flex-20">Comment</label>
-                        <kbq-form-field class="kbq-form__control flex-80">
-                            <textarea formControlName="comment" kbqTextarea></textarea>
-                        </kbq-form-field>
-                    </div>
+                <div class="kbq-form__row layout-margin-bottom-xxl">
+                    <label class="kbq-form__label flex-20">Comment</label>
+                    <kbq-form-field class="kbq-form__control flex-80">
+                        <textarea formControlName="comment" kbqTextarea></textarea>
+                    </kbq-form-field>
+                </div>
 
-                    <div class="kbq-form__row">
-                        <div class="kbq-form__label flex-20"></div>
-                        <div class="kbq-form__control">
-                            <button color="contrast" kbq-button type="submit">Send</button>
-                        </div>
+                <div class="kbq-form__row">
+                    <div class="kbq-form__label flex-20"></div>
+                    <div class="kbq-form__control">
+                        <button color="contrast" kbq-button type="submit">Send</button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     `,
     styles: `
         :host {
@@ -118,6 +116,11 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 
         .kbq-form__row:has(> .kbq-form-field-type-select) {
             --kbq-forms-size-vertical-row-margin-bottom: var(--kbq-size-xl);
+        }
+
+        form {
+            width: 574px;
+            padding: 1px;
         }
     `,
     host: {

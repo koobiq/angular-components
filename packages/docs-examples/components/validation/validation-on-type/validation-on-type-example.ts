@@ -24,28 +24,32 @@ const restSymbolsRegex = /[^0-9a-zA-Z]+/g;
         KbqInputModule
     ],
     template: `
-        <div class="layout-margin" style="width: 320px">
-            <form [formGroup]="checkOnFlyForm" novalidate>
-                <kbq-form-field>
-                    <kbq-label>Folder name</kbq-label>
-                    <input
-                        #tooltip="kbqTooltip"
-                        [kbqEnterDelay]="10"
-                        [kbqPlacement]="popUpPlacements.Top"
-                        [kbqTrigger]="'manual'"
-                        [kbqTooltip]="'Letters and numbers'"
-                        [kbqTooltipColor]="colors.Error"
-                        (input)="onInput($event)"
-                        formControlName="folderName"
-                        kbqInput
-                    />
+        <form [formGroup]="checkOnFlyForm" novalidate>
+            <kbq-form-field>
+                <kbq-label>Folder name</kbq-label>
+                <input
+                    #tooltip="kbqTooltip"
+                    [kbqEnterDelay]="10"
+                    [kbqPlacement]="popUpPlacements.Top"
+                    [kbqTrigger]="'manual'"
+                    [kbqTooltip]="'Letters and numbers'"
+                    [kbqTooltipColor]="colors.Error"
+                    (input)="onInput($event)"
+                    formControlName="folderName"
+                    kbqInput
+                />
 
-                    <kbq-cleaner />
+                <kbq-cleaner />
 
-                    <kbq-hint>Only letters and numbers</kbq-hint>
-                </kbq-form-field>
-            </form>
-        </div>
+                <kbq-hint>Only letters and numbers</kbq-hint>
+            </kbq-form-field>
+        </form>
+    `,
+    styles: `
+        form {
+            width: 320px;
+            padding: 1px;
+        }
     `,
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'

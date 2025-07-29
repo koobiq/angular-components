@@ -104,6 +104,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 
         form {
             width: 100%;
+            padding: 1px;
         }
 
         .example-alert__container {

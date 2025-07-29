@@ -1,84 +1,78 @@
-<div class="example-container layout-margin">
-    <form novalidate class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="submitForm()">
-        @if (showError()) {
-            <kbq-alert
-                alertColor="error"
-                alertStyle="colored"
-                class="example-alert layout-margin-bottom-l"
-                [class.example-alert_in-progress]="inProgress()"
-                [compact]="true"
-            >
-                <i kbq-icon="kbq-info-circle_16" [color]="'error'"></i>
-                <span>
-                    Fill in at least one of the fields:
-                    <span kbq-link pseudo (click)="seriesInput.focus()" (keydown.enter)="seriesInput.focus()">
-                        Series,
-                    </span>
-                    <span kbq-link pseudo (click)="numberInput.focus()" (keydown.enter)="numberInput.focus()">
-                        Number
-                    </span>
-                    or
-                    <span kbq-link pseudo (click)="lastNameInput.focus()" (keydown.enter)="lastNameInput.focus()">
-                        Last name
-                    </span>
+<form novalidate class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="submitForm()">
+    @if (showError()) {
+        <kbq-alert
+            alertColor="error"
+            alertStyle="colored"
+            class="example-alert layout-margin-bottom-l"
+            [class.example-alert_in-progress]="inProgress()"
+            [compact]="true"
+        >
+            <i kbq-icon="kbq-info-circle_16" [color]="'error'"></i>
+            <span>
+                Fill in at least one of the fields:
+                <span kbq-link pseudo (click)="seriesInput.focus()" (keydown.enter)="seriesInput.focus()">Series,</span>
+                <span kbq-link pseudo (click)="numberInput.focus()" (keydown.enter)="numberInput.focus()">Number</span>
+                or
+                <span kbq-link pseudo (click)="lastNameInput.focus()" (keydown.enter)="lastNameInput.focus()">
+                    Last name
                 </span>
-            </kbq-alert>
-        }
+            </span>
+        </kbq-alert>
+    }
 
-        <div class="kbq-form__fieldset layout-margin-bottom-xxl">
-            <div class="kbq-form__fieldset kbq-horizontal">
-                <div class="kbq-form__row flex-25">
-                    <kbq-form-field class="kbq-form__control">
-                        <kbq-label>Series</kbq-label>
-                        <input #seriesInput formControlName="series" kbqInput name="input" />
-                    </kbq-form-field>
-                </div>
-
-                <div class="kbq-form__row flex-40">
-                    <kbq-form-field class="kbq-form__control">
-                        <kbq-label>Number</kbq-label>
-                        <input #numberInput formControlName="number" kbqInput name="input" />
-                    </kbq-form-field>
-                </div>
-            </div>
-
-            <div class="kbq-form__row">
+    <div class="kbq-form__fieldset layout-margin-bottom-xxl">
+        <div class="kbq-form__fieldset kbq-horizontal">
+            <div class="kbq-form__row flex-25">
                 <kbq-form-field class="kbq-form__control">
-                    <kbq-label>Last name</kbq-label>
-                    <input #lastNameInput formControlName="lastName" kbqInput name="input" />
+                    <kbq-label>Series</kbq-label>
+                    <input #seriesInput formControlName="series" kbqInput name="input" />
                 </kbq-form-field>
             </div>
 
-            <div class="kbq-form__row">
+            <div class="kbq-form__row flex-40">
                 <kbq-form-field class="kbq-form__control">
-                    <kbq-label>Name</kbq-label>
-                    <input formControlName="firstName" kbqInput name="input" />
-
-                    <kbq-hint>Optional</kbq-hint>
-                </kbq-form-field>
-            </div>
-
-            <div class="kbq-form__row">
-                <kbq-form-field class="kbq-form__control">
-                    <kbq-label>Patronymic</kbq-label>
-                    <input formControlName="patronymic" kbqInput name="input" />
-
-                    <kbq-hint>Optional</kbq-hint>
+                    <kbq-label>Number</kbq-label>
+                    <input #numberInput formControlName="number" kbqInput name="input" />
                 </kbq-form-field>
             </div>
         </div>
 
         <div class="kbq-form__row">
-            <button
-                color="contrast"
-                kbq-button
-                type="submit"
-                class="flex-30"
-                [class.kbq-progress]="inProgress()"
-                [disabled]="inProgress()"
-            >
-                Send
-            </button>
+            <kbq-form-field class="kbq-form__control">
+                <kbq-label>Last name</kbq-label>
+                <input #lastNameInput formControlName="lastName" kbqInput name="input" />
+            </kbq-form-field>
         </div>
-    </form>
-</div>
+
+        <div class="kbq-form__row">
+            <kbq-form-field class="kbq-form__control">
+                <kbq-label>Name</kbq-label>
+                <input formControlName="firstName" kbqInput name="input" />
+
+                <kbq-hint>Optional</kbq-hint>
+            </kbq-form-field>
+        </div>
+
+        <div class="kbq-form__row">
+            <kbq-form-field class="kbq-form__control">
+                <kbq-label>Patronymic</kbq-label>
+                <input formControlName="patronymic" kbqInput name="input" />
+
+                <kbq-hint>Optional</kbq-hint>
+            </kbq-form-field>
+        </div>
+    </div>
+
+    <div class="kbq-form__row">
+        <button
+            color="contrast"
+            kbq-button
+            type="submit"
+            class="flex-30"
+            [class.kbq-progress]="inProgress()"
+            [disabled]="inProgress()"
+        >
+            Send
+        </button>
+    </div>
+</form>
