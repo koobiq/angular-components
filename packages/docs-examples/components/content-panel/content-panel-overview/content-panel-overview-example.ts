@@ -85,8 +85,6 @@ export class ExampleGrid {
     });
 
     protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
-        api.setFocusedCell(0, 'column0');
-
         api.forEachNode((node) => {
             if (node.rowIndex === 3 || node.rowIndex === 4) {
                 node.setSelected(true);
@@ -205,10 +203,11 @@ export class ExampleGrid {
 
         .example-modal-body {
             height: 100%;
+            max-height: unset;
         }
 
         ::ng-deep .example-modal-title {
-            padding: var(--kbq-size-xxl);
+            padding: var(--kbq-size-xl) var(--kbq-size-xxl);
         }
 
         ::ng-deep .example-modal-title .kbq-modal-title {
@@ -224,7 +223,6 @@ export class ExampleGrid {
 
         .example-content-panel-container {
             display: flex;
-            flex-grow: 1;
             max-height: unset;
             height: 100%;
         }
