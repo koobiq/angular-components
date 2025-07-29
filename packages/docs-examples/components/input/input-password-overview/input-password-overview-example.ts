@@ -36,7 +36,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             </kbq-password-hint>
 
             <kbq-password-hint [checkRule]="atLeastNCapitalLetters(5)" [rule]="passwordRules.Custom">
-                не менее 5 заглавных букв
+                Не менее 5 заглавных букв
             </kbq-password-hint>
         </kbq-form-field>
     `
