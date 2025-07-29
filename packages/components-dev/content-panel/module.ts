@@ -150,6 +150,8 @@ export class DevContentPanelOverview {
     selector: 'dev-examples',
     template: `
         <content-panel-overview-example />
+        <hr />
+        <content-panel-scroll-events-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

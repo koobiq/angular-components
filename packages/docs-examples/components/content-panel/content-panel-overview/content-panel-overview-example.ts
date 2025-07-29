@@ -225,7 +225,6 @@ export class ExampleGrid {
         .example-content-panel-container {
             display: flex;
             max-height: unset;
-            height: 100%;
         }
 
         .example-content-header-caption {

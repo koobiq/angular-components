@@ -26,28 +26,7 @@ The opened state can also be set via `opened` property, which supports two-way b
 
 To react to scrolling inside the `<kbq-content-panel-container>` or `<kbq-content-panel>`, you can get `CdkScrollable` instances and subscribe to their `elementScrolled()` observable.
 
-```ts
-class Component {
-    readonly contentPanelContainer = viewChild.required(KbqContentPanelContainer);
-    readonly contentPanel = viewChild.required(KbqContentPanel);
-
-    constructor() {
-        afterNextRender(() => {
-            this.contentPanelContainer()
-                .scrollableContent.elementScrolled()
-                .subscribe(() => {
-                    // handle KbqContentPanelContainer content scrolling
-                });
-
-            this.contentPanel()
-                .scrollableBody.elementScrolled()
-                .subscribe(() => {
-                    // handle KbqContentPanelBody content scrolling
-                });
-        });
-    }
-}
-```
+<!-- example(content-panel-scroll-events) -->
 
 ### Keyboard interaction
 

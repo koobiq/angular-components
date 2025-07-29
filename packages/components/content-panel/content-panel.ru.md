@@ -26,28 +26,7 @@
 
 Для реакции на прокрутку внутри `<kbq-content-panel-container>` или `<kbq-content-panel>`, вы можете получить экземпляры `CdkScrollable` и подписаться на их observable `elementScrolled()`.
 
-```ts
-class Component {
-    readonly contentPanelContainer = viewChild.required(KbqContentPanelContainer);
-    readonly contentPanel = viewChild.required(KbqContentPanel);
-
-    constructor() {
-        afterNextRender(() => {
-            this.contentPanelContainer()
-                .scrollableContent.elementScrolled()
-                .subscribe(() => {
-                    // обработка прокрутки контента KbqContentPanelContainer
-                });
-
-            this.contentPanel()
-                .scrollableBody.elementScrolled()
-                .subscribe(() => {
-                    // обработка прокрутки контента KbqContentPanelBody
-                });
-        });
-    }
-}
-```
+<!-- example(content-panel-scroll-events) -->
 
 ### Взаимодействие с клавиатурой
 
