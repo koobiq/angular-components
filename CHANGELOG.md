@@ -1,3 +1,21 @@
+# 18.33.0 (2025-07-29)
+
+### Koobiq
+
+ * bug fix  **breadcrumbs:** resolve hydration duplication ([#DS-3679](https://github.com/koobiq/angular-components/issues/issue/DS-3679)) ([#930](https://github.com/koobiq/angular-components/issues/930)) ([1b1cc59](https://github.com/koobiq/angular-components/commit/1b1cc599d540850369d4d3ffd87c22b2720859cd))
+ * bug fix  **button:** set default color on init ([#DS-3991](https://github.com/koobiq/angular-components/issues/issue/DS-3991)) ([#925](https://github.com/koobiq/angular-components/issues/925)) ([fc39df5](https://github.com/koobiq/angular-components/commit/fc39df5020c33a02db5829debd06f12853a34615))
+ * bug fix  **datepicker:** don' t set error on blur for required ([#DS-3520](https://github.com/koobiq/angular-components/issues/issue/DS-3520)) ([#937](https://github.com/koobiq/angular-components/issues/937)) ([733a9f7](https://github.com/koobiq/angular-components/commit/733a9f7041c2a7fdadb25866385e2c742e508146))
+ * bug fix  **docs:** added form-field for sitemap ([#DS-3995](https://github.com/koobiq/angular-components/issues/issue/DS-3995)) ([#921](https://github.com/koobiq/angular-components/issues/921)) ([1f7cb3c](https://github.com/koobiq/angular-components/commit/1f7cb3c7f4123f604734d6c5f82c7aedb180ebcb))
+ * bug fix  **docs:** resolved missing preview & examples ([#DS-3960](https://github.com/koobiq/angular-components/issues/issue/DS-3960)) ([#932](https://github.com/koobiq/angular-components/issues/932)) ([e83b1c4](https://github.com/koobiq/angular-components/commit/e83b1c41cabbe86bd3696b155ed8376da9ad701a))
+ * bug fix  **file-upload:** added default font ([#DS-4032](https://github.com/koobiq/angular-components/issues/issue/DS-4032)) ([#934](https://github.com/koobiq/angular-components/issues/934)) ([2b1223d](https://github.com/koobiq/angular-components/commit/2b1223de18923c85cda866bfd88bd6a14843b204))
+ * bug fix  **filter-bar:** filter list is not displayed ([#DS-4035](https://github.com/koobiq/angular-components/issues/issue/DS-4035)) ([#936](https://github.com/koobiq/angular-components/issues/936)) ([676a059](https://github.com/koobiq/angular-components/commit/676a05904d9c3b672c5054d6b533680b8943895c))
+ * bug fix  **filter-bar:** open filter after reset ([#DS-4000](https://github.com/koobiq/angular-components/issues/issue/DS-4000)) ([#933](https://github.com/koobiq/angular-components/issues/933)) ([b3131c0](https://github.com/koobiq/angular-components/commit/b3131c07694808765925287460b6d86e66496a93))
+ * bug fix  **input:** adjust password focus for validation ([#DS-3965](https://github.com/koobiq/angular-components/issues/issue/DS-3965)) ([#926](https://github.com/koobiq/angular-components/issues/926)) ([fe46a31](https://github.com/koobiq/angular-components/commit/fe46a319d83b9f80f6edd2602a66e6722e70d2a1))
+ * bug fix  **styles:** font-style ([#DS-3989](https://github.com/koobiq/angular-components/issues/issue/DS-3989)) ([#938](https://github.com/koobiq/angular-components/issues/938)) ([29e1fd6](https://github.com/koobiq/angular-components/commit/29e1fd6599fe9c5de691ec2d3145777fa95653e1))
+ * bug fix  **tree-select:** positioning when space is limited ([#DS-3966](https://github.com/koobiq/angular-components/issues/issue/DS-3966)) ([#919](https://github.com/koobiq/angular-components/issues/919)) ([80b2137](https://github.com/koobiq/angular-components/commit/80b21374f9c0e4244fb8d1b96941b1a9a4c3ebf3))
+ * feature  **option:** new action button ([#DS-3648](https://github.com/koobiq/angular-components/issues/issue/DS-3648)) ([#923](https://github.com/koobiq/angular-components/issues/923)) ([c56dd73](https://github.com/koobiq/angular-components/commit/c56dd73c8177001f9f66e95fa2e9abbe484a8f58))
+ * feature  **select, tree-select:** added multiline ([#DS-3120](https://github.com/koobiq/angular-components/issues/issue/DS-3120)) ([#927](https://github.com/koobiq/angular-components/issues/927)) ([c85119f](https://github.com/koobiq/angular-components/commit/c85119f9e7890127c3964b028bf0e9911b611477))
+
 # 18.32.0 (2025-07-15)
 
 ### Koobiq
