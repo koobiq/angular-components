@@ -13,6 +13,7 @@ import { KbqModalComponent } from './modal.component';
                 class="kbq-modal-close kbq-button_transparent"
                 [color]="'contrast'"
                 (click)="modal.onClickCloseBtn()"
+                type="button"
                 kbq-button
             >
                 <i [color]="modal.componentColors.Contrast" kbq-icon="kbq-xmark_16"></i>
