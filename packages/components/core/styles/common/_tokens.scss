@@ -15,6 +15,7 @@ $tokens: meta.module-variables(tokens) !default;
 
 @mixin kbq-typography-css-variables($component, $property) {
     @include kbq-css-font-variable($component, $property, font-size, font-);
+    @include kbq-css-font-variable($component, $property, font-style, font-);
     @include kbq-css-font-variable($component, $property, font-weight, font-);
     @include kbq-css-font-variable($component, $property, line-height, font-);
     @include kbq-css-font-variable($component, $property, font-family, font-);
@@ -25,6 +26,7 @@ $tokens: meta.module-variables(tokens) !default;
 
 @mixin kbq-typography-level-to-styles-css-variables($component, $property) {
     @include kbq-css-font-variable($component, $property, font-size, '');
+    @include kbq-css-font-variable($component, $property, font-style, '');
     @include kbq-css-font-variable($component, $property, font-weight, '');
     @include kbq-css-font-variable($component, $property, line-height, '');
     @include kbq-css-font-variable($component, $property, font-family, '');
