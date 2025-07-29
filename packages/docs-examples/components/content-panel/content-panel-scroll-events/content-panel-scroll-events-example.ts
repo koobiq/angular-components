@@ -3,16 +3,16 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqContentPanel, KbqContentPanelContainer, KbqContentPanelModule } from '@koobiq/components/content-panel';
 
 /**
- * @title Content Panel scroll events
+ * @title Content panel scroll events
  */
 @Component({
     standalone: true,
     imports: [KbqButtonModule, KbqContentPanelModule],
     selector: 'content-panel-scroll-events-example',
     template: `
-        <kbq-content-panel-container #contentPanelContainer="kbqContentPanelContainer">
-            <button (click)="contentPanelContainer.toggle()" kbq-button>toggle</button>
-            @for (_p of paragraphs; track $index) {
+        <kbq-content-panel-container #panel="kbqContentPanelContainer" width="300" maxWidth="400" minWidth="200">
+            <button (click)="panel.toggle()" kbq-button>toggle</button>
+            @for (_i of paragraphs; track $index) {
                 <p>
                     In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in which the
                     perpetrator seeks to make a machine or network resource unavailable to its intended users by
@@ -29,7 +29,7 @@ import { KbqContentPanel, KbqContentPanelContainer, KbqContentPanelModule } from
                     <div kbqContentPanelHeaderTitle>Title</div>
                 </kbq-content-panel-header>
                 <kbq-content-panel-body>
-                    @for (_p of paragraphs; track $index) {
+                    @for (_i of paragraphs; track $index) {
                         <p>
                             In computing [{{ $index }}], a denial-of-service attack (DoS attack) is a cyber-attack in
                             which the perpetrator seeks to make a machine or network resource unavailable to its
@@ -50,8 +50,6 @@ import { KbqContentPanel, KbqContentPanelContainer, KbqContentPanelModule } from
         :host {
             display: block;
             height: 400px;
-            min-width: 1000px;
-            overflow: auto;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -68,14 +66,14 @@ export class ContentPanelScrollEventsExample {
                 .scrollableContent()
                 .elementScrolled()
                 .subscribe(() => {
-                    console.log('KbqContentPanelContainer content scrolled.');
+                    console.log('KbqContentPanelContainer content was scrolled.');
                 });
 
             this.contentPanel()
                 .scrollableBody()
                 ?.elementScrolled()
                 .subscribe(() => {
-                    console.log('KbqContentPanelBody content scrolled.');
+                    console.log('KbqContentPanelBody content was scrolled.');
                 });
         });
     }

@@ -46,7 +46,7 @@ import { DevThemeToggle } from '../theme-toggle';
                         <a kbq-link pseudo>July 21, 2025 2:29 PM</a>
                     </div>
                     <div class="example-content-header-actions" kbqContentPanelHeaderActions>
-                        @for (_a of headerActions; track $index) {
+                        @for (_i of headerActions; track $index) {
                             <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
                                 <i kbq-icon="kbq-link_16"></i>
                             </button>
@@ -70,13 +70,8 @@ import { DevThemeToggle } from '../theme-toggle';
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer class="example-content-panel-footer">
-                    @for (action of footerActions; track $index) {
-                        <button
-                            [color]="$index > 0 ? componentColors.ContrastFade : componentColors.Contrast"
-                            kbq-button
-                        >
-                            Button {{ $index }}
-                        </button>
+                    @for (_a of footerActions; track $index) {
+                        <button [color]="componentColors.ContrastFade" kbq-button>Button {{ $index }}</button>
                     }
                 </kbq-content-panel-footer>
             </kbq-content-panel>
@@ -150,6 +145,8 @@ export class DevContentPanelOverview {
     selector: 'dev-examples',
     template: `
         <content-panel-overview-example />
+        <hr />
+        <content-panel-with-grid-example />
         <hr />
         <content-panel-scroll-events-example />
     `,

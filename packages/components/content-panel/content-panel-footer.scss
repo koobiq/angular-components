@@ -1,3 +1,5 @@
 .kbq-content-panel-footer {
+    display: flex;
+    gap: var(--kbq-size-l);
     padding: var(--kbq-size-l) var(--kbq-size-xxl);
 }
