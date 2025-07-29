@@ -75,6 +75,9 @@ import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/
 
 #### После отправки формы
 
+По умолчанию ошибки показываются только для **невалидных** (некорректно заполненных) полей после взаимодействия пользователя.
+Чтобы отображать ошибки сразу после отправки формы, используйте `ShowOnFormSubmitErrorStateMatcher` — реализацию [ErrorStateMatcher](https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts).
+
 Такая валидация используется для проверки пустых обязательных полей и тех, которые нельзя проверить на клиенте.
 
 Кнопка отправки не блокируется в пустой форме или с невалидными полями. По клику на кнопку происходит валидация и отправка формы: кнопка принимает состояние **Progress** в момент отправки. Также в момент отправки поверх формы можно показать [Loader Overlay](/ru/components/loader-overlay).

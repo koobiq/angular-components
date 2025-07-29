@@ -73,6 +73,9 @@ Invalid fields remain styled as such if the user leaves the field without correc
 
 #### On form submission
 
+By default, errors are shown only for **invalid** (incorrectly filled) fields after the user interacts with them.
+To display errors immediately after form submission, use `ShowOnFormSubmitErrorStateMatcher` — an implementation of [ErrorStateMatcher](https://github.com/koobiq/angular-components/blob/main/packages/components/core/error/error-state-matcher.ts).
+
 Used for checking empty required fields and things that can't be validated client-side.
 
 The submit button is **not disabled**, even if the form is empty or contains invalid fields. When clicked, validation and submission are triggered. The button enters a **Progress** state during submission. You can also display a [Loader Overlay](/ru/components/loader-overlay) over the form during this time.
