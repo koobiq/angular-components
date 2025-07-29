@@ -12,7 +12,7 @@
 
 ### Ширина панели
 
-Ширина панели настраивается при помощи атрибута `width`, `minWidth` и `maxWidth`. По умолчанию: `width="640"`, `minWidth="480"` и `maxWidth="800"`.
+Ширина панели настраивается при помощи атрибута `width`, `minWidth` и `maxWidth`.
 
 ```html
 <kbq-content-panel-container width="400" minWidth="300" maxWidth="500">

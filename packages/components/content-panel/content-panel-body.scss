@@ -1,5 +1,9 @@
 .kbq-content-panel-body {
-    overflow: auto;
+    overflow: hidden;
     flex-grow: 1;
-    padding: 0 var(--kbq-size-xxl);
+
+    .kbq-content-panel-body__content {
+        padding: 0 var(--kbq-size-xxl);
+        height: 100%;
+    }
 }

@@ -12,7 +12,7 @@ The panel can be opened or closed using the `toggle()`, `open()` and `close()` m
 
 ### Panel width
 
-The panel width is configured using the `width`, `minWidth` and `maxWidth` attributes. Default values: `width="640"`, `minWidth="480"` and `maxWidth="800"`.
+The panel width is configured using the `width`, `minWidth` and `maxWidth` attributes.
 
 ```html
 <kbq-content-panel-container width="400" minWidth="300" maxWidth="500">

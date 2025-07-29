@@ -7,7 +7,6 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/scrolling';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqButtonStyles } from '@koobiq/components/button';
@@ -37,7 +36,7 @@ export class KbqContentPanelAside {
 // @public (undocumented)
 export class KbqContentPanelBody {
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, [{ directive: typeof i1.CdkScrollable; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqContentPanelBody, "kbq-content-panel-body", ["kbqContentPanelBody"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelBody, never>;
 }
@@ -116,10 +115,10 @@ export class KbqContentPanelModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqContentPanelModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqContentPanelModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof i1_2.KbqContentPanelContainer, typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter], [typeof i1_2.KbqContentPanelContainer, typeof i1_2.KbqContentPanel, typeof i1_2.KbqContentPanelAside, typeof i1_2.KbqContentPanelHeader, typeof i1_2.KbqContentPanelHeaderTitle, typeof i1_2.KbqContentPanelHeaderActions, typeof i1_2.KbqContentPanelBody, typeof i1_2.KbqContentPanelFooter]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqContentPanelModule, never, [typeof i1.KbqContentPanelContainer, typeof i1.KbqContentPanel, typeof i1.KbqContentPanelAside, typeof i1.KbqContentPanelHeader, typeof i1.KbqContentPanelHeaderTitle, typeof i1.KbqContentPanelHeaderActions, typeof i1.KbqContentPanelBody, typeof i1.KbqContentPanelFooter], [typeof i1.KbqContentPanelContainer, typeof i1.KbqContentPanel, typeof i1.KbqContentPanelAside, typeof i1.KbqContentPanelHeader, typeof i1.KbqContentPanelHeaderTitle, typeof i1.KbqContentPanelHeaderActions, typeof i1.KbqContentPanelBody, typeof i1.KbqContentPanelFooter]>;
 }
 
 // @public
