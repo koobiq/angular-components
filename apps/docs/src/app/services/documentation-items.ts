@@ -285,7 +285,8 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     svgPreview: 'content-panel',
                     hasApi: true,
                     apiId: 'content-panel',
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2025-08-29')
                 },
                 {
                     id: 'core',
