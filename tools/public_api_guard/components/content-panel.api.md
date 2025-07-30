@@ -55,7 +55,7 @@ export class KbqContentPanelContainer {
     readonly disableCloseByEscape: InputSignalWithTransform<boolean, unknown>;
     readonly disableResizer: InputSignalWithTransform<boolean, unknown>;
     protected handleEscapeKeydown(event: KeyboardEvent): void;
-    protected handleResizerDBClick(event: MouseEvent): void;
+    protected handleResizerDBLClick(event: MouseEvent): void;
     protected handleResizerSizeChange({ width }: KbqResizerSizeChangeEvent): void;
     readonly isOpened: Signal<boolean>;
     readonly maxWidth: InputSignalWithTransform<number, unknown>;
