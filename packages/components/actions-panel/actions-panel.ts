@@ -1,5 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { ComponentType, Overlay, OverlayContainer } from '@angular/cdk/overlay';
+import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { inject, Injectable, InjectionToken, Injector, OnDestroy, TemplateRef } from '@angular/core';
 import { KBQ_ACTIONS_PANEL_DEFAULT_CONFIG, KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelContainer } from './actions-panel-container';
@@ -54,20 +54,12 @@ export type KbqActionsPanelTemplateContext<T = unknown, D = unknown, R = unknown
 export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = 'kbq-actions-panel-overlay';
 
 /**
- * Selector for custom actions panel overlay container.
- *
- * @docs-private
- */
-export const KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR = 'kbq-actions-panel-overlay-container';
-
-/**
  * Service for opening actions panel.
  */
 @Injectable({ providedIn: 'root' })
 export class KbqActionsPanel implements OnDestroy {
     private readonly injector = inject(Injector);
     private readonly overlay = inject(Overlay);
-    private readonly overlayContainer = inject(OverlayContainer);
     private readonly dialog = inject(Dialog);
     private readonly defaultConfig = inject(KBQ_ACTIONS_PANEL_DEFAULT_CONFIG);
 
@@ -143,16 +135,6 @@ export class KbqActionsPanel implements OnDestroy {
     ): KbqActionsPanelRef<T, R> {
         let actionsPanelRef!: KbqActionsPanelRef<T, R>;
 
-        if (config.overlayContainer) {
-            // We should override protected `_containerElement` property to set custom container without creating
-            // new `OverlayContainer` instance.
-            this.overlayContainer['_containerElement'] = config.overlayContainer.nativeElement;
-        }
-
-        const overlayContainerElement = this.overlayContainer.getContainerElement();
-
-        overlayContainerElement.classList.add(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR);
-
         const dialogRef = this.dialog.open<R, D, T>(componentOrTemplateRef, {
             ...config,
             container: KbqActionsPanelContainer,
@@ -166,7 +148,19 @@ export class KbqActionsPanel implements OnDestroy {
             // Disable closing since we need to sync it up to the animation ourselves
             disableClose: true,
             scrollStrategy: config.scrollStrategy && config.scrollStrategy(this.overlay),
-            positionStrategy: this.overlay.position().global().centerHorizontally().bottom(),
+            positionStrategy: config.overlayContainer
+                ? this.overlay
+                      .position()
+                      .flexibleConnectedTo(config.overlayContainer)
+                      .withPositions([
+                          {
+                              originX: 'center',
+                              originY: 'bottom',
+                              overlayX: 'center',
+                              overlayY: 'bottom'
+                          }
+                      ])
+                : this.overlay.position().global().centerHorizontally().bottom(),
             templateContext: () => {
                 return {
                     $implicit: config.data,
@@ -193,10 +187,6 @@ export class KbqActionsPanel implements OnDestroy {
         if (config.overlayPanelClass) {
             dialogRef.addPanelClass(config.overlayPanelClass);
         }
-
-        actionsPanelRef?.afterClosed.subscribe(() => {
-            overlayContainerElement.classList.remove(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR);
-        });
 
         return actionsPanelRef;
     }
