@@ -345,6 +345,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
 
     onInput(event: InputEvent) {
         const currentValueLength = this.formatNumber(this.value)?.length || 0;
+        const previousSelectionStart = this.nativeElement.selectionStart || 0;
 
         setTimeout(() => {
             const fromPaste = event.inputType === 'insertFromPaste';
@@ -356,20 +357,26 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                 /*this.viewValue is raw and should be reformatted to localized number */
                 formattedValue = this.formatViewValue();
 
-                const offsetWhenSeparatorAdded = 2;
+                if (this.withThousandSeparator) {
+                    const offsetWhenSeparatorAdded = 2;
 
-                Promise.resolve().then(() => {
-                    if (Math.abs(this.viewValue.length - currentValueLength) === offsetWhenSeparatorAdded) {
-                        const cursorPosition = Math.max(
-                            0,
-                            (this.nativeElement.selectionStart || 0) +
-                                Math.sign(this.viewValue.length - currentValueLength)
-                        );
+                    Promise.resolve().then(() => {
+                        if (
+                            this.value &&
+                            Math.abs(this.value) >= 1000 &&
+                            Math.abs(this.viewValue.length - currentValueLength) === offsetWhenSeparatorAdded
+                        ) {
+                            // move selection to the left/right if separator was added/removed
+                            const cursorPosition = Math.max(
+                                0,
+                                previousSelectionStart + Math.sign(this.viewValue.length - currentValueLength)
+                            );
 
-                        this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
-                        this.renderer.setProperty(this.nativeElement, 'selectionEnd', cursorPosition);
-                    }
-                });
+                            this.renderer.setProperty(this.nativeElement, 'selectionStart', cursorPosition);
+                            this.renderer.setProperty(this.nativeElement, 'selectionEnd', cursorPosition);
+                        }
+                    });
+                }
             }
 
             this.setViewValue(formattedValue, !fromPaste);
