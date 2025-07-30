@@ -14,9 +14,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
             <div class="example-content-panel-container__content">
-                <button (click)="panel.toggle()" kbq-button>toggle</button>
-                <button [disabled]="panel.isOpened()" (click)="panel.open()" kbq-button>open</button>
-                <button [disabled]="!panel.isOpened()" (click)="panel.close()" kbq-button>close</button>
+                <button (click)="panel.toggle()" kbq-button>Toggle</button>
+                <button [disabled]="panel.isOpened()" (click)="panel.open()" kbq-button>Open</button>
+                <button [disabled]="!panel.isOpened()" (click)="panel.close()" kbq-button>Close</button>
             </div>
 
             <kbq-content-panel>
@@ -47,8 +47,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer>
-                    <button [color]="componentColors.Contrast" kbq-button>Button 0</button>
-                    <button [color]="componentColors.ContrastFade" kbq-button>Button 1</button>
+                    <button [color]="componentColors.Contrast" kbq-button>Button 1</button>
+                    <button [color]="componentColors.ContrastFade" kbq-button>Button 2</button>
                 </kbq-content-panel-footer>
             </kbq-content-panel>
         </kbq-content-panel-container>

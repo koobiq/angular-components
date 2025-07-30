@@ -183,9 +183,9 @@ export class ExampleGrid {
                         }
                     </kbq-content-panel-body>
                     <kbq-content-panel-footer>
-                        <button [color]="componentColors.Contrast" kbq-button>Button 0</button>
-                        <button [color]="componentColors.ContrastFade" kbq-button>Button 1</button>
+                        <button [color]="componentColors.Contrast" kbq-button>Button 1</button>
                         <button [color]="componentColors.ContrastFade" kbq-button>Button 2</button>
+                        <button [color]="componentColors.ContrastFade" kbq-button>Button 3</button>
                     </kbq-content-panel-footer>
                 </kbq-content-panel>
             </kbq-content-panel-container>
@@ -313,7 +313,6 @@ export class ContentPanelWithGridExample {
         this.modal.open({
             kbqComponent: ExampleContentPanel,
             kbqWidth: '90vw',
-            kbqCloseByESC: false,
             kbqClosable: false
         });
     }

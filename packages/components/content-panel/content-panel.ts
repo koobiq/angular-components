@@ -424,9 +424,11 @@ export class KbqContentPanelContainer {
      * @docs-private
      */
     protected handleEscapeKeydown(event: KeyboardEvent): void {
-        if (this.openedState() && (this.disableClose() || this.disableCloseByEscape())) return;
+        if (!this.openedState() || this.disableClose() || this.disableCloseByEscape()) return;
 
         event.preventDefault();
+        event.stopPropagation();
+
         this.close();
     }
 }
