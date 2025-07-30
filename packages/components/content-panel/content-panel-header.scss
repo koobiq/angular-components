@@ -3,7 +3,7 @@
 .kbq-content-panel-header {
     display: flex;
     flex-direction: column;
-    padding: var(--kbq-size-l) var(--kbq-size-xxl);
+    padding: var(--kbq-size-l) var(--kbq-content-panel-vertical-padding);
 
     .kbq-content-panel-header__wrapper {
         display: flex;

@@ -22,8 +22,6 @@
     }
 
     .kbq-content-panel-container__panel-resizer {
-        --kbq-content-panel-resizer-width: var(--kbq-size-l);
-
         position: absolute;
         top: 0;
         left: calc(var(--kbq-content-panel-resizer-width) / -2);

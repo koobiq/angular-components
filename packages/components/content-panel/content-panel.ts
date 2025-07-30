@@ -29,11 +29,8 @@ import { KbqResizable, KbqResizer, KbqResizerSizeChangeEvent } from './resizable
 const KBQ_CONTENT_PANEL_CONTAINER_CONTENT_ANIMATION = trigger('contentAnimation', [
     state('false', style({ 'margin-right': 0 })),
     state('true', style({ 'margin-right': '{{ marginRight }}px' }), { params: { marginRight: 0 } }),
-    transition('true => false', [
-        animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.AccelerationCurve}`)]),
-    transition('false => true', [
-        animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.DecelerationCurve}`)])
-
+    transition('true => false', [animate(`${KbqAnimationDurations.Entering} ${KbqAnimationCurves.AccelerationCurve}`)]),
+    transition('false => true', [animate(`${KbqAnimationDurations.Exiting} ${KbqAnimationCurves.DecelerationCurve}`)])
 ]);
 
 const KBQ_CONTENT_PANEL_CONTAINER_PANEL_ANIMATION = trigger('panelAnimation', [
@@ -187,7 +184,10 @@ export class KbqContentPanelFooter {}
             <ng-content select="kbq-content-panel-footer" />
         </div>
     `,
-    styleUrl: './content-panel.scss',
+    styleUrls: [
+        './content-panel-tokens.scss',
+        './content-panel.scss'
+    ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
