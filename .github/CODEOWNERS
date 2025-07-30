@@ -34,6 +34,7 @@
 /packages/components/timezone/*                             @NikGurev
 /packages/components/toggle/*                               @NikGurev
 /packages/components/top-bar/*                              @NikGurev
+/packages/components/username/*                             @NikGurev
 
 /packages/components/actions-panel/*                        @artembelik
 /packages/components/autocomplete/*                         @artembelik

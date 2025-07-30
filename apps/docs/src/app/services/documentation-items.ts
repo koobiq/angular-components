@@ -793,6 +793,16 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     hasApi: true,
                     apiId: 'tree-select',
                     hasExamples: true
+                },
+                {
+                    id: 'username',
+                    name: {
+                        ru: 'Username',
+                        en: 'Username'
+                    },
+                    hasApi: true,
+                    apiId: 'username',
+                    hasExamples: false
                 }
             ]
         }

@@ -82,6 +82,7 @@
             "@koobiq/components/top-bar": ["packages/components/top-bar/index.ts"],
             "@koobiq/components/tree": ["packages/components/tree/index.ts"],
             "@koobiq/components/tree-select": ["packages/components/tree-select/index.ts"],
+            "@koobiq/components/username": ["packages/components/username/index.ts"],
             "@koobiq/components/vertical-navbar": ["packages/components/vertical-navbar/index.ts"],
             "@koobiq/angular-luxon-adapter": ["packages/angular-luxon-adapter/index.ts"],
             "@koobiq/angular-moment-adapter": ["packages/angular-moment-adapter/index.ts"],
