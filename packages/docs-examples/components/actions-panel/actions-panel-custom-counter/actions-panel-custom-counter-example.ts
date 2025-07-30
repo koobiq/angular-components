@@ -171,6 +171,8 @@ export class ActionsPanelCustomCounterExample {
     }
 
     protected open(): void {
+        if (this.actionsPanelRef) return;
+
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             data: { selected: 3, counter: 6 },
             overlayContainer: this.elementRef

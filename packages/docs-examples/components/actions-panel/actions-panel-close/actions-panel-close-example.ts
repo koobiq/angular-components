@@ -53,6 +53,8 @@ export class ActionsPanelCloseExample {
     }
 
     protected open(): void {
+        if (this.actionsPanelRef) return;
+
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             data: { length: 3 },
             overlayContainer: this.elementRef

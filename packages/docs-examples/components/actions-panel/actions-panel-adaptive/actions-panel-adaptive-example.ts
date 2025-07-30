@@ -139,6 +139,8 @@ export class ExampleActionsPanel {
     }
 
     protected open(): void {
+        if (this.actionsPanelRef) return;
+
         this.actionsPanelRef = this.actionsPanel.open(this.templateRef(), {
             data: { length: 5 },
             overlayContainer: this.elementRef
