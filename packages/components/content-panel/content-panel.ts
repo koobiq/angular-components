@@ -266,7 +266,7 @@ export class KbqContentPanel {
                         class="kbq-content-panel-container__panel-resizer"
                         [kbqResizer]="[-1, 0]"
                         (sizeChange)="handleResizerSizeChange($event)"
-                        (dblclick)="handleResizerDBClick($event)"
+                        (dblclick)="handleResizerDBLClick($event)"
                     ></div>
                 }
                 <ng-content select="kbq-content-panel" />
@@ -404,7 +404,7 @@ export class KbqContentPanelContainer {
     /**
      * @docs-private
      */
-    protected handleResizerDBClick(event: MouseEvent): void {
+    protected handleResizerDBLClick(event: MouseEvent): void {
         event.preventDefault();
 
         this.widthState.set(this.width());
