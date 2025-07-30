@@ -363,7 +363,7 @@ export class KbqNumberInput implements KbqFormFieldControl<any>, ControlValueAcc
                     Promise.resolve().then(() => {
                         if (
                             this.value &&
-                            this.value >= 1000 &&
+                            Math.abs(this.value) >= 1000 &&
                             Math.abs(this.viewValue.length - currentValueLength) === offsetWhenSeparatorAdded
                         ) {
                             // move selection to the left/right if separator was added/removed
