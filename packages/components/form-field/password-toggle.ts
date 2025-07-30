@@ -1,9 +1,14 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     inject,
     Input,
+    numberAttribute,
+    OnDestroy,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
@@ -36,7 +41,9 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
     template: `
-        <i kbq-icon-button="" color="contrast-fade" [ngClass]="iconClass" [autoColor]="true"></i>
+        <ng-content>
+            <i [ngClass]="iconClass" [autoColor]="true" kbq-icon color="contrast-fade"></i>
+        </ng-content>
     `,
     styleUrls: ['password-toggle.scss'],
     host: {
@@ -46,6 +53,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
         '[style.visibility]': 'visibility',
         '[class.cdk-visually-hidden]': 'visibility === "hidden"',
         '[attr.aria-hidden]': 'visibility === "hidden"',
+        '[attr.tabindex]': 'tabindex',
 
         '(click)': 'toggle($event)',
         '(keydown.ENTER)': 'toggle($event)',
@@ -54,9 +62,14 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPasswordToggle extends KbqTooltipTrigger {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly focusMonitor = inject(FocusMonitor);
+
     // @TODO fix types (#DS-2915)
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
+
+    @Input({ transform: numberAttribute }) tabindex: number = 0;
 
     /**
      * @docs-private
@@ -112,6 +125,14 @@ export class KbqPasswordToggle extends KbqTooltipTrigger {
         super();
 
         this.trigger = `${PopUpTriggers.Hover}`;
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.nativeElement, true);
+    }
+
+    ngOnDestroy() {
+        this.focusMonitor.stopMonitoring(this.nativeElement);
     }
 
     /**
