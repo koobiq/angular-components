@@ -1,0 +1,32 @@
+.kbq-content-panel-container {
+    display: flex;
+    gap: var(--kbq-size-l);
+    overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+
+    .kbq-content-panel-container__content {
+        flex-grow: 1;
+        height: 100%;
+    }
+
+    .kbq-content-panel-container__panel {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding: 0 var(--kbq-size-s) var(--kbq-size-s) 0;
+        display: flex;
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    .kbq-content-panel-container__panel-resizer {
+        position: absolute;
+        top: 0;
+        left: calc(var(--kbq-content-panel-resizer-width) / -2);
+        width: var(--kbq-content-panel-resizer-width);
+        height: 100%;
+        z-index: 2;
+    }
+}

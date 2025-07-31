@@ -710,6 +710,36 @@
                 }
             }
         },
+        "dev-content-panel": {
+            "projectType": "application",
+            "root": "packages/components-dev/content-panel",
+            "sourceRoot": "packages/components-dev/content-panel",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/content-panel"
+                        },
+                        "tsConfig": "packages/components-dev/content-panel/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/content-panel/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-content-panel:build"
+                    }
+                }
+            }
+        },
         "dev-date-formatter": {
             "projectType": "application",
             "root": "packages/components-dev/date-formatter",

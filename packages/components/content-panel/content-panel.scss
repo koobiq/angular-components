@@ -1,0 +1,25 @@
+.kbq-content-panel {
+    display: flex;
+    border-radius: var(--kbq-content-panel-border-radius);
+    background-color: var(--kbq-content-panel-background-color);
+    border: var(--kbq-content-panel-border);
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+
+    &.kbq-content-panel_header-with-shadow .kbq-content-panel-header {
+        box-shadow: var(--kbq-content-panel-header-overflow-box-shadow);
+    }
+
+    &.kbq-content-panel_footer-with-shadow .kbq-content-panel-footer {
+        box-shadow: var(--kbq-content-panel-footer-overflow-box-shadow);
+    }
+
+    .kbq-content-panel__content {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        border-top-right-radius: inherit;
+        border-bottom-right-radius: inherit;
+    }
+}

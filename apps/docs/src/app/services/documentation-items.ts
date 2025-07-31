@@ -277,6 +277,18 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     hasExamples: true
                 },
                 {
+                    id: 'content-panel',
+                    name: {
+                        ru: 'Content panel',
+                        en: 'Content panel'
+                    },
+                    svgPreview: 'content-panel',
+                    hasApi: true,
+                    apiId: 'content-panel',
+                    hasExamples: false,
+                    isNew: expiresAt('2025-08-29')
+                },
+                {
                     id: 'core',
                     name: {
                         ru: 'Core',

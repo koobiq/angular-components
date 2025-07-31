@@ -1,0 +1,9 @@
+.kbq-content-panel-body {
+    overflow: hidden;
+    flex-grow: 1;
+
+    .kbq-content-panel-body__content {
+        padding: 0 var(--kbq-content-panel-vertical-padding);
+        height: 100%;
+    }
+}

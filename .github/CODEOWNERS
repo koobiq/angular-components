@@ -52,6 +52,7 @@
 /packages/components/table/*                                @artembelik
 /packages/components/tabs/*                                 @artembelik
 /packages/components/textarea/*                             @artembelik
+/packages/components/content-panel/*                        @artembelik
 
 # Tools
 /tools/api-extractor/*                                      @NikGurev

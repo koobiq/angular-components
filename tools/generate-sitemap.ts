@@ -48,6 +48,9 @@ const paths = [
     'components/code-block/overview',
     'components/code-block/api',
 
+    'components/content-panel/overview',
+    'components/content-panel/api',
+
     'components/core/overview',
     'components/core/api',
 

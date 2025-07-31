@@ -210,6 +210,7 @@
         "dev:button-toggle": "ng serve dev-button-toggle --port 3003",
         "dev:checkbox": "ng serve dev-checkbox --port 3003",
         "dev:code-block": "ng serve dev-code-block --port 3003",
+        "dev:content-panel": "ng serve dev-content-panel --port 3003",
         "dev:date-formatter": "ng serve dev-date-formatter --port 3003",
         "dev:date-pipes": "ng serve dev-date-pipes --port 3003",
         "dev:datepicker": "ng serve dev-datepicker --port 3003",
