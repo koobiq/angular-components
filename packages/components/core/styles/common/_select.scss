@@ -17,7 +17,7 @@
 
         cursor: pointer;
 
-        min-height: var(--kbq-form-field-size-height);
+        min-height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
 
         &:not(.kbq-select__trigger_multiline) {
             height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
@@ -99,6 +99,7 @@
             align-items: center;
 
             height: calc(var(--kbq-form-field-size-height) - var(--kbq-size-s));
+            min-width: var(--kbq-form-field-size-addon-width);
         }
 
         & .kbq-select__multiline-match-list {

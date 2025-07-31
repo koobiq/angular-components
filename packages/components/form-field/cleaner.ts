@@ -1,16 +1,6 @@
-import { FocusMonitor } from '@angular/cdk/a11y';
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    inject,
-    Input,
-    numberAttribute,
-    OnDestroy,
-    ViewEncapsulation
-} from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * Element to be placed in end of the form field.
@@ -22,29 +12,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',
     template: `
-        <ng-content>
-            <i [autoColor]="true" [color]="'contrast-fade'" kbq-icon="kbq-xmark-circle_16"></i>
-        </ng-content>
+        <ng-content />
     `,
-    styleUrls: ['cleaner.scss'],
+    styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
     host: {
-        class: 'kbq-cleaner',
-        '[attr.tabindex]': 'tabindex'
+        class: 'kbq-cleaner kbq kbq-xmark-circle_16'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqCleaner implements AfterViewInit, OnDestroy {
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
-    protected readonly focusMonitor = inject(FocusMonitor);
+export class KbqCleaner extends KbqIconButton {
+    constructor() {
+        super();
 
-    @Input({ transform: numberAttribute }) tabindex: number = 0;
-
-    ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.nativeElement, true);
-    }
-
-    ngOnDestroy() {
-        this.focusMonitor.stopMonitoring(this.nativeElement);
+        this.color = KbqComponentColors.ContrastFade;
+        this.autoColor = true;
     }
 }

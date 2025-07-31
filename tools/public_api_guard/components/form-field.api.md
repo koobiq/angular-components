@@ -47,21 +47,10 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
 }>>;
 
 // @public
-export class KbqCleaner implements AfterViewInit, OnDestroy {
+export class KbqCleaner extends KbqIconButton {
+    constructor();
     // (undocumented)
-    protected readonly focusMonitor: FocusMonitor;
-    // (undocumented)
-    protected readonly nativeElement: any;
-    // (undocumented)
-    static ngAcceptInputType_tabindex: unknown;
-    // (undocumented)
-    ngAfterViewInit(): void;
-    // (undocumented)
-    ngOnDestroy(): void;
-    // (undocumented)
-    tabindex: number;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], { "tabindex": { "alias": "tabindex"; "required": false; }; }, {}, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCleaner, never>;
 }
@@ -275,10 +264,14 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
     constructor();
     // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
+    // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
     // (undocumented)
     protected readonly focusMonitor: FocusMonitor;
+    // (undocumented)
+    protected hasError: boolean;
     get hidden(): boolean;
     readonly icon: KbqIconButton;
     get iconClass(): string;
@@ -288,9 +281,8 @@ export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewIni
     protected readonly nativeElement: any;
     // (undocumented)
     static ngAcceptInputType_tabindex: unknown;
-    // (undocumented)
+    ngAfterContentInit(): void;
     ngAfterViewInit(): void;
-    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     tabindex: number;
