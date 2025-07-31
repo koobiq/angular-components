@@ -261,7 +261,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 }
 
 // @public
-export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
     constructor();
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
