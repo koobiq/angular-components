@@ -2,6 +2,7 @@ import {
     afterNextRender,
     ChangeDetectionStrategy,
     Component,
+    DestroyRef,
     ElementRef,
     inject,
     output,
@@ -9,6 +10,7 @@ import {
     signal,
     viewChild
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KBQ_ACTIONS_PANEL_DATA, KbqActionsPanel, KbqActionsPanelRef } from '@koobiq/components/actions-panel';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -257,17 +259,14 @@ export class ActionsPanelOverviewExample {
     private readonly exampleTable = viewChild.required(ExampleTable);
     private actionsPanelRef: KbqActionsPanelRef<ExampleActionsPanel> | null;
     private readonly data = signal<ExampleTableItem[]>([]);
+    private readonly destroyRef = inject(DestroyRef);
 
     protected toggleActionsPanel(selectedItems: ExampleTableItem[]): void {
-        if (selectedItems.length === 0) {
-            return this.actionsPanel.close();
-        }
+        if (selectedItems.length === 0) return this.actionsPanel.close();
 
         this.data.set(selectedItems);
 
-        if (this.actionsPanelRef) {
-            return;
-        }
+        if (this.actionsPanelRef) return;
 
         this.actionsPanelRef = this.actionsPanel.open(ExampleActionsPanel, {
             data: this.data,
@@ -278,8 +277,9 @@ export class ActionsPanelOverviewExample {
             console.log('ActionsPanel opened');
         });
 
-        this.actionsPanelRef.afterClosed.subscribe((result) => {
+        this.actionsPanelRef.afterClosed.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((result) => {
             console.log('ActionsPanel closed by action:', result);
+
             this.actionsPanelRef = null;
             this.exampleTable().reset();
         });
