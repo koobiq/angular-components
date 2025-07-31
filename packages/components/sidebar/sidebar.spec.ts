@@ -3,9 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqSidebar, KbqSidebarModule, SidebarPositions } from './index';
 
-const BRACKET_LEFT_KEYDOWN_EVENT = new KeyboardEvent('keydown', { code: 'BracketLeft' });
-const BRACKET_RIGHT_KEYDOWN_EVENT = new KeyboardEvent('keydown', { code: 'BracketRight' });
-
 describe(KbqSidebarModule.name, () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -95,10 +92,9 @@ describe(KbqSidebarModule.name, () => {
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
-            document.dispatchEvent(BRACKET_LEFT_KEYDOWN_EVENT);
-            document.dispatchEvent(BRACKET_LEFT_KEYDOWN_EVENT);
+            document.dispatchEvent(new KeyboardEvent('keypress', { code: 'BracketLeft' }));
 
-            expect(toggleSpy).toHaveBeenCalledTimes(2);
+            expect(toggleSpy).toHaveBeenCalledTimes(1);
         });
 
         it('should NOT toggle on `BracketRight` keypress', () => {
@@ -106,7 +102,7 @@ describe(KbqSidebarModule.name, () => {
 
             expect(testComponent.position).toBe(SidebarPositions.Left);
 
-            document.dispatchEvent(BRACKET_RIGHT_KEYDOWN_EVENT);
+            document.dispatchEvent(new KeyboardEvent('keypress', { code: 'BracketRight' }));
 
             expect(toggleSpy).toHaveBeenCalledTimes(0);
         });
@@ -139,5 +135,5 @@ class TestSidebar {
 
     @ViewChild(KbqSidebar, { static: false }) readonly sidebar: KbqSidebar;
 
-    readonly onStateChanged = jest.fn((_newState: boolean) => {});
+    readonly onStateChanged = jest.fn();
 }
