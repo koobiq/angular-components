@@ -1,7 +1,9 @@
 import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
+    afterNextRender,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     Directive,
@@ -11,8 +13,8 @@ import {
     Input,
     NgZone,
     OnDestroy,
-    OnInit,
     Output,
+    Renderer2,
     ViewEncapsulation
 } from '@angular/core';
 import { isControl, isInput, isLeftBracket, isRightBracket } from '@koobiq/cdk/keycodes';
@@ -73,8 +75,13 @@ export class KbqSidebarClosed {
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
+export class KbqSidebar implements OnDestroy, AfterContentInit {
+    /**
+     * @docs-private
+     */
     protected readonly document = inject<Document>(DOCUMENT);
+    private readonly renderer = inject(Renderer2);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     @Input()
     get opened(): boolean {
@@ -88,10 +95,14 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
 
         this._opened = value;
     }
+
     private _opened: boolean = true;
 
     @Input() position: SidebarPositions;
 
+    /**
+     * @docs-private
+     */
     params: KbqSidebarParams = {
         openedStateWidth: 'inherit',
         openedStateMinWidth: 'inherit',
@@ -102,49 +113,39 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
 
     @Output() readonly stateChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    /**
+     * @docs-private
+     */
     @ContentChild(KbqSidebarOpened, { static: false }) openedContent: KbqSidebarOpened;
 
+    /**
+     * @docs-private
+     */
     @ContentChild(KbqSidebarClosed, { static: false }) closedContent: KbqSidebarClosed;
 
+    /**
+     * @docs-private
+     */
     get animationState(): KbqSidebarAnimationState {
         return this._opened ? KbqSidebarAnimationState.Opened : KbqSidebarAnimationState.Closed;
     }
 
+    /**
+     * @docs-private
+     */
     internalState: boolean = true;
 
-    private documentKeydownListener: (event: KeyboardEvent) => void;
+    private unbindKeydownListener: ReturnType<Renderer2['listen']> | null = null;
 
     constructor(
         private ngZone: NgZone,
         private elementRef: ElementRef
-    ) {}
-
-    ngOnInit(): void {
-        if (this.position === SidebarPositions.Left || this.position === SidebarPositions.Right) {
-            this.registerKeydownListener();
-        }
+    ) {
+        afterNextRender(() => this.registerKeydownListener());
     }
 
     ngOnDestroy(): void {
-        if (this.position === SidebarPositions.Left || this.position === SidebarPositions.Right) {
-            this.unRegisterKeydownListener();
-        }
-    }
-
-    toggle(): void {
-        this.opened = !this.opened;
-    }
-
-    onAnimationStart() {
-        if (this._opened) {
-            this.internalState = this._opened;
-        }
-    }
-
-    onAnimationDone() {
-        this.internalState = this._opened;
-
-        this.stateChanged.emit(this._opened);
+        this.unRegisterKeydownListener();
     }
 
     ngAfterContentInit(): void {
@@ -157,25 +158,53 @@ export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
         };
     }
 
+    toggle(): void {
+        this.opened = !this.opened;
+        this.changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * @docs-private
+     */
+    onAnimationStart() {
+        if (this._opened) {
+            this.internalState = this._opened;
+        }
+    }
+
+    /**
+     * @docs-private
+     */
+    onAnimationDone() {
+        this.internalState = this._opened;
+
+        this.stateChanged.emit(this._opened);
+    }
+
     private registerKeydownListener(): void {
-        this.documentKeydownListener = (event) => {
-            if (isControl(event) || isInput(event)) return;
-
-            if (
-                (this.position === SidebarPositions.Left && isLeftBracket(event)) ||
-                (this.position === SidebarPositions.Right && isRightBracket(event))
-            ) {
-                this.ngZone.run(() => (this._opened = !this._opened));
-            }
-        };
-
         this.ngZone.runOutsideAngular(() => {
-            this.document.addEventListener('keypress', this.documentKeydownListener, true);
+            this.unbindKeydownListener ||= this.renderer.listen(this.document, 'keypress', (event) =>
+                this.handleKeydown(event)
+            );
         });
     }
 
     private unRegisterKeydownListener(): void {
-        this.document.removeEventListener('keypress', this.documentKeydownListener, true);
+        if (this.unbindKeydownListener) {
+            this.unbindKeydownListener();
+            this.unbindKeydownListener = null;
+        }
+    }
+
+    private handleKeydown(event: KeyboardEvent): void {
+        if (isControl(event) || isInput(event)) return;
+
+        if (
+            (this.position === SidebarPositions.Left && isLeftBracket(event)) ||
+            (this.position === SidebarPositions.Right && isRightBracket(event))
+        ) {
+            this.toggle();
+        }
     }
 
     private saveWidth() {
