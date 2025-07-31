@@ -92,7 +92,7 @@ class KbqLinkBaseTestApp {}
 @Component({
     selector: 'kbq-link-print-test-app',
     template: `
-        <a [print]="print" href="http://localhost:3003/" kbq-link>Отчет сканирования</a>
+        <a href="http://localhost:3003/" kbq-link [print]="print">Отчет сканирования</a>
     `
 })
 class KbqLinkPrintTestApp {

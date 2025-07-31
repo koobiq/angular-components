@@ -10,12 +10,12 @@ import { KbqCodeBlock, KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/comp
     imports: [KbqCodeBlockModule],
     template: `
         <kbq-code-block
-            [files]="files"
-            [style.height.px]="350"
             activeFileIndex="2"
             lineNumbers
             canToggleSoftWrap
             softWrap
+            [files]="files"
+            [style.height.px]="350"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

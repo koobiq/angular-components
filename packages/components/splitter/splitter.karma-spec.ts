@@ -25,7 +25,7 @@ function createTestComponent<T>(component: Type<T>) {
 @Component({
     selector: 'kbq-demo-splitter',
     template: `
-        <kbq-splitter #splitter [direction]="direction" [useGhost]="true" style="width: 500px;">
+        <kbq-splitter #splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             <div #areaA kbq-splitter-area style="flex: 1">first</div>
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>

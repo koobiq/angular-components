@@ -9,7 +9,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     selector: 'breadcrumbs-with-wrap-example',
     template: `
         <div [style.max-width.px]="320">
-            <nav [firstItemNegativeMargin]="false" wrapMode="wrap" kbq-breadcrumbs>
+            <nav wrapMode="wrap" kbq-breadcrumbs [firstItemNegativeMargin]="false">
                 @for (breadcrumb of breadcrumbs; track breadcrumb) {
                     <kbq-breadcrumb-item [text]="breadcrumb.label" />
                 }

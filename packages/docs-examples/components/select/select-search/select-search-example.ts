@@ -29,7 +29,7 @@ import { map, startWith } from 'rxjs/operators';
             <kbq-select placeholder="Placeholder">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
-                    <input [formControl]="searchControl" kbqInput type="text" />
+                    <input kbqInput type="text" [formControl]="searchControl" />
                     <kbq-cleaner />
                 </kbq-form-field>
 

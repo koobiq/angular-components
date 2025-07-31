@@ -13,7 +13,7 @@ import {
     selector: 'dev-scrollbar-with-options',
     template: `
         <h4>ScrollbarWithOptions:</h4>
-        <kbq-scrollbar [options]="options" style="width: 200px; height: 200px;">
+        <kbq-scrollbar style="width: 200px; height: 200px;" [options]="options">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />
@@ -69,16 +69,16 @@ export class DevScrollbarWithCustomConfig {
     ],
     template: `
         <h4>ScrollbarScrollToTop:</h4>
-        <kbq-scrollbar #scrollbarRef="kbqScrollbar" (onScroll)="onScroll($event)" style="width: 200px; height: 200px;">
+        <kbq-scrollbar #scrollbarRef="kbqScrollbar" style="width: 200px; height: 200px;" (onScroll)="onScroll($event)">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />
             }
         </kbq-scrollbar>
         <button
+            kbq-button
             [disabled]="!(scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0)"
             (click)="scrollbarRef.scrollTo({ top: 0, behavior: 'smooth' })"
-            kbq-button
         >
             Scroll To Top
         </button>

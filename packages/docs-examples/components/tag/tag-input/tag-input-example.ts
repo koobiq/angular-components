@@ -29,11 +29,11 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
                 }
 
                 <input
+                    placeholder="New tag..."
                     [formControl]="control"
                     [kbqTagInputFor]="tagList"
                     [kbqTagInputSeparatorKeyCodes]="separatorKeysCodes"
                     (kbqTagInputTokenEnd)="onCreate($event)"
-                    placeholder="New tag..."
                 />
 
                 <kbq-cleaner #kbqTagListCleaner (click)="onClear()" />

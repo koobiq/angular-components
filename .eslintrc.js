@@ -238,7 +238,6 @@ const templateRules = {
         '@angular-eslint/template/no-inline-styles': 0,
         '@angular-eslint/template/button-has-type': 0,
         '@angular-eslint/template/no-interpolation-in-attributes': 0,
-        '@angular-eslint/template/attributes-order': 0,
         '@angular-eslint/template/no-any': 0
     }
 };

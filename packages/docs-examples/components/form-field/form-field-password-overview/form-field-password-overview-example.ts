@@ -12,7 +12,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <input [formControl]="formControl" placeholder="Password" kbqInputPassword />
+            <input placeholder="Password" kbqInputPassword [formControl]="formControl" />
 
             <kbq-password-toggle />
 

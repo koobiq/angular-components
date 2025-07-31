@@ -6,10 +6,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
     standalone: true,
     selector: 'kbq-filter-refresher, [kbq-filter-refresher]',
     template: `
-        <button [color]="'contrast'" [kbqStyle]="'transparent'" kbq-button>
+        <button kbq-button [color]="'contrast'" [kbqStyle]="'transparent'">
             <i kbq-icon="kbq-arrow-rotate-right_16"></i>
         </button>
-        <button [color]="'contrast'" [kbqStyle]="'transparent'" kbq-button>
+        <button kbq-button [color]="'contrast'" [kbqStyle]="'transparent'">
             <i kbq-icon="kbq-chevron-down_16"></i>
         </button>
     `,

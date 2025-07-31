@@ -44,7 +44,7 @@ import { DateTime } from 'luxon';
         </kbq-filter-bar>
 
         <ng-template #optionTemplate let-option="option">
-            <i [color]="option.type" kbq-icon="kbq-square_16"></i>
+            <i kbq-icon="kbq-square_16" [color]="option.type"></i>
             {{ option.name }}
         </ng-template>
     `

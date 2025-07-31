@@ -40,7 +40,7 @@ import { DateTime } from 'luxon';
                             [max]="maxDate"
                             [min]="minDate"
                         />
-                        <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
+                        <kbq-datepicker-toggle-icon kbqSuffix [for]="datepicker" />
                         <kbq-datepicker #datepicker [maxDate]="maxDate" [minDate]="minDate" />
                     </kbq-form-field>
                 </div>

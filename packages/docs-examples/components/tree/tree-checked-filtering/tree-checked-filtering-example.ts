@@ -176,7 +176,7 @@ abstract class TreeParams {
     ],
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" kbqInput type="text" />
+            <input kbqInput type="text" [(ngModel)]="filterValue" (ngModelChange)="onFilterChange($event)" />
         </kbq-form-field>
         <div class="layout-margin-top-4xl">
             <kbq-button-toggle-group #group1="kbqButtonToggleGroup" (change)="onToggleClick($event)">
@@ -195,14 +195,14 @@ abstract class TreeParams {
             </kbq-button-toggle-group>
         </div>
         <kbq-tree-selection
-            [(ngModel)]="modelValue"
+            multiple="checkbox"
             [autoSelect]="false"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
+            [(ngModel)]="modelValue"
             (ngModelChange)="onModelValueChange($event)"
-            multiple="checkbox"
         >
-            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <span [innerHTML]="treeControl.getViewValue(node) | mcHighlight: treeControl.filterValue.value"></span>
             </kbq-tree-option>
 

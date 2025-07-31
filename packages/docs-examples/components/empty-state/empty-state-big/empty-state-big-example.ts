@@ -20,8 +20,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <div kbq-empty-state-title>Нет групп</div>
             <div kbq-empty-state-text>{{ emptyStateText }}</div>
             <div kbq-empty-state-actions>
-                <button [color]="'theme'" [kbqStyle]="'transparent'" kbq-button>
-                    <i [color]="'theme'" kbq-icon="kbq-plus_16"></i>
+                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
+                    <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
                     {{ buttonText }}
                 </button>
             </div>

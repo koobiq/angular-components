@@ -13,7 +13,7 @@ import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/m
         KbqButtonModule
     ],
     template: `
-        <button (click)="showConfirmModal()" kbq-button>Open two modals</button>
+        <button kbq-button (click)="showConfirmModal()">Open two modals</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

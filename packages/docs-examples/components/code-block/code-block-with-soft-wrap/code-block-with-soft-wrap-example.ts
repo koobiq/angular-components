@@ -16,7 +16,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     ],
     template: `
         <kbq-toggle class="layout-margin-bottom-m" [(ngModel)]="softWrap">Word wrap</kbq-toggle>
-        <kbq-code-block [(softWrap)]="softWrap" [files]="files" canToggleSoftWrap lineNumbers />
+        <kbq-code-block canToggleSoftWrap lineNumbers [files]="files" [(softWrap)]="softWrap" />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

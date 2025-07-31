@@ -231,11 +231,11 @@ const OPTIONS = [
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
             <kbq-select
+                placeholder="Food"
                 [formControl]="control"
                 [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
                 [panelClass]="panelClass"
-                placeholder="Food"
             >
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value" [disabled]="food.disabled">
@@ -247,9 +247,9 @@ const OPTIONS = [
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -302,9 +302,9 @@ class BasicSelect {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -366,9 +366,9 @@ class ManySelects {}
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -398,7 +398,7 @@ class SelectWithChangeEvent {
         <kbq-form-field>
             <kbq-select #select [(value)]="singleSelectedWithSearch">
                 <kbq-form-field kbqSelectSearch>
-                    <input [formControl]="searchCtrl" kbqInput type="text" />
+                    <input kbqInput type="text" [formControl]="searchCtrl" />
                 </kbq-form-field>
 
                 @for (option of options$ | async; track option) {
@@ -411,9 +411,9 @@ class SelectWithChangeEvent {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -517,7 +517,7 @@ class ThrowsErrorOnInit implements OnInit {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" placeholder="Food">
+            <kbq-select placeholder="Food" [formControl]="control">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -541,7 +541,7 @@ class BasicSelectOnPush {
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" placeholder="Food">
+            <kbq-select placeholder="Food" [formControl]="control">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -564,7 +564,7 @@ class BasicSelectOnPushPreselected {
     selector: 'multi-select',
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" [sortComparator]="sortComparator" multiple placeholder="Food">
+            <kbq-select multiple placeholder="Food" [formControl]="control" [sortComparator]="sortComparator">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -575,9 +575,9 @@ class BasicSelectOnPushPreselected {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -609,11 +609,11 @@ class MultiSelect {
     template: `
         <kbq-form-field>
             <kbq-select
-                [formControl]="control"
-                [sortComparator]="sortComparator"
                 multiple
                 placeholder="Food"
                 style="width: 100px;"
+                [formControl]="control"
+                [sortComparator]="sortComparator"
             >
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
@@ -625,9 +625,9 @@ class MultiSelect {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -697,7 +697,7 @@ class BasicSelectWithTheming {
     selector: 'reset-values-select',
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" placeholder="Food">
+            <kbq-select placeholder="Food" [formControl]="control">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -709,9 +709,9 @@ class BasicSelectWithTheming {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -748,9 +748,9 @@ class ResetValuesSelect {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -772,7 +772,7 @@ class FalsyValueSelect {
     selector: 'select-with-groups',
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" placeholder="Pokemon">
+            <kbq-select placeholder="Pokemon" [formControl]="control">
                 @for (group of pokemonTypes; track group) {
                     <kbq-optgroup [label]="group.name" [disabled]="group.disabled">
                         @for (pokemon of group.pokemon; track pokemon) {
@@ -832,7 +832,7 @@ class SelectWithGroups {
     selector: 'select-with-groups',
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" placeholder="Pokemon">
+            <kbq-select placeholder="Pokemon" [formControl]="control">
                 @for (group of pokemonTypes; track group) {
                     <kbq-optgroup [label]="group.name" [disabled]="group.disabled">
                         @for (pokemon of group.pokemon; track pokemon) {
@@ -896,7 +896,7 @@ class SelectInsideFormGroup {
 @Component({
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selectedFood" placeholder="Food">
+            <kbq-select placeholder="Food" [(value)]="selectedFood">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -922,7 +922,7 @@ class BasicSelectWithoutForms {
 @Component({
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selectedFood" placeholder="Food">
+            <kbq-select placeholder="Food" [(value)]="selectedFood">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -945,7 +945,7 @@ class BasicSelectWithoutFormsPreselected {
 @Component({
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="selectedFoods" placeholder="Food" multiple>
+            <kbq-select placeholder="Food" multiple [(value)]="selectedFoods">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -970,7 +970,7 @@ class BasicSelectWithoutFormsMultiple {
     selector: 'select-with-custom-trigger',
     template: `
         <kbq-form-field>
-            <kbq-select #select="kbqSelect" [formControl]="control" placeholder="Food">
+            <kbq-select #select="kbqSelect" placeholder="Food" [formControl]="control">
                 <kbq-select__trigger>
                     {{ select.selected?.viewValue.split('').reverse().join('') }}
                 </kbq-select__trigger>
@@ -1006,9 +1006,9 @@ class SelectWithCustomTrigger {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -1056,7 +1056,7 @@ class NgModelCompareWithSelect {
 
 @Component({
     template: `
-        <kbq-select [formControl]="control" [errorStateMatcher]="errorStateMatcher" placeholder="Food">
+        <kbq-select placeholder="Food" [formControl]="control" [errorStateMatcher]="errorStateMatcher">
             @for (food of foods; track food) {
                 <kbq-option [value]="food.value">
                     {{ food.viewValue }}
@@ -1078,7 +1078,7 @@ class CustomErrorBehaviorSelect {
 @Component({
     template: `
         <kbq-form-field>
-            <kbq-select [(ngModel)]="selectedFoods" placeholder="Food">
+            <kbq-select placeholder="Food" [(ngModel)]="selectedFoods">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -1105,7 +1105,7 @@ class SingleSelectWithPreselectedArrayValues {
     selector: 'select-without-option-centering',
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" placeholder="Food">
+            <kbq-select placeholder="Food" [formControl]="control">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -1153,11 +1153,11 @@ class SelectWithFormFieldLabel {
         <kbq-form-field>
             <kbq-select>
                 <kbq-option [value]="'value1'">Not long text</kbq-option>
-                <kbq-option [value]="'value2'" style="max-width: 200px;">
+                <kbq-option style="max-width: 200px;" [value]="'value2'">
                     Long long long long Long long long long Long long long long Long long long long Long long long long
                     Long long long long text
                 </kbq-option>
-                <kbq-option [value]="'value3'" style="max-width: 200px;">
+                <kbq-option style="max-width: 200px;" [value]="'value3'">
                     {{ changingLabel }}
                 </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
@@ -1165,9 +1165,9 @@ class SelectWithFormFieldLabel {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -1190,7 +1190,7 @@ class SelectWithLongOptionText {
     selector: 'multiple-select-with-customized-tag-content',
     template: `
         <kbq-form-field>
-            <kbq-select #select [multiple]="true" [value]="selected" style="max-width: 300px">
+            <kbq-select #select style="max-width: 300px" [multiple]="true" [value]="selected">
                 <kbq-option [value]="'value1'">value</kbq-option>
                 <kbq-option [value]="'value2'">value2</kbq-option>
                 <kbq-option [value]="'value3'">value3</kbq-option>
@@ -1202,9 +1202,9 @@ class SelectWithLongOptionText {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -1224,7 +1224,7 @@ class MultiSelectWithCustomizedTagContent {
     selector: 'cdk-virtual-scroll-viewport-select',
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="values" [multiple]="true" [style]="style">
+            <kbq-select [multiple]="true" [style]="style" [(value)]="values">
                 <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
                     <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option }}
@@ -1255,7 +1255,7 @@ class CdkVirtualScrollViewportSelect<T = string> {
     selector: 'cdk-virtual-scroll-viewport-select-option-as-object',
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="values" [multiple]="true" [style]="style">
+            <kbq-select [multiple]="true" [style]="style" [(value)]="values">
                 <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
                     <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option.name }}
@@ -1267,9 +1267,9 @@ class CdkVirtualScrollViewportSelect<T = string> {
                         {{ option.value.name }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 mcTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>

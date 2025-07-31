@@ -15,7 +15,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     ],
     template: `
         <div class="example-icon-item-container layout-column">
-            <i [color]="colors.Theme" kbq-icon-item="kbq-bell_16"></i>
+            <i kbq-icon-item="kbq-bell_16" [color]="colors.Theme"></i>
         </div>
     `
 })

@@ -28,7 +28,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div class="kbq-form-vertical layout-column">
             <div class="kbq-form__label">Invalid</div>
             <kbq-form-field>
-                <kbq-select [formControl]="invalidControl" placeholder="Placeholder">
+                <kbq-select placeholder="Placeholder" [formControl]="invalidControl">
                     <kbq-option [value]="null">None</kbq-option>
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>

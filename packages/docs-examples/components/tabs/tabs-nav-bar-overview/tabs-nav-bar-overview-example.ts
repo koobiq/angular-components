@@ -9,9 +9,9 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     selector: 'tabs-nav-bar-overview-example',
     imports: [KbqTabsModule],
     template: `
-        <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
+        <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
             @for (link of links; track link) {
-                <a [active]="activeLink === link" (click)="activeLink = link" kbqTabLink>
+                <a kbqTabLink [active]="activeLink === link" (click)="activeLink = link">
                     {{ link }}
                 </a>
             }

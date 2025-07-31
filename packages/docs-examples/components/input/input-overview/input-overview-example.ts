@@ -20,9 +20,9 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field>
-            <i [autoColor]="true" kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-            <input [(ngModel)]="value" kbqInput placeholder="Placeholder" />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>
@@ -32,9 +32,9 @@ import { KbqInputModule } from '@koobiq/components/input';
         <br />
 
         <kbq-form-field kbqFormFieldWithoutBorders>
-            <i [autoColor]="true" kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
+            <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix [autoColor]="true"></i>
 
-            <input [(ngModel)]="value" kbqInput placeholder="Placeholder" />
+            <input kbqInput placeholder="Placeholder" [(ngModel)]="value" />
 
             <kbq-cleaner />
         </kbq-form-field>

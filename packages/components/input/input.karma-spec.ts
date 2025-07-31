@@ -23,7 +23,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" kbqInput />
+            <input kbqInput [(ngModel)]="value" />
             <kbq-cleaner />
         </kbq-form-field>
     `

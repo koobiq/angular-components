@@ -19,12 +19,12 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <kbq-toggle [(ngModel)]="filled">Filled</kbq-toggle>
 
         <kbq-code-block
-            [(viewAll)]="viewAll"
-            [filled]="filled()"
-            [files]="files"
             canToggleSoftWrap
             maxHeight="200"
             lineNumbers
+            [filled]="filled()"
+            [files]="files"
+            [(viewAll)]="viewAll"
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

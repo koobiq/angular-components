@@ -17,7 +17,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
     template: `
         <div class="example-tabs-vertical-icons">
             <kbq-tab-group vertical>
-                <kbq-tab [tooltipPlacement]="PopUpPlacements.Left" tooltipTitle="BruteForce" empty>
+                <kbq-tab tooltipTitle="BruteForce" empty [tooltipPlacement]="PopUpPlacements.Left">
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
@@ -42,7 +42,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         Revenge and blackmail, as well as hacktivism, can motivate these attacks.
                     </p>
                 </kbq-tab>
-                <kbq-tab [tooltipPlacement]="PopUpPlacements.Left" tooltipTitle="Complex Attack" empty>
+                <kbq-tab tooltipTitle="Complex Attack" empty [tooltipPlacement]="PopUpPlacements.Left">
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
@@ -61,7 +61,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         weaknesses in an encryption system (if any exist) that would make the task easier.
                     </p>
                 </kbq-tab>
-                <kbq-tab [tooltipPlacement]="PopUpPlacements.Left" tooltipTitle="DDoS" empty>
+                <kbq-tab tooltipTitle="DDoS" empty [tooltipPlacement]="PopUpPlacements.Left">
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>
@@ -86,7 +86,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                         Revenge and blackmail, as well as hacktivism, can motivate these attacks.
                     </p>
                 </kbq-tab>
-                <kbq-tab [tooltipPlacement]="PopUpPlacements.Left" tooltipTitle="DoS" empty>
+                <kbq-tab tooltipTitle="DoS" empty [tooltipPlacement]="PopUpPlacements.Left">
                     <ng-template kbq-tab-label>
                         <i kbq-icon="kbq-bug_16"></i>
                     </ng-template>

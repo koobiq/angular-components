@@ -12,7 +12,7 @@ import { KbqTableModule } from '@koobiq/components/table';
         KbqTableModule
     ],
     template: `
-        <table [border]="true" style="margin-bottom: 32px; width: 100%" kbq-table>
+        <table style="margin-bottom: 32px; width: 100%" kbq-table [border]="true">
             <thead>
                 <tr>
                     <th>Файл</th>

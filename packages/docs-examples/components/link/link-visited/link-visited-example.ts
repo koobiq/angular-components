@@ -13,11 +13,11 @@ import { KbqLinkModule } from '@koobiq/components/link';
         <div style="padding: 16px">
             <a
                 class="kbq-link_external"
-                [useVisited]="visited"
-                (click)="visited = true"
                 href="https://koobiq.io/en/components/link"
                 target="_blank"
                 kbq-link
+                [useVisited]="visited"
+                (click)="visited = true"
             >
                 Отчет от 19.05.2020
             </a>

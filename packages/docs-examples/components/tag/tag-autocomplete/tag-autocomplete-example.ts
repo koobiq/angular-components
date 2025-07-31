@@ -39,6 +39,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                 }
                 <input
                     #tagInput
+                    placeholder="Placeholder"
                     [distinct]="true"
                     [formControl]="control"
                     [kbqAutocomplete]="autocomplete"
@@ -47,7 +48,6 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                     [kbqTagInputSeparatorKeyCodes]="[]"
                     (blur)="addOnBlurFunc($event)"
                     (kbqTagInputTokenEnd)="onCreate($event)"
-                    placeholder="Placeholder"
                 />
 
                 <kbq-cleaner #kbqTagListCleaner (click)="selectedTags.length = 0" />

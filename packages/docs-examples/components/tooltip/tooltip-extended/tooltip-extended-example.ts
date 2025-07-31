@@ -20,10 +20,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     ],
     template: `
         <button
+            kbq-button
             [kbqExtendedTooltip]="tooltipContent"
             [kbqTooltipClass]="'custom-tooltip'"
             [kbqTooltipHeader]="tooltipHeader"
-            kbq-button
         >
             Кнопка со сложным тултипом
         </button>

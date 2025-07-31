@@ -24,18 +24,18 @@ import { map } from 'rxjs/operators';
             <kbq-empty-state class="flex" size="big" style="min-height: 216px">
                 <div kbq-empty-state-icon>
                     <img
-                        [srcset]="srcSet()"
                         alt="Empty state"
                         height="192"
-                        src="assets/images/{{ currentTheme() }}/empty_192.png"
                         width="192"
+                        [srcset]="srcSet()"
+                        src="assets/images/{{ currentTheme() }}/empty_192.png"
                     />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
-                    <button [color]="colors.Theme" [kbqStyle]="styles.Transparent" kbq-button>
-                        <i [color]="'theme'" kbq-icon="kbq-plus_16"></i>
+                    <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                        <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
                         {{ buttonText }}
                     </button>
                 </div>
@@ -44,18 +44,18 @@ import { map } from 'rxjs/operators';
             <kbq-empty-state class="flex" style="min-height: 216px">
                 <div kbq-empty-state-icon>
                     <img
-                        [srcset]="srcSet()"
-                        src="assets/images/{{ currentTheme() }}/empty_192.png"
                         alt="Empty state"
                         width="80"
                         height="80"
+                        [srcset]="srcSet()"
+                        src="assets/images/{{ currentTheme() }}/empty_192.png"
                     />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>
                 <div kbq-empty-state-text>{{ emptyStateText }}</div>
                 <div kbq-empty-state-actions>
-                    <button [color]="colors.Theme" [kbqStyle]="styles.Transparent" kbq-button>
-                        <i [color]="'theme'" kbq-icon="kbq-plus_16"></i>
+                    <button kbq-button [color]="colors.Theme" [kbqStyle]="styles.Transparent">
+                        <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
                         {{ buttonText }}
                     </button>
                 </div>

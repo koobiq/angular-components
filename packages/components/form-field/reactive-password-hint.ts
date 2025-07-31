@@ -24,7 +24,7 @@ import { KbqHint } from './hint';
     selector: 'kbq-reactive-password-hint',
     exportAs: 'kbqReactivePasswordHint',
     template: `
-        <i [ngClass]="icon()" kbq-icon=""></i>
+        <i kbq-icon="" [ngClass]="icon()"></i>
 
         <span class="kbq-hint__text">
             <ng-content />

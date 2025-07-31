@@ -498,7 +498,7 @@ describe('KbqFilterBar', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <kbq-filter-bar [(filter)]="activeFilter" [pipeTemplates]="pipeTemplates">
+        <kbq-filter-bar [pipeTemplates]="pipeTemplates" [(filter)]="activeFilter">
             <kbq-filters
                 [filters]="filters"
                 (onChangeFilter)="onChangeFilter($event)"

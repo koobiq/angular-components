@@ -15,11 +15,11 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
     selector: 'toast-overview-example',
     template: `
         <ng-template #toastAction let-toast>
-            <a (click)="toast.close()" (keydown.enter)="toast.close()" kbq-link pseudo>Обновить</a>
+            <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Обновить</a>
         </ng-template>
 
         <div class="demo-block">
-            <button class="example-button" (click)="showToast(toastAction)" kbq-button>Показать тост</button>
+            <button class="example-button" kbq-button (click)="showToast(toastAction)">Показать тост</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

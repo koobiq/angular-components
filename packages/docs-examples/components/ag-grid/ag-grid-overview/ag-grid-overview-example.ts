@@ -53,15 +53,15 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     selector: 'ag-grid-overview-example',
     template: `
         <ag-grid-angular
+            rowSelection="multiple"
+            kbqAgGridTheme
+            disableCellFocusStyles
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
             [rowData]="rowData"
             [suppressRowClickSelection]="true"
             (firstDataRendered)="onFirstDataRendered($event)"
-            rowSelection="multiple"
-            kbqAgGridTheme
-            disableCellFocusStyles
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -40,11 +40,11 @@ import { timezones } from '../mock';
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
                     <input
-                        [formControl]="searchControl"
-                        [placeholder]="'Город или часовой пояс'"
                         autocomplete="off"
                         kbqInput
                         type="text"
+                        [formControl]="searchControl"
+                        [placeholder]="'Город или часовой пояс'"
                     />
                     <kbq-cleaner />
                 </kbq-form-field>

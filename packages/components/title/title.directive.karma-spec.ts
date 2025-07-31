@@ -150,16 +150,16 @@ class BaseKbqTitleComponent {
     ],
     template: `
         <div id="parent1" style="max-width: 150px" kbq-title>
-            <div class="parent" #kbqTitleContainer>
-                <div class="child" #kbqTitleText>
+            <div #kbqTitleContainer class="parent">
+                <div #kbqTitleText class="child">
                     {{ longValue }}
                 </div>
             </div>
         </div>
 
         <div id="parent2" style="max-width: 600px" kbq-title>
-            <div class="parent" #kbqTitleContainer>
-                <div class="child" #kbqTitleText>
+            <div #kbqTitleContainer class="parent">
+                <div #kbqTitleText class="child">
                     {{ defaultValue }}
                 </div>
             </div>

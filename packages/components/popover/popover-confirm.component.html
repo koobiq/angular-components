@@ -3,9 +3,9 @@
     cdkTrapFocusAutoCapture="true"
     class="kbq-popover-confirm kbq-popover"
     [ngClass]="classMap"
+    [@state]="visibility"
     (@state.done)="animationDone($event)"
     (@state.start)="animationStart()"
-    [@state]="visibility"
 >
     <div class="kbq-popover__container">
         <div class="kbq-popover__content">

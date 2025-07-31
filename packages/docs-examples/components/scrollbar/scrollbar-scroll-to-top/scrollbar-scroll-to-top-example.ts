@@ -13,16 +13,16 @@ import { KbqScrollbarModule } from '@koobiq/components/scrollbar';
         KbqButtonModule
     ],
     template: `
-        <kbq-scrollbar #scrollbarRef="kbqScrollbar" (onScroll)="onScroll($event)" style="width: 200px; height: 200px;">
+        <kbq-scrollbar #scrollbarRef="kbqScrollbar" style="width: 200px; height: 200px;" (onScroll)="onScroll($event)">
             @for (item of items; track item) {
                 <div>{{ item }}</div>
                 <hr />
             }
         </kbq-scrollbar>
         <button
+            kbq-button
             [disabled]="!(scrollbarRef?.contentElement?.nativeElement?.scrollTop || 0 > 0)"
             (click)="scrollbarRef.scrollTo({ top: 0, left: 0, behavior: 'smooth' })"
-            kbq-button
         >
             Scroll To Top
         </button>

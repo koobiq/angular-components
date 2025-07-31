@@ -3,9 +3,9 @@
     class="kbq-popover"
     [cdkTrapFocus]="isTrapFocus"
     [ngClass]="classMap"
+    [@state]="visibility"
     (@state.done)="animationDone($event)"
     (@state.start)="animationStart()"
-    [@state]="visibility"
 >
     <div
         class="kbq-popover__container"

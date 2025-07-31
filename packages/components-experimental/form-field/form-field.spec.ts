@@ -96,7 +96,7 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
     ],
     template: `
         <kbq-form-field>
-            <input [formControl]="control" kbqInput />
+            <input kbqInput [formControl]="control" />
             <kbq-hint id="test-hint-id">Hint</kbq-hint>
             <kbq-error id="test-error-id">Error</kbq-error>
         </kbq-form-field>
@@ -133,7 +133,7 @@ export class InputFormFieldWithPrefixAndSuffix {}
     ],
     template: `
         <kbq-form-field>
-            <input [formControl]="control" kbqInput />
+            <input kbqInput [formControl]="control" />
             <kbq-cleaner />
         </kbq-form-field>
     `
@@ -170,7 +170,7 @@ export class InputFormFieldWithoutFormFieldControl {
     template: `
         <kbq-form-field>
             <kbq-label id="test-label-id">Label</kbq-label>
-            <input [id]="id" kbqInput />
+            <input kbqInput [id]="id" />
         </kbq-form-field>
     `
 })
@@ -195,7 +195,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
-                <input [errorStateMatcher]="errorStateMatcher" formControlName="email" kbqInput />
+                <input formControlName="email" kbqInput [errorStateMatcher]="errorStateMatcher" />
                 <kbq-error id="test-error-id">Error</kbq-error>
                 <input type="submit" />
             </kbq-form-field>
@@ -237,7 +237,7 @@ export class InputFormFieldWithBorderCustomization {
     ],
     template: `
         <kbq-form-field>
-            <input [formControl]="formControl" kbqInputPassword />
+            <input kbqInputPassword [formControl]="formControl" />
             <kbq-password-toggle />
             <kbq-password-hint id="test-password-hint-id" [hasError]="formControl.hasError('minLength')">
                 Min length

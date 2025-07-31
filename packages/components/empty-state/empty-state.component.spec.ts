@@ -50,13 +50,13 @@ describe('KbqEmptyState', () => {
     selector: 'empty-state-with-params',
     template: `
         <kbq-empty-state>
-            <i [fade]="true" [big]="true" [color]="'contrast'" kbq-icon-item="kbq-bell_16" kbq-empty-state-icon></i>
+            <i kbq-icon-item="kbq-bell_16" kbq-empty-state-icon [fade]="true" [big]="true" [color]="'contrast'"></i>
             <div kbq-empty-state-title>kbq-empty-state-title</div>
             <div kbq-empty-state-text>kbq-empty-state-text</div>
             <div kbq-empty-state-actions>
-                <button [kbqStyle]="styles.Transparent" [color]="colors.Theme" kbq-button>Action 1</button>
-                <button [kbqStyle]="styles.Transparent" [color]="colors.Theme" kbq-button>Action 2</button>
-                <button [kbqStyle]="styles.Transparent" [color]="colors.Theme" kbq-button>Action 3</button>
+                <button kbq-button [kbqStyle]="styles.Transparent" [color]="colors.Theme">Action 1</button>
+                <button kbq-button [kbqStyle]="styles.Transparent" [color]="colors.Theme">Action 2</button>
+                <button kbq-button [kbqStyle]="styles.Transparent" [color]="colors.Theme">Action 3</button>
             </div>
         </kbq-empty-state>
     `

@@ -15,7 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     selector: 'list-action-button-example',
     imports: [KbqListModule, FormsModule, KbqDropdownModule, KbqToolTipModule, KbqBadgeModule],
     template: `
-        <kbq-list-selection [(ngModel)]="selected" [autoSelect]="false" style="width: 400px">
+        <kbq-list-selection style="width: 400px" [autoSelect]="false" [(ngModel)]="selected">
             <kbq-list-option [value]="'An element with a very very very long name'">
                 <div>Element with a very very very very very very long name</div>
 
@@ -29,7 +29,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 <kbq-list-option [value]="'Item ' + item">
                     <div class="layout-row layout-align-space-between">
                         Item {{ item }}
-                        <kbq-badge [compact]="true" style="align-self: center" badgeColor="theme">badge</kbq-badge>
+                        <kbq-badge style="align-self: center" badgeColor="theme" [compact]="true">badge</kbq-badge>
                     </div>
                     <kbq-option-action
                         [kbqDropdownTriggerFor]="dropdown"

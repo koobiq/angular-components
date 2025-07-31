@@ -406,7 +406,7 @@ class KbqTooltipDisabledComponent {
         <ng-template #tooltipContent let-ctx>
             <div>{{ ctx.content }}</div>
         </ng-template>
-        <button #trigger [kbqTooltip]="tooltipContent" [kbqTooltipContext]="tooltipContext" kbqTrigger="click">
+        <button #trigger kbqTrigger="click" [kbqTooltip]="tooltipContent" [kbqTooltipContext]="tooltipContext">
             Button
         </button>
     `

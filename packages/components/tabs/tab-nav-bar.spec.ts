@@ -121,7 +121,7 @@ describe(KbqTabNavBar.name, () => {
     template: `
         <nav kbqTabNavBar>
             @for (tab of tabs; track tab; let index = $index) {
-                <a [active]="activeIndex === index" [disabled]="disabled" (click)="activeIndex = index" kbqTabLink>
+                <a kbqTabLink [active]="activeIndex === index" [disabled]="disabled" (click)="activeIndex = index">
                     Tab link {{ label }}
                 </a>
             }
@@ -155,7 +155,7 @@ class TabLinkWithNgIf {
 @Component({
     template: `
         <nav kbqTabNavBar>
-            <a [tabIndex]="tabIndex" kbqTabLink>TabIndex Link</a>
+            <a kbqTabLink [tabIndex]="tabIndex">TabIndex Link</a>
         </nav>
     `
 })

@@ -17,7 +17,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <legend kbqLegend>Field group title</legend>
 
             <kbq-form-field style="width: 96px; min-width: 96px">
-                <kbq-select [formControl]="control" panelWidth="auto">
+                <kbq-select panelWidth="auto" [formControl]="control">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">
                             <span [innerHTML]="option"></span>

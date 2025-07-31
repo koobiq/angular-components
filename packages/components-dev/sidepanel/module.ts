@@ -34,7 +34,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
 
         <kbq-sidepanel-footer>
             <kbq-sidepanel-actions>
-                <button [color]="'contrast'" (click)="openComponentSidepanel()" kbq-button>
+                <button kbq-button [color]="'contrast'" (click)="openComponentSidepanel()">
                     <span>Open another sidepanel</span>
                 </button>
 

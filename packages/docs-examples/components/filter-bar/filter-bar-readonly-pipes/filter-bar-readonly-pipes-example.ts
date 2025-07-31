@@ -35,12 +35,12 @@ import { KbqLinkModule } from '@koobiq/components/link';
 
         <kbq-dl [minWidth]="590">
             <kbq-dt>Пользователь</kbq-dt>
-            <kbq-dd><span (click)="setUser('Пользователь', 'rturov')" kbq-link pseudo>rturov</span></kbq-dd>
+            <kbq-dd><span kbq-link pseudo (click)="setUser('Пользователь', 'rturov')">rturov</span></kbq-dd>
 
             @for (item of readonlyPipes; track item) {
                 <kbq-dt>{{ item.name }}</kbq-dt>
                 <kbq-dd>
-                    <span (click)="addPipe(item.name, item.value)" kbq-link pseudo>{{ item.value }}</span>
+                    <span kbq-link pseudo (click)="addPipe(item.name, item.value)">{{ item.value }}</span>
                 </kbq-dd>
             }
         </kbq-dl>

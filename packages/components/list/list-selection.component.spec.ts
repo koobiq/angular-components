@@ -868,7 +868,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
 
 @Component({
     template: `
-        <mat-selection-list [(ngModel)]="selectedOptions" [compareWith]="compareWith">
+        <mat-selection-list [compareWith]="compareWith" [(ngModel)]="selectedOptions">
             @for (option of options; track option) {
                 <mat-list-option [value]="option">
                     {{ option.label }}
@@ -897,18 +897,18 @@ class SelectionListWithCustomComparator {
     template: `
         <kbq-list-selection
             id="selection-list-1"
+            multiple="keyboard"
             [autoSelect]="false"
             [noUnselectLast]="false"
             (selectionChange)="onValueChange($event)"
-            multiple="keyboard"
         >
-            <kbq-list-option [value]="'inbox'" checkboxPosition="before" disabled="true">
+            <kbq-list-option checkboxPosition="before" disabled="true" [value]="'inbox'">
                 Inbox (disabled selection-option)
             </kbq-list-option>
-            <kbq-list-option id="testSelect" [value]="'starred'" checkboxPosition="before">Starred</kbq-list-option>
-            <kbq-list-option [value]="'sent-mail'" checkboxPosition="before">Sent Mail</kbq-list-option>
+            <kbq-list-option id="testSelect" checkboxPosition="before" [value]="'starred'">Starred</kbq-list-option>
+            <kbq-list-option checkboxPosition="before" [value]="'sent-mail'">Sent Mail</kbq-list-option>
             @if (showLastOption) {
-                <kbq-list-option [value]="'drafts'" checkboxPosition="before">Drafts</kbq-list-option>
+                <kbq-list-option checkboxPosition="before" [value]="'drafts'">Drafts</kbq-list-option>
             }
         </kbq-list-selection>
     `
@@ -921,7 +921,7 @@ class SelectionListWithListOptions {
 
 @Component({
     template: `
-        <kbq-list-selection [(ngModel)]="model" [autoSelect]="false" [noUnselectLast]="false" multiple="checkbox">
+        <kbq-list-selection multiple="checkbox" [autoSelect]="false" [noUnselectLast]="false" [(ngModel)]="model">
             <kbq-list-option [value]="'value1'">value1</kbq-list-option>
             <kbq-list-option [value]="'value2'">value2</kbq-list-option>
             <kbq-list-option [value]="'value3'">value3</kbq-list-option>
@@ -1001,7 +1001,7 @@ class SelectionListWithTabindexInDisabledState {
 
 @Component({
     template: `
-        <kbq-list-selection [(ngModel)]="selectedOptions" [autoSelect]="false">
+        <kbq-list-selection [autoSelect]="false" [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
             <kbq-list-option [value]="'opt2'">Option 2</kbq-list-option>
             @if (renderLastOption) {
@@ -1032,7 +1032,7 @@ class SelectionListWithFormControl {
     template: `
         <kbq-list-selection [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
+            <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })
@@ -1044,7 +1044,7 @@ class SelectionListWithPreselectedOption {
     template: `
         <kbq-list-selection [(ngModel)]="selectedOptions">
             <kbq-list-option [value]="'opt1'">Option 1</kbq-list-option>
-            <kbq-list-option [value]="'opt2'" selected>Option 2</kbq-list-option>
+            <kbq-list-option selected [value]="'opt2'">Option 2</kbq-list-option>
         </kbq-list-selection>
     `
 })

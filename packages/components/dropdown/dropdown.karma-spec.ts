@@ -186,20 +186,20 @@ describe('KbqDropdown', () => {
 
         <kbq-dropdown #root="kbqDropdown" [hasBackdrop]="true" (closed)="rootCloseCallback($event)">
             <button
-                id="level-one-trigger"
                 #levelOneTrigger="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="levelOne"
+                id="level-one-trigger"
                 kbq-dropdown-item
+                [kbqDropdownTriggerFor]="levelOne"
             >
                 One
             </button>
             <button kbq-dropdown-item>Two</button>
             @if (showLazy) {
                 <button
-                    id="lazy-trigger"
                     #lazyTrigger="kbqDropdownTrigger"
-                    [kbqDropdownTriggerFor]="lazy"
+                    id="lazy-trigger"
                     kbq-dropdown-item
+                    [kbqDropdownTriggerFor]="lazy"
                 >
                     Three
                 </button>
@@ -209,10 +209,10 @@ describe('KbqDropdown', () => {
         <kbq-dropdown #levelOne="kbqDropdown" [hasBackdrop]="true" (closed)="levelOneCloseCallback($event)">
             <button kbq-dropdown-item>Four</button>
             <button
-                id="level-two-trigger"
                 #levelTwoTrigger="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="levelTwo"
+                id="level-two-trigger"
                 kbq-dropdown-item
+                [kbqDropdownTriggerFor]="levelTwo"
             >
                 Five
             </button>

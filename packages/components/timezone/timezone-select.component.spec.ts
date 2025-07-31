@@ -82,11 +82,11 @@ const groupedZones: KbqTimezoneGroup[] = [
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
             <kbq-timezone-select
+                placeholder="Timezones"
                 [formControl]="control"
                 [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
                 [panelClass]="panelClass"
-                placeholder="Timezones"
             >
                 @for (group of zones; track group) {
                     <kbq-optgroup [label]="group.countryName">
@@ -125,7 +125,7 @@ class BasicTimezoneSelect {
             <kbq-timezone-select [(value)]="selected">
                 <kbq-form-field kbqFormFieldWithoutBorders kbqSelectSearch>
                     <i kbqPrefix kbq-icon="kbq-magnifying-glass_16"></i>
-                    <input [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" kbqInput type="text" />
+                    <input kbqInput type="text" [formControl]="searchCtrl" [placeholder]="'Город или часовой пояс'" />
                     <kbq-cleaner />
                 </kbq-form-field>
 

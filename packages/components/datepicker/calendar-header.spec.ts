@@ -71,8 +71,8 @@ describe('KbqCalendarHeader', () => {
 @Component({
     template: `
         <kbq-calendar
-            [(selected)]="selected"
             [startAt]="startDate"
+            [(selected)]="selected"
             (yearSelected)="selectedYear = $event"
             (monthSelected)="selectedMonth = $event"
         />

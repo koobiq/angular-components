@@ -7,7 +7,7 @@ import { KbqFilter } from './filter-bar.types';
     standalone: true,
     selector: 'kbq-filter-reset',
     template: `
-        <button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()" kbq-button>
+        <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'" (click)="resetFilter()">
             <ng-content>{{ localeData }}</ng-content>
         </button>
     `,

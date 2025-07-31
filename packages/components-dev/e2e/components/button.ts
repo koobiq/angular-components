@@ -32,15 +32,15 @@ type DevButton = DevButtonState & DevButtonStyle;
     },
     template: `
         <div class="dev-options">
-            <kbq-checkbox [(ngModel)]="showPrefixIcon" data-testid="e2eShowPrefixIcon">show prefix icon</kbq-checkbox>
+            <kbq-checkbox data-testid="e2eShowPrefixIcon" [(ngModel)]="showPrefixIcon">show prefix icon</kbq-checkbox>
             <kbq-checkbox
-                [(ngModel)]="showTitle"
-                [disabled]="!showPrefixIcon() && !showSuffixIcon()"
                 data-testid="e2eShowTitle"
+                [disabled]="!showPrefixIcon() && !showSuffixIcon()"
+                [(ngModel)]="showTitle"
             >
                 show title
             </kbq-checkbox>
-            <kbq-checkbox [(ngModel)]="showSuffixIcon" data-testid="e2eShowSuffixIcon">show suffix icon</kbq-checkbox>
+            <kbq-checkbox data-testid="e2eShowSuffixIcon" [(ngModel)]="showSuffixIcon">show suffix icon</kbq-checkbox>
         </div>
 
         <table>
@@ -49,6 +49,7 @@ type DevButton = DevButtonState & DevButtonStyle;
                     @for (button of buttons; track button.title) {
                         <td>
                             <button
+                                kbq-button
                                 [class.cdk-keyboard-focused]="button.focused"
                                 [class.kbq-active]="button.active"
                                 [class.kbq-hover]="button.hover"
@@ -56,7 +57,6 @@ type DevButton = DevButtonState & DevButtonStyle;
                                 [disabled]="button.disabled"
                                 [kbqStyle]="button.style!"
                                 [color]="button.color!"
-                                kbq-button
                             >
                                 @if (showPrefixIcon()) {
                                     <i kbq-icon="kbq-play_16"></i>

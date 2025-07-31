@@ -21,10 +21,10 @@ import { KbqToastService } from '@koobiq/components/toast';
     providers: [KbqActionsPanel],
     selector: 'actions-panel-close-example',
     template: `
-        <button (click)="open()" kbq-button>open</button>
+        <button kbq-button (click)="open()">open</button>
 
         <ng-template let-data>
-            <button (click)="onAction('Execute and close')" color="contrast" kbq-button>
+            <button color="contrast" kbq-button (click)="onAction('Execute and close')">
                 <i kbq-icon="kbq-user_16"></i>
                 Execute and close
             </button>

@@ -169,7 +169,7 @@ class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
     standalone: true,
     selector: 'tree-lazyload-example',
     template: `
-        <kbq-tree-selection [(ngModel)]="modelValue" [dataSource]="dataSource" [treeControl]="treeControl">
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>

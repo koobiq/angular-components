@@ -606,8 +606,8 @@ describe('nested KbqTabGroup with enabled animations', () => {
     template: `
         <kbq-tab-group
             class="tab-group"
-            [(selectedIndex)]="selectedIndex"
             [headerPosition]="headerPosition"
+            [(selectedIndex)]="selectedIndex"
             (animationDone)="animationDone()"
             (focusChange)="handleFocus($event)"
             (selectedTabChange)="handleSelection($event)"

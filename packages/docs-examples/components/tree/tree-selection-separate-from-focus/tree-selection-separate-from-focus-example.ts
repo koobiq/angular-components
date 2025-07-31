@@ -122,16 +122,16 @@ export const DATA_OBJECT = [
         <div class="layout-row">
             <div class="flex-30">
                 <kbq-tree-selection
-                    [(ngModel)]="modelValue"
                     [autoSelect]="false"
                     [dataSource]="dataSource"
                     [treeControl]="treeControl"
+                    [(ngModel)]="modelValue"
                 >
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node"
+                        kbqTreeNodePadding
                         [class.kbq-checked]="node.checked"
                         (keydown.space)="toggleCheckboxState($event, node)"
-                        kbqTreeNodePadding
                     >
                         <kbq-pseudo-checkbox [state]="node.checked" (click)="toggleCheckboxState($event, node)" />
                         <span [innerHTML]="treeControl.getViewValue(node)"></span>
@@ -139,9 +139,9 @@ export const DATA_OBJECT = [
 
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
+                        kbqTreeNodePadding
                         [class.kbq-checked]="node.checked"
                         (keydown.space)="toggleCheckboxState($event, node)"
-                        kbqTreeNodePadding
                     >
                         <kbq-tree-node-toggle [node]="node" />
 

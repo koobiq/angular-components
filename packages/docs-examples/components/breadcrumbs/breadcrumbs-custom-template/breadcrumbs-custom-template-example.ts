@@ -14,8 +14,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
         <nav kbq-breadcrumbs>
             @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
-                    <a *kbqBreadcrumbView [routerLink]="breadcrumb.url" tabindex="-1">
-                        <button [disabled]="last" [attr.aria-current]="last ? 'page' : null" kbq-button kbqBreadcrumb>
+                    <a *kbqBreadcrumbView tabindex="-1" [routerLink]="breadcrumb.url">
+                        <button kbq-button kbqBreadcrumb [disabled]="last" [attr.aria-current]="last ? 'page' : null">
                             {{ breadcrumb.label }}
                             <i kbq-icon="kbq-file-code-o_16"></i>
                         </button>

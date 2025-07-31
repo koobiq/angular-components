@@ -28,7 +28,7 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text text text text text text text
             text text text text text text text text text text text text text text text
-            <kbq-loader-overlay [size]="size()" text="Loading data..." />
+            <kbq-loader-overlay text="Loading data..." [size]="size()" />
         </div>
     `
 })

@@ -34,10 +34,10 @@ import { KbqLinkModule } from '@koobiq/components/link';
         <div style="padding: 16px">
             <a
                 class="kbq-link_external"
-                [disabled]="disabled"
                 href="https://koobiq.io/en/components/link"
                 target="_blank"
                 kbq-link
+                [disabled]="disabled"
             >
                 <i kbq-icon="kbq-calendar-o_16"></i>
                 <span class="kbq-link__text">Отчет сканирования</span>

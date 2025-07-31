@@ -107,12 +107,12 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-tree-selection
-            [(ngModel)]="modelValue"
+            multiple="keyboard"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
-            multiple="keyboard"
+            [(ngModel)]="modelValue"
         >
-            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 

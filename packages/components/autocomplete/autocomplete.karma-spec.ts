@@ -267,17 +267,17 @@ describe('KbqAutocomplete', () => {
     template: `
         <kbq-form-field [style.width.px]="width">
             <input
+                kbqInput
+                placeholder="State"
                 [kbqAutocomplete]="auto"
                 [kbqAutocompleteDisabled]="autocompleteDisabled"
                 [formControl]="stateCtrl"
-                kbqInput
-                placeholder="State"
             />
         </kbq-form-field>
 
         <kbq-autocomplete
-            class="class-one class-two"
             #auto="kbqAutocomplete"
+            class="class-one class-two"
             [displayWith]="displayFn"
             (opened)="openedSpy()"
             (closed)="closedSpy()"

@@ -53,11 +53,11 @@ const filterEvents = (emits: KbqScrollbarEvents, events: KbqScrollbarEvents) =>
     template: `
         <div
             #content
+            data-overlayscrollbars-contents=""
+            kbqScrollbar
             [options]="options"
             [events]="mergeEvents()"
             [defer]="defer"
-            data-overlayscrollbars-contents=""
-            kbqScrollbar
         >
             <ng-content />
         </div>

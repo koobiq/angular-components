@@ -13,7 +13,7 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
         KbqButtonModule
     ],
     template: `
-        <button (click)="createModal(title, content, footer)" kbq-button>Open Modal</button>
+        <button kbq-button (click)="createModal(title, content, footer)">Open Modal</button>
 
         <ng-template #title>DoS attack</ng-template>
 
@@ -25,19 +25,19 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
 
         <ng-template #footer>
             <div class="layout-row flex-grow layout-align-space-between">
-                <button (click)="destroyModal()" kbq-button>Add. action</button>
+                <button kbq-button (click)="destroyModal()">Add. action</button>
 
                 <div>
                     <button
                         class="layout-margin-right-m"
-                        [color]="'contrast'"
-                        (click)="destroyModal()"
                         kbq-button
                         kbq-modal-main-action
+                        [color]="'contrast'"
+                        (click)="destroyModal()"
                     >
                         Save
                     </button>
-                    <button (click)="destroyModal()" kbq-button>Cancel</button>
+                    <button kbq-button (click)="destroyModal()">Cancel</button>
                 </div>
             </div>
         </ng-template>

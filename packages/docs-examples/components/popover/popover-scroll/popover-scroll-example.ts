@@ -32,32 +32,32 @@ import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover'
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap" style="gap: 16px">
-                <button [color]="'contrast'" (click)="activePopover.hide(0)" kbq-button>Сохранить</button>
-                <button (click)="activePopover.hide(0)" kbq-button>Отмена</button>
+                <button kbq-button [color]="'contrast'" (click)="activePopover.hide(0)">Сохранить</button>
+                <button kbq-button (click)="activePopover.hide(0)">Отмена</button>
             </div>
         </ng-template>
 
         <div class="layout-row layout-wrap" style="gap: 16px">
             <button
                 #kbqNoClosePopover="kbqPopover"
+                kbq-button
+                kbqPopover
                 [kbqPopoverClass]="'popover-scroll-example'"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqNoClosePopover"
-                kbq-button
-                kbqPopover
             >
                 Поповер не закрывается при прокрутке
             </button>
             <button
                 #kbqClosePopover="kbqPopover"
+                kbq-button
+                kbqPopover
                 [closeOnScroll]="true"
                 [kbqPopoverClass]="'popover-scroll-example'"
                 [kbqPopoverContent]="customContent"
                 [kbqPopoverFooter]="customFooter"
                 (click)="activePopover = kbqClosePopover"
-                kbq-button
-                kbqPopover
             >
                 Закрывается при прокрутке
             </button>

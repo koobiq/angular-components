@@ -23,12 +23,12 @@ import { KbqFilterBar } from './filter-bar';
     selector: 'kbq-filter-search, [kbq-filter-search]',
     template: `
         <button
+            kbq-button
             [class.kbq-filter_hidden]="isSearchActive"
             [color]="'contrast'"
             [kbqStyle]="'transparent'"
-            (click)="openSearch()"
-            kbq-button
             kbqTooltip="{{ localeData.tooltip }}"
+            (click)="openSearch()"
         >
             <i kbq-icon="kbq-magnifying-glass_16"></i>
         </button>
@@ -37,12 +37,12 @@ import { KbqFilterBar } from './filter-bar';
             <i kbq-icon="kbq-magnifying-glass_16" kbqPrefix></i>
 
             <input
-                [formControl]="searchControl"
-                (blur)="onBlur()"
-                (keydown.escape)="onEscape()"
                 autocomplete="off"
                 kbqInput
+                [formControl]="searchControl"
                 placeholder="{{ localeData.placeholder }}"
+                (blur)="onBlur()"
+                (keydown.escape)="onEscape()"
             />
 
             <kbq-cleaner (click)="onClear()" />

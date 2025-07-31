@@ -1641,8 +1641,8 @@ describe('KbqDropdown default overrides', () => {
     template: `
         <button #triggerEl [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown
-            class="custom-one custom-two"
             #dropdown="kbqDropdown"
+            class="custom-one custom-two"
             [backdropClass]="backdropClass"
             [hasBackdrop]="true"
             (closed)="closeCallback($event)"
@@ -1760,20 +1760,20 @@ class CustomDropdown {
 
         <kbq-dropdown #root="kbqDropdown" [hasBackdrop]="true" (closed)="rootCloseCallback($event)">
             <button
-                id="level-one-trigger"
                 #levelOneTrigger="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="levelOne"
+                id="level-one-trigger"
                 kbq-dropdown-item
+                [kbqDropdownTriggerFor]="levelOne"
             >
                 One
             </button>
             <button kbq-dropdown-item>Two</button>
             @if (showLazy) {
                 <button
-                    id="lazy-trigger"
                     #lazyTrigger="kbqDropdownTrigger"
-                    [kbqDropdownTriggerFor]="lazy"
+                    id="lazy-trigger"
                     kbq-dropdown-item
+                    [kbqDropdownTriggerFor]="lazy"
                 >
                     Three
                 </button>
@@ -1783,10 +1783,10 @@ class CustomDropdown {
         <kbq-dropdown #levelOne="kbqDropdown" [hasBackdrop]="true" (closed)="levelOneCloseCallback($event)">
             <button kbq-dropdown-item>Four</button>
             <button
-                id="level-two-trigger"
                 #levelTwoTrigger="kbqDropdownTrigger"
-                [kbqDropdownTriggerFor]="levelTwo"
+                id="level-two-trigger"
                 kbq-dropdown-item
+                [kbqDropdownTriggerFor]="levelTwo"
             >
                 Five
             </button>
@@ -1831,7 +1831,7 @@ class NestedDropdown {
         <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
         <kbq-dropdown #root="kbqDropdown">
             @for (item of items; track item) {
-                <button class="level-one-trigger" [kbqDropdownTriggerFor]="levelOne" kbq-dropdown-item>
+                <button class="level-one-trigger" kbq-dropdown-item [kbqDropdownTriggerFor]="levelOne">
                     {{ item }}
                 </button>
             }
@@ -1855,7 +1855,7 @@ class NestedDropdownRepeater {
         <button #rootTriggerEl [kbqDropdownTriggerFor]="root">Toggle dropdown</button>
 
         <kbq-dropdown #root="kbqDropdown">
-            <button class="level-one-trigger" [kbqDropdownTriggerFor]="levelOne" kbq-dropdown-item>One</button>
+            <button class="level-one-trigger" kbq-dropdown-item [kbqDropdownTriggerFor]="levelOne">One</button>
 
             <kbq-dropdown #levelOne="kbqDropdown">
                 <button class="level-two-item" kbq-dropdown-item>Two</button>

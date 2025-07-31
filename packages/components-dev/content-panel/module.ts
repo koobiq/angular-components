@@ -20,20 +20,20 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-content-panel-overview',
     template: `
         <kbq-content-panel-container
-            class="example-content-panel-container"
             #contentPanelContainer="kbqContentPanelContainer"
+            class="example-content-panel-container"
         >
             <div class="example-content-panel-container__content">
-                <button (click)="contentPanelContainer.toggle()" kbq-button>Toggle</button>
+                <button kbq-button (click)="contentPanelContainer.toggle()">Toggle</button>
             </div>
             <kbq-content-panel>
                 <kbq-content-panel-aside>
                     @for (_b of asideButtons; track $index) {
                         <button
+                            kbq-button
                             [class.kbq-active]="$index === 0"
                             [color]="componentColors.Contrast"
                             [kbqStyle]="buttonStyles.Transparent"
-                            kbq-button
                         >
                             <i kbq-icon="kbq-bug_16"></i>
                         </button>
@@ -47,7 +47,7 @@ import { DevThemeToggle } from '../theme-toggle';
                     </div>
                     <div class="example-content-header-actions" kbqContentPanelHeaderActions>
                         @for (_i of headerActions; track $index) {
-                            <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                            <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
                                 <i kbq-icon="kbq-link_16"></i>
                             </button>
                         }
@@ -71,7 +71,7 @@ import { DevThemeToggle } from '../theme-toggle';
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer class="example-content-panel-footer">
                     @for (_a of footerActions; track $index) {
-                        <button [color]="componentColors.ContrastFade" kbq-button>Button {{ $index }}</button>
+                        <button kbq-button [color]="componentColors.ContrastFade">Button {{ $index }}</button>
                     }
                 </kbq-content-panel-footer>
             </kbq-content-panel>

@@ -32,28 +32,28 @@ type ExampleAction = {
     providers: [KbqActionsPanel],
     selector: 'example-actions-panel',
     template: `
-        <button (click)="open()" kbq-button>open</button>
+        <button kbq-button (click)="open()">open</button>
 
         <ng-template let-data>
             <div
                 #kbqOverflowItems="kbqOverflowItems"
-                [additionalResizeObserverTargets]="additionalResizeObserverTargets"
                 kbqOverflowItems
+                [additionalResizeObserverTargets]="additionalResizeObserverTargets"
             >
-                <div [kbqOverflowItem]="action.Counter" order="99">
+                <div order="99" [kbqOverflowItem]="action.Counter">
                     <div class="example-counter">Selected: {{ data.length }}</div>
                     <kbq-divider class="example-divider-vertical" [vertical]="true" />
                 </div>
 
                 @for (action of actions; track action.id) {
                     <button
+                        color="contrast"
+                        kbq-button
                         [kbqOverflowItem]="action.id"
                         [class.layout-margin-left-xxs]="!$first"
                         (click)="onAction(action)"
-                        color="contrast"
-                        kbq-button
                     >
-                        <i [class]="action.icon" kbq-icon></i>
+                        <i kbq-icon [class]="action.icon"></i>
                         {{ action.id }}
                     </button>
                 }
@@ -61,7 +61,7 @@ type ExampleAction = {
                 @let hiddenItemIDs = kbqOverflowItems.hiddenItemIDs();
                 <!-- ignores when only action.Counter is hidden -->
                 @if (hiddenItemIDs.size > 1) {
-                    <button [kbqDropdownTriggerFor]="dropdown" kbqOverflowItemsResult color="contrast" kbq-button>
+                    <button kbqOverflowItemsResult color="contrast" kbq-button [kbqDropdownTriggerFor]="dropdown">
                         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
                     </button>
                 }
@@ -72,8 +72,8 @@ type ExampleAction = {
 
                     @for (action of actions; track action.id) {
                         @if (hiddenItemIDs.has(action.id)) {
-                            <button (click)="onAction(action)" kbq-dropdown-item>
-                                <i [class]="action.icon" kbq-icon></i>
+                            <button kbq-dropdown-item (click)="onAction(action)">
+                                <i kbq-icon [class]="action.icon"></i>
                                 {{ action.id }}
                             </button>
                         }

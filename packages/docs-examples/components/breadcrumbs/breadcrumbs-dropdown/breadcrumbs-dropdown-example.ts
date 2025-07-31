@@ -14,33 +14,33 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <nav kbq-breadcrumbs>
             <kbq-breadcrumb-item
-                [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
                 routerLink="./info-sec"
                 text="Information Security"
+                [queryParams]="{ queryParams: 'queryParams' }"
+                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
-                [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
                 routerLink="./access-control"
                 text="Access Control"
+                [queryParams]="{ queryParams: 'queryParams' }"
+                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item
-                [queryParams]="{ queryParams: 'queryParams' }"
-                [fragment]="'fragment'"
                 routerLink="./authorization"
                 text="Authorization"
+                [queryParams]="{ queryParams: 'queryParams' }"
+                [fragment]="'fragment'"
             />
 
             <kbq-breadcrumb-item>
                 <div *kbqBreadcrumbView>
                     <button
-                        [kbqDropdownTriggerFor]="siblingsListDropdown"
-                        [openByArrowDown]="false"
                         kbq-button
                         kbqBreadcrumb
+                        [kbqDropdownTriggerFor]="siblingsListDropdown"
+                        [openByArrowDown]="false"
                     >
                         Access Control
                         <i kbq-icon="kbq-chevron-down-s_16"></i>

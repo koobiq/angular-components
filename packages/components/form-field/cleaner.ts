@@ -11,7 +11,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',
     template: `
-        <i [autoColor]="true" color="contrast-fade" kbq-icon-button="kbq-xmark-circle_16"></i>
+        <i color="contrast-fade" kbq-icon-button="kbq-xmark-circle_16" [autoColor]="true"></i>
     `,
     styleUrls: ['cleaner.scss'],
     host: {

@@ -1283,7 +1283,7 @@ class DatepickerWithStartAt {
 
 @Component({
     template: `
-        <input [(ngModel)]="selected" [kbqDatepicker]="d" />
+        <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d />
     `
 })
@@ -1334,7 +1334,7 @@ class DatepickerWithCustomIcon {}
 
 @Component({
     template: `
-        <input [(ngModel)]="date" [kbqDatepicker]="d" [min]="minDate" [max]="maxDate" />
+        <input [kbqDatepicker]="d" [min]="minDate" [max]="maxDate" [(ngModel)]="date" />
         <kbq-datepicker-toggle [for]="d" />
         <kbq-datepicker #d />
     `
@@ -1348,7 +1348,7 @@ class DatepickerWithMinAndMaxValidation {
 
 @Component({
     template: `
-        <input [(ngModel)]="date" [kbqDatepicker]="d" [kbqDatepickerFilter]="filter" />
+        <input [kbqDatepicker]="d" [kbqDatepickerFilter]="filter" [(ngModel)]="date" />
         <kbq-datepicker-toggle [for]="d" />
         <kbq-datepicker #d />
     `
@@ -1362,8 +1362,8 @@ class DatepickerWithFilterAndValidation {
 @Component({
     template: `
         <input
-            [(ngModel)]="value"
             [kbqDatepicker]="d"
+            [(ngModel)]="value"
             (change)="onChange()"
             (dateChange)="onDateChange($event)"
             (dateInput)="onDateInput()"
@@ -1384,7 +1384,7 @@ class DatepickerWithChangeAndInputEvents {
 
 @Component({
     template: `
-        <input [(ngModel)]="date" [kbqDatepicker]="d" />
+        <input [kbqDatepicker]="d" [(ngModel)]="date" />
         <kbq-datepicker #d />
     `
 })
@@ -1396,7 +1396,7 @@ class DatepickerWithi18n {
 
 @Component({
     template: `
-        <input [(ngModel)]="value" [kbqDatepicker]="d" [min]="min" [max]="max" />
+        <input [kbqDatepicker]="d" [min]="min" [max]="max" [(ngModel)]="value" />
         <kbq-datepicker #d [startAt]="startAt" />
     `
 })
@@ -1411,7 +1411,7 @@ class DatepickerWithISOStrings {
 
 @Component({
     template: `
-        <input [(ngModel)]="selected" [kbqDatepicker]="d" />
+        <input [kbqDatepicker]="d" [(ngModel)]="selected" />
         <kbq-datepicker #d (opened)="openedSpy()" (closed)="closedSpy()" />
     `
 })

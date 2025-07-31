@@ -20,7 +20,7 @@ import { DateTime } from 'luxon';
         <div class="docs-row">
             <kbq-form-field #tooltip="kbqWarningTooltip" [kbqWarningTooltip]="'Только цифры'">
                 <i kbq-icon="kbq-clock_16" kbqPrefix></i>
-                <input [(ngModel)]="time" [format]="timeFormats.HHmm" [kbqValidationTooltip]="tooltip" kbqTimepicker />
+                <input kbqTimepicker [format]="timeFormats.HHmm" [kbqValidationTooltip]="tooltip" [(ngModel)]="time" />
             </kbq-form-field>
         </div>
     `

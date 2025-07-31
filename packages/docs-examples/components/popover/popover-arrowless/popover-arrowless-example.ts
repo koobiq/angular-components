@@ -33,19 +33,19 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 
         <ng-template #customFooter>
             <div class="layout-row layout-wrap layout-gap-l">
-                <button (click)="kbqPopover.hide(0)" color="contrast" kbq-button>Save</button>
-                <button (click)="kbqPopover.hide(0)" kbq-button>Cancel</button>
+                <button color="contrast" kbq-button (click)="kbqPopover.hide(0)">Save</button>
+                <button kbq-button (click)="kbqPopover.hide(0)">Cancel</button>
             </div>
         </ng-template>
 
         <button
             #kbqPopover="kbqPopover"
+            kbq-button
+            kbqPopover
             [kbqPopoverContent]="customContent"
             [kbqPopoverFooter]="customFooter"
             [kbqPopoverSize]="popoverSize"
             [kbqPopoverArrow]="false"
-            kbq-button
-            kbqPopover
         >
             Open popover
         </button>

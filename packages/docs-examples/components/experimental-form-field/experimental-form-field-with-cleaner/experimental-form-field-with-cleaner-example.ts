@@ -14,7 +14,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field>
-            <input [formControl]="formControl" kbqInput placeholder="Enter some input" />
+            <input kbqInput placeholder="Enter some input" [formControl]="formControl" />
             <kbq-cleaner />
         </kbq-form-field>
     `,

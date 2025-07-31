@@ -13,13 +13,13 @@ import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/m
         KbqButtonModule
     ],
     template: `
-        <button (click)="showModal(modalSize.Small)" kbq-button>Small</button>
+        <button kbq-button (click)="showModal(modalSize.Small)">Small</button>
 
-        <button (click)="showModal(modalSize.Medium)" kbq-button>Medium</button>
+        <button kbq-button (click)="showModal(modalSize.Medium)">Medium</button>
 
-        <button (click)="showModal(modalSize.Large)" kbq-button>Large</button>
+        <button kbq-button (click)="showModal(modalSize.Large)">Large</button>
 
-        <button (click)="showCustomModal()" kbq-button>Custom width</button>
+        <button kbq-button (click)="showCustomModal()">Custom width</button>
     `,
     styles: [
         `

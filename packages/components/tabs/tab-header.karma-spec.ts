@@ -58,10 +58,10 @@ interface ITab {
                 @for (tab of tabs; track tab; let i = $index) {
                     <div
                         class="label-content"
-                        [disabled]="!!tab.disabled"
-                        (click)="selectedIndex = i"
                         kbqTabLabelWrapper
                         style="min-width: 30px; width: 30px"
+                        [disabled]="!!tab.disabled"
+                        (click)="selectedIndex = i"
                     >
                         {{ tab.label }}
                     </div>

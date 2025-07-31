@@ -619,7 +619,7 @@ class SingleToggle {
     ],
     template: `
         <form>
-            <kbq-toggle [(ngModel)]="isGood" name="cb">Be good</kbq-toggle>
+            <kbq-toggle name="cb" [(ngModel)]="isGood">Be good</kbq-toggle>
         </form>
     `
 })

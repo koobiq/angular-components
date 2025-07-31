@@ -116,19 +116,19 @@ export const DATA_OBJECT = {
         <kbq-form-field>
             <kbq-tree-select [formControl]="control" [multiple]="true" (selectionChange)="onSelectionChange($event)">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
-                    <kbq-tree-option *kbqTreeNodeDef="let node" [checkboxThirdState]="true" kbqTreeNodePadding>
+                    <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [checkboxThirdState]="true">
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>
 
                     <kbq-tree-option
                         *kbqTreeNodeDef="let node; when: hasChild"
-                        [checkboxThirdState]="true"
                         kbqTreeNodePadding
+                        [checkboxThirdState]="true"
                     >
                         <i
-                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                             kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                         ></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>

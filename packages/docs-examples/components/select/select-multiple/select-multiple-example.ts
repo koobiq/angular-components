@@ -12,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [value]="selected" multiple placeholder="Placeholder">
+            <kbq-select multiple placeholder="Placeholder" [value]="selected">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }

@@ -27,7 +27,7 @@ export class CustomModalComponent {
         KbqButtonModule
     ],
     template: `
-        <button (click)="createLongModal()" kbq-button>Open Modal</button>
+        <button kbq-button (click)="createLongModal()">Open Modal</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

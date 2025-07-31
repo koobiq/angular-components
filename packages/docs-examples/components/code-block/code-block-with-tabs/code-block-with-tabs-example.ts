@@ -20,13 +20,13 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
         <kbq-toggle [(ngModel)]="lineNumbers">Line numbers</kbq-toggle>
 
         <kbq-code-block
+            activeFileIndex="1"
+            canToggleSoftWrap
+            canDownload
             [files]="files"
             [hideTabs]="hideTabs()"
             [filled]="filled()"
             [lineNumbers]="lineNumbers()"
-            activeFileIndex="1"
-            canToggleSoftWrap
-            canDownload
         />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

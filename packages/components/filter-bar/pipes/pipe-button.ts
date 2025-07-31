@@ -22,14 +22,14 @@ import { KbqPipeState } from './pipe-state';
     template: `
         <button
             class="kbq-pipe__remove-button"
+            kbq-button
             [disabled]="pipe.data.disabled"
             [kbqPipeState]="pipe.data"
             [kbqTooltipDisabled]="pipe.data.disabled"
-            (click)="pipe.data.cleanable ? pipe.onClear() : pipe.onRemove()"
-            kbq-button
             kbqTooltip="{{ pipe.data.cleanable ? localeData.clearButtonTooltip : localeData.removeButtonTooltip }}"
+            (click)="pipe.data.cleanable ? pipe.onClear() : pipe.onRemove()"
         >
-            <i [color]="pipe.data.disabled ? 'empty' : 'contrast'" kbq-icon="kbq-xmark-s_16"></i>
+            <i kbq-icon="kbq-xmark-s_16" [color]="pipe.data.disabled ? 'empty' : 'contrast'"></i>
         </button>
     `,
     styleUrl: 'pipe-button.scss',

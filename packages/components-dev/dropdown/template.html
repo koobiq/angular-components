@@ -20,7 +20,7 @@
     </ng-template>
 </kbq-dropdown>
 <kbq-dropdown #domainsDropdown>
-    <ng-template kbqDropdownContent let-domains="domains">
+    <ng-template let-domains="domains" kbqDropdownContent>
         @for (domain of domains; track domain) {
             <button kbq-dropdown-item (click)="selectDomain(domain.id)">
                 {{ domain.name }}
@@ -110,7 +110,7 @@
 </button>
 
 <kbq-dropdown #appDropdownLazy="kbqDropdown">
-    <ng-template kbqDropdownContent let-someValue="someValue">
+    <ng-template let-someValue="someValue" kbqDropdownContent>
         <button kbq-dropdown-item>
             Point 1
             <span class="kbq-dropdown-item__caption">Some info</span>

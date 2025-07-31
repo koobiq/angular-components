@@ -16,7 +16,7 @@ import { KbqDlModule } from '@koobiq/components/dl';
             @for (size of sizes; track size) {
                 <kbq-dt class="kbq-text-normal">{{ size | titlecase }}</kbq-dt>
                 <kbq-dd>
-                    <nav [size]="size" kbq-breadcrumbs>
+                    <nav kbq-breadcrumbs [size]="size">
                         @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                             <kbq-breadcrumb-item
                                 [routerLink]="breadcrumb.url"

@@ -14,10 +14,10 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
         <kbq-splitter [direction]="direction.Horizontal" [disabled]="!opened">
             <kbq-sidebar
                 #sidebar="kbqSidebar"
+                kbq-splitter-area
                 [opened]="opened"
                 [position]="position.Left"
                 (stateChanged)="onStateChanged($event)"
-                kbq-splitter-area
             >
                 <div kbq-sidebar-opened minWidth="170px" width="170px" maxWidth="50%">Opened content</div>
                 <div kbq-sidebar-closed width="44px">Closed content</div>
@@ -25,8 +25,8 @@ import { Direction, KbqSplitterModule } from '@koobiq/components/splitter';
 
             <main kbq-splitter-area>
                 <div>Main content</div>
-                <div><button (click)="toggle()" kbq-button>Toggle model</button></div>
-                <div><button (click)="sidebar.toggle()" kbq-button>Toggle</button></div>
+                <div><button kbq-button (click)="toggle()">Toggle model</button></div>
+                <div><button kbq-button (click)="sidebar.toggle()">Toggle</button></div>
             </main>
         </kbq-splitter>
     `,

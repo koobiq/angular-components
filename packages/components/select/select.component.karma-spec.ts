@@ -236,7 +236,7 @@ const OPTIONS = [
     template: `
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
-            <kbq-select [formControl]="control" [required]="isRequired" [panelClass]="panelClass" placeholder="Food">
+            <kbq-select placeholder="Food" [formControl]="control" [required]="isRequired" [panelClass]="panelClass">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value" [disabled]="food.disabled">
                         {{ food.viewValue }}
@@ -247,9 +247,9 @@ const OPTIONS = [
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -284,7 +284,7 @@ class BasicSelect {
     selector: 'ng-model-select',
     template: `
         <kbq-form-field>
-            <kbq-select [disabled]="isDisabled" placeholder="Food" ngModel>
+            <kbq-select placeholder="Food" ngModel [disabled]="isDisabled">
                 @for (food of foods; track food) {
                     <kbq-option [value]="food.value">
                         {{ food.viewValue }}
@@ -312,7 +312,7 @@ class NgModelSelect {
         @if (isShowing) {
             <div>
                 <kbq-form-field>
-                    <kbq-select [formControl]="control" placeholder="Food I want to eat right now">
+                    <kbq-select placeholder="Food I want to eat right now" [formControl]="control">
                         @for (food of foods; track food) {
                             <kbq-option [value]="food.value">
                                 {{ food.viewValue }}
@@ -367,7 +367,7 @@ class BasicSelectNoPlaceholder {}
     selector: 'select-with-groups',
     template: `
         <kbq-form-field>
-            <kbq-select [formControl]="control" placeholder="Pokemon">
+            <kbq-select placeholder="Pokemon" [formControl]="control">
                 @for (group of pokemonTypes; track group) {
                     <kbq-optgroup [label]="group.name" [disabled]="group.disabled">
                         @for (pokemon of group.pokemon; track pokemon) {
@@ -429,11 +429,11 @@ class SelectWithGroups {
         <kbq-form-field>
             <kbq-select>
                 <kbq-option [value]="'value1'">Not long text</kbq-option>
-                <kbq-option [value]="'value2'" style="max-width: 200px;">
+                <kbq-option style="max-width: 200px;" [value]="'value2'">
                     Long long long long Long long long long Long long long long Long long long long Long long long long
                     Long long long long text
                 </kbq-option>
-                <kbq-option [value]="'value3'" style="max-width: 200px;">
+                <kbq-option style="max-width: 200px;" [value]="'value3'">
                     {{ changingLabel }}
                 </kbq-option>
                 <ng-template #kbqSelectTagContent let-option let-select="select">
@@ -441,9 +441,9 @@ class SelectWithGroups {
                         {{ option.viewValue }}
                         @if (!option.disabled && !select.disabled) {
                             <i
-                                (click)="select.onRemoveMatcherItem(option, $event)"
                                 kbq-icon="kbq-xmark-s_16"
                                 kbqTagRemove
+                                (click)="select.onRemoveMatcherItem(option, $event)"
                             ></i>
                         }
                     </kbq-tag>
@@ -466,7 +466,7 @@ class SelectWithLongOptionText {
     selector: 'cdk-virtual-scroll-viewport-select',
     template: `
         <kbq-form-field>
-            <kbq-select [(value)]="values" [multiple]="true" [style]="style">
+            <kbq-select [multiple]="true" [style]="style" [(value)]="values">
                 <cdk-virtual-scroll-viewport [itemSize]="itemSize" [minBufferPx]="100" [maxBufferPx]="400">
                     <kbq-option *cdkVirtualFor="let option of options; templateCacheSize: 0" [value]="option">
                         {{ option }}

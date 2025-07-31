@@ -29,6 +29,8 @@ import { KbqTitleModule } from '@koobiq/components/title';
     selector: 'color-pipe',
     template: `
         <button
+            kbq-button
+            kbqPopover
             [disabled]="data.disabled"
             [kbqPipeState]="data"
             [kbqPipeTitle]="pipeTooltip"
@@ -38,11 +40,9 @@ import { KbqTitleModule } from '@koobiq/components/title';
             [kbqPopoverOffset]="4"
             [kbqPopoverPlacement]="placements.BottomLeft"
             [ngClass]="{ 'kbq-active': popover?.isOpen }"
-            kbq-button
-            kbqPopover
         >
-            <span class="kbq-pipe__name" #kbqTitleText kbqPipeMinWidth>{{ data.name }}</span>
-            <span class="kbq-pipe__value" #kbqTitleText [class.kbq-pipe__value_empty]="!data.value" kbqPipeMinWidth>
+            <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
+            <span #kbqTitleText class="kbq-pipe__value" kbqPipeMinWidth [class.kbq-pipe__value_empty]="!data.value">
                 {{ data.value }}
             </span>
         </button>
@@ -54,10 +54,10 @@ import { KbqTitleModule } from '@koobiq/components/title';
         <ng-template #content>
             <input
                 class="layout-margin-bottom-s"
-                [(ngModel)]="data.value"
-                (keydown.enter)="popover.hide()"
                 type="color"
                 style="width:100%;"
+                [(ngModel)]="data.value"
+                (keydown.enter)="popover.hide()"
             />
         </ng-template>
 

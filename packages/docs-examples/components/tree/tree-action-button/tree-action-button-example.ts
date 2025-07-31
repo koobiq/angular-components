@@ -117,19 +117,19 @@ export const DATA_OBJECT = {
     ],
     template: `
         <kbq-tree-selection
-            [(ngModel)]="modelValue"
+            style="width: 400px"
             [autoSelect]="false"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
+            [(ngModel)]="modelValue"
             (onSelectAll)="onSelectAll($event)"
-            style="width: 400px"
         >
-            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <i kbq-icon="kbq-info-circle_16"></i>
 
                 <div class="layout-row layout-align-space-between">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                    <kbq-badge [compact]="true" badgeColor="theme">badge</kbq-badge>
+                    <kbq-badge badgeColor="theme" [compact]="true">badge</kbq-badge>
                 </div>
 
                 <kbq-option-action
@@ -146,7 +146,7 @@ export const DATA_OBJECT = {
 
                 <div class="layout-row layout-align-space-between">
                     <span [innerHTML]="treeControl.getViewValue(node)"></span>
-                    <kbq-badge [compact]="true" badgeColor="theme">badge</kbq-badge>
+                    <kbq-badge badgeColor="theme" [compact]="true">badge</kbq-badge>
                 </div>
 
                 <kbq-option-action

@@ -86,10 +86,10 @@ const groupedZones: KbqTimezoneGroup[] = [
         <div [style.height.px]="heightAbove"></div>
         <kbq-form-field>
             <kbq-timezone-select
+                placeholder="Timezones"
                 [formControl]="control"
                 [required]="isRequired"
                 [panelClass]="panelClass"
-                placeholder="Timezones"
             >
                 @for (group of zones; track group) {
                     <kbq-optgroup [label]="group.countryName">

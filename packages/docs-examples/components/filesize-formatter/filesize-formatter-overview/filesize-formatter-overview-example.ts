@@ -42,7 +42,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label">Size in bits</label>
                     <kbq-form-field class="kbq-form__control">
-                        <input [min]="0" [formControl]="bytesControl" kbqNumberInput kbqNormalizeWhitespace />
+                        <input kbqNumberInput kbqNormalizeWhitespace [min]="0" [formControl]="bytesControl" />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>
@@ -64,11 +64,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <label class="kbq-form__label">
                         Base
                         <i
+                            kbq-icon="kbq-question-circle_16"
                             [color]="'contrast-fade'"
                             [style.cursor]="'help'"
                             [kbqPlacement]="popUpPlacements.Right"
                             [kbqTooltip]="tooltipText"
-                            kbq-icon="kbq-question-circle_16"
                         ></i>
                     </label>
                     <kbq-form-field class="kbq-form__control">
