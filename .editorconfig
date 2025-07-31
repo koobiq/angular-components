@@ -17,3 +17,7 @@ max_line_length = off
 
 [*.yml]
 indent_size = 2
+
+[*.snap]
+insert_final_newline = false
+trim_trailing_whitespace = false

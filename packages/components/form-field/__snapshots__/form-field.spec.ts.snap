@@ -6,13 +6,14 @@ DebugElement {
     aria-hidden="false"
     class="kbq-password-toggle"
     style="visibility: visible;"
+    tabindex="0"
   >
     <i
-      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye-slash_16"
+      class="kbq kbq-icon kbq-contrast-fade kbq-eye-slash_16"
       color="contrast-fade"
-      kbq-icon-button=""
-      tabindex="0"
+      kbq-icon=""
     />
+    
   </kbq-password-toggle>,
 }
 `;
@@ -21,13 +22,14 @@ exports[`KbqFormField should display KbqCleaner 1`] = `
 DebugElement {
   "nativeNode": <kbq-cleaner
     class="kbq-cleaner"
+    tabindex="0"
   >
     <i
-      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-xmark-circle_16"
-      color="contrast-fade"
-      kbq-icon-button="kbq-xmark-circle_16"
-      tabindex="0"
+      class="kbq kbq-icon kbq-contrast-fade kbq-xmark-circle_16"
+      kbq-icon="kbq-xmark-circle_16"
+      style="max-height: 16px;"
     />
+    
   </kbq-cleaner>,
 }
 `;
@@ -78,13 +80,14 @@ DebugElement {
     aria-hidden="false"
     class="kbq-password-toggle"
     style="visibility: visible;"
+    tabindex="0"
   >
     <i
-      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      class="kbq kbq-icon kbq-contrast-fade kbq-eye_16"
       color="contrast-fade"
-      kbq-icon-button=""
-      tabindex="0"
+      kbq-icon=""
     />
+    
   </kbq-password-toggle>,
 }
 `;
@@ -179,13 +182,14 @@ DebugElement {
     aria-hidden="true"
     class="kbq-password-toggle cdk-visually-hidden"
     style="visibility: hidden;"
+    tabindex="0"
   >
     <i
-      class="kbq kbq-icon-button kbq-icon kbq-contrast-fade kbq-eye_16"
+      class="kbq kbq-icon kbq-contrast-fade kbq-eye_16"
       color="contrast-fade"
-      kbq-icon-button=""
-      tabindex="0"
+      kbq-icon=""
     />
+    
   </kbq-password-toggle>,
 }
 `;
