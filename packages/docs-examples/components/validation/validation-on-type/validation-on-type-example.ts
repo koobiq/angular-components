@@ -68,7 +68,7 @@ export class ValidationOnTypeExample {
     });
 
     onInput(event: Event): void {
-        const regex = /^[0-9a-zA-Zа-а-яА-ЯёЁйЙ]+$/g;
+        const regex = /^[0-9a-zA-Zа-яА-ЯёЁйЙ]+$/g;
 
         if (event.target instanceof HTMLInputElement && event.target.value && !regex.test(event.target.value)) {
             const newValue = event.target.value.replace(restSymbolsRegex, '');
