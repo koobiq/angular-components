@@ -28,7 +28,7 @@ const restSymbolsRegex = /[^0-9.]+/g;
     ],
     template: `
         <kbq-form-field style="width: 320px;">
-            <kbq-label>IP-address</kbq-label>
+            <kbq-label>IPv4-address</kbq-label>
             <input
                 [formControl]="ipAddressControl"
                 [kbqEnterDelay]="10"

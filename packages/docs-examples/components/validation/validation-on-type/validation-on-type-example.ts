@@ -9,7 +9,7 @@ import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 
-const restSymbolsRegex = /[^0-9a-zA-Z]+/g;
+const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
 
 /**
  * @title Validation on type
@@ -68,7 +68,7 @@ export class ValidationOnTypeExample {
     });
 
     onInput(event: Event): void {
-        const regex = /^[0-9a-zA-Z]+$/g;
+        const regex = /^[0-9a-zA-Zа-а-яА-ЯёЁйЙ]+$/g;
 
         if (event.target instanceof HTMLInputElement && event.target.value && !regex.test(event.target.value)) {
             const newValue = event.target.value.replace(restSymbolsRegex, '');
