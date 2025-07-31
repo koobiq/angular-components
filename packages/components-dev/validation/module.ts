@@ -26,6 +26,7 @@ import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { FlatTreeControl, KbqTreeFlatDataSource, KbqTreeFlattener, KbqTreeModule } from '@koobiq/components/tree';
 import { KbqTreeSelectModule } from '@koobiq/components/tree-select';
+import { ValidationExamplesModule } from '../../docs-examples/components/validation';
 import { DEV_DATA_OBJECT, devBuildFileTree, DevFileFlatNode, DevFileNode } from '../tree/module';
 
 function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
@@ -35,6 +36,42 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         return allowed ? null : { ldapLogin: { value: control.value } };
     };
 }
+
+@Component({
+    standalone: true,
+    imports: [ValidationExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <validation-on-open-example />
+        <validation-optional-label-example />
+        <validation-required-label-example />
+        <validation-on-type-example />
+        <validation-on-blur-example />
+        <validation-on-blur-filled-example />
+        <validation-on-submit-example />
+        <validation-message-for-specific-field-example />
+        <validation-no-message-example />
+        <validation-message-global-example />
+        <validation-message-global-with-links-example />
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            flex-wrap: wrap;
+        }
+
+        :host > * {
+            border-radius: var(--kbq-size-border-radius);
+            border: 1px solid var(--kbq-line-contrast-less);
+            margin-bottom: var(--kbq-size-l);
+            padding: var(--kbq-size-m);
+            flex: 1 0 auto;
+        }
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -54,7 +91,8 @@ function ldapLoginValidator(loginRegex: RegExp): ValidatorFn {
         KbqIconModule,
         KbqDatepickerModule,
         KbqTimepickerModule,
-        KbqLuxonDateModule
+        KbqLuxonDateModule,
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

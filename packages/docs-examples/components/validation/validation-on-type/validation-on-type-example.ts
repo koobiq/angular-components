@@ -1,48 +1,81 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { KbqFormsModule, PopUpPlacements } from '@koobiq/components/core';
+import {
+    KbqComponentColors,
+    kbqDisableLegacyValidationDirectiveProvider,
+    PopUpPlacements
+} from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
-import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+
+const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
 
 /**
  * @title Validation on type
  */
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     selector: 'validation-on-type-example',
+    standalone: true,
     imports: [
         ReactiveFormsModule,
         KbqFormFieldModule,
         KbqToolTipModule,
-        KbqInputModule,
-        KbqFormsModule
+        KbqInputModule
     ],
-    templateUrl: 'validation-on-type-example.html'
+    template: `
+        <form [formGroup]="checkOnFlyForm" novalidate>
+            <kbq-form-field>
+                <kbq-label>Folder name</kbq-label>
+                <input
+                    #tooltip="kbqTooltip"
+                    [kbqEnterDelay]="10"
+                    [kbqPlacement]="popUpPlacements.Top"
+                    [kbqTrigger]="'manual'"
+                    [kbqTooltip]="'Letters and numbers'"
+                    [kbqTooltipColor]="colors.Error"
+                    (input)="onInput($event)"
+                    formControlName="folderName"
+                    kbqInput
+                />
+
+                <kbq-cleaner />
+
+                <kbq-hint>Only letters and numbers</kbq-hint>
+            </kbq-form-field>
+        </form>
+    `,
+    styles: `
+        form {
+            width: 320px;
+            padding: 1px;
+        }
+    `,
+    host: {
+        class: 'layout-margin-5xl layout-align-center-center layout-row'
+    },
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnTypeExample {
-    popUpPlacements = PopUpPlacements;
+    @ViewChild('tooltip', { static: false }) tooltip: KbqTooltipTrigger;
 
-    checkOnFlyForm: FormGroup;
+    protected readonly popUpPlacements = PopUpPlacements;
+    protected readonly colors = KbqComponentColors;
 
-    @ViewChild('tooltip', { static: false }) tooltip: any;
+    protected readonly checkOnFlyForm = new FormGroup({
+        folderName: new FormControl('')
+    });
 
-    constructor() {
-        this.checkOnFlyForm = new FormGroup({
-            folderName: new FormControl('')
-        });
-    }
+    onInput(event: Event): void {
+        const regex = /^[0-9a-zA-Zа-яА-ЯёЁйЙ]+$/g;
 
-    onInput(event) {
-        const regex = /^[\d\w]+$/g;
-
-        if (!regex.test(event.target.value)) {
-            const newValue = event.target.value.replace(/[^\d\w]+/g, '');
+        if (event.target instanceof HTMLInputElement && event.target.value && !regex.test(event.target.value)) {
+            const newValue = event.target.value.replace(restSymbolsRegex, '');
 
             this.checkOnFlyForm.controls.folderName.setValue(newValue);
 
-            if (!this.tooltip.isTooltipOpen) {
+            if (!this.tooltip.isOpen) {
                 this.tooltip.show();
 
                 setTimeout(() => this.tooltip.hide(), 3000);

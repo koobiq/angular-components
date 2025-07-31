@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
     KbqComponentColors,
@@ -15,10 +15,10 @@ const IP_PATTERN =
 const restSymbolsRegex = /[^0-9.]+/g;
 
 /**
- * @title Validation on blur
+ * @title Validation on blur filled
  */
 @Component({
-    selector: 'validation-on-blur-example',
+    selector: 'validation-on-blur-filled-example',
     standalone: true,
     imports: [
         ReactiveFormsModule,
@@ -51,12 +51,16 @@ const restSymbolsRegex = /[^0-9.]+/g;
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ValidationOnBlurExample {
+export class ValidationOnBlurFilledExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
+    protected readonly ipAddressControl = new FormControl('123...12123123', [Validators.pattern(IP_PATTERN)]);
 
-    protected readonly ipAddressControl = new FormControl('', [Validators.pattern(IP_PATTERN)]);
-    protected readonly popUpPlacements = PopUpPlacements;
+    constructor() {
+        afterNextRender(() => this.ipAddressControl.markAsTouched());
+    }
+
     protected readonly colors = KbqComponentColors;
+    protected readonly popUpPlacements = PopUpPlacements;
 
     onInput(event: Event): void {
         const allowedSymbolsRegex = /^[0-9.]+$/g;
