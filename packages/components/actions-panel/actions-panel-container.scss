@@ -28,9 +28,3 @@
 .kbq-actions-panel-overlay {
     margin: var(--kbq-actions-panel-margin);
 }
-
-.kbq-actions-panel-overlay-container {
-    // Required for positioning the overlay inside the custom container
-    // See: KbqActionsPanelConfig.overlayContainer
-    position: relative;
-}

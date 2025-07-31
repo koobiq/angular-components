@@ -50,9 +50,7 @@ export class KbqActionsPanelConfig<D = unknown> {
     closeOnNavigation?: boolean = true;
 
     /**
-     * Overlay container element in which the actions panel are rendered.
-     *
-     * @default `document.body`
+     * Element in which the actions panel overlay will be connected to.
      */
     overlayContainer?: ElementRef<HTMLElement>;
 

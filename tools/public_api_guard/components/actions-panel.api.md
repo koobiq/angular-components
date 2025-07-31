@@ -33,9 +33,6 @@ export const KBQ_ACTIONS_PANEL_DEFAULT_CONFIG: InjectionToken<KbqActionsPanelCon
 export const KBQ_ACTIONS_PANEL_LOCALE_CONFIGURATION: InjectionToken<KbqActionsPanelLocaleConfiguration>;
 
 // @public
-export const KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR = "kbq-actions-panel-overlay-container";
-
-// @public
 export const KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR = "kbq-actions-panel-overlay";
 
 // @public

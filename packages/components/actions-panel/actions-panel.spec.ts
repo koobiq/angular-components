@@ -14,12 +14,7 @@ import {
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { lastValueFrom } from 'rxjs';
-import {
-    KBQ_ACTIONS_PANEL_DATA,
-    KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR,
-    KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR,
-    KbqActionsPanel
-} from './actions-panel';
+import { KBQ_ACTIONS_PANEL_DATA, KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR, KbqActionsPanel } from './actions-panel';
 import { KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelRef } from './actions-panel-ref';
 import { KbqActionsPanelModule } from './module';
@@ -382,15 +377,6 @@ describe(KbqActionsPanelModule.name, () => {
 
         componentInstance.openFromTemplate({ scrollStrategy: () => scrollStrategy });
         expect(scrollStrategy.enable).toHaveBeenCalledTimes(1);
-    });
-
-    it('should apply custom OverlayContainer element by KbqActionsPanelConfig', () => {
-        const { componentInstance } = createComponent(ActionsPanelController);
-        const element = componentInstance.elementRef.nativeElement;
-
-        expect(element.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)).toBeFalsy();
-        componentInstance.openFromTemplate({ overlayContainer: componentInstance.elementRef });
-        expect(element.classList.contains(KBQ_ACTIONS_PANEL_OVERLAY_CONTAINER_SELECTOR)).toBeTruthy();
     });
 
     it('should apply global custom OverlayContainer by providers', () => {
