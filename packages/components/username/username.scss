@@ -1,0 +1,98 @@
+@use '../core/styles/common';
+@use '../core/styles/common/tokens';
+
+:where(.kbq-username) {
+    --kbq-username-primary-color: var(--kbq-foreground-contrast);
+    --kbq-username-secondary-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-username-vertical-gap: var(--kbq-size-xxs);
+    --kbq-username-horizontal-gap: var(--kbq-size-xxs);
+}
+
+@mixin _kbq-username-theme() {
+    & {
+        color: var(--kbq-username-primary-color);
+
+        .kbq-username__site,
+        .kbq-username__name + .kbq-username__login {
+            color: var(--kbq-username-secondary-color);
+        }
+    }
+
+    &.kbq-username_error {
+        --kbq-username-primary-color: var(--kbq-foreground-error);
+        --kbq-username-secondary-color: var(--kbq-foreground-error);
+    }
+
+    &.kbq-username_simple {
+        --kbq-username-primary-color: var(--kbq-foreground-contrast);
+        --kbq-username-secondary-color: var(--kbq-foreground-contrast);
+    }
+}
+
+@mixin _kbq-username-typography() {
+    & {
+        @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-normal);
+    }
+
+    &.kbq-username_simple {
+        .kbq-username__name {
+            @include tokens.kbq-typography-level-to-styles_css-variables(typography, text-normal-strong);
+        }
+    }
+}
+
+.kbq-username {
+    @include _kbq-username-theme();
+    @include _kbq-username-typography();
+
+    &.kbq-username_stacked {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: flex-start;
+        align-items: normal;
+
+        gap: var(--kbq-username-vertical-gap);
+    }
+
+    &.kbq-username_inline:not(.kbq-username_none) {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: flex-start;
+        align-items: baseline;
+
+        .kbq-username__name + .kbq-username__login {
+            @include common.rtl-prop(margin-left, margin-right, var(--kbq-username-horizontal-gap), 0);
+        }
+    }
+
+    &.kbq-username_text {
+        display: inline;
+    }
+
+    &.kbq-username_stacked,
+    &.kbq-username_inline {
+        .kbq-username__name,
+        .kbq-username__login {
+            @include common.kbq-truncate-line();
+        }
+    }
+
+    &.kbq-username_none {
+        display: inline;
+        color: inherit;
+
+        .kbq-username__login,
+        .kbq-username__site {
+            color: inherit;
+        }
+    }
+}
+
+.kbq-link .kbq-username {
+    color: inherit;
+
+    .kbq-username__login,
+    .kbq-username__site {
+        color: inherit;
+    }
+}

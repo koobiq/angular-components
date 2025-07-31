@@ -30,7 +30,8 @@ export enum KbqUsernameFormatKey {
     /**
      * Full form of the last name (e.g., "Doe")
      */
-    LastNameFull = 'L'
+    LastNameFull = 'L',
+    Dot = '.'
 }
 
 /**
@@ -38,7 +39,24 @@ export enum KbqUsernameFormatKey {
  * Allows flexible formatting regardless of profile field names.
  */
 export type KbqFormatKeyToProfileMapping<T = any> = {
-    [key in KbqUsernameFormatKey]: keyof T;
+    [key in KbqUsernameFormatKey]: keyof T | undefined;
 };
 
+/**
+ * Layout mode for displaying a username and applying text-ellipsis.
+ *
+ * - `stacked`: Elements shown vertically.
+ * - `inline`: Elements shown in one line. Text ellipsis is applied to both parts.
+ * - `text`: Plain text, no layout styling. No text-ellipsis.
+ */
 export type KbqUsernameMode = 'stacked' | 'inline' | 'text';
+
+/**
+ * Visual style of the username.
+ *
+ * - `default`: standard styling with primary and secondary colors.
+ * - `error`: error colors (e.g., red).
+ * - `simple`: minimal style with contrast color.
+ * - `none`: inherits parent styles, no theming. For exampe, useful when using inside links.
+ */
+export type KbqUsernameStyle = 'default' | 'error' | 'simple' | 'none';

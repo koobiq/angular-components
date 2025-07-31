@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqUsername should use default input values 1`] = `
+{
+  "kbq-username": true,
+  "kbq-username_default": true,
+  "kbq-username_inline": true,
+}
+`;

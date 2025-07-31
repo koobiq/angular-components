@@ -1,0 +1,31 @@
+@let profile = userInfo();
+@let fullName = profile | kbqUsername: fullNameFormat();
+
+@if (!isCompact()) {
+    @if (hasFullName()) {
+        <span kbq-title class="kbq-username__name">{{ fullName }}</span>
+    }
+
+    @if (profile?.login) {
+        <span kbq-title class="kbq-username__login">
+            {{ profile?.login }}
+
+            @if (profile?.site) {
+                <span class="kbq-username__site">({{ profile?.site }})</span>
+            }
+        </span>
+    }
+} @else {
+    <span kbq-title class="kbq-username__name">
+        @if (hasFullName()) {
+            <span>{{ fullName }}</span>
+        }
+        @if (!hasFullName() && profile?.login) {
+            {{ profile?.login }}
+        }
+
+        @if (profile?.site) {
+            <span class="kbq-username__site">&nbsp;({{ profile?.site }})</span>
+        }
+    </span>
+}
