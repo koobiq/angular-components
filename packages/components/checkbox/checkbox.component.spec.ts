@@ -820,7 +820,6 @@ describe('KbqCheckbox', () => {
     template: `
         <div (click)="parentElementClicked = true" (keyup)="parentElementKeyedUp = true">
             <kbq-checkbox
-                [(indeterminate)]="isIndeterminate"
                 [id]="checkboxId"
                 [required]="isRequired"
                 [labelPosition]="labelPos"
@@ -828,6 +827,7 @@ describe('KbqCheckbox', () => {
                 [disabled]="isDisabled"
                 [color]="checkboxColor"
                 [value]="checkboxValue"
+                [(indeterminate)]="isIndeterminate"
                 (click)="onCheckboxClick($event)"
                 (change)="onCheckboxChange($event)"
             >
@@ -856,7 +856,7 @@ class SingleCheckbox {
 @Component({
     template: `
         <form>
-            <kbq-checkbox [(ngModel)]="isGood" name="cb">Be good</kbq-checkbox>
+            <kbq-checkbox name="cb" [(ngModel)]="isGood">Be good</kbq-checkbox>
         </form>
     `
 })
@@ -867,7 +867,7 @@ class CheckboxWithFormDirectives {
 /** Simple component for testing an KbqCheckbox with required ngModel. */
 @Component({
     template: `
-        <kbq-checkbox [(ngModel)]="isGood" [required]="isRequired">Be good</kbq-checkbox>
+        <kbq-checkbox [required]="isRequired" [(ngModel)]="isGood">Be good</kbq-checkbox>
     `
 })
 class CheckboxWithNgModel {

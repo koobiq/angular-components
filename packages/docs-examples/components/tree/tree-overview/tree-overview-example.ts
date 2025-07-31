@@ -106,8 +106,8 @@ export const DATA_OBJECT = {
         FormsModule
     ],
     template: `
-        <kbq-tree-selection [(ngModel)]="modelValue" [dataSource]="dataSource" [treeControl]="treeControl">
-            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'tests'" kbqTreeNodePadding>
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'tests'">
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 

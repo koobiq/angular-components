@@ -27,16 +27,16 @@ import { KbqTitleModule } from '@koobiq/components/title';
             <br />
 
             <div kbq-title style="max-width: 50%">
-                <div class="example-title-overview-parent" #kbqTitleContainer>
-                    <div class="example-title-overview-child kbq-text-normal" #kbqTitleText>
+                <div #kbqTitleContainer class="example-title-overview-parent">
+                    <div #kbqTitleText class="example-title-overview-child kbq-text-normal">
                         {{ field }}
                     </div>
                 </div>
             </div>
             <br />
-            <button (click)="onAddText()" kbq-button>Add text</button>
+            <button kbq-button (click)="onAddText()">Add text</button>
             <br />
-            <button (click)="field = defaultValue" kbq-button>Set Default text</button>
+            <button kbq-button (click)="field = defaultValue">Set Default text</button>
         </div>
     `,
     styleUrls: ['./title-overview-example.css']

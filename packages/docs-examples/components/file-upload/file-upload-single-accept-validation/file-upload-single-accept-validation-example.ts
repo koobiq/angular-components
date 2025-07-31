@@ -14,7 +14,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'file-upload-single-accept-validation-example',
     template: `
         <form [formGroup]="formGroup">
-            <kbq-file-upload class="layout-margin-bottom-s" [accept]="accept" formControlName="fileControl">
+            <kbq-file-upload class="layout-margin-bottom-s" formControlName="fileControl" [accept]="accept">
                 @if (!formGroup.get('fileControl')?.errors) {
                     <i kbq-icon="kbq-file-o_16"></i>
                 }

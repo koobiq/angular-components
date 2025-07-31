@@ -63,7 +63,7 @@ describe('should update model after keyboard interaction with multiple mode = ch
 
 @Component({
     template: `
-        <kbq-list-selection [(ngModel)]="model" [autoSelect]="false" [noUnselectLast]="false" multiple="checkbox">
+        <kbq-list-selection multiple="checkbox" [autoSelect]="false" [noUnselectLast]="false" [(ngModel)]="model">
             <kbq-list-option [value]="'value1'">value1</kbq-list-option>
             <kbq-list-option [value]="'value2'">value2</kbq-list-option>
             <kbq-list-option [value]="'value3'">value3</kbq-list-option>

@@ -16,12 +16,12 @@ import { map } from 'rxjs/operators';
                 <nav kbq-breadcrumbs wrapMode="none">
                     @for (breadcrumb of breadcrumbs; track breadcrumb.label; let last = $last) {
                         <kbq-breadcrumb-item [routerLink]="breadcrumb.url" [text]="breadcrumb.label">
-                            <a *kbqBreadcrumbView [routerLink]="breadcrumb.url" tabindex="-1">
+                            <a *kbqBreadcrumbView tabindex="-1" [routerLink]="breadcrumb.url">
                                 <button
-                                    [disabled]="last"
-                                    [attr.aria-current]="last ? 'page' : null"
                                     kbq-button
                                     kbqBreadcrumb
+                                    [disabled]="last"
+                                    [attr.aria-current]="last ? 'page' : null"
                                 >
                                     <span>{{ breadcrumb.label }}</span>
                                 </button>

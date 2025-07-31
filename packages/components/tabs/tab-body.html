@@ -2,12 +2,12 @@
     #content
     cdkScrollable
     class="kbq-tab-body__content kbq-scrollbar kbq-hide-nested-popup"
-    (@translateTab.done)="onTranslateTabComplete($event)"
-    (@translateTab.start)="onTranslateTabStarted($event)"
     [@translateTab]="{
         value: bodyPosition,
         params: { animationDuration: animationDuration }
     }"
+    (@translateTab.done)="onTranslateTabComplete($event)"
+    (@translateTab.start)="onTranslateTabStarted($event)"
 >
     <ng-template kbqTabBodyHost />
 </div>

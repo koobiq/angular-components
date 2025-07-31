@@ -16,20 +16,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
         KbqIconModule
     ],
     template: `
-        <kbq-empty-state [errorColor]="true" style="min-height: 216px">
+        <kbq-empty-state style="min-height: 216px" [errorColor]="true">
             <i
+                kbq-empty-state-icon
+                kbq-icon-item="kbq-exclamation-triangle_16"
                 [big]="true"
                 [color]="'contrast'"
                 [fade]="true"
-                kbq-empty-state-icon
-                kbq-icon-item="kbq-exclamation-triangle_16"
             ></i>
             <div kbq-empty-state-title>Не удалось показать записи</div>
             <div kbq-empty-state-text>
                 {{ emptyStateText }}
             </div>
             <div kbq-empty-state-actions>
-                <button [color]="'theme'" [kbqStyle]="'transparent'" kbq-button>Обновить</button>
+                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">Обновить</button>
             </div>
         </kbq-empty-state>
     `

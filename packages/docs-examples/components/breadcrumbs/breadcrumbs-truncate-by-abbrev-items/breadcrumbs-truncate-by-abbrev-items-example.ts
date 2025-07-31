@@ -20,16 +20,16 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     [fragment]="breadcrumb.longText"
                     [text]="breadcrumb.longText"
                 >
-                    <a *kbqBreadcrumbView [routerLink]="breadcrumb.url" tabindex="-1">
+                    <a *kbqBreadcrumbView tabindex="-1" [routerLink]="breadcrumb.url">
                         <button
+                            kbq-button
+                            kbqBreadcrumb
                             [attr.aria-current]="last ? 'page' : null"
                             [disabled]="last"
                             [kbqPlacementPriority]="PopUpPlacements.Bottom"
                             [kbqTooltipArrow]="false"
                             [kbqTooltip]="breadcrumb.longText"
                             [kbqTooltipDisabled]="!breadcrumb.shortText"
-                            kbq-button
-                            kbqBreadcrumb
                         >
                             {{ breadcrumb.shortText || breadcrumb.longText }}
                         </button>

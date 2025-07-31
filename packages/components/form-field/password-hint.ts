@@ -44,7 +44,7 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
     imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
     template: `
-        <i class="kbq-password-hint__icon" [ngClass]="icon" kbq-icon=""></i>
+        <i class="kbq-password-hint__icon" kbq-icon="" [ngClass]="icon"></i>
 
         <span class="kbq-hint__text">
             <ng-content />

@@ -16,27 +16,27 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <div class="example-icon-item-layout layout-row">
             <div class="example-icon-item-container">
-                <i [color]="colors.Theme" kbq-icon-item="kbq-bell_16"></i>
+                <i kbq-icon-item="kbq-bell_16" [color]="colors.Theme"></i>
                 <div class="example-icon-item-container__name kbq-text-normal">Theme</div>
             </div>
 
             <div class="example-icon-item-container">
-                <i [color]="colors.Contrast" kbq-icon-item="kbq-bell_16"></i>
+                <i kbq-icon-item="kbq-bell_16" [color]="colors.Contrast"></i>
                 <div class="example-icon-item-container__name kbq-text-normal">Contrast</div>
             </div>
 
             <div class="example-icon-item-container">
-                <i [color]="colors.Success" kbq-icon-item="kbq-bell_16"></i>
+                <i kbq-icon-item="kbq-bell_16" [color]="colors.Success"></i>
                 <div class="example-icon-item-container__name kbq-text-normal">Success</div>
             </div>
 
             <div class="example-icon-item-container">
-                <i [color]="colors.Warning" kbq-icon-item="kbq-bell_16"></i>
+                <i kbq-icon-item="kbq-bell_16" [color]="colors.Warning"></i>
                 <div class="example-icon-item-container__name kbq-text-normal">Warning</div>
             </div>
 
             <div class="example-icon-item-container">
-                <i [color]="colors.Error" kbq-icon-item="kbq-bell_16"></i>
+                <i kbq-icon-item="kbq-bell_16" [color]="colors.Error"></i>
                 <div class="example-icon-item-container__name kbq-text-normal">Error</div>
             </div>
         </div>

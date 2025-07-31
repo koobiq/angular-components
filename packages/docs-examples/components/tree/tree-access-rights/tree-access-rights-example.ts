@@ -198,12 +198,12 @@ abstract class TreeParams {
     ],
     template: `
         <kbq-tree-selection
+            multiple="checkbox"
             [autoSelect]="false"
             [dataSource]="dataSource"
             [ngModel]="modelValue"
             [treeControl]="treeControl"
             (ngModelChange)="onModelChange($event)"
-            multiple="checkbox"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                 <span>{{ treeControl.getViewValue(node) }}</span>

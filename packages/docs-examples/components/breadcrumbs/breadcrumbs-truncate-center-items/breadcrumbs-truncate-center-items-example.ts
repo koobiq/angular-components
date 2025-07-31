@@ -22,11 +22,11 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
                     <a routerLink="./report" tabindex="-1">
                         <button aria-current="page" disabled kbq-button kbqBreadcrumb>
                             <span
+                                kbqEllipsisCenter="Report dated 28.08.2018"
                                 [minVisibleLength]="15"
                                 [charWidth]="5"
                                 [kbqPlacementPriority]="PopUpPlacements.Bottom"
                                 [kbqTooltipArrow]="false"
-                                kbqEllipsisCenter="Report dated 28.08.2018"
                             ></span>
                         </button>
                     </a>

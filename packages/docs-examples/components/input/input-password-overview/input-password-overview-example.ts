@@ -17,7 +17,7 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     template: `
         <kbq-form-field style="width: 250px">
-            <input [(ngModel)]="value" kbqInputPassword />
+            <input kbqInputPassword [(ngModel)]="value" />
 
             <kbq-password-toggle [kbqTooltipHidden]="'Показать пароль'" [kbqTooltipNotHidden]="'Скрыть пароль'" />
 

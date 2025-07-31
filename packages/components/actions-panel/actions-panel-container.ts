@@ -97,11 +97,11 @@ const KBQ_ACTIONS_PANEL_CONTAINER_ANIMATION = trigger('state', [
             <kbq-divider class="kbq-actions-panel-container__vertical-divider" [vertical]="true" />
             <button
                 class="kbq-actions-panel-container__close-button"
+                color="contrast"
+                kbq-button
                 [kbqTooltip]="localeConfiguration()!.closeTooltip"
                 [kbqTooltipOffset]="16"
                 (click)="close()"
-                color="contrast"
-                kbq-button
             >
                 <i kbq-icon="kbq-xmark-circle_16"></i>
             </button>

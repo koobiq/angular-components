@@ -19,9 +19,9 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
         <div class="docs-component-header">
             <div class="docs-component-name" docsRegisterHeader>Дизайн-токены</div>
             <div class="docs-component-navbar layout-padding-top-s">
-                <nav [tabNavPanel]="tabNavPanel" kbqTabNavBar>
+                <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
                     @for (link of links; track link) {
-                        <a [routerLink]="link.value" kbqTabLink routerLinkActive="kbq-selected">
+                        <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="link.value">
                             {{ link.title[locale()] }}
                         </a>
                     }

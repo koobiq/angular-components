@@ -5,7 +5,7 @@ import { KbqBreadcrumbsModule } from '@koobiq/components/breadcrumbs';
     standalone: true,
     selector: 'example-breadcrumbs',
     template: `
-        <nav [max]="null" wrapMode="auto" kbq-breadcrumbs>
+        <nav wrapMode="auto" kbq-breadcrumbs [max]="null">
             @for (breadcrumb of breadcrumbs; track breadcrumb; let last = $last) {
                 <kbq-breadcrumb-item [text]="breadcrumb.label" />
             }

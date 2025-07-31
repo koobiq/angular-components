@@ -1268,7 +1268,7 @@ class StandardTagList {
                         {{ tag }}
                     </kbq-tag>
                 }
-                <input [kbqTagInputFor]="tagList" name="test" />
+                <input name="test" [kbqTagInputFor]="tagList" />
             </kbq-tag-list>
         </kbq-form-field>
     `
@@ -1290,11 +1290,11 @@ class FormFieldTagList {
     template: `
         <kbq-form-field>
             <kbq-tag-list
+                placeholder="Food"
                 [formControl]="control"
                 [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
                 [selectable]="selectable"
-                placeholder="Food"
             >
                 @for (food of foods; track food) {
                     <kbq-tag [value]="food.value" [disabled]="food.disabled">
@@ -1331,12 +1331,12 @@ class BasicTagList {
     template: `
         <kbq-form-field>
             <kbq-tag-list
+                placeholder="Food"
                 [multiple]="true"
                 [formControl]="control"
                 [required]="isRequired"
                 [tabIndex]="tabIndexOverride"
                 [selectable]="selectable"
-                placeholder="Food"
             >
                 @for (food of foods; track food) {
                     <kbq-tag [value]="food.value" [disabled]="food.disabled">
@@ -1373,10 +1373,10 @@ class MultiSelectionTagList {
         <kbq-form-field>
             <kbq-tag-list
                 #tagList1
+                placeholder="Food"
                 [multiple]="true"
                 [formControl]="control"
                 [required]="isRequired"
-                placeholder="Food"
             >
                 @for (food of foods; track food) {
                     <kbq-tag [value]="food.value" (removed)="remove(food)">
@@ -1385,11 +1385,11 @@ class MultiSelectionTagList {
                 }
             </kbq-tag-list>
             <input
+                placeholder="New food..."
                 [kbqTagInputFor]="tagList1"
                 [kbqTagInputSeparatorKeyCodes]="separatorKeyCodes"
                 [kbqTagInputAddOnBlur]="addOnBlur"
                 (kbqTagInputTokenEnd)="add($event)"
-                placeholder="New food..."
             />
         </kbq-form-field>
     `

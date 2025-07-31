@@ -29,12 +29,12 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </kbq-button-toggle-group>
         </div>
 
-        <kbq-empty-state [size]="size()" style="min-height: 216px">
+        <kbq-empty-state style="min-height: 216px" [size]="size()">
             <div kbq-empty-state-title>No Groups</div>
             <div kbq-empty-state-text>{{ emptyStateText }}</div>
             <div kbq-empty-state-actions>
-                <button [color]="'theme'" [kbqStyle]="'transparent'" kbq-button>
-                    <i [color]="'theme'" kbq-icon="kbq-plus_16"></i>
+                <button kbq-button [color]="'theme'" [kbqStyle]="'transparent'">
+                    <i kbq-icon="kbq-plus_16" [color]="'theme'"></i>
                     {{ buttonText }}
                 </button>
             </div>

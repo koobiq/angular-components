@@ -75,8 +75,8 @@ class KbqSplitterDirection {
     selector: 'kbq-demo-splitter',
     template: `
         <kbq-splitter (gutterPositionChange)="gutterPositionChange()">
-            <div #areaA (sizeChange)="areaASizeChange($event)" kbq-splitter-area>first</div>
-            <div #areaB (sizeChange)="areaBSizeChange($event)" kbq-splitter-area>second</div>
+            <div #areaA kbq-splitter-area (sizeChange)="areaASizeChange($event)">first</div>
+            <div #areaB kbq-splitter-area (sizeChange)="areaBSizeChange($event)">second</div>
         </kbq-splitter>
     `
 })
@@ -91,7 +91,7 @@ class KbqSplitterEvents {
 @Component({
     selector: 'kbq-demo-splitter',
     template: `
-        <kbq-splitter #splitter [direction]="direction" [useGhost]="true" style="width: 500px;">
+        <kbq-splitter #splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             <div #areaA kbq-splitter-area style="flex: 1">first</div>
             <div #areaB kbq-splitter-area style="min-width: 50px">second</div>
         </kbq-splitter>
@@ -107,7 +107,7 @@ class KbqSplitterGhost {
 @Component({
     selector: 'kbq-demo-splitter',
     template: `
-        <kbq-splitter [direction]="direction" [useGhost]="true" style="width: 500px;">
+        <kbq-splitter style="width: 500px;" [direction]="direction" [useGhost]="true">
             @if (isFirstRendered) {
                 <div #areaA kbq-splitter-area style="flex: 1">first</div>
             }

@@ -15,7 +15,7 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         KbqToolTipModule
     ],
     template: `
-        <button [kbqPlacement]="placement" kbq-button kbqTooltip="Подсказка может занимать две и более строк">
+        <button kbq-button kbqTooltip="Подсказка может занимать две и более строк" [kbqPlacement]="placement">
             Кнопка с тултипом
         </button>
     `

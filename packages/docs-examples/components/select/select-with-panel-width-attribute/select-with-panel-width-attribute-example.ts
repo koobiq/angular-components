@@ -16,7 +16,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div>
             <label class="kbq-form__label">Fixed panelWidth</label>
             <kbq-form-field>
-                <kbq-select [panelWidth]="400" placeholder="Placeholder">
+                <kbq-select placeholder="Placeholder" [panelWidth]="400">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }

@@ -13,7 +13,7 @@ import { KbqComponentColors } from '@koobiq/components/core';
         KbqButtonModule
     ],
     template: `
-        <button class="kbq-progress" [color]="colors.Contrast" kbq-button>Кнопка</button>
+        <button class="kbq-progress" kbq-button [color]="colors.Contrast">Кнопка</button>
         &nbsp;
     `
 })

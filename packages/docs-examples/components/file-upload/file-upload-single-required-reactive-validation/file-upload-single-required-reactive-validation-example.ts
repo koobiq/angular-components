@@ -15,10 +15,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <form [formGroup]="formMultiple" (ngSubmit)="onSubmit()">
             <kbq-file-upload
-                class="layout-margin-bottom-s"
                 #kbqFileUpload
-                [progressMode]="'indeterminate'"
+                class="layout-margin-bottom-s"
                 formControlName="fileUpload"
+                [progressMode]="'indeterminate'"
             >
                 <i kbq-icon="kbq-file-o_16"></i>
                 @if (formMultiple.controls.fileUpload.invalid && kbqFileUpload.invalid) {

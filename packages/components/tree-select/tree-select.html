@@ -122,8 +122,8 @@
         <div
             #optionsContainer
             class="kbq-tree-select__content kbq-scrollbar"
-            (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
             [@fadeInContent]="'showing'"
+            (@fadeInContent.done)="panelDoneAnimatingStream.next($event.toState)"
         >
             @if (isEmptySearchResult) {
                 <div class="kbq-select__no-options-message">

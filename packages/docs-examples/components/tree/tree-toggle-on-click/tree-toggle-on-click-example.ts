@@ -103,24 +103,24 @@ export const DATA_OBJECT = [
     ],
     template: `
         <kbq-tree-selection
-            [(ngModel)]="modelValue"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             [autoSelect]="false"
+            [(ngModel)]="modelValue"
         >
             <kbq-tree-option
                 *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
                 [selectable]="false"
                 (click)="treeControl.toggle(node)"
                 (keydown.enter)="treeControl.toggle(node)"
-                kbqTreeNodePadding
             >
                 <kbq-tree-node-toggle [node]="node" />
 
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 
-            <kbq-tree-option *kbqTreeNodeDef="let node" [disabled]="node.name === 'Disabled Node'" kbqTreeNodePadding>
+            <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding [disabled]="node.name === 'Disabled Node'">
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
         </kbq-tree-selection>

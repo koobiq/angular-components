@@ -344,8 +344,8 @@ describe('KbqCalendar', () => {
 @Component({
     template: `
         <kbq-calendar
-            [(selected)]="selected"
             [startAt]="startDate"
+            [(selected)]="selected"
             (yearSelected)="selectedYear = $event"
             (monthSelected)="selectedMonth = $event"
         />
@@ -375,7 +375,7 @@ class CalendarWithMinMax {
 
 @Component({
     template: `
-        <kbq-calendar [(selected)]="selected" [startAt]="startDate" [dateFilter]="dateFilter" />
+        <kbq-calendar [startAt]="startDate" [dateFilter]="dateFilter" [(selected)]="selected" />
     `
 })
 class CalendarWithDateFilter {

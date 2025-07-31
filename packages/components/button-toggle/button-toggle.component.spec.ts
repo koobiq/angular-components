@@ -616,7 +616,7 @@ describe('KbqButtonToggle without forms', () => {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [(value)]="groupValue" [disabled]="isGroupDisabled" [vertical]="isVertical">
+        <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" [(value)]="groupValue">
             @if (renderFirstToggle) {
                 <kbq-button-toggle [value]="'test1'">Test1</kbq-button-toggle>
             }
@@ -634,7 +634,7 @@ class ButtonTogglesInsideButtonToggleGroup {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [(ngModel)]="modelValue" [name]="groupName" (change)="lastEvent = $event">
+        <kbq-button-toggle-group [name]="groupName" [(ngModel)]="modelValue" (change)="lastEvent = $event">
             @for (option of options; track option) {
                 <kbq-button-toggle [value]="option.value">
                     {{ option.label }}
@@ -656,7 +656,7 @@ class ButtonToggleGroupWithNgModel {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [disabled]="isGroupDisabled" [vertical]="isVertical" multiple>
+        <kbq-button-toggle-group multiple [disabled]="isGroupDisabled" [vertical]="isVertical">
             <kbq-button-toggle [value]="'eggs'">Eggs</kbq-button-toggle>
             <kbq-button-toggle [value]="'flour'">Flour</kbq-button-toggle>
             <kbq-button-toggle [value]="'sugar'">Sugar</kbq-button-toggle>
@@ -670,7 +670,7 @@ class ButtonTogglesInsideButtonToggleGroupMultiple {
 
 @Component({
     template: `
-        <kbq-button-toggle-group [value]="value" multiple>
+        <kbq-button-toggle-group multiple [value]="value">
             <kbq-button-toggle [value]="0">Eggs</kbq-button-toggle>
             <kbq-button-toggle [value]="null">Flour</kbq-button-toggle>
             <kbq-button-toggle [value]="false">Sugar</kbq-button-toggle>

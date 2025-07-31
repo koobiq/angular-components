@@ -15700,7 +15700,6 @@ __metadata:
     postcss-discard-comments: "npm:^7.0.4"
     prettier: "npm:^3.6.2"
     prettier-plugin-multiline-arrays: "npm:^3.0.6"
-    prettier-plugin-organize-attributes: "npm:^1.0.0"
     prettier-plugin-organize-imports: "npm:^4.1.0"
     rimraf: "npm:^5.0.5"
     rollup: "npm:^4.44.1"
@@ -18708,15 +18707,6 @@ __metadata:
   peerDependencies:
     prettier: ">=3.0.0"
   checksum: 10c0/4a22a9f7edebbca06360d1092e1b9dbc8775dcf386fbd5f555565d56735b7c1698abcad46008dc1e23f693a9f0cf3dc92e70bebec282462b0480193fb26ead9c
-  languageName: node
-  linkType: hard
-
-"prettier-plugin-organize-attributes@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "prettier-plugin-organize-attributes@npm:1.0.0"
-  peerDependencies:
-    prettier: ^3.0.0
-  checksum: 10c0/eb84691390eadd256ec8ec34ad6946f7ebdbbe7ff0ec26ca569cb9e74f94677c9b4cfe1b34df06d3a01a68700bdab87c9a6d1e8c62dafc8ae53c73fd3d255b60
   languageName: node
   linkType: hard
 

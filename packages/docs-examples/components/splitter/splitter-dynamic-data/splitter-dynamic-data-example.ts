@@ -26,7 +26,7 @@ import { KbqSplitterModule } from '@koobiq/components/splitter';
         }
     `,
     template: `
-        <button (click)="isFirstVisible = !isFirstVisible" kbq-button>Change first area visibility</button>
+        <button kbq-button (click)="isFirstVisible = !isFirstVisible">Change first area visibility</button>
 
         <kbq-splitter>
             @if (isFirstVisible) {

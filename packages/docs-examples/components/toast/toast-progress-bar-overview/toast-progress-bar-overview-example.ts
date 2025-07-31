@@ -21,10 +21,10 @@ import { KbqToastService } from '@koobiq/components/toast';
         </ng-template>
 
         <ng-template #toastStickyActionsTemplate let-toast>
-            <a (click)="toast.close()" (keydown.enter)="toast.close()" kbq-link pseudo>Отмена</a>
+            <a kbq-link pseudo (click)="toast.close()" (keydown.enter)="toast.close()">Отмена</a>
         </ng-template>
 
-        <button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)" kbq-button>
+        <button kbq-button (click)="showStickyToast(toastStickyContentTemplate, toastStickyActionsTemplate)">
             Тост с прогресс-баром, кнопкой Отмена и без крестика
         </button>
     `,

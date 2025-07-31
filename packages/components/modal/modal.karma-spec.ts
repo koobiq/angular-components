@@ -68,11 +68,11 @@ describe('KbqModal', () => {
 @Component({
     selector: 'kbq-modal-by-service-from-dropdown',
     template: `
-        <kbq-modal [(kbqVisible)]="nonServiceModalVisible" kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__" />
-        <button class="template-button" [kbqDropdownTriggerFor]="dropdown" kbq-button>Open modal from dropdown</button>
+        <kbq-modal kbqWrapClassName="__NON_SERVICE_ID_SUFFIX__" [(kbqVisible)]="nonServiceModalVisible" />
+        <button class="template-button" kbq-button [kbqDropdownTriggerFor]="dropdown">Open modal from dropdown</button>
         <kbq-dropdown #dropdown>
             <ng-template kbqDropdownContent>
-                <button (click)="showConfirm()" kbq-dropdown-item>open Component Modal</button>
+                <button kbq-dropdown-item (click)="showConfirm()">open Component Modal</button>
             </ng-template>
         </kbq-dropdown>
     `,

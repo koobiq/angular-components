@@ -5,11 +5,11 @@
         [class.kbq-dropdown__panel_nested]="parent"
         [ngClass]="classList"
         [style.min-width]="triggerWidth"
+        [@transformDropdown]="panelAnimationState"
         (@transformDropdown.done)="onAnimationDone($event)"
         (@transformDropdown.start)="onAnimationStart($event)"
         (click)="close()"
         (keydown)="handleKeydown($event)"
-        [@transformDropdown]="panelAnimationState"
     >
         <div class="kbq-dropdown__content">
             <ng-content />

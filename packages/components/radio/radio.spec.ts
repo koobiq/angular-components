@@ -316,11 +316,11 @@ describe('MсRadio', () => {
 @Component({
     template: `
         <kbq-radio-group
+            name="test-name"
             [disabled]="isGroupDisabled"
             [labelPosition]="labelPos"
             [required]="isGroupRequired"
             [value]="groupValue"
-            name="test-name"
         >
             <kbq-radio-button [value]="'fire'" [disabled]="isFirstDisabled" [color]="color">
                 Charmander

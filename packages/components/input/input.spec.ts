@@ -29,7 +29,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" [required]="true" kbqInput minlength="4" />
+            <input kbqInput minlength="4" [required]="true" [(ngModel)]="value" />
         </kbq-form-field>
     `
 })
@@ -40,7 +40,7 @@ class KbqInputInvalid {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" kbqInput kbqInputMonospace />
+            <input kbqInput kbqInputMonospace [(ngModel)]="value" />
         </kbq-form-field>
     `
 })
@@ -51,7 +51,7 @@ class KbqInputWithKbqInputMonospace {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" [placeholder]="placeholder" [disabled]="disabled" kbqInput />
+            <input kbqInput [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value" />
         </kbq-form-field>
     `
 })
@@ -103,7 +103,7 @@ class KbqFormFieldWithoutBorders {}
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" kbqInput required />
+            <input kbqInput required [(ngModel)]="value" />
         </kbq-form-field>
     `
 })
@@ -115,7 +115,7 @@ class KbqFormFieldWithStandaloneNgModel {
     template: `
         <form #form="ngForm">
             <kbq-form-field>
-                <input [(ngModel)]="value" kbqInput name="control" required />
+                <input kbqInput name="control" required [(ngModel)]="value" />
             </kbq-form-field>
 
             <button type="submit"></button>
@@ -137,7 +137,7 @@ class KbqFormFieldWithNgModelInForm {
             <kbq-form-field class="kbq-form__control">
                 <input kbqInput formControlName="lastName" />
             </kbq-form-field>
-            <button [color]="ThemePalette.Primary" [disabled]="reactiveForm.invalid" kbq-button type="submit">
+            <button kbq-button type="submit" [color]="ThemePalette.Primary" [disabled]="reactiveForm.invalid">
                 Отправить
             </button>
         </form>

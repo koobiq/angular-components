@@ -107,7 +107,7 @@ export const DATA_OBJECT = {
     imports: [KbqFormFieldModule, FormsModule, KbqTreeModule, KbqTreeSelectModule, KbqIconModule],
     template: `
         <kbq-form-field>
-            <kbq-tree-select [(ngModel)]="selected" [multiline]="true">
+            <kbq-tree-select [multiline]="true" [(ngModel)]="selected">
                 <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
                     <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                         {{ treeControl.getViewValue(node) }}
@@ -115,9 +115,9 @@ export const DATA_OBJECT = {
 
                     <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                         <i
-                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                             kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                         ></i>
                         {{ treeControl.getViewValue(node) }}
                     </kbq-tree-option>

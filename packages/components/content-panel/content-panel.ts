@@ -99,11 +99,11 @@ export class KbqContentPanelHeaderActions {}
                 @if (!contentPanelContainer.disableClose()) {
                     <button
                         class="kbq-content-panel-header__close-button"
+                        kbq-button
+                        type="button"
                         [color]="componentColors.Contrast"
                         [kbqStyle]="buttonStyles.Transparent"
                         (click)="contentPanelContainer.close()"
-                        kbq-button
-                        type="button"
                     >
                         <i kbq-icon="kbq-xmark_16"></i>
                     </button>
@@ -255,11 +255,11 @@ export class KbqContentPanel {
         @if (openedState()) {
             <div
                 class="kbq-content-panel-container__panel"
+                kbqResizable
                 @panelAnimation
                 [style.min-width.px]="minWidth()"
                 [style.width.px]="widthState()"
                 [style.max-width.px]="maxWidth()"
-                kbqResizable
             >
                 @if (!disableResizer()) {
                     <div

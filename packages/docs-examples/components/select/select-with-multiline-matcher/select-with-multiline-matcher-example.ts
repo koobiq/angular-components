@@ -15,7 +15,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <div>
             <kbq-form-field>
-                <kbq-select [multiline]="true" [value]="selected" [panelWidth]="400" placeholder="Placeholder">
+                <kbq-select placeholder="Placeholder" [multiline]="true" [value]="selected" [panelWidth]="400">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }

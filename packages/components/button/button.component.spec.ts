@@ -298,8 +298,8 @@ describe('Button with icon', () => {
 @Component({
     selector: 'test-app',
     template: `
-        <button [color]="buttonColor" [disabled]="isDisabled" (click)="increment()" kbq-button type="button"></button>
-        <a [color]="buttonColor" [disabled]="isDisabled" (click)="increment()" href="#" kbq-button></a>
+        <button kbq-button type="button" [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></button>
+        <a href="#" kbq-button [color]="buttonColor" [disabled]="isDisabled" (click)="increment()"></a>
     `
 })
 class TestApp {
@@ -455,10 +455,10 @@ class KbqButtonIconNgIfCaseTestApp {
 
 @Component({
     template: `
-        <button #triggerEl [kbqDropdownTriggerFor]="dropdown" kbq-button>Toggle dropdown</button>
+        <button #triggerEl kbq-button [kbqDropdownTriggerFor]="dropdown">Toggle dropdown</button>
         <kbq-dropdown
-            class="custom-one custom-two"
             #dropdown="kbqDropdown"
+            class="custom-one custom-two"
             [backdropClass]="backdropClass"
             [hasBackdrop]="true"
         >

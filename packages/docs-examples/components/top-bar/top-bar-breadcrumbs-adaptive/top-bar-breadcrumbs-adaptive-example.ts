@@ -73,18 +73,18 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
                     <kbq-breadcrumb-item text="Section" routerLink="./main/sections" />
                     <kbq-breadcrumb-item routerLink="./main/sections/details" text="Details">
                         <a
-                            class="kbq-truncate-line"
                             *kbqBreadcrumbView
+                            class="kbq-truncate-line"
                             routerLink="./main/sections/page/details"
                             tabindex="-1"
                         >
                             <button disabled aria-current="page" kbq-button kbqBreadcrumb>
                                 <span>Details</span>
                                 <i
-                                    [kbqPlacement]="PopUpPlacements.Bottom"
-                                    [kbqTooltipArrow]="false"
                                     kbq-icon="kbq-info-circle_16"
                                     kbqTooltip="Info"
+                                    [kbqPlacement]="PopUpPlacements.Bottom"
+                                    [kbqTooltipArrow]="false"
                                 ></i>
                             </button>
                         </a>
@@ -95,26 +95,26 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
             <div kbqTopBarContainer placement="end">
                 <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
+                        kbqOverflowItem="filter"
+                        kbqTooltip="Filter"
+                        kbq-button
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        kbqOverflowItem="filter"
-                        kbqTooltip="Filter"
-                        kbq-button
                     >
                         <i kbq-icon="kbq-filter_16"></i>
                     </button>
 
                     <button
+                        kbqOverflowItem="share"
+                        kbqTooltip="Share"
+                        kbq-button
                         [kbqStyle]="KbqButtonStyles.Filled"
                         [color]="KbqComponentColors.ContrastFade"
                         [kbqTooltipDisabled]="isDesktop()"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        kbqOverflowItem="share"
-                        kbqTooltip="Share"
-                        kbq-button
                     >
                         @if (isDesktop()) {
                             Share
@@ -125,10 +125,10 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
 
                     <div kbqOverflowItemsResult>
                         <button
+                            kbq-button
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
                             [kbqDropdownTriggerFor]="appDropdown"
-                            kbq-button
                         >
                             <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
                         </button>

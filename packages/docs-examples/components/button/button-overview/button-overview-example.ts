@@ -20,10 +20,10 @@ import { KbqComponentColors } from '@koobiq/components/core';
     template: `
         <button
             class="example-overview__button"
+            kbq-button
             [class.kbq-progress]="hasProgress"
             [color]="colors.Contrast"
             [disabled]="isDisabled"
-            kbq-button
         >
             Кнопка
         </button>

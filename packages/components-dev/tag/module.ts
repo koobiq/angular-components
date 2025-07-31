@@ -94,10 +94,10 @@ class DevExamples {}
                 }
 
                 <input
-                    [kbqTagInputFor]="inputTagList"
-                    (kbqTagInputTokenEnd)="createTag($event)"
                     kbqInput
                     placeholder="New keyword..."
+                    [kbqTagInputFor]="inputTagList"
+                    (kbqTagInputTokenEnd)="createTag($event)"
                 />
             </kbq-tag-list>
 

@@ -28,7 +28,7 @@ import { map, startWith } from 'rxjs/operators';
             <div class="kbq-form__row">
                 <label class="kbq-form__label">Enter countries to see autocomplete</label>
                 <kbq-form-field>
-                    <input [formControl]="control" [kbqAutocomplete]="auto" kbqInput type="text" />
+                    <input kbqInput type="text" [formControl]="control" [kbqAutocomplete]="auto" />
 
                     <kbq-autocomplete #auto="kbqAutocomplete">
                         @for (option of filteredOptions | async; track option) {

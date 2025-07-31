@@ -17,8 +17,8 @@
             @for (item of category.items; track item) {
                 <a class="docs-welcome__category-item" [routerLink]="[category.id, item.id]">
                     <img
-                        src="./assets/images/welcome/{{ item.svgPreview || 'generic' }}-{{ currentTheme$ | async }}.png"
                         class="docs-welcome__category-item-preview"
+                        src="./assets/images/welcome/{{ item.svgPreview || 'generic' }}-{{ currentTheme$ | async }}.png"
                         [alt]="item.id"
                     />
                     <div class="docs-welcome__category-item-title">{{ item.name[locale()] }}</div>

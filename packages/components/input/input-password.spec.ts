@@ -32,7 +32,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" [disabled]="disabled" kbqInputPassword />
+            <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
             <kbq-password-toggle
                 [kbqTooltipNotHidden]="'Скрыть пароль'"
                 [kbqTooltipDisabled]="disabled"
@@ -65,7 +65,7 @@ class KbqPasswordInputDefault {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" kbqInputPassword />
+            <input kbqInputPassword [(ngModel)]="value" />
             <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'" [kbqTooltipHidden]="'Показать пароль'" />
 
             <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
@@ -84,7 +84,7 @@ class KbqPasswordInputCustomPasswordRulesUndefined {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" [disabled]="disabled" kbqInputPassword />
+            <input kbqInputPassword [disabled]="disabled" [(ngModel)]="value" />
             <kbq-password-toggle [kbqTooltipNotHidden]="'Скрыть пароль'" [kbqTooltipHidden]="'Показать пароль'" />
 
             <kbq-password-hint [rule]="passwordRules.Custom" [regex]="regex" [checkRule]="checkFunc">
@@ -115,7 +115,7 @@ class KbqPasswordInputCustomPasswordRule {
     template: `
         <form [formGroup]="form">
             <kbq-form-field>
-                <input [formControl]="form.controls.control" kbqInputPassword />
+                <input kbqInputPassword [formControl]="form.controls.control" />
             </kbq-form-field>
         </form>
     `

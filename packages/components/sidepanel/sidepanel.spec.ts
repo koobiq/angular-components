@@ -320,12 +320,12 @@ class ComponentForSidepanel {}
 @Component({
     selector: 'kbq-sidepanel-from-dropdown',
     template: `
-        <button class="template-button" #trigger="kbqDropdownTrigger" [kbqDropdownTriggerFor]="dropdown" kbq-button>
+        <button #trigger="kbqDropdownTrigger" class="template-button" kbq-button [kbqDropdownTriggerFor]="dropdown">
             Open sidepanel from dropdown
         </button>
         <kbq-dropdown #dropdown>
             <ng-template kbqDropdownContent>
-                <button (click)="showSidepanel()" kbq-dropdown-item>open Component Sidepanel</button>
+                <button kbq-dropdown-item (click)="showSidepanel()">open Component Sidepanel</button>
             </ng-template>
         </kbq-dropdown>
     `,

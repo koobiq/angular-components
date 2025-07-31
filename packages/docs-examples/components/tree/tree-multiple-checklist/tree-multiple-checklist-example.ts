@@ -109,37 +109,37 @@ export const DATA_OBJECT = {
         KbqCheckboxModule
     ],
     template: `
-        <kbq-tree-selection [(ngModel)]="modelValue" [dataSource]="dataSource" [treeControl]="treeControl">
+        <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl" [(ngModel)]="modelValue">
             <kbq-tree-option
                 *kbqTreeNodeDef="let node"
+                kbqTreeNodePadding
                 [class.kbq-selected]="selectedState(node)"
                 [disabled]="node.name === 'tests'"
                 (click)="onOptionClick($event, node)"
                 (keydown.enter)="fileSelectionToggle(node)"
                 (keydown.space)="fileSelectionToggle(node)"
-                kbqTreeNodePadding
             >
                 <kbq-checkbox
+                    style="margin-right: 8px"
                     [checked]="checklistSelection.isSelected(node)"
                     [disabled]="node.name === 'tests'"
-                    style="margin-right: 8px"
                 />
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>
 
             <kbq-tree-option
                 *kbqTreeNodeDef="let node; when: hasChild"
+                kbqTreeNodePadding
                 [class.kbq-selected]="selectedState(node)"
                 (click)="onOptionClick($event, node)"
                 (keydown.enter)="fileSelectionToggle(node)"
                 (keydown.space)="fileSelectionToggle(node)"
-                kbqTreeNodePadding
             >
                 <kbq-tree-node-toggle [node]="node" />
                 <kbq-checkbox
+                    style="margin-right: 8px"
                     [checked]="descendantsAllSelected(node)"
                     [indeterminate]="descendantsPartiallySelected(node)"
-                    style="margin-right: 8px"
                 />
                 <span [innerHTML]="treeControl.getViewValue(node)"></span>
             </kbq-tree-option>

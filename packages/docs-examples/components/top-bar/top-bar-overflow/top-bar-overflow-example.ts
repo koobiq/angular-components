@@ -64,6 +64,7 @@ type ExampleAction = {
                 <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     @for (action of actions; track action.id) {
                         <button
+                            kbq-button
                             [kbqOverflowItem]="action.id"
                             [kbqStyle]="action.style"
                             [color]="action.color"
@@ -72,10 +73,9 @@ type ExampleAction = {
                             [kbqTooltipDisabled]="canTooltipBeAppied(action)"
                             [kbqTooltip]="action.text || action.id"
                             [alwaysVisible]="action?.alwaysVisible"
-                            kbq-button
                         >
                             @if (action.icon) {
-                                <i [class]="action.icon" kbq-icon=""></i>
+                                <i kbq-icon="" [class]="action.icon"></i>
                             }
                             @if (canTooltipBeAppied(action)) {
                                 {{ action.text }}
@@ -85,10 +85,10 @@ type ExampleAction = {
 
                     <div kbqOverflowItemsResult>
                         <button
+                            kbq-button
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
                             [kbqDropdownTriggerFor]="appDropdown"
-                            kbq-button
                         >
                             <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
                         </button>

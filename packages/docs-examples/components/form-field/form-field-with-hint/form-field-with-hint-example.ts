@@ -15,7 +15,7 @@ import { map } from 'rxjs';
     template: `
         <kbq-form-field>
             <kbq-label>Article title</kbq-label>
-            <input [formControl]="formControl" [maxlength]="maxLength" kbqInput placeholder="Article title" />
+            <input kbqInput placeholder="Article title" [formControl]="formControl" [maxlength]="maxLength" />
             <kbq-hint>Max {{ maxLength }} chars ({{ count() }}/{{ maxLength }})</kbq-hint>
         </kbq-form-field>
     `,

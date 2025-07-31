@@ -208,7 +208,7 @@ class SimpleBreadcrumbs {
 
             @for (item of items; track item) {
                 <kbq-breadcrumb-item [text]="item.text" [disabled]="item.disabled">
-                    <a class="custom-breadcrumb" *kbqBreadcrumbView>CUSTOM_BREADCRUMB_TEMPLATE</a>
+                    <a *kbqBreadcrumbView class="custom-breadcrumb">CUSTOM_BREADCRUMB_TEMPLATE</a>
                 </kbq-breadcrumb-item>
             }
         </kbq-breadcrumbs>

@@ -57,7 +57,7 @@ export class ExampleDropdownPortal implements OnInit {
         ExampleDropdownPortal
     ],
     template: `
-        <button [kbqDropdownTriggerFor]="egDropdown" kbq-button>
+        <button kbq-button [kbqDropdownTriggerFor]="egDropdown">
             dropdown
             <i kbq-icon="kbq-chevron-down-s_16"></i>
         </button>
@@ -72,7 +72,7 @@ export class ExampleDropdownPortal implements OnInit {
 
             <ng-template #dropdownItemTpl let-item="item">
                 @if (item.children) {
-                    <button [kbqDropdownTriggerFor]="egDropdownNested" kbq-dropdown-item>
+                    <button kbq-dropdown-item [kbqDropdownTriggerFor]="egDropdownNested">
                         {{ item.label }}
                     </button>
 

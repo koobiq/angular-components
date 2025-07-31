@@ -12,9 +12,9 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'file-upload-single-error-overview-example',
     template: `
         <kbq-single-file-upload
+            inputId="file-upload-single-error-overview"
             [file]="file"
             (fileQueueChange)="onChange($event)"
-            inputId="file-upload-single-error-overview"
         >
             @if (!errors.length) {
                 <i kbq-icon="kbq-file-o_16"></i>

@@ -49,7 +49,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" kbqNumberInput />
+            <input kbqNumberInput [(ngModel)]="value" />
             <kbq-stepper />
         </kbq-form-field>
     `
@@ -61,7 +61,7 @@ class KbqNumberInputTestComponent {
 @Component({
     template: `
         <kbq-form-field>
-            <input [formControl]="formControl" kbqNumberInput />
+            <input kbqNumberInput [formControl]="formControl" />
             <kbq-stepper />
         </kbq-form-field>
     `
@@ -72,7 +72,7 @@ class KbqNumberInputWithFormControl {
 
 @Component({
     template: `
-        <form [formGroup]="reactiveForm" novalidate>
+        <form novalidate [formGroup]="reactiveForm">
             <kbq-form-field>
                 <input kbqNumberInput formControlName="reactiveInputValue" />
                 <kbq-stepper />
@@ -93,7 +93,7 @@ class KbqNumberInputWithFormControlName {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" kbqNumberInput max="10" min="3" step="0.5" big-step="2" />
+            <input kbqNumberInput max="10" min="3" step="0.5" big-step="2" [(ngModel)]="value" />
             <kbq-stepper />
         </kbq-form-field>
     `
@@ -105,7 +105,7 @@ class KbqNumberInputMaxMinStep {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" [max]="max" [min]="min" [step]="step" [bigStep]="bigStep" kbqNumberInput />
+            <input kbqNumberInput [max]="max" [min]="min" [step]="step" [bigStep]="bigStep" [(ngModel)]="value" />
             <kbq-stepper />
         </kbq-form-field>
     `
@@ -121,7 +121,7 @@ class KbqNumberInputMaxMinStepInput {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" kbqNumberInput />
+            <input kbqNumberInput [(ngModel)]="value" />
             <kbq-cleaner />
         </kbq-form-field>
     `
@@ -134,13 +134,13 @@ class KbqNumberInputWithCleaner {
     template: `
         <kbq-form-field>
             <input
-                [(ngModel)]="value"
+                kbqNumberInput
                 [max]="max"
                 [min]="min"
                 [step]="step"
                 [bigStep]="bigStep"
                 [withThousandSeparator]="withMask"
-                kbqNumberInput
+                [(ngModel)]="value"
             />
             <kbq-stepper />
         </kbq-form-field>
@@ -162,7 +162,7 @@ class KbqNumberInputWithMask {
 @Component({
     template: `
         <kbq-form-field>
-            <input [(ngModel)]="value" [step]="step" [bigStep]="bigStep" [integer]="true" kbqNumberInput />
+            <input kbqNumberInput [step]="step" [bigStep]="bigStep" [integer]="true" [(ngModel)]="value" />
             <kbq-stepper />
         </kbq-form-field>
     `

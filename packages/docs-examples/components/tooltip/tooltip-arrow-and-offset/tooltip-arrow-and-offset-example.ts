@@ -25,10 +25,10 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
         <div class="layout-row layout-align-space-around-center">
             <div class="layout-row layout-align-center-center">
                 <button
-                    [kbqTooltipArrow]="arrow"
-                    [kbqTooltipOffset]="offset"
                     kbq-button
                     kbqTooltip="Очень длинное название на тултипе"
+                    [kbqTooltipArrow]="arrow"
+                    [kbqTooltipOffset]="offset"
                 >
                     Кнопка с тултипом
                 </button>

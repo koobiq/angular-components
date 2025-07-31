@@ -38,10 +38,10 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             <kbq-form-field>
                 <kbq-label>Email</kbq-label>
                 <input
-                    [errorStateMatcher]="customErrorStateMatcher"
                     formControlName="email"
                     kbqInput
                     placeholder="mail@koobiq.io"
+                    [errorStateMatcher]="customErrorStateMatcher"
                 />
                 <kbq-hint>Enter email</kbq-hint>
                 <kbq-error>

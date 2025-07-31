@@ -10,7 +10,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
     imports: [KbqToggleModule],
     template: `
         <div class="example-toggle-label-left__container layout-align-center-start layout-column layout-gap-s">
-            <kbq-toggle [checked]="true" labelPosition="left">Tap to wake</kbq-toggle>
+            <kbq-toggle labelPosition="left" [checked]="true">Tap to wake</kbq-toggle>
             <kbq-toggle labelPosition="left">Shake to undo</kbq-toggle>
             <kbq-toggle labelPosition="left">Vibration</kbq-toggle>
         </div>

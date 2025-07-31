@@ -103,7 +103,7 @@ export class KbqError extends KbqHint {
     imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
     template: `
-        <i [ngClass]="icon" kbq-icon=""></i>
+        <i kbq-icon="" [ngClass]="icon"></i>
 
         <span class="kbq-hint__text">
             <ng-content />

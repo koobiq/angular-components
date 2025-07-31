@@ -822,11 +822,11 @@ function expectFlatTreeToMatch(treeElement: Element, expectedPaddingIndent: numb
     template: `
         <kbq-tree-selection [dataSource]="dataSource" [treeControl]="treeControl">
             <kbq-tree-option
-                class="customNodeClass"
                 *kbqTreeNodeDef="let node"
-                [kbqTreeNodePaddingIndent]="28"
+                class="customNodeClass"
                 kbqTreeNodePadding
                 kbqTreeNodeToggle
+                [kbqTreeNodePaddingIndent]="28"
             >
                 {{ node.name }}
             </kbq-tree-option>
@@ -938,10 +938,10 @@ class TreeSelectionFocusStates extends TreeParams {}
 @Component({
     template: `
         <kbq-tree-selection
-            [(ngModel)]="modelValue"
+            multiple="keyboard"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
-            multiple="keyboard"
+            [(ngModel)]="modelValue"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                 {{ node.name }}
@@ -963,11 +963,11 @@ class KbqTreeAppMultiple extends TreeParams {
 @Component({
     template: `
         <kbq-tree-selection
+            multiple="checkbox"
             [ngModel]="modelValue"
             [dataSource]="dataSource"
             [treeControl]="treeControl"
             (ngModelChange)="onModelValueChange($event)"
-            multiple="checkbox"
         >
             <kbq-tree-option *kbqTreeNodeDef="let node" kbqTreeNodePadding>
                 {{ node.name }}

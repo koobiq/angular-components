@@ -241,7 +241,7 @@ export class DevCustomTextDirective {}
                     </kbq-multiple-file-upload>
                 </td>
                 <td>
-                    <kbq-multiple-file-upload [disabled]="true" size="compact">
+                    <kbq-multiple-file-upload size="compact" [disabled]="true">
                         <ng-template #kbqFileIcon>
                             <i kbq-icon="kbq-file-o_16"></i>
                         </ng-template>
@@ -265,8 +265,8 @@ export class DevCustomTextDirective {}
             <tr>
                 <td colspan="4">
                     <kbq-multiple-file-upload
-                        class="dev-dragover"
                         #multipleWithErrorState
+                        class="dev-dragover"
                         [formControl]="multipleFileControlInvalid"
                     >
                         <ng-template #kbqFileIcon>
@@ -372,11 +372,11 @@ class DevExamples {}
     selector: 'dev-file-upload-compact',
     template: `
         <kbq-multiple-file-upload
+            size="compact"
             [disabled]="disabled"
             [inputId]="'test-compact'"
             [files]="files"
             (fileQueueChanged)="addedFiles($event)"
-            size="compact"
         >
             <ng-template #kbqFileIcon>
                 <i color="contrast-fade" kbq-icon="kbq-file-o_16"></i>

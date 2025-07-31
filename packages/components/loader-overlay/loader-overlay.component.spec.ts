@@ -122,9 +122,9 @@ class OverlayNoParams {}
 
             <kbq-loader-overlay>
                 <kbq-progress-spinner
+                    kbq-loader-overlay-indicator
                     [mode]="'indeterminate'"
                     [color]="themePalette.Error"
-                    kbq-loader-overlay-indicator
                 />
 
                 <div kbq-loader-overlay-text>Создание отчета</div>

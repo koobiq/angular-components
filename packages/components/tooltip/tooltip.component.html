@@ -3,9 +3,9 @@
     class="kbq-tooltip"
     [class.kbq-tooltip_arrowless]="!arrow"
     [ngClass]="classMap"
+    [@state]="visibility"
     (@state.done)="animationDone($event)"
     (@state.start)="animationStart()"
-    [@state]="visibility"
 >
     <div class="kbq-tooltip__inner">
         @if (arrow) {

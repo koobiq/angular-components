@@ -34,10 +34,10 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
             <kbq-form-field>
                 <kbq-label>Email</kbq-label>
                 <input
-                    [errorStateMatcher]="customErrorStateMatcher"
                     formControlName="email"
                     kbqInput
                     placeholder="mail@koobiq.io"
+                    [errorStateMatcher]="customErrorStateMatcher"
                 />
                 <kbq-hint>Error will be shown when the control is invalid and the form is submitted</kbq-hint>
                 <kbq-error>

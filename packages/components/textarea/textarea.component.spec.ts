@@ -30,7 +30,7 @@ function createComponent<T>(component: Type<T>, imports: any[] = [], providers: 
 @Component({
     template: `
         <kbq-form-field>
-            <textarea [(ngModel)]="value" kbqTextarea required></textarea>
+            <textarea kbqTextarea required [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `
 })
@@ -42,7 +42,7 @@ class KbqTextareaInvalid {
     template: `
         <form #form="ngForm">
             <kbq-form-field>
-                <textarea [(ngModel)]="value" kbqTextarea name="control" required></textarea>
+                <textarea kbqTextarea name="control" required [(ngModel)]="value"></textarea>
             </kbq-form-field>
 
             <button type="submit"></button>
@@ -58,7 +58,7 @@ class KbqFormFieldWithNgModelInForm {
 @Component({
     template: `
         <kbq-form-field>
-            <textarea class="kbq-textarea_monospace" [(ngModel)]="value" kbqTextarea></textarea>
+            <textarea class="kbq-textarea_monospace" kbqTextarea [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `
 })
@@ -69,7 +69,7 @@ class KbqTextareaWithMonospace {
 @Component({
     template: `
         <kbq-form-field>
-            <textarea [(ngModel)]="value" [placeholder]="placeholder" [disabled]="disabled" kbqTextarea></textarea>
+            <textarea kbqTextarea [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"></textarea>
         </kbq-form-field>
     `
 })

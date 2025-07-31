@@ -10,9 +10,9 @@ import { KbqPipeTitleDirective } from './pipe-title';
     standalone: true,
     selector: 'kbq-pipe-readonly',
     template: `
-        <button [disabled]="data.disabled" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip" kbq-button>
-            <span class="kbq-pipe__name" #kbqTitleText kbqPipeMinWidth>{{ data.name }}</span>
-            <span class="kbq-pipe__value" #kbqTitleText [class.kbq-pipe__value_empty]="!data.value" kbqPipeMinWidth>
+        <button kbq-button [disabled]="data.disabled" [kbqPipeState]="data" [kbqPipeTitle]="pipeTooltip">
+            <span #kbqTitleText class="kbq-pipe__name" kbqPipeMinWidth>{{ data.name }}</span>
+            <span #kbqTitleText class="kbq-pipe__value" kbqPipeMinWidth [class.kbq-pipe__value_empty]="!data.value">
                 {{ data.value }}
             </span>
         </button>

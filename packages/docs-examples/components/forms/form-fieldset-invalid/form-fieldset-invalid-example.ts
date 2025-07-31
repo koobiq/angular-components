@@ -14,15 +14,15 @@ import { KbqInputModule } from '@koobiq/components/input';
         <form [formGroup]="form">
             <kbq-fieldset>
                 <kbq-form-field kbqFieldsetItem>
-                    <input [formControl]="form.controls.surname" kbqInput placeholder="Surname" />
+                    <input kbqInput placeholder="Surname" [formControl]="form.controls.surname" />
                 </kbq-form-field>
 
                 <kbq-form-field kbqFieldsetItem>
-                    <input [formControl]="form.controls.name" kbqInput placeholder="Name" />
+                    <input kbqInput placeholder="Name" [formControl]="form.controls.name" />
                 </kbq-form-field>
 
                 <kbq-form-field kbqFieldsetItem>
-                    <input [formControl]="form.controls.patronymic" kbqInput placeholder="Patronymic" />
+                    <input kbqInput placeholder="Patronymic" [formControl]="form.controls.patronymic" />
                 </kbq-form-field>
 
                 @if (form.controls.surname.hasError('required')) {

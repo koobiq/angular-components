@@ -15,8 +15,8 @@ import { KbqModalModule, KbqModalRef, KbqModalService } from '@koobiq/components
         <kbq-modal-body>{{ subtitle }}</kbq-modal-body>
 
         <div kbq-modal-footer>
-            <button [color]="'contrast'" (click)="destroyModal('save')" kbq-button>Save</button>
-            <button (click)="destroyModal('close')" kbq-button autofocus>Close</button>
+            <button kbq-button [color]="'contrast'" (click)="destroyModal('save')">Save</button>
+            <button kbq-button autofocus (click)="destroyModal('close')">Close</button>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,7 +43,7 @@ export class CustomModalComponent {
         KbqButtonModule
     ],
     template: `
-        <button (click)="openModal()" kbq-button>Open Modal</button>
+        <button kbq-button (click)="openModal()">Open Modal</button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

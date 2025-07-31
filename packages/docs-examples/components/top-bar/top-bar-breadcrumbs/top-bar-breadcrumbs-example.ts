@@ -45,26 +45,26 @@ import { map } from 'rxjs/operators';
             <div kbqTopBarContainer placement="end">
                 <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
                     <button
+                        kbqOverflowItem="0"
+                        kbqTooltip="Filter"
+                        kbq-button
                         [kbqStyle]="KbqButtonStyles.Transparent"
                         [color]="KbqComponentColors.Contrast"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        kbqOverflowItem="0"
-                        kbqTooltip="Filter"
-                        kbq-button
                     >
                         <i kbq-icon="kbq-filter_16"></i>
                     </button>
 
                     <button
+                        kbqOverflowItem="1"
+                        kbqTooltip="Share"
+                        kbq-button
                         [kbqStyle]="KbqButtonStyles.Filled"
                         [color]="KbqComponentColors.ContrastFade"
                         [kbqTooltipDisabled]="isDesktop()"
                         [kbqPlacement]="PopUpPlacements.Bottom"
                         [kbqTooltipArrow]="false"
-                        kbqOverflowItem="1"
-                        kbqTooltip="Share"
-                        kbq-button
                     >
                         @if (isDesktop()) {
                             Share
@@ -75,10 +75,10 @@ import { map } from 'rxjs/operators';
 
                     <div kbqOverflowItemsResult>
                         <button
+                            kbq-button
                             [kbqStyle]="KbqButtonStyles.Transparent"
                             [color]="KbqComponentColors.Contrast"
                             [kbqDropdownTriggerFor]="appDropdown"
-                            kbq-button
                         >
                             <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
                         </button>

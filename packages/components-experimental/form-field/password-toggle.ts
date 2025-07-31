@@ -16,7 +16,7 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
     template: `
-        <i [ngClass]="icon" [autoColor]="true" color="contrast-fade" kbq-icon-button=""></i>
+        <i color="contrast-fade" kbq-icon-button="" [ngClass]="icon" [autoColor]="true"></i>
     `,
     styleUrl: './password-toggle.scss',
     host: {

@@ -13,7 +13,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
     standalone: true,
     selector: 'file-upload-multiple-accept-validation-example',
     template: `
-        <kbq-file-upload (fileRemoved)="onFileRemoved($event)" (filesAdded)="onFilesAdded($event)" multiple>
+        <kbq-file-upload multiple (fileRemoved)="onFileRemoved($event)" (filesAdded)="onFilesAdded($event)">
             <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {
                     <i kbq-icon="kbq-file-o_16"></i>

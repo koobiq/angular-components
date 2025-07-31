@@ -15,9 +15,9 @@ import { KbqSidepanelModule, KbqSidepanelService } from '@koobiq/components/side
         KbqButtonModule
     ],
     template: `
-        <button (click)="sidepanel.open(template)" kbq-button>Open sidepanel</button>
+        <button kbq-button (click)="sidepanel.open(template)">Open sidepanel</button>
         <ng-template #template>
-            <kbq-code-block [files]="files" canToggleSoftWrap noBorder lineNumbers />
+            <kbq-code-block canToggleSoftWrap noBorder lineNumbers [files]="files" />
         </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

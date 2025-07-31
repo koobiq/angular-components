@@ -35,12 +35,12 @@ export class KbqDatepickerToggleIcon {}
     template: `
         <ng-content select="[kbqDatepickerToggleIcon]">
             <i
+                color="contrast-fade"
+                kbq-icon-button="kbq-calendar-o_16"
                 [tabindex]="-1"
                 [class.kbq-active]="datepicker && datepicker.opened"
                 [disabled]="disabled"
                 [autoColor]="true"
-                color="contrast-fade"
-                kbq-icon-button="kbq-calendar-o_16"
             ></i>
         </ng-content>
     `,

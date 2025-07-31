@@ -17,46 +17,46 @@ import { KbqToolTipModule } from '@koobiq/components/tooltip';
     template: `
         <div class="layout-row layout-wrap" style="gap: 16px">
             <button
+                kbq-button
+                kbqTooltip="Тултип"
                 [kbqPlacement]="placement"
                 [kbqTooltipColor]="KbqComponentColors.Contrast"
-                kbq-button
-                kbqTooltip="Тултип"
             >
                 {{ buttonText }}
             </button>
 
             <button
+                kbq-button
+                kbqTooltip="Тултип"
                 [kbqPlacement]="placement"
                 [kbqTooltipColor]="KbqComponentColors.ContrastFade"
-                kbq-button
-                kbqTooltip="Тултип"
             >
                 {{ buttonText }}
             </button>
 
             <button
+                kbq-button
+                kbqTooltip="Тултип"
                 [kbqPlacement]="placement"
                 [kbqTooltipColor]="KbqComponentColors.Error"
-                kbq-button
-                kbqTooltip="Тултип"
             >
                 {{ buttonText }}
             </button>
 
             <button
+                kbq-button
+                kbqTooltip="Тултип"
                 [kbqPlacement]="placement"
                 [kbqTooltipColor]="KbqComponentColors.Warning"
-                kbq-button
-                kbqTooltip="Тултип"
             >
                 {{ buttonText }}
             </button>
 
             <button
-                [kbqPlacement]="placement"
-                [kbqTooltipColor]="KbqComponentColors.Theme"
                 kbq-button
                 kbqTooltip="Тултип"
+                [kbqPlacement]="placement"
+                [kbqTooltipColor]="KbqComponentColors.Theme"
             >
                 {{ buttonText }}
             </button>

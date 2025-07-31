@@ -28,7 +28,7 @@ import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
         })
     ],
     template: `
-        <kbq-code-block [files]="files" canToggleSoftWrap maxHeight="200" lineNumbers canDownload />
+        <kbq-code-block canToggleSoftWrap maxHeight="200" lineNumbers canDownload [files]="files" />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -26,12 +26,12 @@ import { getId } from './pipes/base-pipe';
     template: `
         <kbq-select #select [tabIndex]="-1" [multiple]="true" [value]="addedPipes" [compareWith]="compareWith">
             <button
+                kbq-button
+                kbq-select-matcher
                 [color]="'contrast-fade'"
                 [kbqStyle]="'outline'"
                 [ngClass]="{ 'kbq-active': select.panelOpen }"
-                kbq-button
                 kbqTooltip="{{ filterBar.configuration.add.tooltip }}"
-                kbq-select-matcher
             >
                 <i kbq-icon="kbq-plus_16"></i>
             </button>

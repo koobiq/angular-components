@@ -293,16 +293,16 @@ export class KbqButtonToggleGroup implements ControlValueAccessor, OnInit, After
     exportAs: 'kbqButtonToggle',
     template: `
         <button
+            kbq-button
+            kbq-title
+            type="button"
             [kbqStyle]="'transparent'"
             [class.kbq-selected]="checked"
             [disabled]="disabled"
             [tabIndex]="tabIndex || 0"
             (click)="onToggleClick()"
-            kbq-button
-            kbq-title
-            type="button"
         >
-            <div class="kbq-button-toggle-wrapper" #kbqTitleText>
+            <div #kbqTitleText class="kbq-button-toggle-wrapper">
                 <ng-content />
             </div>
         </button>

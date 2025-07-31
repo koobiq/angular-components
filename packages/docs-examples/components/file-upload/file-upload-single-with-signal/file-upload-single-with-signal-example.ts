@@ -16,7 +16,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
             </kbq-file-upload>
         </div>
 
-        <kbq-file-upload [files]="files()" (fileQueueChanged)="onMultipleChange($event)" multiple>
+        <kbq-file-upload multiple [files]="files()" (fileQueueChanged)="onMultipleChange($event)">
             <i kbq-icon="kbq-file-o_16"></i>
         </kbq-file-upload>
     `,

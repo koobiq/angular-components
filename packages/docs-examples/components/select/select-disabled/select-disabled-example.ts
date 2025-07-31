@@ -13,7 +13,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div class="example-row">
             <div class="kbq-form__label">For select</div>
             <kbq-form-field>
-                <kbq-select [value]="selected" placeholder="Placeholder" disabled>
+                <kbq-select placeholder="Placeholder" disabled [value]="selected">
                     @for (option of options; track option) {
                         <kbq-option [value]="option">{{ option }}</kbq-option>
                     }
@@ -24,7 +24,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div class="example-row">
             <div class="kbq-form__label">For options</div>
             <kbq-form-field>
-                <kbq-select [value]="selected" placeholder="Placeholder">
+                <kbq-select placeholder="Placeholder" [value]="selected">
                     @for (option of options; track option; let odd = $odd) {
                         <kbq-option [disabled]="odd" [value]="option">{{ option }}</kbq-option>
                     }
@@ -35,7 +35,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         <div class="example-row">
             <div class="kbq-form__label">For optgroup</div>
             <kbq-form-field>
-                <kbq-select [value]="selected" placeholder="Placeholder">
+                <kbq-select placeholder="Placeholder" [value]="selected">
                     @for (group of groups; track group; let odd = $odd) {
                         <kbq-optgroup [label]="group" [disabled]="odd">
                             @for (option of options; track option) {

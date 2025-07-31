@@ -33,12 +33,12 @@ const ESCAPE_KEY_EVENT = new KeyboardEvent('keydown', { key: 'Escape' });
     selector: 'test-content-panel',
     template: `
         <kbq-content-panel-container
-            [(opened)]="opened"
             [width]="width()"
             [maxWidth]="maxWidth()"
             [minWidth]="minWidth()"
             [disableClose]="disableClose()"
             [disableCloseByEscape]="disableCloseByEscape()"
+            [(opened)]="opened"
         >
             <div>test</div>
 

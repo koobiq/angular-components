@@ -19,7 +19,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
             <div class="example-tabs-actionbar_nav">
                 <nav kbqTabNavBar underlined>
                     @for (dashboard of dashboards; track dashboard) {
-                        <a [active]="activeDashboard === dashboard" (click)="activeDashboard = dashboard" kbqTabLink>
+                        <a kbqTabLink [active]="activeDashboard === dashboard" (click)="activeDashboard = dashboard">
                             {{ dashboard }}
                         </a>
                     }
@@ -33,7 +33,7 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
                 <button class="kbq-button_transparent" color="contrast" kbq-button>
                     <i kbq-icon="kbq-filter_16"></i>
                 </button>
-                <button (click)="createDashboard()" color="contrast" kbq-button>
+                <button color="contrast" kbq-button (click)="createDashboard()">
                     <i kbq-icon="kbq-plus_16"></i>
                     Create dashboard
                 </button>

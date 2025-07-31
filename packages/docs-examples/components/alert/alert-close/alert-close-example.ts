@@ -29,10 +29,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
             <i kbq-icon="kbq-info-circle_16"></i>
             Блок скрывается по крестику в углу, не дублируйте эту возможность с помощью кнопки под текстом сообщения
             <i
-                [color]="colors.ContrastFade"
-                (click)="state = !state"
                 kbq-alert-close-button
                 kbq-icon-button="kbq-xmark-s_16"
+                [color]="colors.ContrastFade"
+                (click)="state = !state"
             ></i>
         </kbq-alert>
     `

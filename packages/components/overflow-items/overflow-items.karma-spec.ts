@@ -43,11 +43,11 @@ const isOverflowItemsResultVisible = (debugElement: DebugElement): boolean => {
     template: `
         <div
             #kbqOverflowItems="kbqOverflowItems"
+            kbqOverflowItems
             [style.width.px]="containerWidth()"
             [reverseOverflowOrder]="reverseOverflowOrder()"
-            kbqOverflowItems
         >
-            <div [style.width.px]="resultWidth()" [style.flex-shrink]="0" kbqOverflowItemsResult>
+            <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItems.hiddenItemIDs().size }} more
             </div>
             @for (item of items; track item) {
@@ -73,19 +73,19 @@ export class TestOverflowItems {
     template: `
         <div
             #kbqOverflowItemsReverse="kbqOverflowItems"
-            [style.width.px]="containerWidth()"
             reverseOverflowOrder
             kbqOverflowItems
+            [style.width.px]="containerWidth()"
         >
             <div
+                kbqOverflowItem="lastHiddenItem"
                 [style.width.px]="itemWidth()"
                 [style.flex-shrink]="0"
                 [order]="items.length + 1"
-                kbqOverflowItem="lastHiddenItem"
             >
                 lastHiddenItem
             </div>
-            <div [style.width.px]="resultWidth()" [style.flex-shrink]="0" kbqOverflowItemsResult>
+            <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
             </div>
             @for (item of items; track item) {
@@ -110,7 +110,7 @@ export class TestOrderedOverflowItems {
     imports: [KbqOverflowItemsModule],
     selector: 'overflow-items-test',
     template: `
-        <div #kbqOverflowItemsReverse="kbqOverflowItems" [style.width.px]="containerWidth()" kbqOverflowItems>
+        <div #kbqOverflowItemsReverse="kbqOverflowItems" kbqOverflowItems [style.width.px]="containerWidth()">
             @for (item of items; track item) {
                 @let alwaysVisible = $index === 3;
                 <div
@@ -122,7 +122,7 @@ export class TestOrderedOverflowItems {
                     {{ item }}
                 </div>
             }
-            <div [style.width.px]="resultWidth()" [style.flex-shrink]="0" kbqOverflowItemsResult>
+            <div kbqOverflowItemsResult [style.width.px]="resultWidth()" [style.flex-shrink]="0">
                 and {{ kbqOverflowItemsReverse.hiddenItemIDs().size }} more
             </div>
         </div>

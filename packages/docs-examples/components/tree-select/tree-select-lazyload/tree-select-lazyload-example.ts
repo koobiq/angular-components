@@ -187,9 +187,9 @@ export class LazyLoadDataSource<T, F> extends KbqTreeFlatDataSource<T, F> {
 
                     <kbq-tree-option *kbqTreeNodeDef="let node; when: hasChild" kbqTreeNodePadding>
                         <i
-                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                             kbq-icon="kbq-chevron-down-s_16"
                             kbqTreeNodeToggle
+                            [style.transform]="treeControl.isExpanded(node) ? '' : 'rotate(-90deg)'"
                         ></i>
                         @if (node.loading) {
                             <kbq-progress-spinner mode="indeterminate" />

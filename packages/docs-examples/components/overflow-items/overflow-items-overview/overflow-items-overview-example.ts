@@ -25,7 +25,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             Reverse overflow order
         </kbq-toggle>
 
-        <div #kbqOverflowItems="kbqOverflowItems" [reverseOverflowOrder]="reverseOverflowOrder()" kbqOverflowItems>
+        <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems [reverseOverflowOrder]="reverseOverflowOrder()">
             @if (reverseOverflowOrder()) {
                 <div class="layout-margin-right-xs" kbqOverflowItemsResult>
                     and {{ kbqOverflowItems.hiddenItemIDs().size }} more

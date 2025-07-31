@@ -100,7 +100,7 @@ const getSubmitButtonNativeElement = (debugElement: DebugElement): HTMLInputElem
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <input [formControl]="control" kbqInput />
+            <input kbqInput [formControl]="control" />
             <kbq-hint id="test-hint-id">Hint</kbq-hint>
             <kbq-error id="test-error-id">Error</kbq-error>
         </kbq-form-field>
@@ -132,7 +132,7 @@ export class InputFormFieldWithPrefixAndSuffix {}
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <input [formControl]="control" kbqInput />
+            <input kbqInput [formControl]="control" />
             <kbq-cleaner />
         </kbq-form-field>
     `
@@ -164,7 +164,7 @@ export class InputFormFieldWithoutFormFieldControl {
     template: `
         <kbq-form-field>
             <kbq-label>Label</kbq-label>
-            <input [id]="id" kbqInput />
+            <input kbqInput [id]="id" />
         </kbq-form-field>
     `
 })
@@ -186,7 +186,7 @@ class CustomErrorStateMatcher implements ErrorStateMatcher {
     template: `
         <form [formGroup]="formGroup">
             <kbq-form-field>
-                <input [errorStateMatcher]="errorStateMatcher" formControlName="email" kbqInput />
+                <input formControlName="email" kbqInput [errorStateMatcher]="errorStateMatcher" />
                 <kbq-error id="test-error-id">Error</kbq-error>
             </kbq-form-field>
             <input type="submit" />
@@ -222,7 +222,7 @@ export class InputFormFieldWithBorderCustomization {
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field>
-            <input [formControl]="formControl" kbqInputPassword />
+            <input kbqInputPassword [formControl]="formControl" />
             <kbq-password-toggle />
             <kbq-reactive-password-hint
                 id="test-reactive-password-hint-id"

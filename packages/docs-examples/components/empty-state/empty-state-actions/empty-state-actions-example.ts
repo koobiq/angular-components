@@ -18,11 +18,11 @@ import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
         <kbq-empty-state style="min-height: 216px">
             <div kbq-empty-state-text>{{ emptyStateText }}</div>
             <div class="layout-row layout-align-center" kbq-empty-state-actions style="min-width: 340px">
-                <button class="layout-margin-right-s" [color]="colors.Contrast" [kbqStyle]="styles.Filled" kbq-button>
+                <button class="layout-margin-right-s" kbq-button [color]="colors.Contrast" [kbqStyle]="styles.Filled">
                     {{ buttonText }}
                 </button>
 
-                <button [color]="colors.ContrastFade" [kbqStyle]="styles.Filled" kbq-button>Объединить группы</button>
+                <button kbq-button [color]="colors.ContrastFade" [kbqStyle]="styles.Filled">Объединить группы</button>
             </div>
         </kbq-empty-state>
     `

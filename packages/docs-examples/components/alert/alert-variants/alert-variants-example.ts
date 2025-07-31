@@ -29,14 +29,14 @@ import { KbqIconModule } from '@koobiq/components/icon';
         <div class="layout-row example-row layout-gap-l flex-100">
             <div class="layout-column example-column">
                 <kbq-alert [alertColor]="alertColors.Error">
-                    <i [color]="colors.Error" kbq-icon-item="kbq-exclamation-triangle_16"></i>
+                    <i kbq-icon-item="kbq-exclamation-triangle_16" [color]="colors.Error"></i>
                     <div kbq-alert-title>Default</div>
                     {{ text }}
                 </kbq-alert>
             </div>
             <div class="layout-column example-column">
                 <kbq-alert [alertColor]="alertColors.Error" [alertStyle]="alertStyles.Colored" [compact]="true">
-                    <i [color]="colors.Error" kbq-icon="kbq-exclamation-triangle_16"></i>
+                    <i kbq-icon="kbq-exclamation-triangle_16" [color]="colors.Error"></i>
                     <div kbq-alert-title>Colored</div>
                     {{ text }}
                 </kbq-alert>

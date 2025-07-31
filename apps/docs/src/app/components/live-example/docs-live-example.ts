@@ -41,15 +41,15 @@ import { DocsLiveExampleViewerComponent } from '../live-example-viewer/docs-live
     selector: 'docs-live-example',
     template: `
         {{ isRuLocale() ? 'Загрузка документа...' : 'Loading document...' }}
-        <ng-template cdkPortal let-htmlContent let-contentToCopy="textContent" let-language="language">
-            <kbq-code-block [files]="[{ content: contentToCopy, language }]" filled lineNumbers />
+        <ng-template let-htmlContent let-contentToCopy="textContent" let-language="language" cdkPortal>
+            <kbq-code-block filled lineNumbers [files]="[{ content: contentToCopy, language }]" />
         </ng-template>
-        <ng-template #codeSnippet cdkPortal let-htmlContent>
+        <ng-template #codeSnippet let-htmlContent cdkPortal>
             <span
                 class="kbq-mono-normal"
+                docsCodeSnippet
                 [innerHTML]="htmlContent"
                 [kbqTooltip]="isRuLocale() ? 'Скопировать' : 'Copy'"
-                docsCodeSnippet
             ></span>
         </ng-template>
     `,

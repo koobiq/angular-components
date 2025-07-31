@@ -12,9 +12,9 @@ import { KbqLinkModule } from '@koobiq/components/link';
     template: `
         <div style="padding: 16px">
             <a
-                [print]="'cvedetails.com/cve/CVE-2019-1020010'"
                 href="https://www.cvedetails.com/cve/CVE-2019-1020010/"
                 kbq-link
+                [print]="'cvedetails.com/cve/CVE-2019-1020010'"
             >
                 CVE-2019-1020010
             </a>

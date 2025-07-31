@@ -28,13 +28,13 @@ import { DateTime } from 'luxon';
                     <div>
                         <kbq-form-field class="layout-margin-right-s" (click)="datepicker.toggle()">
                             <input [kbqDatepicker]="datepicker" />
-                            <kbq-datepicker-toggle-icon [for]="datepicker" kbqSuffix />
+                            <kbq-datepicker-toggle-icon kbqSuffix [for]="datepicker" />
                             <kbq-datepicker #datepicker />
                         </kbq-form-field>
 
                         <kbq-form-field (click)="datepicker2.toggle()">
                             <input [kbqDatepicker]="datepicker2" />
-                            <kbq-datepicker-toggle-icon [for]="datepicker2" kbqSuffix />
+                            <kbq-datepicker-toggle-icon kbqSuffix [for]="datepicker2" />
                             <kbq-datepicker #datepicker2 />
                         </kbq-form-field>
                     </div>

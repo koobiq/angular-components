@@ -9,7 +9,7 @@ import { KbqCodeBlockFile, KbqCodeBlockModule } from '@koobiq/components/code-bl
     selector: 'code-block-with-link-example',
     imports: [KbqCodeBlockModule],
     template: `
-        <kbq-code-block [files]="files" lineNumbers canCopy="false" />
+        <kbq-code-block lineNumbers canCopy="false" [files]="files" />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

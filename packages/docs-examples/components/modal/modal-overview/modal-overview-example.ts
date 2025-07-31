@@ -13,11 +13,11 @@ import { KbqModalModule, KbqModalService, ModalSize } from '@koobiq/components/m
         KbqButtonModule
     ],
     template: `
-        <button (click)="showConfirmModal()" kbq-button>Open Confirm Modal</button>
+        <button kbq-button (click)="showConfirmModal()">Open Confirm Modal</button>
 
-        <button (click)="showSuccessModal()" kbq-button>Open Success Modal</button>
+        <button kbq-button (click)="showSuccessModal()">Open Success Modal</button>
 
-        <button (click)="showDeleteModal()" kbq-button>Open Delete Modal</button>
+        <button kbq-button (click)="showDeleteModal()">Open Delete Modal</button>
     `,
     styles: [
         `

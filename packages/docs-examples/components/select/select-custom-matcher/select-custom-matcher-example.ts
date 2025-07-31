@@ -13,9 +13,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
     template: `
         <kbq-select
             #select="kbqSelect"
-            [(value)]="selected"
             [tabIndex]="-1"
             [class]="{ 'kbq-select': false, 'my-custom-select': true }"
+            [(value)]="selected"
         >
             <button kbq-button kbq-select-matcher>
                 {{ select.triggerValue }}

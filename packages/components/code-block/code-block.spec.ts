@@ -59,8 +59,6 @@ const getViewAllButtonElement = (debugElement: DebugElement): HTMLButtonElement 
     imports: [KbqCodeBlockModule],
     template: `
         <kbq-code-block
-            [(activeFileIndex)]="activeFileIndex"
-            [(softWrap)]="softWrap"
             [files]="files"
             [filled]="filled"
             [lineNumbers]="lineNumbers"
@@ -70,6 +68,8 @@ const getViewAllButtonElement = (debugElement: DebugElement): HTMLButtonElement 
             [hideTabs]="hideTabs"
             [canCopy]="canCopy"
             [maxHeight]="maxHeight"
+            [(activeFileIndex)]="activeFileIndex"
+            [(softWrap)]="softWrap"
         />
     `,
     changeDetection: ChangeDetectionStrategy.Default

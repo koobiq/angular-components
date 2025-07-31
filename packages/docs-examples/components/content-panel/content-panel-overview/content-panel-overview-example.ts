@@ -14,19 +14,19 @@ import { KbqIconModule } from '@koobiq/components/icon';
     template: `
         <kbq-content-panel-container #panel="kbqContentPanelContainer" width="350" maxWidth="450" minWidth="250">
             <div class="example-content-panel-container__content">
-                <button (click)="panel.toggle()" kbq-button>Toggle</button>
-                <button [disabled]="panel.isOpened()" (click)="panel.open()" kbq-button>Open</button>
-                <button [disabled]="!panel.isOpened()" (click)="panel.close()" kbq-button>Close</button>
+                <button kbq-button (click)="panel.toggle()">Toggle</button>
+                <button kbq-button [disabled]="panel.isOpened()" (click)="panel.open()">Open</button>
+                <button kbq-button [disabled]="!panel.isOpened()" (click)="panel.close()">Close</button>
             </div>
 
             <kbq-content-panel>
                 <kbq-content-panel-header>
                     <div kbqContentPanelHeaderTitle>Title</div>
                     <div kbqContentPanelHeaderActions>
-                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                        <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
                             <i kbq-icon="kbq-link_16"></i>
                         </button>
-                        <button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent" kbq-button>
+                        <button kbq-button [color]="componentColors.Contrast" [kbqStyle]="buttonStyles.Transparent">
                             <i kbq-icon="kbq-arrows-expand-diagonal_16"></i>
                         </button>
                     </div>
@@ -47,8 +47,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                     }
                 </kbq-content-panel-body>
                 <kbq-content-panel-footer>
-                    <button [color]="componentColors.Contrast" kbq-button>Button 1</button>
-                    <button [color]="componentColors.ContrastFade" kbq-button>Button 2</button>
+                    <button kbq-button [color]="componentColors.Contrast">Button 1</button>
+                    <button kbq-button [color]="componentColors.ContrastFade">Button 2</button>
                 </kbq-content-panel-footer>
             </kbq-content-panel>
         </kbq-content-panel-container>

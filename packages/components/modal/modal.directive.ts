@@ -11,12 +11,12 @@ import { KbqModalComponent } from './modal.component';
         @if (modal.kbqClosable) {
             <button
                 class="kbq-modal-close kbq-button_transparent"
-                [color]="'contrast'"
-                (click)="modal.onClickCloseBtn()"
                 type="button"
                 kbq-button
+                [color]="'contrast'"
+                (click)="modal.onClickCloseBtn()"
             >
-                <i [color]="modal.componentColors.Contrast" kbq-icon="kbq-xmark_16"></i>
+                <i kbq-icon="kbq-xmark_16" [color]="modal.componentColors.Contrast"></i>
             </button>
         }
     `,

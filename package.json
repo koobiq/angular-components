@@ -145,7 +145,6 @@
         "postcss-discard-comments": "^7.0.4",
         "prettier": "^3.6.2",
         "prettier-plugin-multiline-arrays": "^3.0.6",
-        "prettier-plugin-organize-attributes": "^1.0.0",
         "prettier-plugin-organize-imports": "^4.1.0",
         "rimraf": "^5.0.5",
         "rollup": "^4.44.1",

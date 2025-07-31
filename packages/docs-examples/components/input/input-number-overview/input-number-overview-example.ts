@@ -27,12 +27,12 @@ import { KbqInputModule } from '@koobiq/components/input';
                     </label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
-                            [(ngModel)]="value"
-                            [max]="12000"
-                            [min]="-12000"
                             kbqNumberInput
                             kbqNormalizeWhitespace
                             placeholder="Allowed number from -7 to 7"
+                            [max]="12000"
+                            [min]="-12000"
+                            [(ngModel)]="value"
                         />
                         <kbq-stepper />
 
@@ -43,7 +43,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40">С разделителем групп разрядов</label>
                     <kbq-form-field class="kbq-form__control flex-60">
-                        <input [(ngModel)]="value" kbqNumberInput kbqNormalizeWhitespace />
+                        <input kbqNumberInput kbqNormalizeWhitespace [(ngModel)]="value" />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>
@@ -52,10 +52,10 @@ import { KbqInputModule } from '@koobiq/components/input';
                     <label class="kbq-form__label flex-40">Без разделителя групп разрядов</label>
                     <kbq-form-field class="kbq-form__control flex-60">
                         <input
-                            [(ngModel)]="value"
-                            [withThousandSeparator]="false"
                             kbqNumberInput
                             kbqNormalizeWhitespace
+                            [withThousandSeparator]="false"
+                            [(ngModel)]="value"
                         />
                         <kbq-stepper />
                     </kbq-form-field>
@@ -64,7 +64,7 @@ import { KbqInputModule } from '@koobiq/components/input';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-40">Целочисленное значение</label>
                     <kbq-form-field class="kbq-form__control flex-60">
-                        <input [(ngModel)]="integerValue" [integer]="true" kbqNumberInput kbqNormalizeWhitespace />
+                        <input kbqNumberInput kbqNormalizeWhitespace [integer]="true" [(ngModel)]="integerValue" />
                         <kbq-stepper />
                     </kbq-form-field>
                 </div>

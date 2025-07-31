@@ -16,10 +16,10 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
     selector: 'file-upload-multiple-default-validation-reactive-forms-overview-example',
     template: `
         <kbq-file-upload
+            multiple
             [progressMode]="'indeterminate'"
             (fileRemoved)="onFileRemoved($event)"
             (filesAdded)="onFilesAdded($event)"
-            multiple
         >
             <ng-template #kbqFileIcon let-file>
                 @if (!file.hasError) {

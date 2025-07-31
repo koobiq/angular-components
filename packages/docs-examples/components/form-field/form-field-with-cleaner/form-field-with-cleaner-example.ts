@@ -13,12 +13,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         <kbq-form-field class="layout-margin-bottom-m">
-            <input [formControl]="inputFormControl" kbqInput placeholder="Enter some input" />
+            <input kbqInput placeholder="Enter some input" [formControl]="inputFormControl" />
             <kbq-cleaner />
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-select [formControl]="selectFormControl" placeholder="Select an option">
+            <kbq-select placeholder="Select an option" [formControl]="selectFormControl">
                 <kbq-cleaner #kbqSelectCleaner />
                 <kbq-option value="1">Option #1</kbq-option>
                 <kbq-option value="2">Option #2</kbq-option>
