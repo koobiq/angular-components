@@ -17,7 +17,7 @@ import {
  * @title Username custom
  */
 @Component({
-    selector: 'username-playground-example',
+    selector: 'username-custom-example',
     standalone: true,
     imports: [
         FormsModule,
@@ -47,7 +47,7 @@ import {
         <div class="layout-row layout-gap-l">
             <kbq-form-field style="width: 100px">
                 <kbq-label>Name format</kbq-label>
-                <textarea [(ngModel)]="fullNameFormat" [maxRows]="1" kbqTextarea rows="1"></textarea>
+                <textarea kbqTextarea rows="1" [maxRows]="1" [(ngModel)]="fullNameFormat"></textarea>
             </kbq-form-field>
 
             <kbq-checkbox [(ngModel)]="isCompact">isCompact</kbq-checkbox>
