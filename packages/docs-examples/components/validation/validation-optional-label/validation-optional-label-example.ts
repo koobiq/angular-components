@@ -24,7 +24,7 @@ import { KbqInputModule } from '@koobiq/components/input';
         KbqFormsModule
     ],
     template: `
-        <form class="kbq-form-vertical" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <form class="kbq-form-vertical" novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <div class="kbq-form__label">Name</div>

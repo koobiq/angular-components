@@ -24,19 +24,19 @@ const restSymbolsRegex = /[^0-9a-zA-Zа-яА-ЯйЙёЁ]+/g;
         KbqInputModule
     ],
     template: `
-        <form [formGroup]="checkOnFlyForm" novalidate>
+        <form novalidate [formGroup]="checkOnFlyForm">
             <kbq-form-field>
                 <kbq-label>Folder name</kbq-label>
                 <input
                     #tooltip="kbqTooltip"
+                    formControlName="folderName"
+                    kbqInput
                     [kbqEnterDelay]="10"
                     [kbqPlacement]="popUpPlacements.Top"
                     [kbqTrigger]="'manual'"
                     [kbqTooltip]="'Letters and numbers'"
                     [kbqTooltipColor]="colors.Error"
                     (input)="onInput($event)"
-                    formControlName="folderName"
-                    kbqInput
                 />
 
                 <kbq-cleaner />

@@ -30,12 +30,12 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqTextareaModule
     ],
     template: `
-        <form class="kbq-form-horizontal" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+        <form class="kbq-form-horizontal" novalidate [formGroup]="form" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-20">Name</label>
                     <kbq-form-field class="kbq-form__control flex-80">
-                        <input [required]="true" formControlName="firstName" kbqInput />
+                        <input formControlName="firstName" kbqInput [required]="true" />
 
                         <kbq-error>Required</kbq-error>
                     </kbq-form-field>
@@ -78,7 +78,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
                 <div class="kbq-form__row">
                     <label class="kbq-form__label flex-20">Estimation</label>
                     <kbq-form-field class="kbq-form__control flex-80">
-                        <kbq-select [required]="true" formControlName="estimation">
+                        <kbq-select formControlName="estimation" [required]="true">
                             @for (option of estimation; track option.value) {
                                 <kbq-option [value]="option.value">
                                     {{ option.label }}
