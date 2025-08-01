@@ -144,10 +144,6 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
         afterNextRender(() => this.registerKeydownListener());
     }
 
-    ngOnDestroy(): void {
-        this.unRegisterKeydownListener();
-    }
-
     ngAfterContentInit(): void {
         this.params = {
             openedStateWidth: this.openedContent.width || 'inherit',
@@ -156,6 +152,10 @@ export class KbqSidebar implements OnDestroy, AfterContentInit {
 
             closedStateWidth: this.closedContent.width || '32px'
         };
+    }
+
+    ngOnDestroy(): void {
+        this.unRegisterKeydownListener();
     }
 
     toggle(): void {

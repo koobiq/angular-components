@@ -164,12 +164,12 @@ export class KbqDatepickerToggle<D> implements AfterContentInit, OnChanges, OnDe
         }
     }
 
-    ngOnDestroy() {
-        this.stateChanges.unsubscribe();
-    }
-
     ngAfterContentInit() {
         this.watchStateChanges();
+    }
+
+    ngOnDestroy() {
+        this.stateChanges.unsubscribe();
     }
 
     open(event: Event): void {

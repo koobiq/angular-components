@@ -603,6 +603,12 @@ export class KbqTreeSelect
             });
     }
 
+    ngDoCheck() {
+        if (this.ngControl) {
+            this.updateErrorState();
+        }
+    }
+
     ngAfterContentInit() {
         if (!this.tree) return;
 
@@ -688,12 +694,6 @@ export class KbqTreeSelect
         this.tree.treeControl.expansionModel.changed
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.setOverlayPosition());
-    }
-
-    ngDoCheck() {
-        if (this.ngControl) {
-            this.updateErrorState();
-        }
     }
 
     ngOnDestroy() {

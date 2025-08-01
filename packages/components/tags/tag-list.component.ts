@@ -348,6 +348,20 @@ export class KbqTagList
         }
     }
 
+    ngOnInit() {
+        this.selectionModel = new SelectionModel<KbqTag>(this.multiple, undefined, false);
+        this.stateChanges.next();
+    }
+
+    ngDoCheck() {
+        if (this.ngControl) {
+            // We need to re-evaluate this on every change detection cycle, because there are some
+            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
+            // that whatever logic is in here has to be super lean or we risk destroying the performance.
+            this.updateErrorState();
+        }
+    }
+
     ngAfterContentInit() {
         this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
             .withVerticalOrientation()
@@ -408,20 +422,6 @@ export class KbqTagList
             });
 
         this.propagateSelectableToChildren();
-    }
-
-    ngOnInit() {
-        this.selectionModel = new SelectionModel<KbqTag>(this.multiple, undefined, false);
-        this.stateChanges.next();
-    }
-
-    ngDoCheck() {
-        if (this.ngControl) {
-            // We need to re-evaluate this on every change detection cycle, because there are some
-            // error triggers that we can't subscribe to (e.g. parent form submissions). This means
-            // that whatever logic is in here has to be super lean or we risk destroying the performance.
-            this.updateErrorState();
-        }
     }
 
     ngOnDestroy() {

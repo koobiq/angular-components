@@ -213,6 +213,37 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
         this.subscribeToResize();
     }
 
+    ngAfterContentInit() {
+        this.subscribeToTabLabels();
+
+        // Subscribe to changes in the amount of tabs, in order to be
+        // able to re-render the content as new tabs are added or removed.
+        this.tabsSubscription = this.tabs.changes.subscribe(() => {
+            // const indexToSelect = this.clampTabIndex(this.indexToSelect);
+            const indexToSelect = this.getTabIndexToSelect();
+
+            // Maintain the previously-selected tab if a new tab is added or removed and there is no
+            // explicit change that selects a different tab.
+            if (indexToSelect === this._selectedIndex) {
+                const tabs = this.tabs.toArray();
+
+                for (let i = 0; i < tabs.length; i++) {
+                    if (tabs[i].isActive) {
+                        // Assign both to the `activeTab` and `_selectedIndex` so we don't fire a changed
+                        // event, otherwise the consumer may end up in an infinite loop in some edge cases like
+                        // adding a tab within the `selectedIndexChange` event.
+                        this._selectedIndex = i;
+                        this.onSelectFocusedIndex(i);
+                        break;
+                    }
+                }
+            }
+
+            this.subscribeToTabLabels();
+            this.changeDetectorRef.markForCheck();
+        });
+    }
+
     /**
      * After the content is checked, this component knows what tabs have been defined
      * and what the selected index should be. This is where we can know exactly what position
@@ -267,37 +298,6 @@ export class KbqTabGroup implements AfterContentInit, AfterViewInit, AfterConten
             this._selectedIndex = indexToSelect;
             this.changeDetectorRef.markForCheck();
         }
-    }
-
-    ngAfterContentInit() {
-        this.subscribeToTabLabels();
-
-        // Subscribe to changes in the amount of tabs, in order to be
-        // able to re-render the content as new tabs are added or removed.
-        this.tabsSubscription = this.tabs.changes.subscribe(() => {
-            // const indexToSelect = this.clampTabIndex(this.indexToSelect);
-            const indexToSelect = this.getTabIndexToSelect();
-
-            // Maintain the previously-selected tab if a new tab is added or removed and there is no
-            // explicit change that selects a different tab.
-            if (indexToSelect === this._selectedIndex) {
-                const tabs = this.tabs.toArray();
-
-                for (let i = 0; i < tabs.length; i++) {
-                    if (tabs[i].isActive) {
-                        // Assign both to the `activeTab` and `_selectedIndex` so we don't fire a changed
-                        // event, otherwise the consumer may end up in an infinite loop in some edge cases like
-                        // adding a tab within the `selectedIndexChange` event.
-                        this._selectedIndex = i;
-                        this.onSelectFocusedIndex(i);
-                        break;
-                    }
-                }
-            }
-
-            this.subscribeToTabLabels();
-            this.changeDetectorRef.markForCheck();
-        });
     }
 
     ngAfterViewInit(): void {
