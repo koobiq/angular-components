@@ -28,13 +28,11 @@ export type KbqFormatKeyToProfileMapping<T = any> = {
 // @public
 export function KbqMappingMissingError(): Error;
 
-// @public (undocumented)
+// @public
 export class KbqUsername {
-    // (undocumented)
     protected readonly class: Signal<string>;
     protected readonly customView: Signal<KbqUsernameCustomView | undefined>;
     readonly fullNameFormat: InputSignal<string>;
-    // (undocumented)
     protected readonly hasFullName: Signal<string | false | undefined>;
     readonly isCompact: InputSignalWithTransform<boolean, unknown>;
     readonly mode: InputSignal<KbqUsernameMode>;
@@ -49,7 +47,7 @@ export class KbqUsername {
 
 // @public
 export class KbqUsernameCustomPipe<T extends object> implements PipeTransform {
-    transform(profile: T, format?: string, argMapping?: KbqFormatKeyToProfileMapping): string;
+    transform(profile: T, format?: string, customMapping?: KbqFormatKeyToProfileMapping<T>): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameCustomPipe<any>, never>;
     // (undocumented)
@@ -96,7 +94,7 @@ export class KbqUsernameModule {
 
 // @public (undocumented)
 export class KbqUsernamePipe<T extends object> implements PipeTransform {
-    transform(profile: T, format?: string, argMapping?: KbqFormatKeyToProfileMapping): string;
+    transform(profile: T, format?: string, customMapping?: KbqFormatKeyToProfileMapping): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernamePipe<any>, never>;
     // (undocumented)

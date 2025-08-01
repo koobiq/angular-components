@@ -45,7 +45,7 @@ export class KbqUsernamePrimary {}
 })
 export class KbqUsernameSecondary {}
 
-/** Styles a secondary hint (e.g. site info). */
+/** Styles a secondary hint. */
 @Directive({
     selector: '[kbqUsernameSecondaryHint]',
     exportAs: 'kbqUsernameSecondaryHint',
@@ -64,6 +64,12 @@ export class KbqUsernameSecondaryHint {}
 })
 export class KbqUsernameCustomView {}
 
+/**
+ * Displays a user's name based on profile data.
+ * Supports different display modes and visual styles.
+ * A custom view can be provided via `<kbq-username-custom-view>` for full control over the output.
+ * Accepts input profile data and optional formatting options.
+ */
 @Component({
     selector: 'kbq-username',
     standalone: true,
@@ -104,6 +110,7 @@ export class KbqUsername {
     /** Custom projected view for username rendering. */
     protected readonly customView = contentChild(KbqUsernameCustomView);
 
+    /** @docs-private */
     protected readonly hasFullName = computed(() => {
         const profile = this.userInfo();
 
@@ -112,6 +119,7 @@ export class KbqUsername {
         return profile?.lastName && profile?.firstName;
     });
 
+    /** @docs-private */
     protected readonly class = computed(() => {
         return [this.type(), this.mode()].map((modificator) => `${baseClass}_${modificator}`).join(' ');
     });

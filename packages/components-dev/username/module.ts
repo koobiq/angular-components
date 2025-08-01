@@ -8,6 +8,8 @@ import { UsernameExamplesModule } from '../../docs-examples/components/username'
     template: `
         <username-overview-example />
         <username-playground-example />
+        <username-custom-example />
+        <username-as-link-example />
     `,
     styles: `
         :host {

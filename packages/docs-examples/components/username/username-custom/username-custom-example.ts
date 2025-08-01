@@ -1,17 +1,38 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
+    KBQ_PROFILE_MAPPING,
+    KbqFormatKeyToProfileMapping,
     KbqUsernameFormatKey,
     KbqUsernameMode,
     KbqUsernameModule,
     KbqUsernameStyle
 } from '@koobiq/components/username';
+
+type ExampleUser = {
+    firstName?: string;
+    lastName?: string;
+    middleName?: string;
+    login?: string;
+};
+
+const mapping: KbqFormatKeyToProfileMapping<ExampleUser> = {
+    [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
+    [KbqUsernameFormatKey.FirstNameFull]: 'firstName',
+
+    [KbqUsernameFormatKey.MiddleNameShort]: 'middleName',
+    [KbqUsernameFormatKey.MiddleNameFull]: 'middleName',
+
+    [KbqUsernameFormatKey.LastNameShort]: 'lastName',
+    [KbqUsernameFormatKey.LastNameFull]: 'lastName',
+
+    [KbqUsernameFormatKey.Dot]: undefined
+};
 
 /**
  * @title Username custom
@@ -25,7 +46,6 @@ import {
         KbqTextareaModule,
         KbqFormFieldModule,
         KbqLinkModule,
-        KbqCheckboxModule,
         KbqRadioModule,
         KbqTitleModule
     ],
@@ -37,9 +57,7 @@ import {
                     <span kbqUsernamePrimary>{{ fullName }}</span>
 
                     @if (userInfo?.login) {
-                        <span kbqUsernameSecondary kbq-title>
-                            {{ userInfo?.login }}
-                        </span>
+                        <span kbqUsernameSecondary kbq-title class="kbq-mono-normal">[{{ userInfo?.login }}]</span>
                     }
                 </kbq-username-custom-view>
             </kbq-username>
@@ -50,7 +68,6 @@ import {
                 <textarea kbqTextarea rows="1" [maxRows]="1" [(ngModel)]="fullNameFormat"></textarea>
             </kbq-form-field>
 
-            <kbq-checkbox [(ngModel)]="isCompact">isCompact</kbq-checkbox>
             <kbq-radio-group [(ngModel)]="selectedMode">
                 @for (usernameMode of modes; track usernameMode) {
                     <kbq-radio-button [value]="usernameMode">
@@ -75,10 +92,12 @@ import {
             border-radius: var(--kbq-size-border-radius);
         }
     `,
+    providers: [
+        { provide: KBQ_PROFILE_MAPPING, useValue: mapping }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernameCustomExample {
-    userInfo = {
+    userInfo: ExampleUser = {
         firstName: 'Maxwell',
         middleName: 'Alan',
         lastName: 'Root',
@@ -86,22 +105,10 @@ export class UsernameCustomExample {
     };
     selectedMode: KbqUsernameMode = 'inline';
     selectedType: KbqUsernameStyle = 'default';
-    isCompact = false;
-    fullNameFormat = 'F M. L.';
+    fullNameFormat = 'F m. l.';
 
     modes: KbqUsernameMode[] = ['inline', 'stacked', 'text'];
     types: KbqUsernameStyle[] = ['default', 'error', 'accented', 'inherit'];
 
-    readonly customMapping = {
-        [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
-        [KbqUsernameFormatKey.FirstNameFull]: 'firstName',
-
-        [KbqUsernameFormatKey.MiddleNameShort]: 'middleName',
-        [KbqUsernameFormatKey.MiddleNameFull]: 'middleName',
-
-        [KbqUsernameFormatKey.LastNameShort]: 'lastName',
-        [KbqUsernameFormatKey.LastNameFull]: 'lastName',
-
-        [KbqUsernameFormatKey.Dot]: undefined
-    };
+    readonly customMapping = mapping;
 }

@@ -17,8 +17,8 @@ export class KbqUsernamePipe<T extends object> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true });
 
     /** Builds a formatted name string from the user profile using the provided format and mapping. */
-    transform(profile: T, format = kbqDefaultFullNameFormat, argMapping?: KbqFormatKeyToProfileMapping): string {
-        const resolvedMapping = argMapping || this.mapping;
+    transform(profile: T, format = kbqDefaultFullNameFormat, customMapping?: KbqFormatKeyToProfileMapping): string {
+        const resolvedMapping = customMapping || this.mapping;
 
         if (!resolvedMapping) {
             throw KbqMappingMissingError();
@@ -28,11 +28,11 @@ export class KbqUsernamePipe<T extends object> implements PipeTransform {
 
         let result = '';
 
-        const formatUnits = format.split('') as KbqUsernameFormatKey[];
+        const formatUnits = format.split('');
 
-        formatUnits.forEach((letter: KbqUsernameFormatKey, index: number, array) => {
+        formatUnits.forEach((letter: KbqUsernameFormatKey | string, index: number, array) => {
             if (letter !== KbqUsernameFormatKey.Dot) {
-                const field = resolvedMapping[letter] as keyof T;
+                const field: keyof T = resolvedMapping[letter];
                 const fieldValue = profile[field];
 
                 if (fieldValue) {
@@ -62,8 +62,12 @@ export class KbqUsernameCustomPipe<T extends object> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true });
 
     /** Builds a formatted name string from the user profile using the provided format and mapping. */
-    transform(profile: T, format = kbqDefaultFullNameFormatCustom, argMapping?: KbqFormatKeyToProfileMapping): string {
-        const resolvedMapping = argMapping || this.mapping;
+    transform(
+        profile: T,
+        format = kbqDefaultFullNameFormatCustom,
+        customMapping?: KbqFormatKeyToProfileMapping<T>
+    ): string {
+        const resolvedMapping = customMapping || this.mapping;
 
         if (!resolvedMapping) {
             throw KbqMappingMissingError();
@@ -73,10 +77,10 @@ export class KbqUsernameCustomPipe<T extends object> implements PipeTransform {
 
         let result = '';
 
-        const formatUnits = format.split('') as KbqUsernameFormatKey[];
+        const formatUnits = format.split('');
 
-        formatUnits.forEach((letter: KbqUsernameFormatKey) => {
-            const field = resolvedMapping[letter];
+        formatUnits.forEach((letter: KbqUsernameFormatKey | string) => {
+            const field: keyof T | undefined = resolvedMapping[letter];
 
             if (!field) {
                 result += letter;
@@ -85,7 +89,7 @@ export class KbqUsernameCustomPipe<T extends object> implements PipeTransform {
             }
 
             const isShort = letter === letter.toLowerCase();
-            const fieldValue: string = profile[field] || '';
+            const fieldValue = profile[field] || '';
 
             result += fieldValue && isShort ? fieldValue[0] : fieldValue;
         });

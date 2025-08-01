@@ -2,11 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqUsernameMode, KbqUsernameModule, KbqUsernameStyle } from '@koobiq/components/username';
+import { KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/components/username';
 
 /**
  * @title Username playground
@@ -16,13 +14,11 @@ import { KbqUsernameMode, KbqUsernameModule, KbqUsernameStyle } from '@koobiq/co
     standalone: true,
     imports: [
         FormsModule,
-        KbqUsernameModule,
+        KbqUsername,
         KbqTextareaModule,
         KbqFormFieldModule,
-        KbqLinkModule,
         KbqCheckboxModule,
-        KbqRadioModule,
-        KbqTitleModule
+        KbqRadioModule
     ],
     template: `
         <div class="example-result">
@@ -37,7 +33,7 @@ import { KbqUsernameMode, KbqUsernameModule, KbqUsernameStyle } from '@koobiq/co
         <div class="layout-row layout-gap-l">
             <kbq-form-field style="width: 100px">
                 <kbq-label>Name format</kbq-label>
-                <textarea [(ngModel)]="fullNameFormat" [maxRows]="1" kbqTextarea rows="1"></textarea>
+                <textarea kbqTextarea rows="1" [maxRows]="1" [(ngModel)]="fullNameFormat"></textarea>
             </kbq-form-field>
 
             <kbq-checkbox [(ngModel)]="isCompact">isCompact</kbq-checkbox>
