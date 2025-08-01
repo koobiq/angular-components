@@ -7,3 +7,14 @@ exports[`KbqUsername should use default input values 1`] = `
   "kbq-username_inline": true,
 }
 `;
+
+exports[`KbqUsernamePipe should format full name using custom format 1`] = `
+[
+  "Alice B C",
+  "Alice B. C.",
+  "AliceB.C.",
+  "A B C",
+  "A.B.C.",
+  "Alice B. C.",
+]
+`;

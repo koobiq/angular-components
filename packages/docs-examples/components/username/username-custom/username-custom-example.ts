@@ -7,7 +7,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
 import {
     KBQ_PROFILE_MAPPING,
-    KbqFormatKeyToProfileMapping,
+    KbqFormatKeyToProfileMappingExtended,
     KbqUsernameFormatKey,
     KbqUsernameMode,
     KbqUsernameModule,
@@ -21,7 +21,7 @@ type ExampleUser = {
     login?: string;
 };
 
-const mapping: KbqFormatKeyToProfileMapping<ExampleUser> = {
+const mapping: KbqFormatKeyToProfileMappingExtended<ExampleUser> = {
     [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
     [KbqUsernameFormatKey.FirstNameFull]: 'firstName',
 

@@ -5,7 +5,7 @@ import {
     kbqDefaultFullNameFormatCustom,
     KbqMappingMissingError
 } from './constants';
-import { KbqFormatKeyToProfileMapping, KbqUsernameFormatKey } from './types';
+import { KbqFormatKeyToProfileMapping, KbqFormatKeyToProfileMappingExtended, KbqUsernameFormatKey } from './types';
 
 @Injectable({ providedIn: 'root' })
 @Pipe({
@@ -13,7 +13,7 @@ import { KbqFormatKeyToProfileMapping, KbqUsernameFormatKey } from './types';
     pure: true,
     standalone: true
 })
-export class KbqUsernamePipe<T extends object> implements PipeTransform {
+export class KbqUsernamePipe<T = unknown> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true });
 
     /** Builds a formatted name string from the user profile using the provided format and mapping. */
@@ -58,14 +58,14 @@ export class KbqUsernamePipe<T extends object> implements PipeTransform {
     pure: true,
     standalone: true
 })
-export class KbqUsernameCustomPipe<T extends object> implements PipeTransform {
+export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
     private readonly mapping = inject(KBQ_PROFILE_MAPPING, { optional: true });
 
     /** Builds a formatted name string from the user profile using the provided format and mapping. */
     transform(
         profile: T,
         format = kbqDefaultFullNameFormatCustom,
-        customMapping?: KbqFormatKeyToProfileMapping<T>
+        customMapping?: KbqFormatKeyToProfileMappingExtended<T>
     ): string {
         const resolvedMapping = customMapping || this.mapping;
 
