@@ -162,7 +162,7 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     set separatorKeyCodes(value: number[]);
     // (undocumented)
     get separators(): KbqTagSeparator[];
-    tagEnd: EventEmitter<KbqTagInputEvent>;
+    readonly tagEnd: EventEmitter<KbqTagInputEvent>;
     set tagList(value: KbqTagList);
     // (undocumented)
     triggerValidation(): void;

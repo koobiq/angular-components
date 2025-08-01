@@ -20,7 +20,7 @@ export class KbqFileDropDirective {
     dragover: boolean;
 
     /** Emits an event when file items were dropped. */
-    @Output() filesDropped: EventEmitter<FileList | KbqFile[]> = new EventEmitter<FileList | KbqFile[]>();
+    @Output() readonly filesDropped: EventEmitter<FileList | KbqFile[]> = new EventEmitter<FileList | KbqFile[]>();
 
     /** @docs-private */
     onDragOver(event: DragEvent) {

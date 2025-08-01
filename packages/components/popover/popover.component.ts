@@ -340,9 +340,9 @@ export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> impl
     /** Delay before closing in milliseconds. The default value for kbqTrigger=PopUpTriggers.Hover is 500 ms. */
     @Input({ alias: 'kbqLeaveDelay', transform: numberAttribute }) leaveDelay: number;
 
-    @Output('kbqPopoverPlacementChange') placementChange = new EventEmitter();
+    @Output('kbqPopoverPlacementChange') readonly placementChange = new EventEmitter();
 
-    @Output('kbqPopoverVisibleChange') visibleChange = new EventEmitter<boolean>();
+    @Output('kbqPopoverVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
     protected originSelector = '.kbq-popover';
 

@@ -44,7 +44,7 @@ export class KbqPopoverConfirmComponent extends KbqPopoverComponent {
     }
 })
 export class KbqPopoverConfirmTrigger extends KbqPopoverTrigger {
-    @Output() confirm: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly confirm: EventEmitter<void> = new EventEmitter<void>();
 
     @Input('kbqPopoverConfirmText')
     get confirmText(): string {

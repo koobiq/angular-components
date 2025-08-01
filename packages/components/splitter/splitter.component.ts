@@ -230,7 +230,7 @@ export class KbqGutterGhostDirective {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy {
-    @Output() gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();
+    @Output() readonly gutterPositionChange: EventEmitter<void> = new EventEmitter<void>();
 
     areas: IArea[] = [];
 
@@ -554,7 +554,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     }
 })
 export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
-    @Output() sizeChange: EventEmitter<number> = new EventEmitter<number>();
+    @Output() readonly sizeChange: EventEmitter<number> = new EventEmitter<number>();
 
     private readonly window = inject(KBQ_WINDOW);
 

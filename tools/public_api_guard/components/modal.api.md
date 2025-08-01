@@ -142,9 +142,9 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     isTopOverflow: boolean;
     // (undocumented)
-    kbqAfterClose: EventEmitter<R | undefined>;
+    readonly kbqAfterClose: EventEmitter<R | undefined>;
     // (undocumented)
-    kbqAfterOpen: EventEmitter<void>;
+    readonly kbqAfterOpen: EventEmitter<void>;
     // (undocumented)
     kbqBodyStyle: object;
     // (undocumented)
@@ -187,9 +187,9 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     // (undocumented)
     kbqOkType: KbqComponentColors;
     // (undocumented)
-    kbqOnCancel: EventEmitter<T> | OnClickCallback<T>;
+    readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T>;
     // (undocumented)
-    kbqOnOk: EventEmitter<T> | OnClickCallback<T>;
+    readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T>;
     // (undocumented)
     kbqRestoreFocus: boolean;
     // (undocumented)
@@ -202,7 +202,7 @@ export class KbqModalComponent<T = any, R = any> extends KbqModalRef<T, R> imple
     get kbqVisible(): boolean;
     set kbqVisible(value: boolean);
     // (undocumented)
-    kbqVisibleChange: EventEmitter<boolean>;
+    readonly kbqVisibleChange: EventEmitter<boolean>;
     // (undocumented)
     kbqWidth: number | string;
     // (undocumented)

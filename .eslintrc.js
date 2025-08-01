@@ -198,7 +198,6 @@ const typescriptRules = {
         '@angular-eslint/prefer-standalone-component': 0,
         '@angular-eslint/prefer-standalone': 0,
         '@angular-eslint/sort-lifecycle-methods': 0,
-        '@angular-eslint/prefer-output-readonly': 0,
         '@angular-eslint/no-conflicting-lifecycle': 0,
         '@angular-eslint/no-attribute-decorator': 0,
         '@angular-eslint/no-pipe-impure': 0,

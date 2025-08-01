@@ -232,10 +232,10 @@ export class KbqDatepicker<D> implements OnDestroy {
     @Input() backdropClass: string = 'cdk-overlay-transparent-backdrop';
 
     /** Emits when the datepicker has been opened. */
-    @Output('opened') openedStream: EventEmitter<void> = new EventEmitter<void>();
+    @Output('opened') readonly openedStream: EventEmitter<void> = new EventEmitter<void>();
 
     /** Emits when the datepicker has been closed. */
-    @Output('closed') closedStream: EventEmitter<void> = new EventEmitter<void>();
+    @Output('closed') readonly closedStream: EventEmitter<void> = new EventEmitter<void>();
 
     readonly stateChanges: Subject<void> = new Subject<void>();
 

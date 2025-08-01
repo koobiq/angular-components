@@ -280,7 +280,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
         });
     }
 
-    @Output() incorrectInput = new EventEmitter<void>();
+    @Output() readonly incorrectInput = new EventEmitter<void>();
 
     get hasSelection(): boolean {
         return this.selectionStart !== this.selectionEnd;

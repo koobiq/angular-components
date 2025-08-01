@@ -65,8 +65,8 @@ export class DocsExampleViewerComponent implements OnDestroy {
         this.fetchDocument(url);
     }
 
-    @Output() contentRendered = new EventEmitter<void>();
-    @Output() contentRenderFailed = new EventEmitter<void>();
+    @Output() readonly contentRendered = new EventEmitter<void>();
+    @Output() readonly contentRenderFailed = new EventEmitter<void>();
 
     /** The document text. It should not be HTML encoded. */
     textContent = '';

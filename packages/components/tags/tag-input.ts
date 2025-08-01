@@ -92,7 +92,8 @@ export class KbqTagInput implements KbqTagTextControl, OnChanges {
     private _separators: { [key: number]: KbqTagSeparator };
 
     /** Emitted when a tag is to be added. */
-    @Output('kbqTagInputTokenEnd') tagEnd: EventEmitter<KbqTagInputEvent> = new EventEmitter<KbqTagInputEvent>();
+    @Output('kbqTagInputTokenEnd') readonly tagEnd: EventEmitter<KbqTagInputEvent> =
+        new EventEmitter<KbqTagInputEvent>();
 
     /** A value indicating whether allow/prevent tags duplication  */
     @Input() distinct: boolean = false;

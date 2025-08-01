@@ -1725,7 +1725,7 @@ class CustomDropdownPanel implements KbqDropdownPanel {
     items = new QueryList<KbqDropdownItem>();
 
     @ViewChild(TemplateRef, { static: false }) templateRef: TemplateRef<any>;
-    @Output() closed = new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
+    @Output() readonly closed = new EventEmitter<void | 'click' | 'keydown' | 'tab'>();
     backdropClass: string;
     hasBackdrop: boolean;
     lazyContent: KbqDropdownContent;

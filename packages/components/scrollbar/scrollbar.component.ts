@@ -79,12 +79,12 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     /** Whether to defer the initialization to a point in time when the browser is idle. (or to the next frame if `window.requestIdleCallback` is not supported) */
     @Input() defer?: boolean | IdleRequestOptions;
 
-    @Output() onInitialize = new EventEmitter<KbqScrollbarEventListenerArgs['initialized']>();
+    @Output() readonly onInitialize = new EventEmitter<KbqScrollbarEventListenerArgs['initialized']>();
     /** Event triggered when options or event listeners updated */
-    @Output() onUpdate = new EventEmitter<KbqScrollbarEventListenerArgs['updated']>();
+    @Output() readonly onUpdate = new EventEmitter<KbqScrollbarEventListenerArgs['updated']>();
     /** Event triggered when scrollbar instance destroyed */
-    @Output() onDestroy = new EventEmitter<KbqScrollbarEventListenerArgs['destroyed']>();
-    @Output() onScroll = new EventEmitter<KbqScrollbarEventListenerArgs['scroll']>();
+    @Output() readonly onDestroy = new EventEmitter<KbqScrollbarEventListenerArgs['destroyed']>();
+    @Output() readonly onScroll = new EventEmitter<KbqScrollbarEventListenerArgs['scroll']>();
 
     get element(): HTMLElement {
         return this.targetElement.nativeElement;
