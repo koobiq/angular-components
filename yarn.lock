@@ -3410,15 +3410,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-markdown@npm:^2.0.11":
-  version: 2.0.11
-  resolution: "@cspell/dict-markdown@npm:2.0.11"
+"@cspell/dict-markdown@npm:^2.0.12":
+  version: 2.0.12
+  resolution: "@cspell/dict-markdown@npm:2.0.12"
   peerDependencies:
-    "@cspell/dict-css": ^4.0.17
-    "@cspell/dict-html": ^4.0.11
-    "@cspell/dict-html-symbol-entities": ^4.0.3
-    "@cspell/dict-typescript": ^3.2.2
-  checksum: 10c0/2bcd668636eb76e3302b118d1cd7939331752cfd10dc9939b2a290772c73ff440dc7ec85b3e86467bad8818a5d4ce1a99df37383aa3a0d89f4f9aba67bf4f911
+    "@cspell/dict-css": ^4.0.18
+    "@cspell/dict-html": ^4.0.12
+    "@cspell/dict-html-symbol-entities": ^4.0.4
+    "@cspell/dict-typescript": ^3.2.3
+  checksum: 10c0/f6d53e71525dff0832950345118abcb2c2ca01aaff51922c5c18f7c3bc0d84a2168bb9bb3e400fe6b91312a5892d0b608db6ea590e2a785474ad355e60d9b535
   languageName: node
   linkType: hard
 
@@ -3480,10 +3480,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cspell/dict-ru_ru@npm:^2.3.0":
-  version: 2.3.0
-  resolution: "@cspell/dict-ru_ru@npm:2.3.0"
-  checksum: 10c0/699ab0f8769219dbc8a7c696ceffa5f7d7135ca249aac08e93e187c93f7aba87b67fb3f3386200f288f01eaaa15766232a7b91a87d42cde04b2107fef5c716be
+"@cspell/dict-ru_ru@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "@cspell/dict-ru_ru@npm:2.3.2"
+  checksum: 10c0/c4f6679790438fa0405bf82b0e096258bc17f68fb25431eb71d53056d623fe55c82d651803cd204bbec1cc1aef7b678ddde15b66f68e9c717bd856fab3092b17
   languageName: node
   linkType: hard
 
@@ -15602,8 +15602,8 @@ __metadata:
     "@angular/ssr": "npm:18.2.20"
     "@commitlint/cli": "npm:^19.8.1"
     "@commitlint/config-conventional": "npm:^19.8.1"
-    "@cspell/dict-markdown": "npm:^2.0.11"
-    "@cspell/dict-ru_ru": "npm:^2.3.0"
+    "@cspell/dict-markdown": "npm:^2.0.12"
+    "@cspell/dict-ru_ru": "npm:^2.3.2"
     "@docsearch/css": "npm:^3.9.0"
     "@docsearch/js": "npm:^3.9.0"
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.5.0"
