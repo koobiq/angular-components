@@ -47,19 +47,19 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
             }
 
             <div
-                class="example-alert__container"
                 #alertContainer
+                class="example-alert__container"
+                tabindex="0"
                 [class.example-alert__container_hidden]="!showServerErrors()"
                 [class.layout-margin-bottom-l]="showServerErrors()"
-                tabindex="0"
             >
-                <kbq-alert class="example-alert" [compact]="true" alertColor="error" alertStyle="colored">
+                <kbq-alert class="example-alert" alertColor="error" alertStyle="colored" [compact]="true">
                     <i color="error" kbq-icon="kbq-info-circle_16"></i>
                     The server didn’t respond while sending data. Please try again.
                 </kbq-alert>
             </div>
 
-            <form class="kbq-form-vertical" [formGroup]="globalErrorForm" (ngSubmit)="submitForm()" novalidate>
+            <form class="kbq-form-vertical" novalidate [formGroup]="globalErrorForm" (ngSubmit)="submitForm()">
                 <div class="kbq-form__fieldset">
                     <div class="kbq-form__row">
                         <kbq-form-field>
@@ -77,16 +77,16 @@ import { KbqLoaderOverlayModule } from '@koobiq/components/loader-overlay';
 
                     <div class="kbq-form__row">
                         <button
-                            class="flex-25"
                             #submitButton
+                            class="flex-25"
+                            color="contrast"
+                            kbq-button
+                            type="submit"
                             [class.kbq-progress]="inProgress()"
                             [disabled]="inProgress()"
                             (keydown.enter)="submitOrigin = 'keyboard'"
                             (keydown.space)="submitOrigin = 'keyboard'"
                             (mouseleave)="submitOrigin = 'mouse'"
-                            color="contrast"
-                            kbq-button
-                            type="submit"
                         >
                             Send
                         </button>
