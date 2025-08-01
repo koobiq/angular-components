@@ -56,7 +56,7 @@ export type KbqUsernameMode = 'stacked' | 'inline' | 'text';
  *
  * - `default`: standard styling with primary and secondary colors.
  * - `error`: error colors (e.g., red).
- * - `simple`: minimal style with contrast color.
- * - `none`: inherits parent styles, no theming. For exampe, useful when using inside links.
+ * - `accented`: no color theming; emphasizes via typography only.
+ * - `inherit`: inherits parent styles, no theming. For example, useful when using inside links.
  */
-export type KbqUsernameStyle = 'default' | 'error' | 'simple' | 'none';
+export type KbqUsernameStyle = 'default' | 'error' | 'accented' | 'inherit';

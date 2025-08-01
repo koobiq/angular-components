@@ -1,8 +1,15 @@
 import { NgModule } from '@angular/core';
-import { KbqUsername } from './username';
+import { KbqUsername, KbqUsernameCustomView, KbqUsernamePrimary, KbqUsernameSecondary } from './username';
 import { KbqUsernameCustomPipe, KbqUsernamePipe } from './username.pipe';
 
-const COMPONENTS = [KbqUsername, KbqUsernameCustomPipe, KbqUsernamePipe];
+const COMPONENTS = [
+    KbqUsername,
+    KbqUsernameCustomView,
+    KbqUsernamePrimary,
+    KbqUsernameSecondary,
+    KbqUsernameCustomPipe,
+    KbqUsernamePipe
+];
 
 @NgModule({
     imports: COMPONENTS,

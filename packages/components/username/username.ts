@@ -3,6 +3,8 @@ import {
     ChangeDetectionStrategy,
     Component,
     computed,
+    contentChild,
+    Directive,
     input,
     ViewEncapsulation
 } from '@angular/core';
@@ -11,7 +13,7 @@ import { kbqDefaultFullNameFormat } from './constants';
 import { KbqUsernameMode, KbqUsernameStyle } from './types';
 import { KbqUsernamePipe } from './username.pipe';
 
-const cssBase = 'kbq-username';
+const baseClass = 'kbq-username';
 
 type Profile = {
     firstName?: string;
@@ -21,29 +23,86 @@ type Profile = {
     site?: string;
 };
 
+/** Styles the primary part of the username (e.g. full name). */
+@Directive({
+    selector: '[kbqUsernamePrimary]',
+    exportAs: 'kbqUsernamePrimary',
+    standalone: true,
+    host: {
+        class: `${baseClass}__primary`
+    }
+})
+export class KbqUsernamePrimary {}
+
+/** Styles the secondary part. */
+@Directive({
+    selector: '[kbqUsernameSecondary]',
+    exportAs: 'kbqUsernameSecondary',
+    standalone: true,
+    host: {
+        class: `${baseClass}__secondary`
+    }
+})
+export class KbqUsernameSecondary {}
+
+/** Styles a secondary hint (e.g. site info). */
+@Directive({
+    selector: '[kbqUsernameSecondaryHint]',
+    exportAs: 'kbqUsernameSecondaryHint',
+    standalone: true,
+    host: {
+        class: `${baseClass}__secondary-hint`
+    }
+})
+export class KbqUsernameSecondaryHint {}
+
+/** Custom content for `KbqUsername`, overrides default view. */
+@Directive({
+    selector: 'kbq-username-custom-view, [kbq-username-custom-view]',
+    standalone: true,
+    exportAs: 'kbqUsernameCustomView'
+})
+export class KbqUsernameCustomView {}
+
 @Component({
     selector: 'kbq-username',
     standalone: true,
     exportAs: 'kbqUsername',
     imports: [
+        KbqTitleModule,
         KbqUsernamePipe,
-        KbqTitleModule
+        KbqUsernamePrimary,
+        KbqUsernameSecondary,
+        KbqUsernameSecondaryHint
     ],
     templateUrl: './username.html',
-    styleUrls: ['./username.scss'],
+    styleUrls: ['./username.scss', './username-tokens.scss'],
     host: {
-        class: cssBase,
+        class: baseClass,
         '[class]': 'class()'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqUsername {
+    /** User profile data used for display. */
     readonly userInfo = input<Profile>();
-    readonly mode = input<KbqUsernameMode>('inline');
+    /** Enables compact display mode */
     readonly isCompact = input(false, { transform: booleanAttribute });
+    /** Format string for rendering the user's full name. */
     readonly fullNameFormat = input<string>(kbqDefaultFullNameFormat);
+    /**
+     * Display mode of the username.
+     * @default inline
+     */
+    readonly mode = input<KbqUsernameMode>('inline');
+    /**
+     * Visual style of the username.
+     * @default default
+     */
     readonly type = input<KbqUsernameStyle>('default');
+    /** Custom projected view for username rendering. */
+    protected readonly customView = contentChild(KbqUsernameCustomView);
 
     protected readonly hasFullName = computed(() => {
         const profile = this.userInfo();
@@ -54,25 +113,6 @@ export class KbqUsername {
     });
 
     protected readonly class = computed(() => {
-        return [this.type(), this.mode()].map((modificator) => `${cssBase}_${modificator}`).join(' ');
+        return [this.type(), this.mode()].map((modificator) => `${baseClass}_${modificator}`).join(' ');
     });
-}
-
-@Component({
-    selector: 'kbq-username-custom',
-    standalone: true,
-    exportAs: 'kbqUsernameCustom',
-    imports: [],
-    template: `
-        <ng-content select="kbq-username-primary,[kbq-username-primary]" />
-
-        <ng-content select="kbq-username-secondary,[kbq-username-secondary]" />
-    `,
-    host: {
-        class: 'kbq-username'
-    },
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class KbqUsernameCustom {
-    protected readonly mode = input<KbqUsernameMode>('inline');
 }

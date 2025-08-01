@@ -6,10 +6,15 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
 import { KbqTitleModule } from '@koobiq/components/title';
-import { KbqUsernameMode, KbqUsernameModule, KbqUsernameStyle } from '@koobiq/components/username';
+import {
+    KbqUsernameFormatKey,
+    KbqUsernameMode,
+    KbqUsernameModule,
+    KbqUsernameStyle
+} from '@koobiq/components/username';
 
 /**
- * @title Username playground
+ * @title Username custom
  */
 @Component({
     selector: 'username-playground-example',
@@ -26,13 +31,18 @@ import { KbqUsernameMode, KbqUsernameModule, KbqUsernameStyle } from '@koobiq/co
     ],
     template: `
         <div class="example-result">
-            <kbq-username
-                [userInfo]="userInfo"
-                [fullNameFormat]="fullNameFormat"
-                [isCompact]="isCompact"
-                [mode]="selectedMode"
-                [type]="selectedType"
-            />
+            <kbq-username [mode]="selectedMode" [type]="selectedType">
+                <kbq-username-custom-view>
+                    @let fullName = userInfo | kbqUsernameCustom: fullNameFormat : customMapping;
+                    <span kbqUsernamePrimary>{{ fullName }}</span>
+
+                    @if (userInfo?.login) {
+                        <span kbqUsernameSecondary kbq-title>
+                            {{ userInfo?.login }}
+                        </span>
+                    }
+                </kbq-username-custom-view>
+            </kbq-username>
         </div>
         <div class="layout-row layout-gap-l">
             <kbq-form-field style="width: 100px">
@@ -67,7 +77,7 @@ import { KbqUsernameMode, KbqUsernameModule, KbqUsernameStyle } from '@koobiq/co
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsernamePlaygroundExample {
+export class UsernameCustomExample {
     userInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
@@ -77,8 +87,21 @@ export class UsernamePlaygroundExample {
     selectedMode: KbqUsernameMode = 'inline';
     selectedType: KbqUsernameStyle = 'default';
     isCompact = false;
-    fullNameFormat = 'f.m.l';
+    fullNameFormat = 'F M. L.';
 
     modes: KbqUsernameMode[] = ['inline', 'stacked', 'text'];
     types: KbqUsernameStyle[] = ['default', 'error', 'accented', 'inherit'];
+
+    readonly customMapping = {
+        [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
+        [KbqUsernameFormatKey.FirstNameFull]: 'firstName',
+
+        [KbqUsernameFormatKey.MiddleNameShort]: 'middleName',
+        [KbqUsernameFormatKey.MiddleNameFull]: 'middleName',
+
+        [KbqUsernameFormatKey.LastNameShort]: 'lastName',
+        [KbqUsernameFormatKey.LastNameFull]: 'lastName',
+
+        [KbqUsernameFormatKey.Dot]: undefined
+    };
 }

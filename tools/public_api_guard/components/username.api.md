@@ -32,34 +32,19 @@ export function KbqMappingMissingError(): Error;
 export class KbqUsername {
     // (undocumented)
     protected readonly class: Signal<string>;
-    // (undocumented)
+    protected readonly customView: Signal<KbqUsernameCustomView | undefined>;
     readonly fullNameFormat: InputSignal<string>;
     // (undocumented)
     protected readonly hasFullName: Signal<string | false | undefined>;
-    // (undocumented)
     readonly isCompact: InputSignalWithTransform<boolean, unknown>;
-    // (undocumented)
     readonly mode: InputSignal<KbqUsernameMode>;
-    // (undocumented)
     readonly type: InputSignal<KbqUsernameStyle>;
     // Warning: (ae-forgotten-export) The symbol "Profile" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     readonly userInfo: InputSignal<Profile | undefined>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqUsername, "kbq-username", ["kbqUsername"], { "userInfo": { "alias": "userInfo"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "isCompact": { "alias": "isCompact"; "required": false; "isSignal": true; }; "fullNameFormat": { "alias": "fullNameFormat"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqUsername, "kbq-username", ["kbqUsername"], { "userInfo": { "alias": "userInfo"; "required": false; "isSignal": true; }; "isCompact": { "alias": "isCompact"; "required": false; "isSignal": true; }; "fullNameFormat": { "alias": "fullNameFormat"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; }, {}, ["customView"], ["kbq-username-custom-view,[kbq-username-custom-view]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsername, never>;
-}
-
-// @public (undocumented)
-export class KbqUsernameCustom {
-    // (undocumented)
-    protected readonly mode: InputSignal<KbqUsernameMode>;
-    // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqUsernameCustom, "kbq-username-custom", ["kbqUsernameCustom"], { "mode": { "alias": "mode"; "required": false; "isSignal": true; }; }, {}, never, ["kbq-username-primary,[kbq-username-primary]", "kbq-username-secondary,[kbq-username-secondary]"], true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameCustom, never>;
 }
 
 // @public
@@ -71,6 +56,14 @@ export class KbqUsernameCustomPipe<T extends object> implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqUsernameCustomPipe<any>, "kbqUsernameCustom", true>;
     // (undocumented)
     static ɵprov: i0.ɵɵInjectableDeclaration<KbqUsernameCustomPipe<any>>;
+}
+
+// @public
+export class KbqUsernameCustomView {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqUsernameCustomView, "kbq-username-custom-view, [kbq-username-custom-view]", ["kbqUsernameCustomView"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameCustomView, never>;
 }
 
 // @public
@@ -98,7 +91,7 @@ export class KbqUsernameModule {
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqUsernameModule, never, [typeof i1.KbqUsername, typeof i2.KbqUsernameCustomPipe, typeof i2.KbqUsernamePipe], [typeof i1.KbqUsername, typeof i2.KbqUsernameCustomPipe, typeof i2.KbqUsernamePipe]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqUsernameModule, never, [typeof i1.KbqUsername, typeof i1.KbqUsernameCustomView, typeof i1.KbqUsernamePrimary, typeof i1.KbqUsernameSecondary, typeof i2.KbqUsernameCustomPipe, typeof i2.KbqUsernamePipe], [typeof i1.KbqUsername, typeof i1.KbqUsernameCustomView, typeof i1.KbqUsernamePrimary, typeof i1.KbqUsernameSecondary, typeof i2.KbqUsernameCustomPipe, typeof i2.KbqUsernamePipe]>;
 }
 
 // @public (undocumented)
@@ -113,7 +106,31 @@ export class KbqUsernamePipe<T extends object> implements PipeTransform {
 }
 
 // @public
-export type KbqUsernameStyle = 'default' | 'error' | 'simple' | 'none';
+export class KbqUsernamePrimary {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqUsernamePrimary, "[kbqUsernamePrimary]", ["kbqUsernamePrimary"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernamePrimary, never>;
+}
+
+// @public
+export class KbqUsernameSecondary {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqUsernameSecondary, "[kbqUsernameSecondary]", ["kbqUsernameSecondary"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameSecondary, never>;
+}
+
+// @public
+export class KbqUsernameSecondaryHint {
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqUsernameSecondaryHint, "[kbqUsernameSecondaryHint]", ["kbqUsernameSecondaryHint"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameSecondaryHint, never>;
+}
+
+// @public
+export type KbqUsernameStyle = 'default' | 'error' | 'accented' | 'inherit';
 
 // (No @packageDocumentation comment for this package)
 

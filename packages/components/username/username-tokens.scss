@@ -1,0 +1,6 @@
+:where(.kbq-username) {
+    --kbq-username-primary-color: var(--kbq-foreground-contrast);
+    --kbq-username-secondary-color: var(--kbq-foreground-contrast-secondary);
+    --kbq-username-vertical-gap: var(--kbq-size-xxs);
+    --kbq-username-horizontal-gap: var(--kbq-size-xxs);
+}
