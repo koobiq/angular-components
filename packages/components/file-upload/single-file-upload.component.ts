@@ -90,7 +90,8 @@ export class KbqSingleFileUploadComponent
 
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
-    @Output('fileQueueChange') fileChange: EventEmitter<KbqFileItem | null> = new EventEmitter<KbqFileItem | null>();
+    @Output('fileQueueChange') readonly fileChange: EventEmitter<KbqFileItem | null> =
+        new EventEmitter<KbqFileItem | null>();
 
     /** @docs-private */
     @ViewChild('input') input: ElementRef<HTMLInputElement>;

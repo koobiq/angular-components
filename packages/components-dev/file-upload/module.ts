@@ -398,7 +398,7 @@ class DevExamples {}
 export class DevMultipleFileUploadCompact {
     @Input() disabled: boolean;
     @Input() files: KbqFileItem[] = [];
-    @Output() addedFile: EventEmitter<any> = new EventEmitter<any>();
+    @Output() readonly addedFile: EventEmitter<any> = new EventEmitter<any>();
 
     hintMessage = hintMessage;
 

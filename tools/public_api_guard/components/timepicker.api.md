@@ -72,7 +72,7 @@ export class KbqTimepicker<D> implements KbqFormFieldControl<D>, ControlValueAcc
     get id(): string;
     set id(value: string);
     // (undocumented)
-    incorrectInput: EventEmitter<void>;
+    readonly incorrectInput: EventEmitter<void>;
     // (undocumented)
     get isFullFormat(): boolean;
     // (undocumented)

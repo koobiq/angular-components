@@ -71,12 +71,12 @@ export class KbqScrollbar implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    onDestroy: EventEmitter<[instance: OverlayScrollbars, canceled: boolean]>;
+    readonly onDestroy: EventEmitter<[instance: OverlayScrollbars, canceled: boolean]>;
     // (undocumented)
-    onInitialize: EventEmitter<[instance: OverlayScrollbars]>;
+    readonly onInitialize: EventEmitter<[instance: OverlayScrollbars]>;
     // (undocumented)
-    onScroll: EventEmitter<[instance: OverlayScrollbars, event: Event]>;
-    onUpdate: EventEmitter<[instance: OverlayScrollbars, onUpdatedArgs: OnUpdatedEventListenerArgs]>;
+    readonly onScroll: EventEmitter<[instance: OverlayScrollbars, event: Event]>;
+    readonly onUpdate: EventEmitter<[instance: OverlayScrollbars, onUpdatedArgs: OnUpdatedEventListenerArgs]>;
     options: KbqScrollbarOptions;
     scrollTo(options?: ScrollToOptions): void;
     // (undocumented)

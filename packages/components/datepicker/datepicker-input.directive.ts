@@ -465,7 +465,7 @@ export class KbqDatepickerInput<D>
         });
     }
 
-    @Output() incorrectInput = new EventEmitter<void>();
+    @Output() readonly incorrectInput = new EventEmitter<void>();
 
     /** Emits when a `change` event is fired on this `<input>`. */
     @Output() readonly dateChange = new EventEmitter<KbqDatepickerInputEvent<D>>();

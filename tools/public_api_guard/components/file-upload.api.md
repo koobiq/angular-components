@@ -58,7 +58,7 @@ export interface KbqFile extends File {
 // @public (undocumented)
 export class KbqFileDropDirective {
     dragover: boolean;
-    filesDropped: EventEmitter<FileList | KbqFile[]>;
+    readonly filesDropped: EventEmitter<FileList | KbqFile[]>;
     onDragLeave(event: DragEvent): void;
     onDragOver(event: DragEvent): void;
     onDrop(event: DragEvent): void;
@@ -229,7 +229,7 @@ export class KbqSingleFileUploadComponent extends KbqFileUploadBase implements A
     // (undocumented)
     get file(): KbqFileItem | null;
     set file(currentFile: KbqFileItem | null);
-    fileChange: EventEmitter<KbqFileItem | null>;
+    readonly fileChange: EventEmitter<KbqFileItem | null>;
     get hasHint(): boolean;
     input: ElementRef<HTMLInputElement>;
     // (undocumented)

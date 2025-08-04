@@ -100,7 +100,7 @@ export class KbqSplitterAreaDirective implements AfterViewInit, OnDestroy {
     // (undocumented)
     setSize(size: number): void;
     // (undocumented)
-    sizeChange: EventEmitter<number>;
+    readonly sizeChange: EventEmitter<number>;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqSplitterAreaDirective, "[kbq-splitter-area]", never, {}, { "sizeChange": "sizeChange"; }, never, never, false, never>;
     // (undocumented)
@@ -131,7 +131,7 @@ export class KbqSplitterComponent implements OnInit, AfterContentInit, OnDestroy
     // (undocumented)
     ghost: KbqGutterGhostDirective;
     // (undocumented)
-    gutterPositionChange: EventEmitter<void>;
+    readonly gutterPositionChange: EventEmitter<void>;
     // (undocumented)
     gutters: QueryList<KbqGutterDirective>;
     // (undocumented)

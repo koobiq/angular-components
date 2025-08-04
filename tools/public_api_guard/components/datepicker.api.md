@@ -195,7 +195,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     // (undocumented)
     backdropClass: string;
     close(restoreFocus?: boolean): void;
-    closedStream: EventEmitter<void>;
+    readonly closedStream: EventEmitter<void>;
     dateClass: (date: D) => KbqCalendarCellCssClasses;
     // (undocumented)
     get dateFilter(): (date: D | null) => boolean;
@@ -217,7 +217,7 @@ export class KbqDatepicker<D> implements OnDestroy {
     open(): void;
     get opened(): boolean;
     set opened(value: boolean);
-    openedStream: EventEmitter<void>;
+    readonly openedStream: EventEmitter<void>;
     panelClass: string | string[];
     popupRef: OverlayRef | null;
     registerInput(input: KbqDatepickerInput<D>): void;
@@ -306,7 +306,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     get id(): string;
     set id(value: string);
     // (undocumented)
-    incorrectInput: EventEmitter<void>;
+    readonly incorrectInput: EventEmitter<void>;
     // (undocumented)
     get isReadOnly(): boolean;
     set kbqCalendar(value: KbqCalendar<D>);

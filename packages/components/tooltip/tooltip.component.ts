@@ -260,9 +260,9 @@ export class KbqTooltipTrigger extends KbqPopUpTrigger<KbqTooltipComponent> impl
     @Input({ alias: 'kbqTooltipArrow', transform: booleanAttribute }) arrow: boolean = true;
     @Input({ alias: 'kbqTooltipOffset', transform: numberAttribute }) offset: number | null = null;
 
-    @Output('kbqPlacementChange') placementChange = new EventEmitter();
+    @Output('kbqPlacementChange') readonly placementChange = new EventEmitter();
 
-    @Output('kbqVisibleChange') visibleChange = new EventEmitter<boolean>();
+    @Output('kbqVisibleChange') readonly visibleChange = new EventEmitter<boolean>();
 
     private get hasClickInTrigger(): boolean {
         return this.trigger.includes(PopUpTriggers.Click);

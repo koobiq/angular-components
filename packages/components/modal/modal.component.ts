@@ -87,7 +87,7 @@ export class KbqModalComponent<T = any, R = any>
 
     private _kbqVisible = false;
 
-    @Output() kbqVisibleChange = new EventEmitter<boolean>();
+    @Output() readonly kbqVisibleChange = new EventEmitter<boolean>();
 
     @Input() kbqWidth: number | string;
     @Input() kbqSize: ModalSize = ModalSize.Medium;
@@ -129,9 +129,9 @@ export class KbqModalComponent<T = any, R = any>
     @Input() kbqBodyStyle: object;
 
     // Trigger when modal open(visible) after animations
-    @Output() kbqAfterOpen = new EventEmitter<void>();
+    @Output() readonly kbqAfterOpen = new EventEmitter<void>();
     // Trigger when modal leave-animation over
-    @Output() kbqAfterClose = new EventEmitter<R | undefined>();
+    @Output() readonly kbqAfterClose = new EventEmitter<R | undefined>();
 
     // --- Predefined OK & Cancel buttons
     @Input() kbqOkText: string;
@@ -148,7 +148,7 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqOkLoading = false;
 
-    @Input() @Output() kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
+    @Input() @Output() readonly kbqOnOk: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
     @Input() kbqCancelText: string;
 
     @Input()
@@ -160,7 +160,7 @@ export class KbqModalComponent<T = any, R = any>
     }
     private _kbqCancelLoading = false;
 
-    @Input() @Output() kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
+    @Input() @Output() readonly kbqOnCancel: EventEmitter<T> | OnClickCallback<T> = new EventEmitter<T>();
 
     @ViewChild('modalContainer', { static: true }) modalContainer: ElementRef;
     @ViewChild('bodyContainer', { read: ViewContainerRef, static: false }) bodyContainer: ViewContainerRef;
