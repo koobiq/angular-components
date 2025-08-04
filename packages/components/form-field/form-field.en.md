@@ -102,7 +102,7 @@ For a specific field, using the `noBorders` attribute:
 For all fields, using the `KBQ_FORM_FIELD_DEFAULT_OPTIONS` token:
 
 ```ts
-import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components-experimental/form-field';
+import { kbqFormFieldDefaultOptionsProvider } from '@koobiq/components/form-field';
 
 @NgModule({
     providers: [

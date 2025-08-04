@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { KbqFormFieldModule } from '@koobiq/components-experimental/form-field';
 import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 @Component({
