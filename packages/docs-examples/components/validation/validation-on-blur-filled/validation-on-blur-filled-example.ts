@@ -30,6 +30,7 @@ const restSymbolsRegex = /[^0-9.]+/g;
         <kbq-form-field style="width: 320px;">
             <kbq-label>IPv4-address</kbq-label>
             <input
+                kbqInput
                 [formControl]="ipAddressControl"
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
@@ -37,7 +38,6 @@ const restSymbolsRegex = /[^0-9.]+/g;
                 [kbqTooltip]="'Numbers and dots (.) only'"
                 [kbqTooltipColor]="colors.Error"
                 (input)="onInput($event)"
-                kbqInput
             />
 
             <kbq-error>The IP address does not comply with RFC standards</kbq-error>

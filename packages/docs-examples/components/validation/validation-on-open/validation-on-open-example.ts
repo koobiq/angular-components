@@ -22,7 +22,7 @@ type DocsFormData = {
     standalone: true,
     imports: [KbqFormsModule, KbqFormFieldModule, FormsModule, KbqButtonModule, KbqInputModule, ReactiveFormsModule],
     template: `
-        <form class="kbq-form-vertical" id="docs-form" [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()" novalidate>
+        <form class="kbq-form-vertical" id="docs-form" novalidate [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
             <div class="kbq-form__fieldset">
                 <div class="kbq-form__row">
                     <div class="kbq-form__label">Name</div>
@@ -91,15 +91,15 @@ export class DocsNameFormComponent {
         KbqButtonModule
     ],
     template: `
-        <button (click)="openEmptyForm(footer)" kbq-button color="contrast">Open empty form</button>
-        <button (click)="openDraftForm(footer)" kbq-button color="contrast-fade">Open draft</button>
+        <button kbq-button color="contrast" (click)="openEmptyForm(footer)">Open empty form</button>
+        <button kbq-button color="contrast-fade" (click)="openDraftForm(footer)">Open draft</button>
 
         <ng-template #footer>
             <button type="submit" form="docs-form" kbq-button color="contrast">Save</button>
             <button
-                (click)="modalRef.close(modalRef.getContentComponent().userDetailsForm.value)"
                 kbq-button
                 color="contrast-fade"
+                (click)="modalRef.close(modalRef.getContentComponent().userDetailsForm.value)"
             >
                 Cancel
             </button>
