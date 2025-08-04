@@ -3,6 +3,10 @@
     align-items: center;
     justify-content: center;
 
-    width: var(--kbq-form-field-size-addon-width);
-    height: 100%;
+    width: 26px;
+    height: var(--kbq-size-xxl);
+
+    outline: none;
+
+    border-radius: var(--kbq-size-xxs);
 }

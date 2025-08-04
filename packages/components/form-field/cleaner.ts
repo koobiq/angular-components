@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqIconButton, KbqIconModule } from '@koobiq/components/icon';
 
 /**
  * Element to be placed in end of the form field.
@@ -11,13 +12,20 @@ import { KbqIconModule } from '@koobiq/components/icon';
     selector: 'kbq-cleaner',
     exportAs: 'kbqCleaner',
     template: `
-        <i color="contrast-fade" kbq-icon-button="kbq-xmark-circle_16" [autoColor]="true"></i>
+        <ng-content />
     `,
-    styleUrls: ['cleaner.scss'],
+    styleUrls: ['cleaner.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
     host: {
-        class: 'kbq-cleaner'
+        class: 'kbq-cleaner kbq kbq-xmark-circle_16'
     },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class KbqCleaner {}
+export class KbqCleaner extends KbqIconButton {
+    constructor() {
+        super();
+
+        this.color = KbqComponentColors.ContrastFade;
+        this.autoColor = true;
+    }
+}

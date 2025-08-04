@@ -20,6 +20,7 @@ type DocsFormData = {
 @Component({
     selector: 'docs-empty-form',
     standalone: true,
+
     imports: [KbqFormsModule, KbqFormFieldModule, FormsModule, KbqButtonModule, KbqInputModule, ReactiveFormsModule],
     template: `
         <form class="kbq-form-vertical" id="docs-form" novalidate [formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">

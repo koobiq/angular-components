@@ -17,7 +17,7 @@
 
         cursor: pointer;
 
-        min-height: var(--kbq-form-field-size-height);
+        min-height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
 
         &:not(.kbq-select__trigger_multiline) {
             height: calc(var(--kbq-form-field-size-height) - calc(var(--kbq-size-border-width) * 2));
@@ -89,8 +89,10 @@
         & .kbq-select__matcher {
             max-width: 100%;
 
-            padding: var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-right)
-                var(--kbq-select-size-multiple-padding-vertical) var(--kbq-select-size-multiple-padding-left);
+            padding: calc(var(--kbq-select-size-multiple-padding-vertical) - var(--kbq-size-border-width))
+                var(--kbq-select-size-multiple-padding-right)
+                calc(var(--kbq-select-size-multiple-padding-vertical) - var(--kbq-size-border-width))
+                var(--kbq-select-size-multiple-padding-left);
         }
 
         & .kbq-select__cleaner,
@@ -99,6 +101,7 @@
             align-items: center;
 
             height: calc(var(--kbq-form-field-size-height) - var(--kbq-size-s));
+            min-width: var(--kbq-form-field-size-addon-width);
         }
 
         & .kbq-select__multiline-match-list {

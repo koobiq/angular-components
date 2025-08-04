@@ -2031,6 +2031,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon-item"
   },
+  "input-change-password": {
+    "packagePath": "components/input/input-change-password",
+    "title": "Input change password",
+    "componentName": "InputChangePasswordExample",
+    "files": [
+      "input-change-password-example.ts"
+    ],
+    "selector": "input-change-password-example",
+    "additionalComponents": [],
+    "primaryFile": "input-change-password-example.ts",
+    "importPath": "components/input"
+  },
   "input-number-overview": {
     "packagePath": "components/input/input-number-overview",
     "title": "Input number",
@@ -4982,6 +4994,8 @@ return import('@koobiq/docs-examples/components/icon-item');
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-variant':
 return import('@koobiq/docs-examples/components/icon-item');
+  case 'input-change-password':
+return import('@koobiq/docs-examples/components/input');
   case 'input-number-overview':
 return import('@koobiq/docs-examples/components/input');
   case 'input-overview':

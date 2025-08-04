@@ -1,9 +1,16 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { NgClass } from '@angular/common';
 import {
+    AfterContentInit,
+    AfterViewInit,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
+    ElementRef,
     inject,
     Input,
+    numberAttribute,
+    OnDestroy,
     TemplateRef,
     ViewChild,
     ViewEncapsulation
@@ -36,16 +43,20 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     selector: `kbq-password-toggle`,
     exportAs: 'kbqPasswordToggle',
     template: `
-        <i kbq-icon-button="" color="contrast-fade" [ngClass]="iconClass" [autoColor]="true"></i>
+        <ng-content />
     `,
-    styleUrls: ['password-toggle.scss'],
+    styleUrls: ['password-toggle.scss', '../icon/icon-button.scss', '../icon/icon-button-tokens.scss'],
     host: {
-        class: 'kbq-password-toggle',
+        class: 'kbq-password-toggle kbq kbq-icon-button kbq-contrast-fade',
+        '[class.kbq-error]': 'hasError',
+        '[class.kbq-eye_16]': 'hidden',
+        '[class.kbq-eye-slash_16]': '!hidden',
 
         // legacy style for backward compatibility
         '[style.visibility]': 'visibility',
         '[class.cdk-visually-hidden]': 'visibility === "hidden"',
         '[attr.aria-hidden]': 'visibility === "hidden"',
+        '[attr.tabindex]': 'tabindex',
 
         '(click)': 'toggle($event)',
         '(keydown.ENTER)': 'toggle($event)',
@@ -54,9 +65,15 @@ const getKbqPasswordToggleMissingControlError = (): Error => {
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqPasswordToggle extends KbqTooltipTrigger {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
+    protected readonly nativeElement = inject(ElementRef).nativeElement;
+    protected readonly focusMonitor = inject(FocusMonitor);
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+
     // @TODO fix types (#DS-2915)
     private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
+
+    @Input({ transform: numberAttribute }) tabindex: number = 0;
 
     /**
      * @docs-private
@@ -75,6 +92,8 @@ export class KbqPasswordToggle extends KbqTooltipTrigger {
     }
 
     @Input() kbqTooltipHidden: string | TemplateRef<any>;
+
+    protected hasError: boolean = false;
 
     /** Form field password control. */
     private get control(): KbqInputPassword {
@@ -117,6 +136,29 @@ export class KbqPasswordToggle extends KbqTooltipTrigger {
     /**
      * @docs-private
      */
+    ngAfterContentInit(): void {
+        this.formField?.control?.stateChanges.subscribe(this.updateState);
+
+        this.updateState();
+    }
+
+    /**
+     * @docs-private
+     */
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.nativeElement, true);
+    }
+
+    /**
+     * @docs-private
+     */
+    ngOnDestroy() {
+        this.focusMonitor.stopMonitoring(this.nativeElement);
+    }
+
+    /**
+     * @docs-private
+     */
     toggle(event: KeyboardEvent) {
         this.hide();
 
@@ -128,4 +170,10 @@ export class KbqPasswordToggle extends KbqTooltipTrigger {
 
         event.preventDefault();
     }
+
+    private updateState = () => {
+        this.hasError = !!this.formField?.control?.errorState;
+
+        this.changeDetectorRef.markForCheck();
+    };
 }

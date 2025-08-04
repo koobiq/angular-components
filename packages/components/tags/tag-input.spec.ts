@@ -227,6 +227,7 @@ describe('KbqTagInput', () => {
         <kbq-form-field>
             <kbq-tag-list #tagList />
             <input
+                [value]="inputValue"
                 [kbqTagInputFor]="tagList"
                 [kbqTagInputAddOnBlur]="addOnBlur"
                 [kbqTagInputAddOnPaste]="addOnPaste"
@@ -239,6 +240,7 @@ describe('KbqTagInput', () => {
 class TestTagInput {
     @ViewChild(KbqTagList, { static: false }) tagListInstance: KbqTagList;
 
+    inputValue = 'inputValue';
     addOnBlur: boolean = false;
     addOnPaste: boolean = false;
     placeholder = '';

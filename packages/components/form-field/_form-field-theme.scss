@@ -66,28 +66,30 @@
         &.kbq-form-field-type-datepicker,
         &.kbq-form-field-type-input-password,
         &.kbq-form-field-type-tag-list,
-        &.kbq-form-field-type-select.cdk-keyboard-focused {
-            &.cdk-focused {
-                @include _kbq-form-field-state(states-focused);
+        &.kbq-form-field-type-select {
+            &:not(:has(.cdk-keyboard-focused)) {
+                &.cdk-focused {
+                    @include _kbq-form-field-state(states-focused);
 
-                & .kbq-form-field__container {
-                    box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
-                }
-            }
-
-            // Invalid by control `ErrorStateMatcher`
-            &.kbq-form-field_invalid,
-            // Invalid by `KbqValidateDirective`
-            &.kbq-form-field_has-validate-directive.ng-invalid {
-                @include _kbq-form-field-state(states-error);
-
-                &.cdk-focused .kbq-form-field__container {
-                    box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
+                    & .kbq-form-field__container {
+                        box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-focused-focus-outline);
+                    }
                 }
 
-                & .kbq-icon.kbq-empty {
-                    color: var(--kbq-form-field-states-error-text);
-                    -webkit-text-fill-color: var(--kbq-form-field-states-error-text);
+                // Invalid by control `ErrorStateMatcher`
+                &.kbq-form-field_invalid,
+                // Invalid by `KbqValidateDirective`
+                &.kbq-form-field_has-validate-directive.ng-invalid {
+                    @include _kbq-form-field-state(states-error);
+
+                    &.cdk-focused .kbq-form-field__container {
+                        box-shadow: 0 0 0.1px 1px var(--kbq-form-field-states-error-focused-focus-outline);
+                    }
+
+                    & .kbq-icon.kbq-empty {
+                        color: var(--kbq-form-field-states-error-text);
+                        -webkit-text-fill-color: var(--kbq-form-field-states-error-text);
+                    }
                 }
             }
         }

@@ -11,6 +11,7 @@ import { AfterViewInit } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
@@ -46,9 +47,10 @@ export const KBQ_FORM_FIELD_DEFAULT_OPTIONS: InjectionToken<Partial<{
 }>>;
 
 // @public
-export class KbqCleaner {
+export class KbqCleaner extends KbqIconButton {
+    constructor();
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], {}, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqCleaner, "kbq-cleaner", ["kbqCleaner"], {}, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqCleaner, never>;
 }
@@ -259,20 +261,35 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 }
 
 // @public
-export class KbqPasswordToggle extends KbqTooltipTrigger {
+export class KbqPasswordToggle extends KbqTooltipTrigger implements AfterViewInit, OnDestroy, AfterContentInit {
     constructor();
+    // (undocumented)
+    protected readonly changeDetectorRef: ChangeDetectorRef;
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
+    // (undocumented)
+    protected readonly focusMonitor: FocusMonitor;
+    // (undocumented)
+    protected hasError: boolean;
     get hidden(): boolean;
     readonly icon: KbqIconButton;
     get iconClass(): string;
     // (undocumented)
     kbqTooltipHidden: string | TemplateRef<any>;
+    // (undocumented)
+    protected readonly nativeElement: any;
+    // (undocumented)
+    static ngAcceptInputType_tabindex: unknown;
+    ngAfterContentInit(): void;
+    ngAfterViewInit(): void;
+    ngOnDestroy(): void;
+    // (undocumented)
+    tabindex: number;
     toggle(event: KeyboardEvent): void;
     get visibility(): 'hidden' | 'visible';
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; }; }, {}, never, never, true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqPasswordToggle, "kbq-password-toggle", ["kbqPasswordToggle"], { "tabindex": { "alias": "tabindex"; "required": false; }; "content": { "alias": "kbqTooltipNotHidden"; "required": false; }; "kbqTooltipHidden": { "alias": "kbqTooltipHidden"; "required": false; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqPasswordToggle, never>;
 }
