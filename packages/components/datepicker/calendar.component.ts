@@ -162,16 +162,6 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         });
     }
 
-    ngAfterContentInit() {
-        this.activeDate = this.getActiveDateDefault();
-    }
-
-    ngOnDestroy() {
-        this.intlChanges.unsubscribe();
-        this.inputSubscription.unsubscribe();
-        this.stateChanges.complete();
-    }
-
     ngOnChanges(changes: SimpleChanges) {
         const change = changes.minDate || changes.maxDate || changes.dateFilter;
 
@@ -185,6 +175,16 @@ export class KbqCalendar<D> implements AfterContentInit, OnDestroy, OnChanges {
         }
 
         this.stateChanges.next();
+    }
+
+    ngAfterContentInit() {
+        this.activeDate = this.getActiveDateDefault();
+    }
+
+    ngOnDestroy() {
+        this.intlChanges.unsubscribe();
+        this.inputSubscription.unsubscribe();
+        this.stateChanges.complete();
     }
 
     /**

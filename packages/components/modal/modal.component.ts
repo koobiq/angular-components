@@ -225,6 +225,18 @@ export class KbqModalComponent<T = any, R = any>
 
     @Input() kbqGetContainer: HTMLElement | OverlayRef | (() => HTMLElement | OverlayRef) = () => this.overlay.create();
 
+    // [NOTE] NOT available when using by service!
+    // Because ngOnChanges never be called when using by service,
+    // here we can't support "kbqContent"(Component) etc. as inputs that initialized dynamically.
+    // BUT: User also can change "kbqContent" dynamically to trigger UI changes
+    // (provided you don't use Component that needs initializations)
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.kbqVisible) {
+            // Do not trigger animation while initializing
+            this.handleVisibleStateChange(this.kbqVisible, !changes.kbqVisible.firstChange);
+        }
+    }
+
     ngOnInit() {
         // Create component along without View
         if (this.isComponent(this.kbqContent)) {
@@ -252,18 +264,6 @@ export class KbqModalComponent<T = any, R = any>
 
         // Register modal when afterOpen/afterClose is stable
         this.modalControl.registerModal(this);
-    }
-
-    // [NOTE] NOT available when using by service!
-    // Because ngOnChanges never be called when using by service,
-    // here we can't support "kbqContent"(Component) etc. as inputs that initialized dynamically.
-    // BUT: User also can change "kbqContent" dynamically to trigger UI changes
-    // (provided you don't use Component that needs initializations)
-    ngOnChanges(changes: SimpleChanges) {
-        if (changes.kbqVisible) {
-            // Do not trigger animation while initializing
-            this.handleVisibleStateChange(this.kbqVisible, !changes.kbqVisible.firstChange);
-        }
     }
 
     ngAfterViewInit() {

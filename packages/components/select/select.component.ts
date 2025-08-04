@@ -666,6 +666,14 @@ export class KbqSelect
             );
     }
 
+    ngDoCheck() {
+        this.visibleChanges.next(this.isVisible());
+
+        if (this.ngControl) {
+            this.updateErrorState();
+        }
+    }
+
     ngAfterContentInit() {
         this.withVirtualScroll = !!this.cdkVirtualForOf;
         this.initKeyManager();
@@ -693,14 +701,6 @@ export class KbqSelect
         this.tags.changes.subscribe(() => {
             setTimeout(() => this.calculateHiddenItems(), 0);
         });
-    }
-
-    ngDoCheck() {
-        this.visibleChanges.next(this.isVisible());
-
-        if (this.ngControl) {
-            this.updateErrorState();
-        }
     }
 
     ngOnDestroy() {

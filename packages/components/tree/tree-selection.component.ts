@@ -252,10 +252,6 @@ export class KbqTreeSelection
         this.selectionModel = new SelectionModel<SelectionModelOption>(this.multiple);
     }
 
-    ngAfterViewInit(): void {
-        this.focusMonitor.monitor(this.elementRef, true);
-    }
-
     ngAfterContentInit(): void {
         this.unorderedOptions.changes.subscribe(this.updateRenderedOptions);
 
@@ -302,6 +298,10 @@ export class KbqTreeSelection
                     option.markForCheck();
                 });
             });
+    }
+
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef, true);
     }
 
     ngOnDestroy(): void {

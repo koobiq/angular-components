@@ -146,12 +146,12 @@ export class KbqTab implements OnInit, OnChanges, OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
-        this.stateChanges.complete();
-    }
-
     ngOnInit(): void {
         this.contentPortal = new TemplatePortal(this.explicitContent || this.implicitContent, this.viewContainerRef);
+    }
+
+    ngOnDestroy(): void {
+        this.stateChanges.complete();
     }
 
     /**
