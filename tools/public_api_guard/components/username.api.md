@@ -12,9 +12,9 @@ import { PipeTransform } from '@angular/core';
 import { Signal } from '@angular/core';
 
 // @public
-export const KBQ_PROFILE_MAPPING: InjectionToken<KbqFormatKeyToProfileMapping>;
+export const KBQ_PROFILE_MAPPING: InjectionToken<KbqFormatKeyToProfileMapping | KbqFormatKeyToProfileMappingExtended>;
 
-// @public (undocumented)
+// @public
 export const kbqDefaultFullNameFormat = "lf.m.";
 
 // @public
@@ -22,6 +22,11 @@ export const kbqDefaultFullNameFormatCustom = "L f. m.";
 
 // @public
 export type KbqFormatKeyToProfileMapping<T = any> = {
+    [key in Exclude<KbqUsernameFormatKey, KbqUsernameFormatKey.FirstNameFull | KbqUsernameFormatKey.MiddleNameFull | KbqUsernameFormatKey.LastNameFull>]: keyof T | undefined;
+};
+
+// @public
+export type KbqFormatKeyToProfileMappingExtended<T = any> = {
     [key in KbqUsernameFormatKey]: keyof T | undefined;
 };
 
@@ -46,8 +51,8 @@ export class KbqUsername {
 }
 
 // @public
-export class KbqUsernameCustomPipe<T extends object> implements PipeTransform {
-    transform(profile: T, format?: string, customMapping?: KbqFormatKeyToProfileMapping<T>): string;
+export class KbqUsernameCustomPipe<T = unknown> implements PipeTransform {
+    transform(profile: T, format?: string, customMapping?: KbqFormatKeyToProfileMappingExtended<T>): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernameCustomPipe<any>, never>;
     // (undocumented)
@@ -93,7 +98,7 @@ export class KbqUsernameModule {
 }
 
 // @public (undocumented)
-export class KbqUsernamePipe<T extends object> implements PipeTransform {
+export class KbqUsernamePipe<T = unknown> implements PipeTransform {
     transform(profile: T, format?: string, customMapping?: KbqFormatKeyToProfileMapping): string;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqUsernamePipe<any>, never>;

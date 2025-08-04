@@ -21,7 +21,7 @@ type ExampleUser = {
     login?: string;
 };
 
-const mapping: KbqFormatKeyToProfileMappingExtended<ExampleUser> = {
+const mapping: KbqFormatKeyToProfileMappingExtended = {
     [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
     [KbqUsernameFormatKey.FirstNameFull]: 'firstName',
 
