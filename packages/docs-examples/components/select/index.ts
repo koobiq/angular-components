@@ -14,7 +14,9 @@ import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
 import { SelectWithMultilineMatcherExample } from './select-with-multiline-matcher/select-with-multiline-matcher-example';
-import { SelectWithPanelWidthAttributeExample } from './select-with-panel-width-attribute/select-with-panel-width-attribute-example';
+import { SelectWithPanelWidthAutoExample } from './select-with-panel-width-auto/select-with-panel-width-auto-example';
+import { SelectWithPanelWidthDefaultExample } from './select-with-panel-width-default/select-with-panel-width-default-example';
+import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixed/select-with-panel-width-fixed-example';
 
 export {
     SelectCleanerExample,
@@ -32,7 +34,9 @@ export {
     SelectValidationExample,
     SelectVirtualScrollExample,
     SelectWithMultilineMatcherExample,
-    SelectWithPanelWidthAttributeExample
+    SelectWithPanelWidthAutoExample,
+    SelectWithPanelWidthDefaultExample,
+    SelectWithPanelWidthFixedExample
 };
 
 const EXAMPLES = [
@@ -48,10 +52,12 @@ const EXAMPLES = [
     SelectFooterExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
-    SelectWithPanelWidthAttributeExample,
+    SelectWithPanelWidthDefaultExample,
     SelectCustomMatcherExample,
     SelectCustomTriggerExample,
-    SelectWithMultilineMatcherExample
+    SelectWithMultilineMatcherExample,
+    SelectWithPanelWidthAutoExample,
+    SelectWithPanelWidthFixedExample
 ];
 
 @NgModule({

@@ -1,4 +1,4 @@
-`KbqSelect` - allows the user to select one or more values from a predefined list.
+Select - allows the user to select one or more values from a predefined list.
 
 <!-- example(select-overview) -->
 
@@ -46,7 +46,7 @@ If additional controls need to be arranged, you can enable the display of a foot
 
 <!-- example(select-footer) -->
 
-#### Dropdown list height
+#### Select height
 
 By default, the maximum height of the list is 256px. When there are many selections in the select-footer, the drop-down menu will appear scrolling.
 
@@ -54,15 +54,25 @@ You can customize the height if needed. For example, in a normal menu, 7-8 items
 
 <!-- example(select-height) -->
 
-### Dropdown list width
+### Select width
 
-By default, the width of the dropdown list is equal to select-height and it will increase when there is long text in the list. This behavior can be changed with the `panelWidth` attribute.
+#### Basic settings
 
-For a particular drop-down list:
+The width of the select matches the select by default and expands if the list contains long text.
 
-<!-- example(select-with-panel-width-attribute) -->
+<!-- example(select-with-panel-width-default) -->
 
-For all drop-down lists in a module, using `kbqSelectOptionsProvider`:
+#### Additional options
+
+If needed, the select width can be set to match the select width exactly. To do this, use the `panelWidth` attribute with the value `auto`.
+
+<!-- example(select-panel-width-auto) -->
+
+To set a fixed width of 400px for the select, use the `panelWidth` attribute with the value `400`.
+
+<!-- example(select-with-panel-width-fixed) -->
+
+To configure the select width for all selects within a module according to unified display rules, use the `kbqSelectOptionsProvider`.
 
 ```ts
 import { kbqSelectOptionsProvider } from '@koobiq/components/select';
@@ -80,6 +90,8 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 
 #### Customized selection
 
+The select can contain preselected values.
+
 <!-- example(select-prioritized-selected) -->
 
 #### Using cdk-virtual-scroll-viewport
@@ -91,4 +103,4 @@ Add `cdk-virtual-scroll-viewport` to your component template to display only vis
 ### Recommendations
 
 - If you are using a select without a label, we suggest adding a placeholder to indicate what information the user should select. For example, “Country.”
-- If there are more than 10 items in the list of values, then enable the search display in the dropdown list header. This will make it easier to find values.
+- If there are more than 10 items in the list of values, then enable the search display in the select header. This will make it easier to find values.

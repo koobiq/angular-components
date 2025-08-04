@@ -24,7 +24,13 @@ import { DEV_OPTIONS } from './mock';
         <select-with-multiline-matcher-example />
         <hr />
 
-        <select-with-panel-width-attribute-example />
+        <select-with-panel-width-default-example />
+        <hr />
+
+        <select-with-panel-width-auto-example />
+        <hr />
+
+        <select-with-panel-width-fixed-example />
         <hr />
 
         <select-virtual-scroll-example />
