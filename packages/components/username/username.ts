@@ -60,7 +60,10 @@ export class KbqUsernameSecondaryHint {}
 @Directive({
     selector: 'kbq-username-custom-view, [kbq-username-custom-view]',
     standalone: true,
-    exportAs: 'kbqUsernameCustomView'
+    exportAs: 'kbqUsernameCustomView',
+    host: {
+        class: `${baseClass}__custom-view`
+    }
 })
 export class KbqUsernameCustomView {}
 

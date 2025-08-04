@@ -1,6 +1,14 @@
 @use '../core/styles/common';
 @use '../core/styles/common/tokens';
 
+// Targets the layout container: either the root or custom view if present.
+@mixin _kbq-username-content-wrapper {
+    &:not(:has(> .kbq-username__custom-view)),
+    & > .kbq-username__custom-view {
+        @content;
+    }
+}
+
 @mixin _kbq-username-theme() {
     & {
         color: var(--kbq-username-primary-color);
@@ -39,44 +47,54 @@
     @include _kbq-username-typography();
 
     &.kbq-username_stacked {
-        display: flex;
-        flex-flow: column nowrap;
-        justify-content: flex-start;
-        align-items: normal;
+        @include _kbq-username-content-wrapper {
+            display: flex;
+            flex-flow: column nowrap;
+            justify-content: flex-start;
+            align-items: normal;
 
-        gap: var(--kbq-username-vertical-gap);
+            gap: var(--kbq-username-vertical-gap);
+        }
     }
 
     &.kbq-username_inline:not(.kbq-username_inherit) {
-        display: flex;
-        flex-flow: row nowrap;
-        justify-content: flex-start;
-        align-items: baseline;
+        @include _kbq-username-content-wrapper {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: baseline;
 
-        .kbq-username__primary + .kbq-username__secondary {
-            @include common.rtl-prop(margin-left, margin-right, var(--kbq-username-horizontal-gap), 0);
+            .kbq-username__primary + .kbq-username__secondary {
+                @include common.rtl-prop(margin-left, margin-right, var(--kbq-username-horizontal-gap), 0);
+            }
         }
     }
 
     &.kbq-username_text {
-        display: inline;
+        @include _kbq-username-content-wrapper {
+            display: inline;
+        }
     }
 
     &.kbq-username_stacked,
     &.kbq-username_inline {
-        .kbq-username__primary,
-        .kbq-username__secondary {
-            @include common.kbq-truncate-line();
+        @include _kbq-username-content-wrapper {
+            .kbq-username__primary,
+            .kbq-username__secondary {
+                @include common.kbq-truncate-line();
+            }
         }
     }
 
     &.kbq-username_inherit {
-        display: inline;
-        color: inherit;
-
-        .kbq-username__secondary,
-        .kbq-username__secondary-hint {
+        @include _kbq-username-content-wrapper {
+            display: inline;
             color: inherit;
+
+            .kbq-username__secondary,
+            .kbq-username__secondary-hint {
+                color: inherit;
+            }
         }
     }
 }
