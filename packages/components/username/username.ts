@@ -15,7 +15,11 @@ import { KbqUsernamePipe } from './username.pipe';
 
 const baseClass = 'kbq-username';
 
-type Profile = {
+/**
+ * Basic user info
+ * @docs-private
+ */
+export type KbqUserInfo = {
     firstName?: string;
     lastName?: string;
     middleName?: string;
@@ -95,7 +99,7 @@ export class KbqUsernameCustomView {}
 })
 export class KbqUsername {
     /** User profile data used for display. */
-    readonly userInfo = input<Profile>();
+    readonly userInfo = input<KbqUserInfo>();
     /** Enables compact display mode */
     readonly isCompact = input(false, { transform: booleanAttribute });
     /** Format string for rendering the user's full name. */
@@ -115,11 +119,11 @@ export class KbqUsername {
 
     /** @docs-private */
     protected readonly hasFullName = computed(() => {
-        const profile = this.userInfo();
+        const userInfo = this.userInfo();
 
-        if (!profile) return false;
+        if (!userInfo) return false;
 
-        return profile?.lastName && profile?.firstName;
+        return userInfo?.lastName && userInfo?.firstName;
     });
 
     /** @docs-private */

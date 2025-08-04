@@ -8,18 +8,12 @@ import { KbqTitleModule } from '@koobiq/components/title';
 import {
     KBQ_PROFILE_MAPPING,
     KbqFormatKeyToProfileMappingExtended,
+    KbqUserInfo,
     KbqUsernameFormatKey,
     KbqUsernameMode,
     KbqUsernameModule,
     KbqUsernameStyle
 } from '@koobiq/components/username';
-
-type ExampleUser = {
-    firstName?: string;
-    lastName?: string;
-    middleName?: string;
-    login?: string;
-};
 
 const mapping: KbqFormatKeyToProfileMappingExtended = {
     [KbqUsernameFormatKey.FirstNameShort]: 'firstName',
@@ -97,7 +91,7 @@ const mapping: KbqFormatKeyToProfileMappingExtended = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernameCustomExample {
-    userInfo: ExampleUser = {
+    userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
         lastName: 'Root',

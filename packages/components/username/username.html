@@ -1,7 +1,7 @@
+@let profile = userInfo();
 <ng-content select="kbq-username-custom-view,[kbq-username-custom-view]" />
 
-@if (!customView()) {
-    @let profile = userInfo();
+@if (!customView() && profile) {
     @let fullName = profile | kbqUsername: fullNameFormat();
 
     @if (!isCompact()) {
@@ -9,12 +9,12 @@
             <span kbq-title kbqUsernamePrimary>{{ fullName }}</span>
         }
 
-        @if (profile?.login) {
+        @if (profile.login) {
             <span kbq-title kbqUsernameSecondary>
-                {{ profile?.login }}
+                {{ profile.login }}
 
-                @if (profile?.site) {
-                    <span kbqUsernameSecondaryHint>({{ profile?.site }})</span>
+                @if (profile.site) {
+                    <span kbqUsernameSecondaryHint>({{ profile.site }})</span>
                 }
             </span>
         }
@@ -23,12 +23,12 @@
             @if (hasFullName()) {
                 <span>{{ fullName }}</span>
             }
-            @if (!hasFullName() && profile?.login) {
-                {{ profile?.login }}
+            @if (!hasFullName() && profile.login) {
+                {{ profile.login }}
             }
 
-            @if (profile?.site) {
-                <span kbqUsernameSecondaryHint>&nbsp;({{ profile?.site }})</span>
+            @if (profile.site) {
+                <span kbqUsernameSecondaryHint>&nbsp;({{ profile.site }})</span>
             }
         </span>
     }

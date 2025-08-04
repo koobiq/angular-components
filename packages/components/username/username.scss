@@ -13,9 +13,16 @@
     & {
         color: var(--kbq-username-primary-color);
 
+        .kbq-username__secondary,
+        .kbq-username__secondary-hint {
+            color: var(--kbq-username-secondary-color);
+        }
+    }
+
+    &.kbq-username_default {
         .kbq-username__secondary-hint,
         .kbq-username__primary + .kbq-username__secondary {
-            color: var(--kbq-username-secondary-color);
+            --kbq-username-secondary-color: var(--kbq-foreground-contrast-secondary);
         }
     }
 
@@ -27,6 +34,11 @@
     &.kbq-username_accented {
         --kbq-username-primary-color: var(--kbq-foreground-contrast);
         --kbq-username-secondary-color: var(--kbq-foreground-contrast);
+    }
+
+    &.kbq-username_inherit {
+        --kbq-username-primary-color: inherit;
+        --kbq-username-secondary-color: inherit;
     }
 }
 
@@ -88,22 +100,8 @@
 
     &.kbq-username_inherit {
         @include _kbq-username-content-wrapper {
-            display: inline;
-            color: inherit;
-
-            .kbq-username__secondary,
-            .kbq-username__secondary-hint {
-                color: inherit;
-            }
+            font: inherit;
+            display: inherit;
         }
-    }
-}
-
-.kbq-link .kbq-username {
-    color: inherit;
-
-    .kbq-username__secondary,
-    .kbq-username__secondary-hint {
-        color: inherit;
     }
 }

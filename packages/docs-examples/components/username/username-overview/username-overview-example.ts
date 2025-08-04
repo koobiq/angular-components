@@ -1,13 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqUsername } from '@koobiq/components/username';
-
-type ExampleUser = {
-    firstName?: string;
-    lastName?: string;
-    middleName?: string;
-    login?: string;
-    site?: string;
-};
+import { KbqUserInfo, KbqUsername } from '@koobiq/components/username';
 
 /**
  * @title Username overview
@@ -22,7 +14,7 @@ type ExampleUser = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernameOverviewExample {
-    userInfo: ExampleUser = {
+    userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
         lastName: 'Root',

@@ -4,7 +4,7 @@ import { KbqCheckboxModule } from '@koobiq/components/checkbox';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqTextareaModule } from '@koobiq/components/textarea';
-import { KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/components/username';
+import { KbqUserInfo, KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/components/username';
 
 /**
  * @title Username playground
@@ -64,7 +64,7 @@ import { KbqUsername, KbqUsernameMode, KbqUsernameStyle } from '@koobiq/componen
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsernamePlaygroundExample {
-    userInfo = {
+    userInfo: KbqUserInfo = {
         firstName: 'Maxwell',
         middleName: 'Alan',
         lastName: 'Root',
