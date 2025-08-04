@@ -802,7 +802,8 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     },
                     hasApi: true,
                     apiId: 'username',
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2025-08-24')
                 }
             ]
         }
