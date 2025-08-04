@@ -34,6 +34,15 @@ export type KbqFormatKeyToProfileMappingExtended<T = any> = {
 export function KbqMappingMissingError(): Error;
 
 // @public
+export type KbqUserInfo = {
+    firstName?: string;
+    lastName?: string;
+    middleName?: string;
+    login?: string;
+    site?: string;
+};
+
+// @public
 export class KbqUsername {
     protected readonly class: Signal<string>;
     protected readonly customView: Signal<KbqUsernameCustomView | undefined>;
@@ -42,8 +51,7 @@ export class KbqUsername {
     readonly isCompact: InputSignalWithTransform<boolean, unknown>;
     readonly mode: InputSignal<KbqUsernameMode>;
     readonly type: InputSignal<KbqUsernameStyle>;
-    // Warning: (ae-forgotten-export) The symbol "Profile" needs to be exported by the entry point index.d.ts
-    readonly userInfo: InputSignal<Profile | undefined>;
+    readonly userInfo: InputSignal<KbqUserInfo | undefined>;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqUsername, "kbq-username", ["kbqUsername"], { "userInfo": { "alias": "userInfo"; "required": false; "isSignal": true; }; "isCompact": { "alias": "isCompact"; "required": false; "isSignal": true; }; "fullNameFormat": { "alias": "fullNameFormat"; "required": false; "isSignal": true; }; "mode": { "alias": "mode"; "required": false; "isSignal": true; }; "type": { "alias": "type"; "required": false; "isSignal": true; }; }, {}, ["customView"], ["kbq-username-custom-view,[kbq-username-custom-view]"], true, never>;
     // (undocumented)
