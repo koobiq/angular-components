@@ -11,39 +11,26 @@ import * as i0 from '@angular/core';
 import * as i2 from '@angular/common';
 import { NgZone } from '@angular/core';
 import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
 
 // @public (undocumented)
-export class KbqSidebar implements OnDestroy, OnInit, AfterContentInit {
+export class KbqSidebar implements OnDestroy, AfterContentInit {
     constructor(ngZone: NgZone, elementRef: ElementRef);
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarAnimationState" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     get animationState(): KbqSidebarAnimationState;
-    // (undocumented)
     closedContent: KbqSidebarClosed;
-    // (undocumented)
     protected readonly document: Document;
-    // (undocumented)
     internalState: boolean;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     ngOnDestroy(): void;
-    // (undocumented)
-    ngOnInit(): void;
-    // (undocumented)
     onAnimationDone(): void;
-    // (undocumented)
     onAnimationStart(): void;
     // (undocumented)
     get opened(): boolean;
     set opened(value: boolean);
-    // (undocumented)
     openedContent: KbqSidebarOpened;
     // Warning: (ae-forgotten-export) The symbol "KbqSidebarParams" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     params: KbqSidebarParams;
     // (undocumented)
     position: SidebarPositions;
