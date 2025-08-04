@@ -114,7 +114,10 @@ export class KbqUsername {
      * @default default
      */
     readonly type = input<KbqUsernameStyle>('default');
-    /** Custom projected view for username rendering. */
+    /**
+     * Custom projected view for username rendering.
+     * @docs-private
+     */
     protected readonly customView = contentChild(KbqUsernameCustomView);
 
     /** @docs-private */
