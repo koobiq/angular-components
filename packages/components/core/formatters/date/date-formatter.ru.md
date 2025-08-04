@@ -1,30 +1,39 @@
-Для форматирования дат необходимо использовать методы DateFormatter'а,
-например:
+DateFormatter — унифицированная система форматирования дат и времени. Она обеспечивает единообразное отображение во всех частях приложения и соответствует корпоративным стандартам.
+
+DateFormatter автоматически отслеживает изменения локали через KbqLocaleService и обновляет форматы при смене языка интерфейса.
+
+### Методы в TypeScript-коде
+
+Методы DateFormatter позволяют форматировать дату и время непосредственно в TypeScript-коде:
 
 ```typescript
 const formattedStringOfDate = this.formatter.absoluteLongDate(this.adapter.today());
 ```
 
-Так же можно использовать pipe:
+### Pipe в шаблонах
+
+Для форматирования в HTML-шаблонах предназначен специальный pipe:
 
 ```html
 <div>{{ adapter.today() | absoluteLongDate }}</div>
 ```
 
-Название пайпа (absoluteLongDate) соответствует названию метода DateFormatter. Примеры с использованием можно посмотреть [здесь](https://github.com/koobiq/angular-components/tree/main/packages/components-dev/date-pipes)
+Названия pipe полностью соответствуют методам DateFormatter. [Примеры использования](https://github.com/koobiq/angular-components/tree/main/packages/components-dev/date-pipes)
 
-### Абсолютная дата
+### Доступные форматы
+
+#### Абсолютная дата
 
 <!-- example(absolute-date-formatter) -->
 
-### Относительная дата
+#### Относительная дата
 
 <!-- example(relative-date-formatter) -->
 
-### Диапазон дат
+#### Диапазон дат
 
 <!-- example(range-date-formatter) -->
 
-### Продолжительность
+#### Продолжительность
 
 <!-- example(duration-date-formatter) -->
