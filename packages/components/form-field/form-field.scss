@@ -98,7 +98,10 @@
         justify-content: center;
         align-items: center;
 
-        min-width: var(--kbq-form-field-size-addon-width);
+        & > .kbq-icon {
+            min-width: var(--kbq-form-field-size-addon-width);
+            text-align: center;
+        }
     }
 
     .kbq-form-field__prefix {

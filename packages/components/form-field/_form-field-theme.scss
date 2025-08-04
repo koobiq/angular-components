@@ -66,7 +66,7 @@
         &.kbq-form-field-type-datepicker,
         &.kbq-form-field-type-input-password,
         &.kbq-form-field-type-tag-list,
-        &.kbq-form-field-type-select.cdk-keyboard-focused {
+        &.kbq-form-field-type-select {
             &:not(:has(.cdk-keyboard-focused)) {
                 &.cdk-focused {
                     @include _kbq-form-field-state(states-focused);
