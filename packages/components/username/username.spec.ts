@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Type } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { KbqUsernameModule } from './module';
 import {
     KbqFormatKeyToProfileMapping,
     KbqFormatKeyToProfileMappingExtended,
@@ -42,15 +41,6 @@ describe(KbqUsernamePipe.name, () => {
     };
 
     let pipe: KbqUsernamePipe<any>;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [KbqUsernameModule],
-            providers: [
-                KbqUsernamePipe
-            ]
-        }).compileComponents();
-    });
 
     beforeEach(inject([KbqUsernamePipe], (p: KbqUsernamePipe<any>) => {
         pipe = p;
@@ -93,15 +83,6 @@ describe(KbqUsernamePipe.name, () => {
         [KbqUsernameFormatKey.LastNameFull]: 'lastName',
         [KbqUsernameFormatKey.Dot]: undefined
     };
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [KbqUsernameModule],
-            providers: [
-                KbqUsernameCustomPipe
-            ]
-        }).compileComponents();
-    });
 
     beforeEach(inject([KbqUsernameCustomPipe], (p: KbqUsernameCustomPipe<any>) => {
         pipe = p;
