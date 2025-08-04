@@ -1,18 +1,24 @@
 <div class="docs-component-header">
     <div docsRegisterHeader class="docs-component-name">
-        {{ docItem.name[locale()!] }}
+        {{ docStructureCategoryItem.name[locale()!] }}
     </div>
-    @if (!docItem.isGuide) {
+    @if (!docStructureCategoryItem.isGuide) {
         <div class="docs-component-navbar layout-row layout-padding-top-s">
             <nav kbqTabNavBar [tabNavPanel]="tabNavPanel">
-                <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'overview'">
+                <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="docStructureCategoryItemSection.Overview">
                     {{ isRuLocale() ? 'Обзор' : 'Overview' }}
                 </a>
-                @if (docItem.hasApi) {
-                    <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'api'">API</a>
+                @if (docStructureCategoryItem.hasApi) {
+                    <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="docStructureCategoryItemSection.Api">
+                        API
+                    </a>
                 }
-                @if (docItem.hasExamples) {
-                    <a kbqTabLink routerLinkActive="kbq-selected" [routerLink]="'examples'">
+                @if (docStructureCategoryItem.hasExamples) {
+                    <a
+                        kbqTabLink
+                        routerLinkActive="kbq-selected"
+                        [routerLink]="docStructureCategoryItemSection.Examples"
+                    >
                         {{ isRuLocale() ? 'Примеры' : 'Examples' }}
                     </a>
                 }

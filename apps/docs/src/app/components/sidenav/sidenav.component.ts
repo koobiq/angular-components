@@ -15,8 +15,8 @@ import {
 } from '@koobiq/components/tree';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsDocStructure, DocsDocStructureCategory, DocsDocStructureCategoryItemSection } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
-import { DOCS_ITEM_SECTIONS, DocsDocCategory, DocsDocumentationItems } from '../../services/documentation-items';
 import { DocsFooterComponent } from '../footer/footer.component';
 
 enum TreeNodeType {
@@ -45,7 +45,7 @@ class TreeFlatNode {
     isNew: boolean;
 }
 
-function buildTree(categories: DocsDocCategory[]): TreeNode[] {
+function buildTree(categories: DocsDocStructureCategory[]): TreeNode[] {
     const data: TreeNode[] = [];
 
     categories.forEach(({ id, name, items }) => {
@@ -88,7 +88,6 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
     @ViewChild(KbqTreeSelection) readonly tree: KbqTreeSelection;
 
     protected readonly docStates = inject(DocsDocStates);
-    private readonly docItems = inject(DocsDocumentationItems);
     private readonly router = inject(Router);
     private readonly viewportScroller = inject(ViewportScroller);
     private readonly location = inject(Location);
@@ -133,7 +132,7 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
             this.getViewValue
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, treeFlattener);
-        this.dataSource.data = buildTree(this.docItems.getCategories());
+        this.dataSource.data = buildTree(DocsDocStructure.getCategories());
     }
 
     ngAfterViewInit() {
@@ -144,7 +143,7 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
 
     private selectDefaultItem(): void {
         // remove extra path endpoints so tree node can be selected
-        this._selectedItem = DOCS_ITEM_SECTIONS.reduce(
+        this._selectedItem = Object.values(DocsDocStructureCategoryItemSection).reduce(
             (resUrl, currentValue) => resUrl.replace(new RegExp(`\\/${currentValue}.*`), ''),
             this.location.path().replace(`/${this.locale()}/`, '')
         );

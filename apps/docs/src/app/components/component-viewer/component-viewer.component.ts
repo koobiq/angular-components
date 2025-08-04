@@ -20,8 +20,8 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 import { filter } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
+import { DocsDocStructure, DocsDocStructureCategoryItem, DocsDocStructureCategoryItemSection } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
-import { DocsDocItem, DocsDocumentationItems } from '../../services/documentation-items';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
 import { DocsLiveExampleComponent } from '../live-example/docs-live-example';
@@ -52,12 +52,13 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
-    docItem: DocsDocItem;
-    docCategory: string;
+    protected readonly docStructureCategoryItemSection = DocsDocStructureCategoryItemSection;
+
+    docStructureCategoryItem: DocsDocStructureCategoryItem;
+    docStructureCategoryItemId: string;
 
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
-    private readonly docItems = inject(DocsDocumentationItems);
     private readonly sidepanelService = inject(KbqSidepanelService);
     private readonly modalService = inject(KbqModalService);
     private readonly docStates = inject(DocsDocStates);
@@ -70,7 +71,9 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
         // parent route for the section (koobiq/cdk).
         this.activatedRoute.url
             .pipe(
-                map(([{ path: section }, { path: id }]: UrlSegment[]) => this.docItems.getItemById(id, section)),
+                map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
+                    DocsDocStructure.getItemById(id, categoryId)
+                ),
                 takeUntilDestroyed()
             )
             .subscribe((docItem) => {
@@ -81,8 +84,10 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
                     this.router.navigate(['/404']);
                 }
 
-                this.docItem = docItem!;
-                this.docCategory = this.docItems.getCategoryById(this.docItem.packageName!)!.id;
+                this.docStructureCategoryItem = docItem!;
+                this.docStructureCategoryItemId = DocsDocStructure.getCategoryById(
+                    this.docStructureCategoryItem.categoryId!
+                )!.id;
             });
 
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
@@ -92,11 +97,10 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
 @Directive()
 export class DocsOverviewComponentBase extends DocsLocaleState {
     private readonly activatedRoute = inject(ActivatedRoute);
-    private readonly docItems = inject(DocsDocumentationItems);
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly titleService = inject(Title);
 
-    componentDocItem: DocsDocItem | null = null;
+    componentDocItem: DocsDocStructureCategoryItem | null = null;
 
     @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
 
@@ -107,7 +111,9 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
         // parent route for the section (koobiq/cdk).
         this.activatedRoute
             .parent!.url.pipe(
-                map(([{ path: section }, { path: id }]: UrlSegment[]) => this.docItems.getItemById(id, section)),
+                map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
+                    DocsDocStructure.getItemById(id, categoryId)
+                ),
                 filter((p) => !!p),
                 takeUntilDestroyed()
             )

@@ -15,6 +15,7 @@ import { DocsPageNotFoundComponent } from './components/page-not-found/page-not-
 import { DocsWelcomeComponent } from './components/welcome/welcome.component';
 import { DOCS_DEFAULT_LOCALE } from './constants/locale';
 import { DocsLocaleService } from './services/locale';
+import { DocsDocStructureCategoryId, DocsDocStructureCategoryItemSection } from './structure';
 
 const canMatchLocaleRoutes: CanMatchFn = (_route: Route, segments: UrlSegment[]): boolean => {
     const { path } = segments[0];
@@ -40,9 +41,13 @@ export const DOCS_ROUTES: Routes = [
             /**
              * Main section routes
              */
-            { path: 'main', redirectTo: 'main/installation', pathMatch: 'full' },
             {
-                path: 'main/design-tokens',
+                path: DocsDocStructureCategoryId.Main,
+                redirectTo: `${DocsDocStructureCategoryId.Main}/installation`,
+                pathMatch: 'full'
+            },
+            {
+                path: `${DocsDocStructureCategoryId.Main}/design-tokens`,
                 component: DocsDesignTokensViewer,
                 children: [
                     { path: '', redirectTo: 'colors', pathMatch: 'full' },
@@ -55,71 +60,115 @@ export const DOCS_ROUTES: Routes = [
                 ]
             },
             {
-                path: 'main/:id',
+                path: `${DocsDocStructureCategoryId.Main}/:id`,
                 component: DocsComponentViewerComponent,
                 children: [
-                    { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    { path: 'overview', component: DocsComponentOverviewComponent },
-                    { path: '**', redirectTo: 'overview' }
+                    { path: '', redirectTo: DocsDocStructureCategoryItemSection.Overview, pathMatch: 'full' },
+                    { path: DocsDocStructureCategoryItemSection.Overview, component: DocsComponentOverviewComponent },
+                    { path: '**', redirectTo: DocsDocStructureCategoryItemSection.Overview }
                 ]
             },
 
             /**
              * Components section routes
              */
-            { path: 'components', redirectTo: 'components/alert', pathMatch: 'full' },
             {
-                path: 'components/:id',
+                path: DocsDocStructureCategoryId.Components,
+                redirectTo: `${DocsDocStructureCategoryId.Components}/alert`,
+                pathMatch: 'full'
+            },
+            {
+                path: `${DocsDocStructureCategoryId.Components}/:id`,
                 component: DocsComponentViewerComponent,
                 children: [
-                    { path: '', redirectTo: 'overview', pathMatch: 'full' },
+                    { path: '', redirectTo: DocsDocStructureCategoryItemSection.Overview, pathMatch: 'full' },
                     {
-                        path: 'overview',
+                        path: DocsDocStructureCategoryItemSection.Overview,
                         component: DocsComponentOverviewComponent,
                         pathMatch: 'full'
                     },
-                    { path: 'api', component: DocsComponentApiComponent, pathMatch: 'full' },
-                    { path: 'examples', component: DocsComponentExamplesComponent, pathMatch: 'full' },
-                    { path: '**', redirectTo: 'overview' }
+                    {
+                        path: DocsDocStructureCategoryItemSection.Api,
+                        component: DocsComponentApiComponent,
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: DocsDocStructureCategoryItemSection.Examples,
+                        component: DocsComponentExamplesComponent,
+                        pathMatch: 'full'
+                    },
+                    { path: '**', redirectTo: DocsDocStructureCategoryItemSection.Overview }
                 ]
             },
 
             /**
              * Other section routes
              */
-            { path: 'other', redirectTo: 'other/date-formatter', pathMatch: 'full' },
             {
-                path: 'other/:id',
+                path: DocsDocStructureCategoryId.Other,
+                redirectTo: `${DocsDocStructureCategoryId.Other}/date-formatter`,
+                pathMatch: 'full'
+            },
+            {
+                path: `${DocsDocStructureCategoryId.Other}/:id`,
                 component: DocsComponentViewerComponent,
                 children: [
-                    { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    { path: 'overview', component: DocsComponentOverviewComponent, pathMatch: 'full' },
-                    { path: 'api', component: DocsComponentApiComponent, pathMatch: 'full' },
-                    { path: 'examples', component: DocsComponentExamplesComponent, pathMatch: 'full' },
-                    { path: '**', redirectTo: 'overview' }
+                    { path: '', redirectTo: DocsDocStructureCategoryItemSection.Overview, pathMatch: 'full' },
+                    {
+                        path: DocsDocStructureCategoryItemSection.Overview,
+                        component: DocsComponentOverviewComponent,
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: DocsDocStructureCategoryItemSection.Api,
+                        component: DocsComponentApiComponent,
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: DocsDocStructureCategoryItemSection.Examples,
+                        component: DocsComponentExamplesComponent,
+                        pathMatch: 'full'
+                    },
+                    { path: '**', redirectTo: DocsDocStructureCategoryItemSection.Overview }
                 ]
             },
 
             /**
              * CDK section routes
              */
-            { path: 'cdk', redirectTo: 'cdk/a11y', pathMatch: 'full' },
             {
-                path: 'cdk/:id',
+                path: DocsDocStructureCategoryId.CDK,
+                redirectTo: `${DocsDocStructureCategoryId.CDK}/a11y`,
+                pathMatch: 'full'
+            },
+            {
+                path: `${DocsDocStructureCategoryId.CDK}/:id`,
                 component: DocsComponentViewerComponent,
                 children: [
-                    { path: '', redirectTo: 'overview', pathMatch: 'full' },
-                    { path: 'overview', component: DocsCdkOverviewComponent, pathMatch: 'full' },
-                    { path: 'api', component: DocsCdkApiComponent, pathMatch: 'full' },
-                    { path: 'examples', component: DocsComponentExamplesComponent, pathMatch: 'full' },
-                    { path: '**', redirectTo: 'overview' }
+                    { path: '', redirectTo: DocsDocStructureCategoryItemSection.Overview, pathMatch: 'full' },
+                    {
+                        path: DocsDocStructureCategoryItemSection.Overview,
+                        component: DocsCdkOverviewComponent,
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: DocsDocStructureCategoryItemSection.Api,
+                        component: DocsCdkApiComponent,
+                        pathMatch: 'full'
+                    },
+                    {
+                        path: DocsDocStructureCategoryItemSection.Examples,
+                        component: DocsComponentExamplesComponent,
+                        pathMatch: 'full'
+                    },
+                    { path: '**', redirectTo: DocsDocStructureCategoryItemSection.Overview }
                 ]
             },
 
             /**
              * Icons section routes
              */
-            { path: 'icons', component: DocsIconsViewerComponent }
+            { path: DocsDocStructureCategoryId.Icons, component: DocsIconsViewerComponent }
         ]
     },
 
