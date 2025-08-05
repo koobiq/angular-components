@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -14,11 +14,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'select-with-panel-width-fixed-example',
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder" [panelWidth]="400">
+            <kbq-select placeholder="Placeholder" [panelWidth]="400" [(value)]="value">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
-                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `,
@@ -42,4 +41,6 @@ export class SelectWithPanelWidthFixedExample {
         'User Reconnaissance',
         'Host Reconnaissance'
     ];
+
+    protected readonly value = model(this.options[1]);
 }

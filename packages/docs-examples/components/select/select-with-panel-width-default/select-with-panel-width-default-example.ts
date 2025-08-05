@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -14,20 +14,18 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'select-with-panel-width-default-example',
     template: `
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder">
+            <kbq-select placeholder="Placeholder" [(value)]="valueFirst">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
-                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
 
         <kbq-form-field>
-            <kbq-select placeholder="Placeholder">
+            <kbq-select placeholder="Placeholder" [(value)]="valueSecond">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
-                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `,
@@ -55,4 +53,7 @@ export class SelectWithPanelWidthDefaultExample {
         'System Owner or User Discovery',
         'Permission Group Discovery'
     ];
+
+    protected readonly valueFirst = model(this.options[0]);
+    protected readonly valueSecond = model(this.options[1]);
 }
