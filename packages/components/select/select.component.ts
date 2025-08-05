@@ -444,7 +444,7 @@ export class KbqSelect
      * Minimum width of the panel.
      * If minWidth is larger than window width, it will be ignored.
      */
-    @Input({ transform: numberAttribute }) panelMinWidth: number;
+    @Input({ transform: numberAttribute }) panelMinWidth: number = 200;
 
     /** Value of the select control. */
     @Input()

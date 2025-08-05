@@ -33,6 +33,9 @@ import { DEV_OPTIONS } from './mock';
         <select-with-panel-width-fixed-example />
         <hr />
 
+        <select-with-panel-min-width-example />
+        <hr />
+
         <select-virtual-scroll-example />
         <hr />
 
