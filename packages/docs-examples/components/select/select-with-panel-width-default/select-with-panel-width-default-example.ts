@@ -22,7 +22,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </kbq-select>
         </kbq-form-field>
 
-        <kbq-form-field style="width: 70%;">
+        <kbq-form-field>
             <kbq-select placeholder="Placeholder">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
@@ -30,6 +30,19 @@ import { KbqSelectModule } from '@koobiq/components/select';
                 <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
+    `,
+    styles: `
+        :host {
+            .kbq-form-field:first-of-type {
+                min-width: 384px;
+                max-width: 384px;
+            }
+
+            .kbq-form-field:last-of-type {
+                min-width: 200px;
+                max-width: 200px;
+            }
+        }
     `,
     host: {
         class: 'layout-margin-l layout-align-center-center layout-row layout-gap-l'

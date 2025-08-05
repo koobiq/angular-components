@@ -12,7 +12,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select panelClass="example-select-panel-height" [value]="selected">
+            <kbq-select [panelClass]="'example-select-panel-height'" [value]="selected">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
@@ -21,7 +21,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     `,
     styles: `
         ::ng-deep .example-select-panel-height.kbq-select__panel {
-            --kbq-select-panel-size-max-height: 392px;
+            --kbq-select-panel-size-max-height: 500px;
         }
 
         :host {

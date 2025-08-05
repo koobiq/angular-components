@@ -66,7 +66,7 @@
 
 При необходимости ширину выпадающего списка можно сделать равным ширине селекта. Для этого можно использовать атрибут `panelWidth` со значением `auto`.
 
-<!-- example(select-panel-width-auto) -->
+<!-- example(select-with-panel-width-auto) -->
 
 Для задания фиксированной ширины в 400px для выпадающего списка необходимо использовать атрибут `panelWidth` со значением `400`.
 
@@ -84,17 +84,17 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 })
 ```
 
-#### Дополнительная иконка
+### Дополнительная иконка
 
 <!-- example(select-icon) -->
 
-#### Преднастроенный выбор
+### Преднастроенный выбор
 
 Селект может содержать уже заранее выбранные значения.
 
 <!-- example(select-prioritized-selected) -->
 
-#### Использование cdk-virtual-scroll-viewport
+### Использование cdk-virtual-scroll-viewport
 
 Добавьте `cdk-virtual-scroll-viewport` в шаблон компонента, чтобы отображать только видимые элементы и улучшить производительность.
 

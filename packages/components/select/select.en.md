@@ -66,7 +66,7 @@ The width of the select matches the select by default and expands if the list co
 
 If needed, the select width can be set to match the select width exactly. To do this, use the `panelWidth` attribute with the value `auto`.
 
-<!-- example(select-panel-width-auto) -->
+<!-- example(select-with-panel-width-auto) -->
 
 To set a fixed width of 400px for the select, use the `panelWidth` attribute with the value `400`.
 
@@ -84,17 +84,17 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 })
 ```
 
-#### Optional icon
+### Optional icon
 
 <!-- example(select-icon) -->
 
-#### Customized selection
+### Customized selection
 
 The select can contain preselected values.
 
 <!-- example(select-prioritized-selected) -->
 
-#### Using cdk-virtual-scroll-viewport
+### Using cdk-virtual-scroll-viewport
 
 Add `cdk-virtual-scroll-viewport` to your component template to display only visible elements and improve performance.
 
