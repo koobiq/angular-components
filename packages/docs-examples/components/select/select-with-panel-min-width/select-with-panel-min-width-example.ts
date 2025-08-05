@@ -32,12 +32,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
 })
 export class SelectWithPanelMinWidthExample {
     readonly options = [
-        'Scanning',
+        'HUMINT',
+        'HostIntel',
         'Intel',
         'OSINT',
-        'HUMINT',
         'Recon',
-        'UserIntel',
-        'HostIntel'
+        'Scanning',
+        'UserIntel'
     ];
 }
