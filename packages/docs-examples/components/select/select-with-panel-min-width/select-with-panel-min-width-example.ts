@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
@@ -14,11 +14,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
     selector: 'select-with-panel-min-width-example',
     template: `
         <kbq-form-field>
-            <kbq-select>
+            <kbq-select [(value)]="value">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
-                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `,
@@ -28,6 +27,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
             max-width: 104px;
         }
     `,
+    host: {
+        class: 'layout-margin-l layout-align-center-center layout-row'
+    },
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SelectWithPanelMinWidthExample {
@@ -40,4 +42,6 @@ export class SelectWithPanelMinWidthExample {
         'Scanning',
         'UserIntel'
     ];
+
+    protected readonly value = model(this.options[0]);
 }
