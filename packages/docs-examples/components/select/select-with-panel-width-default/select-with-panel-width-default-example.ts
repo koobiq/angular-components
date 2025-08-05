@@ -33,13 +33,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
     `,
     styles: `
         .kbq-form-field:first-of-type {
-            min-width: 384px;
-            max-width: 384px;
+            min-width: 68%;
+            max-width: 68%;
         }
 
         .kbq-form-field:last-of-type {
-            min-width: 200px;
-            max-width: 200px;
+            min-width: 32%;
+            max-width: 32%;
         }
     `,
     host: {

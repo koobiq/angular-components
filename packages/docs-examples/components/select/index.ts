@@ -9,6 +9,7 @@ import { SelectHeightExample } from './select-height/select-height-example';
 import { SelectIconExample } from './select-icon/select-icon-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
+import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
 import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
@@ -29,6 +30,7 @@ export {
     SelectIconExample,
     SelectMultipleExample,
     SelectOverviewExample,
+    SelectPreselectedValuesExample,
     SelectPrioritizedSelectedExample,
     SelectSearchExample,
     SelectValidationExample,
@@ -45,7 +47,7 @@ const EXAMPLES = [
     SelectOverviewExample,
     SelectMultipleExample,
     SelectSearchExample,
-    SelectPrioritizedSelectedExample,
+    SelectPreselectedValuesExample,
     SelectGroupsExample,
     SelectHeightExample,
     SelectIconExample,
@@ -57,7 +59,8 @@ const EXAMPLES = [
     SelectCustomTriggerExample,
     SelectWithMultilineMatcherExample,
     SelectWithPanelWidthAutoExample,
-    SelectWithPanelWidthFixedExample
+    SelectWithPanelWidthFixedExample,
+    SelectPrioritizedSelectedExample
 ];
 
 @NgModule({

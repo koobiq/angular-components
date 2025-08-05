@@ -84,15 +84,19 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 })
 ```
 
-### Дополнительная иконка
-
-<!-- example(select-icon) -->
-
 ### Преднастроенный выбор
 
 Селект может содержать уже заранее выбранные значения.
 
+<!-- example(select-preselected-values) -->
+
+Для упрощения навигации между выбранным элементам списка можно включить их перенос в верхнюю часть списка.
+
 <!-- example(select-prioritized-selected) -->
+
+### Дополнительная иконка
+
+<!-- example(select-icon) -->
 
 ### Использование cdk-virtual-scroll-viewport
 

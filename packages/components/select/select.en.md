@@ -84,15 +84,19 @@ import { kbqSelectOptionsProvider } from '@koobiq/components/select';
 })
 ```
 
-### Optional icon
-
-<!-- example(select-icon) -->
-
 ### Customized selection
 
 The select can contain preselected values.
 
+<!-- example(select-preselected-values) -->
+
+To make navigation easier, selected items can be pinned to the top of the list.
+
 <!-- example(select-prioritized-selected) -->
+
+### Optional icon
+
+<!-- example(select-icon) -->
 
 ### Using cdk-virtual-scroll-viewport
 
