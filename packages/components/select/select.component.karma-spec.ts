@@ -853,7 +853,7 @@ describe(KbqSelect.name, () => {
 
             const pane = overlayContainerElement.querySelector('.cdk-overlay-pane') as HTMLElement;
 
-            expect(pane.style.minWidth).toEqual('300px');
+            expect(pane.style.minWidth).toEqual('200px');
 
             expect(fixture.componentInstance.select.panelOpen).toBe(true);
             expect(overlayContainerElement.textContent).toContain('Steak');
