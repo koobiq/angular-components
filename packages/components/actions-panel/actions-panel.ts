@@ -1,6 +1,9 @@
+import { coerceCssPixelValue } from '@angular/cdk/coercion';
 import { Dialog } from '@angular/cdk/dialog';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
 import { ComponentType, Overlay } from '@angular/cdk/overlay';
 import { inject, Injectable, InjectionToken, Injector, OnDestroy, TemplateRef } from '@angular/core';
+import { takeUntil } from 'rxjs';
 import { KBQ_ACTIONS_PANEL_DEFAULT_CONFIG, KbqActionsPanelConfig } from './actions-panel-config';
 import { KbqActionsPanelContainer } from './actions-panel-container';
 import { KbqActionsPanelRef } from './actions-panel-ref';
@@ -62,6 +65,7 @@ export class KbqActionsPanel implements OnDestroy {
     private readonly overlay = inject(Overlay);
     private readonly dialog = inject(Dialog);
     private readonly defaultConfig = inject(KBQ_ACTIONS_PANEL_DEFAULT_CONFIG);
+    private readonly resizeObserver = inject(SharedResizeObserver);
 
     /** The reference to the currently opened actions panel. */
     private openedActionsPanelRef: KbqActionsPanelRef | null = null;
@@ -134,8 +138,9 @@ export class KbqActionsPanel implements OnDestroy {
         config: KbqActionsPanelConfig<D> = {}
     ): KbqActionsPanelRef<T, R> {
         let actionsPanelRef!: KbqActionsPanelRef<T, R>;
+        const { overlayContainer, overlayPanelClass } = config;
 
-        const dialogRef = this.dialog.open<R, D, T>(componentOrTemplateRef, {
+        this.dialog.open<R, D, T>(componentOrTemplateRef, {
             ...config,
             container: KbqActionsPanelContainer,
             restoreFocus: false,
@@ -148,10 +153,14 @@ export class KbqActionsPanel implements OnDestroy {
             // Disable closing since we need to sync it up to the animation ourselves
             disableClose: true,
             scrollStrategy: config.scrollStrategy && config.scrollStrategy(this.overlay),
-            positionStrategy: config.overlayContainer
+            positionStrategy: overlayContainer
                 ? this.overlay
                       .position()
-                      .flexibleConnectedTo(config.overlayContainer)
+                      .flexibleConnectedTo(overlayContainer)
+                      .withFlexibleDimensions()
+                      .withPush(false)
+                      .withLockedPosition()
+                      .withGrowAfterOpen()
                       .withPositions([
                           {
                               originX: 'center',
@@ -182,10 +191,26 @@ export class KbqActionsPanel implements OnDestroy {
             }
         });
 
-        dialogRef.addPanelClass(KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR);
+        const { overlayRef } = actionsPanelRef;
 
-        if (config.overlayPanelClass) {
-            dialogRef.addPanelClass(config.overlayPanelClass);
+        overlayRef.addPanelClass(KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR);
+
+        if (overlayPanelClass) {
+            overlayRef.addPanelClass(overlayPanelClass);
+        }
+
+        if (overlayContainer) {
+            const { afterClosed } = actionsPanelRef;
+
+            this.resizeObserver
+                .observe(overlayContainer.nativeElement)
+                .pipe(takeUntil(afterClosed))
+                .subscribe(() => {
+                    const { width: maxWidth } = overlayContainer.nativeElement.getBoundingClientRect();
+
+                    overlayRef.overlayElement.style.maxWidth = coerceCssPixelValue(maxWidth);
+                    overlayRef.updatePosition();
+                });
         }
 
         return actionsPanelRef;
