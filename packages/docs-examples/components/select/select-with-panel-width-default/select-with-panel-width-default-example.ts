@@ -32,16 +32,14 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
     `,
     styles: `
-        :host {
-            .kbq-form-field:first-of-type {
-                min-width: 384px;
-                max-width: 384px;
-            }
+        .kbq-form-field:first-of-type {
+            min-width: 384px;
+            max-width: 384px;
+        }
 
-            .kbq-form-field:last-of-type {
-                min-width: 200px;
-                max-width: 200px;
-            }
+        .kbq-form-field:last-of-type {
+            min-width: 200px;
+            max-width: 200px;
         }
     `,
     host: {

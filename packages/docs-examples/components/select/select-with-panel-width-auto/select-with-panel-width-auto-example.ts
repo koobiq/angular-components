@@ -23,7 +23,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         </kbq-form-field>
     `,
     styles: `
-        :host .kbq-form-field {
+        .kbq-form-field {
             width: 280px;
         }
     `,
