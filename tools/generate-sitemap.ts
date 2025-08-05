@@ -186,6 +186,9 @@ const paths = [
     'components/tree-select/overview',
     'components/tree-select/api',
 
+    'components/username/overview',
+    'components/username/api',
+
     // ---------------------- Other ----------------------
     'other/date-formatter/overview',
     'other/date-formatter/api',
