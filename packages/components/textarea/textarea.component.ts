@@ -29,6 +29,7 @@ import {
 } from '@koobiq/components/core';
 import { KbqFormFieldControl } from '@koobiq/components/form-field';
 import { Subject, Subscription } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 export const KBQ_TEXTAREA_VALUE_ACCESSOR = new InjectionToken<{ value: any }>('KBQ_TEXTAREA_VALUE_ACCESSOR');
 
@@ -49,7 +50,8 @@ let nextUniqueId = 0;
         '[required]': 'required',
 
         '(blur)': 'onBlur()',
-        '(focus)': 'focusChanged(true)'
+        '(focus)': 'focusChanged(true)',
+        '(paste)': 'stateChanges.next()'
     },
     providers: [{ provide: KbqFormFieldControl, useExisting: KbqTextarea }]
 })
@@ -214,7 +216,7 @@ export class KbqTextarea
         // eslint-disable-next-line @angular-eslint/no-lifecycle-call
         this.parent?.animationDone.subscribe(() => this.ngOnInit());
 
-        this.growSubscription = this.stateChanges.subscribe(this.grow);
+        this.growSubscription = this.stateChanges.pipe(delay(0)).subscribe(this.grow);
     }
 
     ngOnInit() {
