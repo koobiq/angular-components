@@ -797,7 +797,14 @@ export class KbqSelect
         }
 
         this.overlayWidth = this.getOverlayWidth(this.overlayOrigin);
-        this.overlayMinWidth = this.panelMinWidth || (this.overlayWidth ? '' : this.triggerRect.width);
+
+        // set overlayMinWidth to the largest of `panelMinWidth` and `triggerRect.width`
+        // only if `overlayWidth` falsy and `panelMinWidth` not provided.
+        // This ensures panel isn't narrow.
+        this.overlayMinWidth =
+            this.panelMinWidth !== null && !this.overlayWidth
+                ? Math.max(this.panelMinWidth, this.triggerRect.width)
+                : '';
 
         this.panelOpen = true;
 

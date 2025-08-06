@@ -3259,6 +3259,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-with-multiline-matcher-example.ts",
     "importPath": "components/select"
   },
+  "select-with-panel-min-width": {
+    "packagePath": "components/select/select-with-panel-min-width",
+    "title": "Select with panelWidth min-width",
+    "componentName": "SelectWithPanelMinWidthExample",
+    "files": [
+      "select-with-panel-min-width-example.ts"
+    ],
+    "selector": "select-with-panel-min-width-example",
+    "additionalComponents": [],
+    "primaryFile": "select-with-panel-min-width-example.ts",
+    "importPath": "components/select"
+  },
   "select-with-panel-width-auto": {
     "packagePath": "components/select/select-with-panel-width-auto",
     "title": "Select with panelWidth auto",
@@ -4570,6 +4582,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tree-toggle-on-click-example.ts",
     "importPath": "components/tree"
   },
+  "username-as-link": {
+    "packagePath": "components/username/username-as-link",
+    "title": "Username as link",
+    "componentName": "UsernameAsLinkExample",
+    "files": [
+      "username-as-link-example.ts"
+    ],
+    "selector": "username-as-link-example",
+    "additionalComponents": [],
+    "primaryFile": "username-as-link-example.ts",
+    "importPath": "components/username"
+  },
+  "username-custom": {
+    "packagePath": "components/username/username-custom",
+    "title": "Username custom",
+    "componentName": "UsernameCustomExample",
+    "files": [
+      "username-custom-example.ts"
+    ],
+    "selector": "username-custom-example",
+    "additionalComponents": [],
+    "primaryFile": "username-custom-example.ts",
+    "importPath": "components/username"
+  },
+  "username-overview": {
+    "packagePath": "components/username/username-overview",
+    "title": "Username overview",
+    "componentName": "UsernameOverviewExample",
+    "files": [
+      "username-overview-example.ts"
+    ],
+    "selector": "username-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "username-overview-example.ts",
+    "importPath": "components/username"
+  },
+  "username-playground": {
+    "packagePath": "components/username/username-playground",
+    "title": "Username playground",
+    "componentName": "UsernamePlaygroundExample",
+    "files": [
+      "username-playground-example.ts"
+    ],
+    "selector": "username-playground-example",
+    "additionalComponents": [],
+    "primaryFile": "username-playground-example.ts",
+    "importPath": "components/username"
+  },
   "validation-message-for-specific-field": {
     "packagePath": "components/validation/validation-message-for-specific-field",
     "title": "Validation message for specific field",
@@ -5228,6 +5288,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-with-multiline-matcher':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-with-panel-min-width':
+return import('@koobiq/docs-examples/components/select');
   case 'select-with-panel-width-auto':
 return import('@koobiq/docs-examples/components/select');
   case 'select-with-panel-width-default':
@@ -5442,6 +5504,14 @@ return import('@koobiq/docs-examples/components/tree');
 return import('@koobiq/docs-examples/components/tree');
   case 'tree-toggle-on-click':
 return import('@koobiq/docs-examples/components/tree');
+  case 'username-as-link':
+return import('@koobiq/docs-examples/components/username');
+  case 'username-custom':
+return import('@koobiq/docs-examples/components/username');
+  case 'username-overview':
+return import('@koobiq/docs-examples/components/username');
+  case 'username-playground':
+return import('@koobiq/docs-examples/components/username');
   case 'validation-message-for-specific-field':
 return import('@koobiq/docs-examples/components/validation');
   case 'validation-message-global-with-links':
