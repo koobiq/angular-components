@@ -99,19 +99,22 @@ const maxFileSize = (control: AbstractControl): ValidationErrors | null => {
 })
 export class DevCustomTextDirective {}
 
-type SingleUploadCell = {
+type SingleUploadState = {
     file: KbqFileItem | null;
-    icon: string;
     disabled?: boolean;
+    error?: boolean;
+    dragover?: boolean;
+    icon?: string;
     showFileSize?: boolean;
     className?: string;
 };
 
-type MultipleUploadCell = {
+type MultipleUploadState = {
     files: KbqFileItem[];
-    icon: string;
     disabled?: boolean;
-    showFileSize?: boolean;
+    error?: boolean;
+    dragover?: boolean;
+    icon?: string;
     className?: string;
     size?: KbqMultipleFileUploadComponent['size'];
     type?: 'error';
@@ -133,8 +136,10 @@ type MultipleUploadCell = {
                                     [file]="cell.file"
                                     [showFileSize]="cell.showFileSize ?? true"
                                     [disabled]="!!cell.disabled"
+                                    [class.dev-error]="!!cell.error"
+                                    [class.dev-dragover]="!!cell.dragover"
                                 >
-                                    <i kbq-icon="" [class]="cell.icon"></i>
+                                    <i kbq-icon="" [class]="cell.icon || iconClass.default"></i>
                                 </kbq-file-upload>
                             </td>
                         }
@@ -150,13 +155,14 @@ type MultipleUploadCell = {
                         @for (cell of row; track $index) {
                             <td>
                                 <kbq-multiple-file-upload
-                                    [class]="cell.className"
+                                    [class.dev-error]="!!cell.error"
+                                    [class.dev-dragover]="!!cell.dragover"
                                     [files]="cell.files"
                                     [disabled]="cell.disabled || false"
                                     [size]="cell.size || 'default'"
                                 >
                                     <ng-template #kbqFileIcon>
-                                        <i kbq-icon="kbq-file-o_16"></i>
+                                        <i kbq-icon="" [class]="cell.icon || iconClass.default"></i>
                                     </ng-template>
                                 </kbq-multiple-file-upload>
                             </td>
@@ -169,71 +175,72 @@ type MultipleUploadCell = {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DevFileUploadStateAndStyle {
-    private readonly iconClass = { error: 'kbq-info-circle_16', default: 'kbq-file-o_16' };
+    protected readonly iconClass = { error: 'kbq-info-circle_16', default: 'kbq-file-o_16' };
 
-    protected readonly singleFileUploadRows: SingleUploadCell[][] = [
+    protected readonly singleFileUploadRows: SingleUploadState[][] = [
         // Row 1: Simple (no file selected)
         [
-            { file: null, icon: this.iconClass.default },
-            { file: null, icon: this.iconClass.default, disabled: true },
-            { file: null, icon: this.iconClass.error, className: 'dev-with-error' },
-            { file: null, icon: this.iconClass.default, className: 'dev-dragover' }
-        ],
+            { file: null },
+            { file: null, disabled: true },
+            { file: null, icon: this.iconClass.error, error: true },
+            { file: null, dragover: true }],
 
         // Row 2: File selected, fileSize shown
         [
-            { file: this.testKbqFileItem, icon: this.iconClass.default },
-            { file: this.testKbqFileItem, icon: this.iconClass.default, disabled: true },
-            { file: this.testKbqFileItem, icon: this.iconClass.error, className: 'dev-with-error' },
-            { file: this.testKbqFileItem, icon: this.iconClass.default, className: 'dev-dragover' }
-        ],
+            { file: this.testKbqFileItem },
+            { file: this.testKbqFileItem, disabled: true },
+            { file: this.testKbqFileItem, icon: this.iconClass.error, error: true },
+            { file: this.testKbqFileItem, dragover: true }],
 
         // Row 3: File selected, fileSize hidden
         [
-            { file: this.testKbqFileItem, icon: this.iconClass.default, showFileSize: false },
-            { file: this.testKbqFileItem, icon: this.iconClass.default, showFileSize: false, disabled: true },
+            { file: this.testKbqFileItem, showFileSize: false },
+            { file: this.testKbqFileItem, showFileSize: false, disabled: true },
             {
                 file: this.testKbqFileItem,
                 icon: this.iconClass.error,
                 showFileSize: false,
-                className: 'dev-with-error'
+                error: true
             },
-            { file: this.testKbqFileItem, icon: this.iconClass.default, showFileSize: false, className: 'dev-dragover' }
+            {
+                file: this.testKbqFileItem,
+                icon: this.iconClass.default,
+                showFileSize: false,
+                dragover: true
+            }
         ]
     ];
 
-    protected readonly multipleFileUploadRows: MultipleUploadCell[][] = [
+    protected readonly multipleFileUploadRows: MultipleUploadState[][] = [
         // Row 1: No file selected
         [
-            { files: [], icon: this.iconClass.default },
-            { files: [], icon: this.iconClass.default, disabled: true },
-            { files: [], icon: this.iconClass.error, className: 'dev-with-error' },
-            { files: [], icon: this.iconClass.default, className: 'dev-dragover' }
-        ],
+            { files: [] },
+            { files: [], disabled: true },
+            { files: [], icon: this.iconClass.error, error: true },
+            { files: [], dragover: true }],
         // Row 2: File selected
         [
-            { files: [this.testKbqFileItem], icon: this.iconClass.default },
-            { files: [this.testKbqFileItem], icon: this.iconClass.default, disabled: true },
-            { files: [this.testKbqFileItem], icon: this.iconClass.error, className: 'dev-with-error' },
-            { files: [this.testKbqFileItem], icon: this.iconClass.default, className: 'dev-dragover' }
-        ],
+            { files: [this.testKbqFileItem] },
+            { files: [this.testKbqFileItem], disabled: true },
+            { files: [this.testKbqFileItem], icon: this.iconClass.error, error: true },
+            { files: [this.testKbqFileItem], dragover: true }],
         // Row 3: Compact, no file selected
         [
-            { files: [], icon: this.iconClass.default, size: 'compact' },
-            { files: [], icon: this.iconClass.default, size: 'compact', disabled: true },
-            { files: [], icon: this.iconClass.error, size: 'compact', className: 'dev-with-error' },
-            { files: [], icon: this.iconClass.default, size: 'compact', className: 'dev-dragover' }
+            { files: [], size: 'compact' },
+            { files: [], size: 'compact', disabled: true },
+            { files: [], icon: this.iconClass.error, size: 'compact', error: true },
+            { files: [], size: 'compact', dragover: true }
         ],
         // Row 4: File selected, dragover with error
-        [{ files: [this.testKbqFileItem], icon: this.iconClass.error, className: 'dev-dragover' }]
+        [{ files: [this.testKbqFileItem], icon: this.iconClass.error, type: 'error', dragover: true }]
     ];
+
+    private readonly renderer = inject(Renderer2);
+    private readonly document = inject(DOCUMENT);
 
     protected get testKbqFileItem(): KbqFileItem {
         return { file: new File(['test'] satisfies BlobPart[], 'test.file') } satisfies KbqFileItem;
     }
-
-    private readonly renderer = inject(Renderer2);
-    private readonly document = inject(DOCUMENT);
 
     constructor() {
         afterNextRender(() => {
@@ -241,19 +248,17 @@ export class DevFileUploadStateAndStyle {
                 .querySelectorAll('.dev-dragover .kbq-file-upload')
                 .forEach((el) => this.renderer.addClass(el, 'dragover'));
             this.document
-                .querySelectorAll('.dev-with-error .kbq-file-upload')
+                .querySelectorAll('.dev-error .kbq-file-upload')
                 .forEach((el) => this.renderer.addClass(el, 'kbq-error'));
         });
 
-        for (const row of this.multipleFileUploadRows) {
-            for (const cell of row) {
-                if (cell?.type === 'error') {
-                    for (const file of cell.files) {
-                        file.hasError = true;
-                    }
-                }
-            }
-        }
+        this.multipleFileUploadRows.forEach((row) =>
+            row.forEach((cell) => {
+                if (cell?.type !== 'error') return;
+
+                cell.files.forEach((file) => (file.hasError = true));
+            })
+        );
     }
 }
 
