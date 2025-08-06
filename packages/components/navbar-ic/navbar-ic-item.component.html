@@ -1,0 +1,14 @@
+<ng-content select="[kbq-icon]" />
+
+@if (title) {
+    <div class="kbq-navbar-ic-item__container">
+        <div class="kbq-navbar-ic-item__title">
+            <ng-content select="kbq-navbar-ic-title, [kbq-navbar-ic-title]" />
+        </div>
+        @if (showVerticalDropDownAngle) {
+            <i kbq-icon="kbq-chevron-right_16" class="kbq-navbar-ic-item__arrow-icon"></i>
+        }
+    </div>
+}
+
+<ng-content />

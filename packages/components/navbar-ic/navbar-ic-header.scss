@@ -1,0 +1,55 @@
+@use '../core/styles/tokens';
+@use '../core/styles/common/tokens' as *;
+
+.kbq-navbar-ic-logo {
+    display: flex;
+}
+
+.kbq-navbar-ic-header {
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    margin-left: var(--kbq-size-m);
+    margin-right: var(--kbq-size-m);
+
+    height: 72px;
+
+    border-radius: var(--kbq-size-s);
+
+    & .kbq-navbar-ic-logo {
+        align-items: center;
+    }
+
+    & .kbq-navbar-ic-title {
+        display: block;
+        align-items: center;
+
+        padding-top: var(--kbq-size-xxs);
+        padding-bottom: var(--kbq-size-xxs);
+
+        height: var(--kbq-size-3xl);
+
+        padding-left: 0;
+
+        cursor: pointer;
+
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    &.kbq-collapsed {
+        & .kbq-navbar-ic-title {
+            display: none;
+        }
+
+        justify-content: center;
+    }
+}
+
+a.kbq-navbar-ic-header {
+    text-decoration: none;
+}

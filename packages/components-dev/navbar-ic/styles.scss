@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+}
+
+.kbq-vertical-navbar {
+    height: 700px;
+}
+
+.dev-vertical-navbar-container {
+    display: flex;
+    flex-direction: row;
+
+    height: 700px;
+}
+
+.dev-vertical-navbar-content {
+    flex: 1;
+    border: 1px solid red;
+}
