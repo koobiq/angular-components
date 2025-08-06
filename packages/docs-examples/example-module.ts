@@ -3187,6 +3187,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-overview-example.ts",
     "importPath": "components/select"
   },
+  "select-preselected-values": {
+    "packagePath": "components/select/select-preselected-values",
+    "title": "Selected preselected values",
+    "componentName": "SelectPreselectedValuesExample",
+    "files": [
+      "select-preselected-values-example.ts"
+    ],
+    "selector": "select-preselected-values-example",
+    "additionalComponents": [],
+    "primaryFile": "select-preselected-values-example.ts",
+    "importPath": "components/select"
+  },
   "select-prioritized-selected": {
     "packagePath": "components/select/select-prioritized-selected",
     "title": "Selected prioritized selected",
@@ -3247,16 +3259,40 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "select-with-multiline-matcher-example.ts",
     "importPath": "components/select"
   },
-  "select-with-panel-width-attribute": {
-    "packagePath": "components/select/select-with-panel-width-attribute",
-    "title": "Select with panelWidth attribute",
-    "componentName": "SelectWithPanelWidthAttributeExample",
+  "select-with-panel-width-auto": {
+    "packagePath": "components/select/select-with-panel-width-auto",
+    "title": "Select with panelWidth auto",
+    "componentName": "SelectWithPanelWidthAutoExample",
     "files": [
-      "select-with-panel-width-attribute-example.ts"
+      "select-with-panel-width-auto-example.ts"
     ],
-    "selector": "select-with-panel-width-attribute-example",
+    "selector": "select-with-panel-width-auto-example",
     "additionalComponents": [],
-    "primaryFile": "select-with-panel-width-attribute-example.ts",
+    "primaryFile": "select-with-panel-width-auto-example.ts",
+    "importPath": "components/select"
+  },
+  "select-with-panel-width-default": {
+    "packagePath": "components/select/select-with-panel-width-default",
+    "title": "Select with panelWidth default",
+    "componentName": "SelectWithPanelWidthDefaultExample",
+    "files": [
+      "select-with-panel-width-default-example.ts"
+    ],
+    "selector": "select-with-panel-width-default-example",
+    "additionalComponents": [],
+    "primaryFile": "select-with-panel-width-default-example.ts",
+    "importPath": "components/select"
+  },
+  "select-with-panel-width-fixed": {
+    "packagePath": "components/select/select-with-panel-width-fixed",
+    "title": "Select with panelWidth fixed",
+    "componentName": "SelectWithPanelWidthFixedExample",
+    "files": [
+      "select-with-panel-width-fixed-example.ts"
+    ],
+    "selector": "select-with-panel-width-fixed-example",
+    "additionalComponents": [],
+    "primaryFile": "select-with-panel-width-fixed-example.ts",
     "importPath": "components/select"
   },
   "sidebar-overview": {
@@ -5180,6 +5216,8 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-overview':
 return import('@koobiq/docs-examples/components/select');
+  case 'select-preselected-values':
+return import('@koobiq/docs-examples/components/select');
   case 'select-prioritized-selected':
 return import('@koobiq/docs-examples/components/select');
   case 'select-search':
@@ -5190,7 +5228,11 @@ return import('@koobiq/docs-examples/components/select');
 return import('@koobiq/docs-examples/components/select');
   case 'select-with-multiline-matcher':
 return import('@koobiq/docs-examples/components/select');
-  case 'select-with-panel-width-attribute':
+  case 'select-with-panel-width-auto':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-with-panel-width-default':
+return import('@koobiq/docs-examples/components/select');
+  case 'select-with-panel-width-fixed':
 return import('@koobiq/docs-examples/components/select');
   case 'sidebar-overview':
 return import('@koobiq/docs-examples/components/sidebar');

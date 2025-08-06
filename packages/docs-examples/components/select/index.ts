@@ -9,12 +9,15 @@ import { SelectHeightExample } from './select-height/select-height-example';
 import { SelectIconExample } from './select-icon/select-icon-example';
 import { SelectMultipleExample } from './select-multiple/select-multiple-example';
 import { SelectOverviewExample } from './select-overview/select-overview-example';
+import { SelectPreselectedValuesExample } from './select-preselected-values/select-preselected-values-example';
 import { SelectPrioritizedSelectedExample } from './select-prioritized-selected/select-prioritized-selected-example';
 import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
 import { SelectWithMultilineMatcherExample } from './select-with-multiline-matcher/select-with-multiline-matcher-example';
-import { SelectWithPanelWidthAttributeExample } from './select-with-panel-width-attribute/select-with-panel-width-attribute-example';
+import { SelectWithPanelWidthAutoExample } from './select-with-panel-width-auto/select-with-panel-width-auto-example';
+import { SelectWithPanelWidthDefaultExample } from './select-with-panel-width-default/select-with-panel-width-default-example';
+import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixed/select-with-panel-width-fixed-example';
 
 export {
     SelectCleanerExample,
@@ -27,12 +30,15 @@ export {
     SelectIconExample,
     SelectMultipleExample,
     SelectOverviewExample,
+    SelectPreselectedValuesExample,
     SelectPrioritizedSelectedExample,
     SelectSearchExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
     SelectWithMultilineMatcherExample,
-    SelectWithPanelWidthAttributeExample
+    SelectWithPanelWidthAutoExample,
+    SelectWithPanelWidthDefaultExample,
+    SelectWithPanelWidthFixedExample
 };
 
 const EXAMPLES = [
@@ -41,17 +47,20 @@ const EXAMPLES = [
     SelectOverviewExample,
     SelectMultipleExample,
     SelectSearchExample,
-    SelectPrioritizedSelectedExample,
+    SelectPreselectedValuesExample,
     SelectGroupsExample,
     SelectHeightExample,
     SelectIconExample,
     SelectFooterExample,
     SelectValidationExample,
     SelectVirtualScrollExample,
-    SelectWithPanelWidthAttributeExample,
+    SelectWithPanelWidthDefaultExample,
     SelectCustomMatcherExample,
     SelectCustomTriggerExample,
-    SelectWithMultilineMatcherExample
+    SelectWithMultilineMatcherExample,
+    SelectWithPanelWidthAutoExample,
+    SelectWithPanelWidthFixedExample,
+    SelectPrioritizedSelectedExample
 ];
 
 @NgModule({

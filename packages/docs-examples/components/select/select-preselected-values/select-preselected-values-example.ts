@@ -1,29 +1,28 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Select height
+ * @title Selected preselected values
  */
 @Component({
     standalone: true,
-    selector: 'select-height-example',
-    imports: [KbqFormFieldModule, KbqSelectModule],
+    selector: 'select-preselected-values-example',
+    imports: [KbqFormFieldModule, KbqSelectModule, ReactiveFormsModule],
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
         <kbq-form-field>
-            <kbq-select [panelClass]="'example-select-panel-height'" [(value)]="value">
+            <kbq-select placeholder="Placeholder" multiple [formControl]="control">
                 @for (option of options; track option) {
                     <kbq-option [value]="option">{{ option }}</kbq-option>
                 }
+
+                <kbq-cleaner #kbqSelectCleaner />
             </kbq-select>
         </kbq-form-field>
     `,
     styles: `
-        ::ng-deep .example-select-panel-height.kbq-select__panel {
-            --kbq-select-panel-size-max-height: 500px;
-        }
-
         :host {
             display: flex;
             justify-content: center;
@@ -35,7 +34,9 @@ import { KbqSelectModule } from '@koobiq/components/select';
         }
     `
 })
-export class SelectHeightExample {
-    readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i + 1}`);
-    protected readonly value = model(this.options[0]);
+export class SelectPreselectedValuesExample {
+    options = Array.from({ length: 15 }).map((_, i) => `Option #${i}`);
+    control = new FormControl([this.options.at(0)!, this.options.at(1)!]);
+
+    constructor() {}
 }
