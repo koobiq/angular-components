@@ -29,12 +29,20 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
         return this._afterOpened;
     }
 
-    /** Gets the overlay reference for the actions panel. */
+    /**
+     * Gets the overlay reference for the actions panel.
+     *
+     * @docs-private
+     */
     get overlayRef(): OverlayRef {
         return this.dialogRef.overlayRef;
     }
 
-    /** Gets the ID of the actions panel. */
+    /**
+     * Gets the ID of the actions panel.
+     *
+     * @docs-private
+     */
     get id(): string {
         return this.dialogRef.id;
     }

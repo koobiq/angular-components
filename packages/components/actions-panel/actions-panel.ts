@@ -157,18 +157,11 @@ export class KbqActionsPanel implements OnDestroy {
                 ? this.overlay
                       .position()
                       .flexibleConnectedTo(overlayContainer)
+                      .withPositions([{ originX: 'center', originY: 'bottom', overlayX: 'center', overlayY: 'bottom' }])
                       .withFlexibleDimensions()
                       .withPush(false)
                       .withLockedPosition()
                       .withGrowAfterOpen()
-                      .withPositions([
-                          {
-                              originX: 'center',
-                              originY: 'bottom',
-                              overlayX: 'center',
-                              overlayY: 'bottom'
-                          }
-                      ])
                 : this.overlay.position().global().centerHorizontally().bottom(),
             templateContext: () => {
                 return {
@@ -195,9 +188,7 @@ export class KbqActionsPanel implements OnDestroy {
 
         overlayRef.addPanelClass(KBQ_ACTIONS_PANEL_OVERLAY_SELECTOR);
 
-        if (overlayPanelClass) {
-            overlayRef.addPanelClass(overlayPanelClass);
-        }
+        if (overlayPanelClass) overlayRef.addPanelClass(overlayPanelClass);
 
         if (overlayContainer) {
             const { afterClosed } = actionsPanelRef;
@@ -207,6 +198,8 @@ export class KbqActionsPanel implements OnDestroy {
                 .pipe(takeUntil(afterClosed))
                 .subscribe(() => {
                     const { width: maxWidth } = overlayContainer.nativeElement.getBoundingClientRect();
+
+                    if (!maxWidth) return;
 
                     overlayRef.overlayElement.style.maxWidth = coerceCssPixelValue(maxWidth);
                     overlayRef.updatePosition();
