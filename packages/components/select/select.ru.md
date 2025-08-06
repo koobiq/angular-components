@@ -66,6 +66,18 @@
 
 <!-- example(select-with-panel-min-width) -->
 
+Для настройки минимальной ширины выпадающих списков всех селектов внутри модуля, имеющих единые правила отображения, можно использовать провайдер `kbqSelectOptionsProvider`.
+
+```ts
+import { kbqSelectOptionsProvider } from '@koobiq/components/select';
+
+@NgModule({
+    providers: [
+        kbqSelectOptionsProvider({ panelMinWidth: 350 })
+    ]
+})
+```
+
 #### Дополнительные возможности
 
 Выпадающий список можно настроить так, чтобы его размер совпадал с селектом. Для этого используйте атрибут `panelWidth` со значением `auto`.

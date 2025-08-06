@@ -110,6 +110,10 @@ export type KbqSelectOptions = Partial<{
      * If set to null or an empty string, the panel will grow to match the longest option's text.
      */
     panelWidth: KbqSelectPanelWidth;
+    /**
+     * Minimum width of the panel. If minWidth is larger than window width or property set to null, it will be ignored.
+     */
+    panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'>;
 }>;
 
 /** Injection token that can be used to provide the default options for the `kbq-select`. */
@@ -444,7 +448,8 @@ export class KbqSelect
      * Minimum width of the panel.
      * If minWidth is larger than window width, it will be ignored.
      */
-    @Input({ transform: numberAttribute }) panelMinWidth: number = 200;
+    @Input({ transform: numberAttribute }) panelMinWidth: Exclude<KbqSelectPanelWidth, 'auto'> =
+        this.defaultOptions?.panelMinWidth !== undefined ? this.defaultOptions.panelMinWidth : 200;
 
     /** Value of the select control. */
     @Input()

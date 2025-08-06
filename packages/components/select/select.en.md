@@ -66,6 +66,18 @@ The select panel has a default `min-width` of 200px to align nicely with narrow 
 
 <!-- example(select-with-panel-min-width) -->
 
+To set the minimum width of select panel for all selects within a module that share common display rules, you can use the `kbqSelectOptionsProvider`.
+
+```ts
+import { kbqSelectOptionsProvider } from '@koobiq/components/select';
+
+@NgModule({
+    providers: [
+        kbqSelectOptionsProvider({ panelMinWidth: 350 })
+    ]
+})
+```
+
 #### Additional options
 
 If needed, the select width can be set to match the select width exactly. To do this, use the `panelWidth` attribute with the value `auto`.
