@@ -31,7 +31,7 @@ type MultipleUploadState = {
     selector: 'dev-file-upload-state-and-style',
     template: `
         <div>
-            <table>
+            <table data-testid="e2eSingleFileUploadTable">
                 @for (row of singleFileUploadRows; track $index) {
                     <tr>
                         @for (cell of row; track $index) {
@@ -53,7 +53,7 @@ type MultipleUploadState = {
         </div>
 
         <div>
-            <table>
+            <table data-testid="e2eMultipleFileUploadTable">
                 @for (row of multipleFileUploadRows; track $index) {
                     <tr>
                         @for (cell of row; track $index) {
