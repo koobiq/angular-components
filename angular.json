@@ -1585,6 +1585,36 @@
                 }
             }
         },
+        "dev-navbar-ic": {
+            "projectType": "application",
+            "root": "packages/components-dev/navbar-ic",
+            "sourceRoot": "packages/components-dev/navbar-ic",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/navbar-ic"
+                        },
+                        "tsConfig": "packages/components-dev/navbar-ic/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/navbar-ic/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-navbar-ic:build"
+                    }
+                }
+            }
+        },
         "dev-number-formatter": {
             "projectType": "application",
             "root": "packages/components-dev/number-formatter",
