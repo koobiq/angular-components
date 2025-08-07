@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { KbqAgGridTheme } from '@koobiq/ag-grid-angular-theme';
+import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqLinkModule } from '@koobiq/components/link';
 import { AgGridModule, ICellRendererAngularComp } from 'ag-grid-angular';
 import { ColDef, FirstDataRenderedEvent, ICellRendererParams } from 'ag-grid-community';
@@ -49,13 +49,17 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
  */
 @Component({
     standalone: true,
-    imports: [AgGridModule, KbqAgGridTheme],
+    imports: [AgGridModule, KbqAgGridThemeModule],
     selector: 'ag-grid-overview-example',
     template: `
         <ag-grid-angular
             rowSelection="multiple"
             kbqAgGridTheme
             disableCellFocusStyles
+            kbqAgGridToNextRowByTab
+            kbqAgGridSelectRowsByShiftArrow
+            kbqAgGridSelectAllRowsByCtrlA
+            kbqAgGridSelectRowsByCtrlClick
             [style.height.px]="300"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
@@ -67,13 +71,13 @@ export class ExampleLinkCellRenderer implements ICellRendererAngularComp {
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AgGridOverviewExample {
-    readonly defaultColDef: ColDef = {
+    protected readonly defaultColDef: ColDef = {
         sortable: true,
         resizable: true,
         width: 140
     };
 
-    readonly columnDefs: ColDef[] = [
+    protected readonly columnDefs: ColDef[] = [
         {
             headerCheckboxSelection: true,
             checkboxSelection: true,
@@ -129,7 +133,7 @@ export class AgGridOverviewExample {
         }
     ];
 
-    readonly rowData: ExampleRowData[] = Array.from({ length: 1000 }, (_, index) => ({
+    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => ({
         column0: 'Link ' + index,
         column1: 'Text ' + index,
         column2: 'Text ' + index,
@@ -142,11 +146,9 @@ export class AgGridOverviewExample {
         column9: 'Text ' + index
     }));
 
-    onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
-        // Set initial focused cell
+    protected onFirstDataRendered({ api }: FirstDataRenderedEvent): void {
         api.setFocusedCell(0, 'column0');
 
-        // Set initial selected rows
         api.forEachNode((node) => {
             if (node.rowIndex === 3 || node.rowIndex === 4) {
                 node.setSelected(true);

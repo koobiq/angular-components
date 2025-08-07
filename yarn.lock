@@ -4987,17 +4987,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@koobiq/ag-grid-angular-theme@npm:^30.1.0":
-  version: 30.1.0
-  resolution: "@koobiq/ag-grid-angular-theme@npm:30.1.0"
+"@koobiq/ag-grid-angular-theme@npm:^30.2.0":
+  version: 30.2.0
+  resolution: "@koobiq/ag-grid-angular-theme@npm:30.2.0"
   dependencies:
     tslib: "npm:^2.3.0"
   peerDependencies:
+    "@angular/cdk": ">=16.0.0"
     "@angular/core": ">=16.0.0"
     "@koobiq/design-tokens": ^3.0.0
     "@koobiq/icons": ">=9.0.0"
     ag-grid-community: ^30.0.0
-  checksum: 10c0/a28d95fb52fdc63d5aeec55477a97d40ca7766edfa912f3c4d8a0bbd52decb34e9452930c3875094e2302221a076561404e222025bc7f23d49447a945eb48340
+  checksum: 10c0/327f595525efdb50cdfc6172425c15c9774abb78dafb7f3489bb56f5dd66086d8c0d01b5d0f36d7ae54a174e0011daadde5ede06216c5002043f265360678b5b
   languageName: node
   linkType: hard
 
@@ -15607,7 +15608,7 @@ __metadata:
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.5.0"
     "@fontsource/inter": "npm:^5.2.6"
     "@fontsource/jetbrains-mono": "npm:^5.2.6"
-    "@koobiq/ag-grid-angular-theme": "npm:^30.1.0"
+    "@koobiq/ag-grid-angular-theme": "npm:^30.2.0"
     "@koobiq/date-adapter": "npm:^3.2.3"
     "@koobiq/date-formatter": "npm:^3.2.3"
     "@koobiq/design-tokens": "npm:^3.14.0"
