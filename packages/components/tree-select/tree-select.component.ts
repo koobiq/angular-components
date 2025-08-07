@@ -437,7 +437,9 @@ export class KbqTreeSelect
             this._disabled = value;
 
             if (this.parentFormField) {
-                this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+                Promise.resolve().then(() => {
+                    this._disabled ? this.parentFormField.stopFocusMonitor() : this.parentFormField.runFocusMonitor();
+                });
             }
 
             // Let the parent form field know to run change detection when the disabled state changes.
