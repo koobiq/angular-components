@@ -1,12 +1,20 @@
-@mixin _kbq-clamped-text-theme() {
-    background: #111;
+:host {
+    display: inline-flex;
+    flex-direction: column;
 }
 
-@mixin _kbq-clamped-text-typography() {
-    background: #111;
+.kbq-clamped-text__content {
+    -webkit-line-clamp: 5;
+
+    &.kbq-clamped-text__content_hidden {
+        display: -webkit-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-box-orient: vertical;
+    }
 }
 
-.kbq-clamped-text {
-    @include _kbq-clamped-text-theme();
-    @include _kbq-clamped-text-typography();
+.kbq-clamped-text__toggle {
+    margin-top: var(--kbq-size-xxs);
+    align-self: flex-start;
 }

@@ -9,8 +9,23 @@ import { KbqClampedText } from '@koobiq/components/clamped-text';
     standalone: true,
     imports: [KbqClampedText],
     template: `
-        <kbq-clamped-text />
+        <div>
+            <kbq-clamped-text>{{ text }}</kbq-clamped-text>
+        </div>
+    `,
+    styles: `
+        div {
+            overflow: auto;
+            resize: horizontal;
+            max-width: 500px;
+            min-width: 150px;
+            border: 1px solid var(--kbq-line-contrast-less);
+            border-radius: var(--kbq-size-border-radius);
+            padding: var(--kbq-size-xxs);
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClampedTextOverviewExample {}
+export class ClampedTextOverviewExample {
+    text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
+}
