@@ -15,6 +15,7 @@ import { SelectSearchExample } from './select-search/select-search-example';
 import { SelectValidationExample } from './select-validation/select-validation-example';
 import { SelectVirtualScrollExample } from './select-virtual-scroll/select-virtual-scroll-example';
 import { SelectWithMultilineMatcherExample } from './select-with-multiline-matcher/select-with-multiline-matcher-example';
+import { SelectWithPanelMinWidthExample } from './select-with-panel-min-width/select-with-panel-min-width-example';
 import { SelectWithPanelWidthAutoExample } from './select-with-panel-width-auto/select-with-panel-width-auto-example';
 import { SelectWithPanelWidthDefaultExample } from './select-with-panel-width-default/select-with-panel-width-default-example';
 import { SelectWithPanelWidthFixedExample } from './select-with-panel-width-fixed/select-with-panel-width-fixed-example';
@@ -36,6 +37,7 @@ export {
     SelectValidationExample,
     SelectVirtualScrollExample,
     SelectWithMultilineMatcherExample,
+    SelectWithPanelMinWidthExample,
     SelectWithPanelWidthAutoExample,
     SelectWithPanelWidthDefaultExample,
     SelectWithPanelWidthFixedExample
@@ -60,7 +62,9 @@ const EXAMPLES = [
     SelectWithMultilineMatcherExample,
     SelectWithPanelWidthAutoExample,
     SelectWithPanelWidthFixedExample,
-    SelectPrioritizedSelectedExample
+    SelectPrioritizedSelectedExample,
+    SelectWithPanelWidthFixedExample,
+    SelectWithPanelMinWidthExample
 ];
 
 @NgModule({
