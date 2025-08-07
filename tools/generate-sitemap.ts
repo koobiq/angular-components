@@ -1,29 +1,25 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 import { DOCS_SUPPORTED_LOCALES } from '../apps/docs/src/app/constants/locale';
-import {
-    DocsDocStructure,
-    DocsDocStructureCategoryId,
-    DocsDocStructureCategoryItemSection
-} from '../apps/docs/src/app/structure';
+import { docsGetItems, DocsStructureCategoryId, DocsStructureItemTab } from '../apps/docs/src/app/structure';
 
 try {
     console.info('🚀 Generating sitemap.xml');
 
-    const paths = DocsDocStructure.getItems()
+    const paths = docsGetItems()
         .map(({ categoryId, id, hasApi }) => {
             const _paths: string[] = [
-                `${categoryId}/${id}/${DocsDocStructureCategoryItemSection.Overview}`
+                `${categoryId}/${id}/${DocsStructureItemTab.Overview}`
             ];
 
-            if (hasApi) _paths.push(`${categoryId}/${id}/${DocsDocStructureCategoryItemSection.Api}`);
+            if (hasApi) _paths.push(`${categoryId}/${id}/${DocsStructureItemTab.Api}`);
 
             return _paths;
         })
         .flat();
 
     // We should manually add the icons path, because it does not have any items.
-    paths.push(`${DocsDocStructureCategoryId.Icons}`);
+    paths.push(`${DocsStructureCategoryId.Icons}`);
 
     const routes = paths
         .map((path) => {

@@ -20,7 +20,14 @@ import { KbqTabsModule } from '@koobiq/components/tabs';
 import { filter } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocsDocStructure, DocsDocStructureCategoryItem, DocsDocStructureCategoryItemSection } from 'src/app/structure';
+import {
+    docsGetCategoryById,
+    docsGetItemById,
+    DocsStructureCategoryId,
+    DocsStructureItem,
+    DocsStructureItemId,
+    DocsStructureItemTab
+} from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsAnchorsComponent } from '../anchors/anchors.component';
 import { DocsExampleViewerComponent } from '../example-viewer/example-viewer';
@@ -52,10 +59,9 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DocsComponentViewerComponent extends DocsLocaleState {
-    protected readonly docStructureCategoryItemSection = DocsDocStructureCategoryItemSection;
-
-    docStructureCategoryItem: DocsDocStructureCategoryItem;
-    docStructureCategoryItemId: string;
+    protected readonly structureItemTab = DocsStructureItemTab;
+    protected structureItem: DocsStructureItem;
+    protected structureCategoryId: DocsStructureCategoryId;
 
     private readonly activatedRoute = inject(ActivatedRoute);
     private readonly router = inject(Router);
@@ -72,7 +78,7 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
         this.activatedRoute.url
             .pipe(
                 map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
-                    DocsDocStructure.getItemById(id, categoryId)
+                    docsGetItemById(<DocsStructureItemId>id, <DocsStructureCategoryId>categoryId)
                 ),
                 takeUntilDestroyed()
             )
@@ -84,10 +90,8 @@ export class DocsComponentViewerComponent extends DocsLocaleState {
                     this.router.navigate(['/404']);
                 }
 
-                this.docStructureCategoryItem = docItem!;
-                this.docStructureCategoryItemId = DocsDocStructure.getCategoryById(
-                    this.docStructureCategoryItem.categoryId!
-                )!.id;
+                this.structureItem = docItem!;
+                this.structureCategoryId = docsGetCategoryById(this.structureItem.categoryId!)!.id;
             });
 
         this.docStates.registerHeaderScrollContainer(this.elementRef.nativeElement);
@@ -100,7 +104,7 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
     private readonly changeDetectorRef = inject(ChangeDetectorRef);
     private readonly titleService = inject(Title);
 
-    componentDocItem: DocsDocStructureCategoryItem | null = null;
+    componentDocItem: DocsStructureItem | null = null;
 
     @ViewChild(DocsAnchorsComponent, { static: false }) private readonly anchors: DocsAnchorsComponent;
 
@@ -112,7 +116,7 @@ export class DocsOverviewComponentBase extends DocsLocaleState {
         this.activatedRoute
             .parent!.url.pipe(
                 map(([{ path: categoryId }, { path: id }]: UrlSegment[]) =>
-                    DocsDocStructure.getItemById(id, categoryId)
+                    docsGetItemById(<DocsStructureItemId>id, <DocsStructureCategoryId>categoryId)
                 ),
                 filter((p) => !!p),
                 takeUntilDestroyed()

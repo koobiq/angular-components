@@ -15,7 +15,7 @@ import {
 } from '@koobiq/components/tree';
 import { DocsLocale } from 'src/app/constants/locale';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocsDocStructure, DocsDocStructureCategory, DocsDocStructureCategoryItemSection } from 'src/app/structure';
+import { docsGetCategories, DocsStructureCategory, DocsStructureItemTab } from 'src/app/structure';
 import { DocsDocStates } from '../../services/doc-states';
 import { DocsFooterComponent } from '../footer/footer.component';
 
@@ -45,7 +45,7 @@ class TreeFlatNode {
     isNew: boolean;
 }
 
-function buildTree(categories: DocsDocStructureCategory[]): TreeNode[] {
+function buildTree(categories: DocsStructureCategory[]): TreeNode[] {
     const data: TreeNode[] = [];
 
     categories.forEach(({ id, name, items }) => {
@@ -132,7 +132,7 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
             this.getViewValue
         );
         this.dataSource = new KbqTreeFlatDataSource(this.treeControl, treeFlattener);
-        this.dataSource.data = buildTree(DocsDocStructure.getCategories());
+        this.dataSource.data = buildTree(docsGetCategories());
     }
 
     ngAfterViewInit() {
@@ -143,7 +143,7 @@ export class DocsSidenavComponent extends DocsLocaleState implements AfterViewIn
 
     private selectDefaultItem(): void {
         // remove extra path endpoints so tree node can be selected
-        this._selectedItem = Object.values(DocsDocStructureCategoryItemSection).reduce(
+        this._selectedItem = Object.values(DocsStructureItemTab).reduce(
             (resUrl, currentValue) => resUrl.replace(new RegExp(`\\/${currentValue}.*`), ''),
             this.location.path().replace(`/${this.locale()}/`, '')
         );

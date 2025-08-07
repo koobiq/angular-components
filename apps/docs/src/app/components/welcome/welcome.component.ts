@@ -9,7 +9,7 @@ import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, map } from 'rxjs/operators';
 import { DocsDocStates } from 'src/app/services/doc-states';
 import { DocsLocaleState } from 'src/app/services/locale';
-import { DocsDocStructure, DocsDocStructureCategory } from '../../structure';
+import { docsGetCategories, DocsStructureCategory } from '../../structure';
 import { DocsRegisterHeaderDirective } from '../register-header/register-header.directive';
 
 @Component({
@@ -30,7 +30,7 @@ import { DocsRegisterHeaderDirective } from '../register-header/register-header.
     encapsulation: ViewEncapsulation.None
 })
 export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
-    docStructureCategories: DocsDocStructureCategory[];
+    protected structureCategories: DocsStructureCategory[];
     currentTheme$: Observable<string>;
 
     private readonly elementRef = inject(ElementRef);
@@ -45,7 +45,7 @@ export class DocsWelcomeComponent extends DocsLocaleState implements OnInit {
     }
 
     ngOnInit(): void {
-        this.docStructureCategories = DocsDocStructure.getCategories().filter((category) => category.isPreviewed);
+        this.structureCategories = docsGetCategories().filter((category) => category.isPreviewed);
         this.currentTheme$ = this.themeService.current.pipe(
             map((currentTheme) => currentTheme.className.replace('kbq-', ''))
         );
