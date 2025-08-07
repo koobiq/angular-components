@@ -29,7 +29,7 @@
         "@docsearch/js": "^3.9.0",
         "@fontsource/inter": "^5.2.6",
         "@fontsource/jetbrains-mono": "^5.2.6",
-        "@koobiq/ag-grid-angular-theme": "^30.1.0",
+        "@koobiq/ag-grid-angular-theme": "^30.2.0",
         "@koobiq/date-adapter": "^3.2.3",
         "@koobiq/date-formatter": "^3.2.3",
         "@koobiq/icons": "^10.5.1",

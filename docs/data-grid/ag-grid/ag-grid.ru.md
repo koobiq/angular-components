@@ -34,11 +34,11 @@ npm install @koobiq/ag-grid-angular-theme@^30 ag-grid-community@^30 ag-grid-angu
 Примените тему для `<ag-grid-angular>` в шаблоне:
 
 ```ts
-import { KbqAgGridTheme } from '@koobiq/ag-grid-angular-theme';
+import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { AgGridModule } from 'ag-grid-angular';
 
 @Component({
-    imports: [AgGridModule, KbqAgGridTheme],
+    imports: [AgGridModule, KbqAgGridThemeModule],
     template: `<ag-grid-angular kbqAgGridTheme />`
 })
 ```
@@ -56,6 +56,19 @@ import { AgGridModule } from 'ag-grid-angular';
 ### Перетаскивание строк
 
 <!-- example(ag-grid-row-dragging) -->
+
+### Пользовательские сочетания клавиш
+
+Вы можете добавить пользовательские сочетания клавиш, добавив соответствующие директивы к вашему компоненту `<ag-grid-angular>`.
+
+| <div style="min-width: 120px;">Клавиша</div>                                                   | Действие                   | Директива                         |
+| ---------------------------------------------------------------------------------------------- | -------------------------- | --------------------------------- |
+| <span class="docs-hot-key-button">Tab</span>                                                   | Перейти к следующей строке | `kbqAgGridToNextRowByTab`         |
+| <span class="docs-hot-key-button">Shift</span> + <span class="docs-hot-key-button">↓↑</span>   | Выделить несколько строк   | `kbqAgGridSelectRowsByShiftArrow` |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">A</span>     | Выделить все строки        | `kbqAgGridSelectAllRowsByCtrlA`   |
+| <span class="docs-hot-key-button">Ctrl</span> + <span class="docs-hot-key-button">click</span> | Выделить строку            | `kbqAgGridSelectRowsByCtrlClick`  |
+
+Больше информации о сочетаниях клавиш можно найти в [документации ag-grid-angular](https://www.ag-grid.com/archive/30.2.0/angular-data-grid/keyboard-navigation/).
 
 ### Рекомендации
 
