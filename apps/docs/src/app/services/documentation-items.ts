@@ -266,6 +266,16 @@ const DOCS: { [key: string]: DocsDocCategory[] } = {
                     hasExamples: false
                 },
                 {
+                    id: 'clamped-text',
+                    name: {
+                        ru: 'Clamped Text',
+                        en: 'Clamped Text'
+                    },
+                    hasApi: true,
+                    apiId: 'clamped-text',
+                    hasExamples: false
+                },
+                {
                     id: 'code-block',
                     name: {
                         ru: 'Code block',
