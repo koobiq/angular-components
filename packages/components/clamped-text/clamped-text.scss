@@ -1,0 +1,12 @@
+@mixin _kbq-clamped-text-theme() {
+    background: #111;
+}
+
+@mixin _kbq-clamped-text-typography() {
+    background: #111;
+}
+
+.kbq-clamped-text {
+    @include _kbq-clamped-text-theme();
+    @include _kbq-clamped-text-typography();
+}

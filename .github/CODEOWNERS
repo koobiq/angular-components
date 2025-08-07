@@ -19,6 +19,7 @@
 
 /packages/components/alert/*                                @NikGurev
 /packages/components/breadcrumbs/*                          @NikGurev
+/packages/components/clamped-text/*                         @NikGurev
 /packages/components/divider/*                              @NikGurev
 /packages/components/empty-state/*                          @NikGurev
 /packages/components/file-upload/*                          @NikGurev
