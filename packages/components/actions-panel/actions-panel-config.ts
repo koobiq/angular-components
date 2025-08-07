@@ -73,6 +73,9 @@ export class KbqActionsPanelConfig<D = unknown> {
     /**
      * Max-width of the actions panel.
      * If a number is provided, assumes pixel units.
+     *
+     * NOTE: this property is ignored if the `overlayContainer` property is provided, and will be calculated based on
+     * the width of the `overlayContainer`.
      */
     maxWidth?: number | string;
 

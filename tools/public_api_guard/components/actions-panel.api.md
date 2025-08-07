@@ -18,6 +18,7 @@ import { KbqActionsPanelLocaleConfiguration } from '@koobiq/components/core';
 import { Observable } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { Provider } from '@angular/core';
 import { ScrollStrategy } from '@angular/cdk/overlay';
 import { Signal } from '@angular/core';
@@ -110,7 +111,9 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     get afterOpened(): Observable<void>;
     close(result?: R): void;
     containerInstance: KbqActionsPanelContainer;
+    get id(): string;
     get keydownEvents(): Observable<KeyboardEvent>;
+    get overlayRef(): OverlayRef;
 }
 
 // @public
