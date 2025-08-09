@@ -14,10 +14,10 @@ import { KbqClampedText } from '@koobiq/components/clamped-text';
         </div>
     `,
     styles: `
-        div {
+        :host > div {
             overflow: auto;
             resize: horizontal;
-            max-width: 500px;
+            max-width: 1040px;
             min-width: 150px;
             border: 1px solid var(--kbq-line-contrast-less);
             border-radius: var(--kbq-size-border-radius);

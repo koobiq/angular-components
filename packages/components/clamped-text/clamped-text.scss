@@ -1,15 +1,12 @@
-:host {
+.kbq-clamped-text {
     display: inline-flex;
     flex-direction: column;
 }
 
 .kbq-clamped-text__content {
-    -webkit-line-clamp: 5;
-
-    &.kbq-clamped-text__content_hidden {
+    &.kbq-clamped-text__content_collapsed {
         display: -webkit-box;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        overflow-y: hidden;
         -webkit-box-orient: vertical;
     }
 }
