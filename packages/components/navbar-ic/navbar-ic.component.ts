@@ -15,6 +15,7 @@ import {
     forwardRef,
     inject,
     Input,
+    numberAttribute,
     OnDestroy,
     QueryList,
     ViewEncapsulation
@@ -33,6 +34,10 @@ import {
 
 @Directive()
 export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+    protected readonly changeDetectorRef = inject(ChangeDetectorRef);
+    protected readonly elementRef = inject(ElementRef);
+    protected readonly focusMonitor = inject(FocusMonitor);
+
     @ContentChildren(forwardRef(() => KbqNavbarIcFocusableItem), { descendants: true })
     focusableItems: QueryList<KbqNavbarIcFocusableItem>;
 
@@ -61,12 +66,6 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     private optionFocusSubscription: Subscription | null;
     private optionBlurSubscription: Subscription | null;
-
-    constructor(
-        protected readonly changeDetectorRef: ChangeDetectorRef,
-        protected readonly elementRef: ElementRef,
-        protected readonly focusMonitor: FocusMonitor
-    ) {}
 
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarIcFocusableItem>(this.focusableItems).withTypeAhead();
@@ -157,6 +156,7 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 }
 
 @Directive({
+    standalone: true,
     selector: 'kbq-navbar-ic-container',
     host: {
         class: 'kbq-navbar-ic-container'
@@ -165,10 +165,16 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 export class KbqNavbarIcContainer {}
 
 @Component({
+    standalone: true,
     selector: 'kbq-navbar-ic',
     exportAs: 'KbqNavbarIc',
     template: `
-        <div class="kbq-navbar-ic__container" [class.kbq-collapsed]="!expanded" [class.kbq-expanded]="expanded">
+        <div
+            class="kbq-navbar-ic__top-layer"
+            [style.min-width.px]="expanded ? expandedWidth : collapsedWidth"
+            [style.width.px]="expanded ? expandedWidth : collapsedWidth"
+            [style.max-width.px]="expanded ? expandedWidth : collapsedWidth"
+        >
             <ng-content select="[kbq-navbar-ic-container], kbq-navbar-ic-container" />
             <ng-content select="[kbq-navbar-ic-toggle], kbq-navbar-ic-toggle" />
         </div>
@@ -176,13 +182,14 @@ export class KbqNavbarIcContainer {}
     styleUrls: [
         './navbar-ic.scss',
         './navbar-ic-item.scss',
-        './navbar-ic-header.scss',
         './navbar-ic-divider.scss',
         './navbar-ic-tokens.scss'
     ],
     host: {
         class: 'kbq-navbar-ic',
-        '[class.kbq-navbar-ic_open-over]': 'openOver',
+        '[class.kbq-collapsed]': '!expanded',
+        '[class.kbq-expanded]': 'expanded',
+        '[style.min-width.px]': 'collapsedWidth',
         '[attr.tabindex]': 'tabIndex',
 
         '(focus)': 'focus()',
@@ -203,7 +210,8 @@ export class KbqNavbarIc extends KbqFocusableComponent implements AfterContentIn
 
     readonly animationDone: Subject<void> = new Subject();
 
-    @Input() openOver: boolean = true;
+    @Input({ transform: numberAttribute }) collapsedWidth = 64;
+    @Input({ transform: numberAttribute }) expandedWidth = 240;
 
     @Input()
     get expanded() {
@@ -218,12 +226,8 @@ export class KbqNavbarIc extends KbqFocusableComponent implements AfterContentIn
 
     private _expanded: boolean = false;
 
-    constructor(
-        protected elementRef: ElementRef,
-        changeDetectorRef: ChangeDetectorRef,
-        focusMonitor: FocusMonitor
-    ) {
-        super(changeDetectorRef, elementRef, focusMonitor);
+    constructor() {
+        super();
 
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 
