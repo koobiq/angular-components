@@ -28,7 +28,13 @@ export class DevExamples {}
         DevExamples
     ],
     selector: 'dev-page-1',
-    templateUrl: './template.html',
+    template: `
+        <h2>Page1</h2>
+        <a routerLink="/page-2">Go to page-2</a>
+        <hr />
+
+        <dev-examples />
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
@@ -56,12 +62,7 @@ export class DevPage2 {}
         RouterOutlet
     ],
     selector: 'dev-app',
-    template: `
-        <dev-theme-toggle />
-        <dev-locale-selector />
-        <hr />
-        <router-outlet />
-    `,
+    templateUrl: './template.html',
     styleUrl: './styles.scss',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
