@@ -13,6 +13,9 @@
         border-style: solid;
         border-color: transparent;
         border-radius: var(--kbq-form-field-size-border-radius);
+
+        padding-left: var(--kbq-form-field-size-container-left-padding);
+        padding-right: var(--kbq-form-field-size-container-right-padding);
     }
 
     .kbq-form-field:not(.kbq-form-field-type-textarea) {
@@ -33,6 +36,20 @@
     .kbq-form-field__control {
         width: 100%;
         flex-grow: 1;
+
+        padding-left: var(--kbq-form-field-size-infix-left-padding);
+
+        &:has(.kbq-select_multiple, .kbq-select_multiline):not(:has(.kbq-select__trigger_empty)),
+        &:has(.kbq-tag-list) {
+            padding-left: 0;
+
+            max-width: 100%;
+        }
+
+        & .kbq-input,
+        & .kbq-tag-input {
+            padding-right: var(--kbq-form-field-size-infix-right-padding);
+        }
     }
 
     .kbq-form-field__label {

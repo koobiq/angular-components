@@ -9,6 +9,10 @@
     --kbq-form-field-size-icon-button-margin-left: var(--kbq-size-xxs);
     --kbq-form-field-hint-size-margin-top: var(--kbq-size-xs);
     --kbq-form-field-hint-size-gap: var(--kbq-size-s);
+    --kbq-form-field-size-container-left-padding: calc(var(--kbq-size-xs) - var(--kbq-size-border-width));
+    --kbq-form-field-size-container-right-padding: calc(var(--kbq-size-xs) - var(--kbq-size-border-width));
+    --kbq-form-field-size-infix-left-padding: var(--kbq-size-xs);
+    --kbq-form-field-size-infix-right-padding: var(--kbq-size-xxs);
     /* THEME TOKENS */
     --kbq-form-field-default-border-color: var(--kbq-line-contrast-fade);
     --kbq-form-field-default-background: var(--kbq-background-bg);
