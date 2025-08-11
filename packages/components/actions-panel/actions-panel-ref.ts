@@ -1,4 +1,5 @@
 import { DialogRef } from '@angular/cdk/dialog';
+import { OverlayRef } from '@angular/cdk/overlay';
 import { filter, Observable, Subject, take } from 'rxjs';
 import { KbqActionsPanelContainer } from './actions-panel-container';
 
@@ -26,6 +27,24 @@ export class KbqActionsPanelRef<I = unknown, R = unknown> {
     /** Gets an observable that is notified when the actions panel has opened and appeared. */
     get afterOpened(): Observable<void> {
         return this._afterOpened;
+    }
+
+    /**
+     * Gets the overlay reference for the actions panel.
+     *
+     * @docs-private
+     */
+    get overlayRef(): OverlayRef {
+        return this.dialogRef.overlayRef;
+    }
+
+    /**
+     * Gets the ID of the actions panel.
+     *
+     * @docs-private
+     */
+    get id(): string {
+        return this.dialogRef.id;
     }
 
     private readonly _afterOpened = new Subject<void>();
