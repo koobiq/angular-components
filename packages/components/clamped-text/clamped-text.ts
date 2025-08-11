@@ -16,6 +16,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
+import { skip } from 'rxjs';
 import { kbqClampedTextDefaultMaxRows } from './constants';
 import { KbqClampedTextConfig } from './types';
 
@@ -42,7 +43,7 @@ const baseClass = 'kbq-clamped-text';
             </span>
         </div>
 
-        @if (hasExpander()) {
+        @if (hasToggle()) {
             <span
                 class="kbq-clamped-text__toggle"
                 kbq-link
@@ -54,7 +55,7 @@ const baseClass = 'kbq-clamped-text';
                 (keydown.space)="toggleIsCollapsed($event)"
             >
                 <span class="kbq-link__text">
-                    <ng-content select="clamped-text-toggle,[clamped-text-toggle]" />
+                    <ng-content select="kbq-clamped-text-toggle,[kbq-clamped-text-toggle]" />
 
                     @if (collapsedState()) {
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
@@ -80,33 +81,37 @@ export class KbqClampedText implements AfterViewInit {
     readonly isCollapsed = input<boolean | undefined>();
     readonly isCollapsedChange = output<boolean>();
 
-    protected readonly collapsedState = signal<boolean>(true);
-    protected readonly hasExpander = signal(true);
+    protected readonly text = viewChild<ElementRef<HTMLSpanElement>>('text');
+    protected readonly textContainer = viewChild<ElementRef<HTMLDivElement>>('textContainer');
+
+    /** This flag controls event emission, aria/css-class calculation */
+    protected readonly collapsedState = signal<boolean | undefined>(undefined);
+    protected readonly isToggleCollapsed = signal<boolean | undefined>(undefined);
+    protected readonly hasToggle = signal(true);
     protected readonly lineClamp = signal<number | null>(null);
 
+    private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly destroyRef = inject(DestroyRef);
-    private isEventFromToggle: boolean | null = null;
-
-    private readonly text = viewChild<ElementRef<HTMLSpanElement>>('text');
-    private readonly textContainer = viewChild<ElementRef<HTMLDivElement>>('textContainer');
 
     protected readonly config: KbqClampedTextConfig = {
         openText: 'Развернуть',
         closeText: 'Свернуть'
     };
 
+    private isEventFromToggle = false;
+
     constructor() {
         toObservable(this.isCollapsed)
             .pipe(takeUntilDestroyed())
             .subscribe((collapsed) => {
-                this.collapsedState.set(collapsed ?? true);
+                this.collapsedState.set(collapsed ?? this.isToggleCollapsed() ?? false);
             });
 
         toObservable(this.collapsedState)
-            .pipe(takeUntilDestroyed())
+            .pipe(skip(1), takeUntilDestroyed())
             .subscribe((collapsed) => {
-                this.isCollapsedChange.emit(collapsed);
+                this.isCollapsedChange.emit(collapsed || true);
             });
 
         toObservable(this.rows)
@@ -121,40 +126,53 @@ export class KbqClampedText implements AfterViewInit {
             .observe(textContainer)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                const shouldCollapse = this.getRowsCount() > this.rows() + 1;
-
-                this.hasExpander.set(shouldCollapse);
-
-                if (!this.hasExpander() && !this.isEventFromToggle) {
-                    this.collapsedState.set(false);
-                }
-
-                if (this.hasExpander() && this.isCollapsed === undefined && !this.isEventFromToggle) {
-                    this.collapsedState.set(true);
-                }
-
-                this.isEventFromToggle = null;
+                this.updateToggleVisibilityState();
+                this.updateCollapsedState();
             });
     }
 
     /** @docs-private */
     toggleIsCollapsed(event: Event): void {
         event.stopPropagation();
-        const updatedState = !this.collapsedState();
 
+        this.collapsedState.update((state) =>
+            this.toggleCollapseState(this.isToggleCollapsed() ?? this.isCollapsed() ?? state)
+        );
+        this.isToggleCollapsed.update((state) => this.toggleCollapseState(state ?? this.isCollapsed()));
+
+        // set flag to true  since `collapseState` change will trigger resize event
         this.isEventFromToggle = true;
 
-        this.collapsedState.set(updatedState);
-
-        if (updatedState) {
-            setTimeout(() => {
-                event.target && event.target instanceof HTMLElement && event.target.scrollIntoView();
-            });
+        if (this.collapsedState()) {
+            setTimeout(() => this.elementRef.nativeElement.scrollIntoView());
         }
     }
 
+    /**
+     * Calculates next collapsed state according to previous one.
+     * `undefined` is treated as collapsed and not touched stated.
+     */
+    private toggleCollapseState = (state: boolean | undefined): boolean => {
+        return state === undefined ? false : !state;
+    };
+
+    private updateToggleVisibilityState(): void {
+        this.hasToggle.set(this.getRowsCount() > this.rows() + 1);
+    }
+
+    private updateCollapsedState(): void {
+        if (this.isEventFromToggle) {
+            this.isEventFromToggle = false;
+
+            return;
+        }
+
+        this.collapsedState.set(this.hasToggle() && (this.isToggleCollapsed() ?? this.isCollapsed() ?? true));
+    }
+
     private getRowsCount(): number {
-        return [
-            ...new Set(Array.from(this.text()!.nativeElement.getClientRects()).map((rects) => rects.top))].length;
+        const rects = Array.from(this.text()!.nativeElement.getClientRects());
+
+        return [...new Set(rects.map((rects) => rects.top))].length;
     }
 }
