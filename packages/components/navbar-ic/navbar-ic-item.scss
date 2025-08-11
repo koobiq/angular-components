@@ -10,8 +10,6 @@
     display: flex;
     align-items: center;
 
-    border-radius: var(--kbq-navbar-ic-item-size-content-border-radius);
-
     & .kbq-icon {
         min-width: var(--kbq-size-l);
         min-height: var(--kbq-size-l);
@@ -23,11 +21,6 @@
         padding-right: var(--kbq-size-xs);
         top: 50%;
         transform: translateY(-50%);
-    }
-
-    &:before {
-        position: absolute;
-        content: '';
     }
 
     &:after {
@@ -44,20 +37,19 @@
     }
 
     &.kbq-expanded {
-        height: var(--kbq-size-5xl);
+        height: var(--kbq-size-4xl);
 
         align-items: center;
 
-        padding-right: var(--kbq-size-xl);
-        padding-left: var(--kbq-size-xl);
+        padding: var(--kbq-size-3xs) var(--kbq-size-m);
 
         gap: var(--kbq-size-m);
 
         &:after {
-            top: var(--kbq-size-xxs);
-            right: var(--kbq-size-s);
-            bottom: var(--kbq-size-xxs);
-            left: var(--kbq-size-s);
+            top: var(--kbq-size-3xs);
+            right: var(--kbq-size-m);
+            bottom: var(--kbq-size-3xs);
+            left: var(--kbq-size-m);
         }
 
         &.kbq-navbar-ic-item_has-nested {
@@ -68,18 +60,18 @@
     }
 
     &.kbq-collapsed {
-        height: var(--kbq-size-5xl);
-        width: var(--kbq-size-5xl);
+        height: var(--kbq-size-4xl);
+        width: var(--kbq-size-7xl);
 
-        padding: var(--kbq-size-l);
+        padding: var(--kbq-size-3xs) var(--kbq-size-m);
 
         justify-content: center;
 
         &:after {
-            top: var(--kbq-size-s);
-            right: var(--kbq-size-s);
-            bottom: var(--kbq-size-s);
-            left: var(--kbq-size-s);
+            top: var(--kbq-size-3xs);
+            right: var(--kbq-size-m);
+            bottom: var(--kbq-size-3xs);
+            left: var(--kbq-size-m);
         }
 
         & .kbq-badge {

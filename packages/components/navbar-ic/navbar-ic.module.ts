@@ -3,10 +3,10 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
+import { KbqNavbarIcHeader } from './navbar-ic-header.component';
 import {
     KbqNavbarIcDivider,
     KbqNavbarIcFocusableItem,
-    KbqNavbarIcHeader,
     KbqNavbarIcItem,
     KbqNavbarIcLogo,
     KbqNavbarIcRectangleElement,
@@ -20,11 +20,8 @@ import { KbqNavbarIc, KbqNavbarIcContainer } from './navbar-ic.component';
         A11yModule,
         PlatformModule,
         KbqIconModule,
-        KbqToolTipModule
-    ],
-    exports: [
+        KbqToolTipModule,
         KbqNavbarIc,
-        KbqNavbarIcContainer,
         KbqNavbarIcTitle,
         KbqNavbarIcItem,
         KbqNavbarIcHeader,
@@ -32,9 +29,10 @@ import { KbqNavbarIc, KbqNavbarIcContainer } from './navbar-ic.component';
         KbqNavbarIcToggle,
         KbqNavbarIcDivider,
         KbqNavbarIcFocusableItem,
-        KbqNavbarIcRectangleElement
+        KbqNavbarIcRectangleElement,
+        KbqNavbarIcContainer
     ],
-    declarations: [
+    exports: [
         KbqNavbarIc,
         KbqNavbarIcContainer,
         KbqNavbarIcTitle,
