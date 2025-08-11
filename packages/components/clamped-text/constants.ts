@@ -1,6 +1,22 @@
-import { InjectionToken } from '@angular/core';
-import { KbqClampedTextConfig } from './types';
+import { InjectionToken, Provider } from '@angular/core';
+import { KbqClampedTextLocaleConfig, ruRULocaleData } from '@koobiq/components/core';
 
+/**
+ * Default maximum number of visible rows for the clamped text component
+ * before truncation and the "collapse/expand" toggle is shown.
+ */
 export const kbqClampedTextDefaultMaxRows = 5;
 
-export const KBQ_CLAMPED_TEXT_CONFIGURATION = new InjectionToken<KbqClampedTextConfig>('KbqClampedTextConfig');
+/** Localization configuration provider. */
+export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClampedTextLocaleConfig>(
+    'KbqClampedTextLocaleConfig',
+    {
+        factory: () => ruRULocaleData.clampedText
+    }
+);
+
+/** Utility provider for `KBQ_CLAMPED_TEXT_CONFIGURATION`. */
+export const kbqClampedTextLocaleConfigurationProvider = (configuration: KbqClampedTextLocaleConfig): Provider => ({
+    provide: KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION,
+    useValue: configuration
+});

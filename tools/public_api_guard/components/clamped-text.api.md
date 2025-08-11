@@ -5,49 +5,53 @@
 ```ts
 
 import { AfterViewInit } from '@angular/core';
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InputSignal } from '@angular/core';
+import { InputSignalWithTransform } from '@angular/core';
+import { KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { OutputEmitterRef } from '@angular/core';
+import { Provider } from '@angular/core';
+import { Signal } from '@angular/core';
 import { WritableSignal } from '@angular/core';
 
-// @public (undocumented)
-export const KBQ_CLAMPED_TEXT_CONFIGURATION: InjectionToken<KbqClampedTextConfig>;
+// @public
+export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION: InjectionToken<KbqClampedTextLocaleConfig>;
 
 // @public (undocumented)
 export class KbqClampedText implements AfterViewInit {
     constructor();
+    protected readonly collapsedState: WritableSignal<boolean | undefined>;
+    readonly debounceTime: InputSignalWithTransform<number, unknown>;
     // (undocumented)
-    protected readonly collapsedState: WritableSignal<boolean>;
-    // (undocumented)
-    protected readonly config: KbqClampedTextConfig;
-    // (undocumented)
-    protected readonly hasExpander: WritableSignal<boolean>;
-    // (undocumented)
+    protected readonly hasToggle: WritableSignal<boolean>;
     readonly isCollapsed: InputSignal<boolean | undefined>;
-    // (undocumented)
     readonly isCollapsedChange: OutputEmitterRef<boolean>;
     // (undocumented)
+    protected readonly isToggleCollapsed: WritableSignal<boolean | undefined>;
+    // (undocumented)
     protected readonly lineClamp: WritableSignal<number | null>;
+    protected readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
-    // (undocumented)
     readonly rows: InputSignal<number>;
+    // (undocumented)
+    protected readonly text: Signal<ElementRef<HTMLSpanElement> | undefined>;
+    // (undocumented)
+    protected readonly textContainer: Signal<ElementRef<HTMLDivElement> | undefined>;
     toggleIsCollapsed(event: Event): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*", "clamped-text-toggle,[clamped-text-toggle]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*", "kbq-clamped-text-toggle,[kbq-clamped-text-toggle]"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedText, never>;
 }
 
-// @public (undocumented)
-export type KbqClampedTextConfig = {
-    openText: string;
-    closeText: string;
-};
-
-// @public (undocumented)
+// @public
 export const kbqClampedTextDefaultMaxRows = 5;
+
+// @public
+export const kbqClampedTextLocaleConfigurationProvider: (configuration: KbqClampedTextLocaleConfig) => Provider;
 
 // @public (undocumented)
 export class KbqClampedTextModule {

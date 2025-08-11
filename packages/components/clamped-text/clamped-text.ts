@@ -7,18 +7,19 @@ import {
     ElementRef,
     inject,
     input,
+    numberAttribute,
     output,
     signal,
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { KbqButtonModule } from '@koobiq/components/button';
+import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { skip } from 'rxjs';
-import { kbqClampedTextDefaultMaxRows } from './constants';
-import { KbqClampedTextConfig } from './types';
+import { debounceTime, map, of, skip } from 'rxjs';
+import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } from './constants';
 
 const baseClass = 'kbq-clamped-text';
 
@@ -57,12 +58,14 @@ const baseClass = 'kbq-clamped-text';
                 <span class="kbq-link__text">
                     <ng-content select="kbq-clamped-text-toggle,[kbq-clamped-text-toggle]" />
 
+                    @let config = localeConfiguration();
+
                     @if (collapsedState()) {
                         <i kbq-icon="kbq-chevron-down-s_16"></i>
-                        {{ config.openText }}
+                        {{ config!.openText }}
                     } @else {
                         <i kbq-icon="kbq-chevron-up-s_16"></i>
-                        {{ config.closeText }}
+                        {{ config!.closeText }}
                     }
                 </span>
             </span>
@@ -77,9 +80,20 @@ const baseClass = 'kbq-clamped-text';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KbqClampedText implements AfterViewInit {
+    /**
+     * Max rows before text is clamped.
+     * @default kbqClampedTextDefaultMaxRows
+     */
     readonly rows = input<number>(kbqClampedTextDefaultMaxRows);
+    /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto. */
     readonly isCollapsed = input<boolean | undefined>();
+    /** Emits when collapsed state changes. Used for two-way binding with `isCollapsed`. */
     readonly isCollapsedChange = output<boolean>();
+    /**
+     * Debounce time for recalculating toggle and text visibility.
+     * @default 0
+     */
+    readonly debounceTime = input(0, { transform: numberAttribute });
 
     protected readonly text = viewChild<ElementRef<HTMLSpanElement>>('text');
     protected readonly textContainer = viewChild<ElementRef<HTMLDivElement>>('textContainer');
@@ -93,12 +107,24 @@ export class KbqClampedText implements AfterViewInit {
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
-    protected readonly config: KbqClampedTextConfig = {
-        openText: 'Развернуть',
-        closeText: 'Свернуть'
-    };
+    /**
+     * Actions panel locale configuration.
+     *
+     * @docs-private
+     */
+    protected readonly localeConfiguration = toSignal<KbqClampedTextLocaleConfig>(
+        this.localeService
+            ? this.localeService.changes.pipe(
+                  map(() => this.localeService!.getParams('clampedText') satisfies KbqClampedTextLocaleConfig)
+              )
+            : of(inject(KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION))
+    );
 
+    /**
+     * This flag is used to prevent trigger resize observer on toggle click.
+     */
     private isEventFromToggle = false;
 
     constructor() {
@@ -124,7 +150,7 @@ export class KbqClampedText implements AfterViewInit {
 
         this.resizeObserver
             .observe(textContainer)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(debounceTime(this.debounceTime()), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.updateToggleVisibilityState();
                 this.updateCollapsedState();
@@ -140,7 +166,6 @@ export class KbqClampedText implements AfterViewInit {
         );
         this.isToggleCollapsed.update((state) => this.toggleCollapseState(state ?? this.isCollapsed()));
 
-        // set flag to true  since `collapseState` change will trigger resize event
         this.isEventFromToggle = true;
 
         if (this.collapsedState()) {

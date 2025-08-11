@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
+import { KbqLocaleServiceModule } from '@koobiq/components/core';
 import { ClampedTextExamplesModule } from '../../docs-examples/clamped-text';
+import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
     standalone: true,
@@ -29,7 +31,9 @@ export class DevExamples {}
 @Component({
     standalone: true,
     imports: [
-        DevExamples
+        DevExamples,
+        DevLocaleSelector,
+        KbqLocaleServiceModule
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

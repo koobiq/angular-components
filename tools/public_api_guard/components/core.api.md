@@ -364,6 +364,10 @@ export const enUSLocaleData: {
             backToPeriodSelection: string;
         };
     };
+    clampedText: {
+        openText: string;
+        closeText: string;
+    };
 };
 
 // @public
@@ -511,6 +515,10 @@ export const esLALocaleData: {
             backToPeriodSelection: string;
         };
     };
+    clampedText: {
+        openText: string;
+        closeText: string;
+    };
 };
 
 // @public (undocumented)
@@ -647,6 +655,10 @@ export const faIRLocaleData: {
             customPeriodErrorHint: string;
             backToPeriodSelection: string;
         };
+    };
+    clampedText: {
+        openText: string;
+        closeText: string;
     };
 };
 
@@ -862,6 +874,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        clampedText: {
+            openText: string;
+            closeText: string;
+        };
     };
     'zh-CN': {
         formatters: {
@@ -984,6 +1000,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodErrorHint: string;
                 backToPeriodSelection: string;
             };
+        };
+        clampedText: {
+            openText: string;
+            closeText: string;
         };
     };
     'es-LA': {
@@ -1113,6 +1133,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        clampedText: {
+            openText: string;
+            closeText: string;
+        };
     };
     'pt-BR': {
         formatters: {
@@ -1236,6 +1260,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodErrorHint: string;
                 backToPeriodSelection: string;
             };
+        };
+        clampedText: {
+            openText: string;
+            closeText: string;
         };
     };
     'ru-RU': {
@@ -1367,6 +1395,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        clampedText: {
+            openText: string;
+            closeText: string;
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1492,6 +1524,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        clampedText: {
+            openText: string;
+            closeText: string;
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1616,6 +1652,10 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodErrorHint: string;
                 backToPeriodSelection: string;
             };
+        };
+        clampedText: {
+            openText: string;
+            closeText: string;
         };
     };
 };
@@ -1749,6 +1789,12 @@ export enum KbqAnimationDurations {
 
 // @public
 export type KbqCheckedState = 'true' | 'false' | 'mixed';
+
+// @public
+export type KbqClampedTextLocaleConfig = {
+    openText: string;
+    closeText: string;
+};
 
 // @public
 export type KbqCodeBlockLocaleConfiguration = {
@@ -2956,6 +3002,10 @@ export const ptBRLocaleData: {
             backToPeriodSelection: string;
         };
     };
+    clampedText: {
+        openText: string;
+        closeText: string;
+    };
 };
 
 // @public (undocumented)
@@ -3266,6 +3316,10 @@ export const ruRULocaleData: {
             backToPeriodSelection: string;
         };
     };
+    clampedText: {
+        openText: string;
+        closeText: string;
+    };
 };
 
 // @public
@@ -3487,6 +3541,10 @@ export const tkTMLocaleData: {
             backToPeriodSelection: string;
         };
     };
+    clampedText: {
+        openText: string;
+        closeText: string;
+    };
 };
 
 // @public @deprecated
@@ -3636,6 +3694,10 @@ export const zhCNLocaleData: {
             customPeriodErrorHint: string;
             backToPeriodSelection: string;
         };
+    };
+    clampedText: {
+        openText: string;
+        closeText: string;
     };
 };
 
