@@ -1,38 +1,30 @@
 @use '../core/styles/tokens';
 @use '../core/styles/common/tokens' as *;
 
-.kbq-navbar-ic-logo {
-    display: flex;
-}
-
 .kbq-navbar-ic-header {
-    position: relative;
+    display: block;
 
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+    margin-top: var(--kbq-size-l);
+    margin-bottom: var(--kbq-size-l);
 
-    margin-left: var(--kbq-size-m);
-    margin-right: var(--kbq-size-m);
+    padding: var(--kbq-size-3xs) var(--kbq-size-m);
 
-    height: 72px;
+    & .kbq-navbar-ic-header__inner {
+        display: flex;
+        flex-direction: row;
 
-    border-radius: var(--kbq-size-s);
+        padding: var(--kbq-size-xs) var(--kbq-size-s);
+
+        gap: var(--kbq-size-s);
+    }
 
     & .kbq-navbar-ic-logo {
-        align-items: center;
+        display: flex;
     }
 
     & .kbq-navbar-ic-title {
         display: block;
         align-items: center;
-
-        padding-top: var(--kbq-size-xxs);
-        padding-bottom: var(--kbq-size-xxs);
-
-        height: var(--kbq-size-3xl);
-
-        padding-left: 0;
 
         cursor: pointer;
 
@@ -41,12 +33,8 @@
         overflow: hidden;
     }
 
-    &.kbq-collapsed {
-        & .kbq-navbar-ic-title {
-            display: none;
-        }
-
-        justify-content: center;
+    &.kbq-collapsed .kbq-navbar-ic-title {
+        display: none;
     }
 }
 

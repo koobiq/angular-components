@@ -9,7 +9,6 @@ import {
     ChangeDetectorRef,
     Component,
     ContentChild,
-    DestroyRef,
     Directive,
     ElementRef,
     Input,
@@ -21,7 +20,6 @@ import {
     booleanAttribute,
     inject
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { ENTER, NUMPAD_DIVIDE, RIGHT_ARROW, SLASH, SPACE } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
@@ -30,7 +28,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger, TooltipModifier } from '@koobiq/components/tooltip';
-import { EMPTY, Subject, merge } from 'rxjs';
+import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqNavbarIc } from './navbar-ic.component';
 
@@ -39,6 +37,7 @@ export interface KbqNavbarFocusableItemEvent {
 }
 
 @Directive({
+    standalone: true,
     selector: 'kbq-navbar-ic-logo, [kbq-navbar-logo]',
     host: {
         class: 'kbq-navbar-ic-logo',
@@ -51,6 +50,7 @@ export class KbqNavbarIcLogo {
 }
 
 @Directive({
+    standalone: true,
     selector: 'kbq-navbar-ic-title, [kbq-navbar-ic-title]',
     host: {
         class: 'kbq-navbar-ic-title',
@@ -95,39 +95,8 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     }
 }
 
-@Component({
-    selector: 'kbq-navbar-ic-header, [kbq-navbar-ic-header]',
-    exportAs: 'kbqNavbarIcHeader',
-    template: `
-        <ng-content />
-    `,
-    host: {
-        class: 'kbq-navbar-ic-header',
-        '[class.kbq-hovered]': 'hovered'
-    }
-})
-export class KbqNavbarIcHeader implements AfterContentInit {
-    @ContentChild(KbqNavbarIcLogo) logo: KbqNavbarIcLogo;
-    @ContentChild(KbqNavbarIcTitle) title: KbqNavbarIcTitle;
-
-    hovered = false;
-
-    private readonly destroyRef = inject(DestroyRef);
-
-    constructor(@Optional() private navbar: KbqNavbarIc) {}
-
-    ngAfterContentInit(): void {
-        merge(this.logo ? this.logo.hovered : (EMPTY as any), this.title ? this.title.hovered : (EMPTY as any))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((value) => (this.hovered = !!value));
-
-        this.navbar?.animationDone
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.title?.checkTextOverflown());
-    }
-}
-
 @Directive({
+    standalone: true,
     selector: 'kbq-navbar-ic-divider',
     host: {
         class: 'kbq-navbar-ic-divider'
@@ -136,6 +105,7 @@ export class KbqNavbarIcHeader implements AfterContentInit {
 export class KbqNavbarIcDivider {}
 
 @Directive({
+    standalone: true,
     selector:
         'kbq-navbar-ic-item, [kbq-navbar-ic-item], kbq-navbar-ic-header, [kbq-navbar-ic-header], kbq-navbar-ic-toggle',
     host: {
@@ -289,6 +259,7 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 }
 
 @Directive({
+    standalone: true,
     selector:
         'kbq-navbar-ic-item, [kbq-navbar-ic-item], kbq-navbar-ic-divider, kbq-navbar-ic-header, [kbq-navbar-ic-header]',
     host: {
@@ -327,6 +298,7 @@ export class KbqNavbarIcRectangleElement {
 }
 
 @Component({
+    standalone: true,
     selector: 'kbq-navbar-ic-item, [kbq-navbar-ic-item]',
     exportAs: 'kbqNavbarIcItem',
     templateUrl: './navbar-ic-item.component.html',
@@ -487,6 +459,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
 }
 
 @Component({
+    standalone: true,
     selector: 'kbq-navbar-ic-toggle',
     template: `
         <ng-content select="[kbq-icon]">
@@ -515,6 +488,9 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         '(touchend)': 'handleTouchend()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        KbqIcon
+    ],
     encapsulation: ViewEncapsulation.None
 })
 export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
