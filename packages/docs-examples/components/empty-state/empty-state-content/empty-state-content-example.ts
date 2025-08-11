@@ -28,7 +28,7 @@ import { map } from 'rxjs/operators';
                         height="192"
                         width="192"
                         [srcset]="srcSet()"
-                        src="assets/images/{{ currentTheme() }}/empty_192.png"
+                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
                     />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>
@@ -48,7 +48,7 @@ import { map } from 'rxjs/operators';
                         width="80"
                         height="80"
                         [srcset]="srcSet()"
-                        src="assets/images/{{ currentTheme() }}/empty_192.png"
+                        src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
                     />
                 </div>
                 <div kbq-empty-state-title>Нет групп</div>

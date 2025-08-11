@@ -66,7 +66,7 @@ const ExampleLocalizedData = new InjectionToken<Record<string | 'default', Examp
         <kbq-top-bar withShadow>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
-                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
+                    <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <nav kbq-breadcrumbs size="big">
                     <kbq-breadcrumb-item text="Main" routerLink="./main" />
