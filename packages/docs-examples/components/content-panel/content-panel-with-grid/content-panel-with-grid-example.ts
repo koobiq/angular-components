@@ -1,6 +1,6 @@
 import { ENTER } from '@angular/cdk/keycodes';
 import { ChangeDetectionStrategy, Component, inject, model, output, signal } from '@angular/core';
-import { KbqAgGridTheme } from '@koobiq/ag-grid-angular-theme';
+import { KbqAgGridThemeModule } from '@koobiq/ag-grid-angular-theme';
 import { KbqBadgeColors, KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
 import { KbqContentPanelModule } from '@koobiq/components/content-panel';
@@ -22,13 +22,17 @@ type ExampleRowData = Record<string, string>;
 
 @Component({
     standalone: true,
-    imports: [AgGridModule, KbqAgGridTheme],
+    imports: [AgGridModule, KbqAgGridThemeModule],
     selector: 'example-grid',
     template: `
         <ag-grid-angular
             rowSelection="multiple"
             kbqAgGridTheme
             disableCellFocusStyles
+            kbqAgGridToNextRowByTab
+            kbqAgGridSelectRowsByShiftArrow
+            kbqAgGridSelectAllRowsByCtrlA
+            kbqAgGridSelectRowsByCtrlClick
             [style.height]="'100%'"
             [columnDefs]="columnDefs"
             [defaultColDef]="defaultColDef"
@@ -54,7 +58,7 @@ export class ExampleGrid {
     };
 
     private readonly _columnDefs: ColDef[] = Array.from({ length: 20 }, (_, index) => ({
-        headerName: 'Test ',
+        headerName: 'Text ',
         field: 'column' + index
     }));
 
@@ -75,7 +79,7 @@ export class ExampleGrid {
 
     ];
 
-    protected readonly rowData: ExampleRowData[] = Array.from({ length: 1000 }, (_, index) => {
+    protected readonly rowData: ExampleRowData[] = Array.from({ length: 100 }, (_, index) => {
         return this._columnDefs.reduce((prev, _cur, i) => {
             prev['column' + i] = 'Text ' + index;
 
