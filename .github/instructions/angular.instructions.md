@@ -13,10 +13,12 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 ## Angular Best Practices
 
 - Always use standalone components over NgModules
-- Don't use explicit `standalone: true` (it is implied by default)
+- Must NOT set `standalone: true` inside Angular decorators. It's the default.
 - Use signals for state management
 - Implement lazy loading for feature routes
-- Use `NgOptimizedImage` for all static images
+- Do NOT use the `@HostBinding` and `@HostListener` decorators. Put host bindings inside the `host` object of the `@Component` or `@Directive` decorator instead
+- Use `NgOptimizedImage` for all static images.
+    - `NgOptimizedImage` does not work for inline base64 images.
 
 ## Components
 
@@ -34,6 +36,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Use signals for local component state
 - Use `computed()` for derived state
 - Keep state transformations pure and predictable
+- Do NOT use `mutate` on signals, use `update` or `set` instead
 
 ## Templates
 
@@ -46,3 +49,8 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 - Design services around a single responsibility
 - Use the `providedIn: 'root'` option for singleton services
 - Use the `inject()` function instead of constructor injection
+
+## Common pitfalls
+
+- Control flow (`@if`):
+    - You cannot use `as` expressions in `@else if (...)`. E.g. invalid code: `@else if (bla(); as x)`.
