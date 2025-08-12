@@ -890,6 +890,36 @@
                 }
             }
         },
+        "dev-dynamic-translation": {
+            "projectType": "application",
+            "root": "packages/components-dev/dynamic-translation",
+            "sourceRoot": "packages/components-dev/dynamic-translation",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/dynamic-translation"
+                        },
+                        "tsConfig": "packages/components-dev/dynamic-translation/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/dynamic-translation/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-dynamic-translation:build"
+                    }
+                }
+            }
+        },
         "dev-dropdown": {
             "projectType": "application",
             "root": "packages/components-dev/dropdown",

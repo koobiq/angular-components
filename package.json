@@ -216,6 +216,7 @@
         "dev:divider": "ng serve dev-divider --port 3003",
         "dev:dl": "ng serve dev-dl --port 3003",
         "dev:dropdown": "ng serve dev-dropdown --port 3003",
+        "dev:dynamic-translation": "ng serve dev-dynamic-translation --port 3003",
         "dev:e2e": "ng serve dev-e2e",
         "dev:empty-state": "ng serve dev-empty-state --port 3003",
         "dev:experimental-form-field": "ng serve dev-experimental-form-field --port 3003",
