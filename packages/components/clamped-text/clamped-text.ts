@@ -18,7 +18,7 @@ import { KbqButtonModule } from '@koobiq/components/button';
 import { KBQ_LOCALE_SERVICE, KbqClampedTextLocaleConfig } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { debounceTime, map, of, skip } from 'rxjs';
+import { debounceTime, map, of, skip, Subject } from 'rxjs';
 import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } from './constants';
 
 const baseClass = 'kbq-clamped-text';
@@ -37,7 +37,8 @@ const baseClass = 'kbq-clamped-text';
             #textContainer
             class="kbq-clamped-text__content"
             [style.-webkit-line-clamp]="lineClamp()"
-            [class.kbq-clamped-text__content_collapsed]="collapsedState()"
+            [style.line-clamp]="lineClamp()"
+            [class.kbq-clamped-text__content_collapsed]="collapsedState() ?? true"
         >
             <span #text>
                 <ng-content />
@@ -109,6 +110,8 @@ export class KbqClampedText implements AfterViewInit {
     private readonly destroyRef = inject(DestroyRef);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
+    private readonly stateChanges = new Subject<void>();
+
     /**
      * Clamped text locale configuration.
      * @docs-private
@@ -126,17 +129,21 @@ export class KbqClampedText implements AfterViewInit {
      */
     private isEventFromToggle = false;
 
+    // private isToggleTouched = false;
+
     constructor() {
         toObservable(this.isCollapsed)
             .pipe(takeUntilDestroyed())
             .subscribe((collapsed) => {
-                this.collapsedState.set(collapsed ?? this.isToggleCollapsed() ?? false);
+                this.isToggleCollapsed.set(collapsed);
+                this.collapsedState.set(collapsed);
             });
 
         toObservable(this.collapsedState)
             .pipe(skip(1), takeUntilDestroyed())
             .subscribe((collapsed) => {
-                this.isCollapsedChange.emit(collapsed || true);
+                if (collapsed === undefined) return;
+                this.isCollapsedChange.emit(collapsed);
             });
 
         toObservable(this.rows)
@@ -160,16 +167,43 @@ export class KbqClampedText implements AfterViewInit {
     toggleIsCollapsed(event: Event): void {
         event.stopPropagation();
 
-        this.collapsedState.update((state) =>
-            this.toggleCollapseState(this.isToggleCollapsed() ?? this.isCollapsed() ?? state)
+        this.collapsedState.update(
+            (state) => {
+                return this.toggleCollapseState(this.isToggleCollapsed() ?? state);
+            }
+            // this.toggleCollapseState(this.isToggleCollapsed() ?? this.isCollapsed() ?? state)
         );
-        this.isToggleCollapsed.update((state) => this.toggleCollapseState(state ?? this.isCollapsed()));
+        this.isToggleCollapsed.update(this.toggleCollapseState);
+        // this.isToggleCollapsed.update((state) => this.toggleCollapseState(state ?? this.isCollapsed()));
+
+        this.stateChanges.next();
 
         this.isEventFromToggle = true;
 
         if (this.collapsedState()) {
             setTimeout(() => this.elementRef.nativeElement.scrollIntoView());
         }
+    }
+
+    private updateToggleVisibilityState(): void {
+        const state = this.getRowsCount() > this.rows() + 1;
+
+        this.hasToggle.set(state);
+
+        if (state && this.isCollapsed() !== undefined) {
+            this.isToggleCollapsed.set(this.isCollapsed());
+        }
+    }
+
+    private updateCollapsedState(): void {
+        if (this.isEventFromToggle) {
+            this.isEventFromToggle = false;
+
+            return;
+        }
+
+        this.collapsedState.set(this.hasToggle() && (this.isToggleCollapsed() ?? true));
+        // this.collapsedState.set(this.hasToggle() && (this.isToggleCollapsed() ?? this.isCollapsed() ?? true));
     }
 
     /**
@@ -180,23 +214,9 @@ export class KbqClampedText implements AfterViewInit {
         return state === undefined ? false : !state;
     };
 
-    private updateToggleVisibilityState(): void {
-        this.hasToggle.set(this.getRowsCount() > this.rows() + 1);
-    }
-
-    private updateCollapsedState(): void {
-        if (this.isEventFromToggle) {
-            this.isEventFromToggle = false;
-
-            return;
-        }
-
-        this.collapsedState.set(this.hasToggle() && (this.isToggleCollapsed() ?? this.isCollapsed() ?? true));
-    }
-
     private getRowsCount(): number {
         const rects = Array.from(this.text()!.nativeElement.getClientRects());
 
-        return [...new Set(rects.map((rects) => rects.top))].length;
+        return [...new Set(rects.map(({ top }) => top))].length;
     }
 }
