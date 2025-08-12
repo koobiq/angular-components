@@ -1,11 +1,8 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-navbar-ic-item($state-name) {
-    &:not(.kbq-navbar-ic-item_has-nested) {
-        &:after {
-            display: block;
-            background: var(--kbq-navbar-ic-item-#{$state-name}-content-background);
-        }
+    & .kbq-navbar-ic-item__inner {
+        background: var(--kbq-navbar-ic-item-#{$state-name}-content-background);
     }
 
     .kbq-navbar-ic-title {
@@ -13,18 +10,18 @@
     }
 
     & > .kbq-icon.kbq-empty {
-        color: var(--kbq-navbar-ic-item-#{$state-name}-content-icon-left) !important;
+        color: var(--kbq-navbar-ic-item-#{$state-name}-content-icon-left);
     }
 
     .kbq-navbar-ic-item__arrow-icon {
-        color: var(--kbq-navbar-ic-item-#{$state-name}-content-icon-right) !important;
+        color: var(--kbq-navbar-ic-item-#{$state-name}-content-icon-right);
     }
 }
 
 @mixin kbq-navbar-ic-theme() {
     .kbq-navbar-ic .kbq-navbar-ic__top-layer {
         background-color: var(--kbq-navbar-ic-background);
-        border-right: 1px solid var(--kbq-navbar-ic-border);
+        box-shadow: var(--kbq-navbar-ic-border);
     }
 
     .kbq-navbar-ic-item,
@@ -34,26 +31,22 @@
 
         @include kbq-navbar-ic-item(default);
 
-        &:hover:not(.kbq-disabled, kbq-navbar-ic-header) {
-            @include kbq-navbar-ic-item(states-hover);
-        }
-
-        &.cdk-focused.cdk-keyboard-focused {
-            outline: none;
-
-            &:after {
-                display: block;
-                box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+        &:not(.kbq-disabled) {
+            &:hover {
+                @include kbq-navbar-ic-item(states-hover);
             }
-        }
 
-        &:active:not(.kbq-disabled, .kbq-navbar-ic-header),
-        &.kbq-active:not(.kbq-disabled, .kbq-navbar-ic-header) {
-            @include kbq-navbar-ic-item(states-selected);
-        }
+            &.cdk-keyboard-focused {
+                outline: none;
 
-        &.kbq-navbar-ic-focusable-item {
-            outline: none;
+                & .kbq-navbar-ic-item__inner {
+                    box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
+                }
+            }
+
+            &:active {
+                @include kbq-navbar-ic-item(states-selected);
+            }
         }
 
         &.kbq-disabled {
@@ -64,23 +57,8 @@
         }
     }
 
-    .kbq-navbar-ic-header:hover {
-        .kbq-navbar-logo {
-            transform: scale(1.06);
-        }
-    }
-
     .kbq-navbar-ic-divider {
         background: var(--kbq-line-contrast-less);
-    }
-}
-
-button {
-    &.kbq-navbar-ic-item,
-    &.kbq-navbar-ic-header,
-    &.kbq-navbar-ic-toggle {
-        background: transparent;
-        border: none;
     }
 }
 

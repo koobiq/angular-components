@@ -2,7 +2,7 @@
     --kbq-navbar-ic-item-size-content-border-radius: var(--kbq-size-border-radius);
     /* THEME TOKENS */
     --kbq-navbar-ic-background: var(--kbq-background-bg);
-    --kbq-navbar-ic-border: var(--kbq-line-contrast-less);
+    --kbq-navbar-ic-border: var(--kbq-shadow-overflow-compact-right);
     --kbq-navbar-ic-item-default-content-text: var(--kbq-foreground-contrast);
     --kbq-navbar-ic-item-default-content-background: transparent;
     --kbq-navbar-ic-item-default-content-icon-left: var(--kbq-icon-contrast);
@@ -15,10 +15,6 @@
     --kbq-navbar-ic-item-states-selected-content-background: var(--kbq-states-background-transparent-active);
     --kbq-navbar-ic-item-states-selected-content-icon-left: var(--kbq-states-icon-contrast-active);
     --kbq-navbar-ic-item-states-selected-content-icon-right: var(--kbq-states-icon-contrast-active);
-    --kbq-navbar-ic-item-states-selected-hover-content-text: var(--kbq-foreground-contrast);
-    --kbq-navbar-ic-item-states-selected-hover-content-background: var(--kbq-states-background-transparent-hover);
-    --kbq-navbar-ic-item-states-selected-hover-content-icon-left: var(--kbq-states-icon-contrast-hover);
-    --kbq-navbar-ic-item-states-selected-hover-content-icon-right: var(--kbq-states-icon-contrast-hover);
     --kbq-navbar-ic-item-states-disabled-content-text: var(--kbq-states-foreground-disabled);
     --kbq-navbar-ic-item-states-disabled-content-background: transparent;
     --kbq-navbar-ic-item-states-disabled-content-icon-left: var(--kbq-states-icon-disabled);
