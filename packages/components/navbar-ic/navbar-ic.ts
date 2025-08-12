@@ -30,12 +30,13 @@ import {
     KbqNavbarIcFocusableItem,
     KbqNavbarIcItem,
     KbqNavbarIcRectangleElement
-} from './navbar-ic-item.component';
+} from './navbar-ic-item';
 
 @Directive()
-export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, OnDestroy {
+export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy {
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly elementRef = inject(ElementRef);
+    protected readonly destroyRef = inject(DestroyRef);
     protected readonly focusMonitor = inject(FocusMonitor);
 
     @ContentChildren(forwardRef(() => KbqNavbarIcFocusableItem), { descendants: true })
@@ -44,37 +45,35 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
     keyManager: FocusKeyManager<KbqNavbarIcFocusableItem>;
 
     @Input()
-    get tabIndex(): any {
-        return this._tabIndex;
+    get tabindex(): any {
+        return this._tabindex;
     }
 
-    set tabIndex(value: any) {
-        this._tabIndex = value;
+    set tabindex(value: any) {
+        this._tabindex = value;
     }
 
-    private _tabIndex = 0;
+    private _tabindex = 0;
 
-    get optionFocusChanges(): Observable<KbqNavbarFocusableItemEvent> {
+    get itemFocusChanges(): Observable<KbqNavbarFocusableItemEvent> {
         return merge(...this.focusableItems.map((item) => item.onFocus));
     }
 
-    get optionBlurChanges(): Observable<KbqNavbarFocusableItemEvent> {
+    get itemBlurChanges(): Observable<KbqNavbarFocusableItemEvent> {
         return merge(...this.focusableItems.map((option) => option.onBlur));
     }
 
-    private readonly destroyRef = inject(DestroyRef);
-
-    private optionFocusSubscription: Subscription | null;
-    private optionBlurSubscription: Subscription | null;
+    private itemFocusSubscription: Subscription | null;
+    private itemBlurSubscription: Subscription | null;
 
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarIcFocusableItem>(this.focusableItems).withTypeAhead();
 
         this.keyManager.tabOut.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.tabIndex = -1;
+            this.tabindex = -1;
 
             setTimeout(() => {
-                this.tabIndex = 0;
+                this.tabindex = 0;
                 this.changeDetectorRef.markForCheck();
             });
         });
@@ -115,23 +114,19 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
 
     protected resetOptions() {
         this.dropSubscriptions();
-        this.listenToOptionsFocus();
+        this.listenToItemsFocus();
     }
 
     protected dropSubscriptions() {
-        if (this.optionFocusSubscription) {
-            this.optionFocusSubscription.unsubscribe();
-            this.optionFocusSubscription = null;
-        }
+        this.itemFocusSubscription?.unsubscribe();
+        this.itemBlurSubscription?.unsubscribe();
 
-        if (this.optionBlurSubscription) {
-            this.optionBlurSubscription.unsubscribe();
-            this.optionBlurSubscription = null;
-        }
+        this.itemFocusSubscription = null;
+        this.itemBlurSubscription = null;
     }
 
-    private listenToOptionsFocus(): void {
-        this.optionFocusSubscription = this.optionFocusChanges.subscribe((event) => {
+    protected listenToItemsFocus(): void {
+        this.itemFocusSubscription = this.itemFocusChanges.subscribe((event) => {
             const index: number = this.focusableItems.toArray().indexOf(event.item);
 
             if (this.isValidIndex(index)) {
@@ -139,18 +134,18 @@ export class KbqFocusableComponent implements AfterContentInit, AfterViewInit, O
             }
         });
 
-        this.optionBlurSubscription = this.optionBlurChanges.subscribe(() => this.blur());
+        this.itemBlurSubscription = this.itemBlurChanges.subscribe(() => this.blur());
     }
 
-    private updateTabIndex(): void {
-        this.tabIndex = this.focusableItems.length === 0 ? -1 : 0;
+    protected updateTabIndex(): void {
+        this.tabindex = this.focusableItems.length === 0 ? -1 : 0;
     }
 
-    private isValidIndex(index: number): boolean {
+    protected isValidIndex(index: number): boolean {
         return index >= 0 && index < this.focusableItems.length;
     }
 
-    private hasFocusedItem() {
+    protected hasFocusedItem() {
         return this.focusableItems.some((item) => item.hasFocus);
     }
 }
@@ -171,9 +166,9 @@ export class KbqNavbarIcContainer {}
     template: `
         <div
             class="kbq-navbar-ic__top-layer"
-            [style.min-width.px]="expanded ? expandedWidth : collapsedWidth"
-            [style.width.px]="expanded ? expandedWidth : collapsedWidth"
-            [style.max-width.px]="expanded ? expandedWidth : collapsedWidth"
+            [style.min-width.px]="currentWidth"
+            [style.width.px]="currentWidth"
+            [style.max-width.px]="currentWidth"
         >
             <ng-content select="[kbq-navbar-ic-container], kbq-navbar-ic-container" />
             <ng-content select="[kbq-navbar-ic-toggle], kbq-navbar-ic-toggle" />
@@ -181,7 +176,6 @@ export class KbqNavbarIcContainer {}
     `,
     styleUrls: [
         './navbar-ic.scss',
-        './navbar-ic-item.scss',
         './navbar-ic-divider.scss',
         './navbar-ic-tokens.scss'
     ],
@@ -190,7 +184,7 @@ export class KbqNavbarIcContainer {}
         '[class.kbq-collapsed]': '!expanded',
         '[class.kbq-expanded]': 'expanded',
         '[style.min-width.px]': 'collapsedWidth',
-        '[attr.tabindex]': 'tabIndex',
+        '[attr.tabindex]': 'tabindex',
 
         '(focus)': 'focus()',
         '(blur)': 'blur()',
@@ -200,13 +194,16 @@ export class KbqNavbarIcContainer {}
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
-export class KbqNavbarIc extends KbqFocusableComponent implements AfterContentInit {
+export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     rectangleElements = contentChildren(
         forwardRef(() => KbqNavbarIcRectangleElement),
         { descendants: true }
     );
 
-    @ContentChildren(forwardRef(() => KbqNavbarIcItem), { descendants: true }) items: QueryList<KbqNavbarIcItem>;
+    items = contentChildren(
+        forwardRef(() => KbqNavbarIcItem),
+        { descendants: true }
+    );
 
     readonly animationDone: Subject<void> = new Subject();
 
@@ -226,12 +223,16 @@ export class KbqNavbarIc extends KbqFocusableComponent implements AfterContentIn
 
     private _expanded: boolean = false;
 
+    get currentWidth(): number {
+        return this.expanded ? this.expandedWidth : this.collapsedWidth;
+    }
+
     constructor() {
         super();
 
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 
-        effect(() => this.setItemsVerticalStateAndUpdateExpandedState(this.rectangleElements()));
+        effect(this.updateExpandedStateForItems);
     }
 
     ngAfterContentInit(): void {
@@ -271,19 +272,11 @@ export class KbqNavbarIc extends KbqFocusableComponent implements AfterContentIn
         }
     }
 
-    private updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
+    protected updateTooltipForItems = () => this.items().forEach((item) => item.updateTooltip());
 
-    private updateTooltipForItems = () => this.items.forEach((item) => item.updateTooltip());
+    protected updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
 
-    private setItemsVerticalStateAndUpdateExpandedState = (
-        rectangleElements: Readonly<KbqNavbarIcRectangleElement[]>
-    ) => rectangleElements.forEach(this.setItemVerticalStateAndUpdateExpandedState);
-
-    private setItemVerticalStateAndUpdateExpandedState = (item: KbqNavbarIcRectangleElement): void => {
-        this.updateItemExpandedState(item);
-    };
-
-    private updateItemExpandedState = (item: KbqNavbarIcRectangleElement): void => {
+    protected updateItemExpandedState = (item: KbqNavbarIcRectangleElement): void => {
         item.collapsed = !this.expanded;
         setTimeout(() => item.button?.updateClassModifierForIcons());
     };
