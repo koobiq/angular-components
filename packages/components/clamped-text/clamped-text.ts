@@ -110,8 +110,7 @@ export class KbqClampedText implements AfterViewInit {
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
     /**
-     * Actions panel locale configuration.
-     *
+     * Clamped text locale configuration.
      * @docs-private
      */
     protected readonly localeConfiguration = toSignal<KbqClampedTextLocaleConfig>(
