@@ -34,7 +34,7 @@ import { map } from 'rxjs/operators';
         <kbq-top-bar>
             <div class="layout-align-center-center" kbqTopBarContainer placement="start">
                 <div class="layout-row layout-margin-right-m flex-none">
-                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
+                    <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <nav class="flex" kbq-breadcrumbs size="big">
                     <kbq-breadcrumb-item text="Dashboards" routerLink="./dashboards" />

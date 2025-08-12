@@ -41,7 +41,7 @@ type ExampleAction = {
                 placement="start"
             >
                 <div class="layout-row layout-margin-right-l flex-none">
-                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
+                    <img alt="example icon" src="https://koobiq.io/assets/example-icon.svg" width="24" height="24" />
                 </div>
                 <div class="kbq-title kbq-truncate-line">Dashboards</div>
             </div>
