@@ -21,7 +21,7 @@ describe('KbqNavbarIc', () => {
         tick(FONT_RENDER_TIMEOUT_MS);
         fixture.detectChanges();
 
-        const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-navbar-ic-item_collapsed'));
+        const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-collapsed'));
 
         expect(collapsedElements.length).toBeGreaterThan(0);
     }));
@@ -35,7 +35,7 @@ describe('KbqNavbarIc', () => {
 
         const items = fixture.debugElement.queryAll(By.css('kbq-navbar-ic-item'));
         const collapsedElements = items.filter(
-            (item) => item.nativeElement.querySelectorAll('.kbq-navbar-ic-item_collapsed').length > 0
+            (item) => item.nativeElement.querySelectorAll('.kbq-collapsed').length > 0
         );
 
         const hasTitle = collapsedElements.reduce((acc, el) => acc && el.nativeElement.hasAttribute('title'), true);
@@ -50,7 +50,7 @@ describe('KbqNavbarIc', () => {
         tick(FONT_RENDER_TIMEOUT_MS);
         fixture.detectChanges();
 
-        const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-navbar-ic-item_collapsed'));
+        const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-collapsed'));
         const elementWithCustomTitle = collapsedElements[collapsedElements.length - 1];
 
         expect(elementWithCustomTitle.componentInstance.titleText).toBe('Right icon');

@@ -37,23 +37,19 @@ export interface KbqNavbarFocusableItemEvent {
 
 @Directive({
     standalone: true,
-    selector: 'kbq-navbar-ic-logo, [kbq-navbar-logo]',
+    selector: '[kbqNavbarIcLogo]',
     host: {
-        class: 'kbq-navbar-ic-logo',
-        '(mouseenter)': 'hovered.next(true)',
-        '(mouseleave)': 'hovered.next(false)'
+        class: 'kbq-navbar-ic-logo'
     }
 })
-export class KbqNavbarIcLogo {
-    readonly hovered = new Subject<boolean>();
-}
+export class KbqNavbarIcLogo {}
 
 @Directive({
     standalone: true,
-    selector: 'kbq-navbar-ic-title, [kbq-navbar-ic-title]',
+    selector: 'kbq-navbar-ic-title, [kbqNavbarIcTitle]',
     host: {
         class: 'kbq-navbar-ic-title',
-        '[class.kbq-navbar-ic-title_small]': 'isTextOverflown',
+        '[class.kbq-navbar-ic-title_text-overflown]': 'isTextOverflown',
 
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
@@ -112,7 +108,6 @@ export class KbqNavbarIcDivider {}
         '[attr.disabled]': 'disabled || null',
 
         class: 'kbq-navbar-ic-focusable-item',
-        '[class.kbq-navbar-ic-item_has-nested]': '!!nestedElement',
         '[class.kbq-disabled]': 'disabled',
 
         '(focus)': 'focusHandler()',
@@ -131,10 +126,6 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 
     @ContentChild(KbqFormField) formField: KbqFormField;
 
-    get nestedElement(): KbqButton | KbqFormField {
-        return this.button || this.formField;
-    }
-
     get tooltip(): KbqTooltipTrigger {
         return this._tooltip;
     }
@@ -146,7 +137,7 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     readonly onBlur = new Subject<KbqNavbarFocusableItemEvent>();
 
     get hasFocus(): boolean {
-        return !!this.nestedElement?.hasFocus || this._hasFocus;
+        return this._hasFocus;
     }
 
     set hasFocus(value: boolean) {
@@ -197,14 +188,6 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
             this.focusMonitor.focusVia(this.elementRef, origin);
         }
 
-        if (this.nestedElement) {
-            this.nestedElement.focusViaKeyboard();
-
-            this.changeDetector.markForCheck();
-
-            return;
-        }
-
         this.tooltip?.show();
         this.focusHandler();
     }
@@ -251,8 +234,6 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 
 @Directive({
     standalone: true,
-    selector:
-        'kbq-navbar-ic-item, [kbq-navbar-ic-item], kbq-navbar-ic-divider, kbq-navbar-ic-header, [kbq-navbar-ic-header]',
     host: {
         '[class.kbq-expanded]': '!collapsed',
         '[class.kbq-collapsed]': 'collapsed'
@@ -296,13 +277,13 @@ export class KbqNavbarIcRectangleElement {
     styleUrl: './navbar-ic-item.scss',
     host: {
         class: 'kbq-navbar-ic-item',
-        '[class.kbq-navbar-ic-item_collapsed]': 'isCollapsed',
         '[class.kbq-navbar-ic-item_with-title]': '!!title',
 
         '(keydown)': 'onKeyDown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
+    hostDirectives: [KbqNavbarIcRectangleElement],
     imports: [KbqIcon]
 })
 export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentInit {
@@ -332,17 +313,16 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         }
     }
 
+    get collapsed() {
+        return this._collapsed;
+    }
+
     set collapsed(value: boolean) {
         if (this._collapsed !== value) {
             this._collapsed = value;
 
             this.updateTooltip();
         }
-    }
-
-    // todo in future need rename to 'collapsed'
-    get isCollapsed(): boolean {
-        return this._collapsed ?? this.rectangleElement.collapsed;
     }
 
     private _collapsed = false;
@@ -362,7 +342,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
             return this._disabled;
         }
 
-        return !this.isCollapsed && !this.hasCroppedText;
+        return !this.collapsed && !this.hasCroppedText;
     }
 
     set disabled(value) {
@@ -374,7 +354,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     }
 
     get showDropDownAngle(): boolean {
-        return this.hasDropDownTrigger && !this.isCollapsed;
+        return this.hasDropDownTrigger && !this.collapsed;
     }
 
     get hasCroppedText(): boolean {
@@ -411,9 +391,9 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     }
 
     updateTooltip(): void {
-        if (this.isCollapsed) {
+        if (this.collapsed) {
             this.content = `${this.titleText || ''}`;
-        } else if (!this.isCollapsed && this.hasCroppedText) {
+        } else if (!this.collapsed && this.hasCroppedText) {
             this.content = this.croppedText;
         }
 
@@ -445,19 +425,19 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     standalone: true,
     selector: 'kbq-navbar-ic-toggle',
     template: `
-        <ng-content select="[kbq-icon]">
-            <i
-                kbq-icon
-                [class.kbq-chevron-left_16]="navbar.expanded"
-                [class.kbq-chevron-right_16]="!navbar.expanded"
-            ></i>
-        </ng-content>
+        <div class="kbq-navbar-ic-item__inner">
+            <ng-content select="[kbq-icon]">
+                <i
+                    kbq-icon
+                    [class.kbq-chevron-left_16]="navbar.expanded"
+                    [class.kbq-chevron-right_16]="!navbar.expanded"
+                ></i>
+            </ng-content>
 
-        @if (navbar.expanded) {
-            <div class="kbq-navbar-ic-item__title">
-                <ng-content select="kbq-navbar-ic-title" />
-            </div>
-        }
+            @if (navbar.expanded) {
+                <ng-content select="[kbqNavbarIcTitle]" />
+            }
+        </div>
     `,
     styleUrls: ['./navbar-ic.scss'],
     host: {
@@ -471,10 +451,8 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         '(touchend)': 'handleTouchend()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [
-        KbqIcon
-    ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    imports: [KbqIcon]
 })
 export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     readonly navbar = inject(KbqNavbarIc);
