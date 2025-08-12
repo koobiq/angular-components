@@ -38,7 +38,7 @@ const baseClass = 'kbq-clamped-text';
             class="kbq-clamped-text__content"
             [style.-webkit-line-clamp]="lineClamp()"
             [style.line-clamp]="lineClamp()"
-            [class.kbq-clamped-text__content_collapsed]="collapsedState() ?? true"
+            [class.kbq-clamped-text__content_collapsed]="collapsedState()"
         >
             <span #text>
                 <ng-content />
@@ -87,7 +87,7 @@ export class KbqClampedText implements AfterViewInit {
      */
     readonly rows = input<number>(kbqClampedTextDefaultMaxRows);
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto. */
-    readonly isCollapsed = input<boolean | undefined>();
+    readonly isCollapsed = input<boolean>();
     /** Emits when collapsed state changes. Used for two-way binding with `isCollapsed`. */
     readonly isCollapsedChange = output<boolean>();
     /**
@@ -110,9 +110,9 @@ export class KbqClampedText implements AfterViewInit {
     /** @docs-private */
     protected readonly lineClamp = signal<number | null>(null);
 
+    private readonly destroyRef = inject(DestroyRef);
     private readonly elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
     private readonly resizeObserver = inject(SharedResizeObserver);
-    private readonly destroyRef = inject(DestroyRef);
     private readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
 
     /**
@@ -137,6 +137,7 @@ export class KbqClampedText implements AfterViewInit {
             .pipe(pairwise(), takeUntilDestroyed())
             .subscribe(([previous, current]) => {
                 this.collapsedState.set(current);
+                // store previous collapsed value to reduce unnecessary changes
                 this.isToggleCollapsed.set(!this.hasToggle() ? previous : current);
             });
 
@@ -176,7 +177,7 @@ export class KbqClampedText implements AfterViewInit {
         this.isEventFromToggle = true;
 
         if (this.collapsedState()) {
-            setTimeout(() => this.elementRef.nativeElement.scrollIntoView());
+            setTimeout(() => this.elementRef.nativeElement.scrollIntoView({ block: 'center', inline: 'center' }));
         }
     }
 

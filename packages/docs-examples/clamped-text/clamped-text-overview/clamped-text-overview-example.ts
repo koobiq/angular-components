@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { KbqClampedText } from '@koobiq/components/clamped-text';
+import { KbqToggleModule } from '@koobiq/components/toggle';
 
 /**
  * @title Clamped-text overview
@@ -7,17 +8,21 @@ import { KbqClampedText } from '@koobiq/components/clamped-text';
 @Component({
     selector: 'clamped-text-overview-example',
     standalone: true,
-    imports: [KbqClampedText],
+    imports: [KbqClampedText, KbqToggleModule],
     template: `
-        <div>
-            <kbq-clamped-text>{{ text }}</kbq-clamped-text>
+        <div class="layout-margin-bottom-l">
+            <kbq-clamped-text [isCollapsed]="collapsed()" (isCollapsedChange)="collapsed.set($event)">
+                {{ text }}
+            </kbq-clamped-text>
         </div>
+
+        <kbq-toggle [checked]="collapsed()" (change)="collapsed.set($event.checked)">Collapsed</kbq-toggle>
     `,
     styles: `
         :host > div {
             overflow: auto;
             resize: horizontal;
-            max-width: 1040px;
+            max-width: 100%;
             min-width: 150px;
             border: 1px solid var(--kbq-line-contrast-less);
             border-radius: var(--kbq-size-border-radius);
@@ -27,5 +32,6 @@ import { KbqClampedText } from '@koobiq/components/clamped-text';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedTextOverviewExample {
-    text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
+    protected readonly collapsed = signal(true);
+    protected readonly text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
 }
