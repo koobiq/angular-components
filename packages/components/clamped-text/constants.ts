@@ -15,7 +15,10 @@ export const KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION = new InjectionToken<KbqClamp
     }
 );
 
-/** Utility provider for `KBQ_CLAMPED_TEXT_CONFIGURATION`. */
+/**
+ * Utility provider.
+ * @see KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION
+ */
 export const kbqClampedTextLocaleConfigurationProvider = (configuration: KbqClampedTextLocaleConfig): Provider => ({
     provide: KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION,
     useValue: configuration
