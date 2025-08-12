@@ -1,14 +1,15 @@
-<ng-content select="[kbq-icon]" />
+<div class="kbq-navbar-ic-item__inner">
+    <ng-content select="[kbq-icon]" />
 
-@if (title) {
-    <div class="kbq-navbar-ic-item__container">
-        <div class="kbq-navbar-ic-item__title">
-            <ng-content select="kbq-navbar-ic-title, [kbq-navbar-ic-title]" />
+    @if (title && !collapsed) {
+        <div class="kbq-navbar-ic-item__title-container">
+            <ng-content select="[kbqNavbarIcTitle]" />
+
+            @if (showDropDownAngle) {
+                <i kbq-icon="kbq-chevron-right_16" class="kbq-navbar-ic-item__arrow-icon"></i>
+            }
         </div>
-        @if (showDropDownAngle) {
-            <i kbq-icon="kbq-chevron-right_16" class="kbq-navbar-ic-item__arrow-icon"></i>
-        }
-    </div>
-}
+    }
 
-<ng-content />
+    <ng-content />
+</div>
