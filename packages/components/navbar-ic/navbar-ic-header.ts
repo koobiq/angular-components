@@ -8,8 +8,8 @@ import {
     inject
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { KbqNavbarIcLogo, KbqNavbarIcTitle } from './navbar-ic-item.component';
-import { KbqNavbarIc } from './navbar-ic.component';
+import { KbqNavbarIc } from './navbar-ic';
+import { KbqNavbarIcLogo, KbqNavbarIcTitle } from './navbar-ic-item';
 
 @Component({
     standalone: true,
@@ -22,21 +22,17 @@ import { KbqNavbarIc } from './navbar-ic.component';
     `,
     styleUrl: './navbar-ic-header.scss',
     host: {
-        class: 'kbq-navbar-ic-header',
-        '[class.kbq-hovered]': 'hovered'
+        class: 'kbq-navbar-ic-header'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
 export class KbqNavbarIcHeader implements AfterContentInit {
     protected readonly navbar = inject(KbqNavbarIc);
+    private readonly destroyRef = inject(DestroyRef);
 
     @ContentChild(KbqNavbarIcLogo) logo: KbqNavbarIcLogo;
     @ContentChild(KbqNavbarIcTitle) title: KbqNavbarIcTitle;
-
-    hovered = false;
-
-    private readonly destroyRef = inject(DestroyRef);
 
     ngAfterContentInit(): void {
         this.navbar?.animationDone

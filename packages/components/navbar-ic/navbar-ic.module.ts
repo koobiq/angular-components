@@ -3,7 +3,8 @@ import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
-import { KbqNavbarIcHeader } from './navbar-ic-header.component';
+import { KbqNavbarIc, KbqNavbarIcContainer } from './navbar-ic';
+import { KbqNavbarIcHeader } from './navbar-ic-header';
 import {
     KbqNavbarIcDivider,
     KbqNavbarIcFocusableItem,
@@ -12,8 +13,7 @@ import {
     KbqNavbarIcRectangleElement,
     KbqNavbarIcTitle,
     KbqNavbarIcToggle
-} from './navbar-ic-item.component';
-import { KbqNavbarIc, KbqNavbarIcContainer } from './navbar-ic.component';
+} from './navbar-ic-item';
 
 @NgModule({
     imports: [
