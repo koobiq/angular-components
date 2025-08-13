@@ -84,18 +84,18 @@ export class KbqClampedText implements AfterViewInit {
     readonly rows = input<number>(kbqClampedTextDefaultMaxRows);
     /** Collapsed state: `true` = collapsed, `false` = expanded, `undefined` = auto. */
     readonly isCollapsed = input<boolean>();
-    /** Emits when collapsed state changes. Used for two-way binding with `isCollapsed`. */
-    readonly isCollapsedChange = output<boolean>();
     /**
      * Debounce time on resize observer when recalculating toggle and text visibility.
      * @default 0
      */
     readonly debounceTime = input(0, { transform: numberAttribute });
+    /** Emits when collapsed state changes. Used for two-way binding with `isCollapsed`. */
+    readonly isCollapsedChange = output<boolean>();
 
     /** @docs-private */
-    protected readonly text = viewChild<ElementRef<HTMLSpanElement>>('text');
+    readonly text = viewChild<ElementRef<HTMLSpanElement>>('text');
     /** @docs-private */
-    protected readonly textContainer = viewChild<ElementRef<HTMLDivElement>>('textContainer');
+    readonly textContainer = viewChild<ElementRef<HTMLDivElement>>('textContainer');
 
     /**
      * This flag controls event emission, aria/css-class calculation
@@ -197,7 +197,9 @@ export class KbqClampedText implements AfterViewInit {
      * `undefined` is treated as collapsed and not touched stated.
      */
     private toggleCollapseState = (state: boolean | undefined): boolean => {
-        return state === undefined ? false : !state;
+        const isCollapsed = state ?? true;
+
+        return !isCollapsed;
     };
 
     private getRowsCount(): number {
