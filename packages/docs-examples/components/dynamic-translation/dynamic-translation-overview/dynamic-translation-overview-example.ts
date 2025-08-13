@@ -12,12 +12,12 @@ import { KbqLinkModule } from '@koobiq/components/link';
     template: `
         <kbq-dynamic-translation text="Incident created. [[link:Open in a new tab]] to continue working.">
             <a
-                *kbqDynamicTranslationSlot="'link'; let text"
+                *kbqDynamicTranslationSlot="'link'; let context"
                 kbq-link
                 href="https://koobiq.io/en/dynamic-translation"
                 target="_blank"
             >
-                {{ text }}
+                {{ context }}
             </a>
         </kbq-dynamic-translation>
     `,

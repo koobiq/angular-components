@@ -4,11 +4,11 @@
 
 ### Adding a component
 
-Custom element is wrapped in `[[]]`, parameters are passed through `:`:
+A component is embedded into a string using special syntax: `[[slotName: context]]`, where `slotName` is the key of the registered component, and `context` is the data passed to the component.
 
 ```html
-<kbq-dynamic-translation text="[[myCustomLinkComponent:Open in a new tab]] to continue working.">
-    <a *kbqDynamicTranslationSlot="'myCustomLinkComponent'; let text">{{ text }}</a>
+<kbq-dynamic-translation text="[[myCustomLink:Open link]]">
+    <a *kbqDynamicTranslationSlot="'myCustomLink'; let context">{{ context }}</a>
 </kbq-dynamic-translation>
 ```
 

@@ -4,11 +4,11 @@
 
 ### Добавление компонента
 
-Кастомный элемент оборачивается в `[[]]`, параметры передаются через `:`:
+Компонент встраивается в строку с помощью специального синтаксиса: `[[slotName: context]]`, где `slotName` — ключ зарегистрированного компонента, а `context` — данные, передаваемые в компонент.
 
 ```html
-<kbq-dynamic-translation text="[[myCustomLinkComponent:Open in a new tab]] to continue working.">
-    <a *kbqDynamicTranslationSlot="'myCustomLinkComponent'; let text">{{ text }}</a>
+<kbq-dynamic-translation text="[[myCustomLink:Open link]]">
+    <a *kbqDynamicTranslationSlot="'myCustomLink'; let context">{{ context }}</a>
 </kbq-dynamic-translation>
 ```
 

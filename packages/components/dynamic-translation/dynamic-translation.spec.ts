@@ -28,8 +28,8 @@ const getDynamicTranslationDebugElement = (debugElement: DebugElement): DebugEle
     selector: 'test-dynamic-translation',
     template: `
         <kbq-dynamic-translation [text]="text()">
-            <a *kbqDynamicTranslationSlot="'testSlot1'; let text" kbq-link href="#">{{ text }}</a>
-            <strong *kbqDynamicTranslationSlot="'testSlot2'; let text">{{ text }}</strong>
+            <a *kbqDynamicTranslationSlot="'testSlot1'; let context" kbq-link href="#">{{ context }}</a>
+            <strong *kbqDynamicTranslationSlot="'testSlot2'; let context">{{ context }}</strong>
             <ul *kbqDynamicTranslationSlot="'testListSlot'; let list">
                 @for (item of list; track $index) {
                     <li>{{ item }}</li>
