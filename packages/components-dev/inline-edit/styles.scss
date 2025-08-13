@@ -1,0 +1,9 @@
+// Import theme
+// https://github.com/koobiq/data-grid/blob/main/packages/ag-grid-angular-theme/README.md
+@use '@koobiq/ag-grid-angular-theme';
+
+dev-app {
+    display: block;
+    max-width: 608px;
+    margin: var(--kbq-size-l);
+}
