@@ -24,14 +24,12 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             resize: horizontal;
             max-width: 100%;
             min-width: 150px;
-            border: 1px solid var(--kbq-line-contrast-less);
-            border-radius: var(--kbq-size-border-radius);
-            padding: var(--kbq-size-xxs);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClampedTextOverviewExample {
     protected readonly collapsed = signal(true);
-    protected readonly text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
+    protected readonly text =
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim  veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea  commodo consequat. Duis aute irure dolor in reprehenderit in voluptate  velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint  occaecat cupidatat non proident, sunt in culpa qui officia deserunt  mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur  adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore  magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
 }

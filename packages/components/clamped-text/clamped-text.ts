@@ -56,19 +56,19 @@ const baseClass = 'kbq-clamped-text';
                 (keydown.enter)="toggleIsCollapsed($event)"
                 (keydown.space)="toggleIsCollapsed($event)"
             >
-                <span class="kbq-link__text">
-                    <ng-content select="kbq-clamped-text-toggle,[kbq-clamped-text-toggle]" />
+                @let config = localeConfiguration();
 
-                    @let config = localeConfiguration();
-
-                    @if (collapsedState()) {
-                        <i kbq-icon="kbq-chevron-down-s_16"></i>
+                @if (collapsedState()) {
+                    <i kbq-icon="kbq-chevron-down-s_16"></i>
+                    <span class="kbq-link__text">
                         {{ config!.openText }}
-                    } @else {
-                        <i kbq-icon="kbq-chevron-up-s_16"></i>
+                    </span>
+                } @else {
+                    <i kbq-icon="kbq-chevron-up-s_16"></i>
+                    <span class="kbq-link__text">
                         {{ config!.closeText }}
-                    }
-                </span>
+                    </span>
+                }
             </span>
         }
     `,

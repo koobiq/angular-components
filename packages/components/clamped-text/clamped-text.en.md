@@ -1,4 +1,4 @@
-The `Clamped Text` component displays only part of a long text and adds an “Expand” button.
+The `Clamped text` component displays only part of a long text and adds an “Expand” button.
 When clicked, the full text appears. At the bottom, there’s a “Collapse” button to hide the extra text again.
 
 <!-- example(clamped-text-overview) -->
