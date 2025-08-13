@@ -36,12 +36,18 @@ export interface KbqDynamicTranslationHelperSlot {
     content?: string;
 }
 
+/**
+ * Directive for defining a dynamic translation slot.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqDynamicTranslationSlot]'
 })
 export class KbqDynamicTranslationSlot {
-    readonly slotName = input.required<string>({ alias: 'kbqDynamicTranslationSlot' });
+    /**
+     * The name of the dynamic translation slot.
+     */
+    readonly name = input.required<string>({ alias: 'kbqDynamicTranslationSlot' });
 
     /**
      * @docs-private
@@ -49,6 +55,9 @@ export class KbqDynamicTranslationSlot {
     readonly templateRef = inject(TemplateRef);
 }
 
+/**
+ * Component for dynamic translation.
+ */
 @Component({
     standalone: true,
     imports: [NgTemplateOutlet],
@@ -70,6 +79,9 @@ export class KbqDynamicTranslationSlot {
 export class KbqDynamicTranslation {
     private readonly slots = contentChildren(KbqDynamicTranslationSlot);
 
+    /**
+     * The text which will be translated.
+     */
     readonly text = input.required<string>();
 
     /**
@@ -83,16 +95,13 @@ export class KbqDynamicTranslation {
         text: string,
         slots: ReadonlyArray<KbqDynamicTranslationSlot>
     ): KbqDynamicTranslationParsedSlot[] {
-        const slotTemplatesByName = slots.reduce<Record<string, TemplateRef<unknown>>>(
-            (map, { slotName, templateRef }) => {
-                const _slotName = slotName();
+        const slotTemplatesByName = slots.reduce<Record<string, TemplateRef<unknown>>>((map, { name, templateRef }) => {
+            const slotName = name();
 
-                if (_slotName) map[_slotName] = templateRef;
+            if (slotName) map[slotName] = templateRef;
 
-                return map;
-            },
-            {}
-        );
+            return map;
+        }, {});
         const parsedSlots: KbqDynamicTranslationParsedSlot[] = [];
         const slotSelector = new RegExp(`\\[\\[(${Object.keys(slotTemplatesByName).join('|')})(?::(.+?))?\\]\\]`, 'g');
         let match: RegExpExecArray | null;
@@ -132,7 +141,7 @@ export class KbqDynamicTranslation {
 @Component({
     standalone: true,
     imports: [KbqDynamicTranslation, KbqDynamicTranslationSlot],
-    selector: 'kbq-dynamic-translation-helper',
+    selector: 'kbq-dynamic-translation-with-dynamic-component-creation',
     template: `
         <kbq-dynamic-translation [text]="text()">
             @for (slot of slots(); track $index) {

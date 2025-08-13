@@ -9,6 +9,8 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     template: `
         <dynamic-translation-overview-example />
+        <hr />
+        <dynamic-translation-with-dynamic-component-creation-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
