@@ -1,15 +1,38 @@
-import { ChangeDetectionStrategy, Component, signal, Type, viewChild } from '@angular/core';
+import { SharedResizeObserver } from '@angular/cdk/observers/private';
+import { ChangeDetectionStrategy, Component, inject, Injectable, signal, Type, viewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { dispatchEvent } from '@koobiq/cdk/testing';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { KbqClampedText } from './clamped-text';
 
 const createComponent = <T>(component: Type<T>, providers: any[] = []): ComponentFixture<T> => {
-    TestBed.configureTestingModule({ imports: [component], providers }).compileComponents();
+    TestBed.configureTestingModule({
+        imports: [component],
+        providers
+    });
     const fixture = TestBed.createComponent<T>(component);
 
     fixture.autoDetectChanges();
 
     return fixture;
+};
+
+@Injectable()
+class MockResizeObserver extends SharedResizeObserver {
+    changes = new BehaviorSubject<ResizeObserverEntry[]>([]);
+
+    constructor() {
+        super();
+    }
+
+    override observe(_target: Element, _options?: ResizeObserverOptions): Observable<ResizeObserverEntry[]> {
+        return this.changes.asObservable();
+    }
+}
+
+const dispatchResize = (target: Node) => {
+    return dispatchEvent(target, new Event('resize'));
 };
 
 @Component({
@@ -18,7 +41,7 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
     imports: [KbqClampedText],
     template: `
         <div class="layout-margin-bottom-l" [style.max-width.px]="maxWidth()" [style.width.px]="maxWidth()">
-            <kbq-clamped-text (isCollapsedChange)="collapsed.set($event)">
+            <kbq-clamped-text (isCollapsedChange)="onCollapseChanged($event)">
                 {{ text }}
             </kbq-clamped-text>
         </div>
@@ -34,38 +57,39 @@ const createComponent = <T>(component: Type<T>, providers: any[] = []): Componen
             min-width: 150px;
         }
     `,
+    providers: [
+        { provide: SharedResizeObserver, useClass: MockResizeObserver }],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestClampedTextDefault {
     readonly collapsed = signal<boolean | undefined>(undefined);
-    readonly maxWidth = signal(500);
+    readonly maxWidth = signal(1000);
     readonly clampedText = viewChild(KbqClampedText);
+    readonly resizeObserver = inject(SharedResizeObserver);
     protected readonly text = Array.from({ length: 100 }, (_, i) => `Text ${i}`).join(' ');
 
-    onCollapsedChange(_$event) {
-        console.log('onCollapsedChange');
+    onCollapseChanged($event) {
+        console.log($event);
     }
 }
 
 describe('KbqClampedText', () => {
-    describe('with default parameters', () => {
-        it('should emit collapsed change on state change', async () => {
-            const fixture = createComponent(TestClampedTextDefault);
-            const { debugElement, componentInstance } = fixture;
-            const textContainer: HTMLDivElement | undefined = debugElement.query(
-                By.css('.kbq-clamped-text__content')
-            ).nativeElement;
+    it('should emit collapsed change on state change', async () => {
+        const fixture = createComponent(TestClampedTextDefault);
+        const { debugElement, componentInstance } = fixture;
+        const textContainer: HTMLDivElement | undefined = debugElement.query(
+            By.css('.kbq-clamped-text__content')
+        ).nativeElement;
 
-            textContainer?.dispatchEvent(new Event('resize'));
-            componentInstance.maxWidth.set(200);
-            fixture.detectChanges();
+        spyOn(componentInstance, 'onCollapseChanged');
 
-            await fixture.whenStable();
+        componentInstance.maxWidth.set(200);
+        fixture.detectChanges();
+        (componentInstance.resizeObserver as unknown as MockResizeObserver).changes.next([]);
+        dispatchResize(textContainer!);
 
-            expect(componentInstance.collapsed()).not.toBeUndefined();
-            expect(componentInstance.collapsed()).toBeTrue();
-        });
+        await fixture.whenStable();
+
+        expect(componentInstance.onCollapseChanged).toHaveBeenCalled();
     });
-
-    xdescribe('when collapsed state set from outside', () => {});
 });
