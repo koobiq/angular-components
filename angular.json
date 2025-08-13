@@ -1345,6 +1345,36 @@
                 }
             }
         },
+        "dev-inline-edit": {
+            "projectType": "application",
+            "root": "packages/components-dev/inline-edit",
+            "sourceRoot": "packages/components-dev/inline-edit",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/inline-edit"
+                        },
+                        "tsConfig": "packages/components-dev/inline-edit/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/inline-edit/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-inline-edit:build"
+                    }
+                }
+            }
+        },
         "dev-input": {
             "projectType": "application",
             "root": "packages/components-dev/input",
