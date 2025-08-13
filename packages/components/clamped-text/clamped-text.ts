@@ -168,9 +168,7 @@ export class KbqClampedText implements AfterViewInit {
     toggleIsCollapsed(event: Event): void {
         event.stopPropagation();
 
-        this.collapsedState.update((state) => {
-            return this.toggleCollapseState(this.isToggleCollapsed() ?? state);
-        });
+        this.collapsedState.update((state) => this.toggleCollapseState(this.isToggleCollapsed() ?? state));
         this.isToggleCollapsed.update(this.toggleCollapseState);
 
         this.isEventFromToggle = true;
