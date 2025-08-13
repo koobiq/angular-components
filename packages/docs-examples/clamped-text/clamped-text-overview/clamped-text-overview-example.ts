@@ -24,6 +24,7 @@ import { KbqToggleModule } from '@koobiq/components/toggle';
             resize: horizontal;
             max-width: 100%;
             min-width: 150px;
+            padding: var(--kbq-size-xxs);
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
