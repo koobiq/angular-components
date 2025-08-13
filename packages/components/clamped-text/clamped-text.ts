@@ -178,9 +178,7 @@ export class KbqClampedText implements AfterViewInit {
     }
 
     private updateToggleVisibilityState(): void {
-        const state = this.getRowsCount() > this.rows() + 1;
-
-        this.hasToggle.set(state);
+        this.hasToggle.set(this.getRowsCount() > this.rows() + 1);
     }
 
     private updateCollapsedState(): void {
