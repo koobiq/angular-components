@@ -97,7 +97,10 @@ export class KbqClampedText implements AfterViewInit {
     /** @docs-private */
     protected readonly textContainer = viewChild<ElementRef<HTMLDivElement>>('textContainer');
 
-    /** This flag controls event emission, aria/css-class calculation */
+    /**
+     * This flag controls event emission, aria/css-class calculation
+     * @docs-private
+     */
     protected readonly collapsedState = signal<boolean | undefined>(undefined);
     /** @docs-private */
     protected readonly isToggleCollapsed = signal<boolean | undefined>(undefined);
