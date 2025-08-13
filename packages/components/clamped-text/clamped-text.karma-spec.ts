@@ -158,4 +158,28 @@ describe('KbqClampedText', () => {
 
         expect(componentInstance.collapsed()).not.toEqual(previousCollapsedState);
     });
+
+    it('should use toggled state of toggle button when has toggle', async () => {
+        const fixture = createComponent(TestClampedTextDefault);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.width.set(200);
+        componentInstance.resizeObserver.changes.next([]);
+        fixture.detectChanges();
+
+        const clampedTextToggle = getClampedTextToggleDebugElement(debugElement)
+            .nativeElement satisfies HTMLSpanElement;
+
+        clampedTextToggle.click();
+
+        await fixture.whenStable();
+
+        expect(componentInstance.collapsed()).toBeFalse();
+
+        componentInstance.width.set(1000);
+        componentInstance.resizeObserver.changes.next([]);
+        fixture.detectChanges();
+
+        expect(componentInstance.collapsed()).toBeFalse();
+    });
 });
