@@ -24,25 +24,20 @@ export class KbqClampedText implements AfterViewInit {
     constructor();
     protected readonly collapsedState: WritableSignal<boolean | undefined>;
     readonly debounceTime: InputSignalWithTransform<number, unknown>;
-    // (undocumented)
     protected readonly hasToggle: WritableSignal<boolean>;
     readonly isCollapsed: InputSignal<boolean | undefined>;
     readonly isCollapsedChange: OutputEmitterRef<boolean>;
-    // (undocumented)
     protected readonly isToggleCollapsed: WritableSignal<boolean | undefined>;
-    // (undocumented)
     protected readonly lineClamp: WritableSignal<number | null>;
     protected readonly localeConfiguration: Signal<KbqClampedTextLocaleConfig | undefined>;
     // (undocumented)
     ngAfterViewInit(): void;
     readonly rows: InputSignal<number>;
-    // (undocumented)
     protected readonly text: Signal<ElementRef<HTMLSpanElement> | undefined>;
-    // (undocumented)
     protected readonly textContainer: Signal<ElementRef<HTMLDivElement> | undefined>;
     toggleIsCollapsed(event: Event): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*", "kbq-clamped-text-toggle,[kbq-clamped-text-toggle]"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*"], true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqClampedText, never>;
 }
