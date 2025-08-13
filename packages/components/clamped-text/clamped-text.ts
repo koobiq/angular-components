@@ -59,15 +59,11 @@ const baseClass = 'kbq-clamped-text';
                 @let config = localeConfiguration();
 
                 @if (collapsedState()) {
-                    <i kbq-icon="kbq-chevron-down-s_16"></i>
-                    <span class="kbq-link__text">
-                        {{ config!.openText }}
-                    </span>
+                    <i kbq-icon="kbq-chevron-down_16"></i>
+                    <span class="kbq-link__text">{{ config!.openText }}</span>
                 } @else {
-                    <i kbq-icon="kbq-chevron-up-s_16"></i>
-                    <span class="kbq-link__text">
-                        {{ config!.closeText }}
-                    </span>
+                    <i kbq-icon="kbq-chevron-up_16"></i>
+                    <span class="kbq-link__text">{{ config!.closeText }}</span>
                 }
             </span>
         }
