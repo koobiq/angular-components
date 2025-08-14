@@ -1168,6 +1168,30 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "dropdown-recursive-template-example.ts",
     "importPath": "components/dropdown"
   },
+  "dynamic-translation-overview": {
+    "packagePath": "components/dynamic-translation/dynamic-translation-overview",
+    "title": "Dynamic translation overview example",
+    "componentName": "DynamicTranslationOverviewExample",
+    "files": [
+      "dynamic-translation-overview-example.ts"
+    ],
+    "selector": "dynamic-translation-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "dynamic-translation-overview-example.ts",
+    "importPath": "components/dynamic-translation"
+  },
+  "dynamic-translation-with-dynamic-component-creation": {
+    "packagePath": "components/dynamic-translation/dynamic-translation-with-dynamic-component-creation",
+    "title": "Dynamic-translation with dynamic component creation",
+    "componentName": "DynamicTranslationWithDynamicComponentCreationExample",
+    "files": [
+      "dynamic-translation-with-dynamic-component-creation-example.ts"
+    ],
+    "selector": "dynamic-translation-with-dynamic-component-creation-example",
+    "additionalComponents": [],
+    "primaryFile": "dynamic-translation-with-dynamic-component-creation-example.ts",
+    "importPath": "components/dynamic-translation"
+  },
   "empty-state-actions": {
     "packagePath": "components/empty-state/empty-state-actions",
     "title": "Empty-state actions",
@@ -4948,6 +4972,10 @@ return import('@koobiq/docs-examples/components/dropdown');
 return import('@koobiq/docs-examples/components/dropdown');
   case 'dropdown-recursive-template':
 return import('@koobiq/docs-examples/components/dropdown');
+  case 'dynamic-translation-overview':
+return import('@koobiq/docs-examples/components/dynamic-translation');
+  case 'dynamic-translation-with-dynamic-component-creation':
+return import('@koobiq/docs-examples/components/dynamic-translation');
   case 'empty-state-actions':
 return import('@koobiq/docs-examples/components/empty-state');
   case 'empty-state-actions2':

@@ -1,0 +1,199 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqDynamicTranslationModule should change text dynamically 1`] = `
+<kbq-dynamic-translation>
+  
+  NEW text before slot 
+  
+  
+  <a
+    class="kbq-link kbq-text-only"
+    href="#"
+    kbq-link=""
+    tabindex="0"
+  >
+    NEW slot context
+  </a>
+  
+  
+  
+  
+   NEW text after slot
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should handle list-like slot context (parentheses) 1`] = `
+<kbq-dynamic-translation>
+  
+  with list 
+  
+  
+  <ul>
+    <li>
+      item1
+    </li>
+    <li>
+      item2
+    </li>
+    <li>
+      item3
+    </li>
+    
+  </ul>
+  
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should handle malformed slot syntax 1`] = `
+<kbq-dynamic-translation>
+  
+  with [[incomplete and [invalid] and 
+  
+  
+  <strong>
+    valid
+  </strong>
+  
+  
+  
+  
+   syntax
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should handle multiple same slots 1`] = `
+<kbq-dynamic-translation>
+  
+  first slot 
+  
+  
+  <strong>
+    first context
+  </strong>
+  
+  
+  
+  
+   and second slot 
+  
+  
+  <strong>
+    second context
+  </strong>
+  
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should handle slots without context 1`] = `
+<kbq-dynamic-translation>
+  
+  with empty slots 
+  
+  
+  <a
+    class="kbq-link kbq-text-only"
+    href="#"
+    kbq-link=""
+    tabindex="0"
+  >
+    
+  </a>
+  
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should handle special characters 1`] = `
+<kbq-dynamic-translation>
+  
+  with special chars 
+  
+  
+  <strong>
+    0123456789!@#$%^&*()_+-=[]{}
+  </strong>
+  
+  
+  
+  
+   and 0123456789!@#$%^&*()_+-=[]{}
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should handle undefined slot 1`] = `
+<kbq-dynamic-translation>
+  
+  with undefined slot [[undefinedSlot:undefined slot context]]
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should handle unicode characters 1`] = `
+<kbq-dynamic-translation>
+  
+  with unicode 
+  
+  
+  <strong>
+    тест 测试 🎉
+  </strong>
+  
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
+exports[`KbqDynamicTranslationModule should render component with 2 slots 1`] = `
+<kbq-dynamic-translation>
+  
+  text before slot1 
+  
+  
+  <a
+    class="kbq-link kbq-text-only"
+    href="#"
+    kbq-link=""
+    tabindex="0"
+  >
+    slot1 context
+  </a>
+  
+  
+  
+  
+   text between slots 
+  
+  
+  <strong>
+    slot2 context
+  </strong>
+  
+  
+  
+  
+   text after slot2
+  
+  
+  
+</kbq-dynamic-translation>
+`;

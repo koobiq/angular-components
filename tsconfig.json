@@ -45,6 +45,7 @@
             "@koobiq/components/divider": ["packages/components/divider/index.ts"],
             "@koobiq/components/dl": ["packages/components/dl/index.ts"],
             "@koobiq/components/dropdown": ["packages/components/dropdown/index.ts"],
+            "@koobiq/components/dynamic-translation": ["packages/components/dynamic-translation/index.ts"],
             "@koobiq/components/empty-state": ["packages/components/empty-state/index.ts"],
             "@koobiq/components/form-field": ["packages/components/form-field/index.ts"],
             "@koobiq/components/file-upload": ["packages/components/file-upload/index.ts"],
