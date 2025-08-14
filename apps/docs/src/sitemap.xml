@@ -43,16 +43,22 @@
 		<loc>https://koobiq.io/ru/main/schematics/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/alert/overview</loc>
+		<loc>https://koobiq.io/en/main/migration/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/alert/overview</loc>
+		<loc>https://koobiq.io/ru/main/migration/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/alert/api</loc>
+		<loc>https://koobiq.io/en/components/accordion/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/alert/api</loc>
+		<loc>https://koobiq.io/ru/components/accordion/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/accordion/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/accordion/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/actions-panel/overview</loc>
@@ -73,16 +79,16 @@
 		<loc>https://koobiq.io/ru/components/ag-grid/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/accordion/overview</loc>
+		<loc>https://koobiq.io/en/components/alert/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/accordion/overview</loc>
+		<loc>https://koobiq.io/ru/components/alert/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/components/accordion/api</loc>
+		<loc>https://koobiq.io/en/components/alert/api</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/ru/components/accordion/api</loc>
+		<loc>https://koobiq.io/ru/components/alert/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/autocomplete/overview</loc>
@@ -341,12 +347,6 @@
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/components/layout-flex/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/components/layout-flex/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/components/layout-flex/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/components/link/overview</loc>
@@ -649,6 +649,18 @@
 		<loc>https://koobiq.io/ru/components/timezone/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/title/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/title/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/title/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/title/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/toast/overview</loc>
 	</url>
 	<url>
@@ -739,22 +751,10 @@
 		<loc>https://koobiq.io/ru/other/date-formatter/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/other/date-formatter/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/other/date-formatter/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/other/filesize-formatter/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/other/filesize-formatter/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/other/filesize-formatter/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/other/filesize-formatter/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/other/forms/overview</loc>
@@ -763,22 +763,10 @@
 		<loc>https://koobiq.io/ru/other/forms/overview</loc>
 	</url>
 	<url>
-		<loc>https://koobiq.io/en/other/forms/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/other/forms/api</loc>
-	</url>
-	<url>
 		<loc>https://koobiq.io/en/other/number-formatter/overview</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/ru/other/number-formatter/overview</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/en/other/number-formatter/api</loc>
-	</url>
-	<url>
-		<loc>https://koobiq.io/ru/other/number-formatter/api</loc>
 	</url>
 	<url>
 		<loc>https://koobiq.io/en/other/validation/overview</loc>
