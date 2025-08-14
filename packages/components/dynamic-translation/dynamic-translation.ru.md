@@ -1,4 +1,4 @@
-`KbqDynamicTranslation` - компонент для встраивания пользовательских компонентов в переводимые строки.
+`KbqDynamicTranslation` — компонент для встраивания пользовательских компонентов в переводимые строки.
 
 <!-- example(dynamic-translation-overview) -->
 
