@@ -4,6 +4,7 @@
 
 ```ts
 
+import { ElementRef } from '@angular/core';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
@@ -12,6 +13,7 @@ import { Signal } from '@angular/core';
 
 // @public
 export class ElementVisibilityManager {
+    readonly elementRef: ElementRef<HTMLElement>;
     readonly hidden: Signal<boolean>;
     hide(): void;
     show(): void;
