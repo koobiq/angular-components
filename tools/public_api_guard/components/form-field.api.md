@@ -18,6 +18,7 @@ import * as i0 from '@angular/core';
 import { InjectionToken } from '@angular/core';
 import { InputSignalWithTransform } from '@angular/core';
 import { KbqColorDirective } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconButton } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqValidationOptions } from '@koobiq/components/core';
@@ -240,7 +241,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     hasError: boolean;
     // (undocumented)
     get icon(): string;
-    protected get iconColor(): string;
+    protected get iconColor(): KbqComponentColors;
     // (undocumented)
     id: string;
     // (undocumented)
@@ -308,7 +309,6 @@ export class KbqReactivePasswordHint extends KbqHint {
     constructor();
     readonly hasError: InputSignalWithTransform<boolean, unknown>;
     protected readonly icon: Signal<"kbq-check-s_16" | "kbq-xmark-s_16">;
-    protected readonly iconColor: Signal<"success" | "error">;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqReactivePasswordHint, "kbq-reactive-password-hint", ["kbqReactivePasswordHint"], { "hasError": { "alias": "hasError"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)

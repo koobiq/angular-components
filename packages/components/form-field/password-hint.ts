@@ -88,8 +88,12 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
      *
      * @docs-private
      */
-    protected get iconColor(): string {
-        return this.checked ? 'success' : 'error';
+    protected get iconColor(): KbqComponentColors {
+        if (this.control?.ngControl.untouched && this.control?.ngControl.pristine) {
+            return KbqComponentColors.ContrastFade;
+        }
+
+        return this.checked ? KbqComponentColors.Success : KbqComponentColors.Error;
     }
 
     private checkRule: (value: string) => boolean;
