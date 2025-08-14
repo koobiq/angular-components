@@ -4,7 +4,7 @@
 
 ### Adding a component
 
-Components are embedded into strings using special syntax: `[[<SLOT_NAME>:<CONTEXT>]]`, where `SLOT_NAME` is the key of the registered component, and `CONTEXT` is the data passed to the component.
+Components are embedded into strings using special syntax: `[[<slotName>:<context>]]`, where `slotName` is the key of the registered component, and `context` is the data passed to the component.
 
 <!-- prettier-ignore -->
 ```html
@@ -15,8 +15,8 @@ Components are embedded into strings using special syntax: `[[<SLOT_NAME>:<CONTE
 
 <!-- Slot with list passing -->
 <kbq-dynamic-translation text="[[myListSlot:(first,second,third)]]">
-    <ul *kbqDynamicTranslationSlot="'myListSlot'; let items">
-        @for (item of items; track $index) {
+    <ul *kbqDynamicTranslationSlot="'myListSlot'; let context">
+        @for (item of context; track $index) {
             <li>{{ item }}</li>
         }
     </ul>

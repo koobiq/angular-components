@@ -4,7 +4,7 @@
 
 ### Добавление компонента
 
-Компонент встраивается в строку с помощью специального синтаксиса: `[[<SLOT_NAME>:<CONTEXT>]]`, где `SLOT_NAME` — ключ зарегистрированного компонента, а `CONTEXT` — данные, передаваемые в компонент.
+Компонент встраивается в строку с помощью специального синтаксиса: `[[<slotName>:<context>]]`, где `slotName` — ключ зарегистрированного компонента, а `context` — данные, передаваемые в компонент.
 
 <!-- prettier-ignore -->
 ```html
@@ -15,8 +15,8 @@
 
 <!-- Слот с передачей списка -->
 <kbq-dynamic-translation text="[[myListSlot:(первый,второй,третий)]]">
-    <ul *kbqDynamicTranslationSlot="'myListSlot'; let items">
-        @for (item of items; track $index) {
+    <ul *kbqDynamicTranslationSlot="'myListSlot'; let context">
+        @for (item of context; track $index) {
             <li>{{ item }}</li>
         }
     </ul>
