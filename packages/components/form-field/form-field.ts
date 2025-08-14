@@ -30,7 +30,7 @@ import { NgControl } from '@angular/forms';
 import { ESCAPE, F8 } from '@koobiq/cdk/keycodes';
 import { KBQ_FORM_FIELD_REF, KbqColorDirective } from '@koobiq/components/core';
 import { EMPTY, merge } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { delay, startWith } from 'rxjs/operators';
 import { KbqCleaner } from './cleaner';
 import { KbqError } from './error';
 import { KbqFormFieldControl } from './form-field-control';
@@ -329,7 +329,7 @@ export class KbqFormField
         }
 
         // Subscribe to changes in the child control state in order to update the form field UI.
-        this.control.stateChanges.pipe(startWith()).subscribe((state: any) => {
+        this.control.stateChanges.pipe(startWith(), delay(0)).subscribe((state: any) => {
             if (this.passwordHints.length && !state?.focused && hasPasswordStrengthError(this.passwordHints)) {
                 this.control.ngControl?.control?.setErrors({ passwordStrength: true });
             }
