@@ -68,7 +68,7 @@ const baseClass = 'kbq-clamped-text';
             </span>
         }
     `,
-    styleUrls: ['./clamped-text.scss', './clamped-text-tokens.scss'],
+    styleUrls: ['./clamped-text.scss'],
     host: {
         class: baseClass,
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
