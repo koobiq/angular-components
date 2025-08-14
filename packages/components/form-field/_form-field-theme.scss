@@ -98,7 +98,7 @@
         & .kbq-form-field__container:has(.kbq-input:-webkit-autofill),
         & .kbq-form-field__container:has(.kbq-input:-webkit-autofill:hover),
         & .kbq-form-field__container:has(.kbq-input:-webkit-autofill:focus) {
-            background-color: var(--kbq-form-field-states-autofill-background);
+            background-color: var(--kbq-form-field-states-autofill-background) !important;
         }
 
         &.kbq-disabled {
