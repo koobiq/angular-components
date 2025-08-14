@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import { KbqInlineEdit } from './inline-edit';
+import { KbqInlineEdit, KbqInlineEditEditMode, KbqInlineEditViewMode } from './inline-edit';
 
-const COMPONENTS = [KbqInlineEdit];
+const COMPONENTS = [KbqInlineEdit, KbqInlineEditViewMode, KbqInlineEditEditMode];
 
 @NgModule({
     imports: COMPONENTS,
     exports: COMPONENTS
 })
-export class KbqContentPanelModule {}
+export class KbqInlineEditModule {}
