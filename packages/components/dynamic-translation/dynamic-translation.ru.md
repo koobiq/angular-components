@@ -4,21 +4,33 @@
 
 ### Добавление компонента
 
-Компонент встраивается в строку с помощью специального синтаксиса: `[[slotName: context]]`, где `slotName` — ключ зарегистрированного компонента, а `context` — данные, передаваемые в компонент.
+Компонент встраивается в строку с помощью специального синтаксиса: `[[<SLOT_NAME>:<CONTEXT>]]`, где `SLOT_NAME` — ключ зарегистрированного компонента, а `CONTEXT` — данные, передаваемые в компонент.
 
+<!-- prettier-ignore -->
 ```html
-<kbq-dynamic-translation text="[[myCustomLink:Open link]]">
-    <a *kbqDynamicTranslationSlot="'myCustomLink'; let context">{{ context }}</a>
+<!-- Слот с передачей строки -->
+<kbq-dynamic-translation text="[[myLinkSlot:Открыть ссылку]]">
+    <a *kbqDynamicTranslationSlot="'myLinkSlot'; let context">{{ context }}</a>
+</kbq-dynamic-translation>
+
+<!-- Слот с передачей списка -->
+<kbq-dynamic-translation text="[[myListSlot:(первый,второй,третий)]]">
+    <ul *kbqDynamicTranslationSlot="'myListSlot'; let items">
+        @for (item of items; track $index) {
+            <li>{{ item }}</li>
+        }
+    </ul>
 </kbq-dynamic-translation>
 ```
 
 ### Основные возможности
 
-- Подстановка компонентов в строки локализации.
-- Отделение логики интерфейса от текстов локализации.
+- Встраивание компонентов ([ссылки](/ru/components/link), [кнопки](/ru/components/button), [выпадающие списки](/ru/components/dropdown) и др.) в локализованные строки.
+- Разделение логики интерфейса от текстов локализации.
+- Поддержка нескольких слотов в одной строке.
 
 ### Когда использовать
 
-- При необходимости встраивания пользовательских компонентов в локализованные строки.
-- Когда в переводимом тексте нужны [ссылки](/ru/components/link), [кнопки](/ru/components/button) или другие интерактивные элементы.
+- При необходимости динамически изменять состав и контекст встраиваемых компонентов в зависимости от локализации.
+- Если требуется добавить интерактивные элементы ([ссылки](/ru/components/link), [кнопки](/ru/components/button), [выпадающие списки](/ru/components/dropdown) и др.) прямо в переводимый текст.
 - Для выделения части текста специальными стилями.

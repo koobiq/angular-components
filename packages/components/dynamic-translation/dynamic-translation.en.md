@@ -1,24 +1,36 @@
-`KbqDynamicTranslation` - component for embedding custom components into translatable strings.
+`KbqDynamicTranslation` — component for embedding custom components into translatable strings.
 
 <!-- example(dynamic-translation-overview) -->
 
 ### Adding a component
 
-A component is embedded into a string using special syntax: `[[slotName: context]]`, where `slotName` is the key of the registered component, and `context` is the data passed to the component.
+Components are embedded into strings using special syntax: `[[<SLOT_NAME>:<CONTEXT>]]`, where `SLOT_NAME` is the key of the registered component, and `CONTEXT` is the data passed to the component.
 
+<!-- prettier-ignore -->
 ```html
-<kbq-dynamic-translation text="[[myCustomLink:Open link]]">
-    <a *kbqDynamicTranslationSlot="'myCustomLink'; let context">{{ context }}</a>
+<!-- Slot with string passing -->
+<kbq-dynamic-translation text="[[myLinkSlot:Open link]]">
+    <a *kbqDynamicTranslationSlot="'myLinkSlot'; let context">{{ context }}</a>
+</kbq-dynamic-translation>
+
+<!-- Slot with list passing -->
+<kbq-dynamic-translation text="[[myListSlot:(first,second,third)]]">
+    <ul *kbqDynamicTranslationSlot="'myListSlot'; let items">
+        @for (item of items; track $index) {
+            <li>{{ item }}</li>
+        }
+    </ul>
 </kbq-dynamic-translation>
 ```
 
 ### Key features
 
-- Component substitution in localization strings.
+- Embedding components ([links](/en/components/link), [buttons](/en/components/button), [dropdowns](/en/components/dropdown), etc.) into localized strings.
 - Separation of interface logic from localization texts.
+- Support for multiple slots in a single string.
 
 ### When to use
 
-- When you need to embed custom components into localized strings.
-- When translatable text needs [links](/en/components/link), [buttons](/en/components/button) or other interactive elements.
+- When you need to dynamically change the composition and context of embedded components depending on localization.
+- If you need to add interactive elements ([links](/en/components/link), [buttons](/en/components/button), [dropdowns](/en/components/dropdown), etc.) directly into translatable text.
 - For highlighting parts of text with special styles.
