@@ -94,6 +94,13 @@
             }
         }
 
+        // todo quick fix for bug DS-4060. Technical debt DS-4096
+        & .kbq-form-field__container:has(.kbq-input:-webkit-autofill),
+        & .kbq-form-field__container:has(.kbq-input:-webkit-autofill:hover),
+        & .kbq-form-field__container:has(.kbq-input:-webkit-autofill:focus) {
+            background-color: var(--kbq-form-field-states-autofill-background) !important;
+        }
+
         &.kbq-disabled {
             @include _kbq-form-field-state(states-disabled);
 
