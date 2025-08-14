@@ -36,7 +36,6 @@ export enum DocsStructureItemId {
     FileUpload = 'file-upload',
     FilterBar = 'filter-bar',
     FormField = 'form-field',
-    ExperimentalFormField = 'experimental-form-field',
     LayoutFlex = 'layout-flex',
     Link = 'link',
     List = 'list',
@@ -517,17 +516,6 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'form-field',
                     isNew: expiresAt('2025-07-26'),
-                    hasExamples: false
-                },
-                {
-                    id: DocsStructureItemId.ExperimentalFormField,
-                    name: {
-                        ru: 'Form field (experimental)',
-                        en: 'Form field (experimental)'
-                    },
-                    svgPreview: 'form-field',
-                    hasApi: true,
-                    apiId: 'experimental-form-field',
                     hasExamples: false
                 },
                 {
