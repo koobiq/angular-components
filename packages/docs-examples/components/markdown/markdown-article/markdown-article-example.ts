@@ -9,7 +9,11 @@ import { KbqMarkdownModule } from '@koobiq/components/markdown';
     imports: [KbqMarkdownModule],
     selector: 'markdown-article-example',
     templateUrl: './markdown-article-example.html',
-    styleUrls: ['./markdown-article-example.css'],
+    styles: `
+        :host ::ng-deep img[alt='image-with-custom-width'] {
+            width: 50%;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarkdownArticleExample {}
