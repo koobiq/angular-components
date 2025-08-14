@@ -1,0 +1,25 @@
+@if (label()) {
+    <div>
+        <ng-content select="kbq-label" />
+    </div>
+}
+
+<div style="position: relative; height: 0; width: 100%; left: -12px">
+    <div #overlayOrigin cdkOverlayOrigin style="height: 0; width: 100%; position: absolute; left: 0; top: 0"></div>
+</div>
+
+@if (mode() === 'view') {
+    <ng-container *ngTemplateOutlet="this.viewModeTemplateRef().templateRef" />
+} @else {}
+
+<ng-template
+    cdkConnectedOverlay
+    cdkConnectedOverlayLockPosition
+    [cdkConnectedOverlayOpen]="mode() === 'edit'"
+    [cdkConnectedOverlayOrigin]="overlayOrigin"
+    [cdkConnectedOverlayWidth]="elementRef.nativeElement.clientWidth"
+>
+    <div cdkMonitorSubtreeFocus class="kbq-inline-edit__panel" style="width: 100%">
+        <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
+    </div>
+</ng-template>
