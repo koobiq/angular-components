@@ -89,7 +89,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
-      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
+      class="kbq kbq-icon kbq-error kbq-xmark-s_16"
       kbq-icon=""
     />
     <span
@@ -110,7 +110,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
-      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
+      class="kbq kbq-icon kbq-error kbq-xmark-s_16"
       kbq-icon=""
     />
     <span
@@ -131,7 +131,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
-      class="kbq kbq-icon kbq-empty kbq-check-s_16"
+      class="kbq kbq-icon kbq-success kbq-check-s_16"
       kbq-icon=""
     />
     <span
