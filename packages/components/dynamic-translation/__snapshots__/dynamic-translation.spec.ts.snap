@@ -137,6 +137,16 @@ exports[`KbqDynamicTranslationModule should handle special characters 1`] = `
 </kbq-dynamic-translation>
 `;
 
+exports[`KbqDynamicTranslationModule should handle undefined slot 1`] = `
+<kbq-dynamic-translation>
+  
+  with undefined slot [[undefinedSlot:undefined slot context]]
+  
+  
+  
+</kbq-dynamic-translation>
+`;
+
 exports[`KbqDynamicTranslationModule should handle unicode characters 1`] = `
 <kbq-dynamic-translation>
   

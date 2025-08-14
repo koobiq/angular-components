@@ -146,4 +146,14 @@ describe(KbqDynamicTranslationModule.name, () => {
 
         expect(getDynamicTranslationDebugElement(debugElement).nativeNode).toMatchSnapshot();
     });
+
+    it('should handle undefined slot', () => {
+        const fixture = createComponent(TestDynamicTranslation);
+        const { debugElement, componentInstance } = fixture;
+
+        componentInstance.text.set('with undefined slot [[undefinedSlot:undefined slot context]]');
+        fixture.detectChanges();
+
+        expect(getDynamicTranslationDebugElement(debugElement).nativeNode).toMatchSnapshot();
+    });
 });
