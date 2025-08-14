@@ -1,4 +1,4 @@
-`KbqMarkdown` - - a component that allows converting text written in _Markdown_ markup language into _HTML_.
+`KbqMarkdown` - component that allows converting text written in _Markdown_ markup language into _HTML_.
 
 <div class="kbq-callout kbq-callout_theme">
 <div class="kbq-callout__header">Note</div>
@@ -59,4 +59,10 @@ npm install marked@^15
 
 ### Line break
 
+To create a line break in a component template, you need to add two spaces `&#32;&#32;` at the end of the line.
+
 <!-- example(markdown-line-break) -->
+
+When using the `markdownText` attribute, you need to add `\n` at the end of the line and also enable the configuration option `{ breaks: true }`.
+
+<!-- example(markdown-line-break-with-markdown-text-input) -->

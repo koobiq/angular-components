@@ -2426,8 +2426,7 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "componentName": "MarkdownArticleExample",
     "files": [
       "markdown-article-example.ts",
-      "./markdown-article-example.html",
-      "./markdown-article-example.css"
+      "./markdown-article-example.html"
     ],
     "selector": "markdown-article-example",
     "additionalComponents": [],
@@ -2510,6 +2509,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "markdown-image-example",
     "additionalComponents": [],
     "primaryFile": "markdown-image-example.ts",
+    "importPath": "components/markdown"
+  },
+  "markdown-line-break-with-markdown-text-input": {
+    "packagePath": "components/markdown/markdown-line-break-with-markdown-text-input",
+    "title": "Markdown line break",
+    "componentName": "MarkdownLineBreakWithMarkdownTextInputExample",
+    "files": [
+      "markdown-line-break-with-markdown-text-input-example.ts"
+    ],
+    "selector": "markdown-line-break-with-markdown-text-input-example",
+    "additionalComponents": [],
+    "primaryFile": "markdown-line-break-with-markdown-text-input-example.ts",
     "importPath": "components/markdown"
   },
   "markdown-line-break": {
@@ -5167,6 +5178,8 @@ return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-headers':
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-image':
+return import('@koobiq/docs-examples/components/markdown');
+  case 'markdown-line-break-with-markdown-text-input':
 return import('@koobiq/docs-examples/components/markdown');
   case 'markdown-line-break':
 return import('@koobiq/docs-examples/components/markdown');

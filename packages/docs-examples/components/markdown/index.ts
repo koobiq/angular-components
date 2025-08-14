@@ -6,6 +6,7 @@ import { MarkdownDividerExample } from './markdown-divider/markdown-divider-exam
 import { MarkdownHeadersCombinationsExample } from './markdown-headers-combinations/markdown-headers-combinations-example';
 import { MarkdownHeadersExample } from './markdown-headers/markdown-headers-example';
 import { MarkdownImageExample } from './markdown-image/markdown-image-example';
+import { MarkdownLineBreakWithMarkdownTextInputExample } from './markdown-line-break-with-markdown-text-input/markdown-line-break-with-markdown-text-input-example';
 import { MarkdownLineBreakExample } from './markdown-line-break/markdown-line-break-example';
 import { MarkdownLinkExample } from './markdown-link/markdown-link-example';
 import { MarkdownListExample } from './markdown-list/markdown-list-example';
@@ -23,6 +24,7 @@ export {
     MarkdownHeadersExample,
     MarkdownImageExample,
     MarkdownLineBreakExample,
+    MarkdownLineBreakWithMarkdownTextInputExample,
     MarkdownLinkExample,
     MarkdownListExample,
     MarkdownParagraphExample,
@@ -40,6 +42,7 @@ const EXAMPLES = [
     MarkdownHeadersExample,
     MarkdownImageExample,
     MarkdownLineBreakExample,
+    MarkdownLineBreakWithMarkdownTextInputExample,
     MarkdownLinkExample,
     MarkdownListExample,
     MarkdownParagraphExample,
