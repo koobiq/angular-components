@@ -1,4 +1,8 @@
-import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
+import {
+    KbqActionsPanelLocaleConfiguration,
+    KbqClampedTextLocaleConfig,
+    KbqCodeBlockLocaleConfiguration
+} from './types';
 
 export const ruRULocaleData = {
     select: { hiddenItemsText: 'еще {{ number }}' },
@@ -87,5 +91,9 @@ export const ruRULocaleData = {
             customPeriodErrorHint: 'Начало периода не может быть позже окончания',
             backToPeriodSelection: 'Назад к выбору периода'
         }
-    }
+    },
+    clampedText: {
+        openText: 'Развернуть',
+        closeText: 'Свернуть'
+    } satisfies KbqClampedTextLocaleConfig
 };

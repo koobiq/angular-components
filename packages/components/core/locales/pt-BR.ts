@@ -1,4 +1,8 @@
-import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
+import {
+    KbqActionsPanelLocaleConfiguration,
+    KbqClampedTextLocaleConfig,
+    KbqCodeBlockLocaleConfiguration
+} from './types';
 
 export const ptBRLocaleData = {
     select: { hiddenItemsText: '{{ number }} mais' },
@@ -86,5 +90,9 @@ export const ptBRLocaleData = {
             customPeriodErrorHint: 'O início do período não pode ser posterior ao término do período',
             backToPeriodSelection: 'Retornar à seleção do período'
         }
-    }
+    },
+    clampedText: {
+        openText: 'Expandir',
+        closeText: 'Recolher'
+    } satisfies KbqClampedTextLocaleConfig
 };

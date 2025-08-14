@@ -1,4 +1,8 @@
-import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
+import {
+    KbqActionsPanelLocaleConfiguration,
+    KbqClampedTextLocaleConfig,
+    KbqCodeBlockLocaleConfiguration
+} from './types';
 
 export const enUSLocaleData = {
     select: { hiddenItemsText: '{{ number }} more' },
@@ -87,5 +91,9 @@ export const enUSLocaleData = {
             customPeriodErrorHint: 'The period cannot start later than it ends',
             backToPeriodSelection: 'Back to selecting the period'
         }
-    }
+    },
+    clampedText: {
+        openText: 'Expand',
+        closeText: 'Collapse'
+    } satisfies KbqClampedTextLocaleConfig
 };

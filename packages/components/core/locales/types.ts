@@ -36,3 +36,9 @@ export type KbqNumberInputLocaleConfig = {
     /** Number of digits before applying group separators */
     startFormattingFrom?: number;
 } & KbqNumberFormatOptions;
+
+/** Locale configuration for `KbqClampedText` */
+export type KbqClampedTextLocaleConfig = {
+    openText: string;
+    closeText: string;
+};

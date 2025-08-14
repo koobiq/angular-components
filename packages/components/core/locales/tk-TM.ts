@@ -1,4 +1,8 @@
-import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
+import {
+    KbqActionsPanelLocaleConfiguration,
+    KbqClampedTextLocaleConfig,
+    KbqCodeBlockLocaleConfiguration
+} from './types';
 
 export const tkTMLocaleData = {
     select: { hiddenItemsText: 'ýene {{ number }}' },
@@ -87,5 +91,9 @@ export const tkTMLocaleData = {
             customPeriodErrorHint: 'Döwrüň başlangyjy gutarýan wagtyndan soň bolup bilmeýär',
             backToPeriodSelection: 'Döwür saýlamaga dolanmak'
         }
-    }
+    },
+    clampedText: {
+        openText: 'Giňelt',
+        closeText: 'Ýap'
+    } satisfies KbqClampedTextLocaleConfig
 };

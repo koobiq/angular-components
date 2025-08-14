@@ -38,6 +38,7 @@
             "@koobiq/components/breadcrumbs": ["packages/components/breadcrumbs/index.ts"],
             "@koobiq/components/button-toggle": ["packages/components/button-toggle/index.ts"],
             "@koobiq/components/checkbox": ["packages/components/checkbox/index.ts"],
+            "@koobiq/components/clamped-text": ["packages/components/clamped-text/index.ts"],
             "@koobiq/components/code-block": ["packages/components/code-block/index.ts"],
             "@koobiq/components/content-panel": ["packages/components/content-panel/index.ts"],
             "@koobiq/components/core": ["packages/components/core/index.ts"],
