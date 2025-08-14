@@ -24,7 +24,7 @@ import { KbqHint } from './hint';
     selector: 'kbq-reactive-password-hint',
     exportAs: 'kbqReactivePasswordHint',
     template: `
-        <i kbq-icon="" [ngClass]="icon()"></i>
+        <i kbq-icon="" [ngClass]="icon()" [color]="iconColor()"></i>
 
         <span class="kbq-hint__text">
             <ng-content />
@@ -54,6 +54,13 @@ export class KbqReactivePasswordHint extends KbqHint {
      * @docs-private
      */
     protected readonly icon = computed(() => (this.hasError() ? 'kbq-xmark-s_16' : 'kbq-check-s_16'));
+
+    /**
+     * The form field hint icon color.
+     *
+     * @docs-private
+     */
+    protected readonly iconColor = computed(() => (this.hasError() ? 'error' : 'success'));
 
     constructor() {
         super();

@@ -240,6 +240,7 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
     hasError: boolean;
     // (undocumented)
     get icon(): string;
+    protected get iconColor(): string;
     // (undocumented)
     id: string;
     // (undocumented)
@@ -307,6 +308,7 @@ export class KbqReactivePasswordHint extends KbqHint {
     constructor();
     readonly hasError: InputSignalWithTransform<boolean, unknown>;
     protected readonly icon: Signal<"kbq-check-s_16" | "kbq-xmark-s_16">;
+    protected readonly iconColor: Signal<"success" | "error">;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqReactivePasswordHint, "kbq-reactive-password-hint", ["kbqReactivePasswordHint"], { "hasError": { "alias": "hasError"; "required": false; "isSignal": true; }; }, {}, never, ["*"], true, never>;
     // (undocumented)
