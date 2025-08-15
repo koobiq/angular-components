@@ -14,9 +14,10 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import {
-    KbqSidepanelAnimationState,
     kbqSidepanelAnimations,
+    KbqSidepanelAnimationState,
     kbqSidepanelTransformAnimation
 } from './sidepanel-animations';
 import { KbqSidepanelConfig, KbqSidepanelPosition } from './sidepanel-config';
@@ -74,6 +75,9 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
         return this.sidepanelConfig.trapFocus ?? !!this.sidepanelConfig.hasBackdrop;
     }
 
+    /** @docs-private */
+    protected readonly indentClick$ = new Subject<MouseEvent>();
+
     /** Whether the component has been destroyed. */
     private destroyed: boolean;
 
@@ -89,6 +93,15 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
 
     ngOnDestroy(): void {
         this.destroyed = true;
+    }
+
+    /**
+     * Gets an observable that emits when the indent has been clicked.
+     *
+     * @docs-private
+     */
+    indentClick(): Observable<MouseEvent> {
+        return this.indentClick$.asObservable();
     }
 
     /** Attach a component portal as content to this sidepanel container. */
