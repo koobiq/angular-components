@@ -704,7 +704,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'sidepanel',
                     hasApi: true,
                     apiId: 'sidepanel',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.Splitter,

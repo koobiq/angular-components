@@ -116,6 +116,20 @@ describe('KbqSidepanelService', () => {
         expect(overlayContainerElement.querySelector('kbq-sidepanel-container')).toBeNull();
     }));
 
+    it('should change disableClose dynamically', fakeAsync(() => {
+        const sidepanelRef = sidepanelService.open(SimpleSidepanelExample);
+        const closeSpy = jest.spyOn(sidepanelRef, 'close');
+
+        sidepanelRef.config.disableClose = true;
+
+        overlayContainerElement.querySelector<HTMLElement>('.cdk-overlay-backdrop')!.click();
+        dispatchKeyboardEvent(document.body, 'keydown', ESCAPE);
+
+        tick();
+
+        expect(closeSpy).toHaveBeenCalledTimes(0);
+    }));
+
     it('should close all opened sidepanels', fakeAsync(() => {
         sidepanelService.open(SimpleSidepanelExample);
         sidepanelService.open(SimpleSidepanelExample);
