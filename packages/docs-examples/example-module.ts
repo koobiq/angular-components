@@ -3383,6 +3383,20 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "sidepanel-sizes-example.ts",
     "importPath": "components/sidepanel"
   },
+  "sidepanel-with-dynamic-config-update": {
+    "packagePath": "components/sidepanel/sidepanel-with-dynamic-config-update",
+    "title": "Sidepanel with dynamic config update example",
+    "componentName": "SidepanelWithDynamicConfigUpdateExample",
+    "files": [
+      "sidepanel-with-dynamic-config-update-example.ts"
+    ],
+    "selector": "sidepanel-with-dynamic-config-update-example",
+    "additionalComponents": [
+      "ExampleSidepanelComponent"
+    ],
+    "primaryFile": "sidepanel-with-dynamic-config-update-example.ts",
+    "importPath": "components/sidepanel"
+  },
   "splitter-dynamic-data": {
     "packagePath": "components/splitter/splitter-dynamic-data",
     "title": "Splitter dynamic data",
@@ -5307,6 +5321,8 @@ return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-overlayed':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'sidepanel-sizes':
+return import('@koobiq/docs-examples/components/sidepanel');
+  case 'sidepanel-with-dynamic-config-update':
 return import('@koobiq/docs-examples/components/sidepanel');
   case 'splitter-dynamic-data':
 return import('@koobiq/docs-examples/components/splitter');

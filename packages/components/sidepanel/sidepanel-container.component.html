@@ -1,6 +1,6 @@
 <div class="kbq-sidepanel-wrapper">
     @if (withIndent) {
-        <div class="kbq-sidepanel-indent" (click)="exit()"></div>
+        <div class="kbq-sidepanel-indent" (click)="indentClick$.next($event)"></div>
     }
 
     <div class="kbq-sidepanel-content" [cdkTrapFocus]="trapFocus" [cdkTrapFocusAutoCapture]="trapFocusAutoCapture">
