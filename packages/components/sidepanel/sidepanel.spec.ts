@@ -260,6 +260,40 @@ describe('KbqSidepanelService', () => {
         expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
     });
 
+    it('should close sidepanel on indent click', fakeAsync(() => {
+        sidepanelService.open(SimpleSidepanelExample);
+
+        expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
+
+        sidepanelService.open(SimpleSidepanelExample);
+
+        expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
+
+        overlayContainerElement.querySelectorAll<HTMLDivElement>('.kbq-sidepanel-indent')[0]!.click();
+
+        rootComponentFixture.detectChanges();
+        tick();
+
+        expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
+    }));
+
+    it('should NOT close sidepanel on indent click', fakeAsync(() => {
+        sidepanelService.open(SimpleSidepanelExample);
+
+        expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(0);
+
+        sidepanelService.open(SimpleSidepanelExample, { disableClose: true });
+
+        expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
+
+        overlayContainerElement.querySelectorAll<HTMLDivElement>('.kbq-sidepanel-indent')[0]!.click();
+
+        rootComponentFixture.detectChanges();
+        tick();
+
+        expect(overlayContainerElement.querySelectorAll('.kbq-sidepanel-indent').length).toBe(1);
+    }));
+
     it('should not add indent when open more than one sidepanel with different position', () => {
         sidepanelService.open(SimpleSidepanelExample);
 
