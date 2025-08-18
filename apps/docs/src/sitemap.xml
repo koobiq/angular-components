@@ -247,6 +247,18 @@
 		<loc>https://koobiq.io/ru/components/dropdown/api</loc>
 	</url>
 	<url>
+		<loc>https://koobiq.io/en/components/dynamic-translation/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dynamic-translation/overview</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/en/components/dynamic-translation/api</loc>
+	</url>
+	<url>
+		<loc>https://koobiq.io/ru/components/dynamic-translation/api</loc>
+	</url>
+	<url>
 		<loc>https://koobiq.io/en/components/empty-state/overview</loc>
 	</url>
 	<url>

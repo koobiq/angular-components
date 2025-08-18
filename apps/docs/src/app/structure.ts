@@ -29,6 +29,7 @@ export enum DocsStructureItemId {
     Divider = 'divider',
     Dl = 'dl',
     Dropdown = 'dropdown',
+    DynamicTranslation = 'dynamic-translation',
     EmptyState = 'empty-state',
     Icon = 'icon',
     IconItem = 'icon-item',
@@ -439,6 +440,18 @@ const structure: DocsStructure = makeStructure({
                     hasApi: true,
                     apiId: 'dropdown',
                     hasExamples: false
+                },
+                {
+                    id: DocsStructureItemId.DynamicTranslation,
+                    name: {
+                        ru: 'Dynamic translation',
+                        en: 'Dynamic translation'
+                    },
+                    svgPreview: 'dynamic-translation',
+                    hasApi: true,
+                    apiId: 'dynamic-translation',
+                    hasExamples: true,
+                    isNew: expiresAt('2025-09-14')
                 },
                 {
                     id: DocsStructureItemId.EmptyState,
