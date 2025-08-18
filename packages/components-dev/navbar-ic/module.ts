@@ -4,17 +4,28 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { PopUpPlacements } from '@koobiq/components/core';
-import { KbqDividerModule } from '@koobiq/components/divider';
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
-import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
 import { KbqLinkModule } from '@koobiq/components/link';
-import { KbqModalModule } from '@koobiq/components/modal';
 import { KbqNavbarIc, KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
 import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { map, timer } from 'rxjs';
+import { NavbarIcExamplesModule } from '../../docs-examples/components/navbar-ic';
+
+@Component({
+    standalone: true,
+    imports: [NavbarIcExamplesModule],
+    selector: 'dev-examples',
+    template: `
+        <navbar-ic-overview-example />
+        <br />
+        <br />
+        <navbar-ic-long-app-name-example />
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class DevExamples {}
 
 @Component({
     standalone: true,
@@ -22,17 +33,14 @@ import { map, timer } from 'rxjs';
         KbqNavbarIcModule,
         KbqIconModule,
         KbqButtonModule,
-        KbqFormFieldModule,
-        KbqInputModule,
         FormsModule,
         KbqDropdownModule,
         KbqLinkModule,
         KbqPopoverModule,
         KbqToolTipModule,
-        KbqModalModule,
         KbqBadgeModule,
-        KbqDividerModule,
-        AsyncPipe
+        AsyncPipe,
+        DevExamples
     ],
     selector: 'dev-app',
     templateUrl: './template.html',

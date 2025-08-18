@@ -1,11 +1,12 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
     AfterContentInit,
     AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    contentChild,
     contentChildren,
     ContentChildren,
     DestroyRef,
@@ -23,14 +24,22 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { merge, Observable, Subject, Subscription } from 'rxjs';
+import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
+import { KbqPopoverTrigger } from '@koobiq/components/popover';
+import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import {
     KbqNavbarFocusableItemEvent,
     KbqNavbarIcFocusableItem,
     KbqNavbarIcItem,
-    KbqNavbarIcRectangleElement
+    KbqNavbarIcRectangleElement,
+    KbqNavbarIcToggle
 } from './navbar-ic-item';
+
+export enum ExpandEvents {
+    toggle,
+    hoverOrFocus
+}
 
 @Directive()
 export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy {
@@ -44,12 +53,12 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
 
     keyManager: FocusKeyManager<KbqNavbarIcFocusableItem>;
 
-    @Input()
-    get tabindex(): any {
+    @Input({ transform: numberAttribute })
+    get tabindex(): number {
         return this._tabindex;
     }
 
-    set tabindex(value: any) {
+    set tabindex(value: number) {
         this._tabindex = value;
     }
 
@@ -96,15 +105,13 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
-    focus(): void {
-        if (this.focusableItems.length === 0) {
-            return;
-        }
+    focusHandler(): void {
+        if (this.focusableItems.length === 0) return;
 
         this.keyManager.setFirstItemActive();
     }
 
-    blur() {
+    blurHandler() {
         if (!this.hasFocusedItem()) {
             this.keyManager.setActiveItem(-1);
         }
@@ -134,7 +141,7 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
             }
         });
 
-        this.itemBlurSubscription = this.itemBlurChanges.subscribe(() => this.blur());
+        this.itemBlurSubscription = this.itemBlurChanges.subscribe(() => this.blurHandler());
     }
 
     protected updateTabIndex(): void {
@@ -186,10 +193,13 @@ export class KbqNavbarIcContainer {}
         '[style.min-width.px]': 'collapsedWidth',
         '[attr.tabindex]': 'tabindex',
 
-        '(focus)': 'focus()',
-        '(blur)': 'blur()',
+        '(focus)': 'focusHandler()',
+        '(blur)': 'blurHandler()',
 
-        '(keydown)': 'onKeyDown($event)'
+        '(keydown)': 'onKeyDown($event)',
+
+        '(mouseenter)': 'hovered.next(true)',
+        '(mouseleave)': 'hovered.next(false)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -205,23 +215,60 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         { descendants: true }
     );
 
+    toggleElement = contentChildren(
+        forwardRef(() => KbqNavbarIcToggle),
+        { descendants: true }
+    );
+
+    dropdownTrigger = contentChild(
+        forwardRef(() => KbqDropdownTrigger),
+        { descendants: true }
+    );
+
+    popoverTrigger = contentChild(
+        forwardRef(() => KbqPopoverTrigger),
+        { descendants: true }
+    );
+
+    readonly hovered = new BehaviorSubject<boolean>(false);
+    readonly focused = new BehaviorSubject<boolean>(false);
+
     readonly animationDone: Subject<void> = new Subject();
+
+    pinned: boolean = false;
+    expandEvent: ExpandEvents | null = null;
 
     @Input({ transform: numberAttribute }) collapsedWidth = 64;
     @Input({ transform: numberAttribute }) expandedWidth = 240;
 
-    @Input()
-    get expanded() {
-        return this._expanded;
+    @Input({ transform: booleanAttribute })
+    get expanded(): boolean {
+        return this._expanded || this.pinned || this.hasOpenedPopUp;
     }
 
     set expanded(value: boolean) {
-        this._expanded = coerceBooleanProperty(value);
+        this._expanded = value;
 
         this.updateExpandedStateForItems();
     }
 
-    private _expanded: boolean = false;
+    private _expanded: boolean = true;
+
+    get hasOpenedPopUp() {
+        return [this.dropdownTrigger(), this.popoverTrigger()].some((instance) => instance?.isOpen || instance?.opened);
+    }
+
+    get expandedByToggle() {
+        return this.expanded && this.expandEvent === ExpandEvents.toggle;
+    }
+
+    get expandedByHoverOrFocus() {
+        return this.expanded && this.expandEvent === ExpandEvents.hoverOrFocus;
+    }
+
+    get expandedByInitialState() {
+        return this.expanded && this.expandEvent === null;
+    }
 
     get currentWidth(): number {
         return this.expanded ? this.expandedWidth : this.collapsedWidth;
@@ -233,6 +280,21 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         this.animationDone.pipe(takeUntilDestroyed()).subscribe(this.updateTooltipForItems);
 
         effect(this.updateExpandedStateForItems);
+
+        combineLatest([this.hovered, this.focused])
+            .pipe(takeUntilDestroyed())
+            .subscribe(([hovered, focused]) => {
+                if (this.expandedByInitialState) return;
+
+                this.expandEvent = ExpandEvents.hoverOrFocus;
+                this.expanded = hovered || focused;
+
+                this.changeDetectorRef.markForCheck();
+            });
+
+        this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
+            this.focused.next(focusOrigin === 'keyboard');
+        });
     }
 
     ngAfterContentInit(): void {
@@ -245,6 +307,8 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
 
     toggle(): void {
         this.expanded = !this.expanded;
+
+        this.expandEvent = ExpandEvents.toggle;
 
         this.changeDetectorRef.markForCheck();
     }

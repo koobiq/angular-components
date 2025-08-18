@@ -16,6 +16,8 @@
         padding: var(--kbq-size-xs) var(--kbq-size-s);
 
         gap: var(--kbq-size-s);
+
+        border-radius: var(--kbq-navbar-ic-item-size-content-border-radius);
     }
 
     & .kbq-navbar-ic-logo {
