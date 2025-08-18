@@ -39,7 +39,8 @@
             &.cdk-keyboard-focused {
                 outline: none;
 
-                & .kbq-navbar-ic-item__inner {
+                & .kbq-navbar-ic-item__inner,
+                & .kbq-navbar-ic-header__inner {
                     box-shadow: inset 0 0 0 2px var(--kbq-states-line-focus-theme);
                 }
             }

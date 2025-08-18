@@ -371,7 +371,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         this.rectangleElement.state.subscribe(() => {
             this.collapsed = this.rectangleElement.collapsed;
 
-            this.changeDetectorRef.detectChanges();
+            this.changeDetectorRef.markForCheck();
         });
 
         this._trigger = `${PopUpTriggers.Hover}`;
@@ -426,16 +426,18 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     selector: 'kbq-navbar-ic-toggle',
     template: `
         <div class="kbq-navbar-ic-item__inner">
-            <ng-content select="[kbq-icon]">
+            @if (navbar.expandedByInitialState || navbar.pinned) {
+                <i kbq-icon [class.kbq-chevron-left_16]="navbar.expanded"></i>
+                <ng-content select="[kbqNavbarIcTitle]" />
+            } @else if (navbar.expandedByHoverOrFocus && !navbar.pinned) {
                 <i
                     kbq-icon
-                    [class.kbq-chevron-left_16]="navbar.expanded"
-                    [class.kbq-chevron-right_16]="!navbar.expanded"
+                    [class.kbq-pin_16]="navbar.expanded"
+                    [class.kbq-chevron-left_16]="navbar.expanded && navbar.pinned"
                 ></i>
-            </ng-content>
-
-            @if (navbar.expanded) {
-                <ng-content select="[kbqNavbarIcTitle]" />
+                Оставить развернутым
+            } @else {
+                <i kbq-icon [class.kbq-chevron-right_16]="!navbar.expanded"></i>
             }
         </div>
     `,
@@ -452,10 +454,12 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    imports: [KbqIcon]
+    imports: [KbqIcon],
+    hostDirectives: [KbqNavbarIcRectangleElement]
 })
 export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     readonly navbar = inject(KbqNavbarIc);
+    readonly rectangleElement = inject(KbqNavbarIcRectangleElement);
 
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
     protected readonly document = inject<Document>(DOCUMENT);
@@ -486,6 +490,8 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
 
         this.placement = PopUpPlacements.Right;
 
+        this.rectangleElement.state.subscribe(() => this.changeDetectorRef.markForCheck());
+
         if (this.window) {
             this.ngZone.runOutsideAngular(() => {
                 this.window.addEventListener('keydown', this.windowToggleHandler);
@@ -509,11 +515,16 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     }
 
     toggle = () => {
-        this.navbar.toggle();
+        if (this.navbar.expandedByHoverOrFocus && !this.navbar.pinned) {
+            this.navbar.pinned = true;
+        } else {
+            this.navbar.pinned = false;
+            this.navbar.toggle();
+
+            this.hide();
+        }
 
         this.changeDetectorRef.markForCheck();
-
-        this.hide();
     };
 
     private windowToggleHandler = (event: KeyboardEvent) => {
