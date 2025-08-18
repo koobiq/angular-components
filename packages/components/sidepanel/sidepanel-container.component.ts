@@ -76,7 +76,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     }
 
     /** @docs-private */
-    protected readonly indentClick$ = new Subject<MouseEvent>();
+    protected readonly indentClickEmitter = new Subject<MouseEvent>();
 
     /** Whether the component has been destroyed. */
     private destroyed: boolean;
@@ -101,7 +101,7 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
      * @docs-private
      */
     indentClick(): Observable<MouseEvent> {
-        return this.indentClick$.asObservable();
+        return this.indentClickEmitter.asObservable();
     }
 
     /** Attach a component portal as content to this sidepanel container. */

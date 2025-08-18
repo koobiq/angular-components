@@ -115,8 +115,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     enter(): void;
     exit(): void;
     id: string;
-    protected readonly indentClick$: Subject<MouseEvent>;
     indentClick(): Observable<MouseEvent>;
+    protected readonly indentClickEmitter: Subject<MouseEvent>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
