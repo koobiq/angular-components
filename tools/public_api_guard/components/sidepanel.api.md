@@ -30,6 +30,7 @@ import { OnInit } from '@angular/core';
 import { Overlay } from '@angular/cdk/overlay';
 import { OverlayRef } from '@angular/cdk/overlay';
 import { SimpleChanges } from '@angular/core';
+import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
 
@@ -114,6 +115,8 @@ export class KbqSidepanelContainerComponent extends BasePortalOutlet implements 
     enter(): void;
     exit(): void;
     id: string;
+    indentClick(): Observable<MouseEvent>;
+    protected readonly indentClickEmitter: Subject<MouseEvent>;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
