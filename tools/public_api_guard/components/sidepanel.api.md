@@ -195,12 +195,14 @@ export class KbqSidepanelRef<T = any, R = any> {
     // (undocumented)
     close(result?: R): void;
     // (undocumented)
-    config: KbqSidepanelConfig;
+    readonly config: KbqSidepanelConfig;
     // (undocumented)
-    containerInstance: KbqSidepanelContainerComponent;
+    readonly containerInstance: KbqSidepanelContainerComponent;
     // (undocumented)
     readonly id: string;
     instance: T;
+    // (undocumented)
+    readonly overlayRef: OverlayRef;
 }
 
 // @public (undocumented)

@@ -25,9 +25,9 @@ export class KbqSidepanelRef<T = any, R = any> {
     private result: R | undefined;
 
     constructor(
-        public containerInstance: KbqSidepanelContainerComponent,
-        private overlayRef: OverlayRef,
-        public config: KbqSidepanelConfig
+        public readonly containerInstance: KbqSidepanelContainerComponent,
+        public readonly overlayRef: OverlayRef,
+        public readonly config: KbqSidepanelConfig
     ) {
         this.id = this.config.id || `kbq-sidepanel-${uniqueId++}`;
         this.containerInstance.id = this.id;
@@ -55,16 +55,18 @@ export class KbqSidepanelRef<T = any, R = any> {
                 this.afterClosed$.complete();
             });
 
-        if (!containerInstance.sidepanelConfig.disableClose) {
-            merge(
-                overlayRef.backdropClick(),
-                overlayRef.keydownEvents().pipe(
-                    // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
-                    filter((event) => event.keyCode === ESCAPE)
-                ),
-                this.containerInstance.indentClick()
-            ).subscribe(() => this.close());
-        }
+        merge(
+            overlayRef.backdropClick(),
+            overlayRef.keydownEvents().pipe(
+                // keyCode is deprecated, but IE11 and Edge don't support code property, which we need use instead
+                filter((event) => event.keyCode === ESCAPE)
+            ),
+            this.containerInstance.indentClick()
+        ).subscribe(() => {
+            if (this.config.disableClose) return;
+
+            this.close();
+        });
     }
 
     close(result?: R): void {
