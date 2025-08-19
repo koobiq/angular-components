@@ -426,7 +426,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     selector: 'kbq-navbar-ic-toggle',
     template: `
         <div class="kbq-navbar-ic-item__inner">
-            @if (navbar.expandedByInitialState || navbar.pinned) {
+            @if (navbar.pinned) {
                 <i kbq-icon [class.kbq-chevron-left_16]="navbar.expanded"></i>
                 <ng-content select="[kbqNavbarIcTitle]" />
             } @else if (navbar.expandedByHoverOrFocus && !navbar.pinned) {

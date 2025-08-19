@@ -8,8 +8,6 @@
     flex-shrink: 0;
     flex-direction: column;
     justify-content: space-between;
-
-    position: relative;
 }
 
 .kbq-navbar-ic {
@@ -34,6 +32,10 @@
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
+    }
+
+    &.kbq-pinned .kbq-navbar-ic__top-layer {
+        position: unset;
     }
 }
 

@@ -188,6 +188,7 @@ export class KbqNavbarIcContainer {}
     ],
     host: {
         class: 'kbq-navbar-ic',
+        '[class.kbq-pinned]': 'pinned',
         '[class.kbq-collapsed]': '!expanded',
         '[class.kbq-expanded]': 'expanded',
         '[style.min-width.px]': 'collapsedWidth',
@@ -235,8 +236,9 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
 
     readonly animationDone: Subject<void> = new Subject();
 
-    pinned: boolean = false;
     expandEvent: ExpandEvents | null = null;
+
+    @Input({ transform: booleanAttribute }) pinned = true;
 
     @Input({ transform: numberAttribute }) collapsedWidth = 64;
     @Input({ transform: numberAttribute }) expandedWidth = 240;
@@ -266,10 +268,6 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         return this.expanded && this.expandEvent === ExpandEvents.hoverOrFocus;
     }
 
-    get expandedByInitialState() {
-        return this.expanded && this.expandEvent === null;
-    }
-
     get currentWidth(): number {
         return this.expanded ? this.expandedWidth : this.collapsedWidth;
     }
@@ -284,7 +282,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         combineLatest([this.hovered, this.focused])
             .pipe(takeUntilDestroyed())
             .subscribe(([hovered, focused]) => {
-                if (this.expandedByInitialState) return;
+                if (this.pinned) return;
 
                 this.expandEvent = ExpandEvents.hoverOrFocus;
                 this.expanded = hovered || focused;
