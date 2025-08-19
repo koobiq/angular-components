@@ -1,7 +1,6 @@
 import { FocusMonitor, FocusOrigin } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Platform } from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -20,9 +19,9 @@ import {
     inject
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { ENTER, NUMPAD_DIVIDE, RIGHT_ARROW, SLASH, SPACE } from '@koobiq/cdk/keycodes';
+import { ENTER, RIGHT_ARROW, SPACE } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonCssStyler } from '@koobiq/components/button';
-import { KBQ_WINDOW, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
+import { KBQ_WINDOW, KbqRectangleItem, PopUpPlacements, PopUpTriggers } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -46,7 +45,7 @@ export class KbqNavbarIcLogo {}
 
 @Directive({
     standalone: true,
-    selector: 'kbq-navbar-ic-title, [kbqNavbarIcTitle]',
+    selector: '[kbqNavbarIcTitle]',
     host: {
         class: 'kbq-navbar-ic-title',
         '[class.kbq-navbar-ic-title_text-overflown]': 'isTextOverflown',
@@ -73,6 +72,11 @@ export class KbqNavbarIcTitle implements AfterViewInit {
         return this.nativeElement.scrollWidth > this.nativeElement.clientWidth;
     }
 
+    /** @docs-private */
+    ngAfterViewInit(): void {
+        this.outerElementWidth = this.getOuterElementWidth();
+    }
+
     getOuterElementWidth(): number {
         if (!this.isBrowser) return 0;
 
@@ -84,15 +88,11 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     checkTextOverflown() {
         this.isTextOverflown = this.text.length > 18;
     }
-
-    ngAfterViewInit(): void {
-        this.outerElementWidth = this.getOuterElementWidth();
-    }
 }
 
 @Directive({
     standalone: true,
-    selector: 'kbq-navbar-ic-divider',
+    selector: '[kbqNavbarIcDivider]',
     host: {
         class: 'kbq-navbar-ic-divider'
     }
@@ -120,10 +120,11 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     protected readonly focusMonitor = inject(FocusMonitor);
     protected readonly ngZone = inject(NgZone);
 
+    /** @docs-private */
     @ContentChild(KbqNavbarIcTitle) title: KbqNavbarIcTitle;
-
+    /** @docs-private */
     @ContentChild(KbqButton) button: KbqButton;
-
+    /** @docs-private */
     @ContentChild(KbqFormField) formField: KbqFormField;
 
     get tooltip(): KbqTooltipTrigger {
@@ -161,16 +162,19 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 
     private _disabled = false;
 
+    /** @docs-private */
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef);
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         if (this.button) {
             this.button.tabIndex = -1;
         }
     }
 
+    /** @docs-private */
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
@@ -192,6 +196,7 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
         this.focusHandler();
     }
 
+    /** @docs-private */
     focusHandler() {
         if (this.disabled || this.hasFocus) return;
 
@@ -204,6 +209,7 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
         this.elementRef.nativeElement.focus();
     }
 
+    /** @docs-private */
     blurHandler(): void {
         // When animations are enabled, Angular may end up removing the option from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the list
@@ -232,43 +238,6 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     }
 }
 
-@Directive({
-    standalone: true,
-    host: {
-        '[class.kbq-expanded]': '!collapsed',
-        '[class.kbq-collapsed]': 'collapsed'
-    }
-})
-export class KbqNavbarIcRectangleElement {
-    protected readonly isBrowser = inject(Platform).isBrowser;
-    protected readonly nativeElement = inject(ElementRef).nativeElement;
-    private readonly window = inject(KBQ_WINDOW);
-
-    readonly state = new Subject<void>();
-
-    get collapsed(): boolean {
-        return this._collapsed;
-    }
-
-    set collapsed(value: boolean) {
-        this._collapsed = value;
-
-        this.state.next();
-    }
-
-    private _collapsed: boolean;
-
-    @ContentChild(KbqButtonCssStyler) button: KbqButtonCssStyler;
-
-    getOuterElementWidth(): number {
-        if (!this.isBrowser) return 0;
-
-        const { width, marginLeft, marginRight } = this.window.getComputedStyle(this.nativeElement);
-
-        return [width, marginLeft, marginRight].reduce((acc, item) => acc + parseInt(item), 0);
-    }
-}
-
 @Component({
     standalone: true,
     selector: 'kbq-navbar-ic-item, [kbq-navbar-ic-item]',
@@ -283,20 +252,23 @@ export class KbqNavbarIcRectangleElement {
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
-    hostDirectives: [KbqNavbarIcRectangleElement],
+    hostDirectives: [KbqRectangleItem],
     imports: [KbqIcon]
 })
 export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentInit {
-    readonly rectangleElement = inject(KbqNavbarIcRectangleElement);
+    readonly rectangleElement = inject(KbqRectangleItem);
     readonly navbarFocusableItem = inject(KbqNavbarIcFocusableItem);
 
     private changeDetectorRef = inject(ChangeDetectorRef);
     private dropdownTrigger = inject(KbqDropdownTrigger, { optional: true });
     private tooltip = inject(KbqTooltipTrigger, { optional: true });
 
+    /** @docs-private */
     @ContentChild(KbqNavbarIcTitle) title: KbqNavbarIcTitle;
-
+    /** @docs-private */
     @ContentChild(KbqIcon) icon: KbqIcon;
+    /** @docs-private */
+    @ContentChild(KbqButtonCssStyler) button: KbqButtonCssStyler;
 
     @Input() collapsedText: string;
 
@@ -311,10 +283,6 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
 
             this.initListeners();
         }
-    }
-
-    get collapsed() {
-        return this._collapsed;
     }
 
     set collapsed(value: boolean) {
@@ -386,10 +354,12 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         }
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         this.updateTooltip();
     }
 
+    /** @docs-private */
     updateTooltip(): void {
         if (this.collapsed) {
             this.content = `${this.titleText || ''}`;
@@ -402,10 +372,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         this.changeDetectorRef.markForCheck();
     }
 
-    getTitleWidth(): number {
-        return this.title.outerElementWidth;
-    }
-
+    /** @docs-private */
     onKeyDown($event: KeyboardEvent) {
         if (!this.hasDropDownTrigger) {
             return;
@@ -455,17 +422,15 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [KbqIcon],
-    hostDirectives: [KbqNavbarIcRectangleElement]
+    hostDirectives: [KbqRectangleItem]
 })
 export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     readonly navbar = inject(KbqNavbarIc);
-    readonly rectangleElement = inject(KbqNavbarIcRectangleElement);
+    readonly rectangleElement = inject(KbqRectangleItem);
 
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-    protected readonly document = inject<Document>(DOCUMENT);
 
-    private readonly window = inject(KBQ_WINDOW);
-
+    /** @docs-private */
     @ContentChild(KbqIcon) customIcon: KbqIcon;
 
     @Input('kbqCollapsedTooltip')
@@ -488,17 +453,10 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     constructor() {
         super();
 
-        this.placement = PopUpPlacements.Right;
-
         this.rectangleElement.state.subscribe(() => this.changeDetectorRef.markForCheck());
-
-        if (this.window) {
-            this.ngZone.runOutsideAngular(() => {
-                this.window.addEventListener('keydown', this.windowToggleHandler);
-            });
-        }
     }
 
+    /** @docs-private */
     onKeydown($event: KeyboardEvent) {
         if ([SPACE, ENTER].includes($event.keyCode)) {
             this.toggle();
@@ -508,10 +466,6 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
         }
 
         super.handleKeydown($event);
-    }
-
-    ngOnDestroy(): void {
-        this.window.removeEventListener('keydown', this.windowToggleHandler);
     }
 
     toggle = () => {
@@ -525,11 +479,5 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
         }
 
         this.changeDetectorRef.markForCheck();
-    };
-
-    private windowToggleHandler = (event: KeyboardEvent) => {
-        if (event.ctrlKey && [NUMPAD_DIVIDE, SLASH].includes(event.keyCode)) {
-            this.ngZone.run(this.toggle);
-        }
     };
 }
