@@ -1714,7 +1714,7 @@ describe(KbqSelect.name, () => {
                     expect(lastOption.selected).toBe(true);
 
                     dispatchKeyboardEvent(select, 'keydown', DOWN_ARROW);
-                    flush();
+                    flush(35);
 
                     expect(lastOption.selected).toBe(true);
                 }));
@@ -4873,7 +4873,7 @@ describe(KbqSelect.name, () => {
             // simulate option removal for detection checks
             testInstance.options = testInstance.options.filter((option) => option !== selectedOptions[2]);
             fixture.autoDetectChanges();
-            flush();
+            flush(35);
             tick(1);
         }));
 

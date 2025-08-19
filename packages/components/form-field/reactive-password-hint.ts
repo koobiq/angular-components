@@ -3,6 +3,7 @@ import {
     afterNextRender,
     booleanAttribute,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     computed,
     DestroyRef,
@@ -10,10 +11,11 @@ import {
     input,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { KBQ_FORM_FIELD_REF, KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { EMPTY, merge } from 'rxjs';
+import { EMPTY } from 'rxjs';
+import { delay } from 'rxjs/operators';
 import { KbqFormField } from './form-field';
 import { KbqHint } from './hint';
 
@@ -24,7 +26,7 @@ import { KbqHint } from './hint';
     selector: 'kbq-reactive-password-hint',
     exportAs: 'kbqReactivePasswordHint',
     template: `
-        <i kbq-icon="" [ngClass]="icon()"></i>
+        <i kbq-icon="" [ngClass]="icon()" [color]="color"></i>
 
         <span class="kbq-hint__text">
             <ng-content />
@@ -42,8 +44,9 @@ import { KbqHint } from './hint';
 })
 export class KbqReactivePasswordHint extends KbqHint {
     // @TODO fix types (#DS-2915)
-    private readonly formField = inject(KBQ_FORM_FIELD_REF, { optional: true }) as unknown as KbqFormField | undefined;
+    private readonly formField = inject<KbqFormField>(KBQ_FORM_FIELD_REF, { optional: true });
     private readonly destroyRef = inject(DestroyRef);
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     /** Whether the form field control has an error. */
     readonly hasError = input(false, { transform: booleanAttribute });
@@ -62,23 +65,22 @@ export class KbqReactivePasswordHint extends KbqHint {
         this.compact = false;
         this.color = KbqComponentColors.ContrastFade;
 
-        const hasError = toObservable(this.hasError);
-
         afterNextRender(() => {
-            merge(this.formField?.control?.stateChanges || EMPTY, hasError)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe(() => (this.color = this.makeColor()));
+            (this.formField?.control?.stateChanges || EMPTY)
+                .pipe(delay(0), takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => {
+                    this.color = this.makeColor();
+
+                    this.changeDetectorRef.markForCheck();
+                });
         });
     }
 
     private makeColor(): KbqComponentColors {
-        const invalid = this.formField?.invalid;
-        const hasError = this.hasError();
+        if (this.formField?.control.ngControl?.untouched && this.formField.control.ngControl.pristine) {
+            return KbqComponentColors.ContrastFade;
+        }
 
-        if (invalid && hasError) return KbqComponentColors.Error;
-
-        if ((!invalid && !hasError) || !hasError) return KbqComponentColors.Success;
-
-        return KbqComponentColors.ContrastFade;
+        return this.hasError() ? KbqComponentColors.Error : KbqComponentColors.Success;
     }
 }

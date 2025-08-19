@@ -44,7 +44,7 @@ export const hasPasswordStrengthError = (passwordHints: QueryList<KbqPasswordHin
     imports: [NgClass, KbqIconModule],
     selector: 'kbq-password-hint',
     template: `
-        <i class="kbq-password-hint__icon" kbq-icon="" [ngClass]="icon"></i>
+        <i class="kbq-password-hint__icon" kbq-icon="" [ngClass]="icon" [color]="iconColor"></i>
 
         <span class="kbq-hint__text">
             <ng-content />
@@ -81,6 +81,19 @@ export class KbqPasswordHint extends KbqHint implements AfterContentInit {
 
     get icon(): string {
         return this.checked ? 'kbq-check-s_16' : 'kbq-xmark-s_16';
+    }
+
+    /**
+     * The form field hint icon color.
+     *
+     * @docs-private
+     */
+    protected get iconColor(): KbqComponentColors {
+        if (this.control?.ngControl.untouched && this.control?.ngControl.pristine) {
+            return KbqComponentColors.ContrastFade;
+        }
+
+        return this.checked ? KbqComponentColors.Success : KbqComponentColors.Error;
     }
 
     private checkRule: (value: string) => boolean;

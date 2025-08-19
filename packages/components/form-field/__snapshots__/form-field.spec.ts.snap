@@ -89,7 +89,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
-      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
+      class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
       kbq-icon=""
     />
     <span
@@ -110,7 +110,7 @@ DebugElement {
     id="test-reactive-password-hint-id"
   >
     <i
-      class="kbq kbq-icon kbq-empty kbq-xmark-s_16"
+      class="kbq kbq-icon kbq-contrast-fade kbq-xmark-s_16"
       kbq-icon=""
     />
     <span
@@ -127,11 +127,11 @@ DebugElement {
 exports[`KbqFormField should display KbqReactivePasswordHint success for valid password 1`] = `
 DebugElement {
   "nativeNode": <kbq-reactive-password-hint
-    class="kbq-reactive-password-hint kbq-hint kbq-hint_fill-text-off kbq-success"
+    class="kbq-reactive-password-hint kbq-hint kbq-contrast-fade kbq-hint_fill-text-off"
     id="test-reactive-password-hint-id"
   >
     <i
-      class="kbq kbq-icon kbq-empty kbq-check-s_16"
+      class="kbq kbq-icon kbq-contrast-fade kbq-check-s_16"
       kbq-icon=""
     />
     <span
