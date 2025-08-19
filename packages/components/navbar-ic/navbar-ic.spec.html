@@ -1,7 +1,7 @@
 <div [style.width.px]="navbarContainerWidth">
     <kbq-navbar-ic>
         <kbq-navbar-ic-container>
-            <kbq-navbar-ic-item #disabledItem="kbqNavbarItem" [disabled]="true" (click)="onItemClick(disabledItem)">
+            <kbq-navbar-ic-item #disabledItem="kbqNavbarIcItem" [disabled]="true" (click)="onItemClick(disabledItem)">
                 <i kbq-icon="kbq-info-circle_16"></i>
                 <kbq-navbar-ic-title>Left icon</kbq-navbar-ic-title>
             </kbq-navbar-ic-item>
@@ -10,7 +10,7 @@
                 <i kbq-icon="kbq-play_16"></i>
             </kbq-navbar-ic-item>
             <kbq-navbar-ic-header>
-                <kbq-navbar-ic-logo>
+                <div kbqNavbarIcLogo>
                     <img
                         alt=""
                         height="32"
@@ -18,7 +18,7 @@
                         style="vertical-align: middle"
                         width="32"
                     />
-                </kbq-navbar-ic-logo>
+                </div>
                 <kbq-navbar-ic-title>Brand</kbq-navbar-ic-title>
             </kbq-navbar-ic-header>
             <kbq-navbar-ic-title>Title before</kbq-navbar-ic-title>
