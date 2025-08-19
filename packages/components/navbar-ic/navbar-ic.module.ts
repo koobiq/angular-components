@@ -1,6 +1,7 @@
 import { A11yModule } from '@angular/cdk/a11y';
 import { PlatformModule } from '@angular/cdk/platform';
 import { NgModule } from '@angular/core';
+import { KbqRectangleItem } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { KbqNavbarIc, KbqNavbarIcContainer } from './navbar-ic';
@@ -10,7 +11,6 @@ import {
     KbqNavbarIcFocusableItem,
     KbqNavbarIcItem,
     KbqNavbarIcLogo,
-    KbqNavbarIcRectangleElement,
     KbqNavbarIcTitle,
     KbqNavbarIcToggle
 } from './navbar-ic-item';
@@ -29,8 +29,8 @@ import {
         KbqNavbarIcToggle,
         KbqNavbarIcDivider,
         KbqNavbarIcFocusableItem,
-        KbqNavbarIcRectangleElement,
-        KbqNavbarIcContainer
+        KbqNavbarIcContainer,
+        KbqRectangleItem
     ],
     exports: [
         KbqNavbarIc,
@@ -41,8 +41,7 @@ import {
         KbqNavbarIcLogo,
         KbqNavbarIcToggle,
         KbqNavbarIcDivider,
-        KbqNavbarIcFocusableItem,
-        KbqNavbarIcRectangleElement
+        KbqNavbarIcFocusableItem
     ]
 })
 export class KbqNavbarIcModule {}

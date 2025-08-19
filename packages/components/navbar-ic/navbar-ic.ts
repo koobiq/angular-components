@@ -23,7 +23,8 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { DOWN_ARROW, isHorizontalMovement, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { DOWN_ARROW, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
+import { KbqRectangleItem } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
@@ -32,7 +33,6 @@ import {
     KbqNavbarFocusableItemEvent,
     KbqNavbarIcFocusableItem,
     KbqNavbarIcItem,
-    KbqNavbarIcRectangleElement,
     KbqNavbarIcToggle
 } from './navbar-ic-item';
 
@@ -75,6 +75,7 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
     private itemFocusSubscription: Subscription | null;
     private itemBlurSubscription: Subscription | null;
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarIcFocusableItem>(this.focusableItems).withTypeAhead();
 
@@ -95,22 +96,26 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
         });
     }
 
+    /** @docs-private */
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef).subscribe((focusOrigin) => {
             this.keyManager.setFocusOrigin(focusOrigin);
         });
     }
 
+    /** @docs-private */
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
 
+    /** @docs-private */
     focusHandler(): void {
         if (this.focusableItems.length === 0) return;
 
         this.keyManager.setFirstItemActive();
     }
 
+    /** @docs-private */
     blurHandler() {
         if (!this.hasFocusedItem()) {
             this.keyManager.setActiveItem(-1);
@@ -205,26 +210,31 @@ export class KbqNavbarIcContainer {}
     encapsulation: ViewEncapsulation.None
 })
 export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
+    /** @docs-private */
     rectangleElements = contentChildren(
-        forwardRef(() => KbqNavbarIcRectangleElement),
+        forwardRef(() => KbqRectangleItem),
         { descendants: true }
     );
 
+    /** @docs-private */
     items = contentChildren(
         forwardRef(() => KbqNavbarIcItem),
         { descendants: true }
     );
 
+    /** @docs-private */
     toggleElement = contentChildren(
         forwardRef(() => KbqNavbarIcToggle),
         { descendants: true }
     );
 
+    /** @docs-private */
     dropdownTrigger = contentChild(
         forwardRef(() => KbqDropdownTrigger),
         { descendants: true }
     );
 
+    /** @docs-private */
     popoverTrigger = contentChild(
         forwardRef(() => KbqPopoverTrigger),
         { descendants: true }
@@ -294,6 +304,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         });
     }
 
+    /** @docs-private */
     ngAfterContentInit(): void {
         this.updateTooltipForItems();
 
@@ -310,13 +321,11 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         this.changeDetectorRef.markForCheck();
     }
 
+    /** @docs-private */
     onKeyDown(event: KeyboardEvent) {
         const keyCode = event.keyCode;
 
-        if (
-            !(event.target as HTMLElement).attributes.getNamedItem('kbqinput') &&
-            (isVerticalMovement(event) || isHorizontalMovement(event))
-        ) {
+        if (!(event.target as HTMLElement).attributes.getNamedItem('kbqinput') && isVerticalMovement(event)) {
             event.preventDefault();
         }
 
@@ -337,7 +346,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
 
     protected updateExpandedStateForItems = () => this.rectangleElements().forEach(this.updateItemExpandedState);
 
-    protected updateItemExpandedState = (item: KbqNavbarIcRectangleElement): void => {
+    protected updateItemExpandedState = (item: KbqNavbarIcItem): void => {
         item.collapsed = !this.expanded;
         setTimeout(() => item.button?.updateClassModifierForIcons());
     };
