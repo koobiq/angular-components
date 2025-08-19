@@ -18,7 +18,9 @@ import { NavbarIcExamplesModule } from '../../docs-examples/components/navbar-ic
     imports: [NavbarIcExamplesModule],
     selector: 'dev-examples',
     template: `
-        <navbar-ic-overview-example />
+        <div style="padding: 20px">
+            <navbar-ic-overview-example />
+        </div>
         <br />
         <br />
         <navbar-ic-long-app-name-example />
