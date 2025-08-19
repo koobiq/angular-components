@@ -1,4 +1,4 @@
-<div class="dev-navbar-ic-container">
+<div class="layout-row" style="margin: -20px">
     <kbq-navbar-ic>
         <kbq-navbar-ic-container>
             <a href="#" kbq-navbar-ic-header>
@@ -49,73 +49,38 @@
         </kbq-navbar-ic-container>
     </kbq-navbar-ic>
 
-    <div>
+    <div class="layout-fill">
         <kbq-top-bar>
             <div
                 class="layout-row layout-align-center-center layout-padding-top-3xs layout-padding-bottom-3xs"
                 kbqTopBarContainer
                 placement="start"
             >
-                <div class="layout-row layout-margin-right-l flex-none">
-                    <img alt="example icon" src="assets/example-icon.svg" width="24" height="24" />
-                </div>
                 <div class="kbq-title kbq-truncate-line">Page Title</div>
             </div>
 
             <div kbqTopBarSpacer></div>
 
-            <div kbqTopBarContainer placement="end">
-                <div #kbqOverflowItems="kbqOverflowItems" kbqOverflowItems>
-                    @for (action of actions; track action.id) {
-                        <button
-                            kbq-button
-                            [kbqOverflowItem]="action.id"
-                            [kbqStyle]="action.style"
-                            [color]="action.color"
-                            [kbqPlacement]="PopUpPlacements.Bottom"
-                            [kbqTooltipArrow]="false"
-                            [kbqTooltipDisabled]="isDesktop()"
-                            [kbqTooltip]="action.text || action.id"
-                        >
-                            @if (action.icon) {
-                                <i kbq-icon="" [class]="action.icon"></i>
-                            }
-                            @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
-                                {{ action.text }}
-                            }
-                        </button>
-                    }
-
-                    <div kbqOverflowItemsResult>
-                        <button
-                            kbq-button
-                            [kbqStyle]="KbqButtonStyles.Transparent"
-                            [color]="KbqComponentColors.Contrast"
-                            [kbqDropdownTriggerFor]="appDropdown"
-                        >
-                            <i kbq-icon="kbq-ellipsis-horizontal_16"></i>
-                        </button>
-
-                        <kbq-dropdown #appDropdown="kbqDropdown">
-                            @for (action of actions; track action.id) {
-                                @if (kbqOverflowItems.hiddenItemIDs().has(action.id)) {
-                                    <button kbq-dropdown-item>
-                                        {{ action.text || action.id }}
-                                    </button>
-                                }
-                            }
-                        </kbq-dropdown>
-                    </div>
-                </div>
+            <div kbqTopBarContainer [placement]="'end'">
+                @for (action of actions; track action.id) {
+                    <button kbq-button [kbqStyle]="action.style" [color]="action.color">
+                        @if (action.icon) {
+                            <i kbq-icon="" [class]="action.icon"></i>
+                        }
+                        @if ((action.text && isDesktop()) || (!action.icon && action.text)) {
+                            {{ action.text }}
+                        }
+                    </button>
+                }
             </div>
         </kbq-top-bar>
 
-        <kbq-empty-state size="big" style="min-height: 216px">
+        <kbq-empty-state style="min-height: 216px" [size]="'big'">
             <div kbq-empty-state-icon>
                 <img
                     alt="Empty state"
-                    height="192"
-                    width="192"
+                    height="80"
+                    width="80"
                     [srcset]="srcSet()"
                     src="https://koobiq.io/assets/images/{{ currentTheme() }}/empty_192.png"
                 />

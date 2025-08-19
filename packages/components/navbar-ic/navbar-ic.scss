@@ -12,13 +12,7 @@
 
 .kbq-navbar-ic {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
     position: relative;
-
-    height: 100%;
 
     & .kbq-navbar-ic-container + .kbq-navbar-ic-container {
         padding-top: var(--kbq-size-xxl);
@@ -32,10 +26,6 @@
         flex-direction: column;
         justify-content: space-between;
         height: 100%;
-    }
-
-    &.kbq-pinned .kbq-navbar-ic__top-layer {
-        position: unset;
     }
 }
 

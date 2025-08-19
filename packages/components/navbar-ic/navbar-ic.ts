@@ -188,10 +188,9 @@ export class KbqNavbarIcContainer {}
     ],
     host: {
         class: 'kbq-navbar-ic',
-        '[class.kbq-pinned]': 'pinned',
         '[class.kbq-collapsed]': '!expanded',
         '[class.kbq-expanded]': 'expanded',
-        '[style.min-width.px]': 'collapsedWidth',
+        '[style.min-width.px]': 'pinned ? expandedWidth : collapsedWidth',
         '[attr.tabindex]': 'tabindex',
 
         '(focus)': 'focusHandler()',
