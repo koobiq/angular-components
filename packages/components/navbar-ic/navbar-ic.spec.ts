@@ -14,14 +14,14 @@ describe('KbqNavbarIc', () => {
         }).compileComponents();
     });
 
-    xit('should be collapsed on init stage', fakeAsync(() => {
+    it('should be expanded on init stage', fakeAsync(() => {
         const fixture = TestBed.createComponent(TestApp);
 
         fixture.detectChanges();
         tick(FONT_RENDER_TIMEOUT_MS);
         fixture.detectChanges();
 
-        const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-collapsed'));
+        const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-expanded'));
 
         expect(collapsedElements.length).toBeGreaterThan(0);
     }));
@@ -41,19 +41,6 @@ describe('KbqNavbarIc', () => {
         const hasTitle = collapsedElements.reduce((acc, el) => acc && el.nativeElement.hasAttribute('title'), true);
 
         expect(hasTitle).toBeTruthy();
-    }));
-
-    xit('collapsed elements should have specific title if defined', fakeAsync(() => {
-        const fixture = TestBed.createComponent(TestApp);
-
-        fixture.detectChanges();
-        tick(FONT_RENDER_TIMEOUT_MS);
-        fixture.detectChanges();
-
-        const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-collapsed'));
-        const elementWithCustomTitle = collapsedElements[collapsedElements.length - 1];
-
-        expect(elementWithCustomTitle.componentInstance.titleText).toBe('Right icon');
     }));
 
     it('items should allow click if not disable', () => {
@@ -92,7 +79,7 @@ describe('KbqNavbarIc', () => {
 
 @Component({
     selector: 'test-app',
-    templateUrl: './navbar.component.html'
+    templateUrl: './navbar-ic.spec.html'
 })
 class TestApp {
     counter: number = 0;
