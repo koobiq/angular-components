@@ -21,8 +21,6 @@ import { KbqLinkModule } from '@koobiq/components/link';
 import { debounceTime, map, of, pairwise, skip } from 'rxjs';
 import { KBQ_CLAMPED_TEXT_LOCALE_CONFIGURATION, kbqClampedTextDefaultMaxRows } from './constants';
 
-const baseClass = 'kbq-clamped-text';
-
 @Component({
     selector: 'kbq-clamped-text',
     standalone: true,
@@ -70,7 +68,7 @@ const baseClass = 'kbq-clamped-text';
     `,
     styleUrls: ['./clamped-text.scss'],
     host: {
-        class: baseClass,
+        class: 'kbq-clamped-text',
         '[attr.aria-expanded]': 'collapsedState() ? "false" : "true"'
     },
     encapsulation: ViewEncapsulation.None,
@@ -93,9 +91,9 @@ export class KbqClampedText implements AfterViewInit {
     readonly isCollapsedChange = output<boolean>();
 
     /** @docs-private */
-    readonly text = viewChild<ElementRef<HTMLSpanElement>>('text');
+    readonly text = viewChild.required<ElementRef<HTMLSpanElement>>('text');
     /** @docs-private */
-    readonly textContainer = viewChild<ElementRef<HTMLDivElement>>('textContainer');
+    readonly textContainer = viewChild.required<ElementRef<HTMLDivElement>>('textContainer');
 
     /**
      * This flag controls event emission, aria/css-class calculation
@@ -153,7 +151,7 @@ export class KbqClampedText implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        const textContainer = this.textContainer()!.nativeElement;
+        const textContainer = this.textContainer().nativeElement;
 
         this.resizeObserver
             .observe(textContainer)
@@ -203,7 +201,7 @@ export class KbqClampedText implements AfterViewInit {
     };
 
     private getRowsCount(): number {
-        const rects = Array.from(this.text()!.nativeElement.getClientRects());
+        const rects = Array.from(this.text().nativeElement.getClientRects());
 
         return [...new Set(rects.map(({ top }) => top))].length;
     }

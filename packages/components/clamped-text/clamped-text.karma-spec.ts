@@ -77,8 +77,7 @@ export class TestClampedTextDefault {
     readonly clampedText = viewChild(KbqClampedText);
     readonly resizeObserver = inject(SharedResizeObserver) as MockResizeObserver;
 
-    onCollapseChanged($event) {
-        console.log($event);
+    onCollapseChanged($event: boolean): void {
         this.collapsed.set($event);
     }
 }

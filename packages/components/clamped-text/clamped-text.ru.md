@@ -7,7 +7,11 @@
 По умолчанию текст обрезается после 5 строк. Атрибут `rows` задает, сколько строк показывать в свернутом виде:
 
 ```html
-<kbq-clamped-text [rows]="3">In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the victim originates from many different sources. More sophisticated strategies are required to mitigate this type of attack; simply attempting to block a single source is insufficient as there are multiple sources.</kbq-clamped-text>
+<kbq-clamped-text [rows]="3">
+    In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the victim originates from
+    many different sources. More sophisticated strategies are required to mitigate this type of attack; simply
+    attempting to block a single source is insufficient as there are multiple sources.
+</kbq-clamped-text>
 ```
 
 ### Одна строка не сворачивается
