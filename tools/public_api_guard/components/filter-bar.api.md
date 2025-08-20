@@ -406,7 +406,7 @@ export interface KbqPipeData<V> extends KbqPipe {
 }
 
 // @public (undocumented)
-export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
+export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
     protected readonly colors: typeof KbqComponentColors;
     get defaultEnd(): D;
     get defaultStart(): D;
@@ -419,6 +419,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     get isEmpty(): boolean;
     protected isListMode: boolean;
     listSelection: Signal<KbqListSelection>;
+    ngAfterViewInit(): void;
     // (undocumented)
     onApplyPeriod(): void;
     // (undocumented)
@@ -451,7 +452,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
 }
 
 // @public (undocumented)
-export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
+export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
     protected readonly colors: typeof KbqComponentColors;
     get defaultEnd(): D;
     get defaultStart(): D;
@@ -464,6 +465,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     get isEmpty(): boolean;
     protected isListMode: boolean;
     listSelection: Signal<KbqListSelection>;
+    ngAfterViewInit(): void;
     onApplyPeriod(): void;
     // (undocumented)
     onFocusEndInput(): void;
@@ -651,7 +653,7 @@ export class KbqPipeTitleDirective extends KbqTooltipTrigger implements AfterVie
 }
 
 // @public (undocumented)
-export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
+export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit, AfterViewInit {
     constructor();
     // (undocumented)
     dataSource: KbqTreeFlatDataSource<KbqTreeSelectNode, KbqTreeSelectFlatNode>;
@@ -659,6 +661,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     // (undocumented)
     hasChild(_: number, nodeData: any): any;
     get isEmpty(): boolean;
+    ngAfterViewInit(): void;
     // (undocumented)
     ngOnInit(): void;
     // (undocumented)

@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -57,7 +57,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         FormsModule
     ]
 })
-export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit {
+export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> implements OnInit, AfterViewInit {
     /** control for search options */
     searchControl: UntypedFormControl = new UntypedFormControl();
     /** filtered by search options */
@@ -102,6 +102,15 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
 
     ngOnInit(): void {
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+    }
+
+    /** @docs-private */
+    override ngAfterViewInit() {
+        super.ngAfterViewInit();
+
+        this.select.closedStream
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
     }
 
     hasChild(_: number, nodeData) {

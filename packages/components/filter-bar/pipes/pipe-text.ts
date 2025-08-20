@@ -1,5 +1,6 @@
 import { NgClass } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButtonModule } from '@koobiq/components/button';
@@ -66,7 +67,13 @@ export class KbqPipeTextComponent extends KbqBasePipe<string | null> implements 
     ngAfterViewInit() {
         super.ngAfterViewInit();
 
-        this.popover.visibleChange.subscribe(() => this.stateChanges.next());
+        this.popover.visibleChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((visible) => {
+            this.stateChanges.next();
+
+            if (!visible) {
+                this.filterBar?.onClosePipe.next(this.data);
+            }
+        });
     }
 
     onApply() {
