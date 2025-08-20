@@ -5,7 +5,13 @@
 }
 
 @if (mode() === 'view') {
-    <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
+    @if (true) {
+        <span class="kbq-inline-edit__placeholder">{{ placeholder() }}</span>
+    } @else {
+        <div class="kbq-inline-edit__view-container">
+            <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
+        </div>
+    }
 } @else {
     <div class="kbq-inline-edit__overlay-anchor">
         <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
@@ -21,6 +27,13 @@
     >
         <div class="kbq-inline-edit__panel">
             <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
+
+            @if (true) {
+                <div class="kbq-inline-edit__terminal-buttons layout-padding-m">
+                    <button kbq-button [color]="'contrast'"><i kbq-icon="kbq-check_16"></i></button>
+                    <button kbq-button [color]="'contrast-fade'"><i kbq-icon="kbq-check_16"></i></button>
+                </div>
+            }
         </div>
     </ng-template>
 }

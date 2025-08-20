@@ -14,7 +14,9 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { KbqButtonModule } from '@koobiq/components/button';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
+import { KbqIcon } from '@koobiq/components/icon';
 import { KbqFocusMonitor } from './focus-monitor';
 
 const baseClass = 'kbq-inline-edit';
@@ -56,7 +58,9 @@ export class KbqInlineEditEditMode {
     imports: [
         NgTemplateOutlet,
         CdkConnectedOverlay,
-        CdkOverlayOrigin
+        CdkOverlayOrigin,
+        KbqButtonModule,
+        KbqIcon
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
@@ -94,6 +98,11 @@ export class KbqInlineEdit {
     }
 
     onAttach() {
-        this.formFieldRef()?.focus();
+        const formFieldRef = this.formFieldRef();
+
+        if (formFieldRef) {
+            formFieldRef.focus();
+            (formFieldRef.control as any).placeholder = this.placeholder();
+        }
     }
 }

@@ -33,20 +33,24 @@
             left: calc(-1 * (var(--kbq-inline-edit-padding-horizontal) + 1px));
         }
     }
-}
 
-.kbq-inline-edit_view {
-    min-height: var(--kbq-inline-edit-height);
-    @include _inline-edit-theme();
+    &.kbq-inline-edit_view {
+        min-height: var(--kbq-inline-edit-height);
+        @include _inline-edit-theme();
 
-    .kbq-inline-edit__overlay-anchor {
-        height: 0;
+        .kbq-inline-edit__overlay-anchor {
+            height: 0;
+        }
     }
-}
 
-.kbq-inline-edit_edit {
-    .kbq-inline-edit__label {
-        margin-bottom: var(--kbq-size-3xs);
+    &.kbq-inline-edit_edit {
+        .kbq-inline-edit__label {
+            margin-bottom: var(--kbq-size-3xs);
+        }
+    }
+
+    .kbq-inline-edit__placeholder {
+        color: var(--kbq-foreground-contrast-secondary);
     }
 }
 
