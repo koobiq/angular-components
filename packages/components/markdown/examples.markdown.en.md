@@ -1,5 +1,7 @@
-🚧 **Documentation in progress** 🚧
+#### Headers combinations
 
-Unfortunately, the documentation for this section is not ready yet. We are actively working on its creation and plan to add it soon.
+<!-- example(markdown-headers-combinations) -->
 
-If you would like to contribute to the documentation or have any questions, please feel free to [open an issue](https://github.com/koobiq/angular-components/issues) in our GitHub repository.
+#### Large article
+
+<!-- example(markdown-article) -->
