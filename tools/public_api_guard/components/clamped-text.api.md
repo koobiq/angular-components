@@ -33,8 +33,8 @@ export class KbqClampedText implements AfterViewInit {
     // (undocumented)
     ngAfterViewInit(): void;
     readonly rows: InputSignal<number>;
-    readonly text: Signal<ElementRef<HTMLSpanElement> | undefined>;
-    readonly textContainer: Signal<ElementRef<HTMLDivElement> | undefined>;
+    readonly text: Signal<ElementRef<HTMLSpanElement>>;
+    readonly textContainer: Signal<ElementRef<HTMLDivElement>>;
     toggleIsCollapsed(event: Event): void;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqClampedText, "kbq-clamped-text", ["kbqClampedText"], { "rows": { "alias": "rows"; "required": false; "isSignal": true; }; "isCollapsed": { "alias": "isCollapsed"; "required": false; "isSignal": true; }; "debounceTime": { "alias": "debounceTime"; "required": false; "isSignal": true; }; }, { "isCollapsedChange": "isCollapsedChange"; }, never, ["*"], true, never>;
