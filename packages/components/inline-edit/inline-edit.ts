@@ -1,4 +1,3 @@
-import { CdkMonitorFocus } from '@angular/cdk/a11y';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -12,9 +11,10 @@ import {
     input,
     signal,
     TemplateRef,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { KbqLabel } from '@koobiq/components/form-field';
+import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqFocusMonitor } from './focus-monitor';
 
 const baseClass = 'kbq-inline-edit';
@@ -45,15 +45,17 @@ export class KbqInlineEditEditMode {
     styleUrls: ['./inline-edit.scss', './inline-edit-tokens.scss'],
     host: {
         class: baseClass,
+        '[class.kbq-inline-edit_with-label]': '!!label()',
         '[tabindex]': 'tabIndex()',
         '[class]': 'className()',
-        '(click)': 'onClick()'
+        '(click)': 'onClick()',
+        '(keydown.enter)': 'onClick()',
+        '(keydown.space)': 'onClick()'
     },
     hostDirectives: [KbqFocusMonitor],
     imports: [
         NgTemplateOutlet,
         CdkConnectedOverlay,
-        CdkMonitorFocus,
         CdkOverlayOrigin
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -65,13 +67,23 @@ export class KbqInlineEdit {
     protected readonly viewModeTemplateRef = contentChild.required(KbqInlineEditViewMode);
     protected readonly editModeTemplateRef = contentChild.required(KbqInlineEditEditMode);
     protected readonly label = contentChild(KbqLabel);
-
-    readonly elementRef = inject(ElementRef);
+    protected readonly formFieldRef = contentChild(KbqFormField);
+    protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
 
     protected readonly mode = signal<'view' | 'edit'>('view');
 
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
-    protected readonly tabIndex = computed(() => (this.mode() === 'edit' ? -1 : 0));
+    protected readonly isEditMode = computed(() => this.mode() === 'edit');
+    protected readonly tabIndex = computed(() => (this.isEditMode() ? -1 : 0));
+    protected readonly overlayWidth = computed<number | string>(() => {
+        const elementRef: ElementRef<HTMLElement> | undefined = this.label()
+            ? this.overlayOrigin()?.elementRef
+            : this.elementRef;
+
+        return elementRef?.nativeElement.clientWidth ?? '';
+    });
+
+    protected readonly elementRef = inject(ElementRef);
 
     toggleMode(): void {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
@@ -79,5 +91,9 @@ export class KbqInlineEdit {
 
     onClick(): void {
         this.toggleMode();
+    }
+
+    onAttach() {
+        this.formFieldRef()?.focus();
     }
 }

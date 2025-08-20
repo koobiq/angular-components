@@ -1,9 +1,6 @@
-.kbq-content-panel-container {
-    --kbq-content-panel-resizer-width: var(--kbq-size-l);
-    --kbq-content-panel-border-radius: var(--kbq-size-l);
-    --kbq-content-panel-background-color: var(--kbq-background-card);
-    --kbq-content-panel-border: var(--kbq-size-border-width) solid var(--kbq-line-contrast-less);
-    --kbq-content-panel-header-overflow-box-shadow: var(--kbq-shadow-overflow-normal-bottom);
-    --kbq-content-panel-footer-overflow-box-shadow: var(--kbq-shadow-overflow-normal-top);
-    --kbq-content-panel-vertical-padding: var(--kbq-size-xxl);
+:where(.kbq-inline-edit) {
+    --kbq-inline-edit-height: var(--kbq-size-3xl);
+    --kbq-inline-edit-pop-up-height: var(--kbq-size-xl);
+    --kbq-inline-edit-padding-horizontal: var(--kbq-size-s);
+    --kbq-inline-edit-padding-vertical: 5px;
 }
