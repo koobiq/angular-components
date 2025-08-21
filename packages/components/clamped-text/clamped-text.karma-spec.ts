@@ -102,6 +102,8 @@ describe('KbqClampedText', () => {
 
         componentInstance.width.set(200);
         fixture.detectChanges();
+
+        // @TODO: need to figure out how to get rid of manual resizeObserver call (#DS-4134)
         componentInstance.resizeObserver.changes.next([]);
 
         await fixture.whenStable();
@@ -129,6 +131,7 @@ describe('KbqClampedText', () => {
         const previousCollapsedState = componentInstance.collapsed();
 
         componentInstance.width.set(200);
+        // @TODO: need to figure out how to get rid of manual resizeObserver call (#DS-4134)
         componentInstance.resizeObserver.changes.next([]);
         fixture.detectChanges();
 
@@ -143,6 +146,7 @@ describe('KbqClampedText', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.width.set(200);
+        // @TODO: need to figure out how to get rid of manual resizeObserver call (#DS-4134)
         componentInstance.resizeObserver.changes.next([]);
         fixture.detectChanges();
 
@@ -163,6 +167,7 @@ describe('KbqClampedText', () => {
         const { debugElement, componentInstance } = fixture;
 
         componentInstance.width.set(200);
+        // @TODO: need to figure out how to get rid of manual resizeObserver call (#DS-4134)
         componentInstance.resizeObserver.changes.next([]);
         fixture.detectChanges();
 
@@ -176,6 +181,7 @@ describe('KbqClampedText', () => {
         expect(componentInstance.collapsed()).toBeFalse();
 
         componentInstance.width.set(1000);
+        // @TODO: need to figure out how to get rid of manual resizeObserver call (#DS-4134)
         componentInstance.resizeObserver.changes.next([]);
         fixture.detectChanges();
 

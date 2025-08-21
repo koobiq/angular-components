@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { KbqLocaleServiceModule } from '@koobiq/components/core';
-import { ClampedTextExamplesModule } from '../../docs-examples/clamped-text';
+import { ClampedTextExamplesModule } from '../../docs-examples/components/clamped-text';
 import { DevLocaleSelector } from '../locale-selector';
 
 @Component({
