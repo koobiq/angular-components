@@ -680,6 +680,36 @@
                 }
             }
         },
+        "dev-clamped-text": {
+            "projectType": "application",
+            "root": "packages/components-dev/clamped-text",
+            "sourceRoot": "packages/components-dev/clamped-text",
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:application",
+                    "options": {
+                        "outputPath": {
+                            "base": "dist/components-dev/clamped-text"
+                        },
+                        "tsConfig": "packages/components-dev/clamped-text/tsconfig.app.json",
+                        "index": "packages/components-dev/index.html",
+                        "styles": ["packages/components-dev/main.scss"],
+                        "polyfills": ["zone.js"],
+                        "extractLicenses": false,
+                        "sourceMap": true,
+                        "optimization": false,
+                        "namedChunks": true,
+                        "browser": "packages/components-dev/clamped-text/main.ts"
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "buildTarget": "dev-clamped-text:build"
+                    }
+                }
+            }
+        },
         "dev-code-block": {
             "projectType": "application",
             "root": "packages/components-dev/code-block",

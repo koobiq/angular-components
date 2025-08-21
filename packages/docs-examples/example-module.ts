@@ -24,6 +24,18 @@ export interface LiveExample {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
+  "clamped-text-overview": {
+    "packagePath": "clamped-text/clamped-text-overview",
+    "title": "Clamped-text overview",
+    "componentName": "ClampedTextOverviewExample",
+    "files": [
+      "clamped-text-overview-example.ts"
+    ],
+    "selector": "clamped-text-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-text-overview-example.ts",
+    "importPath": "clamped-text"
+  },
   "accordion-content": {
     "packagePath": "components/accordion/accordion-content",
     "title": "Accordion content",
@@ -4817,6 +4829,8 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
 };
 export async function loadExample(id: string): Promise<any> {
   switch (id) {
+  case 'clamped-text-overview':
+return import('@koobiq/docs-examples/clamped-text');
   case 'accordion-content':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-header':

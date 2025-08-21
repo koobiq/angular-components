@@ -1,0 +1,17 @@
+.kbq-clamped-text {
+    display: inline-flex;
+    flex-direction: column;
+}
+
+.kbq-clamped-text__content {
+    &.kbq-clamped-text__content_collapsed {
+        display: -webkit-box;
+        overflow-y: hidden;
+        -webkit-box-orient: vertical;
+    }
+}
+
+.kbq-clamped-text__toggle {
+    margin-top: var(--kbq-size-xxs);
+    align-self: flex-start;
+}

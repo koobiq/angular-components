@@ -1,4 +1,8 @@
-import { KbqActionsPanelLocaleConfiguration, KbqCodeBlockLocaleConfiguration } from './types';
+import {
+    KbqActionsPanelLocaleConfiguration,
+    KbqClampedTextLocaleConfig,
+    KbqCodeBlockLocaleConfiguration
+} from './types';
 
 export const faIRLocaleData = {
     select: { hiddenItemsText: '{{ number }} بیشتر' },
@@ -86,5 +90,9 @@ export const faIRLocaleData = {
             customPeriodErrorHint: 'دوره نمی‌تواند بعد از پایان آن شروع شود',
             backToPeriodSelection: 'بازگشت به انتخاب دوره'
         }
-    }
+    },
+    clampedText: {
+        openText: 'باز کردن',
+        closeText: 'بستن'
+    } satisfies KbqClampedTextLocaleConfig
 };
