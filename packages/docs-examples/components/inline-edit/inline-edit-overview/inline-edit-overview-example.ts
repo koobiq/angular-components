@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqCleaner, KbqFormFieldModule, KbqLabel } from '@koobiq/components/form-field';
+import { KbqBadgeModule } from '@koobiq/components/badge';
+import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
  * @title Inline edit overview
@@ -12,32 +13,30 @@ import { KbqTagsModule } from '@koobiq/components/tags';
 @Component({
     standalone: true,
     imports: [
+        FormsModule,
         KbqInlineEditModule,
-        KbqTagsModule,
         KbqFormFieldModule,
-        KbqLabel,
         KbqSelectModule,
         KbqCleaner,
-        FormsModule,
-        KbqInputModule
+        KbqInputModule,
+        KbqTextareaModule,
+        KbqBadgeModule
     ],
     selector: 'inline-edit-overview-example',
     template: `
-        <kbq-inline-edit>
-            <kbq-label>Field Name</kbq-label>
-
+        <kbq-inline-edit showActions>
             <ng-container *kbqInlineEditViewMode>
-                <kbq-tag-list>
-                    @for (tag of selected; track tag) {
-                        <kbq-tag [value]="tag">
-                            {{ tag }}
-                        </kbq-tag>
+                <div class="layout-row layout-gap-xxs">
+                    @for (badge of selected; track badge) {
+                        <kbq-badge>
+                            {{ badge }}
+                        </kbq-badge>
                     }
-                </kbq-tag-list>
+                </div>
             </ng-container>
             <ng-container *kbqInlineEditEditMode>
                 <kbq-form-field>
-                    <kbq-select multiple [(value)]="selected">
+                    <kbq-select multiple [(ngModel)]="selected">
                         @for (option of options; track option) {
                             <kbq-option [value]="option">{{ option }}</kbq-option>
                         }
