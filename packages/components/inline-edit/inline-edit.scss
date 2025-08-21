@@ -70,4 +70,13 @@
 
 .kbq-inline-edit__panel {
     width: 100%;
+
+    .kbq-inline-edit__action-buttons {
+        position: relative;
+        left: calc(-1 * var(--kbq-inline-edit-padding-horizontal));
+        display: inline-flex;
+        flex-direction: row;
+        gap: var(--kbq-size-xxs);
+        padding: var(--kbq-size-xxs) var(--kbq-size-s) var(--kbq-size-s);
+    }
 }

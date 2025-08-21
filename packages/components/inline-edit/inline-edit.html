@@ -5,7 +5,7 @@
 }
 
 @if (mode() === 'view') {
-    @if (true) {
+    @if (false) {
         <span class="kbq-inline-edit__placeholder">{{ placeholder() }}</span>
     } @else {
         <div class="kbq-inline-edit__view-container">
@@ -24,14 +24,18 @@
         [cdkConnectedOverlayOrigin]="overlayOrigin"
         [cdkConnectedOverlayWidth]="overlayWidth()"
         (attach)="onAttach()"
+        (overlayOutsideClick)="onOutsideClick()"
+        (overlayKeydown)="onKeydown($event)"
     >
-        <div class="kbq-inline-edit__panel">
+        <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
             <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
 
-            @if (true) {
-                <div class="kbq-inline-edit__terminal-buttons layout-padding-m">
-                    <button kbq-button [color]="'contrast'"><i kbq-icon="kbq-check_16"></i></button>
-                    <button kbq-button [color]="'contrast-fade'"><i kbq-icon="kbq-check_16"></i></button>
+            @if (showActions()) {
+                <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
+                    <button kbq-button [color]="'contrast'" (click)="save()"><i kbq-icon="kbq-check_16"></i></button>
+                    <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
+                        <i kbq-icon="kbq-xmark_16"></i>
+                    </button>
                 </div>
             }
         </div>
