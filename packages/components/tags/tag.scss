@@ -49,6 +49,17 @@
     & .kbq-icon_left {
         margin-left: var(--kbq-tag-size-icon-margin-left);
     }
+
+    &.kbq-tag_editable {
+        .kbq-tag-edit-input {
+            // @TODO auto sizing
+            field-sizing: content;
+
+            border: unset;
+            background: unset;
+            outline: unset;
+        }
+    }
 }
 
 .kbq-tag__wrapper {
