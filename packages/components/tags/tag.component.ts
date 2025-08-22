@@ -1,5 +1,6 @@
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     AfterViewInit,
@@ -25,7 +26,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { BACKSPACE, DELETE, ENTER, ESCAPE, SPACE } from '@koobiq/cdk/keycodes';
 import { KBQ_TITLE_TEXT_REF, KbqColorDirective, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
@@ -96,7 +96,7 @@ export class KbqTagEditSubmit {
 
     /** @docs-private */
     protected handleClick(_event: Event): void {
-        this.tag.submitEditing('submit');
+        this.tag.submitEditing('click');
     }
 
     /** @docs-private */
@@ -105,7 +105,7 @@ export class KbqTagEditSubmit {
             case ENTER: {
                 event.preventDefault();
                 event.stopPropagation();
-                this.tag.submitEditing('enter');
+                this.tag.submitEditing(event.key);
                 break;
             }
             default:
@@ -134,12 +134,12 @@ export class KbqTagEditInput {
         switch (event.keyCode) {
             case ESCAPE: {
                 event.stopPropagation();
-                this.tag.cancelEditing('escape');
+                this.tag.cancelEditing(event.key);
                 break;
             }
             case ENTER: {
                 event.stopPropagation();
-                this.tag.submitEditing('enter');
+                this.tag.submitEditing(event.key);
                 break;
             }
 
@@ -476,6 +476,7 @@ export class KbqTag
         }
     }
 
+    /** @docs-private */
     handleKeydown(event: KeyboardEvent): void {
         console.log('KbqTag handleKeydown', event);
 
@@ -499,6 +500,10 @@ export class KbqTag
 
                 // Always prevent space from scrolling the page since the list has focus
                 event.preventDefault();
+                break;
+            case F2:
+            case ENTER:
+                this.startEditing(event.key);
                 break;
             default:
         }
