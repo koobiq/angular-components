@@ -362,7 +362,7 @@ export class KbqTag
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
             console.log('focusOrigin', focusOrigin);
-            // if (this.editing() && focusOrigin === null) this.cancelEditing('focusout');
+            if (this.editing() && focusOrigin === null) this.cancelEditing('focusout');
         });
     }
 
