@@ -35,9 +35,12 @@ export interface KbqTagEvent {
     tag: KbqTag;
 }
 
+/**
+ * Event object emitted by KbqTag when the tag is edited.
+ */
 export class KbqTagEditChange {
     constructor(
-        public readonly source: KbqTag,
+        public readonly tag: KbqTag,
         public readonly type: 'start' | 'submit' | 'cancel',
         public readonly reason: string
     ) {}
@@ -74,6 +77,9 @@ export class KbqTagAvatar {}
 })
 export class KbqTagTrailingIcon {}
 
+/**
+ * Directive to add submit behavior for the editable tag.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqTagEditSubmit]',
@@ -89,21 +95,16 @@ export class KbqTagEditSubmit {
     private readonly tag = inject(KbqTag);
 
     /** @docs-private */
-    protected handleClick(event: Event): void {
-        console.log('KbqTagEditSubmit handleClick', this.tag, event);
-
+    protected handleClick(_event: Event): void {
         this.tag.submitEditing('submit');
     }
 
     /** @docs-private */
     protected handleKeydown(event: KeyboardEvent): void {
-        console.log('KbqTagEditSubmit handleKeydown', this.tag, event);
-
         switch (event.keyCode) {
             case ENTER: {
                 event.preventDefault();
                 event.stopPropagation();
-
                 this.tag.submitEditing('enter');
                 break;
             }
@@ -112,6 +113,9 @@ export class KbqTagEditSubmit {
     }
 }
 
+/**
+ * Directive to add input behavior for the editable tag.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqTagEditInput]',
@@ -127,27 +131,22 @@ export class KbqTagEditInput {
 
     /** @docs-private */
     protected handleKeydown(event: KeyboardEvent): void {
-        console.log('KbqTagEditInput handleKeydown', this.tag);
-
         switch (event.keyCode) {
             case ESCAPE: {
                 event.stopPropagation();
-
                 this.tag.cancelEditing('escape');
                 break;
             }
             case ENTER: {
                 event.stopPropagation();
-
                 this.tag.submitEditing('enter');
                 break;
             }
 
-            // prevent KbqTag from receiving these key events
+            // prevent KbqTag from receiving these keydown events
             case BACKSPACE:
             case SPACE: {
                 event.stopPropagation();
-
                 break;
             }
 
@@ -227,6 +226,9 @@ export class KbqTag
 
     @Input({ transform: booleanAttribute }) editable = false;
 
+    /**
+     * Emits event when the tag is edited.
+     */
     @Output() readonly editChange = new EventEmitter<KbqTagEditChange>();
 
     /**
@@ -361,7 +363,6 @@ export class KbqTag
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
-            console.log('focusOrigin', focusOrigin);
             if (this.editing() && focusOrigin === null) this.cancelEditing('focusout');
         });
     }
@@ -522,41 +523,30 @@ export class KbqTag
     protected handleDblClick(event: MouseEvent): void {
         console.log('handleDblClick', this.editable);
 
-        if (this.disabled && this.editable) return;
+        if (this.disabled || !this.editable) return;
 
         event.stopPropagation();
-
         this.startEditing('dblclick');
     }
 
     private startEditing(reason: string): void {
-        console.log('startEditing', reason);
+        if (this.editing()) return;
 
         this.editing.set(true);
-        // this.editStart.emit({ tag: this, reason });
-        this.editChange.emit({ source: this, type: 'start', reason });
-
+        this.editChange.emit({ tag: this, type: 'start', reason });
         setTimeout(() => this.editInputElementRef?.nativeElement.focus());
     }
 
     /** @docs-private */
     cancelEditing(reason: string): void {
-        console.log('cancelEditing', reason);
-
         this.editing.set(false);
-        // this.editCancel.emit({ tag: this, reason });
-
-        this.editChange.emit({ source: this, type: 'cancel', reason });
+        this.editChange.emit({ tag: this, type: 'cancel', reason });
     }
 
     /** @docs-private */
     submitEditing(reason: string): void {
-        console.log('endEditing', reason);
-
         this.editing.set(false);
-        // this.editSubmit.emit({ tag: this, reason });
-
-        this.editChange.emit({ source: this, type: 'submit', reason });
+        this.editChange.emit({ tag: this, type: 'submit', reason });
     }
 
     private dispatchSelectionChange(isUserInput = false) {

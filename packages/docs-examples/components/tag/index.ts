@@ -6,6 +6,7 @@ import { TagEditableExample } from './tag-editable/tag-editable';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
 import { TagInputWithFormControlValidatorsExample } from './tag-input-with-form-control-validators/tag-input-with-form-control-validators-example';
 import { TagInputExample } from './tag-input/tag-input-example';
+import { TagListEditableExample } from './tag-list-editable/tag-list-editable';
 import { TagListExample } from './tag-list/tag-list-example';
 import { TagLongTextExample } from './tag-long-text/tag-long-text-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
@@ -22,6 +23,7 @@ export {
     TagFillAndStyleExample,
     TagInputExample,
     TagInputWithFormControlValidatorsExample,
+    TagListEditableExample,
     TagListExample,
     TagLongTextExample,
     TagOverviewExample,
@@ -45,7 +47,8 @@ const EXAMPLES = [
     TagDisabledExample,
     TagWithIconExample,
     TagWithRemoveButtonExample,
-    TagEditableExample
+    TagEditableExample,
+    TagListEditableExample
 ];
 
 @NgModule({

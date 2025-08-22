@@ -8,6 +8,9 @@ import { TagExamplesModule } from 'packages/docs-examples/components/tag';
     template: `
         <tag-editable-example />
         <hr />
+        <tag-list-editable-example />
+        <hr />
+
         <!-- <tag-autocomplete-option-operations-example />
         <hr />
         <tag-input-example />
