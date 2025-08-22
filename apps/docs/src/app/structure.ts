@@ -404,11 +404,10 @@ const structure: DocsStructure = makeStructure({
                         ru: 'Core',
                         en: 'Core'
                     },
-                    svgPreview: '',
+                    svgPreview: 'core',
                     hasApi: true,
                     apiId: 'core',
-                    hasExamples: false,
-                    isNew: expiresAt('2025-05-04')
+                    hasExamples: false
                 },
                 {
                     id: DocsStructureItemId.Datepicker,
