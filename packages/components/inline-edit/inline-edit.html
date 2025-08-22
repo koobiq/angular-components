@@ -24,11 +24,19 @@
         [cdkConnectedOverlayOrigin]="overlayOrigin"
         [cdkConnectedOverlayWidth]="overlayWidth()"
         (attach)="onAttach()"
-        (overlayOutsideClick)="onOutsideClick()"
+        (overlayOutsideClick)="save()"
         (overlayKeydown)="onKeydown($event)"
     >
         <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
-            <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
+            <div
+                [kbqTooltipColor]="colors.Error"
+                [kbqTooltip]="'test'"
+                [kbqTooltipArrow]="false"
+                [kbqTrigger]="'manual'"
+                [kbqPlacement]="placements.TopLeft"
+            >
+                <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
+            </div>
 
             @if (showActions()) {
                 <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
