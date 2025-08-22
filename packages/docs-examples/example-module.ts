@@ -3714,6 +3714,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-disabled-example.ts",
     "importPath": "components/tag"
   },
+  "tag-editable": {
+    "packagePath": "components/tag/tag-editable",
+    "title": "Tag editable",
+    "componentName": "TagEditableExample",
+    "files": [
+      "tag-editable-example.ts"
+    ],
+    "selector": "tag-editable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-editable-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-fill-and-style": {
     "packagePath": "components/tag/tag-fill-and-style",
     "title": "Tag fill and style",
@@ -3748,6 +3760,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "selector": "tag-input-example",
     "additionalComponents": [],
     "primaryFile": "tag-input-example.ts",
+    "importPath": "components/tag"
+  },
+  "tag-list-editable": {
+    "packagePath": "components/tag/tag-list-editable",
+    "title": "Tag list editable",
+    "componentName": "TagListEditableExample",
+    "files": [
+      "tag-list-editable-example.ts"
+    ],
+    "selector": "tag-list-editable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-list-editable-example.ts",
     "importPath": "components/tag"
   },
   "tag-list": {
@@ -5386,11 +5410,15 @@ return import('@koobiq/docs-examples/components/tag');
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-disabled':
 return import('@koobiq/docs-examples/components/tag');
+  case 'tag-editable':
+return import('@koobiq/docs-examples/components/tag');
   case 'tag-fill-and-style':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-list-editable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-list':
 return import('@koobiq/docs-examples/components/tag');

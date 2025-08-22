@@ -30,9 +30,14 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
             @if (length === 0) {
                 <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit></i>
             } @else {
-                <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit></i>
+                <i
+                    kbq-icon-button="kbq-check-s_16"
+                    kbqTagEditSubmit
+                    [disabled]="!isModelValid()"
+                    [color]="color.Theme"
+                ></i>
             }
-            <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+            <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
     `,
     host: {
@@ -51,7 +56,7 @@ export class TagEditableExample {
     protected readonly initialMaxLength = this.tagValue().length;
     protected readonly tagModel = model(this.tagValue());
     protected readonly tagModelTrimmed = computed(() => this.tagModel().trim());
-    private readonly isModelValid = computed(() => this.tagModelTrimmed().length <= this.initialMaxLength);
+    protected readonly isModelValid = computed(() => this.tagModelTrimmed().length <= this.initialMaxLength);
     protected readonly tagColor = computed(() => (this.isModelValid() ? this.color.ContrastFade : this.color.Error));
 
     constructor() {

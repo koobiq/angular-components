@@ -24,8 +24,8 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
                 >
                     {{ tags[$index] }}
                     <input kbqTagEditInput [(ngModel)]="tags[$index]" />
-                    <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit></i>
-                    <i kbq-icon="kbq-xmark-s_16" kbqTagRemove></i>
+                    <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
+                    <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>
             }
         </kbq-tag-list>
