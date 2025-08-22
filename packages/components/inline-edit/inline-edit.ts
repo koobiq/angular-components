@@ -19,9 +19,15 @@ import {
 } from '@angular/core';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
-import { KbqAnimationCurves, KbqAnimationDurations } from '@koobiq/components/core';
+import {
+    KbqAnimationCurves,
+    KbqAnimationDurations,
+    KbqComponentColors,
+    PopUpPlacements
+} from '@koobiq/components/core';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqFocusMonitor } from './focus-monitor';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -76,7 +82,8 @@ export class KbqInlineEditEditMode {
         CdkOverlayOrigin,
         CdkTrapFocus,
         KbqButtonModule,
-        KbqIcon
+        KbqIcon,
+        KbqTooltipTrigger
     ],
     animations: [KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -85,14 +92,17 @@ export class KbqInlineEditEditMode {
 export class KbqInlineEdit {
     readonly placeholder = input<string>();
     readonly showActions = input(false, { transform: booleanAttribute });
+    readonly showTooltipOnError = input(true, { transform: booleanAttribute });
+    readonly validationConfig = input({});
 
     protected readonly viewModeTemplateRef = contentChild.required(KbqInlineEditViewMode);
     protected readonly editModeTemplateRef = contentChild.required(KbqInlineEditEditMode);
     protected readonly label = contentChild(KbqLabel);
     protected readonly formFieldRef = contentChild(KbqFormField);
+    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
     protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
 
-    protected readonly mode = signal<'view' | 'edit'>('view');
+    protected readonly mode = signal<'view' | 'edit' | 'read'>('view');
 
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
     protected readonly isEditMode = computed(() => this.mode() === 'edit');
@@ -135,14 +145,12 @@ export class KbqInlineEdit {
     }
 
     /** @docs-private */
-    onOutsideClick() {
-        this.save();
-        this.toggleMode();
-    }
-
-    /** @docs-private */
     save() {
-        this.validate();
+        if (this.isInvalid()) {
+            this.showTooltipOnError() && this.tooltipTrigger()?.show();
+        } else {
+            this.toggleMode();
+        }
     }
 
     /** @docs-private */
@@ -164,13 +172,21 @@ export class KbqInlineEdit {
             case 'Enter': {
                 if (target instanceof HTMLTextAreaElement) break;
 
-                this.onOutsideClick();
+                this.save();
                 break;
             }
             default: {
                 return;
             }
         }
+    }
+
+    private isInvalid(): boolean {
+        const formFieldRef = this.formFieldRef();
+
+        if (!formFieldRef) return true;
+
+        return formFieldRef.control.errorState;
     }
 
     private getValue() {
@@ -203,7 +219,9 @@ export class KbqInlineEdit {
         return formFieldRef.control;
     }
 
-    private validate(): void {
-        console.log('validate');
-    }
+    /** @docs-private */
+    protected readonly placements = PopUpPlacements;
+
+    /** @docs-private */
+    protected readonly colors = KbqComponentColors;
 }

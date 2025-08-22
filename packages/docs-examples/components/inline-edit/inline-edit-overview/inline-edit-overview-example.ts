@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
@@ -36,7 +37,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             </ng-container>
             <ng-container *kbqInlineEditEditMode>
                 <kbq-form-field>
-                    <kbq-select multiple [(ngModel)]="selected">
+                    <kbq-select multiple [required]="true" [(ngModel)]="selected">
                         @for (option of options; track option) {
                             <kbq-option [value]="option">{{ option }}</kbq-option>
                         }
@@ -46,6 +47,9 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             </ng-container>
         </kbq-inline-edit>
     `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditOverviewExample {
