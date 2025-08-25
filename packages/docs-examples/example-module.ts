@@ -3738,6 +3738,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-fill-and-style-example.ts",
     "importPath": "components/tag"
   },
+  "tag-input-editable": {
+    "packagePath": "components/tag/tag-input-editable",
+    "title": "Tag input editable",
+    "componentName": "TagInputEditableExample",
+    "files": [
+      "tag-input-editable-example.ts"
+    ],
+    "selector": "tag-input-editable-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-input-editable-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-input-with-form-control-validators": {
     "packagePath": "components/tag/tag-input-with-form-control-validators",
     "title": "Tag input with form control validators.",
@@ -5413,6 +5425,8 @@ return import('@koobiq/docs-examples/components/tag');
   case 'tag-editable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-fill-and-style':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-input-editable':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-input-with-form-control-validators':
 return import('@koobiq/docs-examples/components/tag');
