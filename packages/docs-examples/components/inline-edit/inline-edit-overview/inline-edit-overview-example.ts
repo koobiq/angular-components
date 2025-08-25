@@ -3,10 +3,9 @@ import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
-import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
-import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
  * @title Inline edit overview
@@ -19,19 +18,18 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqFormFieldModule,
         KbqSelectModule,
         KbqCleaner,
-        KbqInputModule,
-        KbqTextareaModule,
-        KbqBadgeModule
+        KbqBadgeModule,
+        KbqIconModule
     ],
     selector: 'inline-edit-overview-example',
     template: `
         <kbq-inline-edit showActions>
+            <kbq-label>Label</kbq-label>
+
             <ng-container *kbqInlineEditViewMode>
                 <div class="layout-row layout-gap-xxs">
                     @for (badge of selected; track badge) {
-                        <kbq-badge>
-                            {{ badge }}
-                        </kbq-badge>
+                        <kbq-badge>{{ badge }}</kbq-badge>
                     }
                 </div>
             </ng-container>
@@ -54,5 +52,5 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 })
 export class InlineEditOverviewExample {
     readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
-    selected: string[] = [];
+    selected: string[] = [this.options[0]];
 }

@@ -8,6 +8,7 @@ import { DevThemeToggle } from '../theme-toggle';
     selector: 'dev-examples',
     template: `
         <inline-edit-overview-example />
+        <inline-edit-placeholder-example />
     `,
     styles: `
         :host {
@@ -16,11 +17,18 @@ import { DevThemeToggle } from '../theme-toggle';
             flex-wrap: wrap;
         }
         :host > * {
+            display: flex;
+            align-items: flex-start;
             border-radius: var(--kbq-size-border-radius);
             border: 1px solid var(--kbq-line-contrast-less);
             margin-bottom: var(--kbq-size-l);
             padding: var(--kbq-size-m);
             flex: 1 0 auto;
+            width: 40%;
+        }
+
+        ::ng-deep .kbq-inline-edit {
+            width: 100%;
         }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -12,6 +12,7 @@ import {
     ElementRef,
     inject,
     input,
+    output,
     signal,
     TemplateRef,
     viewChild,
@@ -60,6 +61,25 @@ export class KbqInlineEditEditMode {
     readonly templateRef = inject(TemplateRef);
 }
 
+@Directive({
+    standalone: true,
+    selector: '[kbqInlineEditPlaceholder]',
+    exportAs: 'kbqInlineEditPlaceholder',
+    host: {
+        class: 'kbq-inline-edit__placeholder'
+    }
+})
+export class KbqInlineEditPlaceholder {}
+
+@Directive({
+    standalone: true,
+    selector: '[kbqInlineEditValidationTooltip]',
+    exportAs: 'kbqInlineEditValidationTooltip'
+})
+export class KbqInlineEditValidationTooltip {
+    readonly templateRef = inject(TemplateRef);
+}
+
 @Component({
     standalone: true,
     selector: 'kbq-inline-edit',
@@ -93,12 +113,17 @@ export class KbqInlineEdit {
     readonly placeholder = input<string>();
     readonly showActions = input(false, { transform: booleanAttribute });
     readonly showTooltipOnError = input(true, { transform: booleanAttribute });
-    readonly validationConfig = input({});
+    readonly validationTooltip = input<string>();
+
+    protected readonly saved = output();
+    protected readonly canceled = output();
 
     protected readonly viewModeTemplateRef = contentChild.required(KbqInlineEditViewMode);
     protected readonly editModeTemplateRef = contentChild.required(KbqInlineEditEditMode);
     protected readonly label = contentChild(KbqLabel);
     protected readonly formFieldRef = contentChild(KbqFormField);
+    protected readonly customTooltipContent = contentChild(KbqInlineEditValidationTooltip);
+
     protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
     protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
 
@@ -137,8 +162,6 @@ export class KbqInlineEdit {
         setTimeout(() => {
             if (formFieldRef) {
                 formFieldRef.focus();
-                (formFieldRef.control as any).placeholder = this.placeholder();
-
                 this.initialValue = this.getValue();
             }
         });
@@ -150,6 +173,7 @@ export class KbqInlineEdit {
             this.showTooltipOnError() && this.tooltipTrigger()?.show();
         } else {
             this.toggleMode();
+            this.saved.emit();
         }
     }
 
@@ -158,6 +182,7 @@ export class KbqInlineEdit {
         this.setValue(this.initialValue);
 
         this.toggleMode();
+        this.canceled.emit();
     }
 
     /** @docs-private */
