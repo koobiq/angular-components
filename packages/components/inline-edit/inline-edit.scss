@@ -18,9 +18,10 @@
 .kbq-inline-edit {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     border: var(--kbq-size-border-width) solid transparent;
     border-radius: var(--kbq-size-border-radius);
-    padding: var(--kbq-inline-edit-padding-vertical) var(--kbq-inline-edit-padding-horizontal);
+    padding: 0 var(--kbq-inline-edit-padding-horizontal);
     box-sizing: border-box;
 
     &:focus-visible {
@@ -28,19 +29,23 @@
     }
 
     &:not(.kbq-inline-edit_with-label) {
+        --kbq-inline-edit-padding-horizontal: calc(var(--kbq-size-m) - 1px);
+
         .kbq-inline-edit__overlay-anchor {
-            top: calc(-1 * (var(--kbq-inline-edit-padding-vertical) + 1px));
+            --kbq-inline-edit-pop-up-height: var(--kbq-size-3xl);
+            top: -1px;
             left: calc(-1 * (var(--kbq-inline-edit-padding-horizontal) + 1px));
         }
+    }
+
+    &.kbq-inline-edit_with-label {
+        padding-top: var(--kbq-inline-edit-padding-vertical);
+        padding-bottom: var(--kbq-inline-edit-padding-vertical);
     }
 
     &.kbq-inline-edit_view {
         min-height: var(--kbq-inline-edit-height);
         @include _inline-edit-theme();
-
-        .kbq-inline-edit__overlay-anchor {
-            height: 0;
-        }
     }
 
     &.kbq-inline-edit_edit {
@@ -55,6 +60,8 @@
 }
 
 .kbq-inline-edit__overlay-anchor {
+    display: flex;
+    box-sizing: border-box;
     position: relative;
     height: var(--kbq-inline-edit-pop-up-height);
     width: 100%;

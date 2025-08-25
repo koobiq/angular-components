@@ -5,13 +5,9 @@
 }
 
 @if (mode() === 'view') {
-    @if (false) {
-        <span class="kbq-inline-edit__placeholder">{{ placeholder() }}</span>
-    } @else {
-        <div class="kbq-inline-edit__view-container">
-            <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
-        </div>
-    }
+    <div class="kbq-inline-edit__view-container">
+        <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
+    </div>
 } @else {
     <div class="kbq-inline-edit__overlay-anchor">
         <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
@@ -30,7 +26,7 @@
         <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
             <div
                 [kbqTooltipColor]="colors.Error"
-                [kbqTooltip]="'test'"
+                [kbqTooltip]="validationTooltip() ?? customTooltipContent()?.templateRef ?? ''"
                 [kbqTooltipArrow]="false"
                 [kbqTrigger]="'manual'"
                 [kbqPlacement]="placements.TopLeft"
