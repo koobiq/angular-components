@@ -36,6 +36,10 @@
     &.kbq-disabled {
         @include kbq-tag-state($type, states-disabled);
     }
+
+    &.kbq-tag_editing {
+        background: var(--kbq-background-bg);
+    }
 }
 
 @mixin kbq-tag-theme() {
@@ -59,7 +63,8 @@
 }
 
 @mixin kbq-tag-typography() {
-    .kbq-tag {
+    .kbq-tag,
+    .kbq-tag-edit-input {
         @include kbq-typography-level-to-styles-css-variables(typography, text-normal-medium);
     }
 

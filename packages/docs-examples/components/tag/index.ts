@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { TagAutocompleteOptionOperationsExample } from './tag-autocomplete-option-operations/tag-autocomplete-option-operations-example';
 import { TagAutocompleteExample } from './tag-autocomplete/tag-autocomplete-example';
 import { TagDisabledExample } from './tag-disabled/tag-disabled-example';
+import { TagEditableExample } from './tag-editable/tag-editable-example';
 import { TagFillAndStyleExample } from './tag-fill-and-style/tag-fill-and-style-example';
+import { TagInputEditableExample } from './tag-input-editable/tag-input-editable-example';
 import { TagInputWithFormControlValidatorsExample } from './tag-input-with-form-control-validators/tag-input-with-form-control-validators-example';
 import { TagInputExample } from './tag-input/tag-input-example';
+import { TagListEditableExample } from './tag-list-editable/tag-list-editable-example';
 import { TagListExample } from './tag-list/tag-list-example';
 import { TagLongTextExample } from './tag-long-text/tag-long-text-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
@@ -17,9 +20,12 @@ export {
     TagAutocompleteExample,
     TagAutocompleteOptionOperationsExample,
     TagDisabledExample,
+    TagEditableExample,
     TagFillAndStyleExample,
+    TagInputEditableExample,
     TagInputExample,
     TagInputWithFormControlValidatorsExample,
+    TagListEditableExample,
     TagListExample,
     TagLongTextExample,
     TagOverviewExample,
@@ -42,7 +48,10 @@ const EXAMPLES = [
     TagInputWithFormControlValidatorsExample,
     TagDisabledExample,
     TagWithIconExample,
-    TagWithRemoveButtonExample
+    TagWithRemoveButtonExample,
+    TagEditableExample,
+    TagListEditableExample,
+    TagInputEditableExample
 ];
 
 @NgModule({

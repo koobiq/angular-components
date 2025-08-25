@@ -2,6 +2,11 @@ export function isBoolean(value: unknown): value is boolean {
     return typeof value === 'boolean';
 }
 
+/** Whether the value is undefined. */
+export const isUndefined = (value: unknown): value is undefined => {
+    return typeof value === 'undefined';
+};
+
 /**
  * Will be removed in the next major release
  *

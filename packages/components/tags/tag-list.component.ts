@@ -3,6 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -29,9 +30,9 @@ import { BACKSPACE, END, HOME } from '@koobiq/cdk/keycodes';
 import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
-import { startWith } from 'rxjs/operators';
+import { filter, startWith } from 'rxjs/operators';
 import { KbqTagTextControl } from './tag-text-control';
-import { KbqTag, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
+import { KbqTag, KbqTagEditChange, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
 
 // Increasing integer for generating unique ids for tag-list components.
 let nextUniqueId = 0;
@@ -102,6 +103,11 @@ export class KbqTagList
     /** Combined stream of all of the child tags' remove change events. */
     get tagRemoveChanges(): Observable<KbqTagEvent> {
         return merge(...this.tags.map((tag) => tag.destroyed));
+    }
+
+    /** Combined stream of all of the child tags' edit change events. */
+    get tagEditChanges(): Observable<KbqTagEditChange> {
+        return merge(...this.tags.map((tag) => tag.editChange));
     }
 
     /** The array of selected tags inside tag list. */
@@ -243,6 +249,20 @@ export class KbqTagList
         this.propagateSelectableToChildren();
     }
 
+    /** Whether the tag list is editable. */
+    @Input({ transform: booleanAttribute })
+    get editable(): boolean {
+        return this._editable;
+    }
+
+    set editable(value: boolean) {
+        this._editable = value;
+
+        this.propagateEditableToChildren();
+    }
+
+    private _editable = false;
+
     @Input()
     get tabIndex(): number {
         return this._tabIndex;
@@ -332,6 +352,9 @@ export class KbqTagList
     /** Subscription to remove changes in tags. */
     private tagRemoveSubscription: Subscription | null;
 
+    /** Subscription to edit changes in tags. */
+    private tagEditSubscription: Subscription | null;
+
     private readonly destroyRef = inject(DestroyRef);
 
     constructor(
@@ -366,7 +389,7 @@ export class KbqTagList
         this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
             .withVerticalOrientation()
             .withHorizontalOrientation(this.dir ? this.dir.value : 'ltr')
-            .skipPredicate((item) => item.disabled || !item.selectable);
+            .skipPredicate((item) => item.disabled || !item.selectable || !item.editable);
 
         if (this.dir) {
             this.dir.change
@@ -422,6 +445,7 @@ export class KbqTagList
             });
 
         this.propagateSelectableToChildren();
+        this.propagateEditableToChildren();
     }
 
     ngOnDestroy() {
@@ -743,6 +767,7 @@ export class KbqTagList
         this.listenToTagsFocus();
         this.listenToTagsSelection();
         this.listenToTagsRemoved();
+        this.listenToTagsEdit();
     }
 
     private dropSubscriptions() {
@@ -764,6 +789,11 @@ export class KbqTagList
         if (this.tagRemoveSubscription) {
             this.tagRemoveSubscription.unsubscribe();
             this.tagRemoveSubscription = null;
+        }
+
+        if (this.tagEditSubscription) {
+            this.tagEditSubscription.unsubscribe();
+            this.tagEditSubscription = null;
         }
     }
 
@@ -823,6 +853,12 @@ export class KbqTagList
         });
     }
 
+    private listenToTagsEdit(): void {
+        this.tagEditSubscription = this.tagEditChanges
+            .pipe(filter(({ type }) => type === 'submit'))
+            .subscribe(() => this.propagateTagsChanges());
+    }
+
     /** Checks whether an event comes from inside a tag element. */
     private originatesFromTag(event: Event): boolean {
         let currentElement = event.target as HTMLElement | null;
@@ -866,5 +902,9 @@ export class KbqTagList
         if (this.tags) {
             this.tags.forEach((tag) => (tag.tagListSelectable = this._selectable));
         }
+    }
+
+    private propagateEditableToChildren(): void {
+        this.tags?.forEach((tag) => (tag.tagListEditable = this._editable));
     }
 }
