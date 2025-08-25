@@ -713,6 +713,9 @@ export function isBoolean(value: unknown): value is boolean;
 // @public
 export function isMac(): boolean;
 
+// @public
+export const isUndefined: (value: unknown) => value is undefined;
+
 // @public (undocumented)
 export function isWithin(startRange: number, endRange: number, valueToCheck: number): boolean;
 
