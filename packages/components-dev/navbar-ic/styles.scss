@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+}
+
+.dev-navbar-ic-container {
+    display: flex;
+    flex-direction: row;
+
+    height: 700px;
+}
+
+.dev-vertical-navbar-content {
+    flex: 1;
+    border: 1px solid red;
+}

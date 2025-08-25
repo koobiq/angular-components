@@ -1,0 +1,9 @@
+@use '../core/styles/common/tokens' as *;
+
+.kbq-navbar-ic-divider {
+    display: block;
+
+    height: 1px;
+
+    margin: var(--kbq-size-s) var(--kbq-size-l);
+}
