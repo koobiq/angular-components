@@ -38,9 +38,9 @@ const DATA_OBJECT = {
     ],
     template: `
         <kbq-filter-bar
-            [filter]="activeFilter"
             [pipeTemplates]="pipeTemplates"
             [selectedAllEqualsSelectedNothing]="false"
+            [(filter)]="activeFilter"
             (filterChange)="onFilterChange($event)"
             (onChangePipe)="onChangePipe($event)"
         >
@@ -155,7 +155,6 @@ export class FilterBarSearchInPipesExample {
                     value: null,
 
                     search: true,
-                    selectedAllEqualsSelectedNothing: true,
 
                     cleanable: true,
                     removable: false,
