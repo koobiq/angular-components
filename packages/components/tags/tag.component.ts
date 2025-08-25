@@ -26,7 +26,13 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { KBQ_TITLE_TEXT_REF, KbqColorDirective, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
+import {
+    isUndefined,
+    KBQ_TITLE_TEXT_REF,
+    KbqColorDirective,
+    KbqComponentColors,
+    KbqTitleTextRef
+} from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -159,6 +165,7 @@ export class KbqTagEditInput {
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
     template: `
+        {{ editable }}
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
             <span #kbqTitleText class="kbq-tag__text">
@@ -222,9 +229,26 @@ export class KbqTag
     /** Whether the tag list is selectable */
     tagListSelectable: boolean = true;
 
-    @ContentChild(KbqTagEditInput, { read: ElementRef }) private readonly editInputElementRef: ElementRef;
+    /**
+     * Whether the tag list is editable.
+     *
+     * @docs-private
+     */
+    tagListEditable: boolean = false;
 
-    @Input({ transform: booleanAttribute }) editable = false;
+    /** Whether the tag is editable. */
+    @Input({ transform: booleanAttribute })
+    get editable(): boolean {
+        return isUndefined(this._editable) ? this.tagListEditable : this._editable;
+    }
+
+    set editable(value: boolean) {
+        this._editable = value;
+    }
+
+    private _editable: boolean | undefined = undefined;
+
+    @ContentChild(KbqTagEditInput, { read: ElementRef }) private readonly editInputElementRef: ElementRef;
 
     /**
      * Emits event when the tag is edited.

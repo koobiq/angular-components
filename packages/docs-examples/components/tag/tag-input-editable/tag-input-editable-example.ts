@@ -18,15 +18,9 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
         @let _tags = tags();
 
         <kbq-form-field>
-            <kbq-tag-list #tagList [(ngModel)]="tags">
+            <kbq-tag-list #tagList editable [(ngModel)]="tags">
                 @for (tag of _tags; track $index) {
-                    <kbq-tag
-                        editable
-                        [value]="tag"
-                        [color]="color.ContrastFade"
-                        (editChange)="editChange($event, $index)"
-                        (removed)="remove($index)"
-                    >
+                    <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($index)">
                         {{ tag }}
                         <input kbqTagEditInput [(ngModel)]="_tags[$index]" />
                         <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>

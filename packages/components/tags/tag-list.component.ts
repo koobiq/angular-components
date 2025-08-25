@@ -3,6 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
 import {
     AfterContentInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -248,6 +249,20 @@ export class KbqTagList
         this.propagateSelectableToChildren();
     }
 
+    /** Whether the tag list is editable. */
+    @Input({ transform: booleanAttribute })
+    get editable(): boolean {
+        return this._editable;
+    }
+
+    set editable(value: boolean) {
+        this._editable = value;
+
+        this.propagateEditableToChildren();
+    }
+
+    private _editable = false;
+
     @Input()
     get tabIndex(): number {
         return this._tabIndex;
@@ -430,6 +445,7 @@ export class KbqTagList
             });
 
         this.propagateSelectableToChildren();
+        this.propagateEditableToChildren();
     }
 
     ngOnDestroy() {
@@ -886,5 +902,9 @@ export class KbqTagList
         if (this.tags) {
             this.tags.forEach((tag) => (tag.tagListSelectable = this._selectable));
         }
+    }
+
+    private propagateEditableToChildren(): void {
+        this.tags?.forEach((tag) => (tag.tagListEditable = this._editable));
     }
 }
