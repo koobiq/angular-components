@@ -419,6 +419,7 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> imple
     get isEmpty(): boolean;
     protected isListMode: boolean;
     listSelection: Signal<KbqListSelection>;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     onApplyPeriod(): void;
@@ -465,6 +466,7 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
     get isEmpty(): boolean;
     protected isListMode: boolean;
     listSelection: Signal<KbqListSelection>;
+    // (undocumented)
     ngAfterViewInit(): void;
     onApplyPeriod(): void;
     // (undocumented)
@@ -533,6 +535,7 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
     compareByValue: (o1: any, o2: any) => boolean;
     filteredOptions: Observable<any[]>;
     get isEmpty(): boolean;
+    // (undocumented)
     ngAfterViewInit(): void;
     ngOnInit(): void;
     onClear(): void;
@@ -570,6 +573,7 @@ export class KbqPipeSelectComponent extends KbqBasePipe<KbqSelectValue> implemen
     compareByValue: (o1: any, o2: any) => boolean;
     filteredOptions: Observable<any[]>;
     get isEmpty(): boolean;
+    // (undocumented)
     ngAfterViewInit(): void;
     ngOnInit(): void;
     // (undocumented)
@@ -661,6 +665,7 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
     // (undocumented)
     hasChild(_: number, nodeData: any): any;
     get isEmpty(): boolean;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     ngOnInit(): void;

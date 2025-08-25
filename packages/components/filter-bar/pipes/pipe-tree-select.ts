@@ -104,7 +104,6 @@ export class KbqPipeTreeSelectComponent extends KbqBasePipe<KbqSelectValue> impl
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
     }
 
-    /** @docs-private */
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 

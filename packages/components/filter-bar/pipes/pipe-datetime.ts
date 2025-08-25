@@ -152,7 +152,6 @@ export class KbqPipeDatetimeComponent<D> extends KbqBasePipe<KbqDateTimeValue> i
     /** @docs-private */
     returnButton = viewChild.required('returnButton', { read: KbqButton });
 
-    /** @docs-private */
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
