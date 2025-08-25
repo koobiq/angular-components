@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject, viewChild, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    viewChild,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ENTER } from '@koobiq/cdk/keycodes';
 import { KbqButton, KbqButtonModule, KbqButtonStyles } from '@koobiq/components/button';
@@ -19,6 +28,7 @@ import { KbqListModule, KbqListSelection } from '@koobiq/components/list';
 import { KbqPopoverModule, KbqPopoverTrigger } from '@koobiq/components/popover';
 import { KbqTimepickerModule } from '@koobiq/components/timepicker';
 import { KbqTitleModule } from '@koobiq/components/title';
+import { filter } from 'rxjs/operators';
 import { KbqDateTimeValue } from '../filter-bar.types';
 import { KbqBasePipe } from './base-pipe';
 import { KbqPipeButton } from './pipe-button';
@@ -58,7 +68,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         FormsModule
     ]
 })
-export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
+export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> implements AfterViewInit {
     private readonly adapter = inject(DateAdapter);
     private readonly formatter = inject(DateFormatter);
 
@@ -141,6 +151,17 @@ export class KbqPipeDateComponent<D> extends KbqBasePipe<KbqDateTimeValue> {
     listSelection = viewChild.required('listSelection', { read: KbqListSelection });
     /** @docs-private */
     returnButton = viewChild.required('returnButton', { read: KbqButton });
+
+    override ngAfterViewInit() {
+        super.ngAfterViewInit();
+
+        this.popover.visibleChange
+            .pipe(
+                filter((visible) => !visible),
+                takeUntilDestroyed(this.destroyRef)
+            )
+            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
+    }
 
     /** keydown handler
      * @docs-private */

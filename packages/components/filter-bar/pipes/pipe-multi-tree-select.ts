@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
@@ -61,7 +61,7 @@ import { KbqPipeTitleDirective } from './pipe-title';
         KbqPseudoCheckboxModule
     ]
 })
-export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit {
+export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[]> implements OnInit, AfterViewInit {
     /** control for search options */
     searchControl: UntypedFormControl = new UntypedFormControl();
     /** filtered by search options */
@@ -150,6 +150,14 @@ export class KbqPipeMultiTreeSelectComponent extends KbqBasePipe<KbqSelectValue[
 
     ngOnInit(): void {
         this.searchControl.valueChanges.subscribe((value) => this.treeControl.filterNodes(value));
+    }
+
+    override ngAfterViewInit() {
+        super.ngAfterViewInit();
+
+        this.select.closedStream
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.filterBar?.onClosePipe.next(this.data));
     }
 
     isNodeHasChild(_: number, nodeData) {

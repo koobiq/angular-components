@@ -128,7 +128,6 @@ export class KbqPipeMultiSelectComponent extends KbqBasePipe<KbqSelectValue[]> i
         );
     }
 
-    /** @docs-private */
     override ngAfterViewInit() {
         super.ngAfterViewInit();
 
