@@ -165,7 +165,6 @@ export class KbqTagEditInput {
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
     template: `
-        {{ editable }}
         <div class="kbq-tag__wrapper">
             <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
             <span #kbqTitleText class="kbq-tag__text">
@@ -247,6 +246,9 @@ export class KbqTag
     }
 
     private _editable: boolean | undefined = undefined;
+
+    /** Whether the tag edits can't be submitted. */
+    @Input({ transform: booleanAttribute }) preventEditSubmit: boolean = false;
 
     @ContentChild(KbqTagEditInput, { read: ElementRef }) private readonly editInputElementRef: ElementRef;
 
@@ -571,6 +573,8 @@ export class KbqTag
 
     /** @docs-private */
     submitEditing(reason: string): void {
+        if (this.preventEditSubmit) return;
+
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });
     }

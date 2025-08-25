@@ -18,7 +18,13 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     template: `
         @let length = tagModelTrimmed().length;
 
-        <kbq-tag editable [color]="tagColor()" (editChange)="editChange($event)" (removed)="remove()">
+        <kbq-tag
+            editable
+            [preventEditSubmit]="!isModelValid()"
+            [color]="tagColor()"
+            (editChange)="editChange($event)"
+            (removed)="remove()"
+        >
             {{ tagValue() }}
             <input
                 kbqTagEditInput

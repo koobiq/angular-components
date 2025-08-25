@@ -1,10 +1,10 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEditChange, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
@@ -57,8 +57,11 @@ export class TagInputEditableExample {
     protected readonly color = KbqComponentColors;
     protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
     private readonly toast = inject(KbqToastService);
+    private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     protected editChange({ reason, type }: KbqTagEditChange, index: number): void {
+        const input = this.input().nativeElement as HTMLInputElement;
+
         switch (type) {
             case 'start': {
                 this.toast.show({
@@ -74,6 +77,7 @@ export class TagInputEditableExample {
                     style: KbqToastStyle.Warning,
                     caption: `Reason: ${reason}`
                 });
+                input.focus();
                 break;
             }
             case 'submit': {
@@ -82,6 +86,7 @@ export class TagInputEditableExample {
                     style: KbqToastStyle.Success,
                     caption: `Reason: ${reason}`
                 });
+                input.focus();
                 break;
             }
             default:

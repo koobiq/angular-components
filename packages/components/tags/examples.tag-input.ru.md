@@ -11,6 +11,6 @@
     );
 ```
 
-**Обратите внимание**, что директива [formControl] должна быть применена к `<kbq-tag-list>`, а не к `kbqInput`.
+**Обратите внимание**, что директива [formControl] должна быть применена к `<kbq-tag-list>`, а не к `<input />`.
 
 <!-- example(tag-input-with-form-control-validators) -->
