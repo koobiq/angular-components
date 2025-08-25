@@ -24,18 +24,6 @@ export interface LiveExample {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
-  "clamped-text-overview": {
-    "packagePath": "clamped-text/clamped-text-overview",
-    "title": "Clamped-text overview",
-    "componentName": "ClampedTextOverviewExample",
-    "files": [
-      "clamped-text-overview-example.ts"
-    ],
-    "selector": "clamped-text-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "clamped-text-overview-example.ts",
-    "importPath": "clamped-text"
-  },
   "accordion-content": {
     "packagePath": "components/accordion/accordion-content",
     "title": "Accordion content",
@@ -730,6 +718,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
+  },
+  "clamped-text-overview": {
+    "packagePath": "components/clamped-text/clamped-text-overview",
+    "title": "Clamped-text overview",
+    "componentName": "ClampedTextOverviewExample",
+    "files": [
+      "clamped-text-overview-example.ts"
+    ],
+    "selector": "clamped-text-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-text-overview-example.ts",
+    "importPath": "components/clamped-text"
   },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
@@ -4829,8 +4829,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
 };
 export async function loadExample(id: string): Promise<any> {
   switch (id) {
-  case 'clamped-text-overview':
-return import('@koobiq/docs-examples/clamped-text');
   case 'accordion-content':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-header':
@@ -4939,6 +4937,8 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'clamped-text-overview':
+return import('@koobiq/docs-examples/components/clamped-text');
   case 'code-block-with-custom-locale-configuration':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':

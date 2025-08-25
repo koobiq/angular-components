@@ -1,0 +1,47 @@
+@if (label()) {
+    <div class="kbq-inline-edit__label">
+        <ng-content select="kbq-label" />
+    </div>
+}
+
+@if (mode() === 'view') {
+    <div class="kbq-inline-edit__view-container">
+        <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
+    </div>
+} @else {
+    <div class="kbq-inline-edit__overlay-anchor">
+        <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
+    </div>
+
+    <ng-template
+        cdkConnectedOverlay
+        cdkConnectedOverlayLockPosition
+        [cdkConnectedOverlayOpen]="isEditMode()"
+        [cdkConnectedOverlayOrigin]="overlayOrigin"
+        [cdkConnectedOverlayWidth]="overlayWidth()"
+        (attach)="onAttach()"
+        (overlayOutsideClick)="save()"
+        (overlayKeydown)="onKeydown($event)"
+    >
+        <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
+            <div
+                [kbqTooltipColor]="colors.Error"
+                [kbqTooltip]="validationTooltip() ?? customTooltipContent()?.templateRef ?? ''"
+                [kbqTooltipArrow]="false"
+                [kbqTrigger]="'manual'"
+                [kbqPlacement]="placements.TopLeft"
+            >
+                <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
+            </div>
+
+            @if (showActions()) {
+                <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
+                    <button kbq-button [color]="'contrast'" (click)="save()"><i kbq-icon="kbq-check_16"></i></button>
+                    <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
+                        <i kbq-icon="kbq-xmark_16"></i>
+                    </button>
+                </div>
+            }
+        </div>
+    </ng-template>
+}

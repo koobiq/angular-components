@@ -1,0 +1,56 @@
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqBadgeModule } from '@koobiq/components/badge';
+import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
+import { KbqSelectModule } from '@koobiq/components/select';
+
+/**
+ * @title Inline edit overview
+ */
+@Component({
+    standalone: true,
+    imports: [
+        FormsModule,
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqSelectModule,
+        KbqCleaner,
+        KbqBadgeModule,
+        KbqIconModule
+    ],
+    selector: 'inline-edit-overview-example',
+    template: `
+        <kbq-inline-edit showActions>
+            <kbq-label>Label</kbq-label>
+
+            <ng-container *kbqInlineEditViewMode>
+                <div class="layout-row layout-gap-xxs">
+                    @for (badge of selected; track badge) {
+                        <kbq-badge>{{ badge }}</kbq-badge>
+                    }
+                </div>
+            </ng-container>
+            <ng-container *kbqInlineEditEditMode>
+                <kbq-form-field>
+                    <kbq-select multiple [required]="true" [(ngModel)]="selected">
+                        @for (option of options; track option) {
+                            <kbq-option [value]="option">{{ option }}</kbq-option>
+                        }
+                        <kbq-cleaner #kbqSelectCleaner />
+                    </kbq-select>
+                </kbq-form-field>
+            </ng-container>
+        </kbq-inline-edit>
+    `,
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider()
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class InlineEditOverviewExample {
+    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
+    selected: string[] = [this.options[0]];
+}
