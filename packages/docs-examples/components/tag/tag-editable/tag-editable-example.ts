@@ -48,10 +48,8 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
 export class TagEditableExample {
     private readonly toast = inject(KbqToastService);
     private readonly tooltip = viewChild.required(KbqTooltipTrigger);
-
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly color = KbqComponentColors;
-
     protected readonly tagValue = signal('Editable tag');
     protected readonly initialMaxLength = this.tagValue().length;
     protected readonly tagModel = model(this.tagValue());

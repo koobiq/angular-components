@@ -478,8 +478,6 @@ export class KbqTag
 
     /** @docs-private */
     handleKeydown(event: KeyboardEvent): void {
-        console.log('KbqTag handleKeydown', event);
-
         if (this.disabled) {
             return;
         }
@@ -526,8 +524,6 @@ export class KbqTag
     }
 
     protected handleDblClick(event: MouseEvent): void {
-        console.log('handleDblClick', this.editable);
-
         if (this.disabled || !this.editable) return;
 
         event.stopPropagation();
@@ -539,6 +535,7 @@ export class KbqTag
 
         this.editing.set(true);
         this.editChange.emit({ tag: this, type: 'start', reason });
+
         setTimeout(() => this.editInputElementRef?.nativeElement.focus());
     }
 

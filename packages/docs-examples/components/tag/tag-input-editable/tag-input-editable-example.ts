@@ -2,36 +2,43 @@ import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
+import { KbqTagEditChange, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
- * @title Tag list editable
+ * @title Tag input editable
  */
 @Component({
     standalone: true,
-    selector: 'tag-list-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule, JsonPipe],
+    selector: 'tag-input-editable-example',
+    imports: [KbqTagsModule, KbqIconModule, JsonPipe, KbqFormFieldModule, FormsModule],
     template: `
         @let _tags = tags();
 
-        <kbq-tag-list [(ngModel)]="tags">
-            @for (tag of _tags; track $index) {
-                <kbq-tag
-                    editable
-                    [value]="tag"
-                    [color]="color.ContrastFade"
-                    (editChange)="editChange($event, $index)"
-                    (removed)="remove($index)"
-                >
-                    {{ tag }}
-                    <input kbqTagEditInput [(ngModel)]="_tags[$index]" />
-                    <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
-                    <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
-                </kbq-tag>
-            }
-        </kbq-tag-list>
+        <kbq-form-field>
+            <kbq-tag-list #tagList [(ngModel)]="tags">
+                @for (tag of _tags; track $index) {
+                    <kbq-tag
+                        editable
+                        [value]="tag"
+                        [color]="color.ContrastFade"
+                        (editChange)="editChange($event, $index)"
+                        (removed)="remove($index)"
+                    >
+                        {{ tag }}
+                        <input kbqTagEditInput [(ngModel)]="_tags[$index]" />
+                        <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
+                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
+                    </kbq-tag>
+                }
+
+                <input placeholder="New tag" [kbqTagInputFor]="tagList" (kbqTagInputTokenEnd)="create($event)" />
+
+                <kbq-cleaner #kbqTagListCleaner (click)="clear()" />
+            </kbq-tag-list>
+        </kbq-form-field>
 
         <small>
             <code>{{ _tags | json }}</code>
@@ -52,9 +59,9 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TagListEditableExample {
-    protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
+export class TagInputEditableExample {
     protected readonly color = KbqComponentColors;
+    protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
     private readonly toast = inject(KbqToastService);
 
     protected editChange({ reason, type }: KbqTagEditChange, index: number): void {
@@ -88,9 +95,32 @@ export class TagListEditableExample {
     }
 
     protected remove(index: number): void {
+        this.tags.update((tags) => {
+            tags.splice(index, 1);
+
+            return tags;
+        });
+
         this.toast.show({
             title: `Tag #${index} was removed`,
             style: KbqToastStyle.Warning
         });
+    }
+
+    protected create({ input, value }: KbqTagInputEvent): void {
+        const _value = (value || '').trim();
+
+        if (_value) {
+            this.tags.update((tags) => {
+                tags.push(_value);
+
+                return tags;
+            });
+            input.value = '';
+        }
+    }
+
+    protected clear(): void {
+        this.tags.update(() => []);
     }
 }
