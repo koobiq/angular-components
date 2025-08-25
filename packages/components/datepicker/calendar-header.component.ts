@@ -217,10 +217,10 @@ export class KbqCalendarHeader<D> implements AfterContentInit {
 
         if (currentYear === minYear) {
             this.monthNames.forEach((month) => (month.disabled = month.value < minMonth));
-        }
-
-        if (currentYear === maxYear) {
+        } else if (currentYear === maxYear) {
             this.monthNames.forEach((month) => (month.disabled = month.value > maxMonth));
+        } else {
+            this.monthNames.forEach((month) => (month.disabled = false));
         }
     }
 }
