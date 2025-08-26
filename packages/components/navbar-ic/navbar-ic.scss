@@ -1,6 +1,4 @@
-@use '../core/styles/common/tokens' as *;
-
-@use './navbar-ic-theme' as *;
+@use './navbar-ic-theme';
 
 .kbq-navbar-ic-container {
     display: flex;
@@ -16,6 +14,7 @@
 
     & .kbq-navbar-ic-container + .kbq-navbar-ic-container {
         padding-top: var(--kbq-size-xxl);
+        padding-bottom: var(--kbq-size-m);
     }
 
     & .kbq-navbar-ic__top-layer {
@@ -29,5 +28,5 @@
     }
 }
 
-@include kbq-navbar-ic-theme();
-@include kbq-navbar-ic-typography();
+@include navbar-ic-theme.kbq-navbar-ic-theme();
+@include navbar-ic-theme.kbq-navbar-ic-typography();

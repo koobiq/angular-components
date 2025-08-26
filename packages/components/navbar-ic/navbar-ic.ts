@@ -36,7 +36,7 @@ import {
     KbqNavbarIcToggle
 } from './navbar-ic-item';
 
-export enum ExpandEvents {
+export enum KbqExpandEvents {
     toggle,
     hoverOrFocus
 }
@@ -75,7 +75,6 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
     private itemFocusSubscription: Subscription | null;
     private itemBlurSubscription: Subscription | null;
 
-    /** @docs-private */
     ngAfterContentInit(): void {
         this.keyManager = new FocusKeyManager<KbqNavbarIcFocusableItem>(this.focusableItems).withTypeAhead();
 
@@ -96,14 +95,12 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
         });
     }
 
-    /** @docs-private */
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef).subscribe((focusOrigin) => {
             this.keyManager.setFocusOrigin(focusOrigin);
         });
     }
 
-    /** @docs-private */
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
@@ -245,7 +242,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
 
     readonly animationDone: Subject<void> = new Subject();
 
-    expandEvent: ExpandEvents | null = null;
+    expandEvent: KbqExpandEvents | null = null;
 
     @Input({ transform: booleanAttribute }) pinned = true;
 
@@ -270,11 +267,11 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     }
 
     get expandedByToggle() {
-        return this.expanded && this.expandEvent === ExpandEvents.toggle;
+        return this.expanded && this.expandEvent === KbqExpandEvents.toggle;
     }
 
     get expandedByHoverOrFocus() {
-        return this.expanded && this.expandEvent === ExpandEvents.hoverOrFocus;
+        return this.expanded && this.expandEvent === KbqExpandEvents.hoverOrFocus;
     }
 
     get currentWidth(): number {
@@ -293,7 +290,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
             .subscribe(([hovered, focused]) => {
                 if (this.pinned) return;
 
-                this.expandEvent = ExpandEvents.hoverOrFocus;
+                this.expandEvent = KbqExpandEvents.hoverOrFocus;
                 this.expanded = hovered || focused;
 
                 this.changeDetectorRef.markForCheck();
@@ -316,7 +313,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     toggle(): void {
         this.expanded = !this.expanded;
 
-        this.expandEvent = ExpandEvents.toggle;
+        this.expandEvent = KbqExpandEvents.toggle;
 
         this.changeDetectorRef.markForCheck();
     }
