@@ -220,7 +220,7 @@
     }
 
     .kbq-file-upload__hint {
-        .kbq-hint {
+        :where(& .kbq-hint) {
             color: var(--kbq-foreground-contrast-secondary);
         }
     }
