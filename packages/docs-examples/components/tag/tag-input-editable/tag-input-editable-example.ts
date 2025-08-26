@@ -1,7 +1,7 @@
 import { JsonPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { KbqComponentColors } from '@koobiq/components/core';
+import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
@@ -13,6 +13,7 @@ import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '
     standalone: true,
     selector: 'tag-input-editable-example',
     imports: [KbqTagsModule, KbqIconModule, JsonPipe, KbqFormFieldModule, FormsModule],
+    providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
         @let _tags = tags();
 
@@ -55,24 +56,40 @@ import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '
 export class TagInputEditableExample {
     protected readonly color = KbqComponentColors;
     protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
+    private prevTags = this.tags().slice();
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
-    protected editChange({ reason, type }: KbqTagEditChange, index: number): void {
+    protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
         const input = this.input().nativeElement as HTMLInputElement;
 
         switch (type) {
             case 'start': {
                 console.info(`Tag #${index} edit was started. Reason: "${reason}".`);
+
+                this.prevTags = this.tags().slice();
+
                 break;
             }
             case 'cancel': {
                 console.info(`Tag #${index} edit was canceled. Reason: "${reason}".`);
+
+                this.tags.update((tags) => {
+                    tags[index] = this.prevTags[index];
+
+                    return tags;
+                });
+
                 input.focus();
+
                 break;
             }
             case 'submit': {
                 console.info(`Tag #${index} edit was submitted. Reason: "${reason}".`);
+
+                if (!tag.value) this.remove(index);
+
                 input.focus();
+
                 break;
             }
             default:
@@ -85,6 +102,7 @@ export class TagInputEditableExample {
 
             return tags;
         });
+
         console.info(`Tag #${index} edit was removed.`);
     }
 
@@ -97,6 +115,7 @@ export class TagInputEditableExample {
 
                 return tags;
             });
+
             input.value = '';
         }
     }
