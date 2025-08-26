@@ -165,7 +165,7 @@ export class KbqPipeMinWidth {
 
     /** current length of text */
     get textLength(): number {
-        return this.elementRef.nativeElement.innerText.length || 0;
+        return this.elementRef.nativeElement.innerText?.length || 0;
     }
 
     constructor() {
