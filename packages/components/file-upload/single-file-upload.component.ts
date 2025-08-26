@@ -5,9 +5,11 @@ import {
     Component,
     ContentChildren,
     DoCheck,
+    effect,
     ElementRef,
     EventEmitter,
     inject,
+    input,
     Input,
     Output,
     QueryList,
@@ -88,6 +90,9 @@ export class KbqSingleFileUploadComponent
      */
     @Input({ transform: booleanAttribute }) showFileSize: boolean = true;
 
+    /** Optional configuration to override default labels with localized text.*/
+    readonly localeConfig = input<Partial<KbqInputFileLabel>>();
+
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
     @Output('fileQueueChange') readonly fileChange: EventEmitter<KbqFileItem | null> =
@@ -151,6 +156,10 @@ export class KbqSingleFileUploadComponent
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
+        effect(() => {
+            this.localeService ? this.updateLocaleParams() : this.initDefaultParams();
+        });
     }
 
     ngDoCheck() {
@@ -253,7 +262,9 @@ export class KbqSingleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
-        this.config = this.configuration || this.localeService?.getParams('fileUpload').multiple;
+        this.config = this.buildConfig<KbqInputFileLabel>(
+            this.configuration || this.localeService?.getParams('fileUpload').multiple
+        );
 
         this.getCaptionText();
 
@@ -284,7 +295,7 @@ export class KbqSingleFileUploadComponent
     }
 
     private initDefaultParams() {
-        this.config = KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+        this.config = this.buildConfig(KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
 
         this.getCaptionText();
     }

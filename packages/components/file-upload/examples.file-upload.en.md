@@ -1,6 +1,12 @@
-The example demonstrates the localization capabilities of the component in place.
+### Component Localization
+
+Configuring text via `InjectionToken` changes the labels in all file upload components within the module at once.
 
 <!-- example(file-upload-multiple-custom-text-overview) -->
+
+Configuring text via the input property `[localeConfig]` allows you to change only the required labels. The rest will remain as default and will change depending on the selected language, if such behavior is provided.
+
+<!-- example(file-upload-custom-text-via-input) -->
 
 An example of file upload with indeterminate progress:
 

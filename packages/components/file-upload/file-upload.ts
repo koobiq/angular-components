@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, DestroyRef, ElementRef, inject, InjectionToken, Renderer2 } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    DestroyRef,
+    ElementRef,
+    inject,
+    InjectionToken,
+    InputSignal,
+    Renderer2
+} from '@angular/core';
 import { FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { CanUpdateErrorState, ErrorStateMatcher, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -58,7 +66,8 @@ export const isCorrectExtension = (file: File, accept?: string[]): boolean => {
 };
 
 /** @docs-private */
-export abstract class KbqFileUploadBase implements CanUpdateErrorState {
+export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpdateErrorState {
+    protected abstract localeConfig: InputSignal<Partial<T> | undefined>;
     /** Tracks whether the component is in an error state based on the control, parent form,
      * and `errorStateMatcher`, triggering visual updates and state changes if needed. */
     errorState: boolean = false;
@@ -105,5 +114,16 @@ export abstract class KbqFileUploadBase implements CanUpdateErrorState {
             this.errorState = newState;
             this.stateChanges.next();
         }
+    }
+
+    /** Merges base configuration with locale-specific overrides. */
+    protected buildConfig<T>(config: T): T {
+        const localeConfig = this.localeConfig();
+
+        if (localeConfig) {
+            config = { ...config, ...localeConfig };
+        }
+
+        return config;
     }
 }

@@ -5,9 +5,11 @@ import {
     ContentChild,
     ContentChildren,
     DoCheck,
+    effect,
     ElementRef,
     EventEmitter,
     inject,
+    input,
     Input,
     Output,
     QueryList,
@@ -100,6 +102,9 @@ export class KbqMultipleFileUploadComponent
         this.cvaOnChange(this._files);
         this.cdr.markForCheck();
     }
+
+    /** Optional configuration to override default labels with localized text.*/
+    readonly localeConfig = input<Partial<KbqInputFileMultipleLabel>>();
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
@@ -202,6 +207,10 @@ export class KbqMultipleFileUploadComponent
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
+        effect(() => {
+            this.localeService ? this.updateLocaleParams() : this.initDefaultParams();
+        });
     }
 
     ngDoCheck() {
@@ -305,7 +314,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
-        this.config = this.configuration || this.localeService?.getParams('fileUpload').multiple;
+        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').multiple);
 
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
@@ -353,7 +362,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     private initDefaultParams() {
-        this.config = KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+        this.config = this.buildConfig(KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
 
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
