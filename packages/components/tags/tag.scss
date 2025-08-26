@@ -51,7 +51,7 @@
     }
 
     .kbq-tag-edit-input {
-        // @TODO auto sizing
+        // @TODO should implement auto-sizing, because firefox and safari doesn't support this property
         field-sizing: content;
 
         border: unset;

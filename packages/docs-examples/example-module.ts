@@ -3714,6 +3714,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "tag-disabled-example.ts",
     "importPath": "components/tag"
   },
+  "tag-editable-with-validation": {
+    "packagePath": "components/tag/tag-editable-with-validation",
+    "title": "Tag editable with validation",
+    "componentName": "TagEditableWithValidationExample",
+    "files": [
+      "tag-editable-with-validation-example.ts"
+    ],
+    "selector": "tag-editable-with-validation-example",
+    "additionalComponents": [],
+    "primaryFile": "tag-editable-with-validation-example.ts",
+    "importPath": "components/tag"
+  },
   "tag-editable": {
     "packagePath": "components/tag/tag-editable",
     "title": "Tag editable",
@@ -5421,6 +5433,8 @@ return import('@koobiq/docs-examples/components/tag');
   case 'tag-autocomplete':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-disabled':
+return import('@koobiq/docs-examples/components/tag');
+  case 'tag-editable-with-validation':
 return import('@koobiq/docs-examples/components/tag');
   case 'tag-editable':
 return import('@koobiq/docs-examples/components/tag');
