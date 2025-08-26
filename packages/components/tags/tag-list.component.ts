@@ -389,7 +389,7 @@ export class KbqTagList
         this.keyManager = new FocusKeyManager<KbqTag>(this.tags)
             .withVerticalOrientation()
             .withHorizontalOrientation(this.dir ? this.dir.value : 'ltr')
-            .skipPredicate((item) => item.disabled || !item.selectable || !item.editable);
+            .skipPredicate((item) => item.disabled || !item.selectable);
 
         if (this.dir) {
             this.dir.change
