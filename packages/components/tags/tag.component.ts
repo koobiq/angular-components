@@ -92,6 +92,7 @@ export class KbqTagTrailingIcon {}
     exportAs: 'kbqTagEditSubmit',
     host: {
         class: 'kbq-tag-edit-submit',
+        '[attr.tabindex]': '-1',
 
         '(click)': 'handleClick($event)',
         '(keydown)': 'handleKeydown($event)'
