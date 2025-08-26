@@ -71,7 +71,6 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     // (undocumented)
     elementRef: ElementRef;
     focus(): void;
-    // (undocumented)
     protected handleDblClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
@@ -156,7 +155,6 @@ export class KbqTagEditInput {
 // @public
 export class KbqTagEditSubmit {
     protected handleClick(_event: Event): void;
-    protected handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagEditSubmit, "[kbqTagEditSubmit]", ["kbqTagEditSubmit"], {}, {}, never, never, true, never>;
     // (undocumented)

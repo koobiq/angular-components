@@ -536,6 +536,7 @@ export class KbqTag
             });
     }
 
+    /** @docs-private */
     protected handleDblClick(event: MouseEvent): void {
         if (this.disabled || !this.editable) return;
 
