@@ -36,7 +36,7 @@ import { TemplateRef } from '@angular/core';
 import { TooltipModifier } from '@koobiq/components/tooltip';
 
 // @public (undocumented)
-export enum ExpandEvents {
+export enum KbqExpandEvents {
     // (undocumented)
     hoverOrFocus = 1,
     // (undocumented)
@@ -73,8 +73,11 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
     protected listenToItemsFocus(): void;
     // (undocumented)
     static ngAcceptInputType_tabindex: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     protected resetOptions(): void;
@@ -115,7 +118,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     // (undocumented)
     expandedWidth: number;
     // (undocumented)
-    expandEvent: ExpandEvents | null;
+    expandEvent: KbqExpandEvents | null;
     // (undocumented)
     readonly focused: BehaviorSubject<boolean>;
     // (undocumented)
@@ -191,8 +194,11 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
     set hasFocus(value: boolean);
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
+    // (undocumented)
     ngAfterContentInit(): void;
+    // (undocumented)
     ngAfterViewInit(): void;
+    // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
     protected readonly ngZone: NgZone;
@@ -212,15 +218,24 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 }
 
 // @public (undocumented)
-export class KbqNavbarIcHeader implements AfterContentInit {
+export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContentInit {
+    constructor();
+    // (undocumented)
+    protected readonly destroyRef: DestroyRef;
+    // (undocumented)
+    get isLink(): boolean;
     // (undocumented)
     logo: KbqNavbarIcLogo;
+    // (undocumented)
+    protected readonly nativeElement: any;
     // (undocumented)
     protected readonly navbar: KbqNavbarIc;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
     title: KbqNavbarIcTitle;
+    // (undocumented)
+    get titleText(): string;
     // (undocumented)
     static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcHeader, "kbq-navbar-ic-header, [kbq-navbar-ic-header]", ["kbqNavbarIcHeader"], {}, {}, ["logo", "title"], ["*"], true, never>;
     // (undocumented)
@@ -247,6 +262,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     icon: KbqIcon;
     // (undocumented)
     readonly navbarFocusableItem: KbqNavbarIcFocusableItem;
+    // (undocumented)
     ngAfterContentInit(): void;
     onKeyDown($event: KeyboardEvent): void;
     // (undocumented)
@@ -255,7 +271,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     get showDropDownAngle(): boolean;
     title: KbqNavbarIcTitle;
     // (undocumented)
-    get titleText(): string | null;
+    get titleText(): string;
     // (undocumented)
     get trigger(): string;
     set trigger(value: string);
@@ -304,6 +320,7 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     isTextOverflown: boolean;
     // (undocumented)
     protected readonly nativeElement: any;
+    // (undocumented)
     ngAfterViewInit(): void;
     // (undocumented)
     outerElementWidth: number;
@@ -323,7 +340,6 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     // (undocumented)
     get content(): string | TemplateRef<any>;
     set content(content: string | TemplateRef<any>);
-    customIcon: KbqIcon;
     // (undocumented)
     get disabled(): boolean;
     // (undocumented)
@@ -336,7 +352,7 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     // (undocumented)
     toggle: () => void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcToggle, "kbq-navbar-ic-toggle", never, { "content": { "alias": "kbqCollapsedTooltip"; "required": false; }; }, {}, ["customIcon"], ["[kbqNavbarIcTitle]"], true, [{ directive: typeof i1.KbqRectangleItem; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcToggle, "kbq-navbar-ic-toggle", never, { "content": { "alias": "kbqCollapsedTooltip"; "required": false; }; }, {}, never, ["[kbqNavbarIcTitle]"], true, [{ directive: typeof i1.KbqRectangleItem; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcToggle, never>;
 }

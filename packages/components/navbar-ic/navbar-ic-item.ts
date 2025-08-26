@@ -72,9 +72,10 @@ export class KbqNavbarIcTitle implements AfterViewInit {
         return this.nativeElement.scrollWidth > this.nativeElement.clientWidth;
     }
 
-    /** @docs-private */
     ngAfterViewInit(): void {
         this.outerElementWidth = this.getOuterElementWidth();
+
+        this.checkTextOverflown();
     }
 
     getOuterElementWidth(): number {
@@ -86,7 +87,7 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     }
 
     checkTextOverflown() {
-        this.isTextOverflown = this.text.length > 18;
+        this.isTextOverflown = this.text.length > 22;
     }
 }
 
@@ -162,19 +163,16 @@ export class KbqNavbarIcFocusableItem implements AfterContentInit, AfterViewInit
 
     private _disabled = false;
 
-    /** @docs-private */
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef);
     }
 
-    /** @docs-private */
     ngAfterContentInit(): void {
         if (this.button) {
             this.button.tabIndex = -1;
         }
     }
 
-    /** @docs-private */
     ngOnDestroy() {
         this.focusMonitor.stopMonitoring(this.elementRef);
     }
@@ -296,13 +294,11 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     private _collapsed = false;
 
     get croppedText(): string {
-        const croppedTitleText = this.title?.isOverflown ? this.titleText : '';
-
-        return `${croppedTitleText}`;
+        return this.title?.isOverflown ? this.titleText : '';
     }
 
-    get titleText(): string | null {
-        return this.collapsedText || this.title?.text || null;
+    get titleText(): string {
+        return this.collapsedText || this.title?.text;
     }
 
     get disabled(): boolean {
@@ -354,7 +350,6 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         }
     }
 
-    /** @docs-private */
     ngAfterContentInit(): void {
         this.updateTooltip();
     }
@@ -429,9 +424,6 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     readonly rectangleElement = inject(KbqRectangleItem);
 
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
-
-    /** @docs-private */
-    @ContentChild(KbqIcon) customIcon: KbqIcon;
 
     @Input('kbqCollapsedTooltip')
     get content(): string | TemplateRef<any> {

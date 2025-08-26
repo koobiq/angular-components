@@ -23,7 +23,9 @@ import { NavbarIcExamplesModule } from '../../docs-examples/components/navbar-ic
         </div>
         <br />
         <br />
-        <navbar-ic-long-app-name-example />
+        <div style="padding: 20px">
+            <navbar-ic-long-app-name-example />
+        </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -55,5 +57,5 @@ export class DevApp {
 
     @ViewChild('navbar', { static: false }) navbar: KbqNavbarIc;
 
-    permission$ = timer(500).pipe(map(() => true));
+    permission = timer(500).pipe(map(() => true));
 }

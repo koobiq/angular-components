@@ -74,7 +74,7 @@ export class NavbarIcOverviewExample {
             id: '2',
             color: KbqComponentColors.Contrast,
             style: KbqButtonStyles.Transparent,
-            text: '...'
+            icon: 'kbq-ellipsis-horizontal_16'
         }
     ];
 

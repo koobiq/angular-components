@@ -1,6 +1,3 @@
-@use '../core/styles/tokens';
-@use '../core/styles/common/tokens' as *;
-
 .kbq-navbar-ic-header {
     display: block;
 
@@ -22,17 +19,28 @@
 
     & .kbq-navbar-ic-logo {
         display: flex;
+        align-self: center;
     }
 
     & .kbq-navbar-ic-title {
         display: block;
         align-items: center;
 
-        cursor: pointer;
-
         text-overflow: ellipsis;
         white-space: nowrap;
         overflow: hidden;
+
+        &.kbq-navbar-ic-title_text-overflown {
+            display: -webkit-box;
+
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            white-space: normal;
+        }
+    }
+
+    &.kbq-navbar-ic-header_interactive {
+        cursor: pointer;
     }
 
     &.kbq-collapsed .kbq-navbar-ic-title {
