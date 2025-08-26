@@ -94,8 +94,7 @@ export class KbqTagTrailingIcon {}
         class: 'kbq-tag-edit-submit',
         '[attr.tabindex]': '-1',
 
-        '(click)': 'handleClick($event)',
-        '(keydown)': 'handleKeydown($event)'
+        '(click)': 'handleClick($event)'
     }
 })
 export class KbqTagEditSubmit {
@@ -104,19 +103,6 @@ export class KbqTagEditSubmit {
     /** @docs-private */
     protected handleClick(_event: Event): void {
         this.tag.submitEditing('click');
-    }
-
-    /** @docs-private */
-    protected handleKeydown(event: KeyboardEvent): void {
-        switch (event.keyCode) {
-            case ENTER: {
-                event.preventDefault();
-                event.stopPropagation();
-                this.tag.submitEditing(event.key);
-                break;
-            }
-            default:
-        }
     }
 }
 
@@ -141,12 +127,12 @@ export class KbqTagEditInput {
         switch (event.keyCode) {
             case ESCAPE: {
                 event.stopPropagation();
-                this.tag.cancelEditing(event.key);
+                this.tag.cancelEditing('escape');
                 break;
             }
             case ENTER: {
                 event.stopPropagation();
-                this.tag.submitEditing(event.key);
+                this.tag.submitEditing('enter');
                 break;
             }
 

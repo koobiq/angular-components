@@ -1,13 +1,63 @@
 import { Directionality } from '@angular/cdk/bidi';
-import { Component, DebugElement, ViewChild } from '@angular/core';
+import { ENTER, ESCAPE, F2 } from '@angular/cdk/keycodes';
+import { ChangeDetectionStrategy, Component, DebugElement, model, Provider, Type, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
 import { createKeyboardEvent, dispatchFakeEvent } from '@koobiq/cdk/testing';
 import { Subject } from 'rxjs';
-import { KbqTag, KbqTagEvent, KbqTagList, KbqTagSelectionChange, KbqTagsModule } from './index';
+import { KbqTagList } from './tag-list.component';
+import { KbqTag, KbqTagEditInput, KbqTagEditSubmit, KbqTagEvent, KbqTagSelectionChange } from './tag.component';
+import { KbqTagsModule } from './tag.module';
 
-describe('Tags', () => {
+const createComponent = <T>(component: Type<T>, providers: Provider[] = []): ComponentFixture<T> => {
+    TestBed.configureTestingModule({
+        imports: [component, NoopAnimationsModule],
+        providers
+    });
+    const fixture = TestBed.createComponent<T>(component);
+
+    fixture.autoDetectChanges();
+
+    return fixture;
+};
+
+const getTagElement = (debugElement: DebugElement): HTMLElement => {
+    return debugElement.query(By.directive(KbqTag)).nativeElement;
+};
+
+const getTagEditInputElement = (debugElement: DebugElement): HTMLInputElement => {
+    return debugElement.query(By.directive(KbqTagEditInput)).nativeElement;
+};
+
+const getTagEditSubmitElement = (debugElement: DebugElement): HTMLElement => {
+    return debugElement.query(By.directive(KbqTagEditSubmit)).nativeElement;
+};
+
+@Component({
+    standalone: true,
+    selector: 'test-editable-tag',
+    imports: [KbqTagsModule, FormsModule],
+    template: `
+        <kbq-tag [editable]="editable()" [preventEditSubmit]="preventEditSubmit()" (editChange)="editChange($event)">
+            {{ tag() }}
+            <input kbqTagEditInput [(ngModel)]="tag" />
+            <i kbqTagEditSubmit></i>
+        </kbq-tag>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestEditableTag {
+    readonly tag = model('Editable tag');
+    readonly editable = model(true);
+    readonly preventEditSubmit = model(false);
+
+    readonly editChange = jest.fn();
+}
+
+describe(KbqTag.name, () => {
     let fixture: ComponentFixture<any>;
     let tagDebugElement: DebugElement;
     let tagNativeElement: HTMLElement;
@@ -344,6 +394,163 @@ describe('Tags', () => {
                 expect(tagNativeElement.getAttribute('tabindex')).toBeFalsy();
             });
         });
+    });
+
+    it('should start editing on double click', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+    });
+
+    it('should start editing on ENTER press', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+
+        tag.focus();
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+    });
+
+    it('should start editing on F2 press', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+
+        tag.focus();
+        tag.dispatchEvent(new KeyboardEvent('keydown', { keyCode: F2 }));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+    });
+
+    it('should emit KbqTagEditChange event when editing starts', () => {
+        const { debugElement, componentInstance } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(componentInstance.editChange).toHaveBeenCalledWith(
+            expect.objectContaining({ type: 'start', reason: 'dblclick' })
+        );
+    });
+
+    it('should cancel editing on ESCAPE press', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+
+        getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ESCAPE }));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+    });
+
+    it('should cancel editing on focusout', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+
+        getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+    });
+
+    it('should emit KbqTagEditChange event when editing cancelled', () => {
+        const { debugElement, componentInstance } = createComponent(TestEditableTag);
+
+        getTagElement(debugElement).dispatchEvent(new MouseEvent('dblclick'));
+
+        getTagEditInputElement(debugElement).dispatchEvent(new Event('blur'));
+
+        expect(componentInstance.editChange).toHaveBeenCalledWith(
+            expect.objectContaining({ type: 'cancel', reason: 'focusout' })
+        );
+    });
+
+    it('should submit editing on ENTER press', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+
+        getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+    });
+
+    it('should submit editing on kbqEditSubmit click', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+
+        getTagEditSubmitElement(debugElement).dispatchEvent(new MouseEvent('click'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+    });
+
+    it('should prevent submit editing by preventEditSubmit property', () => {
+        const fixture = createComponent(TestEditableTag);
+        const { debugElement, componentInstance } = fixture;
+        const tag = getTagElement(debugElement);
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeFalsy();
+
+        componentInstance.preventEditSubmit.set(true);
+        fixture.detectChanges();
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+
+        getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+    });
+
+    it('should emit KbqTagEditChange event when editing submitted', () => {
+        const { debugElement, componentInstance } = createComponent(TestEditableTag);
+
+        getTagElement(debugElement).dispatchEvent(new MouseEvent('dblclick'));
+
+        getTagEditInputElement(debugElement).dispatchEvent(new KeyboardEvent('keydown', { keyCode: ENTER }));
+
+        expect(componentInstance.editChange).toHaveBeenCalledWith(
+            expect.objectContaining({ type: 'submit', reason: 'enter' })
+        );
+    });
+
+    it('should stay editable when pressing BACKSPACE and SPACE keys', () => {
+        const { debugElement } = createComponent(TestEditableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('dblclick'));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+
+        const input = getTagEditInputElement(debugElement);
+
+        input.dispatchEvent(createKeyboardEvent('keydown', BACKSPACE));
+        input.dispatchEvent(createKeyboardEvent('keydown', SPACE));
+
+        expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
     });
 });
 

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
@@ -14,7 +14,7 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
         <kbq-tag editable (editChange)="editChange($event)" (removed)="remove()">
             {{ tag() }}
             <input kbqTagEditInput [(ngModel)]="tag" />
-            <i kbq-icon-button="kbq-xmark-s_16" kbqTagEditSubmit></i>
+            <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit></i>
 
             <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
         </kbq-tag>
@@ -25,8 +25,7 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagEditableExample {
-    protected readonly tagValue = signal('Editable tag');
-    protected readonly tag = model(this.tagValue());
+    protected readonly tag = model('Editable tag');
 
     protected editChange({ type, reason }: KbqTagEditChange): void {
         switch (type) {
