@@ -1,10 +1,9 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, model } from '@angular/core';
+import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
-import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
  * @title Tag list editable
@@ -49,32 +48,19 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 export class TagListEditableExample {
     protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
     protected readonly color = KbqComponentColors;
-    private readonly toast = inject(KbqToastService);
 
     protected editChange({ reason, type }: KbqTagEditChange, index: number): void {
         switch (type) {
             case 'start': {
-                this.toast.show({
-                    title: `Tag #${index} edit was started`,
-                    style: KbqToastStyle.Contrast,
-                    caption: `Reason: ${reason}`
-                });
+                console.info(`Tag #${index} edit was started. Reason: "${reason}".`);
                 break;
             }
             case 'cancel': {
-                this.toast.show({
-                    title: `Tag #${index} edit was canceled`,
-                    style: KbqToastStyle.Warning,
-                    caption: `Reason: ${reason}`
-                });
+                console.info(`Tag #${index} edit was canceled. Reason: "${reason}".`);
                 break;
             }
             case 'submit': {
-                this.toast.show({
-                    title: `Tag #${index} edit was submitted`,
-                    style: KbqToastStyle.Success,
-                    caption: `Reason: ${reason}`
-                });
+                console.info(`Tag #${index} edit was submitted. Reason: "${reason}".`);
                 break;
             }
             default:
@@ -82,9 +68,6 @@ export class TagListEditableExample {
     }
 
     protected remove(index: number): void {
-        this.toast.show({
-            title: `Tag #${index} was removed`,
-            style: KbqToastStyle.Warning
-        });
+        console.info(`Tag #${index} edit was removed.`);
     }
 }

@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject, model, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, model, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, PopUpPlacements } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
-import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
@@ -52,7 +51,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TagEditableExample {
-    private readonly toast = inject(KbqToastService);
     private readonly tooltip = viewChild.required(KbqTooltipTrigger);
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly color = KbqComponentColors;
@@ -93,26 +91,15 @@ export class TagEditableExample {
     }
 
     protected remove(): void {
-        this.toast.show({
-            title: 'Tag was removed',
-            style: KbqToastStyle.Warning
-        });
+        console.info('Tag was removed.');
     }
 
     private start({ reason }: KbqTagEditChange): void {
-        this.toast.show({
-            title: 'Tag edit was started',
-            style: KbqToastStyle.Contrast,
-            caption: `Reason: ${reason}`
-        });
+        console.info(`Tag edit was started. Reason: "${reason}".`);
     }
 
     private cancel(event: KbqTagEditChange): void {
-        this.toast.show({
-            title: 'Tag edit was canceled',
-            style: KbqToastStyle.Warning,
-            caption: `Reason: ${event.reason}`
-        });
+        console.info(`Tag edit was canceled. Reason: "${event.reason}".`);
 
         if (event.reason === 'focusout' && this.isModelValid()) {
             return this.submit({ ...event, reason: 'Handle submit when focusout' });
@@ -122,11 +109,7 @@ export class TagEditableExample {
     }
 
     private submit(event: KbqTagEditChange): void {
-        this.toast.show({
-            title: 'Tag edit was submitted',
-            style: KbqToastStyle.Success,
-            caption: `Reason: ${event.reason}`
-        });
+        console.info(`Tag edit was submitted. Reason: "${event.reason}".`);
 
         const model = this.tagModelTrimmed();
 

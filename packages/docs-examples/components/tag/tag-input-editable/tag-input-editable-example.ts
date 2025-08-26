@@ -1,11 +1,10 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, model, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
-import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 
 /**
  * @title Tag input editable
@@ -56,7 +55,6 @@ import { KbqToastService, KbqToastStyle } from '@koobiq/components/toast';
 export class TagInputEditableExample {
     protected readonly color = KbqComponentColors;
     protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
-    private readonly toast = inject(KbqToastService);
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
 
     protected editChange({ reason, type }: KbqTagEditChange, index: number): void {
@@ -64,28 +62,16 @@ export class TagInputEditableExample {
 
         switch (type) {
             case 'start': {
-                this.toast.show({
-                    title: `Tag #${index} edit was started`,
-                    style: KbqToastStyle.Contrast,
-                    caption: `Reason: ${reason}`
-                });
+                console.info(`Tag #${index} edit was started. Reason: "${reason}".`);
                 break;
             }
             case 'cancel': {
-                this.toast.show({
-                    title: `Tag #${index} edit was canceled`,
-                    style: KbqToastStyle.Warning,
-                    caption: `Reason: ${reason}`
-                });
+                console.info(`Tag #${index} edit was canceled. Reason: "${reason}".`);
                 input.focus();
                 break;
             }
             case 'submit': {
-                this.toast.show({
-                    title: `Tag #${index} edit was submitted`,
-                    style: KbqToastStyle.Success,
-                    caption: `Reason: ${reason}`
-                });
+                console.info(`Tag #${index} edit was submitted. Reason: "${reason}".`);
                 input.focus();
                 break;
             }
@@ -99,11 +85,7 @@ export class TagInputEditableExample {
 
             return tags;
         });
-
-        this.toast.show({
-            title: `Tag #${index} was removed`,
-            style: KbqToastStyle.Warning
-        });
+        console.info(`Tag #${index} edit was removed.`);
     }
 
     protected create({ input, value }: KbqTagInputEvent): void {
