@@ -187,9 +187,11 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
 };
 
 /** default configuration of datepicker */
+/** @docs-private */
 export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = ruRULocaleData.datepicker;
 
 /** Injection Token for providing configuration of datepicker */
+/** @docs-private */
 export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken('KbqDatepickerConfiguration');
 
 /**
