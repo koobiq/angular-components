@@ -183,10 +183,16 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
      * The displayed value of the option. It is necessary to show the selected option in the
      * select's trigger.
      */
+    @Input()
     get viewValue(): string {
-        // TODO: Add input property alternative for node envs.
-        return (this.getHostElement().textContent || '').trim();
+        return this._viewValue || (this.getHostElement().textContent || '').trim();
     }
+
+    set viewValue(value: string) {
+        this._viewValue = value;
+    }
+
+    private _viewValue: string;
 
     /** Whether the wrapping component is in multiple selection mode. */
     get multiple(): boolean {

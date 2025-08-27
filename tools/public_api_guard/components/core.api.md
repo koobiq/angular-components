@@ -2198,8 +2198,9 @@ export class KbqOption extends KbqOptionBase implements AfterViewChecked, OnDest
     userSelect: boolean;
     value: any;
     get viewValue(): string;
+    set viewValue(value: string);
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "userSelect": { "alias": "userSelect"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqOption, "kbq-option", ["kbqOption"], { "value": { "alias": "value"; "required": false; }; "selectable": { "alias": "selectable"; "required": false; }; "userSelect": { "alias": "userSelect"; "required": false; }; "showCheckbox": { "alias": "showCheckbox"; "required": false; }; "viewValue": { "alias": "viewValue"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; }, { "onSelectionChange": "onSelectionChange"; }, never, ["kbq-pseudo-checkbox", "*"], false, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqOption, [null, null, { optional: true; }, { optional: true; }]>;
 }
