@@ -9,6 +9,7 @@ import {
     inject,
     Inject,
     Injectable,
+    InjectionToken,
     Input,
     OnDestroy,
     Optional,
@@ -16,6 +17,7 @@ import {
     Provider,
     Renderer2
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     AbstractControl,
     ControlValueAccessor,
@@ -55,7 +57,7 @@ import {
     KBQ_LOCALE_SERVICE,
     KbqDateFormats,
     KbqErrorStateTracker,
-    KbqLocaleService,
+    ruRULocaleData,
     validationTooltipHideDelay,
     validationTooltipShowDelay
 } from '@koobiq/components/core';
@@ -184,6 +186,14 @@ export const KBQ_DATEPICKER_VALIDATORS: any = {
     multi: true
 };
 
+/** default configuration of datepicker */
+/** @docs-private */
+export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION = ruRULocaleData.datepicker;
+
+/** Injection Token for providing configuration of datepicker */
+/** @docs-private */
+export const KBQ_DATEPICKER_CONFIGURATION = new InjectionToken('KbqDatepickerConfiguration');
+
 /**
  * @TODO: Remove after kbq-form-field and kbq-form-field-experimental will be merged. (#DS-3463)
  * Used to sync control's errorState and icon's errorState, since now datepicker-input is validating on initial.
@@ -266,6 +276,13 @@ interface DateTimeObject {
 export class KbqDatepickerInput<D>
     implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit
 {
+    /** @docs-private */
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    protected readonly externalConfiguration = inject(KBQ_DATEPICKER_CONFIGURATION, { optional: true });
+
+    protected configuration;
+
     readonly stateChanges: Subject<void> = new Subject<void>();
 
     controlType: string = 'datepicker';
@@ -295,15 +312,14 @@ export class KbqDatepickerInput<D>
 
     @Input()
     get placeholder(): string {
-        return this._placeholder;
+        return this._placeholder || this.configuration.placeholder;
     }
 
     set placeholder(value: string) {
         this._placeholder = value;
-        this.usePlaceholderFromInput = true;
     }
 
-    private _placeholder: string = '';
+    private _placeholder: string;
 
     @Input()
     get required(): boolean {
@@ -526,8 +542,6 @@ export class KbqDatepickerInput<D>
 
     private datepickerSubscription = Subscription.EMPTY;
 
-    private localeSubscription = Subscription.EMPTY;
-
     /** Whether the last value set on the input was valid. */
     private lastValueValid = false;
 
@@ -542,16 +556,13 @@ export class KbqDatepickerInput<D>
 
     private separatorPositions: number[];
 
-    private usePlaceholderFromInput: boolean = false;
-
     private errorStateTracker: KbqErrorStateTracker;
 
     constructor(
         public elementRef: ElementRef<HTMLInputElement>,
         private readonly renderer: Renderer2,
         @Optional() readonly adapter: DateAdapter<D>,
-        @Optional() @Inject(KBQ_DATE_FORMATS) private readonly dateFormats: KbqDateFormats,
-        @Optional() @Inject(KBQ_LOCALE_SERVICE) private localeService: KbqLocaleService
+        @Optional() @Inject(KBQ_DATE_FORMATS) private readonly dateFormats: KbqDateFormats
     ) {
         this.validator = Validators.compose([
             this.parseValidator,
@@ -575,7 +586,11 @@ export class KbqDatepickerInput<D>
 
         this.setFormat(this.dateInputFormat);
 
-        this.localeSubscription = adapter.localeChanges.subscribe(this.updateLocaleParams);
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.initDefaultParams();
+        }
     }
 
     ngDoCheck() {
@@ -611,7 +626,6 @@ export class KbqDatepickerInput<D>
 
     ngOnDestroy() {
         this.datepickerSubscription.unsubscribe();
-        this.localeSubscription.unsubscribe();
         this.valueChange.complete();
         this.disabledChange.complete();
     }
@@ -874,12 +888,14 @@ export class KbqDatepickerInput<D>
     private updateLocaleParams = () => {
         this.setFormat(this.dateInputFormat);
 
-        if (!this.usePlaceholderFromInput) {
-            this._placeholder = this.localeService.getParams('datepicker').placeholder;
-        }
+        this.configuration = this.externalConfiguration || this.localeService?.getParams('datepicker');
 
         this.value = this.value;
     };
+
+    private initDefaultParams() {
+        this.configuration = this.externalConfiguration || KBQ_DATEPICKER_DEFAULT_CONFIGURATION;
+    }
 
     private setFormat(format: string): void {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment

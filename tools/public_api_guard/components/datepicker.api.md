@@ -44,6 +44,15 @@ import { Validator } from '@angular/forms';
 import { ViewContainerRef } from '@angular/core';
 
 // @public
+export const KBQ_DATEPICKER_CONFIGURATION: InjectionToken<unknown>;
+
+// @public
+export const KBQ_DATEPICKER_DEFAULT_CONFIGURATION: {
+    placeholder: string;
+    dateInput: string;
+};
+
+// @public
 export const KBQ_DATEPICKER_SCROLL_STRATEGY: InjectionToken<() => ScrollStrategy>;
 
 // @public
@@ -269,11 +278,13 @@ export class KbqDatepickerContent<D> implements OnDestroy, AfterViewInit {
 
 // @public
 export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlValueAccessor, Validator, OnDestroy, DoCheck, AfterContentInit {
-    constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, adapter: DateAdapter<D>, dateFormats: KbqDateFormats, localeService: KbqLocaleService);
+    constructor(elementRef: ElementRef<HTMLInputElement>, renderer: Renderer2, adapter: DateAdapter<D>, dateFormats: KbqDateFormats);
     // (undocumented)
     readonly adapter: DateAdapter<D>;
     // (undocumented)
     calendar: KbqCalendar<D>;
+    // (undocumented)
+    protected configuration: any;
     // (undocumented)
     controlType: string;
     readonly dateChange: EventEmitter<KbqDatepickerInputEvent<D>>;
@@ -297,6 +308,8 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     get errorStateMatcher(): ErrorStateMatcher;
     set errorStateMatcher(value: ErrorStateMatcher);
     // (undocumented)
+    protected readonly externalConfiguration: unknown;
+    // (undocumented)
     focus(): void;
     // (undocumented)
     focusChanged(isFocused: boolean): void;
@@ -314,6 +327,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     set kbqDatepickerFilter(value: (date: D | null) => boolean);
     // (undocumented)
     set kbqValidationTooltip(tooltip: KbqWarningTooltipTrigger);
+    protected readonly localeService: KbqLocaleService | null;
     get max(): D | null;
     set max(value: D | null);
     get min(): D | null;
@@ -370,7 +384,7 @@ export class KbqDatepickerInput<D> implements KbqFormFieldControl<D>, ControlVal
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqDatepickerInput<any>, "input[kbqDatepicker], input[kbqCalendar]", ["kbqDatepickerInput"], { "errorStateMatcher": { "alias": "errorStateMatcher"; "required": false; }; "placeholder": { "alias": "placeholder"; "required": false; }; "required": { "alias": "required"; "required": false; }; "kbqDatepicker": { "alias": "kbqDatepicker"; "required": false; }; "kbqCalendar": { "alias": "kbqCalendar"; "required": false; }; "kbqDatepickerFilter": { "alias": "kbqDatepickerFilter"; "required": false; }; "value": { "alias": "value"; "required": false; }; "min": { "alias": "min"; "required": false; }; "max": { "alias": "max"; "required": false; }; "disabled": { "alias": "disabled"; "required": false; }; "id": { "alias": "id"; "required": false; }; "kbqValidationTooltip": { "alias": "kbqValidationTooltip"; "required": false; }; }, { "incorrectInput": "incorrectInput"; "dateChange": "dateChange"; "dateInput": "dateInput"; }, never, never, false, never>;
     // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, [null, null, { optional: true; }, { optional: true; }, { optional: true; }]>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqDatepickerInput<any>, [null, null, { optional: true; }, { optional: true; }]>;
 }
 
 // @public
