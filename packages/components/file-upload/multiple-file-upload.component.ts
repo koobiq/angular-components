@@ -207,11 +207,9 @@ export class KbqMultipleFileUploadComponent
             this.ngControl.valueAccessor = this;
         }
 
-        const handleLocaleChange = this.localeService ? this.updateLocaleParams : this.initDefaultParams;
-
         toObservable(this.localeConfig)
             .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(() => handleLocaleChange());
+            .subscribe(() => (this.localeService ? this.updateLocaleParams() : this.initDefaultParams()));
     }
 
     ngDoCheck() {

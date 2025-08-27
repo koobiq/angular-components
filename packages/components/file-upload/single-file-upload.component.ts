@@ -156,11 +156,11 @@ export class KbqSingleFileUploadComponent
             this.ngControl.valueAccessor = this;
         }
 
-        const handleLocaleChange = this.localeService ? this.updateLocaleParams : this.initDefaultParams;
-
         toObservable(this.localeConfig)
             .pipe(skip(1), takeUntilDestroyed())
-            .subscribe(() => handleLocaleChange());
+            .subscribe(() => {
+                this.localeService ? this.updateLocaleParams() : this.initDefaultParams();
+            });
     }
 
     ngDoCheck() {
@@ -296,6 +296,7 @@ export class KbqSingleFileUploadComponent
     }
 
     private initDefaultParams() {
+        console.log(this.localeConfig());
         this.config = this.buildConfig(KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
 
         this.getCaptionText();
