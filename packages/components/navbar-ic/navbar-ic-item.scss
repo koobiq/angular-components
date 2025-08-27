@@ -23,6 +23,10 @@
             top: 0;
             right: 0;
         }
+
+        & .kbq-navbar-ic-item__title-container {
+            display: none;
+        }
     }
 
     & > .kbq-icon {
@@ -83,4 +87,10 @@ a.kbq-navbar-ic-title {
     & [kbq-button] {
         z-index: 1;
     }
+}
+
+.kbq-navbar-ic-toggle .kbq-navbar-ic-item__inner {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }

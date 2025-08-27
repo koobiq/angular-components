@@ -5,7 +5,9 @@
     height: 700px;
 }
 
-.dev-vertical-navbar-content {
+.dev-navbar-ic-content {
+    display: flex;
+
     flex: 1;
     border: 1px solid red;
 }
