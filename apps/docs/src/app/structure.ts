@@ -272,7 +272,7 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'actions-panel',
                     hasApi: true,
                     apiId: 'actions-panel',
-                    hasExamples: false
+                    hasExamples: true
                 },
                 {
                     id: DocsStructureItemId.AgGrid,

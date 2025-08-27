@@ -9,6 +9,8 @@ import { DevThemeToggle } from '../theme-toggle';
     imports: [ActionsPanelExamplesModule],
     selector: 'dev-examples',
     template: `
+        <actions-panel-with-dropdown-and-popover-example />
+        <hr />
         <actions-panel-custom-counter-example />
         <hr />
         <actions-panel-overview-example />
