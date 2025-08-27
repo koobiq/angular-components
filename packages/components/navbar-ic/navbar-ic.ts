@@ -35,6 +35,7 @@ import {
     KbqNavbarIcItem,
     KbqNavbarIcToggle
 } from './navbar-ic-item';
+import { toggleNavbarIcAnimation } from './navbar-ic.animation';
 
 export enum KbqExpandEvents {
     toggle,
@@ -173,12 +174,7 @@ export class KbqNavbarIcContainer {}
     selector: 'kbq-navbar-ic',
     exportAs: 'KbqNavbarIc',
     template: `
-        <div
-            class="kbq-navbar-ic__top-layer"
-            [style.min-width.px]="currentWidth"
-            [style.width.px]="currentWidth"
-            [style.max-width.px]="currentWidth"
-        >
+        <div class="kbq-navbar-ic__top-layer" [@toggle]="expanded" (@toggle.done)="animationDone.next()">
             <ng-content select="[kbq-navbar-ic-container], kbq-navbar-ic-container" />
             <ng-content select="[kbq-navbar-ic-toggle], kbq-navbar-ic-toggle" />
         </div>
@@ -203,6 +199,7 @@ export class KbqNavbarIcContainer {}
         '(mouseenter)': 'hovered.next(true)',
         '(mouseleave)': 'hovered.next(false)'
     },
+    animations: [toggleNavbarIcAnimation()],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None
 })
