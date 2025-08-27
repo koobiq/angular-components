@@ -5,7 +5,6 @@ import {
     ContentChild,
     ContentChildren,
     DoCheck,
-    effect,
     ElementRef,
     EventEmitter,
     inject,
@@ -17,13 +16,13 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqListSelection } from '@koobiq/components/list';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, skip } from 'rxjs';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -208,9 +207,11 @@ export class KbqMultipleFileUploadComponent
             this.ngControl.valueAccessor = this;
         }
 
-        effect(() => {
-            this.localeService ? this.updateLocaleParams() : this.initDefaultParams();
-        });
+        const handleLocaleChange = this.localeService ? this.updateLocaleParams : this.initDefaultParams;
+
+        toObservable(this.localeConfig)
+            .pipe(skip(1), takeUntilDestroyed())
+            .subscribe(() => handleLocaleChange());
     }
 
     ngDoCheck() {
