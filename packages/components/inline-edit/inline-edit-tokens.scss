@@ -1,4 +1,5 @@
 :where(.kbq-inline-edit, .kbq-inline-edit__panel) {
+    --kbq-inline-edit-background: transparent;
     --kbq-inline-edit-height: var(--kbq-size-3xl);
     --kbq-inline-edit-pop-up-height: var(--kbq-size-xl);
     --kbq-inline-edit-padding-horizontal: var(--kbq-size-s);

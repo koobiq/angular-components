@@ -7,6 +7,15 @@
 @if (mode() === 'view') {
     <div class="kbq-inline-edit__view-container">
         <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
+
+        @if (menu()) {
+            <div class="kbq-inline-edit__menu-mask">
+                <div class="kbq-inline-edit__menu-mask-fade"></div>
+                <div class="kbq-inline-edit__menu-container">
+                    <ng-content select="[kbqInlineEditMenu]" />
+                </div>
+            </div>
+        }
     </div>
 } @else {
     <div class="kbq-inline-edit__overlay-anchor">
@@ -20,8 +29,8 @@
         [cdkConnectedOverlayOrigin]="overlayOrigin"
         [cdkConnectedOverlayWidth]="overlayWidth()"
         (attach)="onAttach()"
-        (overlayOutsideClick)="save()"
-        (overlayKeydown)="onKeydown($event)"
+        (overlayOutsideClick)="save($event)"
+        (overlayKeydown)="onOverlayKeydown($event)"
     >
         <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
             <div

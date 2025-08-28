@@ -9,6 +9,8 @@ import { DevThemeToggle } from '../theme-toggle';
     template: `
         <inline-edit-overview-example />
         <inline-edit-placeholder-example />
+        <inline-edit-menu-example />
+        <inline-edit-disabled-example />
     `,
     styles: `
         :host {

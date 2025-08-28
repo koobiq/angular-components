@@ -2115,6 +2115,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon-item"
   },
+  "inline-edit-disabled": {
+    "packagePath": "components/inline-edit/inline-edit-disabled",
+    "title": "Inline edit disabled",
+    "componentName": "InlineEditDisabledExample",
+    "files": [
+      "inline-edit-disabled-example.ts"
+    ],
+    "selector": "inline-edit-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-disabled-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-menu": {
+    "packagePath": "components/inline-edit/inline-edit-menu",
+    "title": "Inline edit menu",
+    "componentName": "InlineEditMenuExample",
+    "files": [
+      "inline-edit-menu-example.ts"
+    ],
+    "selector": "inline-edit-menu-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-menu-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-overview": {
+    "packagePath": "components/inline-edit/inline-edit-overview",
+    "title": "Inline edit overview",
+    "componentName": "InlineEditOverviewExample",
+    "files": [
+      "inline-edit-overview-example.ts"
+    ],
+    "selector": "inline-edit-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-overview-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-placeholder": {
+    "packagePath": "components/inline-edit/inline-edit-placeholder",
+    "title": "Inline edit placeholder",
+    "componentName": "InlineEditPlaceholderExample",
+    "files": [
+      "inline-edit-placeholder-example.ts"
+    ],
+    "selector": "inline-edit-placeholder-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-placeholder-example.ts",
+    "importPath": "components/inline-edit"
+  },
   "input-change-password": {
     "packagePath": "components/input/input-change-password",
     "title": "Input change password",
@@ -5347,6 +5395,14 @@ return import('@koobiq/docs-examples/components/icon-item');
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-variant':
 return import('@koobiq/docs-examples/components/icon-item');
+  case 'inline-edit-disabled':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-menu':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-overview':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-placeholder':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'input-change-password':
 return import('@koobiq/docs-examples/components/input');
   case 'input-number-overview':

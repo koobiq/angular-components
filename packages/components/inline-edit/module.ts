@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import {
     KbqInlineEdit,
     KbqInlineEditEditMode,
+    KbqInlineEditMenu,
     KbqInlineEditPlaceholder,
     KbqInlineEditValidationTooltip,
     KbqInlineEditViewMode
@@ -12,7 +13,8 @@ const COMPONENTS = [
     KbqInlineEditViewMode,
     KbqInlineEditEditMode,
     KbqInlineEditPlaceholder,
-    KbqInlineEditValidationTooltip
+    KbqInlineEditValidationTooltip,
+    KbqInlineEditMenu
 ];
 
 @NgModule({

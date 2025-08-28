@@ -26,6 +26,7 @@ import {
     KbqComponentColors,
     PopUpPlacements
 } from '@koobiq/components/core';
+import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
@@ -80,6 +81,23 @@ export class KbqInlineEditValidationTooltip {
     readonly templateRef = inject(TemplateRef);
 }
 
+@Directive({
+    standalone: true,
+    selector: '[kbqInlineEditMenu]',
+    exportAs: 'kbqInlineEditMenu',
+    host: {
+        role: 'button',
+        class: 'kbq-inline-edit__menu',
+        '[class.kbq-active]': 'dropdownTrigger?.opened',
+        '(click)': '$event.stopPropagation()',
+        '(keydown.enter)': '$event.stopPropagation()',
+        '(keydown.space)': '$event.stopPropagation()'
+    }
+})
+export class KbqInlineEditMenu {
+    dropdownTrigger = inject(KbqDropdownTrigger, { optional: true });
+}
+
 @Component({
     standalone: true,
     selector: 'kbq-inline-edit',
@@ -89,8 +107,10 @@ export class KbqInlineEditValidationTooltip {
     host: {
         class: baseClass,
         '[class.kbq-inline-edit_with-label]': '!!label()',
+        '[class.kbq-inline-edit_with-menu]': '!!menu()',
         '[tabindex]': 'tabIndex()',
         '[class]': 'className()',
+        '[class.kbq-inline-edit_disabled]': 'disabled()',
         '(click)': 'onClick($event)',
         '(keydown.enter)': 'onClick($event)',
         '(keydown.space)': 'onClick($event)'
@@ -114,12 +134,14 @@ export class KbqInlineEdit {
     readonly showActions = input(false, { transform: booleanAttribute });
     readonly showTooltipOnError = input(true, { transform: booleanAttribute });
     readonly validationTooltip = input<string>();
+    readonly disabled = input(false, { transform: booleanAttribute });
 
     protected readonly saved = output();
     protected readonly canceled = output();
 
     protected readonly viewModeTemplateRef = contentChild.required(KbqInlineEditViewMode);
     protected readonly editModeTemplateRef = contentChild.required(KbqInlineEditEditMode);
+    protected readonly menu = contentChild(KbqInlineEditMenu);
     protected readonly label = contentChild(KbqLabel);
     protected readonly formFieldRef = contentChild(KbqFormField);
     protected readonly customTooltipContent = contentChild(KbqInlineEditValidationTooltip);
@@ -131,7 +153,7 @@ export class KbqInlineEdit {
 
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
     protected readonly isEditMode = computed(() => this.mode() === 'edit');
-    protected readonly tabIndex = computed(() => (this.isEditMode() ? -1 : 0));
+    protected readonly tabIndex = computed(() => (this.isEditMode() || this.disabled() ? -1 : 0));
     protected readonly overlayWidth = computed<number | string>(() => {
         const elementRef: ElementRef<HTMLElement> | undefined = this.label()
             ? this.overlayOrigin()?.elementRef
@@ -151,6 +173,8 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     onClick(event: Event): void {
+        if (this.disabled() || this.isEditMode()) return;
+
         event.stopPropagation();
         this.toggleMode();
     }
@@ -168,7 +192,9 @@ export class KbqInlineEdit {
     }
 
     /** @docs-private */
-    save() {
+    save($event?: Event): void {
+        $event?.stopPropagation();
+
         if (this.isInvalid()) {
             this.showTooltipOnError() && this.tooltipTrigger()?.show();
         } else {
@@ -186,7 +212,7 @@ export class KbqInlineEdit {
     }
 
     /** @docs-private */
-    onKeydown(event: KeyboardEvent) {
+    onOverlayKeydown(event: KeyboardEvent) {
         const { target, key } = event;
 
         switch (key) {
