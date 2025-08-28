@@ -120,10 +120,6 @@ export abstract class KbqFileUploadBase<T = KbqInputFileLabel> implements CanUpd
     protected buildConfig<T>(config: T): T {
         const localeConfig = this.localeConfig();
 
-        if (localeConfig) {
-            config = { ...config, ...localeConfig };
-        }
-
-        return config;
+        return { ...config, ...localeConfig };
     }
 }

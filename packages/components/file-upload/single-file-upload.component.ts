@@ -296,7 +296,6 @@ export class KbqSingleFileUploadComponent
     }
 
     private initDefaultParams() {
-        console.log(this.localeConfig());
         this.config = this.buildConfig(KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
 
         this.getCaptionText();
