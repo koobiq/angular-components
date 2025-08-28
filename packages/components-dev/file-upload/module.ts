@@ -275,6 +275,8 @@ export class DevFileUploadStateAndStyle {
         <hr />
         <file-upload-multiple-custom-text-overview-example />
         <hr />
+        <file-upload-custom-text-via-input-example />
+        <hr />
         <file-upload-multiple-default-overview-example />
         <hr />
         <file-upload-multiple-default-validation-reactive-forms-overview-example />
@@ -296,6 +298,10 @@ export class DevFileUploadStateAndStyle {
         <file-upload-single-accept-validation-example />
         <hr />
         <file-upload-multiple-accept-validation-example />
+        <hr />
+        <file-upload-multiple-mixed-validation-example />
+        <hr />
+        <file-upload-single-mixed-validation-example />
     `,
     host: {
         class: 'layout-column'
