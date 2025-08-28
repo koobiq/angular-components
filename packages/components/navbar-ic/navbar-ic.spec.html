@@ -1,0 +1,73 @@
+<div [style.width.px]="navbarContainerWidth">
+    <kbq-navbar-ic>
+        <kbq-navbar-ic-container>
+            <kbq-navbar-ic-item #disabledItem="kbqNavbarIcItem" [disabled]="true" (click)="onItemClick(disabledItem)">
+                <i kbq-icon="kbq-info-circle_16"></i>
+                <kbq-navbar-ic-title>Left icon</kbq-navbar-ic-title>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <kbq-navbar-ic-title>Right icon</kbq-navbar-ic-title>
+                <i kbq-icon="kbq-play_16"></i>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-header>
+                <div kbqNavbarIcLogo>
+                    <img
+                        alt=""
+                        height="32"
+                        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAS1JREFUWAljPMUh/J9hAAHTANoNtnrUAaMhMBoCoyEw4CHAgq0k5Hd3YVCY0sfAJiOFTZrh369fDJ+PHGd4kJHH8OvxUwbT72+wqkMXPM0pgi7EgDUE8FkOMoGJjY2B38meQWH6RAwDSRVgxFYZqa5dCjbnXmoOw9937zHMZBYSZDB6ehscEmf5MUMJFiLYfIxuGNYouB0cja6OZnysDmCTlQYHL6+tFTi4cdn++fAxXFJEi2N1AChu+Z0dcBoCToRAyx9k5uNUQ6wEVgeAfA4C56RUGP6+/0CsWWSpw5oLQKkcBMi1HBRCIMAsKACm8RFYHYBPAzFyoDICBJTmTCWonCYOABVQH/cdZPj3ExIS+FyBtRzAp4HacjQJAVIcOeqA0RAYDYHREBjwEAAApR1LyfgAzUMAAAAASUVORK5CYII="
+                        style="vertical-align: middle"
+                        width="32"
+                    />
+                </div>
+                <kbq-navbar-ic-title>Brand</kbq-navbar-ic-title>
+            </kbq-navbar-ic-header>
+            <kbq-navbar-ic-title>Title before</kbq-navbar-ic-title>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <i kbq-icon="kbq-pause_16"></i>
+                <kbq-navbar-ic-title>Left icon</kbq-navbar-ic-title>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <i kbq-icon="kbq-clock_16"></i>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <kbq-navbar-ic-title>Right icon</kbq-navbar-ic-title>
+                <i kbq-icon="kbq-magnifying-glass_16"></i>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-title>Title after</kbq-navbar-ic-title>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <kbq-navbar-ic-title>Custom title</kbq-navbar-ic-title>
+                <i kbq-icon="kbq-gear_16"></i>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <kbq-navbar-ic-title>Right icon</kbq-navbar-ic-title>
+                <i kbq-icon="kbq-calendar-o_16"></i>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <i kbq-icon="kbq-circle-xs_16"></i>
+                <kbq-navbar-ic-title>Left icon</kbq-navbar-ic-title>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <kbq-navbar-ic-title>Right icon</kbq-navbar-ic-title>
+                <i kbq-icon="kbq-xmark_16"></i>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <i kbq-icon="kbq-exclamation-triangle_16"></i>
+                <kbq-navbar-ic-title>Left icon</kbq-navbar-ic-title>
+            </kbq-navbar-ic-item>
+        </kbq-navbar-ic-container>
+
+        <kbq-navbar-ic-container>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <i kbq-icon="kbq-triangle_16"></i>
+                <kbq-navbar-ic-title>Left icon</kbq-navbar-ic-title>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <i kbq-icon="kbq-arrow-down-to-line_16"></i>
+            </kbq-navbar-ic-item>
+            <kbq-navbar-ic-item (click)="onItemClick()">
+                <kbq-navbar-ic-title>Right icon</kbq-navbar-ic-title>
+                <i kbq-icon="kbq-square-multiple-o_16"></i>
+            </kbq-navbar-ic-item>
+        </kbq-navbar-ic-container>
+    </kbq-navbar-ic>
+</div>
