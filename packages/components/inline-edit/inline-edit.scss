@@ -1,17 +1,28 @@
 @mixin _inline-edit-theme {
-    &:hover {
-        cursor: pointer;
-        background: var(--kbq-states-background-transparent-hover);
-    }
+    background: var(--kbq-inline-edit-background);
 
-    &:active {
-        background: var(--kbq-states-background-transparent-active);
-    }
+    &.kbq-inline-edit_view {
+        &:not(.kbq-inline-edit_disabled) {
+            &:hover {
+                --kbq-inline-edit-background: var(--kbq-states-background-transparent-hover);
+                cursor: pointer;
+            }
 
-    &.cdk-keyboard-focused {
-        $focused-color: var(--kbq-states-line-focus-theme);
-        outline: 1px solid $focused-color;
-        border-color: $focused-color;
+            &:active,
+            &:has(.kbq-inline-edit__menu.kbq-active) {
+                --kbq-inline-edit-background: var(--kbq-states-background-transparent-active);
+            }
+
+            .kbq-inline-edit__menu-mask {
+                background: linear-gradient(90deg, transparent, var(--kbq-inline-edit-background) 100%);
+            }
+        }
+
+        &.cdk-keyboard-focused {
+            $focused-color: var(--kbq-states-line-focus-theme);
+            outline: 1px solid $focused-color;
+            border-color: $focused-color;
+        }
     }
 }
 
@@ -19,10 +30,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    position: relative;
     border: var(--kbq-size-border-width) solid transparent;
     border-radius: var(--kbq-size-border-radius);
     padding: 0 var(--kbq-inline-edit-padding-horizontal);
     box-sizing: border-box;
+    @include _inline-edit-theme();
 
     &:focus-visible {
         outline: none;
@@ -43,9 +56,18 @@
         padding-bottom: var(--kbq-inline-edit-padding-vertical);
     }
 
+    &.kbq-inline-edit_with-menu {
+        padding-right: var(--kbq-size-3xl);
+    }
+
     &.kbq-inline-edit_view {
         min-height: var(--kbq-inline-edit-height);
-        @include _inline-edit-theme();
+
+        .kbq-inline-edit__view-container {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
     }
 
     &.kbq-inline-edit_edit {
@@ -56,6 +78,45 @@
 
     .kbq-inline-edit__placeholder {
         color: var(--kbq-foreground-contrast-secondary);
+    }
+
+    .kbq-inline-edit__menu-mask {
+        display: flex;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 72px;
+        justify-content: flex-end;
+        border-top-right-radius: var(--kbq-size-border-radius);
+        border-bottom-right-radius: var(--kbq-size-border-radius);
+        height: calc(var(--kbq-inline-edit-height) - 2px);
+
+        &:has(.kbq-inline-edit__menu.kbq-pressed, .kbq-inline-edit__menu.cdk-keyboard-focused) {
+            opacity: 1;
+        }
+
+        .kbq-inline-edit__menu {
+            display: inline-flex;
+            padding: var(--kbq-size-s);
+        }
+
+        .kbq-inline-edit__menu-mask-fade {
+            width: 32px;
+        }
+
+        .kbq-inline-edit__menu-container {
+            display: flex;
+            justify-content: flex-end;
+            flex-grow: 1;
+        }
+    }
+
+    &:hover,
+    &.cdk-keyboard-focused {
+        .kbq-inline-edit__menu-mask {
+            opacity: 1;
+        }
     }
 }
 

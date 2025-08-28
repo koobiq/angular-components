@@ -1,0 +1,57 @@
+import { Clipboard } from '@angular/cdk/clipboard';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { KbqDropdownModule } from '@koobiq/components/dropdown';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqIconButton } from '@koobiq/components/icon';
+import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
+import { KbqInputModule } from '@koobiq/components/input';
+
+/**
+ * @title Inline edit menu
+ */
+@Component({
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        KbqInlineEditModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqIconButton,
+        KbqDropdownModule
+    ],
+    selector: 'inline-edit-menu-example',
+    template: `
+        <kbq-inline-edit>
+            <kbq-dropdown #dropdown="kbqDropdown">
+                <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
+            </kbq-dropdown>
+            <i
+                kbqInlineEditMenu
+                kbq-icon-button="kbq-ellipsis-vertical_16"
+                [kbqDropdownTriggerFor]="dropdown"
+                [color]="'contrast-fade'"
+            ></i>
+            <ng-container *kbqInlineEditViewMode>
+                @if (value) {
+                    <span>{{ value }}</span>
+                } @else {
+                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                }
+            </ng-container>
+            <ng-container *kbqInlineEditEditMode>
+                <kbq-form-field>
+                    <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
+                </kbq-form-field>
+            </ng-container>
+        </kbq-inline-edit>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class InlineEditMenuExample {
+    protected readonly clipboard = inject(Clipboard);
+    placeholder = 'Placeholder';
+    value =
+        'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access';
+}
