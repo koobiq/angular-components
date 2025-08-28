@@ -13,7 +13,6 @@ import {
     Input,
     NgZone,
     OnDestroy,
-    TemplateRef,
     ViewEncapsulation,
     booleanAttribute,
     inject
@@ -390,14 +389,14 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
         <div class="kbq-navbar-ic-item__inner">
             @if (navbar.pinned) {
                 <i kbq-icon [class.kbq-chevron-left_16]="navbar.expanded"></i>
-                <ng-content select="[kbqNavbarIcTitle]" />
+                <ng-content select="[kbqNavbarIcTitle]">{{ localeData.collapseButton }}</ng-content>
             } @else if (navbar.expandedByHoverOrFocus && !navbar.pinned) {
                 <i
                     kbq-icon
                     [class.kbq-pin_16]="navbar.expanded"
                     [class.kbq-chevron-left_16]="navbar.expanded && navbar.pinned"
                 ></i>
-                Оставить развернутым
+                {{ localeData.pinButton }}
             } @else {
                 <i kbq-icon [class.kbq-chevron-right_16]="!navbar.expanded"></i>
             }
@@ -405,46 +404,33 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     `,
     styleUrls: ['./navbar-ic.scss'],
     host: {
-        class: 'kbq-navbar-ic-item kbq-navbar-ic-toggle kbq-vertical',
-        '[class.kbq-tooltip_open]': 'isOpen',
+        class: 'kbq-navbar-ic-item kbq-navbar-ic-toggle',
         '[class.kbq-collapsed]': '!navbar.expanded',
         '[class.kbq-expanded]': 'navbar.expanded',
 
         '(keydown)': 'onKeydown($event)',
-        '(click)': 'toggle()',
-        '(touchend)': 'handleTouchend()'
+        '(click)': 'toggle()'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     imports: [KbqIcon],
     hostDirectives: [KbqRectangleItem]
 })
-export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
+export class KbqNavbarIcToggle {
     readonly navbar = inject(KbqNavbarIc);
     readonly rectangleElement = inject(KbqRectangleItem);
 
     protected readonly changeDetectorRef = inject(ChangeDetectorRef);
 
-    @Input('kbqCollapsedTooltip')
-    get content(): string | TemplateRef<any> {
-        return this._content;
-    }
-
-    set content(content: string | TemplateRef<any>) {
-        this._content = content;
-
-        this.updateData();
-    }
-
-    get disabled(): boolean {
-        return this.navbar.expanded;
-    }
-
     protected modifier: TooltipModifier = TooltipModifier.Default;
 
-    constructor() {
-        super();
+    /** localized data
+     * @docs-private */
+    get localeData() {
+        return this.navbar?.configuration.toggle;
+    }
 
+    constructor() {
         this.rectangleElement.state.subscribe(() => this.changeDetectorRef.markForCheck());
     }
 
@@ -456,8 +442,6 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
             $event.stopPropagation();
             $event.preventDefault();
         }
-
-        super.handleKeydown($event);
     }
 
     toggle = () => {
@@ -466,8 +450,6 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
         } else {
             this.navbar.pinned = false;
             this.navbar.toggle();
-
-            this.hide();
         }
 
         this.changeDetectorRef.markForCheck();

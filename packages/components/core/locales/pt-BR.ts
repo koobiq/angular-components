@@ -94,5 +94,11 @@ export const ptBRLocaleData = {
     clampedText: {
         openText: 'Expandir',
         closeText: 'Recolher'
-    } satisfies KbqClampedTextLocaleConfig
+    } satisfies KbqClampedTextLocaleConfig,
+    navbarIc: {
+        toggle: {
+            pinButton: 'Deixar expandido',
+            collapseButton: 'Recolher'
+        }
+    }
 };

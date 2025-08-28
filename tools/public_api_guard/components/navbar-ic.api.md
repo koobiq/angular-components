@@ -20,10 +20,12 @@ import * as i2 from '@angular/cdk/platform';
 import * as i3 from '@koobiq/components/icon';
 import * as i4 from '@koobiq/components/tooltip';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
+import { InjectionToken } from '@angular/core';
 import { KbqButton } from '@koobiq/components/button';
 import { KbqButtonCssStyler } from '@koobiq/components/button';
 import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
+import { KbqLocaleService } from '@koobiq/components/core';
 import { KbqRectangleItem } from '@koobiq/components/core';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { NgZone } from '@angular/core';
@@ -32,8 +34,18 @@ import { OnDestroy } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Signal } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TemplateRef } from '@angular/core';
 import { TooltipModifier } from '@koobiq/components/tooltip';
+
+// @public
+export const KBQ_NAVBAR_IC_CONFIGURATION: InjectionToken<unknown>;
+
+// @public
+export const KBQ_NAVBAR_IC_DEFAULT_CONFIGURATION: {
+    toggle: {
+        pinButton: string;
+        collapseButton: string;
+    };
+};
 
 // @public (undocumented)
 export enum KbqExpandEvents {
@@ -106,6 +118,8 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     // (undocumented)
     collapsedWidth: number;
     // (undocumented)
+    configuration: any;
+    // (undocumented)
     get currentWidth(): number;
     dropdownTrigger: Signal<any>;
     // (undocumented)
@@ -120,12 +134,15 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     // (undocumented)
     expandEvent: KbqExpandEvents | null;
     // (undocumented)
+    readonly externalConfiguration: unknown;
+    // (undocumented)
     readonly focused: BehaviorSubject<boolean>;
     // (undocumented)
     get hasOpenedPopUp(): boolean;
     // (undocumented)
     readonly hovered: BehaviorSubject<boolean>;
     items: Signal<readonly any[]>;
+    protected readonly localeService: KbqLocaleService | null;
     // (undocumented)
     static ngAcceptInputType_collapsedWidth: unknown;
     // (undocumented)
@@ -333,15 +350,11 @@ export class KbqNavbarIcTitle implements AfterViewInit {
 }
 
 // @public (undocumented)
-export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
+export class KbqNavbarIcToggle {
     constructor();
     // (undocumented)
     protected readonly changeDetectorRef: ChangeDetectorRef;
-    // (undocumented)
-    get content(): string | TemplateRef<any>;
-    set content(content: string | TemplateRef<any>);
-    // (undocumented)
-    get disabled(): boolean;
+    get localeData(): any;
     // (undocumented)
     protected modifier: TooltipModifier;
     // (undocumented)
@@ -352,7 +365,7 @@ export class KbqNavbarIcToggle extends KbqTooltipTrigger implements OnDestroy {
     // (undocumented)
     toggle: () => void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcToggle, "kbq-navbar-ic-toggle", never, { "content": { "alias": "kbqCollapsedTooltip"; "required": false; }; }, {}, never, ["[kbqNavbarIcTitle]"], true, [{ directive: typeof i1.KbqRectangleItem; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcToggle, "kbq-navbar-ic-toggle", never, {}, {}, never, ["[kbqNavbarIcTitle]"], true, [{ directive: typeof i1.KbqRectangleItem; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcToggle, never>;
 }
