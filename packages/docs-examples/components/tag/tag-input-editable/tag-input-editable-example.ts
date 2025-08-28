@@ -1,5 +1,13 @@
 import { JsonPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, model, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    inject,
+    model,
+    viewChild
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -56,6 +64,7 @@ export class TagInputEditableExample {
     protected readonly tags = model(Array.from({ length: 3 }, (_, i) => `Editable tag ${i}`));
     private prevTags = this.tags().slice();
     private readonly input = viewChild.required(KbqTagInput, { read: ElementRef });
+    private readonly changeDetectorRef = inject(ChangeDetectorRef);
 
     protected editChange({ reason, type, tag }: KbqTagEditChange, index: number): void {
         const input = this.input().nativeElement as HTMLInputElement;
@@ -84,7 +93,7 @@ export class TagInputEditableExample {
             case 'submit': {
                 console.info(`Tag #${index} edit was submitted. Reason: "${reason}".`);
 
-                if (!tag.value) this.remove(index);
+                if (!tag.value) tag.remove();
 
                 input.focus();
 
@@ -100,6 +109,8 @@ export class TagInputEditableExample {
 
             return tags;
         });
+
+        this.changeDetectorRef.detectChanges();
 
         console.info(`Tag #${index} edit was removed.`);
     }
