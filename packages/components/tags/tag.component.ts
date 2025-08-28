@@ -64,6 +64,10 @@ export class KbqTagSelectionChange {
 
 const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
 
+const getTagEditInputMissingError = (): Error => {
+    return Error('Editable kbq-tag must contain a KbqTagEditInput.');
+};
+
 /**
  * Dummy directive to add CSS class to tag avatar.
  * @docs-private
@@ -237,7 +241,8 @@ export class KbqTag
     /** Whether the tag edits can't be submitted. */
     @Input({ transform: booleanAttribute }) preventEditSubmit: boolean = false;
 
-    @ContentChild(KbqTagEditInput, { read: ElementRef }) private readonly editInputElementRef: ElementRef;
+    @ContentChild(KbqTagEditInput, { read: ElementRef })
+    private readonly editInputElementRef: ElementRef<HTMLInputElement>;
 
     /**
      * Emits event when the tag is edited.
@@ -550,7 +555,14 @@ export class KbqTag
         this.editing.set(true);
         this.editChange.emit({ tag: this, type: 'start', reason });
 
-        setTimeout(() => this.editInputElementRef?.nativeElement.focus());
+        setTimeout(() => {
+            const input = this.editInputElementRef?.nativeElement;
+
+            if (!input) throw getTagEditInputMissingError();
+
+            input.focus();
+            input.select();
+        });
     }
 
     /** @docs-private */
