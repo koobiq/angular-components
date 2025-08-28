@@ -250,18 +250,7 @@ export class KbqTagList
     }
 
     /** Whether the tag list is editable. */
-    @Input({ transform: booleanAttribute })
-    get editable(): boolean {
-        return this._editable;
-    }
-
-    set editable(value: boolean) {
-        this._editable = value;
-
-        this.propagateEditableToChildren();
-    }
-
-    private _editable = false;
+    @Input({ transform: booleanAttribute }) editable = false;
 
     @Input()
     get tabIndex(): number {
@@ -445,7 +434,6 @@ export class KbqTagList
             });
 
         this.propagateSelectableToChildren();
-        this.propagateEditableToChildren();
     }
 
     ngOnDestroy() {
@@ -902,9 +890,5 @@ export class KbqTagList
         if (this.tags) {
             this.tags.forEach((tag) => (tag.tagListSelectable = this._selectable));
         }
-    }
-
-    private propagateEditableToChildren(): void {
-        this.tags?.forEach((tag) => (tag.tagListEditable = this._editable));
     }
 }

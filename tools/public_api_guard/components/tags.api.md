@@ -109,7 +109,6 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     // (undocumented)
     get tabindex(): any;
     set tabindex(value: any);
-    tagListEditable: boolean;
     tagListSelectable: boolean;
     // (undocumented)
     textElement: ElementRef;
@@ -242,8 +241,7 @@ export class KbqTagList implements KbqFormFieldControl<any>, ControlValueAccesso
     defaultErrorStateMatcher: ErrorStateMatcher;
     get disabled(): boolean;
     set disabled(value: boolean);
-    get editable(): boolean;
-    set editable(value: boolean);
+    editable: boolean;
     // (undocumented)
     protected elementRef: ElementRef<HTMLElement>;
     get empty(): boolean;

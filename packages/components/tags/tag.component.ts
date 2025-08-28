@@ -36,6 +36,7 @@ import {
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { KbqTagList } from './tag-list.component';
 
 export interface KbqTagEvent {
     tag: KbqTag;
@@ -196,6 +197,7 @@ export class KbqTag
     implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit
 {
     private readonly focusMonitor = inject(FocusMonitor);
+    private readonly tagList = inject(KbqTagList, { optional: true });
 
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
@@ -216,7 +218,9 @@ export class KbqTag
      *
      * @docs-private
      */
-    tagListEditable: boolean = false;
+    private get tagListEditable(): boolean {
+        return !!this.tagList?.editable;
+    }
 
     /** Whether the tag is editable. */
     @Input({ transform: booleanAttribute })
@@ -228,7 +232,7 @@ export class KbqTag
         this._editable = value;
     }
 
-    private _editable: boolean | undefined = undefined;
+    private _editable: boolean | undefined;
 
     /** Whether the tag edits can't be submitted. */
     @Input({ transform: booleanAttribute }) preventEditSubmit: boolean = false;
