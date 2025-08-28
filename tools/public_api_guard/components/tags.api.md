@@ -51,7 +51,6 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     // (undocumented)
     addHostClassName(): void;
     avatar: KbqTagAvatar;
-    // (undocumented)
     blur(): void;
     cancelEditing(reason: string): void;
     // (undocumented)
@@ -73,7 +72,6 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     focus(): void;
     protected handleDblClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
-    // (undocumented)
     handleMousedown(event: Event): void;
     hasFocus: boolean;
     // (undocumented)

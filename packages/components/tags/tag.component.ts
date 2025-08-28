@@ -27,6 +27,7 @@ import {
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import {
+    isNull,
     isUndefined,
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
@@ -177,7 +178,7 @@ export class KbqTagEditInput {
         '[attr.disabled]': 'disabled || null',
 
         '[class.kbq-selected]': 'selected',
-        '[class.kbq-focused]': 'hasFocus || editing()',
+        '[class.kbq-focused]': 'hasFocus',
         '[class.kbq-tag-with-avatar]': 'avatar',
         '[class.kbq-tag-with-icon]': 'contentChildren',
         '[class.kbq-tag-with-trailing-icon]': 'trailingIcon || removeIcon',
@@ -186,11 +187,8 @@ export class KbqTagEditInput {
         '[class.kbq-tag_editing]': 'editing()',
 
         '(dblclick)': 'handleDblClick($event)',
-
         '(mousedown)': 'handleMousedown($event)',
-        '(keydown)': 'handleKeydown($event)',
-        '(focus)': 'focus()',
-        '(blur)': 'blur()'
+        '(keydown)': 'handleKeydown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -381,7 +379,7 @@ export class KbqTag
 
     ngAfterViewInit(): void {
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
-            if (this.editing() && focusOrigin === null) this.cancelEditing('focusout');
+            isNull(focusOrigin) ? this.blur() : this.focus();
         });
     }
 
@@ -461,7 +459,7 @@ export class KbqTag
         if (!this.selectable && !this.editable) return;
 
         if (!this.hasFocus) {
-            this.elementRef.nativeElement.focus();
+            if (!this.editing()) this.elementRef.nativeElement.focus();
 
             this.onFocus.next({ tag: this });
 
@@ -484,6 +482,7 @@ export class KbqTag
         }
     }
 
+    /** @docs-private */
     handleMousedown(event: Event) {
         if (this.disabled || !this.selectable) {
             event.preventDefault();
@@ -523,7 +522,10 @@ export class KbqTag
         }
     }
 
+    /** @docs-private */
     blur(): void {
+        this.cancelEditing('focusout');
+
         // When animations are enabled, Angular may end up removing the tag from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the tag list
         // that moves focus not the next item. To work around the issue, we defer marking the tag
@@ -548,7 +550,7 @@ export class KbqTag
     }
 
     private startEditing(reason: string): void {
-        if (this.editing()) return;
+        if (!this.editable || this.editing()) return;
 
         this.editing.set(true);
         this.editChange.emit({ tag: this, type: 'start', reason });
@@ -565,13 +567,15 @@ export class KbqTag
 
     /** @docs-private */
     cancelEditing(reason: string): void {
+        if (!this.editing()) return;
+
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'cancel', reason });
     }
 
     /** @docs-private */
     submitEditing(reason: string): void {
-        if (this.preventEditSubmit) return;
+        if (!this.editing() || this.preventEditSubmit) return;
 
         this.editing.set(false);
         this.editChange.emit({ tag: this, type: 'submit', reason });
