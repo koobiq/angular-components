@@ -87,5 +87,11 @@ export const ruRULocaleData = {
             customPeriodErrorHint: 'Начало периода не может быть позже окончания',
             backToPeriodSelection: 'Назад к выбору периода'
         }
+    },
+    navbarIc: {
+        toggle: {
+            pinButton: 'Оставить развернутым',
+            collapseButton: 'Свернуть'
+        }
     }
 };

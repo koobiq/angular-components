@@ -86,5 +86,11 @@ export const esLALocaleData = {
             customPeriodErrorHint: 'El período no puede empezar más tarde de lo que termina',
             backToPeriodSelection: 'Volver a la selección del período'
         }
+    },
+    navbarIc: {
+        toggle: {
+            pinButton: 'Expandir el menú',
+            collapseButton: 'Colapsar'
+        }
     }
 };

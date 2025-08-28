@@ -86,5 +86,11 @@ export const ptBRLocaleData = {
             customPeriodErrorHint: 'O início do período não pode ser posterior ao término do período',
             backToPeriodSelection: 'Retornar à seleção do período'
         }
+    },
+    navbarIc: {
+        toggle: {
+            pinButton: 'Deixar expandido',
+            collapseButton: 'Recolher'
+        }
     }
 };

@@ -86,5 +86,11 @@ export const faIRLocaleData = {
             customPeriodErrorHint: 'دوره نمی‌تواند بعد از پایان آن شروع شود',
             backToPeriodSelection: 'بازگشت به انتخاب دوره'
         }
+    },
+    navbarIc: {
+        toggle: {
+            pinButton: 'ترک گسترش یافته',
+            collapseButton: 'جمع کردن'
+        }
     }
 };

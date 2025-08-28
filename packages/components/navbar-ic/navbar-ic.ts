@@ -15,6 +15,7 @@ import {
     ElementRef,
     forwardRef,
     inject,
+    InjectionToken,
     Input,
     numberAttribute,
     OnDestroy,
@@ -24,7 +25,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { DOWN_ARROW, isVerticalMovement, TAB, UP_ARROW } from '@koobiq/cdk/keycodes';
-import { KbqRectangleItem } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE, KbqRectangleItem, ruRULocaleData } from '@koobiq/components/core';
 import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqPopoverTrigger } from '@koobiq/components/popover';
 import { BehaviorSubject, combineLatest, merge, Observable, Subject, Subscription } from 'rxjs';
@@ -41,6 +42,14 @@ export enum KbqExpandEvents {
     toggle,
     hoverOrFocus
 }
+
+/** default configuration of navbar-ic */
+/** @docs-private */
+export const KBQ_NAVBAR_IC_DEFAULT_CONFIGURATION = ruRULocaleData.navbarIc;
+
+/** Injection Token for providing configuration of navbar-ic */
+/** @docs-private */
+export const KBQ_NAVBAR_IC_CONFIGURATION = new InjectionToken('KbqNavbarIcConfiguration');
 
 @Directive()
 export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy {
@@ -205,6 +214,13 @@ export class KbqNavbarIcContainer {}
 })
 export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     /** @docs-private */
+    protected readonly localeService = inject(KBQ_LOCALE_SERVICE, { optional: true });
+
+    readonly externalConfiguration = inject(KBQ_NAVBAR_IC_CONFIGURATION, { optional: true });
+
+    configuration;
+
+    /** @docs-private */
     rectangleElements = contentChildren(
         forwardRef(() => KbqRectangleItem),
         { descendants: true }
@@ -296,6 +312,12 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
             this.focused.next(focusOrigin === 'keyboard');
         });
+
+        this.localeService?.changes.pipe(takeUntilDestroyed()).subscribe(this.updateLocaleParams);
+
+        if (!this.localeService) {
+            this.initDefaultParams();
+        }
     }
 
     /** @docs-private */
@@ -344,4 +366,14 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
         item.collapsed = !this.expanded;
         setTimeout(() => item.button?.updateClassModifierForIcons());
     };
+
+    private updateLocaleParams = () => {
+        this.configuration = this.externalConfiguration || this.localeService?.getParams('navbarIc');
+
+        this.changeDetectorRef.markForCheck();
+    };
+
+    private initDefaultParams() {
+        this.configuration = KBQ_NAVBAR_IC_DEFAULT_CONFIGURATION;
+    }
 }

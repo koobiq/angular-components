@@ -364,6 +364,12 @@ export const enUSLocaleData: {
             backToPeriodSelection: string;
         };
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public
@@ -511,6 +517,12 @@ export const esLALocaleData: {
             backToPeriodSelection: string;
         };
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public (undocumented)
@@ -646,6 +658,12 @@ export const faIRLocaleData: {
             customPeriodTo: string;
             customPeriodErrorHint: string;
             backToPeriodSelection: string;
+        };
+    };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
         };
     };
 };
@@ -862,6 +880,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'zh-CN': {
         formatters: {
@@ -983,6 +1007,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
                 backToPeriodSelection: string;
+            };
+        };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
             };
         };
     };
@@ -1113,6 +1143,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'pt-BR': {
         formatters: {
@@ -1235,6 +1271,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
                 backToPeriodSelection: string;
+            };
+        };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
             };
         };
     };
@@ -1367,6 +1409,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1492,6 +1540,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 backToPeriodSelection: string;
             };
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1615,6 +1669,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
                 customPeriodTo: string;
                 customPeriodErrorHint: string;
                 backToPeriodSelection: string;
+            };
+        };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
             };
         };
     };
@@ -2975,6 +3035,12 @@ export const ptBRLocaleData: {
             backToPeriodSelection: string;
         };
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public (undocumented)
@@ -3285,6 +3351,12 @@ export const ruRULocaleData: {
             backToPeriodSelection: string;
         };
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public
@@ -3506,6 +3578,12 @@ export const tkTMLocaleData: {
             backToPeriodSelection: string;
         };
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public @deprecated
@@ -3654,6 +3732,12 @@ export const zhCNLocaleData: {
             customPeriodTo: string;
             customPeriodErrorHint: string;
             backToPeriodSelection: string;
+        };
+    };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
         };
     };
 };

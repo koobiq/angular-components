@@ -87,5 +87,11 @@ export const tkTMLocaleData = {
             customPeriodErrorHint: 'Döwrüň başlangyjy gutarýan wagtyndan soň bolup bilmeýär',
             backToPeriodSelection: 'Döwür saýlamaga dolanmak'
         }
+    },
+    navbarIc: {
+        toggle: {
+            pinButton: 'Rugsat giňeldildi',
+            collapseButton: 'Apseykylmak'
+        }
     }
 };

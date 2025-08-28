@@ -86,5 +86,11 @@ export const zhCNLocaleData = {
             customPeriodErrorHint: '时段开始时间不能晚于结束时间',
             backToPeriodSelection: '返回以选择一个时段'
         }
+    },
+    navbarIc: {
+        toggle: {
+            pinButton: '保持展开',
+            collapseButton: '折叠'
+        }
     }
 };

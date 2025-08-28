@@ -87,5 +87,11 @@ export const enUSLocaleData = {
             customPeriodErrorHint: 'The period cannot start later than it ends',
             backToPeriodSelection: 'Back to selecting the period'
         }
+    },
+    navbarIc: {
+        toggle: {
+            pinButton: 'Leave expanded',
+            collapseButton: 'Collapse'
+        }
     }
 };
