@@ -4,7 +4,7 @@ export function isBoolean(value: unknown): value is boolean {
 
 /** Whether the value is undefined. */
 export const isUndefined = (value: unknown): value is undefined => {
-    return typeof value === 'undefined';
+    return value === undefined;
 };
 
 /**
