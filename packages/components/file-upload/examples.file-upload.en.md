@@ -19,13 +19,15 @@ After uploading, the file is highlighted as having an issue — this is a simula
 
 <!-- example(file-upload-single-with-signal) -->
 
-## Reactive Forms
+## Reactive forms
 
 An example of a file uploader using [`FormControl`](https://angular.dev/api/forms/FormControl).
 
-### Validation: Additional Examples
+### Validation: additional examples
 
-#### Required Field
+The examples use [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts), a set of static methods for validating file upload fields.
+
+#### Required field
 
 - **Single File**: An example of a file uploader that ensures a file must be uploaded.
 
@@ -35,9 +37,7 @@ An example of a file uploader using [`FormControl`](https://angular.dev/api/form
 
 <!-- example(file-upload-multiple-required-reactive-validation) -->
 
-#### File Size Validation
-
-The examples use [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts), a set of static methods for validating file upload fields.
+#### File size validation
 
 - **Single File**: An example of uploading a single file with Reactive Forms-based validation.
 
@@ -49,8 +49,6 @@ The examples use [FileValidators](https://github.com/koobiq/angular-components/b
 
 #### File type or extension validation
 
-The examples use [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts).
-
 - **Single file**: example of uploading a single file using `Reactive Forms` with validation.
 
 <!-- example(file-upload-single-accept-validation) -->
@@ -58,3 +56,13 @@ The examples use [FileValidators](https://github.com/koobiq/angular-components/b
 - **Multiple files**: Example of uploading multiple files using `Reactive Forms` with validation.
 
 <!-- example(file-upload-multiple-accept-validation) -->
+
+#### Mixed validation: required and extension
+
+- **Single file**: example of uploading a single file using `Reactive Forms` with validation.
+
+<!-- example(file-upload-single-mixed-validation) -->
+
+- **Multiple files**: Example of uploading multiple files using `Reactive Forms` with validation.
+
+<!-- example(file-upload-multiple-mixed-validation) -->
