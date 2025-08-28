@@ -15,14 +15,12 @@ import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '
     imports: [KbqTagsModule, KbqIconModule, JsonPipe, KbqFormFieldModule, FormsModule],
     providers: [kbqDisableLegacyValidationDirectiveProvider()],
     template: `
-        @let _tags = tags();
-
         <kbq-form-field>
             <kbq-tag-list #tagList editable [(ngModel)]="tags">
-                @for (tag of _tags; track $index) {
+                @for (tag of tags(); track $index) {
                     <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($index)">
                         {{ tag }}
-                        <input kbqTagEditInput [(ngModel)]="_tags[$index]" />
+                        <input kbqTagEditInput [(ngModel)]="tags()[$index]" />
                         <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                         <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                     </kbq-tag>
@@ -35,7 +33,7 @@ import { KbqTagEditChange, KbqTagInput, KbqTagInputEvent, KbqTagsModule } from '
         </kbq-form-field>
 
         <small>
-            <code>{{ _tags | json }}</code>
+            <code>{{ tags() | json }}</code>
         </small>
     `,
     styles: `
