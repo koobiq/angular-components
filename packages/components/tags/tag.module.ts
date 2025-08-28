@@ -4,17 +4,33 @@ import { ENTER } from '@koobiq/cdk/keycodes';
 import { KBQ_TAGS_DEFAULT_OPTIONS, KbqTagsDefaultOptions } from './tag-default-options';
 import { KbqTagInput } from './tag-input';
 import { KbqTagList } from './tag-list.component';
-import { KbqTag, KbqTagAvatar, KbqTagRemove, KbqTagTrailingIcon } from './tag.component';
+import {
+    KbqTag,
+    KbqTagAvatar,
+    KbqTagEditInput,
+    KbqTagEditSubmit,
+    KbqTagRemove,
+    KbqTagTrailingIcon
+} from './tag.component';
+
+const COMPONENTS = [
+    KbqTagEditSubmit,
+    KbqTagEditInput
+];
 
 @NgModule({
-    imports: [PlatformModule],
+    imports: [
+        PlatformModule,
+        ...COMPONENTS
+    ],
     exports: [
         KbqTagList,
         KbqTag,
         KbqTagInput,
         KbqTagTrailingIcon,
         KbqTagAvatar,
-        KbqTagRemove
+        KbqTagRemove,
+        ...COMPONENTS
     ],
     declarations: [
         KbqTagList,
