@@ -154,7 +154,7 @@ export class KbqTagEditInput {
 
 // @public
 export class KbqTagEditSubmit {
-    protected handleClick(_event: Event): void;
+    protected readonly tag: KbqTag;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagEditSubmit, "[kbqTagEditSubmit]", ["kbqTagEditSubmit"], {}, {}, never, never, true, never>;
     // (undocumented)

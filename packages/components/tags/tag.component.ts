@@ -94,16 +94,12 @@ export class KbqTagTrailingIcon {}
         class: 'kbq-tag-edit-submit',
         '[attr.tabindex]': '-1',
 
-        '(click)': 'handleClick($event)'
+        '(click)': 'tag.submitEditing("click")'
     }
 })
 export class KbqTagEditSubmit {
-    private readonly tag = inject(KbqTag);
-
     /** @docs-private */
-    protected handleClick(_event: Event): void {
-        this.tag.submitEditing('click');
-    }
+    protected readonly tag = inject(KbqTag);
 }
 
 /**
