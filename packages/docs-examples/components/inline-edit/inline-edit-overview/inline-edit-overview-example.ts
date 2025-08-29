@@ -27,15 +27,19 @@ import { KbqSelectModule } from '@koobiq/components/select';
             <kbq-label>Label</kbq-label>
 
             <ng-container *kbqInlineEditViewMode>
-                <div class="layout-row layout-gap-xxs">
-                    @for (badge of selected; track badge) {
-                        <kbq-badge>{{ badge }}</kbq-badge>
+                <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;">
+                    @if (selected.length > 0) {
+                        @for (badge of selected; track badge) {
+                            <kbq-badge>{{ badge }}</kbq-badge>
+                        }
+                    } @else {
+                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                     }
                 </div>
             </ng-container>
             <ng-container *kbqInlineEditEditMode>
                 <kbq-form-field>
-                    <kbq-select multiple [required]="true" [(ngModel)]="selected">
+                    <kbq-select multiple [placeholder]="placeholder" [(ngModel)]="selected">
                         @for (option of options; track option) {
                             <kbq-option [value]="option">{{ option }}</kbq-option>
                         }
@@ -48,9 +52,17 @@ import { KbqSelectModule } from '@koobiq/components/select';
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
     ],
+    styles: `
+        :host {
+            .kbq-inline-edit {
+                --kbq-inline-edit-pop-up-height: var(--kbq-size-xxl);
+            }
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditOverviewExample {
-    readonly options = Array.from({ length: 5 }).map((_, i) => `Option #${i}`);
-    selected: string[] = [this.options[0]];
+    protected readonly placeholder = 'Placeholder';
+    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
+    protected selected: string[] = [this.options[0]];
 }
