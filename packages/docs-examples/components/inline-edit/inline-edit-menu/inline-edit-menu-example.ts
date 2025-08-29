@@ -23,29 +23,56 @@ import { KbqInputModule } from '@koobiq/components/input';
     ],
     selector: 'inline-edit-menu-example',
     template: `
-        <kbq-inline-edit>
-            <kbq-dropdown #dropdown="kbqDropdown">
-                <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
-            </kbq-dropdown>
-            <i
-                kbqInlineEditMenu
-                kbq-icon-button="kbq-ellipsis-vertical_16"
-                [kbqDropdownTriggerFor]="dropdown"
-                [color]="'contrast-fade'"
-            ></i>
-            <ng-container *kbqInlineEditViewMode>
-                @if (value) {
-                    <span>{{ value }}</span>
-                } @else {
-                    <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
-                }
-            </ng-container>
-            <ng-container *kbqInlineEditEditMode>
-                <kbq-form-field>
-                    <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
-                </kbq-form-field>
-            </ng-container>
-        </kbq-inline-edit>
+        <div class="layout-flex layout-column">
+            <kbq-inline-edit>
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
+                </kbq-dropdown>
+                <i
+                    kbqInlineEditMenu
+                    kbq-icon-button="kbq-ellipsis-vertical_16"
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [color]="'contrast-fade'"
+                ></i>
+                <ng-container *kbqInlineEditViewMode>
+                    @if (value) {
+                        <span>{{ value }}</span>
+                    } @else {
+                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                    }
+                </ng-container>
+                <ng-container *kbqInlineEditEditMode>
+                    <kbq-form-field>
+                        <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
+                    </kbq-form-field>
+                </ng-container>
+            </kbq-inline-edit>
+
+            <kbq-inline-edit>
+                <kbq-label>Label</kbq-label>
+                <kbq-dropdown #dropdown="kbqDropdown">
+                    <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>
+                </kbq-dropdown>
+                <i
+                    kbqInlineEditMenu
+                    kbq-icon-button="kbq-ellipsis-vertical_16"
+                    [kbqDropdownTriggerFor]="dropdown"
+                    [color]="'contrast-fade'"
+                ></i>
+                <ng-container *kbqInlineEditViewMode>
+                    @if (value) {
+                        <span>{{ value }}</span>
+                    } @else {
+                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                    }
+                </ng-container>
+                <ng-container *kbqInlineEditEditMode>
+                    <kbq-form-field>
+                        <input kbqInput [placeholder]="placeholder" [(ngModel)]="value" />
+                    </kbq-form-field>
+                </ng-container>
+            </kbq-inline-edit>
+        </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
