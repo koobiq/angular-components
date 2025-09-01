@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
 import { kbqDisableLegacyValidationDirectiveProvider, KbqLocaleServiceModule } from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
@@ -16,17 +16,16 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 @Component({
     standalone: true,
     imports: [
-        FormsModule,
-        KbqInlineEditModule,
-        KbqFormFieldModule,
-        KbqDlModule,
-        KbqInputModule,
         NgTemplateOutlet,
         ReactiveFormsModule,
-        KbqDatepickerModule,
+        KbqInlineEditModule,
+        KbqDlModule,
+        KbqFormFieldModule,
+        KbqInputModule,
+        KbqTextareaModule,
         LuxonDateModule,
-        KbqLocaleServiceModule,
-        KbqTextareaModule
+        KbqDatepickerModule,
+        KbqLocaleServiceModule
     ],
     selector: 'inline-edit-horizontal-list-example',
     template: `
@@ -83,6 +82,10 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         .kbq-dt {
             display: inline-flex;
             align-items: center;
+        }
+
+        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-datepicker {
+            width: 100%;
         }
     `,
     providers: [

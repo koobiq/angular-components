@@ -4,53 +4,53 @@
     </div>
 }
 
-@if (mode() === 'view') {
-    <div class="kbq-inline-edit__view-container">
-        <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
+<div class="kbq-inline-edit__view-container">
+    <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
 
-        @if (menu()) {
-            <div class="kbq-inline-edit__menu-mask kbq-mask">
-                <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
-                <div class="kbq-inline-edit__menu-mask-container kbq-mask__container">
-                    <ng-content select="[kbqInlineEditMenu]" />
-                </div>
+    @if (menu() && mode() === 'view') {
+        <div class="kbq-inline-edit__menu-mask kbq-mask">
+            <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
+            <div class="kbq-inline-edit__menu-mask-container kbq-mask__container">
+                <ng-content select="[kbqInlineEditMenu]" />
             </div>
-        }
-    </div>
-} @else {
-    <div class="kbq-inline-edit__overlay-anchor">
-        <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
-    </div>
-
-    <ng-template
-        cdkConnectedOverlay
-        cdkConnectedOverlayLockPosition
-        [cdkConnectedOverlayOpen]="isEditMode()"
-        [cdkConnectedOverlayOrigin]="overlayOrigin"
-        [cdkConnectedOverlayWidth]="overlayWidth()"
-        (attach)="onAttach()"
-        (overlayOutsideClick)="save($event)"
-        (overlayKeydown)="onOverlayKeydown($event)"
-    >
-        <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
-            <div
-                [kbqTooltipColor]="colors.Error"
-                [kbqTooltip]="validationTooltip() ?? customTooltipContent()?.templateRef ?? ''"
-                [kbqTooltipArrow]="false"
-                [kbqTrigger]="'manual'"
-                [kbqPlacement]="placements.TopLeft"
-            >
-                <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
-            </div>
-
-            @if (showActions()) {
-                <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
-                    <button kbq-button [color]="'contrast'" (click)="save()"><i kbq-icon="kbq-check_16"></i></button>
-                    <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
-                        <i kbq-icon="kbq-xmark_16"></i>
-                    </button>
-                </div>
-            }
         </div>
-    </ng-template>
-}
+    }
+
+    @if (mode() === 'edit') {
+        <div #overlayOrigin cdkOverlayOrigin class="kbq-inline-edit__overlay-origin"></div>
+
+        <ng-template
+            cdkConnectedOverlay
+            cdkConnectedOverlayLockPosition
+            [cdkConnectedOverlayOpen]="isEditMode()"
+            [cdkConnectedOverlayOrigin]="overlayOrigin"
+            [cdkConnectedOverlayWidth]="overlayWidth()"
+            (attach)="onAttach()"
+            (overlayOutsideClick)="save($event)"
+            (overlayKeydown)="onOverlayKeydown($event)"
+        >
+            <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
+                <div
+                    [kbqTooltipColor]="colors.Error"
+                    [kbqTooltip]="validationTooltip() ?? customTooltipContent()?.templateRef ?? ''"
+                    [kbqTooltipArrow]="false"
+                    [kbqTrigger]="'manual'"
+                    [kbqPlacement]="placements.TopLeft"
+                >
+                    <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
+                </div>
+
+                @if (showActions()) {
+                    <div class="kbq-inline-edit__action-buttons" role="group" [@panelAnimation]>
+                        <button kbq-button [color]="'contrast'" (click)="save()">
+                            <i kbq-icon="kbq-check_16"></i>
+                        </button>
+                        <button kbq-button [color]="'contrast-fade'" (click)="cancel()">
+                            <i kbq-icon="kbq-xmark_16"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+        </ng-template>
+    }
+</div>

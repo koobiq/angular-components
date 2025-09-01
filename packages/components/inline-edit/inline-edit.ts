@@ -203,7 +203,7 @@ export class KbqInlineEdit {
                 formFieldRef.focus();
                 this.initialValue = this.getValue();
             }
-        });
+        }, 0);
     }
 
     /** @docs-private */
