@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
@@ -23,13 +23,13 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     selector: 'inline-edit-overview-example',
     template: `
-        <kbq-inline-edit showActions>
+        <kbq-inline-edit showActions (saved)="update()">
             <kbq-label>Label</kbq-label>
 
             <ng-container *kbqInlineEditViewMode>
                 <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;">
-                    @if (selected.length > 0) {
-                        @for (badge of selected; track badge) {
+                    @if (displayValue().length > 0) {
+                        @for (badge of displayValue(); track badge) {
                             <kbq-badge>{{ badge }}</kbq-badge>
                         }
                     } @else {
@@ -39,7 +39,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </ng-container>
             <ng-container *kbqInlineEditEditMode>
                 <kbq-form-field>
-                    <kbq-select multiple [placeholder]="placeholder" [(ngModel)]="selected">
+                    <kbq-select multiple [placeholder]="placeholder" [(ngModel)]="value">
                         @for (option of options; track option) {
                             <kbq-option [value]="option">{{ option }}</kbq-option>
                         }
@@ -64,5 +64,10 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class InlineEditOverviewExample {
     protected readonly placeholder = 'Placeholder';
     protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    protected selected: string[] = [this.options[0]];
+    protected value: string[] = [this.options[0]];
+    protected readonly displayValue = signal(this.value);
+
+    update(): void {
+        this.displayValue.set(this.value);
+    }
 }
