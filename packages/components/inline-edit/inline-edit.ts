@@ -1,5 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CdkTrapFocus } from '@angular/cdk/a11y';
+import { hasModifierKey } from '@angular/cdk/keycodes';
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { NgTemplateOutlet } from '@angular/common';
 import {
@@ -12,6 +13,7 @@ import {
     ElementRef,
     inject,
     input,
+    numberAttribute,
     output,
     signal,
     TemplateRef,
@@ -135,6 +137,7 @@ export class KbqInlineEdit {
     readonly showTooltipOnError = input(true, { transform: booleanAttribute });
     readonly validationTooltip = input<string>();
     readonly disabled = input(false, { transform: booleanAttribute });
+    readonly editModeWidth = input(undefined, { transform: numberAttribute });
 
     protected readonly saved = output();
     protected readonly canceled = output();
@@ -150,21 +153,31 @@ export class KbqInlineEdit {
     protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
 
     protected readonly mode = signal<'view' | 'edit' | 'read'>('view');
+    protected readonly overlayWidth = signal<number | string>('');
 
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
     protected readonly isEditMode = computed(() => this.mode() === 'edit');
     protected readonly tabIndex = computed(() => (this.isEditMode() || this.disabled() ? -1 : 0));
-    protected readonly overlayWidth = computed<number | string>(() => {
-        const elementRef: ElementRef<HTMLElement> | undefined = this.label()
-            ? this.overlayOrigin()?.elementRef
-            : this.elementRef;
-
-        return elementRef?.nativeElement.offsetWidth ?? '';
-    });
 
     protected readonly elementRef = inject(ElementRef);
 
     private initialValue: unknown;
+
+    private setOverlayWidth(): void {
+        const editModeWidth = this.editModeWidth();
+
+        if (editModeWidth) {
+            this.overlayWidth.set(editModeWidth);
+
+            return;
+        }
+
+        const elementRef: ElementRef<HTMLElement> | undefined = this.label()
+            ? this.overlayOrigin()?.elementRef
+            : this.elementRef;
+
+        this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
+    }
 
     /** @docs-private */
     toggleMode(): void {
@@ -182,6 +195,8 @@ export class KbqInlineEdit {
     /** @docs-private */
     onAttach() {
         const formFieldRef = this.formFieldRef();
+
+        this.setOverlayWidth();
 
         setTimeout(() => {
             if (formFieldRef) {
@@ -221,9 +236,10 @@ export class KbqInlineEdit {
                 break;
             }
             case 'Enter': {
-                if (target instanceof HTMLTextAreaElement) break;
+                if (hasModifierKey(event, 'ctrlKey', 'metaKey') || !(target instanceof HTMLTextAreaElement)) {
+                    this.save();
+                }
 
-                this.save();
                 break;
             }
             default: {

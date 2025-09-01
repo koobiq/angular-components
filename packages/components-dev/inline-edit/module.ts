@@ -11,12 +11,16 @@ import { DevThemeToggle } from '../theme-toggle';
         <inline-edit-placeholder-example />
         <inline-edit-menu-example />
         <inline-edit-disabled-example />
+        <inline-edit-horizontal-list-example />
+        <inline-edit-on-clean-example />
+        <inline-edit-validation-example />
     `,
     styles: `
         :host {
             display: flex;
             gap: var(--kbq-size-l);
             flex-wrap: wrap;
+            padding-bottom: 64px;
         }
         :host > * {
             display: flex;
