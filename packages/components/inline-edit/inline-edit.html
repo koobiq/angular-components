@@ -9,9 +9,9 @@
         <ng-container *ngTemplateOutlet="viewModeTemplateRef().templateRef" />
 
         @if (menu()) {
-            <div class="kbq-inline-edit__menu-mask">
-                <div class="kbq-inline-edit__menu-mask-fade"></div>
-                <div class="kbq-inline-edit__menu-container">
+            <div class="kbq-inline-edit__menu-mask kbq-mask">
+                <div class="kbq-inline-edit__menu-mask-fade kbq-mask__fade"></div>
+                <div class="kbq-inline-edit__menu-mask-container kbq-mask__container">
                     <ng-content select="[kbqInlineEditMenu]" />
                 </div>
             </div>
