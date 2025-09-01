@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
-import { KbqIcon } from '@koobiq/components/icon';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqSelectModule } from '@koobiq/components/select';
@@ -16,18 +15,15 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqInlineEditModule,
         KbqFormFieldModule,
         KbqSelectModule,
-        KbqCleaner,
-        ReactiveFormsModule,
-        KbqIcon,
         KbqInputModule
     ],
     selector: 'inline-edit-placeholder-example',
     template: `
-        <kbq-inline-edit>
+        <kbq-inline-edit (saved)="update()">
             <ng-container *kbqInlineEditViewMode>
-                <div class="layout-row">
+                <div class="example-inline-text">
                     @if (!!value) {
-                        <span>{{ value }}</span>
+                        <span class="t">{{ value }}</span>
                     } @else {
                         <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                     }
@@ -40,9 +36,21 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </ng-container>
         </kbq-inline-edit>
     `,
+    styles: `
+        .example-inline-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditPlaceholderExample {
     placeholder = 'Placeholder';
     value = '';
+    protected readonly displayValue = signal(this.value);
+
+    update(): void {
+        this.displayValue.set(this.value);
+    }
 }

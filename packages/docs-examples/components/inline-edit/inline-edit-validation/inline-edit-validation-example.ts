@@ -24,7 +24,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     ],
     selector: 'inline-edit-validation-example',
     template: `
-        <kbq-inline-edit showActions>
+        <kbq-inline-edit showActions [validationTooltip]="'Value required'">
             <kbq-label>Label</kbq-label>
 
             <ng-container *kbqInlineEditViewMode>

@@ -25,7 +25,7 @@ import { KbqInputModule } from '@koobiq/components/input';
             <kbq-dd>
                 <kbq-inline-edit (saved)="onSave()">
                     <ng-container *kbqInlineEditViewMode>
-                        <div style="flex-wrap: wrap;">
+                        <div class="example-inline-text">
                             @if (!control.control.value) {
                                 <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                             } @else {
@@ -46,6 +46,12 @@ import { KbqInputModule } from '@koobiq/components/input';
         .kbq-dt {
             display: inline-flex;
             align-items: center;
+        }
+
+        .example-inline-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
     `,
     providers: [
