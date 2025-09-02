@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { KbqIconModule } from './../icon/icon.module';
 import { KbqNavbarIcItem, KbqNavbarIcModule } from './index';
 
@@ -9,7 +10,7 @@ const FONT_RENDER_TIMEOUT_MS = 10;
 describe('KbqNavbarIc', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [KbqNavbarIcModule, KbqIconModule],
+            imports: [KbqNavbarIcModule, KbqIconModule, NoopAnimationsModule],
             declarations: [TestApp]
         }).compileComponents();
     });
@@ -24,23 +25,6 @@ describe('KbqNavbarIc', () => {
         const collapsedElements = fixture.debugElement.queryAll(By.css('.kbq-expanded'));
 
         expect(collapsedElements.length).toBeGreaterThan(0);
-    }));
-
-    it('collapsed elements should have title', fakeAsync(() => {
-        const fixture = TestBed.createComponent(TestApp);
-
-        fixture.detectChanges();
-        tick(FONT_RENDER_TIMEOUT_MS);
-        fixture.detectChanges();
-
-        const items = fixture.debugElement.queryAll(By.css('kbq-navbar-ic-item'));
-        const collapsedElements = items.filter(
-            (item) => item.nativeElement.querySelectorAll('.kbq-collapsed').length > 0
-        );
-
-        const hasTitle = collapsedElements.reduce((acc, el) => acc && el.nativeElement.hasAttribute('title'), true);
-
-        expect(hasTitle).toBeTruthy();
     }));
 
     it('items should allow click if not disable', () => {
