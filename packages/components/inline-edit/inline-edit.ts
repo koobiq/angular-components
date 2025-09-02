@@ -46,6 +46,10 @@ const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
 
 const baseClass = 'kbq-inline-edit';
 
+/**
+ * Directive for template with view representation of control value
+ * that is projected when inline edit switched to view mode.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqInlineEditViewMode]',
@@ -55,6 +59,10 @@ export class KbqInlineEditViewMode {
     readonly templateRef = inject(TemplateRef);
 }
 
+/**
+ * Directive for template with control that is projected when inline edit switched to edit mode.
+ * Projected inside `cdkOverlay`.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqInlineEditEditMode]',
@@ -64,6 +72,7 @@ export class KbqInlineEditEditMode {
     readonly templateRef = inject(TemplateRef);
 }
 
+/** Directive for easy using styles of inline edit placeholder publicly. */
 @Directive({
     standalone: true,
     selector: '[kbqInlineEditPlaceholder]',
@@ -74,6 +83,7 @@ export class KbqInlineEditEditMode {
 })
 export class KbqInlineEditPlaceholder {}
 
+/** Custom validation tooltip content. */
 @Directive({
     standalone: true,
     selector: '[kbqInlineEditValidationTooltip]',
@@ -83,6 +93,11 @@ export class KbqInlineEditValidationTooltip {
     readonly templateRef = inject(TemplateRef);
 }
 
+/**
+ * This directive enhances element acting as dropdown trigger,
+ * visually indicating the active state with the `kbq-active` class.
+ * Also, it prevents click/keydown events from being propagated to disable mode toggling of parent component.
+ */
 @Directive({
     standalone: true,
     selector: '[kbqInlineEditMenu]',
@@ -100,6 +115,11 @@ export class KbqInlineEditMenu {
     dropdownTrigger = inject(KbqDropdownTrigger, { optional: true });
 }
 
+/**
+ * Customizable component that enables edit-in-place logic for specified control and it's view.
+ * This component is projecting edit/view mode templates and adds keyboard/pointer handlers.
+ * Edit mode opens in a positioned overlay that matches the view mode width or can be customized.
+ */
 @Component({
     standalone: true,
     selector: 'kbq-inline-edit',
