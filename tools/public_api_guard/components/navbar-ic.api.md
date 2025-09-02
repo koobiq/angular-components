@@ -104,6 +104,9 @@ export class KbqFocusable implements AfterContentInit, AfterViewInit, OnDestroy 
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusable, never>;
 }
 
+// @public
+export const kbqMaxSymbolsInHeaderTitle = 22;
+
 // @public (undocumented)
 export interface KbqNavbarFocusableItemEvent {
     // (undocumented)
@@ -121,7 +124,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     configuration: any;
     // (undocumented)
     get currentWidth(): number;
-    dropdownTrigger: Signal<any>;
+    dropdownTrigger: Signal<readonly any[]>;
     // (undocumented)
     get expanded(): boolean;
     set expanded(value: boolean);
@@ -155,7 +158,7 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     onKeyDown(event: KeyboardEvent): void;
     // (undocumented)
     pinned: boolean;
-    popoverTrigger: Signal<any>;
+    popoverTrigger: Signal<readonly any[]>;
     rectangleElements: Signal<readonly any[]>;
     // (undocumented)
     toggle(): void;

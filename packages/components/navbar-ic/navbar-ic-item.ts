@@ -29,6 +29,11 @@ import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { KbqNavbarIc } from './navbar-ic';
 
+/**
+ * The maximum number of characters that can be placed in a title without being wrapped.
+ */
+export const kbqMaxSymbolsInHeaderTitle = 22;
+
 export interface KbqNavbarFocusableItemEvent {
     item: KbqNavbarIcFocusableItem;
 }
@@ -86,7 +91,7 @@ export class KbqNavbarIcTitle implements AfterViewInit {
     }
 
     checkTextOverflown() {
-        this.isTextOverflown = this.text.length > 22;
+        this.isTextOverflown = this.text.length > kbqMaxSymbolsInHeaderTitle;
     }
 }
 
