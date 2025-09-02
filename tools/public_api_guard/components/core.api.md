@@ -3793,15 +3793,15 @@ export const zhCNLocaleData: {
             backToPeriodSelection: string;
         };
     };
+    clampedText: {
+        openText: string;
+        closeText: string;
+    };
     navbarIc: {
         toggle: {
             pinButton: string;
             collapseButton: string;
         };
-    };
-    clampedText: {
-        openText: string;
-        closeText: string;
     };
 };
 
