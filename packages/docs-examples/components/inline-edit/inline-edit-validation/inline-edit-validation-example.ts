@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
@@ -6,6 +6,7 @@ import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
+import { KbqTextareaModule } from '@koobiq/components/textarea';
 
 /**
  * @title Inline edit validation
@@ -20,7 +21,8 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqCleaner,
         KbqBadgeModule,
         KbqIconModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        KbqTextareaModule
     ],
     selector: 'inline-edit-validation-example',
     template: `
@@ -40,12 +42,31 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </ng-container>
             <ng-container *kbqInlineEditEditMode>
                 <kbq-form-field>
-                    <kbq-select multiple [placeholder]="placeholder" [formControl]="control">
+                    <kbq-select multiple multiline [placeholder]="placeholder" [formControl]="control">
                         @for (option of options; track option) {
                             <kbq-option [value]="option">{{ option }}</kbq-option>
                         }
                         <kbq-cleaner #kbqSelectCleaner />
                     </kbq-select>
+                </kbq-form-field>
+            </ng-container>
+        </kbq-inline-edit>
+
+        <kbq-inline-edit showActions [validationTooltip]="'Value required'" (saved)="update()">
+            <kbq-label>Label</kbq-label>
+
+            <ng-container *kbqInlineEditViewMode>
+                <div style="flex-wrap: wrap;">
+                    @if (displayValue().length > 0) {
+                        {{ displayValue() }}
+                    } @else {
+                        <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
+                    }
+                </div>
+            </ng-container>
+            <ng-container *kbqInlineEditEditMode>
+                <kbq-form-field>
+                    <textarea kbqTextarea placeholder="Placeholder" [formControl]="textareaControl"></textarea>
                 </kbq-form-field>
             </ng-container>
         </kbq-inline-edit>
@@ -65,8 +86,18 @@ import { KbqSelectModule } from '@koobiq/components/select';
 export class InlineEditValidationExample {
     protected readonly placeholder = 'Placeholder';
     protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    protected control = new FormControl<string[]>([this.options[0]], {
+    protected control = new FormControl<string[]>([], {
         nonNullable: true,
         validators: [Validators.required]
     });
+    protected textareaControl = new FormControl<string>('', {
+        nonNullable: true,
+        validators: [Validators.required]
+    });
+
+    protected readonly displayValue = signal(this.textareaControl.value);
+
+    update(): void {
+        this.displayValue.set(this.textareaControl.value);
+    }
 }

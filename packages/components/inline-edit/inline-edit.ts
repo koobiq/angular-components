@@ -32,6 +32,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { takeUntil } from 'rxjs/operators';
 import { KbqFocusMonitor } from './focus-monitor';
 
 const KBQ_INLINE_EDIT_ACTION_BUTTONS_ANIMATION = trigger('panelAnimation', [
@@ -82,16 +83,6 @@ export class KbqInlineEditEditMode {
     }
 })
 export class KbqInlineEditPlaceholder {}
-
-/** Custom validation tooltip content. */
-@Directive({
-    standalone: true,
-    selector: '[kbqInlineEditValidationTooltip]',
-    exportAs: 'kbqInlineEditValidationTooltip'
-})
-export class KbqInlineEditValidationTooltip {
-    readonly templateRef = inject(TemplateRef);
-}
 
 /**
  * This directive enhances element acting as dropdown trigger,
@@ -163,7 +154,7 @@ export class KbqInlineEdit {
      */
     readonly showTooltipOnError = input(true, { transform: booleanAttribute });
     /** Custom validation tooltip message. */
-    readonly validationTooltip = input<string>();
+    readonly validationTooltip = input<string | TemplateRef<any>>();
     /**
      * Disables the component, preventing interaction and mode switching. Only allows menu dropdown.
      * @default false
@@ -187,13 +178,13 @@ export class KbqInlineEdit {
     protected readonly label = contentChild(KbqLabel);
     /** @docs-private */
     protected readonly formFieldRef = contentChild(KbqFormField);
-    /** @docs-private */
-    protected readonly customTooltipContent = contentChild(KbqInlineEditValidationTooltip);
 
     /** @docs-private */
-    protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
+    protected readonly tooltipTrigger = viewChild.required(KbqTooltipTrigger);
     /** @docs-private */
     protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
+    /** @docs-private */
+    protected readonly overlayDir = viewChild(CdkConnectedOverlay);
 
     /** @docs-private */
     protected readonly mode = signal<'view' | 'edit' | 'read'>('view');
@@ -237,10 +228,27 @@ export class KbqInlineEdit {
 
         this.setOverlayWidth();
 
+        if (formFieldRef?.control) {
+            formFieldRef.control.stateChanges
+                .pipe(takeUntil(this.overlayDir()!.detach.asObservable()))
+                .subscribe(() => {
+                    if (!this.isInvalid()) {
+                        const tooltipTrigger = this.tooltipTrigger();
+
+                        tooltipTrigger.isOpen && tooltipTrigger.hide();
+                    }
+                });
+        }
+
         setTimeout(() => {
             if (formFieldRef) {
                 formFieldRef.focus();
                 this.initialValue = this.getValue();
+
+                const input: HTMLInputElement | HTMLTextAreaElement | null =
+                    this.overlayDir()!.overlayRef.overlayElement.querySelector('input,textarea');
+
+                if (this.initialValue) input?.select();
             }
         }, 0);
     }
@@ -290,7 +298,7 @@ export class KbqInlineEdit {
     private isInvalid(): boolean {
         const formFieldRef = this.formFieldRef();
 
-        if (!formFieldRef) return true;
+        if (!formFieldRef) return false;
 
         return formFieldRef.control.errorState;
     }

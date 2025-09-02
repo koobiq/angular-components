@@ -4,7 +4,6 @@ import {
     KbqInlineEditEditMode,
     KbqInlineEditMenu,
     KbqInlineEditPlaceholder,
-    KbqInlineEditValidationTooltip,
     KbqInlineEditViewMode
 } from './inline-edit';
 
@@ -13,7 +12,6 @@ const COMPONENTS = [
     KbqInlineEditViewMode,
     KbqInlineEditEditMode,
     KbqInlineEditPlaceholder,
-    KbqInlineEditValidationTooltip,
     KbqInlineEditMenu
 ];
 

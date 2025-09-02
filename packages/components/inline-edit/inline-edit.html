@@ -22,17 +22,21 @@
         <ng-template
             cdkConnectedOverlay
             cdkConnectedOverlayLockPosition
+            cdkConnectedOverlayBackdropClass="cdk-overlay-transparent-backdrop"
             [cdkConnectedOverlayOpen]="isEditMode()"
             [cdkConnectedOverlayOrigin]="overlayOrigin"
             [cdkConnectedOverlayWidth]="overlayWidth()"
+            [cdkConnectedOverlayDisableClose]="true"
+            [cdkConnectedOverlayHasBackdrop]="true"
             (attach)="onAttach()"
             (overlayOutsideClick)="save($event)"
             (overlayKeydown)="onOverlayKeydown($event)"
         >
-            <div class="kbq-inline-edit__panel" cdkTrapFocus cdkTrapFocusAutoCapture>
+            <div class="kbq-inline-edit__panel" cdkTrapFocusAutoCapture cdkTrapFocus>
                 <div
+                    class="kbq-inline-edit__control-container"
                     [kbqTooltipColor]="colors.Error"
-                    [kbqTooltip]="validationTooltip() ?? customTooltipContent()?.templateRef ?? ''"
+                    [kbqTooltip]="validationTooltip() ?? ''"
                     [kbqTooltipArrow]="false"
                     [kbqTrigger]="'manual'"
                     [kbqPlacement]="placements.TopLeft"

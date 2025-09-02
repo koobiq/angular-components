@@ -39,7 +39,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
             </ng-container>
             <ng-container *kbqInlineEditEditMode>
                 <kbq-form-field>
-                    <kbq-select multiple [placeholder]="placeholder" [(ngModel)]="value">
+                    <kbq-select multiple multiline [placeholder]="placeholder" [(ngModel)]="value">
                         @for (option of options; track option) {
                             <kbq-option [value]="option">{{ option }}</kbq-option>
                         }
