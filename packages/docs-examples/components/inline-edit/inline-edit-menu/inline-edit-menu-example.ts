@@ -25,7 +25,7 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
     ],
     selector: 'inline-edit-menu-example',
     template: `
-        <div class="layout-flex layout-column">
+        <div class="layout-flex layout-column layout-gap-s">
             <kbq-inline-edit showActions (saved)="update()">
                 <kbq-dropdown #dropdown="kbqDropdown">
                     <button kbq-dropdown-item (click)="clipboard.copy(value)">Copy text</button>

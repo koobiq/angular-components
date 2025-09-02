@@ -87,6 +87,11 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-datepicker {
             width: 100%;
         }
+
+        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-textarea .kbq-form-field__infix,
+        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-textarea .kbq-form-field__container {
+            padding-left: 0;
+        }
     `,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
@@ -96,9 +101,9 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 export class InlineEditHorizontalListExample {
     protected readonly placeholder = 'Placeholder';
 
-    controls = [
+    protected readonly controls = [
         { label: 'Incident', type: 'text', control: new FormControl(null) },
-        { label: 'Comment', type: 'comment', control: new FormControl(null), withActions: true },
-        { label: 'Date', type: 'date', control: new FormControl(null) }
+        { label: 'Comment', type: 'comment', control: new FormControl(''), withActions: true },
+        { label: 'Date', type: 'date', control: new FormControl('') }
     ];
 }
