@@ -8,99 +8,99 @@
 <br />
 <br />
 
-<div class="dev-navbar-ic-content">
-    <kbq-navbar-ic #navbar>
-        <kbq-navbar-ic-container>
-            <a href="#" kbq-navbar-ic-header>
-                <div kbqNavbarIcLogo>
-                    <!-- prettier-ignore -->
-                    <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>
-                </div>
+<!--<div class="dev-navbar-ic-content">-->
+<!--    <kbq-navbar-ic #navbar>-->
+<!--        <kbq-navbar-ic-container>-->
+<!--            <a href="#" kbq-navbar-ic-header>-->
+<!--                <div kbqNavbarIcLogo>-->
+<!--                    &lt;!&ndash; prettier-ignore &ndash;&gt;-->
+<!--                    <svg fill="none" height="24" viewBox="0 0 32 32" width="24" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M0 25.6C0 28.4045 0 29.9635 1.01826 30.9817C2.03651 32 3.59554 32 6.4 32H25.6C28.4045 32 29.9635 32 30.9817 30.9817C32 29.9635 32 28.4045 32 25.6V6.4C32 3.59554 32 2.03651 30.9817 1.01826C29.9635 0 28.4045 0 25.6 0H6.4C3.59554 0 2.03651 0 1.01826 1.01826C0 2.03651 0 3.59554 0 6.4V25.6Z" fill="#FF0000" fill-rule="evenodd"/><path d="M14.9774 16L11.1933 19.7841L7.40918 16L11.1933 12.267L14.9774 16ZM19.7842 20.858L16.0512 24.5909L12.2671 20.858L16.0512 17.0739L19.7842 20.858ZM19.7842 11.1932L16.0512 14.9261L12.2671 11.1932L16.0512 7.40909L19.7842 11.1932ZM24.591 16L20.858 19.7841L17.1251 16L20.858 12.267L24.591 16Z" fill="white"/></svg>-->
+<!--                </div>-->
 
-                <div kbqNavbarIcTitle>App Name</div>
-            </a>
+<!--                <div kbqNavbarIcTitle>App Name</div>-->
+<!--            </a>-->
 
-            <a href="#" kbq-navbar-ic-item>
-                <i kbq-icon="kbq-folder-open_16"></i>
-                <div kbqNavbarIcTitle>Панель мониторинга</div>
-            </a>
+<!--            <a href="#" kbq-navbar-ic-item>-->
+<!--                <i kbq-icon="kbq-folder-open_16"></i>-->
+<!--                <div kbqNavbarIcTitle>Панель мониторинга</div>-->
+<!--            </a>-->
 
-            <div kbq-navbar-ic-item>
-                <i kbq-icon="kbq-folder-open_16"></i>
-                <span kbqNavbarIcTitle>Задачи</span>
-            </div>
+<!--            <div kbq-navbar-ic-item>-->
+<!--                <i kbq-icon="kbq-folder-open_16"></i>-->
+<!--                <span kbqNavbarIcTitle>Задачи</span>-->
+<!--            </div>-->
 
-            <kbq-navbar-ic-item
-                #verticalNavbarDropdownTrigger_3="kbqDropdownTrigger"
-                [class.kbq-ictive]="verticalNavbarDropdownTrigger_3.opened"
-                [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"
-            >
-                <i kbq-icon="kbq-ellipsis-vertical_16"></i>
-                <div kbqNavbarIcTitle>Еще</div>
-            </kbq-navbar-ic-item>
+<!--            <kbq-navbar-ic-item-->
+<!--                #verticalNavbarDropdownTrigger_3="kbqDropdownTrigger"-->
+<!--                [class.kbq-ictive]="verticalNavbarDropdownTrigger_3.opened"-->
+<!--                [kbqDropdownTriggerFor]="verticalNavbarDropdown_3"-->
+<!--            >-->
+<!--                <i kbq-icon="kbq-ellipsis-vertical_16"></i>-->
+<!--                <div kbqNavbarIcTitle>Еще</div>-->
+<!--            </kbq-navbar-ic-item>-->
 
-            <!-- Asynchronous navbar-item -->
-            @if (permission | async) {
-                <div kbq-navbar-ic-item>
-                    <i kbq-icon="kbq-bsd_16"></i>
-                    <span kbqNavbarIcTitle>Настройки</span>
-                </div>
-            }
-        </kbq-navbar-ic-container>
+<!--            &lt;!&ndash; Asynchronous navbar-item &ndash;&gt;-->
+<!--            @if (permission | async) {-->
+<!--                <div kbq-navbar-ic-item>-->
+<!--                    <i kbq-icon="kbq-bsd_16"></i>-->
+<!--                    <span kbqNavbarIcTitle>Настройки</span>-->
+<!--                </div>-->
+<!--            }-->
+<!--        </kbq-navbar-ic-container>-->
 
-        <kbq-navbar-ic-container>
-            <kbq-navbar-ic-item
-                #verticalPopover="kbqPopover"
-                kbqPopover
-                [class.kbq-ictive]="verticalPopover.isOpen"
-                [kbqPopoverContent]="
-                    'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '
-                "
-                [kbqPopoverHeader]="'Центр уведомлений'"
-                [kbqPopoverPlacement]="popUpPlacements.Right"
-            >
-                <i kbq-icon="kbq-bell_16"></i>
-                <div kbqNavbarIcTitle>Уведомления Уведомления Уведомления Уведомления</div>
-                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
-            </kbq-navbar-ic-item>
+<!--        <kbq-navbar-ic-container>-->
+<!--            <kbq-navbar-ic-item-->
+<!--                #verticalPopover="kbqPopover"-->
+<!--                kbqPopover-->
+<!--                [class.kbq-ictive]="verticalPopover.isOpen"-->
+<!--                [kbqPopoverContent]="-->
+<!--                    'Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover Body of popover '-->
+<!--                "-->
+<!--                [kbqPopoverHeader]="'Центр уведомлений'"-->
+<!--                [kbqPopoverPlacement]="popUpPlacements.Right"-->
+<!--            >-->
+<!--                <i kbq-icon="kbq-bell_16"></i>-->
+<!--                <div kbqNavbarIcTitle>Уведомления Уведомления Уведомления Уведомления</div>-->
+<!--                <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>-->
+<!--            </kbq-navbar-ic-item>-->
 
-            <kbq-navbar-ic-item>
-                <i kbq-icon="kbq-circle_16" [color]="'success'"></i>
-                <div kbqNavbarIcTitle>Мониторинг</div>
-            </kbq-navbar-ic-item>
+<!--            <kbq-navbar-ic-item>-->
+<!--                <i kbq-icon="kbq-circle_16" [color]="'success'"></i>-->
+<!--                <div kbqNavbarIcTitle>Мониторинг</div>-->
+<!--            </kbq-navbar-ic-item>-->
 
-            <!-- Second asynchronous navbar-item -->
-            @if (permission | async) {
-                <div kbq-navbar-ic-item>
-                    <i kbq-icon="kbq-user_16"></i>
-                    <span kbqNavbarIcTitle>Администратор</span>
-                </div>
-            }
+<!--            &lt;!&ndash; Second asynchronous navbar-item &ndash;&gt;-->
+<!--            @if (permission | async) {-->
+<!--                <div kbq-navbar-ic-item>-->
+<!--                    <i kbq-icon="kbq-user_16"></i>-->
+<!--                    <span kbqNavbarIcTitle>Администратор</span>-->
+<!--                </div>-->
+<!--            }-->
 
-            <!--            <kbq-navbar-ic-divider />-->
+<!--            &lt;!&ndash;            <kbq-navbar-ic-divider />&ndash;&gt;-->
 
-            <kbq-navbar-ic-toggle />
-        </kbq-navbar-ic-container>
-    </kbq-navbar-ic>
+<!--            <kbq-navbar-ic-toggle />-->
+<!--        </kbq-navbar-ic-container>-->
+<!--    </kbq-navbar-ic>-->
 
-    <div class="dev-vertical-navbar-content kbq-text-normal">
-        <p>
-            Целое число в принципе поддерживает скачок функции. Полином отражает экспериментальный разрыв функции,
-            что неудивительно. Интеграл от функции, имеющий конечный разрыв расточительно специфицирует предел функции,
-            таким образом сбылась мечта идиота — утверждение полностью доказано. Интеграл Пуассона развивает интеграл
-            Фурье. Неопределенный интеграл категорически соответствует расходящийся ряд. Не факт, что функция многих
-            переменных по‑прежнему востребована.
-        </p>
-        <p>
-            К тому же график функции усиливает тригонометрический интеграл по поверхности. Правда, некоторые специалисты
-            отмечают, что неравенство Бернулли обуславливает действительный расходящийся ряд. Тем не менее,
-            неопределенный интеграл раскручивает разрыв функции.
-        </p>
-        <p>
-            Эпсилон окрестность привлекает интеграл по бесконечной области. Пустое подмножество, общеизвестно, допускает
-            ряд Тейлора. Наибольшее и наименьшее значения функции недоказуемо. Вектор, не вдаваясь в подробности,
-            осмысленно транслирует постулат. Ортогональный определитель упорядочивает линейно зависимый минимум.
-            Интеграл от функции, обращающейся в бесконечность вдоль линии позитивно уравновешивает график функции.
-        </p>
-    </div>
-</div>
+<!--    <div class="dev-vertical-navbar-content kbq-text-normal">-->
+<!--        <p>-->
+<!--            Целое число в принципе поддерживает скачок функции. Полином отражает экспериментальный разрыв функции,-->
+<!--            что неудивительно. Интеграл от функции, имеющий конечный разрыв расточительно специфицирует предел функции,-->
+<!--            таким образом сбылась мечта идиота — утверждение полностью доказано. Интеграл Пуассона развивает интеграл-->
+<!--            Фурье. Неопределенный интеграл категорически соответствует расходящийся ряд. Не факт, что функция многих-->
+<!--            переменных по‑прежнему востребована.-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            К тому же график функции усиливает тригонометрический интеграл по поверхности. Правда, некоторые специалисты-->
+<!--            отмечают, что неравенство Бернулли обуславливает действительный расходящийся ряд. Тем не менее,-->
+<!--            неопределенный интеграл раскручивает разрыв функции.-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            Эпсилон окрестность привлекает интеграл по бесконечной области. Пустое подмножество, общеизвестно, допускает-->
+<!--            ряд Тейлора. Наибольшее и наименьшее значения функции недоказуемо. Вектор, не вдаваясь в подробности,-->
+<!--            осмысленно транслирует постулат. Ортогональный определитель упорядочивает линейно зависимый минимум.-->
+<!--            Интеграл от функции, обращающейся в бесконечность вдоль линии позитивно уравновешивает график функции.-->
+<!--        </p>-->
+<!--    </div>-->
+<!--</div>-->

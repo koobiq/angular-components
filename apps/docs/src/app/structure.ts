@@ -628,7 +628,8 @@ const structure: DocsStructure = makeStructure({
                     svgPreview: 'navbar-ic',
                     hasApi: true,
                     apiId: 'navbar-ic',
-                    hasExamples: false
+                    hasExamples: false,
+                    isNew: expiresAt('2025-09-20')
                 },
                 {
                     id: DocsStructureItemId.OverflowItems,

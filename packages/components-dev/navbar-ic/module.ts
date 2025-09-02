@@ -23,6 +23,10 @@ import { NavbarIcExamplesModule } from '../../docs-examples/components/navbar-ic
         </div>
         <br />
         <br />
+        <br />
+        <br />
+        <br />
+        <br />
         <div style="padding: 20px">
             <navbar-ic-long-app-name-example />
         </div>

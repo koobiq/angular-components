@@ -6,7 +6,6 @@ import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
-    contentChild,
     contentChildren,
     ContentChildren,
     DestroyRef,
@@ -239,13 +238,13 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     );
 
     /** @docs-private */
-    dropdownTrigger = contentChild(
+    dropdownTrigger = contentChildren(
         forwardRef(() => KbqDropdownTrigger),
         { descendants: true }
     );
 
     /** @docs-private */
-    popoverTrigger = contentChild(
+    popoverTrigger = contentChildren(
         forwardRef(() => KbqPopoverTrigger),
         { descendants: true }
     );
@@ -276,7 +275,9 @@ export class KbqNavbarIc extends KbqFocusable implements AfterContentInit {
     private _expanded: boolean = true;
 
     get hasOpenedPopUp() {
-        return [this.dropdownTrigger(), this.popoverTrigger()].some((instance) => instance?.isOpen || instance?.opened);
+        return [...this.dropdownTrigger(), ...this.popoverTrigger()].some(
+            (instance) => instance?.isOpen || instance?.opened
+        );
     }
 
     get expandedByToggle() {

@@ -46,6 +46,7 @@
                 }
             }
 
+            &.kbq-active,
             &:active {
                 @include kbq-navbar-ic-item(states-selected);
             }

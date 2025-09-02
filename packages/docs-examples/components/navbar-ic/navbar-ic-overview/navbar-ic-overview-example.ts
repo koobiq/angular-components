@@ -7,6 +7,7 @@ import { KbqComponentColors, PopUpPlacements, ThemeService } from '@koobiq/compo
 import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqNavbarModule } from '@koobiq/components/navbar';
 import { KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { of } from 'rxjs';
@@ -36,7 +37,8 @@ type ExampleAction = {
         KbqEmptyStateModule,
         KbqTopBarModule,
         KbqButtonModule,
-        KbqDropdownModule
+        KbqDropdownModule,
+        KbqNavbarModule
     ]
 })
 export class NavbarIcOverviewExample {
