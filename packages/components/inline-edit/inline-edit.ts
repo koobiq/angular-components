@@ -132,60 +132,79 @@ export class KbqInlineEditMenu {
     encapsulation: ViewEncapsulation.None
 })
 export class KbqInlineEdit {
-    readonly placeholder = input<string>();
+    /**
+     * Whether to show save/cancel action buttons in edit mode.
+     * @default false
+     */
     readonly showActions = input(false, { transform: booleanAttribute });
+    /**
+     * Whether to automatically show validation error tooltips on save attempts.
+     * @default true
+     */
     readonly showTooltipOnError = input(true, { transform: booleanAttribute });
+    /** Custom validation tooltip message. */
     readonly validationTooltip = input<string>();
+    /**
+     * Disables the component, preventing interaction and mode switching. Only allows menu dropdown.
+     * @default false
+     */
     readonly disabled = input(false, { transform: booleanAttribute });
+    /** Custom width in pixels for the edit mode overlay. Auto-calculated if not set. */
     readonly editModeWidth = input(undefined, { transform: numberAttribute });
 
+    /** Emitted when the inline edit is saved successfully. */
     protected readonly saved = output();
+    /** Emitted when the inline edit is canceled and changes are discarded. */
     protected readonly canceled = output();
 
+    /** @docs-private */
     protected readonly viewModeTemplateRef = contentChild.required(KbqInlineEditViewMode);
+    /** @docs-private */
     protected readonly editModeTemplateRef = contentChild.required(KbqInlineEditEditMode);
+    /** @docs-private */
     protected readonly menu = contentChild(KbqInlineEditMenu);
+    /** @docs-private */
     protected readonly label = contentChild(KbqLabel);
+    /** @docs-private */
     protected readonly formFieldRef = contentChild(KbqFormField);
+    /** @docs-private */
     protected readonly customTooltipContent = contentChild(KbqInlineEditValidationTooltip);
 
+    /** @docs-private */
     protected readonly tooltipTrigger = viewChild(KbqTooltipTrigger);
+    /** @docs-private */
     protected readonly overlayOrigin = viewChild(CdkOverlayOrigin);
 
+    /** @docs-private */
     protected readonly mode = signal<'view' | 'edit' | 'read'>('view');
+    /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
 
+    /** @docs-private */
     protected readonly className = computed(() => `${baseClass}_${this.mode()}`);
+    /** @docs-private */
     protected readonly isEditMode = computed(() => this.mode() === 'edit');
+    /** @docs-private */
     protected readonly tabIndex = computed(() => (this.isEditMode() || this.disabled() ? -1 : 0));
 
-    protected readonly elementRef = inject(ElementRef);
+    /** @docs-private */
+    protected readonly placements = PopUpPlacements;
+
+    /** @docs-private */
+    protected readonly colors = KbqComponentColors;
+
+    /** @docs-private */
+    private readonly elementRef = inject(ElementRef);
 
     private initialValue: unknown;
 
-    private setOverlayWidth(): void {
-        const editModeWidth = this.editModeWidth();
-
-        if (editModeWidth) {
-            this.overlayWidth.set(editModeWidth);
-
-            return;
-        }
-
-        const elementRef: ElementRef<HTMLElement> | undefined = this.label()
-            ? this.overlayOrigin()?.elementRef
-            : this.elementRef;
-
-        this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
-    }
-
     /** @docs-private */
-    toggleMode(): void {
+    protected toggleMode(): void {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
     }
 
     /** @docs-private */
-    onClick(event: Event): void {
+    protected onClick(event: Event): void {
         if (this.disabled() || this.isEditMode()) return;
 
         event.stopPropagation();
@@ -193,7 +212,7 @@ export class KbqInlineEdit {
     }
 
     /** @docs-private */
-    onAttach() {
+    protected onAttach(): void {
         const formFieldRef = this.formFieldRef();
 
         this.setOverlayWidth();
@@ -207,7 +226,7 @@ export class KbqInlineEdit {
     }
 
     /** @docs-private */
-    save($event?: Event): void {
+    protected save($event?: Event): void {
         $event?.stopPropagation();
 
         if (this.isInvalid()) {
@@ -219,7 +238,7 @@ export class KbqInlineEdit {
     }
 
     /** @docs-private */
-    cancel() {
+    protected cancel(): void {
         this.setValue(this.initialValue);
 
         this.toggleMode();
@@ -227,7 +246,7 @@ export class KbqInlineEdit {
     }
 
     /** @docs-private */
-    onOverlayKeydown(event: KeyboardEvent) {
+    protected onOverlayKeydown(event: KeyboardEvent): void {
         const { target, key } = event;
 
         switch (key) {
@@ -277,7 +296,7 @@ export class KbqInlineEdit {
     private coerceControl() {
         const formFieldRef = this.formFieldRef();
 
-        if (!formFieldRef) return;
+        if (!formFieldRef) return null;
 
         if (formFieldRef.control.ngControl instanceof NgControl) {
             return formFieldRef.control.ngControl.control;
@@ -286,9 +305,19 @@ export class KbqInlineEdit {
         return formFieldRef.control;
     }
 
-    /** @docs-private */
-    protected readonly placements = PopUpPlacements;
+    private setOverlayWidth(): void {
+        const editModeWidth = this.editModeWidth();
 
-    /** @docs-private */
-    protected readonly colors = KbqComponentColors;
+        if (editModeWidth) {
+            this.overlayWidth.set(editModeWidth);
+
+            return;
+        }
+
+        const elementRef: ElementRef<HTMLElement> | undefined = this.label()
+            ? this.overlayOrigin()?.elementRef
+            : this.elementRef;
+
+        this.overlayWidth.set(elementRef?.nativeElement.offsetWidth ?? '');
+    }
 }
