@@ -46,17 +46,17 @@ import { KbqIconModule } from '@koobiq/components/icon';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FileUploadSingleMixedValidationExample {
-    protected customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
-    protected accept: KbqFileTypeSpecifier = ['.txt'];
+    protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
+    protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
 
-    form = new FormGroup({
+    protected readonly form = new FormGroup({
         fileUpload: new FormControl<KbqFileItem | null>(null, [
             Validators.required,
             FileValidators.isCorrectExtension(['.txt'])
         ])
     });
 
-    onSubmit() {
+    onSubmit(): void {
         console.log('perform action on submit');
     }
 }

@@ -55,16 +55,16 @@ import { KbqIconModule } from '@koobiq/components/icon';
 })
 export class FileUploadMultipleMixedValidationExample {
     protected readonly customErrorStateMatcher = new ShowOnFormSubmitErrorStateMatcher();
-    protected accept: KbqFileTypeSpecifier = ['.txt'];
-    protected fileExtensionMismatchErrorMessage = 'Provide valid extension';
-    protected cdr = inject(ChangeDetectorRef);
+    protected readonly accept: KbqFileTypeSpecifier = ['.txt'];
+    protected readonly fileExtensionMismatchErrorMessage = 'Provide valid extension';
+    protected readonly cdr = inject(ChangeDetectorRef);
 
-    formMultiple = new FormGroup({
+    protected readonly formMultiple = new FormGroup({
         fileUpload: new FormControl<FileList | KbqFileItem[]>([], Validators.required),
         fileList: new FormArray<FormControl<KbqFileItem | null>>([], Validators.required)
     });
 
-    get fileList() {
+    protected get fileList() {
         return this.formMultiple.controls.fileList;
     }
 
