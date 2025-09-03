@@ -72,7 +72,7 @@
         "@microsoft/api-extractor": "7.52.8",
         "@octokit/rest": "^18.9.1",
         "@playwright/test": "^1.53.0",
-        "@prettier/plugin-xml": "^3.4.1",
+        "@prettier/plugin-xml": "^3.4.2",
         "@rollup/plugin-commonjs": "^24.0.0",
         "@rollup/plugin-json": "^6.0.0",
         "@rollup/plugin-node-resolve": "^15.3.1",
