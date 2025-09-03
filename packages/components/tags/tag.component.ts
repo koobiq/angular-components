@@ -140,6 +140,7 @@ export class KbqTagEditInput {
 
             // prevent KbqTag from receiving these keydown events
             case BACKSPACE:
+            case DELETE:
             case SPACE: {
                 event.stopPropagation();
                 break;
