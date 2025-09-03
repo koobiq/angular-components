@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { KBQ_DEFAULT_LOCALE_ID, KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
+import { KBQ_LOCALE_SERVICE } from '@koobiq/components/core';
 import { KbqFileUploadModule, KbqInputFileLabel, KbqInputFileMultipleLabel } from '@koobiq/components/file-upload';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { of, skip } from 'rxjs';
@@ -132,16 +132,20 @@ const localeData = {
     }
 })
 export class FileUploadCustomTextViaInputExample {
+    private readonly exampleDefaultLocale = 'en-US';
     protected readonly localeId = toSignal(
-        inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes.pipe(skip(1)) ?? of(undefined)
+        inject(KBQ_LOCALE_SERVICE, { optional: true })?.changes.pipe(skip(1)) ?? of(this.exampleDefaultLocale),
+        { initialValue: this.exampleDefaultLocale }
     );
     protected readonly multipleLocaleConfig = computed(() => {
-        return localeData[this.localeId() ?? KBQ_DEFAULT_LOCALE_ID].multiple;
+        const selectedLocaleData = localeData[this.localeId()] ?? localeData[this.exampleDefaultLocale];
+
+        return selectedLocaleData.multiple;
     });
 
     protected readonly singleLocaleConfig = computed(() => {
-        return localeData[this.localeId() ?? KBQ_DEFAULT_LOCALE_ID].single;
-    });
+        const selectedLocaleData = localeData[this.localeId()] ?? localeData[this.exampleDefaultLocale];
 
-    constructor() {}
+        return selectedLocaleData.single;
+    });
 }
