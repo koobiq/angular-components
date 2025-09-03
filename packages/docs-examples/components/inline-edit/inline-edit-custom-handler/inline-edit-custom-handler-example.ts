@@ -9,7 +9,7 @@ import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
 import { KbqSelectModule } from '@koobiq/components/select';
 
 /**
- * @title Inline edit overview
+ * @title Inline edit custom handler
  */
 @Component({
     standalone: true,
@@ -63,7 +63,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InlineEditOverviewExample {
+export class InlineEditCustomHandlerExample {
     control = new FormControl<KbqFileItem | null>(null);
     protected readonly placeholder = 'Placeholder';
     protected readonly displayValue = signal(this.control.value);

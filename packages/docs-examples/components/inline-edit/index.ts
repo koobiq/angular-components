@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { InlineEditCustomHandlerExample } from './inline-edit-custom-handler/inline-edit-custom-handler-example';
 import { InlineEditDisabledExample } from './inline-edit-disabled/inline-edit-disabled-example';
 import { InlineEditHorizontalListExample } from './inline-edit-horizontal-list/inline-edit-horizontal-list-example';
 import { InlineEditMenuExample } from './inline-edit-menu/inline-edit-menu-example';
@@ -8,6 +9,7 @@ import { InlineEditPlaceholderExample } from './inline-edit-placeholder/inline-e
 import { InlineEditValidationExample } from './inline-edit-validation/inline-edit-validation-example';
 
 export {
+    InlineEditCustomHandlerExample,
     InlineEditDisabledExample,
     InlineEditHorizontalListExample,
     InlineEditMenuExample,
@@ -24,7 +26,8 @@ const EXAMPLES = [
     InlineEditDisabledExample,
     InlineEditHorizontalListExample,
     InlineEditOnCleanExample,
-    InlineEditValidationExample
+    InlineEditValidationExample,
+    InlineEditCustomHandlerExample
 ];
 
 @NgModule({

@@ -20,6 +20,7 @@ import {
     viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { AbstractControl, NgControl } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import {
@@ -32,6 +33,7 @@ import { KbqDropdownTrigger } from '@koobiq/components/dropdown';
 import { KbqFormField, KbqLabel } from '@koobiq/components/form-field';
 import { KbqIcon } from '@koobiq/components/icon';
 import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { skip } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { KbqFocusMonitor } from './focus-monitor';
 
@@ -162,11 +164,19 @@ export class KbqInlineEdit {
     readonly disabled = input(false, { transform: booleanAttribute });
     /** Custom width in pixels for the edit mode overlay. Auto-calculated if not set. */
     readonly editModeWidth = input(undefined, { transform: numberAttribute });
+    /** User-defined tooltip placement */
+    readonly tooltipPlacement = input<PopUpPlacements>();
+    /** Handler function to retrieve the current value */
+    readonly getValueHandler = input<() => unknown>();
+    /** Handler function to update the value */
+    readonly setValueHandler = input<(value: any) => void>();
 
     /** Emitted when the inline edit is saved successfully. */
     protected readonly saved = output();
     /** Emitted when the inline edit is canceled and changes are discarded. */
     protected readonly canceled = output();
+    /** Emitted when mode switched to edit/view */
+    protected readonly modeChange = output<'view' | 'edit'>();
 
     /** @docs-private */
     protected readonly viewModeTemplateRef = contentChild.required(KbqInlineEditViewMode);
@@ -187,7 +197,7 @@ export class KbqInlineEdit {
     protected readonly overlayDir = viewChild(CdkConnectedOverlay);
 
     /** @docs-private */
-    protected readonly mode = signal<'view' | 'edit' | 'read'>('view');
+    protected readonly mode = signal<'view' | 'edit'>('view');
     /** @docs-private */
     protected readonly overlayWidth = signal<number | string>('');
 
@@ -209,6 +219,12 @@ export class KbqInlineEdit {
 
     private initialValue: unknown;
 
+    constructor() {
+        toObservable(this.mode)
+            .pipe(skip(1), takeUntilDestroyed())
+            .subscribe((currentMode) => this.modeChange.emit(currentMode));
+    }
+
     /** @docs-private */
     protected toggleMode(): void {
         this.mode.update((mode) => (mode === 'view' ? 'edit' : 'view'));
@@ -224,32 +240,27 @@ export class KbqInlineEdit {
 
     /** @docs-private */
     protected onAttach(): void {
+        this.setOverlayWidth();
         const formFieldRef = this.formFieldRef();
 
-        this.setOverlayWidth();
+        formFieldRef?.control.stateChanges
+            .pipe(takeUntil(this.overlayDir()!.overlayRef.detachments()))
+            .subscribe(() => {
+                if (!this.isInvalid()) {
+                    const tooltipTrigger = this.tooltipTrigger();
 
-        if (formFieldRef?.control) {
-            formFieldRef.control.stateChanges
-                .pipe(takeUntil(this.overlayDir()!.detach.asObservable()))
-                .subscribe(() => {
-                    if (!this.isInvalid()) {
-                        const tooltipTrigger = this.tooltipTrigger();
-
-                        tooltipTrigger.isOpen && tooltipTrigger.hide();
-                    }
-                });
-        }
+                    tooltipTrigger.isOpen && tooltipTrigger.hide();
+                }
+            });
 
         setTimeout(() => {
-            if (formFieldRef) {
-                formFieldRef.focus();
-                this.initialValue = this.getValue();
+            formFieldRef?.focus();
+            this.initialValue = this.getValue();
 
-                const input: HTMLInputElement | HTMLTextAreaElement | null =
-                    this.overlayDir()!.overlayRef.overlayElement.querySelector('input,textarea');
+            const input: HTMLInputElement | HTMLTextAreaElement | null =
+                this.overlayDir()!.overlayRef.overlayElement.querySelector('input,textarea');
 
-                if (this.initialValue) input?.select();
-            }
+            if (this.initialValue) input?.select();
         }, 0);
     }
 
@@ -304,12 +315,24 @@ export class KbqInlineEdit {
     }
 
     private getValue() {
+        const getValueHandler = this.getValueHandler();
+
+        if (getValueHandler) return getValueHandler();
+
         const control = this.coerceControl();
 
         return control?.value;
     }
 
     private setValue<T>(value: T): void {
+        const setValue = this.setValueHandler();
+
+        if (setValue) {
+            setValue(this.initialValue);
+
+            return;
+        }
+
         const control = this.coerceControl();
 
         if (!control) return;
