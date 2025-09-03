@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { KbqBadgeModule } from '@koobiq/components/badge';
 import { kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
-import { KbqFileItem, KbqFileUploadModule } from '@koobiq/components/file-upload';
 import { KbqCleaner, KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqInlineEditModule } from '@koobiq/components/inline-edit';
@@ -20,34 +19,33 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqSelectModule,
         KbqCleaner,
         KbqBadgeModule,
-        KbqIconModule,
-        KbqFileUploadModule,
-        ReactiveFormsModule
+        KbqIconModule
     ],
     selector: 'inline-edit-overview-example',
     template: `
-        <kbq-inline-edit
-            showActions
-            [getValueHandler]="getValueHandler"
-            [setValueHandler]="setValueHandler"
-            (saved)="update()"
-        >
+        <kbq-inline-edit showActions (saved)="update()">
             <kbq-label>Label</kbq-label>
 
             <ng-container *kbqInlineEditViewMode>
                 <div class="layout-row layout-gap-xxs" style="flex-wrap: wrap;">
-                    @let value = displayValue();
-                    @if (value && value.file) {
-                        {{ value.file.name }}
+                    @if (displayValue().length > 0) {
+                        @for (badge of displayValue(); track badge) {
+                            <kbq-badge>{{ badge }}</kbq-badge>
+                        }
                     } @else {
                         <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                     }
                 </div>
             </ng-container>
             <ng-container *kbqInlineEditEditMode>
-                <kbq-file-upload class="kbq-form__control flex-80" [formControl]="control">
-                    <i kbq-icon="kbq-file-o_16"></i>
-                </kbq-file-upload>
+                <kbq-form-field>
+                    <kbq-select multiple multiline [placeholder]="placeholder" [(ngModel)]="value">
+                        @for (option of options; track option) {
+                            <kbq-option [value]="option">{{ option }}</kbq-option>
+                        }
+                        <kbq-cleaner #kbqSelectCleaner />
+                    </kbq-select>
+                </kbq-form-field>
             </ng-container>
         </kbq-inline-edit>
     `,
@@ -64,14 +62,12 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditOverviewExample {
-    control = new FormControl<KbqFileItem | null>(null);
     protected readonly placeholder = 'Placeholder';
-    protected readonly displayValue = signal(this.control.value);
-
-    getValueHandler = () => this.control.value;
-    setValueHandler = (value: KbqFileItem | null) => this.control.setValue(value);
+    protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
+    protected value: string[] = [this.options[0]];
+    protected readonly displayValue = signal(this.value);
 
     update(): void {
-        this.displayValue.set(this.control.value);
+        this.displayValue.set(this.value);
     }
 }
