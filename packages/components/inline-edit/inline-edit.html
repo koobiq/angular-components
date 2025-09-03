@@ -39,7 +39,7 @@
                     [kbqTooltip]="validationTooltip() ?? ''"
                     [kbqTooltipArrow]="false"
                     [kbqTrigger]="'manual'"
-                    [kbqPlacement]="placements.TopLeft"
+                    [kbqPlacement]="tooltipPlacement() ?? placements.TopLeft"
                 >
                     <ng-container *ngTemplateOutlet="editModeTemplateRef().templateRef" />
                 </div>

@@ -2,7 +2,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { LuxonDateModule } from '@koobiq/angular-luxon-adapter/adapter';
-import { kbqDisableLegacyValidationDirectiveProvider, KbqLocaleServiceModule } from '@koobiq/components/core';
+import {
+    kbqDisableLegacyValidationDirectiveProvider,
+    KbqFormattersModule,
+    KbqLocaleServiceModule
+} from '@koobiq/components/core';
 import { KbqDatepickerModule } from '@koobiq/components/datepicker';
 import { KbqDlModule } from '@koobiq/components/dl';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -25,7 +29,8 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         KbqTextareaModule,
         LuxonDateModule,
         KbqDatepickerModule,
-        KbqLocaleServiceModule
+        KbqLocaleServiceModule,
+        KbqFormattersModule
     ],
     selector: 'inline-edit-horizontal-list-example',
     template: `
@@ -40,11 +45,15 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
             <ng-template #edit let-control>
                 <kbq-inline-edit [showActions]="!!control?.withActions">
                     <ng-container *kbqInlineEditViewMode>
-                        <div style="flex-wrap: wrap;">
+                        <div class="example-inline-text">
                             @if (!control.control.value) {
                                 <span kbqInlineEditPlaceholder>{{ placeholder }}</span>
                             } @else {
-                                <span>{{ control.control.value }}</span>
+                                @if (control.type === 'date') {
+                                    {{ control.control.value | absoluteShortDate }}
+                                } @else {
+                                    {{ control.control.value }}
+                                }
                             }
                         </div>
                     </ng-container>
@@ -82,6 +91,12 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         .kbq-dt {
             display: inline-flex;
             align-items: center;
+        }
+
+        .example-inline-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-datepicker {
