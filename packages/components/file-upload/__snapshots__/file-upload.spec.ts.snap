@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqMultipleFileUploadComponent with localeConfig input property should use default properties if they not provided with localeConfig 1`] = `
+{
+  "browseLink": "выберите",
+  "captionText": "TEST {{ browseLink }}",
+  "captionTextForCompactSize": "Перетащите файлы или {{ browseLink }}",
+  "captionTextWhenSelected": "Перетащите еще или {{ browseLink }}",
+  "gridHeaders": {
+    "file": "Файл",
+    "size": "Размер",
+  },
+  "title": "Загрузите файлы",
+}
+`;
+
+exports[`KbqSingleFileUploadComponent with localeConfig input property should use default properties if they not provided with localeConfig 1`] = `
+{
+  "browseLink": "выберите",
+  "captionText": "TEST {{ browseLink }}",
+}
+`;

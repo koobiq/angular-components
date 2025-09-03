@@ -8,6 +8,7 @@ import {
     ElementRef,
     EventEmitter,
     inject,
+    input,
     Input,
     Output,
     QueryList,
@@ -15,13 +16,13 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor } from '@angular/forms';
 import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { KbqListSelection } from '@koobiq/components/list';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, skip } from 'rxjs';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
     KbqFile,
@@ -100,6 +101,9 @@ export class KbqMultipleFileUploadComponent
         this.cvaOnChange(this._files);
         this.cdr.markForCheck();
     }
+
+    /** Optional configuration to override default labels with localized text.*/
+    readonly localeConfig = input<Partial<KbqInputFileMultipleLabel>>();
 
     /** Emits an event containing updated file list.
      * public output will be renamed to filesChange in next major release (#DS-3700) */
@@ -202,6 +206,10 @@ export class KbqMultipleFileUploadComponent
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
+        toObservable(this.localeConfig)
+            .pipe(skip(1), takeUntilDestroyed())
+            .subscribe(() => (this.localeService ? this.updateLocaleParams() : this.initDefaultParams()));
     }
 
     ngDoCheck() {
@@ -305,7 +313,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
-        this.config = this.configuration || this.localeService?.getParams('fileUpload').multiple;
+        this.config = this.buildConfig(this.configuration || this.localeService?.getParams('fileUpload').multiple);
 
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },
@@ -353,7 +361,7 @@ export class KbqMultipleFileUploadComponent
     }
 
     private initDefaultParams() {
-        this.config = KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+        this.config = this.buildConfig(KBQ_MULTIPLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
 
         this.columnDefs = [
             { header: this.config.gridHeaders.file, cssClass: 'file' },

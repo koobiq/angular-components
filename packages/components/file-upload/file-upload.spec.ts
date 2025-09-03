@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild, signal } from '@angular/core';
 import { ComponentFixture, TestBed, fakeAsync, flush } from '@angular/core/testing';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -13,9 +13,9 @@ import {
     dispatchMouseEvent
 } from '@koobiq/cdk/testing';
 import { createFile } from './file-drop.spec';
-import { KbqFileItem, KbqFileValidatorFn } from './file-upload';
+import { KbqFileItem, KbqFileValidatorFn, KbqInputFileLabel } from './file-upload';
 import { KbqFileUploadModule } from './file-upload.module';
-import { KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
+import { KbqInputFileMultipleLabel, KbqMultipleFileUploadComponent } from './multiple-file-upload.component';
 import { KbqSingleFileUploadComponent } from './single-file-upload.component';
 
 const FILE_NAME = 'test.file';
@@ -310,6 +310,17 @@ describe(KbqMultipleFileUploadComponent.name, () => {
             expect(component.control.touched).toBeTruthy();
         });
     });
+
+    describe('with localeConfig input property', () => {
+        it('should use default properties if they not provided with localeConfig', () => {
+            const updatedConfig: Partial<KbqInputFileMultipleLabel> = { captionText: 'TEST {{ browseLink }}' };
+
+            component.localeConfig.set(updatedConfig);
+            fixture.detectChanges();
+
+            expect(component.fileUpload.config).toMatchSnapshot();
+        });
+    });
 });
 
 describe(KbqSingleFileUploadComponent.name, () => {
@@ -594,6 +605,17 @@ describe(KbqSingleFileUploadComponent.name, () => {
             expect(component.onChange).toHaveBeenCalledTimes(1);
         }));
     });
+
+    describe('with localeConfig input property', () => {
+        it('should use default properties if they not provided with localeConfig', () => {
+            const updatedConfig: Partial<KbqInputFileLabel> = { captionText: 'TEST {{ browseLink }}' };
+
+            component.localeConfig.set(updatedConfig);
+            fixture.detectChanges();
+
+            expect(component.fileUpload.config).toMatchSnapshot();
+        });
+    });
 });
 
 @Component({
@@ -605,6 +627,7 @@ describe(KbqSingleFileUploadComponent.name, () => {
                 [accept]="accept"
                 [customValidation]="validation"
                 [disabled]="disabled"
+                [localeConfig]="localeConfig()"
                 (fileQueueChange)="onChange($event)"
             />
         </div>
@@ -616,6 +639,8 @@ class BasicSingleFileUpload {
     file: KbqFileItem | null;
     accept: string[] = [];
     validation: KbqFileValidatorFn[] = [];
+
+    localeConfig = signal<Partial<KbqInputFileLabel>>({});
 
     constructor(public elementRef: ElementRef) {}
 
@@ -660,6 +685,7 @@ class ControlValueAccessorSingleFileUpload {
                 #fileUpload
                 [disabled]="disabled"
                 [customValidation]="validation"
+                [localeConfig]="localeConfig()"
                 (fileQueueChanged)="onChange($event)"
             />
         </div>
@@ -670,6 +696,8 @@ class BasicMultipleFileUpload {
     disabled: boolean;
     files: KbqFileItem[];
     validation: KbqFileValidatorFn[] = [];
+
+    localeConfig = signal<Partial<KbqInputFileLabel>>({});
 
     constructor(
         public elementRef: ElementRef,

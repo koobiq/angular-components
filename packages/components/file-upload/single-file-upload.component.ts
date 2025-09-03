@@ -8,18 +8,19 @@ import {
     ElementRef,
     EventEmitter,
     inject,
+    input,
     Input,
     Output,
     QueryList,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormControlStatus } from '@angular/forms';
 import { ErrorStateMatcher, ruRULocaleData } from '@koobiq/components/core';
 import { KbqHint } from '@koobiq/components/form-field';
 import { ProgressSpinnerMode } from '@koobiq/components/progress-spinner';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, skip } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 import {
     KBQ_FILE_UPLOAD_CONFIGURATION,
@@ -88,6 +89,9 @@ export class KbqSingleFileUploadComponent
      */
     @Input({ transform: booleanAttribute }) showFileSize: boolean = true;
 
+    /** Optional configuration to override default labels with localized text.*/
+    readonly localeConfig = input<Partial<KbqInputFileLabel>>();
+
     /** Emits an event containing updated file.
      * public output will be renamed to fileChange in next major release (#DS-3700) */
     @Output('fileQueueChange') readonly fileChange: EventEmitter<KbqFileItem | null> =
@@ -151,6 +155,12 @@ export class KbqSingleFileUploadComponent
             // the `providers` to avoid running into a circular import.
             this.ngControl.valueAccessor = this;
         }
+
+        toObservable(this.localeConfig)
+            .pipe(skip(1), takeUntilDestroyed())
+            .subscribe(() => {
+                this.localeService ? this.updateLocaleParams() : this.initDefaultParams();
+            });
     }
 
     ngDoCheck() {
@@ -253,7 +263,9 @@ export class KbqSingleFileUploadComponent
     }
 
     private updateLocaleParams = () => {
-        this.config = this.configuration || this.localeService?.getParams('fileUpload').multiple;
+        this.config = this.buildConfig<KbqInputFileLabel>(
+            this.configuration || this.localeService?.getParams('fileUpload').multiple
+        );
 
         this.getCaptionText();
 
@@ -284,7 +296,7 @@ export class KbqSingleFileUploadComponent
     }
 
     private initDefaultParams() {
-        this.config = KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION;
+        this.config = this.buildConfig(KBQ_SINGLE_FILE_UPLOAD_DEFAULT_CONFIGURATION);
 
         this.getCaptionText();
     }
