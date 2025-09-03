@@ -24,7 +24,7 @@ import { KbqSelectModule } from '@koobiq/components/select';
         KbqFileUploadModule,
         ReactiveFormsModule
     ],
-    selector: 'inline-edit-overview-example',
+    selector: 'inline-edit-custom-handler-example',
     template: `
         <kbq-inline-edit
             showActions
