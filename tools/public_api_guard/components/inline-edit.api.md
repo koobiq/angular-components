@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { CdkConnectedOverlay } from '@angular/cdk/overlay';
 import { CdkOverlayOrigin } from '@angular/cdk/overlay';
 import * as i0 from '@angular/core';
 import { InputSignal } from '@angular/core';
@@ -33,43 +34,48 @@ export class KbqFocusMonitor implements AfterContentInit, OnDestroy {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqFocusMonitor, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqInlineEdit {
+    constructor();
     protected cancel(): void;
     protected readonly canceled: OutputEmitterRef<void>;
     protected readonly className: Signal<string>;
     protected readonly colors: typeof KbqComponentColors;
-    protected readonly customTooltipContent: Signal<KbqInlineEditValidationTooltip | undefined>;
     readonly disabled: InputSignalWithTransform<boolean, unknown>;
     protected readonly editModeTemplateRef: Signal<KbqInlineEditEditMode>;
     readonly editModeWidth: InputSignalWithTransform<number | undefined, unknown>;
     protected readonly formFieldRef: Signal<KbqFormField | undefined>;
+    readonly getValueHandler: InputSignal<(() => unknown) | undefined>;
     protected readonly isEditMode: Signal<boolean>;
     protected readonly label: Signal<KbqLabel | undefined>;
     protected readonly menu: Signal<KbqInlineEditMenu | undefined>;
-    protected readonly mode: WritableSignal<"view" | "edit" | "read">;
+    protected readonly mode: WritableSignal<"view" | "edit">;
+    protected readonly modeChange: OutputEmitterRef<"view" | "edit">;
     protected onAttach(): void;
     protected onClick(event: Event): void;
     protected onOverlayKeydown(event: KeyboardEvent): void;
+    protected readonly overlayDir: Signal<CdkConnectedOverlay | undefined>;
     protected readonly overlayOrigin: Signal<CdkOverlayOrigin | undefined>;
     protected readonly overlayWidth: WritableSignal<string | number>;
     protected readonly placements: typeof PopUpPlacements;
     protected save($event?: Event): void;
     protected readonly saved: OutputEmitterRef<void>;
+    readonly setValueHandler: InputSignal<((value: any) => void) | undefined>;
     readonly showActions: InputSignalWithTransform<boolean, unknown>;
     readonly showTooltipOnError: InputSignalWithTransform<boolean, unknown>;
     protected readonly tabIndex: Signal<0 | -1>;
     protected toggleMode(): void;
-    protected readonly tooltipTrigger: Signal<KbqTooltipTrigger | undefined>;
-    readonly validationTooltip: InputSignal<string | undefined>;
+    readonly tooltipPlacement: InputSignal<PopUpPlacements | undefined>;
+    protected readonly tooltipTrigger: Signal<KbqTooltipTrigger>;
+    readonly validationTooltip: InputSignal<string | TemplateRef<any> | undefined>;
     protected readonly viewModeTemplateRef: Signal<KbqInlineEditViewMode>;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; }, ["viewModeTemplateRef", "editModeTemplateRef", "menu", "label", "formFieldRef", "customTooltipContent"], ["kbq-label", "[kbqInlineEditMenu]"], true, [{ directive: typeof i1.KbqFocusMonitor; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqInlineEdit, "kbq-inline-edit", ["kbqInlineEdit"], { "showActions": { "alias": "showActions"; "required": false; "isSignal": true; }; "showTooltipOnError": { "alias": "showTooltipOnError"; "required": false; "isSignal": true; }; "validationTooltip": { "alias": "validationTooltip"; "required": false; "isSignal": true; }; "disabled": { "alias": "disabled"; "required": false; "isSignal": true; }; "editModeWidth": { "alias": "editModeWidth"; "required": false; "isSignal": true; }; "tooltipPlacement": { "alias": "tooltipPlacement"; "required": false; "isSignal": true; }; "getValueHandler": { "alias": "getValueHandler"; "required": false; "isSignal": true; }; "setValueHandler": { "alias": "setValueHandler"; "required": false; "isSignal": true; }; }, { "saved": "saved"; "canceled": "canceled"; "modeChange": "modeChange"; }, ["viewModeTemplateRef", "editModeTemplateRef", "menu", "label", "formFieldRef"], ["kbq-label", "[kbqInlineEditMenu]"], true, [{ directive: typeof i1.KbqFocusMonitor; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEdit, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqInlineEditEditMode {
     // (undocumented)
     readonly templateRef: TemplateRef<any>;
@@ -79,7 +85,7 @@ export class KbqInlineEditEditMode {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditEditMode, never>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqInlineEditMenu {
     // (undocumented)
     dropdownTrigger: KbqDropdownTrigger | null;
@@ -98,10 +104,10 @@ export class KbqInlineEditModule {
     // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditViewMode, typeof i1_2.KbqInlineEditEditMode, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditValidationTooltip, typeof i1_2.KbqInlineEditMenu], [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditViewMode, typeof i1_2.KbqInlineEditEditMode, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditValidationTooltip, typeof i1_2.KbqInlineEditMenu]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqInlineEditModule, never, [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditViewMode, typeof i1_2.KbqInlineEditEditMode, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu], [typeof i1_2.KbqInlineEdit, typeof i1_2.KbqInlineEditViewMode, typeof i1_2.KbqInlineEditEditMode, typeof i1_2.KbqInlineEditPlaceholder, typeof i1_2.KbqInlineEditMenu]>;
 }
 
-// @public (undocumented)
+// @public
 export class KbqInlineEditPlaceholder {
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditPlaceholder, "[kbqInlineEditPlaceholder]", ["kbqInlineEditPlaceholder"], {}, {}, never, never, true, never>;
@@ -109,17 +115,7 @@ export class KbqInlineEditPlaceholder {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditPlaceholder, never>;
 }
 
-// @public (undocumented)
-export class KbqInlineEditValidationTooltip {
-    // (undocumented)
-    readonly templateRef: TemplateRef<any>;
-    // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqInlineEditValidationTooltip, "[kbqInlineEditValidationTooltip]", ["kbqInlineEditValidationTooltip"], {}, {}, never, never, true, never>;
-    // (undocumented)
-    static ɵfac: i0.ɵɵFactoryDeclaration<KbqInlineEditValidationTooltip, never>;
-}
-
-// @public (undocumented)
+// @public
 export class KbqInlineEditViewMode {
     // (undocumented)
     readonly templateRef: TemplateRef<any>;
@@ -131,7 +127,7 @@ export class KbqInlineEditViewMode {
 
 // Warnings were encountered during analysis:
 //
-// dist/components/inline-edit/inline-edit.d.ts:108:730 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+// dist/components/inline-edit/inline-edit.d.ts:131:1003 - (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 
