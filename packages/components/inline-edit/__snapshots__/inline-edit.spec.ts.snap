@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KbqInlineEdit should add css class when label provided 1`] = `
+{
+  "kbq-inline-edit": true,
+  "kbq-inline-edit_view": true,
+  "kbq-inline-edit_with-label": true,
+  "ng-tns-c2716892036-0": true,
+}
+`;
+
+exports[`KbqInlineEdit should setup with default parameters 1`] = `
+{
+  "kbq-inline-edit": true,
+  "kbq-inline-edit_view": true,
+  "ng-tns-c2716892036-0": true,
+}
+`;
