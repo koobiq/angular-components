@@ -2470,6 +2470,7 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     protected placementPriority: string | string[] | null;
     // (undocumented)
     protected portal: ComponentPortal<T>;
+    protected preventClose: boolean;
     // (undocumented)
     resetOrigin(): void;
     // (undocumented)

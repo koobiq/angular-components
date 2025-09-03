@@ -294,13 +294,15 @@ export class FilterBarOverviewExample {
     }
 
     onSaveFilter({ filter, filterBar, status }: KbqSaveFilterEvent) {
-        if (status === KbqSaveFilterStatuses.NewFilter) {
-            this.saveNewFilter(filter, filterBar);
-        } else if (status === KbqSaveFilterStatuses.NewName) {
-            this.saveCurrentFilterWithNewName(filter, filterBar);
-        } else if (status === KbqSaveFilterStatuses.OnlyChanges) {
-            this.saveCurrentFilterWithChangesInPipes(filter, filterBar);
-        }
+        setTimeout(() => {
+            if (status === KbqSaveFilterStatuses.NewFilter) {
+                this.saveNewFilter(filter, filterBar);
+            } else if (status === KbqSaveFilterStatuses.NewName) {
+                this.saveCurrentFilterWithNewName(filter, filterBar);
+            } else if (status === KbqSaveFilterStatuses.OnlyChanges) {
+                this.saveCurrentFilterWithChangesInPipes(filter, filterBar);
+            }
+        }, 5000);
     }
 
     saveNewFilter(filter: KbqFilter, filterBar: KbqFilterBar) {

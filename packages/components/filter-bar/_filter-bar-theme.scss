@@ -51,8 +51,8 @@
             }
 
             &.kbq-disabled {
-                color: var(--kbq-states-foreground-disable);
-                background: var(--kbq-states-background-disable);
+                color: var(--kbq-states-foreground-disabled);
+                background: var(--kbq-states-background-disabled);
 
                 @include _icon(var(--kbq-states-icon-disabled), var(--kbq-states-icon-disabled));
             }

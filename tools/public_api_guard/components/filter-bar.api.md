@@ -291,6 +291,8 @@ export class KbqFilters implements OnInit {
     // (undocumented)
     filterSavingErrorText: string;
     get isEmpty(): boolean;
+    // (undocumented)
+    isSaving: boolean;
     get localeData(): any;
     // (undocumented)
     ngOnInit(): void;
