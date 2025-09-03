@@ -11,6 +11,6 @@
     );
 ```
 
-**Notice** that the `[formControl]` directive should be applied to `<kbq-tag-list>`, not to `<input />`.
+**Notice** that the `[formControl]` directive should be applied to `<kbq-tag-list>`, not to `kbqInput`.
 
 <!-- example(tag-input-with-form-control-validators) -->

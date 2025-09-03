@@ -55,6 +55,8 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
         <tag-with-icon-example />
         <hr />
         <tag-with-remove-button-example />
+        <hr />
+        <tag-input-with-form-control-validators-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
