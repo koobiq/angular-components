@@ -97,6 +97,8 @@ export class KbqFilters implements OnInit {
     showFilterSavingError: boolean = false;
     filterSavingErrorText: string;
 
+    isSaving: boolean = false;
+
     @Input() filters: KbqFilter[];
 
     /** Event that is generated whenever the user selects a filter. */
@@ -183,6 +185,10 @@ export class KbqFilters implements OnInit {
         filter.saved = true;
         filter.changed = false;
 
+        this.isSaving = true;
+        this.popover.preventClose = true;
+        this.filterName.disable();
+
         if (this.saveNewFilter) {
             this.onSaveAsNew.emit({ filter, filterBar: this.filterBar });
             this.onSave.emit({ filter, filterBar: this.filterBar, status: KbqSaveFilterStatuses.NewFilter });
@@ -214,7 +220,10 @@ export class KbqFilters implements OnInit {
 
         this.popover.show();
 
-        merge(...this.popover.defaultClosingActions()).subscribe(this.closePopover);
+        merge(...this.popover.defaultClosingActions())
+            .pipe(filter(() => !this.isSaving))
+            .subscribe(this.closePopover);
+
         this.popover.visibleChange.pipe(filter((state) => !state)).subscribe(this.closePopover);
 
         setTimeout(() => {
@@ -274,13 +283,23 @@ export class KbqFilters implements OnInit {
     /** Hide the popup and restore focus.
      * Use this method in the onSave, onSaveAsNew, or onChangeFilter events after the data has been successfully saved. */
     filterSavedSuccessfully() {
+        this.isSaving = false;
+        this.popover.preventClose = false;
+
         this.popover.hide();
         this.restoreFocus();
+
+        this.changeDetectorRef.markForCheck();
     }
 
     /** Shows an error. Use this method in the onSave, onSaveAsNew, or onChangeFilter events if saving data failed. */
     filterSavedUnsuccessfully(error?: KbqSaveFilterError) {
+        this.isSaving = false;
+        this.popover.preventClose = false;
+
         this.showError(error);
+
+        this.changeDetectorRef.markForCheck();
     }
 
     private getFilteredOptions(value): KbqFilter[] {

@@ -148,6 +148,9 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     /** Hide pop-up with timeout. Need if you want to show pop-up after leaving trigger */
     protected hideWithTimeout: boolean = false;
 
+    /** prevents closure by any event */
+    protected preventClose: boolean = false;
+
     abstract updateClassMap(newPlacement?: string): void;
 
     abstract updateData(): void;
@@ -263,6 +266,8 @@ export abstract class KbqPopUpTrigger<T> implements OnInit, OnDestroy {
     }
 
     hide = (delay: number = this.leaveDelay) => {
+        if (this.preventClose) return;
+
         if (
             (this.instance && this.triggerName !== 'mouseleave') ||
             (this.triggerName === 'mouseleave' && !this.instance?.hovered.getValue())

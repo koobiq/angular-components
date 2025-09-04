@@ -162,6 +162,9 @@ export function getKbqPopoverInvalidPositionError(position: string) {
 export class KbqPopoverTrigger extends KbqPopUpTrigger<KbqPopoverComponent> implements AfterContentInit, OnInit {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_POPOVER_SCROLL_STRATEGY);
 
+    /** prevents closure by any event */
+    @Input({ alias: 'kbqPopoverPreventClose', transform: booleanAttribute }) override preventClose: boolean = false;
+
     @Input('kbqPopoverVisible')
     get popoverVisible(): boolean {
         return this.visible;

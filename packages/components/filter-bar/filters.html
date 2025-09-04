@@ -13,7 +13,8 @@
     [kbqPopoverPlacementPriority]="[placements.BottomLeft, placements.TopLeft]"
     [kbqPopoverSize]="popoverSize"
     [kbqTrigger]="'manual'"
-    [ngClass]="{ 'kbq-active': opened }"
+    [class.kbq-active]="opened"
+    [disabled]="isSaving"
     (dropdownClosed)="searchControl.setValue('')"
     (dropdownOpened)="onDropdownOpen()"
 >
@@ -36,6 +37,7 @@
         class="kbq-button_action"
         kbqTooltip="{{ localeData.saveNewFilterTooltip }}"
         [color]="colors.Empty"
+        [disabled]="isSaving"
         (click)="openSaveAsNewFilterPopover()"
     >
         <i kbq-icon="kbq-floppy-disk_16"></i>
@@ -49,6 +51,7 @@
         class="kbq-button_action"
         [color]="colors.Empty"
         [kbqDropdownTriggerFor]="filterActions"
+        [disabled]="isSaving"
         [ngClass]="{ 'kbq-button_changed-saved-filter': filterBar.isSavedAndChanged }"
     >
         <i kbq-icon="kbq-ellipsis-vertical_16"></i>
@@ -176,10 +179,18 @@
 </ng-template>
 
 <ng-template #saveAsNewPopoverFooter>
-    <button kbq-button class="layout-margin-right-l" [color]="'contrast'" [kbqStyle]="'filled'" (click)="saveAsNew()">
+    <button
+        kbq-button
+        class="layout-margin-right-l"
+        [class.kbq-progress]="isSaving"
+        [disabled]="isSaving"
+        [color]="'contrast'"
+        [kbqStyle]="'filled'"
+        (click)="saveAsNew()"
+    >
         {{ localeData.saveButton }}
     </button>
-    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" (click)="closePopover()">
+    <button kbq-button [color]="'contrast-fade'" [kbqStyle]="'filled'" [disabled]="isSaving" (click)="closePopover()">
         {{ localeData.cancelButton }}
     </button>
 </ng-template>
