@@ -17,6 +17,7 @@ import { EventEmitter } from '@angular/core';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
 import { FormGroupDirective } from '@angular/forms';
 import * as i0 from '@angular/core';
+import * as i1 from '@koobiq/components/core';
 import * as i4 from '@angular/cdk/platform';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
 import { InjectionToken } from '@angular/core';
@@ -144,7 +145,7 @@ export class KbqTagEditChange {
 export class KbqTagEditInput {
     protected handleKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagEditInput, "[kbqTagEditInput]", ["kbqTagEditInput"], {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqTagEditInput, "[kbqTagEditInput]", ["kbqTagEditInput"], {}, {}, never, never, true, [{ directive: typeof i1.KbqFieldSizingContent; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagEditInput, never>;
 }
@@ -385,12 +386,12 @@ export class KbqTagsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqTagsModule, never>;
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<KbqTagsModule>;
-    // Warning: (ae-forgotten-export) The symbol "i1" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "i1_2" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i2" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "i3" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagsModule, [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i4.PlatformModule, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput], [typeof i1.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<KbqTagsModule, [typeof i1_2.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove], [typeof i4.PlatformModule, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput], [typeof i1_2.KbqTagList, typeof i2.KbqTag, typeof i3.KbqTagInput, typeof i2.KbqTagTrailingIcon, typeof i2.KbqTagAvatar, typeof i2.KbqTagRemove, typeof i2.KbqTagEditSubmit, typeof i2.KbqTagEditInput]>;
 }
 
 // @public

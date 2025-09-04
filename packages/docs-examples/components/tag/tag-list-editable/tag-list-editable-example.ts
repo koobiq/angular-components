@@ -37,6 +37,10 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
             margin: var(--kbq-size-xl);
         }
 
+        .kbq-tag-list {
+            width: 100%;
+        }
+
         small {
             color: var(--kbq-foreground-contrast-secondary);
         }

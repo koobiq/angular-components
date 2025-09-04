@@ -1919,6 +1919,15 @@ export class KbqErrorStateTracker implements CanUpdateErrorState {
 }
 
 // @public
+export class KbqFieldSizingContent {
+    constructor();
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqFieldSizingContent, "[kbqFieldSizingContent]", ["kbqFieldSizingContent"], {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqFieldSizingContent, never>;
+}
+
+// @public
 export const kbqFilesizeFormatterConfigurationProvider: (configuration: Partial<KbqSizeUnitsConfig>) => Provider;
 
 // @public
@@ -2022,6 +2031,9 @@ export class KbqHighlightPipe implements PipeTransform {
     // (undocumented)
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightPipe, "mcHighlight", false>;
 }
+
+// @public (undocumented)
+export const kbqInjectElement: <T = HTMLElement>() => T;
 
 // @public
 export class KbqLine {

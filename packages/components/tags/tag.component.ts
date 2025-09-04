@@ -32,6 +32,7 @@ import {
     KBQ_TITLE_TEXT_REF,
     KbqColorDirective,
     KbqComponentColors,
+    KbqFieldSizingContent,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -119,7 +120,8 @@ export class KbqTagEditSubmit {
         class: 'kbq-tag-edit-input',
 
         '(keydown)': 'handleKeydown($event)'
-    }
+    },
+    hostDirectives: [KbqFieldSizingContent]
 })
 export class KbqTagEditInput {
     private readonly tag = inject(KbqTag);
