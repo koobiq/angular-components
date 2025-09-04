@@ -44,6 +44,14 @@
     .kbq-tag-edit-input {
         color: inherit;
     }
+
+    &.kbq-selected {
+        @include kbq-tag-state($type, states-selected);
+
+        box-shadow:
+            inset 0 0 0.1px 1px var(--kbq-tag-#{$type}-states-selected-outline),
+            0 0 0.1px 1px var(--kbq-tag-#{$type}-states-selected-outline);
+    }
 }
 
 @mixin kbq-tag-theme() {

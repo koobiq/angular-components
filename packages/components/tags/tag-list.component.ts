@@ -1,6 +1,7 @@
 import { Directionality } from '@angular/cdk/bidi';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SelectionModel } from '@angular/cdk/collections';
+import { A, BACKSPACE, END, HOME } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
     booleanAttribute,
@@ -26,8 +27,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, FormGroupDirective, NgControl, NgForm, UntypedFormControl } from '@angular/forms';
 import { FocusKeyManager } from '@koobiq/cdk/a11y';
-import { BACKSPACE, END, HOME } from '@koobiq/cdk/keycodes';
-import { CanUpdateErrorState, ErrorStateMatcher } from '@koobiq/components/core';
+import { CanUpdateErrorState, ErrorStateMatcher, isNull } from '@koobiq/components/core';
 import { KbqCleaner, KbqFormFieldControl } from '@koobiq/components/form-field';
 import { merge, Observable, Subject, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
@@ -48,12 +48,27 @@ export class KbqTagListChange {
 @Component({
     selector: 'kbq-tag-list',
     exportAs: 'kbqTagList',
-    templateUrl: 'tag-list.partial.html',
+    template: `
+        <div class="kbq-tags-list__list-container">
+            {{ multiple ? 'M ' : '' }}
+            {{ selectable ? 'S ' : '' }}
+            <ng-content />
+        </div>
+
+        @if (canShowCleaner) {
+            <div class="kbq-tags-list__cleaner">
+                <ng-content select="kbq-cleaner" />
+            </div>
+        }
+    `,
     styleUrls: ['tag-list.scss', 'tag-tokens.scss'],
     host: {
         class: 'kbq-tag-list',
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-invalid]': 'errorState',
+        '[class.kbq-tag-list_multiple]': 'multiple',
+        '[class.kbq-tag-list_selectable]': 'selectable',
+        '[class.kbq-tag-list_editable]': 'editable',
 
         '[attr.tabindex]': 'disabled ? null : tabIndex',
         '[id]': 'uid',
@@ -128,6 +143,8 @@ export class KbqTagList
     set multiple(value: boolean) {
         this._multiple = coerceBooleanProperty(value);
     }
+
+    private _multiple: boolean = false;
 
     /**
      * A function to compare the option values with the selected values. The first argument
@@ -249,6 +266,8 @@ export class KbqTagList
         this.propagateSelectableToChildren();
     }
 
+    private _selectable: boolean = true;
+
     /** Whether the tag list is editable. */
     @Input({ transform: booleanAttribute }) editable = false;
 
@@ -315,12 +334,8 @@ export class KbqTagList
 
     private _disabled: boolean = false;
 
-    private _selectable: boolean = true;
-
     /** The tag input to add more tags */
     private tagInput: KbqTagTextControl;
-
-    private _multiple: boolean = false;
 
     /**
      * When a tag is destroyed, we store the index of the destroyed tag until the tags
@@ -535,20 +550,34 @@ export class KbqTagList
 
     /**
      * Pass events to the keyboard manager. Available here for tests.
+     *
+     * @docs-private
      */
-    keydown(event: KeyboardEvent) {
-        const target = event.target as HTMLElement;
+    keydown(event: KeyboardEvent): void {
+        const target = event.target as HTMLElement | null;
 
-        // If they are on an empty input and hit backspace, focus the last tag
-        if (event.keyCode === BACKSPACE && this.isInputEmpty(target)) {
-            this.keyManager.setLastItemActive();
-            event.preventDefault();
-        } else if (target && target.classList.contains('kbq-tag')) {
+        if (this.disabled || isNull(target)) return;
+
+        const hasMetaKey = event.metaKey || event.ctrlKey;
+        const allowSelectAll = hasMetaKey && this.multiple && this.selectable;
+
+        if (this.isInputEmpty(target)) {
+            if (event.keyCode === BACKSPACE) {
+                this.keyManager.setLastItemActive();
+                event.preventDefault();
+            } else if (event.keyCode === A && allowSelectAll) {
+                this.selectAll();
+                event.preventDefault();
+            }
+        } else if (this.isTagElement(target)) {
             if (event.keyCode === HOME) {
                 this.keyManager.setFirstItemActive();
                 event.preventDefault();
             } else if (event.keyCode === END) {
                 this.keyManager.setLastItemActive();
+                event.preventDefault();
+            } else if (event.keyCode === A && allowSelectAll) {
+                this.selectAll();
                 event.preventDefault();
             } else {
                 this.keyManager.onKeydown(event);
@@ -656,6 +685,16 @@ export class KbqTagList
         }
 
         return false;
+    }
+
+    private isTagElement(element: HTMLElement): boolean {
+        return element.classList.contains('kbq-tag');
+    }
+
+    private selectAll(): void {
+        this.tags.forEach((tag) => {
+            if (tag.selectable) tag.select();
+        });
     }
 
     /**
@@ -852,7 +891,7 @@ export class KbqTagList
         let currentElement = event.target as HTMLElement | null;
 
         while (currentElement && currentElement !== this.elementRef.nativeElement) {
-            if (currentElement.classList.contains('kbq-tag')) {
+            if (this.isTagElement(currentElement)) {
                 return true;
             }
 
