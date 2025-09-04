@@ -29,7 +29,10 @@ import { take } from 'rxjs/operators';
         @if (isLoading) {
             <p class="kbq-text-big">Immediately load to backend...</p>
         }
-    `
+    `,
+    host: {
+        class: 'layout-column layout-gap-l'
+    }
 })
 export class FileUploadIndeterminateLoadingOverviewExample {
     isLoading: boolean;
