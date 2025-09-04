@@ -12,6 +12,7 @@ import { KbqPopoverModule } from '@koobiq/components/popover';
 import { KbqToolTipModule } from '@koobiq/components/tooltip';
 import { map, timer } from 'rxjs';
 import { NavbarIcExamplesModule } from '../../docs-examples/components/navbar-ic';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -48,7 +49,8 @@ export class DevExamples {}
         KbqToolTipModule,
         KbqBadgeModule,
         AsyncPipe,
-        DevExamples
+        DevExamples,
+        DevThemeToggle
     ],
     selector: 'dev-app',
     templateUrl: './template.html',
