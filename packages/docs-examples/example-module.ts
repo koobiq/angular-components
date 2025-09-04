@@ -24,18 +24,6 @@ export interface LiveExample {
 }
 
 export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
-  "clamped-text-overview": {
-    "packagePath": "clamped-text/clamped-text-overview",
-    "title": "Clamped-text overview",
-    "componentName": "ClampedTextOverviewExample",
-    "files": [
-      "clamped-text-overview-example.ts"
-    ],
-    "selector": "clamped-text-overview-example",
-    "additionalComponents": [],
-    "primaryFile": "clamped-text-overview-example.ts",
-    "importPath": "clamped-text"
-  },
   "accordion-content": {
     "packagePath": "components/accordion/accordion-content",
     "title": "Accordion content",
@@ -742,6 +730,18 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "pseudo-checkbox-example.ts",
     "importPath": "components/checkbox"
+  },
+  "clamped-text-overview": {
+    "packagePath": "components/clamped-text/clamped-text-overview",
+    "title": "Clamped-text overview",
+    "componentName": "ClampedTextOverviewExample",
+    "files": [
+      "clamped-text-overview-example.ts"
+    ],
+    "selector": "clamped-text-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "clamped-text-overview-example.ts",
+    "importPath": "components/clamped-text"
   },
   "code-block-with-custom-locale-configuration": {
     "packagePath": "components/code-block/code-block-with-custom-locale-configuration",
@@ -2078,6 +2078,54 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "additionalComponents": [],
     "primaryFile": "icon-item-variant-example.ts",
     "importPath": "components/icon-item"
+  },
+  "inline-edit-disabled": {
+    "packagePath": "components/inline-edit/inline-edit-disabled",
+    "title": "Inline edit disabled",
+    "componentName": "InlineEditDisabledExample",
+    "files": [
+      "inline-edit-disabled-example.ts"
+    ],
+    "selector": "inline-edit-disabled-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-disabled-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-menu": {
+    "packagePath": "components/inline-edit/inline-edit-menu",
+    "title": "Inline edit menu",
+    "componentName": "InlineEditMenuExample",
+    "files": [
+      "inline-edit-menu-example.ts"
+    ],
+    "selector": "inline-edit-menu-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-menu-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-overview": {
+    "packagePath": "components/inline-edit/inline-edit-overview",
+    "title": "Inline edit overview",
+    "componentName": "InlineEditOverviewExample",
+    "files": [
+      "inline-edit-overview-example.ts"
+    ],
+    "selector": "inline-edit-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-overview-example.ts",
+    "importPath": "components/inline-edit"
+  },
+  "inline-edit-placeholder": {
+    "packagePath": "components/inline-edit/inline-edit-placeholder",
+    "title": "Inline edit placeholder",
+    "componentName": "InlineEditPlaceholderExample",
+    "files": [
+      "inline-edit-placeholder-example.ts"
+    ],
+    "selector": "inline-edit-placeholder-example",
+    "additionalComponents": [],
+    "primaryFile": "inline-edit-placeholder-example.ts",
+    "importPath": "components/inline-edit"
   },
   "input-change-password": {
     "packagePath": "components/input/input-change-password",
@@ -4841,8 +4889,6 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
 };
 export async function loadExample(id: string): Promise<any> {
   switch (id) {
-  case 'clamped-text-overview':
-return import('@koobiq/docs-examples/clamped-text');
   case 'accordion-content':
 return import('@koobiq/docs-examples/components/accordion');
   case 'accordion-header':
@@ -4953,6 +4999,8 @@ return import('@koobiq/docs-examples/components/checkbox');
 return import('@koobiq/docs-examples/components/checkbox');
   case 'pseudo-checkbox':
 return import('@koobiq/docs-examples/components/checkbox');
+  case 'clamped-text-overview':
+return import('@koobiq/docs-examples/components/clamped-text');
   case 'code-block-with-custom-locale-configuration':
 return import('@koobiq/docs-examples/components/code-block');
   case 'code-block-with-filled':
@@ -5171,6 +5219,14 @@ return import('@koobiq/docs-examples/components/icon-item');
 return import('@koobiq/docs-examples/components/icon-item');
   case 'icon-item-variant':
 return import('@koobiq/docs-examples/components/icon-item');
+  case 'inline-edit-disabled':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-menu':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-overview':
+return import('@koobiq/docs-examples/components/inline-edit');
+  case 'inline-edit-placeholder':
+return import('@koobiq/docs-examples/components/inline-edit');
   case 'input-change-password':
 return import('@koobiq/docs-examples/components/input');
   case 'input-number-overview':

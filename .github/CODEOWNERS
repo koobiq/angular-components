@@ -24,6 +24,7 @@
 /packages/components/empty-state/*                          @NikGurev
 /packages/components/file-upload/*                          @NikGurev
 /packages/components/icon/*                                 @NikGurev
+/packages/components/inline-edit/*                          @NikGurev
 /packages/components/input/*                                @NikGurev
 /packages/components/markdown/*                             @NikGurev
 /packages/components/progress-bar/*                         @NikGurev
