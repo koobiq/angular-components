@@ -164,13 +164,17 @@ export class KbqTagEditInput {
                 @if (editing()) {
                     <ng-content select="[kbqTagEditInput]" />
                 } @else {
+                    {{ selected ? 'S ' : '' }}
+                    {{ hasFocus ? 'F ' : '' }}
                     <ng-content />
                 }
             </span>
             @if (editing()) {
                 <ng-content select="[kbqTagEditSubmit]" />
             } @else {
-                <ng-content select="[kbqTagRemove]" />
+                @if (removable) {
+                    <ng-content select="[kbqTagRemove]" />
+                }
             }
         </div>
     `,
@@ -189,6 +193,8 @@ export class KbqTagEditInput {
         '[class.kbq-disabled]': 'disabled',
         '[class.kbq-tag_editable]': 'editable',
         '[class.kbq-tag_editing]': 'editing()',
+        '[class.kbq-tag_removable]': 'removable',
+        '[class.kbq-tag_selectable]': 'selectable',
 
         '(dblclick)': 'handleDblClick($event)',
         '(mousedown)': 'handleMousedown($event)',
@@ -490,12 +496,17 @@ export class KbqTag
     }
 
     /** @docs-private */
-    handleMousedown(event: Event) {
-        if (this.disabled || !this.selectable) {
-            event.preventDefault();
-        } else {
-            event.stopPropagation();
-        }
+    handleMousedown(event: MouseEvent): void {
+        console.log('handleMousedown', event);
+        const unclickable = this.disabled || !this.selectable || this.editing();
+
+        if (unclickable) return event.preventDefault();
+
+        const hasMetaKey = event.metaKey || event.ctrlKey || event.shiftKey;
+
+        if (hasMetaKey && this.selectable) this.toggleSelected(true);
+
+        event.stopPropagation();
     }
 
     /** @docs-private */

@@ -32,6 +32,14 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
     imports: [TagExamplesModule],
     selector: 'dev-examples',
     template: `
+        <tag-selectable-example />
+        <hr />
+        <tag-list-selectable-example />
+        <hr />
+        <tag-removable-example />
+        <hr />
+        <tag-list-removable-example />
+        <hr />
         <tag-editable-example />
         <hr />
         <tag-editable-with-validation-example />
@@ -53,10 +61,8 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
         <tag-disabled-example />
         <hr />
         <tag-with-icon-example />
-        <hr />
-        <tag-with-remove-button-example />
-        <hr />
         <tag-input-with-form-control-validators-example />
+        <hr />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

@@ -57,6 +57,24 @@ export class TestEditableTag {
     readonly editChange = jest.fn();
 }
 
+@Component({
+    standalone: true,
+    selector: 'test-selectable-tag',
+    imports: [KbqTagsModule, FormsModule],
+    template: `
+        <kbq-tag [selectable]="selectable()" (selectionChange)="selectionChange($event)">
+            {{ tag() }}
+        </kbq-tag>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class TestSelectableTag {
+    readonly tag = model('Selectable tag');
+    readonly selectable = model(true);
+
+    readonly selectionChange = jest.fn();
+}
+
 describe(KbqTag.name, () => {
     let fixture: ComponentFixture<any>;
     let tagDebugElement: DebugElement;
@@ -551,6 +569,56 @@ describe(KbqTag.name, () => {
         input.dispatchEvent(createKeyboardEvent('keydown', SPACE));
 
         expect(tag.classList.contains('kbq-tag_editing')).toBeTruthy();
+    });
+
+    it('should select tag on Ctrl + click', () => {
+        const { debugElement } = createComponent(TestSelectableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
+
+        expect(tag.classList.contains('kbq-selected')).toBeTruthy();
+    });
+
+    it('should select tag on Cmd + click', () => {
+        const { debugElement } = createComponent(TestSelectableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('mousedown', { metaKey: true }));
+
+        expect(tag.classList.contains('kbq-selected')).toBeTruthy();
+    });
+
+    it('should select tag on Shift + click', () => {
+        const { debugElement } = createComponent(TestSelectableTag);
+        const tag = getTagElement(debugElement);
+
+        tag.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true }));
+
+        expect(tag.classList.contains('kbq-selected')).toBeTruthy();
+    });
+
+    it('should NOT select tag on Ctrl + click', () => {
+        const fixture = createComponent(TestSelectableTag);
+        const { debugElement, componentInstance } = fixture;
+        const tag = getTagElement(debugElement);
+
+        componentInstance.selectable.set(false);
+        fixture.detectChanges();
+
+        tag.dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
+
+        expect(tag.classList.contains('kbq-selected')).toBeFalsy();
+    });
+
+    it('should emit KbqTagSelectionChange event on Ctrl + click', () => {
+        const { debugElement, componentInstance } = createComponent(TestSelectableTag);
+
+        getTagElement(debugElement).dispatchEvent(new MouseEvent('mousedown', { ctrlKey: true }));
+
+        expect(componentInstance.selectionChange).toHaveBeenCalledWith(
+            expect.objectContaining({ selected: true, isUserInput: true })
+        );
     });
 });
 

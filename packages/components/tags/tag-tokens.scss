@@ -21,6 +21,11 @@
     --kbq-tag-theme-fade-on-states-focus-icon: var(--kbq-icon-theme);
     --kbq-tag-theme-fade-on-states-focus-close-button: var(--kbq-icon-theme);
     --kbq-tag-theme-fade-on-states-focus-outline: var(--kbq-states-line-focus-theme);
+    --kbq-tag-theme-fade-on-states-selected-background: var(--kbq-background-theme-fade);
+    --kbq-tag-theme-fade-on-states-selected-text: var(--kbq-foreground-theme);
+    --kbq-tag-theme-fade-on-states-selected-icon: var(--kbq-icon-theme);
+    --kbq-tag-theme-fade-on-states-selected-close-button: var(--kbq-icon-theme);
+    --kbq-tag-theme-fade-on-states-selected-outline: var(--kbq-states-line-focus-theme);
     --kbq-tag-theme-fade-on-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-tag-theme-fade-on-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-tag-theme-fade-on-states-disabled-icon: var(--kbq-states-icon-disabled);
@@ -38,6 +43,11 @@
     --kbq-tag-contrast-fade-on-states-focus-icon: var(--kbq-icon-contrast-fade);
     --kbq-tag-contrast-fade-on-states-focus-close-button: var(--kbq-icon-contrast-fade);
     --kbq-tag-contrast-fade-on-states-focus-outline: var(--kbq-states-line-focus-theme);
+    --kbq-tag-contrast-fade-on-states-selected-background: var(--kbq-background-contrast-fade);
+    --kbq-tag-contrast-fade-on-states-selected-text: var(--kbq-foreground-contrast);
+    --kbq-tag-contrast-fade-on-states-selected-icon: var(--kbq-icon-contrast-fade);
+    --kbq-tag-contrast-fade-on-states-selected-close-button: var(--kbq-icon-contrast-fade);
+    --kbq-tag-contrast-fade-on-states-selected-outline: var(--kbq-states-line-focus-theme);
     --kbq-tag-contrast-fade-on-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-tag-contrast-fade-on-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-tag-contrast-fade-on-states-disabled-icon: var(--kbq-states-icon-disabled);
@@ -55,6 +65,11 @@
     --kbq-tag-error-fade-on-states-focus-icon: var(--kbq-icon-error);
     --kbq-tag-error-fade-on-states-focus-close-button: var(--kbq-icon-error);
     --kbq-tag-error-fade-on-states-focus-outline: var(--kbq-states-line-focus-error);
+    --kbq-tag-error-fade-on-states-selected-background: var(--kbq-background-error-fade);
+    --kbq-tag-error-fade-on-states-selected-text: var(--kbq-foreground-error);
+    --kbq-tag-error-fade-on-states-selected-icon: var(--kbq-icon-error);
+    --kbq-tag-error-fade-on-states-selected-close-button: var(--kbq-icon-error);
+    --kbq-tag-error-fade-on-states-selected-outline: var(--kbq-states-line-focus-theme);
     --kbq-tag-error-fade-on-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-tag-error-fade-on-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-tag-error-fade-on-states-disabled-icon: var(--kbq-states-icon-disabled);
@@ -72,6 +87,11 @@
     --kbq-tag-warning-fade-states-focus-icon: var(--kbq-icon-warning);
     --kbq-tag-warning-fade-states-focus-close-button: var(--kbq-icon-warning);
     --kbq-tag-warning-fade-states-focus-outline: var(--kbq-states-line-focus-theme);
+    --kbq-tag-warning-fade-states-selected-background: var(--kbq-background-warning-fade);
+    --kbq-tag-warning-fade-states-selected-text: var(--kbq-foreground-warning);
+    --kbq-tag-warning-fade-states-selected-icon: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-states-selected-close-button: var(--kbq-icon-warning);
+    --kbq-tag-warning-fade-states-selected-outline: var(--kbq-states-line-focus-theme);
     --kbq-tag-warning-fade-states-disabled-background: var(--kbq-states-background-disabled);
     --kbq-tag-warning-fade-states-disabled-text: var(--kbq-states-foreground-disabled);
     --kbq-tag-warning-fade-states-disabled-icon: var(--kbq-states-icon-disabled);
