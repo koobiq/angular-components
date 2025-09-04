@@ -3,6 +3,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { COMMA, ENTER } from '@koobiq/cdk/keycodes';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
@@ -16,7 +17,8 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
         KbqFormFieldModule,
         KbqTagsModule,
         KbqIconModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        KbqInputModule
     ],
     template: `
         <kbq-form-field>
@@ -29,6 +31,7 @@ import { KbqTagInputEvent, KbqTagsModule } from '@koobiq/components/tags';
                 }
 
                 <input
+                    kbqInput
                     placeholder="New tag..."
                     [formControl]="control"
                     [kbqTagInputFor]="tagList"

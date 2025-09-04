@@ -7,22 +7,12 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import {
-    AbstractControl,
-    FormControl,
-    FormsModule,
-    ReactiveFormsModule,
-    UntypedFormControl,
-    ValidationErrors,
-    ValidatorFn,
-    Validators
-} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
 import { COMMA, ENTER, SPACE, TAB } from '@koobiq/cdk/keycodes';
 import { KbqAutocomplete, KbqAutocompleteModule, KbqAutocompleteSelectedEvent } from '@koobiq/components/autocomplete';
-import { KbqComponentColors, kbqDisableLegacyValidationDirectiveProvider } from '@koobiq/components/core';
+import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
-import { KbqInputModule } from '@koobiq/components/input';
 import {
     KBQ_TAGS_DEFAULT_OPTIONS,
     KbqTag,
@@ -37,21 +27,19 @@ import { merge, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TagExamplesModule } from '../../docs-examples/components/tag';
 
-const customMaxLengthValidator = (max: number): ValidatorFn => {
-    return ({ value }: AbstractControl): ValidationErrors | null => {
-        if (!value) {
-            return null;
-        }
-
-        return value.length <= max ? null : { customMaxLengthValidator: true };
-    };
-};
-
 @Component({
     standalone: true,
     imports: [TagExamplesModule],
     selector: 'dev-examples',
     template: `
+        <tag-editable-example />
+        <hr />
+        <tag-editable-with-validation-example />
+        <hr />
+        <tag-list-editable-example />
+        <hr />
+        <tag-input-editable-example />
+        <hr />
         <tag-autocomplete-option-operations-example />
         <hr />
         <tag-input-example />
@@ -67,82 +55,12 @@ const customMaxLengthValidator = (max: number): ValidatorFn => {
         <tag-with-icon-example />
         <hr />
         <tag-with-remove-button-example />
+        <hr />
+        <tag-input-with-form-control-validators-example />
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-class DevExamples {}
-
-@Component({
-    standalone: true,
-    imports: [
-        KbqFormFieldModule,
-        KbqInputModule,
-        KbqTagsModule,
-        ReactiveFormsModule,
-        KbqIconModule
-    ],
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
-    selector: 'dev-tag-input-validation',
-    template: `
-        <kbq-form-field>
-            <kbq-tag-list #inputTagList [formControl]="formControl">
-                @for (tag of formControl.value; track tag) {
-                    <kbq-tag [value]="tag" (removed)="removeTag(tag)">
-                        {{ tag }}
-                        <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
-                    </kbq-tag>
-                }
-
-                <input
-                    kbqInput
-                    placeholder="New keyword..."
-                    [kbqTagInputFor]="inputTagList"
-                    (kbqTagInputTokenEnd)="createTag($event)"
-                />
-            </kbq-tag-list>
-
-            @if (formControl.invalid) {
-                <kbq-error>
-                    @if (formControl.hasError('required')) {
-                        Field is required
-                    }
-
-                    @if (formControl.hasError('customMaxLengthValidator')) {
-                        Max keywords count is 3
-                    }
-                </kbq-error>
-            }
-        </kbq-form-field>
-    `,
-    changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class DevTagInputValidation {
-    readonly formControl = new FormControl(
-        ['Koobiq', 'Angular', 'Design'],
-        [Validators.required, customMaxLengthValidator(3)]
-    );
-
-    removeTag(tag: string): void {
-        const tags = this.formControl.value || [];
-        const index = tags.indexOf(tag);
-
-        if (index >= 0) {
-            tags.splice(index, 1);
-            this.formControl.setValue(tags);
-        }
-    }
-
-    createTag({ value, input }: KbqTagInputEvent): void {
-        if (value) {
-            const tags = this.formControl.value || [];
-
-            tags.push(value);
-            this.formControl.setValue(tags);
-        }
-
-        input.value = '';
-    }
-}
+export class DevExamples {}
 
 @Component({
     standalone: true,

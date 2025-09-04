@@ -1,6 +1,10 @@
+import { FocusMonitor } from '@angular/cdk/a11y';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { BACKSPACE, DELETE, ENTER, ESCAPE, F2, SPACE } from '@angular/cdk/keycodes';
 import {
     AfterContentInit,
+    AfterViewInit,
+    booleanAttribute,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -10,24 +14,44 @@ import {
     ElementRef,
     EventEmitter,
     forwardRef,
+    inject,
     Inject,
     Input,
     NgZone,
     OnDestroy,
     Output,
     QueryList,
+    signal,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { IFocusableOption } from '@koobiq/cdk/a11y';
-import { BACKSPACE, DELETE, SPACE } from '@koobiq/cdk/keycodes';
-import { KBQ_TITLE_TEXT_REF, KbqColorDirective, KbqComponentColors, KbqTitleTextRef } from '@koobiq/components/core';
+import {
+    isNull,
+    isUndefined,
+    KBQ_TITLE_TEXT_REF,
+    KbqColorDirective,
+    KbqComponentColors,
+    KbqTitleTextRef
+} from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { KbqTagList } from './tag-list.component';
 
 export interface KbqTagEvent {
     tag: KbqTag;
+}
+
+/**
+ * Event object emitted by KbqTag when the tag is edited.
+ */
+export class KbqTagEditChange {
+    constructor(
+        public readonly tag: KbqTag,
+        public readonly type: 'start' | 'submit' | 'cancel',
+        public readonly reason: string
+    ) {}
 }
 
 /** Event object emitted by KbqTag when selected or deselected. */
@@ -40,6 +64,10 @@ export class KbqTagSelectionChange {
 }
 
 const TAG_ATTRIBUTE_NAMES = ['kbq-basic-tag'];
+
+const getTagEditInputMissingError = (): Error => {
+    return Error('Editable kbq-tag must contain a KbqTagEditInput.');
+};
 
 /**
  * Dummy directive to add CSS class to tag avatar.
@@ -61,10 +89,88 @@ export class KbqTagAvatar {}
 })
 export class KbqTagTrailingIcon {}
 
+/**
+ * Directive to add submit behavior for the editable tag.
+ */
+@Directive({
+    standalone: true,
+    selector: '[kbqTagEditSubmit]',
+    exportAs: 'kbqTagEditSubmit',
+    host: {
+        class: 'kbq-tag-edit-submit',
+        '[attr.tabindex]': '-1',
+
+        '(click)': 'tag.submitEditing("click")'
+    }
+})
+export class KbqTagEditSubmit {
+    /** @docs-private */
+    protected readonly tag = inject(KbqTag);
+}
+
+/**
+ * Directive to add input behavior for the editable tag.
+ */
+@Directive({
+    standalone: true,
+    selector: '[kbqTagEditInput]',
+    exportAs: 'kbqTagEditInput',
+    host: {
+        class: 'kbq-tag-edit-input',
+
+        '(keydown)': 'handleKeydown($event)'
+    }
+})
+export class KbqTagEditInput {
+    private readonly tag = inject(KbqTag);
+
+    /** @docs-private */
+    protected handleKeydown(event: KeyboardEvent): void {
+        switch (event.keyCode) {
+            case ESCAPE: {
+                event.stopPropagation();
+                this.tag.cancelEditing('escape');
+                break;
+            }
+            case ENTER: {
+                event.stopPropagation();
+                this.tag.submitEditing('enter');
+                break;
+            }
+
+            // prevent KbqTag from receiving these keydown events
+            case BACKSPACE:
+            case DELETE:
+            case SPACE: {
+                event.stopPropagation();
+                break;
+            }
+
+            default:
+        }
+    }
+}
+
 @Component({
     selector: 'kbq-tag, [kbq-tag], kbq-basic-tag, [kbq-basic-tag]',
     exportAs: 'kbqTag',
-    templateUrl: 'tag.partial.html',
+    template: `
+        <div class="kbq-tag__wrapper">
+            <ng-content select="[kbq-icon]:not([kbqTagRemove]):not([kbqTagEditSubmit])" />
+            <span #kbqTitleText class="kbq-tag__text">
+                @if (editing()) {
+                    <ng-content select="[kbqTagEditInput]" />
+                } @else {
+                    <ng-content />
+                }
+            </span>
+            @if (editing()) {
+                <ng-content select="[kbqTagEditSubmit]" />
+            } @else {
+                <ng-content select="[kbqTagRemove]" />
+            }
+        </div>
+    `,
     styleUrls: ['./tag.scss'],
     host: {
         class: 'kbq-tag',
@@ -78,11 +184,12 @@ export class KbqTagTrailingIcon {}
         '[class.kbq-tag-with-icon]': 'contentChildren',
         '[class.kbq-tag-with-trailing-icon]': 'trailingIcon || removeIcon',
         '[class.kbq-disabled]': 'disabled',
+        '[class.kbq-tag_editable]': 'editable',
+        '[class.kbq-tag_editing]': 'editing()',
 
+        '(dblclick)': 'handleDblClick($event)',
         '(mousedown)': 'handleMousedown($event)',
-        '(keydown)': 'handleKeydown($event)',
-        '(focus)': 'focus()',
-        '(blur)': 'blur()'
+        '(keydown)': 'handleKeydown($event)'
     },
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
@@ -90,8 +197,11 @@ export class KbqTagTrailingIcon {}
 })
 export class KbqTag
     extends KbqColorDirective
-    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit
+    implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit
 {
+    private readonly focusMonitor = inject(FocusMonitor);
+    private readonly tagList = inject(KbqTagList, { optional: true });
+
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
 
@@ -105,6 +215,43 @@ export class KbqTag
 
     /** Whether the tag list is selectable */
     tagListSelectable: boolean = true;
+
+    /**
+     * Whether the tag list is editable.
+     *
+     * @docs-private
+     */
+    private get tagListEditable(): boolean {
+        return !!this.tagList?.editable;
+    }
+
+    /** Whether the tag is editable. */
+    @Input({ transform: booleanAttribute })
+    get editable(): boolean {
+        return isUndefined(this._editable) ? this.tagListEditable : this._editable;
+    }
+
+    set editable(value: boolean) {
+        this._editable = value;
+    }
+
+    private _editable: boolean | undefined;
+
+    /** Whether the tag edits can't be submitted. */
+    @Input({ transform: booleanAttribute }) preventEditSubmit: boolean = false;
+
+    @ContentChild(KbqTagEditInput, { read: ElementRef })
+    private readonly editInputElementRef: ElementRef<HTMLInputElement>;
+
+    /**
+     * Emits event when the tag is edited.
+     */
+    @Output() readonly editChange = new EventEmitter<KbqTagEditChange>();
+
+    /**
+     * @docs-private
+     */
+    protected readonly editing = signal(false);
 
     @ViewChild('kbqTitleText') textElement: ElementRef;
 
@@ -231,6 +378,17 @@ export class KbqTag
         this.addClassModificatorForIcons();
     }
 
+    ngAfterViewInit(): void {
+        this.focusMonitor.monitor(this.elementRef, true).subscribe((focusOrigin) => {
+            isNull(focusOrigin) ? this.blur() : this.focus();
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.focusMonitor.stopMonitoring(this.elementRef);
+        this.destroyed.emit({ tag: this });
+    }
+
     addClassModificatorForIcons() {
         const icons = this.contentChildren.map((item) => item.elementRef.nativeElement);
 
@@ -269,10 +427,6 @@ export class KbqTag
         (this.elementRef.nativeElement as HTMLElement).classList.add('kbq-standard-tag');
     }
 
-    ngOnDestroy() {
-        this.destroyed.emit({ tag: this });
-    }
-
     select(): void {
         if (!this._selected) {
             this._selected = true;
@@ -303,12 +457,10 @@ export class KbqTag
 
     /** Allows for programmatic focusing of the tag. */
     focus(): void {
-        if (!this.selectable) {
-            return;
-        }
+        if (!this.selectable && !this.editable) return;
 
         if (!this.hasFocus) {
-            this.elementRef.nativeElement.focus();
+            if (!this.editing()) this.elementRef.nativeElement.focus();
 
             this.onFocus.next({ tag: this });
 
@@ -331,6 +483,7 @@ export class KbqTag
         }
     }
 
+    /** @docs-private */
     handleMousedown(event: Event) {
         if (this.disabled || !this.selectable) {
             event.preventDefault();
@@ -339,6 +492,7 @@ export class KbqTag
         }
     }
 
+    /** @docs-private */
     handleKeydown(event: KeyboardEvent): void {
         if (this.disabled) {
             return;
@@ -361,11 +515,18 @@ export class KbqTag
                 // Always prevent space from scrolling the page since the list has focus
                 event.preventDefault();
                 break;
+            case F2:
+            case ENTER:
+                this.startEditing(event.key);
+                break;
             default:
         }
     }
 
+    /** @docs-private */
     blur(): void {
+        this.cancelEditing('focusout');
+
         // When animations are enabled, Angular may end up removing the tag from the DOM a little
         // earlier than usual, causing it to be blurred and throwing off the logic in the tag list
         // that moves focus not the next item. To work around the issue, we defer marking the tag
@@ -379,6 +540,46 @@ export class KbqTag
                     this.onBlur.next({ tag: this });
                 });
             });
+    }
+
+    /** @docs-private */
+    protected handleDblClick(event: MouseEvent): void {
+        if (this.disabled || !this.editable) return;
+
+        event.stopPropagation();
+        this.startEditing('dblclick');
+    }
+
+    private startEditing(reason: string): void {
+        if (!this.editable || this.editing()) return;
+
+        this.editing.set(true);
+        this.editChange.emit({ tag: this, type: 'start', reason });
+
+        setTimeout(() => {
+            const input = this.editInputElementRef?.nativeElement;
+
+            if (!input) throw getTagEditInputMissingError();
+
+            input.focus();
+            input.select();
+        });
+    }
+
+    /** @docs-private */
+    cancelEditing(reason: string): void {
+        if (!this.editing()) return;
+
+        this.editing.set(false);
+        this.editChange.emit({ tag: this, type: 'cancel', reason });
+    }
+
+    /** @docs-private */
+    submitEditing(reason: string): void {
+        if (!this.editing() || this.preventEditSubmit) return;
+
+        this.editing.set(false);
+        this.editChange.emit({ tag: this, type: 'submit', reason });
     }
 
     private dispatchSelectionChange(isUserInput = false) {
