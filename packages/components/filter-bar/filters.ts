@@ -187,6 +187,7 @@ export class KbqFilters implements OnInit {
 
         this.isSaving = true;
         this.popover.preventClose = true;
+        this.filterName.disable();
 
         if (this.saveNewFilter) {
             this.onSaveAsNew.emit({ filter, filterBar: this.filterBar });
