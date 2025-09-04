@@ -289,6 +289,7 @@ export class KbqInlineEdit {
         const { target, key } = event;
 
         switch (key) {
+            // @TODO Handle Tab keydown (#DS-4160)
             case 'Escape': {
                 this.cancel();
                 break;
