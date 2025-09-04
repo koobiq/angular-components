@@ -42,7 +42,7 @@ import { NEVER, fromEvent, merge } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { kbqPopoverAnimations } from './popover-animations';
 
-const defaultOffsetYWithArrow = 8;
+export const defaultOffsetYWithArrow = 8;
 
 @Component({
     selector: 'kbq-popover-component',

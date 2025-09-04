@@ -202,6 +202,7 @@
         "dev:actions-panel": "ng serve dev-actions-panel --port 3003",
         "dev:ag-grid": "ng serve dev-ag-grid --port 3003",
         "dev:alert": "ng serve dev-alert --port 3003",
+        "dev:app-switcher": "ng serve dev-app-switcher --port 3003",
         "dev:autocomplete": "ng serve dev-autocomplete --port 3003",
         "dev:badge": "ng serve dev-badge --port 3003",
         "dev:breadcrumbs": "ng serve dev-breadcrumbs --port 3003",

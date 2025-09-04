@@ -1,0 +1,8 @@
+@use './app-switcher-theme' as *;
+
+.kbq-app-switcher {
+
+}
+
+@include kbq-app-switcher-theme();
+@include kbq-app-switcher-typography();

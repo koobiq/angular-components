@@ -1,0 +1,13 @@
+@use '../core/styles/common/tokens' as *;
+
+@mixin kbq-app-switcher-theme() {
+    .kbq-app-switcher {
+        
+    }
+}
+
+@mixin kbq-app-switcher-typography() {
+    .kbq-app-switcher {
+        @include kbq-typography-level-to-styles-css-variables(typography, text-normal);
+    }
+}
