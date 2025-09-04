@@ -24,11 +24,11 @@ const MAX_FILE_SIZE = 5 * 2 ** 20;
                     <i kbq-icon="kbq-exclamation-triangle_16"></i>
                 }
 
-                <kbq-hint>The file size should not exceed 5 MB</kbq-hint>
-
                 @if (formGroup.get('fileControl')?.hasError('maxFileSize')) {
                     <kbq-hint color="error">The file size must not exceed the limit</kbq-hint>
                 }
+
+                <kbq-hint>The file size should not exceed 5 MB</kbq-hint>
             </kbq-file-upload>
         </form>
     `,

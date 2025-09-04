@@ -28,10 +28,10 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 <ng-template #kbqFileIcon>
                     <i kbq-icon="kbq-file-o_16"></i>
                 </ng-template>
+
                 @if (kbqFileUpload.invalid && formMultiple.controls.fileUpload.hasError('required')) {
                     <kbq-hint color="error">File required</kbq-hint>
                 }
-                <kbq-hint>Files with .txt extension are allowed</kbq-hint>
 
                 @for (control of fileList.controls; track $index) {
                     <kbq-hint color="error">
@@ -40,6 +40,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                         }
                     </kbq-hint>
                 }
+
+                <kbq-hint>Files with TXT extension are allowed</kbq-hint>
             </kbq-file-upload>
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>

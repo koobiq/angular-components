@@ -23,8 +23,6 @@ import { KbqIconModule } from '@koobiq/components/icon';
             >
                 <i kbq-icon="kbq-file-o_16"></i>
 
-                <kbq-hint>Files with .txt extension are allowed</kbq-hint>
-
                 @if (kbqFileUpload.invalid && form.controls.fileUpload.hasError('required')) {
                     <kbq-hint color="error">File required</kbq-hint>
                 }
@@ -32,6 +30,8 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 @if (form.controls.fileUpload.hasError('fileExtensionMismatch')) {
                     <kbq-hint color="error">Provide valid extension</kbq-hint>
                 }
+
+                <kbq-hint>Files with TXT extension are allowed</kbq-hint>
             </kbq-file-upload>
             <button class="layout-margin-top-m" kbq-button type="submit">Submit</button>
         </form>
