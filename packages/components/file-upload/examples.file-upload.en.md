@@ -8,6 +8,8 @@ Configuring text via the input property `[localeConfig]` allows you to change on
 
 <!-- example(file-upload-custom-text-via-input) -->
 
+### Indeterminate progress indicator
+
 An example of file upload with indeterminate progress:
 
 <!-- example(file-upload-indeterminate-loading-overview) -->

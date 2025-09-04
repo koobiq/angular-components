@@ -8,6 +8,8 @@
 
 <!-- example(file-upload-custom-text-via-input) -->
 
+### Неопределенный индикатор прогресса
+
 Пример загрузки файлов с неопределенным по завершенности прогрессом:
 
 <!-- example(file-upload-indeterminate-loading-overview) -->
