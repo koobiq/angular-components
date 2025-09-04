@@ -9,11 +9,14 @@ import { TagInputEditableExample } from './tag-input-editable/tag-input-editable
 import { TagInputWithFormControlValidatorsExample } from './tag-input-with-form-control-validators/tag-input-with-form-control-validators-example';
 import { TagInputExample } from './tag-input/tag-input-example';
 import { TagListEditableExample } from './tag-list-editable/tag-list-editable-example';
+import { TagListRemovableExample } from './tag-list-removable/tag-list-removable-example';
+import { TagListSelectableExample } from './tag-list-selectable/tag-list-selectable-example';
 import { TagListExample } from './tag-list/tag-list-example';
 import { TagLongTextExample } from './tag-long-text/tag-long-text-example';
 import { TagOverviewExample } from './tag-overview/tag-overview-example';
+import { TagRemovableExample } from './tag-removable/tag-removable-example';
+import { TagSelectableExample } from './tag-selectable/tag-selectable-example';
 import { TagWithIconExample } from './tag-with-icon/tag-with-icon-example';
-import { TagWithRemoveButtonExample } from './tag-with-remove-button/tag-with-remove-button-example';
 import { TagsAutocompleteOnpasteOffExample } from './tags-autocomplete-onpaste-off/tags-autocomplete-onpaste-off-example';
 import { TagsInputOnpasteOffExample } from './tags-input-onpaste-off/tags-input-onpaste-off-example';
 
@@ -29,12 +32,15 @@ export {
     TagInputWithFormControlValidatorsExample,
     TagListEditableExample,
     TagListExample,
+    TagListRemovableExample,
+    TagListSelectableExample,
     TagLongTextExample,
     TagOverviewExample,
+    TagRemovableExample,
     TagsAutocompleteOnpasteOffExample,
+    TagSelectableExample,
     TagsInputOnpasteOffExample,
-    TagWithIconExample,
-    TagWithRemoveButtonExample
+    TagWithIconExample
 };
 
 const EXAMPLES = [
@@ -50,7 +56,10 @@ const EXAMPLES = [
     TagInputWithFormControlValidatorsExample,
     TagDisabledExample,
     TagWithIconExample,
-    TagWithRemoveButtonExample,
+    TagRemovableExample,
+    TagListRemovableExample,
+    TagSelectableExample,
+    TagListSelectableExample,
     TagEditableExample,
     TagListEditableExample,
     TagInputEditableExample,
