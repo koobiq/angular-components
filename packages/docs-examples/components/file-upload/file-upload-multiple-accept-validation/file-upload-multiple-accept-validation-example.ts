@@ -23,7 +23,7 @@ import { KbqIconModule } from '@koobiq/components/icon';
                 }
             </ng-template>
 
-            <kbq-hint>Files with .txt extension are allowed</kbq-hint>
+            <kbq-hint>Files with TXT extension are allowed</kbq-hint>
 
             @for (control of fileList.controls; track $index) {
                 <kbq-hint color="error">

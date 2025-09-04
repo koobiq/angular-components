@@ -22,11 +22,11 @@ import { KbqIconModule } from '@koobiq/components/icon';
                     <i kbq-icon="kbq-exclamation-triangle_16"></i>
                 }
 
-                <kbq-hint>File with .txt extension is allowed</kbq-hint>
-
                 @if (formGroup.get('fileControl')?.hasError('fileExtensionMismatch')) {
                     <kbq-hint color="error">Provide valid extension</kbq-hint>
                 }
+
+                <kbq-hint>File with TXT extension is allowed</kbq-hint>
             </kbq-file-upload>
         </form>
     `,

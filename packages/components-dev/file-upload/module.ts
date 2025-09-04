@@ -298,6 +298,10 @@ export class DevFileUploadStateAndStyle {
         <file-upload-single-accept-validation-example />
         <hr />
         <file-upload-multiple-accept-validation-example />
+        <hr />
+        <file-upload-multiple-mixed-validation-example />
+        <hr />
+        <file-upload-single-mixed-validation-example />
     `,
     host: {
         class: 'layout-column'

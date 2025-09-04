@@ -8,6 +8,8 @@
 
 <!-- example(file-upload-custom-text-via-input) -->
 
+### Неопределенный индикатор прогресса
+
 Пример загрузки файлов с неопределенным по завершенности прогрессом:
 
 <!-- example(file-upload-indeterminate-loading-overview) -->
@@ -27,6 +29,8 @@
 
 ### Валидация: дополнительные примеры
 
+В примерах используется [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - это набор статических методов для валидации поля загрузки файлов.
+
 #### Обязательное поле
 
 - **Один файл**: Пример загрузчика, проверяющего, что файл обязательно должен быть загружен.
@@ -39,8 +43,6 @@
 
 #### Валидация размера файла
 
-В примерах используется [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts) - это набор статических методов для валидации поля загрузки файлов.
-
 - **Один файл**: Пример загрузки одного файла с применением `Reactive Forms` для проверки данных.
 
 <!-- example(file-upload-single-validation-reactive-forms-overview) -->
@@ -51,8 +53,6 @@
 
 #### Валидация типа или расширения файла
 
-В примерах используется [FileValidators](https://github.com/koobiq/angular-components/blob/main/packages/components/core/forms/validators.ts).
-
 - **Один файл**: Пример загрузки одного файла с применением `Reactive Forms` для проверки данных.
 
 <!-- example(file-upload-single-accept-validation) -->
@@ -60,3 +60,13 @@
 - **Несколько файлов**: Пример загрузки нескольких файлов с использованием `Reactive Forms` и валидации.
 
 <!-- example(file-upload-multiple-accept-validation) -->
+
+#### Проверка файла: обязательность и расширение
+
+- **Один файл**: Пример загрузки одного файла с применением `Reactive Forms` для проверки данных.
+
+<!-- example(file-upload-single-mixed-validation) -->
+
+- **Несколько файлов**: Пример загрузки нескольких файлов с использованием `Reactive Forms` и валидации.
+
+<!-- example(file-upload-multiple-mixed-validation) -->
