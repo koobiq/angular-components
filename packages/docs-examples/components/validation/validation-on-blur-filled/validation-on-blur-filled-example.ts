@@ -1,5 +1,14 @@
-import { afterNextRender, ChangeDetectionStrategy, Component, viewChild } from '@angular/core';
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    Directive,
+    ElementRef,
+    inject,
+    viewChild
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AbstractControl, FormControl, NgControl, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
     KbqComponentColors,
     kbqDisableLegacyValidationDirectiveProvider,
@@ -8,11 +17,47 @@ import {
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
 import { KbqInputModule } from '@koobiq/components/input';
 import { KbqToolTipModule, KbqTooltipTrigger } from '@koobiq/components/tooltip';
+import { fromEvent, switchMap } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 const IP_PATTERN =
     /^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$/;
 
 const restSymbolsRegex = /[^0-9.]+/g;
+
+const conditionalValidator = (validatorFn: ValidatorFn): ValidatorFn => {
+    return (control: AbstractControl) => {
+        if (!control.touched) return null;
+
+        return validatorFn(control);
+    };
+};
+
+@Directive({
+    standalone: true,
+    selector: '[exampleResetTouchedOnFirstInput]',
+    exportAs: 'exampleResetTouchedOnFirstInput'
+})
+class ExampleResetTouchedOnFirstInput {
+    protected readonly elementRef = inject(ElementRef);
+    protected readonly control = inject(NgControl, { optional: true, host: true });
+    protected validators: ValidatorFn | null = null;
+
+    constructor() {
+        const inputEvent = fromEvent(this.elementRef.nativeElement, 'input').pipe(take(1));
+
+        fromEvent(this.elementRef.nativeElement, 'focus')
+            .pipe(
+                switchMap(() => inputEvent),
+                takeUntilDestroyed()
+            )
+            .subscribe(() => {
+                if (this.control?.control) {
+                    this.control.control.markAsUntouched();
+                }
+            });
+    }
+}
 
 /**
  * @title Validation on blur filled
@@ -24,13 +69,15 @@ const restSymbolsRegex = /[^0-9.]+/g;
         ReactiveFormsModule,
         KbqFormFieldModule,
         KbqInputModule,
-        KbqToolTipModule
+        KbqToolTipModule,
+        ExampleResetTouchedOnFirstInput
     ],
     template: `
         <kbq-form-field style="width: 320px;">
             <kbq-label>IPv4-address</kbq-label>
             <input
                 kbqInput
+                exampleResetTouchedOnFirstInput
                 [formControl]="ipAddressControl"
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
@@ -53,10 +100,14 @@ const restSymbolsRegex = /[^0-9.]+/g;
 })
 export class ValidationOnBlurFilledExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
-    protected readonly ipAddressControl = new FormControl('123...12123123', [Validators.pattern(IP_PATTERN)]);
+    protected readonly ipAddressControl = new FormControl('123...12123123', [
+        conditionalValidator(Validators.pattern(IP_PATTERN))]);
 
     constructor() {
-        afterNextRender(() => this.ipAddressControl.markAsTouched());
+        afterNextRender(() => {
+            this.ipAddressControl.markAsTouched();
+            this.ipAddressControl.updateValueAndValidity();
+        });
     }
 
     protected readonly colors = KbqComponentColors;
