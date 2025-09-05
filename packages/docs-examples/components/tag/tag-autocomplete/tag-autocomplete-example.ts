@@ -24,9 +24,9 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
         KbqTagsModule,
         KbqAutocompleteModule,
         ReactiveFormsModule,
-        KbqInputModule,
         KbqIconModule,
-        AsyncPipe
+        AsyncPipe,
+        KbqInputModule
     ],
     template: `
         <kbq-form-field>
@@ -39,6 +39,7 @@ const autocompleteValueCoercion = (value): string => (value?.new ? value.value :
                 }
                 <input
                     #tagInput
+                    kbqInput
                     placeholder="Placeholder"
                     [distinct]="true"
                     [formControl]="control"
