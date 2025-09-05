@@ -1,9 +1,28 @@
-import { ChangeDetectionStrategy, Component, Directive, ElementRef, inject, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormControl, NgControl, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
+    ChangeDetectionStrategy,
+    Component,
+    Directive,
+    ElementRef,
+    inject,
+    Injectable,
+    viewChild
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+    AbstractControl,
+    FormControl,
+    FormGroupDirective,
+    NgControl,
+    NgForm,
+    ReactiveFormsModule,
+    ValidatorFn,
+    Validators
+} from '@angular/forms';
+import {
+    ErrorStateMatcher,
     KbqComponentColors,
     kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -17,13 +36,12 @@ const IP_PATTERN =
 
 const restSymbolsRegex = /[^0-9.]+/g;
 
-const conditionalValidator = (validatorFn: ValidatorFn): ValidatorFn => {
-    return (control: AbstractControl) => {
-        if (!control.touched) return null;
-
-        return validatorFn(control);
-    };
-};
+@Injectable()
+export class CustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return !!(control?.invalid && control.touched && (form?.submitted ?? true));
+    }
+}
 
 @Directive({
     standalone: true,
@@ -74,7 +92,7 @@ class ExampleResetTouchedOnFirstInput {
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
                 [kbqTrigger]="'manual'"
-                [kbqTooltip]="'Numbers and dots (.) only'"
+                [kbqTooltip]="'Numbers and dots only'"
                 [kbqTooltipColor]="colors.Error"
                 (input)="onInput($event)"
             />
@@ -87,13 +105,15 @@ class ExampleResetTouchedOnFirstInput {
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     },
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnBlurExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
 
-    protected readonly ipAddressControl = new FormControl('', [conditionalValidator(Validators.pattern(IP_PATTERN))]);
+    protected readonly ipAddressControl = new FormControl('', [Validators.pattern(IP_PATTERN)]);
     protected readonly popUpPlacements = PopUpPlacements;
     protected readonly colors = KbqComponentColors;
 

@@ -5,13 +5,24 @@ import {
     Directive,
     ElementRef,
     inject,
+    Injectable,
     viewChild
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, FormControl, NgControl, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import {
+    AbstractControl,
+    FormControl,
+    FormGroupDirective,
+    NgControl,
+    NgForm,
+    ReactiveFormsModule,
+    Validators
+} from '@angular/forms';
+import {
+    ErrorStateMatcher,
     KbqComponentColors,
     kbqDisableLegacyValidationDirectiveProvider,
+    kbqErrorStateMatcherProvider,
     PopUpPlacements
 } from '@koobiq/components/core';
 import { KbqFormFieldModule } from '@koobiq/components/form-field';
@@ -25,13 +36,12 @@ const IP_PATTERN =
 
 const restSymbolsRegex = /[^0-9.]+/g;
 
-const conditionalValidator = (validatorFn: ValidatorFn): ValidatorFn => {
-    return (control: AbstractControl) => {
-        if (!control.touched) return null;
-
-        return validatorFn(control);
-    };
-};
+@Injectable()
+export class CustomErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: AbstractControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        return !!(control?.invalid && control.touched && (form?.submitted ?? true));
+    }
+}
 
 @Directive({
     standalone: true,
@@ -41,7 +51,6 @@ const conditionalValidator = (validatorFn: ValidatorFn): ValidatorFn => {
 class ExampleResetTouchedOnFirstInput {
     protected readonly elementRef = inject(ElementRef);
     protected readonly control = inject(NgControl, { optional: true, host: true });
-    protected validators: ValidatorFn | null = null;
 
     constructor() {
         const inputEvent = fromEvent(this.elementRef.nativeElement, 'input').pipe(take(1));
@@ -82,7 +91,7 @@ class ExampleResetTouchedOnFirstInput {
                 [kbqEnterDelay]="10"
                 [kbqPlacement]="popUpPlacements.Top"
                 [kbqTrigger]="'manual'"
-                [kbqTooltip]="'Numbers and dots (.) only'"
+                [kbqTooltip]="'Numbers and dot only'"
                 [kbqTooltipColor]="colors.Error"
                 (input)="onInput($event)"
             />
@@ -95,13 +104,15 @@ class ExampleResetTouchedOnFirstInput {
     host: {
         class: 'layout-margin-5xl layout-align-center-center layout-row'
     },
-    providers: [kbqDisableLegacyValidationDirectiveProvider()],
+    providers: [
+        kbqDisableLegacyValidationDirectiveProvider(),
+        kbqErrorStateMatcherProvider(CustomErrorStateMatcher)],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ValidationOnBlurFilledExample {
     protected readonly tooltip = viewChild(KbqTooltipTrigger);
     protected readonly ipAddressControl = new FormControl('123...12123123', [
-        conditionalValidator(Validators.pattern(IP_PATTERN))]);
+        Validators.pattern(IP_PATTERN)]);
 
     constructor() {
         afterNextRender(() => {
