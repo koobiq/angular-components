@@ -33,6 +33,7 @@
             "@koobiq/components/actions-panel": ["packages/components/actions-panel/index.ts"],
             "@koobiq/components/alert": ["packages/components/alert/index.ts"],
             "@koobiq/components/autocomplete": ["packages/components/autocomplete/index.ts"],
+            "@koobiq/components/app-switcher": ["packages/components/app-switcher/index.ts"],
             "@koobiq/components/badge": ["packages/components/badge/index.ts"],
             "@koobiq/components/button": ["packages/components/button/index.ts"],
             "@koobiq/components/breadcrumbs": ["packages/components/breadcrumbs/index.ts"],
