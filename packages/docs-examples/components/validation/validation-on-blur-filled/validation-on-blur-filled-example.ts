@@ -127,7 +127,11 @@ export class ValidationOnBlurFilledExample {
     onInput(event: Event): void {
         const allowedSymbolsRegex = /^[0-9.]+$/g;
 
-        if (event.target instanceof HTMLInputElement && !allowedSymbolsRegex.test(event.target.value)) {
+        if (
+            event.target instanceof HTMLInputElement &&
+            event.target.value &&
+            !allowedSymbolsRegex.test(event.target.value)
+        ) {
             const newValue = event.target.value.replace(restSymbolsRegex, '');
 
             this.ipAddressControl.setValue(newValue);
