@@ -74,6 +74,7 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     handleKeydown(event: KeyboardEvent): void;
     handleMousedown(event: Event): void;
     hasFocus: boolean;
+    readonly nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_editable: unknown;
     // (undocumented)

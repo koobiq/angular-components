@@ -205,13 +205,16 @@ export class KbqTag
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
     /** @docs-private */
-    public readonly elementRef = kbqInjectElementRef();
+    readonly elementRef = kbqInjectElementRef();
 
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
 
     /** Emits when the tag is blurred. */
     readonly onBlur = new Subject<KbqTagEvent>();
+
+    /** @docs-private */
+    readonly nativeElement = this.elementRef.nativeElement;
 
     /** Whether the tag has focus. */
     hasFocus: boolean = false;
