@@ -368,6 +368,12 @@ export const enUSLocaleData: {
         openText: string;
         closeText: string;
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public
@@ -519,6 +525,12 @@ export const esLALocaleData: {
         openText: string;
         closeText: string;
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public (undocumented)
@@ -659,6 +671,12 @@ export const faIRLocaleData: {
     clampedText: {
         openText: string;
         closeText: string;
+    };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
     };
 };
 
@@ -884,6 +902,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             openText: string;
             closeText: string;
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'zh-CN': {
         formatters: {
@@ -1010,6 +1034,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+        };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
         };
     };
     'es-LA': {
@@ -1143,6 +1173,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             openText: string;
             closeText: string;
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'pt-BR': {
         formatters: {
@@ -1270,6 +1306,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+        };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
         };
     };
     'ru-RU': {
@@ -1405,6 +1447,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             openText: string;
             closeText: string;
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'fa-IR': {
         formatters: {
@@ -1534,6 +1582,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
             openText: string;
             closeText: string;
         };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
+        };
     };
     'tk-TM': {
         formatters: {
@@ -1662,6 +1716,12 @@ export function KBQ_DEFAULT_LOCALE_DATA_FACTORY(): {
         clampedText: {
             openText: string;
             closeText: string;
+        };
+        navbarIc: {
+            toggle: {
+                pinButton: string;
+                collapseButton: string;
+            };
         };
     };
 };
@@ -2546,6 +2606,25 @@ export class KbqPseudoCheckboxModule {
 export type KbqPseudoCheckboxState = 'unchecked' | 'checked' | 'indeterminate' | boolean;
 
 // @public (undocumented)
+export class KbqRectangleItem {
+    // (undocumented)
+    get collapsed(): boolean;
+    set collapsed(value: boolean);
+    // (undocumented)
+    getOuterElementWidth(): number;
+    // (undocumented)
+    protected readonly isBrowser: boolean;
+    // (undocumented)
+    protected readonly nativeElement: any;
+    // (undocumented)
+    readonly state: Subject<void>;
+    // (undocumented)
+    static ɵdir: i0.ɵɵDirectiveDeclaration<KbqRectangleItem, never, never, {}, {}, never, never, true, never>;
+    // (undocumented)
+    static ɵfac: i0.ɵɵFactoryDeclaration<KbqRectangleItem, never>;
+}
+
+// @public (undocumented)
 export class KbqRoundDecimalPipe implements PipeTransform {
     constructor(id: string, localeService: KbqLocaleService);
     // Warning: (ae-forgotten-export) The symbol "RoundDecimalOptions" needs to be exported by the entry point index.d.ts
@@ -3014,6 +3093,12 @@ export const ptBRLocaleData: {
         openText: string;
         closeText: string;
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public (undocumented)
@@ -3328,6 +3413,12 @@ export const ruRULocaleData: {
         openText: string;
         closeText: string;
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public
@@ -3553,6 +3644,12 @@ export const tkTMLocaleData: {
         openText: string;
         closeText: string;
     };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
+    };
 };
 
 // @public @deprecated
@@ -3706,6 +3803,12 @@ export const zhCNLocaleData: {
     clampedText: {
         openText: string;
         closeText: string;
+    };
+    navbarIc: {
+        toggle: {
+            pinButton: string;
+            collapseButton: string;
+        };
     };
 };
 

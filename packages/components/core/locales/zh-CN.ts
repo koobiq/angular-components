@@ -94,5 +94,11 @@ export const zhCNLocaleData = {
     clampedText: {
         openText: '展开',
         closeText: '收起'
-    } satisfies KbqClampedTextLocaleConfig
+    } satisfies KbqClampedTextLocaleConfig,
+    navbarIc: {
+        toggle: {
+            pinButton: '保持展开',
+            collapseButton: '折叠'
+        }
+    }
 };

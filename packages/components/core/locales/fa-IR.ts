@@ -94,5 +94,11 @@ export const faIRLocaleData = {
     clampedText: {
         openText: 'باز کردن',
         closeText: 'بستن'
-    } satisfies KbqClampedTextLocaleConfig
+    } satisfies KbqClampedTextLocaleConfig,
+    navbarIc: {
+        toggle: {
+            pinButton: 'ترک گسترش یافته',
+            collapseButton: 'جمع کردن'
+        }
+    }
 };

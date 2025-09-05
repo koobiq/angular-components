@@ -95,5 +95,11 @@ export const ruRULocaleData = {
     clampedText: {
         openText: 'Развернуть',
         closeText: 'Свернуть'
-    } satisfies KbqClampedTextLocaleConfig
+    } satisfies KbqClampedTextLocaleConfig,
+    navbarIc: {
+        toggle: {
+            pinButton: 'Оставить развернутым',
+            collapseButton: 'Свернуть'
+        }
+    }
 };

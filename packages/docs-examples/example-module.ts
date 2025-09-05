@@ -2752,6 +2752,32 @@ export const EXAMPLE_COMPONENTS: {[id: string]: LiveExample} = {
     "primaryFile": "modal-template-example.ts",
     "importPath": "components/modal"
   },
+  "navbar-ic-long-app-name": {
+    "packagePath": "components/navbar-ic/navbar-ic-long-app-name",
+    "title": "Navbar-ic",
+    "componentName": "NavbarIcLongAppNameExample",
+    "files": [
+      "navbar-ic-long-app-name-overview-example.ts",
+      "navbar-ic-long-app-name-example.html"
+    ],
+    "selector": "navbar-ic-long-app-name-example",
+    "additionalComponents": [],
+    "primaryFile": "navbar-ic-long-app-name-overview-example.ts",
+    "importPath": "components/navbar-ic"
+  },
+  "navbar-ic-overview": {
+    "packagePath": "components/navbar-ic/navbar-ic-overview",
+    "title": "Navbar-ic",
+    "componentName": "NavbarIcOverviewExample",
+    "files": [
+      "navbar-ic-overview-example.ts",
+      "navbar-ic-overview-example.html"
+    ],
+    "selector": "navbar-ic-overview-example",
+    "additionalComponents": [],
+    "primaryFile": "navbar-ic-overview-example.ts",
+    "importPath": "components/navbar-ic"
+  },
   "navbar-overview": {
     "packagePath": "components/navbar/navbar-overview",
     "title": "Navbar",
@@ -5327,6 +5353,10 @@ return import('@koobiq/docs-examples/components/modal');
 return import('@koobiq/docs-examples/components/modal');
   case 'modal-template':
 return import('@koobiq/docs-examples/components/modal');
+  case 'navbar-ic-long-app-name':
+return import('@koobiq/docs-examples/components/navbar-ic');
+  case 'navbar-ic-overview':
+return import('@koobiq/docs-examples/components/navbar-ic');
   case 'navbar-overview':
 return import('@koobiq/docs-examples/components/navbar');
   case 'navbar-vertical-open-over':

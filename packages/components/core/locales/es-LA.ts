@@ -94,5 +94,11 @@ export const esLALocaleData = {
     clampedText: {
         openText: 'Expandir',
         closeText: 'Contraer'
-    } satisfies KbqClampedTextLocaleConfig
+    } satisfies KbqClampedTextLocaleConfig,
+    navbarIc: {
+        toggle: {
+            pinButton: 'Expandir el menú',
+            collapseButton: 'Colapsar'
+        }
+    }
 };

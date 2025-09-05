@@ -238,6 +238,7 @@
         "dev:markdown": "ng serve dev-markdown --port 3003",
         "dev:modal": "ng serve dev-modal --port 3003",
         "dev:navbar": "ng serve dev-navbar --port 3003",
+        "dev:navbar-ic": "ng serve dev-navbar-ic --port 3003",
         "dev:number-formatter": "ng serve dev-number-formatter --port 3003",
         "dev:overflow-items": "ng serve dev-overflow-items --port 3003",
         "dev:popover": "ng serve dev-popover --port 3003",

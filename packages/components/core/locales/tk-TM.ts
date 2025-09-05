@@ -95,5 +95,11 @@ export const tkTMLocaleData = {
     clampedText: {
         openText: 'Giňelt',
         closeText: 'Ýap'
-    } satisfies KbqClampedTextLocaleConfig
+    } satisfies KbqClampedTextLocaleConfig,
+    navbarIc: {
+        toggle: {
+            pinButton: 'Rugsat giňeldildi',
+            collapseButton: 'Apseykylmak'
+        }
+    }
 };
