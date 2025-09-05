@@ -8,7 +8,7 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
 
 @Component({
     standalone: true,
-    imports: [PopoverExamplesModule, KbqButtonModule, KbqIcon],
+    imports: [PopoverExamplesModule, KbqButtonModule, KbqIcon, KbqAppSwitcherModule],
     selector: 'dev-examples',
     template: `
         <button kbq-button kbqAppSwitcher>

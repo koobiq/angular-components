@@ -1,0 +1,16 @@
+@if (withSearch) {
+    <kbq-form-field noBorders>
+        <input kbqInput placeholder="Поиск" [(ngModel)]="searchValue" />
+
+        <kbq-cleaner />
+    </kbq-form-field>
+
+    <kbq-divider />
+}
+<div class="kbq-app-switcher__container">
+    <kbq-app-switcher-tree />
+</div>
+
+@if (withSites) {
+    <kbq-divider />
+}

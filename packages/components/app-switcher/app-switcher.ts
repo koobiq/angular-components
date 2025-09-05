@@ -28,6 +28,7 @@ import {
     numberAttribute
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import {
     KbqComponentColors,
     KbqPopUp,
@@ -37,21 +38,40 @@ import {
     PopUpTriggers,
     applyPopupMargins
 } from '@koobiq/components/core';
+import { KbqDividerModule } from '@koobiq/components/divider';
+import { KbqFormFieldModule } from '@koobiq/components/form-field';
+import { KbqInputModule } from '@koobiq/components/input';
 import { defaultOffsetYWithArrow } from '@koobiq/components/popover';
 import { merge } from 'rxjs';
 import { kbqAppSwitcherAnimations } from './app-switcher-animations';
+import { KbqAppSwitcherTree } from './app-switcher-tree';
 
 @Component({
-    selector: 'kbq-app-switcher-component',
-    templateUrl: './app-switcher.component.html',
+    standalone: true,
+    selector: 'kbq-app-switcher',
+    templateUrl: './app-switcher.html',
     preserveWhitespaces: false,
     styleUrls: ['./app-switcher.scss'],
+    host: {
+        class: 'kbq-app-switcher'
+    },
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        KbqFormFieldModule,
+        KbqInputModule,
+        FormsModule,
+        KbqDividerModule,
+        KbqAppSwitcherTree
+    ],
     animations: [kbqAppSwitcherAnimations.state]
 })
-export class KbqAppSwitcherComponent extends KbqPopUp implements AfterViewInit {
+export class KbqAppSwitcher extends KbqPopUp implements AfterViewInit {
     protected readonly componentColors = KbqComponentColors;
+
+    searchValue: string = '';
+    withSearch: boolean = true;
+    withSites: boolean = true;
 
     prefix = 'kbq-app-switcher';
 
@@ -116,10 +136,7 @@ export const KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER = {
         '(touchend)': 'handleTouchend()'
     }
 })
-export class KbqAppSwitcherTrigger
-    extends KbqPopUpTrigger<KbqAppSwitcherComponent>
-    implements AfterContentInit, OnInit
-{
+export class KbqAppSwitcherTrigger extends KbqPopUpTrigger<KbqAppSwitcher> implements AfterContentInit, OnInit {
     protected scrollStrategy: () => ScrollStrategy = inject(KBQ_APP_SWITCHER_SCROLL_STRATEGY);
 
     // not used
@@ -130,6 +147,7 @@ export class KbqAppSwitcherTrigger
     content: string | TemplateRef<any>;
     header: string | TemplateRef<any>;
     footer: string | TemplateRef<any>;
+    private closeOnScroll: null;
 
     @Input({ transform: booleanAttribute })
     get disabled(): boolean {
@@ -221,8 +239,8 @@ export class KbqAppSwitcherTrigger
         }
     }
 
-    getOverlayHandleComponentType(): Type<KbqAppSwitcherComponent> {
-        return KbqAppSwitcherComponent;
+    getOverlayHandleComponentType(): Type<KbqAppSwitcher> {
+        return KbqAppSwitcher;
     }
 
     updateClassMap(newPlacement: string = this.placement) {
