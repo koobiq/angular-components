@@ -15,6 +15,7 @@ import { KbqRadioModule } from '@koobiq/components/radio';
 import { KbqSelectModule } from '@koobiq/components/select';
 import { KbqSplitterModule } from '@koobiq/components/splitter';
 import { PopoverExamplesModule } from 'packages/docs-examples/components/popover';
+import { DevThemeToggle } from '../theme-toggle';
 
 @Component({
     standalone: true,
@@ -25,6 +26,21 @@ import { PopoverExamplesModule } from 'packages/docs-examples/components/popover
         <popover-hover-example />
         <popover-arrowless-example />
         <popover-arrow-and-offset-example />
+    `,
+    styles: `
+        :host {
+            display: flex;
+            gap: var(--kbq-size-l);
+            flex-wrap: wrap;
+        }
+
+        :host > * {
+            border-radius: var(--kbq-size-border-radius);
+            border: 1px solid var(--kbq-line-contrast-less);
+            margin-bottom: var(--kbq-size-l);
+            padding: var(--kbq-size-m);
+            flex: 1 0 auto;
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -51,7 +67,8 @@ class DevExamples {}
         KbqRadioModule,
         KbqLinkModule,
         DevExamples,
-        NgClass
+        NgClass,
+        DevThemeToggle
     ],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
