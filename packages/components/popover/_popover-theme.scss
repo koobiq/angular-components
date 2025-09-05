@@ -10,7 +10,7 @@
     }
 
     .kbq-popover__arrow {
-        box-shadow: var(--kbq-popover-container-shadow);
+        box-shadow: inset var(--kbq-popover-container-shadow);
         background: var(--kbq-popover-container-background);
     }
 
