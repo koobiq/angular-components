@@ -4,7 +4,7 @@ import { afterNextRender, DestroyRef, Directive, inject, Renderer2 } from '@angu
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fromEvent, merge } from 'rxjs';
 import { KBQ_WINDOW } from '../tokens';
-import { kbqInjectElement } from '../utils';
+import { kbqInjectNativeElement } from '../utils';
 
 const INITIAL_PROPERTIES = {
     all: 'initial',
@@ -62,7 +62,7 @@ const FIELD_RESIZE_EVENTS = ['input', 'change', 'focus'] as const;
     }
 })
 export class KbqFieldSizingContent {
-    private readonly element = kbqInjectElement<HTMLInputElement>();
+    private readonly inputElement = kbqInjectNativeElement<HTMLInputElement>();
     private readonly renderer = inject(Renderer2);
     private readonly window = inject(KBQ_WINDOW);
     private readonly document = inject(DOCUMENT);
@@ -73,32 +73,33 @@ export class KbqFieldSizingContent {
     }
 
     private calculateWidth(): void {
-        const computedStyle = this.window.getComputedStyle(this.element);
-        const meter: HTMLSpanElement = this.renderer.createElement('span');
+        const computedStyle = this.window.getComputedStyle(this.inputElement);
+        const ruler: HTMLSpanElement = this.renderer.createElement('span');
 
-        meter.textContent = this.element.value.length > 0 ? this.element.value : this.element.placeholder;
-        Object.assign(meter.style, INITIAL_PROPERTIES);
-        WIDTH_INHERITED_PROPERTIES.forEach((property) => (meter.style[property] = computedStyle[property]));
-        this.renderer.appendChild(this.document.body, meter);
+        ruler.textContent =
+            this.inputElement.value.length > 0 ? this.inputElement.value : this.inputElement.placeholder;
+        Object.assign(ruler.style, INITIAL_PROPERTIES);
+        WIDTH_INHERITED_PROPERTIES.forEach((property) => (ruler.style[property] = computedStyle[property]));
+        this.renderer.appendChild(this.document.body, ruler);
 
         const width =
             computedStyle.boxSizing === 'border-box'
                 ? BOX_SIZING_BORDER_BOX_WIDTH_PROPERTIES.reduce(
                       (width, property) => width + parseFloat(computedStyle[property]) || 0,
-                      meter.scrollWidth
+                      ruler.scrollWidth
                   )
-                : meter.scrollWidth;
+                : ruler.scrollWidth;
 
-        this.renderer.setStyle(this.element, 'width', coerceCssPixelValue(width));
-        this.renderer.removeChild(this.document.body, meter);
+        this.renderer.setStyle(this.inputElement, 'width', coerceCssPixelValue(width));
+        this.renderer.removeChild(this.document.body, ruler);
     }
 
     private emulate(): void {
         if (CSS.supports('field-sizing', 'content')) {
-            return this.renderer.setStyle(this.element, 'fieldSizing', 'content');
+            return this.renderer.setStyle(this.inputElement, 'fieldSizing', 'content');
         }
 
-        merge(...FIELD_RESIZE_EVENTS.map((event) => fromEvent(this.element, event)))
+        merge(...FIELD_RESIZE_EVENTS.map((event) => fromEvent(this.inputElement, event)))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.calculateWidth());
 
