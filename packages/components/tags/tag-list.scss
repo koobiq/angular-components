@@ -24,6 +24,11 @@
     padding-bottom: var(--kbq-tag-size-padding-vertical);
     padding-left: 4px;
     padding-right: unset;
+
+    &.kbq-input {
+        padding: unset;
+        min-height: unset;
+    }
 }
 
 .kbq-tags-list__list-container {

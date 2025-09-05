@@ -55,12 +55,12 @@
         @include input.kbq-reset-input();
 
         min-width: var(--kbq-size-xs);
-    }
 
-    .kbq-input {
-        min-height: unset;
-        border-radius: unset !important;
-        padding: unset;
+        &.kbq-input {
+            min-height: unset;
+            border-radius: unset;
+            padding: unset;
+        }
     }
 
     .kbq-tag-edit-submit {

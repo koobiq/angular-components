@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqComponentColors } from '@koobiq/components/core';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
@@ -11,13 +12,13 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
 @Component({
     standalone: true,
     selector: 'tag-list-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule, JsonPipe],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, JsonPipe, KbqInputModule],
     template: `
         <kbq-tag-list editable [(ngModel)]="tags">
             @for (tag of tags(); track $index) {
                 <kbq-tag [value]="tag" (editChange)="editChange($event, $index)" (removed)="remove($index)">
                     {{ tag }}
-                    <input kbqTagEditInput [(ngModel)]="tags()[$index]" />
+                    <input kbqInput kbqTagEditInput [(ngModel)]="tags()[$index]" />
                     <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit [color]="color.Theme"></i>
                     <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
                 </kbq-tag>

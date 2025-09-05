@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
 
 /**
@@ -9,11 +10,11 @@ import { KbqTagEditChange, KbqTagsModule } from '@koobiq/components/tags';
 @Component({
     standalone: true,
     selector: 'tag-editable-example',
-    imports: [KbqTagsModule, KbqIconModule, FormsModule],
+    imports: [KbqTagsModule, KbqIconModule, FormsModule, KbqInputModule],
     template: `
         <kbq-tag editable (editChange)="editChange($event)" (removed)="remove()">
             {{ tag() }}
-            <input kbqTagEditInput [(ngModel)]="tag" />
+            <input kbqInput kbqTagEditInput [(ngModel)]="tag" />
             <i kbq-icon-button="kbq-check-s_16" kbqTagEditSubmit></i>
 
             <i kbq-icon-button="kbq-xmark-s_16" kbqTagRemove></i>
