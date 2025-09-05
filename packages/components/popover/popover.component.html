@@ -1,6 +1,7 @@
 <div
     #popover
     class="kbq-popover"
+    [class.kbq-popover_arrowless]="!arrow"
     [cdkTrapFocus]="isTrapFocus"
     [ngClass]="classMap"
     [@state]="visibility"

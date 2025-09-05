@@ -2,7 +2,11 @@
 
 @mixin kbq-popover-theme() {
     .kbq-popover {
-        box-shadow: var(--kbq-popover-container-shadow);
+        box-shadow: var(--kbq-popover-shadow);
+
+        &.kbq-popover_arrowless {
+            box-shadow: var(--kbq-popover-container-shadow);
+        }
     }
 
     .kbq-popover__container {
@@ -10,7 +14,7 @@
     }
 
     .kbq-popover__arrow {
-        box-shadow: var(--kbq-popover-container-shadow);
+        box-shadow: var(--kbq-popover-shadow);
         background: var(--kbq-popover-container-background);
     }
 
