@@ -1,14 +1,14 @@
-<kbq-dropdown #issuesDropdown="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
-    <button kbq-dropdown-item>Open</button>
-    <button kbq-dropdown-item>In Progress</button>
-    <button kbq-dropdown-item>Complete</button>
-    <button kbq-dropdown-item>Closed</button>
+<kbq-dropdown #issuesDropdown="kbqDropdown">
+    <a href="#" kbq-dropdown-item>Open</a>
+    <a href="#" kbq-dropdown-item>In Progress</a>
+    <a href="#" kbq-dropdown-item>Complete</a>
+    <a href="#" kbq-dropdown-item>Closed</a>
 </kbq-dropdown>
 
-<kbq-dropdown #securityDropdown="kbqDropdown" [overlapTriggerX]="false" [overlapTriggerY]="true">
-    <button kbq-dropdown-item>Identity</button>
-    <button kbq-dropdown-item>Members and guests</button>
-    <button kbq-dropdown-item>Data retension</button>
+<kbq-dropdown #securityDropdown="kbqDropdown">
+    <a href="#" kbq-dropdown-item>Identity</a>
+    <a href="#" kbq-dropdown-item>Members and guests</a>
+    <a href="#" kbq-dropdown-item>Data retension</a>
 </kbq-dropdown>
 
 <div class="layout-row" style="margin: -20px; height: 500px">
@@ -26,34 +26,51 @@
                 <div kbqNavbarIcTitle>Short App Name</div>
             </a>
 
-            <kbq-navbar-ic-item>
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Assets"
+                (click)="selected = items.Assets"
+            >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Assets</div>
-            </kbq-navbar-ic-item>
+            </a>
 
             <kbq-navbar-ic-item
                 #issuesDropdownTrigger="kbqDropdownTrigger"
-                [class.kbq-active]="issuesDropdownTrigger.opened"
+                [class.kbq-active]="selected === items.Issues"
                 [kbqDropdownTriggerFor]="issuesDropdown"
+                (click)="selected = items.Issues"
             >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Issues</div>
             </kbq-navbar-ic-item>
 
-            <kbq-navbar-ic-item>
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Incidents"
+                (click)="selected = items.Incidents"
+            >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Incidents</div>
-            </kbq-navbar-ic-item>
+            </a>
 
-            <kbq-navbar-ic-item>
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Policies"
+                (click)="selected = items.Policies"
+            >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Policies</div>
-            </kbq-navbar-ic-item>
+            </a>
 
             <kbq-navbar-ic-item
                 #securityDropdownTrigger="kbqDropdownTrigger"
-                [class.kbq-active]="securityDropdownTrigger.opened"
+                [class.kbq-active]="selected === items.Security"
                 [kbqDropdownTriggerFor]="securityDropdown"
+                (click)="selected = items.Security"
             >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Security</div>
@@ -61,21 +78,21 @@
         </kbq-navbar-ic-container>
 
         <kbq-navbar-ic-container>
-            <kbq-navbar-ic-item>
+            <a href="#" kbq-navbar-ic-item>
                 <i kbq-icon="kbq-bell_16"></i>
                 <div kbqNavbarIcTitle>Notifications</div>
                 <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
-            </kbq-navbar-ic-item>
+            </a>
 
-            <kbq-navbar-ic-item>
+            <a href="#" kbq-navbar-ic-item>
                 <i kbq-icon="kbq-circle_16" [color]="'success'"></i>
                 <div kbqNavbarIcTitle>System Monitor</div>
-            </kbq-navbar-ic-item>
+            </a>
 
-            <div kbq-navbar-ic-item>
+            <a href="#" kbq-navbar-ic-item>
                 <i kbq-icon="kbq-user_16"></i>
                 <span kbqNavbarIcTitle>Administrator</span>
-            </div>
+            </a>
 
             <kbq-navbar-ic-toggle />
         </kbq-navbar-ic-container>

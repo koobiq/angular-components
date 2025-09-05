@@ -8,8 +8,6 @@ import { KbqDropdownModule } from '@koobiq/components/dropdown';
 import { KbqEmptyStateModule } from '@koobiq/components/empty-state';
 import { KbqIconModule } from '@koobiq/components/icon';
 import { KbqNavbarIcModule } from '@koobiq/components/navbar-ic';
-import { KbqOverflowItem, KbqOverflowItems, KbqOverflowItemsResult } from '@koobiq/components/overflow-items';
-import { KbqTooltipTrigger } from '@koobiq/components/tooltip';
 import { KbqTopBarModule } from '@koobiq/components/top-bar';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -22,6 +20,12 @@ type ExampleAction = {
     style: KbqButtonStyles | string;
     color: KbqComponentColors;
 };
+
+enum NavbarIcItems {
+    Assets,
+    Issues,
+    More
+}
 
 /**
  * @title Navbar-ic
@@ -37,12 +41,8 @@ type ExampleAction = {
         KbqIconModule,
         KbqEmptyStateModule,
         KbqTopBarModule,
-        KbqOverflowItems,
         KbqButtonModule,
-        KbqOverflowItemsResult,
-        KbqDropdownModule,
-        KbqOverflowItem,
-        KbqTooltipTrigger
+        KbqDropdownModule
     ]
 })
 export class NavbarIcLongAppNameExample {
@@ -68,6 +68,9 @@ export class NavbarIcLongAppNameExample {
             ),
         { initialValue: true }
     );
+
+    protected items = NavbarIcItems;
+    protected selected: NavbarIcItems = NavbarIcItems.Assets;
 
     protected readonly actions: ExampleAction[] = [
         {

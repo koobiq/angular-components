@@ -269,8 +269,6 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     // (undocumented)
     set collapsed(value: boolean);
     // (undocumented)
-    collapsedText: string;
-    // (undocumented)
     get croppedText(): string;
     // (undocumented)
     get disabled(): boolean;
@@ -297,7 +295,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     set trigger(value: string);
     updateTooltip(): void;
     // (undocumented)
-    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcItem, "kbq-navbar-ic-item, [kbq-navbar-ic-item]", ["kbqNavbarIcItem"], { "collapsedText": { "alias": "collapsedText"; "required": false; }; "trigger": { "alias": "kbqTrigger"; "required": false; }; }, {}, ["title", "icon", "button"], ["[kbq-icon]", "[kbqNavbarIcTitle]", "*"], true, [{ directive: typeof i1.KbqRectangleItem; inputs: {}; outputs: {}; }]>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<KbqNavbarIcItem, "kbq-navbar-ic-item, [kbq-navbar-ic-item]", ["kbqNavbarIcItem"], { "trigger": { "alias": "kbqTrigger"; "required": false; }; }, {}, ["title", "icon", "button"], ["[kbq-icon]", "[kbqNavbarIcTitle]", "*"], true, [{ directive: typeof i1.KbqRectangleItem; inputs: {}; outputs: {}; }]>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<KbqNavbarIcItem, never>;
 }

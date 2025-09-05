@@ -13,39 +13,48 @@
                 <div kbqNavbarIcTitle>Extra-long application name with line breaks and truncation at the end</div>
             </a>
 
-            <div kbq-navbar-ic-item>
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Assets"
+                (click)="selected = items.Assets"
+            >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Assets</div>
-            </div>
+            </a>
 
-            <div kbq-navbar-ic-item>
+            <a
+                href="#"
+                kbq-navbar-ic-item
+                [class.kbq-active]="selected === items.Issues"
+                (click)="selected = items.Issues"
+            >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Issues</div>
-            </div>
+            </a>
 
-            <kbq-navbar-ic-item>
+            <a href="#" kbq-navbar-ic-item [class.kbq-active]="selected === items.More" (click)="selected = items.More">
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>More</div>
-            </kbq-navbar-ic-item>
+            </a>
         </kbq-navbar-ic-container>
 
         <kbq-navbar-ic-container>
-            <kbq-navbar-ic-item>
+            <a href="#" kbq-navbar-ic-item>
                 <i kbq-icon="kbq-bell_16"></i>
                 <div kbqNavbarIcTitle>Notifications</div>
                 <kbq-badge [badgeColor]="'error'" [compact]="true">2</kbq-badge>
-            </kbq-navbar-ic-item>
+            </a>
 
-            <kbq-navbar-ic-item>
+            <a href="#" kbq-navbar-ic-item>
                 <i kbq-icon="kbq-circle_16" [color]="'success'"></i>
                 <div kbqNavbarIcTitle>System Monitor</div>
-            </kbq-navbar-ic-item>
+            </a>
 
-            <div kbq-navbar-ic-item>
+            <a href="#" kbq-navbar-ic-item>
                 <i kbq-icon="kbq-user_16"></i>
                 <span kbqNavbarIcTitle>Administrator</span>
-            </div>
-
+            </a>
             <kbq-navbar-ic-toggle />
         </kbq-navbar-ic-container>
     </kbq-navbar-ic>

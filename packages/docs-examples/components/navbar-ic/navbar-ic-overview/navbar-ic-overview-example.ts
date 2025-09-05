@@ -22,6 +22,14 @@ type ExampleAction = {
     color: KbqComponentColors;
 };
 
+enum NavbarIcItems {
+    Assets,
+    Issues,
+    Incidents,
+    Policies,
+    Security
+}
+
 /**
  * @title Navbar-ic
  */
@@ -64,6 +72,9 @@ export class NavbarIcOverviewExample {
             ),
         { initialValue: true }
     );
+
+    protected items = NavbarIcItems;
+    protected selected: NavbarIcItems = NavbarIcItems.Assets;
 
     protected readonly actions: ExampleAction[] = [
         {

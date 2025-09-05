@@ -21,6 +21,7 @@ import {
     Inject,
     InjectionToken,
     Input,
+    numberAttribute,
     OnDestroy,
     Optional,
     Output,
@@ -78,6 +79,12 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
     private readonly window = inject(KBQ_WINDOW);
 
     lastDestroyReason: DropdownCloseReason;
+
+    /** Position offset of the dropdown in the X axis. */
+    @Input({ transform: numberAttribute }) offsetX: number;
+
+    /** Position offset of the dropdown in the Y axis. */
+    @Input({ transform: numberAttribute }) offsetY: number;
 
     /** Data to be passed along to any lazily-rendered content. */
     @Input('kbqDropdownTriggerData') data: any;
@@ -500,23 +507,37 @@ export class KbqDropdownTrigger implements AfterContentInit, OnDestroy {
         }
 
         positionStrategy.withPositions([
-            { originX, originY, overlayX, overlayY, offsetY, offsetX: -offsetX },
-            { originX: originFallbackX, originY, overlayX: overlayFallbackX, overlayY, offsetY, offsetX },
+            {
+                originX,
+                originY,
+                overlayX,
+                overlayY,
+                offsetY: this.offsetY ?? offsetY,
+                offsetX: this.offsetX ?? -offsetX
+            },
+            {
+                originX: originFallbackX,
+                originY,
+                overlayX: overlayFallbackX,
+                overlayY,
+                offsetY: this.offsetY ?? offsetY,
+                offsetX: this.offsetX ?? offsetX
+            },
             {
                 originX,
                 originY: originFallbackY,
                 overlayX,
                 overlayY: overlayFallbackY,
-                offsetY: -offsetY,
-                offsetX: -offsetX
+                offsetY: this.offsetY ?? -offsetY,
+                offsetX: this.offsetX ?? -offsetX
             },
             {
                 originX: originFallbackX,
                 originY: originFallbackY,
                 overlayX: overlayFallbackX,
                 overlayY: overlayFallbackY,
-                offsetY: -offsetY,
-                offsetX: -offsetX
+                offsetY: this.offsetY ?? -offsetY,
+                offsetX: this.offsetX ?? -offsetX
             }
         ]);
     }

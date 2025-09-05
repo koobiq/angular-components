@@ -272,8 +272,6 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     /** @docs-private */
     @ContentChild(KbqButtonCssStyler) button: KbqButtonCssStyler;
 
-    @Input() collapsedText: string;
-
     @Input('kbqTrigger')
     get trigger(): string {
         return this._trigger;
@@ -302,7 +300,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     }
 
     get titleText(): string {
-        return this.collapsedText || this.title?.text;
+        return this.title?.text;
     }
 
     get disabled(): boolean {
@@ -355,14 +353,19 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
     }
 
     ngAfterContentInit(): void {
+        if (this.dropdownTrigger?.dropdown) {
+            this.dropdownTrigger.dropdown.overlapTriggerX = false;
+            this.dropdownTrigger.dropdown.overlapTriggerY = true;
+            // needs to shift dropdown to the left by 8 pixels
+            this.dropdownTrigger.offsetX = -8;
+        }
+
         this.updateTooltip();
     }
 
     /** @docs-private */
     updateTooltip(): void {
-        if (this.collapsed) {
-            this.content = `${this.titleText || ''}`;
-        } else if (!this.collapsed && this.hasCroppedText) {
+        if (!this.collapsed && this.hasCroppedText) {
             this.content = this.croppedText;
         }
 
@@ -395,7 +398,7 @@ export class KbqNavbarIcItem extends KbqTooltipTrigger implements AfterContentIn
             @if (navbar.pinned) {
                 <i kbq-icon [class.kbq-chevron-left_16]="navbar.expanded"></i>
                 <ng-content select="[kbqNavbarIcTitle]">{{ localeData.collapseButton }}</ng-content>
-            } @else if (navbar.expandedByHoverOrFocus && !navbar.pinned) {
+            } @else if ((navbar.expandedByHoverOrFocus || navbar.expandedByToggle) && !navbar.pinned) {
                 <i
                     kbq-icon
                     [class.kbq-pin_16]="navbar.expanded"
@@ -450,13 +453,13 @@ export class KbqNavbarIcToggle {
     }
 
     toggle = () => {
-        if (this.navbar.expandedByHoverOrFocus && !this.navbar.pinned) {
+        if ((this.navbar.expandedByHoverOrFocus || this.navbar.expandedByToggle) && !this.navbar.pinned) {
             this.navbar.pinned = true;
         } else {
             this.navbar.pinned = false;
             this.navbar.toggle();
         }
 
-        this.changeDetectorRef.markForCheck();
+        this.changeDetectorRef.detectChanges();
     };
 }

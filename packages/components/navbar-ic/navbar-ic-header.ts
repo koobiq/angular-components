@@ -39,8 +39,6 @@ export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContent
     @ContentChild(KbqNavbarIcLogo) logo: KbqNavbarIcLogo;
     @ContentChild(KbqNavbarIcTitle) title: KbqNavbarIcTitle;
 
-    private tooltip = inject(KbqTooltipTrigger, { optional: true });
-
     get titleText(): string {
         return this.title?.text || '';
     }
@@ -54,11 +52,9 @@ export class KbqNavbarIcHeader extends KbqTooltipTrigger implements AfterContent
 
         this._trigger = `${PopUpTriggers.Hover}`;
 
-        if (this.tooltip) {
-            this.tooltip.arrow = false;
-            this.tooltip.offset = 0;
-            this.tooltip.tooltipPlacement = PopUpPlacements.Right;
-        }
+        this.arrow = false;
+        this.offset = -8;
+        this.tooltipPlacement = PopUpPlacements.RightTop;
     }
 
     ngAfterContentInit(): void {
