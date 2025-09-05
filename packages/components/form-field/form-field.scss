@@ -41,6 +41,11 @@
 
         padding-left: var(--kbq-form-field-size-container-left-padding);
         padding-right: var(--kbq-form-field-size-container-right-padding);
+
+        &:has(.kbq-textarea) {
+            --kbq-form-field-size-container-left-padding: 0;
+            --kbq-form-field-size-container-right-padding: 0;
+        }
     }
 
     .kbq-form-field:not(.kbq-form-field-type-textarea) {
@@ -55,7 +60,8 @@
         padding-left: var(--kbq-form-field-size-infix-left-padding);
 
         &:has(.kbq-select_multiple, .kbq-select_multiline):not(:has(.kbq-select__trigger_empty)),
-        &:has(.kbq-tag-list) {
+        &:has(.kbq-tag-list),
+        &:has(.kbq-textarea) {
             padding-left: 0;
 
             max-width: 100%;
