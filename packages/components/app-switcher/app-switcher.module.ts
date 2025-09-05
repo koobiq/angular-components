@@ -8,32 +8,39 @@ import { CdkObserveContent } from '@angular/cdk/observers';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgClass, NgTemplateOutlet } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { KbqButtonModule } from '@koobiq/components/button';
 import { EmptyFocusTrapStrategy } from '@koobiq/components/core';
+import { KbqFormField } from '@koobiq/components/form-field';
 import { KbqIconModule } from '@koobiq/components/icon';
+import { KbqInputModule } from '@koobiq/components/input';
 import {
     KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER,
-    KbqAppSwitcherComponent,
+    KbqAppSwitcher,
     KbqAppSwitcherTrigger
-} from './app-switcher.component';
+} from './app-switcher';
+import { KbqAppSwitcherTree } from './app-switcher-tree';
 
 @NgModule({
     declarations: [
-        KbqAppSwitcherComponent,
         KbqAppSwitcherTrigger
     ],
     exports: [
-        KbqAppSwitcherComponent,
         KbqAppSwitcherTrigger
     ],
     imports: [
+        KbqAppSwitcher,
+        KbqAppSwitcherTree,
         OverlayModule,
         KbqButtonModule,
         A11yModule,
         KbqIconModule,
         CdkObserveContent,
         NgClass,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        KbqFormField,
+        KbqInputModule,
+        FormsModule
     ],
     providers: [
         KBQ_APP_SWITCHER_SCROLL_STRATEGY_FACTORY_PROVIDER,
