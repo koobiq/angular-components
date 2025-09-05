@@ -46,7 +46,7 @@ export const KBQ_TAGS_DEFAULT_OPTIONS: InjectionToken<KbqTagsDefaultOptions>;
 
 // @public (undocumented)
 export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDestroy, KbqTitleTextRef, AfterContentInit, AfterViewInit {
-    constructor(elementRef: ElementRef, changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
+    constructor(changeDetectorRef: ChangeDetectorRef, _ngZone: NgZone);
     // (undocumented)
     addClassModificatorForIcons(): void;
     // (undocumented)
@@ -68,15 +68,12 @@ export class KbqTag extends KbqColorDirective implements IFocusableOption, OnDes
     set editable(value: boolean);
     readonly editChange: EventEmitter<KbqTagEditChange>;
     protected readonly editing: WritableSignal<boolean>;
-    // (undocumented)
-    elementRef: ElementRef;
+    readonly elementRef: ElementRef<HTMLElement>;
     focus(): void;
     protected handleDblClick(event: MouseEvent): void;
     handleKeydown(event: KeyboardEvent): void;
     handleMousedown(event: Event): void;
     hasFocus: boolean;
-    // (undocumented)
-    nativeElement: HTMLElement;
     // (undocumented)
     static ngAcceptInputType_editable: unknown;
     // (undocumented)

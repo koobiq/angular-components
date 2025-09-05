@@ -33,6 +33,7 @@ import {
     KbqColorDirective,
     KbqComponentColors,
     KbqFieldSizingContent,
+    kbqInjectElementRef,
     KbqTitleTextRef
 } from '@koobiq/components/core';
 import { KbqIcon } from '@koobiq/components/icon';
@@ -203,14 +204,14 @@ export class KbqTag
 {
     private readonly focusMonitor = inject(FocusMonitor);
     private readonly tagList = inject(KbqTagList, { optional: true });
+    /** @docs-private */
+    public readonly elementRef = kbqInjectElementRef();
 
     /** Emits when the tag is focused. */
     readonly onFocus = new Subject<KbqTagEvent>();
 
     /** Emits when the tag is blurred. */
     readonly onBlur = new Subject<KbqTagEvent>();
-
-    nativeElement: HTMLElement;
 
     /** Whether the tag has focus. */
     hasFocus: boolean = false;
@@ -297,7 +298,7 @@ export class KbqTag
     /** The value of the tag. Defaults to the content inside `<kbq-tag>` tags. */
     @Input()
     get value(): any {
-        return this._value !== undefined ? this._value : this.elementRef.nativeElement.textContent;
+        return isUndefined(this._value) ? this.elementRef.nativeElement.textContent?.trim() : this._value;
     }
 
     set value(value: any) {
@@ -362,7 +363,6 @@ export class KbqTag
     private _disabled: boolean = false;
 
     constructor(
-        public elementRef: ElementRef,
         public changeDetectorRef: ChangeDetectorRef,
         private _ngZone: NgZone
     ) {
@@ -372,8 +372,6 @@ export class KbqTag
         this.setDefaultColor(KbqComponentColors.ContrastFade);
 
         this.addHostClassName();
-
-        this.nativeElement = elementRef.nativeElement;
     }
 
     ngAfterContentInit() {
@@ -399,10 +397,10 @@ export class KbqTag
 
             if (iconElement.classList.contains('kbq-tag-remove')) {
                 iconElement.classList.add('kbq-icon_right');
-                this.nativeElement.classList.add('kbq-right-icon');
+                this.elementRef.nativeElement.classList.add('kbq-right-icon');
             } else {
                 iconElement.classList.add('kbq-icon_left');
-                this.nativeElement.classList.add('kbq-left-icon');
+                this.elementRef.nativeElement.classList.add('kbq-left-icon');
             }
         } else if (icons.length > 1) {
             const firstIconElement = icons[0];

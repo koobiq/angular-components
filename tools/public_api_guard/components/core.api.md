@@ -2032,8 +2032,11 @@ export class KbqHighlightPipe implements PipeTransform {
     static ɵpipe: i0.ɵɵPipeDeclaration<KbqHighlightPipe, "mcHighlight", false>;
 }
 
-// @public (undocumented)
-export const kbqInjectElement: <T = HTMLElement>() => T;
+// @public
+export const kbqInjectElementRef: <T = HTMLElement>() => ElementRef<T>;
+
+// @public
+export const kbqInjectNativeElement: <T = HTMLElement>() => T;
 
 // @public
 export class KbqLine {
