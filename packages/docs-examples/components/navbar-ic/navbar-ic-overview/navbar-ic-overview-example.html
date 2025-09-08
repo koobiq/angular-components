@@ -1,14 +1,14 @@
 <kbq-dropdown #issuesDropdown="kbqDropdown">
-    <a href="#" kbq-dropdown-item>Open</a>
-    <a href="#" kbq-dropdown-item>In Progress</a>
-    <a href="#" kbq-dropdown-item>Complete</a>
-    <a href="#" kbq-dropdown-item>Closed</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Open</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">In Progress</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Complete</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Issues">Closed</a>
 </kbq-dropdown>
 
 <kbq-dropdown #securityDropdown="kbqDropdown">
-    <a href="#" kbq-dropdown-item>Identity</a>
-    <a href="#" kbq-dropdown-item>Members and guests</a>
-    <a href="#" kbq-dropdown-item>Data retension</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Identity</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Members and guests</a>
+    <a href="#" kbq-dropdown-item (click)="selected = items.Security">Data retension</a>
 </kbq-dropdown>
 
 <div class="layout-row" style="margin: -20px; height: 500px">
@@ -40,7 +40,6 @@
                 #issuesDropdownTrigger="kbqDropdownTrigger"
                 [class.kbq-active]="selected === items.Issues"
                 [kbqDropdownTriggerFor]="issuesDropdown"
-                (click)="selected = items.Issues"
             >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Issues</div>
@@ -70,7 +69,6 @@
                 #securityDropdownTrigger="kbqDropdownTrigger"
                 [class.kbq-active]="selected === items.Security"
                 [kbqDropdownTriggerFor]="securityDropdown"
-                (click)="selected = items.Security"
             >
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>Security</div>

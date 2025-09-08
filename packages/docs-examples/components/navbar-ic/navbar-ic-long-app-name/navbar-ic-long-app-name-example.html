@@ -33,10 +33,10 @@
                 <div kbqNavbarIcTitle>Issues</div>
             </a>
 
-            <a href="#" kbq-navbar-ic-item [class.kbq-active]="selected === items.More" (click)="selected = items.More">
+            <kbq-navbar-ic-item [class.kbq-active]="selected === items.More" (click)="selected = items.More">
                 <i kbq-icon="kbq-diamond_16"></i>
                 <div kbqNavbarIcTitle>More</div>
-            </a>
+            </kbq-navbar-ic-item>
         </kbq-navbar-ic-container>
 
         <kbq-navbar-ic-container>
