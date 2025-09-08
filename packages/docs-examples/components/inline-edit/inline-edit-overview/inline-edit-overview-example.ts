@@ -67,7 +67,7 @@ export class InlineEditOverviewExample {
     protected value: string[] = [this.options[0]];
     protected readonly displayValue = signal(this.value);
 
-    update(): void {
+    protected update(): void {
         this.displayValue.set(this.value);
     }
 }

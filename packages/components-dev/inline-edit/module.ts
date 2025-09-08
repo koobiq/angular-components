@@ -14,6 +14,7 @@ import { DevThemeToggle } from '../theme-toggle';
         <inline-edit-horizontal-list-example />
         <inline-edit-on-clean-example />
         <inline-edit-validation-example />
+        <inline-edit-custom-handler-example />
     `,
     styles: `
         :host {

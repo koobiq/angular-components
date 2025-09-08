@@ -63,9 +63,9 @@ export class InlineEditOnCleanExample {
     protected readonly placeholder = 'Placeholder';
     protected readonly control = { label: 'Label', control: new FormControl('Default value', { nonNullable: true }) };
 
-    onSave() {
-        if (!this.control.control.value) {
-            this.control.control.setValue(this.control.control.defaultValue);
-        }
+    protected onSave(): void {
+        if (this.control.control.value) return;
+
+        this.control.control.setValue(this.control.control.defaultValue);
     }
 }

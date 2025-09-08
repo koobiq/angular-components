@@ -82,12 +82,12 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 })
 export class InlineEditMenuExample {
     protected readonly clipboard = inject(Clipboard);
-    placeholder = 'Placeholder';
-    value =
+    protected readonly placeholder = 'Placeholder';
+    protected value =
         'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access';
     protected readonly displayValue = signal(this.value);
 
-    update(): void {
+    protected update(): void {
         this.displayValue.set(this.value);
     }
 }
