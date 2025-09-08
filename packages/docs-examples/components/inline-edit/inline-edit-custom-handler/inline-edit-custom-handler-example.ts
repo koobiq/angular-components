@@ -54,24 +54,17 @@ import { KbqSelectModule } from '@koobiq/components/select';
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()
     ],
-    styles: `
-        :host {
-            .kbq-inline-edit {
-                --kbq-inline-edit-pop-up-height: var(--kbq-size-xxl);
-            }
-        }
-    `,
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditCustomHandlerExample {
-    control = new FormControl<KbqFileItem | null>(null);
+    protected readonly control = new FormControl<KbqFileItem | null>(null);
     protected readonly placeholder = 'Placeholder';
     protected readonly displayValue = signal(this.control.value);
 
-    getValueHandler = () => this.control.value;
-    setValueHandler = (value: KbqFileItem | null) => this.control.setValue(value);
+    protected getValueHandler = () => this.control.value;
+    protected setValueHandler = (value: KbqFileItem | null) => this.control.setValue(value);
 
-    update(): void {
+    protected update(): void {
         this.displayValue.set(this.control.value);
     }
 }

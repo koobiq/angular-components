@@ -102,11 +102,6 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
         ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-datepicker {
             width: 100%;
         }
-
-        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-textarea .kbq-form-field__infix,
-        ::ng-deep .kbq-inline-edit__panel .kbq-form-field-type-textarea .kbq-form-field__container {
-            padding-left: 0;
-        }
     `,
     providers: [
         kbqDisableLegacyValidationDirectiveProvider()

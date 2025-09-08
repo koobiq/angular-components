@@ -86,18 +86,18 @@ import { KbqTextareaModule } from '@koobiq/components/textarea';
 export class InlineEditValidationExample {
     protected readonly placeholder = 'Placeholder';
     protected readonly options = Array.from({ length: 10 }).map((_, i) => `Option #${i}`);
-    protected control = new FormControl<string[]>([], {
+    protected readonly control = new FormControl<string[]>([], {
         nonNullable: true,
         validators: [Validators.required]
     });
-    protected textareaControl = new FormControl<string>('', {
+    protected readonly textareaControl = new FormControl<string>('', {
         nonNullable: true,
         validators: [Validators.required]
     });
 
     protected readonly displayValue = signal(this.textareaControl.value);
 
-    update(): void {
+    protected update(): void {
         this.displayValue.set(this.textareaControl.value);
     }
 }

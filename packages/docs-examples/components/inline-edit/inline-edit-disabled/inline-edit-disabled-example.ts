@@ -54,7 +54,7 @@ import { KbqInputModule } from '@koobiq/components/input';
 })
 export class InlineEditDisabledExample {
     protected readonly clipboard = inject(Clipboard);
-    placeholder = 'Placeholder';
-    value =
+    protected readonly placeholder = 'Placeholder';
+    protected value =
         'Multi-factor authentication involves multiple identification forms before account access, reducing the risk of unauthorized access';
 }

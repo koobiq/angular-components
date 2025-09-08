@@ -46,11 +46,11 @@ import { KbqSelectModule } from '@koobiq/components/select';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InlineEditPlaceholderExample {
-    placeholder = 'Placeholder';
-    value = '';
+    protected readonly placeholder = 'Placeholder';
+    protected value = '';
     protected readonly displayValue = signal(this.value);
 
-    update(): void {
+    protected update(): void {
         this.displayValue.set(this.value);
     }
 }
