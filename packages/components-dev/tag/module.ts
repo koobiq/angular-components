@@ -40,6 +40,8 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
         <hr />
         <tag-list-removable-example />
         <hr />
+        <tag-input-removable-example />
+        <hr />
         <tag-editable-example />
         <hr />
         <tag-editable-with-validation-example />
@@ -61,6 +63,7 @@ import { TagExamplesModule } from '../../docs-examples/components/tag';
         <tag-disabled-example />
         <hr />
         <tag-with-icon-example />
+        <hr />
         <tag-input-with-form-control-validators-example />
         <hr />
     `,
