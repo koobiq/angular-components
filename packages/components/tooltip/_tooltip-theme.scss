@@ -1,8 +1,6 @@
 @use '../core/styles/common/tokens' as *;
 
 @mixin kbq-tooltip-color($style-name) {
-    box-shadow: var(--kbq-tooltip-#{$style-name}-shadow);
-
     & .kbq-tooltip__inner {
         color: var(--kbq-tooltip-#{$style-name}-text);
 
@@ -11,11 +9,20 @@
 
     & .kbq-tooltip__arrow {
         background-color: var(--kbq-tooltip-#{$style-name}-background);
+        box-shadow: var(--kbq-tooltip-borderless-shadow);
+    }
+
+    &.kbq-tooltip_arrowless {
         box-shadow: var(--kbq-tooltip-#{$style-name}-shadow);
     }
 }
 
 @mixin kbq-tooltip-theme() {
+    .kbq-tooltip,
+    .kbq-tooltip__arrow {
+        box-shadow: var(--kbq-tooltip-borderless-shadow);
+    }
+
     .kbq-tooltip.kbq-theme {
         @include kbq-tooltip-color(theme-fade-off);
     }
